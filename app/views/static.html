@@ -1,0 +1,35 @@
+#{extends 'main.html' /}
+
+	<style>
+		body {
+			background:url(/public/images/inner_bg.gif) repeat-x top;
+		}
+	</style>
+</head>
+<body>
+	<div id="top_container">
+		<div id="top">
+			<div id="logo">
+				<a href="/"><img src="/public/images/spacer.gif" alt="Talk About Health" 
+					width="328" height="73" border="0" /></a>
+			</div>
+			<div id="topnav">
+				
+			</div>
+		</div>
+		
+		<div id="bottom_container">
+			<div id="innerbanner"></div>
+			<div id="innermain">
+				<div id="innerheading" class="blacktext2">#{get 'pageHeader' /}</div>
+				<div id="innermiddlearea">
+					<div id="signupleft">
+						#{doLayout /}
+					</div>
+					<div id="signupright">
+						#{rightmenu /}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
