@@ -1,16 +1,71 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+	<meta name="author" content="Talkmi" /> 
+	<meta name="keywords" content="support, health, talk" /> 
+	<meta name="description" content="real-time support for your health issues" /> 
+	<meta name="robots" content="all" /> 
+	
+	#{set title:'Talkmi : Real-time support for your health issues' /}
+	<title>#{get 'title' /}</title>
+	
+	<link href="@{'/public/stylesheets/style.css'}" rel="stylesheet" type="text/css" />
+	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
+	
+	<script type="text/javascript" src="@{'/public/javascripts/jquery-1.4.2.min.js'}">
+	
+	<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/menu.css'}" />
+	<script type="text/javascript" src="@{'/public/javascripts/menu.js'}">
+	
+	/***********************************************
+	* Chrome CSS Drop Down Menu- (c) Dynamic Drive DHTML code library (www.dynamicdrive.com)
+	* This notice MUST stay intact for legal use
+	* Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
+	***********************************************/
+	
+	</script>
+	
 
-<html>
-    <head>
-        <title>#{get 'title' /}</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/main.css'}">
-        #{get 'moreStyles' /}
-        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
-        <script src="@{'/public/javascripts/jquery-1.4.2.min.js'}" type="text/javascript" charset="utf-8"></script>
-        #{get 'moreScripts' /}
-    </head>
-    <body>
-        #{doLayout /}
-    </body>
+	#{doLayout /}
+        
+	
+	<div id="footerarea">
+		<div id="footer">
+			<div id="footerleft">
+				<div id="footericons">Find us on Facebook and Twitter 
+					<a href="http://www.facebook.com/pages/TalkAboutHealth/123999230963635?ref=sgm" >
+						<img src="public/images/facebookfooter.gif" width="17" height="17" border="0" />
+					</a>
+					<a href="http://twitter.com/talkforhealth">
+						<img src="public/images/twitterfooter.gif" width="17" height="17" border="0" />
+					</a>
+				</div>
+				|&nbsp;&nbsp;
+				<a href="http://blog.talkabouthealth.com" class="footerlink">Blog</a>&nbsp;&nbsp;|&nbsp;
+				<a href="faq.jsp" class="footerlink">Faq</a>&nbsp;&nbsp;|&nbsp;
+				<a href="mailto:feedback@Talkmi.com" class="footerlink">Contact Us</a>&nbsp;&nbsp;|&nbsp;
+				<a href="aboutus.jsp" class="footerlink">About Us</a>&nbsp;&nbsp;|&nbsp;
+				<a href="privacy.jsp" class="footerlink">Privacy Policy</a>&nbsp;&nbsp;|&nbsp;
+				<a href="tos.jsp" class="footerlink">Terms of Service</a>
+			</div>
+			<div id="footerright"><img src="public/images/footerlogo.gif" width="237" height="25" alt="" /></div>
+		</div>
+	</div>
+
+	<!-- begin Google Analytics -->
+	<script type="text/javascript">
+	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+	<script type="text/javascript">
+	try {
+	var pageTracker = _gat._getTracker("UA-13005583-1");
+	pageTracker._trackPageview();
+	} catch(err) {}</script>
+	<!-- end Google Analytics -->
+
+</body>
 </html>
