@@ -1,5 +1,6 @@
 package models;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -9,7 +10,7 @@ import org.bson.types.ObjectId;
 
 import com.mongodb.DBObject;
 
-public class TalkerBean {
+public class TalkerBean implements Serializable {
 	
 	public enum ProfilePreference {
 		PERSONAL_INFO(1, "Display my Personal Info in my profile"),
@@ -65,6 +66,16 @@ public class TalkerBean {
 	private String accountType;
 	private String accountId;
 	
+	private int numberOfTopics;
+	
+	public int getNumberOfTopics() {
+		return numberOfTopics;
+	}
+
+	public void setNumberOfTopics(int numberOfTopics) {
+		this.numberOfTopics = numberOfTopics;
+	}
+
 	private EnumSet<ProfilePreference> profilePreferences;
 	
 	public TalkerBean(){}
@@ -292,11 +303,14 @@ public class TalkerBean {
 	}
 
 	public String getImagePath() {
+		//TODO: rollback this
+		String n = "/public/";
+		
 		if (imagePath == null) {
 			//return default
-			return "images/img1.gif";
+			return n+"images/img1.gif";
 		}
-		return imagePath;
+		return n+imagePath;
 	}
 
 	public void setImagePath(String imagePath) {

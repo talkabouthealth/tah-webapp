@@ -18,6 +18,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import dao.TalkerDAO;
+
+import play.cache.Cache;
+import play.mvc.Scope.Session;
+
+import models.TalkerBean;
+
 public class CommonUtil {
 	
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
@@ -100,4 +107,15 @@ public class CommonUtil {
 		
 		return null;
 	}
+	
+	public static TalkerBean loadCachedTalker(Session session) {
+		TalkerBean talker = Cache.get(session.getId() + "-talker", TalkerBean.class);
+	    if (talker == null) {
+	        // Cache miss
+	    	talker = TalkerDAO.getByUserName(session.get("username"));
+	        Cache.set(session.getId() + "-talker", talker, "30mn");
+	    }
+	    return talker;
+	}
+
 }
