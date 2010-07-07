@@ -15,7 +15,7 @@
 		function checkForm()
 		{
 			//Check topic name field
-			var newTopicField = document.postnewtopic.newtopic;
+			var newTopicField = document.postnewtopic.newTopic;
 			if((newTopicField.value == "") 
 					|| (newTopicField.value == "Please enter your Conversation here ...")) {
 				alert("Please enter topic name.");
@@ -40,8 +40,8 @@
 		
 		function createTopic() {
 			if (checkForm()) {
-				postNewTopic(document.getElementById('newtopic'));
-				document.getElementById('newtopic').value = "Please enter your Conversation here ...";
+				postNewTopic(document.getElementById('newTopic'));
+				document.getElementById('newTopic').value = "Please enter your Conversation here ...";
 				return false;
 			}
 		}
@@ -74,7 +74,7 @@
 			<div id="curvetop"></div>
 			<div id="lefttextareainner">
 				<form id="postform" name="postnewtopic" action="javascript:postNewTopic(document.getElementById('newtopic'));" method="post" > 
-					<textarea cols="" rows="" class="textarea" id="newtopic" name="newtopic" maxlength="40" 
+					<textarea cols="" rows="" class="textarea" id="newTopic" name="newTopic" maxlength="40" 
 						onKeyPress="submitenter(this,event)" TABINDEX=1
 						onclick="if (this.value == 'Please enter your Conversation here ...') this.value=''" >${newtopic}</textarea>
 				</form>

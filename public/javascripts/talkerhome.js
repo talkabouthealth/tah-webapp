@@ -135,7 +135,7 @@ function postNewTopic(form) {
 	//alert(topic);
 	var params = form.name + "=" + topic;
 	form.value = '';
-	httpRequest.open("POST", "/tah-java/NewTopic", true);
+	httpRequest.open("POST", "/topics/create", true);
 	httpRequest.setRequestHeader("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
 	httpRequest.setRequestHeader("Content-length", params.length);
 	httpRequest.setRequestHeader("Connection", "close");
@@ -196,7 +196,7 @@ function postNewTopicResponse() {
 				areaMid.appendChild(joinArea);
 				joinArea.innerHTML = 
 					'<a href="javascript:open_chat('+update[0]+')">'+
-					'<img border="0" src="images/join_conv.gif" width="178" height="27" />'+ 
+					'<img border="0" src="/public/images/join_conv.gif" width="178" height="27" />'+ 
 				    '</a>';    
 				
 				//add topic as first topic in list
