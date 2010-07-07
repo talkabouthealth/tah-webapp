@@ -3,6 +3,8 @@ package controllers;
 import play.mvc.Controller;
 
 public class Static extends Controller {
+	
+	//TODO: Load templates by name?
 
     public static void aboutus() {
         render();

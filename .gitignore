@@ -1,6 +1,7 @@
 tmp/*
 logs/*
 eclipse/*
+secure/*
 .*
 *.class
 *~

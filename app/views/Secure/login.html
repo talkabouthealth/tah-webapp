@@ -1,0 +1,92 @@
+#{extends 'main.html' /}
+
+	<style>
+		body {
+			background:url(/public/images/inner_bg.gif) repeat-x top;
+		}
+	</style>
+
+	<!-- scripts -->
+	<script type="text/javascript">
+		function openTwitter() {
+			var popupWindow = window.open("oauth?action=getauth&type=twitter", 
+				"TwitterLogin", "width=800,height=400,toolbar=no,location=no,menubar=no");
+		}
+		function openFacebook() {
+			var popupWindow = window.open("oauth?action=getauth&type=facebook", 
+				"FacebookLogin", "width=1000,height=450,toolbar=no,location=no,menubar=no");
+		}
+	
+		function checkForm() {
+			document.forms[0].submit();
+		}
+	</script>
+</head>
+
+<body>
+	<div id="top_container">
+		<div id="top">
+			#{logo /}
+		</div>
+		<div id="innerbanner"></div>
+		<div id="innermain">
+			<div class="blacktext2" id="innerheading">Login to your Account</div>
+			<div id="innermiddlearea">
+				<div id="loginarea">
+				#{form @authenticate()} 
+					#{if flash.error}
+						<p class="error">
+							&{flash.error}
+						</p>
+					#{/if}
+					<h1>Username or Email</h1>
+					<div class="fieldarea">
+						<div class="fieldarealeft"></div>
+						<div class="fieldareamid">
+							<input type="text" name="username" id="username" 
+								class="textfields" value="${flash.username}" tabindex="1" />
+						</div>
+						<div class="fieldarearight"></div>
+					</div>
+					<h1>Password</h1>
+					<div class="fieldarea">
+						<div class="fieldarealeft"></div>
+						<div class="fieldareamid">
+							<input name="password"  type="password" class="textfields" id="password" 
+								onclick="this.value=''" value="123456" tabindex="2" /></div>
+						<div class="fieldarearight"></div>
+						<div class="checkboxarea">
+							<input type="checkbox" name="remember" id="remember" 
+								class="checkboxclass" value="true" ${flash.remember ? 'checked="true"' : ''} />Remember me
+						</div>
+						<div class="forgotpassword"><a href="ForgotPassword.jsp" class="bluetext12">Forgot password?</a></div>
+					</div>
+					<div class="signupbutton">
+						<a tabindex="3" onclick="checkForm()" href="#">
+							<img src="/public/images/signinbutton.gif" border="0" width="126" height="46" />
+						</a>
+					</div>
+					<div class="newusersignup">
+						<a href="SignUp.jsp" class="bluetext12"></a>Not a User ? <br>
+					  	<a href="SignUp.jsp" class="pinktext14">Create your account</a>
+					</div>
+				#{/form}
+				</div>
+				
+				<div id="rightarea">
+					Or Sign in with one-click
+					<div class="socialicons">
+						<ul class="socialicons1">
+							<li><a href="#" onclick="openFacebook()">
+									<img src="/public/images/signinfacebook.gif" width="150" height="22" border="0" />
+							</a></li>
+							<li><a href="#" onclick="openTwitter()">
+									<img src="/public/images/signintwitter.gif" width="150" height="22" border="0" />
+							</a></li>
+							<!-- <li><a href="#"><img src="images/signingoogle.gif" width="150" height="22" border="0" /></a></li> -->
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
