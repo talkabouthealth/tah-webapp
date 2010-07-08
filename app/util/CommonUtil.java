@@ -99,15 +99,6 @@ public class CommonUtil {
 		}
 	}
 	
-	public static Date parseDate(String dateString) {
-		try {
-			Date date = DATE_FORMAT.parse(dateString);
-			return date;
-		} catch (ParseException e) {}
-		
-		return null;
-	}
-	
 	public static TalkerBean loadCachedTalker(Session session) {
 		TalkerBean talker = Cache.get(session.getId() + "-talker", TalkerBean.class);
 	    if (talker == null) {
@@ -116,6 +107,22 @@ public class CommonUtil {
 	        Cache.set(session.getId() + "-talker", talker, "30mn");
 	    }
 	    return talker;
+	}
+	
+	public static Date parseDate(String dateString) {
+		try {
+			Date date = DATE_FORMAT.parse(dateString);
+			return date;
+		} catch (ParseException e) {}
+		
+		return null;
+	}
+
+	public static Date parseDate(int month, int day, int year) {
+		if (month == 0 || day == 0 || year == 0) {
+			return null;
+		}
+		return parseDate(month+"/"+day+"/"+year);
 	}
 
 }

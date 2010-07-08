@@ -1,3 +1,16 @@
 # You can specialize this file for each language.
 # For example, for French create a messages.fr file
 #
+validation.required=%s is required
+validation.match = %s contains illegal characters. Only letters, numbers, underscores, dashes, and periods are allowed.
+
+# We don't need message for whole object - only for separate fields
+validation.object=
+
+username.exists = Username is already taken. Please enter a different username.
+email.exists = Email is already registered. Please enter a different email.
+
+# Talker fields
+talker.userName = Username
+talker.password = Password
+talker.email = Email

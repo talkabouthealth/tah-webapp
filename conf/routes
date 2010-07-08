@@ -7,6 +7,8 @@
 
 # Home page
 GET     /                                       Application.index
+GET     /signup                                 Application.signup
+POST    /register	                            Application.register
 GET		/home									Home.index
 
 # Map static resources from the /app/public folder to the /public path

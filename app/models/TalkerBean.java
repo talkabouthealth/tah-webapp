@@ -8,6 +8,11 @@ import java.util.EnumSet;
 
 import org.bson.types.ObjectId;
 
+import play.data.validation.Email;
+import play.data.validation.Match;
+import play.data.validation.Required;
+import util.ValidateData;
+
 import com.mongodb.DBObject;
 
 public class TalkerBean implements Serializable {
@@ -42,13 +47,25 @@ public class TalkerBean implements Serializable {
 	}
 	
 	private String id;
+	@Required
+	@Match(ValidateData.USER_REGEX)
 	private String userName;
+	@Required
+	@Match(ValidateData.USER_REGEX)
 	private String password;
-	private String IM;
-	private String imUsername;
+	@Required
+	@Email
 	private String email;
-	private String gender;
+	
+	private String im;
+	private String imUsername;
+	
 	private Date dob;
+	private int dobMonth;
+	private int dobDay;
+	private int dobYear;
+	
+	private String gender;
 	private int invitations;
 	private String MariStat;
 	private String Category;
@@ -68,14 +85,6 @@ public class TalkerBean implements Serializable {
 	
 	private int numberOfTopics;
 	
-	public int getNumberOfTopics() {
-		return numberOfTopics;
-	}
-
-	public void setNumberOfTopics(int numberOfTopics) {
-		this.numberOfTopics = numberOfTopics;
-	}
-
 	private EnumSet<ProfilePreference> profilePreferences;
 	
 	public TalkerBean(){}
@@ -86,9 +95,6 @@ public class TalkerBean implements Serializable {
 	public String getPassword() {
 		return password;
 	}
-	public String getIM(){
-		return IM;
-	}
 	public void setUserName(String value) {
 		userName = value;
 	}
@@ -96,29 +102,11 @@ public class TalkerBean implements Serializable {
 		password = value;
 	}
 	
-	public void setIM(String value){
-		IM = value;
-	}
 	public void parseLoginRequest(String un, String pw){
 		setUserName(un);
 		setPassword(pw);
 	}
 	
-	public String getDOBYear() {
-		Calendar cal=Calendar.getInstance();
-        cal.setTime(dob);
-		return String.valueOf(cal.get(Calendar.YEAR));
-	}
-	public String getDOBMonth() {
-		Calendar cal=Calendar.getInstance();
-        cal.setTime(dob);
-		return String.valueOf(cal.get(Calendar.MONTH));
-	}
-	public String getDOBDay() {
-		Calendar cal=Calendar.getInstance();	
-        cal.setTime(dob);
-		return String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
-	}
 	public void setEmail(String email) {
 		this.email = email;
 	}
@@ -151,13 +139,13 @@ public class TalkerBean implements Serializable {
 		this.invitations = invitations;
 	}
 
-	public EnumSet<ProfilePreference> getProfilePreferences() {
-		return profilePreferences;
-	}
-
-	public void setProfilePreferences(EnumSet<ProfilePreference> profilePreferences) {
-		this.profilePreferences = profilePreferences;
-	}
+//	public EnumSet<ProfilePreference> getProfilePreferences() {
+//		return profilePreferences;
+//	}
+//
+//	public void setProfilePreferences(EnumSet<ProfilePreference> profilePreferences) {
+//		this.profilePreferences = profilePreferences;
+//	}
 	
 	public void parseFromDB(DBObject talkerDBObject) {
 		ObjectId objectId = (ObjectId)talkerDBObject.get("_id");
@@ -166,7 +154,7 @@ public class TalkerBean implements Serializable {
 		setUserName((String)talkerDBObject.get("uname"));
 		setPassword((String)talkerDBObject.get("pass"));
 		setEmail((String)talkerDBObject.get("email"));
-		setIM((String)talkerDBObject.get("im"));
+		setIm((String)talkerDBObject.get("im"));
 		setImUsername((String)talkerDBObject.get("im_uname"));
 		setGender((String)talkerDBObject.get("gender"));
 		setDob((Date)talkerDBObject.get("dob"));
@@ -356,4 +344,45 @@ public class TalkerBean implements Serializable {
 	public void setAccountId(String accountId) {
 		this.accountId = accountId;
 	}
+	
+	public String getIm() {
+		return im;
+	}
+
+	public void setIm(String im) {
+		this.im = im;
+	}
+	
+	public int getNumberOfTopics() {
+		return numberOfTopics;
+	}
+
+	public void setNumberOfTopics(int numberOfTopics) {
+		this.numberOfTopics = numberOfTopics;
+	}
+
+	public int getDobMonth() {
+		return dobMonth;
+	}
+
+	public void setDobMonth(int dobMonth) {
+		this.dobMonth = dobMonth;
+	}
+
+	public int getDobDay() {
+		return dobDay;
+	}
+
+	public void setDobDay(int dobDate) {
+		this.dobDay = dobDate;
+	}
+
+	public int getDobYear() {
+		return dobYear;
+	}
+
+	public void setDobYear(int dobYear) {
+		this.dobYear = dobYear;
+	}
+	
 }	

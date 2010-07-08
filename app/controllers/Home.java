@@ -15,7 +15,7 @@ import dao.TopicDAO;
 @With(Secure.class)
 public class Home extends Controller {
 
-    public static void index(String newtopic) {
+    public static void index(String newTopic) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	talker.setNumberOfTopics(TopicDAO.getNumberOfTopics(talker.getId()));
 		
@@ -26,8 +26,8 @@ public class Home extends Controller {
 		}
 		Cache.set(session.getId()+"-mapTalkmiTopics", mapTalkmiTopics);
 		
-		if (newtopic == null) {
-			newtopic = "Please enter your Conversation here ...";
+		if (newTopic == null || newTopic.trim().length() == 0) {
+			newTopic = "Please enter your Conversation here ...";
 		}
 		
 		//For loading previous/next topics. Do we need to use this?
@@ -41,7 +41,7 @@ public class Home extends Controller {
 //			//System.out.println("Earliest date: " + SQL_DATE_FORMAT.format(tbTalkmiTopic.getDisplayTime()));
 //		}
 		
-        render(talker, mapTalkmiTopics, newtopic);
+        render(talker, mapTalkmiTopics, newTopic);
     }
 
 }

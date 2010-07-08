@@ -1,0 +1,380 @@
+#{extends 'main.html' /}
+
+	<style>
+		body {
+			background:url(/public/images/inner_bg.gif) repeat-x top;
+		}	
+	</style>
+	
+	<script type="text/javascript" charset="utf-8">
+		function openTwitter() {
+			var popupWindow = window.open("oauth?action=getauth&type=twitter", 
+				"TwitterLogin", "width=800,height=400,toolbar=no,location=no,menubar=no");
+		}
+		function openFacebook() {
+			var popupWindow = window.open("oauth?action=getauth&type=facebook", 
+				"FacebookLogin", "width=1000,height=450,toolbar=no,location=no,menubar=no");
+		}
+		
+		/* 
+			TODO: move this to separate .js ? Merge with "validation.js"?
+		*/
+		function validateFormOnSubmit(signup) {
+			var reason = "";
+		
+		  //reason += validateUsername(signup.username);
+		  //reason += validatePassword(signup.password);
+		  //reason += validateEmail(signup.email);
+		  //reason += validateMonth(signup.month);  
+		  //reason += validateDay(signup.day);  
+		  //reason += validateYear(signup.year);  
+		 // reason += validateGender(signup.gender);  
+		//  reason += validateAge(signup.age);  
+			
+		  if (reason != "") {
+		    alert("Some fields need correction:\n" + reason);
+		    return false;
+		  }
+		
+		  // alert("All fields are filled correctly");
+		  document.getElementById("signup").submit();
+		}
+		function validateEmpty(fld) {
+		    var error = "";
+		 
+		    if (fld.value.length == 0) {
+		        fld.style.background = 'orange'; 
+		        error = "The required field has not been filled in.\n"
+		    } else {
+		        fld.style.background = 'White';
+		    }
+		    return error;  
+		}
+		function validateUsername(fld) {
+		    var error = "";
+		
+		    var varUN = new RegExp("^[\\w-_\\.]{1,25}$");
+		    if (fld.value == "") {
+		        fld.style.background = 'orange'; 
+		        error = "You didn't enter a username.\n";
+		    } else if ((fld.value.length < 3) || (fld.value.length > 25)) {
+		        fld.style.background = 'orange'; 
+		        error = "Username must be between 3 and 25 Characters.\n";
+		    } else if (fld.value.search(varUN) == -1) {
+		        fld.style.background = 'orange'; 
+		        error = "The username contains illegal characters. Only letters, numbers, underscores, dashes, and periods are allowed.\n";
+		    } else {
+		        fld.style.background = 'White';
+		    }
+		    /*varUN = new RegExp("^[\\w-_\\.]{1,25}$");
+		    if(fld.value.search(varUN) == -1){
+		    	fld.style.background = 'orange'; 
+		        error = "The username contains illegal characters. Only letters, numbers, underscore, dash, and period are allowed.\n";
+		    } else if (illegalChars.test(fld.value)) {
+		        fld.style.background = 'orange'; 
+		        error = "The username contains illegal characters. Only letters, numbers, underscore, dash, and period are allowed.\n";
+		    } var illegalChars = /\W/; // allow letters, numbers, and underscores
+		    */
+		    return error;
+		}
+		
+		function validatePassword(fld) {
+		    var error = "";
+		    var varPW = new RegExp("^[\\w-_\\.?!@#$%^&*()+=]{1,25}$");
+		    if (fld.value == "") {
+		        fld.style.background = 'orange';
+		        error = "You didn't enter a password.\n";
+		    } else if ((fld.value.length < 4) || (fld.value.length > 25)) {
+		        error = "Password must be between 3 and 25 Characters. \n";
+		        fld.style.background = 'orange';
+		    } else if (fld.value.search(varPW) == -1) {
+		        fld.style.background = 'orange'; 
+		        error = "The username contains illegal characters. Only letters, numbers, and the following characters are allowed: !@#$%^&*()_-+=?\.n";
+		    } /*else if (illegalChars.test(fld.value)) {
+		        error = "The password contains illegal characters. Only numbers, letters, underscore, dash, and period allowed.  \n";
+		        fld.style.background = 'orange';
+		    } /*else if (!((fld.value.search(/(a-z)+/)) && (fld.value.search(/(0-9)+/)))) {
+		        error = "The password must contain at least one numeral.\n";
+		        fld.style.background = 'orange';
+		    } var illegalChars = /[\W_]/; // allow only letters and numbers 
+			  */else {
+		        fld.style.background = 'White';
+		    }
+		   return error;
+		}  
+		function trim(s)
+		{
+		  return s.replace(/^\s+|\s+$/, '');
+		}
+		function validateEmail(fld) {
+		    var error="";
+		    var tfld = trim(fld.value);                        // value of field with whitespace trimmed off
+		    var emailFilter = /^[^@]+@[^@.]+\.[^@]*\w\w$/ ;
+		    var illegalChars= /[\(\)\<\>\,\;\:\\\"\[\]]/ ;
+		   
+		    if (fld.value == "") {
+		        fld.style.background = 'orange';
+		        error = "You didn't enter an email address.\n";
+		    } else if (!emailFilter.test(tfld)) {              //test email for illegal characters
+		        fld.style.background = 'orange';
+		        error = "Please enter a valid email address.\n";
+		    } else if (fld.value.match(illegalChars)) {
+		        fld.style.background = 'orange';
+		        error = "The email address contains illegal characters.\n";
+		    } else {
+		        fld.style.background = 'White';
+		    }
+		    return error;
+		}
+		
+		
+		function validateMonth(fld) {
+		    var error = "";
+		 
+		    if (fld.value == 0) {
+		        fld.style.background = 'orange'; 
+		        error = "Please select your birth month.\n";
+		    } else {
+		        fld.style.background = 'White';
+		    }
+		    return error;
+		}
+		
+		function validateDay(fld) {
+		    var error = "";
+		 
+		    if (fld.value == 0) {
+		        fld.style.background = 'orange'; 
+		        error = "Please select your birth date.\n";
+		    } else {
+		        fld.style.background = 'White';
+		    }
+		    return error;
+		}
+		
+		
+		function validateYear(fld) {
+		    var error = "";
+		 
+		    if (fld.value == 0) {
+		        fld.style.background = 'orange'; 
+		        error = "Please select your birth year.\n";
+		    } else {
+		        fld.style.background = 'White';
+		    }
+		    return error;
+		}		
+		function validateGender(btn) {
+		    var error = "";
+		    var cnt = -1;
+		
+		    for (var i=btn.length-1; i > -1; i--){
+		     if (btn[i].checked) {cnt = i; i = -1;}
+		 	 } if (cnt > -1) {error = "";
+		 	 } else {error = "Please choose a your gender.\n";
+		 	 }
+		 	 return error;
+		}
+		               
+		function validateAge(fld)  {
+			var error = "";
+			
+			if (!document.getElementById("age").checked){
+		        fld.style.background = 'orange'; 
+		        error = "You must agree to the Terms of Service and Age requirements";
+			} else {
+		        fld.style.background = 'White';
+			}
+			return error;
+		}	
+	</script>
+</head>
+
+<body>
+	<div id="top_container">
+		<div id="top">
+			#{ logo /}
+		</div>
+		<div id="innerbanner"></div>
+		<div id="bottom_container">
+			<div class="blacktext2" id="innerheading">Sign Up Now</div>
+			<div id="innermiddlearea">
+				<div id="signupleft">
+				#{form @Application.register() , id:'signup' }
+					#{if flash.from }
+					    <h6 class="blacktext14">
+					    	Welcome! You've gotten started by connecting your <i>${flash.from}</i> account.
+					    	<br/>Your TalkAboutHealth account needs just a few more details. 
+					    	Please take a moment to provide them below
+					    </h6>
+					#{/if}
+					#{else}
+					    <h6 class="blacktext14" style="text-align:left;">Save time entering your information</h6>
+						<div class="socialicons2">
+							<ul>
+								<li><a href="#" onclick="openFacebook()">
+										<img src="/public/images/joinusingfacebook.gif" width="150" height="22" border="0" />
+								</a></li>
+								<li><a href="#" onclick="openTwitter()">
+										<img src="/public/images/joinusingtwitter.gif" width="150" height="22" border="0" />
+								</a></li>
+								<!-- <li><img src="/public/images/JoinwithGoogle.gif" width="150" height="22" />&nbsp;&nbsp;</li> -->
+							</ul>
+						</div>
+					#{/else}	
+
+					<h5 class="error">
+						#{ifErrors}
+						   <p>Validation failed! Please correct the following errors:</p>
+						   <br/>
+						   #{errors}
+						       <p>${error}</p>
+						   #{/errors}
+						#{/ifErrors}
+						#{if flash.contains("error") }
+							<p>${flash.error}</p>
+						#{/if}
+					</h5>
+					<div id="signupleftarea">
+						<input type="hidden" id="newTopic" name="newTopic" value="${flash.newTopic}" />
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">Username</span></div>
+							<div class="personaltextfield">
+								<input name="talker.userName" type="text" class="personalfields" id="talker.userName" 
+									value="${flash['talker.userName']}" />
+							</div>
+							<div class="signtag">
+								<span class="textgreylight12">How other users will recognize you.
+									You might not want to associate your real name.</span>
+							</div>
+						</div>
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">Password</span></div>
+							<div class="personaltextfield">
+							  	<input name="talker.password" type="password" class="personalfields" id="talker.password" 
+									value="" />
+							</div>
+						</div>
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">Email</span></div>
+							<div class="personaltextfield">
+							  	<input name="talker.email" type="text" class="personalfields" id="talker.email" 
+									value="${flash['talker.email']}" />
+							</div>
+						</div>
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">Select an IM Service</span></div>
+							<div class="personaltextfield" >
+								<select id="talker.im" name="talker.im" class="personalfields">
+							  		<option selected value='0'>Select an IM service</option>
+									<option value="YahooIM">YahooIM</option>
+									<option value="WindowLive">WindowLive</option>
+									<option value="AOL">AOL</option>
+									<option value="GoogleTalk">GoogleTalk</option>
+									<option value="SkypeIM">SkypeIM</option>
+								</select>
+							</div>
+						</div>
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">IM Username</span></div>
+							<div class="personaltextfield" >
+								<input name="talker.imUsername" id="talker.imUsername"  type="text" class="personalfields" 
+								  	value="${flash['talker.imUsername']}" />
+							</div>
+							<div class="signtag">
+								<span class="textgreylight12">TalkAboutHealth notifies you of conversations via IM.</span>
+							</div>
+						</div>
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">Date of Birth${flash['talker.dobMonth']}</span></div>
+							<div class="personaltextfield">
+								<select size="1"  name="talker.dobMonth" id="talker.dobMonth" class="textarea2">
+#{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
+    <option value="${i_index-1}" 
+    #{if flash['talker.dobMonth'].equals((i_index-1).toString()) } selected #{/if} 
+    >${i}</option>
+#{/list}
+								</select>
+								<select size="1" name="talker.dobDay" class="textarea2" id="talker.dobDay">
+							  		<option selected value='0'>Day</option>
+							  		#{list items:1..31, as:'i'}
+									    <option value="${i}"
+									    #{if flash['talker.dobDay'].equals(i.toString()) } selected #{/if} 
+									    >${i}</option>
+									#{/list}
+								</select>
+								<select size="1"  name="talker.dobYear" class="textarea2" id="talker.dobYear">
+							  		<option selected value='0'>Year</option>
+							  		#{list items:1991..1900, as:'i'}
+									    <option value="${i}"
+									    #{if flash['talker.dobYear'].equals(i.toString()) } selected #{/if} 
+									    >${i}</option>
+									#{/list}
+								</select>
+							</div>
+							<div class="signtag">
+								<span class="textgreylight12">You must be over 18 years old to use this service.</span>
+							</div>
+						</div>
+						<!-- 
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">Your Community</span></div>
+							<div class="personaltextfield">
+								<select class="personalfields" >
+							  		<option value="Your Community" selected="selected">Your Community</option>
+								</select>
+							</div>
+						</div>
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">Patient/Caregiver/Family Member</span></div>
+							<div class="personaltextfield">
+								<select class="personalfields" >
+							  		<option value="Patient/Caregiver/Family Member" 
+							  			selected="selected">Patient/Caregiver/Family Member</option>
+								</select>
+							</div>
+						</div>
+						-->
+						<div class="signupmain"></div>
+					</div>								
+					<div class="signdown">
+						<h4>By signing up you agree to the <a href="@{Static.tos()}" class="pinktext14">Terms Of Service</a> 
+							and <a href="@{Static.privacy()}" class="pinktext14">Privacy Policy</a><br />
+	   						<strong>Note:</strong> Your information will remain safe and private.
+						</h4>
+						<div id="checkboxarea2">
+							<input id="talker.newsletter" name="talker.newsletter" 
+								type="checkbox" #{if flash['talker.newsletter']} checked #{/if} /> 
+							Sign me up for the TalkAboutHealth newsletter
+						</div>
+						<div class="signupbutton">
+							<a href="#" onclick="validateFormOnSubmit(document.signup);">
+								<img src="/public/images/signupbutton.gif" border="0" width="126" height="46" />
+							</a>
+						</div>
+						<div id="alreadyuser">
+							<span class="blacktext14">Already have an account?&nbsp;</span> 
+							<a href="@{Secure.login()}" class="pinktext16">Sign in</a>
+						</div>
+					</div>
+				#{/form}
+				</div>
+				
+				<div id="signupright">
+					<div class="signrightbox">
+						<div class="signrightop"></div>
+						<div class="signrighmid">
+							<span class="bluetext14">Get the health information you need in 
+							real-time, 24X7.<br /><br />
+							Advice and support from experienced 
+							peers<br /><br />
+							Meet and develop friendships with 
+							others just like you.<br /><br />Share you story with others who 
+							understand.</span>
+						</div>
+						<div class="signrighbot"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
