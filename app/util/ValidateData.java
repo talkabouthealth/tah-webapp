@@ -2,7 +2,6 @@ package util;
 
 import java.util.regex.Pattern;
 
-//TODO built more rich validation scheme?
 public class ValidateData {
 	public static final Pattern unpwPattern = Pattern
 			.compile("([\\w-_\\.]){1,25}");

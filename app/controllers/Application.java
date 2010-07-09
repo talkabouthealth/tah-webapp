@@ -112,7 +112,6 @@ public class Application extends Controller {
 			talker.setDob(dateOfBirth);
 		}
 		else {
-			//TODO: think about better implementation?
 			validation.required(dateOfBirth).message("Date of Birth is incorrect");
 		}
 		
