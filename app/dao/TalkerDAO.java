@@ -48,7 +48,7 @@ public class TalkerDAO {
 			.add("email", talker.getEmail())
 			.add("dob", talker.getDob())
 			.add("gender", talker.getGender())
-			.add("mar_status", talker.getMariStat())
+			.add("mar_status", talker.getMaritalStatus())
 			.add("city", talker.getCity())
 			.add("state", talker.getState())
 			.add("country", talker.getCountry())

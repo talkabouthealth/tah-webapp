@@ -1,0 +1,390 @@
+#{extends 'main.html' /}
+
+<style>
+	body {
+		background:url(/public/images/inner_bg.gif) repeat-x top;
+	}
+</style>
+<script type="text/javascript" charset="utf-8">
+	function validatePasswordForm() {
+		var reason = "";
+		
+		reason += validatePassword(document.changePasswordForm.newpassword);
+		if (reason != "") {
+		    alert(reason);
+		    return false;
+		}
+		
+		document.changePasswordForm.submit();
+	}
+	
+	function validateProfileForm() {
+	  var reason = "";
+	  var updateprofileForm = document.getElementById("updateprofile");
+		
+	  reason += validateUsername(document.getElementById("talker.userName"));
+	  reason += validateEmail(document.getElementById("talker.email"));
+	  reason += validateEmpty(document.getElementById("talker.dob"));
+	    
+	  if (reason != "") {
+	    alert("Some fields need correction:\n" + reason);
+	    return false;
+	  }
+		
+	  updateprofileForm.submit();
+	}
+	function validateEmpty(fld) {
+	    var error = "";
+	 
+	    if (fld.value.length == 0) {
+	        fld.style.background = 'Yellow'; 
+	        error = "The required field has not been filled in.\n"
+	    } else {
+	        fld.style.background = 'White';
+	    }
+	    return error;  
+	}
+	function validateUsername(fld) {
+	    var error = "";
+	    var illegalChars = /\W/; // allow letters, numbers, and underscores
+	 
+	    if (fld.value == "") {
+	        fld.style.background = 'Yellow'; 
+	        error = "You didn't enter a username.\n";
+	    } else if ((fld.value.length < 1) || (fld.value.length > 15)) {
+	        fld.style.background = 'Yellow'; 
+	        error = "The username is the wrong length.\n";
+	    } else if (illegalChars.test(fld.value)) {
+	        fld.style.background = 'Yellow'; 
+	        error = "The username contains illegal characters.\n";
+	    } else {
+	        fld.style.background = 'White';
+	    }
+	    return error;
+	}
+	function validatePassword(fld) {
+	    var error = "";
+	    var illegalChars = /[\W_]/; // allow only letters and numbers 
+	 
+	    if (fld.value == "") {
+	        fld.style.background = 'Yellow';
+	        error = "You didn't enter a password.\n";
+	    } else if ((fld.value.length < 1) || (fld.value.length > 15)) {
+	        error = "The password is the wrong length. \n";
+	        fld.style.background = 'Yellow';
+	    } else if (illegalChars.test(fld.value)) {
+	        error = "The password contains illegal characters.\n";
+	        fld.style.background = 'Yellow';
+	    } else if (!((fld.value.search(/(a-z)+/)) && (fld.value.search(/(0-9)+/)))) {
+	        error = "The password must contain at least one numeral.\n";
+	        fld.style.background = 'Yellow';
+	    } else {
+	        fld.style.background = 'White';
+	    }
+	   return error;
+	}  
+	function trim(s)
+	{
+	  return s.replace(/^\s+|\s+$/, '');
+	}
+	function validateEmail(fld){
+	    var error="";
+	    var tfld = trim(fld.value);                        // value of field with whitespace trimmed off
+	    var emailFilter = /^[^@]+@[^@.]+\.[^@]*\w\w$/ ;
+	    var illegalChars= /[\(\)\<\>\,\;\:\\\"\[\]]/ ;
+	   
+	    if (fld.value == "") {
+	        fld.style.background = 'Yellow';
+	        error = "You didn't enter an email address.\n";
+	    } else if (!emailFilter.test(tfld)) {              //test email for illegal characters
+	        fld.style.background = 'Yellow';
+	        error = "Please enter a valid email address.\n";
+	    } else if (fld.value.match(illegalChars)) {
+	        fld.style.background = 'Yellow';
+	        error = "The email address contains illegal characters.\n";
+	    } else {
+	        fld.style.background = 'White';
+	    }
+	    return error;
+	}
+</script>
+</head>
+<body>
+<div id="top_container">
+	<div id="top">
+		#{ logo /}
+		<div id="topnav">
+			#{include 'menu.html' /}
+		</div>
+	</div>
+	<div id="innerbanner"></div>
+	<div id="innermain">
+		<div class="blacktext2" id="innerheading">Personal Info and Password</div>
+		<div id="innerpersonalarea">
+			<div id="signupleft">
+			#{form @Profile.save() , id:'updateprofile' }
+				<!-- We need this field to pass validation -->
+				<input type="hidden" id="talker.password" name="talker.password" value="pass" />
+				<div id="personalleft">
+					<div class="personalmain" style="text-align: center">
+						#{if flash.success}
+						    <span class="success">${flash.success}</span>
+						#{/if}
+						#{ifErrors}
+						   #{errors}
+						       <span class="error">${error}</span><br/>
+						   #{/errors}
+						#{/ifErrors}
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Username</span></div>
+						<div class="personaltextfield">
+							<input name="talker.userName" type="text" class="personalfields" id="talker.userName" 
+									value="${talker.userName}" />
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Email</span></div>
+						<div class="personaltextfield">
+						  	<input name="talker.email" type="text" class="personalfields" id="talker.email" 
+									value="${talker.email}" />
+						</div>
+					</div>
+					<!-- 
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">First Name</span></div>
+						<div class="personaltextfield">
+						  	<input name="textfield2" type="text" class="personalfields" id="textfield2" onclick="this.value=''"  value="Murray" />
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Last Name</span></div>
+						<div class="personaltextfield">
+							<input name="textfield3" type="text" class="personalfields" id="textfield3" onclick="this.value=''"  value="Jones" />
+						</div>
+					</div>
+					-->
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Birth Date</span></div>
+						<div class="personaltextfield">
+							<input name="talker.dob" type="text" class="personalfields" id="talker.dob" 
+									value="${talker.dob?.format('MM/dd/yyyy')}" />
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Gender</span></div>
+						<div class="personaltextfield">
+							<select class="personalfields" id="talker.gender" name="talker.gender">
+								#{list items:['Male', 'Female'], as:'gender'}
+							  		<option value="${gender.charAt(0)}" 
+								    #{if talker.gender.charAt(0) == gender.charAt(0) } selected #{/if} 
+								    >${gender}</option>
+								#{/list}
+							</select>
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">City</span></div>
+						<div class="personaltextfield">
+							<input name="talker.city" type="text" class="personalfields" id="talker.city" 
+									value="${talker.city}" />
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">State</span></div>
+						<div class="personaltextfield">
+							<input name="talker.state" type="text" class="personalfields" id="talker.state" 
+									value="${talker.state}" />
+						</div>
+					</div>
+					<!-- 
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Zip Code</span></div>
+						<div class="personaltextfield">
+							<input name="textfield3" type="text" class="personalfields" id="textfield3" onclick="this.value=''"  value="10014" />
+						</div>
+					</div>
+					-->
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Country</span></div>
+						<div class="personaltextfield" style="border:0;">
+							<input name="talker.country" type="text" class="personalfields" id="talker.country" 
+									value="${talker.country}" />
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Martial Status</span></div>
+						<div class="personaltextfield">
+							<select id="talker.maritalStatus" name="talker.maritalStatus" class="personalfields">
+								#{list items:["Single", "Married/partnered relationship", "Divorced", "Separated", "Widowed"], as:'maritalStatus'}
+							  		<option value="${maritalStatus}" 
+								    #{if maritalStatus.equals(talker.maritalStatus) } selected #{/if} 
+								    >${maritalStatus}</option>
+								#{/list}
+							</select>
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">No. Of Children</span></div>
+						<div class="personaltextfield">
+							<input name="talker.childrenNum" type="text" class="personalfields" id="talker.childrenNum" 
+									value="${talker.childrenNum}" />
+						</div>
+					</div>
+					<!-- 
+					<div class="personalmain">
+					<div class="personaltextarea"><span class="blacktext14">Ages of Children</span></div>
+						<div class="personalcheck">
+							<div class="personalcheck1"><input name="" type="checkbox" value="" />&nbsp; <span class="blacktext14">new born</span></div>
+							<div class="personalcheck2"><input name="" type="checkbox" value="" />&nbsp; <span class="blacktext14">6-12 years old</span></div>
+							<div class="personalcheck1"><input name="" type="checkbox" value="" />&nbsp; <span class="blacktext14">1-2 years old</span></div>
+							<div class="personalcheck2"><input name="" type="checkbox" value="" />&nbsp; <span class="blacktext14">12-18 years old</span></div>
+							<div class="personalcheck1"><input name="" type="checkbox" value="" />&nbsp; <span class="blacktext14">1-2 years old</span></div>
+							<div class="personalcheck2"><input name="" type="checkbox" value="" />&nbsp; <span class="blacktext14">12-18 years old</span></div>
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Patient, Caregiver etc</span></div>
+						<div class="personaltextfield">
+							<select id="selection" name="selection" class="personalfields">
+						 		<option selected value='0'>Patient/Caregiver/other/etc. </option>
+						 		<option value="Patient">Patient</option>
+							 	<option value="Former Patient">Former Patient</option>
+							 	<option value="Caregiver">Caregiver</option>
+							 	<option value="Family member">Family member</option> 
+								<option value="Friend">Friend</option>
+								<option value="Physician">Physician</option>
+								<option value="Nurse">Nurse</option> 
+							</select>
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Web Page</span></div>
+						<div class="personaltextfield">
+							<input name="textfield2" type="text" class="personalfields" id="textfield2" 
+								onclick="this.value=''"  value="http://talkabouthealth.com" />
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea2"><span class="blacktext14">Conversation Topic<br />
+							  <span class="footerlink">Key words of what you 
+								like to talk about i.e. cooking, 
+								sports etc.</span></span>
+						</div>
+						<div class="textareabig">
+							<textarea name="textarea" id="textarea" cols="45" rows="5" class="textarea3"></textarea>
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Bio</span></div>
+						<div class="textareabig"><textarea name="textarea" id="textarea" cols="45" rows="5" class="textarea3"></textarea></div>
+					</div>
+					-->
+					<div class="personalmain">
+						<div class="personaltextarea"></div>
+						<div class="personaltextarea" >
+							<a href="#" onclick="validateProfileForm()">
+								<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" /></a>
+						</div>
+					</div>
+					<div class="personalmain"></div>
+				</div>
+				<div id="personalright">
+					<div id="personalrightimg">
+						<img src="${talker.imagePath}" />
+					</div>
+					<div class="bluetext12" id="personalrighttext">
+						<a href="@{Profile.image()}" class="bluetext12">Change Photo</a>
+					</div>
+				</div>
+			#{/form}
+			</div>
+			
+			<div id="signupright">
+				<div class="personalinfosignrightbox">
+					<div class="personalinfosignrighttop"></div>
+					<div class="signrighmid">
+						<span class="pinktext14"><strong>Picture</strong></span>
+						<span class="textgreylight12"><br />
+						A real picture does add a personal touch, 
+						but its not advised if you do not want others 
+						to recognize you.</span>
+						<span class="pinktext14"><strong><br /><br />Username visibility</strong></span>
+						<span class="textgreylight12"><br />
+						Your Username will be visibe to other 
+						members. If you want to remain anonymous, 
+						we recommend you make your user name 
+						different than your real name.</span>
+						<span class="pinktext14"><strong><br />
+						<br />Why provide more information?</strong></span>
+						<span class="textgreylight12"><br />
+						Filling in your profile information enables us 
+						to find others similar to you for conversations. 
+						The more information we have, the better we 
+						can match you..<br /><br />As well the more information everyone in the 
+						community shares, the more we help each 
+						other. We find others just like us develop 
+						friendships and know that we can get the 
+						support we need.</span></span><br />
+						<br />
+					</div>
+					<div class="signrighbot"></div>
+				</div>
+			</div>	
+		</div>
+	</div>
+</div>
+<div id="personalarea">
+	<div id="personalinner">
+		<div id="personalleft1">
+		<a name="passwordform"></a>
+		<form id="changePasswordForm" name="changePasswordForm" action="UpdateProfile?action=changepassword" method="post">
+			<%
+				if (result != null) {
+			%>
+			<div class="personalmain" style="text-align: center">
+				<%
+					if (result.equals("badpass")) {
+						out.println("<font id=\"error\">Current password is wrong</font>");
+					}
+					else if (result.equals("differentpass")) {
+						out.println("<font id=\"error\">New and Confirm passwords are different</font>");
+					}
+					else if (result.equals("okpassword")) {
+						out.println("<span class=\"blacktext14\">Password is changed!</span>");
+					}
+				%>
+			</div>
+			<%
+				}
+			%>
+			<div class="personalmain">
+				<div class="personaltextarea"><span class="blacktext14">Current Password</span></div>
+				<div class="personaltextfield">
+					<input name="curpassword" id="curpassword" type="password" class="personalfields" value="" />
+				</div>
+			</div>
+			<div class="personalmain">
+				<div class="personaltextarea"><span class="blacktext14">New Password</span></div>
+				<div class="personaltextfield">
+					<input name="newpassword" id="newpassword" type="password" class="personalfields" value="" />
+				</div>
+			</div>
+			<div class="personalmain">
+				<div class="personaltextarea"><span class="blacktext14">Confirm Password</span></div>
+				<div class="personaltextfield">
+					<input name="confirmpassword" id="confirmpassword" type="password" class="personalfields" value="" />
+				</div>
+			</div>
+			<div class="personalmain">
+				<div class="personaltextarea"></div>
+				<div class="personaltextarea" style="height:46px; padding-top:2px;">
+					<a href="#passwordform" onclick="validatePasswordForm()">
+						<img src="/public/images/changepass_btn.gif" width="186" height="46" border="0" />
+					</a>
+				</div>
+			</div>
+		</form>
+		</div>
+	</div>
+</div>

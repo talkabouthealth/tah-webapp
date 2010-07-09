@@ -432,6 +432,7 @@ h4 { float:left; width:221px; padding-bottom:7px;  font-weight: bold; font-size:
 .datefields {width:75px;}
 /* #signupleft h5 {margin: 0px; padding-top: 10px; font-size:14px; clear:both;} */
 .error {font-size: 14px; color: red}
+.success {font-size: 14px; color: green}
 #footerleft {font-size:11px;}
 
 #innermiddlearea #tipsbox {float: right; width: 200px; font-size: 14px;}

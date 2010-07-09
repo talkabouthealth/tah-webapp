@@ -67,7 +67,7 @@ public class TalkerBean implements Serializable {
 	
 	private String gender;
 	private int invitations;
-	private String MariStat;
+	private String maritalStatus;
 	private String Category;
 	private String city;
 	private String state;
@@ -139,13 +139,13 @@ public class TalkerBean implements Serializable {
 		this.invitations = invitations;
 	}
 
-//	public EnumSet<ProfilePreference> getProfilePreferences() {
-//		return profilePreferences;
-//	}
-//
-//	public void setProfilePreferences(EnumSet<ProfilePreference> profilePreferences) {
-//		this.profilePreferences = profilePreferences;
-//	}
+	public EnumSet<ProfilePreference> getProfilePreferences() {
+		return profilePreferences;
+	}
+
+	public void setProfilePreferences(EnumSet<ProfilePreference> profilePreferences) {
+		this.profilePreferences = profilePreferences;
+	}
 	
 	public void parseFromDB(DBObject talkerDBObject) {
 		ObjectId objectId = (ObjectId)talkerDBObject.get("_id");
@@ -174,7 +174,7 @@ public class TalkerBean implements Serializable {
 		}
 		
 		setChildrenNum(parseInt(talkerDBObject.get("ch_num")));
-		setMariStat((String)talkerDBObject.get("mar_status"));
+		setMaritalStatus((String)talkerDBObject.get("mar_status"));
 		setCategory((String)talkerDBObject.get("category"));
 		setImagePath((String)talkerDBObject.get("img"));
 		parseProfilePreferences(parseInt(talkerDBObject.get("prefs")));
@@ -209,12 +209,12 @@ public class TalkerBean implements Serializable {
 		}
 	}
 	
-	public String getMariStat() {
-		return MariStat;
+	public String getMaritalStatus() {
+		return maritalStatus;
 	}
 
-	public void setMariStat(String mariStat) {
-		MariStat = mariStat;
+	public void setMaritalStatus(String maritalStatus) {
+		this.maritalStatus = maritalStatus;
 	}
 
 	public String getCategory() {
@@ -291,14 +291,11 @@ public class TalkerBean implements Serializable {
 	}
 
 	public String getImagePath() {
-		//TODO: rollback this
-		String n = "/public/";
-		
 		if (imagePath == null) {
 			//return default
-			return n+"images/img1.gif";
+			return "images/img1.gif";
 		}
-		return n+imagePath;
+		return imagePath;
 	}
 
 	public void setImagePath(String imagePath) {

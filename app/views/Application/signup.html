@@ -266,12 +266,12 @@
 							<div class="signuptextarea"><span class="blacktext14">Select an IM Service</span></div>
 							<div class="personaltextfield" >
 								<select id="talker.im" name="talker.im" class="personalfields">
-							  		<option selected value='0'>Select an IM service</option>
-									<option value="YahooIM">YahooIM</option>
-									<option value="WindowLive">WindowLive</option>
-									<option value="AOL">AOL</option>
-									<option value="GoogleTalk">GoogleTalk</option>
-									<option value="SkypeIM">SkypeIM</option>
+							  		<option selected value=''>Select an IM service</option>
+									#{list items:['YahooIM', 'WindowLive', 'AOL', 'GoogleTalk', 'SkypeIM'], as:'imService'}
+									    <option value="${imService}" 
+									    #{if flash['talker.im'].equals(imService) } selected #{/if} 
+									    >${imService}</option>
+									#{/list}
 								</select>
 							</div>
 						</div>

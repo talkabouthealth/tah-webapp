@@ -1,9 +1,13 @@
 package controllers;
 
-import java.net.URLEncoder;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import models.TalkerBean;
+import play.data.validation.Email;
 import play.data.validation.Valid;
 import play.mvc.Controller;
 import util.CommonUtil;
@@ -23,6 +27,44 @@ public class Application extends Controller {
     	}
     }
     
+    /* ------- Forgot Password --------- */
+    public static void forgotPassword() {
+    	render();
+    }
+    
+    public static void sendNewPassword(@Email String email) {
+    	
+    	TalkerBean user = null;
+    	if (!validation.hasError("email")) {
+    		user = TalkerDAO.getByEmail(email);
+    		validation.isTrue(user != null).message("email.nosuchemail");
+    	}
+    	
+    	if(validation.hasErrors()) {
+            params.flash(); // add http parameters to the flash scope
+            validation.keep();
+            forgotPassword();
+            return;
+        }
+    	
+		//generate new password
+		SecureRandom random = new SecureRandom();
+	    String newPassword = new BigInteger(60, random).toString(32);
+	    
+	    //change password for this user
+	    user.setPassword(CommonUtil.hashPassword(newPassword));
+	    TalkerDAO.updateTalker(user);
+		
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("username", user.getUserName());
+		vars.put("newpassword", newPassword);
+		EmailUtil.sendEmail(EmailUtil.FORGOT_PASSWORD_TEMPLATE, user.getEmail(), vars);
+		
+		flash.success("ok");
+		forgotPassword();
+    }
+    
+    /* ------- Sign Up --------- */
     public static void signup() {
     	TalkerBean talker = new TalkerBean();
     	flash.put("talker", talker);
@@ -107,6 +149,11 @@ public class Application extends Controller {
 			TalkerBean tmpTalker = TalkerDAO.getByEmail(talker.getEmail());
 			validation.isTrue(tmpTalker == null).message("email.exists");
 		}
+	}
+	
+	
+	public static void redirectPage(String url) {
+		render(url);
 	}
 
 }

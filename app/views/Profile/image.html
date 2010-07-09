@@ -1,0 +1,41 @@
+#{ extends 'main.html' /}
+
+	<style>
+		body {
+			background:url(/public/images/inner_bg.gif) repeat-x top;
+		}
+		#userpicture {
+			float: left;
+			margin: 10px;
+		}	
+	</style>
+</head>
+<body>
+
+<div id="top_container">
+	<div id="top">
+		#{ logo /}
+		<div id="topnav">
+			#{ include 'menu.html' /}
+		</div>
+		<div id="innerbanner"></div>
+		<form id="uploadimageform" name="uploadimageform" enctype="multipart/form-data"
+			action="@{Profile.uploadImage()}" method="POST" />
+		<div id="innermain">
+			<div class="blacktext2" id="innerheading">Upload Picture</div>
+			<div id="innermiddlearea">
+				<div id="notifactionbox">
+					<div class="notifactionboxtop"></div>
+					<div class="notifactionboxmid">
+						<img id="userpicture" src="${imagePath}" width="100" height="100" />
+						<h3>Actions:</h3>
+						<input type="file" id="imageFile" name="imageFile" />
+						<input id="submitAction" name="submitAction" type="submit" value="Upload" />
+						<br/><br/>
+						<input id="submitAction" name="submitAction" type="submit" value="Remove current image" />
+					</div>
+					<div class="notifactionboxbot"></div>
+				</div>
+			</div>
+		</div>
+		</form>

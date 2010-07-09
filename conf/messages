@@ -8,9 +8,14 @@ validation.match = %s contains illegal characters. Only letters, numbers, unders
 validation.object=
 
 username.exists = Username is already taken. Please enter a different username.
+
 email.exists = Email is already registered. Please enter a different email.
+email.nosuchemail = Sorry, there are no user with this email in our database.
+emails.incorrect = Please input correct emails
+emails.noinvites = Sorry, you don't have enough invites
 
 # Talker fields
 talker.userName = Username
 talker.password = Password
 talker.email = Email
+talker.dob = sdfsd

@@ -59,7 +59,7 @@
 							<input type="checkbox" name="remember" id="remember" 
 								class="checkboxclass" value="true" ${flash.remember ? 'checked="true"' : ''} />Remember me
 						</div>
-						<div class="forgotpassword"><a href="ForgotPassword.jsp" class="bluetext12">Forgot password?</a></div>
+						<div class="forgotpassword"><a href="@{Application.forgotpassword()}" class="bluetext12">Forgot password?</a></div>
 					</div>
 					<div class="signupbutton">
 						<a tabindex="3" onclick="checkForm()" href="#">
@@ -67,8 +67,8 @@
 						</a>
 					</div>
 					<div class="newusersignup">
-						<a href="SignUp.jsp" class="bluetext12"></a>Not a User ? <br>
-					  	<a href="SignUp.jsp" class="pinktext14">Create your account</a>
+						<a href="@{Application.signup()}" class="bluetext12"></a>Not a User ? <br>
+						<a href="@{Application.signup()}" class="pinktext14">Create your account</a>
 					</div>
 				#{/form}
 				</div>

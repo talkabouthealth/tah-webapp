@@ -1,0 +1,70 @@
+#{ extends 'main.html' /}
+
+	<style>
+		body {
+			background:url(/public/images/inner_bg.gif) repeat-x top;
+		}
+		.notiblueareamid ul li {
+			font-size: 14px;
+			line-height: 28px;
+			padding: 0px;
+			width:600px;
+		}	
+	</style>
+</head>
+<body>
+
+<div id="top_container">
+	<div id="top">
+		#{ logo /}
+		<div id="topnav">
+			#{ include 'menu.html' /}
+		</div>
+		<div id="innerbanner"></div>
+		<form id="profilepreferencesform" name="profilepreferencesform" action="@{Profile.savePreferences()}" method="POST" />
+		<div id="innermain">
+			<div class="blacktext2" id="innerheading">Profile Preferences</div>
+			<div id="innermiddlearea">
+				<div id="notifactionbox">
+					<div class="notifactionboxtop"></div>
+					<div class="notifactionboxmid">
+						#{if flash.success}
+						    <div class="notibluearea">
+								<div class="notiblueareatop"></div>
+								<div class="signfields2">
+									<h4>Changes are saved!</h4>
+								</div>
+								<div class="notiblueareabot"></div>
+							</div>
+						#{/if}
+						<div class="notibluearea">
+							<div class="notiblueareatop"></div>
+							<div class="notiblueareamid">							
+								<ul>
+									#{list items:profilePreferencesArr, as:'preference' }
+										<li>
+											<input type='checkbox' name='${preference}' 
+											#{if profilePreferences.contains(preference) } checked='checked' #{/if}
+											/> ${preference.description}
+										</li>
+									#{/list}
+								</ul>
+							</div>
+							<div class="notiblueareabot"></div>
+						</div>
+						<a id="savebutton" href="#" onclick="document.profilepreferencesform.submit();">
+							<img src="/public/images/save.gif" width="186" height="46" border="0"/>
+						</a>
+					</div>
+					<div class="notifactionboxbot"></div>
+				</div>
+				<div id="tipsbox">
+					<b>Tips</b><br/><br/>
+					<b>Why display information in your profile?</b><br/>
+					Displaying your health details enables others
+					just like you who are dealing with or have dealt with similar health issues
+					to find you to request advice or just talk.
+				</div>
+			</div>
+		</div>
+		</form>
