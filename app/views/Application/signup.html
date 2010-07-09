@@ -7,14 +7,7 @@
 	</style>
 	
 	<script type="text/javascript" charset="utf-8">
-		function openTwitter() {
-			var popupWindow = window.open("oauth?action=getauth&type=twitter", 
-				"TwitterLogin", "width=800,height=400,toolbar=no,location=no,menubar=no");
-		}
-		function openFacebook() {
-			var popupWindow = window.open("oauth?action=getauth&type=facebook", 
-				"FacebookLogin", "width=1000,height=450,toolbar=no,location=no,menubar=no");
-		}
+		#{ oauthJavaScripts /}
 		
 		/* 
 			TODO: move this to separate .js ? Merge with "validation.js"?
@@ -203,10 +196,11 @@
 				#{form @Application.register() , id:'signup' }
 					#{if flash.from }
 					    <h6 class="blacktext14">
-					    	Welcome! You've gotten started by connecting your <i>${flash.from}</i> account.
+					    	Welcome! You've gotten started by connecting your <i>${flash.from.capFirst()}</i> account.
 					    	<br/>Your TalkAboutHealth account needs just a few more details. 
 					    	Please take a moment to provide them below
 					    </h6>
+					    <input type="hidden" id="from" name="from" value="${flash.from}" />
 					#{/if}
 					#{else}
 					    <h6 class="blacktext14" style="text-align:left;">Save time entering your information</h6>
@@ -286,7 +280,7 @@
 							</div>
 						</div>
 						<div class="signupmain">
-							<div class="signuptextarea"><span class="blacktext14">Date of Birth${flash['talker.dobMonth']}</span></div>
+							<div class="signuptextarea"><span class="blacktext14">Date of Birth</span></div>
 							<div class="personaltextfield">
 								<select size="1"  name="talker.dobMonth" id="talker.dobMonth" class="textarea2">
 #{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}

@@ -9,7 +9,7 @@
 	function validatePasswordForm() {
 		var reason = "";
 		
-		reason += validatePassword(document.changePasswordForm.newpassword);
+		reason += validatePassword(document.changePasswordForm.newPassword);
 		if (reason != "") {
 		    alert(reason);
 		    return false;
@@ -127,14 +127,16 @@
 				<input type="hidden" id="talker.password" name="talker.password" value="pass" />
 				<div id="personalleft">
 					<div class="personalmain" style="text-align: center">
-						#{if flash.success}
-						    <span class="success">${flash.success}</span>
+						#{if "editForm".equals(flash.currentForm)}
+							#{if flash.success}
+							    <span class="success">Changes are saved!</span>
+							#{/if}
+							#{ifErrors}
+							   #{errors}
+							       <span class="error">${error}</span><br/>
+							   #{/errors}
+							#{/ifErrors}
 						#{/if}
-						#{ifErrors}
-						   #{errors}
-						       <span class="error">${error}</span><br/>
-						   #{/errors}
-						#{/ifErrors}
 					</div>
 					<div class="personalmain">
 						<div class="personaltextarea"><span class="blacktext14">Username</span></div>
@@ -338,42 +340,35 @@
 	<div id="personalinner">
 		<div id="personalleft1">
 		<a name="passwordform"></a>
-		<form id="changePasswordForm" name="changePasswordForm" action="UpdateProfile?action=changepassword" method="post">
-			<%
-				if (result != null) {
-			%>
+		<form id="changePasswordForm" name="changePasswordForm" action="@{Profile.changePassword()}#changePasswordForm" method="post">
 			<div class="personalmain" style="text-align: center">
-				<%
-					if (result.equals("badpass")) {
-						out.println("<font id=\"error\">Current password is wrong</font>");
-					}
-					else if (result.equals("differentpass")) {
-						out.println("<font id=\"error\">New and Confirm passwords are different</font>");
-					}
-					else if (result.equals("okpassword")) {
-						out.println("<span class=\"blacktext14\">Password is changed!</span>");
-					}
-				%>
+				#{if "changePasswordForm".equals(flash.currentForm)}
+					#{if flash.success}
+					    <span class="success">Password is changed!</span>
+					#{/if}
+					#{ifErrors}
+					   #{errors}
+					       <span class="error">${error}</span><br/>
+					   #{/errors}
+					#{/ifErrors}
+				#{/if}
 			</div>
-			<%
-				}
-			%>
 			<div class="personalmain">
 				<div class="personaltextarea"><span class="blacktext14">Current Password</span></div>
 				<div class="personaltextfield">
-					<input name="curpassword" id="curpassword" type="password" class="personalfields" value="" />
+					<input name="curPassword" id="curPassword" type="password" class="personalfields" value="" />
 				</div>
 			</div>
 			<div class="personalmain">
 				<div class="personaltextarea"><span class="blacktext14">New Password</span></div>
 				<div class="personaltextfield">
-					<input name="newpassword" id="newpassword" type="password" class="personalfields" value="" />
+					<input name="newPassword" id="newPassword" type="password" class="personalfields" value="" />
 				</div>
 			</div>
 			<div class="personalmain">
 				<div class="personaltextarea"><span class="blacktext14">Confirm Password</span></div>
 				<div class="personaltextfield">
-					<input name="confirmpassword" id="confirmpassword" type="password" class="personalfields" value="" />
+					<input name="confirmPassword" id="confirmPassword" type="password" class="personalfields" value="" />
 				</div>
 			</div>
 			<div class="personalmain">

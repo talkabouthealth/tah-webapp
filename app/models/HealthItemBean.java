@@ -43,7 +43,6 @@ public class HealthItemBean implements Comparable<HealthItemBean> {
 		this.children = children;
 	}
 
-	@Override
 	public int compareTo(HealthItemBean o) {
 		return name.compareTo(o.name);
 	}

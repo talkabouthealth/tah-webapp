@@ -25,16 +25,15 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 	private static final String APP_ID = "131545373528131";
 	private static final String APP_SECRET = "0620bead67e2ffa4e9e46f60b3376dec";
 	private static final String CALLBACK_URL =
-		"http://talkabouthealth.com:8080/tah-java/oauth?action=callback&type=facebook";
+		"http://talkabouthealth.com:9000/oauth/callback?type=facebook";
 	
-//Test settings	
+// Test settings	
 //	private static final String APP_ID = "126479497379490";
 //	private static final String APP_SECRET = "cd4606efec03ea8c5bd9ffb9d49000ff";
 //	private static final String CALLBACK_URL =
-//		"http://kan.dev.com:8080/tah-java/oauth?action=callback&type=facebook";
+//		"http://kan.dev.com:9000/oauth/callback?type=facebook";
 	
 
-	@Override
 	public String getAuthURL(Session session) {
 		String authURL = null;
 		try {
@@ -47,7 +46,6 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 		return authURL;
 	}
 
-	@Override
 	public String handleCallback(Session session, Map<String, String> params) throws Exception {
 		String code = params.get("code");
 		if (code != null) {
@@ -101,13 +99,13 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 				// add TalkerBean to session
 				session.put("username", talker.getUserName());
 				
-				return URLEncoder.encode("/home/", "UTF-8");
+				return "/home";
 	        }
 	        else {
-	        	 session.put("accounttype", "facebook");
-			     session.put("accountid", accountId);
-			     
-			     return URLEncoder.encode("/signup?email="+userEmail+"&from=facebook", "UTF-8");
+	        	session.put("accounttype", "facebook");
+			    session.put("accountid", accountId);
+			    
+			    return "/signup?talker.email="+userEmail+"&from=facebook";
 	        }
 		}
 		return null;

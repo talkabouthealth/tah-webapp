@@ -18,6 +18,7 @@ import org.apache.commons.io.IOUtils;
 import play.Play;
 import play.data.validation.Valid;
 import play.mvc.Controller;
+import play.mvc.Router.ActionDefinition;
 import play.mvc.With;
 import util.CommonUtil;
 import dao.TalkerDAO;
@@ -33,6 +34,7 @@ public class Profile extends Controller {
     }
 	
 	public static void save(@Valid TalkerBean talker) {
+		flash.put("currentForm", "editForm");
 		TalkerBean oldTalker = CommonUtil.loadCachedTalker(session);
 		
 		String oldUserName = oldTalker.getUserName();
@@ -66,10 +68,42 @@ public class Profile extends Controller {
 		
 		TalkerDAO.updateTalker(oldTalker);
 		
-		flash.success("Changes are saved!");
+		flash.success("ok");
 		render("@edit", talker);
 	}
 	
+	public static void changePassword(String curPassword, String newPassword, String confirmPassword) {
+		flash.put("currentForm", "changePasswordForm");
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		String hashedPassword = CommonUtil.hashPassword(curPassword);
+		
+		validation.isTrue(talker.getPassword().equals(hashedPassword)).message("password.currentbad");
+		validation.isTrue(newPassword != null && newPassword.equals(confirmPassword)).message("password.different");
+		
+		if(validation.hasErrors()) {
+			flash.success("");
+			render("@edit", talker);
+			
+			//TODO strange fix. Discussed here:
+			//http://groups.google.com/group/play-framework/browse_thread/thread/93c2ec3e34c20f4e/bf94f63fcb2e529d?lnk=gst&q=addRef#bf94f63fcb2e529d
+//			ActionDefinition action = reverse(); {
+//				//render("@edit", talker);
+//				edit();
+//	        }
+//			redirect(action.addRef("changePasswordForm").toString()); 
+			
+            return;
+        }
+		
+		talker.setPassword(CommonUtil.hashPassword(newPassword));
+		TalkerDAO.updateTalker(talker);
+		
+		flash.success("ok");
+		render("@edit", talker);
+	}
+	
+	/* -------------- Image ------------------------ */
 	
 	public static void image() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
@@ -116,11 +150,11 @@ public class Profile extends Controller {
 		}
 	}
 	
-	
+	/* -------------- Preferences ------------------------ */
 	
 	public static void preferences() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		EnumSet<ProfilePreference> profilePreferences = talker.getProfilePreferences();
+		EnumSet<ProfilePreference> profilePreferences = talker.loadProfilePreferences();
 		
 		ProfilePreference[] profilePreferencesArr = ProfilePreference.values();
 		render(profilePreferencesArr, profilePreferences);
@@ -140,11 +174,37 @@ public class Profile extends Controller {
 			catch (IllegalArgumentException iae) {}
 		}
 		
-		talker.setProfilePreferences(preferencesSet);
+		talker.saveProfilePreferences(preferencesSet);
 		TalkerDAO.updateTalker(talker);
 		
 		flash.success("ok");
 		preferences();
 	}
-
+	
+	/* -------------- Notifications ------------------------ */
+	public static void notifications() {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		render(talker);
+	}
+	
+	public static void saveNotifications(TalkerBean talker) {
+		flash.put("currentForm", "notificationsForm");
+		
+		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);
+		
+		sessionTalker.setNfreq(talker.getNfreq());
+		sessionTalker.setNtime(talker.getNtime());
+		sessionTalker.setCtype(talker.getCtype());
+		
+		TalkerDAO.updateTalker(sessionTalker);
+		flash.success("ok");
+		notifications();
+	}
+	
+	/* ------------- Health Info -------------------------- */
+	
+	public static void healthinfo() {
+		
+	}
 }

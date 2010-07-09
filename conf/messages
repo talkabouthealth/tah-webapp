@@ -6,6 +6,7 @@ validation.match = %s contains illegal characters. Only letters, numbers, unders
 
 # We don't need message for whole object - only for separate fields
 validation.object=
+validation.invalid=Incorrect date format
 
 username.exists = Username is already taken. Please enter a different username.
 
@@ -13,6 +14,9 @@ email.exists = Email is already registered. Please enter a different email.
 email.nosuchemail = Sorry, there are no user with this email in our database.
 emails.incorrect = Please input correct emails
 emails.noinvites = Sorry, you don't have enough invites
+
+password.currentbad = Current password is wrong.
+password.different = New and Confirm passwords are different.
 
 # Talker fields
 talker.userName = Username

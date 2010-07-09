@@ -10,7 +10,7 @@
 	
 	<script type="text/javascript">
 		function redirectParent() {
-			var url = '<%= request.getParameter("url") %>';
+			var url = '${url.raw()}';
 			window.opener.document.location = url;
 			window.close();
 		}

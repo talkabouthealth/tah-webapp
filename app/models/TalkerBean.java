@@ -139,11 +139,12 @@ public class TalkerBean implements Serializable {
 		this.invitations = invitations;
 	}
 
-	public EnumSet<ProfilePreference> getProfilePreferences() {
+	//TODO: we don't have binder for EnumSet now - here is workaround
+	public EnumSet<ProfilePreference> loadProfilePreferences() {
 		return profilePreferences;
 	}
 
-	public void setProfilePreferences(EnumSet<ProfilePreference> profilePreferences) {
+	public void saveProfilePreferences(EnumSet<ProfilePreference> profilePreferences) {
 		this.profilePreferences = profilePreferences;
 	}
 	
@@ -293,7 +294,7 @@ public class TalkerBean implements Serializable {
 	public String getImagePath() {
 		if (imagePath == null) {
 			//return default
-			return "images/img1.gif";
+			return "/public/images/img1.gif";
 		}
 		return imagePath;
 	}

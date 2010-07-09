@@ -10,6 +10,7 @@ import models.TalkerBean;
 import play.data.validation.Email;
 import play.data.validation.Valid;
 import play.mvc.Controller;
+import play.mvc.Scope.Session;
 import util.CommonUtil;
 import util.EmailUtil;
 import dao.TalkerDAO;
@@ -66,24 +67,15 @@ public class Application extends Controller {
     
     /* ------- Sign Up --------- */
     public static void signup() {
-    	TalkerBean talker = new TalkerBean();
-    	flash.put("talker", talker);
-    	
-    	String from = params.get("from");
-    	if (from != null) {
-    		flash.put("from", from);
-    	}
+    	params.flash();
     	
     	render();
     }
     
     public static void register(@Valid TalkerBean talker, String newTopic) {
-		//TODO: work on this!
-		//check if user signed up through Twitter or Facebook
-//		accountType = (String) request.getSession().getAttribute("accounttype");
-//		accountId = (String) request.getSession().getAttribute("accountid");
-		
 		validateTalker(talker);
+		
+		System.out.println(validation.errorsMap());
 				
         if(validation.hasErrors()) {
             params.flash(); // add http parameters to the flash scope
@@ -92,7 +84,7 @@ public class Application extends Controller {
             return;
         }
         
-        prepareTalker(talker);
+        prepareTalker(talker, session);
         
         if (!TalkerDAO.save(talker)) {
         	params.flash(); // add http parameters to the flash scope
@@ -112,25 +104,8 @@ public class Application extends Controller {
 
         index(newTopic);
     }
-
-	private static void prepareTalker(TalkerBean talker) {
-		//for now gender has default value
-		talker.setGender("M");
-		talker.setInvitations(100);
-		
-        String imUsername = talker.getImUsername();
-        if (imUsername.trim().length() == 0) {
-			//if user didn't enter it - we parse from email
-			int atIndex = talker.getEmail().indexOf('@');
-			imUsername = talker.getEmail().substring(0, atIndex);
-			talker.setImUsername(imUsername);
-		}
-        
-        String hashedPassword = CommonUtil.hashPassword(talker.getPassword());
-        talker.setPassword(hashedPassword);
-	}
-
-	private static void validateTalker(TalkerBean talker) {
+    
+    private static void validateTalker(TalkerBean talker) {
 		Date dateOfBirth = CommonUtil.parseDate(talker.getDobMonth(), talker.getDobDay(), talker.getDobYear());
 		if (dateOfBirth != null) {
 			validation.past(dateOfBirth);
@@ -150,9 +125,30 @@ public class Application extends Controller {
 			validation.isTrue(tmpTalker == null).message("email.exists");
 		}
 	}
-	
+
+	private static void prepareTalker(TalkerBean talker, Session session) {
+		//for now gender has default value
+		talker.setGender("M");
+		talker.setInvitations(100);
+		
+		//check if user signed up through Twitter or Facebook
+		talker.setAccountType(session.get("accounttype"));
+		talker.setAccountId(session.get("accountid"));
+		
+        String imUsername = talker.getImUsername();
+        if (imUsername.trim().length() == 0) {
+			//if user didn't enter it - we parse from email
+			int atIndex = talker.getEmail().indexOf('@');
+			imUsername = talker.getEmail().substring(0, atIndex);
+			talker.setImUsername(imUsername);
+		}
+        
+        String hashedPassword = CommonUtil.hashPassword(talker.getPassword());
+        talker.setPassword(hashedPassword);
+	}
 	
 	public static void redirectPage(String url) {
+		System.out.println("???"+url);
 		render(url);
 	}
 
