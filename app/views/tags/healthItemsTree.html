@@ -1,0 +1,15 @@
+#{list items: _healthItem.children, as: 'item' }
+	#{if item.children?.size() > 0 }
+		<li><b>${item.name}</b></li>
+		#{ healthItemsTree healthItem: item, checkedItems: _checkedItems /}
+	#{/if}
+	#{else}
+		<li>
+			<input name='healthitem${item.id}' type='checkbox'
+			#{if _checkedItems.contains(item.id) }
+				checked='checked'
+			#{/if}
+			/> ${item.name}
+		</li>
+	#{/else}
+#{/list}

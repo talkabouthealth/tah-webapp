@@ -1,16 +1,21 @@
 package controllers;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import models.HealthItemBean;
 import models.TalkerBean;
 import models.TalkerBean.ProfilePreference;
+import models.TalkerDiseaseBean;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -18,10 +23,12 @@ import org.apache.commons.io.IOUtils;
 import play.Play;
 import play.data.validation.Valid;
 import play.mvc.Controller;
-import play.mvc.Router.ActionDefinition;
 import play.mvc.With;
 import util.CommonUtil;
+import dao.DiseaseDAO;
+import dao.HealthItemDAO;
 import dao.TalkerDAO;
+import dao.TalkerDiseaseDAO;
 
 @With(Secure.class)
 public class Profile extends Controller {
@@ -201,9 +208,75 @@ public class Profile extends Controller {
 		notifications();
 	}
 	
+	public static void saveAccounts(TalkerBean talker) {
+		flash.put("currentForm", "accountsForm");
+		
+		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);
+		
+		//if something was changed - send new invitation
+		if (!sessionTalker.getIm().equals(talker.getIm()) 
+				|| !sessionTalker.getImUsername().equals(talker.getImUsername())) {
+			CommonUtil.sendIMInvitation(talker.getImUsername(), talker.getIm());
+		}
+		
+		//TODO: what email here? check for duplicate email?
+		sessionTalker.setEmail(talker.getEmail());
+		sessionTalker.setImUsername(talker.getImUsername());
+		sessionTalker.setIm(talker.getIm());
+		
+		TalkerDAO.updateTalker(sessionTalker);
+		flash.success("ok");
+		notifications();
+	}
+	
 	/* ------------- Health Info -------------------------- */
 	
-	public static void healthinfo() {
+	public static void healthDetails() {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
+		//For now we have only one disease - Breast Cancer
+		final String diseaseName = "Breast Cancer";
+
+		//Load data for selects
+		List<String> stagesList = DiseaseDAO.getValuesByDisease("stages", diseaseName);
+		List<String> typesList = DiseaseDAO.getValuesByDisease("types", diseaseName);
+		
+		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
+		
+		//Load all healthItems for this disease
+		Map<String, HealthItemBean> healthItemsMap = new HashMap<String, HealthItemBean>();
+		for (String itemName : new String[] {"symptoms", "tests", "procedures", "treatments"}) {
+			HealthItemBean healthItem = HealthItemDAO.getHealthItemByName(itemName, diseaseName);
+			healthItemsMap.put(itemName, healthItem);
+		}
+		
+		render(talkerDisease, stagesList, typesList, healthItemsMap);
+	}
+	
+	public static void saveHealthDetails(TalkerDiseaseBean talkerDisease) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		parseHealthItems(talkerDisease);
+		talkerDisease.setUid(talker.getId());
+		
+		//Save or update
+		TalkerDiseaseDAO.saveTalkerDisease(talkerDisease);
+		
+		flash.success("ok");
+		healthDetails();
+	}
+	
+	private static void parseHealthItems(TalkerDiseaseBean talkerDisease) {
+		Map<String, String> paramsMap = params.allSimple();
+		
+		Set<String> healthItems = new HashSet<String>();
+		for (String paramName : paramsMap.keySet()) {
+			//Health item parameter name: 'healthitemID'
+			if (paramName.startsWith("healthitem")) {
+				String id = paramName.substring(10);
+				healthItems.add(id);
+			}
+		}
+		talkerDisease.setHealthItems(healthItems);
 	}
 }
