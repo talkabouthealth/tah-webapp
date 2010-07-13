@@ -1,0 +1,270 @@
+#{extends 'main.html' /}
+	<style>
+		body {
+			background:url(/public/images/inner_bg.gif) repeat-x top;
+		}
+	</style>
+</head>
+<body>
+	<div id="top_container">
+		<div id="top">
+			#{ logo /}
+			<div id="topnav">
+				#{include 'menu.html' /}
+			</div>
+		</div>
+		<div id="bottom_container">
+			<div id="innerbanner"></div>
+			<div id="innermain">
+				<div id="innerheading" class="blacktext2" >My Public Profile</div>
+				<div id="innermiddlearea">
+					<div id="profileleft">
+						<div id="profilelefttop"></div>
+						<div id="profileleftmid">
+							<div class="proleftwhite">
+								<div class="proleftwhitetop"></div>
+								<div class="proleftwhitemid">
+									<div class="profilearea">
+										<div class="profileimg">
+											<img src="/public/images/profileimg.jpg" width="208" height="136" />
+										</div>
+										<div class="profileimgtext">
+											<ul>
+											<li><span class="simpletext">Currently Online</span></li>
+											<li><a href="#" class="navybluetext12">Follow</a></li>
+											<li><a href="#" class="navybluetext12">Give a 'Thanks you'</a></li>
+											<!-- 
+											<li><a href="#" class="navybluetext12">Send a private message</a></li>
+											<li><a href="#" class="navybluetext12">Request to talk right now</a></li>
+											<li><a href="#" class="navybluetext12">Leave a comment</a></li>
+											-->
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="proleftwhitebot"></div>
+							</div>
+							<div class="proleftwhite">
+								<div class="proleftwhitetop"></div>
+								<div class="proleftwhitemid">
+									<div class="followarea">
+									<div class="profileheading">Following</div>
+									<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
+									<div class="followingimg">
+									<ul>
+										<li><a href="#" class="bluetext11"><img src="/public/images/followimg1.jpg" border="0" /><br />Andry</a></li>
+										<li><a href="#" class="bluetext11"><img src="/public/images/followimg2.jpg" border="0" /><br />Blal</a></li>
+										<li><a href="#" class="bluetext11"><img src="/public/images/followimg3.jpg" border="0" /><br />Lalit</a></li>
+										<li><a href="#" class="bluetext11"><img src="/public/images/followimg4.jpg" border="0" /><br />Jason</a></li>
+									</ul>
+									</div>
+									</div>
+								</div>
+								<div class="proleftwhitebot"></div>
+							</div>
+							<div class="proleftwhite">
+								<div class="proleftwhitetop"></div>
+								<div class="proleftwhitemid">
+									<div class="followarea">
+									<div class="profileheading">Followers</div>
+									<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
+									<div class="followingimg">
+										<ul>
+										<li><a href="#" class="bluetext11"><img src="/public/images/followimg1.jpg" border="0" /><br />Andry</a></li>
+										<li><a href="#" class="bluetext11"><img src="/public/images/followimg2.jpg" border="0" /><br />Blal</a></li>
+										<li><a href="#" class="bluetext11"><img src="/public/images/followimg3.jpg" border="0" /><br />Lalit</a></li>
+										<li><a href="#" class="bluetext11"><img src="/public/images/followimg4.jpg" border="0" /><br />Jason</a></li>
+										</ul>
+									</div>
+								</div>
+								</div>
+								<div class="proleftwhitebot"></div>
+							</div>
+							<!-- 
+							<div class="proleftwhite">
+								<div class="proleftwhitetop"></div>
+								<div class="proleftwhitemid">
+									<div class="profilearea">
+										<div class="profileheading">Groups</div>
+										<div class="profileimgtext">
+										<ul>
+											<li><a href="#" class="navybluetext12">UWS Breast Cancer Group</a></li>
+											<li><a href="#" class="navybluetext12">NYC Skin Cancer Group</a></li>
+											<li><a href="#" class="navybluetext12">BreastCancer.org</a></li>
+										</ul>
+										</div>
+									</div>
+								</div>
+								<div class="proleftwhitebot"></div>
+							</div>
+							-->
+							<div class="proleftwhite">
+								<div class="proleftwhitetop"></div>
+								<div class="proleftwhitemid">
+									<div class="profilearea">
+										<div class="profileheading">Personal Info</div>
+										<div class="profileimgtext">
+											<ul>
+											<li class="blacktext12">Age: ${talker.age}</li>
+											<li class="blacktext12">Gender: ${talker.fullGender}</li>
+											<li class="blacktext12">Location: ${talker.state}, ${talker.city}</li>
+											<li class="blacktext12">Marital Status: ${talker.maritalStatus}</li>
+											<li class="blacktext12">No. of Children: ${talker.childrenNum}</li>
+											<!-- 
+											<li class="blacktext12">Ages of Children: New Born, 2-6 years</li>
+											<li class="blacktext12">Web page: 
+												<a href="http://talkabouthealth.com" target="_blank" 
+												class="navybluetext12">http://talkabouthealth.com</a></li>
+											<li class="blacktext12">Keywords Following: tennis, reading, dancing, entrepreneurship</li>
+											 -->
+											<li class="blacktext12"></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="proleftwhitebot"></div>
+							</div>
+						</div>
+						<div id="profileleftbot"></div>
+					</div>
+					<div id="profileright">
+						<div id="proheading">
+							<span class="pinktext18">${talker.userName}</span><span class="blacktext18">&nbsp;-&nbsp;Patient</span>
+						</div>
+						<div class="profiletext2">
+							<ul>
+								<li class="blacktext12"><strong>Community:</strong> Skin Cancer</li>
+								<li class="blacktext12"><strong>Location:</strong> ${talker.city}, ${talker.state}, ${talker.country}</li>
+								<li class="blacktext12"><strong>Member Since:</strong> ${talker.regDate.format('MMM d, yyyy')}</li>
+							</ul>
+						</div>
+						<div class="profiletext2">
+							<ul>
+								<li class="blacktext12"><strong>Recognition Level:</strong> Advocate</li>
+								<li class="blacktext12"><strong>Conversation:</strong> 10</li>
+								<li class="blacktext12"><strong>Thank you's:</strong> 5</li>
+							</ul>
+						</div>
+						<div class="prosubheading">
+							<div class="profileheading">Bio</div>
+							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
+						</div>
+						<div class="protext">
+							<strong>Serious ADOBE (Adobe) Flash Designer / Programmer / Technical Consultant</strong><br />
+							Expertise in Flash application development, Web 2.0 Technology, management, and professional services.
+						</div>
+						<div class="prosubheading">
+							<div class="profileheading">Health Info</div>
+							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
+						</div>
+						<div class="profiletext2">
+							<ul>
+								<li class="blacktext12">Disease Type: <span class="blacktext">Type 1</span></li>
+								<li class="blacktext12">Stage of disease: <span class="blacktext">Stage 1</span></li>
+								<li class="blacktext12">Date of first symptom: <span class="blacktext">10/23/2007</span></li>
+								<li class="blacktext12">Date of diagnosis: <span class="blacktext">10/23/2007</span></li>
+								<li class="blacktext12">Recurrent:<span class="blacktext"> No</span></li>
+								<li class="blacktext12" style="padding-top:10px;"><strong>Initial Symptoms</strong></li>
+								<li class="blacktext12">Lump in breast</li>
+								
+								<li class="blacktext12" style="padding-top:10px;"><strong>Tests</strong></li>
+								<li class="blacktext12">Mammogram</li>
+								<li class="blacktext12">Breast Biospy</li>
+								
+								<li class="blacktext12" style="padding-top:10px;"><strong>Procedures/Surgeries</strong></li>
+								<li class="blacktext12">Mastectomy</li>
+								<li class="blacktext12">Lumpectomy</li>
+							</ul>
+						</div>
+						<div class="profiletext2">
+							<ul>
+							<li class="blacktext12"><strong>Disease symptoms and severity</strong></li>
+							<li class="blacktext12">Discoloration of moles - mild</li>
+							<li class="blacktext12">Vomiting: mild</li>
+							<li class="blacktext12">Vomiting: mild</li>
+							<li class="blacktext12">Vomiting: mild</li>
+							<li class="blacktext12">Vomiting: mild</li>
+							
+							<li class="blacktext12" style="padding-top:10px;"><strong>Medications and Treatments</strong></li>
+							<li class="blacktext12">Chemotherapy</li>
+							<li class="blacktext12">Herceptin</li>
+							
+							<li class="blacktext12" style="padding-top:10px;"><strong>Side effects from medications/treatments</strong></li>
+							<li class="blacktext12">Depression - severe</li>
+							<li class="blacktext12">Vomiting - severe</li>
+							
+							<li class="blacktext12" style="padding-top:10px;"><strong>Treatments/medications for side-effects</strong></li>
+							<li class="blacktext12">Aspirin</li>
+							</ul>
+						</div>
+						<div class="prosubheading">
+							<div class="profileheading">Thank You's (5)</div>
+							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
+						</div>
+						<div class="profiletext2">
+							<div class="thankyoupic"><img src="/public/images/followimg4.jpg" border="0" /></div>
+							<div class="thankyoutext">
+								<span class="navybluetext12">Jason Sharma</span><br />
+							  	<span class="blacktext11">Great advice on how to deal <br />
+							  		with side effects.</span>
+							 </div>
+						</div>
+						<div class="prosubheading">
+							<div class="profileheading">Comments</div>
+							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
+						</div>
+						<div class="commentsarea">
+							<div class="thankyoupic"><img src="/public/images/followimg4.jpg" border="0" /></div>
+							<div class="thankyoutext"><span class="navybluetext12">Jason Sharma</span><br />
+							  <span class="blacktext11">Great advice on how to deal <br />
+							  with side effects.</span></div>
+							<div class="commentsreply"><div class="thankyoupic"><img src="/public/images/followimg4.jpg" border="0" /></div>
+							<div class="thankyoutext"><span class="navybluetext12">Jason Sharma</span><span class="pinktext12">&nbsp;replied</span><br />
+							  <span class="blacktext11">Great advice on how to deal <br />
+							  with side effects.</span></div>
+							</div>
+						</div>
+						<div class="prosubheading">
+							<div class="profileheading">Conversation Started (10)</div>
+							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
+						</div>
+						<div class="conversationarea">
+							<ul>
+							<li ><a href="#" class="navybluetext12"><strong>Just received 2 diagnoses, what should i do ?</strong></a></li>
+							<li ><a href="#" class="navybluetext12">10 talkers</a> <span class="blacktext">- mjones, yiwang, shanghao, eltont, sariebarie, quigs, dubs, nana, johnr, nato</span></li>
+							<li ><a href="#" class="navybluetext12">3 comments</a><span class="blacktext"> - johnr, suzie, scott</span></li>
+							</ul>
+						</div>
+						<div class="prosubheading">
+							<div class="profileheading">Conversation Joined (20)</div>
+							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
+						</div>
+						<div class="conversationarea">
+							<div class="thankyoupic">
+								<a href="#" class="bluetext11"><img src="/public/images/followimg2.jpg" border="0" /><br />Blal</a>
+							</div>
+							<div class="conversationtext">
+								<ul>
+								<li ><a href="#" class="navybluetext12"><strong>What are the best hospitals for skin cancer?</strong></a></li>
+								<li ><a href="#" class="navybluetext12">3 talkers</a> <span class="blacktext"> - tester, julier, lily</span></li>
+								<li ><a href="#" class="navybluetext12">1 comments</a><span class="blacktext"> - jramsay</span></li>
+								</ul>
+							</div>
+						</div>
+						<div class="prosubheading">
+							<div class="profileheading">mn_jones Activities</div>
+							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
+						</div>
+						<div class="activitiestext">
+							<ul>
+								<li class="blacktext12">mn_jones joined the conversation:
+									<a href="#" class="navybluetext12"> "What are the side effects of Hercepting?"</a></li>
+								<li class="blacktext12">mn_jones started the conversation:
+									<a href="#" class="navybluetext12"> "What are some things you wish you had said or done?</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>

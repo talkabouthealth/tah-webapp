@@ -313,7 +313,9 @@ a.bluetext11:hover {text-decoration: none; color: #1550a4;}
 .bluetext12 {font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none; color: #1550a4;}
 a.bluetext12:hover {text-decoration: none; color: #1550a4;}
 .navybluetext12 {font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none; color: #0286bc;}
-a.navybluetext12:hover {text-decoration: none; color: #0286bc;}
+a.navybluetext12:hover {text-decoration: underline; color: #0286bc;}
+.navybluetext14 {font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none; color: #0286bc;}
+a.navybluetext14:hover {text-decoration: none; color: #0286bc;}
 .bluetext14 {font-family: arial; font-size: 14px; font-weight: normal; text-decoration: none; color: #1550a4; line-height:20px;}
 a.bluetext14:hover {text-decoration: none; color: #eb1d90;}
 .bluetext16 {font-family: arial; font-size: 16px; font-weight: normal; text-decoration: none; color: #1550a4; line-height:20px;}
@@ -421,8 +423,21 @@ h4 { float:left; width:221px; padding-bottom:7px;  font-weight: bold; font-size:
 .profiletext2 { float:left; width: 254px; padding-bottom:10px; padding-top:10px;}
 .profiletext2 ul  { float:left; width: 254px; list-style-type:none; padding:0px; margin:0px; }
 .profiletext2 ul li  { float:left; width: 254px; list-style-type:none; padding-right:10px; margin:0px; height:20px; line-height:20px; }
+.thankyoupic { float:left; width: 48px; text-align:center; }
+.thankyoutext { float:left; width: 160px; padding-left:8px; padding-top:2px;}
+.commentsarea { float:left; width: 350px; padding-bottom:10px; padding-top:10px;}
+.commentsreply { float:left; width: 300px; padding-left:20px; padding-top:20px;}
+.conversationarea { float:left; width: 650px; padding-bottom:10px; padding-top:10px;}
+.conversationarea ul  { float:left; width: 650px; list-style-type:none; padding:0px; margin:0px; }
+.conversationarea ul li  { float:left; width: 650px; list-style-type:none; padding-right:10px; margin:0px; height:20px; line-height:20px; }
+.conversationtext { float:left; width: 500px; padding-left:8px; padding-top:0px;}
+.conversationtext ul  { float:left; width: 500px; list-style-type:none; padding:0px; margin:0px; }
+.conversationtext ul li  { float:left; width: 500px; list-style-type:none; padding-right:10px; margin:0px; height:20px; line-height:20px; }
+.activitiestext { float:left; width: 500px; padding-top:10px; }
+.activitiestext ul  { float:left; width: 500px; list-style-type:none; padding:0px; margin:0px; }
+.activitiestext ul li  { float:left; width: 500px; list-style-type:none; padding-right:10px; margin:0px; height:20px; line-height:20px; }
 .prosubheading { float:left; width:663px; border-top:1px dashed #a7a7a7; border-bottom:1px dashed #a7a7a7; padding:8px 0px 8px 0px;}
-.protext { float:left; padding-top:8px; padding-bottom:8px; width:663px; color:#4b4b4b; font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none;}
+.protext { float:left; padding-top:8px; padding-bottom:8px; width:663px; color:#000000; font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none;}
 
 
 /* 
@@ -433,6 +448,7 @@ h4 { float:left; width:221px; padding-bottom:7px;  font-weight: bold; font-size:
 /* #signupleft h5 {margin: 0px; padding-top: 10px; font-size:14px; clear:both;} */
 .error {font-size: 14px; color: red}
 .success {font-size: 14px; color: green}
+.simpletext {font-size: 14px;}
 #footerleft {font-size:11px;}
 
 #innermiddlearea #tipsbox {float: right; width: 200px; font-size: 14px;}

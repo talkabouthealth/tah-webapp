@@ -279,4 +279,11 @@ public class Profile extends Controller {
 		}
 		talkerDisease.setHealthItems(healthItems);
 	}
+	
+	/* ---------------- Public Profile ------------------------ */
+	public static void view() {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		render(talker);
+	}
 }

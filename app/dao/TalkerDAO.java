@@ -1,8 +1,11 @@
 package dao;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import models.TalkerBean;
+import models.ThankYouBean;
 
 import org.bson.types.ObjectId;
 
@@ -12,6 +15,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.DBRef;
 
 public class TalkerDAO {
 	
@@ -139,6 +143,49 @@ public class TalkerDAO {
 			return talker;
 		}
 	}
-
+	
+	
+	/* --------------------- "Thank you" feature ----------------------------- */
+	private static void saveThankYou(ThankYouBean thankYouBean) {
+		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		
+		DBRef fromTalkerRef = new DBRef(DBUtil.getDB(), TALKERS_COLLECTION, thankYouBean.getFrom());
+		DBObject thankYouObject = BasicDBObjectBuilder.start()
+			.add("time", thankYouBean.getTime())
+			.add("note", thankYouBean.getNote())
+			.add("from", fromTalkerRef)
+			.get();
+		
+		DBObject talkerId = new BasicDBObject("_id", new ObjectId(thankYouBean.getTo()));
+		//For creating/adding to array: { $push : { field : value } }
+		talkersColl.update(talkerId, new BasicDBObject("$push", new BasicDBObject("thankyous", thankYouObject)));
+	}
+	
+	private static void findThankYouFrom(String talkerId) {
+		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		
+		DBRef fromTalkerRef = new DBRef(DBUtil.getDB(), TALKERS_COLLECTION, talkerId);
+		DBObject query = new BasicDBObject("thankyous.from", fromTalkerRef);
+		
+		List<DBObject> list = talkersColl.find(query, new BasicDBObject("thankyous", "")).toArray();
+		System.out.println(list.size());
+		for (DBObject dbo : list) {
+			System.out.println(dbo);
+		}
+	}
+	
+	public static void main(String[] args) {
+		ThankYouBean thankYouBean = new ThankYouBean();
+		thankYouBean.setTime(new Date());
+		thankYouBean.setNote("Thank you note!");
+		thankYouBean.setFrom("4c35dbeb5165f305eebfc5f2");
+		thankYouBean.setTo("4c2cb43160adf3055c97d061");
+		TalkerDAO.saveThankYou(thankYouBean);
+		
+//		TalkerBean talkerBean = TalkerDAO.getByUserName("osezno");
+//		System.out.println(talkerBean.getThankYouList());
+		
+//		TalkerDAO.findThankYouFrom("4c2cb43160adf3055c97d061");
+	}
 }
 

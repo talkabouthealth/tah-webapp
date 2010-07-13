@@ -1,8 +1,8 @@
 #{if session.contains("username") }
 	<div class="chromestyle" id="chromemenu">
 		<ul>
-			<!--  
 			<li><a href="#" rel="dropmenu1">You</a></li>
+			<!--
 			<li><a href="#" rel="dropmenu2">Community</a></li>
 			-->
 			<li><a href="#" rel="dropmenu3">Settings</a></li>
@@ -12,11 +12,13 @@
 	</div>
 	<!--1st drop down menu -->                                                   
 	<div id="dropmenu1" class="dropmenudiv">
-		<a href="#">Profile</a>
+		<a href="@{Profile.view()}">Profile</a>
+		<!--
 		<a href="#">Conversation History</a>
 		<a href="#">Followers</a>
 		<a href="#">Following</a>
 		<a href="#">Activity Stream</a>
+		-->
 	</div>
 	<!--2nd drop down menu -->                                                
 	<div id="dropmenu2" class="dropmenudiv" style="width: 180px;">

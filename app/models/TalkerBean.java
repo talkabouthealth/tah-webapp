@@ -1,18 +1,22 @@
 package models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 
 import play.data.validation.Email;
 import play.data.validation.Match;
 import play.data.validation.Required;
+import play.i18n.Messages;
 import util.ValidateData;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.DBObject;
 
 public class TalkerBean implements Serializable {
@@ -83,6 +87,26 @@ public class TalkerBean implements Serializable {
 	private String accountType;
 	private String accountId;
 	
+	private Date regDate;
+	
+	public Date getRegDate() {
+		return regDate;
+	}
+
+	public void setRegDate(Date regDate) {
+		this.regDate = regDate;
+	}
+
+	private List<ThankYouBean> thankYouList;
+	
+	public List<ThankYouBean> getThankYouList() {
+		return thankYouList;
+	}
+
+	public void setThankYouList(List<ThankYouBean> thankYouList) {
+		this.thankYouList = thankYouList;
+	}
+
 	private int numberOfTopics;
 	
 	private EnumSet<ProfilePreference> profilePreferences;
@@ -178,9 +202,24 @@ public class TalkerBean implements Serializable {
 		setMaritalStatus((String)talkerDBObject.get("mar_status"));
 		setCategory((String)talkerDBObject.get("category"));
 		setImagePath((String)talkerDBObject.get("img"));
+		setRegDate((Date)talkerDBObject.get("timestamp"));
 		parseProfilePreferences(parseInt(talkerDBObject.get("prefs")));
+		
+//		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
 	}
 	
+	private void parseThankYous(Collection<DBObject> thankYouDBList) {
+		thankYouList = new ArrayList<ThankYouBean>();
+		for (DBObject thankYouDBObject : thankYouDBList) {
+			ThankYouBean thankYouBean = new ThankYouBean();
+			thankYouBean.setTime((Date)thankYouDBObject.get("time"));
+			thankYouBean.setNote((String)thankYouDBObject.get("note"));
+			thankYouBean.setFrom(thankYouDBObject.get("from").toString());
+			
+			thankYouList.add(thankYouBean);
+		}
+	}
+
 	private int parseInt(Object value) {
 		if (value == null) {
 			return 0;
@@ -207,6 +246,23 @@ public class TalkerBean implements Serializable {
 			if ((dbValue & preference.getValue()) != 0) {
 				profilePreferences.add(preference);
 			}
+		}
+	}
+	
+	public long getAge() {
+		Date now = new Date();
+        long delta = (now.getTime() - dob.getTime()) / 1000;
+
+        long years = delta / (365 * 24 * 60 * 60);
+        return years;
+	}
+	
+	public String getFullGender() {
+		if ("F".equals(gender)) {
+			return "Female";
+		}
+		else {
+			return "Male";
 		}
 	}
 	
