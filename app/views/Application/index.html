@@ -36,10 +36,8 @@
 		}
 		
 		function signup() {
-			if (checkForm()) {
-				var newTopic = document.getElementById('newtopic').value;				
-				document.location = "@{Application.signup()}?newtopic="+encodeURIComponent(newTopic);
-			}
+			var newTopic = document.getElementById('newtopic').value;				
+			document.location = "@{Application.signup()}?newtopic="+encodeURIComponent(newTopic);
 		}
 	</script>
 </head>

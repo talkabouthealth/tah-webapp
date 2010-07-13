@@ -4,6 +4,28 @@
 			background:url(/public/images/inner_bg.gif) repeat-x top;
 		}
 	</style>
+	<script type="text/javascript"> 	 
+   		$(document).ready(function() {
+   			$("#thankyoulink").fancybox({ 
+   	   			'hideOnContentClick': false,
+   	   			'showCloseButton': false
+   	   		});
+   		});
+
+   		function thankYou() {
+   	   		var noteText = $("#thankYouNote").val();
+   	   		
+   			$.fancybox.close();
+   			$("#thankYouNote").val("");
+
+   			$.post("@{Actions.createThankYou()}", 
+  				{ toTalker: '${talker.id}', note: noteText},
+  				function(data) {
+  					//ok?!
+  				}
+  			);
+   		}
+   	</script>
 </head>
 <body>
 	<div id="top_container">
@@ -26,18 +48,21 @@
 								<div class="proleftwhitemid">
 									<div class="profilearea">
 										<div class="profileimg">
-											<img src="/public/images/profileimg.jpg" width="208" height="136" />
+											<img src="${talker.imagePath}" width="208" height="136" />
 										</div>
 										<div class="profileimgtext">
 											<ul>
 											<li><span class="simpletext">Currently Online</span></li>
-											<li><a href="#" class="navybluetext12">Follow</a></li>
-											<li><a href="#" class="navybluetext12">Give a 'Thanks you'</a></li>
-											<!-- 
-											<li><a href="#" class="navybluetext12">Send a private message</a></li>
-											<li><a href="#" class="navybluetext12">Request to talk right now</a></li>
-											<li><a href="#" class="navybluetext12">Leave a comment</a></li>
-											-->
+											#{ifnot session.get('username').equals(talker.userName) }
+												<li><a href="#" class="navybluetext12">Follow</a></li>
+												<li><a href="#thankyouform" id="thankyoulink" 
+														class="navybluetext12">Give a 'Thanks you'</a></li>
+												<!-- 
+												<li><a href="#" class="navybluetext12">Send a private message</a></li>
+												<li><a href="#" class="navybluetext12">Request to talk right now</a></li>
+												<li><a href="#" class="navybluetext12">Leave a comment</a></li>
+												-->
+											#{/ifnot}
 											</ul>
 										</div>
 									</div>
@@ -198,17 +223,19 @@
 							</ul>
 						</div>
 						<div class="prosubheading">
-							<div class="profileheading">Thank You's (5)</div>
+							<div class="profileheading">Thank You's (${talker.thankYouList.size()})</div>
 							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 						</div>
-						<div class="profiletext2">
-							<div class="thankyoupic"><img src="/public/images/followimg4.jpg" border="0" /></div>
+						#{list items:talker.thankYouList, as:'thankYou'}
+							<div class="profiletext2">
+							<div class="thankyoupic"><img width="48" height="48" src="${thankYou.fromTalker.imagePath}" border="0" /></div>
 							<div class="thankyoutext">
-								<span class="navybluetext12">Jason Sharma</span><br />
-							  	<span class="blacktext11">Great advice on how to deal <br />
-							  		with side effects.</span>
+								<a href="@{Profile.view(thankYou.fromTalker.userName)}" 
+									class="bluetext11">${thankYou.fromTalker.userName}</a><br/>
+							  	<span class="blacktext11">${thankYou.note}</span>
 							 </div>
 						</div>
+						#{/list}
 						<div class="prosubheading">
 							<div class="profileheading">Comments</div>
 							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
@@ -268,3 +295,21 @@
 			</div>
 		</div>
 	</div>
+	
+<!-- Pop-up Thank You form -->
+<div id="hiddenwindows" style="display: none">
+	<div id="thankyouform">
+		<table align="center" cellspacing="10">
+			<tr>
+				<td align="right" valign="top">'Thanks You' note:</td>
+				<td><textarea rows="5" cols="30" id="thankYouNote" name="thankYouNote" ></textarea></td>
+			</tr>
+			<tr align="center">
+				<td colspan="2">
+					<input id="thankYouBtn" onClick="thankYou()" type="button" value="Give a 'Thanks you'"/>
+					<input id="cancelBtn" onClick="$.fancybox.close();" value="Cancel" type="button" />
+				</td>
+			</tr>
+		</table>	
+	</div>
+</div>

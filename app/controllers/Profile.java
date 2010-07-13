@@ -281,8 +281,10 @@ public class Profile extends Controller {
 	}
 	
 	/* ---------------- Public Profile ------------------------ */
-	public static void view() {
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+	public static void view(String userName) {
+		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		
+		//TODO: no such user?
 		
 		render(talker);
 	}

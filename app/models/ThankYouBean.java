@@ -11,6 +11,14 @@ public class ThankYouBean {
 	private String from;
 	private String to;
 	
+	private TalkerBean fromTalker;
+	
+	public TalkerBean getFromTalker() {
+		return fromTalker;
+	}
+	public void setFromTalker(TalkerBean fromTalker) {
+		this.fromTalker = fromTalker;
+	}
 	public Date getTime() {
 		return time;
 	}

@@ -18,6 +18,7 @@ import util.ValidateData;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.DBObject;
+import com.mongodb.DBRef;
 
 public class TalkerBean implements Serializable {
 	
@@ -205,18 +206,33 @@ public class TalkerBean implements Serializable {
 		setRegDate((Date)talkerDBObject.get("timestamp"));
 		parseProfilePreferences(parseInt(talkerDBObject.get("prefs")));
 		
-//		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
+		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
 	}
 	
 	private void parseThankYous(Collection<DBObject> thankYouDBList) {
+		//TODO: move thanks you load to separate function (to prevent delays)?
 		thankYouList = new ArrayList<ThankYouBean>();
-		for (DBObject thankYouDBObject : thankYouDBList) {
-			ThankYouBean thankYouBean = new ThankYouBean();
-			thankYouBean.setTime((Date)thankYouDBObject.get("time"));
-			thankYouBean.setNote((String)thankYouDBObject.get("note"));
-			thankYouBean.setFrom(thankYouDBObject.get("from").toString());
-			
-			thankYouList.add(thankYouBean);
+		if (thankYouDBList != null) {
+			for (DBObject thankYouDBObject : thankYouDBList) {
+				ThankYouBean thankYouBean = new ThankYouBean();
+				thankYouBean.setTime((Date)thankYouDBObject.get("time"));
+				thankYouBean.setNote((String)thankYouDBObject.get("note"));
+				
+				System.out.println(((DBRef)thankYouDBObject.get("from")));
+				System.out.println(((DBRef)thankYouDBObject.get("from")).getId());
+				System.out.println(((DBRef)thankYouDBObject.get("from")).getRef());
+				System.out.println(((DBRef)thankYouDBObject.get("from")).fetch());
+				DBObject fromTalkerDBObject = ((DBRef)thankYouDBObject.get("from")).fetch();
+				System.out.println(fromTalkerDBObject);
+				TalkerBean fromTalker = new TalkerBean();
+				fromTalker.setUserName((String)fromTalkerDBObject.get("uname"));
+				fromTalker.setImagePath((String)fromTalkerDBObject.get("img"));
+				
+				thankYouBean.setFrom(fromTalkerDBObject.get("_id").toString());
+				thankYouBean.setFromTalker(fromTalker);
+				
+				thankYouList.add(thankYouBean);
+			}
 		}
 	}
 

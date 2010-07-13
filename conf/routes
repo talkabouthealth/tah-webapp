@@ -13,6 +13,8 @@ POST    /sendnewpassword						Application.sendNewPassword
 
 GET		/home									Home.index
 
+GET		/profile/view/{userName}				Profile.view
+
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
 

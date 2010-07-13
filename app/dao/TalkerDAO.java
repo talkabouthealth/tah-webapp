@@ -146,10 +146,10 @@ public class TalkerDAO {
 	
 	
 	/* --------------------- "Thank you" feature ----------------------------- */
-	private static void saveThankYou(ThankYouBean thankYouBean) {
+	public static void saveThankYou(ThankYouBean thankYouBean) {
 		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
 		
-		DBRef fromTalkerRef = new DBRef(DBUtil.getDB(), TALKERS_COLLECTION, thankYouBean.getFrom());
+		DBRef fromTalkerRef = new DBRef(DBUtil.getDB(), TALKERS_COLLECTION, new ObjectId(thankYouBean.getFrom()));
 		DBObject thankYouObject = BasicDBObjectBuilder.start()
 			.add("time", thankYouBean.getTime())
 			.add("note", thankYouBean.getNote())
@@ -159,19 +159,6 @@ public class TalkerDAO {
 		DBObject talkerId = new BasicDBObject("_id", new ObjectId(thankYouBean.getTo()));
 		//For creating/adding to array: { $push : { field : value } }
 		talkersColl.update(talkerId, new BasicDBObject("$push", new BasicDBObject("thankyous", thankYouObject)));
-	}
-	
-	private static void findThankYouFrom(String talkerId) {
-		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
-		
-		DBRef fromTalkerRef = new DBRef(DBUtil.getDB(), TALKERS_COLLECTION, talkerId);
-		DBObject query = new BasicDBObject("thankyous.from", fromTalkerRef);
-		
-		List<DBObject> list = talkersColl.find(query, new BasicDBObject("thankyous", "")).toArray();
-		System.out.println(list.size());
-		for (DBObject dbo : list) {
-			System.out.println(dbo);
-		}
 	}
 	
 	public static void main(String[] args) {
