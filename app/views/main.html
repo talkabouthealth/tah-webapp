@@ -30,7 +30,6 @@
 	
 
 	#{doLayout /}
-        
 	
 	<div id="footerarea">
 		<div id="footer">
@@ -45,11 +44,11 @@
 				</div>
 				|&nbsp;&nbsp;
 				<a href="http://blog.talkabouthealth.com" class="footerlink">Blog</a>&nbsp;&nbsp;|&nbsp;
-				<a href="/static/faq" class="footerlink">Faq</a>&nbsp;&nbsp;|&nbsp;
-				<a href="mailto:feedback@Talkmi.com" class="footerlink">Contact Us</a>&nbsp;&nbsp;|&nbsp;
-				<a href="/static/aboutus" class="footerlink">About Us</a>&nbsp;&nbsp;|&nbsp;
-				<a href="/static/privacy" class="footerlink">Privacy Policy</a>&nbsp;&nbsp;|&nbsp;
-				<a href="/static/tos" class="footerlink">Terms of Service</a>
+				<a href="@{Static.faq()}" class="footerlink">Faq</a>&nbsp;&nbsp;|&nbsp;
+				<a href="@{Static.contactus()}" class="footerlink">Contact Us</a>&nbsp;&nbsp;|&nbsp;
+				<a href="@{Static.aboutus()}" class="footerlink">About Us</a>&nbsp;&nbsp;|&nbsp;
+				<a href="@{Static.privacy()}" class="footerlink">Privacy Policy</a>&nbsp;&nbsp;|&nbsp;
+				<a href="@{Static.tos()}" class="footerlink">Terms of Service</a>
 			</div>
 			<div id="footerright"><img src="/public/images/footerlogo.gif" width="237" height="25" alt="" /></div>
 		</div>
