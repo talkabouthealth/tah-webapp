@@ -9,8 +9,10 @@ public class TalkerDiseaseBean {
 	private String stage;
 	private String type;
 	private boolean recurrent;
+	
 	private Date symptomDate;
 	private Date diagnoseDate;
+	
 	private Set<String> healthItems;
 	
 	public boolean isRecurrent() {

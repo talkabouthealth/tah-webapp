@@ -83,7 +83,7 @@
 								<div class="row">
 									<label>When did the first symptom appear?</label>
 									<div>
-										<input name="talkerDisease.symptomDate" type="text" class="textfields" 
+										<input name="talkerDisease.symptomDateString" type="text" class="textfields" 
 											onclick="if (this.value == 'mm/dd/yyyy') this.value='';" 
 											#{if talkerDisease != null && talkerDisease.symptomDate != null }	
 												value="${talkerDisease.symptomDate.format('MM/dd/yyyy')}"
@@ -97,7 +97,7 @@
 								<div class="row">
 									<label>When were you first diagnosed?</label>
 									<div>
-										<input name="talkerDisease.diagnoseDate" type="text" class="textfields" 
+										<input name="talkerDisease.diagnoseDateString" type="text" class="textfields" 
 											onclick="if (this.value == 'mm/dd/yyyy') this.value='';" 
 											#{if talkerDisease != null && talkerDisease.diagnoseDate != null }	
 												value="${talkerDisease.diagnoseDate.format('MM/dd/yyyy')}"

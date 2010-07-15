@@ -24,7 +24,7 @@
 		
 	  reason += validateUsername(document.getElementById("talker.userName"));
 	  reason += validateEmail(document.getElementById("talker.email"));
-	  reason += validateEmpty(document.getElementById("talker.dob"));
+	  reason += validateEmpty(document.getElementById("talker.dobString"));
 	    
 	  if (reason != "") {
 	    alert("Some fields need correction:\n" + reason);
@@ -123,7 +123,7 @@
 		<div id="innerpersonalarea">
 			<div id="signupleft">
 			#{form @Profile.save() , id:'updateprofile' }
-				<!-- We need this field to pass validation -->
+				<!-- We need this field to pass TalkerBean validation -->
 				<input type="hidden" id="talker.password" name="talker.password" value="pass" />
 				<div id="personalleft">
 					<div class="personalmain" style="text-align: center">
@@ -169,7 +169,7 @@
 					<div class="personalmain">
 						<div class="personaltextarea"><span class="blacktext14">Birth Date</span></div>
 						<div class="personaltextfield">
-							<input name="talker.dob" type="text" class="personalfields" id="talker.dob" 
+							<input name="talker.dobString" type="text" class="personalfields" id="talker.dobString" 
 									value="${talker.dob?.format('MM/dd/yyyy')}" />
 						</div>
 					</div>

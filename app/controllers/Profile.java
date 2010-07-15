@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -56,13 +57,16 @@ public class Profile extends Controller {
 			validation.isTrue(tmpTalker == null).message("email.exists");
 		}
 		
-		//TODO incorrect date handling and error message?
+		//temporarily we parse dates manually (Play 1.0.3 can't parse it with pattern 'MM/dd/yyyy')
+		Date dateOfBirth = CommonUtil.parseDate(params.get("talker.dobString"));
+		validation.required(dateOfBirth).message("Please input correct Birth Date, format is 'mm/dd/yyyy'");
 		
 		if(validation.hasErrors()) {
 			flash.success("");
 			render("@edit", talker);
             return;
         }
+		talker.setDob(dateOfBirth);
 		
 		oldTalker.setUserName(talker.getUserName());
 		oldTalker.setEmail(talker.getEmail());
@@ -93,7 +97,7 @@ public class Profile extends Controller {
 			flash.success("");
 			render("@edit", talker);
 			
-			//TODO strange fix. Discussed here:
+			//TODO strange fix for redirect with "#reference". Discussed here:
 			//http://groups.google.com/group/play-framework/browse_thread/thread/93c2ec3e34c20f4e/bf94f63fcb2e529d?lnk=gst&q=addRef#bf94f63fcb2e529d
 //			ActionDefinition action = reverse(); {
 //				//render("@edit", talker);
@@ -236,7 +240,6 @@ public class Profile extends Controller {
 	}
 	
 	/* ------------- Health Info -------------------------- */
-	
 	public static void healthDetails() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
@@ -265,6 +268,12 @@ public class Profile extends Controller {
 		parseHealthItems(talkerDisease);
 		talkerDisease.setUid(talker.getId());
 		
+		//temporarily we parse dates manually (Play 1.0.3 can't parse it with pattern 'MM/dd/yyyy')
+		Date symptomDate = CommonUtil.parseDate(params.get("talkerDisease.symptomDateString"));
+		talkerDisease.setSymptomDate(symptomDate);
+		Date diagnoseDate = CommonUtil.parseDate(params.get("talkerDisease.diagnoseDateString"));
+		talkerDisease.setDiagnoseDate(diagnoseDate);
+		
 		//Save or update
 		TalkerDiseaseDAO.saveTalkerDisease(talkerDisease);
 		
@@ -290,8 +299,10 @@ public class Profile extends Controller {
 	public static void view(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		
-		//TODO: no such user?
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		
+		notFoundIfNull(talker);
+		
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		talker.setActivityList(ActivityDAO.load(talker.getId()));
 		//TODO: Temporarily - later we'll load all list of topics
