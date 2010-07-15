@@ -24,7 +24,7 @@ public class TalkerDAO {
 	public static final String TALKERS_COLLECTION = "talkers";
 	
 	public static boolean save(TalkerBean talker) {
-		DBCollection talkersColl = DBUtil.getCollection("talkers");
+		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
 
 		DBObject talkerDBObject = BasicDBObjectBuilder.start()
 				.add("uname", talker.getUserName())

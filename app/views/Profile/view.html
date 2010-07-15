@@ -3,6 +3,10 @@
 		body {
 			background:url(/public/images/inner_bg.gif) repeat-x top;
 		}
+		.seeall {
+			/* Temporarily - until we'll have pages for all "see all" */
+			display: none;
+		}
 	</style>
 	<script type="text/javascript"> 	 
    		$(document).ready(function() {
@@ -302,15 +306,16 @@
 							</div>
 						</div>
 						<div class="prosubheading">
-							<div class="profileheading">mn_jones Activities</div>
+							<div class="profileheading">${talker.userName} Activities</div>
 							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 						</div>
 						<div class="activitiestext">
 							<ul>
-								<li class="blacktext12">mn_jones joined the conversation:
-									<a href="#" class="navybluetext12"> "What are the side effects of Hercepting?"</a></li>
-								<li class="blacktext12">mn_jones started the conversation:
-									<a href="#" class="navybluetext12"> "What are some things you wish you had said or done?</a></li>
+								#{list items:talker.activityList, as:'activity' }
+									<li class="blacktext12">
+										${talker.userName} ${activity.text}
+									</li>
+								#{/list}
 							</ul>
 						</div>
 					</div>

@@ -12,6 +12,7 @@ import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
 import webapp.LiveConversationsSingleton;
+import dao.ActivityDAO;
 import dao.TopicDAO;
 
 @With(Secure.class)
@@ -44,6 +45,9 @@ public class Topics extends Controller {
 			new Exception("DB Problem - Topic not inserted into DB").printStackTrace();
 			renderText("|");
 		}
+		
+		// Save as talker activity
+		ActivityDAO.createActivity(topic.getUid(), "started the conversation: "+topic.getTopic());
 
 		// create new LiveConvBean
 		LiveConversationBean lcb = new LiveConversationBean();

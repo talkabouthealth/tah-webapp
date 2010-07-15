@@ -101,7 +101,16 @@ public class TalkerBean implements Serializable {
 	private List<ThankYouBean> thankYouList;
 	private List<TalkerBean> followingList;
 	private List<TalkerBean> followerList;
+	private List<ActivityBean> activityList;
 	
+	public List<ActivityBean> getActivityList() {
+		return activityList;
+	}
+
+	public void setActivityList(List<ActivityBean> activityList) {
+		this.activityList = activityList;
+	}
+
 	public List<TalkerBean> getFollowerList() {
 		return followerList;
 	}

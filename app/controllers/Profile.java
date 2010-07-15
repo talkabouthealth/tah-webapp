@@ -25,6 +25,7 @@ import play.data.validation.Valid;
 import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
+import dao.ActivityDAO;
 import dao.DiseaseDAO;
 import dao.HealthItemDAO;
 import dao.TalkerDAO;
@@ -287,6 +288,7 @@ public class Profile extends Controller {
 		//TODO: no such user?
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+		talker.setActivityList(ActivityDAO.load(talker.getId()));
 		
 		render(talker, currentTalker);
 	}
