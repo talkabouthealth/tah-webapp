@@ -10,6 +10,16 @@
    	   			'hideOnContentClick': false,
    	   			'showCloseButton': false
    	   		});
+
+   			$("#followActionlink").click(function() {
+   				$.post("@{Actions.follow()}", 
+	  				{ followingId: '${talker.id}'},
+	  				function(data) {
+	  					$("#followResult").html("Ok! ");
+	  					$("#followActionlink").html(data);
+	  				}
+	  			);
+	   		});
    		});
 
    		function thankYou() {
@@ -53,8 +63,13 @@
 										<div class="profileimgtext">
 											<ul>
 											<li><span class="simpletext">Currently Online</span></li>
-											#{ifnot session.get('username').equals(talker.userName) }
-												<li><a href="#" class="navybluetext12">Follow</a></li>
+											#{ifnot talker.userName.equals(currentTalker.userName) }
+												<li>
+													<span id="followResult" class="simpletext"></span>
+													<a id="followActionlink" href="#" class="navybluetext12">
+													${ currentTalker.followingList.contains(talker) ? 'Unfollow' : 'Follow'}
+													</a>
+												</li>
 												<li><a href="#thankyouform" id="thankyoulink" 
 														class="navybluetext12">Give a 'Thanks you'</a></li>
 												<!-- 
@@ -76,12 +91,16 @@
 									<div class="profileheading">Following</div>
 									<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 									<div class="followingimg">
-									<ul>
-										<li><a href="#" class="bluetext11"><img src="/public/images/followimg1.jpg" border="0" /><br />Andry</a></li>
-										<li><a href="#" class="bluetext11"><img src="/public/images/followimg2.jpg" border="0" /><br />Blal</a></li>
-										<li><a href="#" class="bluetext11"><img src="/public/images/followimg3.jpg" border="0" /><br />Lalit</a></li>
-										<li><a href="#" class="bluetext11"><img src="/public/images/followimg4.jpg" border="0" /><br />Jason</a></li>
-									</ul>
+										<ul>
+											#{list items:talker.followingList, as:'following' }
+												<li>
+													<a href="@{Profile.view(following.userName)}" class="bluetext11">
+														<img src="${following.imagePath}" width="48" height="48" border="0" />
+														<br />${following.userName}
+													</a>
+												</li>
+											#{/list}
+										</ul>
 									</div>
 									</div>
 								</div>
@@ -95,10 +114,14 @@
 									<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 									<div class="followingimg">
 										<ul>
-										<li><a href="#" class="bluetext11"><img src="/public/images/followimg1.jpg" border="0" /><br />Andry</a></li>
-										<li><a href="#" class="bluetext11"><img src="/public/images/followimg2.jpg" border="0" /><br />Blal</a></li>
-										<li><a href="#" class="bluetext11"><img src="/public/images/followimg3.jpg" border="0" /><br />Lalit</a></li>
-										<li><a href="#" class="bluetext11"><img src="/public/images/followimg4.jpg" border="0" /><br />Jason</a></li>
+											#{list items:talker.followerList, as:'follower' }
+												<li>
+													<a href="@{Profile.view(follower.userName)}" class="bluetext11">
+														<img src="${follower.imagePath}" width="48" height="48" border="0" />
+														<br />${follower.userName}
+													</a>
+												</li>
+											#{/list}
 										</ul>
 									</div>
 								</div>

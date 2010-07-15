@@ -1,10 +1,12 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import models.TalkerBean;
+import models.TalkerDiseaseBean;
 import models.ThankYouBean;
 
 import org.bson.types.ObjectId;
@@ -161,18 +163,58 @@ public class TalkerDAO {
 		talkersColl.update(talkerId, new BasicDBObject("$push", new BasicDBObject("thankyous", thankYouObject)));
 	}
 	
-	public static void main(String[] args) {
-		ThankYouBean thankYouBean = new ThankYouBean();
-		thankYouBean.setTime(new Date());
-		thankYouBean.setNote("Thank you note!");
-		thankYouBean.setFrom("4c35dbeb5165f305eebfc5f2");
-		thankYouBean.setTo("4c2cb43160adf3055c97d061");
-		TalkerDAO.saveThankYou(thankYouBean);
+	/* ---------------------- Following/Followers feature --------------------------- */
+	
+	/**
+	 * Follows or unfollows depending on third parameter
+	 */
+	public static void followAction(String followerId, String followingId, boolean follow) {
+		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
 		
-//		TalkerBean talkerBean = TalkerDAO.getByUserName("osezno");
-//		System.out.println(talkerBean.getThankYouList());
+		DBRef followingTalkerRef = new DBRef(DBUtil.getDB(), 
+				TALKERS_COLLECTION, new ObjectId(followingId));
+		DBObject talkerId = new BasicDBObject("_id", new ObjectId(followerId));
 		
-//		TalkerDAO.findThankYouFrom("4c2cb43160adf3055c97d061");
+		String action = null;
+		if (follow) {
+			//add to array
+			action = "$push";
+		}
+		else {
+			//remove from array
+			action = "$pull";
+		}
+		DBObject updateQuery = new BasicDBObject(action, new BasicDBObject("following", followingTalkerRef));
+		talkersColl.update(talkerId, updateQuery);
 	}
+	
+	public static List<TalkerBean> loadFollowers(String talkerId) {
+		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+
+		DBRef followingTalkerRef = new DBRef(DBUtil.getDB(), 
+				TALKERS_COLLECTION, new ObjectId(talkerId));
+		BasicDBObject query = new BasicDBObject("following", followingTalkerRef);
+		List<DBObject> followerDBList = talkersColl.find(query).toArray();
+		
+		List<TalkerBean> followerList = new ArrayList<TalkerBean>();
+		for (DBObject followerDBObject : followerDBList) {
+			//TODO: same as following?
+			TalkerBean followerTalker = new TalkerBean();
+			followerTalker.setId(followerDBObject.get("_id").toString());
+			followerTalker.setUserName(followerDBObject.get("uname").toString());
+			followerTalker.setImagePath(followerDBObject.get("img").toString());
+			
+			followerList.add(followerTalker);
+		}
+		
+		return followerList;
+	}
+	
+	public static void main(String[] args) {
+//		TalkerDAO.follow("4c2cb43160adf3055c97d061", "4c35dbeb5165f305eebfc5f2", true);
+		
+		System.out.println(loadFollowers("4c35dbeb5165f305eebfc5f2"));
+	}
+
 }
 

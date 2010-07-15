@@ -282,10 +282,12 @@ public class Profile extends Controller {
 	
 	/* ---------------- Public Profile ------------------------ */
 	public static void view(String userName) {
-		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		
 		//TODO: no such user?
+		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		
-		render(talker);
+		render(talker, currentTalker);
 	}
 }

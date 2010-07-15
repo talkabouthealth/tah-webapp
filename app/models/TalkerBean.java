@@ -99,7 +99,25 @@ public class TalkerBean implements Serializable {
 	}
 
 	private List<ThankYouBean> thankYouList;
+	private List<TalkerBean> followingList;
+	private List<TalkerBean> followerList;
 	
+	public List<TalkerBean> getFollowerList() {
+		return followerList;
+	}
+
+	public void setFollowerList(List<TalkerBean> followerList) {
+		this.followerList = followerList;
+	}
+
+	public List<TalkerBean> getFollowingList() {
+		return followingList;
+	}
+
+	public void setFollowingList(List<TalkerBean> followingList) {
+		this.followingList = followingList;
+	}
+
 	public List<ThankYouBean> getThankYouList() {
 		return thankYouList;
 	}
@@ -114,6 +132,20 @@ public class TalkerBean implements Serializable {
 	
 	public TalkerBean(){}
 	
+	public TalkerBean(String id) {
+		this.id = id;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof TalkerBean)) {
+			return false;
+		}
+		
+		TalkerBean other = (TalkerBean)obj;
+		return id.equals(other.id);
+	}
+
 	public String getUserName() {
 		return userName;
 	}
@@ -207,6 +239,7 @@ public class TalkerBean implements Serializable {
 		parseProfilePreferences(parseInt(talkerDBObject.get("prefs")));
 		
 		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
+		parseFollowing((Collection<DBRef>)talkerDBObject.get("following"));
 	}
 	
 	private void parseThankYous(Collection<DBObject> thankYouDBList) {
@@ -218,12 +251,7 @@ public class TalkerBean implements Serializable {
 				thankYouBean.setTime((Date)thankYouDBObject.get("time"));
 				thankYouBean.setNote((String)thankYouDBObject.get("note"));
 				
-				System.out.println(((DBRef)thankYouDBObject.get("from")));
-				System.out.println(((DBRef)thankYouDBObject.get("from")).getId());
-				System.out.println(((DBRef)thankYouDBObject.get("from")).getRef());
-				System.out.println(((DBRef)thankYouDBObject.get("from")).fetch());
 				DBObject fromTalkerDBObject = ((DBRef)thankYouDBObject.get("from")).fetch();
-				System.out.println(fromTalkerDBObject);
 				TalkerBean fromTalker = new TalkerBean();
 				fromTalker.setUserName((String)fromTalkerDBObject.get("uname"));
 				fromTalker.setImagePath((String)fromTalkerDBObject.get("img"));
@@ -232,6 +260,22 @@ public class TalkerBean implements Serializable {
 				thankYouBean.setFromTalker(fromTalker);
 				
 				thankYouList.add(thankYouBean);
+			}
+		}
+	}
+	
+	private void parseFollowing(Collection<DBRef> followingDBList) {
+		followingList = new ArrayList<TalkerBean>();
+		if (followingDBList != null) {
+			for (DBRef followingDBRef : followingDBList) {
+				TalkerBean followingTalker = new TalkerBean();
+				
+				DBObject followingDBOBject = followingDBRef.fetch();
+				followingTalker.setId(followingDBOBject.get("_id").toString());
+				followingTalker.setUserName(followingDBOBject.get("uname").toString());
+				followingTalker.setImagePath(followingDBOBject.get("img").toString());
+				
+				followingList.add(followingTalker);
 			}
 		}
 	}

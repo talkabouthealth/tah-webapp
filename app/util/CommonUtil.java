@@ -103,10 +103,16 @@ public class CommonUtil {
 		TalkerBean talker = Cache.get(session.getId() + "-talker", TalkerBean.class);
 	    if (talker == null) {
 	        // Cache miss
-	    	talker = TalkerDAO.getByUserName(session.get("username"));
-	        Cache.set(session.getId() + "-talker", talker, "30mn");
+	    	talker = updateCachedTalker(session);
 	    }
 	    return talker;
+	}
+	
+	public static TalkerBean updateCachedTalker(Session session) {
+		TalkerBean talker = TalkerDAO.getByUserName(session.get("username"));
+        Cache.set(session.getId() + "-talker", talker, "60mn");
+        
+        return talker;
 	}
 	
 	public static Date parseDate(String dateString) {
