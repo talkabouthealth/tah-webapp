@@ -43,6 +43,9 @@ public class TalkerDiseaseDAO {
 		
 		//load and parse disease data from talker
 		DBObject diseaseDBObject = (DBObject)talkerDBObject.get("disease");
+		if (diseaseDBObject == null) {
+			return null;
+		}
 		TalkerDiseaseBean talkerDisease = new TalkerDiseaseBean();
 		talkerDisease.setUid(talkerId);
 		talkerDisease.setStage((String)diseaseDBObject.get("stage"));

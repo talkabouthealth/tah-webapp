@@ -30,6 +30,7 @@ import dao.DiseaseDAO;
 import dao.HealthItemDAO;
 import dao.TalkerDAO;
 import dao.TalkerDiseaseDAO;
+import dao.TopicDAO;
 
 @With(Secure.class)
 public class Profile extends Controller {
@@ -197,8 +198,12 @@ public class Profile extends Controller {
 	
 	public static void saveNotifications(TalkerBean talker) {
 		flash.put("currentForm", "notificationsForm");
-		
 		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);
+		
+		if (talker == null) {
+			//save defaults
+			talker = new TalkerBean();
+		}
 		
 		sessionTalker.setNfreq(talker.getNfreq());
 		sessionTalker.setNtime(talker.getNtime());
@@ -289,6 +294,8 @@ public class Profile extends Controller {
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		talker.setActivityList(ActivityDAO.load(talker.getId()));
+		//TODO: Temporarily - later we'll load all list of topics
+		talker.setNumberOfTopics(TopicDAO.getNumberOfTopics(talker.getId()));
 		
 		render(talker, currentTalker);
 	}

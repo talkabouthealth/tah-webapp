@@ -51,7 +51,7 @@
 										<select name="talkerDisease.stage" class="textarea1">
 											#{list items:stagesList, as:'stage' }
 												<option value="${stage}" 
-											    #{if stage.equals(talkerDisease.stage) } selected #{/if} 
+											    #{if stage.equals(talkerDisease?.stage) } selected #{/if} 
 											    >${stage}</option>
 											#{/list}
 										</select>
@@ -63,7 +63,7 @@
 										<select name="talkerDisease.type" class="textarea1">
 											#{list items:typesList, as:'type' }
 												<option value="${type}" 
-											    #{if type.equals(talkerDisease.type) } selected #{/if} 
+											    #{if type.equals(talkerDisease?.type) } selected #{/if} 
 											    >${type}</option>
 											#{/list}
 										</select>
@@ -75,7 +75,7 @@
 										<select name="talkerDisease.recurrent" class="textarea1">											
 									 		<option value="false">No</option>
 									 		<option value="true" 
-									 		#{if talkerDisease.recurrent } selected #{/if} 
+									 		#{if talkerDisease?.recurrent } selected #{/if} 
 									 		>Yes</option>
 										</select>
 									</div> 
@@ -110,7 +110,7 @@
 								</div>
 								<h1 style="margin-top: 15px;" >What were the initial symptoms you experienced?</h1>
 								<ul>
-									#{ healthItemsTree healthItem:healthItemsMap["symptoms"], checkedItems: talkerDisease.healthItems /}
+									#{ healthItemsTree healthItem:healthItemsMap["symptoms"], checkedItems: talkerDisease?.healthItems /}
 								</ul>
 							</div>
 							<div class="notiblueareabot"></div>
@@ -143,7 +143,7 @@
 							<div class="signfields2">								
 								<h1>Which of the following tests have you had?</h1>
 								<ul>
-									#{ healthItemsTree healthItem:healthItemsMap["tests"], checkedItems: talkerDisease.healthItems /}
+									#{ healthItemsTree healthItem:healthItemsMap["tests"], checkedItems: talkerDisease?.healthItems /}
 								</ul>
 							</div>
 							<div class="notiblueareabot"></div>
@@ -153,7 +153,7 @@
 							<div class="signfields2">								
 								<h1>What procedures / surgeries have you had?</h1>
 								<ul>
-									#{ healthItemsTree healthItem:healthItemsMap["procedures"], checkedItems: talkerDisease.healthItems /}
+									#{ healthItemsTree healthItem:healthItemsMap["procedures"], checkedItems: talkerDisease?.healthItems /}
 								</ul>
 							</div>
 							<div class="notiblueareabot"></div>
@@ -178,7 +178,7 @@
 							<div class="signfields2">								
 								<h1>What treatments / medications have you taken?</h1>
 								<ul>
-									#{ healthItemsTree healthItem:healthItemsMap["treatments"], checkedItems: talkerDisease.healthItems /}
+									#{ healthItemsTree healthItem:healthItemsMap["treatments"], checkedItems: talkerDisease?.healthItems /}
 								</ul>
 							</div>
 							<div class="notiblueareabot"></div>

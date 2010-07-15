@@ -6,7 +6,7 @@
 	#{else}
 		<li>
 			<input name='healthitem${item.id}' type='checkbox'
-			#{if _checkedItems.contains(item.id) }
+			#{if _checkedItems?.contains(item.id) }
 				checked='checked'
 			#{/if}
 			/> ${item.name}
