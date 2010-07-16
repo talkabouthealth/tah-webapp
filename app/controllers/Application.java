@@ -75,7 +75,7 @@ public class Application extends Controller {
     public static void register(@Valid TalkerBean talker, String newTopic) {
 		validateTalker(talker);
 		
-		System.out.println(validation.errorsMap());
+//		System.out.println(validation.errorsMap());
 				
         if(validation.hasErrors()) {
             params.flash(); // add http parameters to the flash scope
@@ -147,7 +147,6 @@ public class Application extends Controller {
 	}
 	
 	public static void redirectPage(String url) {
-		System.out.println("???"+url);
 		render(url);
 	}
 

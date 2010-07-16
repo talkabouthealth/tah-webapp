@@ -261,7 +261,7 @@
 							<div class="personaltextfield" >
 								<select id="talker.im" name="talker.im" class="personalfields">
 							  		<option selected value=''>Select an IM service</option>
-									#{list items:['YahooIM', 'WindowLive', 'AOL', 'GoogleTalk', 'SkypeIM'], as:'imService'}
+									#{list items:['YahooIM', 'WindowLive', 'GoogleTalk'], as:'imService'}
 									    <option value="${imService}" 
 									    #{if flash['talker.im'].equals(imService) } selected #{/if} 
 									    >${imService}</option>
@@ -319,16 +319,20 @@
 								</select>
 							</div>
 						</div>
+						-->
 						<div class="signupmain">
-							<div class="signuptextarea"><span class="blacktext14">Patient/Caregiver/Family Member</span></div>
+							<div class="signuptextarea"><span class="blacktext14">Patient/Caregiver/etc.</span></div>
 							<div class="personaltextfield">
-								<select class="personalfields" >
-							  		<option value="Patient/Caregiver/Family Member" 
-							  			selected="selected">Patient/Caregiver/Family Member</option>
+								<select size="1" name="talker.connection" class="personalfields" id="talker.connection">
+							  		<option selected value=''>Patient/Caregiver/etc.</option>
+							  		#{list items:models.TalkerBean.CONNECTIONS_ARRAY, as:'connection'}
+									    <option value="${connection}"
+									    #{if connection.equals(flash['talker.connection']) } selected #{/if} 
+									    >${connection}</option>
+									#{/list}
 								</select>
 							</div>
 						</div>
-						-->
 						<div class="signupmain"></div>
 					</div>								
 					<div class="signdown">
@@ -363,7 +367,7 @@
 							Advice and support from experienced 
 							peers<br /><br />
 							Meet and develop friendships with 
-							others just like you.<br /><br />Share you story with others who 
+							others just like you.<br /><br />Share your story with others who 
 							understand.</span>
 						</div>
 						<div class="signrighbot"></div>

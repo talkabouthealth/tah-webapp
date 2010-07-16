@@ -245,21 +245,21 @@
 							<div class="personalcheck2"><input name="" type="checkbox" value="" />&nbsp; <span class="blacktext14">12-18 years old</span></div>
 						</div>
 					</div>
+					-->
 					<div class="personalmain">
-						<div class="personaltextarea"><span class="blacktext14">Patient, Caregiver etc</span></div>
+						<div class="personaltextarea"><span class="blacktext14">Patient/Caregiver/etc.</span></div>
 						<div class="personaltextfield">
-							<select id="selection" name="selection" class="personalfields">
-						 		<option selected value='0'>Patient/Caregiver/other/etc. </option>
-						 		<option value="Patient">Patient</option>
-							 	<option value="Former Patient">Former Patient</option>
-							 	<option value="Caregiver">Caregiver</option>
-							 	<option value="Family member">Family member</option> 
-								<option value="Friend">Friend</option>
-								<option value="Physician">Physician</option>
-								<option value="Nurse">Nurse</option> 
+							<select size="1" name="talker.connection" class="personalfields" id="talker.connection">
+						  		<option selected value=''>Patient/Caregiver/etc.</option>
+						  		#{list items:models.TalkerBean.CONNECTIONS_ARRAY, as:'connection'}
+								    <option value="${connection}"
+								    #{if connection.equals(talker.connection) } selected #{/if} 
+								    >${connection}</option>
+								#{/list}
 							</select>
 						</div>
 					</div>
+					<!-- 
 					<div class="personalmain">
 						<div class="personaltextarea"><span class="blacktext14">Web Page</span></div>
 						<div class="personaltextfield">

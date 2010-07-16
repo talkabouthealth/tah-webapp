@@ -22,6 +22,12 @@ import com.mongodb.DBRef;
 
 public class TalkerBean implements Serializable {
 	
+	//TODO: move it to some constants?
+	public static final String[] CONNECTIONS_ARRAY = new String[] {
+		"Patient", "Former Patient", "Parent", "Caregiver", "Family member", "Friend", 
+		"Physician", "Pharmacist", "Nurse", "Psychiatrist", "Social worker", "other"
+	};
+	
 	public enum ProfilePreference {
 		PERSONAL_INFO(1, "Display my Personal Info in my profile"),
 		HEALTH_INFO(2, "Display my Health Info in my profile"),
@@ -74,6 +80,16 @@ public class TalkerBean implements Serializable {
 	private int invitations;
 	private String maritalStatus;
 	private String Category;
+	//Patient/Caregiver/etc.
+	private String connection;
+	public String getConnection() {
+		return connection;
+	}
+
+	public void setConnection(String connection) {
+		this.connection = connection;
+	}
+
 	private String city;
 	private String state;
 	private String country;
@@ -243,6 +259,7 @@ public class TalkerBean implements Serializable {
 		setChildrenNum(parseInt(talkerDBObject.get("ch_num")));
 		setMaritalStatus((String)talkerDBObject.get("mar_status"));
 		setCategory((String)talkerDBObject.get("category"));
+		setConnection((String)talkerDBObject.get("connection"));
 		setImagePath((String)talkerDBObject.get("img"));
 		setRegDate((Date)talkerDBObject.get("timestamp"));
 		parseProfilePreferences(parseInt(talkerDBObject.get("prefs")));

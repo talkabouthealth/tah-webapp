@@ -73,6 +73,7 @@ public class Profile extends Controller {
 		oldTalker.setDob(talker.getDob());
 		oldTalker.setGender(talker.getGender());
 		oldTalker.setMaritalStatus(talker.getMaritalStatus());
+		oldTalker.setConnection(talker.getConnection());
 		oldTalker.setCity(talker.getCity());
 		oldTalker.setState(talker.getState());
 		oldTalker.setCountry(talker.getCountry());

@@ -119,7 +119,7 @@
 								<li>
 									<select name="talker.im" id="talker.im" class="textarea1">
 										<option selected value=''>Select an IM service</option>
-									#{list items:['YahooIM', 'WindowLive', 'AOL', 'GoogleTalk', 'SkypeIM'], as:'imService'}
+									#{list items:['YahooIM', 'WindowLive', 'GoogleTalk'], as:'imService'}
 									    <option value="${imService}" 
 									    #{if imService.equals(talker.im) } selected #{/if} 
 									    >${imService}</option>
