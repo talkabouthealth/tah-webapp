@@ -456,3 +456,10 @@ h4 { float:left; width:221px; padding-bottom:7px;  font-weight: bold; font-size:
 
 .signfields2 .row label {float: left; display: block; width: 300px; font-size: 18px; padding-top:5px;}
 .signfields2 .row div { background:transparent url(../images/textfieldbluebg.gif) no-repeat scroll center top; height:36px; line-height:36px; padding:1px 0 7px 20px; width:261px; margin-left:300px;}
+
+#text_heading {
+	background:transparent url(../images/homeHeadings1.gif) no-repeat scroll center center;
+	float:left;
+	height:110px;
+	width:972px;
+}
