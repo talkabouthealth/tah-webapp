@@ -53,6 +53,7 @@ public class TopicDAO {
 	    	DBObject talkerDBObject = ((DBRef)topicDBObject.get("uid")).fetch();
 	    	TalkerBean talker = new TalkerBean();
 	    	talker.parseFromDB(talkerDBObject);
+	    	talker.setNumberOfTopics(getNumberOfTopics(talker.getId()));
 	    	topic.setTalker(talker);
 	    	
 	    	topicsMap.put(topic.getId(), topic);
@@ -63,6 +64,7 @@ public class TopicDAO {
 	
 	/**
 	 * # of topics for given Talker ID
+	 * TODO: store additional field - quicker access?
 	 */
 	public static int getNumberOfTopics(String talkerId) {
 		DBCollection topicsColl = DBUtil.getCollection(TOPICS_COLLECTION);

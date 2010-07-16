@@ -171,7 +171,7 @@ function postNewTopicResponse() {
 					//TODO: handle user data in other way?
 					'<img src="'+imgPath+'" width="71" height="71" /><br />'+
 					'<span class="bluetext11">'+username+'</span><br/>'+
-					'<span class="currenttext">Advocate</span>';
+					'<span class="currenttext">'+levelOfRecognition+'</span>';
 				newTopic.appendChild(areaLeft);
 				
 				//right side

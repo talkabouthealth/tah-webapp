@@ -11,6 +11,7 @@
 	<script type="text/javascript">
 		var username = "${talker.userName}";
 		var imgPath = "${talker.imagePath}";
+		var levelOfRecognition = "${talker.levelOfRecognition}";
 		
 		function checkForm()
 		{
@@ -97,7 +98,7 @@
 				<div id="imgarea"><img src="${talker.imagePath}" width="71" height="71" /></div>
 				<div class="pinktext" id="imghead">
 					${talker.userName}<br />
-			  		<span class="blacktext14">Advocate</span>
+			  		<span class="blacktext14">${talker.levelOfRecognition}</span>
 			  	</div>
 			  	<div class="bluetext14" id="textrightbox">
 			  		<span class="blacktext">Conversations:</span><strong> ${talker.numberOfTopics}</strong> <br />
@@ -120,8 +121,8 @@
 						<div class="arealeft2">
 							<img src="${topic.talker.imagePath}" width="71" height="71" />
 							<br />
-				  			<span class="bluetext11">${topic.talker.userName}</span> 
-				  			<span class="blacktext11">Advocate</span>
+				  			<span class="bluetext11">${topic.talker.userName}</span><br/>
+				  			<span class="blacktext11">${topic.talker.levelOfRecognition}</span>
 				  		</div>
 						<div class="arearight">
 						    <div class="areatop"></div>

@@ -352,6 +352,45 @@ public class TalkerBean implements Serializable {
 		}
 	}
 	
+	/*
+		New Member - 0 to 5 conversations
+		Supporter - 5 to 15 conversations
+		Companion - 15 to 35 conversations
+		Advocate - 35 to 75 conversations
+		Fellow - 75 to 200 conversations
+		Benefactor - 200 to 500 conversations
+		Patron - 500 to 1,000 conversations
+		Champion - over 1,000 conversations
+	*/
+	public String getLevelOfRecognition() {
+		String levelOfRecognition = "New Member";
+		
+		//TODO: better implementation?
+		if (numberOfTopics >= 5 && numberOfTopics < 15) {
+			levelOfRecognition = "Supporter";
+		}
+		else if (numberOfTopics >= 15 && numberOfTopics < 35) {
+			levelOfRecognition = "Companion";
+		}
+		else if (numberOfTopics >= 35 && numberOfTopics < 75) {
+			levelOfRecognition = "Advocate";
+		}
+		else if (numberOfTopics >= 75 && numberOfTopics < 200) {
+			levelOfRecognition = "Fellow";
+		}
+		else if (numberOfTopics >= 200 && numberOfTopics < 500) {
+			levelOfRecognition = "Benefactor";
+		}
+		else if (numberOfTopics >= 500 && numberOfTopics < 1000) {
+			levelOfRecognition = "Patron";
+		}
+		else if (numberOfTopics >= 1000) {
+			levelOfRecognition = "Champion";
+		}
+		
+		return levelOfRecognition;
+	}
+	
 	public String getMaritalStatus() {
 		return maritalStatus;
 	}

@@ -117,7 +117,6 @@ public class Profile extends Controller {
 	}
 	
 	/* -------------- Image ------------------------ */
-	
 	public static void image() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		String imagePath = talker.getImagePath();
@@ -127,8 +126,6 @@ public class Profile extends Controller {
 	
 	public static void uploadImage(String submitAction, File imageFile) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
-		System.out.println(submitAction);
 		
 		if ("Remove current image".equals(submitAction)) {
 			talker.setImagePath(null);
@@ -164,7 +161,6 @@ public class Profile extends Controller {
 	}
 	
 	/* -------------- Preferences ------------------------ */
-	
 	public static void preferences() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		EnumSet<ProfilePreference> profilePreferences = talker.loadProfilePreferences();
