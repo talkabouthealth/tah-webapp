@@ -102,8 +102,8 @@
 			  	<div class="bluetext14" id="textrightbox">
 			  		<span class="blacktext">Conversations:</span><strong> ${talker.numberOfTopics}</strong> <br />
 				    <span class="blacktext">Thanks You's:</span><strong> ${talker.thankYouList.size()}</strong> <br />
-				    <span class="blacktext">Friends :</span> <strong>30</strong> <br />
-				    <span class="blacktext">Member Since: </span><strong>${talker.regDate.format('MMM yy')}</strong>
+				    <span class="blacktext">Followers:</span> <strong> ${talker.followerList.size()}</strong> <br />
+				    <span class="blacktext">Following:</span><strong> ${talker.followingList.size()}</strong>
 				</div>
 			</div>
 			<div id="rightbot"></div>
@@ -150,12 +150,14 @@
 				<div id="innerbot"></div>
 			</div>
 			<div id="innerright">
+				<!-- 
 				<div id="searcharea">
 					<input name="" type="text" class="search"  value="Search Conversation" 
 						onclick="this.value=''" onblur="this.value='Search Conversation'"/>
 				</div>
 				<div id="searchright"><img src="/public/images/searchbutton.gif" width="34" height="35" /></div>
-				<div class="innerrightbox">
+				-->
+				<div class="innerrightbox" style="padding-top: 0px">
 					<div class="innerrightop"></div>
 					<div class="innerrighmid">
 						<span class="redtext">Tell us about you</span><br />

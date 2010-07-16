@@ -24,6 +24,8 @@ public class Home extends Controller {
     public static void index(String newTopic) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	talker.setNumberOfTopics(TopicDAO.getNumberOfTopics(talker.getId()));
+    	//TODO: load only count?
+    	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		
 		Map<String, TopicBean> mapTalkmiTopics = new LinkedHashMap<String, TopicBean>(40);
 		LiveConversationsSingleton lcs = LiveConversationsSingleton.getReference();
@@ -53,6 +55,8 @@ public class Home extends Controller {
     public static void invitations() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	int invitations = talker.getInvitations();
+    	
+    	flash.put("note", "I've joined TalkAboutHealth to get real-time health support. Here's an invitation for you to try it as well.");
     	
     	render(invitations);
     }
