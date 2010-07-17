@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import play.mvc.Controller;
+import play.mvc.With;
 
 import com.tah.im.IMNotifier;
 import com.tah.im.userInfo;
@@ -15,6 +16,8 @@ import com.tah.im.singleton.yahooSingleton;
 import dao.TalkerDAO;
 import dao.TopicDAO;
 
+@Check("admin")
+@With(Secure.class)
 public class Dashboard extends Controller {
 	
 	public static void index() {
@@ -121,5 +124,4 @@ public class Dashboard extends Controller {
 		
 		index();
 	}
-
 }

@@ -148,3 +148,48 @@ play.exceptions.TemplateNotFoundException: Template not found : Dashboard/userli
 	at play.utils.Java.invokeStatic(Java.java:129)
 	at play.mvc.ActionInvoker.invoke(ActionInvoker.java:139)
 	at Invocation.HTTP Request(Play!)
+15:01:12,820 ERROR ~ 
+
+@637b9d3m4
+Internal Server Error (500) for request POST /login
+
+Java exception (In /app/util/CommonUtil.java around line 113)
+NullPointerException occured : null
+
+play.exceptions.JavaExecutionException
+	at play.mvc.ActionInvoker.invoke(ActionInvoker.java:230)
+	at Invocation.HTTP Request(Play!)
+Caused by: java.lang.NullPointerException
+	at play.cache.Cache.checkSerializable(Cache.java:255)
+	at play.cache.Cache.set(Cache.java:68)
+	at util.CommonUtil.updateCachedTalker(CommonUtil.java:113)
+	at util.CommonUtil.loadCachedTalker(CommonUtil.java:106)
+	at controllers.Security.onAuthenticated(Security.java:33)
+	at play.utils.Java.invokeStaticOrParent(Java.java:118)
+	at controllers.Secure$Security.invoke(Secure.java:185)
+	at controllers.Secure$Security.access$0(Secure.java:176)
+	at controllers.Secure.redirectToOriginalURL(Secure.java:93)
+	at controllers.Secure.authenticate(Secure.java:79)
+	at play.utils.Java.invokeStatic(Java.java:129)
+	at play.mvc.ActionInvoker.invoke(ActionInvoker.java:139)
+	... 1 more
+15:05:38,575 ERROR ~ 
+
+@637b9d3m5
+Internal Server Error (500) for request GET /home
+
+Java exception (In /app/util/CommonUtil.java around line 113)
+NullPointerException occured : null
+
+play.exceptions.JavaExecutionException
+	at play.mvc.ActionInvoker.invoke(ActionInvoker.java:230)
+	at Invocation.HTTP Request(Play!)
+Caused by: java.lang.NullPointerException
+	at play.cache.Cache.checkSerializable(Cache.java:255)
+	at play.cache.Cache.set(Cache.java:68)
+	at util.CommonUtil.updateCachedTalker(CommonUtil.java:113)
+	at util.CommonUtil.loadCachedTalker(CommonUtil.java:106)
+	at controllers.Home.index(Home.java:25)
+	at play.utils.Java.invokeStatic(Java.java:129)
+	at play.mvc.ActionInvoker.invoke(ActionInvoker.java:139)
+	... 1 more
