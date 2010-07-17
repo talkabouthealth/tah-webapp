@@ -299,7 +299,7 @@ public class TalkerBean implements Serializable {
 				DBObject followingDBOBject = followingDBRef.fetch();
 				followingTalker.setId(followingDBOBject.get("_id").toString());
 				followingTalker.setUserName(followingDBOBject.get("uname").toString());
-				followingTalker.setImagePath(followingDBOBject.get("img").toString());
+				followingTalker.setImagePath((String)followingDBOBject.get("img"));
 				
 				followingList.add(followingTalker);
 			}

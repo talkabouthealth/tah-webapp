@@ -204,7 +204,11 @@ public class TalkerDAO {
 			TalkerBean followerTalker = new TalkerBean();
 			followerTalker.setId(followerDBObject.get("_id").toString());
 			followerTalker.setUserName(followerDBObject.get("uname").toString());
-			followerTalker.setImagePath(followerDBObject.get("img").toString());
+			//Test?
+			Object imgObject = followerDBObject.get("img");
+			if (imgObject != null) {
+				followerTalker.setImagePath((String)imgObject);
+			}
 			
 			followerList.add(followerTalker);
 		}
