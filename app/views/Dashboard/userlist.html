@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Dashboard Userlist</title>
+
+ 	<script src="http://code.jquery.com/jquery-latest.js"></script>
+  	<script>
+  	var convTid = "";
+  	var concOwner = "";
+  	var convTopic = "";
+  	var previousLatestTopicId = 0;
+  	var userId = new Array();
+  	var userEmail = new Array;
+  	var param = "";
+  	var GOOGLE = new Array();
+  	var YAHOO = new Array();
+  	var MSN = new Array();
+  	var idGOOGLE = new Array();
+  	var idYAHOO = new Array();
+  	var idMSN = new Array();
+  	// Create HTTP request object.
+	function createHttpObj(){
+		if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		}
+		else{// code for IE6, IE5
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		return xmlhttp;
+	}
+	// check latest topic every 5 seconds.
+  	setInterval("checkLatestTopic()", 5000);
+  	//Send http request to newTopicAlert servlet to check if there's new topic
+  	function checkLatestTopic(){
+  		var xmlhttp = createHttpObj();
+		xmlhttp.open("GET", "newTopicAlert", true);
+		xmlhttp.onreadystatechange=function(){
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+				currentTopicId = xmlhttp.responseText;	
+				if(previousLatestTopicId == 0){
+					previousLatestTopicId = currentTopicId;
+					$("#alert").text("There are no new topics... pre = " + previousLatestTopicId + " current = " + currentTopicId);
+				}else if(currentTopicId > previousLatestTopicId && previousLatestTopicId != 0){
+					$("#alert").text("You got a new topic!!!" + " currentTopicId is " + currentTopicId + " and previoustopicid is "+ previousLatestTopicId);
+					previousLatestTopicId = currentTopicId;
+				}
+		    }
+		};	
+		xmlhttp.send();
+  	}
+  	// Create conversation information
+  	function addConversationInfo(_convTid, _convOwner, _convTopic){
+  	  	convTid = _convTid;
+  	  	convOwner = _convOwner;
+  	  	convTopic = _convTopic;
+  	  	show();
+	}
+	// Create user information for different IM services
+	function addUserInfo(_userId, _userEmail, _imType){
+		switch(_imType){
+		case "GoogleTalk":
+			addUserGOOGLE(_userId, _userEmail);
+			break;
+		case "WindowLive":
+			addUserMSN(_userId, _userEmail);
+			break;
+		case "YahooIM":
+			addUserYAHOO(_userId, _userEmail);
+			break;
+		default:
+			break;	
+		}
+	}
+	// Google user information
+	function addUserGOOGLE(_userId, _userEmail){
+		var exist = 0;
+		if(idGOOGLE.length == 0){
+			idGOOGLE.push(_userId);
+			GOOGLE.push(_userEmail);
+		}else{
+			for(i = 0; i < idGOOGLE.length; i++){
+				if(idGOOGLE[i] == _userId){
+					idGOOGLE.splice(i, 1);
+					GOOGLE.splice(i, 1);
+					exist = 1;
+				}
+			}	
+			if(!exist){
+				idGOOGLE.push(_userId);
+				GOOGLE.push(_userEmail);				
+			}		
+		}
+		show();	
+	}
+	// MSN user information
+	function addUserMSN(_userId, _userEmail){
+		var exist = 0;
+		if(idMSN.length == 0){
+			idMSN.push(_userId);
+			MSN.push(_userEmail);
+		}else{
+			for(i = 0; i < idMSN.length; i++){
+				if(idMSN[i] == _userId){
+					idMSN.splice(i, 1);
+					MSN.splice(i, 1);
+					exist = 1;
+				}
+			}	
+			if(!exist){
+				idMSN.push(_userId);
+				MSN.push(_userEmail);				
+			}		
+		}
+		show();	
+	}
+	//Yahoo user information
+	function addUserYAHOO(_userId, _userEmail){
+		var exist = 0;
+		if(idYAHOO.length == 0){
+			idYAHOO.push(_userId);
+			YAHOO.push(_userEmail.slice(0, _userEmail.indexOf("@")));
+		}else{
+			for(i = 0; i < idYAHOO.length; i++){
+				if(idYAHOO[i] == _userId){
+					idYAHOO.splice(i, 1);
+					YAHOO.splice(i, 1);
+					exist = 1;
+				}
+			}	
+			if(!exist){
+				idYAHOO.push(_userId);
+				YAHOO.push(_userEmail.slice(0, _userEmail.indexOf("@")));				
+			}		
+		}
+		show();	
+	}
+	// Display information of selected topic and number of users who has been selected.
+  	function show(){
+		$("#results").html("You've selected " + (idGOOGLE.length + idYAHOO.length + idMSN.length) 
+			+ " users to join conversation(" + convTid + "). <br>" + "Yahoo: " + idYAHOO.length 
+			+ "<br> GOOGLE: " + idGOOGLE.length + "<br> MSN: " + idMSN.length + "<br>");	 
+	}
+	// Send http request to IMNotifier to invited users
+	function sendtoservlet(){
+		var param = setParam(idGOOGLE, GOOGLE);
+		var paramYahoo = setParam(idYAHOO, YAHOO);
+		var paramMSN = setParam(idMSN, MSN);
+		var httprequest = createHttpObj();
+		var httprequestYahoo = createHttpObj();
+		var httprequestMSN = createHttpObj();
+		$("#results").html("GOOGLE: " + param + "<br> Yahoo: " + paramYahoo + "<br> MSN: " + paramMSN);
+		httprequest.open("POST","Notification",true);
+		httprequestYahoo.open("POST","NotificationYAHOO",true);
+		httprequestMSN.open("POST","NotificationMSN",true);
+		httprequest.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		httprequestYahoo.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		httprequestMSN.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		httprequest.onreadystatechange=function(){
+			if (httprequestYahoo.readyState == 4 && httprequestYahoo.status == 200 
+					&& httprequestMSN.readyState == 4 && httprequestMSN.status == 200 
+					&& httprequest.readyState == 4 && httprequest.status == 200){
+				window.location.reload();
+		    }
+		};	
+		httprequestYahoo.onreadystatechange=function(){
+			if (httprequestYahoo.readyState == 4 && httprequestYahoo.status == 200 
+					&& httprequestMSN.readyState == 4 && httprequestMSN.status == 200 
+					&& httprequest.readyState == 4 && httprequest.status == 200){
+				window.location.reload();
+		    }
+		};	
+		httprequestMSN.onreadystatechange=function(){
+			if (httprequestYahoo.readyState == 4 && httprequestYahoo.status == 200 
+					&& httprequestMSN.readyState == 4 && httprequestMSN.status == 200 
+					&& httprequest.readyState == 4 && httprequest.status == 200){
+				window.location.reload();
+		    }
+		};	
+		httprequest.send(param);
+		httprequestYahoo.send(paramYahoo);
+		httprequestMSN.send(paramMSN);
+	}
+	// Create parameter string for POST method.
+	function setParam(_userId, _userEmail){
+		param = "convTid=" + convTid + "&convOwner=" + convOwner + "&convTopic=" + convTopic;
+		for(i = 0; i < _userId.length; i++){
+			param = param + "&userId=" + _userId[i];
+		}
+		for(j = 0; j < _userEmail.length; j++){
+			param = param + "&userEmail=" + _userEmail[j];
+		}
+		return param; 
+	}
+
+	</script>
+	</head>
+	<body>
+		<p><tt id="results"></tt></p>
+		<p><tt id="alert"></tt></p>
+			<table>
+				<tr>
+					<td valign = "top">
+						<div id = "topiclist">
+							<table border = "1">
+								<tr>
+									<th>Topics list 1
+									</th>   
+								</tr>
+									<tr>
+										<td>
+										#{list items: topicsList, as: 'topicInfo'}
+											<br>
+											<input type = "radio" name = "convTid" value = "${topicInfo.topicId}"
+												onclick = "addConversationInfo('${topicInfo.topicId}', 
+													'${topicInfo.uname}', '${topicInfo.topic}')" >
+											${topicInfo.topic} was created by ${topicInfo.uid} on ${topicInfo.cr_date}
+											<br>User name: ${topicInfo.uname}
+											<br>Gender: ${topicInfo.gender}
+											<br/>
+										#{/list}
+										</td>   
+									</tr>
+									<tr>
+										<th>Topics list 2
+										</th>   
+									</tr>
+									<tr>
+										<td>
+										#{list items: topicsWithNotificationsList, as: 'topicInfo'}
+											<br>
+											<input type = "radio" name = "convTid" value = "${topicInfo.topicId}"
+												onclick = "addConversationInfo('${topicInfo.topicId}', 
+													'${topicInfo.uname}', '${topicInfo.topic}')" >
+											${topicInfo.topic} was created by ${topicInfo.uid} on ${topicInfo.cr_date}
+											<br>Topic ${topicInfo.topicId} has inviteed ${topicInfo.notificationsNum} people
+											<br>User name: ${topicInfo.uname}
+											<br>Gender: ${topicInfo.gender}
+											<br/>
+										#{/list}
+										</td>   
+									</tr>
+							</table>
+						</div>
+					</td>
+					<td valign = "top">
+						<div id = "userlist">
+							<table border = "1">
+								<tr>								
+									<th> Online Users (${onlineUserMap.size()})</th>   
+								</tr>
+								<tr>
+									<td>
+										#{list items: onlineUserMap.values(), as: 'talkerInfo'}
+											<input type = "checkbox" name = "uidArray" value = "${talkerInfo.uid}" 
+												onclick = "addUserInfo('${talkerInfo.uid}', 
+													'${talkerInfo.email}', '${talkerInfo.getIMType(talkerInfo.uid)}')"> 
+											${talkerInfo.uname} has account of ${talkerInfo.email} 
+												with IM type of ${talkerInfo.getIMType(talkerInfo.uid)}
+											<br>Last notified on: ${talkerInfo.lastNotiTime(talkerInfo.uid)}
+											<br> ${talkerInfo.uname} has been notified 
+												${talkerInfo.numOfNoti(talkerInfo.uid)} times in past 24 hours.
+										#{/list}
+									</td>    
+								</tr>
+							</table>
+						</div>
+					</td>
+				</tr>
+			</table>
+	
+			<button type="button" onclick="sendtoservlet()">Send Notifications</button>
+
+	</body>
+</html>

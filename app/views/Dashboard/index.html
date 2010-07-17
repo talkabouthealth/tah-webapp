@@ -1,0 +1,100 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Dashboard</title>
+	</head>
+	<body>
+		<form method = "GET" action = "@{Dashboard.notification()}" >
+			<table>
+				<tr>
+					<td valign = "top">
+						<div>
+							<table border = "1">
+								<tr>
+									<th>Topics list 1
+									</th>   
+								</tr>
+									<tr>
+										<td>
+										#{list items: topicsList, as: 'topicInfo'}
+											<br>
+											<input type = "radio" name = "convTid" value = "${topicInfo.topicId}">
+											${topicInfo.topic} was created by ${topicInfo.uid} on ${topicInfo.cr_date}
+											<br>User name: ${topicInfo.uname}
+											<br>Gender: ${topicInfo.gender}
+											<br/>
+										#{/list}
+										</td>   
+									</tr>
+									<tr>
+										<th>Topics list 2
+										</th>   
+									</tr>
+									<tr>
+										<td>
+										#{list items: topicsWithNotificationsList, as: 'topicInfo'}
+											<br>
+											<input type = "radio" name = "convTid" value = "${topicInfo.topicId}">
+											${topicInfo.topic} was created by ${topicInfo.uid} on ${topicInfo.cr_date}
+											<br>Topic ${topicInfo.topicId} has inviteed ${topicInfo.notificationsNum} people
+											<br>User name: ${topicInfo.uname}
+											<br>Gender: ${topicInfo.gender}
+											<br/>
+										#{/list}
+										</td>   
+									</tr>
+							</table>
+						</div>
+					</td>
+					<td valign = "top">
+						<div>
+							<table border = "1">
+								<tr>
+									<th> Online Users
+									</th>   
+								</tr>
+								<tr>
+									<td>
+										#{list items: talkersList, as: 'talkerInfo'}
+											#{if imNotifier.isUserOnline(talkerInfo.email)}
+												<br>
+												<input type = "checkbox" name = "uidArray" value = "${talkerInfo.id}"> 
+												${talkerInfo.uname} has account of ${talkerInfo.email}
+												<br>${talkerInfo.uname} is online
+												<br>Last notified on: ${talkerInfo.latestNotification}
+												<br>Current time: ${new Date()}	
+												<br> ${talkerInfo.uname} has been notified 
+													${talkerInfo.numOfNotifications} times in past 24 hours.	
+											#{/if}
+										#{/list}
+									</td>   
+								</tr>
+								<tr>
+									<th> Offline Users
+									</th>   
+								</tr>
+								<tr>
+									<td>
+									#{list items: talkersList, as: 'talkerInfo'}
+										#{ifnot imNotifier.isUserOnline(talkerInfo.email)}
+											<br>
+											<input type = "checkbox" name = "uidArray" value = "${talkerInfo.id}"> 
+											${talkerInfo.uname} has account of ${talkerInfo.email}
+											<br>${talkerInfo.uname} is NOT online
+											<br>Last notified on: ${talkerInfo.latestNotification}
+											<br>Current time: ${new Date()}	
+											<br> ${talkerInfo.uname} has been notified 
+												${talkerInfo.numOfNotifications} times in past 24 hours.	
+										#{/ifnot}
+									#{/list}
+									</td>   
+								</tr>
+							</table>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<input type = "submit" value = "Send Notifications">
+		</form>
+	</body>
+</html>

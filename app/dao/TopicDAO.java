@@ -1,6 +1,8 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +76,63 @@ public class TopicDAO {
 
 		int numberOfTopics = topicsColl.find(query).count();
 		return numberOfTopics;
+	}
+	
+	public static String getLastTopicId() {
+		DBCollection topicsColl = DBUtil.getDB().getCollection(TOPICS_COLLECTION);
+		
+		DBObject topicDBObject = topicsColl.find().sort(new BasicDBObject("cr_date", -1)).next();
+		if (topicDBObject == null) {
+			return null;
+		}
+		else {
+			return topicDBObject.get("_id").toString();
+		}
+	}
+	
+	public static List<Map<String, String>> loadTopicsForDashboard(boolean withNotifications) {
+		DBCollection topicsColl = DBUtil.getDB().getCollection(TOPICS_COLLECTION);
+		
+		List<DBObject> topicsDBList = topicsColl.find().sort(new BasicDBObject("cr_date", 1)).toArray();
+		
+		List<Map<String, String>> topicsInfoList = new ArrayList<Map<String,String>>();
+		for (DBObject topicDBObject : topicsDBList) {
+			Map<String, String> topicInfoMap = new HashMap<String, String>();
+			
+			//noti_history.noti_time is null
+			int numOfNotifications = NotificationDAO.getNotiNumByTopic(topicDBObject.get("_id").toString());
+			if (withNotifications && numOfNotifications == 0) {
+				continue;
+			}
+			else if (!withNotifications && numOfNotifications > 0) {
+				continue;
+			}
+			
+			//convert data to map
+			DBRef talkerRef = (DBRef)topicDBObject.get("uid");
+			DBObject talkerDBObject = talkerRef.fetch();
+			
+			topicInfoMap.put("topicId", topicDBObject.get("_id").toString());
+			topicInfoMap.put("topic", (String)topicDBObject.get("topic"));
+			topicInfoMap.put("cr_date", topicDBObject.get("cr_date").toString());
+			
+			topicInfoMap.put("uid", talkerDBObject.get("_id").toString());
+			topicInfoMap.put("uname", talkerDBObject.get("uname").toString());
+			topicInfoMap.put("gender", talkerDBObject.get("gender").toString());
+			
+			if (withNotifications) {
+				//String sqlStatement4 = 
+				//	"SELECT COUNT(*) FROM topics 
+				//	RIGHT JOIN noti_history ON topics.topic_id = noti_history.topic_id 
+				//	WHERE topics.topic_id = " + con3.getRs().getInt("topics.topic_id");
+				int notificationsNum = NotificationDAO.getNotiNumByTopic(topicInfoMap.get("topicId"));
+				topicInfoMap.put("notificationsNum", ""+notificationsNum);
+			}
+			
+			topicsInfoList.add(topicInfoMap);
+		}
+		
+		return topicsInfoList;
 	}
 	
 	public static void main(String[] args) {

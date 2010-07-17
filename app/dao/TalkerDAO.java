@@ -3,10 +3,11 @@ package dao;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import models.TalkerBean;
-import models.TalkerDiseaseBean;
 import models.ThankYouBean;
 
 import org.bson.types.ObjectId;
@@ -146,6 +147,33 @@ public class TalkerDAO {
 			talker.parseFromDB(talkerDBObject);
 			return talker;
 		}
+	}
+	
+	public static List<Map<String, String>> loadTalkersForDashboard() {
+		DBCollection talkersColl = DBUtil.getDB().getCollection("talkers");
+		
+		//TODO: sort by last notification!
+		List<DBObject> talkersDBList = talkersColl.find().toArray();
+		
+		List<Map<String, String>> talkersInfoList = new ArrayList<Map<String,String>>();
+		for (DBObject talkerDBObject : talkersDBList) {
+			Map<String, String> talkerInfoMap = new HashMap<String, String>();
+			
+			talkerInfoMap.put("id", talkerDBObject.get("_id").toString());
+			talkerInfoMap.put("uname", talkerDBObject.get("uname").toString());
+			talkerInfoMap.put("email", talkerDBObject.get("email").toString());
+			
+			Date latestNotification = NotificationDAO.getLatestNotification(talkerInfoMap.get("id"));
+			if (latestNotification != null) {
+				talkerInfoMap.put("latestNotification", latestNotification.toString());
+			}
+			long numOfNotifications = NotificationDAO.getNumOfNotifications(talkerInfoMap.get("id"));
+			talkerInfoMap.put("numOfNotifications", ""+numOfNotifications);
+			
+			talkersInfoList.add(talkerInfoMap);
+		}
+		
+		return talkersInfoList;
 	}
 	
 	

@@ -11,6 +11,7 @@ import play.cache.Cache;
 import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
+import util.DBUtil;
 import webapp.LiveConversationsSingleton;
 import dao.ActivityDAO;
 import dao.TopicDAO;
@@ -68,6 +69,12 @@ public class Topics extends Controller {
 		newTopic = newTopic.replaceAll("\\|", "&#124;");
 		
 		renderText(topicId + "|" + newTopic);
+    }
+    
+    public static void lastTopicId() {
+    	String lastTopicId = TopicDAO.getLastTopicId();
+		
+    	renderText(lastTopicId);
     }
 
 }

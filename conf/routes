@@ -6,12 +6,13 @@
 *		/										module:secure
 
 GET     /                                       Application.index
-GET     /signup                                 Application.signup
-POST    /register	                            Application.register
-GET     /forgotpassword                         Application.forgotPassword
-POST    /sendnewpassword						Application.sendNewPassword
+GET     /signup/?                               Application.signup
+POST    /register/?	                            Application.register
+GET     /forgotpassword/?                       Application.forgotPassword
+POST    /sendnewpassword/?						Application.sendNewPassword
 
-GET		/home									Home.index
+GET		/home/?									Home.index
+GET		/dashboard/?							Dashboard.index
 
 GET		/profile/view/{userName}				Profile.view
 

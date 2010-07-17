@@ -1,0 +1,46 @@
+TAH Web Application utilizing Play Framework
+
+
+----------------------------- Dashboard Module ---------------------------------------
+
+Functionality:
+ 		The dashboard is mainy responsible for sending notifications via different IM apps to invite our users to join a newlw created conversation.  After 		sending notifications to users, dashboard will refresh the page automatically.
+
+Layout:
+  	The dashboard web app devides into three parts, the notification bar, topic list and online user list.  
+  	Notification Bar:
+		The notification bar will check new topics from database(talkmidb.topics) every 5 seconds.  If we got a new topic, the message in notification bar 		will change to alert administrator that a user just created a topic.  Administrator should reload the page to get the latest topic list.
+	  	The notification bar also provides information of how many users that administrator has chosen to invite to a topic and number of users for each IM 		service type repectively.  
+	  	When administrator click "Send Notification" button, the notification bar shows the parameters that are going to send to each servlet.  This function 		is for examination only.
+	
+	Topic List:
+		Topic list breaks into two sub-regions.  The upper one shows topics that haven't invited any users to join.  The lower one shows topics that has 		invited user to join the conversation.  The topic list provides following information: 1. conversation topic. 2. creation time. 3. topic id, 4. how many 		users have been invited to this converstaion, 5. name of user who created this topic, 6. other information can be added upon request.
+	
+	Online User List:
+		Here we have all users in our contacts with online/available status.  We pull user data from a singleton in the memory.  In this table, we provide 		information of the total number of online users within all of our IM accounts (Google Tail, Yahoo Messager and Windows Live), users' IM account, IM service 		types, last notification time and how many times this user has been notified in past 24 hours.  All these indormation can be extended upon request.
+
+Instruction:
+	Sending Invitations:
+	Step 1, Select a topic that administrator is going to invite people to join.  After administrator click on the radio box, a message shows up in notification 		bar telling administrator that you are going to invite people to join this specific conversation.
+	Step 2, Select online users from online user list by checking the check boxes.  Notification bar will show information of how many users are going to receive 		invitations for this conversation.  
+	Step 3, After reviewing the invitation list and notification bar and all information is correct, administrator click on "Send Notification" button on the 		bottom of dashboard.
+	Step 4, Wait for while (about 5 to 10 seconds) to send the invitations to users.  Then, the dashboard page will refresh after invitations are sent.
+	
+	Getting latest topic list/online user list:
+	When administrator see message says "You got a new topic!!!", administrator refresh the page manually to get latest topic list.  Everytime, administrator 		wants to send invitations to users, he/she refresh the page manually to get latest online user list before sending invitation.
+
+Features to be added:
+	1. Sorting online user list in terms of factors of Gender, Age, Location and desiases.
+	2. Make information more readable.
+
+Bugs need to be fixed:
+	1. There are restructions on IM Notifier API which delay the process of sending invitations.  We should dig into the code and see if we can improve the 	performance.
+	2. The dashboard cannot display specical characters (", ').
+
+Official website of APIs:
+	MSN: http://jml.blathersource.org/
+	Google Talk: http://www.igniterealtime.org/projects/smack/index.jsp
+	Yahoo http://openymsg.blathersource.org/
+-----------------------------------------------------------------------------------------
+
+ 
