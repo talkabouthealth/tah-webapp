@@ -50,10 +50,6 @@
 		function open_chat(){
 			window.open("http://talkabouthealth.com:5080/tah/chat.jsp?id="+username);
 		}
-		
-		function openInvitationsWindow() {
-			window.open("@{Home.invitations()}", "TalkAboutHealthInvitations", "width=600,height=350");
-		}
 	</script>
 </head>
 
@@ -166,10 +162,9 @@
 							notified of the most relevant 
 							conversations to you
 						</span><br /><br />
-						<span class="bluetext14">Treatments and Medications<br />
-							Personal Info<br />
-							Notification Settings
-						</span>
+						<a class="bluetext14" href="@{Profile.edit()}">Profile Information</a><br />
+						<a class="bluetext14" href="@{Profile.healthDetails()}">Health Information</a><br />
+						<a class="bluetext14" href="@{Profile.notifications()}">Notification Settings</a>
 					</div>
 					<div class="innerrighbot"></div>
 				</div>

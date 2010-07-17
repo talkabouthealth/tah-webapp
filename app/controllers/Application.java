@@ -18,12 +18,11 @@ import dao.TalkerDAO;
 public class Application extends Controller {
 
     public static void index(String newTopic) {
-    	if (session.contains("username")) {
+    	if (Security.isConnected()) {
     		Home.index(newTopic);
     	}
     	else {
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
-
     		render(numberOfMembers);
     	}
     }

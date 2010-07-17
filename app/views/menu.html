@@ -36,14 +36,20 @@
 	</div>
 	<div id="dropmenu4" class="dropmenudiv" style="width: 180px;">
 		<a href="@{Static.faq()}">FAQ</a>
+		<!--  
 		<a href="#">Enabling IM</a>
 		<a href="#">IM Commands</a>
 		<a href="#">Tips and Etiquette</a>
-		<a href="#">Blog</a>
-		<a href="#">Feedback</a>
-		<a href="#">Share TalkAboutHealth</a>
+		-->
+		<a href="http://blog.talkabouthealth.com">Blog</a>
+		<a href="@{Static.contactus()}">Feedback</a>
+		<a href="#" onclick="openInvitationsWindow()">Share TalkAboutHealth</a>
 	</div>
 	<script type="text/javascript">
 		cssdropdown.startchrome("chromemenu")
+		
+		function openInvitationsWindow() {
+			window.open("@{Home.invitations()}", "TalkAboutHealthInvitations", "width=600,height=350");
+		}
 	</script>
 #{/if}
