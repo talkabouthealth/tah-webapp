@@ -13,6 +13,7 @@ POST    /sendnewpassword/?						Application.sendNewPassword
 
 GET		/home/?									Home.index
 GET		/dashboard/?							Dashboard.index
+GET		/comm/?									Comm.commApp
 
 GET		/profile/view/{userName}				Profile.view
 
