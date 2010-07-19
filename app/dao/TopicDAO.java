@@ -1,5 +1,7 @@
 package dao;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -92,6 +94,7 @@ public class TopicDAO {
 	
 	public static List<Map<String, String>> loadTopicsForDashboard(boolean withNotifications) {
 		DBCollection topicsColl = DBUtil.getDB().getCollection(TOPICS_COLLECTION);
+		DateFormat dateFormat = new SimpleDateFormat("MM.dd.yyyy HH:mm:ss");
 		
 		List<DBObject> topicsDBList = topicsColl.find().sort(new BasicDBObject("cr_date", 1)).toArray();
 		
@@ -114,7 +117,8 @@ public class TopicDAO {
 			
 			topicInfoMap.put("topicId", topicDBObject.get("_id").toString());
 			topicInfoMap.put("topic", (String)topicDBObject.get("topic"));
-			topicInfoMap.put("cr_date", topicDBObject.get("cr_date").toString());
+			Date creationDate = (Date)topicDBObject.get("cr_date");
+			topicInfoMap.put("cr_date", dateFormat.format(creationDate));
 			
 			topicInfoMap.put("uid", talkerDBObject.get("_id").toString());
 			topicInfoMap.put("uname", talkerDBObject.get("uname").toString());

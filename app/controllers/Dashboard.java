@@ -1,5 +1,6 @@
 package controllers;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -42,8 +43,9 @@ public class Dashboard extends Controller {
 		List<Map<String, String>> talkersList = TalkerDAO.loadTalkersForDashboard();
 		
 		IMNotifier imNotifier = new IMNotifier();
-			
-		render(topicsList, topicsWithNotificationsList, talkersList, imNotifier);
+		String lastTopicId = TopicDAO.getLastTopicId(); 
+		
+		render(topicsList, topicsWithNotificationsList, talkersList, imNotifier, lastTopicId);
 	}
 	
 	public static void userlist() {
@@ -122,6 +124,17 @@ public class Dashboard extends Controller {
 			e.printStackTrace();
 		}
 		
-		index();
+//		index();
+		renderText("ok!");
+	}
+	
+	public static void checkNewTopic(String oldLastTopic) {
+		String lastTopic = TopicDAO.getLastTopicId();
+		
+		boolean isNewTopic = false;
+		if (lastTopic != null) {
+			isNewTopic = !lastTopic.equals(oldLastTopic);
+		}
+		renderText(Boolean.toString(isNewTopic));
 	}
 }

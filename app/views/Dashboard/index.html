@@ -1,27 +1,131 @@
-<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Dashboard</title>
-	</head>
-	<body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+	<meta name="author" content="Talkmi" /> 
+	<meta name="keywords" content="support, health, talk" /> 
+	<meta name="description" content="real-time support for your health issues" /> 
+	<meta name="robots" content="all" /> 
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Dashboard</title>
+	
+	<link href="@{'/public/stylesheets/style.css'}" rel="stylesheet" type="text/css" />
+	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
+	<script type="text/javascript" src="@{'/public/javascripts/jquery-1.4.2.min.js'}" ></script>
+
+	<style type="text/css">
+		body {
+			margin: 20px;
+			width: auto;
+			font-size: 14px;
+		}
+		#notificationbar {
+			border: #000000 dashed 1px;
+			padding: 10px;
+		}
+	</style>
+	<script type="text/javascript">
+		var lastTopicId = '${lastTopicId}';
+		var selectedTopicId;
+		var selectedTalkers = new Array();
+		var selectedEmails = new Array();
+			
+		$(document).ready(function() {
+			//check for new topics every 5 seconds
+			setInterval("checkNewTopic()", 5000);
+
+			$("input[type=radio]").click (function() {
+				selectedTopicId = $(this).val();
+				var topic = $(this).next().val();
+				$("#selectedtopic").html("Selected topic is '"+topic+"'");
+				updateButton();
+			});
+
+			$("input[type=checkbox]").click (function() {
+				var talkerId = $(this).val();
+				var talkerEmail = $(this).next().val();
+				if ($(this).attr("checked") == true) {
+					selectedTalkers.push(talkerId);
+					selectedEmails.push(talkerEmail);
+				}
+				else {
+					selectedTalkers = removeItem(selectedTalkers, talkerId);
+					selectedEmails = removeItem(selectedEmails, talkerEmail);
+				}
+				$("#selectedtalkers").html(selectedTalkers.length+" selected talker(s)");
+				updateButton();
+			});
+
+			$("#sendNotiBtn").click(function() {
+				$.post("@{Dashboard.notification()}",
+					{uidArray: selectedTalkers, emailArray: selectedEmails, convTid: selectedTopicId},
+	  				function(data) {
+	  					//...
+	  				}
+	  			);
+			});
+		});
+
+		function updateButton() {
+			if (selectedTopicId && selectedTalkers.length > 0) {
+				$("#sendNotiBtn").attr("disabled", false);
+			}
+			else {
+				$("#sendNotiBtn").attr("disabled", true);
+			}
+		}
+
+		function checkNewTopic() {
+			$.get("@{Dashboard.checkNewTopic()}", {oldLastTopic: lastTopicId},
+  				function(data) {
+  					if (data == 'true') {
+  	  					$("#newtopicmessage").html("You got a new topic!!!");
+  					}
+  				}
+  			);
+		}
+
+		function removeItem(array, item) {
+			var i = 0;
+			while (i < array.length) {
+				if (array[i] == item) {
+					array.splice(i, 1);
+				} else {
+					i++;
+				}
+			}
+			return array;
+		}
+	</script>
+</head>
+<body>
+		<div id="notificationbar">
+			Notification Bar<br/>
+			<span id="newtopicmessage" class="error"></span><br/>
+			<span id="selectedtopic" class="success"></span><br/>
+			<span id="selectedtalkers" class="success"></span><br/><br/>
+			
+			<input id="sendNotiBtn" type="button" disabled="true" value="Send Notifications" />
+		</div>
 		<form method = "GET" action = "@{Dashboard.notification()}" >
-			<table>
+			<table style="width: 100%">
 				<tr>
-					<td valign = "top">
+					<td valign = "top" width="50%">
 						<div>
 							<table border = "1">
 								<tr>
-									<th>Topics list 1
-									</th>   
+									<th>Topics list 1</th>   
 								</tr>
 									<tr>
 										<td>
 										#{list items: topicsList, as: 'topicInfo'}
 											<br>
-											<input type = "radio" name = "convTid" value = "${topicInfo.topicId}">
-											${topicInfo.topic} was created by ${topicInfo.uid} on ${topicInfo.cr_date}
-											<br>User name: ${topicInfo.uname}
-											<br>Gender: ${topicInfo.gender}
+											<input type="radio" name="convTid" value="${topicInfo.topicId}" />
+											<input type="hidden" id="convTopic" value="${topicInfo.topic}" />
+											"${topicInfo.topic}", created: ${topicInfo.cr_date}
+											<br>User: ${topicInfo.uname}
 											<br/>
 										#{/list}
 										</td>   
@@ -34,11 +138,11 @@
 										<td>
 										#{list items: topicsWithNotificationsList, as: 'topicInfo'}
 											<br>
-											<input type = "radio" name = "convTid" value = "${topicInfo.topicId}">
-											${topicInfo.topic} was created by ${topicInfo.uid} on ${topicInfo.cr_date}
-											<br>Topic ${topicInfo.topicId} has inviteed ${topicInfo.notificationsNum} people
-											<br>User name: ${topicInfo.uname}
-											<br>Gender: ${topicInfo.gender}
+											<input type="radio" name="convTid" value="${topicInfo.topicId}" />
+											<input type="hidden" id="convTopic" value="${topicInfo.topic}" />
+											"${topicInfo.topic}", created: ${topicInfo.cr_date}
+											<br>Topic ${topicInfo.topicId} has invited ${topicInfo.notificationsNum} people
+											<br>User: ${topicInfo.uname}
 											<br/>
 										#{/list}
 										</td>   
@@ -46,7 +150,7 @@
 							</table>
 						</div>
 					</td>
-					<td valign = "top">
+					<td valign = "top" width="50%">
 						<div>
 							<table border = "1">
 								<tr>
@@ -58,11 +162,10 @@
 										#{list items: talkersList, as: 'talkerInfo'}
 											#{if imNotifier.isUserOnline(talkerInfo.email)}
 												<br>
-												<input type = "checkbox" name = "uidArray" value = "${talkerInfo.id}"> 
+												<input type="checkbox" name="uidArray" value="${talkerInfo.id}"> 
+												<input type="hidden" id="emailArray" value="${talkerInfo.email}" />
 												${talkerInfo.uname} has account of ${talkerInfo.email}
-												<br>${talkerInfo.uname} is online
 												<br>Last notified on: ${talkerInfo.latestNotification}
-												<br>Current time: ${new Date()}	
 												<br> ${talkerInfo.uname} has been notified 
 													${talkerInfo.numOfNotifications} times in past 24 hours.	
 											#{/if}
@@ -78,13 +181,11 @@
 									#{list items: talkersList, as: 'talkerInfo'}
 										#{ifnot imNotifier.isUserOnline(talkerInfo.email)}
 											<br>
-											<input type = "checkbox" name = "uidArray" value = "${talkerInfo.id}"> 
 											${talkerInfo.uname} has account of ${talkerInfo.email}
-											<br>${talkerInfo.uname} is NOT online
 											<br>Last notified on: ${talkerInfo.latestNotification}
-											<br>Current time: ${new Date()}	
 											<br> ${talkerInfo.uname} has been notified 
 												${talkerInfo.numOfNotifications} times in past 24 hours.	
+											<br/>
 										#{/ifnot}
 									#{/list}
 									</td>   
@@ -94,7 +195,6 @@
 					</td>
 				</tr>
 			</table>
-			<input type = "submit" value = "Send Notifications">
 		</form>
 	</body>
 </html>

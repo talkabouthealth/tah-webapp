@@ -1,5 +1,7 @@
 package dao;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -150,7 +152,8 @@ public class TalkerDAO {
 	}
 	
 	public static List<Map<String, String>> loadTalkersForDashboard() {
-		DBCollection talkersColl = DBUtil.getDB().getCollection("talkers");
+		DBCollection talkersColl = DBUtil.getDB().getCollection(TALKERS_COLLECTION);
+		DateFormat dateFormat = new SimpleDateFormat("MM.dd.yyyy HH:mm:ss");
 		
 		//TODO: sort by last notification!
 		List<DBObject> talkersDBList = talkersColl.find().toArray();
@@ -165,7 +168,7 @@ public class TalkerDAO {
 			
 			Date latestNotification = NotificationDAO.getLatestNotification(talkerInfoMap.get("id"));
 			if (latestNotification != null) {
-				talkerInfoMap.put("latestNotification", latestNotification.toString());
+				talkerInfoMap.put("latestNotification", dateFormat.format(latestNotification));
 			}
 			long numOfNotifications = NotificationDAO.getNumOfNotifications(talkerInfoMap.get("id"));
 			talkerInfoMap.put("numOfNotifications", ""+numOfNotifications);
