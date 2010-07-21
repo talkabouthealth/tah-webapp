@@ -15,13 +15,13 @@ import play.jobs.OnApplicationStart;
 public class IMServicesJob extends Job {
 	
 	private static final LoginInfo[] LOGIN_INFO_ARRAY = new LoginInfo[] {
-//			new LoginInfo(IMService.GOOGLE, "talkabouthealth.com@gmail.com", "CarrotCake917"),
-//			new LoginInfo(IMService.MSN, "talkabouthealth.com@live.com", "CarrotCake917"),
-//			new LoginInfo(IMService.YAHOO, "talkabouthealth@ymail.com", "CarrotCake917"),
+		new LoginInfo(IMService.GOOGLE, "talkabouthealth.com@gmail.com", "CarrotCake917"),
+		new LoginInfo(IMService.MSN, "talkabouthealth.com@live.com", "CarrotCake917"),
+		new LoginInfo(IMService.YAHOO, "talkabouthealth@ymail.com", "CarrotCake917"),
 		
-		new LoginInfo(IMService.GOOGLE, "talkabouthealth.com.test@gmail.com", "CarrotCake917"),
-		new LoginInfo(IMService.MSN, "talkabouthealth.com.test@hotmail.com", "CarrotCake917"),
-		new LoginInfo(IMService.YAHOO, "talkabouthealthtest@ymail.com", "CarrotCake917"),
+//		new LoginInfo(IMService.GOOGLE, "talkabouthealth.com.test@gmail.com", "CarrotCake917"),
+//		new LoginInfo(IMService.MSN, "talkabouthealth.com.test@hotmail.com", "CarrotCake917"),
+//		new LoginInfo(IMService.YAHOO, "talkabouthealthtest@ymail.com", "CarrotCake917"),
 	};
 
  

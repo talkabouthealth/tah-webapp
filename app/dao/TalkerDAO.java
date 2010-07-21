@@ -165,6 +165,8 @@ public class TalkerDAO {
 			talkerInfoMap.put("id", talkerDBObject.get("_id").toString());
 			talkerInfoMap.put("uname", talkerDBObject.get("uname").toString());
 			talkerInfoMap.put("email", talkerDBObject.get("email").toString());
+			talkerInfoMap.put("imService", talkerDBObject.get("im").toString());
+			talkerInfoMap.put("imUsername", talkerDBObject.get("im_uname").toString());
 			
 			Date latestNotification = NotificationDAO.getLatestNotification(talkerInfoMap.get("id"));
 			if (latestNotification != null) {

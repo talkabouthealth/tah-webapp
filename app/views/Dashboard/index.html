@@ -23,6 +23,7 @@
 		}
 		#notificationbar {
 			border: #000000 dashed 1px;
+			margin-top: 3px;
 			padding: 10px;
 		}
 	</style>
@@ -31,6 +32,9 @@
 		var selectedTopicId;
 		var selectedTopic;
 		var selectedTalkers = new Array();
+		
+		var services = {"WindowLive":0, "GoogleTalk":0, "YahooIM":0};
+		var totalServices = 0;
 			
 		$(document).ready(function() {
 			//check for new topics every 5 seconds
@@ -45,14 +49,18 @@
 
 			$("input[type=checkbox]").click (function() {
 				var talkerId = $(this).val();
-				var talkerEmail = $(this).next().val();
+				var talkerIMService = $(this).next().val();
 				if ($(this).attr("checked") == true) {
 					selectedTalkers.push(talkerId);
+					updateServices(talkerIMService, 1);
 				}
 				else {
 					selectedTalkers = removeItem(selectedTalkers, talkerId);
+					updateServices(talkerIMService, -1);
 				}
-				$("#selectedtalkers").html(selectedTalkers.length+" selected talker(s)");
+				$("#selectedtalkers").html(
+						selectedTalkers.length+" selected talker(s): Google="+
+						services['GoogleTalk']+", Yahoo="+services['YahooIM']+", MSN="+services['WindowLive'] );
 				updateButton();
 			});
 
@@ -66,6 +74,11 @@
 	  			);
 			});
 		});
+
+		function updateServices(imService, delta) {
+			totalServices = totalServices + delta;
+			services[imService] = services[imService] + delta;
+		}
 
 		function updateButton() {
 			if (selectedTopicId && selectedTalkers.length > 0) {
@@ -162,8 +175,9 @@
 										#{list items: talkersList, as: 'talkerInfo'}
 											#{if onlineUsersSingleton.isUserOnline(talkerInfo.id)}
 												<br>
-												<input type="checkbox" name="uidArray" value="${talkerInfo.id}"> 
-												${talkerInfo.uname} has account of ${talkerInfo.email}
+												<input type="checkbox" name="uidArray" value="${talkerInfo.id}">
+												<input type="hidden" name="imservice" value="${talkerInfo.imService}">  
+												${talkerInfo.uname}, account: ${talkerInfo.imUsername} [${talkerInfo.imService}]
 												<br>Last notified on: ${talkerInfo.latestNotification}
 												<br> ${talkerInfo.uname} has been notified 
 													${talkerInfo.numOfNotifications} times in past 24 hours.	
