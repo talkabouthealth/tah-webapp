@@ -47,8 +47,8 @@
 			}
 		}
 		
-		function open_chat(){
-			window.open("http://talkabouthealth.com:5080/tah/chat.jsp?id="+username);
+		function openChat(topicId){
+			window.open("@{Chat.chatApp()}/"+topicId, "TalkerWindow", "width=700,height=500");
 		}
 	</script>
 </head>
@@ -134,7 +134,7 @@
 				        			</p>
 				        		</div>
 								<div class="join">
-									<a href="javascript:open_chat('${topic.id}')">
+									<a href="#" onclick="openChat('${topic.id}')">
 										<img border="0" src="/public/images/join_conv.gif" width="178" height="27" />
 									</a>
 								</div>

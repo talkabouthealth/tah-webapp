@@ -41,6 +41,30 @@ public class TopicDAO {
 		return topicObject.get("_id").toString();
 	}
 	
+	public static TopicBean getById(String topicId) {
+		DBCollection topicsColl = DBUtil.getDB().getCollection(TOPICS_COLLECTION);
+		
+		DBObject query = null;
+		try {
+			query = new BasicDBObject("_id", new ObjectId(topicId));
+		}
+		catch(IllegalArgumentException iae) {
+			//bad topicId - return no topic 
+			return null;
+		}
+		DBObject topicDBObject = topicsColl.findOne(query);
+		if (topicDBObject == null) {
+			return null;
+		}
+		
+		TopicBean topic = new TopicBean();
+    	topic.setId(topicDBObject.get("_id").toString());
+    	topic.setTopic((String)topicDBObject.get("topic"));
+    	topic.setCreationDate((Date)topicDBObject.get("cr_date"));
+    	topic.setDisplayTime((Date)topicDBObject.get("disp_date"));
+		return topic;
+	}
+	
 	public static Map<String, TopicBean> queryTopics() {
 		DBCollection topicsColl = DBUtil.getCollection(TOPICS_COLLECTION);
 		List<DBObject> topicsList = 
@@ -96,7 +120,7 @@ public class TopicDAO {
 		DBCollection topicsColl = DBUtil.getDB().getCollection(TOPICS_COLLECTION);
 		DateFormat dateFormat = new SimpleDateFormat("MM.dd.yyyy HH:mm:ss");
 		
-		List<DBObject> topicsDBList = topicsColl.find().sort(new BasicDBObject("cr_date", 1)).toArray();
+		List<DBObject> topicsDBList = topicsColl.find().sort(new BasicDBObject("cr_date", -1)).toArray();
 		
 		List<Map<String, String>> topicsInfoList = new ArrayList<Map<String,String>>();
 		for (DBObject topicDBObject : topicsDBList) {
@@ -150,7 +174,6 @@ public class TopicDAO {
 //		topic.setDisplayTime(currentDate);
 //		TopicDAO.save(topic);
 	}
-	
 
 	/* 
 	 	Unused DB code - if we'll need it we convert it later.

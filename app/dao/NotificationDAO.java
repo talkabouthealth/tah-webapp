@@ -22,6 +22,11 @@ public class NotificationDAO {
 	 * Returns number of notifications for last 24 hours
 	 */
 	public static int getNumOfNotifications(String talkerId) {
+//		String sql = "SELECT COUNT(*) FROM talkers LEFT JOIN noti_history " +
+//		"ON talkers.uid = noti_history.uid " +
+//		"WHERE noti_history.noti_time > '" + _time + "' " +
+//				"AND noti_history.uid =" + _uid + " ORDER BY noti_history.noti_time"; 
+		
 		DBCollection notificationsColl = DBUtil.getDB().getCollection(NOTIFICATIONS_COLLECTION);
 		
 		Calendar oneDayBeforeDate = Calendar.getInstance();
@@ -38,6 +43,10 @@ public class NotificationDAO {
 	}
 	
 	public static Date getLatestNotification(String talkerId) {
+//		String sql = "SELECT talkers.*, MAX(noti_history.noti_time) FROM talkers " +
+//		"LEFT JOIN noti_history ON talkers.uid = noti_history.uid " +
+//		"WHERE talkers.uid = '" + _uid + "' GROUP BY talkers.uid ORDER BY MAX(noti_history.noti_time)";
+		
 		DBCollection notificationsColl = DBUtil.getDB().getCollection(NOTIFICATIONS_COLLECTION);
 		
 		DBRef talkerRef = new DBRef(DBUtil.getDB(), 

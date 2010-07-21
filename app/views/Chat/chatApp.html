@@ -37,10 +37,10 @@
             <!-- To use express install, set to playerProductInstall.swf, otherwise the empty string. -->
             var xiSwfUrlStr = "playerProductInstall.swf";
             var flashvars = {};
-            flashvars.userid = '${userid}';
-            flashvars.username = '${username}';
-            flashvars.topicid = '${topicid}';
-            flashvars.topic = '${topic}';
+            flashvars.userid = '${talker.id}';
+            flashvars.username = '${talker.userName}';
+            flashvars.topicid = '${topic.id}';
+            flashvars.topic = '${topic.topic}';
             var params = {};
             params.quality = "high";
             params.bgcolor = "#ffffff";
@@ -81,14 +81,14 @@
                 <param name="movie" value="/public/comm/CommApp.swf" />
                 <param name="quality" value="high" />
                 <param name="bgcolor" value="#ffffff" />
-                <param name="FlashVars" value="userid=${userid}&username=${username}&topicid=${topicid}&topic=${topic}" />
+                <param name="FlashVars" value="userid=${talker.id}&username=${talker.userName}&topicid=${topic.id}&topic=${topic.topic}" />
                 <param name="allowScriptAccess" value="sameDomain" />
                 <param name="allowFullScreen" value="true" />
                 <!--[if !IE]>-->
                 <object type="application/x-shockwave-flash" data="/public/comm/CommApp.swf" width="849" height="601">
                     <param name="quality" value="high" />
                     <param name="bgcolor" value="#ffffff" />
-                    <param name="FlashVars" value="userid=${userid}&username=${username}&topicid=${topicid}&topic=${topic}" />
+                    <param name="FlashVars" value="userid=${talker.id}&username=${talker.userName}&topicid=${topic.id}&topic=${topic.topic}" />
                 	<param name="allowScriptAccess" value="sameDomain" />
                     <param name="allowFullScreen" value="true" />
                 <!--<![endif]-->

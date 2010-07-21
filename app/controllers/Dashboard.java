@@ -42,7 +42,9 @@ public class Dashboard extends Controller {
 		//	GROUP BY talkers.uid ORDER BY MAX(noti_history.noti_time)";
 		List<Map<String, String>> talkersList = TalkerDAO.loadTalkersForDashboard();
 		
+		//FIXME!!!
 		IMNotifier imNotifier = new IMNotifier();
+//		IMNotifier imNotifier = null;
 		String lastTopicId = TopicDAO.getLastTopicId(); 
 		
 		render(topicsList, topicsWithNotificationsList, talkersList, imNotifier, lastTopicId);

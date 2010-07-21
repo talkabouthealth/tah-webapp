@@ -62,7 +62,8 @@
 				$.post("@{Dashboard.notification()}",
 					{uidArray: selectedTalkers, emailArray: selectedEmails, convTid: selectedTopicId},
 	  				function(data) {
-	  					//...
+		  				//on receive - reload page
+						document.location.reload();
 	  				}
 	  			);
 			});
@@ -101,6 +102,7 @@
 	</script>
 </head>
 <body>
+		<a href="@{Secure.logout()}">Logout</a>
 		<div id="notificationbar">
 			Notification Bar<br/>
 			<span id="newtopicmessage" class="error"></span><br/>

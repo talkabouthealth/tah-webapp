@@ -151,9 +151,8 @@ function postNewTopicResponse() {
 			update = response.split('|');
 			
 			if (update[1] != '' && update[0] != '') {
-				//alert("Topic1: " + update[1]);
-				
-				//var topic3 = decodeURIComponent(update[1]);
+				//show chat window
+				openChat(update[0]);
 				
 				var topicLink = update[1].replace(/&#39;/g, "\\'");
 				var topic = update[1].replace(/&#39;/g, "'");
@@ -195,7 +194,7 @@ function postNewTopicResponse() {
 				joinArea = createDiv('join');
 				areaMid.appendChild(joinArea);
 				joinArea.innerHTML = 
-					'<a href="javascript:open_chat('+update[0]+')">'+
+					'<a href="#" onclick="openChat(\''+update[0]+'\')">'+
 					'<img border="0" src="/public/images/join_conv.gif" width="178" height="27" />'+ 
 				    '</a>';    
 				

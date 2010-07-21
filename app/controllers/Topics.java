@@ -27,9 +27,6 @@ public class Topics extends Controller {
 		// call notification module
 		// start new thread
 
-		// open talker window
-		// start new thread
-
 		// create topic bean
 		TopicBean topic = new TopicBean();
 		topic.setTopic(newTopic);
