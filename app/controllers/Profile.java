@@ -223,7 +223,7 @@ public class Profile extends Controller {
 		//if something was changed - send new invitation
 		if (!sessionTalker.getIm().equals(talker.getIm()) 
 				|| !sessionTalker.getImUsername().equals(talker.getImUsername())) {
-			CommonUtil.sendIMInvitation(talker.getImUsername(), talker.getIm());
+			CommonUtil.sendIMInvitation(talker.getIm(), talker.getImUsername());
 		}
 		
 		//TODO: what email here? check for duplicate email?

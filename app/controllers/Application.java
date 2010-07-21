@@ -95,7 +95,7 @@ public class Application extends Controller {
 		}
 
 		//Successful signup!
-		CommonUtil.sendIMInvitation(talker.getUserName(), talker.getIm());
+		CommonUtil.sendIMInvitation(talker.getIm(), talker.getUserName());
 		EmailUtil.sendEmail(EmailUtil.WELCOME_TEMPLATE, talker.getEmail());
 
 		//login

@@ -8,7 +8,6 @@ import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
@@ -18,12 +17,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import dao.TalkerDAO;
-
+import models.TalkerBean;
 import play.cache.Cache;
 import play.mvc.Scope.Session;
 
-import models.TalkerBean;
+import com.tah.im.IMNotifier;
+
+import dao.TalkerDAO;
 
 public class CommonUtil {
 	
@@ -89,13 +89,15 @@ public class CommonUtil {
 	}
 
 	//Send IM invitation through Dashboard application
-	public static void sendIMInvitation(String imUsername, String imService) {
-		String dashboardURL = "http://localhost:8080/tah-dashboard/";
-		try {
-			CommonUtil.makeGET(dashboardURL+"Invitation", 
-					"imusername="+URLEncoder.encode(imUsername, "UTF-8")+"&imservice="+imService);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+	public static void sendIMInvitation(String imService, String imUsername) {
+		//TODO: check if such IM exists? 
+		if (imService != null && imUsername != null) {
+			IMNotifier imNotifier = IMNotifier.getInstance(null);
+			try {
+				imNotifier.addContact(imService, imUsername);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

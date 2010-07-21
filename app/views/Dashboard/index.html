@@ -8,7 +8,7 @@
 	<meta name="keywords" content="support, health, talk" /> 
 	<meta name="description" content="real-time support for your health issues" /> 
 	<meta name="robots" content="all" /> 
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Dashboard</title>
 	
 	<link href="@{'/public/stylesheets/style.css'}" rel="stylesheet" type="text/css" />
@@ -29,8 +29,8 @@
 	<script type="text/javascript">
 		var lastTopicId = '${lastTopicId}';
 		var selectedTopicId;
+		var selectedTopic;
 		var selectedTalkers = new Array();
-		var selectedEmails = new Array();
 			
 		$(document).ready(function() {
 			//check for new topics every 5 seconds
@@ -38,8 +38,8 @@
 
 			$("input[type=radio]").click (function() {
 				selectedTopicId = $(this).val();
-				var topic = $(this).next().val();
-				$("#selectedtopic").html("Selected topic is '"+topic+"'");
+				selectedTopic = $(this).next().val();
+				$("#selectedtopic").html("Selected topic is '"+selectedTopic+"'");
 				updateButton();
 			});
 
@@ -48,11 +48,9 @@
 				var talkerEmail = $(this).next().val();
 				if ($(this).attr("checked") == true) {
 					selectedTalkers.push(talkerId);
-					selectedEmails.push(talkerEmail);
 				}
 				else {
 					selectedTalkers = removeItem(selectedTalkers, talkerId);
-					selectedEmails = removeItem(selectedEmails, talkerEmail);
 				}
 				$("#selectedtalkers").html(selectedTalkers.length+" selected talker(s)");
 				updateButton();
@@ -60,7 +58,7 @@
 
 			$("#sendNotiBtn").click(function() {
 				$.post("@{Dashboard.notification()}",
-					{uidArray: selectedTalkers, emailArray: selectedEmails, convTid: selectedTopicId},
+					{uidArray: selectedTalkers, topicId: selectedTopicId, topic: selectedTopic},
 	  				function(data) {
 		  				//on receive - reload page
 						document.location.reload();
@@ -124,8 +122,8 @@
 										<td>
 										#{list items: topicsList, as: 'topicInfo'}
 											<br>
-											<input type="radio" name="convTid" value="${topicInfo.topicId}" />
-											<input type="hidden" id="convTopic" value="${topicInfo.topic}" />
+											<input type="radio" name="topicId" value="${topicInfo.topicId}" />
+											<input type="hidden" id="topic" value="${topicInfo.topic}" />
 											"${topicInfo.topic}", created: ${topicInfo.cr_date}
 											<br>User: ${topicInfo.uname}
 											<br/>
@@ -140,8 +138,8 @@
 										<td>
 										#{list items: topicsWithNotificationsList, as: 'topicInfo'}
 											<br>
-											<input type="radio" name="convTid" value="${topicInfo.topicId}" />
-											<input type="hidden" id="convTopic" value="${topicInfo.topic}" />
+											<input type="radio" name="topicId" value="${topicInfo.topicId}" />
+											<input type="hidden" id="topic" value="${topicInfo.topic}" />
 											"${topicInfo.topic}", created: ${topicInfo.cr_date}
 											<br>Topic ${topicInfo.topicId} has invited ${topicInfo.notificationsNum} people
 											<br>User: ${topicInfo.uname}
@@ -162,10 +160,9 @@
 								<tr>
 									<td>
 										#{list items: talkersList, as: 'talkerInfo'}
-											#{if imNotifier.isUserOnline(talkerInfo.email)}
+											#{if onlineUsersSingleton.isUserOnline(talkerInfo.id)}
 												<br>
 												<input type="checkbox" name="uidArray" value="${talkerInfo.id}"> 
-												<input type="hidden" id="emailArray" value="${talkerInfo.email}" />
 												${talkerInfo.uname} has account of ${talkerInfo.email}
 												<br>Last notified on: ${talkerInfo.latestNotification}
 												<br> ${talkerInfo.uname} has been notified 
@@ -181,7 +178,7 @@
 								<tr>
 									<td>
 									#{list items: talkersList, as: 'talkerInfo'}
-										#{ifnot imNotifier.isUserOnline(talkerInfo.email)}
+										#{ifnot onlineUsersSingleton.isUserOnline(talkerInfo.id)}
 											<br>
 											${talkerInfo.uname} has account of ${talkerInfo.email}
 											<br>Last notified on: ${talkerInfo.latestNotification}
