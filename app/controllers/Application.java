@@ -33,7 +33,6 @@ public class Application extends Controller {
     }
     
     public static void sendNewPassword(@Email String email) {
-    	
     	TalkerBean user = null;
     	if (!validation.hasError("email")) {
     		user = TalkerDAO.getByEmail(email);

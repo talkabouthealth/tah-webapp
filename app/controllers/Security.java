@@ -10,13 +10,13 @@ import dao.TalkerDAO;
  
 public class Security extends Secure.Security {
 	
-    static boolean authenticate(String username, String password) {
-    	if ("admin".equals(username) && "admin".equals(password)) {
+    static boolean authenticate(String usernameOrEmail, String password) {
+    	if ("admin".equals(usernameOrEmail) && "admin".equals(password)) {
     		return true;
     	}
     	
     	TalkerBean talker = 
-    		TalkerDAO.getTalkerByLoginInfo(username, CommonUtil.hashPassword(password));
+    		TalkerDAO.getTalkerByLoginInfo(usernameOrEmail, CommonUtil.hashPassword(password));
     	return talker != null;
     }
     
@@ -29,13 +29,17 @@ public class Security extends Secure.Security {
     }
 
     static void onAuthenticated() {
-    	//TODO: make user for admin?
-    	if (!"admin".equals(connected())) {
-    		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-        	
-        	Date now = Calendar.getInstance().getTime(); 
-    		LoginHistoryDAO.save(talker.getId(), now);
+    	//if user logged with email - change session "username" to username (not email)
+    	String connectedUser = connected();
+    	if (connectedUser.contains("@")) {
+    		TalkerBean talker = TalkerDAO.getByEmail(connectedUser);
+    		session.put("username", talker.getUserName());
     	}
+    	
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	
+    	Date now = Calendar.getInstance().getTime(); 
+		LoginHistoryDAO.save(talker.getId(), now);
     }
     
     static void onDisconnected() {
