@@ -2,8 +2,11 @@ package controllers;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import models.TalkerBean;
@@ -16,6 +19,16 @@ import util.EmailUtil;
 import dao.TalkerDAO;
 
 public class Application extends Controller {
+	
+	//As we have profile link as "http://talkabouthealth.com/{userName}" 
+	//we need to disallow usernames equal to application routes - controllers, static files, etc
+	//TODO: maybe we can user Play! configuration for this?
+	private static final List<String> RESERVED_WORDS = Arrays.asList(new String[]{
+		"login", "logout", "signup", "register", "forgotpassword", "sendnewpassword", 
+		"home", "dashboard", "talk", "profile", "public",
+		"actions", "application", "oauth", "security", "static", "topics",
+		"errors", 
+	});
 
     public static void index(String newTopic) {
     	if (Security.isConnected()) {
@@ -66,7 +79,6 @@ public class Application extends Controller {
     /* ------- Sign Up --------- */
     public static void signup() {
     	params.flash();
-    	
     	render();
     }
     
@@ -116,6 +128,9 @@ public class Application extends Controller {
 		if (!validation.hasError("talker.userName")) {
 			TalkerBean tmpTalker = TalkerDAO.getByUserName(talker.getUserName());
 			validation.isTrue(tmpTalker == null).message("username.exists");
+
+			String lowUserName = talker.getUserName().toLowerCase();
+			validation.isTrue(!RESERVED_WORDS.contains(lowUserName)).message("username.reserved");
 		}
 		if (!validation.hasError("talker.email")) {
 			TalkerBean tmpTalker = TalkerDAO.getByEmail(talker.getEmail());

@@ -17,10 +17,12 @@ GET		/dashboard/?							Dashboard.index
 GET		/talk/{topicId}							Talk.talkApp
 GET		/talk/?									Talk.talkApp
 
-GET		/profile/view/{userName}				Profile.view
-
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
 
+GET		/{userName}								Profile.view
+
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}
+
+					
