@@ -4,6 +4,7 @@ import com.tah.im.IMNotifier;
 
 import improject.LoginInfo;
 import improject.IMSession.IMService;
+import play.Play;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 
@@ -14,21 +15,25 @@ import play.jobs.OnApplicationStart;
 @OnApplicationStart
 public class IMServicesJob extends Job {
 	
-	private static final LoginInfo[] LOGIN_INFO_ARRAY = new LoginInfo[] {
+	private static final LoginInfo[] PROD_LOGIN_ARRAY = new LoginInfo[] {
 		new LoginInfo(IMService.GOOGLE, "talkabouthealth.com@gmail.com", "CarrotCake917"),
 		new LoginInfo(IMService.MSN, "talkabouthealth.com@live.com", "CarrotCake917"),
 		new LoginInfo(IMService.YAHOO, "talkabouthealth@ymail.com", "CarrotCake917"),
-		
-//		new LoginInfo(IMService.GOOGLE, "talkabouthealth.com.test@gmail.com", "CarrotCake917"),
-//		new LoginInfo(IMService.MSN, "talkabouthealth.com.test@hotmail.com", "CarrotCake917"),
-//		new LoginInfo(IMService.YAHOO, "talkabouthealthtest@ymail.com", "CarrotCake917"),
 	};
-
+	private static final LoginInfo[] DEV_LOGIN_ARRAY = new LoginInfo[] {
+		new LoginInfo(IMService.GOOGLE, "talkabouthealth.com.test@gmail.com", "CarrotCake917"),
+		new LoginInfo(IMService.MSN, "talkabouthealth.com.test@hotmail.com", "CarrotCake917"),
+		new LoginInfo(IMService.YAHOO, "talkabouthealthtest@ymail.com", "CarrotCake917"),
+	};
  
     public void doJob() {
-    	//TODO: call DEV and PROD arrays when needed
-    	//TODO: make init() method?
-    	IMNotifier.getInstance(LOGIN_INFO_ARRAY);
+    	String appMode = (String)Play.configuration.get("application.mode");
+    	if (appMode != null && appMode.equalsIgnoreCase("prod")) {
+    		IMNotifier.init(PROD_LOGIN_ARRAY);
+    	}
+    	else {
+    		IMNotifier.init(DEV_LOGIN_ARRAY);
+    	}
     }
  
 }

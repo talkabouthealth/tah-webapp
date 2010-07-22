@@ -92,7 +92,7 @@ public class CommonUtil {
 	public static void sendIMInvitation(String imService, String imUsername) {
 		//TODO: check if such IM exists? 
 		if (imService != null && imUsername != null) {
-			IMNotifier imNotifier = IMNotifier.getInstance(null);
+			IMNotifier imNotifier = IMNotifier.getInstance();
 			try {
 				imNotifier.addContact(imService, imUsername);
 			} catch (Exception e) {

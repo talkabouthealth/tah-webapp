@@ -8,9 +8,9 @@ import play.mvc.With;
 import util.CommonUtil;
 
 @With(Secure.class)
-public class Chat extends Controller {
+public class Talk extends Controller {
 	
-	public static void chatApp(String topicId) {
+	public static void talkApp(String topicId) {
 		notFoundIfNull(topicId);
 		
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);

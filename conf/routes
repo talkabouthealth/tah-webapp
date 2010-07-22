@@ -14,8 +14,8 @@ POST    /sendnewpassword/?						Application.sendNewPassword
 GET		/home/?									Home.index
 GET		/dashboard/?							Dashboard.index
 
-GET		/chat/{topicId}							Chat.chatApp
-GET		/chat/?									Chat.chatApp
+GET		/talk/{topicId}							Talk.talkApp
+GET		/talk/?									Talk.talkApp
 
 GET		/profile/view/{userName}				Profile.view
 
