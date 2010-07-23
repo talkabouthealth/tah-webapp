@@ -8,7 +8,7 @@ body {
 	width:100%;
 	color:#000000;}
 
-
+form { padding:0px; margin:0px;}
 #top_container { width:972px; margin-left:auto; margin-right:auto; font-size:1px}
 #bottom_container { width:972px; margin-left:auto; margin-right:auto;}
 #top { float:left; width:972px; padding:0px; margin:0px; height:73px; }
@@ -120,7 +120,20 @@ body {
 #innerheading { float:left; width: 100%; height:56px; line-height:56px;}
 #innermiddlearea {float:left; width: 942px; padding-top:20px; padding-bottom:20px;}
 #innerpersonalarea {float:left; width: 942px; padding-top:20px; padding-bottom:10px;}
+.generaltextarea {float:left; width:285px; height:27px; line-height:27px; padding-top:10px;}
+.generaltextarea2 {float:left; width:500px; height:27px; line-height:27px; padding-top:10px;}
+.button {float:left; width:500px;  padding-top:10px;}
+.generalcheck {float:left; width:580px;  padding-bottom:10px; }
+.generalcheck1 {float:left; width:255px; padding-right:5px; }
+.generalcheck2 {float:left; width:310px;   }
+.generalinfosignrighttop { float:left; width:284px; background:url(../images/generalforight_top.gif) no-repeat; height:57px; }
 #signupleftarea { float:left; width:590px; padding-top:10px;}
+.signupleftarea2 { float:left; width:600px; padding-top:10px;}
+.generalsubhead { float:left; width:590px; padding-top:20px; padding-bottom:10px; font-weight: bold; font-size: 16px; color: #000000; font-family:arial; text-decoration: none;}
+.checkbox1 {float:left; width:280px; padding-bottom:10px; padding-right:5px;}
+.checkbox2 {float:left; width:300px; padding-bottom:10px; }
+.generalcheck3 {float:left; width:280px; padding:2px;   }
+.generalcheck4 {float:left; width:300px; padding:2px;   }
 .signupmain { float:left; width:580px; padding-bottom:10px;}
 .signuptextarea {float:left; width:220px; height:27px; line-height:27px; padding-top:10px;}
 #signupleft { float:left; width:590px;}
@@ -188,6 +201,15 @@ body {
 .personalfields{width:249px;  height:23px; margin-top:5px; margin-bottom:5px; border:0; font-family: arial; font-size: 14px; font-weight: normal; text-decoration: none; color: #000000;}
 .fieldarearight{ float:left; width:15px; background:url(../images/txtfieldright.gif) no-repeat right; height:37px;}
 .forgotpassword{ float:left; text-align:right; height:20px; width:138px; padding-top:20px; font-weight: normal; font-size: 12px; color: #1450a4; font-family:arial; text-decoration: none;  }
+.inputfields {
+border:1px solid #BDC7D8;
+font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
+font-size:11px;
+padding:3px;
+width:150px;
+height:23px;
+margin-bottom:5px;
+}
 .checkboxarea{ float:left; height:20px; width:140px; padding-top:20px; font-weight: normal; font-size: 14px; color: #545454; font-family:arial; text-decoration: none; }
 .checkboxclass{ background:url(../images/checkboxbg.gif) repeat-x; border:1px solid #d1d1d1;  }
 .signupbutton{ float:left;  width:150px; height:46px; padding-top:10px; font-weight: normal; font-size: 12px; color: #1450a4; font-family:arial; text-decoration: none;  }
@@ -227,6 +249,11 @@ body {
 #midnoticontainer { float:left; width:100%; background:url(../images/notificationbottombg.gif) repeat-x top; }
 #midnoticontainermain { width:942px; padding-left:30px;  margin-left:auto; margin-right:auto;}
 #boxarea_head2 { float:left;  width:962px; padding-top:10px; height:37px; }
+
+#midnoticontainer1 { float:left; width:100%; background:url(../images/notificationbottombg.gif) repeat-x top; }
+#midnoticontainermain1 { width:942px; padding-left:30px;  margin-left:auto; margin-right:auto;}
+#boxarea_head3 { float:left;  width:962px; padding-top:10px; height:37px; }
+
 #notifactionbox2 { float:left; width:664px; padding-top:30px; padding-bottom:20px;}
 .signfields2 { float:left; width:618px; border-left:1px solid #cae3ed; border-right:1px solid #cae3ed; background:#e8f1f5; padding:10px;}
 .signfields2 ul{ float:left; width:281px; padding-top:15px;}
@@ -299,6 +326,9 @@ a.pinktext18:hover {text-decoration: none; color: #eb1d90;}
 a.blacktext18:hover {text-decoration: none; color: #000000;}
 .blacktext14 {font-family: arial; font-size: 14px; font-weight: normal; text-decoration: none; color: #000000; line-height:20px;}
 a.blacktext14:hover {text-decoration: none; color: #000000;}
+.blacktext16 {font-family: arial; font-size: 16px; font-weight: normal; text-decoration: none; color: #000000; line-height:20px;}
+a.blacktext16:hover {text-decoration: none; color: #000000;}
+
 .blacktext12 {font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none; color: #000000; line-height:20px;}
 a.blacktext12:hover {text-decoration: none; color: #000000;}
 .blacktextgrey14 {font-family: arial; font-size: 14px; font-weight: normal; text-decoration: none; color: #434242; line-height:20px;}
@@ -310,6 +340,8 @@ a.greytext:hover {text-decoration: none; color: #434242;}
 a.bluetext2:hover {text-decoration: none; color: #1550a4;}
 .bluetext11 {font-family: arial; font-size: 11px; font-weight: normal; text-decoration: none; color: #1550a4;}
 a.bluetext11:hover {text-decoration: none; color: #1550a4;}
+.greytext11 {font-family: arial; font-size: 11px; font-weight: normal; text-decoration: none; color: #989898;}
+a.greytext11:hover {text-decoration: none; color: #1550a4;}
 .bluetext12 {font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none; color: #1550a4;}
 a.bluetext12:hover {text-decoration: none; color: #1550a4;}
 .navybluetext12 {font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none; color: #0286bc;}
@@ -423,22 +455,42 @@ h4 { float:left; width:221px; padding-bottom:7px;  font-weight: bold; font-size:
 .profiletext2 { float:left; width: 254px; padding-bottom:10px; padding-top:10px;}
 .profiletext2 ul  { float:left; width: 254px; list-style-type:none; padding:0px; margin:0px; }
 .profiletext2 ul li  { float:left; width: 254px; list-style-type:none; padding-right:10px; margin:0px; height:20px; line-height:20px; }
+.thankyoutextarea { float:left; width: 600px; padding-bottom:10px; padding-top:10px; }
 .thankyoupic { float:left; width: 48px; text-align:center; }
-.thankyoutext { float:left; width: 160px; padding-left:8px; padding-top:2px;}
+.thankyoutext { float:left; width: 180px; padding-left:8px; padding-top:2px; vertical-align:top;}
 .commentsarea { float:left; width: 350px; padding-bottom:10px; padding-top:10px;}
+.commentbox { float:left; width: 350px; padding-bottom:5px; padding-top:5px;}
+#toggleText { float:left; width: 350px; padding-bottom:5px; padding-top:5px;}
+#toggleText ul { float:left; width: 350px; list-style-type:none;}
+#toggleText ul li {list-style-type:none; float:left; width: 350px; padding-bottom:5px; }
+#leavecommentText { float:left; width: 650px; padding-bottom:0px; padding-top:0px;}
+#leavecommentText ul { float:left; width: 650px; list-style-type:none;}
+#leavecommentText ul li {list-style-type:none; float:left; width: 650px;  }
+#leavethankyouText { float:left; width: 650px; padding-bottom:5px; padding-top:5px;}
+#leavethankyouText ul { float:left; width: 650px; list-style-type:none;}
+#leavethankyouText ul li {list-style-type:none; float:left; width: 650px; padding-bottom:5px; }
+
+#conversation_addcomment { float:left; width: 650px; padding-bottom:5px; padding-top:5px;}
+#conversation_addcomment ul { float:left; width: 650px; list-style-type:none;}
+#conversation_addcomment ul li {list-style-type:none; float:left; width: 650px; padding-bottom:0px; }
+.togglecommentfield {float:left; width:550px; border:1px solid #cccccc; height:25px; padding-top:4px; margin-bottom:5px; padding-left:5px; }
+.togglecomment {float:left; width:276px; border:1px solid #cccccc; height:60px; padding-top:4px; margin-bottom:5px; padding-left:5px; }
+
+
+#commentForm {float:left; width:250px; display:none; font-family:Arial,sans-serif; font-size:0.8em;}
 .commentsreply { float:left; width: 300px; padding-left:20px; padding-top:20px;}
 .conversationarea { float:left; width: 650px; padding-bottom:10px; padding-top:10px;}
 .conversationarea ul  { float:left; width: 650px; list-style-type:none; padding:0px; margin:0px; }
-.conversationarea ul li  { float:left; width: 650px; list-style-type:none; padding-right:10px; margin:0px; height:20px; line-height:20px; }
+.conversationarea ul li  { float:left; width: 650px; list-style-type:none; padding-right:10px; margin:0px; height:20px; line-height:15px; }
 .conversationtext { float:left; width: 500px; padding-left:8px; padding-top:0px;}
 .conversationtext ul  { float:left; width: 500px; list-style-type:none; padding:0px; margin:0px; }
 .conversationtext ul li  { float:left; width: 500px; list-style-type:none; padding-right:10px; margin:0px; height:20px; line-height:20px; }
+.conversationtextsmall { float:left; width:500px;  padding-top:6px;}
 .activitiestext { float:left; width: 500px; padding-top:10px; }
 .activitiestext ul  { float:left; width: 500px; list-style-type:none; padding:0px; margin:0px; }
 .activitiestext ul li  { float:left; width: 500px; list-style-type:none; padding-right:10px; margin:0px; height:20px; line-height:20px; }
 .prosubheading { float:left; width:663px; border-top:1px dashed #a7a7a7; border-bottom:1px dashed #a7a7a7; padding:8px 0px 8px 0px;}
 .protext { float:left; padding-top:8px; padding-bottom:8px; width:663px; color:#000000; font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none;}
-
 
 /* 
 	Additions/Fixes 

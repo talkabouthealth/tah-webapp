@@ -39,6 +39,45 @@
   				}
   			);
    		}
+
+   		function toggle() {
+   			var ele = document.getElementById("toggleText");
+   			var text = document.getElementById("displayText");
+   			if(ele.style.display == "block") {
+   		    		ele.style.display = "none";
+   				text.innerHTML = "Add Comment";
+   		  	}
+   			else {
+   				ele.style.display = "block";
+   				text.innerHTML = "Close";
+   			}
+   		} 
+
+   		function leavecomment() {
+   			var ele = document.getElementById("leavecommentText");
+   			var text = document.getElementById("displaycommentText");
+   			if(ele.style.display == "block") {
+   		    		ele.style.display = "none";
+   				text.innerHTML = "Leave a Comment";
+   		  	}
+   			else {
+   				ele.style.display = "block";
+   				text.innerHTML = "Close Comment Box";
+   			}
+   		} 
+
+   		function giveaThankYou() {
+   			var ele = document.getElementById("leavethankyouText");
+   			var text = document.getElementById("displayThankYouText");
+   			if(ele.style.display == "block") {
+   		    		ele.style.display = "none";
+   				text.innerHTML = "Give a Thank You";
+   		  	}
+   			else {
+   				ele.style.display = "block";
+   				text.innerHTML = "Close Thank You Box";
+   			}
+   		} 
    	</script>
 </head>
 <body>
@@ -250,28 +289,78 @@
 							</ul>
 						</div>
 						<div class="prosubheading">
-							<div class="profileheading">Thank You's (${talker.thankYouList.size()})</div>
+							<div class="profileheading">
+								Thank You's (${talker.thankYouList.size()})
+								<a id="displayThankYouText" href="javascript:giveaThankYou();" class="navybluetext12">Give a Thank You</a>
+							</div>
 							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 						</div>
+						<div id="leavethankyouText" style="display:none">
+							<ul>
+								<li class="blacktext14">Give a Thank You</li>
+								<li>
+									<input name="textarea" type="text" class="togglecommentfield" id="textarea" value="" size="6" />
+								</li>
+								<li>
+									<div class="personaltextarea" style="height:46px; padding-top:2px;">
+										<a href="#"><img src="/public/images/addcomment_btn.gif" width="145" height="32" border="0" /></a>
+									</div>
+								</li> 
+							</ul>
+						</div>
+						<div class="thankyoutextarea">
 						#{list items:talker.thankYouList, as:'thankYou'}
 							<div class="profiletext2">
-							<div class="thankyoupic"><img width="48" height="48" src="${thankYou.fromTalker.imagePath}" border="0" /></div>
-							<div class="thankyoutext">
-								<a href="@{Profile.view(thankYou.fromTalker.userName)}" 
-									class="bluetext11">${thankYou.fromTalker.userName}</a><br/>
-							  	<span class="blacktext11">${thankYou.note}</span>
-							 </div>
-						</div>
+								<div class="thankyoupic"><img width="48" height="48" src="${thankYou.fromTalker.imagePath}" border="0" /></div>
+								<div class="thankyoutext">
+									<a href="@{Profile.view(thankYou.fromTalker.userName)}" 
+										class="bluetext11">${thankYou.fromTalker.userName}</a><br/>
+								  	<span class="blacktext11">${thankYou.note}</span>
+								  	<span class="greytext11"><br/>${thankYou.time?.format('MMM dd HH:mm')}</span>
+								 </div>
+							</div>
 						#{/list}
+						</div>
 						<div class="prosubheading">
-							<div class="profileheading">Comments</div>
+							<div class="profileheading">
+								Comments
+								<a id="displaycommentText" href="javascript:leavecomment();" class="navybluetext12">Leave a Comment</a>
+							</div>
 							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 						</div>
+						<div id="leavecommentText" style="display:none">
+							<ul>
+								<li class="blacktext14">Leave a Comment</li>
+								<li>
+									<input name="textarea" type="text" class="togglecommentfield" id="textarea" value="" size="6" />
+								</li>
+								<li>
+									<div class="personaltextarea" style="height:46px; padding-top:2px;">
+										<a href="#"><img src="/public/images/addcomment_btn.gif" width="145" height="32" border="0" /></a>
+									</div>
+								</li> 
+						  	</ul>
+						</div>
 						<div class="commentsarea">
-							<div class="thankyoupic"><img src="/public/images/followimg4.jpg" border="0" /></div>
-							<div class="thankyoutext"><span class="navybluetext12">Jason Sharma</span><br />
-							  <span class="blacktext11">Great advice on how to deal <br />
-							  with side effects.</span></div>
+							<div class="commentbox">
+								<div class="thankyoupic"><img src="/public/images/followimg4.jpg" border="0" /></div>
+								<div class="thankyoutext"><span class="navybluetext12">Jason Sharma</span><br />
+								  <span class="blacktext11">Great advice on how to deal <br />
+								  with side effects.</span>
+								  <span class="greytext11"><br/>May 16 at 11:55am </span>
+								  <a id="displayText" href="javascript:toggle();" class="navybluetext12">Add Comment</a>
+								</div>
+								<div id="toggleText" style="display: none">
+								<ul>
+									<li class="blacktext14">Comment:</li>
+									<li><textarea name="textarea" id="textarea" cols="45" rows="5" class="togglecomment"></textarea>
+								    </li>
+									<li><div class="personaltextarea" style="height:46px; padding-top:2px;">
+										<a href="#"><img src="/public/images/addcomment_btn.gif" width="145" height="32" border="0" /></a></div>
+									</li> 
+								    </ul>
+								</div>
+							</div>
 							<div class="commentsreply"><div class="thankyoupic"><img src="/public/images/followimg4.jpg" border="0" /></div>
 							<div class="thankyoutext"><span class="navybluetext12">Jason Sharma</span><span class="pinktext12">&nbsp;replied</span><br />
 							  <span class="blacktext11">Great advice on how to deal <br />
@@ -283,11 +372,15 @@
 							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 						</div>
 						<div class="conversationarea">
-							<ul>
-							<li ><a href="#" class="navybluetext12"><strong>Just received 2 diagnoses, what should i do ?</strong></a></li>
-							<li ><a href="#" class="navybluetext12">10 talkers</a> <span class="blacktext">- mjones, yiwang, shanghao, eltont, sariebarie, quigs, dubs, nana, johnr, nato</span></li>
-							<li ><a href="#" class="navybluetext12">3 comments</a><span class="blacktext"> - johnr, suzie, scott</span></li>
-							</ul>
+							<div class="conversationtext">
+								<a href="#" class="navybluetext12"><strong>Just received 2 diagnoses, what should i do ?</strong></a><br />
+								<span class="greytext11">May 16 at 11:55am</span>
+								<div class="conversationtextsmall">
+									<a href="#" class="navybluetext12">10 talkers</a> 
+									<span class="blacktext">- mjones, yiwang, shanghao, eltont, sariebarie, quigs, dubs, nana, johnr, nato</span><br />
+									<a href="#" class="navybluetext12">3 comments</a><span class="blacktext"> - johnr, suzie, scott</span>
+								</div>
+							</div>
 						</div>
 						<div class="prosubheading">
 							<div class="profileheading">Conversation Joined (20)</div>
@@ -298,11 +391,16 @@
 								<a href="#" class="bluetext11"><img src="/public/images/followimg2.jpg" border="0" /><br />Blal</a>
 							</div>
 							<div class="conversationtext">
-								<ul>
-								<li ><a href="#" class="navybluetext12"><strong>What are the best hospitals for skin cancer?</strong></a></li>
-								<li ><a href="#" class="navybluetext12">3 talkers</a> <span class="blacktext"> - tester, julier, lily</span></li>
-								<li ><a href="#" class="navybluetext12">1 comments</a><span class="blacktext"> - jramsay</span></li>
-								</ul>
+								<a href="#" class="navybluetext12">
+									<strong>Just received 2 diagnoses, what should i do ?</strong></a><br />
+								<span class="greytext11">May 16 at 11:55am</span>
+								<div class="conversationtextsmall">
+									<a href="#" class="navybluetext12">10 talkers</a>
+									<span class="blacktext">- mjones, yiwang, shanghao, eltont, 
+										sariebarie, quigs, dubs, nana, johnr, nato</span><br />
+									<a href="#" class="navybluetext12">3 comments</a>
+									<span class="blacktext"> - johnr, suzie, scott</span>
+								</div>
 							</div>
 						</div>
 						<div class="prosubheading">
@@ -310,13 +408,10 @@
 							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 						</div>
 						<div class="activitiestext">
-							<ul>
-								#{list items:talker.activityList, as:'activity' }
-									<li class="blacktext12">
-										${talker.userName} ${activity.text}
-									</li>
-								#{/list}
-							</ul>
+							#{list items:talker.activityList, as:'activity' }
+								<span class="blacktext12">${talker.userName} ${activity.text}</span><br/>
+								<span class="greytext11">May 16 at 11:55am</span><br />
+							#{/list}
 						</div>
 					</div>
 				</div>
