@@ -27,12 +27,14 @@ public class Home extends Controller {
     	//TODO: load only count?
     	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		
-		Map<String, TopicBean> mapTalkmiTopics = new LinkedHashMap<String, TopicBean>(40);
-		LiveConversationsSingleton lcs = LiveConversationsSingleton.getReference();
-		if(lcs.getLiveConversationMap().size() < 20) {
-			mapTalkmiTopics = TopicDAO.queryTopics();
-		}
-		Cache.set(session.getId()+"-mapTalkmiTopics", mapTalkmiTopics);
+    	//TODO: use cache?
+    	Map<String, TopicBean> mapTalkmiTopics = TopicDAO.queryTopics();
+//		Map<String, TopicBean> mapTalkmiTopics = new LinkedHashMap<String, TopicBean>(40);
+//		LiveConversationsSingleton lcs = LiveConversationsSingleton.getReference();
+//		if(lcs.getLiveConversationMap().size() < 20) {
+//			mapTalkmiTopics = TopicDAO.queryTopics();
+//		}
+//		Cache.set(session.getId()+"-mapTalkmiTopics", mapTalkmiTopics);
 		
 		if (newTopic == null || newTopic.trim().length() == 0) {
 			newTopic = "Please enter your Conversation here ...";

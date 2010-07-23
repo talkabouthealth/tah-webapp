@@ -19,39 +19,67 @@ import util.DBUtil;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import com.mongodb.MongoException;
+import com.mongodb.DB.WriteConcern;
 
 public class TopicDAO {
 	
 	public static final String TOPICS_COLLECTION = "topics";
 	
-	public static String save(TopicBean topic) {
+	public static int save(TopicBean topic) {
+		//we try to insert topic 5 times
+		return saveInternal(topic, 5);
+	}
+	
+	/**
+	 * Tries to insert topic 'count' times (in case of duplicate key error on 'tid' field)
+	 * Returns -1 in case of failure
+	 */
+	//TODO: move similar code in one jar ?
+	private static int saveInternal(TopicBean topic, int count) {
+		if (count == 0) {
+			return -1;
+		}
+		
 		DBCollection topicsColl = DBUtil.getCollection(TOPICS_COLLECTION);
+		
+		//get last tid
+		DBCursor topicsCursor = 
+			topicsColl.find(null, new BasicDBObject("tid", "")).sort(new BasicDBObject("tid", -1)).limit(1);
+		int tid = topicsCursor.hasNext() ? ((Integer)topicsCursor.next().get("tid")) + 1 : 1;
 		
 		DBRef talkerRef = new DBRef(DBUtil.getDB(), TalkerDAO.TALKERS_COLLECTION, new ObjectId(topic.getUid()));
 		DBObject topicObject = BasicDBObjectBuilder.start()
 			.add("uid", talkerRef)
+			.add("tid", tid)
 			.add("topic", topic.getTopic())
 			.add("cr_date", topic.getCreationDate())
 			.add("disp_date", topic.getDisplayTime())
 			.get();
 
-		topicsColl.save(topicObject);
-		return topicObject.get("_id").toString();
+		//Only with STRICT WriteConcern we receive exception on duplicate key
+		topicsColl.setWriteConcern(WriteConcern.STRICT);
+		try {
+			topicsColl.save(topicObject);
+		}
+		catch (MongoException me) {
+			//E11000 duplicate key error index
+			if (me.getCode() == 11000) {
+				System.err.println("Duplicate key error while saving topic");
+				return saveInternal(topic, --count);
+			}
+			me.printStackTrace();
+		}
+		return (Integer)topicObject.get("tid");
 	}
 	
-	public static TopicBean getById(String topicId) {
+	public static TopicBean getByTid(Integer tid) {
 		DBCollection topicsColl = DBUtil.getDB().getCollection(TOPICS_COLLECTION);
 		
-		DBObject query = null;
-		try {
-			query = new BasicDBObject("_id", new ObjectId(topicId));
-		}
-		catch(IllegalArgumentException iae) {
-			//bad topicId - return no topic 
-			return null;
-		}
+		DBObject query = new BasicDBObject("tid", tid);
 		DBObject topicDBObject = topicsColl.findOne(query);
 		if (topicDBObject == null) {
 			return null;
@@ -59,6 +87,7 @@ public class TopicDAO {
 		
 		TopicBean topic = new TopicBean();
     	topic.setId(topicDBObject.get("_id").toString());
+    	topic.setTid((Integer)topicDBObject.get("tid"));
     	topic.setTopic((String)topicDBObject.get("topic"));
     	topic.setCreationDate((Date)topicDBObject.get("cr_date"));
     	topic.setDisplayTime((Date)topicDBObject.get("disp_date"));
@@ -74,6 +103,7 @@ public class TopicDAO {
 		for (DBObject topicDBObject : topicsList) {
 			TopicBean topic = new TopicBean();
 	    	topic.setId(topicDBObject.get("_id").toString());
+	    	topic.setTid((Integer)topicDBObject.get("tid"));
 	    	topic.setTopic((String)topicDBObject.get("topic"));
 	    	topic.setCreationDate((Date)topicDBObject.get("cr_date"));
 	    	topic.setDisplayTime((Date)topicDBObject.get("disp_date"));

@@ -36,9 +36,9 @@ public class Topics extends Controller {
 		topic.setDisplayTime(currentDate);
 
 		// insert new topic into database
-		String topicId = TopicDAO.save(topic);
-		if (topicId != null) {
-			topic.setId(topicId);
+		int tid = TopicDAO.save(topic);
+		if (tid != -1) {
+			topic.setTid(tid);
 		} else {
 			new Exception("DB Problem - Topic not inserted into DB").printStackTrace();
 			renderText("|");
@@ -48,24 +48,24 @@ public class Topics extends Controller {
 		ActivityDAO.createActivity(topic.getUid(), "started the conversation: "+topic.getTopic());
 
 		// create new LiveConvBean
-		LiveConversationBean lcb = new LiveConversationBean();
-		lcb.setTopic(topic);
-		lcb.addTalker(talker.getId(), talker);
+//		LiveConversationBean lcb = new LiveConversationBean();
+//		lcb.setTopic(topic);
+//		lcb.addTalker(talker.getId(), talker);
 
 		// add LiveConvBean to LiveConversationSingleton
-		LiveConversationsSingleton lcs = LiveConversationsSingleton.getReference();
-		lcs.addConversation(topicId, lcb);
+//		LiveConversationsSingleton lcs = LiveConversationsSingleton.getReference();
+//		lcs.addConversation(topicId, lcb);
 
 		// add topic to TopicMap in session - keeps track of topics on the page so no duplicates
-		Map<String, TopicBean> mTopics = (Map<String, TopicBean>)Cache.get(session.getId()+"-mapTalkmiTopics");
-		if (mTopics != null) {
-			mTopics.put(topicId, topic);
-		}
+//		Map<String, TopicBean> mTopics = (Map<String, TopicBean>)Cache.get(session.getId()+"-mapTalkmiTopics");
+//		if (mTopics != null) {
+//			mTopics.put(topicId, topic);
+//		}
 
 		newTopic = newTopic.replaceAll("'", "&#39;");
 		newTopic = newTopic.replaceAll("\\|", "&#124;");
 		
-		renderText(topicId + "|" + newTopic);
+		renderText(topic.getTid() + "|" + newTopic);
     }
     
     public static void lastTopicId() {

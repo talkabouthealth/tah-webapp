@@ -10,11 +10,11 @@ import util.CommonUtil;
 @With(Secure.class)
 public class Talk extends Controller {
 	
-	public static void talkApp(String topicId) {
+	public static void talkApp(Integer topicId) {
 		notFoundIfNull(topicId);
 		
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		TopicBean topic = TopicDAO.getById(topicId);
+		TopicBean topic = TopicDAO.getByTid(topicId);
 		
 		notFoundIfNull(topic);
 		

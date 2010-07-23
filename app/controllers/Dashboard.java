@@ -17,6 +17,9 @@ import dao.TopicDAO;
 public class Dashboard extends Controller {
 	
 	public static void index() {
+		//TODO: fix service counter
+		
+		
 //		String sqlStatement = 
 //		"SELECT DISTINCT topics.topic_id, topics.*, noti_history.noti_time, talkers.* 
 //		FROM topics LEFT JOIN noti_history ON topics.topic_id = noti_history.topic_id 
@@ -47,7 +50,7 @@ public class Dashboard extends Controller {
 	public static void notification(String[] uidArray, String topicId, String topic) {
 		IMNotifier imNotifier = IMNotifier.getInstance();
 		try {
-			imNotifier.broadcast(uidArray, topicId, topic);
+			imNotifier.broadcast(uidArray, topicId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

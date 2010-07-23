@@ -4,6 +4,15 @@ import java.util.Date;
 
 public class TopicBean {
 	private String id;
+	private int tid;
+	public int getTid() {
+		return tid;
+	}
+
+	public void setTid(int tid) {
+		this.tid = tid;
+	}
+
 	private String topic;
 	private Date creationDate;
 	private Date displayTime;
