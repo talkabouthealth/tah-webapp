@@ -113,7 +113,7 @@
 													${ currentTalker.followingList.contains(talker) ? 'Unfollow' : 'Follow'}
 													</a>
 												</li>
-												<li><a href="#thankyouform" id="thankyoulink" 
+												<li><a href="#thankyouSection" onclick="giveaThankYou()" id="thankyoulink2" 
 														class="navybluetext12">Give a 'Thanks you'</a></li>
 												<!-- 
 												<li><a href="#" class="navybluetext12">Send a private message</a></li>
@@ -288,7 +288,7 @@
 							<li class="blacktext12">Aspirin</li>
 							</ul>
 						</div>
-						<div class="prosubheading">
+						<div id="thankyouSection" class="prosubheading">
 							<div class="profileheading">
 								Thank You's (${talker.thankYouList.size()})
 								<a id="displayThankYouText" href="javascript:giveaThankYou();" class="navybluetext12">Give a Thank You</a>
@@ -299,11 +299,14 @@
 							<ul>
 								<li class="blacktext14">Give a Thank You</li>
 								<li>
-									<input name="textarea" type="text" class="togglecommentfield" id="textarea" value="" size="6" />
+									<input id="thankYouNote" name="thankYouNote" type="text" 
+										class="togglecommentfield" value="" size="6" />
 								</li>
 								<li>
 									<div class="personaltextarea" style="height:46px; padding-top:2px;">
-										<a href="#"><img src="/public/images/addcomment_btn.gif" width="145" height="32" border="0" /></a>
+										<a href="#thankyouSection" onclick="thankYou()">
+											<img src="/public/images/addcomment_btn.gif" width="145" height="32" border="0" />
+										</a>
 									</div>
 								</li> 
 							</ul>
@@ -421,6 +424,7 @@
 	
 <!-- Pop-up Thank You form -->
 <div id="hiddenwindows" style="display: none">
+	<!-- 
 	<div id="thankyouform">
 		<table align="center" cellspacing="10">
 			<tr>
@@ -435,4 +439,5 @@
 			</tr>
 		</table>	
 	</div>
+	-->
 </div>
