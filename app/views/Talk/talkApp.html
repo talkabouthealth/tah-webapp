@@ -39,7 +39,7 @@
             var flashvars = {};
             flashvars.userid = '${talker.id}';
             flashvars.username = '${talker.userName}';
-            flashvars.topicid = '${topic.id}';
+            flashvars.topicid = '${topic.tid}';
             flashvars.topic = '${topic.topic}';
             var params = {};
             params.quality = "high";
@@ -81,14 +81,14 @@
                 <param name="movie" value="/public/comm/CommApp.swf" />
                 <param name="quality" value="high" />
                 <param name="bgcolor" value="#ffffff" />
-                <param name="FlashVars" value="userid=${talker.id}&username=${talker.userName}&topicid=${topic.id}&topic=${topic.topic}" />
+                <param name="FlashVars" value="userid=${talker.id}&username=${talker.userName}&topicid=${topic.tid}&topic=${topic.topic}" />
                 <param name="allowScriptAccess" value="sameDomain" />
                 <param name="allowFullScreen" value="true" />
                 <!--[if !IE]>-->
                 <object type="application/x-shockwave-flash" data="/public/comm/CommApp.swf" width="849" height="601">
                     <param name="quality" value="high" />
                     <param name="bgcolor" value="#ffffff" />
-                    <param name="FlashVars" value="userid=${talker.id}&username=${talker.userName}&topicid=${topic.id}&topic=${topic.topic}" />
+                    <param name="FlashVars" value="userid=${talker.id}&username=${talker.userName}&topicid=${topic.tid}&topic=${topic.topic}" />
                 	<param name="allowScriptAccess" value="sameDomain" />
                     <param name="allowFullScreen" value="true" />
                 <!--<![endif]-->
