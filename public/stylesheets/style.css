@@ -515,3 +515,10 @@ h4 { float:left; width:221px; padding-bottom:7px;  font-weight: bold; font-size:
 	height:110px;
 	width:972px;
 }
+.commentsreply {
+	padding-top: 0px;
+}
+
+.replyForm { float:left; width: 350px; padding-bottom:5px; padding-top:5px;}
+.replyForm ul { float:left; width: 350px; list-style-type:none;}
+.replyForm ul li {list-style-type:none; float:left; width: 350px; padding-bottom:5px; }

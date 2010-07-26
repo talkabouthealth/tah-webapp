@@ -51,8 +51,7 @@ public class Actions extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 		CommentBean comment = new CommentBean();
-		//TODO: check?
-		comment.setParentId(parentId);
+		comment.setParentId(parentId.trim().length() == 0 ? null : parentId);
 		comment.setProfileTalkerId(profileTalkerId);
 		comment.setFromTalker(talker);
 		comment.setText(text);

@@ -40,16 +40,19 @@
    		}
 
    		//saveProfileComment(String profileTalkerId, String parentId, String text)
-   		function profileComment() {
-   	   		var commentText = $("#commentText").val();
-   			$("#commentText").val("");
+   		function saveProfileComment(parentId) {
+   	   		var commentText = $("#replytext"+parentId).val();
+   			$("#replytext"+parentId).val("");
 
    			$.post("@{Actions.saveProfileComment()}", 
-  				{ profileTalkerId: '${talker.id}', parentId: '', text: commentText},
+  				{ profileTalkerId: '${talker.id}', parentId: parentId, text: commentText},
   				function(data) {
   					//ok?!
   				}
   			);
+
+   			$("#reply"+parentId).hide();
+  			return false;
    		}
 
    		function toggle() {
@@ -339,51 +342,28 @@
 						<div id="commentsSection" class="prosubheading">
 							<div class="profileheading">
 								Comments
-								<a id="displaycommentText" href="javascript:leavecomment();" class="navybluetext12">Leave a Comment</a>
+								<a id="displaycommentText" href="#" onclick="$('#reply').toggle(); return false;"
+									 class="navybluetext12">Leave a Comment</a>
 							</div>
 							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 						</div>
-						<div id="leavecommentText" style="display:none">
+						<div style="display: none;" id="reply" class="replyForm">
 							<ul>
-								<li class="blacktext14">Leave a Comment</li>
+								<li class="blacktext14">Comment:</li>
 								<li>
-									<input id="commentText" name="commentText" type="text" 
-										class="togglecommentfield" value="" size="6" />
-								</li>
+									<textarea class="togglecomment" rows="5" cols="45" id="replytext"></textarea>
+							    </li>
 								<li>
-									<div class="personaltextarea" style="height:46px; padding-top:2px;">
-										<a href="#commentsSection" onclick="profileComment()">
-											<img src="/public/images/addcomment_btn.gif" width="145" height="32" border="0" />
+									<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
+										<a href="#" onclick="return saveProfileComment('');">
+											<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
 										</a>
 									</div>
 								</li> 
-						  	</ul>
+							</ul>
 						</div>
 						<div class="commentsarea">
-							<div class="commentbox">
-								<div class="thankyoupic"><img src="/public/images/followimg4.jpg" border="0" /></div>
-								<div class="thankyoutext"><span class="navybluetext12">Jason Sharma</span><br />
-								  <span class="blacktext11">Great advice on how to deal <br />
-								  with side effects.</span>
-								  <span class="greytext11"><br/>May 16 at 11:55am </span>
-								  <a id="displayText" href="javascript:toggle();" class="navybluetext12">Add Comment</a>
-								</div>
-								<div id="toggleText" style="display: none">
-								<ul>
-									<li class="blacktext14">Comment:</li>
-									<li><textarea name="textarea" id="textarea" cols="45" rows="5" class="togglecomment"></textarea>
-								    </li>
-									<li><div class="personaltextarea" style="height:46px; padding-top:2px;">
-										<a href="#"><img src="/public/images/addcomment_btn.gif" width="145" height="32" border="0" /></a></div>
-									</li> 
-								    </ul>
-								</div>
-							</div>
-							<div class="commentsreply"><div class="thankyoupic"><img src="/public/images/followimg4.jpg" border="0" /></div>
-							<div class="thankyoutext"><span class="navybluetext12">Jason Sharma</span><span class="pinktext12">&nbsp;replied</span><br />
-							  <span class="blacktext11">Great advice on how to deal <br />
-							  with side effects.</span></div>
-							</div>
+							#{profileCommentsTree commentsList: talker.profileCommentsList /}
 						</div>
 						<div class="prosubheading">
 							<div class="profileheading">Conversation Started (10)</div>

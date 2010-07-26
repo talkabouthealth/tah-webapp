@@ -314,6 +314,7 @@ public class TalkerDAO {
 		//comments without parent (top in hierarchy)
 		List<CommentBean> topCommentsList = new ArrayList<CommentBean>();
 		//temp map for resolving children
+		//TODO: we don't need cache map because of sorting? (children comments are always older)
 		Map<String, CommentBean> commentsCacheMap = new HashMap<String, CommentBean>();
 		for (DBObject commentDBObject : commentsList) {
 			String commentId = commentDBObject.get("_id").toString();
@@ -354,6 +355,7 @@ public class TalkerDAO {
 					topCommentsList.remove(childrenCommentBean);
 				}
 			}
+			commentBean.setChildren(childrenList);
 		}
 		
 		return topCommentsList;
