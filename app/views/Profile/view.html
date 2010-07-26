@@ -26,14 +26,26 @@
 	   		});
    		});
 
+   		//createThankYou(String toTalker, String note)
    		function thankYou() {
    	   		var noteText = $("#thankYouNote").val();
-   	   		
-   			$.fancybox.close();
    			$("#thankYouNote").val("");
 
    			$.post("@{Actions.createThankYou()}", 
   				{ toTalker: '${talker.id}', note: noteText},
+  				function(data) {
+  					//ok?!
+  				}
+  			);
+   		}
+
+   		//saveProfileComment(String profileTalkerId, String parentId, String text)
+   		function profileComment() {
+   	   		var commentText = $("#commentText").val();
+   			$("#commentText").val("");
+
+   			$.post("@{Actions.saveProfileComment()}", 
+  				{ profileTalkerId: '${talker.id}', parentId: '', text: commentText},
   				function(data) {
   					//ok?!
   				}
@@ -324,7 +336,7 @@
 							</div>
 						#{/list}
 						</div>
-						<div class="prosubheading">
+						<div id="commentsSection" class="prosubheading">
 							<div class="profileheading">
 								Comments
 								<a id="displaycommentText" href="javascript:leavecomment();" class="navybluetext12">Leave a Comment</a>
@@ -335,11 +347,14 @@
 							<ul>
 								<li class="blacktext14">Leave a Comment</li>
 								<li>
-									<input name="textarea" type="text" class="togglecommentfield" id="textarea" value="" size="6" />
+									<input id="commentText" name="commentText" type="text" 
+										class="togglecommentfield" value="" size="6" />
 								</li>
 								<li>
 									<div class="personaltextarea" style="height:46px; padding-top:2px;">
-										<a href="#"><img src="/public/images/addcomment_btn.gif" width="145" height="32" border="0" /></a>
+										<a href="#commentsSection" onclick="profileComment()">
+											<img src="/public/images/addcomment_btn.gif" width="145" height="32" border="0" />
+										</a>
 									</div>
 								</li> 
 						  	</ul>

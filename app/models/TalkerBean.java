@@ -119,7 +119,16 @@ public class TalkerBean implements Serializable {
 	private List<TalkerBean> followingList;
 	private List<TalkerBean> followerList;
 	private List<ActivityBean> activityList;
+	private List<CommentBean> profileCommentsList;
 	
+	public List<CommentBean> getProfileCommentsList() {
+		return profileCommentsList;
+	}
+
+	public void setProfileCommentsList(List<CommentBean> profileCommentsList) {
+		this.profileCommentsList = profileCommentsList;
+	}
+
 	public List<ActivityBean> getActivityList() {
 		return activityList;
 	}

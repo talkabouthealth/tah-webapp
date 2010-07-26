@@ -9,9 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.CommentBean;
 import models.TalkerBean;
 import models.ThankYouBean;
 
+import org.apache.lucene.analysis.cn.ChineseTokenizer;
 import org.bson.types.ObjectId;
 
 import util.DBUtil;
@@ -26,6 +28,7 @@ import com.mongodb.DBRef;
 public class TalkerDAO {
 	
 	public static final String TALKERS_COLLECTION = "talkers";
+	public static final String PROFILE_COMMENTS_COLLECTION = "profilecomments";
 	
 	public static boolean save(TalkerBean talker) {
 		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
@@ -264,49 +267,96 @@ public class TalkerDAO {
 		return followerList;
 	}
 	
-	/* ---------------- Profile comments -------------------------- */
-	public static void saveProfileComment(String talkerId, String fromTalkerId, String text) {
-		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+	
+	/* ---------------- Profile comments -------------------------- 
+	 	We store profile comments in separate collection, as "child lists" tree.
+	 	Example "child lists" structure:
+			{"_id": "A", "children": ["B", "C"]}
+			{"_id": "B", "children": ["D"]}
+			{"_id": "C"}
+			{"_id": "D"}
+	 */
+	public static void saveProfileComment(CommentBean comment) {
+		DBCollection commentsColl = DBUtil.getCollection(PROFILE_COMMENTS_COLLECTION);
 		
-		DBRef fromTalkerRef = new DBRef(DBUtil.getDB(), TALKERS_COLLECTION, new ObjectId(fromTalkerId));
+		DBRef profileTalkerRef = new DBRef(DBUtil.getDB(), 
+				TALKERS_COLLECTION, new ObjectId(comment.getProfileTalkerId()));
+		DBRef fromTalkerRef = new DBRef(DBUtil.getDB(), 
+				TALKERS_COLLECTION, new ObjectId(comment.getFromTalker().getId()));
 		DBObject commentObject = BasicDBObjectBuilder.start()
-			.add("time", new Date())
-			.add("text", text)
+			.add("profile", profileTalkerRef)
 			.add("from", fromTalkerRef)
+			.add("text", comment.getText())
+			.add("time", comment.getTime())
 			.get();
 		
-		DBObject talkerIdDBObject = new BasicDBObject("_id", new ObjectId(talkerId));
-		//For creating/adding to array: { $push : { field : value } }
-		talkersColl.update(talkerIdDBObject, new BasicDBObject("$push", 
-				new BasicDBObject("profilecomments", commentObject)));
+		commentsColl.save(commentObject);
+		
+		//update parent - add new comment "_id" to children array
+		String parentCommentId = comment.getParentId();
+		if (parentCommentId != null) {
+			DBObject parentIdDBObject = new BasicDBObject("_id", new ObjectId(parentCommentId));
+			commentsColl.update(parentIdDBObject, 
+					new BasicDBObject("$push", new BasicDBObject("children", commentObject.get("_id").toString())));
+		}
 	}
 	
-	public static void saveProfileReply(String talkerId, String fromTalkerId, String text) {
-		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+	public static List<CommentBean> loadProfileComments(String talkerId) {
+		DBCollection talkersColl = DBUtil.getCollection(PROFILE_COMMENTS_COLLECTION);
 		
-		DBRef fromTalkerRef = new DBRef(DBUtil.getDB(), TALKERS_COLLECTION, new ObjectId(fromTalkerId));
-		DBObject commentObject = BasicDBObjectBuilder.start()
-			.add("time", new Date())
-			.add("text", text)
-			.add("from", fromTalkerRef)
-			.get();
-		
-		DBObject talkerIdDBObject = new BasicDBObject("_id", new ObjectId(talkerId));
-		//For creating/adding to array: { $push : { field : value } }
-		talkersColl.update(talkerIdDBObject, new BasicDBObject("$push", 
-				new BasicDBObject("profilecomments.0.replies.0.replies", commentObject)));
-	}
-	
-	public static void loadProfileComments(String talkerId) {
-		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
-		
+		DBRef profileTalkerRef = new DBRef(DBUtil.getDB(), TALKERS_COLLECTION, new ObjectId(talkerId));
 		DBObject query = BasicDBObjectBuilder.start()
-			.add("_id", new ObjectId(talkerId))
+			.add("profile", profileTalkerRef)
 			.get();
 		
-		DBObject talkerDBObject = talkersColl.findOne(query, new BasicDBObject("profilecomments", ""));
-		BasicDBList commentsList = (BasicDBList)talkerDBObject.get("profilecomments");
-		System.out.println(commentsList);
+		List<DBObject> commentsList = talkersColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		
+		//comments without parent (top in hierarchy)
+		List<CommentBean> topCommentsList = new ArrayList<CommentBean>();
+		//temp map for resolving children
+		Map<String, CommentBean> commentsCacheMap = new HashMap<String, CommentBean>();
+		for (DBObject commentDBObject : commentsList) {
+			String commentId = commentDBObject.get("_id").toString();
+			
+			CommentBean commentBean = commentsCacheMap.get(commentId);
+			if (commentBean == null) {
+				commentBean = new CommentBean(commentId);
+				commentsCacheMap.put(commentId, commentBean);
+			}
+			topCommentsList.add(commentBean);
+			
+			commentBean.setText((String)commentDBObject.get("text"));
+			commentBean.setTime((Date)commentDBObject.get("time"));
+			
+			//TODO: the same as thankyou?
+			DBObject fromTalkerDBObject = ((DBRef)commentDBObject.get("from")).fetch();
+			TalkerBean fromTalker = new TalkerBean();
+			fromTalker.setUserName((String)fromTalkerDBObject.get("uname"));
+			fromTalker.setImagePath((String)fromTalkerDBObject.get("img"));
+			commentBean.setFromTalker(fromTalker);
+			
+			//save children
+			List<CommentBean> childrenList = new ArrayList<CommentBean>();
+			BasicDBList childrenDBList = (BasicDBList)commentDBObject.get("children");
+			if (childrenDBList != null) {
+				for (Object childIdObject : childrenDBList) {
+					String childId = (String)childIdObject;
+					
+					//try to get cached instance
+					CommentBean childrenCommentBean = commentsCacheMap.get(childId);
+					if (childrenCommentBean == null) {
+						childrenCommentBean = new CommentBean(childId);
+						commentsCacheMap.put(childId, childrenCommentBean);
+					}
+					
+					childrenList.add(childrenCommentBean);
+					//remove child comments from top list
+					topCommentsList.remove(childrenCommentBean);
+				}
+			}
+		}
+		
+		return topCommentsList;
 	}
 	
 	public static void main(String[] args) {
@@ -315,7 +365,7 @@ public class TalkerDAO {
 		
 //		TalkerDAO.saveProfileComment("4c35dbeb5165f305eebfc5f2", "4c2cb43160adf3055c97d061", "Teeeext");
 //		TalkerDAO.loadProfileComments("4c35dbeb5165f305eebfc5f2");
-		TalkerDAO.saveProfileReply("4c35dbeb5165f305eebfc5f2", "4c35dbeb5165f305eebfc5f2", "Reply2222");
+//		TalkerDAO.saveProfileReply("4c35dbeb5165f305eebfc5f2", "4c35dbeb5165f305eebfc5f2", "Reply2222");
 		
 		System.out.println("cool");
 	}

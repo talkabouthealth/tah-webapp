@@ -302,6 +302,7 @@ public class Profile extends Controller {
 		
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		talker.setActivityList(ActivityDAO.load(talker.getId()));
+		talker.setProfileCommentsList(TalkerDAO.loadProfileComments(talker.getId()));
 		//TODO: Temporarily - later we'll load all list of topics
 		talker.setNumberOfTopics(TopicDAO.getNumberOfTopics(talker.getId()));
 		

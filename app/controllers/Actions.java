@@ -6,6 +6,7 @@ import play.mvc.Controller;
 
 import util.CommonUtil;
 
+import models.CommentBean;
 import models.TalkerBean;
 import models.ThankYouBean;
 import dao.TalkerDAO;
@@ -44,6 +45,20 @@ public class Actions extends Controller {
 		else {
 			renderText("Follow");
 		}
+	}
+	
+	public static void saveProfileComment(String profileTalkerId, String parentId, String text) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		CommentBean comment = new CommentBean();
+		//TODO: check?
+		comment.setParentId(parentId);
+		comment.setProfileTalkerId(profileTalkerId);
+		comment.setFromTalker(talker);
+		comment.setText(text);
+		comment.setTime(new Date());
+		
+		TalkerDAO.saveProfileComment(comment);
 	}
 
 }
