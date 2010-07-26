@@ -30,16 +30,16 @@ public class TalkerBean implements Serializable {
 	};
 	
 	public enum ProfilePreference {
-		PERSONAL_INFO(1, "Display my Personal Info in my profile"),
-		HEALTH_INFO(2, "Display my Health Info in my profile"),
-		BASIC_INFO(4, "Display my Basic Info in my profile (Recognition level, " +
+		PERSONAL_INFO(1, "Display my Personal Info in my Public Profile"),
+		HEALTH_INFO(2, "Display my Health Info in my Public Profile"),
+		BASIC_INFO(4, "Display my Basic Info in my Public Profile (Recognition level, " +
 				"No. of conversations)"),
-		FOLLOWERS(8, "Display my Followers in my profile"),
-		FOLLOWING(16, "Display who I am Following in my profile"),
-		CONVERSATIONS(32, "Display the Conversations I have started and joined in my profile"),
-		COMMENTS(64, "Display my Comments in my profile"),
-		BIO(128, "Display my Bio in my profile"),
-		ACTIVITY_STREAM(256, "Display my Activity Stream in my profile");
+		FOLLOWERS(8, "Display my Followers in my Public Profile"),
+		FOLLOWING(16, "Display who I am Following in my Public Profile"),
+		CONVERSATIONS(32, "Display the Conversations I have started and joined in my Public Profile"),
+		COMMENTS(64, "Display my Comments in my Public Profile"),
+		BIO(128, "Display my Bio in my Public Profile"),
+		ACTIVITY_STREAM(256, "Display my Activity Stream in my Public Profile");
 		
 		private int value;
 		private String description;
