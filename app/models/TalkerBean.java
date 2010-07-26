@@ -23,6 +23,7 @@ import com.mongodb.DBRef;
 public class TalkerBean implements Serializable {
 	
 	//TODO: move it to some constants?
+	public static final String DEFAULT_IMAGE = "/public/images/img1.gif"; 
 	public static final String[] CONNECTIONS_ARRAY = new String[] {
 		"Patient", "Former Patient", "Parent", "Caregiver", "Family member", "Friend", 
 		"Physician", "Pharmacist", "Nurse", "Psychiatrist", "Social worker", "other"
@@ -473,14 +474,17 @@ public class TalkerBean implements Serializable {
 	}
 
 	public String getImagePath() {
-		if (imagePath == null) {
+		if (imagePath == null || imagePath.trim().length() == 0) {
 			//return default
-			return "/public/images/img1.gif";
+			return DEFAULT_IMAGE;
 		}
 		return imagePath;
 	}
 
 	public void setImagePath(String imagePath) {
+		if (imagePath == null || imagePath.trim().length() == 0) {
+			imagePath = DEFAULT_IMAGE;
+		}
 		this.imagePath = imagePath;
 	}
 

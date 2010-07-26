@@ -16,6 +16,7 @@ import org.bson.types.ObjectId;
 
 import util.DBUtil;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
@@ -263,10 +264,60 @@ public class TalkerDAO {
 		return followerList;
 	}
 	
+	/* ---------------- Profile comments -------------------------- */
+	public static void saveProfileComment(String talkerId, String fromTalkerId, String text) {
+		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		
+		DBRef fromTalkerRef = new DBRef(DBUtil.getDB(), TALKERS_COLLECTION, new ObjectId(fromTalkerId));
+		DBObject commentObject = BasicDBObjectBuilder.start()
+			.add("time", new Date())
+			.add("text", text)
+			.add("from", fromTalkerRef)
+			.get();
+		
+		DBObject talkerIdDBObject = new BasicDBObject("_id", new ObjectId(talkerId));
+		//For creating/adding to array: { $push : { field : value } }
+		talkersColl.update(talkerIdDBObject, new BasicDBObject("$push", 
+				new BasicDBObject("profilecomments", commentObject)));
+	}
+	
+	public static void saveProfileReply(String talkerId, String fromTalkerId, String text) {
+		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		
+		DBRef fromTalkerRef = new DBRef(DBUtil.getDB(), TALKERS_COLLECTION, new ObjectId(fromTalkerId));
+		DBObject commentObject = BasicDBObjectBuilder.start()
+			.add("time", new Date())
+			.add("text", text)
+			.add("from", fromTalkerRef)
+			.get();
+		
+		DBObject talkerIdDBObject = new BasicDBObject("_id", new ObjectId(talkerId));
+		//For creating/adding to array: { $push : { field : value } }
+		talkersColl.update(talkerIdDBObject, new BasicDBObject("$push", 
+				new BasicDBObject("profilecomments.0.replies.0.replies", commentObject)));
+	}
+	
+	public static void loadProfileComments(String talkerId) {
+		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("_id", new ObjectId(talkerId))
+			.get();
+		
+		DBObject talkerDBObject = talkersColl.findOne(query, new BasicDBObject("profilecomments", ""));
+		BasicDBList commentsList = (BasicDBList)talkerDBObject.get("profilecomments");
+		System.out.println(commentsList);
+	}
+	
 	public static void main(String[] args) {
 //		TalkerDAO.follow("4c2cb43160adf3055c97d061", "4c35dbeb5165f305eebfc5f2", true);
+//		System.out.println(loadFollowers("4c35dbeb5165f305eebfc5f2"));
 		
-		System.out.println(loadFollowers("4c35dbeb5165f305eebfc5f2"));
+//		TalkerDAO.saveProfileComment("4c35dbeb5165f305eebfc5f2", "4c2cb43160adf3055c97d061", "Teeeext");
+//		TalkerDAO.loadProfileComments("4c35dbeb5165f305eebfc5f2");
+		TalkerDAO.saveProfileReply("4c35dbeb5165f305eebfc5f2", "4c35dbeb5165f305eebfc5f2", "Reply2222");
+		
+		System.out.println("cool");
 	}
 
 }

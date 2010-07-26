@@ -139,9 +139,9 @@ public class Profile extends Controller {
 			String extension = FilenameUtils.getExtension(imageFile.getName());
 	    	if (extension == null) {
 	    		//default
-	    		extension = ".gif";
+	    		extension = "gif";
 	    	}
-	    	String fileName = talker.getId()+extension;
+	    	String fileName = talker.getId()+"."+extension;
 	        
 	    	File destFile = new File(Play.getFile("public/images/pictures/"), fileName);
 	        try {
