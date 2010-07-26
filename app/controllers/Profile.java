@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -197,7 +199,7 @@ public class Profile extends Controller {
 		render(talker);
 	}
 	
-	public static void saveNotifications(TalkerBean talker) {
+	public static void saveNotifications(TalkerBean talker, String otherCTypes) {
 		flash.put("currentForm", "notificationsForm");
 		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);
 		
@@ -209,6 +211,27 @@ public class Profile extends Controller {
 		sessionTalker.setNfreq(talker.getNfreq());
 		sessionTalker.setNtime(talker.getNtime());
 		sessionTalker.setCtype(talker.getCtype());
+		
+		//parse other convo types field
+		otherCTypes = otherCTypes.trim();
+		if (!otherCTypes.equals("Other (please separate by commas)")) {
+			String[] otherCTypesArray = otherCTypes.split(",");
+			//validate and add other ctypes
+			List<String> cTypeList = new ArrayList<String>();
+			for (String cType : otherCTypesArray) {
+				cType = cType.trim();
+				if (cType.length() != 0) {
+					cTypeList.add(cType);
+				}
+			}
+			
+			//add standard ctypes to the list
+			if (talker.getCtype() != null) {
+				cTypeList.addAll(Arrays.asList(talker.getCtype()));
+			}
+			
+			sessionTalker.setCtype(cTypeList.toArray(new String[]{}));
+		}
 		
 		TalkerDAO.updateTalker(sessionTalker);
 		flash.success("ok");

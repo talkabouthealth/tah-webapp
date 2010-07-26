@@ -78,7 +78,12 @@
 							<li><input name='talker.ctype' type='checkbox' value='${cType}' 
 							#{if talker.ctype?.contains(cType) } checked="checked" #{/if}
 							/>&nbsp;<span class='blacktext' >${cType}</span></li>
-						#{/list}						
+						#{/list}				
+								<li>
+									<textarea class="textarea3" rows="5" cols="45" style="padding: 5px"
+										onclick="if (this.value == 'Other (please separate by commas)') this.value='';" 
+										id="otherCTypes" name="otherCTypes">${talker.getOtherCTypes()}</textarea>
+								</li>	
 							</ul>
 						</div>
 						<div class="notiblueareabot"></div>

@@ -2,6 +2,7 @@ package models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -94,10 +95,12 @@ public class TalkerBean implements Serializable {
 	private String city;
 	private String state;
 	private String country;
-	//conversations types
+	
+	//types of conversations
 	private String[] ctype;
 	private int nfreq;
 	private int ntime;
+	
 	private int childrenNum;
 	private String imagePath;
 	
@@ -468,6 +471,33 @@ public class TalkerBean implements Serializable {
 
 	public String[] getCtype() {
 		return ctype;
+	}
+	
+	public String getOtherCTypes() {
+		final String defaultMessage = "Other (please separate by commas)";
+		if (ctype == null) {
+			return defaultMessage;
+		}
+		
+		//get only non-standard (other) ctypes
+		List<String> cTypesList = new ArrayList<String>();
+		//TODO: make constant list?
+		List<String> standardTypes = 
+			Arrays.asList("Informational", "Advice and opinions", "Meet new people", "Emotional support");
+		for (String ctypeEntry : ctype) {
+			if (!standardTypes.contains(ctypeEntry)) {
+				cTypesList.add(ctypeEntry);
+			}
+		}
+		
+		if (cTypesList.size() == 0) {
+			return defaultMessage;
+		}
+		else {
+			//format [entry1, entry2]
+			String cTypesListString = cTypesList.toString();
+			return cTypesListString.substring(1, cTypesListString.length()-1);
+		}
 	}
 	
 	public void setCtype(String[] ctype) {
