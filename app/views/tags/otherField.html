@@ -1,9 +1,12 @@
 <textarea name="other${_name}" id="other${_name}" cols="45" rows="5" 
 	onclick="if (this.value == 'Other (please separate by commas)') this.value='';"
 	class="textarea3"
-	#{if _values[_name] == null }
+	#{if _values == null }
 		>Other (please separate by commas)</textarea>
 	#{/if}
+	#{elseif _values[_name] == null }
+		>Other (please separate by commas)</textarea>
+	#{/elseif}
 	#{else}
 		>${_values[_name].toCommaString()}</textarea>
 	#{/else}
