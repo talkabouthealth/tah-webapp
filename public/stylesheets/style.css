@@ -530,3 +530,6 @@ h4 { float:left; width:221px; padding-bottom:7px;  font-weight: bold; font-size:
 .replyForm { float:left; width: 350px; padding-bottom:5px; padding-top:5px;}
 .replyForm ul { float:left; width: 350px; list-style-type:none;}
 .replyForm ul li {list-style-type:none; float:left; width: 350px; padding-bottom:5px; }
+
+/* Health Details page - for now we make Health Items lists in one column */
+.generalcheck1 { width: 500px }

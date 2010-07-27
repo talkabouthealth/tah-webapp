@@ -1,8 +1,13 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import models.TalkerDiseaseBean;
@@ -11,6 +16,7 @@ import org.bson.types.ObjectId;
 
 import util.DBUtil;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
@@ -20,6 +26,18 @@ public class TalkerDiseaseDAO {
 	
 	public static void saveTalkerDisease(TalkerDiseaseBean talkerDisease) {
 	    DBCollection talkersColl = DBUtil.getCollection(TalkerDAO.TALKERS_COLLECTION);
+	    
+	    //prepare other items
+	    List<DBObject> otherHealthItems = new ArrayList<DBObject>();
+	    for (String otherName : talkerDisease.getOtherHealthItems().keySet()) {
+	    	List<String> otherValues = talkerDisease.getOtherHealthItems().get(otherName);
+	    	DBObject otherDBObject = BasicDBObjectBuilder.start()
+	    		.add("name", otherName)
+	    		.add("values", otherValues)
+	    		.get();
+	    	
+	    	otherHealthItems.add(otherDBObject);
+	    }
 		
 		DBObject diseaseObject = BasicDBObjectBuilder.start()
 			.add("stage", talkerDisease.getStage())
@@ -28,6 +46,7 @@ public class TalkerDiseaseDAO {
 			.add("symp_date", talkerDisease.getSymptomDate())
 			.add("diag_date", talkerDisease.getDiagnoseDate())
 			.add("healthitems", talkerDisease.getHealthItems())
+			.add("other_healthitems", otherHealthItems)
 			.get();
 		DBObject talkerDiseaseObject = new BasicDBObject("disease", diseaseObject);
 		
@@ -57,6 +76,21 @@ public class TalkerDiseaseDAO {
 		@SuppressWarnings("unchecked")
 		Set<String> healthItems = new HashSet<String>((Collection<String>)diseaseDBObject.get("healthitems"));
 		talkerDisease.setHealthItems(healthItems);
+		
+		BasicDBList otherItemsList = (BasicDBList)diseaseDBObject.get("other_healthitems");
+		if (otherItemsList != null) {
+			Map<String, List<String>> otherHealthItems = new HashMap<String, List<String>>();
+			
+			Iterator<Object> iter = otherItemsList.iterator();
+			while (iter.hasNext()) {
+				DBObject otherDBObject = (DBObject)iter.next();
+				String otherName = (String)otherDBObject.get("name");
+				List<String> otherValues = new ArrayList<String>((Collection<String>)otherDBObject.get("values"));
+				otherHealthItems.put(otherName, otherValues);
+			}
+			
+			talkerDisease.setOtherHealthItems(otherHealthItems);
+		}
 		
 		return talkerDisease;
 	}

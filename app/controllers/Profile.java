@@ -288,10 +288,9 @@ public class Profile extends Controller {
 		parseHealthItems(talkerDisease);
 		talkerDisease.setUid(talker.getId());
 		
-		//temporarily we parse dates manually (Play 1.0.3 can't parse it with pattern 'MM/dd/yyyy')
-		Date symptomDate = CommonUtil.parseDate(params.get("talkerDisease.symptomDateString"));
+		Date symptomDate = CommonUtil.parseDate(talkerDisease.getSymptomMonth(), 1, talkerDisease.getSymptomYear());
 		talkerDisease.setSymptomDate(symptomDate);
-		Date diagnoseDate = CommonUtil.parseDate(params.get("talkerDisease.diagnoseDateString"));
+		Date diagnoseDate = CommonUtil.parseDate(talkerDisease.getDiagnoseMonth(), 1, talkerDisease.getDiagnoseYear());
 		talkerDisease.setDiagnoseDate(diagnoseDate);
 		
 		//Save or update
@@ -305,14 +304,27 @@ public class Profile extends Controller {
 		Map<String, String> paramsMap = params.allSimple();
 		
 		Set<String> healthItems = new HashSet<String>();
+		Map<String, List<String>> otherHealthItems = new HashMap<String, List<String>>();
 		for (String paramName : paramsMap.keySet()) {
 			//Health item parameter name: 'healthitemID'
 			if (paramName.startsWith("healthitem")) {
 				String id = paramName.substring(10);
 				healthItems.add(id);
 			}
+			
+			//Other health items
+			if (paramName.startsWith("other")) {
+				String id = paramName.substring(5);
+				String otherValue = paramsMap.get(paramName);
+				if (!otherValue.equals("Other (please separate by commas)")) {
+					List<String> otherItems = CommonUtil.parseCommaSerapatedList(otherValue);
+					otherHealthItems.put(id, otherItems);
+				}
+			}
 		}
+		
 		talkerDisease.setHealthItems(healthItems);
+		talkerDisease.setOtherHealthItems(otherHealthItems);
 	}
 	
 	/* ---------------- Public Profile ------------------------ */

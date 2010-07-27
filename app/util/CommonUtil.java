@@ -133,4 +133,19 @@ public class CommonUtil {
 		return parseDate(month+"/"+day+"/"+year);
 	}
 
+	public static List<String> parseCommaSerapatedList(String otherItems) {
+		String[] otherArray = otherItems.split(",");
+		
+		//validate and add
+		List<String> itemsList = new ArrayList<String>();
+		for (String otherItem : otherArray) {
+			otherItem = otherItem.trim();
+			if (otherItem.length() != 0) {
+				itemsList.add(otherItem);
+			}
+		}
+		
+		return itemsList;
+	}
+
 }

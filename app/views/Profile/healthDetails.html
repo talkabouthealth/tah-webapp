@@ -18,116 +18,153 @@
 	</style>
 </head>
 <body>
-<div id="top_container">
-	<div id="top">
-		#{ logo /}
-		<div id="topnav">
-			#{ include 'menu.html' /}
+	<div id="top_container">
+		<div id="top">
+			#{ logo /}
+			<div id="topnav">
+				#{ include 'menu.html' /}
+			</div>
 		</div>
 	</div>
+	
 		<div id="innerbanner"></div>
 		<form id="healthdetailsform" name="healthdetailsform" action="@{Profile.saveHealthDetails()}" method="POST">
 		<div id="innermain">
 			<div class="blacktext2" id="innerheading">General Health Details</div>
-			<div id="innermiddlearea">
-				<div id="notifactionbox">
-					<div class="notifactionboxtop"></div>
-					<div class="notifactionboxmid">
+			<div id="innerpersonalarea">
+				<div id="signupleft">
+					<div id="signupleftarea">
 						#{if flash.success}
-						   <div class="notibluearea">
-								<div class="notiblueareatop"></div>
-								<div class="signfields2">
-									<h4>Changes are saved!</h4>
-								</div>
-								<div class="notiblueareabot"></div>
+							<div class="signupmain" style="text-align: center">
+								<span class="success">Changes are saved!</span>
 							</div>
 						#{/if}
-						<div class="notibluearea">
-							<div class="notiblueareatop"></div>
-							<div class="signfields2">
-								<div class="row">
-									<label>What is the stage?</label>
-									<div>
-										<select name="talkerDisease.stage" class="textarea1">
-											#{list items:stagesList, as:'stage' }
-												<option value="${stage}" 
-											    #{if stage.equals(talkerDisease?.stage) } selected #{/if} 
-											    >${stage}</option>
-											#{/list}
-										</select>
-									</div> 
-								</div>
-								<div class="row">
-									<label>Disease type</label>
-									<div>
-										<select name="talkerDisease.type" class="textarea1">
-											#{list items:typesList, as:'type' }
-												<option value="${type}" 
-											    #{if type.equals(talkerDisease?.type) } selected #{/if} 
-											    >${type}</option>
-											#{/list}
-										</select>
-									</div> 
-								</div>
-								<div class="row">
-									<label>Is it recurrent?</label>
-									<div>
-										<select name="talkerDisease.recurrent" class="textarea1">											
-									 		<option value="false">No</option>
-									 		<option value="true" 
-									 		#{if talkerDisease?.recurrent } selected #{/if} 
-									 		>Yes</option>
-										</select>
-									</div> 
-								</div>
-								<div class="row">
-									<label>When did the first symptom appear?</label>
-									<div>
-										<input name="talkerDisease.symptomDateString" type="text" class="textfields" 
-											onclick="if (this.value == 'mm/dd/yyyy') this.value='';" 
-											#{if talkerDisease != null && talkerDisease.symptomDate != null }	
-												value="${talkerDisease.symptomDate.format('MM/dd/yyyy')}"
-											#{/if}
-											#{else}
-												value="mm/dd/yyyy"
-											#{/else}
-										/>
-									</div> 
-								</div>
-								<div class="row">
-									<label>When were you first diagnosed?</label>
-									<div>
-										<input name="talkerDisease.diagnoseDateString" type="text" class="textfields" 
-											onclick="if (this.value == 'mm/dd/yyyy') this.value='';" 
-											#{if talkerDisease != null && talkerDisease.diagnoseDate != null }	
-												value="${talkerDisease.diagnoseDate.format('MM/dd/yyyy')}"
-											#{/if}
-											#{else}
-												value="mm/dd/yyyy"
-											#{/else}
-										/>
-									</div> 
-								</div>
-								<h1 style="margin-top: 15px;" >What were the initial symptoms you experienced?</h1>
-								<ul>
-									#{ healthItemsTree healthItem:healthItemsMap["symptoms"], checkedItems: talkerDisease?.healthItems /}
-								</ul>
+						<div class="signupmain">
+							<div class="generaltextarea">
+								<span class="blacktext16"><strong>Whats is the stage?</strong></span>
 							</div>
-							<div class="notiblueareabot"></div>
+							<div class="personaltextfield">
+								<select name="talkerDisease.stage" class="personalfields">
+									#{list items:stagesList, as:'stage' }
+										<option value="${stage}" 
+									    #{if stage.equals(talkerDisease?.stage) } selected #{/if} 
+									    >${stage}</option>
+									#{/list}
+								</select>
+							</div>
 						</div>
-						<a id="savebutton" href="#" onclick="document.healthdetailsform.submit();">
-							<img src="/public/images/save.gif" width="186" height="46" border="0" />
-						</a>
+						<div class="signupmain">
+							<div class="generaltextarea">
+								<span class="blacktext16"><strong>Disease type</strong></span>
+							</div>
+							<div class="personaltextfield">
+								<select name="talkerDisease.type" class="personalfields">
+									#{list items:typesList, as:'type' }
+										<option value="${type}" 
+									    #{if type.equals(talkerDisease?.type) } selected #{/if} 
+									    >${type}</option>
+									#{/list}
+								</select>
+							</div>
+						</div>
+						<div class="signupmain">
+							<div class="generaltextarea">
+								<span class="blacktext16"><strong>Is it recurrent?</strong></span>
+							</div>
+							<div class="personaltextfield">
+								<select name="talkerDisease.recurrent" class="personalfields">											
+							 		<option value="false">No</option>
+							 		<option value="true" 
+							 		#{if talkerDisease?.recurrent } selected #{/if} 
+							 		>Yes</option>
+								</select>
+							</div>
+						</div>
+						<div class="signupmain">
+							<div class="generaltextarea">
+								<span class="blacktext16"><strong>When did the first symptom appear?</strong></span>
+							</div>
+							<div class="personaltextfield">
+								<select size="1"  name="talkerDisease.symptomMonth" id="talkerDisease.symptomMonth" class="textarea2">
+#{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
+    <option value="${i_index-1}" 
+    #{if talkerDisease?.symptomDate?.month == i_index-2 } selected #{/if} 
+    >${i}</option>
+#{/list}
+								</select>
+								&nbsp;  &nbsp;  &nbsp;&nbsp;  &nbsp;  &nbsp;
+								<select size="1"  name="talkerDisease.symptomYear" class="textarea2" id="talkerDisease.symptomYear">
+							  		<option value='0'>Year</option>
+							  		#{list items:2010..1950, as:'i'}
+									    <option value="${i}"
+									    *{ TODO: use of deprecated getYear() ? }*
+									    #{if talkerDisease?.symptomDate?.year == i - 1900 } selected #{/if} 
+									    >${i}</option>
+									#{/list}
+								</select>
+							</div>
+						</div>
+						<div class="signupmain">
+							<div class="generaltextarea">
+								<span class="blacktext16"><strong>When were you first diagnosed?</strong></span>
+							</div>
+							<div class="personaltextfield">
+								<select size="1"  name="talkerDisease.diagnoseMonth" id="talkerDisease.diagnoseMonth" class="textarea2">
+#{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
+    <option value="${i_index-1}" 
+    #{if talkerDisease?.diagnoseDate?.month == i_index-2 } selected #{/if} 
+    >${i}</option>
+#{/list}
+								</select>
+								&nbsp;  &nbsp;  &nbsp;&nbsp;  &nbsp;  &nbsp;
+								<select size="1"  name="talkerDisease.diagnoseYear" class="textarea2" id="talkerDisease.diagnoseYear">
+							  		<option value='0'>Year</option>
+							  		#{list items:2010..1950, as:'i'}
+									    <option value="${i}"
+									    *{ TODO: use of deprecated getYear() ? }*
+									    #{if talkerDisease?.diagnoseDate?.year == i - 1900 } selected #{/if} 
+									    >${i}</option>
+									#{/list}
+								</select>
+							</div>
+						</div>
+						
+						<div class="signupmain">
+ 							<div class="generaltextarea2">
+ 								<span class="blacktext16"><strong>What were the initial symptoms you experienced?</strong></span>
+ 							</div>
+							<div class="generalcheck">
+								#{ healthItemsTree healthItem:healthItemsMap["symptoms"], checkedItems: talkerDisease?.healthItems /}
+							</div>
+							<div class="signupmain">
+								<div class="textareabig">
+									#{ otherField name:'symptoms', values: talkerDisease?.otherHealthItems /}
+								</div>
+							</div>
+							<div class="button">
+								<a href="#" onclick="document.healthdetailsform.submit()">
+									<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" />
+								</a>
+							</div>
+						</div>
+						<div class="signupmain"></div>
 					</div>
-					<div class="notifactionboxbot"></div>
 				</div>
-				<div id="tipsbox">
-					<b>Tips</b><br/><br/>
-					Filling in your health details enables
-					us to find others just like you for conversations.
-					The more information you provide
-					the better we can match you 
-					with conversations and other members.
+						
+				<div id="signupright">
+					<div class="personalinfosignrightbox">
+						<div class="generalinfosignrighttop"></div>
+						<div class="signrighmid">
+							<span class="bluetext14">Filling in your health details enables 
+							us to find others just like you for 
+							conversations. <br /><br />
+							
+							The more information you provide, 
+							the better we can match you with 
+							conversations and other members.</span>
+						</div>
+						<div class="signrighbot"></div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -135,34 +172,27 @@
 		<div id="midnoticontainer">
 			<div id="midnoticontainermain">
 				<div id="boxarea_head2" class="blacktext2">Tests and Procedures</div>
-				<div id="notifactionbox2">
-					<div class="notifactionboxtop"></div>
-					<div class="notifactionboxmid">
-						<div class="notibluearea">
-							<div class="notiblueareatop"></div>
-							<div class="signfields2">								
-								<h1>Which of the following tests have you had?</h1>
-								<ul>
-									#{ healthItemsTree healthItem:healthItemsMap["tests"], checkedItems: talkerDisease?.healthItems /}
-								</ul>
-							</div>
-							<div class="notiblueareabot"></div>
-						</div>
-						<div class="notibluearea">
-							<div class="notiblueareatop"></div>
-							<div class="signfields2">								
-								<h1>What procedures / surgeries have you had?</h1>
-								<ul>
-									#{ healthItemsTree healthItem:healthItemsMap["procedures"], checkedItems: talkerDisease?.healthItems /}
-								</ul>
-							</div>
-							<div class="notiblueareabot"></div>
-						</div>
-						<a id="savebutton" href="#" onclick="document.healthdetailsform.submit();">
-							<img src="/public/images/save.gif" width="186" height="46" border="0" />
+				<div class="signupleftarea2">
+					<div class="generalsubhead">Which of the following tests have you had?</div>
+					<div class="generalcheck">
+						#{ healthItemsTree healthItem:healthItemsMap["tests"], checkedItems: talkerDisease?.healthItems /}
+					</div>
+					<div class="textareabig">
+						#{ otherField name:'tests', values: talkerDisease?.otherHealthItems /}
+					</div>
+					<div class="generalsubhead">What procedures/surgeries have you had?</div>
+					<div class="generalcheck">
+						#{ healthItemsTree healthItem:healthItemsMap["procedures"], checkedItems: talkerDisease?.healthItems /}
+					</div>
+					<div class="textareabig">
+						#{ otherField name:'procedures', values: talkerDisease?.otherHealthItems /}
+					</div>
+					<div class="button">
+						<a href="#" onclick="document.healthdetailsform.submit()">
+							<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" />
 						</a>
 					</div>
-					<div class="notifactionboxbot"></div>
+					<div class="signupmain"></div>
 				</div>
 			</div>
 		</div>
@@ -170,26 +200,21 @@
 		<div id="midnoticontainer">
 			<div id="midnoticontainermain">
 				<div id="boxarea_head2" class="blacktext2">Treatments and medications</div>
-				<div id="notifactionbox2">
-					<div class="notifactionboxtop"></div>
-					<div class="notifactionboxmid">
-						<div class="notibluearea">
-							<div class="notiblueareatop"></div>
-							<div class="signfields2">								
-								<h1>What treatments / medications have you taken?</h1>
-								<ul>
-									#{ healthItemsTree healthItem:healthItemsMap["treatments"], checkedItems: talkerDisease?.healthItems /}
-								</ul>
-							</div>
-							<div class="notiblueareabot"></div>
-						</div>
-						<a id="savebutton" href="#" onclick="document.healthdetailsform.submit();">
-							<img src="/public/images/save.gif" width="186" height="46" border="0" />
+				<div class="signupleftarea2">
+					<div class="generalsubhead">What treatments / medications have you taken?</div>
+					<div class="generalcheck">
+						#{ healthItemsTree healthItem:healthItemsMap["treatments"], checkedItems: talkerDisease?.healthItems /}
+					</div>
+					<div class="textareabig">
+						#{ otherField name:'treatments', values: talkerDisease?.otherHealthItems /}
+					</div>
+					<div class="button">
+						<a href="#" onclick="document.healthdetailsform.submit()">
+							<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" />
 						</a>
 					</div>
-					<div class="notifactionboxbot"></div>
+					<div class="signupmain"></div>
 				</div>
 			</div>
 		</div>
-		
-		</form>
+	</form>
