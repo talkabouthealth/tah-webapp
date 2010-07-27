@@ -277,7 +277,7 @@ public class TalkerDAO {
 			{"_id": "C"}
 			{"_id": "D"}
 	 */
-	public static void saveProfileComment(CommentBean comment) {
+	public static String saveProfileComment(CommentBean comment) {
 		DBCollection commentsColl = DBUtil.getCollection(PROFILE_COMMENTS_COLLECTION);
 		
 		DBRef profileTalkerRef = new DBRef(DBUtil.getDB(), 
@@ -300,6 +300,8 @@ public class TalkerDAO {
 			commentsColl.update(parentIdDBObject, 
 					new BasicDBObject("$push", new BasicDBObject("children", commentObject.get("_id").toString())));
 		}
+		
+		return commentObject.get("_id").toString();
 	}
 	
 	public static List<CommentBean> loadProfileComments(String talkerId) {

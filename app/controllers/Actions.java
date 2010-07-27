@@ -1,6 +1,8 @@
 package controllers;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import play.mvc.Controller;
 
@@ -57,7 +59,12 @@ public class Actions extends Controller {
 		comment.setText(text);
 		comment.setTime(new Date());
 		
-		TalkerDAO.saveProfileComment(comment);
+		String id = TalkerDAO.saveProfileComment(comment);
+		comment.setId(id);
+		
+		//render html of new comment using tag
+		List<CommentBean> _commentsList = Arrays.asList(comment);
+		render("tags/profileCommentsTree.html", _commentsList);
 	}
 
 }

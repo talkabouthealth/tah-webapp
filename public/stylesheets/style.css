@@ -430,6 +430,8 @@ h4 { float:left; width:221px; padding-bottom:7px;  font-weight: bold; font-size:
 #topnav2 ul li a:hover { padding:10px 0px 12px 10px;  font-weight: normal; font-size: 14px; color: #eb1d90; font-family:arial; text-decoration: none;   }
 #topnav2 ul li a.currenttext { font-weight: normal; font-size: 14px; color: #eb1d90; font-family:arial; text-decoration: none; 	}
 
+
+
 /*publicprofile*/
 #profileleft { float:left; width:264px;}
 #profilelefttop { float:left; width:264px; background:url(../images/profile_lefttop.gif) no-repeat top left; font-size:1px; height:11px;}
@@ -451,7 +453,7 @@ h4 { float:left; width:221px; padding-bottom:7px;  font-weight: bold; font-size:
 .followingimg ul  { float:left; width: 220px; list-style-type:none; padding:0px; margin:0px; }
 .followingimg ul li  { float:left; width: 48px; padding-bottom:10px; padding-right:7px; list-style-type:none; margin:0px; text-align:center;  }
 #profileright { float:left; width:663px; padding-left:15px;}
-#proheading { float:left; width:663px; }
+#proheading { float:left; width:663px;  }
 .profiletext2 { float:left; width: 254px; padding-bottom:10px; padding-top:10px;}
 .profiletext2 ul  { float:left; width: 254px; list-style-type:none; padding:0px; margin:0px; }
 .profiletext2 ul li  { float:left; width: 254px; list-style-type:none; padding-right:10px; margin:0px; height:20px; line-height:20px; }
@@ -460,12 +462,18 @@ h4 { float:left; width:221px; padding-bottom:7px;  font-weight: bold; font-size:
 .thankyoutext { float:left; width: 180px; padding-left:8px; padding-top:2px; vertical-align:top;}
 .commentsarea { float:left; width: 350px; padding-bottom:10px; padding-top:10px;}
 .commentbox { float:left; width: 350px; padding-bottom:5px; padding-top:5px;}
-#toggleText { float:left; width: 350px; padding-bottom:5px; padding-top:5px;}
-#toggleText ul { float:left; width: 350px; list-style-type:none;}
+#toggleText { float:left; width: 400px; padding-bottom:5px; padding-top:5px;}
+#toggleText ul { float:left; width: 550px; list-style-type:none;}
 #toggleText ul li {list-style-type:none; float:left; width: 350px; padding-bottom:5px; }
+.togglecommentfield {float:left; width:500px; border:1px solid #cccccc; height:25px; padding-top:4px; margin-bottom:5px; padding-left:5px; }
+.replycommentfield {float:left; width:276px; border:1px solid #cccccc; height:25px; padding-top:4px; margin-bottom:5px; padding-left:5px; }
+.togglecomment {float:left; width:276px; border:1px solid #cccccc; height:60px; padding-top:4px; margin-bottom:5px; padding-left:5px; }
 #leavecommentText { float:left; width: 650px; padding-bottom:0px; padding-top:0px;}
 #leavecommentText ul { float:left; width: 650px; list-style-type:none;}
 #leavecommentText ul li {list-style-type:none; float:left; width: 650px;  }
+#hidecommentfield { float:left; width: 650px; padding-bottom:10px; padding-top:0px;}
+#hidecommentfield ul { float:left; width: 650px; list-style-type:none;}
+#hidecommentfield ul li {list-style-type:none; float:left; width: 650px;  }
 #leavethankyouText { float:left; width: 650px; padding-bottom:5px; padding-top:5px;}
 #leavethankyouText ul { float:left; width: 650px; list-style-type:none;}
 #leavethankyouText ul li {list-style-type:none; float:left; width: 650px; padding-bottom:5px; }
@@ -473,8 +481,7 @@ h4 { float:left; width:221px; padding-bottom:7px;  font-weight: bold; font-size:
 #conversation_addcomment { float:left; width: 650px; padding-bottom:5px; padding-top:5px;}
 #conversation_addcomment ul { float:left; width: 650px; list-style-type:none;}
 #conversation_addcomment ul li {list-style-type:none; float:left; width: 650px; padding-bottom:0px; }
-.togglecommentfield {float:left; width:550px; border:1px solid #cccccc; height:25px; padding-top:4px; margin-bottom:5px; padding-left:5px; }
-.togglecomment {float:left; width:276px; border:1px solid #cccccc; height:60px; padding-top:4px; margin-bottom:5px; padding-left:5px; }
+
 
 
 #commentForm {float:left; width:250px; display:none; font-family:Arial,sans-serif; font-size:0.8em;}
@@ -491,6 +498,7 @@ h4 { float:left; width:221px; padding-bottom:7px;  font-weight: bold; font-size:
 .activitiestext ul li  { float:left; width: 500px; list-style-type:none; padding-right:10px; margin:0px; height:20px; line-height:20px; }
 .prosubheading { float:left; width:663px; border-top:1px dashed #a7a7a7; border-bottom:1px dashed #a7a7a7; padding:8px 0px 8px 0px;}
 .protext { float:left; padding-top:8px; padding-bottom:8px; width:663px; color:#000000; font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none;}
+
 
 /* 
 	Additions/Fixes 

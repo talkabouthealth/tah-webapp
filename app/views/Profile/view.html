@@ -16,15 +16,26 @@
    	   		});
 
    			$("#followActionlink").click(function() {
-   				$.post("@{Actions.follow()}", 
-	  				{ followingId: '${talker.id}'},
-	  				function(data) {
-	  					$("#followResult").html("Ok! ");
-	  					$("#followActionlink").html(data);
-	  				}
-	  			);
+   				follow();
+	   		});
+
+   			$("#followActionImagelink").click(function() {
+   				follow();
 	   		});
    		});
+
+   		//follow(String followingId)
+   		function follow(callback) {
+   			$.post("@{Actions.follow()}", 
+  				{ followingId: '${talker.id}'},
+  				function(data) {
+  					$("#followResult").html("Ok! ");
+  					$("#followActionlink").html(data);
+
+  					$("#followActionImagelink img").attr("src", "/public/images/"+data.toLowerCase()+"_icon.gif");
+  				}
+  			);
+   		}
 
    		//createThankYou(String toTalker, String note)
    		function thankYou() {
@@ -46,8 +57,16 @@
 
    			$.post("@{Actions.saveProfileComment()}", 
   				{ profileTalkerId: '${talker.id}', parentId: parentId, text: commentText},
-  				function(data) {
-  					//ok?!
+  				function(html) {
+  					//put comment in the tree
+  					if (parentId == '') {
+  	  					//add as first element in the top
+  						$(html).insertAfter($("#reply"+parentId));
+  					}
+  					else {
+  	  					//add as last element in subtree
+  						$(html).appendTo($("#comment"+parentId+" > .commentsreply"));
+  					}
   				}
   			);
 
@@ -235,7 +254,15 @@
 					</div>
 					<div id="profileright">
 						<div id="proheading">
-							<span class="pinktext18">${talker.userName}</span><span class="blacktext18">&nbsp;-&nbsp;${talker.connection}</span>
+							<span class="pinktext18">${talker.userName}</span>
+							<span class="blacktext18" style="padding-right:15px;">&nbsp;-&nbsp;${talker.connection}</span>
+							#{ifnot talker.userName.equals(currentTalker.userName) }
+								<a id="followActionImagelink" href="#" class="navybluetext12">
+				<img src="/public/images/${ currentTalker.followingList.contains(talker) ? 'unfollow' : 'follow'}_icon.gif" 
+					width="52" height="19" border="0"/>
+								</a>
+							#{/ifnot}
+							
 						</div>
 						<div class="profiletext2">
 							<ul>
@@ -343,26 +370,26 @@
 							<div class="profileheading">
 								Comments
 								<a id="displaycommentText" href="#" onclick="$('#reply').toggle(); return false;"
-									 class="navybluetext12">Leave a Comment</a>
+									 class="navybluetext12">Leave a new Comment</a>
 							</div>
 							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 						</div>
-						<div style="display: none;" id="reply" class="replyForm">
-							<ul>
-								<li class="blacktext14">Comment:</li>
-								<li>
-									<textarea class="togglecomment" rows="5" cols="45" id="replytext"></textarea>
-							    </li>
-								<li>
-									<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
-										<a href="#" onclick="return saveProfileComment('');">
-											<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
-										</a>
-									</div>
-								</li> 
-							</ul>
-						</div>
 						<div class="commentsarea">
+							<div style="display: none;" id="reply" class="replyForm">
+								<ul>
+									<li class="blacktext14">Comment:</li>
+									<li>
+										<textarea class="togglecomment" rows="5" cols="45" id="replytext"></textarea>
+								    </li>
+									<li>
+										<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
+											<a href="#" onclick="return saveProfileComment('');">
+												<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
+											</a>
+										</div>
+									</li> 
+								</ul>
+							</div>
 							#{profileCommentsTree commentsList: talker.profileCommentsList /}
 						</div>
 						<div class="prosubheading">
