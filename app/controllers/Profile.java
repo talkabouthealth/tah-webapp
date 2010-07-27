@@ -59,9 +59,9 @@ public class Profile extends Controller {
 			validation.isTrue(tmpTalker == null).message("email.exists");
 		}
 		
-		//temporarily we parse dates manually (Play 1.0.3 can't parse it with pattern 'MM/dd/yyyy')
-		Date dateOfBirth = CommonUtil.parseDate(params.get("talker.dobString"));
-		validation.required(dateOfBirth).message("Please input correct Birth Date, format is 'mm/dd/yyyy'");
+		Date dateOfBirth = CommonUtil.parseDate(talker.getDobMonth(), talker.getDobDay(), talker.getDobYear());
+		talker.setDob(dateOfBirth);
+		validation.required(dateOfBirth).message("Please input correct Birth Date");
 		
 		if(validation.hasErrors()) {
 			flash.success("");

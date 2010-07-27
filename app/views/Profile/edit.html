@@ -24,7 +24,7 @@
 		
 	  reason += validateUsername(document.getElementById("talker.userName"));
 	  reason += validateEmail(document.getElementById("talker.email"));
-	  reason += validateEmpty(document.getElementById("talker.dobString"));
+	  //reason += validateEmpty(document.getElementById("talker.dobString"));
 	    
 	  if (reason != "") {
 	    alert("Some fields need correction:\n" + reason);
@@ -169,8 +169,29 @@
 					<div class="personalmain">
 						<div class="personaltextarea"><span class="blacktext14">Birth Date</span></div>
 						<div class="personaltextfield">
-							<input name="talker.dobString" type="text" class="personalfields" id="talker.dobString" 
-									value="${talker.dob?.format('MM/dd/yyyy')}" />
+							<select size="1"  name="talker.dobMonth" id="talker.dobMonth" class="textarea2">
+#{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
+    <option value="${i_index-1}" 
+ 	#{if talker.dob?.month == i_index-2 } selected #{/if}  
+    >${i}</option>
+#{/list}
+							</select>
+							<select size="1" name="talker.dobDay" class="textarea2" id="talker.dobDay">
+						  		<option selected value='0'>Day</option>
+						  		#{list items:1..31, as:'i'}
+								    <option value="${i}"
+								    #{if talker.dob?.date == i } selected #{/if} 
+								    >${i}</option>
+								#{/list}
+							</select>
+							<select size="1"  name="talker.dobYear" class="textarea2" id="talker.dobYear">
+						  		<option selected value='0'>Year</option>
+						  		#{list items:1991..1900, as:'i'}
+								    <option value="${i}"
+								    #{if talker.dob?.year == i - 1900} selected #{/if} 
+								    >${i}</option>
+								#{/list}
+							</select>
 						</div>
 					</div>
 					<div class="personalmain">
