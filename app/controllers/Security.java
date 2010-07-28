@@ -40,6 +40,16 @@ public class Security extends Secure.Security {
     	
     	Date now = Calendar.getInstance().getTime(); 
 		LoginHistoryDAO.save(talker.getId(), now);
+		
+		 /*
+	     	Play! 1.0.3 has problems with cookies in IE8 (FLASH cookies aren't stored correctly),
+	     	so we pass Original URL through hidden input on the login page
+	     */
+	    String url = params.get("url");
+	    if (url != null) {
+	    	flash.put("url", url);
+	    }
+
     }
     
     static void onDisconnected() {
