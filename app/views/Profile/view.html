@@ -139,7 +139,9 @@
 										</div>
 										<div class="profileimgtext">
 											<ul>
-											<li><span class="simpletext">Currently Online</span></li>
+											<!-- 
+												<li><span class="simpletext">Currently Online</span></li>
+											-->
 											#{ifnot talker.userName.equals(currentTalker.userName) }
 												<li>
 													<span id="followResult" class="simpletext"></span>
@@ -235,18 +237,20 @@
 										<div class="profileheading">Personal Info</div>
 										<div class="profileimgtext personalinfo">
 											<ul>
-												<li class="blacktext12">Age: ${talker.age}</li>
-												<li class="blacktext12">Gender: ${talker.fullGender}</li>
-												<li class="blacktext12">Location: ${talker.state}, ${talker.city}</li>
-												<li class="blacktext12">Marital Status: ${talker.maritalStatus}</li>
-												<li class="blacktext12">No. of Children: ${talker.childrenNum}</li>
-												<li class="blacktext12">Ages of Children: ${talker.childrenAges?.toCommaString()}</li>
-												<li class="blacktext12">Web page: 
-													<a href="${talker.webpage}" target="_blank" 
-													class="navybluetext12">${talker.webpage}</a>
-												</li>
-												<li class="blacktext12">Keywords Following: ${talker.keywords?.toCommaString()}</li>
-												<li class="blacktext12"></li>
+				<li class="blacktext12">Age: ${talker.age}</li>
+				<li class="blacktext12">Gender: ${talker.fullGender}</li>
+				#{if talker.state && talker.city}<li class="blacktext12">Location: ${talker.state}, ${talker.city}</li>#{/if}
+				#{if talker.maritalStatus}<li class="blacktext12">Marital Status: ${talker.maritalStatus}</li>#{/if}
+				<li class="blacktext12">No. of Children: ${talker.childrenNum}</li>
+				#{if talker.childrenAges}<li class="blacktext12">Ages of Children: ${talker.childrenAges?.toCommaString()}</li>#{/if}
+				#{if talker.webpage}
+					<li class="blacktext12">Web page: 
+						<a href="${talker.webpage}" target="_blank" 
+						class="navybluetext12">${talker.webpage}</a>
+					</li>
+				#{/if}
+				#{if talker.keywords}<li class="blacktext12">Keywords Following: ${talker.keywords?.toCommaString()}</li>#{/if}
+				<li class="blacktext12"></li>
 											</ul>
 										</div>
 									</div>
@@ -260,9 +264,11 @@
 					<div id="profileright">
 						<div id="proheading">
 							<span class="pinktext18">${talker.userName}</span>
-							<span class="blacktext18" style="padding-right:15px;">&nbsp;-&nbsp;${talker.connection}</span>
+							#{if talker.connection}
+								<span class="blacktext18">&nbsp;-&nbsp;${talker.connection}</span>
+							#{/if}
 							#{ifnot talker.userName.equals(currentTalker.userName) }
-								<a id="followActionImagelink" href="#" class="navybluetext12">
+								<a id="followActionImagelink" href="#" class="navybluetext12" style="margin-left:15px;">
 				<img src="/public/images/${ currentTalker.followingList.contains(talker) ? 'unfollow' : 'follow'}_icon.gif" 
 					width="52" height="19" border="0"/>
 								</a>
@@ -272,7 +278,12 @@
 							<div class="profiletext2">
 								<ul>
 									<li class="blacktext12"><strong>Community:</strong> Skin Cancer</li>
-									<li class="blacktext12"><strong>Location:</strong> ${talker.city}, ${talker.state}, ${talker.country}</li>
+									#{if talker.state && talker.city}
+									*{ TODO: make better for location? }*
+										<li class="blacktext12">
+											<strong>Location:</strong> ${talker.city}, ${talker.state}, ${talker.country}
+										</li>
+									#{/if}
 									<li class="blacktext12"><strong>Member Since:</strong> ${talker.regDate.format('MMM d, yyyy')}</li>
 								</ul>
 							</div>
@@ -284,7 +295,7 @@
 								</ul>
 							</div>
 						#{/if}
-						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.BIO) }
+						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.BIO) && talker.bio}
 							<div class="prosubheading">
 								<div class="profileheading">Bio</div>
 								<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
@@ -293,7 +304,7 @@
 								${talker.bio}
 							</div>
 						#{/if}
-						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.HEALTH_INFO) }
+						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.HEALTH_INFO && talkerDisease) }
 							<div class="prosubheading">
 								<div class="profileheading">Health Info</div>
 								<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
@@ -405,6 +416,7 @@
 						</div>
 						#{/if}
 						
+						*{
 						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.CONVERSATIONS) }
 							<div class="prosubheading">
 								<div class="profileheading">Conversation Started (10)</div>
@@ -443,7 +455,8 @@
 								</div>
 							</div>
 						#{/if}
-						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.ACTIVITY_STREAM) }
+						}*
+						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.ACTIVITY_STREAM) && talker.activityList}
 							<div class="prosubheading">
 								<div class="profileheading">${talker.userName} Activities</div>
 								<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>

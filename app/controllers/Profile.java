@@ -343,6 +343,7 @@ public class Profile extends Controller {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
 		
 		notFoundIfNull(talker);
 		
@@ -352,6 +353,6 @@ public class Profile extends Controller {
 		//TODO: Temporarily - later we'll load all list of topics
 		talker.setNumberOfTopics(TopicDAO.getNumberOfTopics(talker.getId()));
 		
-		render(talker, currentTalker);
+		render(talker, talkerDisease, currentTalker);
 	}
 }
