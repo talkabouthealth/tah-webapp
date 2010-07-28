@@ -274,7 +274,8 @@ public class Profile extends Controller {
 		
 		//Load all healthItems for this disease
 		Map<String, HealthItemBean> healthItemsMap = new HashMap<String, HealthItemBean>();
-		for (String itemName : new String[] {"symptoms", "tests", "procedures", "treatments"}) {
+		for (String itemName : new String[] {"symptoms", "tests", 
+				"procedures", "treatments", "sideeffects"}) {
 			HealthItemBean healthItem = HealthItemDAO.getHealthItemByName(itemName, diseaseName);
 			healthItemsMap.put(itemName, healthItem);
 		}

@@ -1,8 +1,12 @@
 package dao;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import models.HealthItemBean;
 
@@ -66,7 +70,7 @@ public class HealthItemDAO {
 		
 		// load all children
 		List<DBObject> childrenList = healthItemsColl.find(query).toArray();
-		Set<HealthItemBean> childrenSet = new LinkedHashSet<HealthItemBean>();
+		Set<HealthItemBean> childrenSet = new TreeSet<HealthItemBean>();
 		for (DBObject childrenDBObject : childrenList) {
 			HealthItemBean childHealthItem = loadHealthItem(healthItemsColl, 
 					childrenDBObject.get("_id").toString(), (String)childrenDBObject.get("name"));
@@ -77,21 +81,70 @@ public class HealthItemDAO {
 		return healthItem;
 	}
 	
-	/*  Test methods */
-//	private void saveTree(HealthItemBean healthItem, String parentId) {
-//		healthItem.setDiseaseId("4c2ddd873846000000001f4b");
-//		String currentId = HealthItemDAO.save(healthItem, parentId);
-//		Set<HealthItemBean> childs = healthItem.getChildren();
-//		if (childs != null) {
-//			for (HealthItemBean child : childs) {
-//				saveTree(child, currentId);
-//			}
-//		}
-//	}
+	/*  Methods for importing HealthItems for given disease in DB */
+	private static void importHealthItems(String fileName) throws Exception {
+		BufferedReader br = new BufferedReader(new FileReader(fileName));
+		String line = null;
+		
+		HealthItemBean topLevel = null;
+		Set<HealthItemBean> topLevelChildren = null;
+		HealthItemBean subLevel = null;
+		Set<HealthItemBean> subLevelChildren = null;
+		while ((line = br.readLine()) != null) {
+			line = line.trim();
+			
+			if (line.length() == 0) {
+				continue;
+			}
+			
+			if (line.startsWith("--")) {
+				if (topLevel != null) {
+					saveTree(topLevel, null);
+				}
+				topLevel = new HealthItemBean(line.substring(2));
+				topLevelChildren = new HashSet<HealthItemBean>();
+				topLevel.setChildren(topLevelChildren);
+				
+				subLevel = null;
+				subLevelChildren = null;
+			}
+			else if (line.startsWith("-")) {
+				subLevel = new HealthItemBean(line.substring(1));
+				topLevelChildren.add(subLevel);
+				
+				subLevelChildren = new HashSet<HealthItemBean>();
+				subLevel.setChildren(subLevelChildren);
+			}
+			else {
+				HealthItemBean healthItem = new HealthItemBean(line);
+				if (subLevelChildren == null) {
+					topLevelChildren.add(healthItem);
+				}
+				else {
+					subLevelChildren.add(healthItem);
+				}
+			}
+		}
+		
+		if (topLevel != null) {
+			saveTree(topLevel, null);
+		}
+	}
 	
-	public static void main(String[] args) {
-		HealthItemBean testsItem = HealthItemDAO.getHealthItemByName("tests", "sdf");
-		System.out.println(testsItem.getChildren());
+	
+	private static void saveTree(HealthItemBean healthItem, String parentId) {
+		healthItem.setDiseaseId("4c2ddd873846000000001f4b");
+		String currentId = HealthItemDAO.save(healthItem, parentId);
+		Set<HealthItemBean> childs = healthItem.getChildren();
+		if (childs != null) {
+			for (HealthItemBean child : childs) {
+				saveTree(child, currentId);
+			}
+		}
+	}
+	
+	public static void main(String[] args) throws Exception {
+		importHealthItems("healthitems");
 	}
 
 }

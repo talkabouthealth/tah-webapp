@@ -217,4 +217,25 @@
 				</div>
 			</div>
 		</div>
+		
+		<div id="midnoticontainer">
+			<div id="midnoticontainermain">
+				<div id="boxarea_head2" class="blacktext2">Side Effects</div>
+				<div class="signupleftarea2">
+					<div class="generalsubhead">What Treatment/Medication Side Effects have you experienced?</div>
+					<div class="generalcheck">
+						#{ healthItemsTree healthItem:healthItemsMap["sideeffects"], checkedItems: talkerDisease?.healthItems /}
+					</div>
+					<div class="textareabig">
+						#{ otherField name:'sideeffects', values: talkerDisease?.otherHealthItems /}
+					</div>
+					<div class="button">
+						<a href="#" onclick="document.healthdetailsform.submit()">
+							<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" />
+						</a>
+					</div>
+					<div class="signupmain"></div>
+				</div>
+			</div>
+		</div>
 	</form>

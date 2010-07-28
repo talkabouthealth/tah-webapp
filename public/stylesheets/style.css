@@ -532,4 +532,6 @@ h4 { float:left; width:221px; padding-bottom:7px;  font-weight: bold; font-size:
 .replyForm ul li {list-style-type:none; float:left; width: 350px; padding-bottom:5px; }
 
 /* Health Details page - for now we make Health Items lists in one column */
-.generalcheck1 { width: 500px }
+.healthitemCol1 { float:left; width:500px; margin-left: 0em; line-height: 1.2em; }
+.healthitemCol2 { float:left; width:300px; margin-left: 20em; line-height: 1.2em; }
+/* .healthitemCol2margin-top: -6em; */

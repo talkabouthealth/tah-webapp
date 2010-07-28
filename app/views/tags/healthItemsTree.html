@@ -1,10 +1,12 @@
+*{ TODO: 2 column display }*
+#{set currentNum = 1 /}
 #{list items: _healthItem.children, as: 'item' }
 	#{if item.children?.size() > 0 }
-		<div class="generalcheck1"><span class="blacktext14"><strong>${item.name}</strong></span></div>
+		<div class="healthitemCol${currentNum}"><span class="blacktext14"><strong>${item.name}</strong></span></div>
 		#{ healthItemsTree healthItem: item, checkedItems: _checkedItems /}
 	#{/if}
 	#{else}
-		<div class="generalcheck1">
+		<div class=healthitemCol${currentNum}>
 			<input name='healthitem${item.id}' type='checkbox'
 			#{if _checkedItems?.contains(item.id) }
 				checked='checked'
