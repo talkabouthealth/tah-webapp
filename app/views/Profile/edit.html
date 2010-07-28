@@ -125,6 +125,7 @@
 			#{form @Profile.save() , id:'updateprofile' }
 				<!-- We need this field to pass TalkerBean validation -->
 				<input type="hidden" id="talker.password" name="talker.password" value="pass" />
+				<input type="hidden" id="talker.imagePath" name="talker.imagePath" value="${talker.imagePath}" />
 				<div id="personalleft">
 					<div class="personalmain" style="text-align: center">
 						#{if "editForm".equals(flash.currentForm)}
@@ -152,20 +153,20 @@
 									value="${talker.email}" />
 						</div>
 					</div>
-					<!-- 
 					<div class="personalmain">
 						<div class="personaltextarea"><span class="blacktext14">First Name</span></div>
 						<div class="personaltextfield">
-						  	<input name="textfield2" type="text" class="personalfields" id="textfield2" onclick="this.value=''"  value="Murray" />
+						  	<input name="talker.firstName" type="text" class="personalfields"
+									value="${talker.firstName}" />
 						</div>
 					</div>
 					<div class="personalmain">
 						<div class="personaltextarea"><span class="blacktext14">Last Name</span></div>
 						<div class="personaltextfield">
-							<input name="textfield3" type="text" class="personalfields" id="textfield3" onclick="this.value=''"  value="Jones" />
+							<input name="talker.lastName" type="text" class="personalfields"
+									value="${talker.lastName}" />
 						</div>
 					</div>
-					-->
 					<div class="personalmain">
 						<div class="personaltextarea"><span class="blacktext14">Birth Date</span></div>
 						<div class="personaltextfield">
@@ -220,14 +221,13 @@
 									value="${talker.state}" />
 						</div>
 					</div>
-					<!-- 
 					<div class="personalmain">
 						<div class="personaltextarea"><span class="blacktext14">Zip Code</span></div>
 						<div class="personaltextfield">
-							<input name="textfield3" type="text" class="personalfields" id="textfield3" onclick="this.value=''"  value="10014" />
+							<input name="talker.zip" type="text" class="personalfields"
+									value="${talker.zip}" />
 						</div>
 					</div>
-					-->
 					<div class="personalmain">
 						<div class="personaltextarea"><span class="blacktext14">Country</span></div>
 						<div class="personaltextfield" style="border:0;">
@@ -254,19 +254,24 @@
 									value="${talker.childrenNum}" />
 						</div>
 					</div>
-					<!-- 
 					<div class="personalmain">
-					<div class="personaltextarea"><span class="blacktext14">Ages of Children</span></div>
+						<div class="personaltextarea"><span class="blacktext14">Ages of Children</span></div>
 						<div class="personalcheck">
-							<div class="personalcheck1"><input name="" type="checkbox" value="" />&nbsp; <span class="blacktext14">new born</span></div>
-							<div class="personalcheck2"><input name="" type="checkbox" value="" />&nbsp; <span class="blacktext14">6-12 years old</span></div>
-							<div class="personalcheck1"><input name="" type="checkbox" value="" />&nbsp; <span class="blacktext14">1-2 years old</span></div>
-							<div class="personalcheck2"><input name="" type="checkbox" value="" />&nbsp; <span class="blacktext14">12-18 years old</span></div>
-							<div class="personalcheck1"><input name="" type="checkbox" value="" />&nbsp; <span class="blacktext14">1-2 years old</span></div>
-							<div class="personalcheck2"><input name="" type="checkbox" value="" />&nbsp; <span class="blacktext14">12-18 years old</span></div>
+							#{list items:models.TalkerBean.CHILDREN_AGES_ARRAY, as:'age'}
+								#{if age_parity.equals('odd') }
+									<div class="personalcheck1">
+								#{/if}
+								#{else}
+									<div class="personalcheck2">
+								#{/else}
+										<input name="talker.childrenAges" type="checkbox" value="${age}" 
+										${talker.childrenAges?.contains(age) ? 'checked="true"' : ''}
+										/>
+										&nbsp; <span class="blacktext14">${age}</span>
+									</div>
+							#{/list}
 						</div>
 					</div>
-					-->
 					<div class="personalmain">
 						<div class="personaltextarea"><span class="blacktext14">Patient/Caregiver/etc.</span></div>
 						<div class="personaltextfield">
@@ -280,29 +285,32 @@
 							</select>
 						</div>
 					</div>
-					<!-- 
 					<div class="personalmain">
 						<div class="personaltextarea"><span class="blacktext14">Web Page</span></div>
 						<div class="personaltextfield">
-							<input name="textfield2" type="text" class="personalfields" id="textfield2" 
-								onclick="this.value=''"  value="http://talkabouthealth.com" />
+							<input name="talker.webpage" type="text" class="personalfields"
+									value="${talker.webpage}" />
 						</div>
 					</div>
 					<div class="personalmain">
-						<div class="personaltextarea2"><span class="blacktext14">Conversation Topic<br />
+						<div class="personaltextarea2">
+							<span class="blacktext14">Conversation Topic<br />
 							  <span class="footerlink">Key words of what you 
 								like to talk about i.e. cooking, 
 								sports etc.</span></span>
 						</div>
 						<div class="textareabig">
-							<textarea name="textarea" id="textarea" cols="45" rows="5" class="textarea3"></textarea>
+							<textarea name="talker.keywords" cols="45" rows="5" 
+								onclick="if (this.value == 'Keywords (please separate by commas)') this.value = ''"
+								class="textarea3">${talker.keywords?.toCommaString('Keywords')}</textarea>
 						</div>
 					</div>
 					<div class="personalmain">
 						<div class="personaltextarea"><span class="blacktext14">Bio</span></div>
-						<div class="textareabig"><textarea name="textarea" id="textarea" cols="45" rows="5" class="textarea3"></textarea></div>
+						<div class="textareabig">
+							<textarea name="talker.bio" cols="45" rows="5" class="textarea3">${talker.bio}</textarea>
+						</div>
 					</div>
-					-->
 					<div class="personalmain">
 						<div class="personaltextarea"></div>
 						<div class="personaltextarea" >

@@ -59,6 +59,8 @@ public class Profile extends Controller {
 			validation.isTrue(tmpTalker == null).message("email.exists");
 		}
 		
+		talker.setKeywords(CommonUtil.parseCommaSerapatedList(talker.getKeywords().get(0)));
+		
 		Date dateOfBirth = CommonUtil.parseDate(talker.getDobMonth(), talker.getDobDay(), talker.getDobYear());
 		talker.setDob(dateOfBirth);
 		validation.required(dateOfBirth).message("Please input correct Birth Date");
@@ -80,6 +82,14 @@ public class Profile extends Controller {
 		oldTalker.setState(talker.getState());
 		oldTalker.setCountry(talker.getCountry());
 		oldTalker.setChildrenNum(talker.getChildrenNum());
+		
+		oldTalker.setFirstName(talker.getFirstName());
+		oldTalker.setLastName(talker.getLastName());
+		oldTalker.setZip(talker.getZip());
+		oldTalker.setWebpage(talker.getWebpage());
+		oldTalker.setBio(talker.getBio());
+		oldTalker.setChildrenAges(talker.getChildrenAges());
+		oldTalker.setKeywords(talker.getKeywords());
 		
 		TalkerDAO.updateTalker(oldTalker);
 		

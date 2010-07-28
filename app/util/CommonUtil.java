@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import models.TalkerBean;
@@ -134,6 +135,10 @@ public class CommonUtil {
 	}
 
 	public static List<String> parseCommaSerapatedList(String otherItems) {
+		if (otherItems == null) {
+			return null;
+		}
+		
 		String[] otherArray = otherItems.split(",");
 		
 		//validate and add
@@ -147,5 +152,4 @@ public class CommonUtil {
 		
 		return itemsList;
 	}
-
 }

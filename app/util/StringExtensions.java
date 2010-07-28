@@ -6,9 +6,9 @@ import play.templates.JavaExtensions;
 
 public class StringExtensions extends JavaExtensions {
 
-	public static String toCommaString(List<String> list) {
+	public static String toCommaString(List<String> list, String fieldName) {
 		if (list == null || list.size() == 0) {
-			return "Other (please separate by commas)";
+			return fieldName+" (please separate by commas)";
 		}
 		else {
 			//format [entry1, entry2]

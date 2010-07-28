@@ -25,6 +25,9 @@ public class TalkerBean implements Serializable {
 	
 	//TODO: move it to some constants?
 	public static final String DEFAULT_IMAGE = "/public/images/img1.gif"; 
+	public static final String[] CHILDREN_AGES_ARRAY = new String[] {
+		"new born", "1-2 years old", "2-6 years old", "6-12 years old", "12-18 years old"
+	};
 	public static final String[] CONNECTIONS_ARRAY = new String[] {
 		"Patient", "Former Patient", "Parent", "Caregiver", "Family member", "Friend", 
 		 "other"
@@ -129,6 +132,17 @@ public class TalkerBean implements Serializable {
 	private List<TalkerBean> followerList;
 	private List<ActivityBean> activityList;
 	private List<CommentBean> profileCommentsList;
+	
+	
+	//new fields
+	private String firstName;
+	private String lastName;
+	private String zip;
+	private List<String> childrenAges;
+	private String webpage;
+	private List<String> keywords;
+	private String bio;
+	
 	
 	public List<CommentBean> getProfileCommentsList() {
 		return profileCommentsList;
@@ -269,7 +283,6 @@ public class TalkerBean implements Serializable {
 		setNfreq(parseInt(talkerDBObject.get("nfreq")));
 		setNtime(parseInt(talkerDBObject.get("ntime")));
 		
-		@SuppressWarnings("unchecked")
 		Collection<String> ctype = (Collection<String>)talkerDBObject.get("ctype");
 		if (ctype != null) {
 			setCtype(ctype.toArray(new String[]{}));
@@ -283,8 +296,26 @@ public class TalkerBean implements Serializable {
 		setRegDate((Date)talkerDBObject.get("timestamp"));
 		parseProfilePreferences(parseInt(talkerDBObject.get("prefs")));
 		
+		setFirstName((String)talkerDBObject.get("firstname"));
+		setLastName((String)talkerDBObject.get("lastname"));
+		setZip((String)talkerDBObject.get("zip"));
+		setWebpage((String)talkerDBObject.get("webpage"));
+		setBio((String)talkerDBObject.get("bio"));
+		setChildrenAges(parseStringList(talkerDBObject.get("ch_ages")));
+		setKeywords(parseStringList(talkerDBObject.get("keywords")));
+		
 		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
 		parseFollowing((Collection<DBRef>)talkerDBObject.get("following"));
+	}
+	
+	private List<String> parseStringList(Object fieldValue) {
+		Collection<String> fieldCollection = (Collection<String>)fieldValue;
+		if (fieldCollection == null) {
+			return null;
+		}
+		else {
+			return new ArrayList<String>(fieldCollection);
+		}
 	}
 	
 	private void parseThankYous(Collection<DBObject> thankYouDBList) {
@@ -612,5 +643,62 @@ public class TalkerBean implements Serializable {
 	public void setDobYear(int dobYear) {
 		this.dobYear = dobYear;
 	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getZip() {
+		return zip;
+	}
+
+	public void setZip(String zip) {
+		this.zip = zip;
+	}
+
+	public List<String> getChildrenAges() {
+		return childrenAges;
+	}
+
+	public void setChildrenAges(List<String> childrenAges) {
+		this.childrenAges = childrenAges;
+	}
+
+	public String getWebpage() {
+		return webpage;
+	}
+
+	public void setWebpage(String webpage) {
+		this.webpage = webpage;
+	}
+
+	public List<String> getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(List<String> keywords) {
+		this.keywords = keywords;
+	}
+
+	public String getBio() {
+		return bio;
+	}
+
+	public void setBio(String bio) {
+		this.bio = bio;
+	}
+	
 	
 }	

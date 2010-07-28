@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -79,6 +80,13 @@ public class TalkerDAO {
 			.add("nfreq", talker.getNfreq())
 			.add("ntime", talker.getNtime())
 			.add("ctype", talker.getCtype())
+			.add("firstname", talker.getFirstName())
+			.add("lastname", talker.getLastName())
+			.add("zip", talker.getZip())
+			.add("webpage", talker.getWebpage())
+			.add("bio", talker.getBio())
+			.add("ch_ages", talker.getChildrenAges())
+			.add("keywords", talker.getKeywords())
 			.get();
 		
 		DBObject talkerId = new BasicDBObject("_id", new ObjectId(talker.getId()));
