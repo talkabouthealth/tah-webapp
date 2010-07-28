@@ -5,11 +5,13 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import models.TalkerBean;
+import models.TalkerBean.ProfilePreference;
 import play.data.validation.Email;
 import play.data.validation.Valid;
 import play.mvc.Controller;
@@ -155,6 +157,23 @@ public class Application extends Controller {
 			imUsername = talker.getEmail().substring(0, atIndex);
 			talker.setImUsername(imUsername);
 		}
+        
+        /*
+         	By default the following sections should be unchecked:
+				- Personal Info
+				- Health Info
+				- Basic Info
+				- Bio
+				other sections should be checked
+        */
+        EnumSet<ProfilePreference> defaultPreferences = EnumSet.of(
+	    		ProfilePreference.ACTIVITY_STREAM, 
+	    		ProfilePreference.COMMENTS, 
+	    		ProfilePreference.CONVERSATIONS,
+	    		ProfilePreference.FOLLOWERS, 
+	    		ProfilePreference.FOLLOWING
+	    	);
+        talker.saveProfilePreferences(defaultPreferences);
         
         String hashedPassword = CommonUtil.hashPassword(talker.getPassword());
         talker.setPassword(hashedPassword);

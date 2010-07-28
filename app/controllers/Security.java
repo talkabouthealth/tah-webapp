@@ -44,9 +44,10 @@ public class Security extends Secure.Security {
 		 /*
 	     	Play! 1.0.3 has problems with cookies in IE8 (FLASH cookies aren't stored correctly),
 	     	so we pass Original URL through hidden input on the login page
+	     	http://www.pivotaltracker.com/story/show/4376939
 	     */
 	    String url = params.get("url");
-	    if (url != null) {
+	    if (url != null && url.trim().length() != 0) {
 	    	flash.put("url", url);
 	    }
 

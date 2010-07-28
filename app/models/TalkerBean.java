@@ -27,7 +27,13 @@ public class TalkerBean implements Serializable {
 	public static final String DEFAULT_IMAGE = "/public/images/img1.gif"; 
 	public static final String[] CONNECTIONS_ARRAY = new String[] {
 		"Patient", "Former Patient", "Parent", "Caregiver", "Family member", "Friend", 
-		"Physician", "Pharmacist", "Nurse", "Psychiatrist", "Social worker", "other"
+		 "other"
+		
+		/*
+		  	Temporarily disabled items
+		  	http://www.pivotaltracker.com/story/show/4460673
+		  	"Physician", "Pharmacist", "Nurse", "Psychiatrist", "Social worker"
+		 */
 	};
 	
 	public enum ProfilePreference {
@@ -42,8 +48,8 @@ public class TalkerBean implements Serializable {
 		BIO(128, "Display my Bio in my Public Profile"),
 		ACTIVITY_STREAM(256, "Display my Activity Stream in my Public Profile");
 		
-		private int value;
-		private String description;
+		private final int value;
+		private final String description;
 		
 		private ProfilePreference(int value, String description) {
 			this.value = value;

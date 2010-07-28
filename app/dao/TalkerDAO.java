@@ -48,6 +48,7 @@ public class TalkerDAO {
 				.add("act_type", talker.getAccountType())
 				.add("act_id", talker.getAccountId())
 				.add("invites", 100)
+				.add("prefs", talker.profilePreferencesToInt())
 				.get();
 
 		talkersColl.save(talkerDBObject);
