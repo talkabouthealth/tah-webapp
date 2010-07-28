@@ -161,6 +161,7 @@
 								</div>
 								<div class="proleftwhitebot"></div>
 							</div>
+							#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
 							<div class="proleftwhite">
 								<div class="proleftwhitetop"></div>
 								<div class="proleftwhitemid">
@@ -183,6 +184,8 @@
 								</div>
 								<div class="proleftwhitebot"></div>
 							</div>
+							#{/if}
+							#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWERS) }
 							<div class="proleftwhite">
 								<div class="proleftwhitetop"></div>
 								<div class="proleftwhitemid">
@@ -205,6 +208,7 @@
 								</div>
 								<div class="proleftwhitebot"></div>
 							</div>
+							#{/if}
 							<!-- 
 							<div class="proleftwhite">
 								<div class="proleftwhitetop"></div>
@@ -223,6 +227,7 @@
 								<div class="proleftwhitebot"></div>
 							</div>
 							-->
+							#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.PERSONAL_INFO) }
 							<div class="proleftwhite">
 								<div class="proleftwhitetop"></div>
 								<div class="proleftwhitemid">
@@ -249,6 +254,7 @@
 								</div>
 								<div class="proleftwhitebot"></div>
 							</div>
+							#{/if}
 						</div>
 						<div id="profileleftbot"></div>
 					</div>
@@ -262,74 +268,79 @@
 					width="52" height="19" border="0"/>
 								</a>
 							#{/ifnot}
-							
 						</div>
-						<div class="profiletext2">
-							<ul>
-								<li class="blacktext12"><strong>Community:</strong> Skin Cancer</li>
-								<li class="blacktext12"><strong>Location:</strong> ${talker.city}, ${talker.state}, ${talker.country}</li>
-								<li class="blacktext12"><strong>Member Since:</strong> ${talker.regDate.format('MMM d, yyyy')}</li>
-							</ul>
-						</div>
-						<div class="profiletext2">
-							<ul>
-								<li class="blacktext12"><strong>Recognition Level:</strong> ${talker.levelOfRecognition}</li>
-								<li class="blacktext12"><strong>Conversations:</strong> ${talker.numberOfTopics}</li>
-								<li class="blacktext12"><strong>Thank you's:</strong> ${talker.thankYouList.size()}</li>
-							</ul>
-						</div>
-						<div class="prosubheading">
-							<div class="profileheading">Bio</div>
-							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
-						</div>
-						<div class="protext">
-							<strong>Serious ADOBE (Adobe) Flash Designer / Programmer / Technical Consultant</strong><br />
-							Expertise in Flash application development, Web 2.0 Technology, management, and professional services.
-						</div>
-						<div class="prosubheading">
-							<div class="profileheading">Health Info</div>
-							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
-						</div>
-						<div class="profiletext2">
-							<ul>
-								<li class="blacktext12">Disease Type: <span class="blacktext">Type 1</span></li>
-								<li class="blacktext12">Stage of disease: <span class="blacktext">Stage 1</span></li>
-								<li class="blacktext12">Date of first symptom: <span class="blacktext">10/23/2007</span></li>
-								<li class="blacktext12">Date of diagnosis: <span class="blacktext">10/23/2007</span></li>
-								<li class="blacktext12">Recurrent:<span class="blacktext"> No</span></li>
-								<li class="blacktext12" style="padding-top:10px;"><strong>Initial Symptoms</strong></li>
-								<li class="blacktext12">Lump in breast</li>
+						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.BASIC_INFO) }
+							<div class="profiletext2">
+								<ul>
+									<li class="blacktext12"><strong>Community:</strong> Skin Cancer</li>
+									<li class="blacktext12"><strong>Location:</strong> ${talker.city}, ${talker.state}, ${talker.country}</li>
+									<li class="blacktext12"><strong>Member Since:</strong> ${talker.regDate.format('MMM d, yyyy')}</li>
+								</ul>
+							</div>
+							<div class="profiletext2">
+								<ul>
+									<li class="blacktext12"><strong>Recognition Level:</strong> ${talker.levelOfRecognition}</li>
+									<li class="blacktext12"><strong>Conversations:</strong> ${talker.numberOfTopics}</li>
+									<li class="blacktext12"><strong>Thank you's:</strong> ${talker.thankYouList.size()}</li>
+								</ul>
+							</div>
+						#{/if}
+						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.BIO) }
+							<div class="prosubheading">
+								<div class="profileheading">Bio</div>
+								<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
+							</div>
+							<div class="protext">
+								<strong>Serious ADOBE (Adobe) Flash Designer / Programmer / Technical Consultant</strong><br />
+								Expertise in Flash application development, Web 2.0 Technology, management, and professional services.
+							</div>
+						#{/if}
+						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.HEALTH_INFO) }
+							<div class="prosubheading">
+								<div class="profileheading">Health Info</div>
+								<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
+							</div>
+							<div class="profiletext2">
+								<ul>
+									<li class="blacktext12">Disease Type: <span class="blacktext">Type 1</span></li>
+									<li class="blacktext12">Stage of disease: <span class="blacktext">Stage 1</span></li>
+									<li class="blacktext12">Date of first symptom: <span class="blacktext">10/23/2007</span></li>
+									<li class="blacktext12">Date of diagnosis: <span class="blacktext">10/23/2007</span></li>
+									<li class="blacktext12">Recurrent:<span class="blacktext"> No</span></li>
+									<li class="blacktext12" style="padding-top:10px;"><strong>Initial Symptoms</strong></li>
+									<li class="blacktext12">Lump in breast</li>
+									
+									<li class="blacktext12" style="padding-top:10px;"><strong>Tests</strong></li>
+									<li class="blacktext12">Mammogram</li>
+									<li class="blacktext12">Breast Biospy</li>
+									
+									<li class="blacktext12" style="padding-top:10px;"><strong>Procedures/Surgeries</strong></li>
+									<li class="blacktext12">Mastectomy</li>
+									<li class="blacktext12">Lumpectomy</li>
+								</ul>
+							</div>
+							<div class="profiletext2">
+								<ul>
+								<li class="blacktext12"><strong>Disease symptoms and severity</strong></li>
+								<li class="blacktext12">Discoloration of moles - mild</li>
+								<li class="blacktext12">Vomiting: mild</li>
+								<li class="blacktext12">Vomiting: mild</li>
+								<li class="blacktext12">Vomiting: mild</li>
+								<li class="blacktext12">Vomiting: mild</li>
 								
-								<li class="blacktext12" style="padding-top:10px;"><strong>Tests</strong></li>
-								<li class="blacktext12">Mammogram</li>
-								<li class="blacktext12">Breast Biospy</li>
+								<li class="blacktext12" style="padding-top:10px;"><strong>Medications and Treatments</strong></li>
+								<li class="blacktext12">Chemotherapy</li>
+								<li class="blacktext12">Herceptin</li>
 								
-								<li class="blacktext12" style="padding-top:10px;"><strong>Procedures/Surgeries</strong></li>
-								<li class="blacktext12">Mastectomy</li>
-								<li class="blacktext12">Lumpectomy</li>
-							</ul>
-						</div>
-						<div class="profiletext2">
-							<ul>
-							<li class="blacktext12"><strong>Disease symptoms and severity</strong></li>
-							<li class="blacktext12">Discoloration of moles - mild</li>
-							<li class="blacktext12">Vomiting: mild</li>
-							<li class="blacktext12">Vomiting: mild</li>
-							<li class="blacktext12">Vomiting: mild</li>
-							<li class="blacktext12">Vomiting: mild</li>
-							
-							<li class="blacktext12" style="padding-top:10px;"><strong>Medications and Treatments</strong></li>
-							<li class="blacktext12">Chemotherapy</li>
-							<li class="blacktext12">Herceptin</li>
-							
-							<li class="blacktext12" style="padding-top:10px;"><strong>Side effects from medications/treatments</strong></li>
-							<li class="blacktext12">Depression - severe</li>
-							<li class="blacktext12">Vomiting - severe</li>
-							
-							<li class="blacktext12" style="padding-top:10px;"><strong>Treatments/medications for side-effects</strong></li>
-							<li class="blacktext12">Aspirin</li>
-							</ul>
-						</div>
+								<li class="blacktext12" style="padding-top:10px;"><strong>Side effects from medications/treatments</strong></li>
+								<li class="blacktext12">Depression - severe</li>
+								<li class="blacktext12">Vomiting - severe</li>
+								
+								<li class="blacktext12" style="padding-top:10px;"><strong>Treatments/medications for side-effects</strong></li>
+								<li class="blacktext12">Aspirin</li>
+								</ul>
+							</div>
+						#{/if}
 						<div id="thankyouSection" class="prosubheading">
 							<div class="profileheading">
 								Thank You's (${talker.thankYouList.size()})
@@ -366,6 +377,8 @@
 							</div>
 						#{/list}
 						</div>
+						
+						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) }
 						<div id="commentsSection" class="prosubheading">
 							<div class="profileheading">
 								Comments
@@ -392,52 +405,58 @@
 							</div>
 							#{profileCommentsTree commentsList: talker.profileCommentsList /}
 						</div>
-						<div class="prosubheading">
-							<div class="profileheading">Conversation Started (10)</div>
-							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
-						</div>
-						<div class="conversationarea">
-							<div class="conversationtext">
-								<a href="#" class="navybluetext12"><strong>Just received 2 diagnoses, what should i do ?</strong></a><br />
-								<span class="greytext11">May 16 at 11:55am</span>
-								<div class="conversationtextsmall">
-									<a href="#" class="navybluetext12">10 talkers</a> 
-									<span class="blacktext">- mjones, yiwang, shanghao, eltont, sariebarie, quigs, dubs, nana, johnr, nato</span><br />
-									<a href="#" class="navybluetext12">3 comments</a><span class="blacktext"> - johnr, suzie, scott</span>
+						#{/if}
+						
+						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.CONVERSATIONS) }
+							<div class="prosubheading">
+								<div class="profileheading">Conversation Started (10)</div>
+								<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
+							</div>
+							<div class="conversationarea">
+								<div class="conversationtext">
+									<a href="#" class="navybluetext12"><strong>Just received 2 diagnoses, what should i do ?</strong></a><br />
+									<span class="greytext11">May 16 at 11:55am</span>
+									<div class="conversationtextsmall">
+										<a href="#" class="navybluetext12">10 talkers</a> 
+										<span class="blacktext">- mjones, yiwang, shanghao, eltont, sariebarie, quigs, dubs, nana, johnr, nato</span><br />
+										<a href="#" class="navybluetext12">3 comments</a><span class="blacktext"> - johnr, suzie, scott</span>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="prosubheading">
-							<div class="profileheading">Conversation Joined (20)</div>
-							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
-						</div>
-						<div class="conversationarea">
-							<div class="thankyoupic">
-								<a href="#" class="bluetext11"><img src="/public/images/followimg2.jpg" border="0" /><br />Blal</a>
+							<div class="prosubheading">
+								<div class="profileheading">Conversation Joined (20)</div>
+								<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 							</div>
-							<div class="conversationtext">
-								<a href="#" class="navybluetext12">
-									<strong>Just received 2 diagnoses, what should i do ?</strong></a><br />
-								<span class="greytext11">May 16 at 11:55am</span>
-								<div class="conversationtextsmall">
-									<a href="#" class="navybluetext12">10 talkers</a>
-									<span class="blacktext">- mjones, yiwang, shanghao, eltont, 
-										sariebarie, quigs, dubs, nana, johnr, nato</span><br />
-									<a href="#" class="navybluetext12">3 comments</a>
-									<span class="blacktext"> - johnr, suzie, scott</span>
+							<div class="conversationarea">
+								<div class="thankyoupic">
+									<a href="#" class="bluetext11"><img src="/public/images/followimg2.jpg" border="0" /><br />Blal</a>
+								</div>
+								<div class="conversationtext">
+									<a href="#" class="navybluetext12">
+										<strong>Just received 2 diagnoses, what should i do ?</strong></a><br />
+									<span class="greytext11">May 16 at 11:55am</span>
+									<div class="conversationtextsmall">
+										<a href="#" class="navybluetext12">10 talkers</a>
+										<span class="blacktext">- mjones, yiwang, shanghao, eltont, 
+											sariebarie, quigs, dubs, nana, johnr, nato</span><br />
+										<a href="#" class="navybluetext12">3 comments</a>
+										<span class="blacktext"> - johnr, suzie, scott</span>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="prosubheading">
-							<div class="profileheading">${talker.userName} Activities</div>
-							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
-						</div>
-						<div class="activitiestext">
-							#{list items:talker.activityList, as:'activity' }
-								<span class="blacktext12">${talker.userName} ${activity.text}</span><br/>
-								<span class="greytext11">May 16 at 11:55am</span><br />
-							#{/list}
-						</div>
+						#{/if}
+						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.ACTIVITY_STREAM) }
+							<div class="prosubheading">
+								<div class="profileheading">${talker.userName} Activities</div>
+								<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
+							</div>
+							<div class="activitiestext">
+								#{list items:talker.activityList, as:'activity' }
+									<span class="blacktext12">${talker.userName} ${activity.text}</span><br/>
+									<span class="greytext11">May 16 at 11:55am</span><br />
+								#{/list}
+							</div>
+						#{/if}
 					</div>
 				</div>
 			</div>
