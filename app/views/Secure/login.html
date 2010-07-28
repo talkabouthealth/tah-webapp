@@ -38,7 +38,7 @@
 						<div class="fieldarealeft"></div>
 						<div class="fieldareamid">
 							<input type="text" name="username" id="username" 
-								class="textfields" value="${flash.username}" tabindex="1" />
+								class="textfields" value="${ play.mode == play.Play.Mode.DEV ? 'kangaroo' : flash.username}" tabindex="1" />
 						</div>
 						<div class="fieldarearight"></div>
 					</div>
@@ -47,7 +47,7 @@
 						<div class="fieldarealeft"></div>
 						<div class="fieldareamid">
 							<input name="password"  type="password" class="textfields" id="password" 
-								onclick="this.value=''" value="123456" tabindex="2" /></div>
+								onclick="this.value=''" value="${ play.mode == play.Play.Mode.DEV ? '123456' : '' }" tabindex="2" /></div>
 						<div class="fieldarearight"></div>
 						<div class="checkboxarea">
 							<input type="checkbox" name="remember" id="remember" 
