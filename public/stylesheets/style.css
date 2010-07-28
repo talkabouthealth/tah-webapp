@@ -538,3 +538,5 @@ h4 { float:left; width:221px; padding-bottom:7px;  font-weight: bold; font-size:
 
 /* Headings on Public Profile page */
 .prosubheading { margin-top: 14px }
+/* Public info on Profile page - for multirows values */
+.personalinfo ul li { height: auto }

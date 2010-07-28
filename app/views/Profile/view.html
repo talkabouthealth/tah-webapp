@@ -233,21 +233,20 @@
 								<div class="proleftwhitemid">
 									<div class="profilearea">
 										<div class="profileheading">Personal Info</div>
-										<div class="profileimgtext">
+										<div class="profileimgtext personalinfo">
 											<ul>
-											<li class="blacktext12">Age: ${talker.age}</li>
-											<li class="blacktext12">Gender: ${talker.fullGender}</li>
-											<li class="blacktext12">Location: ${talker.state}, ${talker.city}</li>
-											<li class="blacktext12">Marital Status: ${talker.maritalStatus}</li>
-											<li class="blacktext12">No. of Children: ${talker.childrenNum}</li>
-											<!-- 
-											<li class="blacktext12">Ages of Children: New Born, 2-6 years</li>
-											<li class="blacktext12">Web page: 
-												<a href="http://talkabouthealth.com" target="_blank" 
-												class="navybluetext12">http://talkabouthealth.com</a></li>
-											<li class="blacktext12">Keywords Following: tennis, reading, dancing, entrepreneurship</li>
-											 -->
-											<li class="blacktext12"></li>
+												<li class="blacktext12">Age: ${talker.age}</li>
+												<li class="blacktext12">Gender: ${talker.fullGender}</li>
+												<li class="blacktext12">Location: ${talker.state}, ${talker.city}</li>
+												<li class="blacktext12">Marital Status: ${talker.maritalStatus}</li>
+												<li class="blacktext12">No. of Children: ${talker.childrenNum}</li>
+												<li class="blacktext12">Ages of Children: ${talker.childrenAges?.toCommaString()}</li>
+												<li class="blacktext12">Web page: 
+													<a href="${talker.webpage}" target="_blank" 
+													class="navybluetext12">${talker.webpage}</a>
+												</li>
+												<li class="blacktext12">Keywords Following: ${talker.keywords?.toCommaString()}</li>
+												<li class="blacktext12"></li>
 											</ul>
 										</div>
 									</div>
@@ -291,8 +290,7 @@
 								<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 							</div>
 							<div class="protext">
-								<strong>Serious ADOBE (Adobe) Flash Designer / Programmer / Technical Consultant</strong><br />
-								Expertise in Flash application development, Web 2.0 Technology, management, and professional services.
+								${talker.bio}
 							</div>
 						#{/if}
 						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.HEALTH_INFO) }

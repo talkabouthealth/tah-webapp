@@ -26,7 +26,7 @@ public class TalkerBean implements Serializable {
 	//TODO: move it to some constants?
 	public static final String DEFAULT_IMAGE = "/public/images/img1.gif"; 
 	public static final String[] CHILDREN_AGES_ARRAY = new String[] {
-		"new born", "1-2 years old", "2-6 years old", "6-12 years old", "12-18 years old"
+		"New born", "1-2 years old", "2-6 years old", "6-12 years old", "12-18 years old"
 	};
 	public static final String[] CONNECTIONS_ARRAY = new String[] {
 		"Patient", "Former Patient", "Parent", "Caregiver", "Family member", "Friend", 
