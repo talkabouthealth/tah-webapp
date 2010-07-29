@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import play.mvc.Controller;
+import play.mvc.With;
 
 import util.CommonUtil;
 
@@ -13,6 +14,7 @@ import models.TalkerBean;
 import models.ThankYouBean;
 import dao.TalkerDAO;
 
+@With(Secure.class)
 public class Actions extends Controller {
 	
 	public static void createThankYou(String toTalker, String note) {

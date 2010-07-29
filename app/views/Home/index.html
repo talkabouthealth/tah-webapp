@@ -13,7 +13,6 @@
 	<script type="text/javaScript" src="/public/javascripts/talkerhome.js" charset="utf-8"></script>    
 	<script type="text/javascript">
 		var username = "${talker.userName}";
-		var imgPath = "${talker.imagePath}";
 		var levelOfRecognition = "${talker.levelOfRecognition}";
 
 		$(document).ready(function() {
@@ -106,7 +105,7 @@
 		<div id="arearightinner">
 			<div id="rightcurvetop"></div>
 			<div id="rightmid">
-				<div id="imgarea"><img src="${talker.imagePath}" width="71" height="71" /></div>
+				<div id="imgarea"><img src="@{Image.show(talker.userName)}" width="71" height="71" /></div>
 				<div class="pinktext" id="imghead">
 					${talker.userName}<br />
 			  		<span class="blacktext14">${talker.levelOfRecognition}</span>
@@ -131,7 +130,7 @@
 					<div class="area">
 						<div class="arealeft2">
 							<a href="@{Profile.view(topic.talker.userName)}" class="bluetext11">
-								<img src="${topic.talker.imagePath}" width="71" height="71" border="0" />
+								<img src="@{Image.show(topic.talker.userName)}" width="71" height="71" border="0" />
 								<br /><span class="bluetext11">${topic.talker.userName}</span>
 							</a>
 				  			<br/>

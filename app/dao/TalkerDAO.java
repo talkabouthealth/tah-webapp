@@ -1,5 +1,7 @@
 package dao;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import models.CommentBean;
 import models.TalkerBean;
 import models.ThankYouBean;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.lucene.analysis.cn.ChineseTokenizer;
 import org.bson.types.ObjectId;
 
@@ -76,7 +79,6 @@ public class TalkerDAO {
 			.add("prefs", talker.profilePreferencesToInt())
 			.add("im", talker.getIm())
 			.add("im_uname", talker.getImUsername())
-			.add("img", talker.getImagePath())
 			.add("nfreq", talker.getNfreq())
 			.add("ntime", talker.getNtime())
 			.add("ctype", talker.getCtype())
@@ -87,6 +89,18 @@ public class TalkerDAO {
 			.add("bio", talker.getBio())
 			.add("ch_ages", talker.getChildrenAges())
 			.add("keywords", talker.getKeywords())
+			.get();
+		
+		DBObject talkerId = new BasicDBObject("_id", new ObjectId(talker.getId()));
+		//"$set" is used for updating fields
+		talkersColl.update(talkerId, new BasicDBObject("$set", talkerObject));
+	}
+	
+	public static void updateTalkerImage(TalkerBean talker, byte[] imageArray) {
+		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		
+		DBObject talkerObject = BasicDBObjectBuilder.start()
+			.add("img", imageArray)
 			.get();
 		
 		DBObject talkerId = new BasicDBObject("_id", new ObjectId(talker.getId()));
@@ -209,6 +223,21 @@ public class TalkerDAO {
 		return talkersInfoList;
 	}
 	
+	public static byte[] loadTalkerImage(String userName) {
+		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		
+		DBObject query = new BasicDBObject("uname", userName);
+		DBObject talkerDBObject = talkersColl.findOne(query, new BasicDBObject("img", 1));
+		
+		if (talkerDBObject == null) {
+			return null;
+		}
+		else {
+			return (byte[])talkerDBObject.get("img");
+		}
+	}
+	
+	
 	
 	/* --------------------- "Thank you" feature ----------------------------- */
 	public static void saveThankYou(ThankYouBean thankYouBean) {
@@ -265,11 +294,6 @@ public class TalkerDAO {
 			TalkerBean followerTalker = new TalkerBean();
 			followerTalker.setId(followerDBObject.get("_id").toString());
 			followerTalker.setUserName(followerDBObject.get("uname").toString());
-			//Test?
-			Object imgObject = followerDBObject.get("img");
-			if (imgObject != null) {
-				followerTalker.setImagePath((String)imgObject);
-			}
 			
 			followerList.add(followerTalker);
 		}
@@ -345,7 +369,6 @@ public class TalkerDAO {
 			DBObject fromTalkerDBObject = ((DBRef)commentDBObject.get("from")).fetch();
 			TalkerBean fromTalker = new TalkerBean();
 			fromTalker.setUserName((String)fromTalkerDBObject.get("uname"));
-			fromTalker.setImagePath((String)fromTalkerDBObject.get("img"));
 			commentBean.setFromTalker(fromTalker);
 			
 			//save children
@@ -383,6 +406,5 @@ public class TalkerDAO {
 		
 		System.out.println("cool");
 	}
-
 }
 

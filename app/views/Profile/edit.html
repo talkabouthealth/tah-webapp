@@ -125,7 +125,6 @@
 			#{form @Profile.save() , id:'updateprofile' }
 				<!-- We need this field to pass TalkerBean validation -->
 				<input type="hidden" id="talker.password" name="talker.password" value="pass" />
-				<input type="hidden" id="talker.imagePath" name="talker.imagePath" value="${talker.imagePath}" />
 				<div id="personalleft">
 					<div class="personalmain" style="text-align: center">
 						#{if "editForm".equals(flash.currentForm)}
@@ -322,7 +321,7 @@
 				</div>
 				<div id="personalright">
 					<div id="personalrightimg">
-						<img src="${talker.imagePath}" />
+						<img src="@{Image.show(talker.userName)}" />
 					</div>
 					<div class="bluetext12" id="personalrighttext">
 						<a href="@{Profile.image()}" class="bluetext12">Change Photo</a>

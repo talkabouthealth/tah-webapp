@@ -94,7 +94,7 @@
 								<div class="proleftwhitemid">
 									<div class="profilearea">
 										<div class="profileimg">
-											<img src="${talker.imagePath}" width="208" height="136" />
+											<img src="@{Image.show(talker.userName)}" width="208" height="136" />
 										</div>
 										<div class="profileimgtext">
 											<ul>
@@ -134,7 +134,7 @@
 											#{list items:talker.followingList, as:'following' }
 												<li>
 													<a href="@{Profile.view(following.userName)}" class="bluetext11">
-														<img src="${following.imagePath}" width="48" height="48" border="0" />
+														<img src="@{Image.show(following.userName)}" width="48" height="48" border="0" />
 														<br />${following.userName}
 													</a>
 												</li>
@@ -158,7 +158,7 @@
 											#{list items:talker.followerList, as:'follower' }
 												<li>
 													<a href="@{Profile.view(follower.userName)}" class="bluetext11">
-														<img src="${follower.imagePath}" width="48" height="48" border="0" />
+														<img src="@{Image.show(follower.userName)}" width="48" height="48" border="0" />
 														<br />${follower.userName}
 													</a>
 												</li>

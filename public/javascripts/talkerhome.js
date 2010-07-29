@@ -169,7 +169,7 @@ function postNewTopicResponse() {
 				areaLeft.innerHTML = 
 					//TODO: handle user data in other way?
 					'<a href="/'+username+'" class="bluetext11">'+
-					'<img src="'+imgPath+'" width="71" height="71" border="0" />'+
+					'<img src="/image/'+username+'" width="71" height="71" border="0" />'+
 					'<br /><span class="bluetext11">'+username+'</span>'+
 					'</a><br/>'+
 					'<span class="currenttext">'+levelOfRecognition+'</span>';

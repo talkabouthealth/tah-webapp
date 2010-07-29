@@ -3,7 +3,6 @@ package models;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
@@ -14,17 +13,14 @@ import org.bson.types.ObjectId;
 import play.data.validation.Email;
 import play.data.validation.Match;
 import play.data.validation.Required;
-import play.i18n.Messages;
 import util.ValidateData;
 
-import com.mongodb.BasicDBList;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
 public class TalkerBean implements Serializable {
 	
 	//TODO: move it to some constants?
-	public static final String DEFAULT_IMAGE = "/public/images/img1.gif"; 
 	public static final String[] CHILDREN_AGES_ARRAY = new String[] {
 		"New born", "1-2 years old", "2-6 years old", "6-12 years old", "12-18 years old"
 	};
@@ -111,7 +107,6 @@ public class TalkerBean implements Serializable {
 	private int ntime;
 	
 	private int childrenNum;
-	private String imagePath;
 	
 	private boolean newsletter;
 	private String accountType;
@@ -292,7 +287,6 @@ public class TalkerBean implements Serializable {
 		setMaritalStatus((String)talkerDBObject.get("mar_status"));
 		setCategory((String)talkerDBObject.get("category"));
 		setConnection((String)talkerDBObject.get("connection"));
-		setImagePath((String)talkerDBObject.get("img"));
 		setRegDate((Date)talkerDBObject.get("timestamp"));
 		parseProfilePreferences(parseInt(talkerDBObject.get("prefs")));
 		
@@ -330,7 +324,6 @@ public class TalkerBean implements Serializable {
 				DBObject fromTalkerDBObject = ((DBRef)thankYouDBObject.get("from")).fetch();
 				TalkerBean fromTalker = new TalkerBean();
 				fromTalker.setUserName((String)fromTalkerDBObject.get("uname"));
-				fromTalker.setImagePath((String)fromTalkerDBObject.get("img"));
 				
 				thankYouBean.setFrom(fromTalkerDBObject.get("_id").toString());
 				thankYouBean.setFromTalker(fromTalker);
@@ -349,7 +342,6 @@ public class TalkerBean implements Serializable {
 				DBObject followingDBOBject = followingDBRef.fetch();
 				followingTalker.setId(followingDBOBject.get("_id").toString());
 				followingTalker.setUserName(followingDBOBject.get("uname").toString());
-				followingTalker.setImagePath((String)followingDBOBject.get("img"));
 				
 				followingList.add(followingTalker);
 			}
@@ -550,21 +542,6 @@ public class TalkerBean implements Serializable {
 
 	public void setChildrenNum(int childrenNum) {
 		this.childrenNum = childrenNum;
-	}
-
-	public String getImagePath() {
-		if (imagePath == null || imagePath.trim().length() == 0) {
-			//return default
-			return DEFAULT_IMAGE;
-		}
-		return imagePath;
-	}
-
-	public void setImagePath(String imagePath) {
-		if (imagePath == null || imagePath.trim().length() == 0) {
-			imagePath = DEFAULT_IMAGE;
-		}
-		this.imagePath = imagePath;
 	}
 
 	public String getImUsername() {

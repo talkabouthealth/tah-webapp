@@ -20,6 +20,7 @@ import models.TalkerBean;
 import models.TalkerBean.ProfilePreference;
 import models.TalkerDiseaseBean;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -131,45 +132,27 @@ public class Profile extends Controller {
 	/* -------------- Image ------------------------ */
 	public static void image() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		String imagePath = talker.getImagePath();
+		String userName = talker.getUserName();
 		
-		render("@image", imagePath);
+		render("@image", userName);
 	}
 	
 	public static void uploadImage(String submitAction, File imageFile) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 		if ("Remove current image".equals(submitAction)) {
-			talker.setImagePath(null);
-			TalkerDAO.updateTalker(talker);
-			
-			image();
-			return;
+			TalkerDAO.updateTalkerImage(talker, null);
 		}
 		else {
-			//TODO: move it to separate directory or db?
-			String extension = FilenameUtils.getExtension(imageFile.getName());
-	    	if (extension == null) {
-	    		//default
-	    		extension = "gif";
-	    	}
-	    	String fileName = talker.getId()+"."+extension;
-	        
-	    	File destFile = new File(Play.getFile("public/images/pictures/"), fileName);
 	        try {
-				IOUtils.copy(new FileInputStream(imageFile), new FileOutputStream(destFile));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				TalkerDAO.updateTalkerImage(talker, FileUtils.readFileToByteArray(imageFile));
 			} catch (IOException e) {
 				e.printStackTrace();
-			} 
-	        
-	        talker.setImagePath("/public/images/pictures/"+fileName);
-	        TalkerDAO.updateTalker(talker);
-	        
-	        image();
-	        return;
+			}
 		}
+		
+		image();
+        return;
 	}
 	
 	/* -------------- Preferences ------------------------ */
