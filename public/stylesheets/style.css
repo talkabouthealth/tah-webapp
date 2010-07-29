@@ -540,3 +540,6 @@ h4 { float:left; width:221px; padding-bottom:7px;  font-weight: bold; font-size:
 .prosubheading { margin-top: 14px }
 /* Public info on Profile page - for multirows values */
 .personalinfo ul li { height: auto }
+/* Health Info on Profile page - wider columns */
+.profiletext2 { width: 300px }
+.profiletext2 ul li { width: 300px }

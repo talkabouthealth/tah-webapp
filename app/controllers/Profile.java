@@ -343,9 +343,25 @@ public class Profile extends Controller {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
-		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
 		
 		notFoundIfNull(talker);
+		
+		// Health info
+		//For now we have only one disease - Breast Cancer
+		final String diseaseName = "Breast Cancer";
+		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
+		if (talkerDisease != null) {
+			talkerDisease.setName(diseaseName);
+		}
+		
+		//Load all healthItems for this disease
+		//TODO: duplicate code?
+		Map<String, HealthItemBean> healthItemsMap = new HashMap<String, HealthItemBean>();
+		for (String itemName : new String[] {"symptoms", "tests", 
+				"procedures", "treatments", "sideeffects"}) {
+			HealthItemBean healthItem = HealthItemDAO.getHealthItemByName(itemName, diseaseName);
+			healthItemsMap.put(itemName, healthItem);
+		}
 		
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		talker.setActivityList(ActivityDAO.load(talker.getId()));
@@ -353,6 +369,6 @@ public class Profile extends Controller {
 		//TODO: Temporarily - later we'll load all list of topics
 		talker.setNumberOfTopics(TopicDAO.getNumberOfTopics(talker.getId()));
 		
-		render(talker, talkerDisease, currentTalker);
+		render(talker, talkerDisease, healthItemsMap, currentTalker);
 	}
 }

@@ -4,7 +4,7 @@
 			background:url(/public/images/inner_bg.gif) repeat-x top;
 		}
 		.seeall {
-			/* Temporarily - until we'll have pages for all "see all" */
+			/* Temporarily - until we have pages for all "see all" */
 			display: none;
 		}
 	</style>
@@ -304,56 +304,75 @@
 								${talker.bio}
 							</div>
 						#{/if}
-						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.HEALTH_INFO && talkerDisease) }
+						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.HEALTH_INFO) && talkerDisease }
 							<div class="prosubheading">
 								<div class="profileheading">Health Info</div>
 								<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 							</div>
 							<div class="profiletext2">
 								<ul>
-									<li class="blacktext12">Disease Type: <span class="blacktext">Type 1</span></li>
-									<li class="blacktext12">Stage of disease: <span class="blacktext">Stage 1</span></li>
-									<li class="blacktext12">Date of first symptom: <span class="blacktext">10/23/2007</span></li>
-									<li class="blacktext12">Date of diagnosis: <span class="blacktext">10/23/2007</span></li>
-									<li class="blacktext12">Recurrent:<span class="blacktext"> No</span></li>
+									<li class="blacktext12">Disease: <span class="blacktext">${talkerDisease.name}</span></li>
+									<li class="blacktext12">Disease Type: <span class="blacktext">${talkerDisease.type}</span></li>
+									<li class="blacktext12">Stage of disease: <span class="blacktext">${talkerDisease.stage}</span></li>
+									#{if talkerDisease.symptomDate}
+										<li class="blacktext12">Date of first symptom: 
+											<span class="blacktext">${talkerDisease.symptomDate?.format('MM/dd/yyyy')}</span>
+										</li>
+									#{/if}
+									#{if talkerDisease.diagnoseDate}
+										<li class="blacktext12">Date of diagnosis: 
+											<span class="blacktext">${talkerDisease.diagnoseDate?.format('MM/dd/yyyy')}</span>
+										</li>
+									#{/if}
+									<li class="blacktext12">Recurrent:
+										<span class="blacktext">${talkerDisease.recurrent?.yesno('Yes', 'No')}</span>
+									</li>
+									
 									<li class="blacktext12" style="padding-top:10px;"><strong>Initial Symptoms</strong></li>
-									<li class="blacktext12">Lump in breast</li>
+									#{ healthItemsList healthItem: healthItemsMap["symptoms"], talkerDisease: talkerDisease /}
+									#{list items: talkerDisease.otherHealthItems?.symptoms, as: 'item' }
+										<li class="blacktext12">${item}</li>
+									#{/list}
 									
 									<li class="blacktext12" style="padding-top:10px;"><strong>Tests</strong></li>
-									<li class="blacktext12">Mammogram</li>
-									<li class="blacktext12">Breast Biospy</li>
-									
-									<li class="blacktext12" style="padding-top:10px;"><strong>Procedures/Surgeries</strong></li>
-									<li class="blacktext12">Mastectomy</li>
-									<li class="blacktext12">Lumpectomy</li>
+									#{ healthItemsList healthItem:healthItemsMap["tests"], talkerDisease: talkerDisease /}
+									#{list items: talkerDisease.otherHealthItems?.tests, as: 'item' }
+										<li class="blacktext12">${item}</li>
+									#{/list}
 								</ul>
 							</div>
 							<div class="profiletext2">
 								<ul>
-								<li class="blacktext12"><strong>Disease symptoms and severity</strong></li>
-								<li class="blacktext12">Discoloration of moles - mild</li>
-								<li class="blacktext12">Vomiting: mild</li>
-								<li class="blacktext12">Vomiting: mild</li>
-								<li class="blacktext12">Vomiting: mild</li>
-								<li class="blacktext12">Vomiting: mild</li>
-								
-								<li class="blacktext12" style="padding-top:10px;"><strong>Medications and Treatments</strong></li>
-								<li class="blacktext12">Chemotherapy</li>
-								<li class="blacktext12">Herceptin</li>
-								
-								<li class="blacktext12" style="padding-top:10px;"><strong>Side effects from medications/treatments</strong></li>
-								<li class="blacktext12">Depression - severe</li>
-								<li class="blacktext12">Vomiting - severe</li>
-								
-								<li class="blacktext12" style="padding-top:10px;"><strong>Treatments/medications for side-effects</strong></li>
-								<li class="blacktext12">Aspirin</li>
+									<li class="blacktext12"><strong>Procedures/Surgeries</strong></li>
+									#{ healthItemsList healthItem:healthItemsMap["procedures"], talkerDisease: talkerDisease /}
+									#{list items: talkerDisease.otherHealthItems?.procedures, as: 'item' }
+										<li class="blacktext12">${item}</li>
+									#{/list}
+									
+									<li class="blacktext12" style="padding-top:10px;">
+										<strong>Medications and Treatments</strong>
+									</li>
+									#{ healthItemsList healthItem:healthItemsMap["treatments"], talkerDisease: talkerDisease /}
+									#{list items: talkerDisease.otherHealthItems?.treatments, as: 'item' }
+										<li class="blacktext12">${item}</li>
+									#{/list}
+									
+									<li class="blacktext12" style="padding-top:10px;">
+										<strong>Side effects from medications/treatments</strong>
+									</li>
+									#{ healthItemsList healthItem:healthItemsMap["sideeffects"], talkerDisease: talkerDisease /}
+									#{list items: talkerDisease.otherHealthItems?.sideeffects, as: 'item' }
+										<li class="blacktext12">${item}</li>
+									#{/list}
 								</ul>
 							</div>
 						#{/if}
 						<div id="thankyouSection" class="prosubheading">
 							<div class="profileheading">
 								Thank You's (${talker.thankYouList.size()})
-								<a id="displayThankYouText" href="javascript:giveaThankYou();" class="navybluetext12">Give a Thank You</a>
+								#{ifnot talker.userName.equals(currentTalker.userName) }
+									<a id="displayThankYouText" href="javascript:giveaThankYou();" class="navybluetext12">Give a Thank You</a>
+								#{/ifnot}
 							</div>
 							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 						</div>

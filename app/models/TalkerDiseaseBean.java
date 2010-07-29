@@ -8,6 +8,7 @@ import java.util.Set;
 public class TalkerDiseaseBean {
 	
 	private String uid;
+	private String name;
 	private String stage;
 	private String type;
 	private boolean recurrent;
@@ -47,6 +48,12 @@ public class TalkerDiseaseBean {
 	}
 	public void setUid(String uid) {
 		this.uid = uid;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 	public Set<String> getHealthItems() {
 		return healthItems;
