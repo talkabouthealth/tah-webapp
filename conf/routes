@@ -10,6 +10,8 @@ GET     /signup/?                               Application.signup
 POST    /register/?	                            Application.register
 GET     /forgotpassword/?                       Application.forgotPassword
 POST    /sendnewpassword/?						Application.sendNewPassword
+GET     /contactus/?							Application.contactus
+POST    /contactus/?							Application.sendContactEmail
 
 GET		/home/?									Home.index
 GET		/dashboard/?							Dashboard.index

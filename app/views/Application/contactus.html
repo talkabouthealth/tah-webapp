@@ -1,0 +1,56 @@
+#{extends 'static.html' /}
+#{set pageHeader:'Contact TalkAboutHealth' /}
+
+	<style type="text/css">
+		.signuptextarea {
+			width:120px;
+		}
+		.signupbutton {
+			margin-left: 140px;
+		}
+	</style>
+
+	#{if flash.success}
+	    <span class="success">Thanks! Message successfully sent.</span>
+	#{/if}
+	#{else}
+		#{form action: @Application.sendContactEmail() } 
+			#{ifErrors}
+				<span class="error">Validation failed! Please correct the following errors:</span><br/><br/>
+			   #{errors}
+			       <span class="error">${error}</span><br/>
+			   #{/errors}
+			   <br/>
+			#{/ifErrors}
+			<div id="signupleftarea">
+				<div class="signupmain">
+					<div class="signuptextarea"><span class="blacktext14">Name<span class="required">*</span></span></span></div>
+					<div class="personaltextfield">
+						<input name="name" type="text" class="personalfields" value="${flash.name}" />
+					</div>
+				</div>
+				<div class="signupmain">
+					<div class="signuptextarea"><span class="blacktext14">Your Email<span class="required">*</span></span></div>
+					<div class="personaltextfield">
+					  	<input name="email" type="text" class="personalfields" value="${flash.email}" />
+					</div>
+				</div>
+				<div class="signupmain">
+					<div class="signuptextarea"><span class="blacktext14">Subject</span></div>
+					<div class="personaltextfield">
+					  	<input name="subject" type="text" class="personalfields" value="${flash.subject}" />
+					</div>
+				</div>
+				<div class="signupmain">
+					<div class="signuptextarea"><span class="blacktext14">Message<span class="required">*</span></span></div>
+					<div class="textareabig">
+						<textarea name="message" cols="45" rows="5" class="textarea3">${flash.message}</textarea>
+					</div>
+				</div>
+				<div class="signupmain"></div>
+			</div>					
+			<div class="signupbutton">
+				<input type="submit" value="Submit" />
+			</div>
+		#{/form}
+	#{/else}

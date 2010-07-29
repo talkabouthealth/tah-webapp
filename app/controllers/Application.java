@@ -13,6 +13,7 @@ import java.util.Map;
 import models.TalkerBean;
 import models.TalkerBean.ProfilePreference;
 import play.data.validation.Email;
+import play.data.validation.Required;
 import play.data.validation.Valid;
 import play.mvc.Controller;
 import play.mvc.Scope.Session;
@@ -179,8 +180,41 @@ public class Application extends Controller {
         talker.setPassword(hashedPassword);
 	}
 	
+	/**
+	 * Redirects top panel to given url,
+	 * is used during OAuth 
+	 * @param url
+	 */
 	public static void redirectPage(String url) {
 		render(url);
 	}
 
+	
+	/* ----------------- Contact Us ------------------------- */
+	public static void contactus() {
+    	render();
+    }
+    
+    public static void sendContactEmail(String name, @Email String email, String subject, String message) {
+    	validation.required(name).message("Name is required");
+    	validation.required(email).message("Email is required");
+    	validation.required(message).message("Message is required");
+    	
+    	if(validation.hasErrors()) {
+            params.flash(); // add http parameters to the flash scope
+            validation.keep();
+            contactus();
+            return;
+        }
+    	
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("name", name);
+		vars.put("email", email);
+		vars.put("subject", subject);
+		vars.put("message", message);
+		EmailUtil.sendEmail(EmailUtil.CONTACTUS_TEMPLATE, EmailUtil.SUPPORT_EMAIL, vars);
+		
+		flash.success("ok");
+		contactus();
+    }
 }

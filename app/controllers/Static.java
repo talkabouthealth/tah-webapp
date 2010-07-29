@@ -24,7 +24,7 @@ public class Static extends Controller {
         render();
     }
     
-    public static void contactus() {
+    public static void feedback() {
     	render();
     }
     
