@@ -115,9 +115,11 @@
 					#{list items:mapTalkmiTopics.values(), as:'topic'}
 					<div class="area">
 						<div class="arealeft2">
-							<img src="${topic.talker.imagePath}" width="71" height="71" />
-							<br />
-				  			<span class="bluetext11">${topic.talker.userName}</span><br/>
+							<a href="@{Profile.view(topic.talker.userName)}" class="bluetext11">
+								<img src="${topic.talker.imagePath}" width="71" height="71" border="0" />
+								<br /><span class="bluetext11">${topic.talker.userName}</span>
+							</a>
+				  			<br/>
 				  			<span class="blacktext11">${topic.talker.levelOfRecognition}</span>
 				  		</div>
 						<div class="arearight">

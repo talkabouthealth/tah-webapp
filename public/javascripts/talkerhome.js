@@ -168,8 +168,10 @@ function postNewTopicResponse() {
 				var areaLeft = createDiv('arealeft2');
 				areaLeft.innerHTML = 
 					//TODO: handle user data in other way?
-					'<img src="'+imgPath+'" width="71" height="71" /><br />'+
-					'<span class="bluetext11">'+username+'</span><br/>'+
+					'<a href="/'+username+'" class="bluetext11">'+
+					'<img src="'+imgPath+'" width="71" height="71" border="0" />'+
+					'<br /><span class="bluetext11">'+username+'</span>'+
+					'</a><br/>'+
 					'<span class="currenttext">'+levelOfRecognition+'</span>';
 				newTopic.appendChild(areaLeft);
 				
