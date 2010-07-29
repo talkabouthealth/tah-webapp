@@ -21,11 +21,15 @@ public class Actions extends Controller {
 		ThankYouBean thankYouBean = new ThankYouBean();
 		thankYouBean.setTime(new Date());
 		thankYouBean.setNote(note);
-		thankYouBean.setFrom(talker.getId());
+		thankYouBean.setFromTalker(talker);
 		thankYouBean.setTo(toTalker);
 		TalkerDAO.saveThankYou(thankYouBean);
 		
 		CommonUtil.updateCachedTalker(session);
+		
+		//render html of new comment using tag
+		ThankYouBean _thankYou = thankYouBean;
+		render("tags/profileThankYou.html", _thankYou);
 	}
 	
 	public static void follow(String followingId) {

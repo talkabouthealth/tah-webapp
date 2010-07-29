@@ -214,7 +214,7 @@ public class TalkerDAO {
 	public static void saveThankYou(ThankYouBean thankYouBean) {
 		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
 		
-		DBRef fromTalkerRef = new DBRef(DBUtil.getDB(), TALKERS_COLLECTION, new ObjectId(thankYouBean.getFrom()));
+		DBRef fromTalkerRef = new DBRef(DBUtil.getDB(), TALKERS_COLLECTION, new ObjectId(thankYouBean.getFromTalker().getId()));
 		DBObject thankYouObject = BasicDBObjectBuilder.start()
 			.add("time", thankYouBean.getTime())
 			.add("note", thankYouBean.getNote())

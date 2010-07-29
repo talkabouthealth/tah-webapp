@@ -10,11 +10,6 @@
 	</style>
 	<script type="text/javascript"> 	 
    		$(document).ready(function() {
-   			$("#thankyoulink").fancybox({ 
-   	   			'hideOnContentClick': false,
-   	   			'showCloseButton': false
-   	   		});
-
    			$("#followActionlink").click(function() {
    				follow();
 	   		});
@@ -44,10 +39,13 @@
 
    			$.post("@{Actions.createThankYou()}", 
   				{ toTalker: '${talker.id}', note: noteText},
-  				function(data) {
-  					//ok?!
+  				function(html) {
+  					//put new thank you item in the list
+  					$(html).appendTo($("#thankyoulist"));
   				}
   			);
+
+   			$("#leavethankyouText").hide();
    		}
 
    		//saveProfileComment(String profileTalkerId, String parentId, String text)
@@ -73,45 +71,6 @@
    			$("#reply"+parentId).hide();
   			return false;
    		}
-
-   		function toggle() {
-   			var ele = document.getElementById("toggleText");
-   			var text = document.getElementById("displayText");
-   			if(ele.style.display == "block") {
-   		    		ele.style.display = "none";
-   				text.innerHTML = "Add Comment";
-   		  	}
-   			else {
-   				ele.style.display = "block";
-   				text.innerHTML = "Close";
-   			}
-   		} 
-
-   		function leavecomment() {
-   			var ele = document.getElementById("leavecommentText");
-   			var text = document.getElementById("displaycommentText");
-   			if(ele.style.display == "block") {
-   		    		ele.style.display = "none";
-   				text.innerHTML = "Leave a Comment";
-   		  	}
-   			else {
-   				ele.style.display = "block";
-   				text.innerHTML = "Close Comment Box";
-   			}
-   		} 
-
-   		function giveaThankYou() {
-   			var ele = document.getElementById("leavethankyouText");
-   			var text = document.getElementById("displayThankYouText");
-   			if(ele.style.display == "block") {
-   		    		ele.style.display = "none";
-   				text.innerHTML = "Give a Thank You";
-   		  	}
-   			else {
-   				ele.style.display = "block";
-   				text.innerHTML = "Close Thank You Box";
-   			}
-   		} 
    	</script>
 </head>
 <body>
@@ -149,7 +108,7 @@
 													${ currentTalker.followingList.contains(talker) ? 'Unfollow' : 'Follow'}
 													</a>
 												</li>
-												<li><a href="#thankyouSection" onclick="giveaThankYou()" id="thankyoulink2" 
+												<li><a href="#thankyouSection" onclick="$('#leavethankyouText').toggle();" id="thankyoulink2" 
 														class="navybluetext12">Give a 'Thanks you'</a></li>
 												<!-- 
 												<li><a href="#" class="navybluetext12">Send a private message</a></li>
@@ -371,7 +330,8 @@
 							<div class="profileheading">
 								Thank You's (${talker.thankYouList.size()})
 								#{ifnot talker.userName.equals(currentTalker.userName) }
-									<a id="displayThankYouText" href="javascript:giveaThankYou();" class="navybluetext12">Give a Thank You</a>
+									<a id="displayThankYouText" href="#" onclick="$('#leavethankyouText').toggle(); return false;"
+										class="navybluetext12">Give a Thank You</a>
 								#{/ifnot}
 							</div>
 							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
@@ -392,17 +352,9 @@
 								</li> 
 							</ul>
 						</div>
-						<div class="thankyoutextarea">
+						<div id="thankyoulist" class="thankyoutextarea">
 						#{list items:talker.thankYouList, as:'thankYou'}
-							<div class="profiletext2">
-								<div class="thankyoupic"><img width="48" height="48" src="${thankYou.fromTalker.imagePath}" border="0" /></div>
-								<div class="thankyoutext">
-									<a href="@{Profile.view(thankYou.fromTalker.userName)}" 
-										class="bluetext11">${thankYou.fromTalker.userName}</a><br/>
-								  	<span class="blacktext11">${thankYou.note}</span>
-								  	<span class="greytext11"><br/>${thankYou.time?.format('MMM dd HH:mm')}</span>
-								 </div>
-							</div>
+							#{ profileThankYou thankYou: thankYou /}
 						#{/list}
 						</div>
 						
