@@ -149,7 +149,7 @@ public class Application extends Controller {
 		talker.setAccountType(session.get("accounttype"));
 		talker.setAccountId(session.get("accountid"));
 		
-		//TODO: imUsername should be without '@' symbol!
+		//TODO: imUsername should be without '@' symbol! && check IMService also?
         String imUsername = talker.getImUsername();
         if (imUsername.trim().length() == 0) {
 			//if user didn't enter it - we parse from email
