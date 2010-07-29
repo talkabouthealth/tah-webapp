@@ -403,38 +403,41 @@ public class TalkerBean implements Serializable {
 	}
 	
 	/*
-		New Member - 0 to 5 conversations
-		Supporter - 5 to 15 conversations
-		Companion - 15 to 35 conversations
-		Advocate - 35 to 75 conversations
-		Fellow - 75 to 200 conversations
-		Benefactor - 200 to 500 conversations
-		Patron - 500 to 1,000 conversations
-		Champion - over 1,000 conversations
+		Recognition levels should be the following:
+		- New Member - 0 Thank you's
+		- Supporter - 1 to 2 Thank you's
+		- Companion - 3 to 5 Thank you's
+		- Advocate - 6- 10 Thank you's
+		- Fellow - 11- 20 Thank you's
+		- Benefactor - 21 - 40 Thank you's
+		- Patron 41- 100 Thank you's
+		- Champion - great than 100 Thank you's
 	*/
 	public String getLevelOfRecognition() {
-		String levelOfRecognition = "New Member";
+		int numberOfThankYous = thankYouList.size();
 		
 		//TODO: better implementation?
-		if (numberOfTopics >= 5 && numberOfTopics < 15) {
+		
+		String levelOfRecognition = "New Member";
+		if (numberOfThankYous >= 1 && numberOfThankYous < 3) {
 			levelOfRecognition = "Supporter";
 		}
-		else if (numberOfTopics >= 15 && numberOfTopics < 35) {
+		else if (numberOfThankYous >= 3 && numberOfThankYous < 6) {
 			levelOfRecognition = "Companion";
 		}
-		else if (numberOfTopics >= 35 && numberOfTopics < 75) {
+		else if (numberOfThankYous >= 6 && numberOfThankYous < 11) {
 			levelOfRecognition = "Advocate";
 		}
-		else if (numberOfTopics >= 75 && numberOfTopics < 200) {
+		else if (numberOfThankYous >= 11 && numberOfThankYous < 21) {
 			levelOfRecognition = "Fellow";
 		}
-		else if (numberOfTopics >= 200 && numberOfTopics < 500) {
+		else if (numberOfThankYous >= 21 && numberOfThankYous < 41) {
 			levelOfRecognition = "Benefactor";
 		}
-		else if (numberOfTopics >= 500 && numberOfTopics < 1000) {
+		else if (numberOfThankYous >= 41 && numberOfThankYous < 101) {
 			levelOfRecognition = "Patron";
 		}
-		else if (numberOfTopics >= 1000) {
+		else if (numberOfThankYous >= 101) {
 			levelOfRecognition = "Champion";
 		}
 		
