@@ -1,7 +1,6 @@
 #{extends 'main.html' /}
 	<link rel="stylesheet" href="/public/plugins/jquery-tooltip/jquery.tooltip.css" type="text/css" media="screen" />
-	<script type="text/javascript" 
-		src="/public/plugins/jquery-tooltip/jquery.tooltip.min.js" ></script>
+	<script type="text/javascript" src="/public/plugins/jquery-tooltip/jquery.tooltip.js" ></script>
 
 	<style type="text/css">
 		body {
@@ -12,14 +11,13 @@
 	<!-- scripts -->
 	<script language="javascript">
 		$(document).ready(function() {
-			$('#arealefttext').tooltip({
+			$('#exampleQuestionsLink').tooltip({
 				track: true,
 				delay: 0,
 				showURL: false,
-				showBody: " - ",
 				extraClass: "pretty",
 				left: 5,
-				top: -100
+				top: 15
 			});
 		});
 			
@@ -121,8 +119,13 @@
 				</form>
 			</div>
 			<div id="arealefttextarea">
-				<div id="arealefttext" title="After a mastectomy, what items come in handy?">
-					<p><span class="blacktext">&nbsp;Example Question</span></p>
+				<div id="arealefttext">
+					<p>
+						<a class="blacktext" href="#" id="exampleQuestionsLink"
+							title="After a mastectomy, what items come in handy?<br/>
+							What are some things you wish people had said or done?"
+							>&nbsp;Example Questions</a>
+					</p>
 				</div>
 				<div id="arealeftgrey">
 					<a href="#" onclick="signup()"><img src="/public/images/startbutton.gif" width="206" height="46" border="0" /></a>

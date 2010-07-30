@@ -1,7 +1,6 @@
 #{extends 'main.html' /}
 	<link rel="stylesheet" href="/public/plugins/jquery-tooltip/jquery.tooltip.css" type="text/css" media="screen" />
-	<script type="text/javascript" 
-		src="/public/plugins/jquery-tooltip/jquery.tooltip.min.js" ></script>
+	<script type="text/javascript" src="/public/plugins/jquery-tooltip/jquery.tooltip.js" ></script>
 
 	<style>
 		body {
@@ -16,14 +15,13 @@
 		var levelOfRecognition = "${talker.levelOfRecognition}";
 
 		$(document).ready(function() {
-			$('#examplequestion').tooltip({
+			$('#exampleQuestionsLink').tooltip({
 				track: true,
 				delay: 0,
 				showURL: false,
-				showBody: " - ",
 				extraClass: "pretty",
 				left: 5,
-				top: -100
+				top: 15
 			});
 		});
 		
@@ -92,7 +90,12 @@
 			</div>
 			<div id="arealefttextareainner">
 				<div id="examplequestion" title="What are some things you wish people had said or done?">
-					<p><span class="blacktext">&nbsp;Example Question</span></p>
+					<p>
+						<a class="blacktext" href="#" id="exampleQuestionsLink"
+							title="After a mastectomy, what items come in handy?<br/>
+							What are some things you wish people had said or done?"
+							>&nbsp;Example Questions</a>
+					</p>
 				</div>
 				<div id="greybg">
 					<a href="#" id="submitnewtopic" onClick="createTopic();" TABINDEX=2>
