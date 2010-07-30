@@ -43,7 +43,7 @@ public class TalkerDAO {
 				.add("pass", talker.getPassword())
 				.add("email", talker.getEmail())
 				.add("dob", talker.getDob())
-				.add("gender", talker.getGender())
+//				.add("gender", talker.getGender())
 				.add("timestamp",  Calendar.getInstance().getTime())
 				.add("im", talker.getIm())
 				.add("im_uname", talker.getImUsername())
@@ -51,8 +51,13 @@ public class TalkerDAO {
 				.add("newsletter", talker.isNewsletter())
 				.add("act_type", talker.getAccountType())
 				.add("act_id", talker.getAccountId())
-				.add("invites", 100)
+				.add("invites", talker.getInvitations())
 				.add("prefs", talker.profilePreferencesToInt())
+				
+				.add("nfreq", talker.getNfreq())
+				.add("ntime", talker.getNtime())
+				.add("ctype", talker.getCtype())
+				
 				.get();
 
 		talkersColl.save(talkerDBObject);

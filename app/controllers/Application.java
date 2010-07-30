@@ -28,7 +28,7 @@ public class Application extends Controller {
 	//TODO: maybe we can user Play! configuration for this?
 	private static final List<String> RESERVED_WORDS = Arrays.asList(new String[]{
 		"login", "logout", "signup", "register", "forgotpassword", "sendnewpassword", 
-		"home", "dashboard", "talk", "profile", "public",
+		"home", "dashboard", "talk", "profile", "public", "image", 
 		"actions", "application", "oauth", "security", "static", "topics",
 		"errors", 
 	});
@@ -141,9 +141,10 @@ public class Application extends Controller {
 		}
 	}
 
+    /**
+     * Initializes talker with different default values or parsed info
+     */
 	private static void prepareTalker(TalkerBean talker, Session session) {
-		//for now gender has default value
-		talker.setGender("M");
 		talker.setInvitations(100);
 		
 		//check if user signed up through Twitter or Facebook
@@ -158,6 +159,18 @@ public class Application extends Controller {
 			imUsername = talker.getEmail().substring(0, atIndex);
 			talker.setImUsername(imUsername);
 		}
+        
+        /*
+         	TODO: save settings as enums in App and Strings in DB?
+         	Default notification settings:
+			- 2 to 5 times per day
+			- whenever I am online
+			- types of conversations: check all
+        */
+        talker.setNfreq(3);
+        talker.setNtime(1);
+        talker.setCtype(new String[] {
+        		"Informational", "Advice and opinions", "Meet new people", "Emotional support"});
         
         /*
          	By default the following sections should be unchecked:
