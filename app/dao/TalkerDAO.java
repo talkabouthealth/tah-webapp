@@ -116,6 +116,10 @@ public class TalkerDAO {
 		return getByField("email", email);
 	}
 	
+	public static TalkerBean getById(String talkerId) {
+		return getByField("_id", new ObjectId(talkerId));
+	}
+	
 	/**
 	 * For now, there will only be the breast cancer community,
 	 * so this method returns total number of users (talkers) in the DB.

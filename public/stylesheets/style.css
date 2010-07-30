@@ -460,7 +460,7 @@ h4 { float:left; width:221px; padding-bottom:7px;  font-weight: bold; font-size:
 .thankyoutextarea { float:left; width: 600px; padding-bottom:10px; padding-top:10px; }
 .thankyoupic { float:left; width: 48px; text-align:center; }
 .thankyoutext { float:left; width: 180px; padding-left:8px; padding-top:2px; vertical-align:top;}
-.commentsarea { float:left; width: 350px; padding-bottom:10px; padding-top:10px;}
+.commentsarea { float:left; width: 500px; padding-bottom:10px; padding-top:10px;}
 .commentbox { float:left; width: 350px; padding-bottom:5px; padding-top:5px;}
 #toggleText { float:left; width: 400px; padding-bottom:5px; padding-top:5px;}
 #toggleText ul { float:left; width: 550px; list-style-type:none;}

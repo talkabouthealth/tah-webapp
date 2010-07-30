@@ -27,7 +27,13 @@
   					$("#followResult").html("Ok! ");
   					$("#followActionlink").html(data);
 
-  					$("#followActionImagelink img").attr("src", "/public/images/"+data.toLowerCase()+"_icon.gif");
+  					//$("#followActionImagelink img").attr("src", "/public/images/"+data.toLowerCase()+"_icon.gif");
+  					if (data == 'Follow') {
+  						$("#followActionImagelink").html('<img src="/public/images/follow_icon.gif" width="52" height="19" border="0"/>');
+  					}
+  					else {
+  						$("#followActionImagelink").html('Unfollow');
+  					}
   				}
   			);
    		}
@@ -40,6 +46,8 @@
    			$.post("@{Actions.createThankYou()}", 
   				{ toTalker: '${talker.id}', note: noteText},
   				function(html) {
+  					$("#firstthankyoumessage").hide();
+  					
   					//put new thank you item in the list
   					$(html).appendTo($("#thankyoulist"));
   				}
@@ -56,10 +64,11 @@
    			$.post("@{Actions.saveProfileComment()}", 
   				{ profileTalkerId: '${talker.id}', parentId: parentId, text: commentText},
   				function(html) {
+  	  				$("#firstcommentmessage").hide();
   					//put comment in the tree
   					if (parentId == '') {
   	  					//add as first element in the top
-  						$(html).insertAfter($("#reply"+parentId));
+  						$(html).prependTo($(".commentsarea"));
   					}
   					else {
   	  					//add as last element in subtree
@@ -110,10 +119,17 @@
 												</li>
 												<li><a href="#thankyouSection" onclick="$('#leavethankyouText').toggle();" id="thankyoulink2" 
 														class="navybluetext12">Give a 'Thank you'</a></li>
+
+												#{if talker.followingList.contains(currentTalker)}
+													<li>
+														<a href="#commentsSection" onclick="$('#reply').show();"
+															class="navybluetext12">Leave a comment</a>
+													</li>
+												#{/if}
+												
 												<!-- 
 												<li><a href="#" class="navybluetext12">Send a private message</a></li>
 												<li><a href="#" class="navybluetext12">Request to talk right now</a></li>
-												<li><a href="#" class="navybluetext12">Leave a comment</a></li>
 												-->
 											#{/ifnot}
 											</ul>
@@ -228,8 +244,12 @@
 							#{/if}
 							#{ifnot talker.userName.equals(currentTalker.userName) }
 								<a id="followActionImagelink" href="#" class="navybluetext12" style="margin-left:15px;">
-				<img src="/public/images/${ currentTalker.followingList.contains(talker) ? 'unfollow' : 'follow'}_icon.gif" 
-					width="52" height="19" border="0"/>
+									#{if currentTalker.followingList.contains(talker)}
+										Unfollow
+									#{/if}
+									#{else}
+										<img src="/public/images/follow_icon.gif" width="52" height="19" border="0"/>
+									#{/else}
 								</a>
 							#{/ifnot}
 						</div>
@@ -326,63 +346,78 @@
 								</ul>
 							</div>
 						#{/if}
-						<div id="thankyouSection" class="prosubheading">
-							<div class="profileheading">
-								Thank You's (${talker.thankYouList.size()})
-								#{ifnot talker.userName.equals(currentTalker.userName) }
-									<a id="displayThankYouText" href="#" onclick="$('#leavethankyouText').toggle(); return false;"
-										class="navybluetext12">Give a Thank You</a>
-								#{/ifnot}
-							</div>
-							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
-						</div>
-						<div id="leavethankyouText" style="display:none">
-							<ul>
-								<li class="blacktext14">Give a Thank You</li>
-								<li>
-									<input id="thankYouNote" name="thankYouNote" type="text" 
-										class="togglecommentfield" value="" size="6" />
-								</li>
-								<li>
-									<div class="personaltextarea" style="height:46px; padding-top:2px;">
-										<a href="#thankyouSection" onclick="thankYou()">
-											<img src="/public/images/addcomment_btn.gif" width="145" height="32" border="0" />
-										</a>
-									</div>
-								</li> 
-							</ul>
-						</div>
-						<div id="thankyoulist" class="thankyoutextarea">
-						#{list items:talker.thankYouList, as:'thankYou'}
-							#{ profileThankYou thankYou: thankYou /}
-						#{/list}
-						</div>
 						
-						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) }
-						<div id="commentsSection" class="prosubheading">
-							<div class="profileheading">
-								Comments
-								<a id="displaycommentText" href="#" onclick="$('#reply').toggle(); return false;"
-									 class="navybluetext12">Leave a new Comment</a>
+						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
+							<div id="thankyouSection" class="prosubheading">
+								<div class="profileheading">
+									Thank You's (${talker.thankYouList.size()})
+									#{ifnot talker.userName.equals(currentTalker.userName) }
+										<a id="displayThankYouText" href="#" onclick="$('#leavethankyouText').toggle(); return false;"
+											class="navybluetext12">Give a Thank You</a>
+									#{/ifnot}
+								</div>
+								<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 							</div>
-							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
-						</div>
-						<div class="commentsarea">
-							<div style="display: none;" id="reply" class="replyForm">
+							<div id="leavethankyouText" style="display:none">
 								<ul>
-									<li class="blacktext14">Comment:</li>
+									<li class="blacktext14">Give a Thank You</li>
 									<li>
-										<textarea class="togglecomment" rows="5" cols="45" id="replytext"></textarea>
-								    </li>
+										<input id="thankYouNote" name="thankYouNote" type="text" 
+											class="togglecommentfield" value="" size="6" />
+									</li>
 									<li>
-										<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
-											<a href="#" onclick="return saveProfileComment('');">
-												<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
+										<div class="personaltextarea" style="height:46px; padding-top:2px;">
+											<a href="#thankyouSection" onclick="thankYou()">
+												<img src="/public/images/addcomment_btn.gif" width="145" height="32" border="0" />
 											</a>
 										</div>
 									</li> 
 								</ul>
 							</div>
+							<div id="thankyoulist" class="thankyoutextarea">
+								#{list items:talker.thankYouList, as:'thankYou'}
+									#{ profileThankYou thankYou: thankYou /}
+								#{/list}
+								#{else}
+									<span id="firstthankyoumessage" class="blacktext12">
+										${talker.userName} does not have a 'Thank you', be the first to leave a 'Thank you'.
+									</span>
+								#{/else}
+							</div>
+						#{/if}
+						
+						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) }
+						<div id="commentsSection" class="prosubheading">
+							<div class="profileheading">
+								Comments
+								#{if talker.followingList.contains(currentTalker)}
+									<a id="displaycommentText" href="#" onclick="$('#reply').toggle(); return false;"
+									 class="navybluetext12">Leave a new Comment</a>
+								#{/if}
+							</div>
+							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
+						</div>
+						<div style="display: none;" id="reply" class="replyForm">
+							<ul>
+								<li class="blacktext14">Comment:</li>
+								<li>
+									<textarea class="togglecomment" rows="5" cols="45" id="replytext"></textarea>
+							    </li>
+								<li>
+									<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
+										<a href="#" onclick="return saveProfileComment('');">
+											<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
+										</a>
+									</div>
+								</li> 
+							</ul>
+						</div>
+						<div class="commentsarea">
+							#{if talker?.profileCommentsList?.isEmpty()}
+								<span id="firstcommentmessage" class="blacktext12">
+									${talker.userName} does not have any Comments, be the first to leave a Comment.
+								</span>
+							#{/if}
 							#{profileCommentsTree commentsList: talker.profileCommentsList /}
 						</div>
 						#{/if}
