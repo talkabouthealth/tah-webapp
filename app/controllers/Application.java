@@ -164,7 +164,6 @@ public class Application extends Controller {
 				- Personal Info
 				- Health Info
 				- Basic Info
-				- Bio
 				other sections should be checked
         */
         EnumSet<ProfilePreference> defaultPreferences = EnumSet.of(
@@ -172,7 +171,9 @@ public class Application extends Controller {
 	    		ProfilePreference.COMMENTS, 
 	    		ProfilePreference.CONVERSATIONS,
 	    		ProfilePreference.FOLLOWERS, 
-	    		ProfilePreference.FOLLOWING
+	    		ProfilePreference.FOLLOWING,
+	    		ProfilePreference.BIO,
+	    		ProfilePreference.THANKYOUS
 	    	);
         talker.saveProfilePreferences(defaultPreferences);
         

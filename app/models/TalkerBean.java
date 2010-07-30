@@ -35,17 +35,25 @@ public class TalkerBean implements Serializable {
 		 */
 	};
 	
+	/**
+	 * TODO: is it ok? Or find other solution?
+	 * An order of elements is important - displayed on Profile Preference page.
+	 * 
+	 * TODO: save as array in db?
+	 * Value is needed for conversion EnumSet to integer value (to save in DB).
+	 */
 	public enum ProfilePreference {
-		PERSONAL_INFO(1, "Display my Personal Info in my Public Profile"),
-		HEALTH_INFO(2, "Display my Health Info in my Public Profile"),
-		BASIC_INFO(4, "Display my Basic Info in my Public Profile (Recognition level, " +
+		PERSONAL_INFO(0, "Display my Personal Info in my Public Profile"),
+		HEALTH_INFO(1, "Display my Health Info in my Public Profile"),
+		BASIC_INFO(2, "Display my Basic Info in my Public Profile (Recognition level, " +
 				"No. of conversations)"),
-		FOLLOWERS(8, "Display my Followers in my Public Profile"),
-		FOLLOWING(16, "Display who I am Following in my Public Profile"),
-		CONVERSATIONS(32, "Display the Conversations I have started and joined in my Public Profile"),
-		COMMENTS(64, "Display my Comments in my Public Profile"),
-		BIO(128, "Display my Bio in my Public Profile"),
-		ACTIVITY_STREAM(256, "Display my Activity Stream in my Public Profile");
+		BIO(3, "Display my Bio in my Public Profile"),
+		FOLLOWERS(4, "Display my Followers in my Public Profile"),
+		FOLLOWING(5, "Display who I am Following in my Public Profile"),
+		THANKYOUS(6, "Display my Thank you's in my Public Profile"),
+		CONVERSATIONS(7, "Display the Conversations I have started and joined in my Public Profile"),
+		COMMENTS(8, "Display my Comments in my Public Profile"),
+		ACTIVITY_STREAM(9, "Display my Activity Stream in my Public Profile");
 		
 		private final int value;
 		private final String description;
@@ -363,7 +371,7 @@ public class TalkerBean implements Serializable {
 	public int profilePreferencesToInt() {
 		int dbValue = 0;
 		for (ProfilePreference preference : profilePreferences) {
-			dbValue |= preference.getValue();
+			dbValue |= (1 << preference.getValue());
 		}
 		return dbValue;
 	}
@@ -371,7 +379,7 @@ public class TalkerBean implements Serializable {
 	public void parseProfilePreferences(int dbValue) {
 		profilePreferences = EnumSet.noneOf(ProfilePreference.class);
 		for (ProfilePreference preference : ProfilePreference.values()) {
-			if ((dbValue & preference.getValue()) != 0) {
+			if ( (dbValue & (1 << preference.getValue())) != 0) {
 				profilePreferences.add(preference);
 			}
 		}
