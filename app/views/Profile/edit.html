@@ -198,9 +198,10 @@
 						<div class="personaltextarea"><span class="blacktext14">Gender</span></div>
 						<div class="personaltextfield">
 							<select class="personalfields" id="talker.gender" name="talker.gender">
+								<option value=""></option>
 								#{list items:['Male', 'Female'], as:'gender'}
 							  		<option value="${gender.charAt(0)}" 
-								    #{if talker.gender.charAt(0) == gender.charAt(0) } selected #{/if} 
+								    #{if talker.gender?.equals(""+gender.charAt(0)) } selected #{/if} 
 								    >${gender}</option>
 								#{/list}
 							</select>
@@ -238,11 +239,11 @@
 						<div class="personaltextarea"><span class="blacktext14">Martial Status</span></div>
 						<div class="personaltextfield">
 							<select id="talker.maritalStatus" name="talker.maritalStatus" class="personalfields">
-								#{list items:["Single", "Married/partnered relationship", "Divorced", "Separated", "Widowed"], as:'maritalStatus'}
-							  		<option value="${maritalStatus}" 
-								    #{if maritalStatus.equals(talker.maritalStatus) } selected #{/if} 
-								    >${maritalStatus}</option>
-								#{/list}
+		#{list items:["", "Single", "Married/partnered relationship", "Divorced", "Separated", "Widowed"], as:'maritalStatus'}
+	  		<option value="${maritalStatus}" 
+		    #{if maritalStatus.equals(talker.maritalStatus) } selected #{/if} 
+		    >${maritalStatus}</option>
+		#{/list}
 							</select>
 						</div>
 					</div>
@@ -275,7 +276,7 @@
 						<div class="personaltextarea"><span class="blacktext14">Patient/Caregiver/etc.</span></div>
 						<div class="personaltextfield">
 							<select size="1" name="talker.connection" class="personalfields" id="talker.connection">
-						  		<option selected value=''>Patient/Caregiver/etc.</option>
+						  		<option selected value=''></option>
 						  		#{list items:models.TalkerBean.CONNECTIONS_ARRAY, as:'connection'}
 								    <option value="${connection}"
 								    #{if connection.equals(talker.connection) } selected #{/if} 

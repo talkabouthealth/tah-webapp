@@ -213,7 +213,7 @@
 										<div class="profileimgtext personalinfo">
 											<ul>
 				<li class="blacktext12">Age: ${talker.age}</li>
-				<li class="blacktext12">Gender: ${talker.fullGender}</li>
+				#{if talker.gender}<li class="blacktext12">Gender: ${talker.fullGender}</li>#{/if}
 				#{if talker.state && talker.city}<li class="blacktext12">Location: ${talker.state}, ${talker.city}</li>#{/if}
 				#{if talker.maritalStatus}<li class="blacktext12">Marital Status: ${talker.maritalStatus}</li>#{/if}
 				<li class="blacktext12">No. of Children: ${talker.childrenNum}</li>
