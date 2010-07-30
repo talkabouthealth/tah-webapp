@@ -24,9 +24,9 @@
 			#{/ifErrors}
 			<div id="signupleftarea">
 				<div class="signupmain">
-					<div class="signuptextarea"><span class="blacktext14">Name<span class="required">*</span></span></span></div>
+					<div class="signuptextarea"><span class="blacktext14">Username</span></div>
 					<div class="personaltextfield">
-						<input name="name" type="text" class="personalfields" value="${flash.name}" />
+						<input name="name" type="text" class="personalfields" value="${flash.name ? flash.name : session.username}" />
 					</div>
 				</div>
 				<div class="signupmain">

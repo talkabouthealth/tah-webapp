@@ -197,7 +197,6 @@ public class Application extends Controller {
     }
     
     public static void sendContactEmail(String name, @Email String email, String subject, String message) {
-    	validation.required(name).message("Name is required");
     	validation.required(email).message("Email is required");
     	validation.required(message).message("Message is required");
     	
