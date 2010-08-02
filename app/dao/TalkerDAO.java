@@ -223,7 +223,7 @@ public class TalkerDAO {
 			if (latestNotification != null) {
 				talkerInfoMap.put("latestNotification", dateFormat.format(latestNotification));
 			}
-			long numOfNotifications = NotificationDAO.getNumOfNotifications(talkerInfoMap.get("id"));
+			long numOfNotifications = NotificationDAO.numOfNotificationsForDay(talkerInfoMap.get("id"));
 			talkerInfoMap.put("numOfNotifications", ""+numOfNotifications);
 			
 			talkersInfoList.add(talkerInfoMap);

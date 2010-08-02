@@ -5,10 +5,12 @@ import java.util.Map;
 
 import play.mvc.Controller;
 import play.mvc.With;
+import util.NotificationUtils;
 
 import com.tah.im.IMNotifier;
 import com.tah.im.singleton.OnlineUsersSingleton;
 
+import dao.ConfigDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
 
@@ -17,7 +19,7 @@ import dao.TopicDAO;
 public class Dashboard extends Controller {
 	
 	public static void index() {
-		//TODO: fix service counter
+		//TODO: fix service counter - negative values
 		
 		
 //		String sqlStatement = 
@@ -44,9 +46,12 @@ public class Dashboard extends Controller {
 		
 		OnlineUsersSingleton onlineUsersSingleton = OnlineUsersSingleton.getInstance();
 		
-		render(topicsList, topicsWithNotificationsList, talkersList, lastTopicId, onlineUsersSingleton);
+		boolean automaticNotification = ConfigDAO.getBooleanConfig(NotificationUtils.AUTOMATIC_NOTIFICATIONS_CONFIG);
+		
+		render(topicsList, topicsWithNotificationsList, talkersList, lastTopicId, onlineUsersSingleton, automaticNotification);
 	}
 		
+	//TODO: move to Notification Utils?
 	public static void notification(String[] uidArray, String topicId, String topic) {
 		IMNotifier imNotifier = IMNotifier.getInstance();
 		try {
@@ -66,5 +71,9 @@ public class Dashboard extends Controller {
 			isNewTopic = !lastTopic.equals(oldLastTopic);
 		}
 		renderText(Boolean.toString(isNewTopic));
+	}
+	
+	public static void setAutomaticNotification(boolean newValue) {
+		ConfigDAO.saveConfig(NotificationUtils.AUTOMATIC_NOTIFICATIONS_CONFIG, newValue);
 	}
 }

@@ -73,6 +73,10 @@ public class TopicDAO {
 			}
 			me.printStackTrace();
 		}
+		
+		String topicId = topicObject.get("_id").toString();
+		topic.setId(topicId);
+		
 		return (Integer)topicObject.get("tid");
 	}
 	

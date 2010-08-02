@@ -73,6 +73,21 @@
 	  				}
 	  			);
 			});
+
+			$("#automaticNotificationLink").click(function() {
+				var newValue = ($(this).text().indexOf("Turn on") != -1);
+				$.post("@{Dashboard.setAutomaticNotification()}",
+					{newValue : newValue},
+	  				function(data) {
+		  				if (newValue) {
+			  				$("#automaticNotificationLink").text("Turn off Automatic Notification");
+		  				}
+		  				else {
+		  					$("#automaticNotificationLink").text("Turn on Automatic Notification");
+		  				}
+	  				}
+	  			);
+			});
 		});
 
 		function updateServices(imService, delta) {
@@ -113,7 +128,8 @@
 	</script>
 </head>
 <body>
-		<a href="@{Secure.logout()}">Logout</a>
+		<a href="@{Secure.logout()}">Logout</a><br/>
+		<a href="#" id="automaticNotificationLink">Turn ${ automaticNotification ? 'off' : 'on' } Automatic Notification</a>
 		<div id="notificationbar">
 			Notification Bar<br/>
 			<span id="newtopicmessage" class="error"></span><br/>

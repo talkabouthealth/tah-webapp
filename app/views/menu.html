@@ -1,6 +1,9 @@
 #{if session.contains("username") }
 	<div class="chromestyle" id="chromemenu">
 		<ul>
+			#{if session.get("username").equals("admin") }
+				<li><a href="@{Dashboard.index()}"><b>Dashboard</b></a></li>
+			#{/if}
 			<li><a href="#" rel="dropmenu1">You</a></li>
 			<!--
 			<li><a href="#" rel="dropmenu2">Community</a></li>

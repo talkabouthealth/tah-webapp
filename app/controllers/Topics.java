@@ -12,6 +12,7 @@ import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
 import util.DBUtil;
+import util.NotificationUtils;
 import webapp.LiveConversationsSingleton;
 import dao.ActivityDAO;
 import dao.TopicDAO;
@@ -22,12 +23,6 @@ public class Topics extends Controller {
     public static void create(String newTopic) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-		// initiate new conversation room
-
-		// call notification module
-		// start new thread
-
-		// create topic bean
 		TopicBean topic = new TopicBean();
 		topic.setTopic(newTopic);
 		topic.setUid(talker.getId());
@@ -43,6 +38,9 @@ public class Topics extends Controller {
 			new Exception("DB Problem - Topic not inserted into DB").printStackTrace();
 			renderText("|");
 		}
+		
+		//send notifications if Automatic Notifications is On
+		NotificationUtils.sendAutomaticNotifications(topic.getId());
 		
 		// Save as talker activity
 		ActivityDAO.createActivity(topic.getUid(), "started the conversation: "+topic.getTopic());
