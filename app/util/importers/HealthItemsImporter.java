@@ -3,6 +3,7 @@ package util.importers;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import dao.HealthItemDAO;
@@ -51,7 +52,7 @@ public class HealthItemsImporter {
 					HealthItemDAO.saveTree(topLevel, null, DEFAULT_DISEASE_ID);
 				}
 				topLevel = new HealthItemBean(line.substring(2));
-				topLevelChildren = new HashSet<HealthItemBean>();
+				topLevelChildren = new LinkedHashSet<HealthItemBean>();
 				topLevel.setChildren(topLevelChildren);
 				
 				subLevel = null;
@@ -61,7 +62,7 @@ public class HealthItemsImporter {
 				subLevel = new HealthItemBean(line.substring(1));
 				topLevelChildren.add(subLevel);
 				
-				subLevelChildren = new HashSet<HealthItemBean>();
+				subLevelChildren = new LinkedHashSet<HealthItemBean>();
 				subLevel.setChildren(subLevelChildren);
 			}
 			else {

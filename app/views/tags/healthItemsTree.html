@@ -2,7 +2,13 @@
 #{set currentNum = 1 /}
 #{list items: _healthItem.children, as: 'item' }
 	#{if item.children?.size() > 0 }
-		<div class="healthitemCol${currentNum}"><span class="blacktext14"><strong>${item.name}</strong></span></div>
+		*{ 
+			We use 'Empty' item for ordering items.
+			Items with parent as top item ("tests", "procedures") should have 'Empty' as parent
+		}*
+		#{ifnot item.name.equals("Empty") }
+			<div class="healthitemCol${currentNum}"><span class="blacktext14"><strong>${item.name}</strong></span></div>
+		#{/ifnot}
 		#{ healthItemsTree healthItem: item, checkedItems: _checkedItems /}
 	#{/if}
 	#{else}

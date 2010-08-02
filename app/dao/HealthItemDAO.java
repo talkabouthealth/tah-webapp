@@ -55,14 +55,16 @@ public class HealthItemDAO {
 		DBObject healthItemDBObject = healthItemsColl.findOne(query);
 		
 		HealthItemBean healthItem = loadHealthItem(healthItemsColl, 
-				healthItemDBObject.get("_id").toString(), (String)healthItemDBObject.get("name"));
+				healthItemDBObject.get("_id").toString(), (String)healthItemDBObject.get("name"), true);
 		return healthItem;
 	}
 
 	/**
 	 * Recursively load health item with given id and name
+	 * @topItem - defines if this item is top item in the tree (like "tests", "procedures")
 	 */
-	private static HealthItemBean loadHealthItem(DBCollection healthItemsColl, String id, String name) {
+	private static HealthItemBean loadHealthItem(DBCollection healthItemsColl, String id, 
+			String name, boolean topItem) {
 		HealthItemBean healthItem = new HealthItemBean(id, name);
 		
 		DBRef parentRef = new DBRef(DBUtil.getDB(), HEALTH_ITEMS_COLLECTION, new ObjectId(id));
@@ -70,10 +72,18 @@ public class HealthItemDAO {
 		
 		// load all children
 		List<DBObject> childrenList = healthItemsColl.find(query).toArray();
-		Set<HealthItemBean> childrenSet = new TreeSet<HealthItemBean>();
+		Set<HealthItemBean> childrenSet = null;
+		if (topItem) {
+			//top items are in saved order
+			childrenSet = new LinkedHashSet<HealthItemBean>();
+		}
+		else {
+			//children items sorted alphabetically
+			childrenSet = new TreeSet<HealthItemBean>();
+		}
 		for (DBObject childrenDBObject : childrenList) {
 			HealthItemBean childHealthItem = loadHealthItem(healthItemsColl, 
-					childrenDBObject.get("_id").toString(), (String)childrenDBObject.get("name"));
+					childrenDBObject.get("_id").toString(), (String)childrenDBObject.get("name"), false);
 			childrenSet.add(childHealthItem);
 		}
 		healthItem.setChildren(childrenSet);	

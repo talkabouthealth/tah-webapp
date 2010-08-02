@@ -117,10 +117,14 @@
 													${ currentTalker.followingList.contains(talker) ? 'Unfollow' : 'Follow'}
 													</a>
 												</li>
-												<li><a href="#thankyouSection" onclick="$('#leavethankyouText').toggle();" id="thankyoulink2" 
-														class="navybluetext12">Give a 'Thank you'</a></li>
+												#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
+													<li><a href="#thankyouSection" onclick="$('#leavethankyouText').toggle();" 
+															id="thankyoulink2" 
+															class="navybluetext12">Give a 'Thank you'</a></li>
+												#{/if}
 
-												#{if talker.followingList.contains(currentTalker)}
+												#{if talker.followingList.contains(currentTalker) &&
+													talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) }
 													<li>
 														<a href="#commentsSection" onclick="$('#reply').show();"
 															class="navybluetext12">Leave a comment</a>
