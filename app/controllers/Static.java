@@ -24,8 +24,8 @@ public class Static extends Controller {
         render();
     }
     
-    public static void feedback() {
-    	render();
-    }
+//    public static void feedback() {
+//    	render();
+//    }
     
 }

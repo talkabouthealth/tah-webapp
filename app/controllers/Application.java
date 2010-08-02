@@ -110,7 +110,10 @@ public class Application extends Controller {
 
 		//Successful signup!
 		CommonUtil.sendIMInvitation(talker.getIm(), talker.getUserName());
-		EmailUtil.sendEmail(EmailUtil.WELCOME_TEMPLATE, talker.getEmail());
+		
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("username", talker.getUserName());
+		EmailUtil.sendEmail(EmailUtil.WELCOME_TEMPLATE, talker.getEmail(), vars);
 
 		//login
 		session.put("username", talker.getUserName());
