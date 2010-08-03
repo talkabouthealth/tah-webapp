@@ -73,7 +73,16 @@ public class Application extends Controller {
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("username", user.getUserName());
 		vars.put("newpassword", newPassword);
-		EmailUtil.sendEmail(EmailUtil.FORGOT_PASSWORD_TEMPLATE, user.getEmail(), vars);
+		boolean result = EmailUtil.sendEmail(EmailUtil.FORGOT_PASSWORD_TEMPLATE, user.getEmail(), vars);
+		
+		validation.isTrue(result).message("Not verified email or unknown error. " +
+				"Please contact support at <a href=\"mailto:"+EmailUtil.SUPPORT_EMAIL+"\">"+EmailUtil.SUPPORT_EMAIL+"</a>");
+		if(validation.hasErrors()) {
+            params.flash(); // add http parameters to the flash scope
+            validation.keep();
+            forgotPassword();
+            return;
+        }
 		
 		flash.success("ok");
 		forgotPassword();
@@ -113,7 +122,12 @@ public class Application extends Controller {
 		
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("username", talker.getUserName());
-		EmailUtil.sendEmail(EmailUtil.WELCOME_TEMPLATE, talker.getEmail(), vars);
+		vars.put("verify_code", talker.getVerifyCode());
+		EmailUtil.sendEmail(EmailUtil.VERIFICATION_TEMPLATE, talker.getEmail(), vars, null, false);
+		
+		vars = new HashMap<String, String>();
+		vars.put("username", talker.getUserName());
+		EmailUtil.sendEmail(EmailUtil.WELCOME_TEMPLATE, talker.getEmail(), vars, null, false);
 
 		//login
 		session.put("username", talker.getUserName());
@@ -195,6 +209,22 @@ public class Application extends Controller {
         
         String hashedPassword = CommonUtil.hashPassword(talker.getPassword());
         talker.setPassword(hashedPassword);
+        
+        //code for email validation
+        talker.setVerifyCode(CommonUtil.generateVerifyCode());
+	}
+	
+	public static void verifyEmail(String verifyCode) {
+		TalkerBean talker = TalkerDAO.getByVerifyCode(verifyCode);
+		
+		notFoundIfNull(talker);
+		
+		talker.setVerifyCode(null);
+		TalkerDAO.updateTalker(talker);
+		
+		CommonUtil.updateCachedTalker(session);
+		
+		render();
 	}
 	
 	/**
@@ -228,7 +258,7 @@ public class Application extends Controller {
 		vars.put("email", email);
 		vars.put("subject", subject);
 		vars.put("message", message);
-		EmailUtil.sendEmail(EmailUtil.CONTACTUS_TEMPLATE, EmailUtil.SUPPORT_EMAIL, vars);
+		EmailUtil.sendEmail(EmailUtil.CONTACTUS_TEMPLATE, EmailUtil.SUPPORT_EMAIL, vars, null, false);
 		
 		flash.success("ok");
 		contactus();

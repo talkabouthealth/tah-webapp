@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import models.TalkerBean;
 import play.cache.Cache;
@@ -151,5 +152,10 @@ public class CommonUtil {
 		}
 		
 		return itemsList;
+	}
+
+	public static String generateVerifyCode() {
+		//TODO check unique in db?
+		return UUID.randomUUID().toString();
 	}
 }

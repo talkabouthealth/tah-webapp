@@ -12,6 +12,7 @@ GET     /forgotpassword/?                       Application.forgotPassword
 POST    /sendnewpassword/?						Application.sendNewPassword
 GET     /contactus/?							Application.contactus
 POST    /contactus/?							Application.sendContactEmail
+GET		/verify/{verifyCode}					Application.verifyEmail
 
 GET		/home/?									Home.index
 GET		/dashboard/?							Dashboard.index

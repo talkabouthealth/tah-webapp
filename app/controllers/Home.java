@@ -90,7 +90,7 @@ public class Home extends Controller {
 		vars.put("username", talker.getUserName());
 		vars.put("invitation_note", note);
 		for (String email : emailsToSend) {
-			EmailUtil.sendEmail(EmailUtil.INVITATION_TEMPLATE, email, vars);
+			EmailUtil.sendEmail(EmailUtil.INVITATION_TEMPLATE, email, vars, null, false);
 		}
 		
 		//decrease invitations count

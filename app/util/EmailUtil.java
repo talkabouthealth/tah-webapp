@@ -2,7 +2,11 @@ package util;
 
 import java.util.Map;
 
+import models.TalkerBean;
+
 import com.sailthru.TriggerMailClient;
+
+import dao.TalkerDAO;
 
 /**
  * Uses Sailthru API, http://sailthru.com/
@@ -19,17 +23,22 @@ public class EmailUtil {
 	public static final String FORGOT_PASSWORD_TEMPLATE = "forgotpassword";
 	public static final String INVITATION_TEMPLATE = "invitation";
 	public static final String CONTACTUS_TEMPLATE = "contactus";
+	public static final String VERIFICATION_TEMPLATE = "verificate";
 	
-	public static void sendEmail(String templateName, String toEmail) {
-		sendEmail(templateName, toEmail, null, null);
+	public static boolean sendEmail(String templateName, String toEmail) {
+		return sendEmail(templateName, toEmail, null, null, true);
 	}
 	
-	public static void sendEmail(String templateName, String toEmail, Map<String, String> vars) {
-		sendEmail(templateName, toEmail, vars, null);
+	public static boolean sendEmail(String templateName, String toEmail, Map<String, String> vars) {
+		return sendEmail(templateName, toEmail, vars, null, true);
 	}
 	
-	public static void sendEmail(String templateName, String toEmail, 
-			Map<String, String> vars, Map<String, String> options) {
+	public static boolean sendEmail(String templateName, String toEmail, 
+			Map<String, String> vars, Map<String, String> options, boolean verify) {
+		if (verify && !isVerifiedEmail(toEmail)) {
+			return false;
+		}
+		
 		TriggerMailClient client;
 		try {
 			client = new TriggerMailClient(SAILTHRU_APIKEY, SAILTHRU_SECRET);
@@ -39,7 +48,21 @@ public class EmailUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println("Couldn't send email: "+e.getMessage());
+			return false;
 		}
+		
+		return true;
+	}
+
+	private static boolean isVerifiedEmail(String email) {
+		TalkerBean talker = TalkerDAO.getByEmail(email);
+		
+		if (talker == null) {
+			return false;
+		}
+		
+		//verified talker has empty Verify Code
+		return talker.getVerifyCode() == null;
 	}
 }
 

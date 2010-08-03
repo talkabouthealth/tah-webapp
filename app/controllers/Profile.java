@@ -29,6 +29,7 @@ import play.data.validation.Valid;
 import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
+import util.EmailUtil;
 import dao.ActivityDAO;
 import dao.DiseaseDAO;
 import dao.HealthItemDAO;
@@ -71,11 +72,10 @@ public class Profile extends Controller {
 			render("@edit", talker);
             return;
         }
-		talker.setDob(dateOfBirth);
 		
 		oldTalker.setUserName(talker.getUserName());
 		oldTalker.setEmail(talker.getEmail());
-		oldTalker.setDob(talker.getDob());
+		oldTalker.setDob(dateOfBirth);
 		oldTalker.setGender(talker.getGender());
 		oldTalker.setMaritalStatus(talker.getMaritalStatus());
 		oldTalker.setConnection(talker.getConnection());
@@ -92,10 +92,23 @@ public class Profile extends Controller {
 		oldTalker.setChildrenAges(talker.getChildrenAges());
 		oldTalker.setKeywords(talker.getKeywords());
 		
+		//TODO duplicates functionality?
+		if (!oldEmail.equals(talker.getEmail())) {
+			//send verification email
+			oldTalker.setVerifyCode(CommonUtil.generateVerifyCode());
+			
+			Map<String, String> vars = new HashMap<String, String>();
+			vars.put("username", oldTalker.getUserName());
+			vars.put("verify_code", oldTalker.getVerifyCode());
+			EmailUtil.sendEmail(EmailUtil.VERIFICATION_TEMPLATE, oldTalker.getEmail(), vars, null, false);
+		}
+		
 		TalkerDAO.updateTalker(oldTalker);
 		
+		CommonUtil.updateCachedTalker(session);
+		
 		flash.success("ok");
-		render("@edit", talker);
+		render("@edit", oldTalker);
 	}
 	
 	public static void changePassword(String curPassword, String newPassword, String confirmPassword) {
@@ -235,6 +248,7 @@ public class Profile extends Controller {
 		flash.put("currentForm", "accountsForm");
 		
 		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);
+		String oldEmail = sessionTalker.getEmail();
 		
 		//if something was changed - send new invitation
 		if (!sessionTalker.getIm().equals(talker.getIm()) 
@@ -247,7 +261,20 @@ public class Profile extends Controller {
 		sessionTalker.setImUsername(talker.getImUsername());
 		sessionTalker.setIm(talker.getIm());
 		
+		if (!oldEmail.equals(talker.getEmail())) {
+			//send verification email
+			sessionTalker.setVerifyCode(CommonUtil.generateVerifyCode());
+			
+			Map<String, String> vars = new HashMap<String, String>();
+			vars.put("username", sessionTalker.getUserName());
+			vars.put("verify_code", sessionTalker.getVerifyCode());
+			EmailUtil.sendEmail(EmailUtil.VERIFICATION_TEMPLATE, sessionTalker.getEmail(), vars, null, false);
+		}
+		
 		TalkerDAO.updateTalker(sessionTalker);
+		
+		CommonUtil.updateCachedTalker(session);
+		
 		flash.success("ok");
 		notifications();
 	}

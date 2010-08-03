@@ -146,7 +146,13 @@
 						</div>
 					</div>
 					<div class="personalmain">
-						<div class="personaltextarea"><span class="blacktext14">Email</span></div>
+						<div class="personaltextarea">
+							<span class="blacktext14">Email
+								#{if talker.verifyCode != null }
+									<span class="footerlink" style="color: red">(Not verified)</span>
+								#{/if}
+							</span>
+						</div>
 						<div class="personaltextfield">
 						  	<input name="talker.email" type="text" class="personalfields" id="talker.email" 
 									value="${talker.email}" />

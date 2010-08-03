@@ -82,7 +82,17 @@ public class TalkerBean implements Serializable {
 	@Required
 	@Email
 	private String email;
+	//code for email verification
+	private String verifyCode;
 	
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
+	}
+
 	private String im;
 	private String imUsername;
 	
@@ -273,6 +283,8 @@ public class TalkerBean implements Serializable {
 		setUserName((String)talkerDBObject.get("uname"));
 		setPassword((String)talkerDBObject.get("pass"));
 		setEmail((String)talkerDBObject.get("email"));
+		setVerifyCode((String)talkerDBObject.get("verify_code"));
+		
 		setIm((String)talkerDBObject.get("im"));
 		setImUsername((String)talkerDBObject.get("im_uname"));
 		setGender((String)talkerDBObject.get("gender"));

@@ -42,6 +42,8 @@ public class TalkerDAO {
 				.add("uname", talker.getUserName())
 				.add("pass", talker.getPassword())
 				.add("email", talker.getEmail())
+				.add("verify_code", talker.getVerifyCode())
+				
 				.add("dob", talker.getDob())
 //				.add("gender", talker.getGender())
 				.add("timestamp",  Calendar.getInstance().getTime())
@@ -71,6 +73,8 @@ public class TalkerDAO {
 			.add("uname", talker.getUserName())
 			.add("pass", talker.getPassword())
 			.add("email", talker.getEmail())
+			.add("verify_code", talker.getVerifyCode())
+			
 			.add("dob", talker.getDob())
 			.add("gender", talker.getGender())
 			.add("mar_status", talker.getMaritalStatus())
@@ -119,6 +123,10 @@ public class TalkerDAO {
 	
 	public static TalkerBean getByEmail(String email) {
 		return getByField("email", email);
+	}
+	
+	public static TalkerBean getByVerifyCode(String verifyCode) {
+		return getByField("verify_code", verifyCode);
 	}
 	
 	public static TalkerBean getById(String talkerId) {

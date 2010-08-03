@@ -143,6 +143,9 @@
 						<div class="notiblueareatop"></div>
 						<div class="signfields2">
 							<h1>Email</h1>
+							#{if talker.verifyCode != null }
+								<span class="footerlink" style="color: red">(Not verified)</span>
+							#{/if}
 							<ul>
 							  <li>
 							  	<input name="talker.email" type="text" class="textfields" id="talker.email"
