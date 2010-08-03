@@ -16,6 +16,7 @@ import play.data.validation.Email;
 import play.data.validation.Required;
 import play.data.validation.Valid;
 import play.mvc.Controller;
+import play.mvc.With;
 import play.mvc.Scope.Session;
 import util.CommonUtil;
 import util.EmailUtil;
@@ -212,19 +213,6 @@ public class Application extends Controller {
         
         //code for email validation
         talker.setVerifyCode(CommonUtil.generateVerifyCode());
-	}
-	
-	public static void verifyEmail(String verifyCode) {
-		TalkerBean talker = TalkerDAO.getByVerifyCode(verifyCode);
-		
-		notFoundIfNull(talker);
-		
-		talker.setVerifyCode(null);
-		TalkerDAO.updateTalker(talker);
-		
-		CommonUtil.updateCachedTalker(session);
-		
-		render();
 	}
 	
 	/**

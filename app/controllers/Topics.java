@@ -1,5 +1,6 @@
 package controllers;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -79,6 +80,12 @@ public class Topics extends Controller {
 		TopicBean topic = TopicDAO.getByTid(tid);
 		
 		notFoundIfNull(topic);
+		
+		//temporary test data
+		topic.setDetails("Suggestions for friends and family...");
+		topic.setTagList(Arrays.asList("support", "help", "testtag"));
+		topic.setSummary("Summary.........");
+		topic.setContributorList(Arrays.asList("murray", "situ"));
 		
 		render(talker, topic);
     }

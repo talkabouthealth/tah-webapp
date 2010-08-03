@@ -108,7 +108,8 @@ public class Profile extends Controller {
 		CommonUtil.updateCachedTalker(session);
 		
 		flash.success("ok");
-		render("@edit", oldTalker);
+		talker = oldTalker;
+		render("@edit", talker);
 	}
 	
 	public static void changePassword(String curPassword, String newPassword, String confirmPassword) {
@@ -380,5 +381,18 @@ public class Profile extends Controller {
 		talker.setNumberOfTopics(TopicDAO.getNumberOfTopics(talker.getId()));
 		
 		render(talker, talkerDisease, healthItemsMap, currentTalker);
+	}
+	
+	public static void verifyEmail(String verifyCode) {
+		TalkerBean talker = TalkerDAO.getByVerifyCode(verifyCode);
+		
+		notFoundIfNull(talker);
+		
+		talker.setVerifyCode(null);
+		TalkerDAO.updateTalker(talker);
+		
+		CommonUtil.updateCachedTalker(session);
+		
+		render();
 	}
 }

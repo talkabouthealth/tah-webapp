@@ -42,8 +42,8 @@ public class EmailUtil {
 		TriggerMailClient client;
 		try {
 			client = new TriggerMailClient(SAILTHRU_APIKEY, SAILTHRU_SECRET);
-			//TODO: replace to real "toEmail" later
-			client.send(templateName, "support@talkabouthealth.com", vars, options);
+			//TODO: other for DEV?
+			client.send(templateName, toEmail, vars, options);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

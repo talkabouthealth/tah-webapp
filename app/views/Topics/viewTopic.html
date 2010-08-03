@@ -33,7 +33,7 @@
 					${topic.details}
 					<br/>
 					#{list items: topic.tagList, as: 'tag'}
-						$tag&nbsp;&nbsp;&nbsp;
+						${tag}&nbsp;&nbsp;&nbsp;
 					#{/list}
 					<br/>
 					<a href="#">Re-start conversation</a>&nbsp;
@@ -44,7 +44,7 @@
 					${topic.summary}<br/>
 					Contributions by: 
 					#{list items: topic.contributorList, as: 'contributor'}
-						$contributor&nbsp;&nbsp;&nbsp;
+						${contributor}&nbsp;&nbsp;&nbsp;
 					#{/list}
 					<br/><br/>
 					<h3>Comments:</h3><br/>
@@ -55,6 +55,7 @@
 					<a href="#">Re-start conversation</a>&nbsp;
 					<a href="#">Start follow up conversation</a>&nbsp;
 					<br/>
+					
 				</div>
 				<div id="innerbot"></div>
 			</div>
