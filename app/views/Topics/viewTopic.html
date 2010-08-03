@@ -1,0 +1,94 @@
+#{extends 'main.html' /}
+	<style>
+		body {
+			background:url(/public/images/inner_bg.gif) repeat-x top;
+		}
+	</style>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			
+		});
+	</script>
+</head>
+
+<body>
+<div id="top_container">
+	<div id="top">
+		#{ logo /}
+		<div id="topnav">
+			#{include 'menu.html' /}
+		</div>
+	</div>
+</div>
+
+<div id="innerbanner"></div>
+<div id="bottom_container">
+	<div class="blacktext2" id="innerheading">${topic.topic}</div>
+	<div id="middle_area_inner">
+		<div id="innerboxarea">
+			<div id="innerleft">
+				<div id="innerlefttop"></div>
+				<div id="innermid">
+					${topic.details}
+					<br/>
+					#{list items: topic.tagList, as: 'tag'}
+						$tag&nbsp;&nbsp;&nbsp;
+					#{/list}
+					<br/>
+					<a href="#">Re-start conversation</a>&nbsp;
+					<a href="#">Start follow up conversation</a>&nbsp;
+					<a href="#">Flag conversation</a>&nbsp;
+					<br/><br/>
+					<h3>Conversation Summary:</h3><br/>
+					${topic.summary}<br/>
+					Contributions by: 
+					#{list items: topic.contributorList, as: 'contributor'}
+						$contributor&nbsp;&nbsp;&nbsp;
+					#{/list}
+					<br/><br/>
+					<h3>Comments:</h3><br/>
+					<br/><br/>
+					<br/><br/>
+					Conversation:
+					<br/>
+					<a href="#">Re-start conversation</a>&nbsp;
+					<a href="#">Start follow up conversation</a>&nbsp;
+					<br/>
+				</div>
+				<div id="innerbot"></div>
+			</div>
+			<div id="innerright">
+				<!-- 
+				<div id="searcharea">
+					<input name="" type="text" class="search"  value="Search Conversation" 
+						onclick="this.value=''" onblur="this.value='Search Conversation'"/>
+				</div>
+				<div id="searchright"><img src="/public/images/searchbutton.gif" width="34" height="35" /></div>
+				-->
+				<div class="innerrightbox" style="padding-top: 0px">
+					<div class="innerrightop"></div>
+					<div class="innerrighmid">
+						<span class="redtext">Tell us about you</span><br />
+						<span class="blacktext14">Tell us more about you 
+						to be notified of relevant conversations just for you.
+						</span><br /><br />
+						<a class="bluetext14" href="@{Profile.edit()}">Profile Information</a><br />
+						<a class="bluetext14" href="@{Profile.healthDetails()}">Health Information</a><br />
+						<a class="bluetext14" href="@{Profile.notifications()}">Notification Settings</a>
+					</div>
+					<div class="innerrighbot"></div>
+				</div>
+				<div class="innerrightbox">
+					<div class="innerrightop"></div>
+					<div class="innerrighmid">
+						<span class="redtext">Share TalkAboutHealth</span><br />
+			  			<span class="blacktext14">Invite friends to join the community</span><br /><br />
+						<a href="#" onclick="openInvitationsWindow()"><img border="0" src="/public/images/invite.gif" /></a>
+					</div>
+					<div class="innerrighbot"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

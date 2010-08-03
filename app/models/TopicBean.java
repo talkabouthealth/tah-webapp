@@ -1,6 +1,7 @@
 package models;
 
 import java.util.Date;
+import java.util.List;
 
 public class TopicBean {
 	private String id;
@@ -19,6 +20,46 @@ public class TopicBean {
 	private String uid;
 	private TalkerBean talker;
 	
+	//new fields
+	private String details;
+	private List<String> tagList;
+	
+	private String summary;
+	private List<String> contributorList;
+	
+	
+	public List<String> getContributorList() {
+		return contributorList;
+	}
+
+	public void setContributorList(List<String> contributorList) {
+		this.contributorList = contributorList;
+	}
+
+	public String getDetails() {
+		return details;
+	}
+
+	public void setDetails(String details) {
+		this.details = details;
+	}
+
+	public List<String> getTagList() {
+		return tagList;
+	}
+
+	public void setTagList(List<String> tagList) {
+		this.tagList = tagList;
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+
 	public TopicBean(){}
 	
 	public String getTopic() {

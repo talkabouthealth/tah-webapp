@@ -71,5 +71,16 @@ public class Topics extends Controller {
 		
     	renderText(lastTopicId);
     }
+    
+    public static void viewTopic(Integer tid) {
+    	notFoundIfNull(tid);
+		
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		TopicBean topic = TopicDAO.getByTid(tid);
+		
+		notFoundIfNull(topic);
+		
+		render(talker, topic);
+    }
 
 }
