@@ -10,13 +10,22 @@
 	</style>
 	<script type="text/javascript"> 	 
    		$(document).ready(function() {
-   			$("#followActionlink").click(function() {
+   			$("#followActionlink, #followActionImagelink").click(function() {
    				follow();
 	   		});
 
-   			$("#followActionImagelink").click(function() {
-   				follow();
+   			$("#thankyoulink2, #displayThankYouText").click(function() {
+   				$('#leavethankyouText').toggle(); 
+   				$('#thankYouNote').focus(); 
+   				return false;
 	   		});
+
+	   		$("#displaycommenttext").click(function() {
+	   			$('#reply').toggle();
+	   			$('#replytext').focus();
+	   			return false;
+	   		});
+
    		});
 
    		//follow(String followingId)
@@ -118,15 +127,14 @@
 													</a>
 												</li>
 												#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
-													<li><a href="#thankyouSection" onclick="$('#leavethankyouText').toggle();" 
-															id="thankyoulink2" 
+													<li><a href="#thankyouSection" id="thankyoulink2" 
 															class="navybluetext12">Give a 'Thank you'</a></li>
 												#{/if}
 
 												#{if talker.followingList.contains(currentTalker) &&
 													talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) }
 													<li>
-														<a href="#commentsSection" onclick="$('#reply').show();"
+														<a href="#commentsSection" onclick="$('#reply').show(); $('#replytext').focus();"
 															class="navybluetext12">Leave a comment</a>
 													</li>
 												#{/if}
@@ -356,7 +364,7 @@
 								<div class="profileheading">
 									Thank You's (${talker.thankYouList.size()})
 									#{ifnot talker.userName.equals(currentTalker.userName) }
-										<a id="displayThankYouText" href="#" onclick="$('#leavethankyouText').toggle(); return false;"
+										<a id="displayThankYouText" href="#" 
 											class="navybluetext12">Give a Thank You</a>
 									#{/ifnot}
 								</div>
@@ -395,8 +403,8 @@
 							<div class="profileheading">
 								Comments
 								#{if talker.followingList.contains(currentTalker)}
-									<a id="displaycommentText" href="#" onclick="$('#reply').toggle(); return false;"
-									 class="navybluetext12">Leave a new Comment</a>
+									<a id="displaycommentText" href="#commentsSection" 
+									 	class="navybluetext12">Leave a new Comment</a>
 								#{/if}
 							</div>
 							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>

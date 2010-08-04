@@ -227,10 +227,12 @@ public class Application extends Controller {
 	
 	/* ----------------- Contact Us ------------------------- */
 	public static void contactus() {
-    	render();
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		render(talker);
     }
     
-    public static void sendContactEmail(String name, @Email String email, String subject, String message) {
+    public static void sendContactEmail(@Email String email, String subject, String message) {
     	validation.required(email).message("Email is required");
     	validation.required(message).message("Message is required");
     	
@@ -242,7 +244,7 @@ public class Application extends Controller {
         }
     	
 		Map<String, String> vars = new HashMap<String, String>();
-		vars.put("name", name);
+		vars.put("name", session.get("username"));
 		vars.put("email", email);
 		vars.put("subject", subject);
 		vars.put("message", message);

@@ -23,18 +23,22 @@
 			   <br/>
 			#{/ifErrors}
 			<div id="signupleftarea">
-				<div class="signupmain">
-					<div class="signuptextarea"><span class="blacktext14">Username</span></div>
-					<div class="personaltextfield">
-						<input name="name" type="text" class="personalfields" value="${flash.name ? flash.name : session.username}" />
+				*{
+					- if user logged in, only show Subject and msg fields and 
+						populate in hidden fields the username and email
+					- if user not logged in, have the email, subject, and message fields.
+				}*
+				#{if session.contains("username") }
+					<input name="email" type="hidden" value="${talker.email}" />
+				#{/if}
+				#{else}
+					<div class="signupmain">
+						<div class="signuptextarea"><span class="blacktext14">Your Email<span class="required">*</span></span></div>
+						<div class="personaltextfield">
+						  	<input name="email" type="text" class="personalfields" value="${flash.email}" />
+						</div>
 					</div>
-				</div>
-				<div class="signupmain">
-					<div class="signuptextarea"><span class="blacktext14">Your Email<span class="required">*</span></span></div>
-					<div class="personaltextfield">
-					  	<input name="email" type="text" class="personalfields" value="${flash.email}" />
-					</div>
-				</div>
+				#{/else}
 				<div class="signupmain">
 					<div class="signuptextarea"><span class="blacktext14">Subject</span></div>
 					<div class="personaltextfield">

@@ -114,7 +114,9 @@ public class CommonUtil {
 	
 	public static TalkerBean updateCachedTalker(Session session) {
 		TalkerBean talker = TalkerDAO.getByUserName(session.get("username"));
-        Cache.set(session.getId() + "-talker", talker, "60mn");
+		if (talker != null) {
+			Cache.set(session.getId() + "-talker", talker, "60mn");
+		}
         
         return talker;
 	}
