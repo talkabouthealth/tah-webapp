@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
@@ -339,7 +340,7 @@ public class TalkerBean implements Serializable {
 	
 	private void parseThankYous(Collection<DBObject> thankYouDBList) {
 		//TODO: move thanks you load to separate function (to prevent delays)?
-		thankYouList = new ArrayList<ThankYouBean>();
+		List<ThankYouBean> thankYous = new ArrayList<ThankYouBean>();
 		if (thankYouDBList != null) {
 			for (DBObject thankYouDBObject : thankYouDBList) {
 				ThankYouBean thankYouBean = new ThankYouBean();
@@ -353,9 +354,12 @@ public class TalkerBean implements Serializable {
 				thankYouBean.setFrom(fromTalkerDBObject.get("_id").toString());
 				thankYouBean.setFromTalker(fromTalker);
 				
-				thankYouList.add(thankYouBean);
+				thankYous.add(thankYouBean);
 			}
 		}
+		
+		Collections.sort(thankYous);
+		thankYouList = thankYous;
 	}
 	
 	private void parseFollowing(Collection<DBRef> followingDBList) {

@@ -2,7 +2,7 @@ package models;
 
 import java.util.Date;
 
-public class ThankYouBean {
+public class ThankYouBean implements Comparable<ThankYouBean> {
 	
 	private Date time;
 	private String note;
@@ -12,6 +12,12 @@ public class ThankYouBean {
 	private String to;
 	
 	private TalkerBean fromTalker;
+	
+	//TODO: move to Comparator? - ThankYou, Activity, Comments?
+	public int compareTo(ThankYouBean o) {
+		//reverse order
+		return o.time.compareTo(time);
+	}
 	
 	public TalkerBean getFromTalker() {
 		return fromTalker;

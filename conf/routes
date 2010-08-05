@@ -28,7 +28,7 @@ GET		/image/{userName}						Image.show
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
 
-GET		/{userName}								Profile.view
+GET		/{userName}								PublicProfile.view
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}

@@ -3,10 +3,6 @@
 		body {
 			background:url(/public/images/inner_bg.gif) repeat-x top;
 		}
-		.seeall {
-			/* Temporarily - until we have pages for all "see all" */
-			display: none;
-		}
 	</style>
 	<script type="text/javascript"> 	 
    		$(document).ready(function() {
@@ -131,19 +127,18 @@
 															class="navybluetext12">Give a 'Thank you'</a></li>
 												#{/if}
 
-												#{if talker.followingList.contains(currentTalker) &&
-													talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) }
-													<li>
-														<a href="#commentsSection" id="commentlink2"
-															class="navybluetext12">Leave a comment</a>
-													</li>
-												#{/if}
-												
 												<!-- 
 												<li><a href="#" class="navybluetext12">Send a private message</a></li>
 												<li><a href="#" class="navybluetext12">Request to talk right now</a></li>
 												-->
 											#{/ifnot}
+											#{if (talker.followingList.contains(currentTalker) || talker.userName.equals(currentTalker.userName))  
+												&& talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) }
+												<li>
+													<a href="#commentsSection" id="commentlink2"
+														class="navybluetext12">Leave a comment</a>
+												</li>
+											#{/if}
 											</ul>
 										</div>
 									</div>
@@ -155,13 +150,13 @@
 								<div class="proleftwhitetop"></div>
 								<div class="proleftwhitemid">
 									<div class="followarea">
-									<div class="profileheading">Following</div>
+									<div class="profileheading">Following (${talker.followingList.size()})</div>
 									<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 									<div class="followingimg">
 										<ul>
-											#{list items:talker.followingList, as:'following' }
+											#{list items:talker.followingList.limit(8), as:'following' }
 												<li>
-													<a href="@{Profile.view(following.userName)}" class="bluetext11">
+													<a href="@{PublicProfile.view(following.userName)}" class="bluetext11">
 														<img src="@{Image.show(following.userName)}" width="48" height="48" border="0" />
 														${following.userName}
 													</a>
@@ -179,13 +174,13 @@
 								<div class="proleftwhitetop"></div>
 								<div class="proleftwhitemid">
 									<div class="followarea">
-									<div class="profileheading">Followers</div>
+									<div class="profileheading">Followers (${talker.followerList.size()})</div>
 									<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 									<div class="followingimg">
 										<ul>
-											#{list items:talker.followerList, as:'follower' }
+											#{list items:talker.followerList.limit(8), as:'follower' }
 												<li>
-													<a href="@{Profile.view(follower.userName)}" class="bluetext11">
+													<a href="@{PublicProfile.view(follower.userName)}" class="bluetext11">
 														<img src="@{Image.show(follower.userName)}" width="48" height="48" border="0" />
 														${follower.userName}
 													</a>
@@ -387,7 +382,7 @@
 								</ul>
 							</div>
 							<div id="thankyoulist" class="thankyoutextarea">
-								#{list items:talker.thankYouList, as:'thankYou'}
+								#{list items:talker.thankYouList.limit(4), as:'thankYou'}
 									#{ profileThankYou thankYou: thankYou /}
 								#{/list}
 								#{else}
@@ -402,7 +397,7 @@
 						<div id="commentsSection" class="prosubheading">
 							<div class="profileheading">
 								Comments
-								#{if talker.followingList.contains(currentTalker)}
+								#{if talker.followingList.contains(currentTalker) || talker.userName.equals(currentTalker.userName)}
 									<a id="displaycommentText" href="#commentsSection" 
 									 	class="navybluetext12">Leave a new Comment</a>
 								#{/if}
@@ -480,7 +475,7 @@
 								<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 							</div>
 							<div class="activitiestext">
-								#{list items:talker.activityList, as:'activity' }
+								#{list items:talker.activityList.limit(6), as:'activity' }
 									<span class="blacktext12">${talker.userName} ${activity.text}</span><br/>
 									<span class="greytext11">May 16 at 11:55am</span><br />
 								#{/list}
