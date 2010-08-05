@@ -50,4 +50,12 @@ public class PublicProfile extends Controller {
 		
 		render(talker, talkerDisease, healthItemsMap, currentTalker);
 	}
+	
+	public static void thankYous(String userName) {
+		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		
+		notFoundIfNull(talker);
+		
+		render(talker);
+	}
 }

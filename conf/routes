@@ -29,6 +29,7 @@ GET		/image/{userName}						Image.show
 GET     /public/                                staticDir:public
 
 GET		/{userName}								PublicProfile.view
+GET		/{userName}/thankyous					PublicProfile.thankyous
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}

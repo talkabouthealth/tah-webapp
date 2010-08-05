@@ -1,0 +1,41 @@
+#{ extends 'main.html' /}
+
+	<style>
+		body {
+			background:url(/public/images/inner_bg.gif) repeat-x top;
+		}
+		#signupleftarea, #thankyoulist {
+			width: auto;
+		} 
+		.profiletext2 {
+			width:250px;
+		}
+	</style>
+</head>
+<body>
+	<div id="top_container">
+		<div id="top">
+			#{ logo /}
+			<div id="topnav">
+				#{ include 'menu.html' /}
+			</div>
+		</div>
+	</div>
+	<div id="innerbanner"></div>
+	<div id="innermain">
+		<div class="blacktext2" id="innerheading">${talker.userName} Thank You's (${talker.thankYouList.size()})</div>
+		<div id="innerpersonalarea">
+			<div id="signupleftarea">
+				#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
+					<div id="thankyoulist" class="thankyoutextarea">
+						#{list items:talker.thankYouList.limit(3*10), as:'thankYou'}
+							#{ profileThankYou thankYou: thankYou /}
+						#{/list}
+					</div>
+				#{/if}
+				#{else}
+					<span class="blacktext14">${talker.userName} hid Thank You's</span>
+				#{/else}
+			</div>
+		</div>
+	</div>
