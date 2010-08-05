@@ -54,7 +54,8 @@ public class TalkerBean implements Serializable {
 		THANKYOUS(6, "Display my Thank you's in my Public Profile"),
 		CONVERSATIONS(7, "Display the Conversations I have started and joined in my Public Profile"),
 		COMMENTS(8, "Display my Comments in my Public Profile"),
-		ACTIVITY_STREAM(9, "Display my Activity Stream in my Public Profile");
+		ACTIVITY_STREAM(9, "Display my Activity Stream in my Public Profile"),
+		CONVERSATIONS_FOLLOWED(10, "Display my Conversations Followed in my Public Profile");
 		
 		private final int value;
 		private final String description;

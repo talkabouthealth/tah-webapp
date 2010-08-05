@@ -40,14 +40,14 @@
 						<div class="notiblueareamid">
 							<h1>How often do you want to be notified?</h1>
 							<ul>
-			#{list items:['more than 10 times per day', '5 to 10 times per day', '2 to 5 times per day', '1 time per day'], as:'notifyFreq'}
-				<li>
-					<input name="talker.nfreq" type="radio" value="${notifyFreq_index}" 
-					#{if talker.nfreq == notifyFreq_index} checked="true" #{/if}
-					class="radiobutton" /> 
-					<span class="blacktext" style="vertical-align:top;">${notifyFreq}</span>
-				</li>
-			#{/list}
+	#{list items:['more than 10 times per day', '5 to 10 times per day', '2 to 5 times per day', '1 time per day', 'Never'], as:'notifyFreq'}
+		<li>
+			<input name="talker.nfreq" type="radio" value="${notifyFreq_index}" 
+			#{if talker.nfreq == notifyFreq_index} checked="true" #{/if}
+			class="radiobutton" /> 
+			<span class="blacktext" style="vertical-align:top;">${notifyFreq}</span>
+		</li>
+	#{/list}
 							</ul>
 						</div>
 						<div class="notiblueareabot"></div>

@@ -61,7 +61,7 @@ public class Actions extends Controller {
 		//only people who you follow should be able to leave a 'Comment'
 		TalkerBean profileTalker = TalkerDAO.getById(profileTalkerId);
 		notFoundIfNull(profileTalker);
-		if (!profileTalker.getFollowingList().contains(talker)) {
+		if ( !(profileTalker.getFollowingList().contains(talker) || profileTalker.equals(talker)) ) {
 			forbidden();
 			return;
 		}

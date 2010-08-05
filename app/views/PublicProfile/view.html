@@ -428,7 +428,7 @@
 									${talker.userName} does not have any Comments, be the first to leave a Comment.
 								</span>
 							#{/if}
-							#{profileCommentsTree commentsList: talker.profileCommentsList /}
+							#{profileCommentsTree commentsList: talker.profileCommentsList.limit(4) /}
 						</div>
 						#{/if}
 						
@@ -472,7 +472,8 @@
 							</div>
 						#{/if}
 						}*
-						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.ACTIVITY_STREAM) && talker.activityList}
+						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.ACTIVITY_STREAM) 
+								&& talker.activityList}
 							<div class="prosubheading">
 								<div class="profileheading">${talker.userName} Activities</div>
 								<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
@@ -481,6 +482,19 @@
 								#{list items:talker.activityList.limit(6), as:'activity' }
 									<span class="blacktext12">${talker.userName} ${activity.text}</span><br/>
 									<span class="greytext11">May 16 at 11:55am</span><br />
+								#{/list}
+							</div>
+						#{/if}
+						
+						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.CONVERSATIONS_FOLLOWED) 
+								&& talker.activityList}
+							<div class="prosubheading">
+								<div class="profileheading">Conversations Followed</div>
+								<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
+							</div>
+							<div class="activitiestext">
+								#{list items:talker.activityList.limit(12), as:'activity' }
+									<a href="@{Topics.viewTopic(1)}" class="bluetext12">${activity.text}</a><br/>
 								#{/list}
 							</div>
 						#{/if}
