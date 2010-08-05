@@ -81,13 +81,29 @@ public class Topics extends Controller {
 		
 		notFoundIfNull(topic);
 		
+		TopicDAO.incrementTopicViews(topic.getId());
+		
 		//temporary test data
 		topic.setDetails("Suggestions for friends and family...");
-		topic.setTagList(Arrays.asList("support", "help", "testtag"));
+		topic.setTags(Arrays.asList("support", "help", "testtag"));
 		topic.setSummary("Summary.........");
-		topic.setContributorList(Arrays.asList("murray", "situ"));
+		topic.setSumContributors(Arrays.asList("murray", "situ"));
+//		topic.setMembers(Arrays.asList("kangaroo", "test1"));
 		
 		render(talker, topic);
+    }
+    
+    //follow or unfollow
+    public static void follow(String topicId) {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	
+    	renderText("Ok!");
+    }
+    
+    public static void updateTopicField(String name, String value) {
+    	//TODO: list of allowed fields?
+    	
+    	
     }
 
 }

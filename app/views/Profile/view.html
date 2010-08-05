@@ -19,8 +19,8 @@
    				$('#thankYouNote').focus(); 
    				return false;
 	   		});
-
-	   		$("#displaycommenttext").click(function() {
+	   		
+	   		$("#commentlink2, #displaycommentText").click(function() {
 	   			$('#reply').toggle();
 	   			$('#replytext').focus();
 	   			return false;
@@ -134,7 +134,7 @@
 												#{if talker.followingList.contains(currentTalker) &&
 													talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) }
 													<li>
-														<a href="#commentsSection" onclick="$('#reply').show(); $('#replytext').focus();"
+														<a href="#commentsSection" id="commentlink2"
 															class="navybluetext12">Leave a comment</a>
 													</li>
 												#{/if}

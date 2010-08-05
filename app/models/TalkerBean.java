@@ -206,6 +206,11 @@ public class TalkerBean implements Serializable {
 	public TalkerBean(String id) {
 		this.id = id;
 	}
+	
+	public TalkerBean(String id, String userName) {
+		this.id = id;
+		this.userName = userName;
+	}
 
 	@Override
 	public boolean equals(Object obj) {

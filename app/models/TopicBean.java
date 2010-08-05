@@ -22,19 +22,17 @@ public class TopicBean {
 	
 	//new fields
 	private String details;
-	private List<String> tagList;
+	private List<String> tags;
 	
 	private String summary;
-	private List<String> contributorList;
+	private List<String> sumContributors;
+	
+	private List<String> members;
+	private List<MessageBean> messages;
+	
+	private int views;
 	
 	
-	public List<String> getContributorList() {
-		return contributorList;
-	}
-
-	public void setContributorList(List<String> contributorList) {
-		this.contributorList = contributorList;
-	}
 
 	public String getDetails() {
 		return details;
@@ -42,14 +40,6 @@ public class TopicBean {
 
 	public void setDetails(String details) {
 		this.details = details;
-	}
-
-	public List<String> getTagList() {
-		return tagList;
-	}
-
-	public void setTagList(List<String> tagList) {
-		this.tagList = tagList;
 	}
 
 	public String getSummary() {
@@ -104,4 +94,46 @@ public class TopicBean {
 	public void setTalker(TalkerBean talker) {
 		this.talker = talker;
 	}
+
+	public List<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<String> tags) {
+		this.tags = tags;
+	}
+
+	public List<String> getMembers() {
+		return members;
+	}
+
+	public void setMembers(List<String> members) {
+		this.members = members;
+	}
+
+	public List<MessageBean> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(List<MessageBean> messages) {
+		this.messages = messages;
+	}
+	
+	public List<String> getSumContributors() {
+		return sumContributors;
+	}
+
+	public void setSumContributors(List<String> sumContributors) {
+		this.sumContributors = sumContributors;
+	}
+
+	public int getViews() {
+		return views;
+	}
+
+	public void setViews(int views) {
+		this.views = views;
+	}
+	
+	
 }

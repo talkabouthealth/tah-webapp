@@ -7,7 +7,19 @@
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			
+			$("#followTopicLink").click(function() {
+				$.post("@{Topics.follow()}", 
+	  				{ topicId: '${topic.id}'},
+	  				function(data) {
+	  					if ($("#followTopicLink").html() == "Follow Conversation") {
+	  						$("#followTopicLink").html("Unfollow Conversation");
+	  					}
+	  					else {
+	  						$("#followTopicLink").html("Follow Conversation");
+	  					}
+	  				}
+	  			);
+			});
 		});
 	</script>
 </head>
@@ -32,7 +44,7 @@
 				<div id="innermid">
 					${topic.details}
 					<br/>
-					#{list items: topic.tagList, as: 'tag'}
+					#{list items: topic.tags, as: 'tag'}
 						${tag}&nbsp;&nbsp;&nbsp;
 					#{/list}
 					<br/>
@@ -43,19 +55,29 @@
 					<h3>Conversation Summary:</h3><br/>
 					${topic.summary}<br/>
 					Contributions by: 
-					#{list items: topic.contributorList, as: 'contributor'}
+					#{list items: topic.sumContributors, as: 'contributor'}
 						${contributor}&nbsp;&nbsp;&nbsp;
 					#{/list}
 					<br/><br/>
 					<h3>Comments:</h3><br/>
 					<br/><br/>
 					<br/><br/>
-					Conversation:
+					<h3>Conversation:</h3>
 					<br/>
 					<a href="#">Re-start conversation</a>&nbsp;
 					<a href="#">Start follow up conversation</a>&nbsp;
 					<br/>
-					
+					${topic.creationDate?.format('M/d/yyyy')}
+					<br/>
+					Talkers:
+					#{list items: topic.members, as: 'member'}
+						<img src="@{Image.show(member)}" width="48" height="48" border="0" />
+						${member}&nbsp;&nbsp;&nbsp;
+					#{/list}
+					<br/><br/>
+					#{list items: topic.messages, as: 'message'}
+						${message.fromTalker.userName}: ${message.text}<br/>
+					#{/list}
 				</div>
 				<div id="innerbot"></div>
 			</div>
@@ -70,22 +92,17 @@
 				<div class="innerrightbox" style="padding-top: 0px">
 					<div class="innerrightop"></div>
 					<div class="innerrighmid">
-						<span class="redtext">Tell us about you</span><br />
-						<span class="blacktext14">Tell us more about you 
-						to be notified of relevant conversations just for you.
-						</span><br /><br />
-						<a class="bluetext14" href="@{Profile.edit()}">Profile Information</a><br />
-						<a class="bluetext14" href="@{Profile.healthDetails()}">Health Information</a><br />
-						<a class="bluetext14" href="@{Profile.notifications()}">Notification Settings</a>
+						<a href="#" id="followTopicLink">Follow Conversation</a>
 					</div>
 					<div class="innerrighbot"></div>
 				</div>
 				<div class="innerrightbox">
 					<div class="innerrightop"></div>
 					<div class="innerrighmid">
-						<span class="redtext">Share TalkAboutHealth</span><br />
-			  			<span class="blacktext14">Invite friends to join the community</span><br /><br />
-						<a href="#" onclick="openInvitationsWindow()"><img border="0" src="/public/images/invite.gif" /></a>
+						<b>Question Statistics</b><br/>
+						Latest Activity: <br/>
+						Views: ${topic.views}<br/>
+						Followed by  members<br/>
 					</div>
 					<div class="innerrighbot"></div>
 				</div>

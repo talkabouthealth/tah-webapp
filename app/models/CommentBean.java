@@ -7,15 +7,9 @@ import java.util.List;
  *	Bean for Profile Comments 
  *
  */
-public class CommentBean {
-	
-	private String id;
+public class CommentBean extends MessageBean {
 	
 	private String profileTalkerId;
-	private TalkerBean fromTalker;
-	
-	private String text;
-	private Date time;
 	
 	private String parentId;
 	private List<CommentBean> children;
@@ -24,7 +18,7 @@ public class CommentBean {
 	public CommentBean() {}
 
 	public CommentBean(String commentId) {
-		id = commentId;
+		super(commentId);
 	}
 	
 	@Override
@@ -36,15 +30,7 @@ public class CommentBean {
 		CommentBean other = (CommentBean)obj;
 		return id.equals(other.id);
 	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
+	
 	public String getProfileTalkerId() {
 		return profileTalkerId;
 	}
@@ -53,30 +39,6 @@ public class CommentBean {
 		this.profileTalkerId = profileTalkerId;
 	}
 
-	public TalkerBean getFromTalker() {
-		return fromTalker;
-	}
-
-	public void setFromTalker(TalkerBean fromTalker) {
-		this.fromTalker = fromTalker;
-	}
-
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
-	}
-
-	public Date getTime() {
-		return time;
-	}
-
-	public void setTime(Date time) {
-		this.time = time;
-	}
-	
 	public String getParentId() {
 		return parentId;
 	}

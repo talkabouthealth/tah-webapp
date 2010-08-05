@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.CommentBean;
+import models.MessageBean;
 import models.TalkerBean;
 import models.TopicBean;
 
@@ -16,6 +18,7 @@ import org.bson.types.ObjectId;
 
 import util.DBUtil;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
@@ -84,6 +87,7 @@ public class TopicDAO {
 		DBCollection topicsColl = DBUtil.getDB().getCollection(TOPICS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("tid", tid);
+		//TODO: DBObject -> BasicDBObject and update getters!
 		DBObject topicDBObject = topicsColl.findOne(query);
 		if (topicDBObject == null) {
 			return null;
@@ -95,6 +99,34 @@ public class TopicDAO {
     	topic.setTopic((String)topicDBObject.get("topic"));
     	topic.setCreationDate((Date)topicDBObject.get("cr_date"));
     	topic.setDisplayTime((Date)topicDBObject.get("disp_date"));
+    	topic.setViews((Integer)topicDBObject.get("views"));
+    	
+    	
+    	List<MessageBean> messages = new ArrayList<MessageBean>();
+    	//TODO update comments/messages name
+    	BasicDBList messagesDBList = (BasicDBList)topicDBObject.get("comments");
+    	if (messagesDBList != null) {
+    		for (Object obj : messagesDBList) {
+    			BasicDBObject messageDBObject = (BasicDBObject)obj;
+    			
+    			MessageBean message = new MessageBean();
+    			message.setText(messageDBObject.getString("text"));
+    			
+    			DBObject fromTalkerDBObject = ((DBRef)messageDBObject.get("uid")).fetch();
+    			TalkerBean fromTalker = new TalkerBean(fromTalkerDBObject.get("_id").toString(), (String)fromTalkerDBObject.get("uname"));
+    			message.setFromTalker(fromTalker);
+    			
+    			messages.add(message);
+    		}
+    	}
+    	topic.setMessages(messages);
+    	
+    	
+    	
+    	
+    	
+    	
+    	
 		return topic;
 	}
 	
@@ -197,6 +229,14 @@ public class TopicDAO {
 		return topicsInfoList;
 	}
 	
+	public static void incrementTopicViews(String topicId) {
+		DBCollection topicsColl = DBUtil.getDB().getCollection(TOPICS_COLLECTION);
+		
+		DBObject topicIdDBObject = new BasicDBObject("_id", new ObjectId(topicId));
+		topicsColl.update(topicIdDBObject, 
+				new BasicDBObject("$inc", new BasicDBObject("views", 1)));
+	}
+	
 	public static void main(String[] args) {
 		System.out.println(TopicDAO.getNumberOfTopics("4c2cb43160adf3055c97d061"));
 		
@@ -208,414 +248,6 @@ public class TopicDAO {
 //		topic.setDisplayTime(currentDate);
 //		TopicDAO.save(topic);
 	}
-
-	/* 
-	 	Unused DB code - if we'll need it we convert it later.
-	 	
-	 	
-	 	
-	 	public static Map<Integer, TopicBean> queryOlderTopics(String sMaxDisplayTime){
-		
-		Connection conn = null;
-		PreparedStatement ps = null;  // Or PreparedStatement if needed
-		ResultSet rs = null;
-		
-		try {
-		    Context initContext = new InitialContext();
-		    Context envContext  = (Context)initContext.lookup("java:/comp/env");
-		    DataSource ds = (DataSource)envContext.lookup(DATA_SOURCE_NAME);
-		    conn = ds.getConnection();
-		    //2009-02-25 22:48:22
-		    String sqlStatement = "SELECT topic_id, topic, display_time FROM topics WHERE display_time BETWEEN '0' AND '" + sMaxDisplayTime + "' ORDER BY display_time DESC LIMIT 40";		    
-			
-		    ps = conn.prepareStatement(sqlStatement);
-		    rs = ps.executeQuery();
-		    Map <Integer, TopicBean> mapTopics = new LinkedHashMap<Integer, TopicBean>(40);
-		    while (rs.next()){
-		    	TopicBean tb = new TopicBean();
-		    	tb.setTopicID(rs.getInt(1));
-		    	tb.setTopic(rs.getString(2));
-		    	
-		    	String sDisplayTime = rs.getString(3);
-		    	SimpleDateFormat SQL_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
-				Date dDisplayTime = SQL_DATE_FORMAT.parse(sDisplayTime);
-		    	tb.setDisplayTime(dDisplayTime);
-				mapTopics.put(tb.getTopicID(), tb);
-			}
-		    rs.close();
-		    rs = null;
-		    ps.close();
-		    ps = null;
-		    conn.close(); // Return to connection pool
-		    conn = null;  // Make sure we don't close it twice
-		   
-		    return mapTopics;
-		} catch (SQLException ex) {
-			    // handle any errors
-			    ex.printStackTrace();
-				return null;
-		} catch (Exception ex) {
-				ex.printStackTrace();
-				return null;
-		} finally {
-		    // Always make sure result sets and statements are closed,
-		    // and the connection is returned to the pool
-		    if (rs != null) {
-		      try { rs.close(); } catch (SQLException e) { ; }
-		      rs = null;
-		    }
-		    if (ps != null) {
-		      try { ps.close(); } catch (SQLException e) { ; }
-		      ps = null;
-		    }
-		    if (conn != null) {
-		      try { conn.close(); } catch (SQLException e) { ; }
-		      conn = null;
-		    }
-		}
-	}
-	
-	
-	
-	public static Map<Integer, TopicBean> queryNewerTopics(String sMinDisplayTime){
-		
-		Connection conn = null;
-		PreparedStatement ps = null;  // Or PreparedStatement if needed
-		ResultSet rs = null;
-		
-		Date dNow = Calendar.getInstance().getTime();
-		SimpleDateFormat SQL_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String now = SQL_DATE_FORMAT.format(dNow);
-		
-		try {
-		    Context initContext = new InitialContext();
-		    Context envContext  = (Context)initContext.lookup("java:/comp/env");
-		    DataSource ds = (DataSource)envContext.lookup(DATA_SOURCE_NAME);
-		    conn = ds.getConnection();
-		    //2009-02-25 22:48:22
-		    String sqlStatement = "SELECT topic_id, topic, display_time FROM topics WHERE display_time BETWEEN '" + sMinDisplayTime + "' AND '" + now + "' ORDER BY display_time ASC LIMIT 40";		    
-			
-		    ps = conn.prepareStatement(sqlStatement);
-		    rs = ps.executeQuery();
-		    Map <Integer, TopicBean> mapTopics = new LinkedHashMap<Integer, TopicBean>(40);
-		    
-		    rs.setFetchDirection(ResultSet.FETCH_REVERSE);
-		    rs.last();
-		    while (rs.previous()){
-		    	TopicBean tb = new TopicBean();
-		    	tb.setTopicID(rs.getInt(1));
-		    	tb.setTopic(rs.getString(2));
-		    	
-		    	String sDisplayTime = rs.getString(3);
-		    	Date dDisplayTime = SQL_DATE_FORMAT.parse(sDisplayTime);
-		    	tb.setDisplayTime(dDisplayTime);
-				mapTopics.put(tb.getTopicID(), tb);
-			}
-		    rs.close();
-		    rs = null;
-		    ps.close();
-		    ps = null;
-		    conn.close(); // Return to connection pool
-		    conn = null;  // Make sure we don't close it twice
-		    
-		    return mapTopics;
-		} catch (SQLException ex) {
-			    // handle any errors
-			    ex.printStackTrace();
-				return null;
-		} catch (Exception ex) {
-				ex.printStackTrace();
-				return null;
-		} finally {
-		    // Always make sure result sets and statements are closed,
-		    // and the connection is returned to the pool
-		    if (rs != null) {
-		      try { rs.close(); } catch (SQLException e) { ; }
-		      rs = null;
-		    }
-		    if (ps != null) {
-		      try { ps.close(); } catch (SQLException e) { ; }
-		      ps = null;
-		    }
-		    if (conn != null) {
-		      try { conn.close(); } catch (SQLException e) { ; }
-		      conn = null;
-		    }
-		}
-	}
-	
-	
-	public static Map<Integer, TopicBean> queryUserCreatedTopics(String uid){
-		
-		Connection conn = null;
-		PreparedStatement ps = null;  // Or PreparedStatement if needed
-		ResultSet rs = null;
-		
-		try {
-		    Context initContext = new InitialContext();
-		    Context envContext  = (Context)initContext.lookup("java:/comp/env");
-		    DataSource ds = (DataSource)envContext.lookup(DATA_SOURCE_NAME);
-		    conn = ds.getConnection();
-		    
-		    String sqlStatement = "SELECT topic_id, topic, creation_date FROM topics WHERE uid = '" + uid + "' ORDER BY topic_id DESC LIMIT 40";
-		    ps = conn.prepareStatement(sqlStatement);
-		    rs = ps.executeQuery();
-		    Map <Integer, TopicBean> mapTopics = new LinkedHashMap<Integer, TopicBean>(40);
-		    while (rs.next()){
-		    	TopicBean tb = new TopicBean();
-		    	tb.setTopicID(rs.getInt(1));
-		    	tb.setTopic(rs.getString(2));
-		    	String sCreationDate = rs.getString(3);
-		    	SimpleDateFormat SQL_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
-				Date dCreationDate = SQL_DATE_FORMAT.parse(sCreationDate);
-		    	tb.setCreationDate(dCreationDate);
-				mapTopics.put(tb.getTopicID(), tb);
-			}
-		    rs.close();
-		    rs = null;
-		    ps.close();
-		    ps = null;
-		    conn.close(); // Return to connection pool
-		    conn = null;  // Make sure we don't close it twice
-		    return mapTopics;
-		} catch (SQLException ex) {
-			    // handle any errors
-			    ex.printStackTrace();
-				return null;
-		} catch (Exception ex) {
-				ex.printStackTrace();
-				return null;
-		} finally {
-		    // Always make sure result sets and statements are closed,
-		    // and the connection is returned to the pool
-		    if (rs != null) {
-		      try { rs.close(); } catch (SQLException e) { ; }
-		      rs = null;
-		    }
-		    if (ps != null) {
-		      try { ps.close(); } catch (SQLException e) { ; }
-		      ps = null;
-		    }
-		    if (conn != null) {
-		      try { conn.close(); } catch (SQLException e) { ; }
-		      conn = null;
-		    }
-		}
-	}
-	public static String queryLastTalkTopic(String uid, String uid2){
-	
-		Connection conn = null;
-		PreparedStatement ps = null;  // Or PreparedStatement if needed
-		ResultSet rs = null;
-		
-		try {
-		    Context initContext = new InitialContext();
-		    Context envContext  = (Context)initContext.lookup("java:/comp/env");
-		    DataSource ds = (DataSource)envContext.lookup(DATA_SOURCE_NAME);
-		    conn = ds.getConnection();
-		    
-		    String sqlStatement = "SELECT conversations.topic_id FROM conversations INNER JOIN topics ON conversations.topic_id = topics.topic_id WHERE ((conversations.uid1 = '" + uid + "' AND conversations.uid2 = '" + uid2 + "') OR (conversations.uid2 = '" + uid + "' AND conversations.uid1 = '" + uid + "')) ORDER BY conversations.end_time DESC LIMIT 1";
-		    ps = conn.prepareStatement(sqlStatement);
-		    rs = ps.executeQuery();
-		    String sTopicID = null;
-		    while (rs.next()){
-		    	sTopicID = rs.getString(1);
-		    }
-		    rs.close();
-		    rs = null;
-		    ps.close();
-		    ps = null;
-		    conn.close(); // Return to connection pool
-		    conn = null;  // Make sure we don't close it twice
-		    return sTopicID;
-		} catch (SQLException ex) {
-			    // handle any errors
-			    ex.printStackTrace();
-				return null;
-		} catch (Exception ex) {
-				ex.printStackTrace();
-				return null;
-		} finally {
-		    // Always make sure result sets and statements are closed,
-		    // and the connection is returned to the pool
-		    if (rs != null) {
-		      try { rs.close(); } catch (SQLException e) { ; }
-		      rs = null;
-		    }
-		    if (ps != null) {
-		      try { ps.close(); } catch (SQLException e) { ; }
-		      ps = null;
-		    }
-		    if (conn != null) {
-		      try { conn.close(); } catch (SQLException e) { ; }
-		      conn = null;
-		    }
-		}
-	}
-	
-	
-	
-	public Map<Integer, TopicBean> queryNextTopics(String sLatestTimeStamp){
-		
-	Connection conn = null;
-	PreparedStatement ps = null;  // Or PreparedStatement if needed
-	ResultSet rs = null;
-	
-	Date dNow = Calendar.getInstance().getTime();
-	SimpleDateFormat SQL_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	String now = SQL_DATE_FORMAT.format(dNow);
-	
-	Date dLTS = dNow;
-	try {
-		dLTS = SQL_DATE_FORMAT.parse(sLatestTimeStamp);
-	} catch (ParseException e1) {
-		e1.printStackTrace();
-	}
-	////System.out.println("*** retrieveNextTopicServlet - Latest TimeStamp: Long: " + dLTS.getTime());
-	long lLTS = dLTS.getTime() + 1000;
-	////System.out.println("*** retrieveNextTopicServlet - Latest TimeStamp: " + lLTS);
-	dLTS.setTime(lLTS);
-	sLatestTimeStamp = SQL_DATE_FORMAT.format(dLTS);
-	////System.out.println("*** retrieveNextTopicServlet - Latest TimeStamp: " + sLatestTimeStamp);
-	
-	try {
-	    String sqlStatement = "SELECT topic_id, topic, display_time FROM topics WHERE display_time BETWEEN '" + sLatestTimeStamp + "' AND '" + now + "' ORDER BY display_time ASC LIMIT 40";		    
-		
-	    conn = ds.getConnection();
-	    ps = conn.prepareStatement(sqlStatement);
-	    rs = ps.executeQuery();
-	    Map <Integer, TopicBean> mapNextTopics = new LinkedHashMap<Integer, TopicBean>(40);
-	    
-	    while (rs.next()){
-	    	TopicBean tb = new TopicBean();
-	    	tb.setTopicID(rs.getInt(1));
-	    	tb.setTopic(rs.getString(2));
-	    	
-	    	String sDisplayTime = rs.getString(3);
-	    	Date dDisplayTime = SQL_DATE_FORMAT.parse(sDisplayTime);
-	    	tb.setDisplayTime(dDisplayTime);
-			mapNextTopics.put(tb.getTopicID(), tb);
-			////System.out.println("***queryNextTopics - queried: " + tb.getTopic());
-	    }
-	    rs.close();
-	    rs = null;
-	    ps.close();
-	    ps = null;
-	    conn.close(); // Return to connection pool
-	    conn = null;  // Make sure we don't close it twice
-	    
-	    return mapNextTopics;
-	} catch (SQLException ex) {
-		    // handle any errors
-		    ex.printStackTrace();
-			return null;
-	} catch (Exception ex) {
-			ex.printStackTrace();
-			return null;
-	} finally {
-	    // Always make sure result sets and statements are closed,
-	    // and the connection is returned to the pool
-	    if (rs != null) {
-	      try { rs.close(); } catch (SQLException e) { ; }
-	      rs = null;
-	    }
-	    if (ps != null) {
-	      try { ps.close(); } catch (SQLException e) { ; }
-	      ps = null;
-	    }
-	    if (conn != null) {
-	      try { conn.close(); } catch (SQLException e) { ; }
-	      conn = null;
-	    }
-	}
-}
-
-
-
-public Map<Integer, TopicBean> queryNextTopics(String sEarliestTimeStamp){
-		
-	Connection conn = null;
-	PreparedStatement ps = null;  // Or PreparedStatement if needed
-	ResultSet rs = null;
-	
-	SimpleDateFormat SQL_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	Date dBeginning;
-	try {
-		dBeginning = SQL_DATE_FORMAT.parse("2009-01-1 00:00:00");
-	} catch (ParseException e2) {
-		e2.printStackTrace();
-		return null;
-	}
-	String sBeginning = SQL_DATE_FORMAT.format(dBeginning);
-	Date dETS = dBeginning;
-	try {
-		dETS = SQL_DATE_FORMAT.parse(sEarliestTimeStamp);
-	} catch (ParseException e1) {
-		e1.printStackTrace();
-	}
-	////System.out.println("*** retrieveNextTopicServlet - Latest TimeStamp: Long: " + dLTS.getTime());
-	//long lLTS = dLTS.getTime() + 1000;
-	long lLTS = dETS.getTime();
-	////System.out.println("*** retrieveNextTopicServlet - Latest TimeStamp: " + lLTS);
-	dETS.setTime(lLTS);
-	sEarliestTimeStamp = SQL_DATE_FORMAT.format(dETS);
-	
-	try {
-	    String sqlStatement = "SELECT topic_id, topic, display_time FROM topics WHERE display_time BETWEEN '" + sBeginning + "' AND '" + sEarliestTimeStamp + "' ORDER BY display_time DESC LIMIT 40";		    
-	    //System.out.println("***MoreOldTopicServlet:  SQL: " + sqlStatement);
-		
-	    conn = ds.getConnection();
-	    ps = conn.prepareStatement(sqlStatement);
-	    rs = ps.executeQuery();
-	    Map <Integer, TopicBean> mapNextTopics = new LinkedHashMap<Integer, TopicBean>(40);
-	    
-	    while (rs.next()){
-	    	TopicBean tb = new TopicBean();
-	    	tb.setTopicID(rs.getInt(1));
-	    	tb.setTopic(rs.getString(2));
-	    	
-	    	String sDisplayTime = rs.getString(3);
-	    	Date dDisplayTime = SQL_DATE_FORMAT.parse(sDisplayTime);
-	    	tb.setDisplayTime(dDisplayTime);
-			mapNextTopics.put(tb.getTopicID(), tb);
-			////System.out.println("***queryNextTopics - queried: " + tb.getTopic());
-	    }
-	    rs.close();
-	    rs = null;
-	    ps.close();
-	    ps = null;
-	    conn.close(); // Return to connection pool
-	    conn = null;  // Make sure we don't close it twice
-	    
-	    return mapNextTopics;
-	} catch (SQLException ex) {
-		    // handle any errors
-		    ex.printStackTrace();
-			return null;
-	} catch (Exception ex) {
-			ex.printStackTrace();
-			return null;
-	} finally {
-	    // Always make sure result sets and statements are closed,
-	    // and the connection is returned to the pool
-	    if (rs != null) {
-	      try { rs.close(); } catch (SQLException e) { ; }
-	      rs = null;
-	    }
-	    if (ps != null) {
-	      try { ps.close(); } catch (SQLException e) { ; }
-	      ps = null;
-	    }
-	    if (conn != null) {
-	      try { conn.close(); } catch (SQLException e) { ; }
-	      conn = null;
-	    }
-	}
-}
-	 
-	 
-	 */
-	
 
 }
 
