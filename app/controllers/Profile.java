@@ -92,7 +92,7 @@ public class Profile extends Controller {
 		oldTalker.setChildrenAges(talker.getChildrenAges());
 		oldTalker.setKeywords(talker.getKeywords());
 		
-		//TODO duplicates functionality?
+		//TODO duplicates functionality? - move email creation to EmailUtil?
 		if (!oldEmail.equals(talker.getEmail())) {
 			//send verification email
 			oldTalker.setVerifyCode(CommonUtil.generateVerifyCode());
@@ -361,5 +361,16 @@ public class Profile extends Controller {
 		CommonUtil.updateCachedTalker(session);
 		
 		render();
+	}
+	
+	public static void resendVerificationEmail() {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("username", talker.getUserName());
+		vars.put("verify_code", talker.getVerifyCode());
+		EmailUtil.sendEmail(EmailUtil.VERIFICATION_TEMPLATE, talker.getEmail(), vars, null, false);
+		
+		renderText("Ok! Email sent.");
 	}
 }

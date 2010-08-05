@@ -6,6 +6,19 @@
 	}
 </style>
 <script type="text/javascript" charset="utf-8">
+
+	$(document).ready(function() {
+		$("#verificationResendLink").click(function() {
+			$(this).html("Sending...");
+			$.post("@{Profile.resendVerificationEmail()}", {},
+				function(data) {
+					$("#verificationResendLink").hide();
+					$("#verificationResendResult").html(data).show();
+				}
+			);
+		});
+	});
+	
 	function validatePasswordForm() {
 		var reason = "";
 		
@@ -147,15 +160,16 @@
 					</div>
 					<div class="personalmain">
 						<div class="personaltextarea">
-							<span class="blacktext14">Email
-								#{if talker.verifyCode != null }
-									<span class="footerlink" style="color: red">(Not verified)</span>
-								#{/if}
-							</span>
+							<span class="blacktext14">Email</span>
 						</div>
-						<div class="personaltextfield">
+						<div class="personaltextfield" style="height: auto">
 						  	<input name="talker.email" type="text" class="personalfields" id="talker.email" 
-									value="${talker.email}" />
+									value="${talker.email}" /><br/>
+							#{if talker.verifyCode != null }
+								<a href="#" id="verificationResendLink" 
+									class="bluetext12">(email not verified - resend verification e-mail)</a>
+								<span id="verificationResendResult" class="blacktext12"></span>
+							#{/if}
 						</div>
 					</div>
 					<div class="personalmain">
