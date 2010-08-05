@@ -13,11 +13,12 @@ import dao.TalkerDAO;
  * @author kindcoder
  */
 public class EmailUtil {
-	
+	//TODO: move to Play! configuration?
 	private static final String SAILTHRU_APIKEY = "4007bc4d4b48586353eb44012172eaf3";
 	private static final String SAILTHRU_SECRET = "4ba0a437f0f138fceba76dac5c33e567";
 	
 	public static final String SUPPORT_EMAIL = "support@talkabouthealth.com";
+	public static final String MURRAY_EMAIL = "murrayjones@gmail.com";
 	
 	public static final String WELCOME_TEMPLATE = "welcome";
 	public static final String FORGOT_PASSWORD_TEMPLATE = "forgotpassword";

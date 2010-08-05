@@ -2,8 +2,12 @@ package util;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import models.TalkerBean;
 
 import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry.Entry;
 import com.tah.im.IMNotifier;
@@ -12,11 +16,12 @@ import com.tah.im.singleton.OnlineUsersSingleton;
 
 import dao.ConfigDAO;
 import dao.NotificationDAO;
+import dao.TalkerDAO;
 
 public class NotificationUtils {
 	
 	public static final String AUTOMATIC_NOTIFICATIONS_CONFIG = "AutomaticNotifications";
-
+	
 	/**
 	 * Rules are:
 	 * - notify 10 latest people who came online
@@ -33,7 +38,17 @@ public class NotificationUtils {
 		//TODO: find 10 latest people who came online?
 		Map<String, UserInfo> onlineUsers = onlineUsersSingleton.getOnlineUserMap();
 		
-		List<String> talkersForNotification = new ArrayList<String>();
+		Set<String> talkersForNotification = new HashSet<String>();
+		
+		//With automatic notification, always send a notification to murrayjones@gmail.com
+		TalkerBean murrayTalker = TalkerDAO.getByEmail(EmailUtil.MURRAY_EMAIL);
+		if (murrayTalker == null) {
+			//TODO: log error
+		}
+		else {
+			talkersForNotification.add(murrayTalker.getId());
+		}
+		
 		for (UserInfo userInfo : onlineUsers.values()) {
 			//notifications for last 3 hours and day
 			Calendar threeHoursBeforeNow = Calendar.getInstance();
