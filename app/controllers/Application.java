@@ -245,7 +245,7 @@ public class Application extends Controller {
         }
     	
 		Map<String, String> vars = new HashMap<String, String>();
-		vars.put("name", session.get("username"));
+		vars.put("name", session.get("username") == null ? "" : session.get("username"));
 		vars.put("email", email);
 		vars.put("subject", subject);
 		vars.put("message", message);
