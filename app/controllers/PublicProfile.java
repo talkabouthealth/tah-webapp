@@ -75,4 +75,14 @@ public class PublicProfile extends Controller {
 		
 		render(talker, currentTalker);
 	}
+	
+	public static void conversationsFollowing(String userName) {
+		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		notFoundIfNull(talker);
+		
+		talker.setFollowingTopicsFullList(TalkerDAO.loadFollowingTopics(talker.getId()));
+		
+		render(talker, currentTalker);
+	}
 }

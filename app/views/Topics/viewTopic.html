@@ -25,6 +25,7 @@
 	  			);
 			});
 
+			*{ TODO: convo or topic ? }*
 			$(".restartConvoLink").click(function() {
 				openChat(tid);
 				$.post("@{Topics.restart}", {topicId: '${topic.id}'});
@@ -77,7 +78,7 @@
 						${contributor}&nbsp;&nbsp;&nbsp;
 					#{/list}
 					<br/><br/>
-					<h3>Comments:</h3><br/>
+					<h3 id="comments">Comments:</h3><br/>
 					<br/><br/>
 					<br/><br/>
 					<h3>Conversation:</h3>

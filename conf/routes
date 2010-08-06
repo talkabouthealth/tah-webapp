@@ -32,6 +32,7 @@ GET		/{userName}								PublicProfile.view
 GET		/{userName}/thankyous					PublicProfile.thankyous
 GET		/{userName}/following					PublicProfile.following
 GET		/{userName}/followers					PublicProfile.followers
+GET		/{userName}/conversationsfollowing		PublicProfile.conversationsFollowing
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}

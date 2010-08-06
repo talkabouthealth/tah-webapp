@@ -94,17 +94,7 @@ public class TopicDAO {
 			return null;
 		}
 		
-		TopicBean topic = new TopicBean();
-    	topic.setId(topicDBObject.get("_id").toString());
-    	topic.setTid((Integer)topicDBObject.get("tid"));
-    	topic.setTopic((String)topicDBObject.get("topic"));
-    	topic.setCreationDate((Date)topicDBObject.get("cr_date"));
-    	topic.setDisplayTime((Date)topicDBObject.get("disp_date"));
-    	
-    	Integer views = (Integer)topicDBObject.get("views");
-    	topic.setViews(views == null ? 0 : views);
-    	
-    	return topic;
+		return parseTopicBean(topicDBObject);
 	}
 	
 	public static TopicBean getByTid(Integer tid) {
@@ -117,6 +107,10 @@ public class TopicDAO {
 			return null;
 		}
 		
+		return parseTopicBean(topicDBObject);
+	}
+	
+	private static TopicBean parseTopicBean(DBObject topicDBObject) {
 		//TODO: move to topic bean?
 		TopicBean topic = new TopicBean();
     	topic.setId(topicDBObject.get("_id").toString());
@@ -124,6 +118,11 @@ public class TopicDAO {
     	topic.setTopic((String)topicDBObject.get("topic"));
     	topic.setCreationDate((Date)topicDBObject.get("cr_date"));
     	topic.setDisplayTime((Date)topicDBObject.get("disp_date"));
+    	
+    	DBObject talkerDBObject = ((DBRef)topicDBObject.get("uid")).fetch();
+    	TalkerBean talker = new TalkerBean();
+    	talker.parseFromDB(talkerDBObject);
+    	topic.setTalker(talker);
     	
     	Integer views = (Integer)topicDBObject.get("views");
     	topic.setViews(views == null ? 0 : views);
@@ -153,10 +152,9 @@ public class TopicDAO {
     	topic.setMessages(messages);
     	
     	
-    	
     	//followers of this topic
     	DBCollection talkersColl = DBUtil.getDB().getCollection(TalkerDAO.TALKERS_COLLECTION);
-    	query = new BasicDBObject("following_topics", topic.getId());
+    	DBObject query = new BasicDBObject("following_topics", topic.getId());
     	List<DBObject> followersDBList = talkersColl.find(query, new BasicDBObject("uname", 1)).toArray();
     	List<String> followers = new ArrayList<String>();
     	for (DBObject followerDBObject : followersDBList) {
