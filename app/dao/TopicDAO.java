@@ -83,6 +83,28 @@ public class TopicDAO {
 		return (Integer)topicObject.get("tid");
 	}
 	
+	public static TopicBean getByTopicId(String topicId) {
+		DBCollection topicsColl = DBUtil.getDB().getCollection(TOPICS_COLLECTION);
+		
+		DBObject query = new BasicDBObject("_id", new ObjectId(topicId));
+		DBObject topicDBObject = topicsColl.findOne(query);
+		if (topicDBObject == null) {
+			return null;
+		}
+		
+		TopicBean topic = new TopicBean();
+    	topic.setId(topicDBObject.get("_id").toString());
+    	topic.setTid((Integer)topicDBObject.get("tid"));
+    	topic.setTopic((String)topicDBObject.get("topic"));
+    	topic.setCreationDate((Date)topicDBObject.get("cr_date"));
+    	topic.setDisplayTime((Date)topicDBObject.get("disp_date"));
+    	
+    	Integer views = (Integer)topicDBObject.get("views");
+    	topic.setViews(views == null ? 0 : views);
+    	
+    	return topic;
+	}
+	
 	public static TopicBean getByTid(Integer tid) {
 		DBCollection topicsColl = DBUtil.getDB().getCollection(TOPICS_COLLECTION);
 		
@@ -93,6 +115,7 @@ public class TopicDAO {
 			return null;
 		}
 		
+		//TODO: move to topic bean?
 		TopicBean topic = new TopicBean();
     	topic.setId(topicDBObject.get("_id").toString());
     	topic.setTid((Integer)topicDBObject.get("tid"));
@@ -122,11 +145,6 @@ public class TopicDAO {
     		}
     	}
     	topic.setMessages(messages);
-    	
-    	
-    	
-    	
-    	
     	
     	
 		return topic;

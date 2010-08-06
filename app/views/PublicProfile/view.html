@@ -487,14 +487,14 @@
 						#{/if}
 						
 						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.CONVERSATIONS_FOLLOWED) 
-								&& talker.activityList}
+								&& talker.followingTopicsFullList}
 							<div class="prosubheading">
 								<div class="profileheading">Conversations Followed</div>
 								<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 							</div>
 							<div class="activitiestext">
-								#{list items:talker.activityList.limit(12), as:'activity' }
-									<a href="@{Topics.viewTopic(1)}" class="bluetext12">${activity.text}</a><br/>
+								#{list items:talker.followingTopicsFullList.limit(12), as:'topic' }
+									<a href="@{Topics.viewTopic(topic.tid)}" class="bluetext12">${topic.topic}</a><br/>
 								#{/list}
 							</div>
 						#{/if}

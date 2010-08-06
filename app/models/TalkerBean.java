@@ -148,7 +148,10 @@ public class TalkerBean implements Serializable {
 	private List<TalkerBean> followerList;
 	private List<ActivityBean> activityList;
 	private List<CommentBean> profileCommentsList;
+	
+	//TODO: what's the best solution for partial load?
 	private List<String> followingTopicsList;
+	private List<TopicBean> followingTopicsFullList;
 	
 	
 	//new fields
@@ -723,6 +726,12 @@ public class TalkerBean implements Serializable {
 	}
 	
 	
-	
+	public List<TopicBean> getFollowingTopicsFullList() {
+		return followingTopicsFullList;
+	}
+
+	public void setFollowingTopicsFullList(List<TopicBean> followingTopicsFullList) {
+		this.followingTopicsFullList = followingTopicsFullList;
+	}
 	
 }	

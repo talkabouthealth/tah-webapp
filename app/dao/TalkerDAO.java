@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.Map;
 import models.CommentBean;
 import models.TalkerBean;
 import models.ThankYouBean;
+import models.TopicBean;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.lucene.analysis.cn.ChineseTokenizer;
@@ -413,6 +415,22 @@ public class TalkerDAO {
 		}
 		
 		return topCommentsList;
+	}
+	
+	public static List<TopicBean> loadFollowingTopics(String talkerId) {
+		TalkerBean talker = getById(talkerId);
+		
+		if (talker == null) {
+			return new ArrayList<TopicBean>();
+		}
+		
+		List<TopicBean> followingTopicsList = new ArrayList<TopicBean>();
+		for (String topicId : talker.getFollowingTopicsList()) {
+			TopicBean topic = TopicDAO.getByTopicId(topicId);
+			followingTopicsList.add(topic);
+		}
+		
+		return followingTopicsList;
 	}
 	
 	public static void main(String[] args) {
