@@ -20,7 +20,6 @@ public class PublicProfile extends Controller {
 
 	public static void view(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
-		
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
 		
 		notFoundIfNull(talker);
@@ -54,10 +53,10 @@ public class PublicProfile extends Controller {
 	}
 	
 	public static void thankYous(String userName) {
+		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
-		
 		notFoundIfNull(talker);
 		
-		render(talker);
+		render(talker, currentTalker);
 	}
 }

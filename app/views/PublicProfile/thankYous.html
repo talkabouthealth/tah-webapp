@@ -1,5 +1,31 @@
 #{ extends 'main.html' /}
+	<script type="text/javascript"> 	 
+   		$(document).ready(function() {
+   			$("#displayThankYouText").click(function() {
+   				$('#leavethankyouText').toggle(); 
+   				$('#thankYouNote').focus(); 
+   				return false;
+	   		});
+   		});
 
+   		//createThankYou(String toTalker, String note)
+   		function thankYou() {
+   	   		var noteText = $("#thankYouNote").val();
+   			$("#thankYouNote").val("");
+
+   			$.post("@{Actions.createThankYou()}", 
+  				{ toTalker: '${talker.id}', note: noteText},
+  				function(html) {
+  					$("#firstthankyoumessage").hide();
+  					
+  					//put new thank you item in the list
+  					$(html).prependTo($("#thankyoulist"));
+  				}
+  			);
+
+   			$("#leavethankyouText").hide();
+   		}
+   	</script>
 	<style>
 		body {
 			background:url(/public/images/inner_bg.gif) repeat-x top;
@@ -26,6 +52,26 @@
 		<div class="blacktext2" id="innerheading">${talker.userName} Thank You's (${talker.thankYouList.size()})</div>
 		<div id="innerpersonalarea">
 			<div id="signupleftarea">
+				#{ifnot talker.userName.equals(currentTalker.userName) }
+					<a id="displayThankYouText" href="#" 
+						class="navybluetext12">Give ${talker.userName} a 'Thank you'</a>
+				#{/ifnot}
+				<div id="leavethankyouText" style="display:none">
+					<ul>
+						<li class="blacktext14">Give a Thank You</li>
+						<li>
+							<input id="thankYouNote" name="thankYouNote" type="text" 
+								class="togglecommentfield" value="" size="6" />
+						</li>
+						<li>
+							<div class="personaltextarea" style="height:46px; padding-top:2px;">
+								<a href="#thankyouSection" onclick="thankYou()">
+									<img src="/public/images/addcomment_btn.gif" width="145" height="32" border="0" />
+								</a>
+							</div>
+						</li> 
+					</ul>
+				</div>
 				#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
 					<div id="thankyoulist" class="thankyoutextarea">
 						#{list items:talker.thankYouList.limit(3*10), as:'thankYou'}
