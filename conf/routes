@@ -30,6 +30,8 @@ GET     /public/                                staticDir:public
 
 GET		/{userName}								PublicProfile.view
 GET		/{userName}/thankyous					PublicProfile.thankyous
+GET		/{userName}/following					PublicProfile.following
+GET		/{userName}/followers					PublicProfile.followers
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}

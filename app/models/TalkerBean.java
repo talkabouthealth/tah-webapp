@@ -379,6 +379,9 @@ public class TalkerBean implements Serializable {
 				DBObject followingDBOBject = followingDBRef.fetch();
 				followingTalker.setId(followingDBOBject.get("_id").toString());
 				followingTalker.setUserName(followingDBOBject.get("uname").toString());
+				followingTalker.setBio((String)followingDBOBject.get("bio"));
+				
+				//TODO: number of thankyous?
 				
 				followingList.add(followingTalker);
 			}
@@ -443,11 +446,15 @@ public class TalkerBean implements Serializable {
 		- Champion - great than 100 Thank you's
 	*/
 	public String getLevelOfRecognition() {
-		int numberOfThankYous = thankYouList.size();
-		
-		//TODO: better implementation?
-		
 		String levelOfRecognition = "New Member";
+		
+		if (thankYouList == null) {
+			return levelOfRecognition;
+		}
+		
+		int numberOfThankYous = thankYouList.size();
+
+		//TODO: better implementation?
 		if (numberOfThankYous >= 1 && numberOfThankYous < 3) {
 			levelOfRecognition = "Supporter";
 		}

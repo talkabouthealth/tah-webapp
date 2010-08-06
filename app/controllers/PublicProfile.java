@@ -59,4 +59,20 @@ public class PublicProfile extends Controller {
 		
 		render(talker, currentTalker);
 	}
+	
+	public static void followers(String userName) {
+		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		notFoundIfNull(talker);
+		
+		render(talker, currentTalker);
+	}
+	
+	public static void following(String userName) {
+		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		notFoundIfNull(talker);
+		
+		render(talker, currentTalker);
+	}
 }

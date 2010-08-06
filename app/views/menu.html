@@ -15,12 +15,13 @@
 	</div>
 	<!--1st drop down menu -->                                                   
 	<div id="dropmenu1" class="dropmenudiv">
+		*{ TODO username to variable }*
 		<a href="@{PublicProfile.view(session.get('username'))}">Public Profile</a>
 		<a href="@{PublicProfile.thankYous(session.get('username'))}">Thank You's</a>
+		<a href="@{PublicProfile.following(session.get('username'))}">Following</a>
+		<a href="@{PublicProfile.followers(session.get('username'))}">Followers</a>
 		<!--
 		<a href="#">Conversation History</a>
-		<a href="#">Followers</a>
-		<a href="#">Following</a>
 		<a href="#">Activity Stream</a>
 		-->
 	</div>

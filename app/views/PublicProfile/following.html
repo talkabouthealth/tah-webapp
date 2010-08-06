@@ -1,0 +1,122 @@
+#{ extends 'main.html' /}
+	<script type="text/javascript"> 	 
+		var selectedTalkerId = '';
+   		$(document).ready(function() {
+   			$(".followActionLink").click(function() {
+   				var followingId = $(this).attr("rel");
+   				var followLink = $(this);
+   	   			$.post("@{Actions.follow()}", 
+   	  				{ followingId: followingId },
+   	  				function(data) {
+   	  					followLink.html(data);
+   	  				}
+   	  			);
+	   		});
+
+   			$(".commentLink").click(function() {
+   				return false;
+	   		});
+	   		
+	   		$(".thankYouLink")
+	   			.click(function(){ 
+	   				selectedTalkerId = $(this).attr("rel");
+	   			})
+	   			.fancybox({
+	   			    'hideOnContentClick': false,
+	   			    'showCloseButton': false
+	   			}
+   			});
+   		});
+
+   		//createThankYou(String toTalker, String note)
+   		function thankYou() {
+   	   		var noteText = $("#thankYouNote").val();
+
+   	   		$.fancybox.close();
+   			$("#thankYouNote").val("");
+
+   			$.post("@{Actions.createThankYou()}", 
+  				{ toTalker: selectedTalkerId, note: noteText}
+  			);
+
+   			$("#leavethankyouText").hide();
+   		}
+   	</script>
+	<style>
+		body {
+			background:url(/public/images/inner_bg.gif) repeat-x top;
+		}
+		#signupleftarea, #thankyoulist {
+			width: auto;
+		} 
+		.profiletext2 {
+			width:250px;
+		}
+	</style>
+</head>
+<body>
+	<div id="top_container">
+		<div id="top">
+			#{ logo /}
+			<div id="topnav">
+				#{ include 'menu.html' /}
+			</div>
+		</div>
+	</div>
+	<div id="innerbanner"></div>
+	<div id="innermain">
+		<div class="blacktext2" id="innerheading">${talker.userName} Following</div>
+		<div id="innerpersonalarea">
+			<div id="signupleftarea">
+				#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
+					<div>
+						#{list items:talker.followingList.limit(3*10), as:'following' }
+							<div class="profiletext2">
+								<div class="thankyoupic">
+									<img width="48" height="48" src="@{Image.show(following.userName)}" border="0" />
+								</div>
+								<div class="thankyoutext">
+									<a href="@{PublicProfile.view(following.userName)}" 
+										class="bluetext11">${following.userName}</a><br/>
+									<span class="blacktext11">${following.levelOfRecognition}</span><br/>
+								  	<span class="blacktext11">${following.bio}</span>
+								 </div>
+								 <div style="clear: both; padding-left: 5px; padding-top: 3px;">
+								 	#{ifnot currentTalker?.equals(following) }
+									 	<a class="bluetext12 followActionLink" rel="${following.id}" href="#">
+										${ currentTalker.followingList.contains(following) ? 'Unfollow' : 'Follow'}
+										</a> | 
+									#{/ifnot}
+								 	<a href="#" class="bluetext12 commentLink">Comment</a> | 
+								 	#{ifnot currentTalker?.equals(following) }
+									 	<a href="#thankyouform" rel="${following.id}" class="bluetext12 thankYouLink">Thank</a>
+									#{/ifnot}
+								 </div>
+							</div>
+						#{/list}
+					</div>
+				#{/if}
+				#{else}
+					<span class="blacktext14">${talker.userName} hid Following list</span>
+				#{/else}
+			</div>
+		</div>
+	</div>
+
+<!-- Pop-up Thank You form -->
+<div id="hiddenwindows" style="display: none">
+	<div id="thankyouform">
+		<table align="center" cellspacing="10">
+			<tr>
+				<td align="right" valign="top">'Thanks You' note:</td>
+				<td><textarea rows="5" cols="30" id="thankYouNote" name="thankYouNote" ></textarea></td>
+			</tr>
+			<tr align="center">
+				<td colspan="2">
+					<input id="thankYouBtn" onClick="thankYou()" type="button" value="Give a 'Thanks you'"/>
+					<input id="cancelBtn" onClick="$.fancybox.close();" value="Cancel" type="button" />
+				</td>
+			</tr>
+		</table>	
+	</div>
+</div>

@@ -315,6 +315,7 @@ public class TalkerDAO {
 			TalkerBean followerTalker = new TalkerBean();
 			followerTalker.setId(followerDBObject.get("_id").toString());
 			followerTalker.setUserName(followerDBObject.get("uname").toString());
+			followerTalker.setBio((String)followerDBObject.get("bio"));
 			
 			followerList.add(followerTalker);
 		}

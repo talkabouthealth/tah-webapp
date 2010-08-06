@@ -25,7 +25,7 @@
    		});
 
    		//follow(String followingId)
-   		function follow(callback) {
+   		function follow() {
    			$.post("@{Actions.follow()}", 
   				{ followingId: '${talker.id}'},
   				function(data) {
@@ -151,7 +151,9 @@
 								<div class="proleftwhitemid">
 									<div class="followarea">
 									<div class="profileheading">Following (${talker.followingList.size()})</div>
-									<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
+									<div class="seeall">
+										<a href="@{PublicProfile.following(talker.userName)}" class="bluetext12"><strong>see all</strong></a>
+									</div>
 									<div class="followingimg">
 										<ul>
 											#{list items:talker.followingList.limit(8), as:'following' }
@@ -175,7 +177,9 @@
 								<div class="proleftwhitemid">
 									<div class="followarea">
 									<div class="profileheading">Followers (${talker.followerList.size()})</div>
-									<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
+									<div class="seeall">
+										<a href="@{PublicProfile.followers(talker.userName)}" class="bluetext12"><strong>see all</strong></a>
+									</div>
 									<div class="followingimg">
 										<ul>
 											#{list items:talker.followerList.limit(8), as:'follower' }
@@ -503,23 +507,3 @@
 			</div>
 		</div>
 	</div>
-	
-<!-- Pop-up Thank You form -->
-<div id="hiddenwindows" style="display: none">
-	<!-- 
-	<div id="thankyouform">
-		<table align="center" cellspacing="10">
-			<tr>
-				<td align="right" valign="top">'Thanks You' note:</td>
-				<td><textarea rows="5" cols="30" id="thankYouNote" name="thankYouNote" ></textarea></td>
-			</tr>
-			<tr align="center">
-				<td colspan="2">
-					<input id="thankYouBtn" onClick="thankYou()" type="button" value="Give a 'Thanks you'"/>
-					<input id="cancelBtn" onClick="$.fancybox.close();" value="Cancel" type="button" />
-				</td>
-			</tr>
-		</table>	
-	</div>
-	-->
-</div>
