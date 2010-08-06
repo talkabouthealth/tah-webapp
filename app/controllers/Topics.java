@@ -16,6 +16,7 @@ import util.DBUtil;
 import util.NotificationUtils;
 import webapp.LiveConversationsSingleton;
 import dao.ActivityDAO;
+import dao.TalkerDAO;
 import dao.TopicDAO;
 
 @With(Secure.class)
@@ -64,7 +65,8 @@ public class Topics extends Controller {
 		newTopic = newTopic.replaceAll("'", "&#39;");
 		newTopic = newTopic.replaceAll("\\|", "&#124;");
 		
-		renderText(topic.getTid() + "|" + newTopic);
+		//TODO: make as template!
+		renderText(topic.getTid() + "|" + newTopic + "|" + topic.getId());
     }
     
     public static void lastTopicId() {
@@ -96,6 +98,18 @@ public class Topics extends Controller {
     //follow or unfollow
     public static void follow(String topicId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	
+    	if (talker.getFollowingTopicsList().contains(topicId)) {
+    		//unfollow action
+    		talker.getFollowingTopicsList().remove(topicId);
+    	}
+    	else {
+    		talker.getFollowingTopicsList().add(topicId);
+    	}
+    	
+    	//TODO: put together?
+    	TalkerDAO.updateTalker(talker);
+    	CommonUtil.updateCachedTalker(session);
     	
     	renderText("Ok!");
     }

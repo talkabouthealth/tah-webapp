@@ -188,10 +188,13 @@ function postNewTopicResponse() {
 				areaMidLeft = createDiv('areamidleft');
 				areaMid.appendChild(areaMidLeft);
 				areaMidLeft.innerHTML = 
-					'<p><span class="blacktext14">'+topic+'<br />'+
-					'<span class="bluetext12">1 people talking</span> | '+ 
-				    '<span class="red12">Started 0 mins ago</span><br /></span>'+
-				    '<span class="blacktext">Community: Breast Cancer</span></p>';
+					'<p><span class="blacktext14">'+
+					'<a href="/topic/'+update[0]+'">'+topic+'</a>'+
+					'<br />'+
+					'<span class="blacktext12">1 members talking</span> | '+ 
+				    '<span class="blacktext12">Started 0 mins ago</span> | '+
+				    '<a href="#" class="bluetext12 followTopicLink" rel="'+update[2]+'">Follow</a>'+
+				    '</span></p>';
 			
 				joinArea = createDiv('join');
 				areaMid.appendChild(joinArea);

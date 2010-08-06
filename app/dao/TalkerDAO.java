@@ -98,6 +98,8 @@ public class TalkerDAO {
 			.add("bio", talker.getBio())
 			.add("ch_ages", talker.getChildrenAges())
 			.add("keywords", talker.getKeywords())
+			
+			.add("following_topics", talker.getFollowingTopicsList())
 			.get();
 		
 		DBObject talkerId = new BasicDBObject("_id", new ObjectId(talker.getId()));

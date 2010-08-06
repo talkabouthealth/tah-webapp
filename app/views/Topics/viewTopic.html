@@ -92,7 +92,12 @@
 				<div class="innerrightbox" style="padding-top: 0px">
 					<div class="innerrightop"></div>
 					<div class="innerrighmid">
-						<a href="#" id="followTopicLink">Follow Conversation</a>
+						#{if talker.followingTopicsList?.contains(topic.id) }
+							<a href="#" id="followTopicLink">Unfollow Conversation</a>
+						#{/if}
+						#{else}
+							<a href="#" id="followTopicLink">Follow Conversation</a>
+						#{/else}
 					</div>
 					<div class="innerrighbot"></div>
 				</div>

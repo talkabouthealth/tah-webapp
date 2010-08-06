@@ -99,7 +99,9 @@ public class TopicDAO {
     	topic.setTopic((String)topicDBObject.get("topic"));
     	topic.setCreationDate((Date)topicDBObject.get("cr_date"));
     	topic.setDisplayTime((Date)topicDBObject.get("disp_date"));
-    	topic.setViews((Integer)topicDBObject.get("views"));
+    	
+    	Integer views = (Integer)topicDBObject.get("views");
+    	topic.setViews(views == null ? 0 : views);
     	
     	
     	List<MessageBean> messages = new ArrayList<MessageBean>();

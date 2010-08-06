@@ -142,11 +142,13 @@ public class TalkerBean implements Serializable {
 		this.regDate = regDate;
 	}
 
+	//TODO: List or (s) ?
 	private List<ThankYouBean> thankYouList;
 	private List<TalkerBean> followingList;
 	private List<TalkerBean> followerList;
 	private List<ActivityBean> activityList;
 	private List<CommentBean> profileCommentsList;
+	private List<String> followingTopicsList;
 	
 	
 	//new fields
@@ -327,12 +329,14 @@ public class TalkerBean implements Serializable {
 		
 		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
 		parseFollowing((Collection<DBRef>)talkerDBObject.get("following"));
+		setFollowingTopicsList(parseStringList(talkerDBObject.get("following_topics")));
 	}
 	
 	private List<String> parseStringList(Object fieldValue) {
 		Collection<String> fieldCollection = (Collection<String>)fieldValue;
 		if (fieldCollection == null) {
-			return null;
+			//TODO: empty list or null?
+			return new ArrayList<String>();
 		}
 		else {
 			return new ArrayList<String>(fieldCollection);
@@ -709,6 +713,16 @@ public class TalkerBean implements Serializable {
 	public void setBio(String bio) {
 		this.bio = bio;
 	}
+
+	public List<String> getFollowingTopicsList() {
+		return followingTopicsList;
+	}
+
+	public void setFollowingTopicsList(List<String> followingTopicsList) {
+		this.followingTopicsList = followingTopicsList;
+	}
+	
+	
 	
 	
 }	
