@@ -247,7 +247,7 @@ public class TopicDAO {
 			
 			topicInfoMap.put("uid", talkerDBObject.get("_id").toString());
 			topicInfoMap.put("uname", talkerDBObject.get("uname").toString());
-			topicInfoMap.put("gender", talkerDBObject.get("gender").toString());
+			topicInfoMap.put("gender", (String)talkerDBObject.get("gender"));
 			
 			if (withNotifications) {
 				//String sqlStatement4 = 
