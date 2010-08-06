@@ -3,6 +3,7 @@ package controllers;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import models.LiveConversationBean;
@@ -13,6 +14,7 @@ import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
 import util.DBUtil;
+import util.EmailUtil;
 import util.NotificationUtils;
 import webapp.LiveConversationsSingleton;
 import dao.ActivityDAO;
@@ -69,6 +71,29 @@ public class Topics extends Controller {
 		renderText(topic.getTid() + "|" + newTopic + "|" + topic.getId());
     }
     
+    public static void restart(String topicId) {
+    	NotificationUtils.sendAutomaticNotifications(topicId);
+    }
+    
+    public static void flag(String topicId) {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	TopicBean topic = TopicDAO.getByTopicId(topicId);
+    	
+    	if (topic == null) {
+    		return;
+    	}
+    	
+    	Map<String, String> vars = new HashMap<String, String>();
+		vars.put("name", talker.getUserName());
+		vars.put("email", talker.getEmail());
+		vars.put("subject", "FLAGGED CONVERSATION");
+		//TODO: render with Play! classes?
+		vars.put("message", 
+				"Bad conversation: <a href=\"http://talkabouthealth.com:9000/topic/"+topic.getTid()+"\">"+
+					topic.getTopic()+"</a>");
+		EmailUtil.sendEmail(EmailUtil.CONTACTUS_TEMPLATE, EmailUtil.SUPPORT_EMAIL, vars, null, false);
+    }
+    
     public static void lastTopicId() {
     	String lastTopicId = TopicDAO.getLastTopicId();
 		
@@ -90,7 +115,6 @@ public class Topics extends Controller {
 		topic.setTags(Arrays.asList("support", "help", "testtag"));
 		topic.setSummary("Summary.........");
 		topic.setSumContributors(Arrays.asList("murray", "situ"));
-//		topic.setMembers(Arrays.asList("kangaroo", "test1"));
 		
 		render(talker, topic);
     }

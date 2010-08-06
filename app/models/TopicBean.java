@@ -21,6 +21,7 @@ public class TopicBean {
 	private TalkerBean talker;
 	
 	//new fields
+	//TODO: Set or List?
 	private String details;
 	private List<String> tags;
 	
@@ -29,7 +30,16 @@ public class TopicBean {
 	
 	private List<String> members;
 	private List<MessageBean> messages;
+	private List<String> followers;
 	
+	public List<String> getFollowers() {
+		return followers;
+	}
+
+	public void setFollowers(List<String> followers) {
+		this.followers = followers;
+	}
+
 	private int views;
 	
 	

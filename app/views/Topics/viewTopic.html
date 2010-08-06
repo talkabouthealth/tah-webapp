@@ -3,9 +3,13 @@
 		body {
 			background:url(/public/images/inner_bg.gif) repeat-x top;
 		}
+		#innermid {
+			padding: 10px;
+		}
 	</style>
 
 	<script type="text/javascript">
+		var tid = '${topic.tid}';
 		$(document).ready(function() {
 			$("#followTopicLink").click(function() {
 				$.post("@{Topics.follow()}", 
@@ -20,7 +24,21 @@
 	  				}
 	  			);
 			});
+
+			$(".restartConvoLink").click(function() {
+				openChat(tid);
+				$.post("@{Topics.restart}", {topicId: '${topic.id}'});
+			});
+
+			$(".flagConvoLink").click(function() {
+				$(this).after("<span>Thanks!</span>").detach();
+				$.post("@{Topics.flag}", {topicId: '${topic.id}'});
+			});
 		});
+
+		function openChat(tid){
+			window.open("@{Talk.talkApp()}/"+tid, "TalkerWindow", "width=700,height=500");
+		}
 	</script>
 </head>
 
@@ -48,9 +66,9 @@
 						${tag}&nbsp;&nbsp;&nbsp;
 					#{/list}
 					<br/>
-					<a href="#">Re-start conversation</a>&nbsp;
+					<a href="#" class="restartConvoLink">Re-start conversation</a>&nbsp;
 					<a href="#">Start follow up conversation</a>&nbsp;
-					<a href="#">Flag conversation</a>&nbsp;
+					<a href="#" class="flagConvoLink">Flag conversation</a>&nbsp;
 					<br/><br/>
 					<h3>Conversation Summary:</h3><br/>
 					${topic.summary}<br/>
@@ -64,7 +82,7 @@
 					<br/><br/>
 					<h3>Conversation:</h3>
 					<br/>
-					<a href="#">Re-start conversation</a>&nbsp;
+					<a href="#" class="restartConvoLink">Re-start conversation</a>&nbsp;
 					<a href="#">Start follow up conversation</a>&nbsp;
 					<br/>
 					${topic.creationDate?.format('M/d/yyyy')}
@@ -107,7 +125,12 @@
 						<b>Question Statistics</b><br/>
 						Latest Activity: <br/>
 						Views: ${topic.views}<br/>
-						Followed by  members<br/>
+						Followed by ${topic.followers?.size()} members<br/>
+						#{list items: topic.followers, as: 'follower'}
+							<a href="@{PublicProfile.view(follower)}" title="${follower}" >
+								<img src="@{Image.show(follower)}" width="48" height="48" border="0" />
+							</a>
+						#{/list}
 					</div>
 					<div class="innerrighbot"></div>
 				</div>

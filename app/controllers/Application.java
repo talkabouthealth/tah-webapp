@@ -227,6 +227,7 @@ public class Application extends Controller {
 	
 	/* ----------------- Contact Us ------------------------- */
 	public static void contactus() {
+		//TODO: can we do it here? - without login!
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 		render(talker);

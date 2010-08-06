@@ -5,9 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import models.CommentBean;
 import models.MessageBean;
@@ -128,6 +130,7 @@ public class TopicDAO {
     	
     	
     	List<MessageBean> messages = new ArrayList<MessageBean>();
+    	Set<String> members = new HashSet<String>();
     	//TODO update comments/messages name
     	BasicDBList messagesDBList = (BasicDBList)topicDBObject.get("comments");
     	if (messagesDBList != null) {
@@ -138,14 +141,28 @@ public class TopicDAO {
     			message.setText(messageDBObject.getString("text"));
     			
     			DBObject fromTalkerDBObject = ((DBRef)messageDBObject.get("uid")).fetch();
-    			TalkerBean fromTalker = new TalkerBean(fromTalkerDBObject.get("_id").toString(), (String)fromTalkerDBObject.get("uname"));
+    			TalkerBean fromTalker = 
+    				new TalkerBean(fromTalkerDBObject.get("_id").toString(), (String)fromTalkerDBObject.get("uname"));
     			message.setFromTalker(fromTalker);
     			
+    			members.add(fromTalker.getUserName());
     			messages.add(message);
     		}
     	}
+    	topic.setMembers(new ArrayList<String>(members));
     	topic.setMessages(messages);
     	
+    	
+    	
+    	//followers of this topic
+    	DBCollection talkersColl = DBUtil.getDB().getCollection(TalkerDAO.TALKERS_COLLECTION);
+    	query = new BasicDBObject("following_topics", topic.getId());
+    	List<DBObject> followersDBList = talkersColl.find(query, new BasicDBObject("uname", 1)).toArray();
+    	List<String> followers = new ArrayList<String>();
+    	for (DBObject followerDBObject : followersDBList) {
+    		followers.add((String)followerDBObject.get("uname"));
+    	}
+    	topic.setFollowers(followers);
     	
 		return topic;
 	}
