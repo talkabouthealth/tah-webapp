@@ -65,6 +65,8 @@ public class PublicProfile extends Controller {
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
 		notFoundIfNull(talker);
 		
+		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+		
 		render(talker, currentTalker);
 	}
 	

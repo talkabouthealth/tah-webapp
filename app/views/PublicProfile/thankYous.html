@@ -33,6 +33,9 @@
 		#signupleftarea, #thankyoulist {
 			width: auto;
 		} 
+		#thankyoulist {
+			clear: left;
+		}
 		.profiletext2 {
 			width:250px;
 		}
@@ -52,10 +55,11 @@
 		<div class="blacktext2" id="innerheading">${talker.userName} Thank You's (${talker.thankYouList.size()})</div>
 		<div id="innerpersonalarea">
 			<div id="signupleftarea">
-				#{ifnot talker.userName.equals(currentTalker.userName) }
+				#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) &&
+						!talker.userName.equals(currentTalker.userName) }
 					<a id="displayThankYouText" href="#" 
 						class="navybluetext12">Give ${talker.userName} a 'Thank you'</a>
-				#{/ifnot}
+				#{/if}
 				<div id="leavethankyouText" style="display:none">
 					<ul>
 						<li class="blacktext14">Give a Thank You</li>
@@ -72,16 +76,16 @@
 						</li> 
 					</ul>
 				</div>
-				#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
-					<div id="thankyoulist" class="thankyoutextarea">
+				<div id="thankyoulist" class="thankyoutextarea">
+					#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
 						#{list items:talker.thankYouList.limit(3*10), as:'thankYou'}
 							#{ profileThankYou thankYou: thankYou /}
 						#{/list}
-					</div>
-				#{/if}
-				#{else}
-					<span class="blacktext14">This information has been made private.</span>
-				#{/else}
+					#{/if}
+					#{else}
+						<span class="blacktext14">This information has been made private.</span>
+					#{/else}
+				</div>
 			</div>
 		</div>
 	</div>

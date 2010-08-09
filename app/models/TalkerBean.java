@@ -354,7 +354,7 @@ public class TalkerBean implements Serializable {
 		}
 	}
 	
-	private void parseThankYous(Collection<DBObject> thankYouDBList) {
+	public void parseThankYous(Collection<DBObject> thankYouDBList) {
 		//TODO: move thanks you load to separate function (to prevent delays)?
 		List<ThankYouBean> thankYous = new ArrayList<ThankYouBean>();
 		if (thankYouDBList != null) {
@@ -389,7 +389,8 @@ public class TalkerBean implements Serializable {
 				followingTalker.setUserName(followingDBOBject.get("uname").toString());
 				followingTalker.setBio((String)followingDBOBject.get("bio"));
 				
-				//TODO: number of thankyous?
+				//TODO: slooooow?
+				followingTalker.parseThankYous((Collection<DBObject>)followingDBOBject.get("thankyous"));
 				
 				followingList.add(followingTalker);
 			}

@@ -13,13 +13,18 @@
    	  			);
 	   		});
 
-   			$(".commentLink").click(function() {
-   				return false;
-	   		});
+   			$(".commentLink")
+   				.click(function(){ 
+	   				selectedTalkerId = $(this).attr("rel2");
+	   			})
+	   			.fancybox({
+	   			    'hideOnContentClick': false,
+	   			    'showCloseButton': false
+	   			});
 	   		
 	   		$(".thankYouLink")
 	   			.click(function(){ 
-	   				selectedTalkerId = $(this).attr("rel");
+	   				selectedTalkerId = $(this).attr("rel2");
 	   			})
 	   			.fancybox({
 	   			    'hideOnContentClick': false,
@@ -37,8 +42,17 @@
    			$.post("@{Actions.createThankYou()}", 
   				{ toTalker: selectedTalkerId, note: noteText}
   			);
+   		}
 
-   			$("#leavethankyouText").hide();
+   		//saveProfileComment(String profileTalkerId, String parentId, String text)
+   		function saveProfileComment() {
+   	   		var commentText = $("#commentText").val();
+   	   		$.fancybox.close();
+			$("#commentText").val("");
+
+   			$.post("@{Actions.saveProfileComment()}", 
+  				{ profileTalkerId: selectedTalkerId, parentId: '', text: commentText}
+  			);
    		}
    	</script>
 	<style>
@@ -72,7 +86,9 @@
 						#{list items:talker.followingList.limit(3*10), as:'following' }
 							<div class="profiletext2">
 								<div class="thankyoupic">
-									<img width="48" height="48" src="@{Image.show(following.userName)}" border="0" />
+									<a href="@{PublicProfile.view(following.userName)}">
+										<img width="48" height="48" src="@{Image.show(following.userName)}" border="0" />
+									</a>
 								</div>
 								<div class="thankyoutext">
 									<a href="@{PublicProfile.view(following.userName)}" 
@@ -86,9 +102,10 @@
 										${ currentTalker.followingList.contains(following) ? 'Unfollow' : 'Follow'}
 										</a> | 
 									#{/ifnot}
-								 	<a href="#" class="bluetext12 commentLink">Comment</a> | 
+									*{ TODO Not rel2 ? }* 
+								 	<a href="#commentform" rel2="${following.id}" class="bluetext12 commentLink">Comment</a>
 								 	#{ifnot currentTalker?.equals(following) }
-									 	<a href="#thankyouform" rel="${following.id}" class="bluetext12 thankYouLink">Thank</a>
+									 	 | <a href="#thankyouform" rel2="${following.id}" class="bluetext12 thankYouLink">Thank</a>
 									#{/ifnot}
 								 </div>
 							</div>
@@ -113,6 +130,21 @@
 			<tr align="center">
 				<td colspan="2">
 					<input id="thankYouBtn" onClick="thankYou()" type="button" value="Give a 'Thanks you'"/>
+					<input id="cancelBtn" onClick="$.fancybox.close();" value="Cancel" type="button" />
+				</td>
+			</tr>
+		</table>	
+	</div>
+	
+	<div id="commentform">
+		<table align="center" cellspacing="10">
+			<tr>
+				<td align="right" valign="top">Comment:</td>
+				<td><textarea rows="5" cols="30" id="commentText" name="commentText" ></textarea></td>
+			</tr>
+			<tr align="center">
+				<td colspan="2">
+					<input id="commentBtn" onClick="saveProfileComment()" type="button" value="Save comment"/>
 					<input id="cancelBtn" onClick="$.fancybox.close();" value="Cancel" type="button" />
 				</td>
 			</tr>

@@ -317,6 +317,8 @@ public class TalkerDAO {
 			followerTalker.setUserName(followerDBObject.get("uname").toString());
 			followerTalker.setBio((String)followerDBObject.get("bio"));
 			
+			followerTalker.parseThankYous((Collection<DBObject>)followerDBObject.get("thankyous"));
+			
 			followerList.add(followerTalker);
 		}
 		
