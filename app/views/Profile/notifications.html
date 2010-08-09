@@ -5,6 +5,22 @@
 		background:url(/public/images/inner_bg.gif) repeat-x top;
 	}
 </style>
+
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+		$("#verificationResendLink").click(function() {
+			$(this).html("Sending...");
+			$.post("@{Profile.resendVerificationEmail()}", {},
+				function(data) {
+					$("#verificationResendLink").hide();
+					$("#verificationResendResult").html(data).show();
+				}
+			);
+			return false;
+		});
+	});
+</script>
+
 </head>
 
 <body>
@@ -144,7 +160,9 @@
 						<div class="signfields2">
 							<h1>Email</h1>
 							#{if talker.verifyCode != null }
-								<span class="footerlink" style="color: red">(Not verified)</span>
+								<a href="#" id="verificationResendLink" 
+									class="red12">(email not verified - resend verification e-mail)</a>
+								<span id="verificationResendResult" class="blacktext12"></span>
 							#{/if}
 							<ul>
 							  <li>

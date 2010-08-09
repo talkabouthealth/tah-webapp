@@ -16,6 +16,7 @@
 					$("#verificationResendResult").html(data).show();
 				}
 			);
+			return false;
 		});
 	});
 	
@@ -167,7 +168,7 @@
 									value="${talker.email}" /><br/>
 							#{if talker.verifyCode != null }
 								<a href="#" id="verificationResendLink" 
-									class="bluetext12">(email not verified - resend verification e-mail)</a>
+									class="red12">(email not verified - resend verification e-mail)</a>
 								<span id="verificationResendResult" class="blacktext12"></span>
 							#{/if}
 						</div>
