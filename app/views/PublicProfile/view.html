@@ -3,6 +3,16 @@
 		body {
 			background:url(/public/images/inner_bg.gif) repeat-x top;
 		}
+		#reply {
+			padding: 10px 0 0 0;
+		}
+		.commentsarea {
+			padding-top: 0px;
+		}
+		#replytext {
+			height: 20px;
+			color: #666666;
+		}
 	</style>
 	<script type="text/javascript"> 	 
    		$(document).ready(function() {
@@ -22,7 +32,28 @@
 	   			return false;
 	   		});
 
+	   		$("#replytext")
+	   			.click(function() {
+		   			updateCommentState('Extended');
+	   			})
+	   			.blur(function() {
+		   			if ($(this).val() == "") {
+		   				updateCommentState('Initial');
+		   			}
+	   			});
+
    		});
+
+   		function updateCommentState(newState) {
+   	   		if (newState == 'Initial') {
+   	   			$("#replytext").val("What are you thinking?").css("color", "#666666");
+				$("#commentBtn").hide();
+   	   		}
+   	   		else if (newState == 'Extended') {
+	   	   		$("#replytext").val("").css("color", "#000000");
+	   			$("#commentBtn").show();
+   	   		}
+   		}
 
    		//follow(String followingId)
    		function follow() {
@@ -82,7 +113,13 @@
   				}
   			);
 
-   			$("#reply"+parentId).hide();
+   			if (parentId == '') {
+   				updateCommentState('Initial');
+			}
+			else {
+				//add as last element in subtree
+				$(html).appendTo($("#comment"+parentId+" > .commentsreply"));
+			}
   			return false;
    		}
    	</script>
@@ -403,36 +440,34 @@
 						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) }
 						<div id="commentsSection" class="prosubheading">
 							<div class="profileheading">
-								Comments
-								#{if talker.followingList.contains(currentTalker) || talker.userName.equals(currentTalker.userName)}
-									<a id="displaycommentText" href="#commentsSection" 
-									 	class="navybluetext12">Leave a new Comment</a>
-								#{/if}
+								Comments								
 							</div>
 							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 						</div>
-						<div style="display: none;" id="reply" class="replyForm">
-							<ul>
-								<li class="blacktext14">Comment:</li>
-								<li>
-									<textarea class="togglecomment" rows="5" cols="45" id="replytext"></textarea>
-							    </li>
-								<li>
-									<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
-										<a href="#" onclick="return saveProfileComment('');">
-											<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
-										</a>
-									</div>
-								</li> 
-							</ul>
-						</div>
+						#{if talker.followingList.contains(currentTalker) || talker.userName.equals(currentTalker.userName)}
+							<div id="reply" class="replyForm">
+								<ul>
+									<li>
+										<textarea class="togglecomment" rows="1" cols="45" 
+											id="replytext">What are you thinking?</textarea>
+								    </li>
+									<li id="commentBtn" style="display: none">
+										<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
+											<a href="#" onclick="return saveProfileComment('');">
+												<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
+											</a>
+										</div>
+									</li> 
+								</ul>
+							</div>
+						#{/if}
 						<div class="commentsarea">
 							#{if talker?.profileCommentsList?.isEmpty()}
 								<span id="firstcommentmessage" class="blacktext12">
 									${talker.userName} does not have any Comments, be the first to leave a Comment.
 								</span>
 							#{/if}
-							#{profileCommentsTree commentsList: talker.profileCommentsList.limit(4) /}
+							#{profileCommentsTree commentsList: talker.profileCommentsList.limit(4) level: 1 /}
 						</div>
 						#{/if}
 						

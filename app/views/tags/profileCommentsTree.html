@@ -24,7 +24,7 @@
 					</li> 
 				</ul>
 			</div>
-			#{profileCommentsTree commentsList: comment.children /}
+			#{profileCommentsTree commentsList: comment.children level: (_level+1)/}
 		</div>
 	</div>
 #{/list}
