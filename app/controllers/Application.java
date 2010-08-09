@@ -1,6 +1,7 @@
 package controllers;
 
 import java.math.BigInteger;
+import java.net.URL;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,9 +10,17 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+
+import org.apache.log4j.Appender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.PropertyConfigurator;
 
 import models.TalkerBean;
 import models.TalkerBean.ProfilePreference;
+import play.Logger;
+import play.Play;
 import play.data.validation.Email;
 import play.data.validation.Required;
 import play.data.validation.Valid;

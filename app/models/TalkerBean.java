@@ -288,6 +288,14 @@ public class TalkerBean implements Serializable {
 		this.profilePreferences = profilePreferences;
 	}
 	
+//	public EnumSet<ProfilePreference> getProfilePreferences() {
+//		return profilePreferences;
+//	}
+//
+//	public void setProfilePreferences(EnumSet<ProfilePreference> profilePreferences) {
+//		this.profilePreferences = profilePreferences;
+//	}
+	
 	public void parseFromDB(DBObject talkerDBObject) {
 		ObjectId objectId = (ObjectId)talkerDBObject.get("_id");
 		setId(objectId.toString());

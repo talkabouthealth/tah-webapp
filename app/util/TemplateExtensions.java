@@ -4,8 +4,18 @@ import java.util.List;
 
 import play.templates.JavaExtensions;
 
-public class StringExtensions extends JavaExtensions {
+/**
+ * Extensions that can be used in Play! templates.
+ * Must extend "JavaExtensions" class, so Play! could find them on start-up. 
+ *
+ */
+public class TemplateExtensions extends JavaExtensions {
 
+	/**
+	 * Converts list of strings to comma-separated string.
+	 * Used for "other" fields in the forms.
+	 * 
+	 */
 	public static String toCommaString(List<String> list, String fieldName) {
 		if (list == null || list.size() == 0) {
 			return fieldName+" (please separate by commas)";
@@ -17,7 +27,12 @@ public class StringExtensions extends JavaExtensions {
 		}
 	}
 	
-	//TODO: move somewhere?
+	/**
+	 * Returns part of given list.
+	 * @param list
+	 * @param limitValue size of returned part
+	 * @return
+	 */
 	public static List<?> limit (List<?> list, int limitValue) {
 		int size = list.size();
 		if (limitValue <= size) {

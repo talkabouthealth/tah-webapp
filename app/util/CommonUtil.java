@@ -157,7 +157,13 @@ public class CommonUtil {
 	}
 
 	public static String generateVerifyCode() {
-		//TODO check unique in db?
-		return UUID.randomUUID().toString();
+		String verifyCode = null;
+		boolean unique = true;
+		do {
+			verifyCode = UUID.randomUUID().toString();
+			unique = (TalkerDAO.getByVerifyCode(verifyCode) == null);
+		} while (!unique);
+		
+		return verifyCode;
 	}
 }
