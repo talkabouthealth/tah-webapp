@@ -5,7 +5,7 @@ import java.util.Date;
 
 import models.TalkerBean;
 import util.CommonUtil;
-import dao.LoginHistoryDAO;
+import dao.ApplicationDAO;
 import dao.TalkerDAO;
  
 public class Security extends Secure.Security {
@@ -39,7 +39,7 @@ public class Security extends Secure.Security {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
     	Date now = Calendar.getInstance().getTime(); 
-		LoginHistoryDAO.save(talker.getId(), now);
+		ApplicationDAO.saveLogin(talker.getId(), now);
 		
 		 /*
 	     	Play! 1.0.3 has problems with cookies in IE8 (FLASH cookies aren't stored correctly),

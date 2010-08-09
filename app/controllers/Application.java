@@ -29,6 +29,7 @@ import play.mvc.With;
 import play.mvc.Scope.Session;
 import util.CommonUtil;
 import util.EmailUtil;
+import dao.ApplicationDAO;
 import dao.TalkerDAO;
 
 public class Application extends Controller {
@@ -262,5 +263,24 @@ public class Application extends Controller {
 		
 		flash.success("ok");
 		contactus();
+    }
+    
+    
+    /* -------------------- Email signup (for notifications & updates) ------------------- */
+    public static void updatesEmail() {
+    	render();
+    }
+    
+    public static void saveUpdatesEmail(@Required @Email String email) {
+    	if(validation.hasErrors()) {
+    		validation.keep();
+    		updatesEmail();
+            return;
+        }
+    	
+    	ApplicationDAO.saveEmail(email);
+    	
+    	flash.success("ok");
+    	updatesEmail();
     }
 }

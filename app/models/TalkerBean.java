@@ -106,7 +106,7 @@ public class TalkerBean implements Serializable {
 	private String gender;
 	private int invitations;
 	private String maritalStatus;
-	private String Category;
+	private String category;
 	//Patient/Caregiver/etc.
 	private String connection;
 	public String getConnection() {
@@ -498,11 +498,11 @@ public class TalkerBean implements Serializable {
 	}
 
 	public String getCategory() {
-		return Category;
+		return category;
 	}
 
 	public void setCategory(String category) {
-		Category = category;
+		this.category = category;
 	}
 
 	public String getCity() {

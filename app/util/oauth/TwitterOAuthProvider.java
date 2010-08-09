@@ -18,7 +18,7 @@ import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
 import play.cache.Cache;
 import play.mvc.Scope.Session;
-import dao.LoginHistoryDAO;
+import dao.ApplicationDAO;
 import dao.TalkerDAO;
 
 /**
@@ -117,7 +117,7 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
         TalkerBean talker = TalkerDAO.getTalkerByAccount("twitter", accountId);
         if (talker != null) {
         	// insert login record into db
-        	LoginHistoryDAO.save(talker.getId(), new Date());
+        	ApplicationDAO.saveLogin(talker.getId(), new Date());
 
 			// add TalkerBean to session
 			session.put("username", talker.getUserName());

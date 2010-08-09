@@ -1,0 +1,36 @@
+#{extends 'static.html' /}
+
+#{if flash.success}
+    <span class="blacktext16">Thank you for signing up to receive 
+    	the latest TalkAboutHealth health community launches and updates.</span>
+#{/if}
+#{else}
+<form action="@{Application.saveUpdatesEmail()}"
+	name="emailform" method="post" class="loginform"> 
+	#{ifErrors}
+	   #{errors}
+	   	   *{ Raw output - we have "a" link in one of the errors }*
+	       <span class="error">${error.raw()}</span><br/><br/><br/><br/>
+	   #{/errors}
+	#{/ifErrors}
+	<span class="blacktext16">Sign up to receive the latest 
+		TalkAboutHealth health community launches and updates</span><br/>
+	<span class="pinktext14">(Your email won't be used for anything else)</span>
+	<div style="margin-top: 10px">
+		<div class="fieldarea" style="margin: 5px 15px 0 0">
+			<div class="fieldarealeft"></div>
+			<div class="fieldareamid">
+				<input id="email" name="email" type="text"  class="textfields" 
+					onclick="this.value=''" tabindex="1" 
+					value="${flash.email == null ? 'Your Email Address...' : flash.email}" />
+			</div>
+			<div class="fieldarearight"></div>
+		</div>
+		<div class="arearightbutton">
+			<a href="#" onclick="document.emailform.submit();">
+				<img src="/public/images/signupbutton.gif" width="126" height="46" border="0" />
+			</a>
+		</div>
+	</div>
+</form>
+#{/else}

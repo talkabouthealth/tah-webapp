@@ -232,6 +232,30 @@
 					<div id="signupleftarea">
 						<input type="hidden" id="newTopic" name="newTopic" value="${flash.newTopic}" />
 						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">Health Community</span></div>
+							<div class="signuptextarea">
+								<span class="blacktext14">Breast Cancer</span>
+							</div>
+							<div class="signtag" style="margin-top: -5px">
+								<span class="blacktext12">More Health communities coming soon. 
+								Click <a href="@{Application.updatesEmail}" 
+								class="bluetext12">here</a> to be reminded of our next community launch.</span>
+							</div>
+						</div>
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">Patient/Caregiver/etc.</span></div>
+							<div class="personaltextfield">
+								<select size="1" name="talker.connection" class="personalfields" id="talker.connection">
+							  		<option selected value=''>Patient/Caregiver/etc.</option>
+							  		#{list items:models.TalkerBean.CONNECTIONS_ARRAY, as:'connection'}
+									    <option value="${connection}"
+									    #{if connection.equals(flash['talker.connection']) } selected #{/if} 
+									    >${connection}</option>
+									#{/list}
+								</select>
+							</div>
+						</div>
+						<div class="signupmain">
 							<div class="signuptextarea"><span class="blacktext14">Username</span></div>
 							<div class="personaltextfield">
 								<input name="talker.userName" type="text" class="personalfields" id="talker.userName" 
@@ -257,6 +281,9 @@
 							</div>
 						</div>
 						<div class="signupmain">
+							<div class="signtag">
+								<span class="textgreylight12">TalkAboutHealth notifies you of conversations via IM.</span>
+							</div>
 							<div class="signuptextarea">
 								<span class="blacktext14" style="line-height:5px;">Select an IM Service</span><br/>
 								<span class="blacktext11">(not required)</span>
@@ -280,9 +307,6 @@
 							<div class="personaltextfield" >
 								<input name="talker.imUsername" id="talker.imUsername"  type="text" class="personalfields" 
 								  	value="${flash['talker.imUsername']}" />
-							</div>
-							<div class="signtag">
-								<span class="textgreylight12">TalkAboutHealth notifies you of conversations via IM.</span>
 							</div>
 						</div>
 						<div class="signupmain">
@@ -326,24 +350,11 @@
 							</div>
 						</div>
 						-->
-						<div class="signupmain">
-							<div class="signuptextarea"><span class="blacktext14">Patient/Caregiver/etc.</span></div>
-							<div class="personaltextfield">
-								<select size="1" name="talker.connection" class="personalfields" id="talker.connection">
-							  		<option selected value=''>Patient/Caregiver/etc.</option>
-							  		#{list items:models.TalkerBean.CONNECTIONS_ARRAY, as:'connection'}
-									    <option value="${connection}"
-									    #{if connection.equals(flash['talker.connection']) } selected #{/if} 
-									    >${connection}</option>
-									#{/list}
-								</select>
-							</div>
-						</div>
 						<div class="signupmain"></div>
 					</div>								
 					<div class="signdown">
-						<h4>By signing up you agree to the <a href="@{Static.tos()}" class="pinktext14">Terms Of Service</a> 
-							and <a href="@{Static.privacy()}" class="pinktext14">Privacy Policy</a><br />
+						<h4>By signing up you agree to the <a href="@{Static.tos()}" target="_blank" class="pinktext14">Terms Of Service</a> 
+							and <a href="@{Static.privacy()}" target="_blank" class="pinktext14">Privacy Policy</a><br />
 	   						<strong>Note:</strong> Your information will remain safe and private.
 						</h4>
 						<div id="checkboxarea2">

@@ -12,6 +12,8 @@ GET     /forgotpassword/?                       Application.forgotPassword
 POST    /sendnewpassword/?						Application.sendNewPassword
 GET     /contactus/?							Application.contactus
 POST    /contactus/?							Application.sendContactEmail
+GET		/updatesemail/?							Application.updatesEmail
+POST	/updatesemail/?							Application.saveUpdatesEmail
 
 GET		/verify/{verifyCode}					Profile.verifyEmail
 

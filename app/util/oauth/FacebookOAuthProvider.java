@@ -16,7 +16,7 @@ import play.mvc.Scope.Session;
 
 import models.TalkerBean;
 import util.CommonUtil;
-import dao.LoginHistoryDAO;
+import dao.ApplicationDAO;
 import dao.TalkerDAO;
 
 
@@ -94,7 +94,7 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 	        TalkerBean talker = TalkerDAO.getTalkerByAccount("facebook", accountId);
 	        if (talker != null) {
 	        	// insert login record into db
-				LoginHistoryDAO.save(talker.getId(), new Date());
+				ApplicationDAO.saveLogin(talker.getId(), new Date());
 
 				// add TalkerBean to session
 				session.put("username", talker.getUserName());
