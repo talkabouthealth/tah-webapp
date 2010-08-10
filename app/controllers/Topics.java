@@ -12,6 +12,7 @@ import models.TopicBean;
 import play.cache.Cache;
 import play.mvc.Controller;
 import play.mvc.With;
+import play.templates.JavaExtensions;
 import util.CommonUtil;
 import util.DBUtil;
 import util.EmailUtil;
@@ -34,14 +35,11 @@ public class Topics extends Controller {
 		topic.setCreationDate(currentDate);
 		topic.setDisplayTime(currentDate);
 
+		String topicURL = JavaExtensions.slugify(topic.getTopic());
+		topic.setMainURL(topicURL);
+		
 		// insert new topic into database
-		int tid = TopicDAO.save(topic);
-		if (tid != -1) {
-			topic.setTid(tid);
-		} else {
-			new Exception("DB Problem - Topic not inserted into DB").printStackTrace();
-			renderText("|");
-		}
+		TopicDAO.save(topic);
 		
 		//send notifications if Automatic Notifications is On
 		NotificationUtils.sendAutomaticNotifications(topic.getId());
@@ -100,13 +98,20 @@ public class Topics extends Controller {
     	renderText(lastTopicId);
     }
     
-    public static void viewTopic(Integer tid) {
-    	notFoundIfNull(tid);
+    public static void viewTopic(String url) {
+    	notFoundIfNull(url);
 		
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		TopicBean topic = TopicDAO.getByTid(tid);
 		
-		notFoundIfNull(topic);
+		TopicBean topic = TopicDAO.getByMainURL(url);
+		if (topic == null) {
+			//try by old url
+			topic = TopicDAO.getByOldURL(url);
+			notFoundIfNull(topic);
+			
+			//redirect to main url
+			viewTopic(topic.getMainURL());
+		}		
 		
 		TopicDAO.incrementTopicViews(topic.getId());
 		

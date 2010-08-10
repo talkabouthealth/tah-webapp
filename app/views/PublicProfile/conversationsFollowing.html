@@ -69,10 +69,10 @@
 								    	<div class="areamidleft">
 								    		<p>
 								    			<span class="blacktext14">
-								    				<a href="@{Topics.viewTopic(topic.tid)}">${topic.topic}</a><br />
+								    				<a href="@{Topics.viewTopic(topic.mainURL)}">${topic.topic}</a><br />
 								    				<span class="blacktext12">${topic.messages.size()} comment(s)</span> | 
 						        					<span class="blacktext12">${topic.members.size()} people spoke</span> | 
-						        					<a href="@{Topics.viewTopic(topic.tid)}#comments" class="bluetext12">Comment</a> | 
+						        					<a href="@{Topics.viewTopic(topic.mainURL)}#comments" class="bluetext12">Comment</a> | 
 						        					<a href="#" class="bluetext12 followTopicLink" rel="${topic.id}">
 													${ talker.followingTopicsList?.contains(topic.id) ? 'Unfollow' : 'Follow'}
 													</a> | 

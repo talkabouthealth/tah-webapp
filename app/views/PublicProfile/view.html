@@ -536,7 +536,7 @@
 							</div>
 							<div class="activitiestext">
 								#{list items:talker.followingTopicsFullList.limit(12), as:'topic' }
-									<a href="@{Topics.viewTopic(topic.tid)}" class="bluetext12">${topic.topic}</a><br/>
+									<a href="@{Topics.viewTopic(topic.mainURL)}" class="bluetext12">${topic.topic}</a><br/>
 								#{/list}
 							</div>
 						#{/if}

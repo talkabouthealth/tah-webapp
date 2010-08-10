@@ -23,7 +23,7 @@ GET		/dashboard/?							Dashboard.index
 GET		/talk/{topicId}							Talk.talkApp
 GET		/talk/?									Talk.talkApp
 
-GET		/topic/{tid}							Topics.viewTopic
+GET		/topic/{url}							Topics.viewTopic
 
 GET		/image/{userName}						Image.show
 

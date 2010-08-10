@@ -34,9 +34,29 @@ public class TopicDAO {
 	
 	public static final String TOPICS_COLLECTION = "topics";
 	
-	public static int save(TopicBean topic) {
+	public static void save(TopicBean topic) {
+		//TODO: Same topic? - Do not update anything
+		//TODO: one query?
+		//TODO: move everything to update?
+		boolean uniqueMainURL = (getByMainURL(topic.getMainURL()) == null);
+		boolean uniqueOldURL = (getByOldURL(topic.getMainURL()) == null);
+		
 		//we try to insert topic 5 times
-		return saveInternal(topic, 5);
+		int tid = saveInternal(topic, 5);
+		
+		if (tid != -1) {
+			topic.setTid(tid);
+		} else {
+			//TODO: error handling?
+			new Exception("DB Problem - Topic not inserted into DB").printStackTrace();
+			return;
+		}
+		
+		if (!(uniqueMainURL && uniqueOldURL)) {
+			//add 'tid' to mainURL
+			topic.setMainURL(topic.getMainURL()+"-"+topic.getTid());
+			updateTopic(topic);
+		}
 	}
 	
 	/**
@@ -63,6 +83,7 @@ public class TopicDAO {
 			.add("topic", topic.getTopic())
 			.add("cr_date", topic.getCreationDate())
 			.add("disp_date", topic.getDisplayTime())
+			.add("main_url", topic.getMainURL())
 			.get();
 
 		//Only with STRICT WriteConcern we receive exception on duplicate key
@@ -83,6 +104,18 @@ public class TopicDAO {
 		topic.setId(topicId);
 		
 		return (Integer)topicObject.get("tid");
+	}
+	
+	public static void updateTopic(TopicBean topic) {
+		DBCollection topicsColl = DBUtil.getCollection(TOPICS_COLLECTION);
+		
+		DBObject topicObject = BasicDBObjectBuilder.start()
+			.add("topic", topic.getTopic())
+			.add("main_url", topic.getMainURL())
+			.get();
+		
+		DBObject topicId = new BasicDBObject("_id", new ObjectId(topic.getId()));
+		topicsColl.update(topicId, new BasicDBObject("$set", topicObject));
 	}
 	
 	public static TopicBean getByTopicId(String topicId) {
@@ -110,6 +143,30 @@ public class TopicDAO {
 		return parseTopicBean(topicDBObject);
 	}
 	
+	public static TopicBean getByMainURL(String mainURL) {
+		DBCollection topicsColl = DBUtil.getDB().getCollection(TOPICS_COLLECTION);
+		
+		DBObject query = new BasicDBObject("main_url", mainURL);
+		DBObject topicDBObject = topicsColl.findOne(query);
+		if (topicDBObject == null) {
+			return null;
+		}
+		
+		return parseTopicBean(topicDBObject);
+	}
+	
+	public static TopicBean getByOldURL(String oldURL) {
+		DBCollection topicsColl = DBUtil.getDB().getCollection(TOPICS_COLLECTION);
+		
+		DBObject query = new BasicDBObject("urls", oldURL);
+		DBObject topicDBObject = topicsColl.findOne(query);
+		if (topicDBObject == null) {
+			return null;
+		}
+		
+		return parseTopicBean(topicDBObject);
+	}
+	
 	private static TopicBean parseTopicBean(DBObject topicDBObject) {
 		//TODO: move to topic bean?
 		TopicBean topic = new TopicBean();
@@ -118,6 +175,7 @@ public class TopicDAO {
     	topic.setTopic((String)topicDBObject.get("topic"));
     	topic.setCreationDate((Date)topicDBObject.get("cr_date"));
     	topic.setDisplayTime((Date)topicDBObject.get("disp_date"));
+    	topic.setMainURL((String)topicDBObject.get("main_url"));
     	
     	DBObject talkerDBObject = ((DBRef)topicDBObject.get("uid")).fetch();
     	TalkerBean talker = new TalkerBean();
@@ -178,11 +236,11 @@ public class TopicDAO {
 	    	topic.setTopic((String)topicDBObject.get("topic"));
 	    	topic.setCreationDate((Date)topicDBObject.get("cr_date"));
 	    	topic.setDisplayTime((Date)topicDBObject.get("disp_date"));
+	    	topic.setMainURL((String)topicDBObject.get("main_url"));
 			
 	    	DBObject talkerDBObject = ((DBRef)topicDBObject.get("uid")).fetch();
 	    	TalkerBean talker = new TalkerBean();
 	    	talker.parseFromDB(talkerDBObject);
-	    	talker.setNumberOfTopics(getNumberOfTopics(talker.getId()));
 	    	topic.setTalker(talker);
 	    	
 	    	topicsMap.put(topic.getId(), topic);

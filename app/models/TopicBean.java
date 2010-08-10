@@ -20,6 +20,20 @@ public class TopicBean {
 	private String uid;
 	private TalkerBean talker;
 	
+	private String mainURL;
+	
+	public String getMainURL() {
+		if (mainURL == null || mainURL.length() == 0) {
+			//TODO: temporary for old topics
+			return ""+tid;
+		}
+		return mainURL;
+	}
+
+	public void setMainURL(String mainURL) {
+		this.mainURL = mainURL;
+	}
+
 	//new fields
 	//TODO: Set or List?
 	private String details;
