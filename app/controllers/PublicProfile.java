@@ -87,4 +87,14 @@ public class PublicProfile extends Controller {
 		
 		render(talker, currentTalker);
 	}
+	
+	public static void comments(String userName) {
+		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		notFoundIfNull(talker);
+		
+		talker.setProfileCommentsList(TalkerDAO.loadProfileComments(talker.getId()));
+		
+		render(talker, currentTalker);
+	}
 }

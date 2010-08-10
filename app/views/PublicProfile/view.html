@@ -470,7 +470,9 @@
 							<div class="profileheading">
 								Comments								
 							</div>
-							<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
+							<div class="seeall">
+								<a href="@{PublicProfile.comments(talker.userName)}" class="bluetext12"><strong>see all</strong></a>
+							</div>
 						</div>
 						#{if talker.followingList.contains(currentTalker) || talker.userName.equals(currentTalker.userName)}
 							<div id="reply" class="replyForm">

@@ -10,6 +10,7 @@
 		#{if _level == 1}
 			<div class="commentsreply">
 				#{profileCommentsTree commentsList: comment.children, level: (_level+1)/}
+				*{ TODO: Denied replies? }*
 				<div id="reply${comment.id}" class="replyForm">
 					<ul>
 						<li>
