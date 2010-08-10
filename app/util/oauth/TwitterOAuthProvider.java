@@ -18,6 +18,7 @@ import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
 import play.cache.Cache;
 import play.mvc.Scope.Session;
+import util.TwitterUtil;
 import dao.ApplicationDAO;
 import dao.TalkerDAO;
 
@@ -108,7 +109,10 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
         	
         	//Ex: <id>23090656</id>
         	if (line.startsWith("<id>")) {
-        		accountId = line.substring(4, line.length()-5);
+        		//check only first <id> (there is also <id> of status)
+        		if (accountId == null) {
+        			accountId = line.substring(4, line.length()-5);
+        		}
         	}
         }
         br.close();
@@ -125,6 +129,8 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			return "/home";
         }
         else {
+        	TwitterUtil.followUser(accountId);
+        	
         	session.put("accounttype", "twitter");
 		    session.put("accountid", accountId);
 		     
