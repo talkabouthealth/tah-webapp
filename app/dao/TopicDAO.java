@@ -109,6 +109,7 @@ public class TopicDAO {
 	public static void updateTopic(TopicBean topic) {
 		DBCollection topicsColl = DBUtil.getCollection(TOPICS_COLLECTION);
 		
+		//TODO: update also main url
 		DBObject topicObject = BasicDBObjectBuilder.start()
 			.add("topic", topic.getTopic())
 			.add("main_url", topic.getMainURL())

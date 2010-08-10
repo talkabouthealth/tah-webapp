@@ -6,25 +6,26 @@
 		<div class="thankyoutext"><span class="navybluetext12">${comment.fromTalker.userName}</span><br />
 		  <span class="blacktext11">${comment.text}</span>
 		  <span class="greytext11"><br/>${comment.time.format("MMM dd 'at' HH:MM a")}&nbsp;&nbsp;</span>
-		  <a href="#" onclick="$('#reply${comment.id}').toggle(); return false;" class="navybluetext12">Reply</a>
 		</div>
-		<div class="commentsreply">
-			<div style="display: none;" id="reply${comment.id}" class="replyForm">
-				<ul>
-					<li class="blacktext14">Comment:</li>
-					<li>
-						<textarea class="togglecomment" rows="5" cols="45" id="replytext${comment.id}"></textarea>
-				    </li>
-					<li>
-						<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
-							<a href="#reply${comment.id}" onclick="return saveProfileComment('${comment.id}');">
-								<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
-							</a>
-						</div>
-					</li> 
-				</ul>
+		#{if _level == 1}
+			<div class="commentsreply">
+				#{profileCommentsTree commentsList: comment.children, level: (_level+1)/}
+				<div id="reply${comment.id}" class="replyForm">
+					<ul>
+						<li>
+							<textarea class="togglecomment commentreply" 
+								rows="5" cols="45" id="replytext${comment.id}">Reply to comment..</textarea>
+					    </li>
+						<li style="display: none;">
+							<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
+								<a href="#reply${comment.id}" onclick="return saveProfileComment('${comment.id}');">
+									<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
+								</a>
+							</div>
+						</li> 
+					</ul>
+				</div>
 			</div>
-			#{profileCommentsTree commentsList: comment.children, level: (_level+1)/}
-		</div>
+		#{/if}
 	</div>
 #{/list}

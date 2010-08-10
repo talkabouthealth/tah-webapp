@@ -78,7 +78,8 @@ public class Actions extends Controller {
 		
 		//render html of new comment using tag
 		List<CommentBean> _commentsList = Arrays.asList(comment);
-		render("tags/profileCommentsTree.html", _commentsList);
+		int _level = (comment.getParentId() == null ? 1 : 2);
+		render("tags/profileCommentsTree.html", _commentsList, _level);
 	}
 
 }

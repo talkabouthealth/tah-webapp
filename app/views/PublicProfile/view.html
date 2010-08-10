@@ -11,11 +11,19 @@
 		}
 		#replytext {
 			height: 20px;
-			color: #666666;
+			color: #777777;
+		}
+		.commentreply {
+			height: 20px;
+			color: #777777;
 		}
 	</style>
 	<script type="text/javascript"> 	 
    		$(document).ready(function() {
+   			$(".commentreply").each(function() {
+				$(this).val("Reply to comment..").css("color", "#777777");
+			});
+
    			$("#followActionlink, #followActionImagelink").click(function() {
    				follow();
 	   		});
@@ -42,16 +50,37 @@
 		   			}
 	   			});
 
+	   		$(".commentreply")
+	   			.click(function() {
+	   				updateReplyState($(this), 'Extended');
+	   			})
+	   			.blur(function() {
+		   			if ($(this).val() == "") {
+		   				updateReplyState($(this), 'Initial');
+		   			}
+	   			});
+			
    		});
 
    		function updateCommentState(newState) {
    	   		if (newState == 'Initial') {
-   	   			$("#replytext").val("What are you thinking?").css("color", "#666666");
+   	   			$("#replytext").val("What are you thinking?").css("color", "#777777");
 				$("#commentBtn").hide();
    	   		}
    	   		else if (newState == 'Extended') {
 	   	   		$("#replytext").val("").css("color", "#000000");
 	   			$("#commentBtn").show();
+   	   		}
+   		}
+
+   		function updateReplyState(replyTextArea, newState) {
+   	   		if (newState == 'Initial') {
+   	   			replyTextArea.val("Reply to comment..").css("color", "#777777");
+   	   			replyTextArea.parent().next().hide();
+   	   		}
+   	   		else if (newState == 'Extended') {
+   	   			replyTextArea.val("").css("color", "#000000");
+	   			replyTextArea.parent().next().show();
    	   		}
    		}
 
@@ -107,8 +136,8 @@
   						$(html).prependTo($(".commentsarea"));
   					}
   					else {
-  	  					//add as last element in subtree
-  						$(html).appendTo($("#comment"+parentId+" > .commentsreply"));
+  						//add as last element in subtree
+  						$("#reply"+parentId).before($(html));
   					}
   				}
   			);
@@ -117,8 +146,7 @@
    				updateCommentState('Initial');
 			}
 			else {
-				//add as last element in subtree
-				$(html).appendTo($("#comment"+parentId+" > .commentsreply"));
+				updateReplyState($("#replytext"+parentId), 'Initial');
 			}
   			return false;
    		}
