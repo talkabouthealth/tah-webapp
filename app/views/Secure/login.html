@@ -11,8 +11,19 @@
 		#{ oauthJavaScripts /}
 	
 		function checkForm() {
-			document.forms[0].submit();
+			$("#loginform").submit();
 		}
+
+		$(document).ready(function() {
+			$('.textfields').keypress(function(e){
+				if (e.which == 13) {
+					$("#loginform").submit();
+
+			       e.preventDefault();
+				   return false;
+			    }
+			});
+		});
 	</script>
 </head>
 
@@ -26,7 +37,7 @@
 			<div class="blacktext2" id="innerheading">Login to your Account</div>
 			<div id="innermiddlearea">
 				<div id="loginarea">
-				#{form @authenticate()} 
+				#{form @authenticate() , id: 'loginform'} 
 					#{if flash.error}
 						<p class="error">
 							&{flash.error}
