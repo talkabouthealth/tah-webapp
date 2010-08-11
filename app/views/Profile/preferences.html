@@ -1,5 +1,9 @@
 #{ extends 'main.html' /}
-
+	<script type="text/javascript">
+		function confirmDeactivation() {
+			return false;
+		}
+	</script>
 	<style>
 		body {
 			background:url(/public/images/inner_bg.gif) repeat-x top;
@@ -18,8 +22,8 @@
 			#{ include 'menu.html' /}
 		</div>
 		<div id="innerbanner"></div>
-		<form id="profilepreferencesform" name="profilepreferencesform" action="@{Profile.savePreferences()}" method="POST" >
 		<div id="innermain">
+		<form id="profilepreferencesform" name="profilepreferencesform" action="@{Profile.savePreferences()}" method="POST" >
 			<div class="blacktext2" id="innerheading">Profile Preferences</div>
 			<div id="innerpersonalarea">
 				<div id="signupleft">
@@ -60,6 +64,24 @@
 						<div class="signrighbot"></div>
 					</div>
 				</div>
+				
+			</form>
+			</div>
+			
+			<div class="blacktext2" id="innerheading">Account Deactivation</div>
+			<div id="innerpersonalarea">
+				<div id="signupleft">
+					<span class="blacktext14">
+						Deactivating your account means that you'll never
+						hear from TalkAboutHealth again. If you change
+						your mind, you can always reactivate your account by
+						logging in with your email address and password.
+					</span><br/><br/><br/><br/><br/>
+					<form action="@{Profile.deactivateAccount()}" method="POST" 
+							onsubmit="if (!confirm('Are you sure want to deactivate your account?')) return false;">
+						<input type="submit" style="padding: 10px" 
+							value="Deactivate Account" />
+					</form>
+				</div>
 			</div>
 		</div>
-		</form>

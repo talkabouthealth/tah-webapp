@@ -101,6 +101,8 @@ public class TalkerDAO {
 			.add("ch_ages", talker.getChildrenAges())
 			.add("keywords", talker.getKeywords())
 			
+			.add("deactivated", talker.isDeactivated())
+			
 			.add("following_topics", talker.getFollowingTopicsList())
 			.get();
 		
@@ -248,14 +250,23 @@ public class TalkerDAO {
 		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("uname", userName);
-		DBObject talkerDBObject = talkersColl.findOne(query, new BasicDBObject("img", 1));
+		DBObject fields = BasicDBObjectBuilder.start()
+			.add("img", 1)
+			.add("deactivated", 1)
+			.get();
+		DBObject talkerDBObject = talkersColl.findOne(query, fields);
 		
 		if (talkerDBObject == null) {
 			return null;
 		}
-		else {
-			return (byte[])talkerDBObject.get("img");
+		
+		Boolean isDeactivated = (Boolean)talkerDBObject.get("deactivated");
+		if (isDeactivated != null && isDeactivated) {
+			//Show default image
+			return null;
 		}
+		
+		return (byte[])talkerDBObject.get("img");
 	}
 	
 	
@@ -313,6 +324,12 @@ public class TalkerDAO {
 		for (DBObject followerDBObject : followerDBList) {
 			//TODO: same as following?
 			TalkerBean followerTalker = new TalkerBean();
+			
+			boolean isDeactivated = followerTalker.getBoolean(followerDBObject.get("deactivated"));
+			if (isDeactivated) {
+				continue;
+			}
+			
 			followerTalker.setId(followerDBObject.get("_id").toString());
 			followerTalker.setUserName(followerDBObject.get("uname").toString());
 			followerTalker.setBio((String)followerDBObject.get("bio"));

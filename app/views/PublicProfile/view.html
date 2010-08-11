@@ -163,7 +163,13 @@
 		<div id="bottom_container">
 			<div id="innerbanner"></div>
 			<div id="innermain">
-				<div id="innerheading" class="blacktext2">My Public Profile</div>
+				<div id="innerheading" class="blacktext2">
+					${ talker.userName.equals(currentTalker.userName) ? 'My' : talker.userName+'\'s' } Public Profile
+				</div>
+				#{if talker.deactivated }
+					<span class="blacktext16" style="padding: 50px 0; float: left;">Member profile no longer available.</span>
+				#{/if}
+				#{else}
 				<div id="innermiddlearea">
 					<div id="profileleft">
 						<div id="profilelefttop"></div>
@@ -572,6 +578,7 @@
 						#{/if}
 					</div>
 				</div>
+				#{/else}
 			</div>
 		</div>
 	</div>

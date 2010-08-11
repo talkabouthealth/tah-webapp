@@ -24,6 +24,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 
+import play.Logger;
 import play.Play;
 import play.data.validation.Valid;
 import play.mvc.Controller;
@@ -372,5 +373,18 @@ public class Profile extends Controller {
 		EmailUtil.sendEmail(EmailUtil.VERIFICATION_TEMPLATE, talker.getEmail(), vars, null, false);
 		
 		renderText("Ok! Email sent.");
+	}
+	
+	public static void deactivateAccount() {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		talker.setDeactivated(true);
+		TalkerDAO.updateTalker(talker);
+		
+		try {
+			Secure.logout();
+		} catch (Throwable e) {
+			Logger.error("Logout error", e);
+		}
 	}
 }

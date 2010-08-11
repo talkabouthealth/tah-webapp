@@ -38,6 +38,13 @@ public class Security extends Secure.Security {
     	
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
+    	if (talker.isDeactivated()) {
+    		talker.setDeactivated(false);
+    		TalkerDAO.updateTalker(talker);
+    		
+    		CommonUtil.updateCachedTalker(session);
+    	}
+    	
     	Date now = Calendar.getInstance().getTime(); 
 		ApplicationDAO.saveLogin(talker.getId(), now);
 		

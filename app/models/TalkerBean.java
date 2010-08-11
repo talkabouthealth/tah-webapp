@@ -164,6 +164,8 @@ public class TalkerBean implements Serializable {
 	private List<String> keywords;
 	private String bio;
 	
+	private boolean deactivated;
+	
 	
 	public List<CommentBean> getProfileCommentsList() {
 		return profileCommentsList;
@@ -306,6 +308,8 @@ public class TalkerBean implements Serializable {
 		setEmail((String)talkerDBObject.get("email"));
 		setVerifyCode((String)talkerDBObject.get("verify_code"));
 		
+		setDeactivated(getBoolean(talkerDBObject.get("deactivated"))); 
+		
 		setIm((String)talkerDBObject.get("im"));
 		setImUsername((String)talkerDBObject.get("im_uname"));
 		setGender((String)talkerDBObject.get("gender"));
@@ -344,6 +348,16 @@ public class TalkerBean implements Serializable {
 		setFollowingTopicsList(parseStringList(talkerDBObject.get("following_topics")));
 	}
 	
+	//TODO: make private and unify with all other getters
+	public boolean getBoolean(Object object) {
+		if (object == null) {
+			return false;
+		}
+		else {
+			return ((Boolean)object).booleanValue();
+		}
+	}
+
 	private List<String> parseStringList(Object fieldValue) {
 		Collection<String> fieldCollection = (Collection<String>)fieldValue;
 		if (fieldCollection == null) {
@@ -386,6 +400,12 @@ public class TalkerBean implements Serializable {
 				TalkerBean followingTalker = new TalkerBean();
 				
 				DBObject followingDBOBject = followingDBRef.fetch();
+				
+				boolean isDeactivated = getBoolean(followingDBOBject.get("deactivated"));
+				if (isDeactivated) {
+					continue;
+				}
+				
 				followingTalker.setId(followingDBOBject.get("_id").toString());
 				followingTalker.setUserName(followingDBOBject.get("uname").toString());
 				followingTalker.setBio((String)followingDBOBject.get("bio"));
@@ -750,5 +770,12 @@ public class TalkerBean implements Serializable {
 	public void setFollowingTopicsFullList(List<TopicBean> followingTopicsFullList) {
 		this.followingTopicsFullList = followingTopicsFullList;
 	}
-	
+
+	public boolean isDeactivated() {
+		return deactivated;
+	}
+
+	public void setDeactivated(boolean deactivated) {
+		this.deactivated = deactivated;
+	}
 }	
