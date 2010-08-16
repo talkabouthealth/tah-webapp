@@ -412,6 +412,7 @@ public class TalkerBean implements Serializable {
 				
 				//TODO: slooooow?
 				followingTalker.parseThankYous((Collection<DBObject>)followingDBOBject.get("thankyous"));
+				followingTalker.parseProfilePreferences(parseInt(followingDBOBject.get("prefs")));
 				
 				followingList.add(followingTalker);
 			}

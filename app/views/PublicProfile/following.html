@@ -126,7 +126,9 @@
 						            			</a>
 							            		<span class="blue13"> | </span> 
 							            		<span class="blkq13">${following.levelOfRecognition}</span><br/>
-							              		<span class="greytext12">${following.bio}</span><br/>
+							            		#{if following.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.BIO) }
+							              			<span class="greytext12">${following.bio}</span><br/>
+							              		#{/if}
 							              		<span class="bluetext12">
 								              		#{ifnot currentTalker?.equals(following) }
 													 	<a class="bluetext12 followActionLink" rel="${following.id}" href="#">
