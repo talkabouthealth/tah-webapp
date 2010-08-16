@@ -10,6 +10,7 @@ import models.LiveConversationBean;
 import models.TalkerBean;
 import models.TopicBean;
 import play.cache.Cache;
+import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 import play.templates.JavaExtensions;
@@ -22,8 +23,12 @@ import dao.ActivityDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
 
-@With(Secure.class)
 public class Topics extends Controller {
+	
+	@Before(unless={"viewTopic"})
+    static void checkAccess() throws Throwable {
+		Secure.checkAccess();
+	}
 
     public static void create(String newTopic) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
@@ -98,32 +103,6 @@ public class Topics extends Controller {
     	renderText(lastTopicId);
     }
     
-    public static void viewTopic(String url) {
-    	notFoundIfNull(url);
-		
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
-		TopicBean topic = TopicDAO.getByMainURL(url);
-		if (topic == null) {
-			//try by old url
-			topic = TopicDAO.getByOldURL(url);
-			notFoundIfNull(topic);
-			
-			//redirect to main url
-			viewTopic(topic.getMainURL());
-		}		
-		
-		TopicDAO.incrementTopicViews(topic.getId());
-		
-		//temporary test data
-		topic.setDetails("Suggestions for friends and family...");
-		topic.setTags(Arrays.asList("support", "help", "testtag"));
-		topic.setSummary("Summary.........");
-		topic.setSumContributors(Arrays.asList("murray", "situ"));
-		
-		render(talker, topic);
-    }
-    
     //follow or unfollow
     public static void follow(String topicId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
@@ -147,6 +126,36 @@ public class Topics extends Controller {
     	//TODO: list of allowed fields?
     	
     	
+    }
+    
+    /* --------------- Public -------------------- */
+    public static void viewTopic(String url) {
+    	notFoundIfNull(url);
+		
+		TalkerBean talker = null;
+		if (Security.isConnected()) {
+			talker = CommonUtil.loadCachedTalker(session);
+		}
+		
+		TopicBean topic = TopicDAO.getByMainURL(url);
+		if (topic == null) {
+			//try by old url
+			topic = TopicDAO.getByOldURL(url);
+			notFoundIfNull(topic);
+			
+			//redirect to main url
+			viewTopic(topic.getMainURL());
+		}		
+		
+		TopicDAO.incrementTopicViews(topic.getId());
+		
+		//temporary test data
+		topic.setDetails("Suggestions for friends and family...");
+		topic.setTags(Arrays.asList("support", "help", "testtag"));
+		topic.setSummary("Summary.........");
+		topic.setSumContributors(Arrays.asList("murray", "situ"));
+		
+		render(talker, topic);
     }
 
 }

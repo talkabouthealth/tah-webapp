@@ -125,16 +125,34 @@
 		<div id="arearightinner">
 			<div id="rightcurvetop"></div>
 			<div id="rightmid">
-				<div id="imgarea"><img src="@{Image.show(talker.userName)}" width="71" height="71" /></div>
+				<div id="imgarea">
+					<a href="@{PublicProfile.view(talker.userName)}">
+						<img src="@{Image.show(talker.userName)}" width="71" height="71" border="0" />
+					</a>
+				</div>
 				<div class="blacktext14" id="imghead">
-					<strong>${talker.userName}</strong><br />
+					<a href="@{PublicProfile.view(talker.userName)}" style="color: black; text-decoration: none">
+						<strong>${talker.userName}</strong>
+					</a><br />
 			  		<span class="blacktext14">${talker.levelOfRecognition}</span>
 			  	</div>
 			  	<div class="bluetext14" id="textrightbox">
-			  		<span class="blacktext">Conversations:</span><strong> ${talker.numberOfTopics}</strong> <br />
-				    <span class="blacktext">Thank You's:</span><strong> ${talker.thankYouList.size()}</strong> <br />
-				    <span class="blacktext">Followers:</span> <strong> ${talker.followerList.size()}</strong> <br />
-				    <span class="blacktext">Following:</span><strong> ${talker.followingList.size()}</strong>
+			  		<span class="blacktext">Conversations:</span>
+			  		<a style="text-decoration: none" href="#conversationsjoined">
+				    	<strong>${talker.numberOfTopics}</strong>
+				    </a> <br />
+				    <span class="blacktext">Thank You's: </span>
+				    <a style="text-decoration: none" href="@{PublicProfile.thankyous(talker.userName)}">
+				    	<strong>${talker.thankYouList.size()}</strong>
+				    </a> <br />
+				    <span class="blacktext">Followers:</span>
+				    <a style="text-decoration: none" href="@{PublicProfile.followers(talker.userName)}">
+				    	<strong>${talker.followerList.size()}</strong>
+				    </a> <br />
+				    <span class="blacktext">Following:</span>
+				    <a style="text-decoration: none" href="@{PublicProfile.following(talker.userName)}">
+				    	<strong>${talker.followingList.size()}</strong>
+				    </a>
 				</div>
 			</div>
 			<div id="rightbot"></div>

@@ -63,6 +63,7 @@
 				})
 				//.mouseover(save)
 				.mouseout(hide)
+				//.blur(hide)
 				.click(save);
 		},
 		fixPNG: IE ? function() {

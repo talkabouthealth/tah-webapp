@@ -2,6 +2,7 @@
 	<style>
 		body {
 			background:url(/public/images/inner_bg.gif) repeat-x top;
+			font-size: 14px;
 		}
 		#innermid {
 			padding: 10px;
@@ -67,9 +68,11 @@
 						${tag}&nbsp;&nbsp;&nbsp;
 					#{/list}
 					<br/>
-					<a href="#" class="restartConvoLink">Re-start conversation</a>&nbsp;
-					<a href="#">Start follow up conversation</a>&nbsp;
-					<a href="#" class="flagConvoLink">Flag conversation</a>&nbsp;
+					#{if talker }
+						<a href="#" class="restartConvoLink">Re-start conversation</a>&nbsp;
+						<a href="#">Start follow up conversation</a>&nbsp;
+						<a href="#" class="flagConvoLink">Flag conversation</a>&nbsp;
+					#{/if}
 					<br/><br/>
 					<h3>Conversation Summary:</h3><br/>
 					${topic.summary}<br/>
@@ -83,8 +86,10 @@
 					<br/><br/>
 					<h3>Conversation:</h3>
 					<br/>
-					<a href="#" class="restartConvoLink">Re-start conversation</a>&nbsp;
-					<a href="#">Start follow up conversation</a>&nbsp;
+					#{if talker }
+						<a href="#" class="restartConvoLink">Re-start conversation</a>&nbsp;
+						<a href="#">Start follow up conversation</a>&nbsp;
+					#{/if}
 					<br/>
 					${topic.creationDate?.format('M/d/yyyy')}
 					<br/>
@@ -108,6 +113,7 @@
 				</div>
 				<div id="searchright"><img src="/public/images/searchbutton.gif" width="34" height="35" /></div>
 				-->
+				#{if talker }
 				<div class="innerrightbox" style="padding-top: 0px">
 					<div class="innerrightop"></div>
 					<div class="innerrighmid">
@@ -120,6 +126,7 @@
 					</div>
 					<div class="innerrighbot"></div>
 				</div>
+				#{/if}
 				<div class="innerrightbox">
 					<div class="innerrightop"></div>
 					<div class="innerrighmid">
