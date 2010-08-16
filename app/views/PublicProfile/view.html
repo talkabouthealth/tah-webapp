@@ -109,7 +109,7 @@
    			$("#thankYouNote").val("");
 
    			$.post("@{Actions.createThankYou()}", 
-  				{ toTalker: '${talker.id}', note: noteText},
+  				{ toTalker: '${talker.id}', note: noteText, tagFile: 'profileThankYou'},
   				function(html) {
   					$("#firstthankyoumessage").hide();
   					

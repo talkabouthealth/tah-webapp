@@ -14,12 +14,10 @@
    			$("#thankYouNote").val("");
 
    			$.post("@{Actions.createThankYou()}", 
-  				{ toTalker: '${talker.id}', note: noteText},
+  				{ toTalker: '${talker.id}', note: noteText, tagFile: 'thanksThankYou'},
   				function(html) {
-  					$("#firstthankyoumessage").hide();
-  					
   					//put new thank you item in the list
-  					$(html).prependTo($("#thankyoulist"));
+  					$(html).prependTo($(".thnksarea2"));
   				}
   			);
 
@@ -29,15 +27,6 @@
 	<style>
 		body {
 			background:url(/public/images/inner_bg.gif) repeat-x top;
-		}
-		#signupleftarea, #thankyoulist {
-			width: auto;
-		} 
-		#thankyoulist {
-			clear: left;
-		}
-		.profiletext2 {
-			width:250px;
 		}
 	</style>
 </head>
@@ -52,40 +41,58 @@
 	</div>
 	<div id="innerbanner"></div>
 	<div id="innermain">
-		<div class="blacktext2" id="innerheading">${talker.userName} Thank You's (${talker.thankYouList.size()})</div>
-		<div id="innerpersonalarea">
-			<div id="signupleftarea">
-				#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) &&
-						!talker.userName.equals(currentTalker.userName) }
-					<a id="displayThankYouText" href="#" 
-						class="navybluetext12">Give ${talker.userName} a 'Thank you'</a>
-				#{/if}
-				<div id="leavethankyouText" style="display:none">
-					<ul>
-						<li class="blacktext14">Give a Thank You</li>
-						<li>
-							<input id="thankYouNote" name="thankYouNote" type="text" 
-								class="togglecommentfield" value="" size="6" />
-						</li>
-						<li>
-							<div class="personaltextarea" style="height:46px; padding-top:2px;">
-								<a href="#thankyouSection" onclick="thankYou()">
-									<img src="/public/images/addcomment_btn.gif" width="145" height="32" border="0" />
-								</a>
-							</div>
-						</li> 
-					</ul>
-				</div>
-				<div id="thankyoulist" class="thankyoutextarea">
-					#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
-						#{list items:talker.thankYouList.limit(3*10), as:'thankYou'}
-							#{ profileThankYou thankYou: thankYou /}
-						#{/list}
+		<div class="blacktext2" id="innerheading">Thank you's</div>
+		<div id="innermiddlearea">
+   			<div class="headingarea2">
+	      		<div class="tabheading">
+	      			<span class="blacktext25">${talker.userName}'s Thank You's </span> 
+	      			<span class="pinktext25"><strong>(${talker.thankYouList.size()})</strong></span> 
+	      			
+	      			#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) &&
+							!talker.userName.equals(currentTalker.userName) }
+						<span class="greytext25">|</span> 
+						<a id="displayThankYouText" href="#" 
+							class="bluetext14">Give ${talker.userName} a "Thank you"</a>
 					#{/if}
-					#{else}
-						<span class="blacktext14">This information has been made private.</span>
-					#{/else}
-				</div>
+	      		</div>
+	      		#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
+		            <div class="seemore">
+		            	<a href="#"><img width="134" height="33" border="0" src="/public/images/seemorebutton.gif"/></a>
+		            </div>
+		        #{/if}
+    		</div>
+			<div id="leavethankyouText" style="display:none">
+				<ul>
+					<li class="blacktext14">Give a Thank You</li>
+					<li>
+						<input id="thankYouNote" name="thankYouNote" type="text" 
+							class="togglecommentfield" value="" size="6" />
+					</li>
+					<li>
+						<div class="personaltextarea" style="height:46px; padding-top:2px;">
+							<a href="#thankyouSection" onclick="thankYou()">
+								<img src="/public/images/addcomment_btn.gif" width="145" height="32" border="0" />
+							</a>
+						</div>
+					</li> 
+				</ul>
 			</div>
-		</div>
+            <div class="thnksarea2">
+            	#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
+					#{list items:talker.thankYouList.limit(3*10), as:'thankYou'}
+						#{ thanksThankYou thankYou: thankYou /}
+					#{/list}
+				#{/if}
+				#{else}
+					<span class="blacktext14" style="margin: 30px 0; float: left">This information has been made private.</span>
+				#{/else}
+            </div>
+            #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
+	            <div class="thnksbottom">
+	            	<div class="seemore">
+	            		<a href="#"><img width="134" height="33" border="0" src="/public/images/seemorebutton.gif"/></a>
+	            	</div>
+	            </div>
+	        #{/if}
+        </div>
 	</div>

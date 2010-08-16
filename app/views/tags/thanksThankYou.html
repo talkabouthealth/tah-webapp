@@ -1,0 +1,13 @@
+<div class="thnkstext2">
+	<div class="thnksfollowingimg">
+		<a href="@{PublicProfile.view(_thankYou.fromTalker.userName)}">
+			<img width="80" height="80" src="@{Image.show(_thankYou.fromTalker.userName)}" border="0" />
+		</a>
+	</div>
+	<div class="thnksfollowingtext">
+		<a href="@{PublicProfile.view(_thankYou.fromTalker.userName)}" 
+			class="blue13"><strong>${_thankYou.fromTalker.userName}</strong></a><br/>
+		<span class="greytext12">${_thankYou.note}</span><br/>
+		<span class="lightgrey12">${_thankYou.time?.format('M/d/yyyy')}</span>
+	</div>
+</div>

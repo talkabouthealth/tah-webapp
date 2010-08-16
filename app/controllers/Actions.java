@@ -17,7 +17,7 @@ import dao.TalkerDAO;
 @With(Secure.class)
 public class Actions extends Controller {
 	
-	public static void createThankYou(String toTalker, String note) {
+	public static void createThankYou(String toTalker, String note, String tagFile) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 		ThankYouBean thankYouBean = new ThankYouBean();
@@ -31,7 +31,12 @@ public class Actions extends Controller {
 		
 		//render html of new comment using tag
 		ThankYouBean _thankYou = thankYouBean;
-		render("tags/profileThankYou.html", _thankYou);
+		
+		//default tag
+		if (tagFile == null) {
+			tagFile = "profileThankYou";
+		}
+		render("tags/"+tagFile+".html", _thankYou);
 	}
 	
 	public static void follow(String followingId) {
