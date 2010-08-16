@@ -2,6 +2,20 @@
 	<script type="text/javascript"> 	 
 		var selectedTalkerId = '';
    		$(document).ready(function() {
+   			// When a link is clicked
+   			$("a.tab").click(function () {
+   				// switch all tabs off
+   				$(".active").removeClass("active");
+   				// switch this tab on
+   				$(this).addClass("active");
+   				// slide all content up
+   				$(".content").slideUp();
+   				// slide this content up
+   				var content_show = $(this).attr("title");
+   				$("#"+content_show).slideDown();
+   			});
+
+	   	   		
    			$(".followActionLink").click(function() {
    				var followingId = $(this).attr("rel");
    				var followLink = $(this);
@@ -78,43 +92,167 @@
 	</div>
 	<div id="innerbanner"></div>
 	<div id="innermain">
-		<div class="blacktext2" id="innerheading">${talker.userName} Following</div>
+		<div class="blacktext2" id="innerheading">${talker.userName}'s Contacts</div>
+		<div id="innermiddlearea">
+			<div class="tabbed_box" id="tabbed_box_1">
+    			<div class="tabbed_area">
+			        <ul class="tabs">
+			            <li><a class="tab active" title="content_1" href="#">Following (${talker.followingList.size()})</a></li>
+			            <li><a class="tab" title="content_2" href="#">Followers (10)</a></li>
+			        </ul>
+			        <div class="content" id="content_1" style="display: block;">
+			   			<div>
+				        	<div class="headingarea">
+					            <div class="tabheading">
+					            	<span class="blacktext25">Following</span> 
+					            	<span class="pinktext25"><strong>(${talker.followingList.size()})</strong></span>
+					            </div>
+					            <div class="seemore">
+					            	<a href="#"><img width="134" height="33" border="0" src="/public/images/seemorebutton.gif"/></a>
+					            </div>
+				            </div>
+				            <div class="thnksarea">
+				            	#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
+									#{list items:talker.followingList.limit(3*10), as:'following' }
+										<div class="thnksfollowing">
+							            	<div class="thnksfollowingimg">
+												<a href="@{PublicProfile.view(following.userName)}">
+													<img width="80" height="80" src="@{Image.show(following.userName)}" border="0" />
+												</a>
+											</div>
+							            	<div class="thnksfollowingtext">
+							            		<a class="blue13" href="@{PublicProfile.view(following.userName)}">
+						            				<strong>${following.userName}</strong>
+						            			</a>
+							            		<span class="blue13"> | </span> 
+							            		<span class="blkq13">${following.levelOfRecognition}</span><br/>
+							              		<span class="greytext12">${following.bio}</span><br/>
+							              		<span class="bluetext12">
+								              		#{ifnot currentTalker?.equals(following) }
+													 	<a class="bluetext12 followActionLink" rel="${following.id}" href="#">
+														${ currentTalker.followingList.contains(following) ? 'Unfollow' : 'Follow'}
+														</a> | 
+													#{/ifnot}
+													*{ TODO Not rel2 ? }* 
+												 	<a href="#commentform" rel2="${following.id}" class="bluetext12 commentLink">Comment</a>
+												 	#{ifnot currentTalker?.equals(following) }
+													 	 | <a href="#thankyouform" rel2="${following.id}" class="bluetext12 thankYouLink">Thank</a>
+													#{/ifnot}
+							              		</span>
+							              	</div>
+							            </div>
+									#{/list}
+								#{/if}
+								#{else}
+									<span class="blacktext14">This information has been made private.</span>
+								#{/else}
+					             <div class="thnksfollowing">
+					            <div class="thnksfollowingimg"><img src="/public/images/thnksimg.gif"/></div>
+					            <div class="thnksfollowingtext"><span class="blue13"><strong>Murray</strong> |</span> <span class="blkq13">Advocate</span><br/>
+					              <span class="greytext12">I am crazy about travelling and about getting to know and understand new cultures. ...</span><br/>
+					              <span class="bluetext12"><a class="bluetext12" href="#">Unfollow</a> | <a class="bluetext12" href="#">Comment</a> | <a class="bluetext12" href="#">Thank</a></span></div>
+					            </div>
+					             <div class="thnksfollowing">
+					            <div class="thnksfollowingimg"><img src="/public/images/thnksimg.gif"/></div>
+					            <div class="thnksfollowingtext"><span class="blue13"><strong>Murray</strong> |</span> <span class="blkq13">Advocate</span><br/>
+					              <span class="greytext12">I am crazy about travelling and about getting to know and understand new cultures. ...</span><br/>
+					              <span class="bluetext12"><a class="bluetext12" href="#">Unfollow</a> | <a class="bluetext12" href="#">Comment</a> | <a class="bluetext12" href="#">Thank</a></span></div>
+					            </div>
+					            
+					             <div class="thnksfollowing">
+					            <div class="thnksfollowingimg"><img src="/public/images/thnksimg.gif"/></div>
+					            <div class="thnksfollowingtext"><span class="blue13"><strong>Murray</strong> |</span> <span class="blkq13">Advocate</span><br/>
+					              <span class="greytext12">I am crazy about travelling and about getting to know and understand new cultures. ...</span><br/>
+					              <span class="bluetext12"><a class="bluetext12" href="#">Unfollow</a> | <a class="bluetext12" href="#">Comment</a> | <a class="bluetext12" href="#">Thank</a></span></div>
+					            </div>
+					             <div class="thnksfollowing">
+					            <div class="thnksfollowingimg"><img src="/public/images/thnksimg.gif"/></div>
+					            <div class="thnksfollowingtext"><span class="blue13"><strong>Murray</strong> |</span> <span class="blkq13">Advocate</span><br/>
+					              <span class="greytext12">I am crazy about travelling and about getting to know and understand new cultures. ...</span><br/>
+					              <span class="bluetext12"><a class="bluetext12" href="#">Unfollow</a> | <a class="bluetext12" href="#">Comment</a> | <a class="bluetext12" href="#">Thank</a></span></div>
+					            </div>
+					             <div class="thnksfollowing">
+					            <div class="thnksfollowingimg"><img src="/public/images/thnksimg.gif"/></div>
+					            <div class="thnksfollowingtext"><span class="blue13"><strong>Murray</strong> |</span> <span class="blkq13">Advocate</span><br/>
+					              <span class="greytext12">I am crazy about travelling and about getting to know and understand new cultures. ...</span><br/>
+					              <span class="bluetext12"><a class="bluetext12" href="#">Unfollow</a> | <a class="bluetext12" href="#">Comment</a> | <a class="bluetext12" href="#">Thank</a></span></div>
+					            </div>
+					            
+					             <div class="thnksfollowing">
+					            <div class="thnksfollowingimg"><img src="/public/images/thnksimg.gif"/></div>
+					            <div class="thnksfollowingtext"><span class="blue13"><strong>Murray</strong> |</span> <span class="blkq13">Advocate</span><br/>
+					              <span class="greytext12">I am crazy about travelling and about getting to know and understand new cultures. ...</span><br/>
+					              <span class="bluetext12"><a class="bluetext12" href="#">Unfollow</a> | <a class="bluetext12" href="#">Comment</a> | <a class="bluetext12" href="#">Thank</a></span></div>
+					            </div>
+				            </div>
+				            <div class="thnksbottom"><div class="seemore"><a href="#"><img width="134" height="33" border="0" src="/public/images/seemorebutton.gif"/></a></div></div>
+			        	</div>
+			        </div>
+			        <div class="content" id="content_2" style="display: none;">
+			        	 <div>
+			        	<div class="headingarea">
+			            <div class="tabheading"><span class="blacktext25">Followers</span> <span class="pinktext25"><strong>(10)</strong></span></div>
+			            <div class="seemore"><a href="#"><img width="134" height="33" border="0" src="/public/images/seemorebutton.gif"/></a></div>
+			            </div>
+			        
+			            <div class="thnksarea">
+			            <div class="thnksfollowing">
+			            <div class="thnksfollowingimg"><img src="/public/images/thnksimg.gif"/></div>
+			            <div class="thnksfollowingtext"><span class="blue13"><strong>Murray</strong> |</span> <span class="blkq13">Advocate</span><br/>
+			              <span class="greytext12">I am crazy about travelling and about getting to know and understand new cultures. ...</span><br/>
+			              <span class="bluetext12"><a class="bluetext12" href="#">Unfollow</a> | <a class="bluetext12" href="#">Comment</a> | <a class="bluetext12" href="#">Thank</a></span></div>
+			            </div>
+			             <div class="thnksfollowing">
+			            <div class="thnksfollowingimg"><img src="/public/images/thnksimg.gif"/></div>
+			            <div class="thnksfollowingtext"><span class="blue13"><strong>Murray</strong> |</span> <span class="blkq13">Advocate</span><br/>
+			              <span class="greytext12">I am crazy about travelling and about getting to know and understand new cultures. ...</span><br/>
+			              <span class="bluetext12"><a class="bluetext12" href="#">Unfollow</a> | <a class="bluetext12" href="#">Comment</a> | <a class="bluetext12" href="#">Thank</a></span></div>
+			            </div>
+			             <div class="thnksfollowing">
+			            <div class="thnksfollowingimg"><img src="/public/images/thnksimg.gif"/></div>
+			            <div class="thnksfollowingtext"><span class="blue13"><strong>Murray</strong> |</span> <span class="blkq13">Advocate</span><br/>
+			              <span class="greytext12">I am crazy about travelling and about getting to know and understand new cultures. ...</span><br/>
+			              <span class="bluetext12"><a class="bluetext12" href="#">Unfollow</a> | <a class="bluetext12" href="#">Comment</a> | <a class="bluetext12" href="#">Thank</a></span></div>
+			            </div>
+			            
+			             <div class="thnksfollowing">
+			            <div class="thnksfollowingimg"><img src="/public/images/thnksimg.gif"/></div>
+			            <div class="thnksfollowingtext"><span class="blue13"><strong>Murray</strong> |</span> <span class="blkq13">Advocate</span><br/>
+			              <span class="greytext12">I am crazy about travelling and about getting to know and understand new cultures. ...</span><br/>
+			              <span class="bluetext12"><a class="bluetext12" href="#">Unfollow</a> | <a class="bluetext12" href="#">Comment</a> | <a class="bluetext12" href="#">Thank</a></span></div>
+			            </div>
+			             <div class="thnksfollowing">
+			            <div class="thnksfollowingimg"><img src="/public/images/thnksimg.gif"/></div>
+			            <div class="thnksfollowingtext"><span class="blue13"><strong>Murray</strong> |</span> <span class="blkq13">Advocate</span><br/>
+			              <span class="greytext12">I am crazy about travelling and about getting to know and understand new cultures. ...</span><br/>
+			              <span class="bluetext12"><a class="bluetext12" href="#">Unfollow</a> | <a class="bluetext12" href="#">Comment</a> | <a class="bluetext12" href="#">Thank</a></span></div>
+			            </div>
+			             <div class="thnksfollowing">
+			            <div class="thnksfollowingimg"><img src="/public/images/thnksimg.gif"/></div>
+			            <div class="thnksfollowingtext"><span class="blue13"><strong>Murray</strong> |</span> <span class="blkq13">Advocate</span><br/>
+			              <span class="greytext12">I am crazy about travelling and about getting to know and understand new cultures. ...</span><br/>
+			              <span class="bluetext12"><a class="bluetext12" href="#">Unfollow</a> | <a class="bluetext12" href="#">Comment</a> | <a class="bluetext12" href="#">Thank</a></span></div>
+			            </div>
+			            
+			             <div class="thnksfollowing">
+			            <div class="thnksfollowingimg"><img src="/public/images/thnksimg.gif"/></div>
+			            <div class="thnksfollowingtext"><span class="blue13"><strong>Murray</strong> |</span> <span class="blkq13">Advocate</span><br/>
+			              <span class="greytext12">I am crazy about travelling and about getting to know and understand new cultures. ...</span><br/>
+			              <span class="bluetext12"><a class="bluetext12" href="#">Unfollow</a> | <a class="bluetext12" href="#">Comment</a> | <a class="bluetext12" href="#">Thank</a></span></div>
+			            </div>
+			              <div class="thnksfollowing">
+			            </div>
+			            <div class="thnksbottom"><div class="seemore"><a href="#"><img width="134" height="33" border="0" src="/public/images/seemorebutton.gif"/></a></div></div>
+			        	</div>
+			        </div>
+    				</div>
+    			</div>
+			</div>
+		</div>
+		
 		<div id="innerpersonalarea">
 			<div id="signupleftarea">
-				#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
-					<div>
-						#{list items:talker.followingList.limit(3*10), as:'following' }
-							<div class="profiletext2">
-								<div class="thankyoupic">
-									<a href="@{PublicProfile.view(following.userName)}">
-										<img width="48" height="48" src="@{Image.show(following.userName)}" border="0" />
-									</a>
-								</div>
-								<div class="thankyoutext">
-									<a href="@{PublicProfile.view(following.userName)}" 
-										class="bluetext11">${following.userName}</a><br/>
-									<span class="blacktext11">${following.levelOfRecognition}</span><br/>
-								  	<span class="blacktext11">${following.bio}</span>
-								 </div>
-								 <div style="clear: both; padding-left: 5px; padding-top: 3px;">
-								 	#{ifnot currentTalker?.equals(following) }
-									 	<a class="bluetext12 followActionLink" rel="${following.id}" href="#">
-										${ currentTalker.followingList.contains(following) ? 'Unfollow' : 'Follow'}
-										</a> | 
-									#{/ifnot}
-									*{ TODO Not rel2 ? }* 
-								 	<a href="#commentform" rel2="${following.id}" class="bluetext12 commentLink">Comment</a>
-								 	#{ifnot currentTalker?.equals(following) }
-									 	 | <a href="#thankyouform" rel2="${following.id}" class="bluetext12 thankYouLink">Thank</a>
-									#{/ifnot}
-								 </div>
-							</div>
-						#{/list}
-					</div>
-				#{/if}
-				#{else}
-					<span class="blacktext14">This information has been made private.</span>
-				#{/else}
+				
 			</div>
 		</div>
 	</div>
