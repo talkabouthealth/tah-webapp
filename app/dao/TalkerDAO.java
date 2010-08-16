@@ -335,6 +335,7 @@ public class TalkerDAO {
 			followerTalker.setBio((String)followerDBObject.get("bio"));
 			
 			followerTalker.parseThankYous((Collection<DBObject>)followerDBObject.get("thankyous"));
+			followerTalker.parseProfilePreferences(followerTalker.parseInt(followerDBObject.get("prefs")));
 			
 			followerList.add(followerTalker);
 		}

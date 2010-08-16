@@ -79,7 +79,7 @@
 			</div>
             <div class="thnksarea2">
             	#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
-					#{list items:talker.thankYouList.limit(3*10), as:'thankYou'}
+					#{list items:talker.thankYouList.limit(10), as:'thankYou'}
 						#{ thanksThankYou thankYou: thankYou /}
 					#{/list}
 				#{/if}

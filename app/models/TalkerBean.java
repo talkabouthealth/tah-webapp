@@ -429,7 +429,7 @@ public class TalkerBean implements Serializable {
 		}
 	}
 
-	private int parseInt(Object value) {
+	public int parseInt(Object value) {
 		if (value == null) {
 			return 0;
 		}

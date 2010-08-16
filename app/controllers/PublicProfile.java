@@ -60,6 +60,15 @@ public class PublicProfile extends Controller {
 		render(talker, currentTalker);
 	}
 	
+//	public static void loadMoreThankYous(String userName, int start) {
+//		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+//		TalkerBean talker = TalkerDAO.getByUserName(userName);
+//		notFoundIfNull(talker);
+//		
+//		render("@thankyoulist", talker);
+//	}
+	
+	
 	public static void followers(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
@@ -67,7 +76,8 @@ public class PublicProfile extends Controller {
 		
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		
-		render(talker, currentTalker);
+		String action = "followers";
+		render("@following", talker, currentTalker, action);
 	}
 	
 	public static void following(String userName) {
@@ -75,7 +85,10 @@ public class PublicProfile extends Controller {
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
 		notFoundIfNull(talker);
 		
-		render(talker, currentTalker);
+		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+		
+		String action = "following";
+		render("@following", talker, currentTalker, action);
 	}
 	
 	public static void conversationsFollowing(String userName) {
