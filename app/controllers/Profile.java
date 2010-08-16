@@ -44,7 +44,6 @@ public class Profile extends Controller {
 
     public static void edit() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	
     	render(talker);
     }
 	

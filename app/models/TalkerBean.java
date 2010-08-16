@@ -7,7 +7,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bson.types.ObjectId;
 
@@ -26,6 +28,14 @@ public class TalkerBean implements Serializable {
 		"New born", "1-2 years old", "2-6 years old", 
 		"6-12 years old", "12-18 years old", "Over 18 years old"
 	};
+	
+	public static final Map<String, String> IM_SERVICES_MAP = new HashMap<String, String>();
+	static {
+		IM_SERVICES_MAP.put("YahooIM", "Yahoo IM / Yahoo Messenger");
+		IM_SERVICES_MAP.put("GoogleTalk", "GoogleTalk / Gmail Chat / Gchat");
+		IM_SERVICES_MAP.put("WindowLive", "Windows Live Messenger");
+	}
+	
 	public static final String[] CONNECTIONS_ARRAY = new String[] {
 		"Patient", "Former Patient", "Parent", "Caregiver", "Family member", "Friend", 
 		 "other"

@@ -3,13 +3,14 @@
 <style>
 	body {
 		background:url(/public/images/inner_bg.gif) repeat-x top;
+		font-family:arial;
+		font-size:11px;
 	}
 	.note {
 		float: left; 
 		clear: left; 
 		margin-top: -10px; 
 		width: 600px;
-		
 		color:#7C7C7C;
 		font-family:arial;
 		font-size:12px;
@@ -150,10 +151,10 @@
 								<li>
 									<select name="talker.im" id="talker.im" class="textarea1">
 										<option selected value=''>Select an IM service</option>
-									#{list items:['YahooIM', 'WindowLive', 'GoogleTalk'], as:'imService'}
+									#{list items: models.TalkerBean.IM_SERVICES_MAP.keySet(), as:'imService'}
 									    <option value="${imService}" 
 									    #{if imService.equals(talker.im) } selected #{/if} 
-									    >${imService}</option>
+									    >${models.TalkerBean.IM_SERVICES_MAP.get(imService)}</option>
 									#{/list}
 									</select>
 								</li>

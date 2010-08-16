@@ -302,10 +302,10 @@
 							<div class="personaltextfield" >
 								<select id="talker.im" name="talker.im" class="personalfields">
 							  		<option selected value=''>Select an IM service</option>
-									#{list items:['YahooIM', 'WindowLive', 'GoogleTalk'], as:'imService'}
+									#{list items: models.TalkerBean.IM_SERVICES_MAP.keySet(), as:'imService'}
 									    <option value="${imService}" 
 									    #{if flash['talker.im'].equals(imService) } selected #{/if} 
-									    >${imService}</option>
+									    >${models.TalkerBean.IM_SERVICES_MAP.get(imService)}</option>
 									#{/list}
 								</select>
 							</div>
