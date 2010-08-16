@@ -4,6 +4,7 @@
 			#{if session.get("username").equals("admin") }
 				<li><a href="@{Dashboard.index()}"><b>Dashboard</b></a></li>
 			#{/if}
+			<li><a href="@{Home.index()}">Home</a></li>
 			<li><a href="#" rel="dropmenu1">You</a></li>
 			<!--
 			<li><a href="#" rel="dropmenu2">Community</a></li>
@@ -20,6 +21,7 @@
 		<a href="@{PublicProfile.thankYous(session.get('username'))}">Thank You's</a>
 		<a href="@{PublicProfile.following(session.get('username'))}">Following</a>
 		<a href="@{PublicProfile.followers(session.get('username'))}">Followers</a>
+		<a href="@{PublicProfile.comments(session.get('username'))}">Your Comments</a>
 		<!--
 		<a href="#">Conversation History</a>
 		<a href="#">Activity Stream</a>

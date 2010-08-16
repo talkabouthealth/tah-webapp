@@ -693,3 +693,12 @@ a.greytext25:hover {text-decoration: none; color: #818181;}
 }
 
 .required { font-size: 14px; color: red; font-weight: bold; padding-left: 5px}
+
+.blacksubtitle {
+	color: black;
+	font-family:arial;
+	font-size:14px;
+	font-weight:bold;
+	line-height:20px;
+	text-decoration:none;
+}

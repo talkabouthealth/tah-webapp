@@ -45,7 +45,7 @@
 #{else}
 	You have ${invitations} TalkAboutHealth invitations left.<br/><br/>
 	#{if flash.success}
-	    <span class="success">Invitations successfully sent!</span>
+	    <span class="error">Invitations successfully sent!</span>
 	#{/if}
 	#{ifErrors}
 	   #{errors}
