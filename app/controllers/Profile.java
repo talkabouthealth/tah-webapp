@@ -28,6 +28,7 @@ import play.Logger;
 import play.Play;
 import play.data.validation.Valid;
 import play.mvc.Controller;
+import play.mvc.Router.ActionDefinition;
 import play.mvc.With;
 import util.CommonUtil;
 import util.EmailUtil;
@@ -125,14 +126,6 @@ public class Profile extends Controller {
 		if(validation.hasErrors()) {
 			flash.success("");
 			render("@edit", talker);
-			
-			//TODO strange fix for redirect with "#reference". Discussed here:
-			//http://groups.google.com/group/play-framework/browse_thread/thread/93c2ec3e34c20f4e/bf94f63fcb2e529d?lnk=gst&q=addRef#bf94f63fcb2e529d
-//			ActionDefinition action = reverse(); {
-//				//render("@edit", talker);
-//				edit();
-//	        }
-//			redirect(action.addRef("changePasswordForm").toString()); 
 			
             return;
         }
@@ -306,7 +299,7 @@ public class Profile extends Controller {
 		render(talkerDisease, stagesList, typesList, healthItemsMap);
 	}
 	
-	public static void saveHealthDetails(TalkerDiseaseBean talkerDisease) {
+	public static void saveHealthDetails(TalkerDiseaseBean talkerDisease, String section) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 		parseHealthItems(talkerDisease);
@@ -321,7 +314,27 @@ public class Profile extends Controller {
 		TalkerDiseaseDAO.saveTalkerDisease(talkerDisease);
 		
 		flash.success("ok");
-		healthDetails();
+		
+		//TODO strange fix for redirect with "#reference". Discussed here:
+		//http://groups.google.com/group/play-framework/browse_thread/thread/93c2ec3e34c20f4e/bf94f63fcb2e529d?lnk=gst&q=addRef#bf94f63fcb2e529d
+//		ActionDefinition action = reverse(); {
+//			//render("@edit", talker);
+//			edit();
+//        }
+//		redirect(action.addRef("changePasswordForm").toString());
+		
+		ActionDefinition action = reverse(); 
+		{
+			healthDetails();
+        }
+		if (section == null) {
+			redirect(action.toString()); 
+		}
+		else {
+			flash.put(section, "Changes saved");
+			
+			redirect(action.addRef(section).toString()); 
+		}
 	}
 	
 	private static void parseHealthItems(TalkerDiseaseBean talkerDisease) {

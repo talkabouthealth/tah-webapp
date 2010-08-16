@@ -19,8 +19,23 @@
 			height: 24px;
 			padding: 0px;
 			width:600px;
-		}	
+		}
+		.button { position: relative }
+		.savednote {
+			left:200px;
+			position:absolute;
+			top:25px;
+		}
 	</style>
+	
+	<script type="text/javascript">
+		function submitForm(section) {
+			$("#section").val(section);
+			
+			document.healthdetailsform.submit();
+			return false;
+		}
+	</script>
 </head>
 <body>
 	<div id="top_container">
@@ -34,17 +49,14 @@
 	
 		<div id="innerbanner"></div>
 		<form id="healthdetailsform" name="healthdetailsform" action="@{Profile.saveHealthDetails()}" method="POST">
+		<input type="hidden" name="section" id="section" />
 		<div id="innermain">
 			<div class="blacktext2" id="innerheading">General Health Details</div>
 			<div id="innerpersonalarea">
 				<div id="signupleft">
 					<div id="signupleftarea">
-						#{if flash.success}
-							<div class="signupmain" style="text-align: center">
-								<span class="success">Changes are saved!</span>
-							</div>
-						#{/if}
 						<div class="signupmain">
+							<a name="symptoms"></a>
 							<div class="generaltextarea">
 								<span class="blacktext16"><strong>Stage of disease</strong></span>
 							</div>
@@ -147,9 +159,10 @@
 								</div>
 							</div>
 							<div class="button">
-								<a href="#" onclick="document.healthdetailsform.submit()">
+								<a href="" onclick="return submitForm('symptoms');">
 									<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" />
 								</a>
+								<span class="success savednote">${flash.symptoms}</span>
 							</div>
 						</div>
 						<div class="signupmain"></div>
@@ -184,7 +197,10 @@
 					<div class="textareabig">
 						#{ otherField name:'tests', values: talkerDisease?.otherHealthItems /}
 					</div>
-					<div class="generalsubhead">What procedures/surgeries have you had?</div>
+					<div class="generalsubhead">
+						<a name="procedures"></a>
+						What procedures/surgeries have you had?
+					</div>
 					<div class="generalcheck">
 						#{ healthItemsTree healthItem:healthItemsMap["procedures"], checkedItems: talkerDisease?.healthItems /}
 					</div>
@@ -192,9 +208,10 @@
 						#{ otherField name:'procedures', values: talkerDisease?.otherHealthItems /}
 					</div>
 					<div class="button">
-						<a href="#" onclick="document.healthdetailsform.submit()">
+						<a href="" onclick="return submitForm('procedures');">
 							<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" />
 						</a>
+						<span class="success savednote">${flash.procedures}</span>
 					</div>
 					<div class="signupmain"></div>
 				</div>
@@ -205,7 +222,10 @@
 			<div id="midnoticontainermain">
 				<div id="boxarea_head2" class="blacktext2">Treatments and medications</div>
 				<div class="signupleftarea2">
-					<div class="generalsubhead">What treatments / medications have you taken?</div>
+					<div class="generalsubhead">
+						<a name="treatments"></a>
+						What treatments / medications have you taken?
+					</div>
 					<div class="generalcheck">
 						#{ healthItemsTree healthItem:healthItemsMap["treatments"], checkedItems: talkerDisease?.healthItems /}
 					</div>
@@ -213,9 +233,10 @@
 						#{ otherField name:'treatments', values: talkerDisease?.otherHealthItems /}
 					</div>
 					<div class="button">
-						<a href="#" onclick="document.healthdetailsform.submit()">
+						<a href="" onclick="return submitForm('treatments');">
 							<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" />
 						</a>
+						<span class="success savednote">${flash.treatments}</span>
 					</div>
 					<div class="signupmain"></div>
 				</div>
@@ -231,12 +252,14 @@
 						#{ healthItemsTree healthItem:healthItemsMap["sideeffects"], checkedItems: talkerDisease?.healthItems /}
 					</div>
 					<div class="textareabig">
+						<a name="sideeffects"></a>
 						#{ otherField name:'sideeffects', values: talkerDisease?.otherHealthItems /}
 					</div>
 					<div class="button">
-						<a href="#" onclick="document.healthdetailsform.submit()">
+						<a href="" onclick="return submitForm('sideeffects');">
 							<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" />
 						</a>
+						<span class="success savednote">${flash.sideeffects}</span>
 					</div>
 					<div class="signupmain"></div>
 				</div>
