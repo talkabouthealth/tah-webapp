@@ -19,6 +19,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang.StringUtils;
+
 import models.TalkerBean;
 import play.cache.Cache;
 import play.mvc.Scope.Session;

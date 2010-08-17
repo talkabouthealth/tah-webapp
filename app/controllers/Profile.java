@@ -19,10 +19,12 @@ import models.HealthItemBean;
 import models.TalkerBean;
 import models.TalkerBean.ProfilePreference;
 import models.TalkerDiseaseBean;
+import models.actions.UpdateProfileAction;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 
 import play.Logger;
 import play.Play;
@@ -74,6 +76,25 @@ public class Profile extends Controller {
             return;
         }
 		
+		if (!StringUtils.equals(oldTalker.getBio(), talker.getBio())) {
+			ActivityDAO.saveActivity(new UpdateProfileAction(oldTalker, "BIO"));
+		}
+		
+		//check if any fields were changed
+		if ( !(
+				StringUtils.equals(oldTalker.getGender(), talker.getGender()) &&
+				StringUtils.equals(oldTalker.getCountry(), talker.getCountry()) &&
+				StringUtils.equals(oldTalker.getState(), talker.getState()) &&
+				StringUtils.equals(oldTalker.getCity(), talker.getCity()) &&
+				StringUtils.equals(oldTalker.getMaritalStatus(), talker.getMaritalStatus()) &&
+				oldTalker.getChildrenNum() == oldTalker.getChildrenNum() &&
+				oldTalker.getChildrenAges().equals(talker.getChildrenAges()) &&
+				StringUtils.equals(oldTalker.getWebpage(), talker.getWebpage()) &&
+				oldTalker.getKeywords().equals(talker.getKeywords())
+					)) {
+			ActivityDAO.saveActivity(new UpdateProfileAction(oldTalker, "PERSONAL"));
+		}
+		
 		oldTalker.setUserName(talker.getUserName());
 		oldTalker.setEmail(talker.getEmail());
 		oldTalker.setDob(dateOfBirth);
@@ -105,7 +126,6 @@ public class Profile extends Controller {
 		}
 		
 		TalkerDAO.updateTalker(oldTalker);
-		
 		CommonUtil.updateCachedTalker(session);
 		
 		flash.success("ok");
@@ -311,6 +331,8 @@ public class Profile extends Controller {
 		
 		//Save or update
 		TalkerDiseaseDAO.saveTalkerDisease(talkerDisease);
+		
+		ActivityDAO.saveActivity(new UpdateProfileAction(talker, "HEALTH"));
 		
 		flash.success("ok");
 		

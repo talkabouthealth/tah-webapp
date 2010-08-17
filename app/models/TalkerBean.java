@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.actions.Action;
+
 import org.bson.types.ObjectId;
 
 import play.data.validation.Email;
@@ -157,7 +159,7 @@ public class TalkerBean implements Serializable {
 	private List<ThankYouBean> thankYouList;
 	private List<TalkerBean> followingList;
 	private List<TalkerBean> followerList;
-	private List<ActivityBean> activityList;
+	private List<Action> activityList;
 	private List<CommentBean> profileCommentsList;
 	
 	//TODO: what's the best solution for partial load?
@@ -185,11 +187,11 @@ public class TalkerBean implements Serializable {
 		this.profileCommentsList = profileCommentsList;
 	}
 
-	public List<ActivityBean> getActivityList() {
+	public List<Action> getActivityList() {
 		return activityList;
 	}
 
-	public void setActivityList(List<ActivityBean> activityList) {
+	public void setActivityList(List<Action> activityList) {
 		this.activityList = activityList;
 	}
 

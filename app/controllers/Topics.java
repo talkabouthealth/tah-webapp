@@ -9,6 +9,8 @@ import java.util.Map;
 import models.LiveConversationBean;
 import models.TalkerBean;
 import models.TopicBean;
+import models.actions.FollowConvoAction;
+import models.actions.StartConvoAction;
 import play.cache.Cache;
 import play.mvc.Before;
 import play.mvc.Controller;
@@ -50,7 +52,8 @@ public class Topics extends Controller {
 		NotificationUtils.sendAutomaticNotifications(topic.getId());
 		
 		// Save as talker activity
-		ActivityDAO.createActivity(topic.getUid(), "started the conversation: "+topic.getTopic());
+//		ActivityDAO.createActivity(topic.getUid(), "started the conversation: "+topic.getTopic());
+		ActivityDAO.saveActivity(new StartConvoAction(talker, topic));
 
 		// create new LiveConvBean
 //		LiveConversationBean lcb = new LiveConversationBean();
@@ -103,7 +106,7 @@ public class Topics extends Controller {
     	renderText(lastTopicId);
     }
     
-    //follow or unfollow
+    //follow or unfollow topic
     public static void follow(String topicId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
@@ -113,6 +116,8 @@ public class Topics extends Controller {
     	}
     	else {
     		talker.getFollowingTopicsList().add(topicId);
+    		
+    		ActivityDAO.saveActivity(new FollowConvoAction(talker, new TopicBean(topicId)));
     	}
     	
     	//TODO: put together?

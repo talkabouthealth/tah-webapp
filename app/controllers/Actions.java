@@ -12,6 +12,11 @@ import util.CommonUtil;
 import models.CommentBean;
 import models.TalkerBean;
 import models.ThankYouBean;
+import models.actions.FollowTalkerAction;
+import models.actions.GiveThanksAction;
+import models.actions.ProfileCommentAction;
+import models.actions.ProfileReplyAction;
+import dao.ActivityDAO;
 import dao.TalkerDAO;
 
 @With(Secure.class)
@@ -26,6 +31,8 @@ public class Actions extends Controller {
 		thankYouBean.setFromTalker(talker);
 		thankYouBean.setTo(toTalker);
 		TalkerDAO.saveThankYou(thankYouBean);
+		
+		ActivityDAO.saveActivity(new GiveThanksAction(talker, new TalkerBean(toTalker)));
 		
 		CommonUtil.updateCachedTalker(session);
 		
@@ -53,6 +60,8 @@ public class Actions extends Controller {
 		
 		//Text for the follow link after this action
 		if (followAction) {
+			ActivityDAO.saveActivity(new FollowTalkerAction(talker, new TalkerBean(followingId)));
+			
 			renderText("Unfollow");
 		}
 		else {
@@ -80,6 +89,13 @@ public class Actions extends Controller {
 		
 		String id = TalkerDAO.saveProfileComment(comment);
 		comment.setId(id);
+		
+		if (comment.getParentId() == null) {
+			ActivityDAO.saveActivity(new ProfileCommentAction(talker, profileTalker));
+		}
+		else {
+			ActivityDAO.saveActivity(new ProfileReplyAction(talker, profileTalker));
+		}
 		
 		//render html of new comment using tag
 		List<CommentBean> _commentsList = Arrays.asList(comment);

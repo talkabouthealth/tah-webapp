@@ -1,8 +1,10 @@
 package controllers;
 
+import dao.ActivityDAO;
 import dao.TopicDAO;
 import models.TalkerBean;
 import models.TopicBean;
+import models.actions.JoinConvoAction;
 import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
@@ -17,6 +19,8 @@ public class Talk extends Controller {
 		TopicBean topic = TopicDAO.getByTid(topicId);
 		
 		notFoundIfNull(topic);
+		
+		ActivityDAO.saveActivity(new JoinConvoAction(talker, topic));
 		
 		render(talker, topic);
 	}

@@ -22,6 +22,12 @@ public class TopicBean {
 	
 	private String mainURL;
 	
+	public TopicBean() {}
+	
+	public TopicBean(String id) {
+		this.id = id;
+	}
+
 	public String getMainURL() {
 		if (mainURL == null || mainURL.length() == 0) {
 			//TODO: temporary for old topics
@@ -74,8 +80,6 @@ public class TopicBean {
 		this.summary = summary;
 	}
 
-	public TopicBean(){}
-	
 	public String getTopic() {
 		return topic;
 	}

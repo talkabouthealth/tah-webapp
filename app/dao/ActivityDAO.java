@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.bson.types.ObjectId;
+
 import util.DBUtil;
 
 import com.mongodb.BasicDBObject;
@@ -15,6 +17,16 @@ import com.mongodb.DBRef;
 
 import models.ActivityBean;
 import models.TalkerBean;
+import models.actions.AbstractAction;
+import models.actions.Action;
+import models.actions.FollowConvoAction;
+import models.actions.FollowTalkerAction;
+import models.actions.GiveThanksAction;
+import models.actions.JoinConvoAction;
+import models.actions.ProfileCommentAction;
+import models.actions.ProfileReplyAction;
+import models.actions.StartConvoAction;
+import models.actions.UpdateProfileAction;
 
 public class ActivityDAO {
 	
@@ -41,25 +53,58 @@ public class ActivityDAO {
 		ActivityDAO.save(activity);
 	}
 	
-	public static List<ActivityBean> load(String talkerId) {
+	public static List<Action> load(String talkerId) {
 		DBCollection activitiesColl = DBUtil.getCollection(ACTIVITIES_COLLECTION);
 		
-		DBRef talkerRef = new DBRef(DBUtil.getDB(), TalkerDAO.TALKERS_COLLECTION, talkerId);
+		DBRef talkerRef = new DBRef(DBUtil.getDB(), TalkerDAO.TALKERS_COLLECTION, new ObjectId(talkerId));
 		DBObject query = new BasicDBObject("uid", talkerRef);
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
-		List<ActivityBean> activitiesList = new ArrayList<ActivityBean>();
+		List<Action> activitiesList = new ArrayList<Action>();
 		for (DBObject activityDBObject : activitiesDBList) {
-			ActivityBean activity = new ActivityBean();
-			activity.setId(activityDBObject.get("_id").toString());
-			activity.setTalker(new TalkerBean(talkerId));
-			activity.setTime((Date)activityDBObject.get("time"));
-			activity.setText(activityDBObject.get("text").toString());
-			
-			activitiesList.add(activity);
+			Action action = actionFromDB(activityDBObject);
+			activitiesList.add(action);
 		}
 		return activitiesList;
+	}
+	
+	private static Action actionFromDB(DBObject dbObject) {
+		String type = (String)dbObject.get("type");
+		
+		if (type == null) {
+			return null;
+		}
+		
+		if (type.equals("START_CONVO")) {
+			return new StartConvoAction(dbObject);
+		}
+		else if (type.equals("JOIN_CONVO")) {
+			return new JoinConvoAction(dbObject);
+		}
+		else if (type.equals("GIVE_THANKS")) {
+			return new GiveThanksAction(dbObject);
+		}
+		else if (type.equals("FOLLOW_CONVO")) {
+			return new FollowConvoAction(dbObject);
+		}
+		else if (type.equals("FOLLOW_TALKER")) {
+			return new FollowTalkerAction(dbObject);
+		}
+		else if (type.equals("PROFILE_COMMENT")) {
+			return new ProfileCommentAction(dbObject);
+		}
+		else if (type.equals("PROFILE_REPLY")) {
+			return new ProfileReplyAction(dbObject);
+		}
+		else if (type.startsWith("UPDATE_")) {
+			return new UpdateProfileAction(dbObject);
+		}
+		else if (type.equals("JOIN_CONVO")) {
+			return new JoinConvoAction(dbObject);
+		}
+		
+		return null;
 	}
 
 	public static void main(String[] args) {
@@ -69,5 +114,12 @@ public class ActivityDAO {
 //		ActivityDAO.save(activity);
 		
 		System.out.println(ActivityDAO.load("4c2cb43160adf3055c97d061"));
+	}
+
+	public static void saveActivity(Action action) {
+		DBCollection activitiesColl = DBUtil.getCollection(ACTIVITIES_COLLECTION);
+
+		DBObject activityDBObject = action.toDBObject();
+		activitiesColl.save(activityDBObject);
 	}
 }
