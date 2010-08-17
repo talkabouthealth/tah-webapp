@@ -331,6 +331,28 @@ public class TopicDAO {
 				new BasicDBObject("$inc", new BasicDBObject("views", 1)));
 	}
 	
+	//Load topics for given activity type
+	public static List<TopicBean> loadTopics(String talkerId, String type) {
+		DBCollection activitiesColl = DBUtil.getCollection(ActivityDAO.ACTIVITIES_COLLECTION);
+		
+		DBRef talkerRef = new DBRef(DBUtil.getDB(), TalkerDAO.TALKERS_COLLECTION, new ObjectId(talkerId));
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("uid", talkerRef)
+			.add("type", type)
+			.get();
+		List<DBObject> activitiesDBList = 
+			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		
+		List<TopicBean> topicsList = new ArrayList<TopicBean>();
+		for (DBObject activityDBObject : activitiesDBList) {
+			DBObject topicDBObject = ((DBRef)activityDBObject.get("topicId")).fetch();
+			
+			TopicBean topic = parseTopicBean(topicDBObject);
+			topicsList.add(topic);
+		}
+		return topicsList;
+	}
+	
 	public static void main(String[] args) {
 		System.out.println(TopicDAO.getNumberOfTopics("4c2cb43160adf3055c97d061"));
 		

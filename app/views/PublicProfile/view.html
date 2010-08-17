@@ -507,46 +507,6 @@
 						</div>
 						#{/if}
 						
-						*{
-						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.CONVERSATIONS) }
-							<div class="prosubheading">
-								<div class="profileheading">Conversation Started (10)</div>
-								<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
-							</div>
-							<div class="conversationarea">
-								<div class="conversationtext">
-									<a href="#" class="navybluetext12"><strong>Just received 2 diagnoses, what should i do ?</strong></a><br />
-									<span class="greytext11">May 16 at 11:55am</span>
-									<div class="conversationtextsmall">
-										<a href="#" class="navybluetext12">10 talkers</a> 
-										<span class="blacktext">- mjones, yiwang, shanghao, eltont, sariebarie, quigs, dubs, nana, johnr, nato</span><br />
-										<a href="#" class="navybluetext12">3 comments</a><span class="blacktext"> - johnr, suzie, scott</span>
-									</div>
-								</div>
-							</div>
-							<div class="prosubheading">
-								<div class="profileheading">Conversation Joined (20)</div>
-								<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
-							</div>
-							<div class="conversationarea">
-								<div class="thankyoupic">
-									<a href="#" class="bluetext11"><img src="/public/images/followimg2.jpg" border="0" /><br />Blal</a>
-								</div>
-								<div class="conversationtext">
-									<a href="#" class="navybluetext12">
-										<strong>Just received 2 diagnoses, what should i do ?</strong></a><br />
-									<span class="greytext11">May 16 at 11:55am</span>
-									<div class="conversationtextsmall">
-										<a href="#" class="navybluetext12">10 talkers</a>
-										<span class="blacktext">- mjones, yiwang, shanghao, eltont, 
-											sariebarie, quigs, dubs, nana, johnr, nato</span><br />
-										<a href="#" class="navybluetext12">3 comments</a>
-										<span class="blacktext"> - johnr, suzie, scott</span>
-									</div>
-								</div>
-							</div>
-						#{/if}
-						}*
 						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.ACTIVITY_STREAM) 
 								&& talker.activityList}
 							<div class="prosubheading">
@@ -561,10 +521,83 @@
 							</div>
 						#{/if}
 						
+						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.CONVERSATIONS)}
+							#{if talker.startedTopicsList }
+								<div class="prosubheading">
+									<div class="profileheading">Conversation Started (${talker.startedTopicsList.size()})</div>
+									<div class="seeall">
+										<a href="@{PublicProfile.conversationsStarted(talker.userName)}" 
+											class="bluetext12"><strong>see all</strong></a>
+									</div>
+								</div>
+								
+								#{list items:talker.startedTopicsList.limit(12), as:'topic' }
+									<div class="conversationarea">
+										<div class="conversationtext">
+											<a href="@{Topics.viewTopic(topic.mainURL)}" class="navybluetext12">
+												<strong>${topic.topic}</strong>
+											</a><br />
+											<span class="greytext11">${topic.creationDate.format("MMM dd 'at' HH:mm a")}</span>
+											<div class="conversationtextsmall">
+												<a href="#" class="navybluetext12">${topic.members.size()} talkers</a> 
+												<span class="blacktext"> - 
+													#{list items: topic.members, as: 'member'}
+														${member}${member_isLast ? '' : ', '}
+													#{/list}
+												</span><br />
+												*{ TODO
+													<a href="#" class="navybluetext12">3 comments</a>
+													<span class="blacktext"> - johnr, suzie, scott</span>
+												}*
+											</div>
+										</div>
+									</div>
+								#{/list}
+							#{/if}
+							
+							#{if talker.joinedTopicsList }
+								<div class="prosubheading">
+									<div class="profileheading">Conversation Joined (${talker.joinedTopicsList.size()})</div>
+									<div class="seeall">
+										<a href="@{PublicProfile.conversationsJoined(talker.userName)}" 
+											class="bluetext12"><strong>see all</strong></a>
+									</div>
+								</div>
+								#{list items:talker.joinedTopicsList.limit(12), as:'topic' }
+									<div class="conversationarea">
+										<div class="thankyoupic">
+											<a href="@{PublicProfile.view(topic.talker.userName)}" class="bluetext11">
+												<img src="@{Image.show(topic.talker.userName)}" width="48" height="48" border="0" />
+												<br />${topic.talker.userName}
+											</a>
+										</div>
+										<div class="conversationtext">
+											<a href="@{Topics.viewTopic(topic.mainURL)}" class="navybluetext12">
+												<strong>${topic.topic}</strong>
+											</a><br />
+											<span class="greytext11">${topic.creationDate.format("MMM dd 'at' HH:mm a")}</span>
+											<div class="conversationtextsmall">
+												<a href="#" class="navybluetext12">${topic.members.size()} talkers</a> 
+												<span class="blacktext"> - 
+													#{list items: topic.members, as: 'member'}
+														${member}${member_isLast ? '' : ', '}
+													#{/list}
+												</span><br />
+												*{ TODO
+													<a href="#" class="navybluetext12">3 comments</a>
+													<span class="blacktext"> - johnr, suzie, scott</span>
+												}*
+											</div>
+										</div>
+									</div>
+								#{/list}
+							#{/if}
+						#{/if}
+						
 						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.CONVERSATIONS_FOLLOWED) 
 								&& talker.followingTopicsFullList}
 							<div class="prosubheading">
-								<div class="profileheading">Conversations Following</div>
+								<div class="profileheading">Conversations Following (${talker.followingTopicsFullList.size()})</div>
 								<div class="seeall">
 									<a href="@{PublicProfile.conversationsFollowing(talker.userName)}" 
 										class="bluetext12"><strong>see all</strong></a>

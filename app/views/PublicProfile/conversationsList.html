@@ -1,0 +1,97 @@
+#{ extends 'main.html' /}
+	<script type="text/javascript"> 	 
+   		$(document).ready(function() {
+   			$(".followTopicLink").live('click', function() {
+				var topicId = $(this).attr("rel");
+				if ($(this).html().indexOf("Unfollow") != -1) {
+					$(this).html("Follow");
+				}
+				else {
+					$(this).html("Unfollow");
+				}
+				$.post("@{Topics.follow()}", 
+	  				{ topicId: topicId},
+	  				function(data) {
+	  					//...
+	  				}
+	  			);
+	  			return false;
+			});
+
+   			$(".restartTopicLink").click(function() {
+				var topicId = $(this).attr("rel");
+				var tid = $(this).attr("rel2");
+				openChat(tid);
+				$.post("@{Topics.restart}", {topicId: topicId});
+			});
+   		});
+
+   		function openChat(tid){
+			window.open("@{Talk.talkApp()}/"+tid, "TalkerWindow", "width=700,height=500");
+		}
+   	</script>
+	<style>
+		body {
+			background:url(/public/images/inner_bg.gif) repeat-x top;
+		}
+	</style>
+</head>
+<body>
+	<div id="top_container">
+		<div id="top">
+			#{ logo /}
+			<div id="topnav">
+				#{ include 'menu.html' /}
+			</div>
+		</div>
+	</div>
+	<div id="innerbanner"></div>
+	<div id="innermain">
+		<div class="blacktext2" id="innerheading">${talker.userName} Conversations ${topicsType}</div>
+		<div id="innerpersonalarea">
+			<div id="signupleftarea">
+				#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.CONVERSATIONS)}
+					<div class="activitiestext">
+						#{list items:topicsList.limit(12), as:'topic' }
+							<div class="area">
+								<div class="arealeft2">
+									<a href="@{PublicProfile.view(topic.talker.userName)}" class="bluetext11">
+										<img src="@{Image.show(topic.talker.userName)}" width="71" height="71" border="0" />
+										<br /><span class="bluetext11">${topic.talker.userName}</span>
+									</a>
+						  			<br/>
+						  			<span class="blacktext11">${topic.talker.levelOfRecognition}</span>
+						  		</div>
+								<div class="arearight">
+								    <div class="areatop"></div>
+								    <div class="areamid">
+								    	<div class="areamidleft">
+								    		<p>
+								    			<span class="blacktext14">
+								    				<a href="@{Topics.viewTopic(topic.mainURL)}">${topic.topic}</a><br />
+								    				<span class="blacktext12">${topic.messages.size()} comment(s)</span> | 
+						        					<span class="blacktext12">${topic.members.size()} people spoke</span> | 
+						        					<a href="@{Topics.viewTopic(topic.mainURL)}#comments" class="bluetext12">Comment</a> | 
+						        					<a href="#" class="bluetext12 followTopicLink" rel="${topic.id}">
+													${ talker.followingTopicsList?.contains(topic.id) ? 'Unfollow' : 'Follow'}
+													</a> | 
+													<a href="#" class="bluetext12 restartTopicLink" 
+														rel="${topic.id}" rel2="${topic.tid}">Re-start</a> | 
+						        					*{ TODO: joined/started/etc }*
+						        					<span class="blacktext12">${topic.creationDate.since()}</span>
+						        				</span>
+						        			</p>
+						        		</div>
+									</div>
+					  				<div class="areabot"></div>
+					 	 		</div>
+							</div>		
+						#{/list}
+					</div>
+				#{/if}
+				#{else}
+					<span class="blacktext14">This information has been made private.</span>
+				#{/else}
+			</div>
+		</div>
+	</div>

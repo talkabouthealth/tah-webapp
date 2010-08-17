@@ -166,6 +166,8 @@ public class TalkerBean implements Serializable {
 	private List<String> followingTopicsList;
 	private List<TopicBean> followingTopicsFullList;
 	
+	private List<TopicBean> startedTopicsList;
+	private List<TopicBean> joinedTopicsList;
 	
 	//new fields
 	private String firstName;
@@ -790,5 +792,21 @@ public class TalkerBean implements Serializable {
 
 	public void setDeactivated(boolean deactivated) {
 		this.deactivated = deactivated;
+	}
+
+	public List<TopicBean> getStartedTopicsList() {
+		return startedTopicsList;
+	}
+
+	public void setStartedTopicsList(List<TopicBean> startedTopicsList) {
+		this.startedTopicsList = startedTopicsList;
+	}
+
+	public List<TopicBean> getJoinedTopicsList() {
+		return joinedTopicsList;
+	}
+
+	public void setJoinedTopicsList(List<TopicBean> joinedTopicsList) {
+		this.joinedTopicsList = joinedTopicsList;
 	}
 }	

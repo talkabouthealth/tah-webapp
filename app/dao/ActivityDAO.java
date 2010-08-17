@@ -17,6 +17,7 @@ import com.mongodb.DBRef;
 
 import models.ActivityBean;
 import models.TalkerBean;
+import models.TopicBean;
 import models.actions.AbstractAction;
 import models.actions.Action;
 import models.actions.FollowConvoAction;
@@ -122,4 +123,5 @@ public class ActivityDAO {
 		DBObject activityDBObject = action.toDBObject();
 		activitiesColl.save(activityDBObject);
 	}
+
 }

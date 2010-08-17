@@ -7,6 +7,7 @@ import java.util.Map;
 import models.HealthItemBean;
 import models.TalkerBean;
 import models.TalkerDiseaseBean;
+import models.TopicBean;
 import dao.ActivityDAO;
 import dao.HealthItemDAO;
 import dao.TalkerDAO;
@@ -46,6 +47,9 @@ public class PublicProfile extends Controller {
 		talker.setActivityList(ActivityDAO.load(talker.getId()));
 		talker.setProfileCommentsList(TalkerDAO.loadProfileComments(talker.getId()));
 		talker.setFollowingTopicsFullList(TalkerDAO.loadFollowingTopics(talker.getId()));
+		
+		talker.setStartedTopicsList(TopicDAO.loadTopics(talker.getId(), "START_CONVO"));
+		talker.setJoinedTopicsList(TopicDAO.loadTopics(talker.getId(), "JOIN_CONVO"));
 		
 		//TODO: Temporarily - later we'll load all list of topics
 		talker.setNumberOfTopics(TopicDAO.getNumberOfTopics(talker.getId()));
@@ -120,6 +124,32 @@ public class PublicProfile extends Controller {
 		
 		render(talker, currentTalker);
 	}
+	
+	public static void conversationsStarted(String userName) {
+		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		notFoundIfNull(talker);
+		
+		String topicsType = "Started";
+		List<TopicBean> topicsList = TopicDAO.loadTopics(talker.getId(), "START_CONVO");
+		
+		render("@conversationsList", talker, currentTalker, topicsType, topicsList);
+	}
+	
+	public static void conversationsJoined(String userName) {
+		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		notFoundIfNull(talker);
+		
+		String topicsType = "Joined";
+		List<TopicBean> topicsList = TopicDAO.loadTopics(talker.getId(), "JOIN_CONVO");
+		
+		render("@conversationsList", talker, currentTalker, topicsType, topicsList);
+	}
+	
+	
+	
+	
 	
 	public static void comments(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
