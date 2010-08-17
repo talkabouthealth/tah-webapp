@@ -1,0 +1,36 @@
+#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
+	#{list items:followList.limit(start, 3*10), as:'following' }
+		<div class="thnksfollowing">
+           	<div class="thnksfollowingimg">
+				<a href="@{PublicProfile.view(following.userName)}">
+					<img width="80" height="80" src="@{Image.show(following.userName)}" border="0" />
+				</a>
+			</div>
+           	<div class="thnksfollowingtext">
+           		<a class="blue13" href="@{PublicProfile.view(following.userName)}">
+          				<strong>${following.userName}</strong>
+          			</a>
+           		<span class="blue13"> | </span> 
+           		<span class="blkq13">${following.levelOfRecognition}</span><br/>
+           		#{if following.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.BIO) }
+             			<span class="greytext12">${following.bio}</span><br/>
+             		#{/if}
+             		<span class="bluetext12">
+              		#{ifnot currentTalker?.equals(following) }
+					 	<a class="bluetext12 followActionLink" rel="${following.id}" href="#">
+						${ currentTalker.followingList.contains(following) ? 'Unfollow' : 'Follow'}
+						</a> | 
+					#{/ifnot}
+					*{ TODO Not rel2 ? }* 
+				 	<a href="#commentform" rel2="${following.id}" class="bluetext12 commentLink">Comment</a>
+				 	#{ifnot currentTalker?.equals(following) }
+					 	 | <a href="#thankyouform" rel2="${following.id}" class="bluetext12 thankYouLink">Thank</a>
+					#{/ifnot}
+             		</span>
+             	</div>
+           </div>
+	#{/list}
+#{/if}
+#{else}
+	<span class="blacktext14">This information has been made private.</span>
+#{/else}

@@ -1,5 +1,6 @@
 package util;
 
+import java.util.Collections;
 import java.util.List;
 
 import play.templates.JavaExtensions;
@@ -33,13 +34,28 @@ public class TemplateExtensions extends JavaExtensions {
 	 * @param limitValue size of returned part
 	 * @return
 	 */
-	public static List<?> limit (List<?> list, int limitValue) {
+	public static List<?> limit (List<?> list, int limitSize) {
+		return limit(list, 0, limitSize);
+	}
+	
+	/**
+	 * Returns part of given list.
+	 * @param list
+	 * @param limitValue size of returned part
+	 * @return
+	 */
+	public static List<?> limit (List<?> list, int start, int limitSize) {
 		int size = list.size();
-		if (limitValue <= size) {
-			return list.subList(0, limitValue);
+		int end = start + limitSize;
+		
+		if (start >= size) {
+			return Collections.emptyList();
+		}
+		else if (end <= size) {
+			return list.subList(start, end);
 		}
 		else {
-			return list;
+			return list.subList(start, size);
 		}
 	}
 

@@ -1,10 +1,16 @@
 #{ extends 'main.html' /}
-	<script type="text/javascript"> 	 
+	<script type="text/javascript">
+		//Ajax load from this index 	
+		var currentIndex = 10; 
    		$(document).ready(function() {
    			$("#displayThankYouText").click(function() {
    				$('#leavethankyouText').toggle(); 
    				$('#thankYouNote').focus(); 
    				return false;
+	   		});
+
+	   		$(".seemore a").click(function() {
+	   			loadMoreThankYous();
 	   		});
    		});
 
@@ -22,6 +28,18 @@
   			);
 
    			$("#leavethankyouText").hide();
+   		}
+
+   		//public static void loadMoreThankYous(String userName, int start) {
+   		function loadMoreThankYous() {
+   			$.post("@{PublicProfile.loadMoreThankYous()}", 
+  				{ userName: '${talker.userName}', start: currentIndex},
+  				function(newHTML) {
+  					$(".thnksarea2").html(newHTML);
+  				}
+  			);
+  			*{ 30 to some constant ? }*
+  			currentIndex = currentIndex + 3*10;
    		}
    	</script>
 	<style>
@@ -79,7 +97,7 @@
 			</div>
             <div class="thnksarea2">
             	#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
-					#{list items:talker.thankYouList.limit(10), as:'thankYou'}
+					#{list items:talker.thankYouList.limit(3*10), as:'thankYou'}
 						#{ thanksThankYou thankYou: thankYou /}
 					#{/list}
 				#{/if}

@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import models.HealthItemBean;
@@ -52,6 +53,7 @@ public class PublicProfile extends Controller {
 		render(talker, talkerDisease, healthItemsMap, currentTalker);
 	}
 	
+	
 	public static void thankYous(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
@@ -60,15 +62,15 @@ public class PublicProfile extends Controller {
 		render(talker, currentTalker);
 	}
 	
-//	public static void loadMoreThankYous(String userName, int start) {
-//		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
-//		TalkerBean talker = TalkerDAO.getByUserName(userName);
-//		notFoundIfNull(talker);
-//		
-//		render("@thankyoulist", talker);
-//	}
+	public static void loadMoreThankYous(String userName, int start) {
+		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		notFoundIfNull(talker);
+		
+		render("@thankYousAjax", talker, start);
+	}
 	
 	
+	//TODO: make one method? use 'action' parameter
 	public static void followers(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
@@ -90,6 +92,24 @@ public class PublicProfile extends Controller {
 		String action = "following";
 		render("@following", talker, currentTalker, action);
 	}
+	
+	public static void loadMoreFollowlist(String userName, String followType, int start) {
+		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		notFoundIfNull(talker);
+		
+		List<TalkerBean> followList = null;
+		if (followType.equals("following")) {
+			followList = talker.getFollowingList();
+		}
+		else {
+			followList = TalkerDAO.loadFollowers(talker.getId());
+		}
+		
+		render("@followlistAjax", talker, currentTalker, start, followList);
+	}
+	
+	
 	
 	public static void conversationsFollowing(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);

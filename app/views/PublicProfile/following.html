@@ -1,6 +1,8 @@
 #{ extends 'main.html' /}
 	<script type="text/javascript"> 	 
 		var selectedTalkerId = '';
+		var followingIndex = 30;
+		var followersIndex = 30;
    		$(document).ready(function() {
    			// When a link is clicked
    			$("a.tab").click(function () {
@@ -16,7 +18,7 @@
    			});
 
 	   	   		
-   			$(".followActionLink").click(function() {
+   			$(".followActionLink").live('click', function() {
    				var followingId = $(this).attr("rel");
    				var followLink = $(this);
    	   			$.post("@{Actions.follow()}", 
@@ -28,22 +30,34 @@
 	   		});
 
    			$(".commentLink")
-   				.click(function(){ 
+   				.live('click', function(){ 
 	   				selectedTalkerId = $(this).attr("rel2");
 	   			})
-	   			.fancybox({
-	   			    'hideOnContentClick': false,
-	   			    'showCloseButton': false
-	   			});
+	   			//Hack to use Fancybox with 'live' event
+	   			.live('mouseover', function() {
+	   				$(this).fancybox({
+		   			    'hideOnContentClick': false,
+		   			    'showCloseButton': false
+		   			});
+			   	});
 	   		
 	   		$(".thankYouLink")
-	   			.click(function(){ 
+	   			.live('click', function(){ 
 	   				selectedTalkerId = $(this).attr("rel2");
 	   			})
-	   			.fancybox({
-	   			    'hideOnContentClick': false,
-	   			    'showCloseButton': false
-	   			});
+	   			.live('mouseover', function() {
+	   				$(this).fancybox({
+		   			    'hideOnContentClick': false,
+		   			    'showCloseButton': false
+		   			});
+			   	});
+
+	   		$("#content_1 .seemore a").click(function() {
+		   		loadMoreFollowlist('following');
+	   		});
+	   		$("#content_2 .seemore a").click(function() {
+		   		loadMoreFollowlist('followers');
+	   		});
    		});
 
    		//createThankYou(String toTalker, String note)
@@ -66,6 +80,28 @@
 
    			$.post("@{Actions.saveProfileComment()}", 
   				{ profileTalkerId: selectedTalkerId, parentId: '', text: commentText}
+  			);
+   		}
+
+   		//public static void loadMoreFollowlist(String userName, String followType, int start) {
+   		function loadMoreFollowlist(followType) {
+   	   		var currentIndex = followingIndex;
+   	   		if (followType == 'followers') {
+   	   	   		currentIndex = followersIndex;
+   	   		}
+   			$.post("@{PublicProfile.loadMoreFollowlist()}", 
+  				{ userName: '${talker.userName}', followType: followType, start: currentIndex},
+  				function(newHTML) {
+  	  				if (followType == 'following') {
+  	  					$("#content_1 .thnksarea").html(newHTML);
+	  	  				*{ TODO 30 to some constant ? }*
+	  	    			followingIndex = followingIndex + 30;
+  	  				}
+  	  				else {
+  	  					$("#content_2 .thnksarea").html(newHTML);
+  	  					followersIndex = followersIndex + 30;
+  	  				}
+  				}
   			);
    		}
    	</script>
