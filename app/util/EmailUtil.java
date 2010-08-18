@@ -25,6 +25,7 @@ public class EmailUtil {
 	public static final String INVITATION_TEMPLATE = "invitation";
 	public static final String CONTACTUS_TEMPLATE = "contactus";
 	public static final String VERIFICATION_TEMPLATE = "verificate";
+	public static final String NOTIFICATION_TEMPLATE = "notification";
 	
 	public static boolean sendEmail(String templateName, String toEmail) {
 		return sendEmail(templateName, toEmail, null, null, true);

@@ -214,10 +214,25 @@ public class TopicDAO {
     	//followers of this topic
     	DBCollection talkersColl = DBUtil.getDB().getCollection(TalkerDAO.TALKERS_COLLECTION);
     	DBObject query = new BasicDBObject("following_topics", topic.getId());
-    	List<DBObject> followersDBList = talkersColl.find(query, new BasicDBObject("uname", 1)).toArray();
-    	List<String> followers = new ArrayList<String>();
+    	DBObject fields = BasicDBObjectBuilder.start()
+    		.add("uname", 1)
+    		.add("email", 1)
+    		.add("bio", 1)
+    		.add("email_settings", 1)
+    		.get();
+    	List<DBObject> followersDBList = talkersColl.find(query, fields).toArray();
+    	List<TalkerBean> followers = new ArrayList<TalkerBean>();
     	for (DBObject followerDBObject : followersDBList) {
-    		followers.add((String)followerDBObject.get("uname"));
+    		TalkerBean followerTalker = new TalkerBean();
+			
+    		//TODO: unified way of parsing everything?
+			followerTalker.setId(followerDBObject.get("_id").toString());
+			followerTalker.setUserName(followerDBObject.get("uname").toString());
+			followerTalker.setEmail((String)followerDBObject.get("email"));
+			followerTalker.setBio((String)followerDBObject.get("bio"));
+			followerTalker.parseEmailSettings(followerTalker.parseStringList(followerDBObject.get("email_settings")));
+			
+			followers.add(followerTalker);
     	}
     	topic.setFollowers(followers);
     	

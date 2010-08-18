@@ -406,7 +406,7 @@ public class TalkerBean implements Serializable {
 		}
 	}
 
-	private List<String> parseStringList(Object fieldValue) {
+	public List<String> parseStringList(Object fieldValue) {
 		Collection<String> fieldCollection = (Collection<String>)fieldValue;
 		if (fieldCollection == null) {
 			//TODO: empty list or null?
@@ -505,7 +505,7 @@ public class TalkerBean implements Serializable {
 		return emailSettingsStringList;
 	}
 	
-	private void parseEmailSettings(List<String> dbEmailSettingsList) {
+	public void parseEmailSettings(List<String> dbEmailSettingsList) {
 		emailSettings = EnumSet.noneOf(EmailSetting.class);
 		if (dbEmailSettingsList == null) {
 			return;

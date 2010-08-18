@@ -50,13 +50,13 @@ public class TopicBean {
 	
 	private List<String> members;
 	private List<MessageBean> messages;
-	private List<String> followers;
+	private List<TalkerBean> followers;
 	
-	public List<String> getFollowers() {
+	public List<TalkerBean> getFollowers() {
 		return followers;
 	}
 
-	public void setFollowers(List<String> followers) {
+	public void setFollowers(List<TalkerBean> followers) {
 		this.followers = followers;
 	}
 

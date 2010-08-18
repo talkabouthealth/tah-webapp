@@ -2,12 +2,14 @@ package util;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import models.TalkerBean;
+import models.TalkerBean.EmailSetting;
 
 import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry.Entry;
 import com.tah.im.IMNotifier;
@@ -71,6 +73,15 @@ public class NotificationUtils {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	public static void sendEmailNotification(EmailSetting emailSetting, TalkerBean talker, String text) {
+		if (talker.loadEmailSettings().contains(emailSetting)) {
+			Map<String, String> vars = new HashMap<String, String>();
+			vars.put("username", talker.getUserName());
+			vars.put("notification_text", text);
+			EmailUtil.sendEmail(EmailUtil.NOTIFICATION_TEMPLATE, talker.getEmail(), vars, null, true);
 		}
 	}
 

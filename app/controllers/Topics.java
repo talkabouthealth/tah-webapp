@@ -9,6 +9,7 @@ import java.util.Map;
 import models.LiveConversationBean;
 import models.TalkerBean;
 import models.TopicBean;
+import models.TalkerBean.EmailSetting;
 import models.actions.FollowConvoAction;
 import models.actions.StartConvoAction;
 import play.cache.Cache;
@@ -78,7 +79,14 @@ public class Topics extends Controller {
     }
     
     public static void restart(String topicId) {
+    	//TODO: in other thread?
     	NotificationUtils.sendAutomaticNotifications(topicId);
+    	
+    	TopicBean topic = TopicDAO.getByTopicId(topicId);
+    	for (TalkerBean follower : topic.getFollowers()) {
+    		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_RESTART, 
+    				follower, "Topic '"+topic.getTopic()+"' is restarted.");
+    	}
     }
     
     public static void flag(String topicId) {

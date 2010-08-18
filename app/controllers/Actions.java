@@ -8,9 +8,11 @@ import play.mvc.Controller;
 import play.mvc.With;
 
 import util.CommonUtil;
+import util.NotificationUtils;
 
 import models.CommentBean;
 import models.TalkerBean;
+import models.TalkerBean.EmailSetting;
 import models.ThankYouBean;
 import models.actions.FollowTalkerAction;
 import models.actions.GiveThanksAction;
@@ -24,6 +26,7 @@ public class Actions extends Controller {
 	
 	public static void createThankYou(String toTalker, String note, String tagFile) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		TalkerBean toTalkerBean = TalkerDAO.getById(toTalker);
 		
 		ThankYouBean thankYouBean = new ThankYouBean();
 		thankYouBean.setTime(new Date());
@@ -32,7 +35,9 @@ public class Actions extends Controller {
 		thankYouBean.setTo(toTalker);
 		TalkerDAO.saveThankYou(thankYouBean);
 		
-		ActivityDAO.saveActivity(new GiveThanksAction(talker, new TalkerBean(toTalker)));
+		ActivityDAO.saveActivity(new GiveThanksAction(talker, toTalkerBean));
+		NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_THANKYOU, 
+				toTalkerBean, talker.getUserName()+" gave a 'Thank You' to you.");
 		
 		CommonUtil.updateCachedTalker(session);
 		
@@ -96,6 +101,8 @@ public class Actions extends Controller {
 		else {
 			ActivityDAO.saveActivity(new ProfileReplyAction(talker, profileTalker));
 		}
+		NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
+				profileTalker, talker.getUserName()+" left a comment on you profile.");
 		
 		//render html of new comment using tag
 		List<CommentBean> _commentsList = Arrays.asList(comment);
