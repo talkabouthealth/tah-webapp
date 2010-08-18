@@ -702,3 +702,19 @@ a.greytext25:hover {text-decoration: none; color: #818181;}
 	line-height:20px;
 	text-decoration:none;
 }
+
+#examplequestion {
+	background: none;
+	padding-left: 0px;
+	position: relative;
+	line-height: normal;
+}
+.exampleQuestionsImage {
+	position: absolute;
+	top: 12px;
+}
+.exampleQuestionsText {
+	position: absolute;
+	top: 18px;
+	left: 25px;
+}

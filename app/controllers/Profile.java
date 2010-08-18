@@ -443,6 +443,7 @@ public class Profile extends Controller {
 		renderText("Ok! Email sent.");
 	}
 	
+	
 	public static void deactivateAccount() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		

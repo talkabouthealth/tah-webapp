@@ -10,17 +10,6 @@
 
 	<!-- scripts -->
 	<script language="javascript">
-		$(document).ready(function() {
-			$('#exampleQuestionsLink').tooltip({
-				track: true,
-				delay: 0,
-				showURL: false,
-				extraClass: "pretty",
-				left: 5,
-				top: 15
-			});
-		});
-			
 		#{ oauthJavaScripts /}
 		
 		function checkForm() {
@@ -119,14 +108,7 @@
 				</form>
 			</div>
 			<div id="arealefttextarea">
-				<div id="arealefttext">
-					<p>
-						<a class="blacktext" href="#" id="exampleQuestionsLink"
-							title="After a mastectomy, what items come in handy?<br/>
-							What are some things you wish people had said or done?"
-							>&nbsp;Example Questions</a>
-					</p>
-				</div>
+				#{ common/exampleQuestions /}
 				<div id="arealeftgrey">
 					<a href="#" onclick="signup()"><img src="/public/images/startbutton.gif" width="206" height="46" border="0" /></a>
 				</div>

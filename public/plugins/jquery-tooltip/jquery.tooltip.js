@@ -13,7 +13,7 @@
  *   http://www.gnu.org/licenses/gpl.html
  *   
  * 2010-07-30
- * Updated for showing on click, not on mouseover  
+ * Updated for showing on click and hiding on blur.
  *   
  */
  
@@ -62,8 +62,8 @@
 					this.alt = "";
 				})
 				//.mouseover(save)
-				.mouseout(hide)
-				//.blur(hide)
+				//.mouseout(hide)
+				.blur(hide)
 				.click(save);
 		},
 		fixPNG: IE ? function() {

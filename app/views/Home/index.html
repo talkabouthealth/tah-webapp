@@ -16,15 +16,6 @@
 		var levelOfRecognition = "${talker.levelOfRecognition}";
 
 		$(document).ready(function() {
-			$('#exampleQuestionsLink').tooltip({
-				track: true,
-				delay: 0,
-				showURL: false,
-				extraClass: "pretty",
-				left: 5,
-				top: 15
-			});
-
 			$(".followTopicLink").live('click', function() {
 				var topicId = $(this).attr("rel");
 				if ($(this).html().indexOf("Unfollow") != -1) {
@@ -107,14 +98,7 @@
 				</form>
 			</div>
 			<div id="arealefttextareainner">
-				<div id="examplequestion" title="What are some things you wish people had said or done?">
-					<p>
-						<a class="blacktext" href="#" id="exampleQuestionsLink"
-							title="After a mastectomy, what items come in handy?<br/>
-							What are some things you wish people had said or done?"
-							>&nbsp;Example Questions</a>
-					</p>
-				</div>
+				#{ common/exampleQuestions /}
 				<div id="greybg">
 					<a href="#" id="submitnewtopic" onClick="createTopic();" TABINDEX=2>
 						<img src="/public/images/startbutton.gif" width="206" height="46" border="0" />

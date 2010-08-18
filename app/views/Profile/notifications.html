@@ -15,6 +15,11 @@
 		font-family:arial;
 		font-size:12px;
 	}
+	
+	#emailstable td {
+		padding: 10px;
+		font-size: 14px;
+	}
 </style>
 
 <script type="text/javascript" charset="utf-8">
@@ -28,6 +33,10 @@
 				}
 			);
 			return false;
+		});
+
+		$("#newEmailBtn").click(function() {
+			
 		});
 	});
 </script>
@@ -64,32 +73,28 @@
 				<div class="notibluearea">
 					<div class="notiblueareatop"></div>
 					<div class="signfields2">
-						<h1>Instant Messenger</h1>
-						<ul>
-							<li>
-								<select name="talker.im" id="talker.im" class="textarea1">
-									<option selected value=''>Select an IM service</option>
-								#{list items: models.TalkerBean.IM_SERVICES_MAP.keySet(), as:'imService'}
-								    <option value="${imService}" 
-								    #{if imService.equals(talker.im) } selected #{/if} 
-								    >${models.TalkerBean.IM_SERVICES_MAP.get(imService)}</option>
-								#{/list}
-								</select>
-							</li>
-							<li>
-								<input name="talker.imUsername" type="text" class="textfields" 
-							  		id="talker.imUsername" value="${talker.imUsername}" />
-							</li>
-						</ul>
-						<span class="note">Just the username, 
-							  		no need for the "@gmail.com" or "@yahoo.com" (i.e. joesmith)</span>
+						<h1>Email</h1>
+						<table id="emailstable" border="0">
+							<tr>
+								<td>${talker.email}</td>
+								<td>Primary</td>
+								<td>&nbsp;</td>
+							</tr>
+						</table>
+						<a href="#" onclick="$('#addEmailForm').toggle()">add another email address</a>
+						<div id="addEmailForm" style="display:none">
+							<span class="error" id="emailerror"></span>
+							<input id="newEmail" name="newEmail" type="text" value="" size="40"/>
+							<br/>
+							<input id="newEmailBtn" type="button" value="Add email" />
+						</div>
 					</div>
 					<div class="notiblueareabot"></div>
 				</div>
 				<div class="notibluearea">
 					<div class="notiblueareatop"></div>
 					<div class="signfields2">
-						<h1>Email</h1>
+						<h1>IM</h1>
 						#{if talker.verifyCode != null }
 							<a href="#" id="verificationResendLink" 
 								class="red12">(email not verified - resend verification e-mail)</a>
