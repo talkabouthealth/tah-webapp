@@ -114,7 +114,7 @@ public class PublicProfile extends Controller {
 	}
 	
 	
-	
+	//TODO: load more for topics?
 	public static void conversationsFollowing(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByUserName(userName);

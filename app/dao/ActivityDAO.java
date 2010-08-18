@@ -20,6 +20,7 @@ import models.TalkerBean;
 import models.TopicBean;
 import models.actions.AbstractAction;
 import models.actions.Action;
+import models.actions.AnswerConvoAction;
 import models.actions.FollowConvoAction;
 import models.actions.FollowTalkerAction;
 import models.actions.GiveThanksAction;
@@ -101,8 +102,20 @@ public class ActivityDAO {
 		else if (type.startsWith("UPDATE_")) {
 			return new UpdateProfileAction(dbObject);
 		}
-		else if (type.equals("JOIN_CONVO")) {
-			return new JoinConvoAction(dbObject);
+		else if (type.equals("ANSWER_CONVO")) {
+			return new AnswerConvoAction(dbObject);
+		}
+		else if (type.equals("ANSWER_CONVO")) {
+			return new AnswerConvoAction(dbObject);
+		}
+		else if (type.equals("ANSWER_CONVO")) {
+			return new AnswerConvoAction(dbObject);
+		}
+		else if (type.equals("ANSWER_CONVO")) {
+			return new AnswerConvoAction(dbObject);
+		}
+		else if (type.equals("ANSWER_CONVO")) {
+			return new AnswerConvoAction(dbObject);
 		}
 		
 		return null;
