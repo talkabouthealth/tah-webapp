@@ -177,21 +177,23 @@
 					<div>
 						<h3 id="comments">Comments:</h3><br/>
 
-						<div id="reply" class="replyForm">
-							<ul>
-								<li>
-									<textarea class="togglecomment" rows="1" cols="45" 
-										id="replytext">What are you thinking?</textarea>
-							    </li>
-								<li id="commentBtn" style="display: none">
-									<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
-										<a href="#" onclick="return saveProfileComment('');">
-											<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
-										</a>
-									</div>
-								</li> 
-							</ul>
-						</div>
+						#{if talker }
+							<div id="reply" class="replyForm">
+								<ul>
+									<li>
+										<textarea class="togglecomment" rows="1" cols="45" 
+											id="replytext">What are you thinking?</textarea>
+								    </li>
+									<li id="commentBtn" style="display: none">
+										<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
+											<a href="#" onclick="return saveProfileComment('');">
+												<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
+											</a>
+										</div>
+									</li> 
+								</ul>
+							</div>
+						#{/if}
 						<div class="commentsarea">
 							#{topicCommentsTree commentsList: topic.comments, level: 1 /}
 						</div>

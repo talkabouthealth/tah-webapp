@@ -496,6 +496,9 @@ public class TalkerBean implements Serializable {
 	
 	public List<String> emailSettingsToList() {
 		List<String> emailSettingsStringList = new ArrayList<String>();
+		if (emailSettings == null) {
+			return emailSettingsStringList;
+		}
 		for (EmailSetting emailSetting : emailSettings) {
 			emailSettingsStringList.add(emailSetting.toString());
 		}

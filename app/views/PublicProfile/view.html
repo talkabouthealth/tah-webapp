@@ -323,12 +323,14 @@
 							<span class="pinktext18">${talker.userName}</span>
 							#{if talker.connection}
 								<span class="blacktext18">&nbsp;-&nbsp;${talker.connection} </span>
-								#{if talker.connectionVerified }
-									<span class="blacktext12">(Verified)</span>
+								#{if models.TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.connection)}
+									#{if talker.connectionVerified }
+										<span class="blacktext12">(Verified)</span>
+									#{/if}
+									#{else}
+										<span class="red12">(Not Verified)</span>
+									#{/else}
 								#{/if}
-								#{else}
-									<span class="red12">(Not Verified)</span>
-								#{/else}
 							#{/if}
 							#{ifnot talker.userName.equals(currentTalker.userName) }
 								<a id="followActionImagelink" href="#" class="navybluetext12" style="margin-left:15px;">

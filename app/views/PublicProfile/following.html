@@ -29,28 +29,14 @@
    	  			);
 	   		});
 
-   			$(".commentLink")
-   				.live('click', function(){ 
-	   				selectedTalkerId = $(this).attr("rel2");
-	   			})
-	   			//Hack to use Fancybox with 'live' event
-	   			.live('mouseover', function() {
-	   				$(this).fancybox({
-		   			    'hideOnContentClick': false,
-		   			    'showCloseButton': false
-		   			});
-			   	});
-	   		
-	   		$(".thankYouLink")
-	   			.live('click', function(){ 
-	   				selectedTalkerId = $(this).attr("rel2");
-	   			})
-	   			.live('mouseover', function() {
-	   				$(this).fancybox({
-		   			    'hideOnContentClick': false,
-		   			    'showCloseButton': false
-		   			});
-			   	});
+   			//Hack to use Fancybox with 'live' event - fancybox on mouseover
+   			$(".commentLink, .thankYouLink").live('mouseover', function(event) {
+				selectedTalkerId = $(this).attr("rel2");
+				$(this).fancybox({
+	   			    'hideOnContentClick': false,
+	   			    'showCloseButton': false
+	   			});
+   			})
 
 	   		$("#content_1 .seemore a").click(function() {
 		   		loadMoreFollowlist('following');
@@ -135,8 +121,10 @@
 			<div class="tabbed_box" id="tabbed_box_1">
     			<div class="tabbed_area">
 			        <ul class="tabs">
-			            <li><a class="tab ${ action.equals('following') ? 'active' : '' }" title="content_1" href="#">Following (${talker.followingList.size()})</a></li>
-			            <li><a class="tab ${ action.equals('followers') ? 'active' : '' }" title="content_2" href="#">Followers (${talker.followerList.size()})</a></li>
+			            <li><a class="tab ${ action.equals('following') ? 'active' : '' }" 
+			            	title="content_1" href="#">Following (${talker.followingList.size()})</a></li>
+			            <li><a class="tab ${ action.equals('followers') ? 'active' : '' }" 
+			            	title="content_2" href="#">Followers (${talker.followerList.size()})</a></li>
 			        </ul>
 			        <div class="content" id="content_1" style="display: ${ action.equals('following') ? 'block' : 'none' };">
 			   			<div>
@@ -176,7 +164,8 @@
 													*{ TODO Not rel2 ? }* 
 												 	<a href="#commentform" rel2="${following.id}" class="bluetext12 commentLink">Comment</a>
 												 	#{ifnot currentTalker?.equals(following) }
-													 	 | <a href="#thankyouform" rel2="${following.id}" class="bluetext12 thankYouLink">Thank</a>
+													 	 | <a href="#thankyouform" rel2="${following.id}" 
+													 	 		class="bluetext12 thankYouLink">Thank</a>
 													#{/ifnot}
 							              		</span>
 							              	</div>
@@ -187,7 +176,13 @@
 									<span class="blacktext14">This information has been made private.</span>
 								#{/else}
 				            </div>
-				            <div class="thnksbottom"><div class="seemore"><a href="#"><img width="134" height="33" border="0" src="/public/images/seemorebutton.gif"/></a></div></div>
+				            <div class="thnksbottom">
+				            	<div class="seemore">
+				            		<a href="#"><img width="134" height="33" 
+				            			border="0" src="/public/images/seemorebutton.gif"/>
+				            		</a>
+				            	</div>
+				            </div>
 			        	</div>
 			        </div>
 			        <div class="content" id="content_2" style="display: ${ action.equals('followers') ? 'block' : 'none' };">

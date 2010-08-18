@@ -10,22 +10,23 @@
 		#{if _level == 1}
 			<div class="commentsreply">
 				#{profileCommentsTree commentsList: comment.children, level: (_level+1)/}
-				*{ TODO: Denied replies? }*
-				<div id="reply${comment.id}" class="replyForm">
-					<ul>
-						<li>
-							<textarea class="togglecomment commentreply" 
-								rows="5" cols="45" id="replytext${comment.id}">Reply to comment..</textarea>
-					    </li>
-						<li style="display: none;">
-							<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
-								<a href="#reply${comment.id}" onclick="return saveProfileComment('${comment.id}');">
-									<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
-								</a>
-							</div>
-						</li> 
-					</ul>
-				</div>
+				#{if session.username }
+					<div id="reply${comment.id}" class="replyForm">
+						<ul>
+							<li>
+								<textarea class="togglecomment commentreply" 
+									rows="5" cols="45" id="replytext${comment.id}">Reply to comment..</textarea>
+						    </li>
+							<li style="display: none;">
+								<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
+									<a href="#reply${comment.id}" onclick="return saveProfileComment('${comment.id}');">
+										<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
+									</a>
+								</div>
+							</li> 
+						</ul>
+					</div>
+				#{/if}
 			</div>
 		#{/if}
 	</div>

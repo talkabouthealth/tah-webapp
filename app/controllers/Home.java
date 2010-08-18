@@ -23,6 +23,7 @@ public class Home extends Controller {
 
     public static void index(String newTopic) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	//TODO: load Joined, not Started?
     	talker.setNumberOfTopics(TopicDAO.getNumberOfTopics(talker.getId()));
     	//TODO: load only count?
     	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
