@@ -10,6 +10,7 @@ import java.util.List;
 public class CommentBean extends MessageBean {
 	
 	private String profileTalkerId;
+	private String topicId;
 	
 	private String parentId;
 	private List<CommentBean> children;
@@ -55,6 +56,12 @@ public class CommentBean extends MessageBean {
 		this.children = children;
 	}
 
-	
+	public String getTopicId() {
+		return topicId;
+	}
+
+	public void setTopicId(String topicId) {
+		this.topicId = topicId;
+	}
 	
 }

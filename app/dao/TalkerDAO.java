@@ -35,7 +35,6 @@ import com.mongodb.DBRef;
 public class TalkerDAO {
 	
 	public static final String TALKERS_COLLECTION = "talkers";
-	public static final String PROFILE_COMMENTS_COLLECTION = "profilecomments";
 	
 	public static boolean save(TalkerBean talker) {
 		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
@@ -371,100 +370,6 @@ public class TalkerDAO {
 		return followerList;
 	}
 	
-	
-	/* ---------------- Profile comments -------------------------- 
-	 	We store profile comments in separate collection, as "child lists" tree.
-	 	Example "child lists" structure:
-			{"_id": "A", "children": ["B", "C"]}
-			{"_id": "B", "children": ["D"]}
-			{"_id": "C"}
-			{"_id": "D"}
-	 */
-	public static String saveProfileComment(CommentBean comment) {
-		DBCollection commentsColl = DBUtil.getCollection(PROFILE_COMMENTS_COLLECTION);
-		
-		DBRef profileTalkerRef = new DBRef(DBUtil.getDB(), 
-				TALKERS_COLLECTION, new ObjectId(comment.getProfileTalkerId()));
-		DBRef fromTalkerRef = new DBRef(DBUtil.getDB(), 
-				TALKERS_COLLECTION, new ObjectId(comment.getFromTalker().getId()));
-		DBObject commentObject = BasicDBObjectBuilder.start()
-			.add("profile", profileTalkerRef)
-			.add("from", fromTalkerRef)
-			.add("text", comment.getText())
-			.add("time", comment.getTime())
-			.get();
-		
-		commentsColl.save(commentObject);
-		
-		//update parent - add new comment "_id" to children array
-		String parentCommentId = comment.getParentId();
-		if (parentCommentId != null) {
-			DBObject parentIdDBObject = new BasicDBObject("_id", new ObjectId(parentCommentId));
-			commentsColl.update(parentIdDBObject, 
-					new BasicDBObject("$push", new BasicDBObject("children", commentObject.get("_id").toString())));
-		}
-		
-		return commentObject.get("_id").toString();
-	}
-	
-	public static List<CommentBean> loadProfileComments(String talkerId) {
-		DBCollection talkersColl = DBUtil.getCollection(PROFILE_COMMENTS_COLLECTION);
-		
-		DBRef profileTalkerRef = new DBRef(DBUtil.getDB(), TALKERS_COLLECTION, new ObjectId(talkerId));
-		DBObject query = BasicDBObjectBuilder.start()
-			.add("profile", profileTalkerRef)
-			.get();
-		
-		List<DBObject> commentsList = talkersColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
-		
-		//comments without parent (top in hierarchy)
-		List<CommentBean> topCommentsList = new ArrayList<CommentBean>();
-		//temp map for resolving children
-		//TODO: we don't need cache map because of sorting? (children comments are always older)
-		Map<String, CommentBean> commentsCacheMap = new HashMap<String, CommentBean>();
-		for (DBObject commentDBObject : commentsList) {
-			String commentId = commentDBObject.get("_id").toString();
-			
-			CommentBean commentBean = commentsCacheMap.get(commentId);
-			if (commentBean == null) {
-				commentBean = new CommentBean(commentId);
-				commentsCacheMap.put(commentId, commentBean);
-			}
-			topCommentsList.add(commentBean);
-			
-			commentBean.setText((String)commentDBObject.get("text"));
-			commentBean.setTime((Date)commentDBObject.get("time"));
-			
-			//TODO: the same as thankyou?
-			DBObject fromTalkerDBObject = ((DBRef)commentDBObject.get("from")).fetch();
-			TalkerBean fromTalker = new TalkerBean();
-			fromTalker.setUserName((String)fromTalkerDBObject.get("uname"));
-			commentBean.setFromTalker(fromTalker);
-			
-			//save children
-			List<CommentBean> childrenList = new ArrayList<CommentBean>();
-			BasicDBList childrenDBList = (BasicDBList)commentDBObject.get("children");
-			if (childrenDBList != null) {
-				for (Object childIdObject : childrenDBList) {
-					String childId = (String)childIdObject;
-					
-					//try to get cached instance
-					CommentBean childrenCommentBean = commentsCacheMap.get(childId);
-					if (childrenCommentBean == null) {
-						childrenCommentBean = new CommentBean(childId);
-						commentsCacheMap.put(childId, childrenCommentBean);
-					}
-					
-					childrenList.add(childrenCommentBean);
-					//remove child comments from top list
-					topCommentsList.remove(childrenCommentBean);
-				}
-			}
-			commentBean.setChildren(childrenList);
-		}
-		
-		return topCommentsList;
-	}
 	
 	public static List<TopicBean> loadFollowingTopics(String talkerId) {
 		TalkerBean talker = getById(talkerId);

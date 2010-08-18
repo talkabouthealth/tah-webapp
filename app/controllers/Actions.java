@@ -19,6 +19,7 @@ import models.actions.GiveThanksAction;
 import models.actions.ProfileCommentAction;
 import models.actions.ProfileReplyAction;
 import dao.ActivityDAO;
+import dao.CommentsDAO;
 import dao.TalkerDAO;
 
 @With(Secure.class)
@@ -92,7 +93,7 @@ public class Actions extends Controller {
 		comment.setText(text);
 		comment.setTime(new Date());
 		
-		String id = TalkerDAO.saveProfileComment(comment);
+		String id = CommentsDAO.saveProfileComment(comment);
 		comment.setId(id);
 		
 		if (comment.getParentId() == null) {

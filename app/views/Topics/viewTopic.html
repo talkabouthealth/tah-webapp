@@ -7,6 +7,21 @@
 		#innermid {
 			padding: 10px;
 		}
+		
+		#reply {
+			padding: 10px 0 0 0;
+		}
+		.commentsarea {
+			padding-top: 0px;
+		}
+		#replytext {
+			height: 20px;
+			color: #777777;
+		}
+		.commentreply {
+			height: 20px;
+			color: #777777;
+		}
 	</style>
 
 	<script type="text/javascript">
@@ -36,7 +51,84 @@
 				$(this).after("<span>Thanks!</span>").detach();
 				$.post("@{Topics.flag}", {topicId: '${topic.id}'});
 			});
+
+			//comments
+			$(".commentreply").each(function() {
+				$(this).val("Reply to comment..").css("color", "#777777");
+			});
+
+   			$("#replytext")
+	   			.click(function() {
+		   			updateCommentState('Extended');
+	   			})
+	   			.blur(function() {
+		   			if ($(this).val() == "") {
+		   				updateCommentState('Initial');
+		   			}
+	   			});
+	
+	   		$(".commentreply")
+	   			.click(function() {
+	   				updateReplyState($(this), 'Extended');
+	   			})
+	   			.blur(function() {
+		   			if ($(this).val() == "") {
+		   				updateReplyState($(this), 'Initial');
+		   			}
+	   			});			
 		});
+
+		function updateCommentState(newState) {
+   	   		if (newState == 'Initial') {
+   	   			$("#replytext").val("What are you thinking?").css("color", "#777777");
+				$("#commentBtn").hide();
+   	   		}
+   	   		else if (newState == 'Extended') {
+	   	   		$("#replytext").val("").css("color", "#000000");
+	   			$("#commentBtn").show();
+   	   		}
+   		}
+
+   		function updateReplyState(replyTextArea, newState) {
+   	   		if (newState == 'Initial') {
+   	   			replyTextArea.val("Reply to comment..").css("color", "#777777");
+   	   			replyTextArea.parent().next().hide();
+   	   		}
+   	   		else if (newState == 'Extended') {
+   	   			replyTextArea.val("").css("color", "#000000");
+	   			replyTextArea.parent().next().show();
+   	   		}
+   		}
+
+   		//public static void saveTopicComment(String topicId, String parentId, String text) {
+   		function saveProfileComment(parentId) {
+   	   		var commentText = $("#replytext"+parentId).val();
+   			$("#replytext"+parentId).val("");
+
+   			$.post("@{Topics.saveTopicComment()}", 
+  				{ topicId: '${topic.id}', parentId: parentId, text: commentText},
+  				function(html) {
+  	  				$("#firstcommentmessage").hide();
+  					//put comment in the tree
+  					if (parentId == '') {
+  	  					//add as first element in the top
+  						$(html).prependTo($(".commentsarea"));
+  					}
+  					else {
+  						//add as last element in subtree
+  						$("#reply"+parentId).before($(html));
+  					}
+  				}
+  			);
+
+   			if (parentId == '') {
+   				updateCommentState('Initial');
+			}
+			else {
+				updateReplyState($("#replytext"+parentId), 'Initial');
+			}
+  			return false;
+   		}
 
 		function openChat(tid){
 			window.open("@{Talk.talkApp()}/"+tid, "TalkerWindow", "width=700,height=500");
@@ -81,7 +173,32 @@
 						${contributor}&nbsp;&nbsp;&nbsp;
 					#{/list}
 					<br/><br/>
-					<h3 id="comments">Comments:</h3><br/>
+					
+					<div>
+						<h3 id="comments">Comments:</h3><br/>
+
+						<div id="reply" class="replyForm">
+							<ul>
+								<li>
+									<textarea class="togglecomment" rows="1" cols="45" 
+										id="replytext">What are you thinking?</textarea>
+							    </li>
+								<li id="commentBtn" style="display: none">
+									<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
+										<a href="#" onclick="return saveProfileComment('');">
+											<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
+										</a>
+									</div>
+								</li> 
+							</ul>
+						</div>
+						<div class="commentsarea">
+							#{topicCommentsTree commentsList: topic.comments, level: 1 /}
+						</div>
+					</div>
+
+					<div style="clear: both"></div>
+
 					<br/><br/>
 					<br/><br/>
 					<h3>Conversation:</h3>

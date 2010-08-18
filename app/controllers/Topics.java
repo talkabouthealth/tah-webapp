@@ -4,13 +4,17 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import models.CommentBean;
 import models.LiveConversationBean;
 import models.TalkerBean;
 import models.TopicBean;
 import models.TalkerBean.EmailSetting;
 import models.actions.FollowConvoAction;
+import models.actions.ProfileCommentAction;
+import models.actions.ProfileReplyAction;
 import models.actions.StartConvoAction;
 import play.cache.Cache;
 import play.mvc.Before;
@@ -23,11 +27,13 @@ import util.EmailUtil;
 import util.NotificationUtils;
 import webapp.LiveConversationsSingleton;
 import dao.ActivityDAO;
+import dao.CommentsDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
 
 public class Topics extends Controller {
 	
+	//Not using "@With" annotation to skip 'viewTopic' method, it should be public
 	@Before(unless={"viewTopic"})
     static void checkAccess() throws Throwable {
 		Secure.checkAccess();
@@ -141,6 +147,37 @@ public class Topics extends Controller {
     	
     }
     
+    public static void saveTopicComment(String topicId, String parentId, String text) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		TopicBean topic = TopicDAO.getByTopicId(topicId);
+		notFoundIfNull(topic);
+		
+		CommentBean comment = new CommentBean();
+		comment.setParentId(parentId.trim().length() == 0 ? null : parentId);
+		comment.setTopicId(topicId);
+		comment.setFromTalker(talker);
+		comment.setText(text);
+		comment.setTime(new Date());
+		
+		String id = CommentsDAO.saveTopicComment(comment);
+		comment.setId(id);
+		
+//		if (comment.getParentId() == null) {
+//			ActivityDAO.saveActivity(new ProfileCommentAction(talker, profileTalker));
+//		}
+//		else {
+//			ActivityDAO.saveActivity(new ProfileReplyAction(talker, profileTalker));
+//		}
+//		NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
+//				profileTalker, talker.getUserName()+" left a comment on you profile.");
+		
+		//render html of new comment using tag
+		List<CommentBean> _commentsList = Arrays.asList(comment);
+		int _level = (comment.getParentId() == null ? 1 : 2);
+		render("tags/topicCommentsTree.html", _commentsList, _level);
+	}
+    
     /* --------------- Public -------------------- */
     public static void viewTopic(String url) {
     	notFoundIfNull(url);
@@ -161,6 +198,8 @@ public class Topics extends Controller {
 		}		
 		
 		TopicDAO.incrementTopicViews(topic.getId());
+		
+		topic.setComments(CommentsDAO.loadTopicComments(topic.getId()));
 		
 		//temporary test data
 		topic.setDetails("Suggestions for friends and family...");

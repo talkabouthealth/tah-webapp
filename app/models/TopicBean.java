@@ -22,6 +22,8 @@ public class TopicBean {
 	
 	private String mainURL;
 	
+	private List<CommentBean> comments;
+	
 	public TopicBean() {}
 	
 	public TopicBean(String id) {
@@ -161,6 +163,14 @@ public class TopicBean {
 
 	public void setViews(int views) {
 		this.views = views;
+	}
+	
+	public List<CommentBean> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<CommentBean> comments) {
+		this.comments = comments;
 	}
 	
 	

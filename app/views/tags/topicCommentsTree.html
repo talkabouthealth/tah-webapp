@@ -1,0 +1,32 @@
+#{list items: _commentsList, as: 'comment' }
+	<div id="comment${comment.id}" class="commentbox">
+		<div class="thankyoupic">
+			<img src="@{Image.show(comment.fromTalker.userName)}" border="0" width="48px" height="48px" />
+		</div>
+		<div class="thankyoutext"><span class="navybluetext12">${comment.fromTalker.userName}</span><br />
+		  <span class="blacktext11">${comment.text}</span>
+		  <span class="greytext11"><br/>${comment.time.format("MMM dd 'at' HH:mm a")}&nbsp;&nbsp;</span>
+		</div>
+		#{if _level == 1}
+			<div class="commentsreply">
+				#{profileCommentsTree commentsList: comment.children, level: (_level+1)/}
+				*{ TODO: Denied replies? }*
+				<div id="reply${comment.id}" class="replyForm">
+					<ul>
+						<li>
+							<textarea class="togglecomment commentreply" 
+								rows="5" cols="45" id="replytext${comment.id}">Reply to comment..</textarea>
+					    </li>
+						<li style="display: none;">
+							<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
+								<a href="#reply${comment.id}" onclick="return saveProfileComment('${comment.id}');">
+									<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
+								</a>
+							</div>
+						</li> 
+					</ul>
+				</div>
+			</div>
+		#{/if}
+	</div>
+#{/list}

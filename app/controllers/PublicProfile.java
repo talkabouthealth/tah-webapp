@@ -9,6 +9,7 @@ import models.TalkerBean;
 import models.TalkerDiseaseBean;
 import models.TopicBean;
 import dao.ActivityDAO;
+import dao.CommentsDAO;
 import dao.HealthItemDAO;
 import dao.TalkerDAO;
 import dao.TalkerDiseaseDAO;
@@ -45,7 +46,7 @@ public class PublicProfile extends Controller {
 		
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		talker.setActivityList(ActivityDAO.load(talker.getId()));
-		talker.setProfileCommentsList(TalkerDAO.loadProfileComments(talker.getId()));
+		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
 		talker.setFollowingTopicsFullList(TalkerDAO.loadFollowingTopics(talker.getId()));
 		
 		talker.setStartedTopicsList(TopicDAO.loadTopics(talker.getId(), "START_CONVO"));
@@ -149,14 +150,12 @@ public class PublicProfile extends Controller {
 	
 	
 	
-	
-	
 	public static void comments(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
 		notFoundIfNull(talker);
 		
-		talker.setProfileCommentsList(TalkerDAO.loadProfileComments(talker.getId()));
+		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
 		
 		render(talker, currentTalker);
 	}
