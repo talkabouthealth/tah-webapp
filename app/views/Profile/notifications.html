@@ -45,11 +45,81 @@
 	</div>
 	<div id="innerbanner"></div>
 	<div id="innermain">
-	<form id="NofifyFrequency" name="setNotifyFrequency" action="@{Profile.saveNotifications()}" method="post"  >
-		<div class="blacktext2" id="innerheading">Notification Settings</div>
+	<form id="primaryIM" name="setPrimaryIM" action="@{Profile.saveAccounts()}#accountsform" method="post">
+		<div class="blacktext2" id="innerheading">Accounts where we notify you</div>
 		<div id="innermiddlearea">
-			<div id="notifactionbox">
-				<div class="notifactionboxtop"></div>
+			<div class="notifactionboxtop"></div>
+			<div class="notifactionboxmid">
+				#{if "accountsForm".equals(flash.currentForm)}
+					#{if flash.success}
+					   <div class="notibluearea">
+							<div class="notiblueareatop"></div>
+							<div class="signfields2">
+								<h4>Changes are saved!</h4>
+							</div>
+							<div class="notiblueareabot"></div>
+						</div>
+					#{/if}
+				#{/if}
+				<div class="notibluearea">
+					<div class="notiblueareatop"></div>
+					<div class="signfields2">
+						<h1>Instant Messenger</h1>
+						<ul>
+							<li>
+								<select name="talker.im" id="talker.im" class="textarea1">
+									<option selected value=''>Select an IM service</option>
+								#{list items: models.TalkerBean.IM_SERVICES_MAP.keySet(), as:'imService'}
+								    <option value="${imService}" 
+								    #{if imService.equals(talker.im) } selected #{/if} 
+								    >${models.TalkerBean.IM_SERVICES_MAP.get(imService)}</option>
+								#{/list}
+								</select>
+							</li>
+							<li>
+								<input name="talker.imUsername" type="text" class="textfields" 
+							  		id="talker.imUsername" value="${talker.imUsername}" />
+							</li>
+						</ul>
+						<span class="note">Just the username, 
+							  		no need for the "@gmail.com" or "@yahoo.com" (i.e. joesmith)</span>
+					</div>
+					<div class="notiblueareabot"></div>
+				</div>
+				<div class="notibluearea">
+					<div class="notiblueareatop"></div>
+					<div class="signfields2">
+						<h1>Email</h1>
+						#{if talker.verifyCode != null }
+							<a href="#" id="verificationResendLink" 
+								class="red12">(email not verified - resend verification e-mail)</a>
+							<span id="verificationResendResult" class="blacktext12"></span>
+						#{/if}
+						<ul>
+						  <li>
+						  	<input name="talker.email" type="text" class="textfields" id="talker.email"
+						  		value="${talker.email}"/>
+						  </li>
+						</ul>
+					</div>
+					<div class="notiblueareabot"></div>
+				</div>
+<!-- <div id="savebutton"><img src="/public/images/save.gif" width="186" height="46" /></div> -->
+				<input id="submit" name="submit1" type="image" src="/public/images/save.gif" value="save changes"> 
+			</div>
+			<div class="notifactionboxbot"></div>
+		</div>
+	</form>
+	</div>
+	
+	<div id="midnoticontainer">
+		<div id="midnoticontainermain">
+		<a name="notificationsform"></a>
+		<form id="NofifyFrequency" name="setNotifyFrequency" action="@{Profile.saveNotifications()}#notificationsform" method="post"  >
+			<div id="boxarea_head2" class="blacktext2">IM Notification Settings</div>
+			<div id="notifactionbox2">
+			
+			<div class="notifactionboxtop"></div>
 				<div class="notifactionboxmid">
 					#{if "notificationsForm".equals(flash.currentForm)}
 						#{if flash.success}
@@ -120,19 +190,20 @@
 				</div>
 				<div class="notifactionboxbot"></div>
 			</div>
+		</form>
 		</div>
-	</form>
 	</div>
+			
 	
 	<div id="midnoticontainer">
 		<div id="midnoticontainermain">
-		<a name="accountsform"></a>
-		<form id="primaryIM" name="setPrimaryIM" action="@{Profile.saveAccounts()}#accountsform" method="post">
-			<div id="boxarea_head2" class="blacktext2">Accounts where we notify you</div>
+		<a name="emailsettingsform"></a>
+		<form id="emailsettings" name="emailsettings" action="@{Profile.saveEmailSettings()}#emailsettings" method="post">
+			<div id="boxarea_head2" class="blacktext2">Email Settings</div>
 			<div id="notifactionbox2">
 				<div class="notifactionboxtop"></div>
 				<div class="notifactionboxmid">
-					#{if "accountsForm".equals(flash.currentForm)}
+					#{if "emailsettingsForm".equals(flash.currentForm)}
 						#{if flash.success}
 						   <div class="notibluearea">
 								<div class="notiblueareatop"></div>
@@ -146,47 +217,35 @@
 					<div class="notibluearea">
 						<div class="notiblueareatop"></div>
 						<div class="signfields2">
-							<h1>Instant Messenger</h1>
-							<ul>
-								<li>
-									<select name="talker.im" id="talker.im" class="textarea1">
-										<option selected value=''>Select an IM service</option>
-									#{list items: models.TalkerBean.IM_SERVICES_MAP.keySet(), as:'imService'}
-									    <option value="${imService}" 
-									    #{if imService.equals(talker.im) } selected #{/if} 
-									    >${models.TalkerBean.IM_SERVICES_MAP.get(imService)}</option>
-									#{/list}
-									</select>
-								</li>
-								<li>
-									<input name="talker.imUsername" type="text" class="textfields" 
-								  		id="talker.imUsername" value="${talker.imUsername}" />
-								</li>
-							</ul>
-							<span class="note">Just the username, 
-								  		no need for the "@gmail.com" or "@yahoo.com" (i.e. joesmith)</span>
+							<div class="generalcheck">
+								<h1>User Related</h1>
+								#{set showConvoTitle = true /}
+								#{list items:models.TalkerBean.EmailSetting.values(), as:'setting' }
+									#{if setting.toString().startsWith('CONVO') && showConvoTitle}
+										<h1>Conversation Related</h1>
+										#{set showConvoTitle = false /}
+									#{/if}
+									<div class="preferencescheck">
+										<input type="checkbox" value="" name="${setting}"
+											#{if talker.loadEmailSettings().contains(setting) } checked='checked' #{/if}
+										/>
+										<span class="blacktext14">&nbsp;${setting.description}</span>
+									</div>
+								#{/list}
+							</div>
+							
+							
+							<h1>Newsletter</h1>
+							<div class="generalcheck">
+								<div class="preferencescheck">
+									<input id="talker.newsletter" name="talker.newsletter" 
+										type="checkbox" #{if talker.newsletter} checked #{/if} /> 
+									<span class="blacktext14">&nbsp;Send me the TalkAboutHealth newsletter.</span>
+								</div>
+							</div>
 						</div>
 						<div class="notiblueareabot"></div>
 					</div>
-					<div class="notibluearea">
-						<div class="notiblueareatop"></div>
-						<div class="signfields2">
-							<h1>Email</h1>
-							#{if talker.verifyCode != null }
-								<a href="#" id="verificationResendLink" 
-									class="red12">(email not verified - resend verification e-mail)</a>
-								<span id="verificationResendResult" class="blacktext12"></span>
-							#{/if}
-							<ul>
-							  <li>
-							  	<input name="talker.email" type="text" class="textfields" id="talker.email"
-							  		value="${talker.email}"/>
-							  </li>
-							</ul>
-						</div>
-						<div class="notiblueareabot"></div>
-					</div>
-<!-- <div id="savebutton"><img src="/public/images/save.gif" width="186" height="46" /></div> -->
 					<input id="submit" name="submit1" type="image" src="/public/images/save.gif" value="save changes"> 
 				</div>
 				<div class="notifactionboxbot"></div>

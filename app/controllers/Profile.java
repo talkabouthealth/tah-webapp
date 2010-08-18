@@ -17,6 +17,7 @@ import java.util.Set;
 
 import models.HealthItemBean;
 import models.TalkerBean;
+import models.TalkerBean.EmailSetting;
 import models.TalkerBean.ProfilePreference;
 import models.TalkerDiseaseBean;
 import models.actions.UpdateProfileAction;
@@ -187,8 +188,7 @@ public class Profile extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		EnumSet<ProfilePreference> profilePreferences = talker.loadProfilePreferences();
 		
-		ProfilePreference[] profilePreferencesArr = ProfilePreference.values();
-		render(profilePreferencesArr, profilePreferences);
+		render(profilePreferences);
 	}
 	
 	public static void savePreferences() {
@@ -293,6 +293,40 @@ public class Profile extends Controller {
 		flash.success("ok");
 		notifications();
 	}
+	
+	public static void saveEmailSettings(TalkerBean talker) {
+		flash.put("currentForm", "emailsettingsForm");
+		
+		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);
+
+		//TODO: duplicate? easier?
+		Map<String, String> paramsMap = params.allSimple();
+		EnumSet<EmailSetting> emailSettings = EnumSet.noneOf(EmailSetting.class);
+		for (String paramName : paramsMap.keySet()) {
+			//try to parse all parameters to ProfilePreference enum
+			try {
+				EmailSetting emailSetting = EmailSetting.valueOf(paramName);
+				emailSettings.add(emailSetting);
+			}
+			catch (IllegalArgumentException iae) {}
+		}
+		
+		sessionTalker.saveEmailSettings(emailSettings);
+		if (talker == null) {
+			sessionTalker.setNewsletter(false);
+		}
+		else {
+			sessionTalker.setNewsletter(talker.isNewsletter());
+		}
+		
+		
+		TalkerDAO.updateTalker(sessionTalker);
+		CommonUtil.updateCachedTalker(session);
+		
+		flash.success("ok");
+		notifications();
+	}
+	
 	
 	/* ------------- Health Info -------------------------- */
 	public static void healthDetails() {

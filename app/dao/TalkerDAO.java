@@ -56,7 +56,9 @@ public class TalkerDAO {
 				.add("act_type", talker.getAccountType())
 				.add("act_id", talker.getAccountId())
 				.add("invites", talker.getInvitations())
+				
 				.add("prefs", talker.profilePreferencesToInt())
+				.add("email_settings", talker.emailSettingsToList())
 				
 				.add("nfreq", talker.getNfreq())
 				.add("ntime", talker.getNtime())
@@ -87,9 +89,14 @@ public class TalkerDAO {
 			.add("connection", talker.getConnection())
 			.add("ch_num", talker.getChildrenNum())
 			.add("invites", talker.getInvitations())
+			
 			.add("prefs", talker.profilePreferencesToInt())
+			.add("email_settings", talker.emailSettingsToList())
+			
 			.add("im", talker.getIm())
 			.add("im_uname", talker.getImUsername())
+			.add("newsletter", talker.isNewsletter())
+			
 			.add("nfreq", talker.getNfreq())
 			.add("ntime", talker.getNtime())
 			.add("ctype", talker.getCtype())

@@ -87,6 +87,27 @@ public class TalkerBean implements Serializable {
 		}
 	}
 	
+	//Convo-related items start with "CONVO" - we use it for display
+	public enum EmailSetting {
+		RECEIVE_COMMENT ("Send me an email when I receive a comment."),
+		RECEIVE_THANKYOU ("Send me an email when I receive a 'Thank You'."),
+		RECEIVE_DIRECT ("Send me an email when I receive a Direct Message."),
+		
+		CONVO_RESTART ("Send me an email when a Conversation I follow is re-started."),
+		CONVO_COMMENT ("Send me an email when a Comment is added to a Conversation I follow."),
+		CONVO_SUMMARY ("Send me an email when a Summary of a Conversation I follow is updated.");
+		
+		private final String description;
+		
+		private EmailSetting(String description) {
+			this.description = description;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+	}
+	
 	private String id;
 	@Required
 	@Match(ValidateData.USER_REGEX)
@@ -224,6 +245,7 @@ public class TalkerBean implements Serializable {
 	private int numberOfTopics;
 	
 	private EnumSet<ProfilePreference> profilePreferences;
+	private EnumSet<EmailSetting> emailSettings;
 	
 	public TalkerBean(){}
 	
@@ -305,6 +327,14 @@ public class TalkerBean implements Serializable {
 		this.profilePreferences = profilePreferences;
 	}
 	
+	public EnumSet<EmailSetting> loadEmailSettings() {
+		return emailSettings;
+	}
+
+	public void saveEmailSettings(EnumSet<EmailSetting> emailSettings) {
+		this.emailSettings = emailSettings;
+	}
+	
 //	public EnumSet<ProfilePreference> getProfilePreferences() {
 //		return profilePreferences;
 //	}
@@ -326,6 +356,8 @@ public class TalkerBean implements Serializable {
 		
 		setIm((String)talkerDBObject.get("im"));
 		setImUsername((String)talkerDBObject.get("im_uname"));
+		setNewsletter((Boolean)talkerDBObject.get("newsletter"));
+		
 		setGender((String)talkerDBObject.get("gender"));
 		setDob((Date)talkerDBObject.get("dob"));
 		setInvitations(parseInt(talkerDBObject.get("invites")));
@@ -347,7 +379,6 @@ public class TalkerBean implements Serializable {
 		setCategory((String)talkerDBObject.get("category"));
 		setConnection((String)talkerDBObject.get("connection"));
 		setRegDate((Date)talkerDBObject.get("timestamp"));
-		parseProfilePreferences(parseInt(talkerDBObject.get("prefs")));
 		
 		setFirstName((String)talkerDBObject.get("firstname"));
 		setLastName((String)talkerDBObject.get("lastname"));
@@ -360,6 +391,9 @@ public class TalkerBean implements Serializable {
 		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
 		parseFollowing((Collection<DBRef>)talkerDBObject.get("following"));
 		setFollowingTopicsList(parseStringList(talkerDBObject.get("following_topics")));
+		
+		parseProfilePreferences(parseInt(talkerDBObject.get("prefs")));
+		parseEmailSettings(parseStringList(talkerDBObject.get("email_settings")));
 	}
 	
 	//TODO: make private and unify with all other getters
@@ -461,6 +495,29 @@ public class TalkerBean implements Serializable {
 			}
 		}
 	}
+	
+	public List<String> emailSettingsToList() {
+		List<String> emailSettingsStringList = new ArrayList<String>();
+		for (EmailSetting emailSetting : emailSettings) {
+			emailSettingsStringList.add(emailSetting.toString());
+		}
+		
+		return emailSettingsStringList;
+	}
+	
+	private void parseEmailSettings(List<String> dbEmailSettingsList) {
+		emailSettings = EnumSet.noneOf(EmailSetting.class);
+		if (dbEmailSettingsList == null) {
+			return;
+		}
+		
+		for (String dbEmailSetting : dbEmailSettingsList) {
+			EmailSetting emailSetting = EmailSetting.valueOf(dbEmailSetting);
+			emailSettings.add(emailSetting);
+		}
+	}
+	
+	
 	
 	public long getAge() {
 		Date now = new Date();
@@ -809,4 +866,5 @@ public class TalkerBean implements Serializable {
 	public void setJoinedTopicsList(List<TopicBean> joinedTopicsList) {
 		this.joinedTopicsList = joinedTopicsList;
 	}
+
 }	
