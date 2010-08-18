@@ -40,14 +40,15 @@ public class TalkerBean implements Serializable {
 	
 	public static final String[] CONNECTIONS_ARRAY = new String[] {
 		"Patient", "Former Patient", "Parent", "Caregiver", "Family member", "Friend", 
-		 "other"
+		//"professionals"
+		"Physician", "Pharmacist", "Nurse", "Psychiatrist", "Social worker",
 		
-		/*
-		  	Temporarily disabled items
-		  	http://www.pivotaltracker.com/story/show/4460673
-		  	"Physician", "Pharmacist", "Nurse", "Psychiatrist", "Social worker"
-		 */
+		 "other"
 	};
+	// only professionals in this list
+	public static final List<String> PROFESSIONAL_CONNECTIONS_LIST = Arrays.asList(
+		"Physician", "Pharmacist", "Nurse", "Psychiatrist", "Social worker"
+	);
 	
 	/**
 	 * TODO: is it ok? Or find other solution?
@@ -141,16 +142,11 @@ public class TalkerBean implements Serializable {
 	private int invitations;
 	private String maritalStatus;
 	private String category;
+	
 	//Patient/Caregiver/etc.
 	private String connection;
-	public String getConnection() {
-		return connection;
-	}
-
-	public void setConnection(String connection) {
-		this.connection = connection;
-	}
-
+	private boolean connectionVerified;
+	
 	private String city;
 	private String state;
 	private String country;
@@ -377,8 +373,10 @@ public class TalkerBean implements Serializable {
 		setChildrenNum(parseInt(talkerDBObject.get("ch_num")));
 		setMaritalStatus((String)talkerDBObject.get("mar_status"));
 		setCategory((String)talkerDBObject.get("category"));
-		setConnection((String)talkerDBObject.get("connection"));
 		setRegDate((Date)talkerDBObject.get("timestamp"));
+		
+		setConnection((String)talkerDBObject.get("connection"));
+		setConnectionVerified(getBoolean(talkerDBObject.get("connection_verified"))); 
 		
 		setFirstName((String)talkerDBObject.get("firstname"));
 		setLastName((String)talkerDBObject.get("lastname"));
@@ -865,6 +863,22 @@ public class TalkerBean implements Serializable {
 
 	public void setJoinedTopicsList(List<TopicBean> joinedTopicsList) {
 		this.joinedTopicsList = joinedTopicsList;
+	}
+	
+	public boolean isConnectionVerified() {
+		return connectionVerified;
+	}
+
+	public void setConnectionVerified(boolean connectionVerified) {
+		this.connectionVerified = connectionVerified;
+	}
+
+	public String getConnection() {
+		return connection;
+	}
+
+	public void setConnection(String connection) {
+		this.connection = connection;
 	}
 
 }	

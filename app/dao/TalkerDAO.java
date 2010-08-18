@@ -51,7 +51,10 @@ public class TalkerDAO {
 				.add("timestamp",  Calendar.getInstance().getTime())
 				.add("im", talker.getIm())
 				.add("im_uname", talker.getImUsername())
+				
 				.add("connection", talker.getConnection())
+				.add("connection_verified", talker.isConnectionVerified())
+				
 				.add("newsletter", talker.isNewsletter())
 				.add("act_type", talker.getAccountType())
 				.add("act_id", talker.getAccountId())
@@ -86,7 +89,10 @@ public class TalkerDAO {
 			.add("state", talker.getState())
 			.add("country", talker.getCountry())
 			.add("category", talker.getCategory())
+			
 			.add("connection", talker.getConnection())
+			.add("connection_verified", talker.isConnectionVerified())
+			
 			.add("ch_num", talker.getChildrenNum())
 			.add("invites", talker.getInvitations())
 			
@@ -221,6 +227,21 @@ public class TalkerDAO {
 			talker.parseFromDB(talkerDBObject);
 			return talker;
 		}
+	}
+	
+	public static List<TalkerBean> loadAllTalkers() {
+		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		
+		List<DBObject> talkersDBObjectList = talkersColl.find().toArray();
+		
+		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
+		for (DBObject talkerDBObject : talkersDBObjectList) {
+			TalkerBean talker = new TalkerBean();
+			talker.parseFromDB(talkerDBObject);
+			talkerList.add(talker);
+		}
+		
+		return talkerList;
 	}
 	
 	public static List<Map<String, String>> loadTalkersForDashboard() {

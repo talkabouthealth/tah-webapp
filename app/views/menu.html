@@ -2,7 +2,7 @@
 	<div class="chromestyle" id="chromemenu">
 		<ul>
 			#{if session.get("username").equals("admin") }
-				<li><a href="@{Dashboard.index()}"><b>Dashboard</b></a></li>
+				<li><a href="#" rel="dropmenu0"><b>Admin</b></a></li>
 			#{/if}
 			<li><a href="@{Home.index()}">Home</a></li>
 			<li><a href="#" rel="dropmenu1">You</a></li>
@@ -13,6 +13,11 @@
 			<li><a href="#" rel="dropmenu4">Help</a></li>
 			<li><a href="@{Secure.logout()}" >Logout</a></li>	
 		</ul>
+	</div>
+	<!--0st drop down menu -->                                                   
+	<div id="dropmenu0" class="dropmenudiv">
+		<a href="@{Dashboard.index()}">Dashboard</a>
+		<a href="@{Dashboard.verifyProfessionals()}">Verify Professionals</a>
 	</div>
 	<!--1st drop down menu -->                                                   
 	<div id="dropmenu1" class="dropmenudiv">

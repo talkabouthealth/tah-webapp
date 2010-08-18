@@ -257,7 +257,7 @@
 							<div class="signuptextarea"><span class="blacktext14">Patient/Caregiver/etc.</span></div>
 							<div class="personaltextfield">
 								<select size="1" name="talker.connection" class="personalfields" id="talker.connection">
-							  		<option selected value=''>Patient/Caregiver/etc.</option>
+							  		<option selected value=''></option>
 							  		#{list items:models.TalkerBean.CONNECTIONS_ARRAY, as:'connection'}
 									    <option value="${connection}"
 									    #{if connection.equals(flash['talker.connection']) } selected #{/if} 

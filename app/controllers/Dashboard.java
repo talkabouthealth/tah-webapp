@@ -1,7 +1,13 @@
 package controllers;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+
+import models.TalkerBean;
+import models.TalkerBean.ProfilePreference;
 
 import play.mvc.Controller;
 import play.mvc.With;
@@ -75,5 +81,42 @@ public class Dashboard extends Controller {
 	
 	public static void setAutomaticNotification(boolean newValue) {
 		ConfigDAO.saveConfig(NotificationUtils.AUTOMATIC_NOTIFICATIONS_CONFIG, newValue);
+	}
+	
+	public static void verifyProfessionals() {
+		List<TalkerBean> talkers = loadProfessionalTalkers();
+		
+		render(talkers);
+	}
+	
+	public static void saveVerifyProfessionals(List<String> selectedTalkerIds) {
+		List<TalkerBean> talkers = loadProfessionalTalkers();
+		
+		if (selectedTalkerIds == null) {
+			selectedTalkerIds = Collections.EMPTY_LIST;
+		}
+		for (TalkerBean talker : talkers) {
+			if (selectedTalkerIds.contains(talker.getId())) {
+				talker.setConnectionVerified(true);
+			}
+			else {
+				talker.setConnectionVerified(false);
+			}
+			TalkerDAO.updateTalker(talker);
+		}
+		
+		verifyProfessionals();
+	}
+	
+	private static List<TalkerBean> loadProfessionalTalkers() {
+		List<TalkerBean> talkerList = TalkerDAO.loadAllTalkers();
+		
+		List<TalkerBean> professionalTalkers = new ArrayList<TalkerBean>();
+		for (TalkerBean talker : talkerList) {
+			if (TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.getConnection())) {
+				professionalTalkers.add(talker);
+			}
+		}
+		return professionalTalkers;
 	}
 }

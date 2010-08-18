@@ -1,0 +1,40 @@
+#{extends 'static.html' /}
+#{set pageHeader:'Verify Professionals' /}
+
+<style type="text/css">
+	#signupright {
+		visibility: hidden;
+	}
+	table {
+		font-size: 14px;
+	}
+	table td, table th {
+		padding: 7px;
+	}
+</style>
+
+<form name="verifyform" action="@{Dashboard.saveVerifyProfessionals()}" method="POST">
+	<table border="1" cellspacing="0">
+		<tr>
+			<th>Username</th>
+			<th>Connection</th>
+			<th>Verified?</th>
+		</tr>
+		#{list items: talkers, as: 'talker'}
+			<tr>
+				<td>${talker.userName}</td>
+				<td>${talker.connection == null || talker.connection.isEmpty() ? '-' : talker.connection}</td>
+				<td>
+					<input type="checkbox" name="selectedTalkerIds" value="${talker.id}"
+						${talker.connectionVerified ? "checked='checked'" : ""}
+					/>
+				</td>
+			</tr>
+		#{/list}
+	</table>
+	<div class="button">
+		<a href="#" onclick="document.verifyform.submit();">
+			<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" />
+		</a>
+	</div>
+</form>

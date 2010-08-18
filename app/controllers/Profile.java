@@ -77,6 +77,13 @@ public class Profile extends Controller {
             return;
         }
 		
+		if (!StringUtils.equals(oldTalker.getConnection(), talker.getConnection())) {
+			//check if new connection professional and unverify it
+			if (TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.getConnection())) {
+				oldTalker.setConnectionVerified(false);
+			}
+		}
+		
 		if (!StringUtils.equals(oldTalker.getBio(), talker.getBio())) {
 			ActivityDAO.saveActivity(new UpdateProfileAction(oldTalker, "BIO"));
 		}
