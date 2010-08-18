@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.CommentBean;
+import models.EmailBean;
 import models.TalkerBean;
 import models.ThankYouBean;
 import models.TopicBean;
@@ -370,7 +371,6 @@ public class TalkerDAO {
 		return followerList;
 	}
 	
-	
 	public static List<TopicBean> loadFollowingTopics(String talkerId) {
 		TalkerBean talker = getById(talkerId);
 		
@@ -386,6 +386,20 @@ public class TalkerDAO {
 		
 		return followingTopicsList;
 	}
+	
+	public static void saveEmail(TalkerBean talker, EmailBean email) {
+		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		
+		DBObject emailObject = BasicDBObjectBuilder.start()
+			.add("value", email.getValue())
+			.add("verify_code", email.getVerifyCode())
+			.get();
+		DBObject talkerObject = new BasicDBObject("$push", emailObject);
+		
+		DBObject talkerId = new BasicDBObject("_id", new ObjectId(talker.getId()));
+		talkersColl.update(talkerId, new BasicDBObject("$set", talkerObject));
+	}
+	
 	
 	public static void main(String[] args) {
 //		TalkerDAO.follow("4c2cb43160adf3055c97d061", "4c35dbeb5165f305eebfc5f2", true);

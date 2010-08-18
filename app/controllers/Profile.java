@@ -334,6 +334,27 @@ public class Profile extends Controller {
 		notifications();
 	}
 	
+	//ajax methods
+	public static void addEmail(String newEmail) {
+//		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+//		
+//		TalkerBean otherTalker = TalkerDAO.getByEmail(talker.getEmail());
+//		
+//		//TODO duplicates functionality? - move email creation to EmailUtil?
+//		if (!oldEmail.equals(talker.getEmail())) {
+//			//send verification email
+//			oldTalker.setVerifyCode(CommonUtil.generateVerifyCode());
+//			
+//			Map<String, String> vars = new HashMap<String, String>();
+//			vars.put("username", oldTalker.getUserName());
+//			vars.put("verify_code", oldTalker.getVerifyCode());
+//			EmailUtil.sendEmail(EmailUtil.VERIFICATION_TEMPLATE, oldTalker.getEmail(), vars, null, false);
+//		}
+//		
+//		TalkerDAO.saveEmail(talker, newEmail);
+	}
+	
+	
 	
 	/* ------------- Health Info -------------------------- */
 	public static void healthDetails() {

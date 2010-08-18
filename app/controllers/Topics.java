@@ -191,6 +191,19 @@ public class Topics extends Controller {
 		if (topic == null) {
 			//try by old url
 			topic = TopicDAO.getByOldURL(url);
+			
+			//TODO: temporary - for old topics with mainURL
+			if (topic == null) {
+				try {
+					Integer tid = Integer.parseInt(url);
+					topic = TopicDAO.getByTid(tid);
+					
+					String topicURL = JavaExtensions.slugify(topic.getTopic());
+					topic.setMainURL(topicURL+"-"+topic.getTid());
+					TopicDAO.updateTopic(topic);
+				}
+				catch(Exception e){}
+			}
 			notFoundIfNull(topic);
 			
 			//redirect to main url
