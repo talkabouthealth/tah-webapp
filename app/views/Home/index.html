@@ -127,15 +127,15 @@
 				    	<strong>${talker.numberOfTopics}</strong>
 				    </a> <br />
 				    <span class="blacktext">Thank You's: </span>
-				    <a style="text-decoration: none" href="@{PublicProfile.thankyous(talker.userName)}">
+				    <a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.userName, 'thankyous')}">
 				    	<strong>${talker.thankYouList.size()}</strong>
 				    </a> <br />
 				    <span class="blacktext">Followers:</span>
-				    <a style="text-decoration: none" href="@{PublicProfile.followers(talker.userName)}">
+				    <a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.userName, 'followers')}">
 				    	<strong>${talker.followerList.size()}</strong>
 				    </a> <br />
 				    <span class="blacktext">Following:</span>
-				    <a style="text-decoration: none" href="@{PublicProfile.following(talker.userName)}">
+				    <a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.userName, 'following')}">
 				    	<strong>${talker.followingList.size()}</strong>
 				    </a>
 				</div>

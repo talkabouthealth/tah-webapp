@@ -31,13 +31,15 @@ GET		/image/{userName}						Image.show
 GET     /public/                                staticDir:public
 
 GET		/{userName}								PublicProfile.view
-GET		/{userName}/thankyous					PublicProfile.thankyous
-GET		/{userName}/following					PublicProfile.following
-GET		/{userName}/followers					PublicProfile.followers
+
+GET		/{userName}/thankyous					PublicProfile.userBasedActions(action:'thankyous')
+GET		/{userName}/following					PublicProfile.userBasedActions(action:'following')
+GET		/{userName}/followers					PublicProfile.userBasedActions(action:'followers')
+GET		/{userName}/comments					PublicProfile.userBasedActions(action:'comments')
+
 GET		/{userName}/conversationsfollowing		PublicProfile.conversationsFollowing
 GET		/{userName}/conversationsstarted		PublicProfile.conversationsStarted
 GET		/{userName}/conversationsjoined			PublicProfile.conversationsJoined
-GET		/{userName}/comments					PublicProfile.comments
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}

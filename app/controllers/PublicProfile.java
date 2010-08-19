@@ -58,12 +58,15 @@ public class PublicProfile extends Controller {
 	}
 	
 	
-	public static void thankYous(String userName) {
+	public static void userBasedActions(String userName, String action) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
 		notFoundIfNull(talker);
 		
-		render(talker, currentTalker);
+		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
+		
+		render(talker, currentTalker, action);
 	}
 	
 	public static void loadMoreThankYous(String userName, int start) {
@@ -71,30 +74,6 @@ public class PublicProfile extends Controller {
 		notFoundIfNull(talker);
 		
 		render("@thankYousAjax", talker, start);
-	}
-	
-	
-	//TODO: make one method? use 'action' parameter
-	public static void followers(String userName) {
-		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
-		TalkerBean talker = TalkerDAO.getByUserName(userName);
-		notFoundIfNull(talker);
-		
-		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-		
-		String action = "followers";
-		render("@following", talker, currentTalker, action);
-	}
-	
-	public static void following(String userName) {
-		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
-		TalkerBean talker = TalkerDAO.getByUserName(userName);
-		notFoundIfNull(talker);
-		
-		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-		
-		String action = "following";
-		render("@following", talker, currentTalker, action);
 	}
 	
 	public static void loadMoreFollowlist(String userName, String followType, int start) {
@@ -147,15 +126,4 @@ public class PublicProfile extends Controller {
 		render("@conversationsList", talker, currentTalker, topicsType, topicsList);
 	}
 	
-	
-	
-	public static void comments(String userName) {
-		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
-		TalkerBean talker = TalkerDAO.getByUserName(userName);
-		notFoundIfNull(talker);
-		
-		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
-		
-		render(talker, currentTalker);
-	}
 }

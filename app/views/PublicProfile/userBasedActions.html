@@ -1,0 +1,522 @@
+#{ extends 'main.html' /}
+	<script type="text/javascript"> 	 
+		var selectedTalkerId = '';
+		var followingIndex = 30;
+		var followersIndex = 30;
+   		$(document).ready(function() {
+   			// When a link is clicked
+   			$("a.tab").click(function () {
+   				// switch all tabs off
+   				$(".active").removeClass("active");
+   				// switch this tab on
+   				$(this).addClass("active");
+   				// slide all content up
+   				$(".content, .tabcontent").slideUp();
+   				// slide this content up
+   				var content_show = $(this).attr("title");
+   				$("#"+content_show).slideDown();
+   			});
+
+   			//--- Comments ---
+   			$(".commentreply").each(function() {
+				$(this).val("Reply to comment..").css("color", "#777777");
+			});
+   			$("#replytext")
+	   			.click(function() {
+		   			updateCommentState('Extended');
+	   			})
+	   			.blur(function() {
+		   			if ($(this).val() == "") {
+		   				updateCommentState('Initial');
+		   			}
+	   			});
+	   		$(".commentreply")
+	   			.click(function() {
+	   				updateReplyState($(this), 'Extended');
+	   			})
+	   			.blur(function() {
+		   			if ($(this).val() == "") {
+		   				updateReplyState($(this), 'Initial');
+		   			}
+	   			});
+
+			
+			//--- Thanks you's ---
+			$("#displayThankYouText").click(function() {
+   				$('#leavethankyouText').toggle(); 
+   				$('#thankYouNote').focus(); 
+   				return false;
+	   		});
+
+	   		$("#content_2 .seemore a").click(function() {
+	   			loadMoreThankYous();
+	   		});
+	   		
+	   		
+	   	   	//--- Follows ---
+   			$(".followActionLink").live('click', function() {
+   				var followingId = $(this).attr("rel");
+   				var followLink = $(this);
+   	   			$.post("@{Actions.follow()}", 
+   	  				{ followingId: followingId },
+   	  				function(data) {
+   	  					followLink.html(data);
+   	  				}
+   	  			);
+	   		});
+
+   			//Hack to use Fancybox with 'live' event - fancybox on mouseover
+   			$(".commentLink, .thankYouLink").live('mouseover', function(event) {
+				selectedTalkerId = $(this).attr("rel2");
+				$(this).fancybox({
+	   			    'hideOnContentClick': false,
+	   			    'showCloseButton': false
+	   			});
+   			})
+
+	   		$("#content_1 .seemore a").click(function() {
+		   		loadMoreFollowlist('following');
+	   		});
+	   		$("#content_2 .seemore a").click(function() {
+		   		loadMoreFollowlist('followers');
+	   		});
+   		});
+
+   		function updateCommentState(newState) {
+   	   		if (newState == 'Initial') {
+   	   			$("#replytext").val("What are you thinking?").css("color", "#777777");
+				$("#commentBtn").hide();
+   	   		}
+   	   		else if (newState == 'Extended') {
+	   	   		$("#replytext").val("").css("color", "#000000");
+	   			$("#commentBtn").show();
+   	   		}
+   		}
+
+   		function updateReplyState(replyTextArea, newState) {
+   	   		if (newState == 'Initial') {
+   	   			replyTextArea.val("Reply to comment..").css("color", "#777777");
+   	   			replyTextArea.parent().next().hide();
+   	   		}
+   	   		else if (newState == 'Extended') {
+   	   			replyTextArea.val("").css("color", "#000000");
+	   			replyTextArea.parent().next().show();
+   	   		}
+   		}
+
+   		//saveProfileComment(String profileTalkerId, String parentId, String text)
+   		function saveProfileComment(parentId) {
+   	   		var commentText = $("#replytext"+parentId).val();
+   			$("#replytext"+parentId).val("");
+
+   			$.post("@{Actions.saveProfileComment()}", 
+  				{ profileTalkerId: '${talker.id}', parentId: parentId, text: commentText},
+  				function(html) {
+  	  				$("#firstcommentmessage").hide();
+  					//put comment in the tree
+  					if (parentId == '') {
+  	  					//add as first element in the top
+  						$(html).prependTo($(".commentsarea"));
+  					}
+  					else {
+  						//add as last element in subtree
+  						$("#reply"+parentId).before($(html));
+  					}
+  				}
+  			);
+
+   			if (parentId == '') {
+   				updateCommentState('Initial');
+			}
+			else {
+				updateReplyState($("#replytext"+parentId), 'Initial');
+			}
+  			return false;
+   		}
+
+   		//createThankYou(String toTalker, String note)
+   		function thankYou() {
+   	   		var noteText = $("#thankYouNote").val();
+
+   	   		$.fancybox.close();
+   			$("#thankYouNote").val("");
+
+   			$.post("@{Actions.createThankYou()}", 
+  				{ toTalker: selectedTalkerId, note: noteText}
+  			);
+   		}
+
+   		//createThankYou(String toTalker, String note)
+   		function saveThankYou() {
+   	   		var noteText = $("#thankYouNote").val();
+   			$("#thankYouNote").val("");
+
+   			$.post("@{Actions.createThankYou()}", 
+  				{ toTalker: '${talker.id}', note: noteText, tagFile: 'thanksThankYou'},
+  				function(html) {
+  					//put new thank you item in the list
+  					$(html).prependTo($(".thnksarea2"));
+  				}
+  			);
+
+   			$("#leavethankyouText").hide();
+   		}
+
+   		//public static void loadMoreThankYous(String userName, int start) {
+   		function loadMoreThankYous() {
+   			$.post("@{PublicProfile.loadMoreThankYous()}", 
+  				{ userName: '${talker.userName}', start: currentIndex},
+  				function(newHTML) {
+  					$(".thnksarea2").html(newHTML);
+  				}
+  			);
+  			*{ 30 to some constant ? }*
+  			currentIndex = currentIndex + 3*10;
+   		}
+
+   		//saveProfileComment(String profileTalkerId, String parentId, String text)
+   		function saveProfileComment2() {
+   	   		var commentText = $("#commentText").val();
+   	   		$.fancybox.close();
+			$("#commentText").val("");
+
+   			$.post("@{Actions.saveProfileComment()}", 
+  				{ profileTalkerId: selectedTalkerId, parentId: '', text: commentText}
+  			);
+   		}
+
+   		//public static void loadMoreFollowlist(String userName, String followType, int start) {
+   		function loadMoreFollowlist(followType) {
+   	   		var currentIndex = followingIndex;
+   	   		if (followType == 'followers') {
+   	   	   		currentIndex = followersIndex;
+   	   		}
+   			$.post("@{PublicProfile.loadMoreFollowlist()}", 
+  				{ userName: '${talker.userName}', followType: followType, start: currentIndex},
+  				function(newHTML) {
+  	  				if (followType == 'following') {
+  	  					$("#content_1 .thnksarea").html(newHTML);
+	  	  				*{ TODO 30 to some constant ? }*
+	  	    			followingIndex = followingIndex + 30;
+  	  				}
+  	  				else {
+  	  					$("#content_2 .thnksarea").html(newHTML);
+  	  					followersIndex = followersIndex + 30;
+  	  				}
+  				}
+  			);
+   		}
+   	</script>
+	<style>
+		body {
+			background:url(/public/images/inner_bg.gif) repeat-x top;
+			font-family:arial;
+			font-size:11px;
+		}
+		#reply {
+			padding: 10px 0 0 0;
+		}
+		.commentsarea {
+			padding-top: 0px;
+			clear: left;
+		}
+		#replytext {
+			height: 20px;
+			color: #777777;
+		}
+		.commentreply {
+			height: 20px;
+			color: #777777;
+		}
+		#signupleftarea, #thankyoulist {
+			width: auto;
+		} 
+		.profiletext2 {
+			width:250px;
+		}
+	</style>
+</head>
+<body>
+	<div id="top_container">
+		<div id="top">
+			#{ logo /}
+			<div id="topnav">
+				#{ include 'menu.html' /}
+			</div>
+		</div>
+	</div>
+	<div id="innerbanner"></div>
+	<div id="innermain">
+		<div class="blacktext2" id="innerheading">${talker.userName}'s Contacts, Comment Stream, and Thank you's</div>
+		<div id="innermiddlearea">
+			<div class="tabbed_box" id="tabbed_box_1">
+    			<div class="tabbed_area">
+			        <ul class="tabs">
+			        	<li><a class="tab ${ action.equals('comments') ? 'active' : '' }" 
+			            	title="content_1" href="#">Comments (${talker.profileCommentsList.size()})</a></li>
+			            <li><a class="tab ${ action.equals('thankyous') ? 'active' : '' }" 
+			            	title="content_2" href="#">Thank you's (${talker.thankYouList.size()})</a></li>
+			            <li><a class="tab ${ action.equals('following') ? 'active' : '' }" 
+			            	title="content_3" href="#">Following (${talker.followingList.size()})</a></li>
+			            <li><a class="tab ${ action.equals('followers') ? 'active' : '' }" 
+			            	title="content_4" href="#">Followers (${talker.followerList.size()})</a></li>
+			        </ul>
+			        <div class="tabcontent" id="content_1" style="display: ${ action.equals('comments') ? 'block' : 'none' };">
+			   			<div>
+				        	<div class="headingarea">
+					            <div class="tabheading">
+					            	<span class="blacktext25">Comment Stream</span> 
+					            </div>
+				            </div>
+				            <div class="thnksarea">
+				            	#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) }
+									#{if talker.followingList.contains(currentTalker) || talker.userName.equals(currentTalker.userName)}
+										<div id="reply" class="replyForm">
+											<ul>
+												<li>
+													<textarea class="togglecomment" rows="1" cols="45" 
+														id="replytext">What are you thinking?</textarea>
+											    </li>
+												<li id="commentBtn" style="display: none">
+													<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
+														<a href="#" onclick="return saveProfileComment('');">
+															<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
+														</a>
+													</div>
+												</li> 
+											</ul>
+										</div>
+									#{/if}
+									<div class="commentsarea">
+										#{if talker?.profileCommentsList?.isEmpty()}
+											<span id="firstcommentmessage" class="blacktext12">
+												${talker.userName} does not have any Comments, be the first to leave a Comment.
+											</span>
+										#{/if}
+										#{profileCommentsTree commentsList: talker.profileCommentsList, level: 1 /}
+									</div>
+								#{/if}
+								#{else}
+									<span class="blacktext14">This information has been made private.</span>
+								#{/else}
+				            </div>
+				            <div class="thnksbottom" style="display: none">
+				            	<div class="seemore">
+				            		<a href="#"><img width="134" height="33" 
+				            			border="0" src="/public/images/seemorebutton.gif"/>
+				            		</a>
+				            	</div>
+				            </div>
+			        	</div>
+			        </div>
+			        
+			        <div class="content" id="content_2" style="display: ${ action.equals('thankyous') ? 'block' : 'none' };">
+			   			<div>
+				        	<div class="headingarea">
+					            <div class="tabheading">
+					      			<span class="blacktext25">Thank you's </span> 
+					      			<span class="pinktext25"><strong>(${talker.thankYouList.size()})</strong></span> 
+					      			
+					      			#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) &&
+											!talker.userName.equals(currentTalker.userName) }
+										<span class="greytext25">&nbsp;|&nbsp;</span> 
+										<a id="displayThankYouText" href="#" 
+											class="bluetext14">Give ${talker.userName} a "Thank you"</a>
+									#{/if}
+					      		</div>
+					      		#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
+						            <div class="seemore">
+						            	<a href="#"><img width="134" height="33" border="0" src="/public/images/seemorebutton.gif"/></a>
+						            </div>
+						        #{/if}
+				            </div>
+				            <div id="leavethankyouText" style="display:none">
+								<ul>
+									<li class="blacktext14">Give a Thank You</li>
+									<li>
+										<input id="thankYouNote" name="thankYouNote" type="text" 
+											class="togglecommentfield" value="" size="6" />
+									</li>
+									<li>
+										<div class="personaltextarea" style="height:46px; padding-top:2px;">
+											<a href="#thankyouSection" onclick="saveThankYou()">
+												<img src="/public/images/addcomment_btn.gif" width="145" height="32" border="0" />
+											</a>
+										</div>
+									</li> 
+								</ul>
+							</div>
+				            <div class="thnksarea2">
+				            	#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
+									#{list items:talker.thankYouList.limit(3*10), as:'thankYou'}
+										#{ thanksThankYou thankYou: thankYou /}
+									#{/list}
+								#{/if}
+								#{else}
+									<span class="blacktext14" style="margin: 30px 0; float: left">This information has been made private.</span>
+								#{/else}
+				            </div>
+				            #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
+					            <div class="thnksbottom">
+					            	<div class="seemore">
+					            		<a href="#"><img width="134" height="33" border="0" src="/public/images/seemorebutton.gif"/></a>
+					            	</div>
+					            </div>
+					        #{/if}
+			        	</div>
+			        </div>
+			        
+			        <div class="content" id="content_3" style="display: ${ action.equals('following') ? 'block' : 'none' };">
+			   			<div>
+				        	<div class="headingarea">
+					            <div class="tabheading">
+					            	<span class="blacktext25">Following</span> 
+					            	<span class="pinktext25"><strong>(${talker.followingList.size()})</strong></span>
+					            </div>
+					            <div class="seemore">
+					            	<a href="#"><img width="134" height="33" border="0" src="/public/images/seemorebutton.gif"/></a>
+					            </div>
+				            </div>
+				            <div class="thnksarea">
+				            	#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
+									#{list items:talker.followingList.limit(3*10), as:'following' }
+										<div class="thnksfollowing">
+							            	<div class="thnksfollowingimg">
+												<a href="@{PublicProfile.view(following.userName)}">
+													<img width="80" height="80" src="@{Image.show(following.userName)}" border="0" />
+												</a>
+											</div>
+							            	<div class="thnksfollowingtext">
+							            		<a class="blue13" href="@{PublicProfile.view(following.userName)}">
+						            				<strong>${following.userName}</strong>
+						            			</a>
+							            		<span class="blue13"> | </span> 
+							            		<span class="blkq13">${following.levelOfRecognition}</span><br/>
+							            		#{if following.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.BIO) }
+							              			<span class="greytext12">${following.bio}</span><br/>
+							              		#{/if}
+							              		<span class="bluetext12">
+								              		#{ifnot currentTalker?.equals(following) }
+													 	<a class="bluetext12 followActionLink" rel="${following.id}" href="#">
+														${ currentTalker.followingList.contains(following) ? 'Unfollow' : 'Follow'}
+														</a> | 
+													#{/ifnot}
+													*{ TODO Not rel2 ? }* 
+												 	<a href="#commentform" rel2="${following.id}" class="bluetext12 commentLink">Comment</a>
+												 	#{ifnot currentTalker?.equals(following) }
+													 	 | <a href="#thankyouform" rel2="${following.id}" 
+													 	 		class="bluetext12 thankYouLink">Thank</a>
+													#{/ifnot}
+							              		</span>
+							              	</div>
+							            </div>
+									#{/list}
+								#{/if}
+								#{else}
+									<span class="blacktext14">This information has been made private.</span>
+								#{/else}
+				            </div>
+				            <div class="thnksbottom">
+				            	<div class="seemore">
+				            		<a href="#"><img width="134" height="33" 
+				            			border="0" src="/public/images/seemorebutton.gif"/>
+				            		</a>
+				            	</div>
+				            </div>
+			        	</div>
+			        </div>
+			        <div class="content" id="content_4" style="display: ${ action.equals('followers') ? 'block' : 'none' };">
+			        	<div>
+				        	<div class="headingarea">
+					            <div class="tabheading">
+					            	<span class="blacktext25">Followers</span> 
+					            	<span class="pinktext25"><strong>(${talker.followerList.size()})</strong></span>
+					            </div>
+					            <div class="seemore">
+					            	<a href="#"><img width="134" height="33" border="0" src="/public/images/seemorebutton.gif"/></a>
+					            </div>
+				            </div>
+				            <div class="thnksarea">
+				            	#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWERS) }
+									#{list items:talker.followerList.limit(3*10), as:'follower' }
+										<div class="thnksfollowing">
+							            	<div class="thnksfollowingimg">
+												<a href="@{PublicProfile.view(follower.userName)}">
+													<img width="80" height="80" src="@{Image.show(follower.userName)}" border="0" />
+												</a>
+											</div>
+							            	<div class="thnksfollowingtext">
+							            		<a class="blue13" href="@{PublicProfile.view(follower.userName)}">
+						            				<strong>${follower.userName}</strong>
+						            			</a>
+							            		<span class="blue13"> | </span> 
+							            		<span class="blkq13">${follower.levelOfRecognition}</span><br/>
+							            		#{if follower.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.BIO) }
+							              			<span class="greytext12">${follower.bio}</span><br/>
+							              		#{/if}
+							              		<span class="bluetext12">
+								              		#{ifnot currentTalker?.equals(follower) }
+													 	<a class="bluetext12 followActionLink" rel="${follower.id}" href="#">
+														${ currentTalker.followingList.contains(follower) ? 'Unfollow' : 'Follow'}
+														</a> | 
+													#{/ifnot}
+													*{ TODO Not rel2 ? }* 
+												 	<a href="#commentform" rel2="${follower.id}" class="bluetext12 commentLink">Comment</a>
+												 	#{ifnot currentTalker?.equals(follower) }
+													 	 | <a href="#thankyouform" rel2="${follower.id}" class="bluetext12 thankYouLink">Thank</a>
+													#{/ifnot}
+							              		</span>
+							              	</div>
+							            </div>
+									#{/list}
+								#{/if}
+								#{else}
+									<span class="blacktext14">This information has been made private.</span>
+								#{/else}
+			        		</div>
+		            		<div class="thnksbottom">
+		            			<div class="seemore">
+		            				<a href="#">
+		            					<img width="134" height="33" border="0" src="/public/images/seemorebutton.gif"/>
+		            				</a>
+		            			</div>
+		            		</div>
+			        	</div>
+    				</div>
+    			</div>
+			</div>
+		</div>
+	</div>
+
+<!-- Pop-up Thank You form -->
+<div id="hiddenwindows" style="display: none">
+	<div id="thankyouform">
+		<table align="center" cellspacing="10">
+			<tr>
+				<td align="right" valign="top">'Thanks You' note:</td>
+				<td><textarea rows="5" cols="30" id="thankYouNote" name="thankYouNote" ></textarea></td>
+			</tr>
+			<tr align="center">
+				<td colspan="2">
+					<input id="thankYouBtn" onClick="thankYou()" type="button" value="Give a 'Thanks you'"/>
+					<input id="cancelBtn" onClick="$.fancybox.close();" value="Cancel" type="button" />
+				</td>
+			</tr>
+		</table>	
+	</div>
+	
+	<div id="commentform">
+		<table align="center" cellspacing="10">
+			<tr>
+				<td align="right" valign="top">Comment:</td>
+				<td><textarea rows="5" cols="30" id="commentText" name="commentText" ></textarea></td>
+			</tr>
+			<tr align="center">
+				<td colspan="2">
+					<input id="commentBtn" onClick="saveProfileComment2()" type="button" value="Save comment"/>
+					<input id="cancelBtn" onClick="$.fancybox.close();" value="Cancel" type="button" />
+				</td>
+			</tr>
+		</table>	
+	</div>
+</div>

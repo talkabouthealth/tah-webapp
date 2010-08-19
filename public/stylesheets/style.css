@@ -718,3 +718,10 @@ a.greytext25:hover {text-decoration: none; color: #818181;}
 	top: 18px;
 	left: 25px;
 }
+
+.tabcontent {
+	background-color:#ffffff;
+	padding-top:20px;
+	border-top:1px solid #d3d3d3; 	
+	font-family:Arial, Helvetica, sans-serif;
+}

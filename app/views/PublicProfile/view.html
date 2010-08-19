@@ -229,7 +229,7 @@
 									<div class="followarea">
 									<div class="profileheading">Following (${talker.followingList.size()})</div>
 									<div class="seeall">
-										<a href="@{PublicProfile.following(talker.userName)}" class="bluetext12"><strong>see all</strong></a>
+										<a href="@{PublicProfile.userBasedActions(talker.userName, 'following')}" class="bluetext12"><strong>see all</strong></a>
 									</div>
 									<div class="followingimg">
 										<ul>
@@ -255,7 +255,7 @@
 									<div class="followarea">
 									<div class="profileheading">Followers (${talker.followerList.size()})</div>
 									<div class="seeall">
-										<a href="@{PublicProfile.followers(talker.userName)}" class="bluetext12"><strong>see all</strong></a>
+										<a href="@{PublicProfile.userBasedActions(talker.userName, 'followers')}" class="bluetext12"><strong>see all</strong></a>
 									</div>
 									<div class="followingimg">
 										<ul>
@@ -453,7 +453,7 @@
 									#{/ifnot}
 								</div>
 								<div class="seeall">
-									<a href="@{PublicProfile.thankyous(talker.userName)}" 
+									<a href="@{PublicProfile.userBasedActions(talker.userName, 'thankyous')}" 
 										class="bluetext12"><strong>see all</strong></a>
 								</div>
 							</div>
@@ -491,7 +491,7 @@
 								Comments								
 							</div>
 							<div class="seeall">
-								<a href="@{PublicProfile.comments(talker.userName)}" class="bluetext12"><strong>see all</strong></a>
+								<a href="@{PublicProfile.userBasedActions(talker.userName, 'comments')}" class="bluetext12"><strong>see all</strong></a>
 							</div>
 						</div>
 						#{if talker.followingList.contains(currentTalker) || talker.userName.equals(currentTalker.userName)}
