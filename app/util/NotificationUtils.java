@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import play.Logger;
+
 import models.TalkerBean;
 import models.TalkerBean.EmailSetting;
 
@@ -45,7 +47,7 @@ public class NotificationUtils {
 		//With automatic notification, always send a notification to murrayjones@gmail.com
 		TalkerBean murrayTalker = TalkerDAO.getByEmail(EmailUtil.MURRAY_EMAIL);
 		if (murrayTalker == null) {
-			//TODO: log error
+			Logger.error("Can't send automatic notification to Murray!");
 		}
 		else {
 			talkersForNotification.add(murrayTalker.getId());

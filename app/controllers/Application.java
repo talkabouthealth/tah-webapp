@@ -143,6 +143,7 @@ public class Application extends Controller {
 		EmailUtil.sendEmail(EmailUtil.WELCOME_TEMPLATE, talker.getEmail(), vars, null, false);
 
 		//login
+		ApplicationDAO.saveLogin(talker.getId());
 		session.put("username", talker.getUserName());
 
         index(newTopic);

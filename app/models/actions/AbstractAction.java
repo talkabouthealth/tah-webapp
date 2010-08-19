@@ -80,7 +80,6 @@ public abstract class AbstractAction implements Action {
 	}
 	
 	// Topic connected actions
-	//TODO: move to subclass ?
 	protected TopicBean parseTopic(DBObject dbObject) {
 		DBObject topicDBObject = ((DBRef)dbObject.get("topicId")).fetch();
 		TopicBean topic = new TopicBean();

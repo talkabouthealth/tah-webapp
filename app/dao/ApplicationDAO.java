@@ -24,14 +24,14 @@ public class ApplicationDAO {
 	public static final String LOGIN_HISTORY_COLLECTION = "logins";
 	public static final String UPDATES_EMAIL_COLLECTION = "emails";
 	
-	public static void saveLogin(String talkerId, Date loginTime) {
+	public static void saveLogin(String talkerId) {
 		DBCollection loginsColl = DBUtil.getCollection(LOGIN_HISTORY_COLLECTION);
 		
 		DBRef talkerRef = new DBRef(DBUtil.getDB(), 
 				TalkerDAO.TALKERS_COLLECTION, new ObjectId(talkerId));
 		DBObject loginHistoryObject = BasicDBObjectBuilder.start()
 			.add("uid", talkerRef)
-			.add("log_time", loginTime)
+			.add("log_time", new Date())
 			.get();
 
 		loginsColl.save(loginHistoryObject);
@@ -40,7 +40,6 @@ public class ApplicationDAO {
 	public static void saveEmail(String email) {
 		DBCollection emailsColl = DBUtil.getCollection(UPDATES_EMAIL_COLLECTION);
 		
-		//TODO: same email?
 		emailsColl.save(new BasicDBObject("email", email));
 	}
 	
@@ -63,10 +62,12 @@ public class ApplicationDAO {
 			DBObject talkerDBObject = ((DBRef)loginDBObject.get("uid")).fetch();
 			
 			TalkerBean talker = new TalkerBean();
-			//TODO: not parse same talkers?
-			talker.parseBasicFromDB(talkerDBObject);
+			talker.setId(talkerDBObject.get("_id").toString());
 			
-			activeTalkers.add(talker);
+			if (!activeTalkers.contains(talker)) {
+				talker.parseBasicFromDB(talkerDBObject);
+				activeTalkers.add(talker);
+			}
 		}
 		
 		return activeTalkers;
@@ -89,10 +90,12 @@ public class ApplicationDAO {
 		Set<TalkerBean> activeTalkers = new LinkedHashSet<TalkerBean>();
 		for (DBObject talkerDBObject : talkersDBList) {
 			TalkerBean talker = new TalkerBean();
-			//TODO: not parse same talkers?
-			talker.parseBasicFromDB(talkerDBObject);
+			talker.setId(talkerDBObject.get("_id").toString());
 			
-			activeTalkers.add(talker);
+			if (!activeTalkers.contains(talker)) {
+				talker.parseBasicFromDB(talkerDBObject);
+				activeTalkers.add(talker);
+			}
 		}
 		
 		return activeTalkers;

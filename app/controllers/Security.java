@@ -46,8 +46,7 @@ public class Security extends Secure.Security {
     		CommonUtil.updateCachedTalker(session);
     	}
     	
-    	Date now = Calendar.getInstance().getTime(); 
-		ApplicationDAO.saveLogin(talker.getId(), now);
+		ApplicationDAO.saveLogin(talker.getId());
 		
 		 /*
 	     	Play! 1.0.3 has problems with cookies in IE8 (FLASH cookies aren't stored correctly),
