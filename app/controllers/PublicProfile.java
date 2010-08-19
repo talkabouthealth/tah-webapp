@@ -36,7 +36,6 @@ public class PublicProfile extends Controller {
 		}
 		
 		//Load all healthItems for this disease
-		//TODO: duplicate code?
 		Map<String, HealthItemBean> healthItemsMap = new HashMap<String, HealthItemBean>();
 		for (String itemName : new String[] {"symptoms", "tests", 
 				"procedures", "treatments", "sideeffects"}) {

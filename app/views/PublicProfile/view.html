@@ -59,7 +59,13 @@
 		   				updateReplyState($(this), 'Initial');
 		   			}
 	   			});
-			
+
+	   		//Hide health item title if user hasn't entered/checked information for it
+			$(".healthitemtitle").each(function() {
+				if ($(this).nextUntil(".healthitemtitle").size() == 0) {
+					$(this).hide();
+				}
+			});
    		});
 
    		function updateCommentState(newState) {
@@ -376,7 +382,6 @@
 						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.HEALTH_INFO) && talkerDisease }
 							<div class="prosubheading">
 								<div class="profileheading">Health Info</div>
-								<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 							</div>
 							<div class="profiletext2">
 								<ul>
@@ -397,14 +402,15 @@
 										<span class="blacktext">${talkerDisease.recurrent?.yesno('Yes', 'No')}</span>
 									</li>
 									
-									<li class="blacktext12" style="padding-top:10px;"><strong>Initial Symptoms</strong></li>
-									#{ healthItemsList healthItem: healthItemsMap["symptoms"], talkerDisease: talkerDisease /}
+									<li class="blacktext12 healthitemtitle" style="padding-top:10px;"><strong>Initial Symptoms</strong></li>
+									<!-- We need span to hide health items titles without children using jQuery -->
+									#{ healthItemsList healthItem: healthItemsMap.symptoms, talkerDisease: talkerDisease /}
 									#{list items: talkerDisease.otherHealthItems?.symptoms, as: 'item' }
 										<li class="blacktext12">${item}</li>
 									#{/list}
 									
-									<li class="blacktext12" style="padding-top:10px;"><strong>Tests</strong></li>
-									#{ healthItemsList healthItem:healthItemsMap["tests"], talkerDisease: talkerDisease /}
+									<li class="blacktext12 healthitemtitle" style="padding-top:10px;"><strong>Tests</strong></li>
+									#{ healthItemsList healthItem:healthItemsMap.tests, talkerDisease: talkerDisease /}
 									#{list items: talkerDisease.otherHealthItems?.tests, as: 'item' }
 										<li class="blacktext12">${item}</li>
 									#{/list}
@@ -412,27 +418,27 @@
 							</div>
 							<div class="profiletext2">
 								<ul>
-									<li class="blacktext12"><strong>Procedures/Surgeries</strong></li>
-									#{ healthItemsList healthItem:healthItemsMap["procedures"], talkerDisease: talkerDisease /}
-									#{list items: talkerDisease.otherHealthItems?.procedures, as: 'item' }
-										<li class="blacktext12">${item}</li>
-									#{/list}
+									<li class="blacktext12 healthitemtitle"><strong>Procedures/Surgeries</strong></li>
+										#{ healthItemsList healthItem:healthItemsMap["procedures"], talkerDisease: talkerDisease /}
+										#{list items: talkerDisease.otherHealthItems?.procedures, as: 'item' }
+											<li class="blacktext12">${item}</li>
+										#{/list}
 									
-									<li class="blacktext12" style="padding-top:10px;">
+									<li class="blacktext12 healthitemtitle" style="padding-top:10px;">
 										<strong>Medications and Treatments</strong>
 									</li>
-									#{ healthItemsList healthItem:healthItemsMap["treatments"], talkerDisease: talkerDisease /}
-									#{list items: talkerDisease.otherHealthItems?.treatments, as: 'item' }
-										<li class="blacktext12">${item}</li>
-									#{/list}
+										#{ healthItemsList healthItem:healthItemsMap["treatments"], talkerDisease: talkerDisease /}
+										#{list items: talkerDisease.otherHealthItems?.treatments, as: 'item' }
+											<li class="blacktext12">${item}</li>
+										#{/list}
 									
-									<li class="blacktext12" style="padding-top:10px;">
+									<li class="blacktext12 healthitemtitle" style="padding-top:10px;">
 										<strong>Side effects from medications/treatments</strong>
 									</li>
-									#{ healthItemsList healthItem:healthItemsMap["sideeffects"], talkerDisease: talkerDisease /}
-									#{list items: talkerDisease.otherHealthItems?.sideeffects, as: 'item' }
-										<li class="blacktext12">${item}</li>
-									#{/list}
+										#{ healthItemsList healthItem:healthItemsMap["sideeffects"], talkerDisease: talkerDisease /}
+										#{list items: talkerDisease.otherHealthItems?.sideeffects, as: 'item' }
+											<li class="blacktext12">${item}</li>
+										#{/list}
 								</ul>
 							</div>
 						#{/if}
