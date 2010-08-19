@@ -77,11 +77,13 @@ public class ApplicationDAO {
 	public static Set<TalkerBean> getNewTalkers() {
 		DBCollection loginsColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
 		
-		Calendar oneDayBeforeNow = Calendar.getInstance();
-		oneDayBeforeNow.add(Calendar.DAY_OF_MONTH, -1);
+		Calendar twoWeeksBeforeNow = Calendar.getInstance();
+		twoWeeksBeforeNow.add(Calendar.WEEK_OF_YEAR, -2);
+		
+		System.out.println(twoWeeksBeforeNow.getTime());
 		
 		DBObject query = BasicDBObjectBuilder.start()
-			.add("timestamp", new BasicDBObject("$gt", oneDayBeforeNow.getTime()))
+			.add("timestamp", new BasicDBObject("$gt", twoWeeksBeforeNow.getTime()))
 			.get();
 		
 		List<DBObject> talkersDBList = 

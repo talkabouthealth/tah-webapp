@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import models.CommentBean;
-import models.LiveConversationBean;
 import models.TalkerBean;
 import models.TopicBean;
 import models.TalkerBean.EmailSetting;
