@@ -21,7 +21,7 @@ import util.CommonUtil;
 @With(Secure.class)
 public class PublicProfile extends Controller {
 	
-	enum PROFILE_COMPLETION {
+	enum ProfileCompletion {
 		BASIC(25, "Sign Up"),
 		JOIN_CONVO(5, "Join a Conversation to get to "),
 		START_CONVO(10, "Start a Conversation to get to "),
@@ -35,7 +35,7 @@ public class PublicProfile extends Controller {
 		private final int value;
 		private final String description;
 		
-		private PROFILE_COMPLETION(int value, String description) {
+		private ProfileCompletion(int value, String description) {
 			this.value = value;
 			this.description = description;
 		}

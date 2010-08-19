@@ -5,7 +5,6 @@ import java.util.Date;
 public class MessageBean {
 	
 	protected String id;
-	
 	private TalkerBean fromTalker;
 	private String text;
 	private Date time;
@@ -16,6 +15,7 @@ public class MessageBean {
 		id = messageId;
 	}
 	
+	//TODO check eq and hashCode
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof MessageBean)) {
@@ -26,36 +26,24 @@ public class MessageBean {
 		return id.equals(other.id);
 	}
 	
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
+	@Override
+	public int hashCode() {
+		if (id == null) {
+			return 47;
+		}
+		return id.hashCode();
 	}
 	
-	public TalkerBean getFromTalker() {
-		return fromTalker;
-	}
+	
+	public String getId() { return id; }
+	public void setId(String id) { this.id = id; }
+	
+	public TalkerBean getFromTalker() { return fromTalker; }
+	public void setFromTalker(TalkerBean fromTalker) { this.fromTalker = fromTalker; }
 
-	public void setFromTalker(TalkerBean fromTalker) {
-		this.fromTalker = fromTalker;
-	}
+	public String getText() { return text; }
+	public void setText(String text) { this.text = text; }
 
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
-	}
-
-	public Date getTime() {
-		return time;
-	}
-
-	public void setTime(Date time) {
-		this.time = time;
-	}
-
+	public Date getTime() { return time; }
+	public void setTime(Date time) { this.time = time; }
 }

@@ -3,10 +3,6 @@ package models;
 import java.util.Date;
 import java.util.List;
 
-/**
- *	Bean for Profile Comments 
- *
- */
 public class CommentBean extends MessageBean {
 	
 	private String profileTalkerId;
@@ -15,7 +11,6 @@ public class CommentBean extends MessageBean {
 	private String parentId;
 	private List<CommentBean> children;
 	
-
 	public CommentBean() {}
 
 	public CommentBean(String commentId) {
@@ -31,37 +26,16 @@ public class CommentBean extends MessageBean {
 		CommentBean other = (CommentBean)obj;
 		return id.equals(other.id);
 	}
-	
-	public String getProfileTalkerId() {
-		return profileTalkerId;
-	}
 
-	public void setProfileTalkerId(String profileTalkerId) {
-		this.profileTalkerId = profileTalkerId;
-	}
+	public String getProfileTalkerId() { return profileTalkerId; }
+	public void setProfileTalkerId(String profileTalkerId) { this.profileTalkerId = profileTalkerId; }
 
-	public String getParentId() {
-		return parentId;
-	}
+	public String getParentId() { return parentId; }
+	public void setParentId(String parentId) { this.parentId = parentId; }
 
-	public void setParentId(String parentId) {
-		this.parentId = parentId;
-	}
+	public List<CommentBean> getChildren() { return children; }
+	public void setChildren(List<CommentBean> children) { this.children = children; }
 
-	public List<CommentBean> getChildren() {
-		return children;
-	}
-
-	public void setChildren(List<CommentBean> children) {
-		this.children = children;
-	}
-
-	public String getTopicId() {
-		return topicId;
-	}
-
-	public void setTopicId(String topicId) {
-		this.topicId = topicId;
-	}
-	
+	public String getTopicId() { return topicId; }
+	public void setTopicId(String topicId) { this.topicId = topicId; }
 }

@@ -5,7 +5,6 @@ import java.util.Set;
 /**
  * Bean for saving health items information - symptoms, treatments, etc.
  * Uses tree-like structure.
- *
  */
 public class HealthItemBean implements Comparable<HealthItemBean> {
 	
@@ -24,35 +23,20 @@ public class HealthItemBean implements Comparable<HealthItemBean> {
 		this.name = name;
 	}
 	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public Set<HealthItemBean> getChildren() {
-		return children;
-	}
-	public void setChildren(Set<HealthItemBean> children) {
-		this.children = children;
-	}
-
 	public int compareTo(HealthItemBean o) {
 		return name.compareTo(o.name);
 	}
+	
+	public String getId() { return id; }
+	public void setId(String id) { this.id = id; }
+	
+	public String getName() { return name; }
+	public void setName(String name) { this.name = name; }
+	
+	public Set<HealthItemBean> getChildren() { return children; }
+	public void setChildren(Set<HealthItemBean> children) { this.children = children; }
 
-	public String getDiseaseId() {
-		return diseaseId;
-	}
-
-	public void setDiseaseId(String diseaseId) {
-		this.diseaseId = diseaseId;
-	}
+	public String getDiseaseId() { return diseaseId; }
+	public void setDiseaseId(String diseaseId) { this.diseaseId = diseaseId; }
 }
 

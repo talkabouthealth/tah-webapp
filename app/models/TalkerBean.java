@@ -79,13 +79,9 @@ public class TalkerBean implements Serializable {
 			this.description = description;
 		}
 
-		public int getValue() {
-			return value;
-		}
+		public int getValue() { return value; }
 
-		public String getDescription() {
-			return description;
-		}
+		public String getDescription() { return description; }
 	}
 	
 	//Convo-related items start with "CONVO" - we use it for display
@@ -104,31 +100,19 @@ public class TalkerBean implements Serializable {
 			this.description = description;
 		}
 
-		public String getDescription() {
-			return description;
-		}
+		public String getDescription() { return description; }
 	}
 	
 	private String id;
-	@Required
-	@Match(ValidateData.USER_REGEX)
-	private String userName;
-	@Required
-	@Match(ValidateData.USER_REGEX)
-	private String password;
-	@Required
-	@Email
-	private String email;
-	//code for email verification
-	private String verifyCode;
+	@Required @Match(ValidateData.USER_REGEX) private String userName;
+	@Required @Match(ValidateData.USER_REGEX) private String password;
+	@Required @Email private String email;
+	private String verifyCode;	//code for email verification
+	private boolean deactivated;
 	
-	public String getVerifyCode() {
-		return verifyCode;
-	}
-
-	public void setVerifyCode(String verifyCode) {
-		this.verifyCode = verifyCode;
-	}
+	//Twitter or Facebook account info
+	private String accountType;
+	private String accountId;
 
 	private String im;
 	private String imUsername;
@@ -137,41 +121,37 @@ public class TalkerBean implements Serializable {
 	private int dobMonth;
 	private int dobDay;
 	private int dobYear;
-	
-	private String gender;
-	private int invitations;
-	private String maritalStatus;
-	private String category;
+	private Date regDate;
 	
 	//Patient/Caregiver/etc.
 	private String connection;
 	private boolean connectionVerified;
 	
+	private String firstName;
+	private String lastName;
+	private List<String> childrenAges;
+	private String webpage;
+	private List<String> keywords;
+	private String bio;
+	private boolean newsletter;
+	private String gender;
+	private int invitations;
+	private String maritalStatus;
+	//Breast Cancer, etc.
+	private String category;
 	private String city;
 	private String state;
 	private String country;
+	private String zip;
+	private int childrenNum;
 	
-	//types of conversations
+	private int numberOfTopics;
+	
+	//Notifications settings
 	private String[] ctype;
 	private int nfreq;
 	private int ntime;
 	
-	private int childrenNum;
-	
-	private boolean newsletter;
-	private String accountType;
-	private String accountId;
-	
-	private Date regDate;
-	
-	public Date getRegDate() {
-		return regDate;
-	}
-
-	public void setRegDate(Date regDate) {
-		this.regDate = regDate;
-	}
-
 	//TODO: List or (s) ?
 	private List<ThankYouBean> thankYouList;
 	private List<TalkerBean> followingList;
@@ -182,73 +162,16 @@ public class TalkerBean implements Serializable {
 	//TODO: what's the best solution for partial load?
 	private List<String> followingTopicsList;
 	private List<TopicBean> followingTopicsFullList;
-	
 	private List<TopicBean> startedTopicsList;
 	private List<TopicBean> joinedTopicsList;
-	
-	//new fields
-	private String firstName;
-	private String lastName;
-	private String zip;
-	private List<String> childrenAges;
-	private String webpage;
-	private List<String> keywords;
-	private String bio;
-	
-	private boolean deactivated;
-	
-	
-	public List<CommentBean> getProfileCommentsList() {
-		return profileCommentsList;
-	}
-
-	public void setProfileCommentsList(List<CommentBean> profileCommentsList) {
-		this.profileCommentsList = profileCommentsList;
-	}
-
-	public List<Action> getActivityList() {
-		return activityList;
-	}
-
-	public void setActivityList(List<Action> activityList) {
-		this.activityList = activityList;
-	}
-
-	public List<TalkerBean> getFollowerList() {
-		return followerList;
-	}
-
-	public void setFollowerList(List<TalkerBean> followerList) {
-		this.followerList = followerList;
-	}
-
-	public List<TalkerBean> getFollowingList() {
-		return followingList;
-	}
-
-	public void setFollowingList(List<TalkerBean> followingList) {
-		this.followingList = followingList;
-	}
-
-	public List<ThankYouBean> getThankYouList() {
-		return thankYouList;
-	}
-
-	public void setThankYouList(List<ThankYouBean> thankYouList) {
-		this.thankYouList = thankYouList;
-	}
-
-	private int numberOfTopics;
 	
 	private EnumSet<ProfilePreference> profilePreferences;
 	private EnumSet<EmailSetting> emailSettings;
 	
 	public TalkerBean(){}
-	
 	public TalkerBean(String id) {
 		this.id = id;
 	}
-	
 	public TalkerBean(String id, String userName) {
 		this.id = id;
 		this.userName = userName;
@@ -272,62 +195,13 @@ public class TalkerBean implements Serializable {
 		}
 		return id.hashCode();
 	}
-
-	public String getUserName() {
-		return userName;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setUserName(String value) {
-		userName = value;
-	}
-	public void setPassword(String value) {
-		password = value;
-	}
 	
-	public void parseLoginRequest(String un, String pw){
-		setUserName(un);
-		setPassword(pw);
-	}
 	
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-	
-	public String getGender() {
-		return gender;
-	}
-
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
-
-	public void setDob(Date dob) {
-		this.dob = dob;
-	}
-
-	public Date getDob() {
-		return dob;
-	}
-
-	public int getInvitations() {
-		return invitations;
-	}
-
-	public void setInvitations(int invitations) {
-		this.invitations = invitations;
-	}
-
-	//TODO: we don't have binder for EnumSet now - here is workaround
+	//TODO: we don't have binder for EnumSet now, so we can't use get&set methods
+	// here is workaround
 	public EnumSet<ProfilePreference> loadProfilePreferences() {
 		return profilePreferences;
 	}
-
 	public void saveProfilePreferences(EnumSet<ProfilePreference> profilePreferences) {
 		this.profilePreferences = profilePreferences;
 	}
@@ -335,19 +209,11 @@ public class TalkerBean implements Serializable {
 	public EnumSet<EmailSetting> loadEmailSettings() {
 		return emailSettings;
 	}
-
 	public void saveEmailSettings(EnumSet<EmailSetting> emailSettings) {
 		this.emailSettings = emailSettings;
 	}
 	
-//	public EnumSet<ProfilePreference> getProfilePreferences() {
-//		return profilePreferences;
-//	}
-//
-//	public void setProfilePreferences(EnumSet<ProfilePreference> profilePreferences) {
-//		this.profilePreferences = profilePreferences;
-//	}
-	
+	// ----=================== Parse information from DB =================----
 	public void parseBasicFromDB(DBObject talkerDBObject) {
 		setId(talkerDBObject.get("_id").toString());
 		setUserName(talkerDBObject.get("uname").toString());
@@ -359,20 +225,18 @@ public class TalkerBean implements Serializable {
 	}
 	
 	public void parseFromDB(DBObject talkerDBObject) {
-		ObjectId objectId = (ObjectId)talkerDBObject.get("_id");
-		setId(objectId.toString());
+		setId(talkerDBObject.get("_id").toString());
 		
 		setUserName((String)talkerDBObject.get("uname"));
 		setPassword((String)talkerDBObject.get("pass"));
 		setEmail((String)talkerDBObject.get("email"));
 		setVerifyCode((String)talkerDBObject.get("verify_code"));
-		
 		setDeactivated(getBoolean(talkerDBObject.get("deactivated"))); 
 		
 		setIm((String)talkerDBObject.get("im"));
 		setImUsername((String)talkerDBObject.get("im_uname"));
-		setNewsletter((Boolean)talkerDBObject.get("newsletter"));
 		
+		setNewsletter((Boolean)talkerDBObject.get("newsletter"));
 		setGender((String)talkerDBObject.get("gender"));
 		setDob((Date)talkerDBObject.get("dob"));
 		setInvitations(parseInt(talkerDBObject.get("invites")));
@@ -383,7 +247,6 @@ public class TalkerBean implements Serializable {
 		
 		setNfreq(parseInt(talkerDBObject.get("nfreq")));
 		setNtime(parseInt(talkerDBObject.get("ntime")));
-		
 		Collection<String> ctype = (Collection<String>)talkerDBObject.get("ctype");
 		if (ctype != null) {
 			setCtype(ctype.toArray(new String[]{}));
@@ -411,27 +274,6 @@ public class TalkerBean implements Serializable {
 		
 		parseProfilePreferences(parseInt(talkerDBObject.get("prefs")));
 		parseEmailSettings(parseStringList(talkerDBObject.get("email_settings")));
-	}
-	
-	//TODO: make private and unify with all other getters
-	public boolean getBoolean(Object object) {
-		if (object == null) {
-			return false;
-		}
-		else {
-			return ((Boolean)object).booleanValue();
-		}
-	}
-
-	public List<String> parseStringList(Object fieldValue) {
-		Collection<String> fieldCollection = (Collection<String>)fieldValue;
-		if (fieldCollection == null) {
-			//TODO: empty list or null?
-			return new ArrayList<String>();
-		}
-		else {
-			return new ArrayList<String>(fieldCollection);
-		}
 	}
 	
 	public void parseThankYous(Collection<DBObject> thankYouDBList) {
@@ -474,15 +316,6 @@ public class TalkerBean implements Serializable {
 				
 				followingList.add(followingTalker);
 			}
-		}
-	}
-
-	public int parseInt(Object value) {
-		if (value == null) {
-			return 0;
-		}
-		else {
-			return (Integer)value;
 		}
 	}
 	
@@ -530,8 +363,38 @@ public class TalkerBean implements Serializable {
 		}
 	}
 	
+	//TODO: make private and unify with all other getters
+	public boolean getBoolean(Object object) {
+		if (object == null) {
+			return false;
+		}
+		else {
+			return ((Boolean)object).booleanValue();
+		}
+	}
+
+	public List<String> parseStringList(Object fieldValue) {
+		Collection<String> fieldCollection = (Collection<String>)fieldValue;
+		if (fieldCollection == null) {
+			//TODO: empty list or null?
+			return new ArrayList<String>();
+		}
+		else {
+			return new ArrayList<String>(fieldCollection);
+		}
+	}
+
+	public int parseInt(Object value) {
+		if (value == null) {
+			return 0;
+		}
+		else {
+			return (Integer)value;
+		}
+	}
 	
 	
+	// ----========= Useful methods for displaying data ============----
 	public long getAge() {
 		Date now = new Date();
         long delta = (now.getTime() - dob.getTime()) / 1000;
@@ -595,75 +458,7 @@ public class TalkerBean implements Serializable {
 		return levelOfRecognition;
 	}
 	
-	public String getMaritalStatus() {
-		return maritalStatus;
-	}
-
-	public void setMaritalStatus(String maritalStatus) {
-		this.maritalStatus = maritalStatus;
-	}
-
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-	public String getCity() {
-		if (city == null) {
-			return "";
-		}
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getState() {
-		if (state == null) {
-			return "";
-		}
-		return state;
-	}
-
-	public void setState(String state) {
-		this.state = state;
-	}
-
-	public String getCountry() {
-		if (country == null) {
-			return "";
-		}
-		return country;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
-	}
-
-	public int getNfreq() {
-		return nfreq;
-	}
-
-	public void setNfreq(int nfreq) {
-		this.nfreq = nfreq;
-	}
-
-	public int getNtime() {
-		return ntime;
-	}
-
-	public void setNtime(int ntime) {
-		this.ntime = ntime;
-	}
-
-	public String[] getCtype() {
-		return ctype;
-	}
-	
+	//Returns other(non-standard) ctypes as comma-separated list
 	public String getOtherCTypes() {
 		final String defaultMessage = "Other (please separate by commas)";
 		if (ctype == null) {
@@ -691,209 +486,158 @@ public class TalkerBean implements Serializable {
 		}
 	}
 	
-	public void setCtype(String[] ctype) {
-		this.ctype = ctype;
-	}
-
-	public int getChildrenNum() {
-		return childrenNum;
-	}
-
-	public void setChildrenNum(int childrenNum) {
-		this.childrenNum = childrenNum;
-	}
-
-	public String getImUsername() {
-		return imUsername;
-	}
-
-	public void setImUsername(String imUsername) {
-		this.imUsername = imUsername;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public boolean isNewsletter() {
-		return newsletter;
-	}
-
-	public void setNewsletter(boolean newsletter) {
-		this.newsletter = newsletter;
-	}
-
-	public String getAccountType() {
-		return accountType;
-	}
-
-	public void setAccountType(String accountType) {
-		this.accountType = accountType;
-	}
-
-	public String getAccountId() {
-		return accountId;
-	}
-
-	public void setAccountId(String accountId) {
-		this.accountId = accountId;
-	}
 	
-	public String getIm() {
-		return im;
-	}
-
-	public void setIm(String im) {
-		this.im = im;
-	}
+	// ---- Getters & Setters -------
+	public String getUserName() { return userName; }
+	public void setUserName(String userName) { this.userName = userName; }
 	
-	public int getNumberOfTopics() {
-		return numberOfTopics;
-	}
-
-	public void setNumberOfTopics(int numberOfTopics) {
-		this.numberOfTopics = numberOfTopics;
-	}
-
-	public int getDobMonth() {
-		return dobMonth;
-	}
-
-	public void setDobMonth(int dobMonth) {
-		this.dobMonth = dobMonth;
-	}
-
-	public int getDobDay() {
-		return dobDay;
-	}
-
-	public void setDobDay(int dobDate) {
-		this.dobDay = dobDate;
-	}
-
-	public int getDobYear() {
-		return dobYear;
-	}
-
-	public void setDobYear(int dobYear) {
-		this.dobYear = dobYear;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getZip() {
-		return zip;
-	}
-
-	public void setZip(String zip) {
-		this.zip = zip;
-	}
-
-	public List<String> getChildrenAges() {
-		return childrenAges;
-	}
-
-	public void setChildrenAges(List<String> childrenAges) {
-		this.childrenAges = childrenAges;
-	}
-
-	public String getWebpage() {
-		return webpage;
-	}
-
-	public void setWebpage(String webpage) {
-		this.webpage = webpage;
-	}
-
-	public List<String> getKeywords() {
-		return keywords;
-	}
-
-	public void setKeywords(List<String> keywords) {
-		this.keywords = keywords;
-	}
-
-	public String getBio() {
-		return bio;
-	}
-
-	public void setBio(String bio) {
-		this.bio = bio;
-	}
-
-	public List<String> getFollowingTopicsList() {
-		return followingTopicsList;
-	}
-
-	public void setFollowingTopicsList(List<String> followingTopicsList) {
-		this.followingTopicsList = followingTopicsList;
-	}
+	public String getPassword() { return password; }
+	public void setPassword(String password) { this.password = password; }
 	
+	public void setEmail(String email) { this.email = email; }
+	public String getEmail() { return email; }
 	
-	public List<TopicBean> getFollowingTopicsFullList() {
-		return followingTopicsFullList;
-	}
+	public String getGender() { return gender; }
+	public void setGender(String gender) { this.gender = gender; }
 
-	public void setFollowingTopicsFullList(List<TopicBean> followingTopicsFullList) {
-		this.followingTopicsFullList = followingTopicsFullList;
-	}
+	public void setDob(Date dob) { this.dob = dob; }
+	public Date getDob() { return dob; }
 
-	public boolean isDeactivated() {
-		return deactivated;
-	}
-
-	public void setDeactivated(boolean deactivated) {
-		this.deactivated = deactivated;
-	}
-
-	public List<TopicBean> getStartedTopicsList() {
-		return startedTopicsList;
-	}
-
-	public void setStartedTopicsList(List<TopicBean> startedTopicsList) {
-		this.startedTopicsList = startedTopicsList;
-	}
-
-	public List<TopicBean> getJoinedTopicsList() {
-		return joinedTopicsList;
-	}
-
-	public void setJoinedTopicsList(List<TopicBean> joinedTopicsList) {
-		this.joinedTopicsList = joinedTopicsList;
-	}
+	public int getInvitations() { return invitations; }
+	public void setInvitations(int invitations) { this.invitations = invitations; }
 	
-	public boolean isConnectionVerified() {
-		return connectionVerified;
-	}
+	public String getMaritalStatus() { return maritalStatus; }
+	public void setMaritalStatus(String maritalStatus) { this.maritalStatus = maritalStatus; }
 
-	public void setConnectionVerified(boolean connectionVerified) {
-		this.connectionVerified = connectionVerified;
-	}
+	public String getCategory() { return category; }
+	public void setCategory(String category) { this.category = category; }
 
-	public String getConnection() {
-		return connection;
+	public String getCity() {
+		if (city == null) {
+			return "";
+		}
+		return city;
 	}
+	public void setCity(String city) { this.city = city; }
 
-	public void setConnection(String connection) {
-		this.connection = connection;
+	public String getState() {
+		if (state == null) {
+			return "";
+		}
+		return state;
 	}
+	public void setState(String state) { this.state = state; }
 
+	public String getCountry() {
+		if (country == null) {
+			return "";
+		}
+		return country;
+	}
+	public void setCountry(String country) { this.country = country; }
+
+	public int getNfreq() { return nfreq; }
+	public void setNfreq(int nfreq) { this.nfreq = nfreq; }
+
+	public int getNtime() { return ntime; }
+	public void setNtime(int ntime) { this.ntime = ntime; }
+
+	public String[] getCtype() { return ctype; }
+	public void setCtype(String[] ctype) { this.ctype = ctype; }
+
+	public int getChildrenNum() { return childrenNum; }
+	public void setChildrenNum(int childrenNum) { this.childrenNum = childrenNum; }
+
+	public String getImUsername() { return imUsername; }
+	public void setImUsername(String imUsername) { this.imUsername = imUsername; }
+
+	public String getId() { return id; }
+	public void setId(String id) { this.id = id; }
+
+	public boolean isNewsletter() { return newsletter; }
+	public void setNewsletter(boolean newsletter) { this.newsletter = newsletter; }
+
+	public String getAccountType() { return accountType; }
+	public void setAccountType(String accountType) { this.accountType = accountType; }
+
+	public String getAccountId() { return accountId; }
+	public void setAccountId(String accountId) { this.accountId = accountId; }
+	
+	public String getIm() { return im; }
+	public void setIm(String im) { this.im = im; }
+	
+	public int getNumberOfTopics() { return numberOfTopics; }
+	public void setNumberOfTopics(int numberOfTopics) { this.numberOfTopics = numberOfTopics; }
+
+	public int getDobMonth() { return dobMonth; }
+	public void setDobMonth(int dobMonth) { this.dobMonth = dobMonth; }
+
+	public int getDobDay() { return dobDay; }
+	public void setDobDay(int dobDate) { this.dobDay = dobDate; }
+
+	public int getDobYear() { return dobYear; }
+	public void setDobYear(int dobYear) { this.dobYear = dobYear; }
+
+	public String getFirstName() { return firstName; }
+	public void setFirstName(String firstName) { this.firstName = firstName; }
+
+	public String getLastName() { return lastName; }
+	public void setLastName(String lastName) { this.lastName = lastName; }
+
+	public String getZip() { return zip; }
+	public void setZip(String zip) { this.zip = zip; }
+
+	public List<String> getChildrenAges() { return childrenAges; }
+	public void setChildrenAges(List<String> childrenAges) { this.childrenAges = childrenAges; }
+
+	public String getWebpage() { return webpage; }
+	public void setWebpage(String webpage) { this.webpage = webpage; }
+
+	public List<String> getKeywords() { return keywords; }
+	public void setKeywords(List<String> keywords) { this.keywords = keywords; }
+
+	public String getBio() { return bio; }
+	public void setBio(String bio) { this.bio = bio; }
+
+	public List<String> getFollowingTopicsList() { return followingTopicsList; }
+	public void setFollowingTopicsList(List<String> followingTopicsList) { this.followingTopicsList = followingTopicsList; }
+	
+	public List<TopicBean> getFollowingTopicsFullList() { return followingTopicsFullList; }
+	public void setFollowingTopicsFullList(List<TopicBean> followingTopicsFullList) { this.followingTopicsFullList = followingTopicsFullList; }
+
+	public boolean isDeactivated() { return deactivated; }
+	public void setDeactivated(boolean deactivated) { this.deactivated = deactivated; }
+
+	public List<TopicBean> getStartedTopicsList() { return startedTopicsList; }
+	public void setStartedTopicsList(List<TopicBean> startedTopicsList) { this.startedTopicsList = startedTopicsList; }
+
+	public List<TopicBean> getJoinedTopicsList() { return joinedTopicsList; }
+	public void setJoinedTopicsList(List<TopicBean> joinedTopicsList) { this.joinedTopicsList = joinedTopicsList; }
+	
+	public boolean isConnectionVerified() { return connectionVerified; }
+	public void setConnectionVerified(boolean connectionVerified) { this.connectionVerified = connectionVerified; }
+
+	public String getConnection() { return connection; }
+	public void setConnection(String connection) { this.connection = connection; }
+	
+	public String getVerifyCode() { return verifyCode; }
+	public void setVerifyCode(String verifyCode) { this.verifyCode = verifyCode; }
+	
+	public Date getRegDate() { return regDate; }
+	public void setRegDate(Date regDate) { this.regDate = regDate; }
+
+	public List<CommentBean> getProfileCommentsList() { return profileCommentsList; }
+	public void setProfileCommentsList(List<CommentBean> profileCommentsList) { this.profileCommentsList = profileCommentsList; }
+
+	public List<Action> getActivityList() { return activityList; }
+	public void setActivityList(List<Action> activityList) { this.activityList = activityList; }
+
+	public List<TalkerBean> getFollowerList() { return followerList; }
+	public void setFollowerList(List<TalkerBean> followerList) { this.followerList = followerList; }
+
+	public List<TalkerBean> getFollowingList() { return followingList; }
+	public void setFollowingList(List<TalkerBean> followingList) { this.followingList = followingList; }
+
+	public List<ThankYouBean> getThankYouList() { return thankYouList; }
+	public void setThankYouList(List<ThankYouBean> thankYouList) { this.thankYouList = thankYouList; }
 }	

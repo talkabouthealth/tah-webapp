@@ -4,13 +4,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
 public class LiveConversationBean {
 	private TopicBean topic;
 	private Map<String, TalkerBean> mTalkers = new HashMap<String, TalkerBean>();
 	private Date StartTime = new Date();
 
-	public LiveConversationBean() {
-	}
+	public LiveConversationBean() {}
 
 	public void setTalkers(Map<String, TalkerBean> mTalkers) {
 		this.mTalkers = mTalkers;
