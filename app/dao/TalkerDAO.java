@@ -350,7 +350,6 @@ public class TalkerDAO {
 		
 		List<TalkerBean> followerList = new ArrayList<TalkerBean>();
 		for (DBObject followerDBObject : followerDBList) {
-			//TODO: same as following?
 			TalkerBean followerTalker = new TalkerBean();
 			
 			boolean isDeactivated = followerTalker.getBoolean(followerDBObject.get("deactivated"));
@@ -358,13 +357,7 @@ public class TalkerDAO {
 				continue;
 			}
 			
-			followerTalker.setId(followerDBObject.get("_id").toString());
-			followerTalker.setUserName(followerDBObject.get("uname").toString());
-			followerTalker.setBio((String)followerDBObject.get("bio"));
-			
-			followerTalker.parseThankYous((Collection<DBObject>)followerDBObject.get("thankyous"));
-			followerTalker.parseProfilePreferences(followerTalker.parseInt(followerDBObject.get("prefs")));
-			
+			followerTalker.parseBasicFromDB(followerDBObject);
 			followerList.add(followerTalker);
 		}
 		

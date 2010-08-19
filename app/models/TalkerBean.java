@@ -254,6 +254,7 @@ public class TalkerBean implements Serializable {
 		this.userName = userName;
 	}
 
+	//TODO: verify equals & hashCode ?
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof TalkerBean)) {
@@ -262,6 +263,14 @@ public class TalkerBean implements Serializable {
 		
 		TalkerBean other = (TalkerBean)obj;
 		return id.equals(other.id);
+	}
+	
+	@Override
+	public int hashCode() {
+		if (id == null) {
+			return 47;
+		}
+		return id.hashCode();
 	}
 
 	public String getUserName() {
@@ -338,6 +347,16 @@ public class TalkerBean implements Serializable {
 //	public void setProfilePreferences(EnumSet<ProfilePreference> profilePreferences) {
 //		this.profilePreferences = profilePreferences;
 //	}
+	
+	public void parseBasicFromDB(DBObject talkerDBObject) {
+		setId(talkerDBObject.get("_id").toString());
+		setUserName(talkerDBObject.get("uname").toString());
+		setBio((String)talkerDBObject.get("bio"));
+		
+		//TODO: slooooow?
+		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
+		parseProfilePreferences(parseInt(talkerDBObject.get("prefs")));
+	}
 	
 	public void parseFromDB(DBObject talkerDBObject) {
 		ObjectId objectId = (ObjectId)talkerDBObject.get("_id");
@@ -443,8 +462,6 @@ public class TalkerBean implements Serializable {
 		followingList = new ArrayList<TalkerBean>();
 		if (followingDBList != null) {
 			for (DBRef followingDBRef : followingDBList) {
-				TalkerBean followingTalker = new TalkerBean();
-				
 				DBObject followingDBOBject = followingDBRef.fetch();
 				
 				boolean isDeactivated = getBoolean(followingDBOBject.get("deactivated"));
@@ -452,13 +469,8 @@ public class TalkerBean implements Serializable {
 					continue;
 				}
 				
-				followingTalker.setId(followingDBOBject.get("_id").toString());
-				followingTalker.setUserName(followingDBOBject.get("uname").toString());
-				followingTalker.setBio((String)followingDBOBject.get("bio"));
-				
-				//TODO: slooooow?
-				followingTalker.parseThankYous((Collection<DBObject>)followingDBOBject.get("thankyous"));
-				followingTalker.parseProfilePreferences(parseInt(followingDBOBject.get("prefs")));
+				TalkerBean followingTalker = new TalkerBean();
+				followingTalker.parseBasicFromDB(followingDBOBject);
 				
 				followingList.add(followingTalker);
 			}

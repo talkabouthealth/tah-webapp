@@ -6,9 +6,7 @@
 			#{/if}
 			<li><a href="@{Home.index()}">Home</a></li>
 			<li><a href="#" rel="dropmenu1">You</a></li>
-			<!--
-			<li><a href="#" rel="dropmenu2">Community</a></li>
-			-->
+			<li><a href="#" rel="dropmenu2">Explore</a></li>
 			<li><a href="#" rel="dropmenu3">Settings</a></li>
 			<li><a href="#" rel="dropmenu4">Help</a></li>
 			<li><a href="@{Secure.logout()}" >Logout</a></li>	
@@ -34,10 +32,13 @@
 	</div>
 	<!--2nd drop down menu -->                                                
 	<div id="dropmenu2" class="dropmenudiv" style="width: 180px;">
+		<a href="@{Community.browseMembers()}">Browse Members</a>
+		<!--
 		<a href="#">Search People</a>
 		<a href="#">Browse People</a>
 		<a href="#">Search Conversations</a>
 		<a href="#">Browse Conversations</a>
+		-->
 	</div>
 	<!--3rd drop down menu -->                                                   
 	<div id="dropmenu3" class="dropmenudiv" style="width: 180px;">

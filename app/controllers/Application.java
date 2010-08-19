@@ -106,6 +106,8 @@ public class Application extends Controller {
     }
     
     public static void register(@Valid TalkerBean talker, String newTopic) {
+    	System.out.println("HERE??");
+    	
 		validateTalker(talker);
 		
 //		System.out.println(validation.errorsMap());
