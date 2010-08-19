@@ -218,6 +218,8 @@ public class TalkerBean implements Serializable {
 		setId(talkerDBObject.get("_id").toString());
 		setUserName(talkerDBObject.get("uname").toString());
 		setBio((String)talkerDBObject.get("bio"));
+		setEmail((String)talkerDBObject.get("email"));
+		parseEmailSettings(parseStringList(talkerDBObject.get("email_settings")));
 		
 		//TODO: slooooow?
 		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));

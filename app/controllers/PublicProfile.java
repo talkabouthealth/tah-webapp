@@ -48,14 +48,13 @@ public class PublicProfile extends Controller {
 		
 		notFoundIfNull(talker);
 		
-		// Health info
+		//Health info
 		//For now we have only one disease - Breast Cancer
 		final String diseaseName = "Breast Cancer";
 		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
 		if (talkerDisease != null) {
 			talkerDisease.setName(diseaseName);
 		}
-		
 		//Load all healthItems for this disease
 		Map<String, HealthItemBean> healthItemsMap = new HashMap<String, HealthItemBean>();
 		for (String itemName : new String[] {"symptoms", "tests", 

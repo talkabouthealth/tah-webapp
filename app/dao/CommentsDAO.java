@@ -1,6 +1,9 @@
 package dao;
 
 import java.util.ArrayList;
+
+import static util.DBUtil.*;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,34 +38,30 @@ public class CommentsDAO {
 	
 	// ---------------- Profile comments --------------------------
 	public static String saveProfileComment(CommentBean comment) {
-		DBCollection commentsColl = DBUtil.getCollection(PROFILE_COMMENTS_COLLECTION);
+		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
 		
-		DBRef profileTalkerRef = new DBRef(DBUtil.getDB(), 
-				TalkerDAO.TALKERS_COLLECTION, new ObjectId(comment.getProfileTalkerId()));
-		DBRef fromTalkerRef = new DBRef(DBUtil.getDB(), 
-				TalkerDAO.TALKERS_COLLECTION, new ObjectId(comment.getFromTalker().getId()));
+		DBRef profileTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, comment.getProfileTalkerId());
+		DBRef fromTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, comment.getFromTalker().getId());
 		DBObject commentObject = BasicDBObjectBuilder.start()
 			.add("profile", profileTalkerRef)
 			.add("from", fromTalkerRef)
 			.add("text", comment.getText())
 			.add("time", comment.getTime())
 			.get();
-		
 		commentsColl.save(commentObject);
 		
-		updateParent(commentsColl, comment.getParentId(), commentObject.get("_id").toString());
+		updateParent(commentsColl, comment.getParentId(), getString(commentObject, "_id"));
 		
-		return commentObject.get("_id").toString();
+		return getString(commentObject, "_id");
 	}
 	
 	public static List<CommentBean> loadProfileComments(String talkerId) {
-		DBCollection commentsColl = DBUtil.getCollection(PROFILE_COMMENTS_COLLECTION);
+		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
 		
-		DBRef profileTalkerRef = new DBRef(DBUtil.getDB(), TalkerDAO.TALKERS_COLLECTION, new ObjectId(talkerId));
+		DBRef profileTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("profile", profileTalkerRef)
 			.get();
-		
 		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
 		//comments without parent (top in hierarchy)
@@ -72,44 +71,36 @@ public class CommentsDAO {
 
 	// -------------- Topics comments -----------------
 	public static String saveTopicComment(CommentBean comment) {
-		DBCollection commentsColl = DBUtil.getCollection(TOPIC_COMMENTS_COLLECTION);
+		DBCollection commentsColl = getCollection(TOPIC_COMMENTS_COLLECTION);
 		
-		DBRef topicRef = new DBRef(DBUtil.getDB(), 
-				TopicDAO.TOPICS_COLLECTION, new ObjectId(comment.getTopicId()));
-		DBRef fromTalkerRef = new DBRef(DBUtil.getDB(), 
-				TalkerDAO.TALKERS_COLLECTION, new ObjectId(comment.getFromTalker().getId()));
+		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, comment.getTopicId());
+		DBRef fromTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, comment.getFromTalker().getId());
 		DBObject commentObject = BasicDBObjectBuilder.start()
 			.add("topic", topicRef)
 			.add("from", fromTalkerRef)
 			.add("text", comment.getText())
 			.add("time", comment.getTime())
 			.get();
-		
 		commentsColl.save(commentObject);
 		
-		updateParent(commentsColl, comment.getParentId(), commentObject.get("_id").toString()); 
+		updateParent(commentsColl, comment.getParentId(), getString(commentObject, "_id")); 
 		
-		return commentObject.get("_id").toString();
+		return getString(commentObject, "_id");
 	}
 	
 	public static List<CommentBean> loadTopicComments(String topicId) {
-		DBCollection commentsColl = DBUtil.getCollection(TOPIC_COMMENTS_COLLECTION);
+		DBCollection commentsColl = getCollection(TOPIC_COMMENTS_COLLECTION);
 		
-		DBRef topicRef = new DBRef(DBUtil.getDB(), 
-				TopicDAO.TOPICS_COLLECTION, new ObjectId(topicId));
+		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topicId);
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("topic", topicRef)
 			.get();
-		
 		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
-		
 		
 		//comments without parent (top in hierarchy)
 		List<CommentBean> topCommentsList = parseCommentsTree(commentsList);
 		return topCommentsList;
 	}
-	
-	
 	
 	
 	//update parent - add new comment "_id" to children array
@@ -124,10 +115,9 @@ public class CommentsDAO {
 	private static List<CommentBean> parseCommentsTree(List<DBObject> commentsList) {
 		List<CommentBean> topCommentsList = new ArrayList<CommentBean>();
 		//temp map for resolving children
-		//TODO: we don't need cache map because of sorting? (children comments are always older)
 		Map<String, CommentBean> commentsCacheMap = new HashMap<String, CommentBean>();
 		for (DBObject commentDBObject : commentsList) {
-			String commentId = commentDBObject.get("_id").toString();
+			String commentId = getString(commentDBObject, "_id");
 			
 			CommentBean commentBean = commentsCacheMap.get(commentId);
 			if (commentBean == null) {
@@ -147,22 +137,18 @@ public class CommentsDAO {
 			
 			//save children
 			List<CommentBean> childrenList = new ArrayList<CommentBean>();
-			BasicDBList childrenDBList = (BasicDBList)commentDBObject.get("children");
-			if (childrenDBList != null) {
-				for (Object childIdObject : childrenDBList) {
-					String childId = (String)childIdObject;
-					
-					//try to get cached instance
-					CommentBean childrenCommentBean = commentsCacheMap.get(childId);
-					if (childrenCommentBean == null) {
-						childrenCommentBean = new CommentBean(childId);
-						commentsCacheMap.put(childId, childrenCommentBean);
-					}
-					
-					childrenList.add(childrenCommentBean);
-					//remove child comments from top list
-					topCommentsList.remove(childrenCommentBean);
+			List<String> childrenIdsList = getStringList(commentDBObject, "children");
+			for (String childId : childrenIdsList) {
+				//try to get cached instance
+				CommentBean childrenCommentBean = commentsCacheMap.get(childId);
+				if (childrenCommentBean == null) {
+					childrenCommentBean = new CommentBean(childId);
+					commentsCacheMap.put(childId, childrenCommentBean);
 				}
+				
+				childrenList.add(childrenCommentBean);
+				//remove child comments from top list
+				topCommentsList.remove(childrenCommentBean);
 			}
 			commentBean.setChildren(childrenList);
 		}

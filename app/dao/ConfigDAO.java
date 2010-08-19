@@ -11,12 +11,14 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
+import static util.DBUtil.*;
+
 public class ConfigDAO {
 	
 	public static final String CONFIGS_COLLECTION = "configs";
 	
 	public static void saveConfig (String name, Object value) {
-		DBCollection configsColl = DBUtil.getCollection(CONFIGS_COLLECTION);
+		DBCollection configsColl = getCollection(CONFIGS_COLLECTION);
 
 		DBObject query = new BasicDBObject("name", name);
 		DBObject configDBObject = BasicDBObjectBuilder.start()
@@ -29,10 +31,9 @@ public class ConfigDAO {
 	}
 	
 	public static boolean getBooleanConfig(String name) {
-		DBCollection configsColl = DBUtil.getCollection(CONFIGS_COLLECTION);
+		DBCollection configsColl = getCollection(CONFIGS_COLLECTION);
 
 		DBObject query = new BasicDBObject("name", name);
-
 		DBObject configDBObject = configsColl.findOne(query);
 		if (configDBObject == null) {
 			//TODO: if config not found? return false ?

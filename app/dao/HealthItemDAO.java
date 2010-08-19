@@ -20,19 +20,20 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
+import static util.DBUtil.*;
+
 public class HealthItemDAO {
 	
 	public static final String HEALTH_ITEMS_COLLECTION = "healthitems";
 	
 	public static String save(HealthItemBean healthItem, String parentId) {
-		DBCollection healthItemsColl = DBUtil.getCollection(HEALTH_ITEMS_COLLECTION);
+		DBCollection healthItemsColl = getCollection(HEALTH_ITEMS_COLLECTION);
 		
-		DBRef diseaseRef = new DBRef(DBUtil.getDB(), 
-				DiseaseDAO.DISEASES_COLLECTION, new ObjectId(healthItem.getDiseaseId()));
+		DBRef diseaseRef = createRef(DiseaseDAO.DISEASES_COLLECTION, healthItem.getDiseaseId());
 		//parent reference can be null
 		DBRef parentRef = null;
 		if (parentId != null) {
-			parentRef = new DBRef(DBUtil.getDB(), HEALTH_ITEMS_COLLECTION, new ObjectId(parentId));
+			parentRef = createRef(HEALTH_ITEMS_COLLECTION, parentId);
 		}
 				
 		DBObject healthItemObject = BasicDBObjectBuilder.start()
@@ -42,13 +43,13 @@ public class HealthItemDAO {
 			.get();
 
 		healthItemsColl.save(healthItemObject);
-		return healthItemObject.get("_id").toString();
+		return getString(healthItemObject, "_id");
 	}
 	
 	//For now we don't use "diseaseId" because we have one disease
 	//TODO: make it more efficient? - read Mongo articles
 	public static HealthItemBean getHealthItemByName(String name, String diseaseId) {
-		DBCollection healthItemsColl = DBUtil.getCollection(HEALTH_ITEMS_COLLECTION);
+		DBCollection healthItemsColl = getCollection(HEALTH_ITEMS_COLLECTION);
 		
 		//get root health item by name
 		DBObject query = new BasicDBObject("name", name);
@@ -67,7 +68,7 @@ public class HealthItemDAO {
 			String name, boolean topItem) {
 		HealthItemBean healthItem = new HealthItemBean(id, name);
 		
-		DBRef parentRef = new DBRef(DBUtil.getDB(), HEALTH_ITEMS_COLLECTION, new ObjectId(id));
+		DBRef parentRef = createRef(HEALTH_ITEMS_COLLECTION, id);
 		DBObject query = new BasicDBObject("par_id", parentRef);
 		
 		// load all children
@@ -97,6 +98,7 @@ public class HealthItemDAO {
 	public static void saveTree(HealthItemBean healthItem, String parentId, String diseaseId) {
 		healthItem.setDiseaseId(diseaseId);
 		String currentId = HealthItemDAO.save(healthItem, parentId);
+		
 		Set<HealthItemBean> childs = healthItem.getChildren();
 		if (childs != null) {
 			for (HealthItemBean child : childs) {

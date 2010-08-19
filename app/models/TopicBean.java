@@ -2,6 +2,7 @@ package models;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class TopicBean {
 	private String id;
@@ -21,7 +22,7 @@ public class TopicBean {
 	private List<String> tags;
 	private String summary;
 	private List<String> sumContributors;
-	private List<String> members;
+	private Set<String> members;
 	private List<CommentBean> comments;
 	private List<MessageBean> messages;
 	private List<TalkerBean> followers;
@@ -69,8 +70,8 @@ public class TopicBean {
 	public List<String> getTags() { return tags; }
 	public void setTags(List<String> tags) { this.tags = tags; }
 
-	public List<String> getMembers() { return members; }
-	public void setMembers(List<String> members) { this.members = members; }
+	public Set<String> getMembers() { return members; }
+	public void setMembers(Set<String> members) { this.members = members; }
 
 	public List<MessageBean> getMessages() { return messages; }
 	public void setMessages(List<MessageBean> messages) { this.messages = messages; }

@@ -1,6 +1,7 @@
 package dao;
 
 import java.util.ArrayList;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -30,35 +31,16 @@ import models.actions.ProfileReplyAction;
 import models.actions.StartConvoAction;
 import models.actions.UpdateProfileAction;
 
+import static util.DBUtil.*;
+
 public class ActivityDAO {
 	
 	public static final String ACTIVITIES_COLLECTION = "activities";
 	
-	public static void save(ActivityBean activity) {
-		DBCollection activitiesColl = DBUtil.getCollection(ACTIVITIES_COLLECTION);
-
-		DBRef talkerRef = new DBRef(DBUtil.getDB(), 
-				TalkerDAO.TALKERS_COLLECTION, activity.getTalker().getId());
-		DBObject activityDBObject = BasicDBObjectBuilder.start()
-				.add("uid", talkerRef)
-				.add("time", new Date())
-				.add("text", activity.getText())
-				.get();
-
-		activitiesColl.save(activityDBObject);
-	}
-	
-	public static void createActivity(String talkerId, String text) {
-		ActivityBean activity = new ActivityBean();
-		activity.setTalker(new TalkerBean(talkerId));
-		activity.setText(text);
-		ActivityDAO.save(activity);
-	}
-	
 	public static List<Action> load(String talkerId) {
-		DBCollection activitiesColl = DBUtil.getCollection(ACTIVITIES_COLLECTION);
+		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
-		DBRef talkerRef = new DBRef(DBUtil.getDB(), TalkerDAO.TALKERS_COLLECTION, new ObjectId(talkerId));
+		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		DBObject query = new BasicDBObject("uid", talkerRef);
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
@@ -120,6 +102,14 @@ public class ActivityDAO {
 		
 		return null;
 	}
+	
+	public static void saveActivity(Action action) {
+		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
+
+		DBObject activityDBObject = action.toDBObject();
+		activitiesColl.save(activityDBObject);
+	}
+	
 
 	public static void main(String[] args) {
 //		ActivityBean activity = new ActivityBean();
@@ -129,12 +119,4 @@ public class ActivityDAO {
 		
 		System.out.println(ActivityDAO.load("4c2cb43160adf3055c97d061"));
 	}
-
-	public static void saveActivity(Action action) {
-		DBCollection activitiesColl = DBUtil.getCollection(ACTIVITIES_COLLECTION);
-
-		DBObject activityDBObject = action.toDBObject();
-		activitiesColl.save(activityDBObject);
-	}
-
 }

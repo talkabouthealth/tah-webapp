@@ -33,12 +33,14 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
+import static util.DBUtil.*;
+
 public class TalkerDAO {
 	
 	public static final String TALKERS_COLLECTION = "talkers";
 	
 	public static boolean save(TalkerBean talker) {
-		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 
 		DBObject talkerDBObject = BasicDBObjectBuilder.start()
 				.add("uname", talker.getUserName())
@@ -47,7 +49,6 @@ public class TalkerDAO {
 				.add("verify_code", talker.getVerifyCode())
 				
 				.add("dob", talker.getDob())
-//				.add("gender", talker.getGender())
 				.add("timestamp",  Calendar.getInstance().getTime())
 				.add("im", talker.getIm())
 				.add("im_uname", talker.getImUsername())
@@ -66,7 +67,6 @@ public class TalkerDAO {
 				.add("nfreq", talker.getNfreq())
 				.add("ntime", talker.getNtime())
 				.add("ctype", talker.getCtype())
-				
 				.get();
 
 		talkersColl.save(talkerDBObject);
@@ -74,13 +74,20 @@ public class TalkerDAO {
 	}
 	
 	public static void updateTalker(TalkerBean talker) {
-		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
 		DBObject talkerObject = BasicDBObjectBuilder.start()
 			.add("uname", talker.getUserName())
 			.add("pass", talker.getPassword())
 			.add("email", talker.getEmail())
 			.add("verify_code", talker.getVerifyCode())
+			.add("deactivated", talker.isDeactivated())
+			
+			.add("connection", talker.getConnection())
+			.add("connection_verified", talker.isConnectionVerified())
+			
+			.add("im", talker.getIm())
+			.add("im_uname", talker.getImUsername())
 			
 			.add("dob", talker.getDob())
 			.add("gender", talker.getGender())
@@ -89,20 +96,7 @@ public class TalkerDAO {
 			.add("state", talker.getState())
 			.add("country", talker.getCountry())
 			.add("category", talker.getCategory())
-			
-			.add("connection", talker.getConnection())
-			.add("connection_verified", talker.isConnectionVerified())
-			
-			.add("ch_num", talker.getChildrenNum())
-			.add("invites", talker.getInvitations())
-			
-			.add("prefs", talker.profilePreferencesToInt())
-			.add("email_settings", talker.emailSettingsToList())
-			
-			.add("im", talker.getIm())
-			.add("im_uname", talker.getImUsername())
 			.add("newsletter", talker.isNewsletter())
-			
 			.add("nfreq", talker.getNfreq())
 			.add("ntime", talker.getNtime())
 			.add("ctype", talker.getCtype())
@@ -112,11 +106,14 @@ public class TalkerDAO {
 			.add("webpage", talker.getWebpage())
 			.add("bio", talker.getBio())
 			.add("ch_ages", talker.getChildrenAges())
+			.add("ch_num", talker.getChildrenNum())
+			.add("invites", talker.getInvitations())
 			.add("keywords", talker.getKeywords())
 			
-			.add("deactivated", talker.isDeactivated())
-			
+			.add("prefs", talker.profilePreferencesToInt())
+			.add("email_settings", talker.emailSettingsToList())
 			.add("following_topics", talker.getFollowingTopicsList())
+			
 			.get();
 		
 		DBObject talkerId = new BasicDBObject("_id", new ObjectId(talker.getId()));
@@ -125,7 +122,7 @@ public class TalkerDAO {
 	}
 	
 	public static void updateTalkerImage(TalkerBean talker, byte[] imageArray) {
-		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
 		DBObject talkerObject = BasicDBObjectBuilder.start()
 			.add("img", imageArray)
@@ -152,17 +149,36 @@ public class TalkerDAO {
 		return getByField("_id", new ObjectId(talkerId));
 	}
 	
+	/*
+	 * Loads talker bean by custom field
+	 */
+	private static TalkerBean getByField(String fieldName, Object fieldValue) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		
+		DBObject query = new BasicDBObject(fieldName, fieldValue);
+		DBObject talkerDBObject = talkersColl.findOne(query);
+		
+		if (talkerDBObject == null) {
+			return null;
+		}
+		else {
+			TalkerBean talker = new TalkerBean();
+			talker.parseFromDB(talkerDBObject);
+			return talker;
+		}
+	}
+	
 	/**
 	 * For now, there will only be the breast cancer community,
 	 * so this method returns total number of users (talkers) in the DB.
 	 */
 	public static long getNumberOfTalkers() {
-		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		return talkersColl.count();
 	}
 	
 	public static TalkerBean getTalkerByLoginInfo(String usernameOrEmail, String password) {
-		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
 		DBObject query = new BasicDBObject();
 		query.put("uname", usernameOrEmail);
@@ -193,7 +209,7 @@ public class TalkerDAO {
 	}
 	
 	public static TalkerBean getTalkerByAccount(String accountType, String accountId) {
-		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
 		DBObject query = new BasicDBObject();
 		query.put("act_type", accountType);
@@ -210,27 +226,9 @@ public class TalkerDAO {
 		}
 	}
 	
-	/*
-	 * Loads talker bean by custom field
-	 */
-	private static TalkerBean getByField(String fieldName, Object fieldValue) {
-		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
-		
-		DBObject query = new BasicDBObject(fieldName, fieldValue);
-		DBObject talkerDBObject = talkersColl.findOne(query);
-		
-		if (talkerDBObject == null) {
-			return null;
-		}
-		else {
-			TalkerBean talker = new TalkerBean();
-			talker.parseFromDB(talkerDBObject);
-			return talker;
-		}
-	}
 	
 	public static List<TalkerBean> loadAllTalkers() {
-		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
 		List<DBObject> talkersDBObjectList = talkersColl.find().toArray();
 		
@@ -245,7 +243,7 @@ public class TalkerDAO {
 	}
 	
 	public static List<Map<String, String>> loadTalkersForDashboard() {
-		DBCollection talkersColl = DBUtil.getDB().getCollection(TALKERS_COLLECTION);
+		DBCollection talkersColl = getDB().getCollection(TALKERS_COLLECTION);
 		DateFormat dateFormat = new SimpleDateFormat("MM.dd.yyyy HH:mm:ss");
 		
 		//TODO: sort by last notification!
@@ -275,7 +273,7 @@ public class TalkerDAO {
 	}
 	
 	public static byte[] loadTalkerImage(String userName) {
-		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("uname", userName);
 		DBObject fields = BasicDBObjectBuilder.start()
@@ -288,8 +286,7 @@ public class TalkerDAO {
 			return null;
 		}
 		
-		Boolean isDeactivated = (Boolean)talkerDBObject.get("deactivated");
-		if (isDeactivated != null && isDeactivated) {
+		if (getBoolean(talkerDBObject, "deactivated")) {
 			//Show default image
 			return null;
 		}
@@ -298,12 +295,11 @@ public class TalkerDAO {
 	}
 	
 	
-	
 	/* --------------------- "Thank you" feature ----------------------------- */
 	public static void saveThankYou(ThankYouBean thankYouBean) {
-		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
-		DBRef fromTalkerRef = new DBRef(DBUtil.getDB(), TALKERS_COLLECTION, new ObjectId(thankYouBean.getFromTalker().getId()));
+		DBRef fromTalkerRef = createRef(TALKERS_COLLECTION, thankYouBean.getFromTalker().getId());
 		DBObject thankYouObject = BasicDBObjectBuilder.start()
 			.add("time", thankYouBean.getTime())
 			.add("note", thankYouBean.getNote())
@@ -316,35 +312,27 @@ public class TalkerDAO {
 	}
 	
 	/* ---------------------- Following/Followers feature --------------------------- */
-	
 	/**
 	 * Follows or unfollows depending on third parameter
 	 */
 	public static void followAction(String followerId, String followingId, boolean follow) {
-		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
-		DBRef followingTalkerRef = new DBRef(DBUtil.getDB(), 
-				TALKERS_COLLECTION, new ObjectId(followingId));
+		DBRef followingTalkerRef = createRef(TALKERS_COLLECTION, followingId);
 		DBObject talkerId = new BasicDBObject("_id", new ObjectId(followerId));
 		
-		String action = null;
-		if (follow) {
-			//add to array
-			action = "$push";
-		}
-		else {
-			//remove from array
-			action = "$pull";
-		}
-		DBObject updateQuery = new BasicDBObject(action, new BasicDBObject("following", followingTalkerRef));
+		//add or remove to/from array
+		String action = follow ? "$push" : "$pull";
+
+		DBObject updateQuery = new BasicDBObject(action, 
+				new BasicDBObject("following", followingTalkerRef));
 		talkersColl.update(talkerId, updateQuery);
 	}
 	
 	public static List<TalkerBean> loadFollowers(String talkerId) {
-		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 
-		DBRef followingTalkerRef = new DBRef(DBUtil.getDB(), 
-				TALKERS_COLLECTION, new ObjectId(talkerId));
+		DBRef followingTalkerRef = createRef(TALKERS_COLLECTION, talkerId);
 		BasicDBObject query = new BasicDBObject("following", followingTalkerRef);
 		List<DBObject> followerDBList = talkersColl.find(query).toArray();
 		
@@ -371,6 +359,7 @@ public class TalkerDAO {
 			return new ArrayList<TopicBean>();
 		}
 		
+		//TODO: use DBRef for topics?
 		List<TopicBean> followingTopicsList = new ArrayList<TopicBean>();
 		for (String topicId : talker.getFollowingTopicsList()) {
 			TopicBean topic = TopicDAO.getByTopicId(topicId);
@@ -381,7 +370,7 @@ public class TalkerDAO {
 	}
 	
 	public static void saveEmail(TalkerBean talker, EmailBean email) {
-		DBCollection talkersColl = DBUtil.getCollection(TALKERS_COLLECTION);
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
 		DBObject emailObject = BasicDBObjectBuilder.start()
 			.add("value", email.getValue())

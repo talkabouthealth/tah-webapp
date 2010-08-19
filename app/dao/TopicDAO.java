@@ -3,6 +3,7 @@ package dao;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,6 +30,8 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.MongoException;
 import com.mongodb.DB.WriteConcern;
+
+import static util.DBUtil.*;
 
 public class TopicDAO {
 	
@@ -69,14 +72,14 @@ public class TopicDAO {
 			return -1;
 		}
 		
-		DBCollection topicsColl = DBUtil.getCollection(TOPICS_COLLECTION);
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
 		//get last tid
 		DBCursor topicsCursor = 
 			topicsColl.find(null, new BasicDBObject("tid", "")).sort(new BasicDBObject("tid", -1)).limit(1);
 		int tid = topicsCursor.hasNext() ? ((Integer)topicsCursor.next().get("tid")) + 1 : 1;
 		
-		DBRef talkerRef = new DBRef(DBUtil.getDB(), TalkerDAO.TALKERS_COLLECTION, new ObjectId(topic.getUid()));
+		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, topic.getUid());
 		DBObject topicObject = BasicDBObjectBuilder.start()
 			.add("uid", talkerRef)
 			.add("tid", tid)
@@ -107,7 +110,7 @@ public class TopicDAO {
 	}
 	
 	public static void updateTopic(TopicBean topic) {
-		DBCollection topicsColl = DBUtil.getCollection(TOPICS_COLLECTION);
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
 		//TODO: update also main url
 		DBObject topicObject = BasicDBObjectBuilder.start()
@@ -120,55 +123,46 @@ public class TopicDAO {
 	}
 	
 	public static TopicBean getByTopicId(String topicId) {
-		DBCollection topicsColl = DBUtil.getDB().getCollection(TOPICS_COLLECTION);
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("_id", new ObjectId(topicId));
 		DBObject topicDBObject = topicsColl.findOne(query);
-		if (topicDBObject == null) {
-			return null;
-		}
 		
 		return parseTopicBean(topicDBObject);
 	}
 	
 	public static TopicBean getByTid(Integer tid) {
-		DBCollection topicsColl = DBUtil.getDB().getCollection(TOPICS_COLLECTION);
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("tid", tid);
-		//TODO: DBObject -> BasicDBObject and update getters!
 		DBObject topicDBObject = topicsColl.findOne(query);
-		if (topicDBObject == null) {
-			return null;
-		}
 		
 		return parseTopicBean(topicDBObject);
 	}
 	
 	public static TopicBean getByMainURL(String mainURL) {
-		DBCollection topicsColl = DBUtil.getDB().getCollection(TOPICS_COLLECTION);
+		DBCollection topicsColl = getDB().getCollection(TOPICS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("main_url", mainURL);
 		DBObject topicDBObject = topicsColl.findOne(query);
-		if (topicDBObject == null) {
-			return null;
-		}
 		
 		return parseTopicBean(topicDBObject);
 	}
 	
 	public static TopicBean getByOldURL(String oldURL) {
-		DBCollection topicsColl = DBUtil.getDB().getCollection(TOPICS_COLLECTION);
+		DBCollection topicsColl = getDB().getCollection(TOPICS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("urls", oldURL);
 		DBObject topicDBObject = topicsColl.findOne(query);
-		if (topicDBObject == null) {
-			return null;
-		}
 		
 		return parseTopicBean(topicDBObject);
 	}
 	
 	private static TopicBean parseTopicBean(DBObject topicDBObject) {
+		if (topicDBObject == null) {
+			return null;
+		}
+		
 		//TODO: move to topic bean?
 		TopicBean topic = new TopicBean();
     	topic.setId(topicDBObject.get("_id").toString());
@@ -177,26 +171,20 @@ public class TopicDAO {
     	topic.setCreationDate((Date)topicDBObject.get("cr_date"));
     	topic.setDisplayTime((Date)topicDBObject.get("disp_date"));
     	topic.setMainURL((String)topicDBObject.get("main_url"));
+    	topic.setViews(getInt(topicDBObject, "views"));
     	
     	DBObject talkerDBObject = ((DBRef)topicDBObject.get("uid")).fetch();
     	TalkerBean talker = new TalkerBean();
     	talker.parseFromDB(talkerDBObject);
     	topic.setTalker(talker);
     	
-    	Integer views = (Integer)topicDBObject.get("views");
-    	topic.setViews(views == null ? 0 : views);
-    	
-    	
     	List<MessageBean> messages = new ArrayList<MessageBean>();
     	Set<String> members = new HashSet<String>();
-    	//TODO update comments/messages name
-    	BasicDBList messagesDBList = (BasicDBList)topicDBObject.get("comments");
+    	Collection<DBObject> messagesDBList = (Collection<DBObject>)topicDBObject.get("messages");
     	if (messagesDBList != null) {
-    		for (Object obj : messagesDBList) {
-    			BasicDBObject messageDBObject = (BasicDBObject)obj;
-    			
+    		for (DBObject messageDBObject : messagesDBList) {
     			MessageBean message = new MessageBean();
-    			message.setText(messageDBObject.getString("text"));
+    			message.setText((String)messageDBObject.get("text"));
     			
     			DBObject fromTalkerDBObject = ((DBRef)messageDBObject.get("uid")).fetch();
     			TalkerBean fromTalker = 
@@ -207,12 +195,11 @@ public class TopicDAO {
     			messages.add(message);
     		}
     	}
-    	topic.setMembers(new ArrayList<String>(members));
+    	topic.setMembers(members);
     	topic.setMessages(messages);
     	
-    	
     	//followers of this topic
-    	DBCollection talkersColl = DBUtil.getDB().getCollection(TalkerDAO.TALKERS_COLLECTION);
+    	DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
     	DBObject query = new BasicDBObject("following_topics", topic.getId());
     	DBObject fields = BasicDBObjectBuilder.start()
     		.add("uname", 1)
@@ -224,14 +211,7 @@ public class TopicDAO {
     	List<TalkerBean> followers = new ArrayList<TalkerBean>();
     	for (DBObject followerDBObject : followersDBList) {
     		TalkerBean followerTalker = new TalkerBean();
-			
-    		//TODO: unified way of parsing everything?
-			followerTalker.setId(followerDBObject.get("_id").toString());
-			followerTalker.setUserName(followerDBObject.get("uname").toString());
-			followerTalker.setEmail((String)followerDBObject.get("email"));
-			followerTalker.setBio((String)followerDBObject.get("bio"));
-			followerTalker.parseEmailSettings(followerTalker.parseStringList(followerDBObject.get("email_settings")));
-			
+    		followerTalker.parseBasicFromDB(followerDBObject);
 			followers.add(followerTalker);
     	}
     	topic.setFollowers(followers);
@@ -240,7 +220,7 @@ public class TopicDAO {
 	}
 	
 	public static Map<String, TopicBean> queryTopics() {
-		DBCollection topicsColl = DBUtil.getCollection(TOPICS_COLLECTION);
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		List<DBObject> topicsList = 
 			topicsColl.find().sort(new BasicDBObject("disp_date", -1)).limit(20).toArray();
 		
@@ -270,17 +250,16 @@ public class TopicDAO {
 	 * TODO: store additional field - quicker access?
 	 */
 	public static int getNumberOfTopics(String talkerId) {
-		DBCollection topicsColl = DBUtil.getCollection(TOPICS_COLLECTION);
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
-		DBRef talkerRef = new DBRef(DBUtil.getDB(), TalkerDAO.TALKERS_COLLECTION, new ObjectId(talkerId));
+		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		DBObject query = new BasicDBObject("uid", talkerRef);
 
-		int numberOfTopics = topicsColl.find(query).count();
-		return numberOfTopics;
+		return topicsColl.find(query).count();
 	}
 	
 	public static String getLastTopicId() {
-		DBCollection topicsColl = DBUtil.getDB().getCollection(TOPICS_COLLECTION);
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
 		DBObject topicDBObject = topicsColl.find().sort(new BasicDBObject("cr_date", -1)).next();
 		if (topicDBObject == null) {
@@ -292,7 +271,7 @@ public class TopicDAO {
 	}
 	
 	public static List<Map<String, String>> loadTopicsForDashboard(boolean withNotifications) {
-		DBCollection topicsColl = DBUtil.getDB().getCollection(TOPICS_COLLECTION);
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		DateFormat dateFormat = new SimpleDateFormat("MM.dd.yyyy HH:mm:ss");
 		
 		List<DBObject> topicsDBList = topicsColl.find().sort(new BasicDBObject("cr_date", -1)).toArray();
@@ -324,10 +303,6 @@ public class TopicDAO {
 			topicInfoMap.put("gender", (String)talkerDBObject.get("gender"));
 			
 			if (withNotifications) {
-				//String sqlStatement4 = 
-				//	"SELECT COUNT(*) FROM topics 
-				//	RIGHT JOIN noti_history ON topics.topic_id = noti_history.topic_id 
-				//	WHERE topics.topic_id = " + con3.getRs().getInt("topics.topic_id");
 				int notificationsNum = NotificationDAO.getNotiNumByTopic(topicInfoMap.get("topicId"));
 				topicInfoMap.put("notificationsNum", ""+notificationsNum);
 			}
@@ -339,7 +314,7 @@ public class TopicDAO {
 	}
 	
 	public static void incrementTopicViews(String topicId) {
-		DBCollection topicsColl = DBUtil.getDB().getCollection(TOPICS_COLLECTION);
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
 		DBObject topicIdDBObject = new BasicDBObject("_id", new ObjectId(topicId));
 		topicsColl.update(topicIdDBObject, 
@@ -348,9 +323,9 @@ public class TopicDAO {
 	
 	//Load topics for given activity type
 	public static List<TopicBean> loadTopics(String talkerId, String type) {
-		DBCollection activitiesColl = DBUtil.getCollection(ActivityDAO.ACTIVITIES_COLLECTION);
+		DBCollection activitiesColl = getCollection(ActivityDAO.ACTIVITIES_COLLECTION);
 		
-		DBRef talkerRef = new DBRef(DBUtil.getDB(), TalkerDAO.TALKERS_COLLECTION, new ObjectId(talkerId));
+		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("uid", talkerRef)
 			.add("type", type)
