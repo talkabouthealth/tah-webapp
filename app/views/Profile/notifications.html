@@ -17,26 +17,65 @@
 	}
 	
 	#emailstable td {
-		padding: 10px;
+		padding: 7px;
 		font-size: 14px;
 	}
 </style>
 
 <script type="text/javascript" charset="utf-8">
 	$(document).ready(function() {
-		$("#verificationResendLink").click(function() {
+		$(".verificationResendLink").live("click", function() {
 			$(this).html("Sending...");
-			$.post("@{Profile.resendVerificationEmail()}", {},
+			var email = $(this).attr("title");
+			var verificationLink = $(this);
+			var verificationResult = $(this).next("span");
+			$.post("@{Profile.resendVerificationEmail()}", 
+				{email: email},
 				function(data) {
-					$("#verificationResendLink").hide();
-					$("#verificationResendResult").html(data).show();
+					verificationLink.hide();
+					verificationResult.html(data).show();
 				}
 			);
 			return false;
 		});
 
 		$("#newEmailBtn").click(function() {
-			
+			$("#emailError").html("");
+			var newEmail = $("#newEmail").val();
+			$.post("@{Profile.addEmail()}", 
+				{newEmail : newEmail},
+				function(data) {
+					if (data.indexOf("<tr>") == 0) {
+						$("#newEmail").val("");
+						$("#addEmailForm").hide();
+
+						$(data).appendTo($("#emailstable"));
+					}
+					else {
+						$("#emailError").html(data);
+					}
+				}
+			);
+		});
+
+		$(".makePrimaryLink").live("click", function() {
+			var email = $(this).attr("title");
+			$("#newPrimaryEmail").val(email);
+
+			$("#changePrimaryForm").submit();
+		});
+
+		$(".deleteEmailLink").live("click", function() {
+			var email = $(this).attr("title");
+			//remove raw in the table
+			$(this).parent().parent().remove();
+			$.post("@{Profile.deleteEmail()}", 
+				{email : email},
+				function(data) {
+					
+				},
+				"json"
+			);
 		});
 	});
 </script>
@@ -54,7 +93,8 @@
 	</div>
 	<div id="innerbanner"></div>
 	<div id="innermain">
-	<form id="primaryIM" name="setPrimaryIM" action="@{Profile.saveAccounts()}#accountsform" method="post">
+	<form id="changePrimaryForm" action="@{Profile.makePrimaryEmail()}" method="POST">
+		<input type="hidden" id="newPrimaryEmail" name="newPrimaryEmail" />
 		<div class="blacktext2" id="innerheading">Accounts where we notify you</div>
 		<div id="innermiddlearea">
 			<div class="notifactionboxtop"></div>
@@ -74,16 +114,27 @@
 					<div class="notiblueareatop"></div>
 					<div class="signfields2">
 						<h1>Email</h1>
-						<table id="emailstable" border="0">
-							<tr>
-								<td>${talker.email}</td>
-								<td>Primary</td>
-								<td>&nbsp;</td>
-							</tr>
-						</table>
-						<a href="#" onclick="$('#addEmailForm').toggle()">add another email address</a>
+						
+							<table id="emailstable" border="0">
+								<tr>
+									<td>${talker.email}<br/>
+										#{if talker.verifyCode != null }
+											<a href="#" title="${talker.email}"
+												class="red12 verificationResendLink">(email not verified - resend verification e-mail)</a>
+											<span id="verificationResendResult" class="blacktext12"></span>
+										#{/if}
+									</td>
+									<td>Primary</td>
+									<td>&nbsp;</td>
+								</tr>
+								#{list items: talker.emails, as: 'email' }
+									#{ profileNotificationEmail email: email /}
+								#{/list}
+							</table>
+						<a href="#" onclick="$('#addEmailForm').toggle(); return false;">add another email address</a>
 						<div id="addEmailForm" style="display:none">
-							<span class="error" id="emailerror"></span>
+							<br/>
+							<span class="error" id="emailError"></span><br/>
 							<input id="newEmail" name="newEmail" type="text" value="" size="40"/>
 							<br/>
 							<input id="newEmailBtn" type="button" value="Add email" />
@@ -95,11 +146,6 @@
 					<div class="notiblueareatop"></div>
 					<div class="signfields2">
 						<h1>IM</h1>
-						#{if talker.verifyCode != null }
-							<a href="#" id="verificationResendLink" 
-								class="red12">(email not verified - resend verification e-mail)</a>
-							<span id="verificationResendResult" class="blacktext12"></span>
-						#{/if}
 						<ul>
 						  <li>
 						  	<input name="talker.email" type="text" class="textfields" id="talker.email"

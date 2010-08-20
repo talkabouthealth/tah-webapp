@@ -41,7 +41,7 @@ public class TalkerDAO {
 	
 	public static boolean save(TalkerBean talker) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
-
+		
 		DBObject talkerDBObject = BasicDBObjectBuilder.start()
 				.add("uname", talker.getUserName())
 				.add("pass", talker.getPassword())
@@ -137,16 +137,35 @@ public class TalkerDAO {
 		return getByField("uname", userName);
 	}
 	
+	public static TalkerBean getById(String talkerId) {
+		return getByField("_id", new ObjectId(talkerId));
+	}
+	
 	public static TalkerBean getByEmail(String email) {
 		return getByField("email", email);
 	}
 	
 	public static TalkerBean getByVerifyCode(String verifyCode) {
-		return getByField("verify_code", verifyCode);
-	}
-	
-	public static TalkerBean getById(String talkerId) {
-		return getByField("_id", new ObjectId(talkerId));
+		TalkerBean talker = getByField("verify_code", verifyCode);
+		
+		//TODO: later we can use OR in Mongo?
+		if (talker == null) {
+			//check non-primary emails
+			DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+			
+			DBObject query = new BasicDBObject("emails.verify_code", verifyCode);
+			DBObject talkerDBObject = talkersColl.findOne(query);
+			
+			if (talkerDBObject == null) {
+				return null;
+			}
+			else {
+				talker = new TalkerBean();
+				talker.parseFromDB(talkerDBObject);
+			}
+		}
+		
+		return talker;
 	}
 	
 	/*
@@ -370,16 +389,25 @@ public class TalkerDAO {
 	}
 	
 	public static void saveEmail(TalkerBean talker, EmailBean email) {
+		saveOrDeleteEmail(talker, email, "$push");
+	}
+	
+	public static void deleteEmail(TalkerBean talker, EmailBean email) {
+		saveOrDeleteEmail(talker, email, "$pull");
+	}
+	
+	private static void saveOrDeleteEmail(TalkerBean talker, EmailBean email, String action) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
 		DBObject emailObject = BasicDBObjectBuilder.start()
 			.add("value", email.getValue())
-			.add("verify_code", email.getVerifyCode())
 			.get();
-		DBObject talkerObject = new BasicDBObject("$push", emailObject);
+		if (email.getVerifyCode() != null) {
+			emailObject.put("verify_code", email.getVerifyCode());
+		}
 		
 		DBObject talkerId = new BasicDBObject("_id", new ObjectId(talker.getId()));
-		talkersColl.update(talkerId, new BasicDBObject("$set", talkerObject));
+		talkersColl.update(talkerId, new BasicDBObject(action, new BasicDBObject("emails", emailObject)));
 	}
 	
 	
@@ -390,6 +418,10 @@ public class TalkerDAO {
 //		TalkerDAO.saveProfileComment("4c35dbeb5165f305eebfc5f2", "4c2cb43160adf3055c97d061", "Teeeext");
 //		TalkerDAO.loadProfileComments("4c35dbeb5165f305eebfc5f2");
 //		TalkerDAO.saveProfileReply("4c35dbeb5165f305eebfc5f2", "4c35dbeb5165f305eebfc5f2", "Reply2222");
+		
+		
+//		TalkerBean talker = TalkerDAO.getByVerifyCode("e7b279a1-7e41-4be6-8e3e-2bbb8821e57d");
+//		System.out.println(talker.getUserName());
 		
 		System.out.println("cool");
 	}

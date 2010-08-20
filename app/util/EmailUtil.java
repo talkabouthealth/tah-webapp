@@ -2,6 +2,7 @@ package util;
 
 import java.util.Map;
 
+import models.EmailBean;
 import models.TalkerBean;
 
 import com.sailthru.TriggerMailClient;
@@ -64,7 +65,15 @@ public class EmailUtil {
 		}
 		
 		//verified talker has empty Verify Code
-		return talker.getVerifyCode() == null;
+		if (talker.getEmail().equals(email)) {
+			//primary email
+			return talker.getVerifyCode() == null;
+		}
+		else {
+			//non-primary
+			EmailBean emailBean = talker.findNonPrimaryEmail(email, null);
+			return emailBean.getVerifyCode() == null;
+		}
 	}
 }
 

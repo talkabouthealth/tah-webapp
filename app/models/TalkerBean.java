@@ -8,8 +8,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import models.actions.Action;
 
@@ -108,6 +111,7 @@ public class TalkerBean implements Serializable {
 	@Required @Match(ValidateData.USER_REGEX) private String password;
 	@Required @Email private String email;
 	private String verifyCode;	//code for email verification
+	private Set<EmailBean> emails;
 	private boolean deactivated;
 	
 	//Twitter or Facebook account info
@@ -236,6 +240,7 @@ public class TalkerBean implements Serializable {
 		setUserName((String)talkerDBObject.get("uname"));
 		setPassword((String)talkerDBObject.get("pass"));
 		setEmail((String)talkerDBObject.get("email"));
+		parseEmails((Collection<DBObject>)talkerDBObject.get("emails"));
 		setVerifyCode((String)talkerDBObject.get("verify_code"));
 		setDeactivated(getBoolean(talkerDBObject.get("deactivated"))); 
 		
@@ -282,6 +287,20 @@ public class TalkerBean implements Serializable {
 		parseEmailSettings(parseStringList(talkerDBObject.get("email_settings")));
 	}
 	
+	private void parseEmails(Collection<DBObject> emailsDBList) {
+		Set<EmailBean> emailsSet = new LinkedHashSet<EmailBean>();
+		if (emailsDBList != null) {
+			for (DBObject emailDBObject : emailsDBList) {
+				String emailValue = (String)emailDBObject.get("value");
+				String verifyCode = (String)emailDBObject.get("verify_code");
+				EmailBean email = new EmailBean(emailValue, verifyCode);
+				
+				emailsSet.add(email);
+			}
+		}
+		
+		emails = emailsSet;
+	}
 	public void parseThankYous(Collection<DBObject> thankYouDBList) {
 		//TODO: move thanks you load to separate function (to prevent delays)?
 		List<ThankYouBean> thankYous = new ArrayList<ThankYouBean>();
@@ -397,6 +416,22 @@ public class TalkerBean implements Serializable {
 		else {
 			return (Integer)value;
 		}
+	}
+	
+	public EmailBean findNonPrimaryEmail(String newPrimaryEmail, String verifyCode) {
+		EmailBean nonPrimaryEmail = null;
+		for (EmailBean emailBean : getEmails()) {
+			if (emailBean.getValue().equals(newPrimaryEmail)) {
+				nonPrimaryEmail = emailBean;
+				break;
+			}
+			if (emailBean.getVerifyCode() != null 
+					&& emailBean.getVerifyCode().equals(verifyCode)) {
+				nonPrimaryEmail = emailBean;
+				break;
+			}
+		}
+		return nonPrimaryEmail;
 	}
 	
 	
@@ -659,5 +694,10 @@ public class TalkerBean implements Serializable {
 	public void setProfileCompletionValue(int profileCompletionValue) {
 		this.profileCompletionValue = profileCompletionValue;
 	}
-	
+	public Set<EmailBean> getEmails() {
+		return emails;
+	}
+	public void setEmails(Set<EmailBean> emails) {
+		this.emails = emails;
+	}
 }	

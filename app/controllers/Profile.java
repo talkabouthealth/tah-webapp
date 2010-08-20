@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import models.EmailBean;
 import models.HealthItemBean;
 import models.TalkerBean;
 import models.TalkerBean.EmailSetting;
@@ -30,6 +31,7 @@ import org.apache.commons.lang.StringUtils;
 import play.Logger;
 import play.Play;
 import play.data.validation.Valid;
+import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.Router.ActionDefinition;
 import play.mvc.With;
@@ -334,27 +336,64 @@ public class Profile extends Controller {
 		notifications();
 	}
 	
-	//ajax methods
-	public static void addEmail(String newEmail) {
-//		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-//		
-//		TalkerBean otherTalker = TalkerDAO.getByEmail(talker.getEmail());
-//		
-//		//TODO duplicates functionality? - move email creation to EmailUtil?
-//		if (!oldEmail.equals(talker.getEmail())) {
-//			//send verification email
-//			oldTalker.setVerifyCode(CommonUtil.generateVerifyCode());
-//			
-//			Map<String, String> vars = new HashMap<String, String>();
-//			vars.put("username", oldTalker.getUserName());
-//			vars.put("verify_code", oldTalker.getVerifyCode());
-//			EmailUtil.sendEmail(EmailUtil.VERIFICATION_TEMPLATE, oldTalker.getEmail(), vars, null, false);
-//		}
-//		
-//		TalkerDAO.saveEmail(talker, newEmail);
+	public static void makePrimaryEmail(String newPrimaryEmail) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		EmailBean newPrimaryEmailBean = talker.findNonPrimaryEmail(newPrimaryEmail, null);
+		notFoundIfNull(newPrimaryEmailBean);
+		
+		//delete this email from non-primary
+		TalkerDAO.deleteEmail(talker, newPrimaryEmailBean);
+		
+		//make old primary non-primary
+		TalkerDAO.saveEmail(talker, new EmailBean(talker.getEmail(), talker.getVerifyCode()));
+		
+		//set new primary
+		talker.setEmail(newPrimaryEmailBean.getValue());
+		talker.setVerifyCode(newPrimaryEmailBean.getVerifyCode());
+		TalkerDAO.updateTalker(talker);
+		
+		CommonUtil.updateCachedTalker(session);
+		notifications();
 	}
 	
+	//ajax methods
+	public static void addEmail(String newEmail) {
+		validation.email(newEmail);
+		if (validation.hasError("newEmail")) {
+			renderText(validation.error("newEmail").message());
+			return;
+		}
+		
+		TalkerBean otherTalker = TalkerDAO.getByEmail(newEmail);
+		if (otherTalker != null) {
+			renderText(Messages.get("email.exists"));
+			return;
+		}
+		
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		 
+		EmailBean email = new EmailBean(newEmail, CommonUtil.generateVerifyCode());
+		TalkerDAO.saveEmail(talker, email);
+		
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("username", talker.getUserName());
+		vars.put("verify_code", email.getVerifyCode());
+		EmailUtil.sendEmail(EmailUtil.VERIFICATION_TEMPLATE, email.getValue(), vars, null, false);
+		
+		CommonUtil.updateCachedTalker(session);
+		EmailBean _email = email;
+		render("tags/profileNotificationEmail.html", _email);
+	}
 	
+	public static void deleteEmail(String email) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		TalkerDAO.deleteEmail(talker, new EmailBean(email, null));
+		
+		CommonUtil.updateCachedTalker(session);
+		renderJSON("{\"result\" : \"ok\"}");
+	}
 	
 	/* ------------- Health Info -------------------------- */
 	public static void healthDetails() {
@@ -448,25 +487,47 @@ public class Profile extends Controller {
 	}
 	
 	public static void verifyEmail(String verifyCode) {
-		TalkerBean talker = TalkerDAO.getByVerifyCode(verifyCode);
+		notFoundIfNull(verifyCode);
 		
+		TalkerBean talker = TalkerDAO.getByVerifyCode(verifyCode);
+		//TODO: better error reply?
 		notFoundIfNull(talker);
 		
-		talker.setVerifyCode(null);
-		TalkerDAO.updateTalker(talker);
+		if (verifyCode.equals(talker.getVerifyCode())) {
+			//primary email
+			talker.setVerifyCode(null);
+			TalkerDAO.updateTalker(talker);
+		}
+		else {
+			//non-primary email
+			EmailBean emailBean = talker.findNonPrimaryEmail(null, verifyCode);
+			
+			//clear verify code in db
+			TalkerDAO.deleteEmail(talker, emailBean);
+			emailBean.setVerifyCode(null);
+			TalkerDAO.saveEmail(talker, emailBean);
+		}
 		
 		CommonUtil.updateCachedTalker(session);
-		
 		render();
 	}
 	
-	public static void resendVerificationEmail() {
+	public static void resendVerificationEmail(String email) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		String verifyCode = talker.getVerifyCode();
+		if (!talker.getEmail().equals(email)) {
+			//resend for non-primary email
+			EmailBean nonPrimaryEmail = talker.findNonPrimaryEmail(email, null);
+			notFoundIfNull(nonPrimaryEmail);
+			
+			verifyCode = nonPrimaryEmail.getVerifyCode();
+		}
 		
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("username", talker.getUserName());
-		vars.put("verify_code", talker.getVerifyCode());
-		EmailUtil.sendEmail(EmailUtil.VERIFICATION_TEMPLATE, talker.getEmail(), vars, null, false);
+		vars.put("verify_code", verifyCode);
+		EmailUtil.sendEmail(EmailUtil.VERIFICATION_TEMPLATE, email, vars, null, false);
 		
 		renderText("Ok! Email sent.");
 	}

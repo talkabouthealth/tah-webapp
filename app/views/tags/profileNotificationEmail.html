@@ -1,0 +1,14 @@
+<tr>
+	<td>
+		${_email.value}<br/>
+		#{if _email.verifyCode != null }
+			<a href="#" title="${_email.value}" 
+				class="red12 verificationResendLink">(email not verified - resend verification e-mail)</a>
+			<span id="verificationResendResult" class="blacktext12"></span>
+		#{/if}
+	</td>
+	<td>
+		<a href="#" title="${_email.value}" class="makePrimaryLink">make primary</a>
+	</td>
+	<td><a href="#" title="${_email.value}" class="deleteEmailLink">delete</a></td>
+</tr>

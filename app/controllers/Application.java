@@ -84,7 +84,7 @@ public class Application extends Controller {
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("username", user.getUserName());
 		vars.put("newpassword", newPassword);
-		boolean result = EmailUtil.sendEmail(EmailUtil.FORGOT_PASSWORD_TEMPLATE, user.getEmail(), vars);
+		boolean result = EmailUtil.sendEmail(EmailUtil.FORGOT_PASSWORD_TEMPLATE, email, vars);
 		
 		validation.isTrue(result).message("Not verified email or unknown error. " +
 				"Please contact support at <a href=\"mailto:"+EmailUtil.SUPPORT_EMAIL+"\">"+EmailUtil.SUPPORT_EMAIL+"</a>");
@@ -131,7 +131,7 @@ public class Application extends Controller {
 		}
 
 		//Successful signup!
-		CommonUtil.sendIMInvitation(talker.getIm(), talker.getUserName());
+		CommonUtil.sendIMInvitation(talker.getIm(), talker.getImUsername());
 		
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("username", talker.getUserName());
