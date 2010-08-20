@@ -168,6 +168,10 @@ public class TalkerBean implements Serializable {
 	private EnumSet<ProfilePreference> profilePreferences;
 	private EnumSet<EmailSetting> emailSettings;
 	
+	//variable for displaying
+	private String profileCompletionMessage;
+	private int profileCompletionValue;
+	
 	public TalkerBean(){}
 	public TalkerBean(String id) {
 		this.id = id;
@@ -642,4 +646,18 @@ public class TalkerBean implements Serializable {
 
 	public List<ThankYouBean> getThankYouList() { return thankYouList; }
 	public void setThankYouList(List<ThankYouBean> thankYouList) { this.thankYouList = thankYouList; }
+
+	public String getProfileCompletionMessage() {
+		return profileCompletionMessage;
+	}
+	public void setProfileCompletionMessage(String profileCompletionMessage) {
+		this.profileCompletionMessage = profileCompletionMessage;
+	}
+	public int getProfileCompletionValue() {
+		return profileCompletionValue;
+	}
+	public void setProfileCompletionValue(int profileCompletionValue) {
+		this.profileCompletionValue = profileCompletionValue;
+	}
+	
 }	

@@ -41,5 +41,7 @@ public interface Action {
 	public DBObject toDBObject();
 	
 	public Date getTime();
+	
+	public String getType();
 
 }

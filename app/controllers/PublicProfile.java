@@ -1,5 +1,6 @@
 package controllers;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,15 @@ import models.HealthItemBean;
 import models.TalkerBean;
 import models.TalkerDiseaseBean;
 import models.TopicBean;
+import models.actions.Action;
+import models.actions.FollowConvoAction;
+import models.actions.FollowTalkerAction;
+import models.actions.GiveThanksAction;
+import models.actions.JoinConvoAction;
+import models.actions.ProfileCommentAction;
+import models.actions.ProfileReplyAction;
+import models.actions.StartConvoAction;
+import models.actions.UpdateProfileAction;
 import dao.ActivityDAO;
 import dao.CommentsDAO;
 import dao.HealthItemDAO;
@@ -30,7 +40,7 @@ public class PublicProfile extends Controller {
 		FOLLOW(10, "Follow another member to get to "),
 		COMPLETE_PERSONAL(15, "Complete your Personal Info to get to "),
 		COMPLETE_HEALTH(10, "Complete your Health Details to get to "),
-		WRITE_SUMMARY(5, "Write a Summary of a Conversation to get to ");
+		WRITE_SUMMARY(5, "Write or edit a summary of a Conversation to get to ");
 		
 		private final int value;
 		private final String description;
@@ -39,7 +49,14 @@ public class PublicProfile extends Controller {
 			this.value = value;
 			this.description = description;
 		}
-		
+
+		public int getValue() {
+			return value;
+		}
+
+		public String getDescription() {
+			return description;
+		}
 	}
 	
 	public static void view(String userName) {
@@ -74,10 +91,71 @@ public class PublicProfile extends Controller {
 		//TODO: Temporarily - later we'll load all list of topics
 		talker.setNumberOfTopics(TopicDAO.getNumberOfTopics(talker.getId()));
 		
+		calculateProfileCompletion(talker);
+		
 		render(talker, talkerDisease, healthItemsMap, currentTalker);
 	}
 	
-	
+	private static void calculateProfileCompletion(TalkerBean talker) {
+		//check what items are completed
+		EnumSet<ProfileCompletion> profileActions = EnumSet.of(ProfileCompletion.BASIC);
+		
+		//TODO: finish this items
+//		COMMENT_CONVO(10, "Comment on a Conversation to get to "),
+//		WRITE_SUMMARY(5, "Write or edit a summary of a Conversation to get to ");
+		
+		//TODO: if user deletes info after entering?
+//		COMPLETE_PERSONAL(15, "Complete your Personal Info to get to "),
+//		COMPLETE_HEALTH(10, "Complete your Health Details to get to "),
+		
+		for (Action action : talker.getActivityList()) {
+			String type = action.getType();
+			if (type.equals("START_CONVO")) {
+				profileActions.add(ProfileCompletion.START_CONVO);
+			}
+			else if (type.equals("JOIN_CONVO")) {
+				profileActions.add(ProfileCompletion.JOIN_CONVO);
+			}
+			else if (type.equals("GIVE_THANKS")) {
+				profileActions.add(ProfileCompletion.GIVE_THANKYOU);
+			}
+			else if (type.equals("UPDATE_PERSONAL")) {
+				profileActions.add(ProfileCompletion.COMPLETE_PERSONAL);
+			}
+			else if (type.equals("UPDATE_HEALTH")) {
+				profileActions.add(ProfileCompletion.COMPLETE_HEALTH);
+			}
+		}
+		
+		if (!talker.getFollowingList().isEmpty()) {
+			profileActions.add(ProfileCompletion.FOLLOW);
+		}
+		
+		
+		//calculate current sum and next item to complete
+		ProfileCompletion nextItem = null;
+		int sum = 0;
+		for (ProfileCompletion profileCompletion : ProfileCompletion.values()) {
+			if (profileActions.contains(profileCompletion)) {
+				sum += profileCompletion.getValue();
+			}
+			else {
+				if (nextItem == null) {
+					nextItem = profileCompletion;
+				}
+			}
+		}
+		String message = null;
+		if (sum != 100) {
+			int nextSum = sum + nextItem.getValue();
+			message = nextItem.getDescription()+" "+nextSum+"%.";
+		}
+		
+		talker.setProfileCompletionMessage(message);
+		talker.setProfileCompletionValue(sum);
+	}
+
+
 	public static void userBasedActions(String userName, String action) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByUserName(userName);

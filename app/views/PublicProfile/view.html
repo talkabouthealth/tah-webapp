@@ -222,6 +222,41 @@
 								</div>
 								<div class="proleftwhitebot"></div>
 							</div>
+							
+							<div class="proleftwhite">
+								<div class="proleftwhitetop"></div>
+								<div class="proleftwhitemid">
+									<div class="followarea">
+										<div class="profileheading">Profile Completion</div>
+										<div class="profileimgtext">
+											<style type="text/css">
+												#profilebar {
+													width: 200px;
+													height: 20px;
+													border: 1px solid #000000;
+												}
+												#profileprogress {
+													background-color: #0000FF;
+													padding-left: 5px;
+													line-height: 20px;
+													width: ${2*talker.profileCompletionValue}px;
+													height: 100%;
+												}
+											</style>
+											<div id="profilebar">
+												<div id="profileprogress">
+													<span class="whitetext12">${talker.profileCompletionValue}%</span>
+												</div>
+											</div>
+											<span class="blacktext14">
+												${talker.profileCompletionMessage}
+											</span>
+										</div>
+									</div>
+								</div>
+								<div class="proleftwhitebot"></div>
+							</div>
+							
 							#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
 							<div class="proleftwhite">
 								<div class="proleftwhitetop"></div>
@@ -524,7 +559,7 @@
 						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.ACTIVITY_STREAM) 
 								&& talker.activityList}
 							<div class="prosubheading">
-								<div class="profileheading">${talker.userName} Activities</div>
+								<div class="profileheading">${talker.userName} Activities (${talker.activityList.size()})</div>
 								<div class="seeall"><a href="#" class="bluetext12"><strong>see all</strong></a></div>
 							</div>
 							<div class="activitiestext">
