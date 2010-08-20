@@ -16,6 +16,7 @@ import java.util.Map;
 
 import models.CommentBean;
 import models.EmailBean;
+import models.IMAccountBean;
 import models.TalkerBean;
 import models.ThankYouBean;
 import models.TopicBean;
@@ -143,7 +144,25 @@ public class TalkerDAO {
 	}
 	
 	public static TalkerBean getByEmail(String email) {
-		return getByField("email", email);
+		TalkerBean talker = getByField("email", email);
+		
+		if (talker == null) {
+			//check non-primary emails
+			DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+			
+			DBObject query = new BasicDBObject("emails.value", email);
+			DBObject talkerDBObject = talkersColl.findOne(query);
+			
+			if (talkerDBObject == null) {
+				return null;
+			}
+			else {
+				talker = new TalkerBean();
+				talker.parseFromDB(talkerDBObject);
+			}
+		}
+		
+		return talker;
 	}
 	
 	public static TalkerBean getByVerifyCode(String verifyCode) {
@@ -188,16 +207,7 @@ public class TalkerDAO {
 		}
 	}
 	
-	/**
-	 * For now, there will only be the breast cancer community,
-	 * so this method returns total number of users (talkers) in the DB.
-	 */
-	public static long getNumberOfTalkers() {
-		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
-		return talkersColl.count();
-	}
-	
-	public static TalkerBean getTalkerByLoginInfo(String usernameOrEmail, String password) {
+	public static TalkerBean getByLoginInfo(String usernameOrEmail, String password) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
 		DBObject query = new BasicDBObject();
@@ -228,7 +238,7 @@ public class TalkerDAO {
 		return talker;
 	}
 	
-	public static TalkerBean getTalkerByAccount(String accountType, String accountId) {
+	public static TalkerBean getByAccount(String accountType, String accountId) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
 		DBObject query = new BasicDBObject();
@@ -244,6 +254,25 @@ public class TalkerDAO {
 			talker.parseFromDB(talkerDBObject);
 			return talker;
 		}
+	}
+	
+	public static TalkerBean getByIMAccount(IMAccountBean imAccount) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		
+		DBObject imAccountDBObject = BasicDBObjectBuilder.start()
+			.add("uname", imAccount.getUserName())
+			.add("service", imAccount.getService())
+			.get();
+		DBObject query = new BasicDBObject("im_accounts", imAccountDBObject);
+		DBObject talkerDBObject = talkersColl.findOne(query);
+		
+		if (talkerDBObject == null) {
+			return null;
+		}
+		
+		TalkerBean talker = new TalkerBean();
+		talker.parseFromDB(talkerDBObject);
+		return talker;
 	}
 	
 	
@@ -263,6 +292,7 @@ public class TalkerDAO {
 	}
 	
 	public static List<Map<String, String>> loadTalkersForDashboard() {
+		//FIXME: rework it for normal TalkerBean !
 		DBCollection talkersColl = getDB().getCollection(TALKERS_COLLECTION);
 		DateFormat dateFormat = new SimpleDateFormat("MM.dd.yyyy HH:mm:ss");
 		
@@ -274,10 +304,10 @@ public class TalkerDAO {
 			Map<String, String> talkerInfoMap = new HashMap<String, String>();
 			
 			talkerInfoMap.put("id", talkerDBObject.get("_id").toString());
-			talkerInfoMap.put("uname", talkerDBObject.get("uname").toString());
-			talkerInfoMap.put("email", talkerDBObject.get("email").toString());
-			talkerInfoMap.put("imService", talkerDBObject.get("im").toString());
-			talkerInfoMap.put("imUsername", talkerDBObject.get("im_uname").toString());
+			talkerInfoMap.put("uname", (String)talkerDBObject.get("uname"));
+			talkerInfoMap.put("email", (String)talkerDBObject.get("email"));
+//			talkerInfoMap.put("imService", talkerDBObject.get("im").toString());
+//			talkerInfoMap.put("imUsername", talkerDBObject.get("im_uname").toString());
 			
 			Date latestNotification = NotificationDAO.getLatestNotification(talkerInfoMap.get("id"));
 			if (latestNotification != null) {
@@ -312,6 +342,15 @@ public class TalkerDAO {
 		}
 		
 		return (byte[])talkerDBObject.get("img");
+	}
+	
+	/**
+	 * For now, there will only be the breast cancer community,
+	 * so this method returns total number of users (talkers) in the DB.
+	 */
+	public static long getNumberOfTalkers() {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		return talkersColl.count();
 	}
 	
 	

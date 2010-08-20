@@ -91,7 +91,7 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			}
 			
 			//login or signup
-	        TalkerBean talker = TalkerDAO.getTalkerByAccount("facebook", accountId);
+	        TalkerBean talker = TalkerDAO.getByAccount("facebook", accountId);
 	        if (talker != null) {
 	        	// insert login record into db
 				ApplicationDAO.saveLogin(talker.getId());

@@ -108,8 +108,6 @@ public class Application extends Controller {
     }
     
     public static void register(@Valid TalkerBean talker, String newTopic) {
-    	System.out.println("HERE??");
-    	
 		validateTalker(talker);
 		
 //		System.out.println(validation.errorsMap());
@@ -166,16 +164,24 @@ public class Application extends Controller {
 		}
 		
 		if (!validation.hasError("talker.userName")) {
-			TalkerBean tmpTalker = TalkerDAO.getByUserName(talker.getUserName());
-			validation.isTrue(tmpTalker == null).message("username.exists");
+			TalkerBean otherTalker = TalkerDAO.getByUserName(talker.getUserName());
+			validation.isTrue(otherTalker == null).message("username.exists");
 
 			String lowUserName = talker.getUserName().toLowerCase();
 			validation.isTrue(!RESERVED_WORDS.contains(lowUserName)).message("username.reserved");
 		}
 		if (!validation.hasError("talker.email")) {
-			TalkerBean tmpTalker = TalkerDAO.getByEmail(talker.getEmail());
-			validation.isTrue(tmpTalker == null).message("email.exists");
+			TalkerBean otherTalker = TalkerDAO.getByEmail(talker.getEmail());
+			validation.isTrue(otherTalker == null).message("email.exists");
 		}
+		
+		String imService = talker.getIm();
+        String imUsername = talker.getImUsername();
+        if (!imService.isEmpty() && !imUsername.trim().isEmpty()) {
+        	IMAccountBean imAccount = new IMAccountBean(imUsername, imService);
+        	TalkerBean otherTalker = TalkerDAO.getByIMAccount(imAccount);
+        	validation.isTrue(otherTalker == null).message("imaccount.exists");
+        }
 	}
 
     /**
@@ -195,7 +201,6 @@ public class Application extends Controller {
         	if (imUsername.trim().isEmpty()) {
     			int atIndex = talker.getEmail().indexOf('@');
     			imUsername = talker.getEmail().substring(0, atIndex);
-    			talker.setImUsername(imUsername);
     		}
         	
         	IMAccountBean imAccount = new IMAccountBean(imUsername, imService);

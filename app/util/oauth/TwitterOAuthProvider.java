@@ -118,7 +118,7 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
         br.close();
         
         //login or signup
-        TalkerBean talker = TalkerDAO.getTalkerByAccount("twitter", accountId);
+        TalkerBean talker = TalkerDAO.getByAccount("twitter", accountId);
         if (talker != null) {
         	// insert login record into db
         	ApplicationDAO.saveLogin(talker.getId());

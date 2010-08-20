@@ -362,15 +362,16 @@ public class Profile extends Controller {
 	}
 	
 	public static void addIMAccount(String imUserName, String imService) {
-		//TODO: same IM account?
-//		TalkerBean otherTalker = TalkerDAO.getByEmail(newEmail);
-//		if (otherTalker != null) {
-//			renderText(Messages.get("email.exists"));
-//			return;
-//		}
+    	IMAccountBean imAccount = new IMAccountBean(imUserName, imService);
+    	//check if such IM account exists
+    	TalkerBean otherTalker = TalkerDAO.getByIMAccount(imAccount);
+    	if (otherTalker != null) {
+			renderText(Messages.get("imaccount.exists"));
+			return;
+		}
+        
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-		IMAccountBean imAccount = new IMAccountBean(imUserName, imService);
 		talker.getImAccounts().add(imAccount);
 		
 		TalkerDAO.updateTalker(talker);
@@ -390,7 +391,6 @@ public class Profile extends Controller {
 		
 		String[] imArray = imId.split("\\|");
 		IMAccountBean imAccount = new IMAccountBean(imArray[0], imArray[1]);
-		System.out.println(imAccount);
 		talker.getImAccounts().remove(imAccount);
 		
 		TalkerDAO.updateTalker(talker);

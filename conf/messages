@@ -19,6 +19,8 @@ emails.noinvites = Sorry, you don't have enough invites
 password.currentbad = Current password is wrong.
 password.different = New and Confirm passwords are different.
 
+imaccount.exists = This IM account is already registered. Please enter a different one.
+
 # Talker fields
 talker.userName = Username
 talker.password = Password

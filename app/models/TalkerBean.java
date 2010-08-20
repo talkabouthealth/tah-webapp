@@ -239,8 +239,6 @@ public class TalkerBean implements Serializable {
 		setVerifyCode((String)talkerDBObject.get("verify_code"));
 		setDeactivated(getBoolean(talkerDBObject.get("deactivated"))); 
 		
-		setIm((String)talkerDBObject.get("im"));
-		setImUsername((String)talkerDBObject.get("im_uname"));
 		parseIMAccounts((Collection<DBObject>)talkerDBObject.get("im_accounts"));
 		
 		setNewsletter((Boolean)talkerDBObject.get("newsletter"));
@@ -308,12 +306,6 @@ public class TalkerBean implements Serializable {
 				
 				imAccountsSet.add(imAccount);
 			}
-		}
-		
-		//FIXME: to convert old IMs to new IM format
-		if (getImUsername() != null) {
-			IMAccountBean imAccount = new IMAccountBean(getImUsername(), getIm());
-			imAccountsSet.add(imAccount);
 		}
 		
 		imAccounts = imAccountsSet;

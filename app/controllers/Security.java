@@ -16,7 +16,7 @@ public class Security extends Secure.Security {
     	}
     	
     	TalkerBean talker = 
-    		TalkerDAO.getTalkerByLoginInfo(usernameOrEmail, CommonUtil.hashPassword(password));
+    		TalkerDAO.getByLoginInfo(usernameOrEmail, CommonUtil.hashPassword(password));
     	return talker != null;
     }
     
