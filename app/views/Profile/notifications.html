@@ -16,7 +16,7 @@
 		font-size:12px;
 	}
 	
-	#emailstable td {
+	#emailstable td, #imstable td {
 		padding: 7px;
 		font-size: 14px;
 	}
@@ -24,6 +24,7 @@
 
 <script type="text/javascript" charset="utf-8">
 	$(document).ready(function() {
+		// ------------ Emails --------------
 		$(".verificationResendLink").live("click", function() {
 			$(this).html("Sending...");
 			var email = $(this).attr("title");
@@ -77,6 +78,49 @@
 				"json"
 			);
 		});
+
+		// ------------ IM Accounts --------------
+		$("#newIMBtn").click(function() {
+			$("#imError").html("");
+			var imUserName = $("#imUserName").val();
+			var imService = $("#imService").val();
+
+			if (imService.length == 0) {
+				alert("Please choose IM Service");
+				return;
+			}
+			
+			if (imUserName.length == 0) {
+				alert("Please enter correct IM Username");
+				return;
+			}
+
+			$.post("@{Profile.addIMAccount()}", 
+				{imUserName : imUserName, imService : imService},
+				function(data) {
+					if (data.indexOf("<tr>") == 0) {
+						$("#imUserName").val("");
+						$("#imService").val("");
+						$("#addIMForm").hide();
+
+						$(data).appendTo($("#imstable"));
+					}
+					else {
+						$("#emailError").html(data);
+					}
+				}
+			);
+		});
+
+		$(".deleteIMLink").live("click", function() {
+			var imId = $(this).attr("rel");
+			//remove raw in the table
+			$(this).parent().parent().remove();
+			$.post("@{Profile.deleteIMAccount()}", 
+				{imId : imId},
+				function(data) {}
+			);
+		});
 	});
 </script>
 
@@ -114,23 +158,22 @@
 					<div class="notiblueareatop"></div>
 					<div class="signfields2">
 						<h1>Email</h1>
-						
-							<table id="emailstable" border="0">
-								<tr>
-									<td>${talker.email}<br/>
-										#{if talker.verifyCode != null }
-											<a href="#" title="${talker.email}"
-												class="red12 verificationResendLink">(email not verified - resend verification e-mail)</a>
-											<span id="verificationResendResult" class="blacktext12"></span>
-										#{/if}
-									</td>
-									<td>Primary</td>
-									<td>&nbsp;</td>
-								</tr>
-								#{list items: talker.emails, as: 'email' }
-									#{ profileNotificationEmail email: email /}
-								#{/list}
-							</table>
+						<table id="emailstable" border="0">
+							<tr>
+								<td>${talker.email}<br/>
+									#{if talker.verifyCode != null }
+										<a href="#" title="${talker.email}"
+											class="red12 verificationResendLink">(email not verified - resend verification e-mail)</a>
+										<span id="verificationResendResult" class="blacktext12"></span>
+									#{/if}
+								</td>
+								<td>Primary</td>
+								<td>&nbsp;</td>
+							</tr>
+							#{list items: talker.emails, as: 'email' }
+								#{ profileNotificationEmail email: email /}
+							#{/list}
+						</table>
 						<a href="#" onclick="$('#addEmailForm').toggle(); return false;">add another email address</a>
 						<div id="addEmailForm" style="display:none">
 							<br/>
@@ -146,18 +189,31 @@
 					<div class="notiblueareatop"></div>
 					<div class="signfields2">
 						<h1>IM</h1>
-						<ul>
-						  <li>
-						  	<input name="talker.email" type="text" class="textfields" id="talker.email"
-						  		value="${talker.email}"/>
-						  </li>
-						</ul>
+						<table id="imstable" border="0">
+							#{list items: talker.imAccounts, as: 'imAccount' }
+								#{ profileNotificationIM imAccount: imAccount /}
+							#{/list}
+						</table>
+						<a href="#" onclick="$('#addIMForm').toggle(); return false;">add another IM account</a>
+						<div id="addIMForm" style="display:none">
+							<br/>
+							<span class="error" id="imError"></span><br/>
+							<select id="imService" name="imService" class="personalfields">
+						  		<option selected value=''>Select an IM service</option>
+								#{list items: models.IMAccountBean.IM_SERVICES_MAP.keySet(), as:'imService'}
+								    <option value="${imService}" 
+								    #{if flash['talker.im'].equals(imService) } selected #{/if} 
+								    >${models.IMAccountBean.IM_SERVICES_MAP.get(imService)}</option>
+								#{/list}
+							</select>
+							<br/>
+							<input id="imUserName" name="imUserName" type="text" value="" size="40"/>
+							<br/>
+							<input id="newIMBtn" type="button" value="Add IM account" />
+						</div>
 					</div>
 					<div class="notiblueareabot"></div>
 				</div>
-<!-- <div id="savebutton"><img src="/public/images/save.gif" width="186" height="46" /></div> -->
-				<input id="submit" name="submit1" type="image" src="/public/images/save.gif" value="save changes"> 
-				
 			</div>
 			<div class="notifactionboxbot"></div>
 		</div>

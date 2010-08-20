@@ -23,6 +23,7 @@ import play.data.validation.Match;
 import play.data.validation.Required;
 import util.ValidateData;
 
+import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
@@ -33,13 +34,6 @@ public class TalkerBean implements Serializable {
 		"New born", "1-2 years old", "2-6 years old", 
 		"6-12 years old", "12-18 years old", "Over 18 years old"
 	};
-	
-	public static final Map<String, String> IM_SERVICES_MAP = new HashMap<String, String>();
-	static {
-		IM_SERVICES_MAP.put("YahooIM", "Yahoo IM / Yahoo Messenger");
-		IM_SERVICES_MAP.put("GoogleTalk", "GoogleTalk / Gmail Chat / Gchat");
-		IM_SERVICES_MAP.put("WindowLive", "Windows Live Messenger");
-	}
 	
 	public static final String[] CONNECTIONS_ARRAY = new String[] {
 		"Patient", "Former Patient", "Parent", "Caregiver", "Family member", "Friend", 
@@ -120,6 +114,7 @@ public class TalkerBean implements Serializable {
 
 	private String im;
 	private String imUsername;
+	private Set<IMAccountBean> imAccounts;
 	
 	private Date dob;
 	private int dobMonth;
@@ -221,7 +216,7 @@ public class TalkerBean implements Serializable {
 		this.emailSettings = emailSettings;
 	}
 	
-	// ----=================== Parse information from DB =================----
+	// ----=================== Parse/Save information from/to DB =================----
 	public void parseBasicFromDB(DBObject talkerDBObject) {
 		setId(talkerDBObject.get("_id").toString());
 		setUserName(talkerDBObject.get("uname").toString());
@@ -246,6 +241,7 @@ public class TalkerBean implements Serializable {
 		
 		setIm((String)talkerDBObject.get("im"));
 		setImUsername((String)talkerDBObject.get("im_uname"));
+		parseIMAccounts((Collection<DBObject>)talkerDBObject.get("im_accounts"));
 		
 		setNewsletter((Boolean)talkerDBObject.get("newsletter"));
 		setGender((String)talkerDBObject.get("gender"));
@@ -301,6 +297,44 @@ public class TalkerBean implements Serializable {
 		
 		emails = emailsSet;
 	}
+	
+	private void parseIMAccounts(Collection<DBObject> imAccountsDBList) {
+		Set<IMAccountBean> imAccountsSet = new LinkedHashSet<IMAccountBean>();
+		if (imAccountsDBList != null) {
+			for (DBObject emailDBObject : imAccountsDBList) {
+				String userName = (String)emailDBObject.get("uname");
+				String service = (String)emailDBObject.get("service");
+				IMAccountBean imAccount = new IMAccountBean(userName, service);
+				
+				imAccountsSet.add(imAccount);
+			}
+		}
+		
+		//FIXME: to convert old IMs to new IM format
+		if (getImUsername() != null) {
+			IMAccountBean imAccount = new IMAccountBean(getImUsername(), getIm());
+			imAccountsSet.add(imAccount);
+		}
+		
+		imAccounts = imAccountsSet;
+	}
+	
+	public List<DBObject> imAccountsToDB() {
+		List<DBObject> dbList = new ArrayList<DBObject>();
+		
+		if (imAccounts != null) {
+			for (IMAccountBean imAccount : imAccounts) {
+				DBObject imAccountDBObject = BasicDBObjectBuilder.start()
+					.add("uname", imAccount.getUserName())
+					.add("service", imAccount.getService())
+					.get();
+				dbList.add(imAccountDBObject);
+			}
+		}
+		
+		return dbList;
+	}
+	
 	public void parseThankYous(Collection<DBObject> thankYouDBList) {
 		//TODO: move thanks you load to separate function (to prevent delays)?
 		List<ThankYouBean> thankYous = new ArrayList<ThankYouBean>();
@@ -699,5 +733,11 @@ public class TalkerBean implements Serializable {
 	}
 	public void setEmails(Set<EmailBean> emails) {
 		this.emails = emails;
+	}
+	public Set<IMAccountBean> getImAccounts() {
+		return imAccounts;
+	}
+	public void setImAccounts(Set<IMAccountBean> imAccounts) {
+		this.imAccounts = imAccounts;
 	}
 }	

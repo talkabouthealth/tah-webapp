@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -17,6 +18,7 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.PropertyConfigurator;
 
+import models.IMAccountBean;
 import models.TalkerBean;
 import models.TalkerBean.ProfilePreference;
 import play.Logger;
@@ -131,7 +133,11 @@ public class Application extends Controller {
 		}
 
 		//Successful signup!
-		CommonUtil.sendIMInvitation(talker.getIm(), talker.getImUsername());
+        if (talker.getImAccounts() != null) {
+        	for (IMAccountBean imAccount : talker.getImAccounts()) {
+        		CommonUtil.sendIMInvitation(imAccount);
+        	}
+        }
 		
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("username", talker.getUserName());
@@ -178,18 +184,23 @@ public class Application extends Controller {
 	private static void prepareTalker(TalkerBean talker, Session session) {
 		talker.setInvitations(100);
 		
-		//check if user signed up through Twitter or Facebook
+		//if user signed up through Twitter or Facebook
 		talker.setAccountType(session.get("accounttype"));
 		talker.setAccountId(session.get("accountid"));
 		
-		//TODO: imUsername should be without '@' symbol! && check IMService also?
+		String imService = talker.getIm();
         String imUsername = talker.getImUsername();
-        if (imUsername.trim().length() == 0) {
-			//if user didn't enter it - we parse from email
-			int atIndex = talker.getEmail().indexOf('@');
-			imUsername = talker.getEmail().substring(0, atIndex);
-			talker.setImUsername(imUsername);
-		}
+        if (!imService.isEmpty()) {
+        	//if userName empty - parse from email
+        	if (imUsername.trim().isEmpty()) {
+    			int atIndex = talker.getEmail().indexOf('@');
+    			imUsername = talker.getEmail().substring(0, atIndex);
+    			talker.setImUsername(imUsername);
+    		}
+        	
+        	IMAccountBean imAccount = new IMAccountBean(imUsername, imService);
+        	talker.setImAccounts(new HashSet<IMAccountBean>(Arrays.asList(imAccount)));
+        }
         
         /*
          	TODO: save settings as enums in App and Strings in DB?

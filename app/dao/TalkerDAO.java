@@ -50,8 +50,8 @@ public class TalkerDAO {
 				
 				.add("dob", talker.getDob())
 				.add("timestamp",  Calendar.getInstance().getTime())
-				.add("im", talker.getIm())
-				.add("im_uname", talker.getImUsername())
+				
+				.add("im_accounts", talker.imAccountsToDB())
 				
 				.add("connection", talker.getConnection())
 				.add("connection_verified", talker.isConnectionVerified())
@@ -70,6 +70,8 @@ public class TalkerDAO {
 				.get();
 
 		talkersColl.save(talkerDBObject);
+		
+		talker.setId(talkerDBObject.get("_id").toString());
 		return true;
 	}
 	
@@ -86,8 +88,7 @@ public class TalkerDAO {
 			.add("connection", talker.getConnection())
 			.add("connection_verified", talker.isConnectionVerified())
 			
-			.add("im", talker.getIm())
-			.add("im_uname", talker.getImUsername())
+			.add("im_accounts", talker.imAccountsToDB())
 			
 			.add("dob", talker.getDob())
 			.add("gender", talker.getGender())
@@ -388,6 +389,7 @@ public class TalkerDAO {
 		return followingTopicsList;
 	}
 	
+	//TODO: move to update talker?
 	public static void saveEmail(TalkerBean talker, EmailBean email) {
 		saveOrDeleteEmail(talker, email, "$push");
 	}

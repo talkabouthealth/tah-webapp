@@ -21,6 +21,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 
+import models.IMAccountBean;
 import models.TalkerBean;
 import play.cache.Cache;
 import play.mvc.Scope.Session;
@@ -93,15 +94,12 @@ public class CommonUtil {
 	}
 
 	//Send IM invitation through Dashboard application
-	public static void sendIMInvitation(String imService, String imUsername) {
-		//TODO: check if such IM exists? 
-		if (imService != null && imUsername != null) {
-			IMNotifier imNotifier = IMNotifier.getInstance();
-			try {
-				imNotifier.addContact(imService, imUsername);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+	public static void sendIMInvitation(IMAccountBean imAccount) {
+		IMNotifier imNotifier = IMNotifier.getInstance();
+		try {
+			imNotifier.addContact(imAccount.getService(), imAccount.getUserName());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	

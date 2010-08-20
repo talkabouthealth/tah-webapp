@@ -17,6 +17,7 @@ import java.util.Set;
 
 import models.EmailBean;
 import models.HealthItemBean;
+import models.IMAccountBean;
 import models.TalkerBean;
 import models.TalkerBean.EmailSetting;
 import models.TalkerBean.ProfilePreference;
@@ -268,41 +269,6 @@ public class Profile extends Controller {
 		notifications();
 	}
 	
-	public static void saveAccounts(TalkerBean talker) {
-		flash.put("currentForm", "accountsForm");
-		
-		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);
-		String oldEmail = sessionTalker.getEmail();
-		
-		//if something was changed - send new invitation
-		if (!sessionTalker.getIm().equals(talker.getIm()) 
-				|| !sessionTalker.getImUsername().equals(talker.getImUsername())) {
-			CommonUtil.sendIMInvitation(talker.getIm(), talker.getImUsername());
-		}
-		
-		//TODO: what email here? check for duplicate email?
-		sessionTalker.setEmail(talker.getEmail());
-		sessionTalker.setImUsername(talker.getImUsername());
-		sessionTalker.setIm(talker.getIm());
-		
-		if (!oldEmail.equals(talker.getEmail())) {
-			//send verification email
-			sessionTalker.setVerifyCode(CommonUtil.generateVerifyCode());
-			
-			Map<String, String> vars = new HashMap<String, String>();
-			vars.put("username", sessionTalker.getUserName());
-			vars.put("verify_code", sessionTalker.getVerifyCode());
-			EmailUtil.sendEmail(EmailUtil.VERIFICATION_TEMPLATE, sessionTalker.getEmail(), vars, null, false);
-		}
-		
-		TalkerDAO.updateTalker(sessionTalker);
-		
-		CommonUtil.updateCachedTalker(session);
-		
-		flash.success("ok");
-		notifications();
-	}
-	
 	public static void saveEmailSettings(TalkerBean talker) {
 		flash.put("currentForm", "emailsettingsForm");
 		
@@ -393,6 +359,44 @@ public class Profile extends Controller {
 		
 		CommonUtil.updateCachedTalker(session);
 		renderJSON("{\"result\" : \"ok\"}");
+	}
+	
+	public static void addIMAccount(String imUserName, String imService) {
+		//TODO: same IM account?
+//		TalkerBean otherTalker = TalkerDAO.getByEmail(newEmail);
+//		if (otherTalker != null) {
+//			renderText(Messages.get("email.exists"));
+//			return;
+//		}
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		IMAccountBean imAccount = new IMAccountBean(imUserName, imService);
+		talker.getImAccounts().add(imAccount);
+		
+		TalkerDAO.updateTalker(talker);
+		CommonUtil.updateCachedTalker(session);
+		
+		CommonUtil.sendIMInvitation(imAccount);
+		
+		IMAccountBean _imAccount = imAccount;
+		render("tags/profileNotificationIM.html", _imAccount);
+	}
+	
+	/**
+	 * @param imId - imUsername and imService separated by "|"
+	 */
+	public static void deleteIMAccount(String imId) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		String[] imArray = imId.split("\\|");
+		IMAccountBean imAccount = new IMAccountBean(imArray[0], imArray[1]);
+		System.out.println(imAccount);
+		talker.getImAccounts().remove(imAccount);
+		
+		TalkerDAO.updateTalker(talker);
+		CommonUtil.updateCachedTalker(session);
+		
+		renderText("Ok");
 	}
 	
 	/* ------------- Health Info -------------------------- */
