@@ -171,6 +171,9 @@ public class TalkerBean implements Serializable {
 	private String profileCompletionMessage;
 	private int profileCompletionValue;
 	
+	private Date latestNotification;
+	private long numOfNotifications;
+	
 	public TalkerBean(){}
 	public TalkerBean(String id) {
 		this.id = id;
@@ -731,5 +734,17 @@ public class TalkerBean implements Serializable {
 	}
 	public void setImAccounts(Set<IMAccountBean> imAccounts) {
 		this.imAccounts = imAccounts;
+	}
+	public Date getLatestNotification() {
+		return latestNotification;
+	}
+	public void setLatestNotification(Date latestNotification) {
+		this.latestNotification = latestNotification;
+	}
+	public long getNumOfNotifications() {
+		return numOfNotifications;
+	}
+	public void setNumOfNotifications(long numOfNotifications) {
+		this.numOfNotifications = numOfNotifications;
 	}
 }	

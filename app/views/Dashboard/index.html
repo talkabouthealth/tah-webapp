@@ -49,14 +49,17 @@
 
 			$("input[type=checkbox]").click (function() {
 				var talkerId = $(this).val();
-				var talkerIMService = $(this).next().val();
 				if ($(this).attr("checked") == true) {
 					selectedTalkers.push(talkerId);
-					updateServices(talkerIMService, 1);
+					$(this).nextAll("input").each(function() {
+						updateServices($(this).val(), 1);
+					});
 				}
 				else {
 					selectedTalkers = removeItem(selectedTalkers, talkerId);
-					updateServices(talkerIMService, -1);
+					$(this).nextAll("input").each(function() {
+						updateServices($(this).val(), -1);
+					});
 				}
 				$("#selectedtalkers").html(
 						selectedTalkers.length+" selected talker(s): Google="+
@@ -92,7 +95,11 @@
 
 		function updateServices(imService, delta) {
 			totalServices = totalServices + delta;
+			if (totalServices < 0) 
+				totalServices = 0;
 			services[imService] = services[imService] + delta;
+			if (services[imService] < 0) 
+				services[imService] = 0;
 		}
 
 		function updateButton() {
@@ -190,13 +197,18 @@
 									<td>
 										#{list items: talkersList, as: 'talkerInfo'}
 											#{if onlineUsersSingleton.isUserOnline(talkerInfo.id)}
-												<br>
-												<input type="checkbox" name="uidArray" value="${talkerInfo.id}">
-												<input type="hidden" name="imservice" value="${talkerInfo.imService}">  
-												${talkerInfo.uname}, account: ${talkerInfo.imUsername} [${talkerInfo.imService}]
-												<br>Last notified on: ${talkerInfo.latestNotification}
-												<br> ${talkerInfo.uname} has been notified 
-													${talkerInfo.numOfNotifications} times in past 24 hours.	
+												<div>
+													<br>
+													<input type="checkbox" name="uidArray" value="${talkerInfo.id}">
+													#{list items: talkerInfo.imAccounts, as: 'imAccount'}
+														<input type="hidden" value="${imAccount?.service}">  
+													#{/list}
+													${talkerInfo.userName}, 
+													accounts: ${talkerInfo.imAccounts}
+													<br>Last notified on: ${talkerInfo.latestNotification?.format('MM.dd.yyyy HH:mm:ss')}
+													<br> ${talkerInfo.userName} has been notified 
+														${talkerInfo.numOfNotifications} times in past 24 hours.	
+												</div>
 											#{/if}
 										#{/list}
 									</td>   
@@ -210,9 +222,9 @@
 									#{list items: talkersList, as: 'talkerInfo'}
 										#{ifnot onlineUsersSingleton.isUserOnline(talkerInfo.id)}
 											<br>
-											${talkerInfo.uname} has account of ${talkerInfo.email}
-											<br>Last notified on: ${talkerInfo.latestNotification}
-											<br> ${talkerInfo.uname} has been notified 
+											${talkerInfo.userName} has account of ${talkerInfo.email}
+											<br>Last notified on: ${talkerInfo.latestNotification?.format('MM.dd.yyyy HH:mm:ss')}
+											<br> ${talkerInfo.userName} has been notified 
 												${talkerInfo.numOfNotifications} times in past 24 hours.	
 											<br/>
 										#{/ifnot}

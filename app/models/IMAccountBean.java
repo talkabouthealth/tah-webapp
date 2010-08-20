@@ -22,7 +22,7 @@ public class IMAccountBean {
 	
 	@Override
 	public String toString() {
-		return userName+" : "+service;
+		return userName+" ("+service+")";
 	}
 
 	@Override

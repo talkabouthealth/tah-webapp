@@ -291,35 +291,27 @@ public class TalkerDAO {
 		return talkerList;
 	}
 	
-	public static List<Map<String, String>> loadTalkersForDashboard() {
-		//FIXME: rework it for normal TalkerBean !
-		DBCollection talkersColl = getDB().getCollection(TALKERS_COLLECTION);
-		DateFormat dateFormat = new SimpleDateFormat("MM.dd.yyyy HH:mm:ss");
+	public static List<TalkerBean> loadTalkersForDashboard() {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
 		//TODO: sort by last notification!
 		List<DBObject> talkersDBList = talkersColl.find().toArray();
 		
-		List<Map<String, String>> talkersInfoList = new ArrayList<Map<String,String>>();
+		List<TalkerBean> talkersList = new ArrayList<TalkerBean>();
 		for (DBObject talkerDBObject : talkersDBList) {
-			Map<String, String> talkerInfoMap = new HashMap<String, String>();
+			TalkerBean talker = new TalkerBean();
+			talker.parseFromDB(talkerDBObject);
 			
-			talkerInfoMap.put("id", talkerDBObject.get("_id").toString());
-			talkerInfoMap.put("uname", (String)talkerDBObject.get("uname"));
-			talkerInfoMap.put("email", (String)talkerDBObject.get("email"));
-//			talkerInfoMap.put("imService", talkerDBObject.get("im").toString());
-//			talkerInfoMap.put("imUsername", talkerDBObject.get("im_uname").toString());
+			Date latestNotification = NotificationDAO.getLatestNotification(talker.getId());
+			talker.setLatestNotification(latestNotification);
 			
-			Date latestNotification = NotificationDAO.getLatestNotification(talkerInfoMap.get("id"));
-			if (latestNotification != null) {
-				talkerInfoMap.put("latestNotification", dateFormat.format(latestNotification));
-			}
-			long numOfNotifications = NotificationDAO.numOfNotificationsForDay(talkerInfoMap.get("id"));
-			talkerInfoMap.put("numOfNotifications", ""+numOfNotifications);
+			long numOfNotifications = NotificationDAO.numOfNotificationsForDay(talker.getId());
+			talker.setNumOfNotifications(numOfNotifications);
 			
-			talkersInfoList.add(talkerInfoMap);
+			talkersList.add(talker);
 		}
 		
-		return talkersInfoList;
+		return talkersList;
 	}
 	
 	public static byte[] loadTalkerImage(String userName) {
