@@ -7,7 +7,7 @@
 	<div class="thankyoutext">
 		<a href="@{PublicProfile.view(_thankYou.fromTalker.userName)}" 
 			class="bluetext11">${_thankYou.fromTalker.userName}</a><br/>
-	  	<span class="blacktext11">${_thankYou.note}</span>
+	  	<span class="blacktext11">${_thankYou.note.limitSize(80)}</span>
 	  	<span class="greytext11"><br/>${_thankYou.time?.format('MMM dd HH:mm')}</span>
 	 </div>
 </div>

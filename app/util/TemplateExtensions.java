@@ -58,5 +58,27 @@ public class TemplateExtensions extends JavaExtensions {
 			return list.subList(start, size);
 		}
 	}
+	
+	public static String limitSize(String source, int limit) {
+		return limitSize(source, limit, "...");
+	}
+	
+	/**
+	 * Limits number of characters in given string to 'limitSize'
+	 * @param source
+	 * @param size
+	 * @param prefix added to the end if string was truncated
+	 * @return
+	 */
+	public static String limitSize(String source, int limit, String prefix) {
+		int size = source.length();
+		
+		if (size > limit) {
+			return source.substring(0, limit)+prefix;
+		}
+		else {
+			return source;
+		}
+	}
 
 }

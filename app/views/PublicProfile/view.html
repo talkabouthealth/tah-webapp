@@ -272,7 +272,7 @@
 												<li>
 													<a href="@{PublicProfile.view(following.userName)}" class="bluetext11">
 														<img src="@{Image.show(following.userName)}" width="48" height="48" border="0" />
-														${following.userName}
+														${following.userName.limitSize(8)}
 													</a>
 												</li>
 											#{/list}
@@ -298,7 +298,7 @@
 												<li>
 													<a href="@{PublicProfile.view(follower.userName)}" class="bluetext11">
 														<img src="@{Image.show(follower.userName)}" width="48" height="48" border="0" />
-														${follower.userName}
+														${follower.userName.limitSize(8)}
 													</a>
 												</li>
 											#{/list}
@@ -523,10 +523,11 @@
 						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) }
 						<div id="commentsSection" class="prosubheading">
 							<div class="profileheading">
-								Comments								
+								Comments (${talker.profileCommentsList?.size()})								
 							</div>
 							<div class="seeall">
-								<a href="@{PublicProfile.userBasedActions(talker.userName, 'comments')}" class="bluetext12"><strong>see all</strong></a>
+								<a href="@{PublicProfile.userBasedActions(talker.userName, 'comments')}" 
+									class="bluetext12"><strong>see all</strong></a>
 							</div>
 						</div>
 						#{if talker.followingList.contains(currentTalker) || talker.userName.equals(currentTalker.userName)}
@@ -547,7 +548,7 @@
 							</div>
 						#{/if}
 						<div class="commentsarea">
-							#{if talker?.profileCommentsList?.isEmpty()}
+							#{if talker.profileCommentsList?.isEmpty()}
 								<span id="firstcommentmessage" class="blacktext12">
 									${talker.userName} does not have any Comments, be the first to leave a Comment.
 								</span>
