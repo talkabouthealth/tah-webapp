@@ -2,9 +2,12 @@ package util.importers;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import com.google.gson.GsonBuilder;
 
 import dao.HealthItemDAO;
 
@@ -80,5 +83,6 @@ public class HealthItemsImporter {
 			HealthItemDAO.saveTree(topLevel, null, DEFAULT_DISEASE_ID);
 		}
 	}
+
 
 }

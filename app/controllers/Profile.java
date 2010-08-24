@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import models.DiseaseBean;
 import models.EmailBean;
 import models.HealthItemBean;
 import models.IMAccountBean;
@@ -405,11 +406,8 @@ public class Profile extends Controller {
 		
 		//For now we have only one disease - Breast Cancer
 		final String diseaseName = "Breast Cancer";
+		DiseaseBean disease = DiseaseDAO.getByName(diseaseName);
 
-		//Load data for selects
-		List<String> stagesList = DiseaseDAO.getValuesByDisease("stages", diseaseName);
-		List<String> typesList = DiseaseDAO.getValuesByDisease("types", diseaseName);
-		
 		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
 		
 		//Load all healthItems for this disease
@@ -420,7 +418,7 @@ public class Profile extends Controller {
 			healthItemsMap.put(itemName, healthItem);
 		}
 		
-		render(talkerDisease, stagesList, typesList, healthItemsMap);
+		render(talkerDisease, disease, healthItemsMap);
 	}
 	
 	public static void saveHealthDetails(TalkerDiseaseBean talkerDisease, String section) {

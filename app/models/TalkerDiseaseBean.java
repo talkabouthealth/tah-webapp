@@ -25,7 +25,6 @@ public class TalkerDiseaseBean {
 	//Map for "Other" fields
 	private Map<String, List<String>> otherHealthItems;
 	
-	
 	public boolean isRecurrent() { return recurrent; }
 	public void setRecurrent(boolean recurrent) { this.recurrent = recurrent; }
 	
