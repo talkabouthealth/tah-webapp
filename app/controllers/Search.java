@@ -1,6 +1,8 @@
 package controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import models.TalkerBean;
 
@@ -19,60 +21,51 @@ import org.apache.lucene.search.ParallelMultiSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.store.LockObtainFailedException;
 
+import play.mvc.Controller;
+import play.mvc.With;
+
+import util.SearchUtil;
+
 import dao.TalkerDAO;
 
-public class Search {
+@With(Secure.class)
+public class Search extends Controller {
 	
-	public static void test() throws CorruptIndexException, LockObtainFailedException, IOException {
-		IndexWriter indexWriter = new IndexWriter("D:\\index", new StandardAnalyzer(), true);
+	public static void search(String query) throws Exception {
 		
-		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
-			Document doc = new Document();
-			  doc.add(new Field("id", talker.getId(), Field.Store.YES,
-			                      Field.Index.NO));
-			  doc.add(new Field("uname", talker.getUserName(), Field.Store.YES,
-			                        Field.Index.TOKENIZED));
-//			  doc.add(new Field("city", hotel.getCity(), Field.Store.YES,
-//			                        Field.Index.UN_TOKENIZED));
-//			  doc.add(new Field("description", hotel.getDescription(),
-//			                   Field.Store.YES,
-//			                   Field.Index.TOKENIZED));
-//			  String fullSearchableText
-//			        = hotel.getName()
-//			         + " " + hotel.getCity() + " " + hotel.getDescription();
-//
-//			  doc.add(new Field("content", fullSearchableText,
-//			                 Field.Store.NO,
-//			                 Field.Index.TOKENIZED));
-			  
-			  indexWriter.addDocument(doc);
+		if (query == null) {
+			render();
+			return;
 		}
-		indexWriter.close();
-		
-	}
-	
-	public static Hits performSearch(String queryString)
-		    throws IOException, ParseException {
 		
 //		ParallelMultiSearcher pms = new ParallelMultiSearcher(new i);
 		
 		Analyzer analyzer = new StandardAnalyzer();
-		IndexSearcher is = new IndexSearcher("D:\\index");
+		IndexSearcher is = new IndexSearcher(SearchUtil.getTalkerIndex());
 		QueryParser parser = new QueryParser("uname", analyzer);
-		Query query = parser.parse(queryString);
-		Hits hits = is.search(query);
-		return hits;
+		Query searchQuery = parser.parse(query);
+		Hits hits = is.search(searchQuery);
+		
+		List<String> results = new ArrayList<String>();
+		for (int i = 0; i < hits.length(); i++) {
+			Document doc = hits.doc(i);
+//			System.out.println(hits.score(i));
+//			System.out.println(doc.get("uname")+" : "+doc.get("id"));
+			results.add(doc.get("uname"));
+		}
+		
+		render(results);
 	}
 	
 	public static void main(String[] args) throws Exception {
 //		test();
 		
-		Hits hits = performSearch("test");
-		for (int i = 0; i < hits.length(); i++) {
-			Document doc = hits.doc(i);
-			System.out.println(hits.score(i));
-			System.out.println(doc.get("uname")+" : "+doc.get("id"));
-		}
+//		Hits hits = performSearch("test");
+//		for (int i = 0; i < hits.length(); i++) {
+//			Document doc = hits.doc(i);
+//			System.out.println(hits.score(i));
+//			System.out.println(doc.get("uname")+" : "+doc.get("id"));
+//		}
 	}
 
 

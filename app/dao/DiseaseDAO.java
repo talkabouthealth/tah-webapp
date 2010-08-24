@@ -15,14 +15,33 @@ import models.DiseaseBean.DiseaseQuestion;
 import util.DBUtil;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+import com.mongodb.DB.WriteConcern;
 
 import static util.DBUtil.*;
 
 public class DiseaseDAO {
 	
 	public static final String DISEASES_COLLECTION = "diseases";
+	
+	public static void save(DiseaseBean disease) {
+		DBCollection diseasesColl = getCollection(DISEASES_COLLECTION);
+		
+//		DBObject diseaseObject = BasicDBObjectBuilder.start()
+//			.add("uid", talkerRef)
+//			.add("tid", tid)
+//			.add("topic", topic.getTopic())
+//			.add("cr_date", topic.getCreationDate())
+//			.add("disp_date", topic.getDisplayTime())
+//			.add("main_url", topic.getMainURL())
+//			.get();
+//
+//		diseasesColl.save(diseaseObject);
+	}
 	
 	public static DiseaseBean getByName(String diseaseName) {
 		DiseaseBean disease = new DiseaseBean();

@@ -1,0 +1,20 @@
+#{extends 'static.html' /}
+#{set pageHeader: 'Members Search' /}
+
+<form name="searchForm" action="@{Search.search()}" method="POST">
+	<div id="searcharea">
+		<input name="query" type="text" class="search"  value="Search Members" 
+			onclick="this.value=''" onblur=""/>
+	</div>
+	<div id="searchright">
+		<a href="#" onclick="document.searchForm.submit(); return false;">
+			<img src="/public/images/searchbutton.gif" width="34" height="35" border="0"/>
+		</a>
+	</div>
+</form>
+
+<div style="font-size: 14px">		
+	#{list items:results, as: 'res'}
+		${res} <br/>
+	#{/list}
+</div>

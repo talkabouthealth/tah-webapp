@@ -188,13 +188,18 @@
 				<div id="innerbot"></div>
 			</div>
 			<div id="innerright">
-				<!-- 
-				<div id="searcharea">
-					<input name="" type="text" class="search"  value="Search Conversation" 
-						onclick="this.value=''" onblur="this.value='Search Conversation'"/>
-				</div>
-				<div id="searchright"><img src="/public/images/searchbutton.gif" width="34" height="35" /></div>
-				-->
+				<form name="searchForm" action="@{Search.search()}" method="POST">
+					<div id="searcharea">
+						<input name="query" type="text" class="search"  value="Search Members" 
+							onclick="this.value=''" onblur=""/>
+					</div>
+					<div id="searchright">
+						<a href="#" onclick="document.searchForm.submit(); return false;">
+							<img src="/public/images/searchbutton.gif" width="34" height="35" border="0"/>
+						</a>
+					</div>
+				</form>
+				
 				<div class="innerrightbox" style="padding-top: 0px">
 					<div class="innerrightop"></div>
 					<div class="innerrighmid">
