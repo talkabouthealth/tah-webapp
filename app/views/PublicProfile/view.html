@@ -223,6 +223,7 @@
 								<div class="proleftwhitebot"></div>
 							</div>
 							
+							#{if talker.userName.equals(currentTalker.userName) }
 							<div class="proleftwhite">
 								<div class="proleftwhitetop"></div>
 								<div class="proleftwhitemid">
@@ -256,6 +257,7 @@
 								</div>
 								<div class="proleftwhitebot"></div>
 							</div>
+							#{/if}
 							
 							#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
 							<div class="proleftwhite">

@@ -19,7 +19,7 @@ public class ApplicationUpdatesJob extends Job {
     	//Move old IM account info to new format ('im_accounts' array)
 		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
 //			System.out.println(talker.getIm()+" : "+talker.getImUsername());
-			if (talker.getIm() != null) {
+			if (talker.getIm() != null && talker.getImUsername() != null) {
 				if (!talker.getIm().isEmpty() && !talker.getImUsername().isEmpty()) {
 					IMAccountBean imAccount = 
 						new IMAccountBean(talker.getImUsername(), talker.getIm());
