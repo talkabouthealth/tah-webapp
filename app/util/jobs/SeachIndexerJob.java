@@ -16,7 +16,7 @@ import play.jobs.Every;
 import play.jobs.Job;
 import util.SearchUtil;
 
-@Every("1h")
+@Every("5min")
 public class SeachIndexerJob extends Job {
 
 	@Override
