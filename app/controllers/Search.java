@@ -12,12 +12,15 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MultiSearcher;
 import org.apache.lucene.search.ParallelMultiSearcher;
+import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.store.LockObtainFailedException;
 
@@ -42,7 +45,9 @@ public class Search extends Controller {
 		
 		Analyzer analyzer = new StandardAnalyzer();
 		IndexSearcher is = new IndexSearcher(SearchUtil.getTalkerIndex());
-		QueryParser parser = new QueryParser("uname", analyzer);
+//		QueryParser parser = new QueryParser("uname", analyzer);
+		QueryParser parser = new MultiFieldQueryParser(new String[] {"uname", "bio"}, analyzer);
+		parser.setAllowLeadingWildcard(true);
 		Query searchQuery = parser.parse(query);
 		Hits hits = is.search(searchQuery);
 		
@@ -54,7 +59,23 @@ public class Search extends Controller {
 			results.add(doc.get("uname"));
 		}
 		
+		params.flash("query");
 		render(results);
+	}
+	
+	public static void ajaxSearch(String term) throws Exception {
+		IndexSearcher is = new IndexSearcher(SearchUtil.getTalkerIndex());
+		
+		Query searchQuery = new PrefixQuery(new Term("uname", term));
+		Hits hits = is.search(searchQuery);
+		
+		List<String> results = new ArrayList<String>();
+		for (int i = 0; i < hits.length(); i++) {
+			Document doc = hits.doc(i);
+			results.add(doc.get("uname"));
+		}
+		
+		renderJSON(results);
 	}
 	
 	public static void main(String[] args) throws Exception {

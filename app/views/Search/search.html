@@ -1,10 +1,57 @@
 #{extends 'static.html' /}
 #{set pageHeader: 'Members Search' /}
 
+<link rel="stylesheet" href="/public/plugins/ui-lightness/jquery-ui-1.8.4.custom.css" type="text/css" media="screen" />
+<script type="text/javascript" 
+	src="/public/javascripts/jquery-ui-1.8.4.custom.min.js" ></script>
+	
+<script type="text/javascript">
+$(function() {
+	var cache = {};
+	$( "#tags" ).autocomplete({
+		minLength: 1,
+		source: function(request, response) {
+			if ( request.term in cache ) {
+				response( cache[ request.term ] );
+				return;
+			}
+			
+			$.ajax({
+				url: "@{Search.ajaxSearch()}",
+				dataType: "json",
+				data: request,
+				success: function( data ) {
+					cache[ request.term ] = data;
+					response( data );
+				}
+			});
+		}
+	});
+
+});
+</script>
+
+<style type="text/css">
+	body {
+		font-size: 12px;
+	}
+</style>
+
+<div style="font-size: 14px; clear: left">	
+	Autocomplete:
+	<input id="tags">
+	
+	<br/>
+	<br/>
+	<br/>
+	Simple members search<br/>
+</div>
+
+
 <form name="searchForm" action="@{Search.search()}" method="POST">
 	<div id="searcharea">
-		<input name="query" type="text" class="search"  value="Search Members" 
-			onclick="this.value=''" onblur=""/>
+		<input name="query" type="text" class="search"  value="${flash.query ? flash.query : 'Search Members'}" 
+			onclick="if (this.value == 'Search Members') this.value=''" onblur=""/>
 	</div>
 	<div id="searchright">
 		<a href="#" onclick="document.searchForm.submit(); return false;">
@@ -13,8 +60,14 @@
 	</div>
 </form>
 
-<div style="font-size: 14px">		
+<div style="font-size: 14px; clear: left">		
 	#{list items:results, as: 'res'}
-		${res} <br/>
+		<span style="padding-bottom: 3px">
+			<a href="@{PublicProfile.view(res)}">${res}</a>
+		</span>
+		<br/>
 	#{/list}
+	#{else}
+		No results.
+	#{/else}
 </div>
