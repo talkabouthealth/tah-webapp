@@ -406,7 +406,9 @@ public class Profile extends Controller {
 		
 		//For now we have only one disease - Breast Cancer
 		final String diseaseName = "Breast Cancer";
-		DiseaseBean disease = DiseaseDAO.getByName(diseaseName);
+//		DiseaseBean disease = DiseaseDAO.getByName(diseaseName);
+		List<String> typesList = DiseaseDAO.getValuesByDisease("types", diseaseName);
+		List<String> stagesList = DiseaseDAO.getValuesByDisease("stages", diseaseName);
 
 		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
 		
@@ -418,7 +420,8 @@ public class Profile extends Controller {
 			healthItemsMap.put(itemName, healthItem);
 		}
 		
-		render(talkerDisease, disease, healthItemsMap);
+//		render(talkerDisease, disease, healthItemsMap);
+		render(talkerDisease, typesList, stagesList, healthItemsMap);
 	}
 	
 	public static void saveHealthDetails(TalkerDiseaseBean talkerDisease, String section) {

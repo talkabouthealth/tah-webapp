@@ -55,6 +55,7 @@
 			<div id="innerpersonalarea">
 				<div id="signupleft">
 					<div id="signupleftarea">
+						*{
 						#{list items:disease.questions, as:'question'}
 							<div class="signupmain">
 							<a name="symptoms"></a>
@@ -65,15 +66,15 @@
 								<select name="${question.name}" class="personalfields">
 									#{list items:question.answers, as:'answer' }
 										<option value="${answer}" 
-									    *{ #{if stage.equals(talkerDisease?.stage) } selected #{/if} }* 
+									     #{if stage.equals(talkerDisease?.stage) } selected #{/if}
 									    >${answer}</option>
 									#{/list}
 								</select>
 							</div>
 						</div>
 						#{/list}
+						}*
 						
-						*{
 						<div class="signupmain">
 							<a name="symptoms"></a>
 							<div class="generaltextarea">
@@ -103,7 +104,6 @@
 								</select>
 							</div>
 						</div>
-						}*
 						<div class="signupmain">
 							<div class="generaltextarea">
 								<span class="blacktext16"><strong>Is it recurrent?</strong></span>
