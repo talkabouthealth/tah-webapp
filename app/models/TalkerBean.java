@@ -503,8 +503,6 @@ public class TalkerBean implements Serializable {
 		}
 		
 		int numberOfThankYous = thankYouList.size();
-
-		//TODO: better implementation?
 		if (numberOfThankYous >= 1 && numberOfThankYous < 3) {
 			levelOfRecognition = "Supporter";
 		}

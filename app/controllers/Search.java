@@ -42,9 +42,10 @@ public class Search extends Controller {
 		}
 		
 //		ParallelMultiSearcher pms = new ParallelMultiSearcher(new i);
+		System.out.println(SearchUtil.SEARCH_INDEX_PATH+"talker");
 		
 		Analyzer analyzer = new StandardAnalyzer();
-		IndexSearcher is = new IndexSearcher(SearchUtil.getTalkerIndex());
+		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"talker");
 //		QueryParser parser = new QueryParser("uname", analyzer);
 		QueryParser parser = new MultiFieldQueryParser(new String[] {"uname", "bio"}, analyzer);
 		parser.setAllowLeadingWildcard(true);
@@ -64,7 +65,7 @@ public class Search extends Controller {
 	}
 	
 	public static void ajaxSearch(String term) throws Exception {
-		IndexSearcher is = new IndexSearcher(SearchUtil.getTalkerIndex());
+		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"talker");
 		
 		Query searchQuery = new PrefixQuery(new Term("uname", term));
 		Hits hits = is.search(searchQuery);

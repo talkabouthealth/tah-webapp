@@ -45,7 +45,6 @@ public class EmailUtil {
 		TriggerMailClient client;
 		try {
 			client = new TriggerMailClient(SAILTHRU_APIKEY, SAILTHRU_SECRET);
-			//TODO: other for DEV?
 			client.send(templateName, toEmail, vars, options);
 			
 		} catch (Exception e) {

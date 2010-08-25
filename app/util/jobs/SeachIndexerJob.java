@@ -14,14 +14,16 @@ import org.apache.lucene.store.LockObtainFailedException;
 import dao.TalkerDAO;
 import play.jobs.Every;
 import play.jobs.Job;
+import play.jobs.OnApplicationStart;
 import util.SearchUtil;
 
-@Every("5min")
+@OnApplicationStart
+@Every("15min")
 public class SeachIndexerJob extends Job {
 
 	@Override
 	public void doJob() throws Exception {
-		IndexWriter indexWriter = new IndexWriter(SearchUtil.getTalkerIndex(), new StandardAnalyzer(), true);
+		IndexWriter indexWriter = new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"talker", new StandardAnalyzer(), true);
 		
 		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
 			Document doc = new Document();

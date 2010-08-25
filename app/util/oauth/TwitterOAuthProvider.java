@@ -33,7 +33,7 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 	private static final String CALLBACK_URL =
 		"http://talkabouthealth.com:9000/oauth/callback?type=twitter";
 	
-//Test values
+//	Test values
 //	private static final String CONSUMER_KEY = "7VymbW3wmOOoQ892BqIsaA";
 //	private static final String CONSUMER_SECRET = "s8aexaIBgMxAm4ZqQNayv5SAr6Wd1SKFVETUEPv0cmM";
 //	private static final String CALLBACK_URL =
@@ -42,28 +42,22 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 	private OAuthConsumer consumer;
 	private OAuthProvider provider;
 
-
-	public TwitterOAuthProvider() {}
-	
-	public String getAuthURL(Session session) {
+	public TwitterOAuthProvider() {
 		consumer = new DefaultOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
 		provider = new DefaultOAuthProvider(
 	            "http://twitter.com/oauth/request_token",
 	            "http://twitter.com/oauth/access_token",
 	            "http://twitter.com/oauth/authorize");
-		
+	}
+	
+	public String getAuthURL(Session session) {
         String authURL = null;
         try {
 			authURL = provider.retrieveRequestToken(consumer, CALLBACK_URL);
 			
 			//save token and token secret for next step of OAuth
-//			request.getSession().setAttribute("twitter_token", consumer.getToken());
-//			request.getSession().setAttribute("twitter_token_secret", consumer.getTokenSecret());
-//			System.out.println(consumer.getToken()+ " :1: "+consumer.getTokenSecret());
-			
-			//TODO: not save this in session - check signpost code
-			Cache.set(session.getId()+"-twitter_consumer", consumer);
-			Cache.set(session.getId()+"-twitter_provider", provider);
+			session.put("twitter_token", consumer.getToken());
+			session.put("twitter_token_secret", consumer.getTokenSecret());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -72,13 +66,13 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 
 	public String handleCallback(Session session, Map<String, String> params) throws Exception {
 		String oauthVerifier = params.get("oauth_verifier");
-//		String token = (String)request.getSession().getAttribute("twitter_token");
-//		String tokenSecret = (String)request.getSession().getAttribute("twitter_token_secret");
-		consumer = (OAuthConsumer)Cache.get(session.getId()+"-twitter_consumer");
-		provider = (OAuthProvider)Cache.get(session.getId()+"-twitter_provider");
+		String token = (String)session.get("twitter_token");
+		String tokenSecret = (String)session.get("twitter_token_secret");
+
+		//SignPost check this flag to make access_token request
+		provider.setOAuth10a(true);
 		try {
-//			consumer.setTokenWithSecret(token, tokenSecret);
-//			System.out.println(consumer.getToken()+ " :2: "+consumer.getTokenSecret());
+			consumer.setTokenWithSecret(token, tokenSecret);
 			provider.retrieveAccessToken(consumer, oauthVerifier);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -92,7 +86,6 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-        //send the request
         req.connect();
         
         BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
@@ -120,15 +113,15 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
         //login or signup
         TalkerBean talker = TalkerDAO.getByAccount("twitter", accountId);
         if (talker != null) {
-        	// insert login record into db
+        	//simple login
         	ApplicationDAO.saveLogin(talker.getId());
 
-			// add TalkerBean to session
 			session.put("username", talker.getUserName());
 			
 			return "/home";
         }
         else {
+        	//redirect to signup
         	TwitterUtil.followUser(accountId);
         	
         	session.put("accounttype", "twitter");

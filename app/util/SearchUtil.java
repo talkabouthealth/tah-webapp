@@ -5,15 +5,6 @@ import play.Play.Mode;
 
 public class SearchUtil {
 	
-	//TODO: move to configurations?
-	public static String getTalkerIndex() {
-		if (Play.mode == Mode.PROD) {
-			return "/data/talkerindex";
-		}
-		else {
-			return "C:\\data\\talkerindex";
-		}
-	}
+	public static final String SEARCH_INDEX_PATH = Play.configuration.getProperty("search.index");
 	
-
 }
