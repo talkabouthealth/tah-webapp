@@ -193,7 +193,7 @@ function postNewTopicResponse() {
 					'<br />'+
 					'<span class="blacktext12">1 members talking</span> | '+ 
 				    '<span class="blacktext12">Started 0 mins ago</span> | '+
-				    '<a href="#" class="bluetext12 followTopicLink" rel="'+update[2]+'">Follow</a>'+
+				    '<a href="#" class="bluetext12 followTopicLink" rel="'+update[2]+'">Unfollow</a>'+
 				    '</span></p>';
 			
 				joinArea = createDiv('join');

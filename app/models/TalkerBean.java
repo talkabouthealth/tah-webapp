@@ -467,6 +467,13 @@ public class TalkerBean implements Serializable {
 	
 	
 	// ----========= Useful methods for displaying data ============----
+	public boolean isAllowed(ProfilePreference preference) {
+		if (profilePreferences == null) {
+			return false;
+		}
+		return profilePreferences.contains(preference);
+	}
+	
 	public long getAge() {
 		Date now = new Date();
         long delta = (now.getTime() - dob.getTime()) / 1000;

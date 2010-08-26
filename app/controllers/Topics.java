@@ -53,28 +53,17 @@ public class Topics extends Controller {
 		
 		// insert new topic into database
 		TopicDAO.save(topic);
+		ActivityDAO.saveActivity(new StartConvoAction(talker, topic));
 		
 		//send notifications if Automatic Notifications is On
 		NotificationUtils.sendAutomaticNotifications(topic.getId());
 		
-		// Save as talker activity
-//		ActivityDAO.createActivity(topic.getUid(), "started the conversation: "+topic.getTopic());
-		ActivityDAO.saveActivity(new StartConvoAction(talker, topic));
-
-		// create new LiveConvBean
-//		LiveConversationBean lcb = new LiveConversationBean();
-//		lcb.setTopic(topic);
-//		lcb.addTalker(talker.getId(), talker);
-
-		// add LiveConvBean to LiveConversationSingleton
-//		LiveConversationsSingleton lcs = LiveConversationsSingleton.getReference();
-//		lcs.addConversation(topicId, lcb);
-
-		// add topic to TopicMap in session - keeps track of topics on the page so no duplicates
-//		Map<String, TopicBean> mTopics = (Map<String, TopicBean>)Cache.get(session.getId()+"-mapTalkmiTopics");
-//		if (mTopics != null) {
-//			mTopics.put(topicId, topic);
-//		}
+		//automatically follow started topic
+		talker.getFollowingTopicsList().add(topic.getId());
+		TalkerDAO.updateTalker(talker);
+    	CommonUtil.updateCachedTalker(session);
+		ActivityDAO.saveActivity(new FollowConvoAction(talker, topic));
+		
 
 		newTopic = newTopic.replaceAll("'", "&#39;");
 		newTopic = newTopic.replaceAll("\\|", "&#124;");
@@ -129,7 +118,6 @@ public class Topics extends Controller {
     	}
     	else {
     		talker.getFollowingTopicsList().add(topicId);
-    		
     		ActivityDAO.saveActivity(new FollowConvoAction(talker, new TopicBean(topicId)));
     	}
     	

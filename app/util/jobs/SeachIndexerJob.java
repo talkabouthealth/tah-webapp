@@ -3,6 +3,7 @@ package util.jobs;
 import java.io.IOException;
 
 import models.TalkerBean;
+import models.TalkerBean.ProfilePreference;
 import models.TopicBean;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -36,7 +37,7 @@ public class SeachIndexerJob extends Job {
 			  doc.add(new Field("uname", talker.getUserName(), Field.Store.YES,
 			                        Field.Index.TOKENIZED));
 			  
-			  if (talker.getBio() != null) {
+			  if (talker.isAllowed(ProfilePreference.BIO) && talker.getBio() != null) {
 				  doc.add(new Field("bio", talker.getBio(), Field.Store.YES,
 	                      Field.Index.TOKENIZED));
 			  }
