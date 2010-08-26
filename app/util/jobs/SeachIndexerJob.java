@@ -37,6 +37,8 @@ public class SeachIndexerJob extends Job {
 	                      Field.Index.TOKENIZED));
 			  }
 			  
+			  //setBoost
+			  
 //				  doc.add(new Field("city", hotel.getCity(), Field.Store.YES,
 //				                        Field.Index.UN_TOKENIZED));
 //				  doc.add(new Field("description", hotel.getDescription(),

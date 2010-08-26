@@ -20,7 +20,7 @@ public class DiseaseBean {
 		private String name;
 		private String displayName;
 		private String text;
-		private Set<String> answers;
+		private Set<String> choices;
 		
 		public DiseaseQuestionType getType() {
 			return type;
@@ -46,11 +46,11 @@ public class DiseaseBean {
 		public void setText(String text) {
 			this.text = text;
 		}
-		public Set<String> getAnswers() {
-			return answers;
+		public Set<String> getChoices() {
+			return choices;
 		}
-		public void setAnswers(Set<String> answers) {
-			this.answers = answers;
+		public void setChoices(Set<String> choices) {
+			this.choices = choices;
 		}
 	}
 	

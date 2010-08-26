@@ -31,22 +31,45 @@ public class DiseaseDAO {
 	public static void save(DiseaseBean disease) {
 		DBCollection diseasesColl = getCollection(DISEASES_COLLECTION);
 		
-//		DBObject diseaseObject = BasicDBObjectBuilder.start()
-//			.add("uid", talkerRef)
-//			.add("tid", tid)
-//			.add("topic", topic.getTopic())
-//			.add("cr_date", topic.getCreationDate())
-//			.add("disp_date", topic.getDisplayTime())
-//			.add("main_url", topic.getMainURL())
-//			.get();
-//
-//		diseasesColl.save(diseaseObject);
+		List<DBObject> questionsDBList = new ArrayList<DBObject>();
+		for (DiseaseQuestion question : disease.getQuestions()) {
+			
+			DBObject questionDBObject = BasicDBObjectBuilder.start()
+				.add("name", question.getName())
+				.add("type", question.getType().toString())
+				.add("display_name", question.getDisplayName())
+				.add("text", question.getText())
+				.add("choices", question.getChoices())
+				.get();
+			
+			questionsDBList.add(questionDBObject);
+		}
+		
+		DBObject diseaseObject = BasicDBObjectBuilder.start()
+			.add("name", disease.getName())
+			.add("questions", questionsDBList)
+			.get();
+
+		diseasesColl.save(diseaseObject);
 	}
 	
 	public static DiseaseBean getByName(String diseaseName) {
 		DiseaseBean disease = new DiseaseBean();
 		
 		disease.setName(diseaseName);
+		
+//		public static class DiseaseQuestion {
+//		public enum DiseaseQuestionType {
+//			TEXT,
+//			SELECT,
+//			MULTI_SELECT
+//		}
+//		
+//		private DiseaseQuestionType type;
+//		private String name;
+//		private String displayName;
+//		private String text;
+//		private Set<String> choices;
 		
 		List<DiseaseQuestion> questions = new ArrayList<DiseaseQuestion>();
 		
@@ -59,7 +82,7 @@ public class DiseaseDAO {
 		quest.setText("Is the cancer invasive or non-invasive?");
 		quest.setName("invasive");
 		quest.setDisplayName("Invasive type");
-		quest.setAnswers(new HashSet<String>(Arrays.asList("Invasive", "Non-invasive")));
+		quest.setChoices(new HashSet<String>(Arrays.asList("Invasive", "Non-invasive")));
 		questions.add(quest);
 		
 		disease.setQuestions(questions);
