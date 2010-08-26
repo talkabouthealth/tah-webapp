@@ -80,7 +80,9 @@ public class TalkerDiseaseDAO {
 		talkerDisease.setDiagnoseDate((Date)diseaseDBObject.get("diag_date"));
 		
 		DBObject healthInfoDBObject = (DBObject)diseaseDBObject.get("health_info");
-		talkerDisease.setHealthInfo(healthInfoDBObject.toMap());
+		if (healthInfoDBObject != null) {
+			talkerDisease.setHealthInfo(healthInfoDBObject.toMap());
+		}
 		
 		talkerDisease.setHealthItems(getStringSet(diseaseDBObject, "healthitems"));
 		

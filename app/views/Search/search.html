@@ -25,8 +25,19 @@ $(function() {
 					response( data );
 				}
 			});
+		},
+		select: function(event, ui) {
+			document.location = ui.item.url;
+			return false;
 		}
-	});
+	})
+	.data( "autocomplete" )._renderItem = function( ul, item ) {
+		return $( "<li></li>" )
+			.data( "item.autocomplete", item )
+			.append( "<a>" + item.label + "&nbsp;<span>" + item.type + "</span></a>" )
+			.appendTo( ul );
+	};
+
 
 });
 </script>
@@ -34,6 +45,17 @@ $(function() {
 <style type="text/css">
 	body {
 		font-size: 12px;
+	}
+	.ui-menu .ui-menu-item a {
+		font-size: 14px;
+		color: #666666;
+	}
+	.ui-menu .ui-menu-item a span {
+		color: #BBBBBB;
+		font-size: 70%;
+	}
+	.ui-menu .ui-menu-item a span b {
+		color: #000000;
 	}
 </style>
 

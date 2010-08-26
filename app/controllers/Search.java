@@ -1,35 +1,27 @@
 package controllers;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import models.TalkerBean;
+import java.util.Map;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
-import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.MultiSearcher;
-import org.apache.lucene.search.ParallelMultiSearcher;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.store.LockObtainFailedException;
+import org.apache.lucene.search.highlight.Highlighter;
+import org.apache.lucene.search.highlight.QueryScorer;
+import org.apache.lucene.search.highlight.Scorer;
 
 import play.mvc.Controller;
 import play.mvc.With;
-
 import util.SearchUtil;
-
-import dao.TalkerDAO;
 
 @With(Secure.class)
 public class Search extends Controller {
@@ -65,19 +57,73 @@ public class Search extends Controller {
 	}
 	
 	public static void ajaxSearch(String term) throws Exception {
-		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"talker");
+		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
 		
-		Query searchQuery = new PrefixQuery(new Term("uname", term));
+//		Query searchQuery = new PrefixQuery(new Term("uname", term));
+//		Hits hits = is.search(searchQuery);
+		
+		Analyzer analyzer = new StandardAnalyzer();
+//		QueryParser parser = new QueryParser("uname", analyzer);
+		QueryParser parser = new MultiFieldQueryParser(new String[] {"uname", "title"}, analyzer);
+		parser.setAllowLeadingWildcard(true);
+		Query searchQuery = parser.parse("*"+term+"*");
 		Hits hits = is.search(searchQuery);
 		
-		List<String> results = new ArrayList<String>();
+//		Scorer scorer = new QueryScorer(searchQuery);
+//		Highlighter highlighter = new Highlighter(scorer);
+
+		List<Map<String, String>> results = new ArrayList<Map<String, String>>();
 		for (int i = 0; i < hits.length(); i++) {
 			Document doc = hits.doc(i);
-			results.add(doc.get("uname"));
+			
+			Map<String, String> result = new HashMap<String, String>();
+			String type = doc.get("type");
+			String label = null;
+			String url = null;
+			if (type.equalsIgnoreCase("User")) {
+				label = doc.get("uname");
+				url = "/"+label;
+			}
+			else {
+				label = doc.get("title");
+				url = "/topic/"+doc.get("url");
+			}
+			
+			result.put("label", label.replaceAll(term, "<b>"+term+"</b>"));
+			result.put("value", "");
+			result.put("url", url);
+			result.put("type", type);
+			
+			results.add(result);
+			
+			if (i == 10) {
+				break;
+			}
 		}
 		
 		renderJSON(results);
 	}
+	
+//	public static String doHighlighting(String text,String query){
+//	    String delims="/ ;,:\\+-*";
+//	    HashSet<String> queryWords=new HashSet<String>();
+//	    
+//	    StringTokenizer st=new StringTokenizer(query,delims);
+//	    
+//	    /*iterate over words in the query*/
+//	    while(st.hasMoreTokens()){
+//	      String token=st.nextToken().toLowerCase();
+//	      queryWords.add(token);
+//	    }
+//	    
+//	    for(String queryWord:queryWords){
+//	     text=text.replaceAll(queryWord, "<b>"+queryWord+"</b>");
+//	     if(!queryWord.equals(capitalizeFirstChar(queryWord)))
+//	       text=text.replaceAll(capitalizeFirstChar(queryWord), "<b>"+capitalizeFirstChar(queryWord)+"</b>");
+//	    }
+//	    System.out.println(text);
+//	    return text;
+//	  }
 	
 	public static void main(String[] args) throws Exception {
 //		test();

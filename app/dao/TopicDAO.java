@@ -219,6 +219,20 @@ public class TopicDAO {
 		return topic;
 	}
 	
+	public static List<TopicBean> loadAllTopics() {
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
+		List<DBObject> topicsDBList = 
+			topicsColl.find().sort(new BasicDBObject("disp_date", -1)).toArray();
+		
+		List<TopicBean> topicsList = new ArrayList<TopicBean>();
+		for (DBObject topicDBObject : topicsDBList) {
+			TopicBean topic = parseTopicBean(topicDBObject);
+	    	topicsList.add(topic);
+		}
+		
+		return topicsList;
+	}
+	
 	public static Map<String, TopicBean> queryTopics() {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		List<DBObject> topicsList = 
