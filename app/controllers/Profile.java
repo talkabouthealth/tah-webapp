@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import models.DiseaseBean;
+import models.DiseaseBean.DiseaseQuestion;
 import models.EmailBean;
 import models.HealthItemBean;
 import models.IMAccountBean;
@@ -406,9 +407,9 @@ public class Profile extends Controller {
 		
 		//For now we have only one disease - Breast Cancer
 		final String diseaseName = "Breast Cancer";
-//		DiseaseBean disease = DiseaseDAO.getByName(diseaseName);
-		List<String> typesList = DiseaseDAO.getValuesByDisease("types", diseaseName);
-		List<String> stagesList = DiseaseDAO.getValuesByDisease("stages", diseaseName);
+		DiseaseBean disease = DiseaseDAO.getByName(diseaseName);
+//		List<String> typesList = DiseaseDAO.getValuesByDisease("types", diseaseName);
+//		List<String> stagesList = DiseaseDAO.getValuesByDisease("stages", diseaseName);
 
 		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
 		
@@ -420,13 +421,20 @@ public class Profile extends Controller {
 			healthItemsMap.put(itemName, healthItem);
 		}
 		
-//		render(talkerDisease, disease, healthItemsMap);
-		render(talkerDisease, typesList, stagesList, healthItemsMap);
+		render(talkerDisease, disease, healthItemsMap);
+//		render(talkerDisease, typesList, stagesList, healthItemsMap);
 	}
 	
 	public static void saveHealthDetails(TalkerDiseaseBean talkerDisease, String section) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
+//		for (String key : params.all().keySet()) {
+//			System.out.println(key+" : "+Arrays.toString(params.all().get(key)));
+//		}
+		final String diseaseName = "Breast Cancer";
+		DiseaseBean disease = DiseaseDAO.getByName(diseaseName);
+		
+		parseHealthQuestions(disease, talkerDisease);
 		parseHealthItems(talkerDisease);
 		talkerDisease.setUid(talker.getId());
 		
@@ -462,6 +470,19 @@ public class Profile extends Controller {
 			
 			redirect(action.addRef(section).toString()); 
 		}
+	}
+	
+	private static void parseHealthQuestions(DiseaseBean disease, TalkerDiseaseBean talkerDisease) {
+		Map<String, String[]> paramsMap = params.all();
+		
+		Map<String, List<String>> healthInfo = new HashMap<String, List<String>>();
+		for (DiseaseQuestion question : disease.getQuestions()) {
+			String[] values = paramsMap.get(question.getName());
+			if (values != null) {
+				healthInfo.put(question.getName(), Arrays.asList(values));
+			}
+		}
+		talkerDisease.setHealthInfo(healthInfo);
 	}
 	
 	private static void parseHealthItems(TalkerDiseaseBean talkerDisease) {

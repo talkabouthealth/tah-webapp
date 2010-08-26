@@ -12,7 +12,7 @@
 		#{ healthItemsTree healthItem: item, checkedItems: _checkedItems /}
 	#{/if}
 	#{else}
-		<div class=healthitemCol${currentNum}>
+		<div class="healthitemCol${currentNum}">
 			<input name='healthitem${item.id}' type='checkbox'
 			#{if _checkedItems?.contains(item.id) }
 				checked='checked'

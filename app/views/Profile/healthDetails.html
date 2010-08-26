@@ -55,26 +55,46 @@
 			<div id="innerpersonalarea">
 				<div id="signupleft">
 					<div id="signupleftarea">
-						*{
+						
 						#{list items:disease.questions, as:'question'}
 							<div class="signupmain">
 							<a name="symptoms"></a>
-							<div class="generaltextarea">
-								<span class="blacktext16"><strong>${question.text}</strong></span>
-							</div>
-							<div class="personaltextfield">
-								<select name="${question.name}" class="personalfields">
-									#{list items:question.answers, as:'answer' }
-										<option value="${answer}" 
-									     #{if stage.equals(talkerDisease?.stage) } selected #{/if}
-									    >${answer}</option>
+							#{if question.type == models.DiseaseBean.DiseaseQuestion.DiseaseQuestionType.SELECT}
+								<div class="generaltextarea">
+									<span class="blacktext16"><strong>${question.text}</strong></span>
+								</div>
+								<div class="personaltextfield">
+									<select name="${question.name}" class="personalfields">
+										#{list items:question.choices, as:'choice' }
+											<option value="${choice}" 
+										    	#{if talkerDisease?.healthInfo?.get(question.name)?.contains(choice) } 
+										    		selected 
+										    	#{/if}
+										    >${choice}</option>
+										#{/list}
+									</select>
+								</div>
+							#{/if}
+							#{else}
+								<div class="generaltextarea2">
+	 								<span class="blacktext16"><strong>${question.text}</strong></span>
+	 							</div>
+								<div class="generalcheck">
+									#{list items:question.choices, as: 'choice'}
+										<div>
+											<input name="${question.name}" type="checkbox" value="${choice}"
+											#{if talkerDisease?.healthInfo?.get(question.name)?.contains(choice) } 
+									    		checked='checked'
+									    	#{/if}
+											/>&nbsp; <span class="blacktext14">${choice}</span>
+										</div>
 									#{/list}
-								</select>
-							</div>
+								</div>
+							#{/else}
 						</div>
 						#{/list}
-						}*
 						
+						*{
 						<div class="signupmain">
 							<a name="symptoms"></a>
 							<div class="generaltextarea">
@@ -104,16 +124,18 @@
 								</select>
 							</div>
 						</div>
+						}*
+						
 						<div class="signupmain">
 							<div class="generaltextarea">
 								<span class="blacktext16"><strong>Is it recurrent?</strong></span>
 							</div>
 							<div class="personaltextfield">
 								<select name="talkerDisease.recurrent" class="personalfields">											
-							 		<option value="false">No</option>
+							 		<option value="false">no</option>
 							 		<option value="true" 
 							 		#{if talkerDisease?.recurrent } selected #{/if} 
-							 		>Yes</option>
+							 		>yes</option>
 								</select>
 							</div>
 						</div>

@@ -29,6 +29,8 @@ public class TalkerDiseaseDAO {
 	public static void saveTalkerDisease(TalkerDiseaseBean talkerDisease) {
 	    DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
 	    
+	    DBObject healthInfoDBObject = new BasicDBObject(talkerDisease.getHealthInfo());
+	    
 	    //prepare other items
 	    List<DBObject> otherHealthItems = new ArrayList<DBObject>();
 	    for (String otherName : talkerDisease.getOtherHealthItems().keySet()) {
@@ -47,6 +49,7 @@ public class TalkerDiseaseDAO {
 			.add("recur", talkerDisease.isRecurrent())
 			.add("symp_date", talkerDisease.getSymptomDate())
 			.add("diag_date", talkerDisease.getDiagnoseDate())
+			.add("health_info", healthInfoDBObject)
 			.add("healthitems", talkerDisease.getHealthItems())
 			.add("other_healthitems", otherHealthItems)
 			.get();
@@ -70,11 +73,15 @@ public class TalkerDiseaseDAO {
 		
 		TalkerDiseaseBean talkerDisease = new TalkerDiseaseBean();
 		talkerDisease.setUid(talkerId);
-		talkerDisease.setStage((String)diseaseDBObject.get("stage"));
-		talkerDisease.setType((String)diseaseDBObject.get("type"));
+//		talkerDisease.setStage((String)diseaseDBObject.get("stage"));
+//		talkerDisease.setType((String)diseaseDBObject.get("type"));
 		talkerDisease.setRecurrent((Boolean)diseaseDBObject.get("recur"));
 		talkerDisease.setSymptomDate((Date)diseaseDBObject.get("symp_date"));
 		talkerDisease.setDiagnoseDate((Date)diseaseDBObject.get("diag_date"));
+		
+		DBObject healthInfoDBObject = (DBObject)diseaseDBObject.get("health_info");
+		talkerDisease.setHealthInfo(healthInfoDBObject.toMap());
+		
 		talkerDisease.setHealthItems(getStringSet(diseaseDBObject, "healthitems"));
 		
 		//TODO: template getList method in DBUtil?

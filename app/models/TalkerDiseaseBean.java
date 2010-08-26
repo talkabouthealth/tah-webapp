@@ -21,6 +21,9 @@ public class TalkerDiseaseBean {
 	private int diagnoseMonth;
 	private int diagnoseYear;
 	
+	//information for particular disease (e.g. for Breast Cancer - stage, cancer hormones, etc.)
+	private Map<String, List<String>> healthInfo;
+	
 	private Set<String> healthItems;
 	//Map for "Other" fields
 	private Map<String, List<String>> otherHealthItems;
@@ -64,6 +67,13 @@ public class TalkerDiseaseBean {
 	public Map<String, List<String>> getOtherHealthItems() { return otherHealthItems; }
 	public void setOtherHealthItems(Map<String, List<String>> otherHealthItems) {
 		this.otherHealthItems = otherHealthItems;
+	}
+	
+	public Map<String, List<String>> getHealthInfo() {
+		return healthInfo;
+	}
+	public void setHealthInfo(Map<String, List<String>> healthInfo) {
+		this.healthInfo = healthInfo;
 	}
 }
 

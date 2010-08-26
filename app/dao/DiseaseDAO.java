@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -21,6 +22,8 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.DB.WriteConcern;
+
+import static util.DBUtil.*;
 
 import static util.DBUtil.*;
 
@@ -54,37 +57,28 @@ public class DiseaseDAO {
 	}
 	
 	public static DiseaseBean getByName(String diseaseName) {
-		DiseaseBean disease = new DiseaseBean();
+		DBCollection diseasesColl = getCollection(DISEASES_COLLECTION);
 		
+		DBObject query = new BasicDBObject("name", diseaseName);
+		DBObject diseaseDBObject = diseasesColl.findOne(query);
+		
+		if (diseaseDBObject == null) {
+			return null;
+		}
+		
+		DiseaseBean disease = new DiseaseBean();
 		disease.setName(diseaseName);
 		
-//		public static class DiseaseQuestion {
-//		public enum DiseaseQuestionType {
-//			TEXT,
-//			SELECT,
-//			MULTI_SELECT
-//		}
-//		
-//		private DiseaseQuestionType type;
-//		private String name;
-//		private String displayName;
-//		private String text;
-//		private Set<String> choices;
-		
 		List<DiseaseQuestion> questions = new ArrayList<DiseaseQuestion>();
-		
-		//test question
-//		- Is the cancer invasive or non-invasive?
-//				- Invasive
-//				- Non-invasive
-		DiseaseQuestion quest = new DiseaseQuestion();
-		quest.setType(DiseaseQuestion.DiseaseQuestionType.SELECT);
-		quest.setText("Is the cancer invasive or non-invasive?");
-		quest.setName("invasive");
-		quest.setDisplayName("Invasive type");
-		quest.setChoices(new HashSet<String>(Arrays.asList("Invasive", "Non-invasive")));
-		questions.add(quest);
-		
+		for (DBObject questionDBObject : (Collection<DBObject>)diseaseDBObject.get("questions")) {
+			DiseaseQuestion quest = new DiseaseQuestion();
+			quest.setName((String)questionDBObject.get("name"));
+			quest.setType(DiseaseQuestion.DiseaseQuestionType.valueOf((String)questionDBObject.get("type")));
+			quest.setText((String)questionDBObject.get("text"));
+			quest.setDisplayName((String)questionDBObject.get("display_name"));
+			quest.setChoices(getStringSet(questionDBObject, "choices"));
+			questions.add(quest);
+		}
 		disease.setQuestions(questions);
 		
 		return disease;
@@ -104,8 +98,6 @@ public class DiseaseDAO {
 	public static void main(String[] args) {
 		System.out.println(DiseaseDAO.getValuesByDisease("stages", "Breast Cancer"));
 	}
-
-	
 
 }
 
