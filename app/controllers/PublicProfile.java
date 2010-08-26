@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.DiseaseBean;
 import models.HealthItemBean;
 import models.TalkerBean;
 import models.TalkerDiseaseBean;
@@ -20,6 +21,7 @@ import models.actions.StartConvoAction;
 import models.actions.UpdateProfileAction;
 import dao.ActivityDAO;
 import dao.CommentsDAO;
+import dao.DiseaseDAO;
 import dao.HealthItemDAO;
 import dao.TalkerDAO;
 import dao.TalkerDiseaseDAO;
@@ -68,6 +70,7 @@ public class PublicProfile extends Controller {
 		//Health info
 		//For now we have only one disease - Breast Cancer
 		final String diseaseName = "Breast Cancer";
+		DiseaseBean disease = DiseaseDAO.getByName(diseaseName);
 		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
 		if (talkerDisease != null) {
 			talkerDisease.setName(diseaseName);
@@ -93,7 +96,7 @@ public class PublicProfile extends Controller {
 		
 		calculateProfileCompletion(talker);
 		
-		render(talker, talkerDisease, healthItemsMap, currentTalker);
+		render(talker, disease, talkerDisease, healthItemsMap, currentTalker);
 	}
 	
 	private static void calculateProfileCompletion(TalkerBean talker) {
