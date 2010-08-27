@@ -1,9 +1,9 @@
 package controllers;
 
 import dao.ActivityDAO;
-import dao.TopicDAO;
+import dao.ConversationDAO;
 import models.TalkerBean;
-import models.TopicBean;
+import models.ConversationBean;
 import models.actions.JoinConvoAction;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -12,11 +12,11 @@ import util.CommonUtil;
 @With(Secure.class)
 public class Talk extends Controller {
 	
-	public static void talkApp(Integer topicId) {
-		notFoundIfNull(topicId);
+	public static void talkApp(Integer convoId) {
+		notFoundIfNull(convoId);
 		
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		TopicBean topic = TopicDAO.getByTid(topicId);
+		ConversationBean topic = ConversationDAO.getByTid(convoId);
 		
 		notFoundIfNull(topic);
 		

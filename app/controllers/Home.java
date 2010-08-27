@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import models.TalkerBean;
-import models.TopicBean;
+import models.ConversationBean;
 import play.cache.Cache;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -16,7 +16,7 @@ import util.EmailUtil;
 import util.ValidateData;
 import webapp.LiveConversationsSingleton;
 import dao.TalkerDAO;
-import dao.TopicDAO;
+import dao.ConversationDAO;
 
 @With(Secure.class)
 public class Home extends Controller {
@@ -24,12 +24,12 @@ public class Home extends Controller {
     public static void index(String newTopic) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	//TODO: load Joined, not Started?
-    	talker.setNumberOfTopics(TopicDAO.getNumberOfTopics(talker.getId()));
+    	talker.setNumberOfTopics(ConversationDAO.getNumberOfTopics(talker.getId()));
     	//TODO: load only count?
     	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		
     	//TODO: use cache?
-    	Map<String, TopicBean> mapTalkmiTopics = TopicDAO.queryTopics();
+    	Map<String, ConversationBean> mapTalkmiTopics = ConversationDAO.queryTopics();
 //		Map<String, TopicBean> mapTalkmiTopics = new LinkedHashMap<String, TopicBean>(40);
 //		LiveConversationsSingleton lcs = LiveConversationsSingleton.getReference();
 //		if(lcs.getLiveConversationMap().size() < 20) {
@@ -40,17 +40,6 @@ public class Home extends Controller {
 		if (newTopic == null || newTopic.trim().length() == 0) {
 			newTopic = "Please enter your Conversation here ...";
 		}
-		
-		//For loading previous/next topics. Do we need to use this?
-//		if (count == 1) {
-//			SimpleDateFormat SQL_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//			session.setAttribute("latesttimestamp", SQL_DATE_FORMAT.format(tbTalkmiTopic.getDisplayTime()));
-//			//System.out.println("Latest date: " + SQL_DATE_FORMAT.format(tbTalkmiTopic.getDisplayTime()));
-//		} else if (count == 40) {
-//			SimpleDateFormat SQL_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//			session.setAttribute("earliesttimestamp", SQL_DATE_FORMAT.format(tbTalkmiTopic.getDisplayTime()));
-//			//System.out.println("Earliest date: " + SQL_DATE_FORMAT.format(tbTalkmiTopic.getDisplayTime()));
-//		}
 		
         render(talker, mapTalkmiTopics, newTopic);
     }

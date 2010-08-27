@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import models.TalkerBean;
 import models.TalkerBean.ProfilePreference;
-import models.TopicBean;
+import models.ConversationBean;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -14,7 +14,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.LockObtainFailedException;
 
 import dao.TalkerDAO;
-import dao.TopicDAO;
+import dao.ConversationDAO;
 import play.jobs.Every;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
@@ -67,7 +67,7 @@ public class SeachIndexerJob extends Job {
 			  autocompleteIndexWriter.addDocument(doc2);
 		}
 		
-		for (TopicBean topic : TopicDAO.loadAllTopics()) {
+		for (ConversationBean topic : ConversationDAO.loadAllTopics()) {
 			//for autocomplete
 			Document doc = new Document();
 			doc.add(new Field("title", topic.getTopic(), Field.Store.YES,

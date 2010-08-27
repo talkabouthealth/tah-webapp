@@ -12,10 +12,10 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
 import dao.TalkerDAO;
-import dao.TopicDAO;
+import dao.ConversationDAO;
 
 import models.TalkerBean;
-import models.TopicBean;
+import models.ConversationBean;
 
 public abstract class AbstractAction implements Action {
 	
@@ -26,7 +26,7 @@ public abstract class AbstractAction implements Action {
 	protected String type;
 	
 	//other possible data
-	protected TopicBean topic;
+	protected ConversationBean topic;
 	protected TalkerBean otherTalker;
 	
 	public AbstractAction(String type, TalkerBean talker) {
@@ -80,9 +80,9 @@ public abstract class AbstractAction implements Action {
 	}
 	
 	// Topic connected actions
-	protected TopicBean parseTopic(DBObject dbObject) {
+	protected ConversationBean parseTopic(DBObject dbObject) {
 		DBObject topicDBObject = ((DBRef)dbObject.get("topicId")).fetch();
-		TopicBean topic = new TopicBean();
+		ConversationBean topic = new ConversationBean();
     	topic.setId(topicDBObject.get("_id").toString());
     	topic.setTid((Integer)topicDBObject.get("tid"));
     	topic.setTopic((String)topicDBObject.get("topic"));
@@ -91,8 +91,8 @@ public abstract class AbstractAction implements Action {
     	return topic;
 	}
 	
-	protected void addTopic(DBObject dbObject, TopicBean topic) {
-		DBRef topicRef = new DBRef(DBUtil.getDB(), TopicDAO.TOPICS_COLLECTION, new ObjectId(topic.getId()));
+	protected void addTopic(DBObject dbObject, ConversationBean topic) {
+		DBRef topicRef = new DBRef(DBUtil.getDB(), ConversationDAO.TOPICS_COLLECTION, new ObjectId(topic.getId()));
 		dbObject.put("topicId", topicRef);
 	}
 	

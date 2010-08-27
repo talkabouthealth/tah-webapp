@@ -45,7 +45,7 @@ import dao.DiseaseDAO;
 import dao.HealthItemDAO;
 import dao.TalkerDAO;
 import dao.TalkerDiseaseDAO;
-import dao.TopicDAO;
+import dao.ConversationDAO;
 
 @With(Secure.class)
 public class Profile extends Controller {

@@ -9,7 +9,7 @@ import java.util.Map;
 
 import models.CommentBean;
 import models.TalkerBean;
-import models.TopicBean;
+import models.ConversationBean;
 import models.TalkerBean.EmailSetting;
 import models.actions.FollowConvoAction;
 import models.actions.ProfileCommentAction;
@@ -29,7 +29,7 @@ import dao.ActivityDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.TalkerDAO;
-import dao.TopicDAO;
+import dao.ConversationDAO;
 
 @With(Secure.class)
 public class Topics extends Controller {
@@ -37,42 +37,42 @@ public class Topics extends Controller {
     public static void create(String newTopic) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-		TopicBean topic = new TopicBean();
-		topic.setTopic(newTopic);
-		topic.setUid(talker.getId());
+		ConversationBean convo = new ConversationBean();
+		convo.setTopic(newTopic);
+		convo.setUid(talker.getId());
 		Date currentDate = Calendar.getInstance().getTime();
-		topic.setCreationDate(currentDate);
-		topic.setDisplayTime(currentDate);
+		convo.setCreationDate(currentDate);
+		convo.setDisplayTime(currentDate);
 
 		String topicURL = ApplicationDAO.createURLName(newTopic);
-		topic.setMainURL(topicURL);
+		convo.setMainURL(topicURL);
 		
 		// insert new topic into database
-		TopicDAO.save(topic);
-		ActivityDAO.saveActivity(new StartConvoAction(talker, topic));
+		ConversationDAO.save(convo);
+		ActivityDAO.saveActivity(new StartConvoAction(talker, convo));
 		
 		//send notifications if Automatic Notifications is On
-		NotificationUtils.sendAutomaticNotifications(topic.getId());
+		NotificationUtils.sendAutomaticNotifications(convo.getId());
 		
 		//automatically follow started topic
-		talker.getFollowingTopicsList().add(topic.getId());
+		talker.getFollowingTopicsList().add(convo.getId());
 		TalkerDAO.updateTalker(talker);
     	CommonUtil.updateCachedTalker(session);
-		ActivityDAO.saveActivity(new FollowConvoAction(talker, topic));
+		ActivityDAO.saveActivity(new FollowConvoAction(talker, convo));
 		
 
 		newTopic = newTopic.replaceAll("'", "&#39;");
 		newTopic = newTopic.replaceAll("\\|", "&#124;");
 		
 		//TODO: make as template!
-		renderText(topic.getTid() + "|" + newTopic + "|" + topic.getId());
+		renderText(convo.getTid() + "|" + newTopic + "|" + convo.getId());
     }
     
     public static void restart(String topicId) {
     	//TODO: in other thread?
     	NotificationUtils.sendAutomaticNotifications(topicId);
     	
-    	TopicBean topic = TopicDAO.getByTopicId(topicId);
+    	ConversationBean topic = ConversationDAO.getByTopicId(topicId);
     	for (TalkerBean follower : topic.getFollowers()) {
     		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_RESTART, 
     				follower, "Topic '"+topic.getTopic()+"' is restarted.");
@@ -81,7 +81,7 @@ public class Topics extends Controller {
     
     public static void flag(String topicId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	TopicBean topic = TopicDAO.getByTopicId(topicId);
+    	ConversationBean topic = ConversationDAO.getByTopicId(topicId);
     	
     	if (topic == null) {
     		return;
@@ -99,7 +99,7 @@ public class Topics extends Controller {
     }
     
     public static void lastTopicId() {
-    	String lastTopicId = TopicDAO.getLastTopicId();
+    	String lastTopicId = ConversationDAO.getLastTopicId();
 		
     	renderText(lastTopicId);
     }
@@ -114,7 +114,7 @@ public class Topics extends Controller {
     	}
     	else {
     		talker.getFollowingTopicsList().add(topicId);
-    		ActivityDAO.saveActivity(new FollowConvoAction(talker, new TopicBean(topicId)));
+    		ActivityDAO.saveActivity(new FollowConvoAction(talker, new ConversationBean(topicId)));
     	}
     	
     	//TODO: put together?
@@ -127,13 +127,12 @@ public class Topics extends Controller {
     public static void updateTopicField(String name, String value) {
     	//TODO: list of allowed fields?
     	
-    	
     }
     
     public static void saveTopicComment(String topicId, String parentId, String text) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-		TopicBean topic = TopicDAO.getByTopicId(topicId);
+		ConversationBean topic = ConversationDAO.getByTopicId(topicId);
 		notFoundIfNull(topic);
 		
 		CommentBean comment = new CommentBean();

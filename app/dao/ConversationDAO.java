@@ -16,7 +16,7 @@ import java.util.Set;
 import models.CommentBean;
 import models.MessageBean;
 import models.TalkerBean;
-import models.TopicBean;
+import models.ConversationBean;
 
 import org.bson.types.ObjectId;
 
@@ -34,11 +34,11 @@ import com.mongodb.WriteConcern;
 
 import static util.DBUtil.*;
 
-public class TopicDAO {
+public class ConversationDAO {
 	
 	public static final String TOPICS_COLLECTION = "topics";
 	
-	public static void save(TopicBean topic) {
+	public static void save(ConversationBean topic) {
 		//TODO: Same topic? - Do not update anything
 		//TODO: move everything to update?
 		
@@ -59,7 +59,7 @@ public class TopicDAO {
 	 * Returns -1 in case of failure
 	 */
 	//TODO: move similar code in one jar ?
-	private static int saveInternal(TopicBean topic, int count) {
+	private static int saveInternal(ConversationBean topic, int count) {
 		if (count == 0) {
 			return -1;
 		}
@@ -100,7 +100,7 @@ public class TopicDAO {
 		return (Integer)topicObject.get("tid");
 	}
 	
-	public static void updateTopic(TopicBean topic) {
+	public static void updateTopic(ConversationBean topic) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
 		//TODO: update also main url
@@ -113,7 +113,7 @@ public class TopicDAO {
 		topicsColl.update(topicId, new BasicDBObject("$set", topicObject));
 	}
 	
-	public static TopicBean getByTopicId(String topicId) {
+	public static ConversationBean getByTopicId(String topicId) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("_id", new ObjectId(topicId));
@@ -122,7 +122,7 @@ public class TopicDAO {
 		return parseTopicBean(topicDBObject);
 	}
 	
-	public static TopicBean getByTid(Integer tid) {
+	public static ConversationBean getByTid(Integer tid) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("tid", tid);
@@ -136,7 +136,7 @@ public class TopicDAO {
 	 * @param url
 	 * @return
 	 */
-	public static TopicBean getByURL(String url) {
+	public static ConversationBean getByURL(String url) {
 		DBCollection topicsColl = getDB().getCollection(TOPICS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("$or", 
@@ -150,13 +150,13 @@ public class TopicDAO {
 		return parseTopicBean(topicDBObject);
 	}
 	
-	private static TopicBean parseTopicBean(DBObject topicDBObject) {
+	private static ConversationBean parseTopicBean(DBObject topicDBObject) {
 		if (topicDBObject == null) {
 			return null;
 		}
 		
 		//TODO: move to topic bean?
-		TopicBean topic = new TopicBean();
+		ConversationBean topic = new ConversationBean();
     	topic.setId(topicDBObject.get("_id").toString());
     	topic.setTid((Integer)topicDBObject.get("tid"));
     	topic.setTopic((String)topicDBObject.get("topic"));
@@ -214,28 +214,28 @@ public class TopicDAO {
 		return topic;
 	}
 	
-	public static List<TopicBean> loadAllTopics() {
+	public static List<ConversationBean> loadAllTopics() {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		List<DBObject> topicsDBList = 
 			topicsColl.find().sort(new BasicDBObject("disp_date", -1)).toArray();
 		
-		List<TopicBean> topicsList = new ArrayList<TopicBean>();
+		List<ConversationBean> topicsList = new ArrayList<ConversationBean>();
 		for (DBObject topicDBObject : topicsDBList) {
-			TopicBean topic = parseTopicBean(topicDBObject);
+			ConversationBean topic = parseTopicBean(topicDBObject);
 	    	topicsList.add(topic);
 		}
 		
 		return topicsList;
 	}
 	
-	public static Map<String, TopicBean> queryTopics() {
+	public static Map<String, ConversationBean> queryTopics() {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		List<DBObject> topicsList = 
 			topicsColl.find().sort(new BasicDBObject("disp_date", -1)).limit(20).toArray();
 		
-		Map <String, TopicBean> topicsMap = new LinkedHashMap <String, TopicBean>(20);
+		Map <String, ConversationBean> topicsMap = new LinkedHashMap <String, ConversationBean>(20);
 		for (DBObject topicDBObject : topicsList) {
-			TopicBean topic = new TopicBean();
+			ConversationBean topic = new ConversationBean();
 	    	topic.setId(topicDBObject.get("_id").toString());
 	    	topic.setTid((Integer)topicDBObject.get("tid"));
 	    	topic.setTopic((String)topicDBObject.get("topic"));
@@ -331,7 +331,7 @@ public class TopicDAO {
 	}
 	
 	//Load topics for given activity type
-	public static List<TopicBean> loadTopics(String talkerId, String type) {
+	public static List<ConversationBean> loadTopics(String talkerId, String type) {
 		DBCollection activitiesColl = getCollection(ActivityDAO.ACTIVITIES_COLLECTION);
 		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
@@ -342,18 +342,18 @@ public class TopicDAO {
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
-		List<TopicBean> topicsList = new ArrayList<TopicBean>();
+		List<ConversationBean> topicsList = new ArrayList<ConversationBean>();
 		for (DBObject activityDBObject : activitiesDBList) {
 			DBObject topicDBObject = ((DBRef)activityDBObject.get("topicId")).fetch();
 			
-			TopicBean topic = parseTopicBean(topicDBObject);
+			ConversationBean topic = parseTopicBean(topicDBObject);
 			topicsList.add(topic);
 		}
 		return topicsList;
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(TopicDAO.getNumberOfTopics("4c2cb43160adf3055c97d061"));
+		System.out.println(ConversationDAO.getNumberOfTopics("4c2cb43160adf3055c97d061"));
 		
 //		TopicBean topic = new TopicBean();
 //		topic.setTopic("test");

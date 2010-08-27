@@ -1,14 +1,14 @@
 package models.actions;
 
 import models.TalkerBean;
-import models.TopicBean;
+import models.ConversationBean;
 
 import com.mongodb.DBObject;
 
 //TODO: finish Convo actions
 public class AnswerConvoAction extends AbstractAction {
 	
-	public AnswerConvoAction(TalkerBean talker, TopicBean topic) {
+	public AnswerConvoAction(TalkerBean talker, ConversationBean topic) {
 		super("ANSWER_CONVO", talker);
 		this.topic = topic;
 	}

@@ -18,7 +18,7 @@ import com.mongodb.DBRef;
 
 import models.ActivityBean;
 import models.TalkerBean;
-import models.TopicBean;
+import models.ConversationBean;
 import models.actions.AbstractAction;
 import models.actions.Action;
 import models.actions.AnswerConvoAction;

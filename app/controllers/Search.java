@@ -49,6 +49,8 @@ public class Search extends Controller {
 			results.add(doc.get("uname"));
 		}
 		
+		is.close();
+		
 		params.flash("query");
 		render(results);
 	}
@@ -65,6 +67,8 @@ public class Search extends Controller {
 		parser.setAllowLeadingWildcard(true);
 		Query searchQuery = parser.parse("*"+term+"*");
 		Hits hits = is.search(searchQuery);
+		
+		is.close();
 		
 //		Scorer scorer = new QueryScorer(searchQuery);
 //		Highlighter highlighter = new Highlighter(scorer);

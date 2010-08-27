@@ -9,7 +9,7 @@ import models.DiseaseBean;
 import models.HealthItemBean;
 import models.TalkerBean;
 import models.TalkerDiseaseBean;
-import models.TopicBean;
+import models.ConversationBean;
 import models.actions.Action;
 import models.actions.FollowConvoAction;
 import models.actions.FollowTalkerAction;
@@ -25,7 +25,7 @@ import dao.DiseaseDAO;
 import dao.HealthItemDAO;
 import dao.TalkerDAO;
 import dao.TalkerDiseaseDAO;
-import dao.TopicDAO;
+import dao.ConversationDAO;
 import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
@@ -121,7 +121,7 @@ public class PublicProfile extends Controller {
 		notFoundIfNull(talker);
 		
 		String topicsType = "Started";
-		List<TopicBean> topicsList = TopicDAO.loadTopics(talker.getId(), "START_CONVO");
+		List<ConversationBean> topicsList = ConversationDAO.loadTopics(talker.getId(), "START_CONVO");
 		
 		render("@conversationsList", talker, currentTalker, topicsType, topicsList);
 	}
@@ -132,7 +132,7 @@ public class PublicProfile extends Controller {
 		notFoundIfNull(talker);
 		
 		String topicsType = "Joined";
-		List<TopicBean> topicsList = TopicDAO.loadTopics(talker.getId(), "JOIN_CONVO");
+		List<ConversationBean> topicsList = ConversationDAO.loadTopics(talker.getId(), "JOIN_CONVO");
 		
 		render("@conversationsList", talker, currentTalker, topicsType, topicsList);
 	}

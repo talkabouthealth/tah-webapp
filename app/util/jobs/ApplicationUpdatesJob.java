@@ -8,12 +8,12 @@ import org.apache.lucene.document.Field;
 
 import models.IMAccountBean;
 import models.TalkerBean;
-import models.TopicBean;
+import models.ConversationBean;
 import models.TalkerBean.ProfilePreference;
 
 import dao.ApplicationDAO;
 import dao.TalkerDAO;
-import dao.TopicDAO;
+import dao.ConversationDAO;
 
 import play.Play;
 import play.jobs.Job;
@@ -36,11 +36,11 @@ public class ApplicationUpdatesJob extends Job {
 				}
 			}
 			
-			for (TopicBean topic : TopicDAO.loadAllTopics()) {
+			for (ConversationBean topic : ConversationDAO.loadAllTopics()) {
 				String name = ApplicationDAO.createURLName(topic.getTopic());
 				
 				topic.setMainURL(name);
-				TopicDAO.updateTopic(topic);
+				ConversationDAO.updateTopic(topic);
 			}
 		}
     }

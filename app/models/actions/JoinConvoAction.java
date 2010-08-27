@@ -1,13 +1,13 @@
 package models.actions;
 
 import models.TalkerBean;
-import models.TopicBean;
+import models.ConversationBean;
 
 import com.mongodb.DBObject;
 
 public class JoinConvoAction extends AbstractAction {
 	
-	public JoinConvoAction(TalkerBean talker, TopicBean topic) {
+	public JoinConvoAction(TalkerBean talker, ConversationBean topic) {
 		super("JOIN_CONVO", talker);
 		this.topic = topic;
 	}

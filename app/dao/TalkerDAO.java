@@ -19,7 +19,7 @@ import models.EmailBean;
 import models.IMAccountBean;
 import models.TalkerBean;
 import models.ThankYouBean;
-import models.TopicBean;
+import models.ConversationBean;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.lucene.analysis.cn.ChineseTokenizer;
@@ -402,17 +402,17 @@ public class TalkerDAO {
 		return followerList;
 	}
 	
-	public static List<TopicBean> loadFollowingTopics(String talkerId) {
+	public static List<ConversationBean> loadFollowingTopics(String talkerId) {
 		TalkerBean talker = getById(talkerId);
 		
 		if (talker == null) {
-			return new ArrayList<TopicBean>();
+			return new ArrayList<ConversationBean>();
 		}
 		
 		//TODO: use DBRef for topics?
-		List<TopicBean> followingTopicsList = new ArrayList<TopicBean>();
+		List<ConversationBean> followingTopicsList = new ArrayList<ConversationBean>();
 		for (String topicId : talker.getFollowingTopicsList()) {
-			TopicBean topic = TopicDAO.getByTopicId(topicId);
+			ConversationBean topic = ConversationDAO.getByTopicId(topicId);
 			followingTopicsList.add(topic);
 		}
 		

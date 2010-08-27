@@ -1,7 +1,7 @@
 package models.actions;
 
 import models.TalkerBean;
-import models.TopicBean;
+import models.ConversationBean;
 
 import com.mongodb.DBObject;
 

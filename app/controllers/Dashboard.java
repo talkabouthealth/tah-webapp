@@ -18,7 +18,7 @@ import com.tah.im.singleton.OnlineUsersSingleton;
 
 import dao.ConfigDAO;
 import dao.TalkerDAO;
-import dao.TopicDAO;
+import dao.ConversationDAO;
 
 @Check("admin")
 @With(Secure.class)
@@ -26,11 +26,11 @@ public class Dashboard extends Controller {
 	
 	public static void index() {
 		//TODO: use normal beans (not maps)
-		List<Map<String, String>> topicsList = TopicDAO.loadTopicsForDashboard(false);
-		List<Map<String, String>> topicsWithNotificationsList = TopicDAO.loadTopicsForDashboard(true);
+		List<Map<String, String>> topicsList = ConversationDAO.loadTopicsForDashboard(false);
+		List<Map<String, String>> topicsWithNotificationsList = ConversationDAO.loadTopicsForDashboard(true);
 		List<TalkerBean> talkersList = TalkerDAO.loadTalkersForDashboard();
 		
-		String lastTopicId = TopicDAO.getLastTopicId(); 
+		String lastTopicId = ConversationDAO.getLastTopicId(); 
 		OnlineUsersSingleton onlineUsersSingleton = OnlineUsersSingleton.getInstance();
 		boolean automaticNotification = ConfigDAO.getBooleanConfig(NotificationUtils.AUTOMATIC_NOTIFICATIONS_CONFIG);
 		
@@ -50,7 +50,7 @@ public class Dashboard extends Controller {
 	}
 	
 	public static void checkNewTopic(String oldLastTopic) {
-		String lastTopic = TopicDAO.getLastTopicId();
+		String lastTopic = ConversationDAO.getLastTopicId();
 		
 		boolean isNewTopic = false;
 		if (lastTopic != null) {

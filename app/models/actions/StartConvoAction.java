@@ -8,14 +8,14 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
 import dao.TalkerDAO;
-import dao.TopicDAO;
+import dao.ConversationDAO;
 
 import models.TalkerBean;
-import models.TopicBean;
+import models.ConversationBean;
 
 public class StartConvoAction extends AbstractAction {
 	
-	public StartConvoAction(TalkerBean talker, TopicBean topic) {
+	public StartConvoAction(TalkerBean talker, ConversationBean topic) {
 		super("START_CONVO", talker);
 		this.topic = topic;
 	}

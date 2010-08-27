@@ -11,7 +11,7 @@ import models.DiseaseBean;
 import models.HealthItemBean;
 import models.TalkerBean;
 import models.TalkerDiseaseBean;
-import models.TopicBean;
+import models.ConversationBean;
 import models.actions.Action;
 import dao.ActivityDAO;
 import dao.CommentsDAO;
@@ -19,7 +19,7 @@ import dao.DiseaseDAO;
 import dao.HealthItemDAO;
 import dao.TalkerDAO;
 import dao.TalkerDiseaseDAO;
-import dao.TopicDAO;
+import dao.ConversationDAO;
 import play.mvc.Controller;
 import play.templates.JavaExtensions;
 import util.CommonUtil;
@@ -40,7 +40,7 @@ public class ViewDispatcher extends Controller {
 		}
 		
 		//next - question or conversation
-		TopicBean topic = TopicDAO.getByURL(name);
+		ConversationBean topic = ConversationDAO.getByURL(name);
 		if (topic != null) {
 			showConvo(topic);
 			return;
@@ -76,11 +76,11 @@ public class ViewDispatcher extends Controller {
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
 		talker.setFollowingTopicsFullList(TalkerDAO.loadFollowingTopics(talker.getId()));
 		
-		talker.setStartedTopicsList(TopicDAO.loadTopics(talker.getId(), "START_CONVO"));
-		talker.setJoinedTopicsList(TopicDAO.loadTopics(talker.getId(), "JOIN_CONVO"));
+		talker.setStartedTopicsList(ConversationDAO.loadTopics(talker.getId(), "START_CONVO"));
+		talker.setJoinedTopicsList(ConversationDAO.loadTopics(talker.getId(), "JOIN_CONVO"));
 		
 		//TODO: Temporarily - later we'll load all list of topics
-		talker.setNumberOfTopics(TopicDAO.getNumberOfTopics(talker.getId()));
+		talker.setNumberOfTopics(ConversationDAO.getNumberOfTopics(talker.getId()));
 		
 		calculateProfileCompletion(talker);
 		
@@ -146,13 +146,13 @@ public class ViewDispatcher extends Controller {
 		talker.setProfileCompletionValue(sum);
 	}
 	
-	private static void showConvo(TopicBean topic) {
+	private static void showConvo(ConversationBean topic) {
 		TalkerBean talker = null;
 		if (Security.isConnected()) {
 			talker = CommonUtil.loadCachedTalker(session);
 		}
 		
-		TopicDAO.incrementTopicViews(topic.getId());
+		ConversationDAO.incrementTopicViews(topic.getId());
 		
 		topic.setComments(CommentsDAO.loadTopicComments(topic.getId()));
 		

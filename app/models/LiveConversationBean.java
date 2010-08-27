@@ -6,7 +6,7 @@ import java.util.Map;
 
 @Deprecated
 public class LiveConversationBean {
-	private TopicBean topic;
+	private ConversationBean topic;
 	private Map<String, TalkerBean> mTalkers = new HashMap<String, TalkerBean>();
 	private Date StartTime = new Date();
 
@@ -32,11 +32,11 @@ public class LiveConversationBean {
 		return mTalkers.get(tID);
 	}
 
-	public void setTopic(TopicBean topic) {
+	public void setTopic(ConversationBean topic) {
 		this.topic = topic;
 	}
 
-	public TopicBean getTopic() {
+	public ConversationBean getTopic() {
 		return topic;
 	}
 

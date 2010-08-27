@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-public class TopicBean {
+public class ConversationBean {
 	private String id;
 	private int tid;
 	private String mainURL;
@@ -28,9 +28,9 @@ public class TopicBean {
 	private List<MessageBean> messages;
 	private List<TalkerBean> followers;
 	
-	public TopicBean() {}
+	public ConversationBean() {}
 	
-	public TopicBean(String id) {
+	public ConversationBean(String id) {
 		this.id = id;
 	}
 

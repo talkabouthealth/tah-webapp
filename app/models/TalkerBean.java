@@ -160,9 +160,9 @@ public class TalkerBean implements Serializable {
 	
 	//TODO: what's the best solution for partial load?
 	private List<String> followingTopicsList;
-	private List<TopicBean> followingTopicsFullList;
-	private List<TopicBean> startedTopicsList;
-	private List<TopicBean> joinedTopicsList;
+	private List<ConversationBean> followingTopicsFullList;
+	private List<ConversationBean> startedTopicsList;
+	private List<ConversationBean> joinedTopicsList;
 	
 	private EnumSet<ProfilePreference> profilePreferences;
 	private EnumSet<EmailSetting> emailSettings;
@@ -679,17 +679,17 @@ public class TalkerBean implements Serializable {
 	public List<String> getFollowingTopicsList() { return followingTopicsList; }
 	public void setFollowingTopicsList(List<String> followingTopicsList) { this.followingTopicsList = followingTopicsList; }
 	
-	public List<TopicBean> getFollowingTopicsFullList() { return followingTopicsFullList; }
-	public void setFollowingTopicsFullList(List<TopicBean> followingTopicsFullList) { this.followingTopicsFullList = followingTopicsFullList; }
+	public List<ConversationBean> getFollowingTopicsFullList() { return followingTopicsFullList; }
+	public void setFollowingTopicsFullList(List<ConversationBean> followingTopicsFullList) { this.followingTopicsFullList = followingTopicsFullList; }
 
 	public boolean isDeactivated() { return deactivated; }
 	public void setDeactivated(boolean deactivated) { this.deactivated = deactivated; }
 
-	public List<TopicBean> getStartedTopicsList() { return startedTopicsList; }
-	public void setStartedTopicsList(List<TopicBean> startedTopicsList) { this.startedTopicsList = startedTopicsList; }
+	public List<ConversationBean> getStartedTopicsList() { return startedTopicsList; }
+	public void setStartedTopicsList(List<ConversationBean> startedTopicsList) { this.startedTopicsList = startedTopicsList; }
 
-	public List<TopicBean> getJoinedTopicsList() { return joinedTopicsList; }
-	public void setJoinedTopicsList(List<TopicBean> joinedTopicsList) { this.joinedTopicsList = joinedTopicsList; }
+	public List<ConversationBean> getJoinedTopicsList() { return joinedTopicsList; }
+	public void setJoinedTopicsList(List<ConversationBean> joinedTopicsList) { this.joinedTopicsList = joinedTopicsList; }
 	
 	public boolean isConnectionVerified() { return connectionVerified; }
 	public void setConnectionVerified(boolean connectionVerified) { this.connectionVerified = connectionVerified; }

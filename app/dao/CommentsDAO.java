@@ -73,7 +73,7 @@ public class CommentsDAO {
 	public static String saveTopicComment(CommentBean comment) {
 		DBCollection commentsColl = getCollection(TOPIC_COMMENTS_COLLECTION);
 		
-		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, comment.getTopicId());
+		DBRef topicRef = createRef(ConversationDAO.TOPICS_COLLECTION, comment.getTopicId());
 		DBRef fromTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, comment.getFromTalker().getId());
 		DBObject commentObject = BasicDBObjectBuilder.start()
 			.add("topic", topicRef)
@@ -91,7 +91,7 @@ public class CommentsDAO {
 	public static List<CommentBean> loadTopicComments(String topicId) {
 		DBCollection commentsColl = getCollection(TOPIC_COMMENTS_COLLECTION);
 		
-		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topicId);
+		DBRef topicRef = createRef(ConversationDAO.TOPICS_COLLECTION, topicId);
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("topic", topicRef)
 			.get();
