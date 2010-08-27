@@ -2,12 +2,12 @@
 	#{list items:followList.limit(start, 3*10), as:'following' }
 		<div class="thnksfollowing">
            	<div class="thnksfollowingimg">
-				<a href="@{PublicProfile.view(following.userName)}">
+				<a href="@{ViewDispatcher.view(following.userName)}">
 					<img width="80" height="80" src="@{Image.show(following.userName)}" border="0" />
 				</a>
 			</div>
            	<div class="thnksfollowingtext">
-           		<a class="blue13" href="@{PublicProfile.view(following.userName)}">
+           		<a class="blue13" href="@{ViewDispatcher.view(following.userName)}">
           				<strong>${following.userName}</strong>
           			</a>
            		<span class="blue13"> | </span> 

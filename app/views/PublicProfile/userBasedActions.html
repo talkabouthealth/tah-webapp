@@ -382,12 +382,12 @@
 									#{list items:talker.followingList.limit(3*10), as:'following' }
 										<div class="thnksfollowing">
 							            	<div class="thnksfollowingimg">
-												<a href="@{PublicProfile.view(following.userName)}">
+												<a href="@{ViewDispatcher.view(following.userName)}">
 													<img width="80" height="80" src="@{Image.show(following.userName)}" border="0" />
 												</a>
 											</div>
 							            	<div class="thnksfollowingtext">
-							            		<a class="blue13" href="@{PublicProfile.view(following.userName)}">
+							            		<a class="blue13" href="@{ViewDispatcher.view(following.userName)}">
 						            				<strong>${following.userName}</strong>
 						            			</a>
 							            		<span class="blue13"> | </span> 
@@ -441,12 +441,12 @@
 									#{list items:talker.followerList.limit(3*10), as:'follower' }
 										<div class="thnksfollowing">
 							            	<div class="thnksfollowingimg">
-												<a href="@{PublicProfile.view(follower.userName)}">
+												<a href="@{ViewDispatcher.view(follower.userName)}">
 													<img width="80" height="80" src="@{Image.show(follower.userName)}" border="0" />
 												</a>
 											</div>
 							            	<div class="thnksfollowingtext">
-							            		<a class="blue13" href="@{PublicProfile.view(follower.userName)}">
+							            		<a class="blue13" href="@{ViewDispatcher.view(follower.userName)}">
 						            				<strong>${follower.userName}</strong>
 						            			</a>
 							            		<span class="blue13"> | </span> 

@@ -85,7 +85,7 @@ $(function() {
 <div style="font-size: 14px; clear: left">		
 	#{list items:results, as: 'res'}
 		<span style="padding-bottom: 3px">
-			<a href="@{PublicProfile.view(res)}">${res}</a>
+			<a href="@{ViewDispatcher.view(res)}">${res}</a>
 		</span>
 		<br/>
 	#{/list}

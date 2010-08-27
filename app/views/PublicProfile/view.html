@@ -272,7 +272,7 @@
 										<ul>
 											#{list items:talker.followingList.limit(8), as:'following' }
 												<li>
-													<a href="@{PublicProfile.view(following.userName)}" class="bluetext11">
+													<a href="@{ViewDispatcher.view(following.userName)}" class="bluetext11">
 														<img src="@{Image.show(following.userName)}" width="48" height="48" border="0" />
 														${following.userName.limitSize(8)}
 													</a>
@@ -298,7 +298,7 @@
 										<ul>
 											#{list items:talker.followerList.limit(8), as:'follower' }
 												<li>
-													<a href="@{PublicProfile.view(follower.userName)}" class="bluetext11">
+													<a href="@{ViewDispatcher.view(follower.userName)}" class="bluetext11">
 														<img src="@{Image.show(follower.userName)}" width="48" height="48" border="0" />
 														${follower.userName.limitSize(8)}
 													</a>
@@ -590,7 +590,7 @@
 								#{list items:talker.startedTopicsList.limit(12), as:'topic' }
 									<div class="conversationarea">
 										<div class="conversationtext">
-											<a href="@{Topics.viewTopic(topic.mainURL)}" class="navybluetext12">
+											<a href="@{ViewDispatcher.view(topic.mainURL)}" class="navybluetext12">
 												<strong>${topic.topic}</strong>
 											</a><br />
 											<span class="greytext11">${topic.creationDate.format("MMM dd 'at' HH:mm a")}</span>
@@ -622,13 +622,13 @@
 								#{list items:talker.joinedTopicsList.limit(12), as:'topic' }
 									<div class="conversationarea">
 										<div class="thankyoupic">
-											<a href="@{PublicProfile.view(topic.talker.userName)}" class="bluetext11">
+											<a href="@{ViewDispatcher.view(topic.talker.userName)}" class="bluetext11">
 												<img src="@{Image.show(topic.talker.userName)}" width="48" height="48" border="0" />
 												<br />${topic.talker.userName}
 											</a>
 										</div>
 										<div class="conversationtext">
-											<a href="@{Topics.viewTopic(topic.mainURL)}" class="navybluetext12">
+											<a href="@{ViewDispatcher.view(topic.mainURL)}" class="navybluetext12">
 												<strong>${topic.topic}</strong>
 											</a><br />
 											<span class="greytext11">${topic.creationDate.format("MMM dd 'at' HH:mm a")}</span>
@@ -661,7 +661,7 @@
 							</div>
 							<div class="activitiestext">
 								#{list items:talker.followingTopicsFullList.limit(12), as:'topic' }
-									<a href="@{Topics.viewTopic(topic.mainURL)}" class="bluetext12">${topic.topic}</a><br/>
+									<a href="@{ViewDispatcher.view(topic.mainURL)}" class="bluetext12">${topic.topic}</a><br/>
 								#{/list}
 							</div>
 						#{/if}

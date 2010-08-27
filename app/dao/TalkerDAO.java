@@ -210,25 +210,24 @@ public class TalkerDAO {
 	public static TalkerBean getByLoginInfo(String usernameOrEmail, String password) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
-		DBObject query = new BasicDBObject();
-		query.put("uname", usernameOrEmail);
-		query.put("pass", password);
+		DBObject usernameQuery = BasicDBObjectBuilder.start()
+			.add("uname", usernameOrEmail)
+			.add("pass", password)
+			.get();
+		DBObject emailQuery = BasicDBObjectBuilder.start()
+			.add("email", usernameOrEmail)
+			.add("pass", password)
+			.get();
+		DBObject notPrimaryEmailQuery = BasicDBObjectBuilder.start()
+			.add("emails.value", usernameOrEmail)
+			.add("pass", password)
+			.get();
+		
+		DBObject query = new BasicDBObject("$or", 
+				Arrays.asList(usernameQuery, emailQuery, notPrimaryEmailQuery)
+			);
 		
 		DBObject talkerDBObject = talkersColl.findOne(query);
-		
-		/*
-		 	Login by Username or Email
-		 	Current version (1.4.4) doesn't support "$or" query (will be supported in 1.5.3),
-		 	so we make second query
-		 	TODO: Later use "$or" operator
-		*/
-		if (talkerDBObject == null) {
-			query = new BasicDBObject();
-			query.put("email", usernameOrEmail);
-			query.put("pass", password);
-			
-			talkerDBObject = talkersColl.findOne(query);
-		}
 		
 		TalkerBean talker = null;
 		if (talkerDBObject != null) {

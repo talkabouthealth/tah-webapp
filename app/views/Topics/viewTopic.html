@@ -254,7 +254,7 @@
 						Views: ${topic.views}<br/>
 						Followed by ${topic.followers?.size()} members<br/>
 						#{list items: topic.followers, as: 'follower'}
-							<a href="@{PublicProfile.view(follower.userName)}" title="${follower.userName}" >
+							<a href="@{ViewDispatcher.view(follower.userName)}" title="${follower.userName}" >
 								<img src="@{Image.show(follower.userName)}" width="48" height="48" border="0" />
 							</a>
 						#{/list}

@@ -55,7 +55,7 @@
 						#{list items:topicsList.limit(12), as:'topic' }
 							<div class="area">
 								<div class="arealeft2">
-									<a href="@{PublicProfile.view(topic.talker.userName)}" class="bluetext11">
+									<a href="@{ViewDispatcher.view(topic.talker.userName)}" class="bluetext11">
 										<img src="@{Image.show(topic.talker.userName)}" width="71" height="71" border="0" />
 										<br /><span class="bluetext11">${topic.talker.userName}</span>
 									</a>
@@ -68,10 +68,10 @@
 								    	<div class="areamidleft">
 								    		<p>
 								    			<span class="blacktext14">
-								    				<a href="@{Topics.viewTopic(topic.mainURL)}">${topic.topic}</a><br />
+								    				<a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.topic}</a><br />
 								    				<span class="blacktext12">${topic.messages.size()} comment(s)</span> | 
 						        					<span class="blacktext12">${topic.members.size()} people spoke</span> | 
-						        					<a href="@{Topics.viewTopic(topic.mainURL)}#comments" class="bluetext12">Comment</a> | 
+						        					<a href="@{ViewDispatcher.view(topic.mainURL)}#comments" class="bluetext12">Comment</a> | 
 						        					<a href="#" class="bluetext12 followTopicLink" rel="${topic.id}">
 													${ talker.followingTopicsList?.contains(topic.id) ? 'Unfollow' : 'Follow'}
 													</a> | 

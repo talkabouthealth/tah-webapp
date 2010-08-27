@@ -20,7 +20,7 @@
 	<!--1st drop down menu -->                                                   
 	<div id="dropmenu1" class="dropmenudiv">
 		*{ TODO username to variable }*
-		<a href="@{PublicProfile.view(session.get('username'))}">Public Profile</a>
+		<a href="@{ViewDispatcher.view(session.get('username'))}">Public Profile</a>
 		<a href="@{PublicProfile.userBasedActions(session.get('username'), 'comments')}">Comment Stream</a>
 		<a href="@{PublicProfile.userBasedActions(session.get('username'), 'thankyous')}">Thank you's</a>
 		<a href="@{PublicProfile.userBasedActions(session.get('username'), 'following')}">Following</a>

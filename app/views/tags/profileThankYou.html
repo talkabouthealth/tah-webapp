@@ -1,11 +1,11 @@
 <div class="profiletext2">
 	<div class="thankyoupic">
-		<a href="@{PublicProfile.view(_thankYou.fromTalker.userName)}">
+		<a href="@{ViewDispatcher.view(_thankYou.fromTalker.userName)}">
 			<img width="48" height="48" src="@{Image.show(_thankYou.fromTalker.userName)}" border="0" />
 		</a>
 	</div>
 	<div class="thankyoutext">
-		<a href="@{PublicProfile.view(_thankYou.fromTalker.userName)}" 
+		<a href="@{ViewDispatcher.view(_thankYou.fromTalker.userName)}" 
 			class="bluetext11">${_thankYou.fromTalker.userName}</a><br/>
 	  	<span class="blacktext11">${_thankYou.note.limitSize(80)}</span>
 	  	<span class="greytext11"><br/>${_thankYou.time?.format('MMM dd HH:mm')}</span>

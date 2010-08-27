@@ -59,12 +59,12 @@
 				            	#{list items: activeTalkers, as: 'talker' }
 				            		<div class="thnksfollowing">
 						            	<div class="thnksfollowingimg">
-											<a href="@{PublicProfile.view(talker.userName)}">
+											<a href="@{ViewDispatcher.view(talker.userName)}">
 												<img width="80" height="80" src="@{Image.show(talker.userName)}" border="0" />
 											</a>
 										</div>
 						            	<div class="thnksfollowingtext">
-						            		<a class="blue13" href="@{PublicProfile.view(talker.userName)}">
+						            		<a class="blue13" href="@{ViewDispatcher.view(talker.userName)}">
 					            				<strong>${talker.userName}</strong>
 					            			</a>
 						            		<span class="blue13"> | </span> 
@@ -97,12 +97,12 @@
 				            	#{list items: newTalkers, as: 'talker' }
 				            		<div class="thnksfollowing">
 						            	<div class="thnksfollowingimg">
-											<a href="@{PublicProfile.view(talker.userName)}">
+											<a href="@{ViewDispatcher.view(talker.userName)}">
 												<img width="80" height="80" src="@{Image.show(talker.userName)}" border="0" />
 											</a>
 										</div>
 						            	<div class="thnksfollowingtext">
-						            		<a class="blue13" href="@{PublicProfile.view(talker.userName)}">
+						            		<a class="blue13" href="@{ViewDispatcher.view(talker.userName)}">
 					            				<strong>${talker.userName}</strong>
 					            			</a>
 						            		<span class="blue13"> | </span> 

@@ -87,12 +87,12 @@
 						#{list items:talker.followerList.limit(3*10), as:'follower' }
 							<div class="profiletext2">
 								<div class="thankyoupic">
-									<a href="@{PublicProfile.view(follower.userName)}">
+									<a href="@{ViewDispatcher.view(follower.userName)}">
 										<img width="48" height="48" src="@{Image.show(follower.userName)}" border="0" />
 									</a>
 								</div>
 								<div class="thankyoutext">
-									<a href="@{PublicProfile.view(follower.userName)}" 
+									<a href="@{ViewDispatcher.view(follower.userName)}" 
 										class="bluetext11">${follower.userName}</a><br/>
 									<span class="blacktext11">${follower.levelOfRecognition}</span><br/>
 								  	<span class="blacktext11">${follower.bio}</span>
