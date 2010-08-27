@@ -8,6 +8,7 @@ public class TopicBean {
 	private String id;
 	private int tid;
 	private String mainURL;
+	private Set<String> URLs;
 	private String topic;
 	private Date creationDate;
 	private Date displayTime;	//TODO: old field? how to use it?
@@ -35,10 +36,6 @@ public class TopicBean {
 
 	
 	public String getMainURL() {
-		if (mainURL == null || mainURL.length() == 0) {
-			//TODO: temporary for old topics
-			return ""+tid;
-		}
 		return mainURL;
 	}
 	public void setMainURL(String mainURL) { this.mainURL = mainURL; }
@@ -90,4 +87,12 @@ public class TopicBean {
 	
 	public int getTid() { return tid; }
 	public void setTid(int tid) { this.tid = tid; }
+
+	public Set<String> getURLs() {
+		return URLs;
+	}
+
+	public void setURLs(Set<String> uRLs) {
+		URLs = uRLs;
+	}
 }

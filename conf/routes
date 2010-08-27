@@ -32,7 +32,7 @@ GET		/image/{userName}						Image.show
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
 
-GET		/{userName}								PublicProfile.view
+GET		/{name}									ViewDispatcher.view
 
 GET		/{userName}/thankyous					PublicProfile.userBasedActions(action:'thankyous')
 GET		/{userName}/following					PublicProfile.userBasedActions(action:'following')

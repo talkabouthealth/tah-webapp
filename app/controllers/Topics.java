@@ -31,14 +31,9 @@ import dao.CommentsDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
 
+@With(Secure.class)
 public class Topics extends Controller {
 	
-	//Not using "@With" annotation to skip 'viewTopic' method, it should be public
-	@Before(unless={"viewTopic"})
-    static void checkAccess() throws Throwable {
-		Secure.checkAccess();
-	}
-
     public static void create(String newTopic) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
@@ -49,7 +44,7 @@ public class Topics extends Controller {
 		topic.setCreationDate(currentDate);
 		topic.setDisplayTime(currentDate);
 
-		String topicURL = ApplicationDAO.getURLName(newTopic);
+		String topicURL = ApplicationDAO.createURLName(newTopic);
 		topic.setMainURL(topicURL);
 		
 		// insert new topic into database
@@ -170,45 +165,6 @@ public class Topics extends Controller {
     public static void viewTopic(String url) {
     	notFoundIfNull(url);
 		
-		TalkerBean talker = null;
-		if (Security.isConnected()) {
-			talker = CommonUtil.loadCachedTalker(session);
-		}
-		
-		TopicBean topic = TopicDAO.getByMainURL(url);
-		if (topic == null) {
-			//try by old url
-			topic = TopicDAO.getByOldURL(url);
-			
-			//TODO: temporary - for old topics with mainURL
-			if (topic == null) {
-				try {
-					Integer tid = Integer.parseInt(url);
-					topic = TopicDAO.getByTid(tid);
-					
-					String topicURL = JavaExtensions.slugify(topic.getTopic());
-					topic.setMainURL(topicURL+"-"+topic.getTid());
-					TopicDAO.updateTopic(topic);
-				}
-				catch(Exception e){}
-			}
-			notFoundIfNull(topic);
-			
-			//redirect to main url
-			viewTopic(topic.getMainURL());
-		}		
-		
-		TopicDAO.incrementTopicViews(topic.getId());
-		
-		topic.setComments(CommentsDAO.loadTopicComments(topic.getId()));
-		
-		//temporary test data
-		topic.setDetails("Suggestions for friends and family...");
-		topic.setTags(Arrays.asList("support", "help", "testtag"));
-		topic.setSummary("Summary.........");
-		topic.setSumContributors(Arrays.asList("murray", "situ"));
-		
-		render(talker, topic);
     }
 
 }

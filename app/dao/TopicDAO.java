@@ -3,6 +3,7 @@ package dao;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -130,19 +131,20 @@ public class TopicDAO {
 		return parseTopicBean(topicDBObject);
 	}
 	
-	public static TopicBean getByMainURL(String mainURL) {
+	/**
+	 * Find by main URL (current) or old urls.
+	 * @param url
+	 * @return
+	 */
+	public static TopicBean getByURL(String url) {
 		DBCollection topicsColl = getDB().getCollection(TOPICS_COLLECTION);
 		
-		DBObject query = new BasicDBObject("main_url", mainURL);
-		DBObject topicDBObject = topicsColl.findOne(query);
-		
-		return parseTopicBean(topicDBObject);
-	}
-	
-	public static TopicBean getByOldURL(String oldURL) {
-		DBCollection topicsColl = getDB().getCollection(TOPICS_COLLECTION);
-		
-		DBObject query = new BasicDBObject("urls", oldURL);
+		DBObject query = new BasicDBObject("$or", 
+				Arrays.asList(
+						new BasicDBObject("main_url", url),
+						new BasicDBObject("urls", url)
+					)
+			);
 		DBObject topicDBObject = topicsColl.findOne(query);
 		
 		return parseTopicBean(topicDBObject);
@@ -160,7 +162,10 @@ public class TopicDAO {
     	topic.setTopic((String)topicDBObject.get("topic"));
     	topic.setCreationDate((Date)topicDBObject.get("cr_date"));
     	topic.setDisplayTime((Date)topicDBObject.get("disp_date"));
+    	
     	topic.setMainURL((String)topicDBObject.get("main_url"));
+    	topic.setURLs(getStringSet(topicDBObject, "urls"));
+    	
     	topic.setViews(getInt(topicDBObject, "views"));
     	
     	DBObject talkerDBObject = ((DBRef)topicDBObject.get("uid")).fetch();

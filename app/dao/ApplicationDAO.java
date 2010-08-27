@@ -119,7 +119,7 @@ public class ApplicationDAO {
 		return namesColl.findOne(query) != null;
 	}
 	
-	public static String getURLName(String name) {
+	public static String createURLName(String name) {
 		name = prepareName(name);
 		
 		DBCollection namesColl = getCollection(NAMES_COLLECTION);
@@ -138,7 +138,7 @@ public class ApplicationDAO {
 		if (cnt == 1) {
 			//if new URL name is a reserved path - create other
 			if (Application.RESERVED_WORDS.contains(name)) {
-				return getURLName(name);
+				return createURLName(name);
 			}
 			return name;
 		}
