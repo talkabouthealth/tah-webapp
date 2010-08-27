@@ -16,18 +16,20 @@ import play.jobs.OnApplicationStart;
 public class ApplicationUpdatesJob extends Job {
 	
 	public void doJob() {
-    	//Move old IM account info to new format ('im_accounts' array)
-		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
-//			System.out.println(talker.getIm()+" : "+talker.getImUsername());
-			if (talker.getIm() != null && talker.getImUsername() != null) {
-				if (!talker.getIm().isEmpty() && !talker.getImUsername().isEmpty()) {
-					IMAccountBean imAccount = 
-						new IMAccountBean(talker.getImUsername(), talker.getIm());
-					talker.getImAccounts().add(imAccount);
-					TalkerDAO.updateTalker(talker);
-				}
-			}
-		}
+//    	//Move old IM account info to new format ('im_accounts' array)
+//		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
+////			System.out.println(talker.getIm()+" : "+talker.getImUsername());
+//			if (talker.getIm() != null && talker.getImUsername() != null) {
+//				if (!talker.getIm().isEmpty() && !talker.getImUsername().isEmpty()) {
+//					IMAccountBean imAccount = 
+//						new IMAccountBean(talker.getImUsername(), talker.getIm());
+//					talker.getImAccounts().add(imAccount);
+//					TalkerDAO.updateTalker(talker);
+//				}
+//			}
+//		}
+		
+		//FIXME: move all talkers/topics to new names
     }
 	
 }

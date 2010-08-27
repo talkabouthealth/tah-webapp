@@ -26,6 +26,7 @@ import util.EmailUtil;
 import util.NotificationUtils;
 import webapp.LiveConversationsSingleton;
 import dao.ActivityDAO;
+import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
@@ -48,7 +49,7 @@ public class Topics extends Controller {
 		topic.setCreationDate(currentDate);
 		topic.setDisplayTime(currentDate);
 
-		String topicURL = JavaExtensions.slugify(topic.getTopic());
+		String topicURL = ApplicationDAO.getURLName(newTopic);
 		topic.setMainURL(topicURL);
 		
 		// insert new topic into database

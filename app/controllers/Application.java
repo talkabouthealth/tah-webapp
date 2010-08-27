@@ -39,7 +39,7 @@ public class Application extends Controller {
 	//As we have profile link as "http://talkabouthealth.com/{userName}" 
 	//we need to disallow usernames equal to application routes - controllers, static files, etc
 	//TODO: maybe we can user Play! configuration for this?
-	private static final List<String> RESERVED_WORDS = Arrays.asList(new String[]{
+	public static final List<String> RESERVED_WORDS = Arrays.asList(new String[]{
 		"login", "logout", "signup", "register", "forgotpassword", "sendnewpassword", 
 		"home", "dashboard", "talk", "profile", "public", "image", 
 		"actions", "application", "oauth", "security", "static", "topics",
@@ -164,11 +164,9 @@ public class Application extends Controller {
 		}
 		
 		if (!validation.hasError("talker.userName")) {
-			TalkerBean otherTalker = TalkerDAO.getByUserName(talker.getUserName());
-			validation.isTrue(otherTalker == null).message("username.exists");
-
-			String lowUserName = talker.getUserName().toLowerCase();
-			validation.isTrue(!RESERVED_WORDS.contains(lowUserName)).message("username.reserved");
+//			TalkerBean otherTalker = TalkerDAO.getByUserName(talker.getUserName());
+			boolean nameNotExists = !ApplicationDAO.isURLNameExists(talker.getUserName());
+			validation.isTrue(nameNotExists).message("username.exists");
 		}
 		if (!validation.hasError("talker.email")) {
 			TalkerBean otherTalker = TalkerDAO.getByEmail(talker.getEmail());

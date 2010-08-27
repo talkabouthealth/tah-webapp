@@ -29,7 +29,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.MongoException;
-import com.mongodb.DB.WriteConcern;
+import com.mongodb.WriteConcern;
 
 import static util.DBUtil.*;
 
@@ -39,10 +39,7 @@ public class TopicDAO {
 	
 	public static void save(TopicBean topic) {
 		//TODO: Same topic? - Do not update anything
-		//TODO: one query?
 		//TODO: move everything to update?
-		boolean uniqueMainURL = (getByMainURL(topic.getMainURL()) == null);
-		boolean uniqueOldURL = (getByOldURL(topic.getMainURL()) == null);
 		
 		//we try to insert topic 5 times
 		int tid = saveInternal(topic, 5);
@@ -53,12 +50,6 @@ public class TopicDAO {
 			//TODO: error handling?
 			new Exception("DB Problem - Topic not inserted into DB").printStackTrace();
 			return;
-		}
-		
-		if (!(uniqueMainURL && uniqueOldURL)) {
-			//add 'tid' to mainURL
-			topic.setMainURL(topic.getMainURL()+"-"+topic.getTid());
-			updateTopic(topic);
 		}
 	}
 	
@@ -90,9 +81,8 @@ public class TopicDAO {
 			.get();
 
 		//Only with STRICT WriteConcern we receive exception on duplicate key
-		topicsColl.setWriteConcern(WriteConcern.STRICT);
 		try {
-			topicsColl.save(topicObject);
+			topicsColl.save(topicObject, WriteConcern.SAFE);
 		}
 		catch (MongoException me) {
 			//E11000 duplicate key error index
