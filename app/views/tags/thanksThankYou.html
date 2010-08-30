@@ -15,8 +15,14 @@
 				(${_thankYou.fromTalker.levelOfRecognition})
 			#{/else}
 		</span><br/>	
-		<span class="greytext12">${_thankYou.note.limitSize(80)}</span><br/>
-		<!-- <a href="#" class="more11">  more</a>  -->
+		<span class="greytext12">
+			${_thankYou.note.limitSize(80)}
+			#{if _thankYou.note.size() > 80 }
+				&nbsp;<a href="#" class="more11">more</a>
+			#{/if}
+		</span>
+		<span class="greytext12 fulltext">${_thankYou.note}</span>
+		<br/>
 		<span class="lightgrey12">${_thankYou.time?.format('M/d/yyyy')}</span>
 	</div>
 </div>

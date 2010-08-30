@@ -30,7 +30,12 @@
    				return false;
    			});
    		 
-
+			//for more links
+			$(".more11").live("click", function() {
+					$(this)
+						.parent().hide()
+						.next(".fulltext").show();
+				});
 
    			//--- Comments ---
    			$(".commentreply").each(function() {
@@ -430,7 +435,14 @@
 													#{/else}
 												</span><br/>
 							            		#{if following.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.BIO) }
-							              			<span class="greytext12">${following.bio}</span><br/>
+							              			<span class="greytext12">
+														${following.bio.limitSize(80)}
+														#{if following.bio.size() > 80 }
+															&nbsp;<a href="#" class="more11">more</a>
+														#{/if}
+													</span>
+													<span class="greytext12 fulltext">${following.bio}</span>
+													<br/>
 							              		#{/if}
 							              		<span class="bluetext12">
 								              		#{ifnot currentTalker?.equals(following) }
@@ -495,7 +507,14 @@
 													#{/else}
 												</span><br/>
 							            		#{if follower.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.BIO) }
-							              			<span class="greytext12">${follower.bio}</span><br/>
+							              			<span class="greytext12">
+														${follower.bio.limitSize(80)}
+														#{if follower.bio.size() > 80 }
+															&nbsp;<a href="#" class="more11">more</a>
+														#{/if}
+													</span>
+													<span class="greytext12 fulltext">${follower.bio}</span>
+													<br/>
 							              		#{/if}
 							              		<span class="bluetext12">
 								              		#{ifnot currentTalker?.equals(follower) }

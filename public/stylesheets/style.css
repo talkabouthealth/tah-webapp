@@ -661,3 +661,5 @@ a.visited { font-weight:bold;font-family: arial; font-size: 11px;text-decoration
 */
 .pagenumb { width: auto; float: right; padding-left:9px; }
 .nextprebutton { float: right}
+
+.fulltext { display: none }
