@@ -30,9 +30,15 @@ public class EmailUtil {
 		
 		
 		NOTIFICATION,
+		
 		THANKYOU,
 		FOLLOWER,
 		PROFILE_COMMENT,
+		DIRECT_MESSAGE,
+		
+		CONVO_RESTARTED,
+		CONVO_COMMENT,
+		CONVO_SUMMARY
 		
 		;
 	}

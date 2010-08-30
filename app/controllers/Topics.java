@@ -75,8 +75,11 @@ public class Topics extends Controller {
     	
     	ConversationBean topic = ConversationDAO.getByTopicId(topicId);
     	for (TalkerBean follower : topic.getFollowers()) {
-    		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_RESTART, 
-    				follower, "Topic '"+topic.getTopic()+"' is restarted.");
+//    		Map<String, String> vars = new HashMap<String, String>();
+//    		vars.put("other_talker", talker.getUserName());
+//    		vars.put("thankyou_text", thankYouBean.getNote());
+//    		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_RESTART, 
+//    				follower, "Topic '"+topic.getTopic()+"' is restarted.");
     	}
     }
     

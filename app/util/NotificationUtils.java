@@ -79,12 +79,11 @@ public class NotificationUtils {
 		}
 	}
 	
-	public static void sendEmailNotification(EmailSetting emailSetting, TalkerBean talker, String text) {
+	public static void sendEmailNotification(EmailSetting emailSetting, 
+			TalkerBean talker, Map<String, String> vars) {
 		if (talker.loadEmailSettings().contains(emailSetting)) {
-			Map<String, String> vars = new HashMap<String, String>();
 			vars.put("username", talker.getUserName());
-			vars.put("notification_text", text);
-			EmailUtil.sendEmail(EmailTemplate.NOTIFICATION, talker.getEmail(), vars, null, true);
+			EmailUtil.sendEmail(emailSetting.getEmailTemplate(), talker.getEmail(), vars, null, true);
 		}
 	}
 

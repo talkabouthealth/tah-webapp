@@ -22,6 +22,7 @@ import play.data.validation.Email;
 import play.data.validation.Match;
 import play.data.validation.Required;
 import util.ValidateData;
+import util.EmailUtil.EmailTemplate;
 
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
@@ -83,21 +84,31 @@ public class TalkerBean implements Serializable {
 	
 	//Convo-related items start with "CONVO" - we use it for display
 	public enum EmailSetting {
-		RECEIVE_COMMENT ("Send me an email when I receive a comment."),
-		RECEIVE_THANKYOU ("Send me an email when I receive a 'Thank You'."),
-		RECEIVE_DIRECT ("Send me an email when I receive a Direct Message."),
+		RECEIVE_COMMENT ("Send me an email when I receive a comment.", EmailTemplate.PROFILE_COMMENT),
+		RECEIVE_THANKYOU ("Send me an email when I receive a 'Thank You'.", EmailTemplate.THANKYOU),
+		RECEIVE_DIRECT ("Send me an email when I receive a Direct Message.", EmailTemplate.DIRECT_MESSAGE),
+		NEW_FOLLOWER ("Send me an email when someone follows me.", EmailTemplate.FOLLOWER),
 		
-		CONVO_RESTART ("Send me an email when a Conversation I follow is re-started."),
-		CONVO_COMMENT ("Send me an email when a Comment is added to a Conversation I follow."),
-		CONVO_SUMMARY ("Send me an email when a Summary of a Conversation I follow is updated.");
+		CONVO_RESTART ("Send me an email when a Conversation I follow is re-started.", 
+				EmailTemplate.CONVO_RESTARTED),
+		CONVO_COMMENT ("Send me an email when a Comment is added to a Conversation I follow.", 
+				EmailTemplate.CONVO_COMMENT),
+		CONVO_SUMMARY ("Send me an email when a Summary of a Conversation I follow is updated.", 
+				EmailTemplate.CONVO_SUMMARY);
 		
 		private final String description;
+		private final EmailTemplate emailTemplate;
 		
-		private EmailSetting(String description) {
+		private EmailSetting(String description, EmailTemplate emailTemplate) {
 			this.description = description;
+			this.emailTemplate = emailTemplate;
 		}
 
 		public String getDescription() { return description; }
+
+		public EmailTemplate getEmailTemplate() {
+			return emailTemplate;
+		}
 	}
 	
 	private String id;

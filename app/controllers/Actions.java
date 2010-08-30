@@ -2,7 +2,9 @@ package controllers;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import play.mvc.Controller;
 import play.mvc.With;
@@ -37,8 +39,13 @@ public class Actions extends Controller {
 		TalkerDAO.saveThankYou(thankYouBean);
 		
 		ActivityDAO.saveActivity(new GiveThanksAction(talker, toTalkerBean));
+		
+		//TODO: better implementation?
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("other_talker", talker.getUserName());
+		vars.put("thankyou_text", thankYouBean.getNote());
 		NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_THANKYOU, 
-				toTalkerBean, talker.getUserName()+" gave a 'Thank You' to you.");
+				toTalkerBean, vars);
 		
 		CommonUtil.updateCachedTalker(session);
 		
@@ -54,9 +61,10 @@ public class Actions extends Controller {
 	
 	public static void follow(String followingId) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		TalkerBean followingTalker = TalkerDAO.getById(followingId);
 		
 		boolean followAction = true;
-		if (talker.getFollowingList().contains(new TalkerBean(followingId))) {
+		if (talker.getFollowingList().contains(followingTalker)) {
 			//we need unfollow
 			followAction = false;
 		}
@@ -66,7 +74,12 @@ public class Actions extends Controller {
 		
 		//Text for the follow link after this action
 		if (followAction) {
-			ActivityDAO.saveActivity(new FollowTalkerAction(talker, new TalkerBean(followingId)));
+			ActivityDAO.saveActivity(new FollowTalkerAction(talker, followingTalker));
+			
+			Map<String, String> vars = new HashMap<String, String>();
+			vars.put("other_talker", talker.getUserName());
+			NotificationUtils.sendEmailNotification(EmailSetting.NEW_FOLLOWER, 
+					followingTalker, vars);
 			
 			renderText("Unfollow");
 		}
@@ -102,8 +115,11 @@ public class Actions extends Controller {
 		else {
 			ActivityDAO.saveActivity(new ProfileReplyAction(talker, profileTalker));
 		}
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("other_talker", talker.getUserName());
+		vars.put("comment_text", comment.getText());
 		NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
-				profileTalker, talker.getUserName()+" left a comment on you profile.");
+				profileTalker, vars);
 		
 		//render html of new comment using tag
 		List<CommentBean> _commentsList = Arrays.asList(comment);
