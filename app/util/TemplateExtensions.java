@@ -22,9 +22,13 @@ public class TemplateExtensions extends JavaExtensions {
 			return fieldName+" (please separate by commas)";
 		}
 		else {
-			//format [entry1, entry2]
-			String listString = list.toString();
-			return listString.substring(1, listString.length()-1);
+			StringBuilder listString = new StringBuilder();
+			for (String value : list) {
+				listString.append(value).append(", ");
+			}
+			//remove last comma
+			listString.delete(listString.length()-2, listString.length());
+			return listString.toString();
 		}
 	}
 	

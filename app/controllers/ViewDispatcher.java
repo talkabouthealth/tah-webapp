@@ -63,6 +63,7 @@ public class ViewDispatcher extends Controller {
 		if (talkerDisease != null) {
 			talkerDisease.setName(diseaseName);
 		}
+		System.out.println(talkerDisease.getHealthInfo().get("her2"));
 		//Load all healthItems for this disease
 		Map<String, HealthItemBean> healthItemsMap = new HashMap<String, HealthItemBean>();
 		for (String itemName : new String[] {"symptoms", "tests", 

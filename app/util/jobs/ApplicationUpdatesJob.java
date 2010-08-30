@@ -18,6 +18,7 @@ import dao.ConversationDAO;
 import play.Play;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
+import util.DBUtil;
 
 /**
  * Job is used for different updates in db when deploying new features.
@@ -43,6 +44,7 @@ public class ApplicationUpdatesJob extends Job {
 				ConversationDAO.updateTopic(topic);
 			}
 		}
+		
     }
 	
 }

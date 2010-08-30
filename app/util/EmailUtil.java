@@ -30,7 +30,9 @@ public class EmailUtil {
 		
 		
 		NOTIFICATION,
-		THANKYOU
+		THANKYOU,
+		FOLLOWER,
+		PROFILE_COMMENT,
 		
 		;
 	}
