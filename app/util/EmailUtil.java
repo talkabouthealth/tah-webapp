@@ -21,22 +21,29 @@ public class EmailUtil {
 	public static final String SUPPORT_EMAIL = "support@talkabouthealth.com";
 	public static final String MURRAY_EMAIL = "murrayjones@gmail.com";
 	
-	public static final String WELCOME_TEMPLATE = "welcome";
-	public static final String FORGOT_PASSWORD_TEMPLATE = "forgotpassword";
-	public static final String INVITATION_TEMPLATE = "invitation";
-	public static final String CONTACTUS_TEMPLATE = "contactus";
-	public static final String VERIFICATION_TEMPLATE = "verificate";
-	public static final String NOTIFICATION_TEMPLATE = "notification";
-	
-	public static boolean sendEmail(String templateName, String toEmail) {
-		return sendEmail(templateName, toEmail, null, null, true);
+	public enum EmailTemplate {
+		WELCOME,
+		FORGOT_PASSWORD,
+		INVITATION,
+		CONTACTUS,
+		VERIFICATION,
+		
+		
+		NOTIFICATION,
+		THANKYOU
+		
+		;
 	}
 	
-	public static boolean sendEmail(String templateName, String toEmail, Map<String, String> vars) {
-		return sendEmail(templateName, toEmail, vars, null, true);
+	public static boolean sendEmail(EmailTemplate emailTemplate, String toEmail) {
+		return sendEmail(emailTemplate, toEmail, null, null, true);
 	}
 	
-	public static boolean sendEmail(String templateName, String toEmail, 
+	public static boolean sendEmail(EmailTemplate emailTemplate, String toEmail, Map<String, String> vars) {
+		return sendEmail(emailTemplate, toEmail, vars, null, true);
+	}
+	
+	public static boolean sendEmail(EmailTemplate emailTemplate, String toEmail, 
 			Map<String, String> vars, Map<String, String> options, boolean verify) {
 		if (verify && !isVerifiedEmail(toEmail)) {
 			return false;
@@ -45,10 +52,8 @@ public class EmailUtil {
 		TriggerMailClient client;
 		try {
 			client = new TriggerMailClient(SAILTHRU_APIKEY, SAILTHRU_SECRET);
-			client.send(templateName, toEmail, vars, options);
-			
+			client.send(emailTemplate.toString().toLowerCase(), toEmail, vars, options);
 		} catch (Exception e) {
-			e.printStackTrace();
 			System.err.println("Couldn't send email: "+e.getMessage());
 			return false;
 		}

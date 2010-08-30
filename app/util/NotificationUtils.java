@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import play.Logger;
+import util.EmailUtil.EmailTemplate;
 
 import models.TalkerBean;
 import models.TalkerBean.EmailSetting;
@@ -83,7 +84,7 @@ public class NotificationUtils {
 			Map<String, String> vars = new HashMap<String, String>();
 			vars.put("username", talker.getUserName());
 			vars.put("notification_text", text);
-			EmailUtil.sendEmail(EmailUtil.NOTIFICATION_TEMPLATE, talker.getEmail(), vars, null, true);
+			EmailUtil.sendEmail(EmailTemplate.NOTIFICATION, talker.getEmail(), vars, null, true);
 		}
 	}
 

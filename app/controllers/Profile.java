@@ -40,6 +40,7 @@ import play.mvc.Router.ActionDefinition;
 import play.mvc.With;
 import util.CommonUtil;
 import util.EmailUtil;
+import util.EmailUtil.EmailTemplate;
 import dao.ActivityDAO;
 import dao.DiseaseDAO;
 import dao.HealthItemDAO;
@@ -135,7 +136,7 @@ public class Profile extends Controller {
 			Map<String, String> vars = new HashMap<String, String>();
 			vars.put("username", oldTalker.getUserName());
 			vars.put("verify_code", oldTalker.getVerifyCode());
-			EmailUtil.sendEmail(EmailUtil.VERIFICATION_TEMPLATE, oldTalker.getEmail(), vars, null, false);
+			EmailUtil.sendEmail(EmailTemplate.VERIFICATION, oldTalker.getEmail(), vars, null, false);
 		}
 		
 		TalkerDAO.updateTalker(oldTalker);
@@ -347,7 +348,7 @@ public class Profile extends Controller {
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("username", talker.getUserName());
 		vars.put("verify_code", email.getVerifyCode());
-		EmailUtil.sendEmail(EmailUtil.VERIFICATION_TEMPLATE, email.getValue(), vars, null, false);
+		EmailUtil.sendEmail(EmailTemplate.VERIFICATION, email.getValue(), vars, null, false);
 		
 		CommonUtil.updateCachedTalker(session);
 		EmailBean _email = email;
@@ -553,7 +554,7 @@ public class Profile extends Controller {
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("username", talker.getUserName());
 		vars.put("verify_code", verifyCode);
-		EmailUtil.sendEmail(EmailUtil.VERIFICATION_TEMPLATE, email, vars, null, false);
+		EmailUtil.sendEmail(EmailTemplate.VERIFICATION, email, vars, null, false);
 		
 		renderText("Ok! Email sent.");
 	}

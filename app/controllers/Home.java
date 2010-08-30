@@ -13,6 +13,7 @@ import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
 import util.EmailUtil;
+import util.EmailUtil.EmailTemplate;
 import util.ValidateData;
 import webapp.LiveConversationsSingleton;
 import dao.TalkerDAO;
@@ -80,7 +81,7 @@ public class Home extends Controller {
 		vars.put("username", talker.getUserName());
 		vars.put("invitation_note", note);
 		for (String email : emailsToSend) {
-			EmailUtil.sendEmail(EmailUtil.INVITATION_TEMPLATE, email, vars, null, false);
+			EmailUtil.sendEmail(EmailTemplate.INVITATION, email, vars, null, false);
 		}
 		
 		//decrease invitations count

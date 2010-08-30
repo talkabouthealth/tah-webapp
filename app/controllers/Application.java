@@ -31,6 +31,7 @@ import play.mvc.With;
 import play.mvc.Scope.Session;
 import util.CommonUtil;
 import util.EmailUtil;
+import util.EmailUtil.EmailTemplate;
 import dao.ApplicationDAO;
 import dao.TalkerDAO;
 
@@ -86,7 +87,7 @@ public class Application extends Controller {
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("username", user.getUserName());
 		vars.put("newpassword", newPassword);
-		boolean result = EmailUtil.sendEmail(EmailUtil.FORGOT_PASSWORD_TEMPLATE, email, vars);
+		boolean result = EmailUtil.sendEmail(EmailTemplate.FORGOT_PASSWORD, email, vars);
 		
 		validation.isTrue(result).message("Not verified email or unknown error. " +
 				"Please contact support at <a href=\"mailto:"+EmailUtil.SUPPORT_EMAIL+"\">"+EmailUtil.SUPPORT_EMAIL+"</a>");
@@ -140,11 +141,11 @@ public class Application extends Controller {
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("username", talker.getUserName());
 		vars.put("verify_code", talker.getVerifyCode());
-		EmailUtil.sendEmail(EmailUtil.VERIFICATION_TEMPLATE, talker.getEmail(), vars, null, false);
+		EmailUtil.sendEmail(EmailTemplate.VERIFICATION, talker.getEmail(), vars, null, false);
 		
 		vars = new HashMap<String, String>();
 		vars.put("username", talker.getUserName());
-		EmailUtil.sendEmail(EmailUtil.WELCOME_TEMPLATE, talker.getEmail(), vars, null, false);
+		EmailUtil.sendEmail(EmailTemplate.WELCOME, talker.getEmail(), vars, null, false);
 
 		//login
 		ApplicationDAO.saveLogin(talker.getId());
@@ -285,7 +286,7 @@ public class Application extends Controller {
 		vars.put("email", email);
 		vars.put("subject", subject);
 		vars.put("message", message);
-		EmailUtil.sendEmail(EmailUtil.CONTACTUS_TEMPLATE, EmailUtil.SUPPORT_EMAIL, vars, null, false);
+		EmailUtil.sendEmail(EmailTemplate.CONTACTUS, EmailUtil.SUPPORT_EMAIL, vars, null, false);
 		
 		flash.success("ok");
 		contactus();

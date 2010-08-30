@@ -23,6 +23,7 @@ import play.templates.JavaExtensions;
 import util.CommonUtil;
 import util.DBUtil;
 import util.EmailUtil;
+import util.EmailUtil.EmailTemplate;
 import util.NotificationUtils;
 import webapp.LiveConversationsSingleton;
 import dao.ActivityDAO;
@@ -95,7 +96,7 @@ public class Topics extends Controller {
 		vars.put("message", 
 				"Bad conversation: <a href=\"http://talkabouthealth.com:9000/topic/"+topic.getTid()+"\">"+
 					topic.getTopic()+"</a>");
-		EmailUtil.sendEmail(EmailUtil.CONTACTUS_TEMPLATE, EmailUtil.SUPPORT_EMAIL, vars, null, false);
+		EmailUtil.sendEmail(EmailTemplate.CONTACTUS, EmailUtil.SUPPORT_EMAIL, vars, null, false);
     }
     
     public static void lastTopicId() {
