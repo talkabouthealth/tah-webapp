@@ -11,123 +11,6 @@ function createRequestObject() {
 
 var httpRequest = createRequestObject();
 
-function moreOldTopics() {
-	//alert("More Old");
-	httpRequest.open("GET", "/tah-java/MoreOldTopicsServlet", true);
-	httpRequest.onreadystatechange = moreOldTopicsResponse;
-	httpRequest.send(null);
-}
-
-function moreOldTopicsResponse() {
-	if(httpRequest.readyState == 4) {
-		if(httpRequest.status == 200) { 
-			var xmlDoc = httpRequest.responseXML.documentElement;
-			// while topics, print each to topic list
-			var x = xmlDoc.getElementsByTagName("topic");
-			var i = 0;
-			insertOldTopics(i, x.length, x);
-		}
-	}
-}
-function insertOldTopics(i, l, x) {
-	var tid = x[i].firstChild.firstChild.data;
-	var t = x[i].lastChild.firstChild.data;
-	
-	// create element for new topic and add to document
-	var topic = t.replace(/&#39;/g, "\'");
-	
-	var mc_TopicTxtNode = document.createTextNode(topic);
-	
-	var mc_box = document.createElement("div");
-    mc_box.className = 'box';
-    mc_box.appendChild(mc_TopicTxtNode);
-	
-	var mc_aAddLink = document.createElement("a");
-	mc_aAddLink.setAttribute("href", "javascript:addTopicToQueue('" + tid + "')");
-	mc_aAddLink.appendChild(mc_box);
-
-	var mc_d = document.createElement("div");
-    mc_d.id = tid;
-    mc_d.className = 'odd';
-    mc_d.appendChild(mc_aAddLink);
-
-    var pelement = document.createElement("p");
-    
-	var tts2 = document.getElementById("topicstable");
-	var fte = tts2.lastChild;
-	//alert("Before 1st insert");
-	tts2.insertBefore(mc_d, fte);
-	//alert("Before 2nd insert");
-	tts2.insertBefore(pelement, mc_d);
-	
-	i++;
-	if (i > l){return;}
-	setTimeout(function(){ insertOldTopics(i, l, x);}, 0);
-}
-
-function moreNewTopics() {
-	httpRequest.open("GET", "/tah-java/MoreNewTopicsServlet", true);
-	httpRequest.onreadystatechange = moreNewTopicsResponse;
-	httpRequest.send(null);
-}
-function moreNewTopicsResponse() {
-	if(httpRequest.readyState == 4) {
-		if(httpRequest.status == 200) { 
-			var xmlDoc = httpRequest.responseXML.documentElement;
-    		// while topics, print each to topic list
-			var x = xmlDoc.getElementsByTagName("topic");
-			if(x.length != 0){
-				var i = 0;
-				insertNewTopics(i, x.length, x);
-			}
-		}
-	}
-}
-function insertNewTopics(i, l, x) {
-	var tid = x[i].firstChild.firstChild.data;
-	var t = x[i].lastChild.firstChild.data;
-	
-	// create element for new topic and add to document
-	var topic = t.replace(/&#39;/g, "\'");
-	
-	var mc_TopicTxtNode = document.createTextNode(topic);
-	
-	var mc_box = document.createElement("div");
-    mc_box.className = 'box';
-    mc_box.appendChild(mc_TopicTxtNode);
-	
-	var mc_aAddLink = document.createElement("a");
-	mc_aAddLink.setAttribute("href", "javascript:addTopicToQueue('" + tid + "')");
-	mc_aAddLink.appendChild(mc_box);
-
-	var mc_d = document.createElement("div");
-    mc_d.id = tid;
-    mc_d.className = 'odd';
-    mc_d.appendChild(mc_aAddLink);
-
-    var pelement = document.createElement("p");
-    
-	var tts2 = document.getElementById("topicstable");
-	var fte = tts2.firstChild;
-	loop = 'y';
-	count = 0;
-	while (loop == 'y' && count < tts2.childNodes.length) {
-		if (fte.nodeType == '1') {
-			if (fte.nodeName == 'P' || fte.nodeName == 'DIV') {
-				tts2.insertBefore(mc_d, fte);
-				tts2.insertBefore(pelement, mc_d);
-				loop = 'n';
-			} 
-		}
-		if (loop == 'y') {
-			fte = fte.nextSibling;
-			count++;
-		}
-	}
-	i++;
-	if (i >= l){return;}
-	setTimeout(function(){ insertNewTopics(i, l, x);}, 500);
-}
 function postNewTopic(form) {
 	//alert("Form.value: " + form.value);
 	
@@ -189,7 +72,7 @@ function postNewTopicResponse() {
 				areaMid.appendChild(areaMidLeft);
 				areaMidLeft.innerHTML = 
 					'<p><span class="blacktext14">'+
-					'<a href="/topic/'+update[0]+'">'+topic+'</a>'+
+					'<a href="/'+update[3]+'">'+topic+'</a>'+
 					'<br />'+
 					'<span class="blacktext12">1 members talking</span> | '+ 
 				    '<span class="blacktext12">Started 0 mins ago</span> | '+

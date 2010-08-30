@@ -66,7 +66,7 @@ public class Topics extends Controller {
 		newTopic = newTopic.replaceAll("\\|", "&#124;");
 		
 		//TODO: make as template!
-		renderText(convo.getTid() + "|" + newTopic + "|" + convo.getId());
+		renderText(convo.getTid() + "|" + newTopic + "|" + convo.getId() + "|" + convo.getMainURL());
     }
     
     public static void restart(String topicId) {
