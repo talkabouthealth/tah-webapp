@@ -1,19 +1,32 @@
 #{ extends 'main.html' /}
 	<script type="text/javascript"> 	 
-   		$(document).ready(function() {
-   			// When a link is clicked
-   			$("a.tab").click(function () {
-   				// switch all tabs off
-   				$(".active").removeClass("active");
-   				// switch this tab on
-   				$(this).addClass("active");
-   				// slide all content up
-   				$(".content, .tabcontent").slideUp();
-   				// slide this content up
-   				var content_show = $(this).attr("title");
-   				$("#"+content_show).slideDown();
-   			});
-   		});
+	//maps actions to tabs
+		var tabs = {
+	   		"active" : "tab1",
+	   		"new" : "tab2",
+	   		"likeyou" : "tab3",
+	   		"search" : "tab4" 
+		}
+	
+		$(document).ready(function() {
+			//Default Action
+			var activeTab = tabs["${action}"];
+			
+			$(".tab_content").hide(); //Hide all content
+			//activate initial tab
+			$("ul.tabs li a[href='#"+activeTab+"']").parent().addClass("active").show(); 
+			$("#"+activeTab).show();
+
+			//On Click Event
+			$("ul.tabs li ").click(function() {
+				$("ul.tabs li ").removeClass("active"); //Remove any "active" class
+				$(this).addClass("active"); //Add "active" class to selected tab
+				$(".tab_content").hide(); //Hide all tab content
+				var activeTab = $(this).find("a").attr("href"); //Find the rel attribute value to identify the active tab + content
+				$(activeTab).fadeIn(); //Fade in the active content
+				return false;
+			});
+		});
    	</script>
 	<style>
 		body {
@@ -38,17 +51,14 @@
 		<div id="innermiddlearea">
 			<div class="tabbed_box" id="tabbed_box_1">
     			<div class="tabbed_area">
-			        <ul class="tabs">
-			        	<li><a class="tab ${ action.equals('active') ? 'active' : '' }" 
-			            	title="content_1" href="#">Active</a></li>
-			            <li><a class="tab ${ action.equals('new') ? 'active' : '' }" 
-			            	title="content_2" href="#">New</a></li>
-			            <li><a class="tab ${ action.equals('likeyou') ? 'active' : '' }" 
-			            	title="content_3" href="#">Like You</a></li>
-			            <li><a class="tab ${ action.equals('search') ? 'active' : '' }" 
-			            	title="content_4" href="#">Search</a></li>
+    				<ul class="tabs">
+			        	<li><a href="#tab1"><span>Active</span></a></li>
+			            <li><a href="#tab2"><span>New</span></a></li>
+			            <li><a href="#tab3"><span>Like You</span></a></li>
+			            <li><a href="#tab4"><span>Search</span></a></li>
 			        </ul>
-			        <div class="tabcontent" id="content_1" style="display: ${ action.equals('active') ? 'block' : 'none' };">
+			        <div class="tab_container">
+				        <div id="tab1" class="tab_content">
 			   			<div>
 				        	<div class="headingarea">
 					            <div class="tabheading">
@@ -84,9 +94,9 @@
 				            	</div>
 				            </div>
 			        	</div>
-			        </div>
+			        	</div>
 			        
-			        <div class="content" id="content_2" style="display: ${ action.equals('new') ? 'block' : 'none' };">
+			        	<div id="tab2" class="tab_content">
 			   			<div>
 				        	<div class="headingarea">
 					            <div class="tabheading">
@@ -122,9 +132,9 @@
 				            	</div>
 				            </div>
 			        	</div>
-			        </div>
+			        	</div>
 			        
-			        <div class="content" id="content_3" style="display: ${ action.equals('likeyou') ? 'block' : 'none' };">
+			        	<div id="tab3" class="tab_content">
 			   			<div>
 				        	<div class="headingarea">
 					            <div class="tabheading">
@@ -142,8 +152,9 @@
 				            	</div>
 				            </div>
 			        	</div>
-			        </div>
-			        <div class="content" id="content_4" style="display: ${ action.equals('search') ? 'block' : 'none' };">
+			        	</div>
+			        	
+			        	<div id="tab4" class="tab_content">
 			        	<div>
 				        	<div class="headingarea">
 					            <div class="tabheading">
@@ -161,6 +172,7 @@
 				            	</div>
 				            </div>
 			        	</div>
+    					</div>
     				</div>
     			</div>
 			</div>
