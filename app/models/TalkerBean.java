@@ -153,6 +153,8 @@ public class TalkerBean implements Serializable {
 	
 	//TODO: List or (s) ?
 	private List<ThankYouBean> thankYouList;
+	private int numOfThankYous;
+	
 	private List<TalkerBean> followingList;
 	private List<TalkerBean> followerList;
 	private List<Action> activityList;
@@ -225,6 +227,9 @@ public class TalkerBean implements Serializable {
 		setUserName(talkerDBObject.get("uname").toString());
 		setBio((String)talkerDBObject.get("bio"));
 		setEmail((String)talkerDBObject.get("email"));
+		setConnection((String)talkerDBObject.get("connection"));
+		setConnectionVerified(getBoolean(talkerDBObject.get("connection_verified"))); 
+		
 		parseEmailSettings(parseStringList(talkerDBObject.get("email_settings")));
 		
 		//TODO: slooooow?
@@ -332,6 +337,7 @@ public class TalkerBean implements Serializable {
 		return dbList;
 	}
 	
+	//TODO: load count() of thankyous for recognition?
 	public void parseThankYous(Collection<DBObject> thankYouDBList) {
 		//TODO: move thanks you load to separate function (to prevent delays)?
 		List<ThankYouBean> thankYous = new ArrayList<ThankYouBean>();
@@ -344,6 +350,11 @@ public class TalkerBean implements Serializable {
 				DBObject fromTalkerDBObject = ((DBRef)thankYouDBObject.get("from")).fetch();
 				TalkerBean fromTalker = new TalkerBean();
 				fromTalker.setUserName((String)fromTalkerDBObject.get("uname"));
+				fromTalker.setConnection((String)fromTalkerDBObject.get("connection"));
+				fromTalker.setConnectionVerified(getBoolean(fromTalkerDBObject.get("connection_verified"))); 
+				
+				Collection<DBObject> thankYousCollection = (Collection<DBObject>)fromTalkerDBObject.get("thankyous");
+				fromTalker.setNumOfThankYous(thankYousCollection == null ? 0 : thankYousCollection.size());
 				
 				thankYouBean.setFrom(fromTalkerDBObject.get("_id").toString());
 				thankYouBean.setFromTalker(fromTalker);
@@ -503,14 +514,20 @@ public class TalkerBean implements Serializable {
 		- Champion - great than 100 Thank you's
 	*/
 	public String getLevelOfRecognition() {
-		String levelOfRecognition = "New Member";
+		String levelOfRecognition = null;
 		
+		int numberOfThankYous = 0;
 		if (thankYouList == null) {
-			return levelOfRecognition;
+			numberOfThankYous = getNumOfThankYous();
+		}
+		else {
+			numberOfThankYous = thankYouList.size();
 		}
 		
-		int numberOfThankYous = thankYouList.size();
-		if (numberOfThankYous >= 1 && numberOfThankYous < 3) {
+		if (numberOfThankYous == 0) {
+			levelOfRecognition = "New Member";
+		}
+		else if (numberOfThankYous >= 1 && numberOfThankYous < 3) {
 			levelOfRecognition = "Supporter";
 		}
 		else if (numberOfThankYous >= 3 && numberOfThankYous < 6) {
@@ -753,5 +770,11 @@ public class TalkerBean implements Serializable {
 	}
 	public void setNumOfNotifications(long numOfNotifications) {
 		this.numOfNotifications = numOfNotifications;
+	}
+	public int getNumOfThankYous() {
+		return numOfThankYous;
+	}
+	public void setNumOfThankYous(int numOfThankYous) {
+		this.numOfThankYous = numOfThankYous;
 	}
 }	

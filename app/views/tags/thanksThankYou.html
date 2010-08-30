@@ -6,8 +6,17 @@
 	</div>
 	<div class="thnksfollowingtext">
 		<a href="@{ViewDispatcher.view(_thankYou.fromTalker.userName)}" 
-			class="blue13"><strong>${_thankYou.fromTalker.userName}</strong></a><br/>
+			class="blue13"><strong>${_thankYou.fromTalker.userName}</strong></a>
+		<span class="blacktext12">
+			#{if _thankYou.fromTalker.connection}
+				(${_thankYou.fromTalker.connection}, ${_thankYou.fromTalker.levelOfRecognition})
+			#{/if}
+			#{else}
+				(${_thankYou.fromTalker.levelOfRecognition})
+			#{/else}
+		</span><br/>	
 		<span class="greytext12">${_thankYou.note.limitSize(80)}</span><br/>
+		<!-- <a href="#" class="more11">  more</a>  -->
 		<span class="lightgrey12">${_thankYou.time?.format('M/d/yyyy')}</span>
 	</div>
 </div>

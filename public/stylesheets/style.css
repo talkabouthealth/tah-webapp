@@ -7,9 +7,7 @@ body {
 	font-size:11px;
 	width:100%;
 	color:#000000;
-	font-family: arial;
-	font-size: 25px;
-}
+	font-family: arial; font-size: 25px;}
 
 form { padding:0px; margin:0px;}
 #top_container { width:972px; margin-left:auto; margin-right:auto; font-size:1px}
@@ -297,6 +295,8 @@ a.pinktext12:hover {text-decoration: underline; color: #eb1d90; font-weight:bold
 .blacktext {font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none; color: #000000;}
 .blacktext11 {font-family: arial; font-size: 11px; font-weight: normal; text-decoration: none; color: #000000;}
 a.blacktext:hover {text-decoration: none; color: #000000;}
+.blacktextbold {font-family: arial; font-size: 12px; font-weight: bold; text-decoration: none; color: #000000;}
+a.blacktextbold:hover {text-decoration: none; color: #000000; font-weight: bold;}
 .red {font-family: arial; font-size: 18px; font-weight: bold; text-decoration: none; color: #e21c3f;}
 a.red:hover {text-decoration: none; color: #e21c3f;}
 .red12 {font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none; color: #e21c3f;}
@@ -342,21 +342,25 @@ a.greytext:hover {text-decoration: none; color: #434242;}
 .bluetext2 {font-family: arial; font-size: 11px; font-weight: bold; text-decoration: none; color: #1550a4;}
 a.bluetext2:hover {text-decoration: none; color: #1550a4;}
 .bluetext11 {font-family: arial; font-size: 11px; font-weight: normal; text-decoration: none; color: #1550a4;}
-a.bluetext11:hover {text-decoration: none; color: #1550a4;}
+a.bluetext11:hover {text-decoration: underline; color: #1550a4;}
 .greytext11 {font-family: arial; font-size: 11px; font-weight: normal; text-decoration: none; color: #989898;}
 a.greytext11:hover {text-decoration: none; color: #1550a4;}
 .bluetext12 {font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none; color: #1550a4;}
-a.bluetext12:hover {text-decoration: none; color: #1550a4;}
+a.bluetext12:hover {text-decoration: underline; color: #1550a4;}
+.bluetextbold12 {font-family: arial; font-size: 12px; font-weight: bold; text-decoration: none; color: #1550a4;}
+a.bluetextbold12:hover {text-decoration: underline; color: #1550a4; font-weight: bold;}
 .navybluetext12 {font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none; color: #0286bc;}
 a.navybluetext12:hover {text-decoration: underline; color: #0286bc;}
 .navybluetext14 {font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none; color: #0286bc;}
 a.navybluetext14:hover {text-decoration: none; color: #0286bc;}
 .bluetext14 {font-family: arial; font-size: 14px; font-weight: normal; text-decoration: none; color: #1550a4; line-height:20px;}
-a.bluetext14:hover {text-decoration: none; color: #eb1d90;}
+a.bluetext14:hover {text-decoration: underline; color: #1550a4;}
 .bluetext16 {font-family: arial; font-size: 16px; font-weight: normal; text-decoration: none; color: #1550a4; line-height:20px;}
 a.bluetext16:hover {text-decoration: none; color: #eb1d90;}
 .bluetext18 {font-family: arial; font-size: 16px; font-weight: bold; text-decoration: none; color: #1550a4; line-height:20px;}
 a.bluetext18:hover {text-decoration: none; color: #eb1d90;}
+.bluetext20 {font-family: arial; font-size: 20px; font-weight: bold; text-decoration: none; color: #1550a4; line-height:20px;}
+a.bluetext20:hover {text-decoration: underline; color: #1550a4;}
 .bluetext {font-weight: bold; font-size: 14px; color: #5e82b1; font-family:arial; text-decoration: none;}
 a.bluetext:link {font-weight: bold; font-size: 14px; color: #5e82b1; font-family:arial; text-decoration: none;}
 a.bluetext:active {font-weight: bold; font-size: 14px; color: #5e82b1; font-family:arial; text-decoration: none;}
@@ -505,25 +509,8 @@ h4 { float:left; width:221px; padding-bottom:7px;  font-weight: bold; font-size:
 
 /* Tabs area*/
 #tabbed_box_1 {
+	
 	width:940px;
-}
-.tabbed_box h4 {
-	font-family:Arial, Helvetica, sans-serif;
-	font-size:23px;
-	color:#ffffff;
-	letter-spacing:-1px;
-	margin-bottom:10px;
-}
-.tabbed_box h4 small {
-	color:#e3e9ec;
-	font-weight:normal;
-	font-size:9px;
-	font-family:Verdana, Arial, Helvetica, sans-serif;
-	text-transform:uppercase;
-	position:relative;
-	top:-4px;
-	left:6px;
-	letter-spacing:0px;
 }
 .tabbed_area {
 
@@ -531,83 +518,6 @@ h4 { float:left; width:221px; padding-bottom:7px;  font-weight: bold; font-size:
 	padding:8px;	
 }
 
-ul.tabs {
-	margin:0px; padding:0px;
-	margin-top:5px;
-	margin-left:15px;
-	margin-bottom:8px;
-}
-ul.tabs li {
-	list-style:none;
-	padding-right:7px;
-	display:inline;
-	
-}
-ul.tabs li a {
-	background-color:#f5f5f5;
-	color:#1550a4;
-	padding:10px 14px 8px 14px;
-	text-decoration:none;
-	font-size:14px;
-	font-family:Arial;
-	font-weight:bold;
-	border:1px solid #d3d3d3;
-}
-ul.tabs li a:hover {
-	background-color:#f5f5f5;
-	border-color:#d3d3d3;
-}
-ul.tabs li a.active {
-	background-color:#ffffff;
-	color:#000000;
-	border:1px solid #d3d3d3; 
-	border-bottom: 1px solid #ffffff;
-	background-image:url(images/tab_on.jpg);
-	background-repeat:repeat-x;
-	background-position:top;	
-}
-.content {
-	background-color:#ffffff;
-	padding-top:20px;
-	border-top:1px solid #d3d3d3; 	
-	font-family:Arial, Helvetica, sans-serif;
-	
-}
-#content_2, #content_3 { display:none; }
-
-.content ul {
-	margin:0px;
-	padding:0px 20px 0px 20px;
-}
-.content ul li {
-	list-style:none;
-	border-bottom:1px solid #d6dde0;
-	
-	padding-bottom:15px;
-	font-size:13px;
-}
-.content ul li:last-child {
-	border-bottom:none;
-}
-.content ul li a {
-	text-decoration:none;
-	color:#3e4346;
-}
-.content ul li a small {
-	color:#8b959c;
-	font-size:9px;
-	text-transform:uppercase;
-	font-family:Verdana, Arial, Helvetica, sans-serif;
-	position:relative;
-	left:4px;
-	top:0px;
-}
-.content ul li a:hover {
-	color:#a59c83;
-}
-.content ul li a:hover small {
-	color:#baae8e;
-}
 .greytext12 {font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none; color: #585b5c;}
 a.greytext12:hover {text-decoration: none; color: #585b5c;}
 .lightgrey12 {font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none; color: #979797;}
@@ -621,21 +531,38 @@ a.pinktext25:hover {text-decoration: none; color: #ec2b98;}
 .blacktext25 {font-family: arial; font-size: 25px; font-weight: normal; text-decoration: none; color: #000000; }
 a.blacktext25:hover {text-decoration: none; color: #000000;}
 .headingarea { float:left; width:893px; padding-left:30px; padding-bottom:10px; height:33px; line-height:33px; border-bottom:1px dashed #c2c2c2;}
-.tabheading {float:left; width:600px; vertical-align:middle; }
+.tabheading {float:left; width:540px; vertical-align:middle; }
 .seemore {float:right;}
 .headingarea2 { float:left; width:923px; padding-bottom:10px; height:33px; line-height:33px; border-bottom:1px dashed #c2c2c2;}
 .thnksarea {float:left; width:893px; padding-top:10px; padding-left:30px; }
 
-.thnksfollowing { float:left; width:282px; padding-right:15px; padding-bottom:28px; }
+.thnksfollowing { float:left; width:289px; padding-right:8px; padding-bottom:28px; }
 .thnksfollowingimg { float:left; width:80px; padding-right:10px;}
-.thnksfollowingtext { float:left; width:192px; }
+.thnksfollowingtext { float:left; width:199px; }
 .thnksbottom {float:left; width:893px; padding-left:30px; padding-top:10px; height:33px; line-height:33px; border-top:1px dashed #c2c2c2;}
 
 .thnksarea2 {float:left; width:923px; padding-top:10px; }
-.thnkstext2 { float:left; width:282px; padding-right:20px; padding-bottom:28px; }
+.thnkstext2 { float:left; width:294px; padding-right:8px; padding-bottom:28px; }
 
 .greytext25 {font-family: arial; font-size: 25px; font-weight: normal; text-decoration: none; color: #818181;}
 a.greytext25:hover {text-decoration: none; color: #818181;}
+
+/* convques ans*/
+.startedarea  { float:left; padding-top:10px; width:923px;}
+.started { float:left;width:420px; padding:0px 20px 15px 21px;}
+.started  p{ float:left;width:420px; padding-top:8px;}
+.convquetext p { float:left;width:344px; padding-top:8px;}
+.more11 {font-family: arial; font-size: 11px; font-weight: normal; text-decoration: none; color: #1550a4;}
+a.more11:hover {text-decoration:underline; color: #1550a4; font-weight: normal;}
+.paging { float:right; text-align:right; width:325px; height:33px; line-height:33px;}
+.nextprebutton { float:left; height:24px; width:79px; padding-top:5px;}
+.pagenumb { float:left; width:150px; padding-left:2px; padding-right:10px; height:33px; line-height:33px; font-family: arial; font-size: 11px;text-decoration: none; color: #1550a4;}
+a.visited { font-weight:bold;font-family: arial; font-size: 11px;text-decoration: none; color: #1550a4;}
+.headingarea2 { float:left; width:903px; padding-left:20px; padding-bottom:10px; height:33px; line-height:33px; border-bottom:1px dashed #c2c2c2;}
+
+.convque { float:left; width:442px; padding:0px 2px 15px 17px; padding-bottom:28px; }
+.convqueimg { float:left; width:80px; padding-right:10px;}
+.convquetext { float:left; width:348px; }
 
 
 
@@ -727,3 +654,10 @@ a.greytext25:hover {text-decoration: none; color: #818181;}
 }
 
 .whitetext12 {font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none; color: #ffffff;}
+
+/* 
+	Fix for pagination
+	Designer's made static paging (with 10 pages), but we have variable number of pages.
+*/
+.pagenumb { width: auto; float: right; padding-left:9px; }
+.nextprebutton { float: right}
