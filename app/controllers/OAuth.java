@@ -15,7 +15,6 @@ public class OAuth extends Controller {
 	public static void callback(String type) {
 		OAuthServiceProvider oauthProvider = getProvider(type);
 		
-		//TODO: decouple providers from request/response?
 		try {
 			String redirectURL = oauthProvider.handleCallback(session, params.allSimple());
 			Application.redirectPage(redirectURL);

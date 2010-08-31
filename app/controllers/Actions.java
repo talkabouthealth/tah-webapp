@@ -38,6 +38,7 @@ public class Actions extends Controller {
 		thankYouBean.setTo(toTalker);
 		TalkerDAO.saveThankYou(thankYouBean);
 		
+		//TODO: every email notification is with activity? can we use it?
 		ActivityDAO.saveActivity(new GiveThanksAction(talker, toTalkerBean));
 		
 		//TODO: better implementation?
@@ -47,12 +48,8 @@ public class Actions extends Controller {
 		NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_THANKYOU, 
 				toTalkerBean, vars);
 		
-		CommonUtil.updateCachedTalker(session);
-		
-		//render html of new comment using tag
+		//render html of new comment using tag - different for PublicProfile and ThankYous page
 		ThankYouBean _thankYou = thankYouBean;
-		
-		//default tag
 		if (tagFile == null) {
 			tagFile = "profileThankYou";
 		}
@@ -63,17 +60,18 @@ public class Actions extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		TalkerBean followingTalker = TalkerDAO.getById(followingId);
 		
-		boolean followAction = true;
+		boolean follow = true;
 		if (talker.getFollowingList().contains(followingTalker)) {
 			//we need unfollow
-			followAction = false;
+			follow = false;
 		}
 		
-		TalkerDAO.followAction(talker.getId(), followingId, followAction);
+		TalkerDAO.followAction(talker.getId(), followingId, follow);
 		CommonUtil.updateCachedTalker(session);
 		
 		//Text for the follow link after this action
-		if (followAction) {
+		if (follow) {
+			//Follow notifications
 			ActivityDAO.saveActivity(new FollowTalkerAction(talker, followingTalker));
 			
 			Map<String, String> vars = new HashMap<String, String>();

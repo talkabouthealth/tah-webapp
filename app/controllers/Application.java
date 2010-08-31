@@ -165,7 +165,6 @@ public class Application extends Controller {
 		}
 		
 		if (!validation.hasError("talker.userName")) {
-//			TalkerBean otherTalker = TalkerDAO.getByUserName(talker.getUserName());
 			boolean nameNotExists = !ApplicationDAO.isURLNameExists(talker.getUserName());
 			validation.isTrue(nameNotExists).message("username.exists");
 		}
@@ -226,15 +225,15 @@ public class Application extends Controller {
 				- Bio
 				other sections should be checked
         */
-        EnumSet<ProfilePreference> defaultPreferences = EnumSet.of(
-	    		ProfilePreference.ACTIVITY_STREAM, 
-	    		ProfilePreference.COMMENTS, 
-	    		ProfilePreference.CONVERSATIONS,
-	    		ProfilePreference.FOLLOWERS, 
-	    		ProfilePreference.FOLLOWING,
-	    		ProfilePreference.CONVERSATIONS_FOLLOWED,
-	    		ProfilePreference.THANKYOUS
-	    	);
+        EnumSet<ProfilePreference> defaultPreferences = 
+        	EnumSet.complementOf(
+        		EnumSet.of(
+    				ProfilePreference.PERSONAL_INFO,
+    				ProfilePreference.HEALTH_INFO,
+    				ProfilePreference.BASIC_INFO,
+    				ProfilePreference.BIO
+        		)
+        	);
         talker.saveProfilePreferences(defaultPreferences);
         
         String hashedPassword = CommonUtil.hashPassword(talker.getPassword());
@@ -264,7 +263,6 @@ public class Application extends Controller {
 	
 	/* ----------------- Contact Us ------------------------- */
 	public static void contactus() {
-		//TODO: can we do it here? - without login!
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 		render(talker);
@@ -275,7 +273,7 @@ public class Application extends Controller {
     	validation.required(message).message("Message is required");
     	
     	if(validation.hasErrors()) {
-            params.flash(); // add http parameters to the flash scope
+            params.flash();
             validation.keep();
             contactus();
             return;

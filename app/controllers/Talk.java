@@ -13,8 +13,6 @@ import util.CommonUtil;
 public class Talk extends Controller {
 	
 	public static void talkApp(Integer convoId) {
-		notFoundIfNull(convoId);
-		
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		ConversationBean topic = ConversationDAO.getByTid(convoId);
 		

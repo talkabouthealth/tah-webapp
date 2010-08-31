@@ -3,6 +3,7 @@ package controllers;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,19 +25,12 @@ public class Home extends Controller {
 
     public static void index(String newTopic) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	//TODO: load Joined, not Started?
-    	talker.setNumberOfTopics(ConversationDAO.getNumberOfTopics(talker.getId()));
+    	talker.setJoinedTopicsList(ConversationDAO.loadConversations(talker.getId(), "JOIN_CONVO"));
     	//TODO: load only count?
     	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		
     	//TODO: use cache?
     	Map<String, ConversationBean> mapTalkmiTopics = ConversationDAO.queryTopics();
-//		Map<String, TopicBean> mapTalkmiTopics = new LinkedHashMap<String, TopicBean>(40);
-//		LiveConversationsSingleton lcs = LiveConversationsSingleton.getReference();
-//		if(lcs.getLiveConversationMap().size() < 20) {
-//			mapTalkmiTopics = TopicDAO.queryTopics();
-//		}
-//		Cache.set(session.getId()+"-mapTalkmiTopics", mapTalkmiTopics);
 		
 		if (newTopic == null || newTopic.trim().length() == 0) {
 			newTopic = "Please enter your Conversation here ...";
@@ -45,11 +39,13 @@ public class Home extends Controller {
         render(talker, mapTalkmiTopics, newTopic);
     }
     
+    /* ---------------- Invitations ----------------- */
     public static void invitations() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	int invitations = talker.getInvitations();
     	
-    	flash.put("note", "I've joined TalkAboutHealth to get real-time health support. Here's an invitation for you to try it as well.");
+    	flash.put("note", "I've joined TalkAboutHealth to get real-time health support. " +
+    			"Here's an invitation for you to try it as well.");
     	
     	render(invitations);
     }
@@ -87,6 +83,7 @@ public class Home extends Controller {
 		//decrease invitations count
 		talker.setInvitations(talker.getInvitations()-emailsToSend.size());
 		TalkerDAO.updateTalker(talker);
+		CommonUtil.updateCachedTalker(session);
 		
     	flash.success("ok");
     	invitations();

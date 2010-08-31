@@ -403,7 +403,7 @@ public class TalkerDAO {
 		return followerList;
 	}
 	
-	public static List<ConversationBean> loadFollowingTopics(String talkerId) {
+	public static List<ConversationBean> loadFollowingConversations(String talkerId) {
 		TalkerBean talker = getById(talkerId);
 		
 		if (talker == null) {

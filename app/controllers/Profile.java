@@ -175,7 +175,7 @@ public class Profile extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		String userName = talker.getUserName();
 		
-		render("@image", userName);
+		render(userName);
 	}
 	
 	public static void uploadImage(String submitAction, File imageFile) {
@@ -409,8 +409,6 @@ public class Profile extends Controller {
 		//For now we have only one disease - Breast Cancer
 		final String diseaseName = "Breast Cancer";
 		DiseaseBean disease = DiseaseDAO.getByName(diseaseName);
-//		List<String> typesList = DiseaseDAO.getValuesByDisease("types", diseaseName);
-//		List<String> stagesList = DiseaseDAO.getValuesByDisease("stages", diseaseName);
 
 		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
 		System.out.println(talkerDisease.getOtherHealthItems().get("symptoms"));
@@ -424,7 +422,6 @@ public class Profile extends Controller {
 		}
 		
 		render(talkerDisease, disease, healthItemsMap);
-//		render(talkerDisease, typesList, stagesList, healthItemsMap);
 	}
 	
 	public static void saveHealthDetails(TalkerDiseaseBean talkerDisease, String section) {

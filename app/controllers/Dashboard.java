@@ -37,7 +37,6 @@ public class Dashboard extends Controller {
 		render(topicsList, topicsWithNotificationsList, talkersList, lastTopicId, onlineUsersSingleton, automaticNotification);
 	}
 		
-	//TODO: move to Notification Utils?
 	public static void notification(String[] uidArray, String topicId, String topic) {
 		IMNotifier imNotifier = IMNotifier.getInstance();
 		try {

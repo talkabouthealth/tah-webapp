@@ -85,7 +85,7 @@ public class ViewDispatcher extends Controller {
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		talker.setActivityList(ActivityDAO.load(talker.getId()));
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
-		talker.setFollowingConvosFullList(TalkerDAO.loadFollowingTopics(talker.getId()));
+		talker.setFollowingConvosFullList(TalkerDAO.loadFollowingConversations(talker.getId()));
 		
 		talker.setStartedTopicsList(ConversationDAO.loadConversations(talker.getId(), "START_CONVO"));
 		talker.setJoinedTopicsList(ConversationDAO.loadConversations(talker.getId(), "JOIN_CONVO"));

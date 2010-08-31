@@ -113,7 +113,12 @@ public class CommonUtil {
 	}
 	
 	public static TalkerBean updateCachedTalker(Session session) {
-		TalkerBean talker = TalkerDAO.getByUserName(session.get("username"));
+		String sessionUserName = session.get("username");
+		if (sessionUserName == null) {
+			return null;
+		}
+		
+		TalkerBean talker = TalkerDAO.getByUserName(sessionUserName);
 		if (talker != null) {
 			Cache.set(session.getId() + "-talker", talker, "60mn");
 		}

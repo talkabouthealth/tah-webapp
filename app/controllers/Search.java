@@ -24,7 +24,6 @@ import util.SearchUtil;
 public class Search extends Controller {
 	
 	public static void search(String query) throws Exception {
-		
 		if (query == null) {
 			render();
 			return;

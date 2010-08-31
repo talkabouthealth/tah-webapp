@@ -20,6 +20,7 @@ import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.TalkerDAO;
 import play.mvc.Controller;
+import play.mvc.Router;
 import play.mvc.With;
 import util.CommonUtil;
 import util.EmailUtil;
@@ -76,35 +77,33 @@ public class Conversations extends Controller {
     }
     
     public static void restart(String topicId) {
-    	//TODO: in other thread?
     	NotificationUtils.sendAutomaticNotifications(topicId);
     	
-    	ConversationBean topic = ConversationDAO.getByConvoId(topicId);
-    	for (TalkerBean follower : topic.getFollowers()) {
+//    	ConversationBean topic = ConversationDAO.getByConvoId(topicId);
+//    	for (TalkerBean follower : topic.getFollowers()) {
 //    		Map<String, String> vars = new HashMap<String, String>();
 //    		vars.put("other_talker", talker.getUserName());
 //    		vars.put("thankyou_text", thankYouBean.getNote());
 //    		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_RESTART, 
 //    				follower, "Topic '"+topic.getTopic()+"' is restarted.");
-    	}
+//    	}
     }
     
     public static void flag(String topicId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	ConversationBean topic = ConversationDAO.getByConvoId(topicId);
+    	ConversationBean convo = ConversationDAO.getByConvoId(topicId);
     	
-    	if (topic == null) {
-    		return;
-    	}
+    	notFoundIfNull(convo);
     	
     	Map<String, String> vars = new HashMap<String, String>();
 		vars.put("name", talker.getUserName());
 		vars.put("email", talker.getEmail());
 		vars.put("subject", "FLAGGED CONVERSATION");
-		//TODO: render with Play! classes?
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("name", convo.getMainURL());
+		String convoURL = Router.reverse("ViewDispatcher", paramsMap).url;
 		vars.put("message", 
-				"Bad conversation: <a href=\"http://talkabouthealth.com:9000/topic/"+topic.getTid()+"\">"+
-					topic.getTopic()+"</a>");
+				"Bad conversation/question: <a href=\""+convoURL+"\">"+convo.getTopic()+"</a>");
 		EmailUtil.sendEmail(EmailTemplate.CONTACTUS, EmailUtil.SUPPORT_EMAIL, vars, null, false);
     }
     
@@ -119,7 +118,7 @@ public class Conversations extends Controller {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
     	if (talker.getFollowingConvosList().contains(topicId)) {
-    		//unfollow action
+    		//unfollow
     		talker.getFollowingConvosList().remove(topicId);
     	}
     	else {
@@ -127,7 +126,6 @@ public class Conversations extends Controller {
     		ActivityDAO.saveActivity(new FollowConvoAction(talker, new ConversationBean(topicId)));
     	}
     	
-    	//TODO: put together?
     	TalkerDAO.updateTalker(talker);
     	CommonUtil.updateCachedTalker(session);
     	
@@ -169,5 +167,5 @@ public class Conversations extends Controller {
 		int _level = (comment.getParentId() == null ? 1 : 2);
 		render("tags/topicCommentsTree.html", _commentsList, _level);
 	}
-
+    
 }

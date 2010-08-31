@@ -124,7 +124,7 @@
 			  	<div class="bluetext14" id="textrightbox">
 			  		<span class="blacktext">Conversations:</span>
 			  		<a style="text-decoration: none" href="@{PublicProfile.conversationsJoined(talker.userName)}">
-				    	<strong>${talker.numberOfTopics}</strong>
+				    	<strong>${talker.joinedTopicsList?.size()}</strong>
 				    </a> <br />
 				    <span class="blacktext">Thank You's: </span>
 				    <a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.userName, 'thankyous')}">
