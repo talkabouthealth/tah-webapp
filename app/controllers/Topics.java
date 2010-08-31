@@ -1,5 +1,6 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,6 +12,7 @@ import models.CommentBean;
 import models.TalkerBean;
 import models.ConversationBean;
 import models.TalkerBean.EmailSetting;
+import models.TopicBean;
 import models.actions.FollowConvoAction;
 import models.actions.ProfileCommentAction;
 import models.actions.ProfileReplyAction;
@@ -31,12 +33,23 @@ import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.TalkerDAO;
 import dao.ConversationDAO;
+import dao.TopicDAO;
 
 @With(Secure.class)
 public class Topics extends Controller {
 	
     public static void create(String newTopic) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	
+    	//create or get? topics for new convo
+//    	String newTag = "testtopic";
+//    	TopicBean topic = new TopicBean(newTag);
+//    	topic.setMainURL(ApplicationDAO.createURLName(newTag));
+//    	TopicDAO.save(topic);
+    	
+    	List<TopicBean> topics = new ArrayList<TopicBean>();
+//    	topics.add(topic);
+    	
 		
 		ConversationBean convo = new ConversationBean();
 		convo.setTopic(newTopic);
@@ -44,6 +57,7 @@ public class Topics extends Controller {
 		Date currentDate = Calendar.getInstance().getTime();
 		convo.setCreationDate(currentDate);
 		convo.setDisplayTime(currentDate);
+		convo.setTopics(topics);
 
 		String topicURL = ApplicationDAO.createURLName(newTopic);
 		convo.setMainURL(topicURL);
@@ -56,7 +70,7 @@ public class Topics extends Controller {
 		NotificationUtils.sendAutomaticNotifications(convo.getId());
 		
 		//automatically follow started topic
-		talker.getFollowingTopicsList().add(convo.getId());
+		talker.getFollowingConvosList().add(convo.getId());
 		TalkerDAO.updateTalker(talker);
     	CommonUtil.updateCachedTalker(session);
 		ActivityDAO.saveActivity(new FollowConvoAction(talker, convo));
@@ -112,12 +126,12 @@ public class Topics extends Controller {
     public static void follow(String topicId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
-    	if (talker.getFollowingTopicsList().contains(topicId)) {
+    	if (talker.getFollowingConvosList().contains(topicId)) {
     		//unfollow action
-    		talker.getFollowingTopicsList().remove(topicId);
+    		talker.getFollowingConvosList().remove(topicId);
     	}
     	else {
-    		talker.getFollowingTopicsList().add(topicId);
+    		talker.getFollowingConvosList().add(topicId);
     		ActivityDAO.saveActivity(new FollowConvoAction(talker, new ConversationBean(topicId)));
     	}
     	
@@ -164,10 +178,4 @@ public class Topics extends Controller {
 		render("tags/topicCommentsTree.html", _commentsList, _level);
 	}
     
-    /* --------------- Public -------------------- */
-    public static void viewTopic(String url) {
-    	notFoundIfNull(url);
-		
-    }
-
 }

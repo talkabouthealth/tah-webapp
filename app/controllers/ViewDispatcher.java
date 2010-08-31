@@ -12,6 +12,7 @@ import models.HealthItemBean;
 import models.TalkerBean;
 import models.TalkerDiseaseBean;
 import models.ConversationBean;
+import models.TopicBean;
 import models.actions.Action;
 import dao.ActivityDAO;
 import dao.CommentsDAO;
@@ -20,6 +21,7 @@ import dao.HealthItemDAO;
 import dao.TalkerDAO;
 import dao.TalkerDiseaseDAO;
 import dao.ConversationDAO;
+import dao.TopicDAO;
 import play.mvc.Controller;
 import play.templates.JavaExtensions;
 import util.CommonUtil;
@@ -40,9 +42,16 @@ public class ViewDispatcher extends Controller {
 		}
 		
 		//next - question or conversation
-		ConversationBean topic = ConversationDAO.getByURL(name);
+		ConversationBean convo = ConversationDAO.getByURL(name);
+		if (convo != null) {
+			showConvo(convo);
+			return;
+		}
+		
+		//next - topic
+		TopicBean topic = TopicDAO.getByURL(name);
 		if (topic != null) {
-			showConvo(topic);
+			showTopic(topic);
 			return;
 		}
 		
@@ -75,7 +84,7 @@ public class ViewDispatcher extends Controller {
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		talker.setActivityList(ActivityDAO.load(talker.getId()));
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
-		talker.setFollowingTopicsFullList(TalkerDAO.loadFollowingTopics(talker.getId()));
+		talker.setFollowingConvosFullList(TalkerDAO.loadFollowingTopics(talker.getId()));
 		
 		talker.setStartedTopicsList(ConversationDAO.loadTopics(talker.getId(), "START_CONVO"));
 		talker.setJoinedTopicsList(ConversationDAO.loadTopics(talker.getId(), "JOIN_CONVO"));
@@ -147,23 +156,34 @@ public class ViewDispatcher extends Controller {
 		talker.setProfileCompletionValue(sum);
 	}
 	
-	private static void showConvo(ConversationBean topic) {
+	private static void showConvo(ConversationBean convo) {
 		TalkerBean talker = null;
 		if (Security.isConnected()) {
 			talker = CommonUtil.loadCachedTalker(session);
 		}
 		
-		ConversationDAO.incrementTopicViews(topic.getId());
+		ConversationDAO.incrementConvoViews(convo.getId());
 		
-		topic.setComments(CommentsDAO.loadTopicComments(topic.getId()));
+		convo.setComments(CommentsDAO.loadConvoComments(convo.getId()));
 		
 		//temporary test data
-		topic.setDetails("Suggestions for friends and family...");
-		topic.setTags(Arrays.asList("support", "help", "testtag"));
-		topic.setSummary("Summary.........");
-		topic.setSumContributors(Arrays.asList("murray", "situ"));
+		convo.setDetails("Suggestions for friends and family...");
+		convo.setTags(Arrays.asList("support", "help", "testtag"));
+		convo.setSummary("Summary.........");
+		convo.setSumContributors(Arrays.asList("murray", "situ"));
+		
+		render("Conversations/viewConvo.html", talker, convo);
+    }
+	
+	private static void showTopic(TopicBean topic) {
+		TalkerBean talker = null;
+		if (Security.isConnected()) {
+			talker = CommonUtil.loadCachedTalker(session);
+		}
+		
+		TopicDAO.incrementTopicViews(topic.getId());
 		
 		render("Topics/viewTopic.html", talker, topic);
-    }
+	}
 
 }

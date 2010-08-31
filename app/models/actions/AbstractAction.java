@@ -92,7 +92,7 @@ public abstract class AbstractAction implements Action {
 	}
 	
 	protected void addTopic(DBObject dbObject, ConversationBean topic) {
-		DBRef topicRef = new DBRef(DBUtil.getDB(), ConversationDAO.TOPICS_COLLECTION, new ObjectId(topic.getId()));
+		DBRef topicRef = new DBRef(DBUtil.getDB(), ConversationDAO.CONVERSATIONS_COLLECTION, new ObjectId(topic.getId()));
 		dbObject.put("topicId", topicRef);
 	}
 	

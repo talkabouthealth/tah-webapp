@@ -172,8 +172,8 @@ public class TalkerBean implements Serializable {
 	private List<CommentBean> profileCommentsList;
 	
 	//TODO: what's the best solution for partial load?
-	private List<String> followingTopicsList;
-	private List<ConversationBean> followingTopicsFullList;
+	private List<String> followingConvosList;
+	private List<ConversationBean> followingConvosFullList;
 	private List<ConversationBean> startedTopicsList;
 	private List<ConversationBean> joinedTopicsList;
 	
@@ -296,7 +296,7 @@ public class TalkerBean implements Serializable {
 		
 		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
 		parseFollowing((Collection<DBRef>)talkerDBObject.get("following"));
-		setFollowingTopicsList(parseStringList(talkerDBObject.get("following_topics")));
+		setFollowingConvosList(parseStringList(talkerDBObject.get("following_topics")));
 		
 		parseProfilePreferences(parseInt(talkerDBObject.get("prefs")));
 		parseEmailSettings(parseStringList(talkerDBObject.get("email_settings")));
@@ -704,12 +704,20 @@ public class TalkerBean implements Serializable {
 	public String getBio() { return bio; }
 	public void setBio(String bio) { this.bio = bio; }
 
-	public List<String> getFollowingTopicsList() { return followingTopicsList; }
-	public void setFollowingTopicsList(List<String> followingTopicsList) { this.followingTopicsList = followingTopicsList; }
+	public List<String> getFollowingConvosList() {
+		return followingConvosList;
+	}
+	public void setFollowingConvosList(List<String> followingConvosList) {
+		this.followingConvosList = followingConvosList;
+	}
 	
-	public List<ConversationBean> getFollowingTopicsFullList() { return followingTopicsFullList; }
-	public void setFollowingTopicsFullList(List<ConversationBean> followingTopicsFullList) { this.followingTopicsFullList = followingTopicsFullList; }
-
+	public List<ConversationBean> getFollowingConvosFullList() {
+		return followingConvosFullList;
+	}
+	public void setFollowingConvosFullList(
+			List<ConversationBean> followingConvosFullList) {
+		this.followingConvosFullList = followingConvosFullList;
+	}
 	public boolean isDeactivated() { return deactivated; }
 	public void setDeactivated(boolean deactivated) { this.deactivated = deactivated; }
 

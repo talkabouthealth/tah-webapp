@@ -110,7 +110,7 @@ public class PublicProfile extends Controller {
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
 		notFoundIfNull(talker);
 		
-		talker.setFollowingTopicsFullList(TalkerDAO.loadFollowingTopics(talker.getId()));
+		talker.setFollowingConvosFullList(TalkerDAO.loadFollowingTopics(talker.getId()));
 		
 		render(talker, currentTalker);
 	}

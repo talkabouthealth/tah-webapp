@@ -20,13 +20,16 @@ public class ConversationBean {
 	//TODO: Set or List?
 	private String details;
 	private int views;
-	private List<String> tags;
+	
 	private String summary;
 	private List<String> sumContributors;
 	private Set<String> members;
 	private List<CommentBean> comments;
 	private List<MessageBean> messages;
 	private List<TalkerBean> followers;
+	
+	private List<String> tags;
+	private List<TopicBean> topics;
 	
 	public ConversationBean() {}
 	
@@ -95,4 +98,13 @@ public class ConversationBean {
 	public void setURLs(Set<String> uRLs) {
 		URLs = uRLs;
 	}
+
+	public List<TopicBean> getTopics() {
+		return topics;
+	}
+
+	public void setTopics(List<TopicBean> topics) {
+		this.topics = topics;
+	}
+	
 }

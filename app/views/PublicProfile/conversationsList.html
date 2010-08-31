@@ -73,7 +73,7 @@
 						        					<span class="blacktext12">${topic.members.size()} people spoke</span> | 
 						        					<a href="@{ViewDispatcher.view(topic.mainURL)}#comments" class="bluetext12">Comment</a> | 
 						        					<a href="#" class="bluetext12 followTopicLink" rel="${topic.id}">
-													${ talker.followingTopicsList?.contains(topic.id) ? 'Unfollow' : 'Follow'}
+													${ talker.followingConvosList?.contains(topic.id) ? 'Unfollow' : 'Follow'}
 													</a> | 
 													<a href="#" class="bluetext12 restartTopicLink" 
 														rel="${topic.id}" rel2="${topic.tid}">Re-start</a> | 

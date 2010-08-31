@@ -51,9 +51,9 @@
 		<div id="innerpersonalarea">
 			<div id="signupleftarea">
 				#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.CONVERSATIONS_FOLLOWED) 
-								&& talker.followingTopicsFullList}
+								&& talker.followingConvosFullList}
 					<div class="activitiestext">
-						#{list items:talker.followingTopicsFullList.limit(12), as:'topic' }
+						#{list items:talker.followingConvosFullList.limit(12), as:'topic' }
 							<div class="area">
 								<div class="arealeft2">
 									<a href="@{ViewDispatcher.view(topic.talker.userName)}" class="bluetext11">
@@ -74,7 +74,7 @@
 						        					<span class="blacktext12">${topic.members.size()} people spoke</span> | 
 						        					<a href="@{ViewDispatcher.view(topic.mainURL)}#comments" class="bluetext12">Comment</a> | 
 						        					<a href="#" class="bluetext12 followTopicLink" rel="${topic.id}">
-													${ talker.followingTopicsList?.contains(topic.id) ? 'Unfollow' : 'Follow'}
+													${ talker.followingConvosList?.contains(topic.id) ? 'Unfollow' : 'Follow'}
 													</a> | 
 													<a href="#" class="bluetext12 restartTopicLink" 
 														rel="${topic.id}" rel2="${topic.tid}">Re-start</a> | 

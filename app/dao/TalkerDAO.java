@@ -114,7 +114,7 @@ public class TalkerDAO {
 			
 			.add("prefs", talker.profilePreferencesToInt())
 			.add("email_settings", talker.emailSettingsToList())
-			.add("following_topics", talker.getFollowingTopicsList())
+			.add("following_topics", talker.getFollowingConvosList())
 			
 			.get();
 		
@@ -410,13 +410,13 @@ public class TalkerDAO {
 		}
 		
 		//TODO: use DBRef for topics?
-		List<ConversationBean> followingTopicsList = new ArrayList<ConversationBean>();
-		for (String topicId : talker.getFollowingTopicsList()) {
+		List<ConversationBean> followingConvoList = new ArrayList<ConversationBean>();
+		for (String topicId : talker.getFollowingConvosList()) {
 			ConversationBean topic = ConversationDAO.getByTopicId(topicId);
-			followingTopicsList.add(topic);
+			followingConvoList.add(topic);
 		}
 		
-		return followingTopicsList;
+		return followingConvoList;
 	}
 	
 	//TODO: move to update talker?

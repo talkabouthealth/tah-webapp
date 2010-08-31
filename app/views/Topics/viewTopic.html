@@ -25,7 +25,6 @@
 	</style>
 
 	<script type="text/javascript">
-		var tid = '${topic.tid}';
 		$(document).ready(function() {
 			$("#followTopicLink").click(function() {
 				$.post("@{Topics.follow()}", 
@@ -40,99 +39,7 @@
 	  				}
 	  			);
 			});
-
-			*{ TODO: convo or topic ? }*
-			$(".restartConvoLink").click(function() {
-				openChat(tid);
-				$.post("@{Topics.restart}", {topicId: '${topic.id}'});
-			});
-
-			$(".flagConvoLink").click(function() {
-				$(this).after("<span>Thanks!</span>").detach();
-				$.post("@{Topics.flag}", {topicId: '${topic.id}'});
-			});
-
-			//comments
-			$(".commentreply").each(function() {
-				$(this).val("Reply to comment..").css("color", "#777777");
-			});
-
-   			$("#replytext")
-	   			.click(function() {
-		   			updateCommentState('Extended');
-	   			})
-	   			.blur(function() {
-		   			if ($(this).val() == "") {
-		   				updateCommentState('Initial');
-		   			}
-	   			});
-	
-	   		$(".commentreply")
-	   			.click(function() {
-	   				updateReplyState($(this), 'Extended');
-	   			})
-	   			.blur(function() {
-		   			if ($(this).val() == "") {
-		   				updateReplyState($(this), 'Initial');
-		   			}
-	   			});			
 		});
-
-		function updateCommentState(newState) {
-   	   		if (newState == 'Initial') {
-   	   			$("#replytext").val("What are you thinking?").css("color", "#777777");
-				$("#commentBtn").hide();
-   	   		}
-   	   		else if (newState == 'Extended') {
-	   	   		$("#replytext").val("").css("color", "#000000");
-	   			$("#commentBtn").show();
-   	   		}
-   		}
-
-   		function updateReplyState(replyTextArea, newState) {
-   	   		if (newState == 'Initial') {
-   	   			replyTextArea.val("Reply to comment..").css("color", "#777777");
-   	   			replyTextArea.parent().next().hide();
-   	   		}
-   	   		else if (newState == 'Extended') {
-   	   			replyTextArea.val("").css("color", "#000000");
-	   			replyTextArea.parent().next().show();
-   	   		}
-   		}
-
-   		//public static void saveTopicComment(String topicId, String parentId, String text) {
-   		function saveProfileComment(parentId) {
-   	   		var commentText = $("#replytext"+parentId).val();
-   			$("#replytext"+parentId).val("");
-
-   			$.post("@{Topics.saveTopicComment()}", 
-  				{ topicId: '${topic.id}', parentId: parentId, text: commentText},
-  				function(html) {
-  	  				$("#firstcommentmessage").hide();
-  					//put comment in the tree
-  					if (parentId == '') {
-  	  					//add as first element in the top
-  						$(html).prependTo($(".commentsarea"));
-  					}
-  					else {
-  						//add as last element in subtree
-  						$("#reply"+parentId).before($(html));
-  					}
-  				}
-  			);
-
-   			if (parentId == '') {
-   				updateCommentState('Initial');
-			}
-			else {
-				updateReplyState($("#replytext"+parentId), 'Initial');
-			}
-  			return false;
-   		}
-
-		function openChat(tid){
-			window.open("@{Talk.talkApp()}/"+tid, "TalkerWindow", "width=700,height=500");
-		}
 	</script>
 </head>
 
@@ -148,25 +55,13 @@
 
 <div id="innerbanner"></div>
 <div id="bottom_container">
-	<div class="blacktext2" id="innerheading">${topic.topic}</div>
+	<div class="blacktext2" id="innerheading">${topic.title}</div>
 	<div id="middle_area_inner">
 		<div id="innerboxarea">
 			<div id="innerleft">
 				<div id="innerlefttop"></div>
 				<div id="innermid">
-					${topic.details}
-					<br/>
-					#{list items: topic.tags, as: 'tag'}
-						${tag}&nbsp;&nbsp;&nbsp;
-					#{/list}
-					<br/>
-					#{if talker }
-						<a href="#" class="restartConvoLink">Re-start conversation</a>&nbsp;
-						<a href="#">Start follow up conversation</a>&nbsp;
-						<a href="#" class="flagConvoLink">Flag conversation</a>&nbsp;
-					#{/if}
-					<br/><br/>
-					<h3>Conversation Summary:</h3><br/>
+					<h3>Topic Summary:</h3><br/>
 					${topic.summary}<br/>
 					Contributions by: 
 					#{list items: topic.sumContributors, as: 'contributor'}
@@ -174,53 +69,13 @@
 					#{/list}
 					<br/><br/>
 					
-					<div>
-						<h3 id="comments">Comments:</h3><br/>
-
-						#{if talker }
-							<div id="reply" class="replyForm">
-								<ul>
-									<li>
-										<textarea class="togglecomment" rows="1" cols="45" 
-											id="replytext">What are you thinking?</textarea>
-								    </li>
-									<li id="commentBtn" style="display: none">
-										<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
-											<a href="#" onclick="return saveProfileComment('');">
-												<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
-											</a>
-										</div>
-									</li> 
-								</ul>
-							</div>
-						#{/if}
-						<div class="commentsarea">
-							#{topicCommentsTree commentsList: topic.comments, level: 1 /}
-						</div>
-					</div>
-
 					<div style="clear: both"></div>
 
 					<br/><br/>
 					<br/><br/>
-					<h3>Conversation:</h3>
-					<br/>
-					#{if talker }
-						<a href="#" class="restartConvoLink">Re-start conversation</a>&nbsp;
-						<a href="#">Start follow up conversation</a>&nbsp;
-					#{/if}
 					<br/>
 					${topic.creationDate?.format('M/d/yyyy')}
 					<br/>
-					Talkers:
-					#{list items: topic.members, as: 'member'}
-						<img src="@{Image.show(member)}" width="48" height="48" border="0" />
-						${member}&nbsp;&nbsp;&nbsp;
-					#{/list}
-					<br/><br/>
-					#{list items: topic.messages, as: 'message'}
-						${message.fromTalker.userName}: ${message.text}<br/>
-					#{/list}
 				</div>
 				<div id="innerbot"></div>
 			</div>
@@ -236,11 +91,11 @@
 				<div class="innerrightbox" style="padding-top: 0px">
 					<div class="innerrightop"></div>
 					<div class="innerrighmid">
-						#{if talker.followingTopicsList?.contains(topic.id) }
-							<a href="#" id="followTopicLink">Unfollow Conversation</a>
+						#{if talker.followingConvosList?.contains(topic.id) }
+							<a href="#" id="followTopicLink">Unfollow Topic</a>
 						#{/if}
 						#{else}
-							<a href="#" id="followTopicLink">Follow Conversation</a>
+							<a href="#" id="followTopicLink">Follow Topic</a>
 						#{/else}
 					</div>
 					<div class="innerrighbot"></div>
