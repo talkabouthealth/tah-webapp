@@ -13,6 +13,7 @@ import models.TalkerBean;
 import models.ConversationBean;
 import models.TalkerBean.EmailSetting;
 import models.TopicBean;
+import models.actions.Action;
 import models.actions.FollowConvoAction;
 import models.actions.ProfileCommentAction;
 import models.actions.ProfileReplyAction;
@@ -59,7 +60,28 @@ public class Topics extends Controller {
     }
     
     public static void manage(String name) {
-    	render();
+    	TopicBean topic = TopicDAO.getByURL(name);
+    	notFoundIfNull(topic);
+
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		render(talker, topic);
+    }
+    
+    public static void manageAliases(String topicId, String todo, String alias) {
+    	TopicBean topic = TopicDAO.getById(topicId);
+    	notFoundIfNull(topic);
+
+    	if (todo.equalsIgnoreCase("add")) {
+    		topic.getAliases().add(alias);
+    	}
+    	else {
+    		topic.getAliases().remove(alias);
+    	}
+    	System.out.println(topic.getAliases());
+    	TopicDAO.updateTopic(topic);
+    	
+    	renderText("<li>"+alias+"&nbsp;<a href='#' rel='"+alias+"' class='removeAliasLink'>remove</a></li>");
     }
     
 }

@@ -65,11 +65,11 @@ public class ConversationDAO {
 			return -1;
 		}
 		
-		DBCollection topicsColl = getCollection(CONVERSATIONS_COLLECTION);
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
 		//get last tid
 		DBCursor topicsCursor = 
-			topicsColl.find(null, new BasicDBObject("tid", "")).sort(new BasicDBObject("tid", -1)).limit(1);
+			convosColl.find(null, new BasicDBObject("tid", "")).sort(new BasicDBObject("tid", -1)).limit(1);
 		int tid = topicsCursor.hasNext() ? ((Integer)topicsCursor.next().get("tid")) + 1 : 1;
 		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, convo.getUid());
@@ -90,7 +90,7 @@ public class ConversationDAO {
 
 		//Only with STRICT WriteConcern we receive exception on duplicate key
 		try {
-			topicsColl.save(topicObject, WriteConcern.SAFE);
+			convosColl.save(topicObject, WriteConcern.SAFE);
 		}
 		catch (MongoException me) {
 			//E11000 duplicate key error index
@@ -107,33 +107,32 @@ public class ConversationDAO {
 		return (Integer)topicObject.get("tid");
 	}
 	
-	public static void updateTopic(ConversationBean topic) {
-		DBCollection topicsColl = getCollection(CONVERSATIONS_COLLECTION);
+	public static void updateTopic(ConversationBean convo) {
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
-		//TODO: update also main url
 		DBObject topicObject = BasicDBObjectBuilder.start()
-			.add("topic", topic.getTopic())
-			.add("main_url", topic.getMainURL())
+			.add("topic", convo.getTopic())
+			.add("main_url", convo.getMainURL())
 			.get();
 		
-		DBObject topicId = new BasicDBObject("_id", new ObjectId(topic.getId()));
-		topicsColl.update(topicId, new BasicDBObject("$set", topicObject));
+		DBObject convoId = new BasicDBObject("_id", new ObjectId(convo.getId()));
+		convosColl.update(convoId, new BasicDBObject("$set", topicObject));
 	}
 	
 	public static ConversationBean getByConvoId(String topicId) {
-		DBCollection topicsColl = getCollection(CONVERSATIONS_COLLECTION);
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("_id", new ObjectId(topicId));
-		DBObject topicDBObject = topicsColl.findOne(query);
+		DBObject topicDBObject = convosColl.findOne(query);
 		
 		return parseConversationBean(topicDBObject);
 	}
 	
 	public static ConversationBean getByTid(Integer tid) {
-		DBCollection topicsColl = getCollection(CONVERSATIONS_COLLECTION);
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("tid", tid);
-		DBObject topicDBObject = topicsColl.findOne(query);
+		DBObject topicDBObject = convosColl.findOne(query);
 		
 		return parseConversationBean(topicDBObject);
 	}
@@ -144,7 +143,7 @@ public class ConversationDAO {
 	 * @return
 	 */
 	public static ConversationBean getByURL(String url) {
-		DBCollection topicsColl = getDB().getCollection(CONVERSATIONS_COLLECTION);
+		DBCollection convosColl = getDB().getCollection(CONVERSATIONS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("$or", 
 				Arrays.asList(
@@ -152,7 +151,7 @@ public class ConversationDAO {
 						new BasicDBObject("urls", url)
 					)
 			);
-		DBObject topicDBObject = topicsColl.findOne(query);
+		DBObject topicDBObject = convosColl.findOne(query);
 		
 		return parseConversationBean(topicDBObject);
 	}
@@ -222,9 +221,9 @@ public class ConversationDAO {
 	}
 	
 	public static List<ConversationBean> loadAllTopics() {
-		DBCollection topicsColl = getCollection(CONVERSATIONS_COLLECTION);
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		List<DBObject> topicsDBList = 
-			topicsColl.find().sort(new BasicDBObject("disp_date", -1)).toArray();
+			convosColl.find().sort(new BasicDBObject("disp_date", -1)).toArray();
 		
 		List<ConversationBean> topicsList = new ArrayList<ConversationBean>();
 		for (DBObject topicDBObject : topicsDBList) {
@@ -236,9 +235,9 @@ public class ConversationDAO {
 	}
 	
 	public static Map<String, ConversationBean> queryTopics() {
-		DBCollection topicsColl = getCollection(CONVERSATIONS_COLLECTION);
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		List<DBObject> topicsList = 
-			topicsColl.find().sort(new BasicDBObject("disp_date", -1)).limit(20).toArray();
+			convosColl.find().sort(new BasicDBObject("disp_date", -1)).limit(20).toArray();
 		
 		Map <String, ConversationBean> topicsMap = new LinkedHashMap <String, ConversationBean>(20);
 		for (DBObject topicDBObject : topicsList) {
@@ -266,18 +265,18 @@ public class ConversationDAO {
 	 * TODO: store additional field - quicker access?
 	 */
 	public static int getNumberOfTopics(String talkerId) {
-		DBCollection topicsColl = getCollection(CONVERSATIONS_COLLECTION);
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		DBObject query = new BasicDBObject("uid", talkerRef);
 
-		return topicsColl.find(query).count();
+		return convosColl.find(query).count();
 	}
 	
 	public static String getLastTopicId() {
-		DBCollection topicsColl = getCollection(CONVERSATIONS_COLLECTION);
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
-		DBObject topicDBObject = topicsColl.find().sort(new BasicDBObject("cr_date", -1)).next();
+		DBObject topicDBObject = convosColl.find().sort(new BasicDBObject("cr_date", -1)).next();
 		if (topicDBObject == null) {
 			return null;
 		}
@@ -287,10 +286,10 @@ public class ConversationDAO {
 	}
 	
 	public static List<Map<String, String>> loadTopicsForDashboard(boolean withNotifications) {
-		DBCollection topicsColl = getCollection(CONVERSATIONS_COLLECTION);
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		DateFormat dateFormat = new SimpleDateFormat("MM.dd.yyyy HH:mm:ss");
 		
-		List<DBObject> topicsDBList = topicsColl.find().sort(new BasicDBObject("cr_date", -1)).toArray();
+		List<DBObject> topicsDBList = convosColl.find().sort(new BasicDBObject("cr_date", -1)).toArray();
 		
 		List<Map<String, String>> topicsInfoList = new ArrayList<Map<String,String>>();
 		for (DBObject topicDBObject : topicsDBList) {
@@ -330,10 +329,10 @@ public class ConversationDAO {
 	}
 	
 	public static void incrementConvoViews(String topicId) {
-		DBCollection topicsColl = getCollection(CONVERSATIONS_COLLECTION);
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
 		DBObject topicIdDBObject = new BasicDBObject("_id", new ObjectId(topicId));
-		topicsColl.update(topicIdDBObject, 
+		convosColl.update(topicIdDBObject, 
 				new BasicDBObject("$inc", new BasicDBObject("views", 1)));
 	}
 	

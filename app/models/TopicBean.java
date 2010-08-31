@@ -1,13 +1,32 @@
 package models;
 
+import static util.DBUtil.createRef;
+import static util.DBUtil.getCollection;
+import static util.DBUtil.getString;
+import static util.DBUtil.getStringSet;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import util.DBUtil;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+
+import dao.ConversationDAO;
+import dao.TalkerDAO;
+import dao.TopicDAO;
 
 public class TopicBean {
 	
 	private String id;
 	private String title;
+	private Set<String> aliases;
 	private String summary;
 	
 	private String mainURL;
@@ -44,6 +63,43 @@ public class TopicBean {
 			return 47;
 		}
 		return id.hashCode();
+	}
+	
+	public void parseBasicFromDB(DBObject topicDBObject) {
+		setId(getString(topicDBObject, "_id"));
+		
+		setTitle((String)topicDBObject.get("title"));
+		setAliases(getStringSet(topicDBObject, "aliases"));
+		
+		setMainURL((String)topicDBObject.get("main_url"));
+		setViews(DBUtil.getInt(topicDBObject, "views"));
+		setCreationDate((Date)topicDBObject.get("cr_date"));
+	}
+	
+	public void parseFromDB(DBObject topicDBObject) {
+		parseBasicFromDB(topicDBObject);
+		
+		setConversations(ConversationDAO.loadConversationsByTopic(getId()));
+		
+		//followers of this topic
+		//TODO: similar to convos?
+    	DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
+    	DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, getId());
+    	DBObject query = new BasicDBObject("following_tags", topicRef);
+    	DBObject fields = BasicDBObjectBuilder.start()
+    		.add("uname", 1)
+    		.add("email", 1)
+    		.add("bio", 1)
+    		.add("email_settings", 1)
+    		.get();
+    	List<DBObject> followersDBList = talkersColl.find(query, fields).toArray();
+    	List<TalkerBean> followers = new ArrayList<TalkerBean>();
+    	for (DBObject followerDBObject : followersDBList) {
+    		TalkerBean followerTalker = new TalkerBean();
+    		followerTalker.parseBasicFromDB(followerDBObject);
+			followers.add(followerTalker);
+    	}
+    	setFollowers(followers);
 	}
 	
 	
@@ -101,5 +157,10 @@ public class TopicBean {
 	public void setConversations(List<ConversationBean> conversations) {
 		this.conversations = conversations;
 	}
-	
+	public Set<String> getAliases() {
+		return aliases;
+	}
+	public void setAliases(Set<String> aliases) {
+		this.aliases = aliases;
+	}
 }

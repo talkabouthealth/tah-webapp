@@ -37,6 +37,8 @@ GET		/{userName}/following					PublicProfile.userBasedActions(action:'following'
 GET		/{userName}/followers					PublicProfile.userBasedActions(action:'followers')
 GET		/{userName}/commentstream				PublicProfile.userBasedActions(action:'comments')
 
+GET		/{name}/manage							Topics.manage
+
 GET		/{userName}/conversationsfollowing		PublicProfile.conversationsFollowing
 GET		/{userName}/conversationsstarted		PublicProfile.conversationsStarted
 GET		/{userName}/conversationsjoined			PublicProfile.conversationsJoined

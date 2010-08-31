@@ -1,9 +1,6 @@
 package dao;
 
-import static util.DBUtil.createRef;
-import static util.DBUtil.getCollection;
-import static util.DBUtil.getDB;
-import static util.DBUtil.getString;
+import static util.DBUtil.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,6 +39,17 @@ public class TopicDAO {
 		topic.setId(getString(topicDBObject, "_id"));
 	}
 	
+	public static void updateTopic(TopicBean topic) {
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
+		
+		DBObject topicObject = BasicDBObjectBuilder.start()
+			.add("aliases", topic.getAliases())
+			.get();
+		
+		DBObject topicId = new BasicDBObject("_id", new ObjectId(topic.getId()));
+		topicsColl.update(topicId, new BasicDBObject("$set", topicObject));
+	}
+	
 	/**
 	 * Find by main URL (current) or old urls.
 	 * @param url
@@ -59,35 +67,19 @@ public class TopicDAO {
 		DBObject topicDBObject = topicsColl.findOne(query);
 		
 		TopicBean topic = new TopicBean();
-		topic.setId(getString(topicDBObject, "_id"));
-		topic.setTitle((String)topicDBObject.get("title"));
-		topic.setMainURL((String)topicDBObject.get("main_url"));
-		topic.setViews(DBUtil.getInt(topicDBObject, "views"));
-		topic.setCreationDate((Date)topicDBObject.get("cr_date"));
-		
-		topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
-		
-		//followers of this topic
-		//TODO: similar to convos?
-    	DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
-    	DBRef topicRef = createRef(TOPICS_COLLECTION, topic.getId());
-    	query = new BasicDBObject("following_tags", topicRef);
-    	DBObject fields = BasicDBObjectBuilder.start()
-    		.add("uname", 1)
-    		.add("email", 1)
-    		.add("bio", 1)
-    		.add("email_settings", 1)
-    		.get();
-    	List<DBObject> followersDBList = talkersColl.find(query, fields).toArray();
-    	List<TalkerBean> followers = new ArrayList<TalkerBean>();
-    	for (DBObject followerDBObject : followersDBList) {
-    		TalkerBean followerTalker = new TalkerBean();
-    		followerTalker.parseBasicFromDB(followerDBObject);
-			followers.add(followerTalker);
-    	}
-    	topic.setFollowers(followers);
-		
+		topic.parseFromDB(topicDBObject);
 		return topic;
+	}
+	
+	public static TopicBean getById(String topicId) {
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
+		
+		DBObject query = new BasicDBObject("_id", new ObjectId(topicId));
+		DBObject topicDBObject = topicsColl.findOne(query);
+		
+		TopicBean topicBean = new TopicBean();
+		topicBean.parseBasicFromDB(topicDBObject);
+		return topicBean;
 	}
 	
 	public static void incrementTopicViews(String topicId) {
@@ -97,5 +89,4 @@ public class TopicDAO {
 		topicsColl.update(topicIdDBObject, 
 				new BasicDBObject("$inc", new BasicDBObject("views", 1)));
 	}
-
 }
