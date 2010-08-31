@@ -5,7 +5,9 @@ import static util.DBUtil.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bson.types.ObjectId;
 
@@ -44,6 +46,7 @@ public class TopicDAO {
 		
 		DBObject topicObject = BasicDBObjectBuilder.start()
 			.add("aliases", topic.getAliases())
+			.add("children", topic.childrenToList())
 			.get();
 		
 		DBObject topicId = new BasicDBObject("_id", new ObjectId(topic.getId()));
@@ -66,6 +69,10 @@ public class TopicDAO {
 			);
 		DBObject topicDBObject = topicsColl.findOne(query);
 		
+		if (topicDBObject == null) {
+			return null;
+		}
+		
 		TopicBean topic = new TopicBean();
 		topic.parseFromDB(topicDBObject);
 		return topic;
@@ -82,6 +89,37 @@ public class TopicDAO {
 		return topicBean;
 	}
 	
+	public static List<TopicBean> getTopics() {
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
+		
+		List<DBObject> topicsDBList = topicsColl.find().toArray();
+		List<TopicBean> topics = new ArrayList<TopicBean>();
+		for (DBObject topicDBObject : topicsDBList) {
+			TopicBean topic = new TopicBean();
+			topic.parseBasicFromDB(topicDBObject);
+			topics.add(topic);
+		}
+		return topics;
+	}
+	
+	public static Set<TopicBean> getParentTopics(String topicId) {
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
+		
+		DBRef topicDBRef = createRef(TOPICS_COLLECTION, topicId);
+		DBObject query = new BasicDBObject("children", topicDBRef);
+		List<DBObject> topicsDBList = topicsColl.find(query).toArray();
+		
+		Set<TopicBean> parentTopics = new HashSet<TopicBean>();
+		for (DBObject topicDBObject : topicsDBList) {
+			TopicBean parentTopic = new TopicBean();
+			parentTopic.setId(topicDBObject.get("_id").toString());
+			parentTopic.setTitle((String)topicDBObject.get("title"));
+			parentTopics.add(parentTopic);
+		}
+		return parentTopics;
+	}
+	
+	
 	public static void incrementTopicViews(String topicId) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
@@ -89,4 +127,12 @@ public class TopicDAO {
 		topicsColl.update(topicIdDBObject, 
 				new BasicDBObject("$inc", new BasicDBObject("views", 1)));
 	}
+	
+//	public static void main(String[] args) {
+//    	String newTag = "thirdtopic";
+//    	TopicBean topic = new TopicBean();
+//    	topic.setTitle(newTag);
+//    	topic.setMainURL(ApplicationDAO.createURLName(newTag));
+//    	TopicDAO.save(topic);
+//	}
 }

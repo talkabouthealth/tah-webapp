@@ -6,7 +6,9 @@ import static util.DBUtil.getString;
 import static util.DBUtil.getStringSet;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -28,15 +30,16 @@ public class TopicBean {
 	private String title;
 	private Set<String> aliases;
 	private String summary;
-	
 	private String mainURL;
+	
+	private Set<TopicBean> parents;
+	private Set<TopicBean> children;
 	
 	private int views;
 	private Date creationDate;
 	
 	private List<String> sumContributors;
 	private List<TalkerBean> followers;
-	
 	private List<ConversationBean> conversations;
 	
 	public TopicBean() {
@@ -74,6 +77,25 @@ public class TopicBean {
 		setMainURL((String)topicDBObject.get("main_url"));
 		setViews(DBUtil.getInt(topicDBObject, "views"));
 		setCreationDate((Date)topicDBObject.get("cr_date"));
+		
+		parseRelatives(topicDBObject);
+	}
+	
+	private void parseRelatives(DBObject topicDBObject) {
+		//children
+		Collection<DBRef> childrenDBList = (Collection<DBRef>)topicDBObject.get("children");
+		children = new HashSet<TopicBean>();
+		if (childrenDBList != null) {
+			for (DBRef childDBRef : childrenDBList) {
+				TopicBean child = new TopicBean();
+				child.setId(childDBRef.fetch().get("_id").toString());
+				child.setTitle((String)childDBRef.fetch().get("title"));
+				children.add(child);
+			}
+		}
+		
+		//parents
+		setParents(TopicDAO.getParentTopics(getString(topicDBObject, "_id")));
 	}
 	
 	public void parseFromDB(DBObject topicDBObject) {
@@ -101,6 +123,21 @@ public class TopicBean {
     	}
     	setFollowers(followers);
 	}
+	
+	
+	
+	public List<DBRef> childrenToList() {
+		List<DBRef> dbRefList = new ArrayList<DBRef>();
+		if (children == null) {
+			return dbRefList;
+		}
+		for (TopicBean topic : children) {
+			dbRefList.add(DBUtil.createRef(TopicDAO.TOPICS_COLLECTION, topic.getId()));
+		}
+		
+		return dbRefList;
+	}
+	
 	
 	
 	public String getId() {
@@ -162,5 +199,17 @@ public class TopicBean {
 	}
 	public void setAliases(Set<String> aliases) {
 		this.aliases = aliases;
+	}
+	public Set<TopicBean> getParents() {
+		return parents;
+	}
+	public void setParents(Set<TopicBean> parents) {
+		this.parents = parents;
+	}
+	public Set<TopicBean> getChildren() {
+		return children;
+	}
+	public void setChildren(Set<TopicBean> children) {
+		this.children = children;
 	}
 }

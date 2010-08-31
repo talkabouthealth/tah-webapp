@@ -64,8 +64,12 @@ public class Topics extends Controller {
     	notFoundIfNull(topic);
 
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	
+    	List<TopicBean> topicsList = TopicDAO.getTopics();
+    	//we can't add this topic as parent/children to itself
+    	topicsList.remove(topic);
 		
-		render(talker, topic);
+		render(talker, topic, topicsList);
     }
     
     public static void manageAliases(String topicId, String todo, String alias) {
@@ -78,10 +82,47 @@ public class Topics extends Controller {
     	else {
     		topic.getAliases().remove(alias);
     	}
-    	System.out.println(topic.getAliases());
     	TopicDAO.updateTopic(topic);
     	
     	renderText("<li>"+alias+"&nbsp;<a href='#' rel='"+alias+"' class='removeAliasLink'>remove</a></li>");
+    }
+    
+    //TODO: check valid add/remove? (Topic can't be children and parent at the same time)
+    public static void manageParents(String topicId, String todo, String parentId) {
+    	TopicBean topic = new TopicBean(topicId);
+    	
+    	TopicBean parentTopic = TopicDAO.getById(parentId);
+    	notFoundIfNull(parentTopic);
+    	
+    	if (todo.equalsIgnoreCase("add")) {
+        	parentTopic.getChildren().add(topic);
+    	}
+    	else {
+    		parentTopic.getChildren().remove(topic);
+    	}
+    	TopicDAO.updateTopic(parentTopic);
+    	
+    	renderText("<li>"+parentTopic.getTitle()+"&nbsp;<a href='#' rel='"+
+    			parentTopic.getId()+"' class='removeParentLink'>remove</a></li>");
+    }
+    
+    public static void manageChildren(String topicId, String todo, String childId) {
+    	TopicBean topic = TopicDAO.getById(topicId);
+    	notFoundIfNull(topic);
+    	
+    	TopicBean childTopic = TopicDAO.getById(childId);
+    	notFoundIfNull(childTopic);
+    	
+    	if (todo.equalsIgnoreCase("add")) {
+    		topic.getChildren().add(childTopic);
+    	}
+    	else {
+    		topic.getChildren().remove(childTopic);
+    	}
+    	TopicDAO.updateTopic(topic);
+    	
+    	renderText("<li>"+childTopic.getTitle()+"&nbsp;<a href='#' rel='"+
+    			childTopic.getId()+"' class='removeChildrenLink'>remove</a></li>");
     }
     
 }

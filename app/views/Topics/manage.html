@@ -40,6 +40,7 @@
 	  			);
 			});
 
+			//Aliases
 			$("#newAliasBtn").click(function() {
 				var newAlias = $("#newAlias").val();
 				$("#newAlias").val("");
@@ -49,6 +50,7 @@
 						$(data).appendTo($("#aliases"));
 					}
 				);
+				return false;
 			});
 
 			$(".removeAliasLink").live("click", function() {
@@ -57,6 +59,46 @@
 				$.post("@{Topics.manageAliases()}", 
 					{topicId: "${topic.id}", todo: "remove", alias : alias}
 				);
+				return false;
+			});
+
+			//Relatives
+			$("#newParentBtn").click(function() {
+				var newParent = $("#newParent").val();
+				$.post("@{Topics.manageParents()}", 
+					{topicId: "${topic.id}", todo: "add", parentId: newParent},
+					function(data) {
+						$(data).appendTo($("#parents"));
+					}
+				);
+				return false;
+			});
+			$(".removeParentLink").live("click", function() {
+				var parentId = $(this).attr("rel");
+				$(this).parent().remove();
+				$.post("@{Topics.manageParents()}", 
+					{topicId: "${topic.id}", todo: "remove", parentId: parentId}
+				);
+				return false;
+			});
+
+			$("#newChildBtn").click(function() {
+				var newChild = $("#newChild").val();
+				$.post("@{Topics.manageChildren()}", 
+					{topicId: "${topic.id}", todo: "add", childId: newChild},
+					function(data) {
+						$(data).appendTo($("#children"));
+					}
+				);
+				return false;
+			});
+			$(".removeChildLink").live("click", function() {
+				var childrenId = $(this).attr("rel");
+				$(this).parent().remove();
+				$.post("@{Topics.manageChildren()}", 
+					{topicId: "${topic.id}", todo: "remove", childId: childrenId}
+				);
+				return false;
 			});
 		});
 	</script>
@@ -104,8 +146,39 @@
 					<br/><br/>
 					<br/><br/>
 
-					<h3>Latest activities:</h3><br/>
+					<h3>Parent topics:</h3><br/>
+					<select id="newParent">
+						#{list items: topicsList, as: 'topicItem'}
+							<option value="${topicItem.id}">${topicItem.title}</option>
+						#{/list}
+					</select>
+					<input id="newParentBtn" type="button" value="Add Parent" />
+					<ul id="parents">
+						#{list items: topic.parents, as: 'parent'}
+							<li>
+								${parent.title}&nbsp;<a href="#" rel="${parent.id}" class="removeParentLink">remove</a>
+							</li>
+						#{/list}
+					</ul>
 					
+					<br/><br/>
+					<br/><br/>
+					<br/>
+					
+					<h3>Children topics:</h3><br/>
+					<select id="newChild">
+						#{list items: topicsList, as: 'topicItem'}
+							<option value="${topicItem.id}">${topicItem.title}</option>
+						#{/list}
+					</select>
+					<input id="newChildBtn" type="button" value="Add Child" />
+					<ul id="children">
+						#{list items: topic.children, as: 'child'}
+							<li>
+								${child.title}&nbsp;<a href="#" rel="${child.id}" class="removeChildLink">remove</a>
+							</li>
+						#{/list}
+					</ul>
 					
 					<br/><br/>
 					<br/><br/>
@@ -161,6 +234,28 @@
 								<img src="@{Image.show(follower.userName)}" width="48" height="48" border="0" />
 							</a>
 						#{/list}
+					</div>
+					<div class="innerrighbot"></div>
+				</div>
+				<div class="innerrightbox">
+					<div class="innerrightop"></div>
+					<div class="innerrighmid">
+						<b>Ontology</b><br/>
+						Parent topics:
+						#{list items: topic.parents, as: 'parent'}
+							${parent.title}${ parent_isLast ? '' : ', ' }
+						#{/list}
+						#{else}
+							none
+						#{/else}
+						<br/>
+						Children topics:
+						#{list items: topic.children, as: 'children'}
+							${children.title}${ children_isLast ? '' : ', ' }
+						#{/list}
+						#{else}
+							none
+						#{/else}
 					</div>
 					<div class="innerrighbot"></div>
 				</div>

@@ -33,8 +33,9 @@ public class Conversations extends Controller {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
     	//create or get? topics for new convo
-//    	String newTag = "testtopic";
-//    	TopicBean topic = new TopicBean(newTag);
+//    	String newTag = "thirdtopic";
+//    	TopicBean topic = new TopicBean();
+//    	topic.setTitle(newTag);
 //    	topic.setMainURL(ApplicationDAO.createURLName(newTag));
 //    	TopicDAO.save(topic);
     	
