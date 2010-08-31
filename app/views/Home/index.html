@@ -24,7 +24,7 @@
 				else {
 					$(this).html("Unfollow");
 				}
-				$.post("@{Topics.follow()}", 
+				$.post("@{Conversations.follow()}", 
 	  				{ topicId: topicId},
 	  				function(data) {
 	  					//...

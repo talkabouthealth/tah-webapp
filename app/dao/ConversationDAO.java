@@ -120,13 +120,13 @@ public class ConversationDAO {
 		topicsColl.update(topicId, new BasicDBObject("$set", topicObject));
 	}
 	
-	public static ConversationBean getByTopicId(String topicId) {
+	public static ConversationBean getByConvoId(String topicId) {
 		DBCollection topicsColl = getCollection(CONVERSATIONS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("_id", new ObjectId(topicId));
 		DBObject topicDBObject = topicsColl.findOne(query);
 		
-		return parseTopicBean(topicDBObject);
+		return parseConversationBean(topicDBObject);
 	}
 	
 	public static ConversationBean getByTid(Integer tid) {
@@ -135,7 +135,7 @@ public class ConversationDAO {
 		DBObject query = new BasicDBObject("tid", tid);
 		DBObject topicDBObject = topicsColl.findOne(query);
 		
-		return parseTopicBean(topicDBObject);
+		return parseConversationBean(topicDBObject);
 	}
 	
 	/**
@@ -154,31 +154,31 @@ public class ConversationDAO {
 			);
 		DBObject topicDBObject = topicsColl.findOne(query);
 		
-		return parseTopicBean(topicDBObject);
+		return parseConversationBean(topicDBObject);
 	}
 	
-	private static ConversationBean parseTopicBean(DBObject topicDBObject) {
+	private static ConversationBean parseConversationBean(DBObject topicDBObject) {
 		if (topicDBObject == null) {
 			return null;
 		}
 		
 		//TODO: move to topic bean?
-		ConversationBean topic = new ConversationBean();
-    	topic.setId(topicDBObject.get("_id").toString());
-    	topic.setTid((Integer)topicDBObject.get("tid"));
-    	topic.setTopic((String)topicDBObject.get("topic"));
-    	topic.setCreationDate((Date)topicDBObject.get("cr_date"));
-    	topic.setDisplayTime((Date)topicDBObject.get("disp_date"));
+		ConversationBean convo = new ConversationBean();
+    	convo.setId(topicDBObject.get("_id").toString());
+    	convo.setTid((Integer)topicDBObject.get("tid"));
+    	convo.setTopic((String)topicDBObject.get("topic"));
+    	convo.setCreationDate((Date)topicDBObject.get("cr_date"));
+    	convo.setDisplayTime((Date)topicDBObject.get("disp_date"));
     	
-    	topic.setMainURL((String)topicDBObject.get("main_url"));
-    	topic.setURLs(getStringSet(topicDBObject, "urls"));
+    	convo.setMainURL((String)topicDBObject.get("main_url"));
+    	convo.setURLs(getStringSet(topicDBObject, "urls"));
     	
-    	topic.setViews(getInt(topicDBObject, "views"));
+    	convo.setViews(getInt(topicDBObject, "views"));
     	
     	DBObject talkerDBObject = ((DBRef)topicDBObject.get("uid")).fetch();
     	TalkerBean talker = new TalkerBean();
-    	talker.parseFromDB(talkerDBObject);
-    	topic.setTalker(talker);
+    	talker.parseBasicFromDB(talkerDBObject);
+    	convo.setTalker(talker);
     	
     	List<MessageBean> messages = new ArrayList<MessageBean>();
     	Set<String> members = new HashSet<String>();
@@ -197,12 +197,12 @@ public class ConversationDAO {
     			messages.add(message);
     		}
     	}
-    	topic.setMembers(members);
-    	topic.setMessages(messages);
+    	convo.setMembers(members);
+    	convo.setMessages(messages);
     	
-    	//followers of this topic
+    	//followers of this convo
     	DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
-    	DBObject query = new BasicDBObject("following_topics", topic.getId());
+    	DBObject query = new BasicDBObject("following_topics", convo.getId());
     	DBObject fields = BasicDBObjectBuilder.start()
     		.add("uname", 1)
     		.add("email", 1)
@@ -216,9 +216,9 @@ public class ConversationDAO {
     		followerTalker.parseBasicFromDB(followerDBObject);
 			followers.add(followerTalker);
     	}
-    	topic.setFollowers(followers);
+    	convo.setFollowers(followers);
     	
-		return topic;
+		return convo;
 	}
 	
 	public static List<ConversationBean> loadAllTopics() {
@@ -228,7 +228,7 @@ public class ConversationDAO {
 		
 		List<ConversationBean> topicsList = new ArrayList<ConversationBean>();
 		for (DBObject topicDBObject : topicsDBList) {
-			ConversationBean topic = parseTopicBean(topicDBObject);
+			ConversationBean topic = parseConversationBean(topicDBObject);
 	    	topicsList.add(topic);
 		}
 		
@@ -338,7 +338,7 @@ public class ConversationDAO {
 	}
 	
 	//Load topics for given activity type
-	public static List<ConversationBean> loadTopics(String talkerId, String type) {
+	public static List<ConversationBean> loadConversations(String talkerId, String type) {
 		DBCollection activitiesColl = getCollection(ActivityDAO.ACTIVITIES_COLLECTION);
 		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
@@ -349,15 +349,32 @@ public class ConversationDAO {
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
-		List<ConversationBean> topicsList = new ArrayList<ConversationBean>();
+		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject activityDBObject : activitiesDBList) {
-			DBObject topicDBObject = ((DBRef)activityDBObject.get("topicId")).fetch();
+			DBObject convoDBObject = ((DBRef)activityDBObject.get("topicId")).fetch();
 			
-			ConversationBean topic = parseTopicBean(topicDBObject);
-			topicsList.add(topic);
+			ConversationBean convo = parseConversationBean(convoDBObject);
+			convosList.add(convo);
 		}
-		return topicsList;
+		return convosList;
 	}
+	
+	public static List<ConversationBean> loadConversationsByTopic(String topicId) {
+		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
+		
+		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topicId);
+		DBObject query = new BasicDBObject("topics", topicRef);
+		List<DBObject> convosDBList = convosColl.find(query).toArray();
+		
+		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
+		for (DBObject convoDBObject : convosDBList) {
+			ConversationBean convo = parseConversationBean(convoDBObject);
+			convo.setComments(CommentsDAO.loadConvoComments(convo.getId()));
+			convosList.add(convo);
+		}
+		return convosList;
+	}
+	
 	
 	public static void main(String[] args) {
 		System.out.println(ConversationDAO.getNumberOfTopics("4c2cb43160adf3055c97d061"));

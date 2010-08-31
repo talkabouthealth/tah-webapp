@@ -19,6 +19,7 @@ import com.mongodb.DBRef;
 import models.ActivityBean;
 import models.TalkerBean;
 import models.ConversationBean;
+import models.TopicBean;
 import models.actions.AbstractAction;
 import models.actions.Action;
 import models.actions.AnswerConvoAction;
@@ -42,6 +43,25 @@ public class ActivityDAO {
 		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		DBObject query = new BasicDBObject("uid", talkerRef);
+		List<DBObject> activitiesDBList = 
+			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		
+		List<Action> activitiesList = new ArrayList<Action>();
+		for (DBObject activityDBObject : activitiesDBList) {
+			Action action = actionFromDB(activityDBObject);
+			activitiesList.add(action);
+		}
+		return activitiesList;
+	}
+	
+	public static List<Action> loadLatestByTopic(TopicBean topic) {
+		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
+		
+		List<DBRef> convosDBList = new ArrayList<DBRef>();
+		for (ConversationBean convo : topic.getConversations()) {
+			convosDBList.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getId()));
+		}
+		DBObject query = new BasicDBObject("topicId", new BasicDBObject("$in", convosDBList));
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		

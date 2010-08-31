@@ -5,8 +5,10 @@ import static util.DBUtil.getCollection;
 import static util.DBUtil.getDB;
 import static util.DBUtil.getString;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 
@@ -14,6 +16,7 @@ import util.DBUtil;
 
 import models.CommentBean;
 import models.ConversationBean;
+import models.TalkerBean;
 import models.TopicBean;
 
 import com.mongodb.BasicDBObject;
@@ -61,6 +64,29 @@ public class TopicDAO {
 		topic.setMainURL((String)topicDBObject.get("main_url"));
 		topic.setViews(DBUtil.getInt(topicDBObject, "views"));
 		topic.setCreationDate((Date)topicDBObject.get("cr_date"));
+		
+		topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
+		
+		//followers of this topic
+		//TODO: similar to convos?
+    	DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
+    	DBRef topicRef = createRef(TOPICS_COLLECTION, topic.getId());
+    	query = new BasicDBObject("following_tags", topicRef);
+    	DBObject fields = BasicDBObjectBuilder.start()
+    		.add("uname", 1)
+    		.add("email", 1)
+    		.add("bio", 1)
+    		.add("email_settings", 1)
+    		.get();
+    	List<DBObject> followersDBList = talkersColl.find(query, fields).toArray();
+    	List<TalkerBean> followers = new ArrayList<TalkerBean>();
+    	for (DBObject followerDBObject : followersDBList) {
+    		TalkerBean followerTalker = new TalkerBean();
+    		followerTalker.parseBasicFromDB(followerDBObject);
+			followers.add(followerTalker);
+    	}
+    	topic.setFollowers(followers);
+		
 		return topic;
 	}
 	

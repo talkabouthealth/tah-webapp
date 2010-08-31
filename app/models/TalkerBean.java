@@ -21,12 +21,15 @@ import org.bson.types.ObjectId;
 import play.data.validation.Email;
 import play.data.validation.Match;
 import play.data.validation.Required;
+import util.DBUtil;
 import util.ValidateData;
 import util.EmailUtil.EmailTemplate;
 
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+
+import dao.TopicDAO;
 
 public class TalkerBean implements Serializable {
 	
@@ -174,6 +177,7 @@ public class TalkerBean implements Serializable {
 	//TODO: what's the best solution for partial load?
 	private List<String> followingConvosList;
 	private List<ConversationBean> followingConvosFullList;
+	private List<TopicBean> followingTopicsList;
 	private List<ConversationBean> startedTopicsList;
 	private List<ConversationBean> joinedTopicsList;
 	
@@ -297,6 +301,7 @@ public class TalkerBean implements Serializable {
 		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
 		parseFollowing((Collection<DBRef>)talkerDBObject.get("following"));
 		setFollowingConvosList(parseStringList(talkerDBObject.get("following_topics")));
+		parseFollowingTopics((Collection<DBRef>)talkerDBObject.get("following_tags"));
 		
 		parseProfilePreferences(parseInt(talkerDBObject.get("prefs")));
 		parseEmailSettings(parseStringList(talkerDBObject.get("email_settings")));
@@ -397,6 +402,16 @@ public class TalkerBean implements Serializable {
 		}
 	}
 	
+	private void parseFollowingTopics(Collection<DBRef> followingTopicsDBList) {
+		followingTopicsList = new ArrayList<TopicBean>();
+		if (followingTopicsDBList != null) {
+			for (DBRef followingDBRef : followingTopicsDBList) {
+				//get only ids - for quick loading
+				followingTopicsList.add(new TopicBean(followingDBRef.getId().toString()));
+			}
+		}
+	}
+	
 	/* 
 	 * Convert from Integer to ProfilePreferences EnumSet and vice versa 
 	 */
@@ -440,6 +455,20 @@ public class TalkerBean implements Serializable {
 			emailSettings.add(emailSetting);
 		}
 	}
+	
+	//TODO: move to some common DB function? 
+	public List<DBRef> followingTopicsToList() {
+		List<DBRef> dbRefList = new ArrayList<DBRef>();
+		if (followingTopicsList == null) {
+			return dbRefList;
+		}
+		for (TopicBean topic : followingTopicsList) {
+			dbRefList.add(DBUtil.createRef(TopicDAO.TOPICS_COLLECTION, topic.getId()));
+		}
+		
+		return dbRefList;
+	}
+	
 	
 	//TODO: make private and unify with all other getters
 	public boolean getBoolean(Object object) {
@@ -795,5 +824,11 @@ public class TalkerBean implements Serializable {
 	}
 	public void setNumOfThankYous(int numOfThankYous) {
 		this.numOfThankYous = numOfThankYous;
+	}
+	public List<TopicBean> getFollowingTopicsList() {
+		return followingTopicsList;
+	}
+	public void setFollowingTopicsList(List<TopicBean> followingTopicsList) {
+		this.followingTopicsList = followingTopicsList;
 	}
 }	

@@ -28,7 +28,7 @@
 		var tid = '${convo.tid}';
 		$(document).ready(function() {
 			$("#followConvoLink").click(function() {
-				$.post("@{Topics.follow()}", 
+				$.post("@{Conversations.follow()}", 
 	  				{ topicId: '${convo.id}'},
 	  				function(data) {
 	  					if ($("#followConvoLink").html() == "Follow Conversation") {
@@ -44,12 +44,12 @@
 			*{ TODO: convo or topic ? }*
 			$(".restartConvoLink").click(function() {
 				openChat(tid);
-				$.post("@{Topics.restart}", {topicId: '${convo.id}'});
+				$.post("@{Conversations.restart}", {topicId: '${convo.id}'});
 			});
 
 			$(".flagConvoLink").click(function() {
 				$(this).after("<span>Thanks!</span>").detach();
-				$.post("@{Topics.flag}", {topicId: '${convo.id}'});
+				$.post("@{Conversations.flag}", {topicId: '${convo.id}'});
 			});
 
 			//comments
@@ -105,7 +105,7 @@
    	   		var commentText = $("#replytext"+parentId).val();
    			$("#replytext"+parentId).val("");
 
-   			$.post("@{Topics.saveTopicComment()}", 
+   			$.post("@{Conversations.saveTopicComment()}", 
   				{ topicId: '${convo.id}', parentId: parentId, text: commentText},
   				function(html) {
   	  				$("#firstcommentmessage").hide();

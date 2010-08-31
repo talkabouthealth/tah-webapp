@@ -9,7 +9,7 @@
 				else {
 					$(this).html("Unfollow");
 				}
-				$.post("@{Topics.follow()}", 
+				$.post("@{Conversations.follow()}", 
 	  				{ topicId: topicId},
 	  				function(data) {
 	  					//...
@@ -22,7 +22,7 @@
 				var topicId = $(this).attr("rel");
 				var tid = $(this).attr("rel2");
 				openChat(tid);
-				$.post("@{Topics.restart}", {topicId: topicId});
+				$.post("@{Conversations.restart}", {topicId: topicId});
 			});
    		});
 

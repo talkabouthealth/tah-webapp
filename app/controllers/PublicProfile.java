@@ -121,7 +121,7 @@ public class PublicProfile extends Controller {
 		notFoundIfNull(talker);
 		
 		String topicsType = "Started";
-		List<ConversationBean> topicsList = ConversationDAO.loadTopics(talker.getId(), "START_CONVO");
+		List<ConversationBean> topicsList = ConversationDAO.loadConversations(talker.getId(), "START_CONVO");
 		
 		render("@conversationsList", talker, currentTalker, topicsType, topicsList);
 	}
@@ -132,7 +132,7 @@ public class PublicProfile extends Controller {
 		notFoundIfNull(talker);
 		
 		String topicsType = "Joined";
-		List<ConversationBean> topicsList = ConversationDAO.loadTopics(talker.getId(), "JOIN_CONVO");
+		List<ConversationBean> topicsList = ConversationDAO.loadConversations(talker.getId(), "JOIN_CONVO");
 		
 		render("@conversationsList", talker, currentTalker, topicsType, topicsList);
 	}

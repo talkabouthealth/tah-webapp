@@ -18,13 +18,34 @@ public class TopicBean {
 	private List<String> sumContributors;
 	private List<TalkerBean> followers;
 	
+	private List<ConversationBean> conversations;
+	
 	public TopicBean() {
 		super();
 	}
-	public TopicBean(String title) {
+	public TopicBean(String id) {
 		super();
-		this.title = title;
+		this.id = id;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof TopicBean)) {
+			return false;
+		}
+		
+		TopicBean other = (TopicBean)obj;
+		return id.equals(other.id);
+	}
+	
+	@Override
+	public int hashCode() {
+		if (id == null) {
+			return 47;
+		}
+		return id.hashCode();
+	}
+	
 	
 	public String getId() {
 		return id;
@@ -73,6 +94,12 @@ public class TopicBean {
 	}
 	public void setFollowers(List<TalkerBean> followers) {
 		this.followers = followers;
+	}
+	public List<ConversationBean> getConversations() {
+		return conversations;
+	}
+	public void setConversations(List<ConversationBean> conversations) {
+		this.conversations = conversations;
 	}
 	
 }

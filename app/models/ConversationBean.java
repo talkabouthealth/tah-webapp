@@ -4,9 +4,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author Osezno
+ *
+ */
 public class ConversationBean {
+	
+	enum ConvoType {
+		CONVERSATION,
+		QUESTION
+	}
+	
 	private String id;
 	private int tid;
+	private ConvoType convoType;
 	private String mainURL;
 	private Set<String> URLs;
 	private String topic;
@@ -36,7 +47,6 @@ public class ConversationBean {
 	public ConversationBean(String id) {
 		this.id = id;
 	}
-
 	
 	public String getMainURL() {
 		return mainURL;
@@ -106,5 +116,12 @@ public class ConversationBean {
 	public void setTopics(List<TopicBean> topics) {
 		this.topics = topics;
 	}
-	
+
+	public ConvoType getConvoType() {
+		return convoType;
+	}
+
+	public void setConvoType(ConvoType convoType) {
+		this.convoType = convoType;
+	}
 }

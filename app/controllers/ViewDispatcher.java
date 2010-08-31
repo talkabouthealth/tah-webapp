@@ -3,6 +3,7 @@ package controllers;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import controllers.PublicProfile.ProfileCompletion;
@@ -86,8 +87,8 @@ public class ViewDispatcher extends Controller {
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
 		talker.setFollowingConvosFullList(TalkerDAO.loadFollowingTopics(talker.getId()));
 		
-		talker.setStartedTopicsList(ConversationDAO.loadTopics(talker.getId(), "START_CONVO"));
-		talker.setJoinedTopicsList(ConversationDAO.loadTopics(talker.getId(), "JOIN_CONVO"));
+		talker.setStartedTopicsList(ConversationDAO.loadConversations(talker.getId(), "START_CONVO"));
+		talker.setJoinedTopicsList(ConversationDAO.loadConversations(talker.getId(), "JOIN_CONVO"));
 		
 		//TODO: Temporarily - later we'll load all list of topics
 		talker.setNumberOfTopics(ConversationDAO.getNumberOfTopics(talker.getId()));
@@ -181,9 +182,12 @@ public class ViewDispatcher extends Controller {
 			talker = CommonUtil.loadCachedTalker(session);
 		}
 		
+		//load latest activities for convos with this topic
+		List<Action> activities = ActivityDAO.loadLatestByTopic(topic);
+		
 		TopicDAO.incrementTopicViews(topic.getId());
 		
-		render("Topics/viewTopic.html", talker, topic);
+		render("Topics/viewTopic.html", talker, topic, activities);
 	}
 
 }
