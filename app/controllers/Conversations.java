@@ -140,8 +140,8 @@ public class Conversations extends Controller {
     public static void saveTopicComment(String topicId, String parentId, String text) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-		ConversationBean topic = ConversationDAO.getByConvoId(topicId);
-		notFoundIfNull(topic);
+		ConversationBean convo = ConversationDAO.getByConvoId(topicId);
+		notFoundIfNull(convo);
 		
 		CommentBean comment = new CommentBean();
 		comment.setParentId(parentId.trim().length() == 0 ? null : parentId);
