@@ -9,6 +9,7 @@ import models.ConversationBean;
 import models.TalkerBean;
 import dao.CommentsDAO;
 import dao.ConversationDAO;
+import dao.TalkerDAO;
 import play.mvc.Before;
 import play.mvc.Controller;
 import util.CommonUtil;
@@ -25,27 +26,31 @@ public class API extends Controller {
         }
     }
 	
-	
-	public static void createAnswer(String convoId, String parentId, String text) {
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
+	public static void createAnswer(String convoId, String authorId, String parentId, String text) {
+		TalkerBean authorTalker = TalkerDAO.getById(authorId);
+		notFoundIfNull(authorTalker);
 		ConversationBean convo = ConversationDAO.getByConvoId(convoId);
 		notFoundIfNull(convo);
 		
 		CommentBean comment = new CommentBean();
 		comment.setParentId(parentId.trim().length() == 0 ? null : parentId);
 		comment.setTopicId(convoId);
-		comment.setFromTalker(talker);
+		comment.setFromTalker(authorTalker);
 		comment.setText(text);
 		comment.setTime(new Date());
 		
 		String id = CommentsDAO.saveTopicComment(comment);
 		comment.setId(id);
 		
-		//render html of new comment using tag
-		List<CommentBean> _commentsList = Arrays.asList(comment);
-		int _level = (comment.getParentId() == null ? 1 : 2);
-		render("tags/topicCommentsTree.html", _commentsList, _level);
+//		@mnjones provided an Answer to your question:
+//			"You will need lots of pillows."
+//			(To reply to @mnjones, just reply with your message.)
+//
+//			@mnj5 replied to your answer:
+//			"What are the pillows for?'"
+//			(To reply to mnj5, just reply to this message.)
+		
+		
 	}
 	
 }

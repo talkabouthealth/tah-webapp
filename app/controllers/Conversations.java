@@ -11,6 +11,7 @@ import java.util.Map;
 import models.CommentBean;
 import models.ConversationBean;
 import models.TalkerBean;
+import models.TalkerBean.EmailSetting;
 import models.TopicBean;
 import models.actions.FollowConvoAction;
 import models.actions.StartConvoAction;
@@ -79,14 +80,17 @@ public class Conversations extends Controller {
     public static void restart(String topicId) {
     	NotificationUtils.sendAutomaticNotifications(topicId);
     	
-//    	ConversationBean topic = ConversationDAO.getByConvoId(topicId);
-//    	for (TalkerBean follower : topic.getFollowers()) {
-//    		Map<String, String> vars = new HashMap<String, String>();
-//    		vars.put("other_talker", talker.getUserName());
-//    		vars.put("thankyou_text", thankYouBean.getNote());
-//    		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_RESTART, 
-//    				follower, "Topic '"+topic.getTopic()+"' is restarted.");
-//    	}
+    	ConversationBean convo = ConversationDAO.getByConvoId(topicId);
+    	//prepare email params
+    	Map<String, String> vars = new HashMap<String, String>();
+		vars.put("convo", convo.getTopic());
+		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
+		vars.put("convo_url", convoURL);
+		String convoTalkURL = CommonUtil.generateAbsoluteURL("Talk.talkApp", "convoId", convo.getTid());
+		vars.put("convo_talk_url", convoTalkURL);
+    	for (TalkerBean follower : convo.getFollowers()) {
+    		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_RESTART, follower, vars);
+    	}
     }
     
     public static void flag(String topicId) {
@@ -99,9 +103,7 @@ public class Conversations extends Controller {
 		vars.put("name", talker.getUserName());
 		vars.put("email", talker.getEmail());
 		vars.put("subject", "FLAGGED CONVERSATION");
-		Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("name", convo.getMainURL());
-		String convoURL = Router.reverse("ViewDispatcher", paramsMap).url;
+		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
 		vars.put("message", 
 				"Bad conversation/question: <a href=\""+convoURL+"\">"+convo.getTopic()+"</a>");
 		EmailUtil.sendEmail(EmailTemplate.CONTACTUS, EmailUtil.SUPPORT_EMAIL, vars, null, false);

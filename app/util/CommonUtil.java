@@ -14,16 +14,23 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 
 import models.IMAccountBean;
 import models.TalkerBean;
+import play.Play;
 import play.cache.Cache;
+import play.mvc.Router;
+import play.mvc.Router.ActionDefinition;
 import play.mvc.Scope.Session;
 
 import com.tah.im.IMNotifier;
@@ -170,5 +177,15 @@ public class CommonUtil {
 		} while (!unique);
 		
 		return verifyCode;
+	}
+	
+	//Generate url by Play! action and parameters
+	public static String generateAbsoluteURL(String action, String paramName, Object paramValue) {
+		Map<String, Object> args = new HashMap<String, Object>(1);
+		args.put(paramName, paramValue);
+		
+		ActionDefinition actionDef = Router.reverse(action, args);
+		actionDef.absolute();
+		return actionDef.url;
 	}
 }

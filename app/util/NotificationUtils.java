@@ -81,6 +81,7 @@ public class NotificationUtils {
 	
 	public static void sendEmailNotification(EmailSetting emailSetting, 
 			TalkerBean talker, Map<String, String> vars) {
+		//TODO: make "StopFollowing" page for conversation emails?
 		if (talker.loadEmailSettings().contains(emailSetting)) {
 			vars.put("username", talker.getUserName());
 			EmailUtil.sendEmail(emailSetting.getEmailTemplate(), talker.getEmail(), vars, null, true);

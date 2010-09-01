@@ -87,17 +87,17 @@ public class TalkerBean implements Serializable {
 	
 	//Convo-related items start with "CONVO" - we use it for display
 	public enum EmailSetting {
-		RECEIVE_COMMENT ("Send me an email when I receive a comment.", EmailTemplate.PROFILE_COMMENT),
-		RECEIVE_THANKYOU ("Send me an email when I receive a 'Thank You'.", EmailTemplate.THANKYOU),
-		RECEIVE_DIRECT ("Send me an email when I receive a Direct Message.", EmailTemplate.DIRECT_MESSAGE),
-		NEW_FOLLOWER ("Send me an email when someone follows me.", EmailTemplate.FOLLOWER),
+		RECEIVE_COMMENT ("Send me an email when I receive a comment.", EmailTemplate.NOTIFICATION_PROFILE_COMMENT),
+		RECEIVE_THANKYOU ("Send me an email when I receive a 'Thank You'.", EmailTemplate.NOTIFICATION_THANKYOU),
+		RECEIVE_DIRECT ("Send me an email when I receive a Direct Message.", EmailTemplate.NOTIFICATION_DIRECT_MESSAGE),
+		NEW_FOLLOWER ("Send me an email when someone follows me.", EmailTemplate.NOTIFICATION_FOLLOWER),
 		
 		CONVO_RESTART ("Send me an email when a Conversation I follow is re-started.", 
-				EmailTemplate.CONVO_RESTARTED),
+				EmailTemplate.NOTIFICATION_CONVO_RESTART),
 		CONVO_COMMENT ("Send me an email when a Comment is added to a Conversation I follow.", 
-				EmailTemplate.CONVO_COMMENT),
+				EmailTemplate.NOTIFICATION_CONVO_ANSWER),
 		CONVO_SUMMARY ("Send me an email when a Summary of a Conversation I follow is updated.", 
-				EmailTemplate.CONVO_SUMMARY);
+				EmailTemplate.NOTIFICATION_CONVO_SUMMARY);
 		
 		private final String description;
 		private final EmailTemplate emailTemplate;
