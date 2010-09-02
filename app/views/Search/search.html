@@ -68,28 +68,3 @@ $(function() {
 	<br/>
 	Simple members search<br/>
 </div>
-
-
-<form name="searchForm" action="@{Search.search()}" method="POST">
-	<div id="searcharea">
-		<input name="query" type="text" class="search"  value="${flash.query ? flash.query : 'Search Members'}" 
-			onclick="if (this.value == 'Search Members') this.value=''" onblur=""/>
-	</div>
-	<div id="searchright">
-		<a href="#" onclick="document.searchForm.submit(); return false;">
-			<img src="/public/images/searchbutton.gif" width="34" height="35" border="0"/>
-		</a>
-	</div>
-</form>
-
-<div style="font-size: 14px; clear: left">		
-	#{list items:results, as: 'res'}
-		<span style="padding-bottom: 3px">
-			<a href="@{ViewDispatcher.view(res)}">${res}</a>
-		</span>
-		<br/>
-	#{/list}
-	#{else}
-		No results.
-	#{/else}
-</div>

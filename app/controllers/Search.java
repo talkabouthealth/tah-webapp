@@ -67,7 +67,7 @@ public class Search extends Controller {
 		Query searchQuery = parser.parse("*"+term+"*");
 		Hits hits = is.search(searchQuery);
 		
-		is.close();
+		
 		
 //		Scorer scorer = new QueryScorer(searchQuery);
 //		Highlighter highlighter = new Highlighter(scorer);
@@ -100,6 +100,8 @@ public class Search extends Controller {
 				break;
 			}
 		}
+		
+		is.close();
 		
 		renderJSON(results);
 	}

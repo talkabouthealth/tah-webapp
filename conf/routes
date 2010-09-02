@@ -17,7 +17,8 @@ POST	/updatesemail/?							Application.saveUpdatesEmail
 
 GET		/verify/{verifyCode}					Profile.verifyEmail
 
-GET		/explore/members						Community.browseMembers
+GET		/explore/members						Community.browseMembers(action:'active')
+*		/search/members							Community.browseMembers(action:'search')
 
 GET		/home/?									Home.index
 GET		/dashboard/?							Dashboard.index

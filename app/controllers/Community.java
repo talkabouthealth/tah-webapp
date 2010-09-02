@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import dao.ApplicationDAO;
@@ -8,6 +10,7 @@ import models.TalkerBean;
 import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
+import util.SearchUtil;
 
 @With(Secure.class)
 public class Community extends Controller {
@@ -23,10 +26,25 @@ public class Community extends Controller {
 		Set<TalkerBean> activeTalkers = ApplicationDAO.getActiveTalkers();
 		Set<TalkerBean> newTalkers = ApplicationDAO.getNewTalkers();
 		
+		String query = params.get("query");
+		List<String> results = null;
+		if (query != null) {
+			params.flash("query");
+			
+			try {
+				results = SearchUtil.searchTalker(query);
+			}
+			catch (Exception e) {
+				//TODO: better handling?
+				e.printStackTrace();
+			}
+		}
+		
+		
 		if (action == null) {
 			action = "active";
 		}
-		render(talker, action, activeTalkers, newTalkers);
+		render(talker, action, activeTalkers, newTalkers, results);
 	}
 
 }
