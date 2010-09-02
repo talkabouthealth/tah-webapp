@@ -1,31 +1,20 @@
 package dao;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
+import static util.DBUtil.getCollection;
+import static util.DBUtil.getStringList;
+import static util.DBUtil.getStringSet;
 
-import org.apache.commons.collections.CollectionUtils;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import models.DiseaseBean;
 import models.DiseaseBean.DiseaseQuestion;
 
-import util.DBUtil;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.DBRef;
-import com.mongodb.DB.WriteConcern;
-
-import static util.DBUtil.*;
-
-import static util.DBUtil.*;
 
 public class DiseaseDAO {
 	

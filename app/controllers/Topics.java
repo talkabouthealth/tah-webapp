@@ -52,10 +52,7 @@ public class Topics extends Controller {
     		talker.getFollowingTopicsList().add(topic);
     	}
     	
-    	//TODO: put together?
-    	TalkerDAO.updateTalker(talker);
-    	CommonUtil.updateCachedTalker(session);
-    	
+    	CommonUtil.updateTalker(talker, session);
     	renderText("Ok!");
     }
     

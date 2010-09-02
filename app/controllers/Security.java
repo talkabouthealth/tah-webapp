@@ -44,15 +44,12 @@ public class Security extends Secure.Security {
             response.setCookie("rememberme", "", 0);
             
             render("Application/suspendedAccount.html");
-    		
     		return;
     	}
     	
     	if (talker.isDeactivated()) {
     		talker.setDeactivated(false);
-    		TalkerDAO.updateTalker(talker);
-    		
-    		CommonUtil.updateCachedTalker(session);
+    		CommonUtil.updateTalker(talker, session);
     	}
     	
 		ApplicationDAO.saveLogin(talker.getId());

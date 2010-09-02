@@ -40,6 +40,8 @@ public class TalkerDAO {
 	
 	public static final String TALKERS_COLLECTION = "talkers";
 	
+	// --------------------- Save/Update ---------------------------
+	
 	public static boolean save(TalkerBean talker) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
@@ -137,6 +139,9 @@ public class TalkerDAO {
 		//"$set" is used for updating fields
 		talkersColl.update(talkerId, new BasicDBObject("$set", talkerObject));
 	}
+	
+	
+	// --------------------- Query ---------------------------
 	
 	public static TalkerBean getByUserName(String userName) {
 		return getByField("uname", userName);
@@ -293,6 +298,9 @@ public class TalkerDAO {
 		
 		return talkerList;
 	}
+	
+	
+	// --------------------- Other ---------------------------
 	
 	public static List<TalkerBean> loadTalkersForDashboard() {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);

@@ -135,8 +135,7 @@ public class Profile extends Controller {
 			EmailUtil.sendEmail(EmailTemplate.VERIFICATION, oldTalker.getEmail(), vars, null, false);
 		}
 		
-		TalkerDAO.updateTalker(oldTalker);
-		CommonUtil.updateCachedTalker(session);
+		CommonUtil.updateTalker(oldTalker, session);
 		
 		flash.success("ok");
 		talker = oldTalker;
@@ -292,9 +291,7 @@ public class Profile extends Controller {
 			sessionTalker.setNewsletter(talker.isNewsletter());
 		}
 		
-		
-		TalkerDAO.updateTalker(sessionTalker);
-		CommonUtil.updateCachedTalker(session);
+		CommonUtil.updateTalker(sessionTalker, session);
 		
 		flash.success("ok");
 		notifications();
@@ -314,8 +311,7 @@ public class Profile extends Controller {
 		talker.setEmail(newPrimaryEmailBean.getValue());
 		talker.setVerifyCode(newPrimaryEmailBean.getVerifyCode());
 		
-		TalkerDAO.updateTalker(talker);
-		CommonUtil.updateCachedTalker(session);
+		CommonUtil.updateTalker(talker, session);
 		
 		notifications();
 	}
@@ -339,8 +335,7 @@ public class Profile extends Controller {
 		EmailBean email = new EmailBean(newEmail, CommonUtil.generateVerifyCode());
 		talker.getEmails().add(email);
 		
-		TalkerDAO.updateTalker(talker);
-		CommonUtil.updateCachedTalker(session);
+		CommonUtil.updateTalker(talker, session);
 		
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("username", talker.getUserName());
@@ -356,8 +351,7 @@ public class Profile extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		talker.getEmails().remove(new EmailBean(email, null));
 		
-		TalkerDAO.updateTalker(talker);
-		CommonUtil.updateCachedTalker(session);
+		CommonUtil.updateTalker(talker, session);
 		
 		renderJSON("{\"result\" : \"ok\"}");
 	}
@@ -374,8 +368,7 @@ public class Profile extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		talker.getImAccounts().add(imAccount);
 		
-		TalkerDAO.updateTalker(talker);
-		CommonUtil.updateCachedTalker(session);
+		CommonUtil.updateTalker(talker, session);
 		
 		CommonUtil.sendIMInvitation(imAccount);
 		
@@ -393,8 +386,7 @@ public class Profile extends Controller {
 		IMAccountBean imAccount = new IMAccountBean(imArray[0], imArray[1]);
 		talker.getImAccounts().remove(imAccount);
 		
-		TalkerDAO.updateTalker(talker);
-		CommonUtil.updateCachedTalker(session);
+		CommonUtil.updateTalker(talker, session);
 		
 		renderText("Ok");
 	}
@@ -523,8 +515,8 @@ public class Profile extends Controller {
 			EmailBean emailBean = talker.findNonPrimaryEmail(null, verifyCode);
 			emailBean.setVerifyCode(null);
 		}
-		TalkerDAO.updateTalker(talker);
-		CommonUtil.updateCachedTalker(session);
+		CommonUtil.updateTalker(talker, session);
+		
 		render();
 	}
 	

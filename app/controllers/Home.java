@@ -30,7 +30,7 @@ public class Home extends Controller {
     	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		
     	//TODO: use cache?
-    	Map<String, ConversationBean> mapTalkmiTopics = ConversationDAO.queryTopics();
+    	Map<String, ConversationBean> mapTalkmiTopics = ConversationDAO.queryConversations();
 		
 		if (newTopic == null || newTopic.trim().length() == 0) {
 			newTopic = "Please enter your Conversation here ...";
@@ -82,8 +82,7 @@ public class Home extends Controller {
 		
 		//decrease invitations count
 		talker.setInvitations(talker.getInvitations()-emailsToSend.size());
-		TalkerDAO.updateTalker(talker);
-		CommonUtil.updateCachedTalker(session);
+		CommonUtil.updateTalker(talker, session);
 		
     	flash.success("ok");
     	invitations();

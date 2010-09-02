@@ -65,14 +65,12 @@ public class Conversations extends Controller {
 		
 		//automatically follow started topic
 		talker.getFollowingConvosList().add(convo.getId());
-		TalkerDAO.updateTalker(talker);
-    	CommonUtil.updateCachedTalker(session);
-		ActivityDAO.saveActivity(new FollowConvoAction(talker, convo));
+		CommonUtil.updateTalker(talker, session);
 		
+		ActivityDAO.saveActivity(new FollowConvoAction(talker, convo));
 
 		newTopic = newTopic.replaceAll("'", "&#39;");
 		newTopic = newTopic.replaceAll("\\|", "&#124;");
-		
 		//TODO: make as template!
 		renderText(convo.getTid() + "|" + newTopic + "|" + convo.getId() + "|" + convo.getMainURL());
     }
@@ -111,7 +109,7 @@ public class Conversations extends Controller {
     
     //for Dashboard
     public static void lastTopicId() {
-    	String lastTopicId = ConversationDAO.getLastTopicId();
+    	String lastTopicId = ConversationDAO.getLastConvoId();
     	renderText(lastTopicId);
     }
     
@@ -128,9 +126,7 @@ public class Conversations extends Controller {
     		ActivityDAO.saveActivity(new FollowConvoAction(talker, new ConversationBean(topicId)));
     	}
     	
-    	TalkerDAO.updateTalker(talker);
-    	CommonUtil.updateCachedTalker(session);
-    	
+    	CommonUtil.updateTalker(talker, session);
     	renderText("Ok!");
     }
     

@@ -28,14 +28,14 @@ import play.templates.JavaExtensions;
 import util.CommonUtil;
 
 /**
- * Is used for dispatch/show Users, Convos/Questions and Topics,
+ * Used for dispatch/show Users, Convos/Questions and Topics,
  * as they all share one url: http://talkabouthealth.com/{name} 
  *
  */
 public class ViewDispatcher extends Controller {
 	
 	public static void view(String name) throws Throwable {
-		//first try userName
+		//first try user
 		TalkerBean talker = TalkerDAO.getByUserName(name);
 		if (talker != null) {
 			showTalker(talker);
@@ -49,7 +49,7 @@ public class ViewDispatcher extends Controller {
 			return;
 		}
 		
-		//next - topic
+		//last - topic
 		TopicBean topic = TopicDAO.getByURL(name);
 		if (topic != null) {
 			showTopic(topic);
@@ -73,7 +73,7 @@ public class ViewDispatcher extends Controller {
 		if (talkerDisease != null) {
 			talkerDisease.setName(diseaseName);
 		}
-		System.out.println(talkerDisease.getHealthInfo().get("her2"));
+		
 		//Load all healthItems for this disease
 		Map<String, HealthItemBean> healthItemsMap = new HashMap<String, HealthItemBean>();
 		for (String itemName : new String[] {"symptoms", "tests", 
@@ -89,9 +89,6 @@ public class ViewDispatcher extends Controller {
 		
 		talker.setStartedTopicsList(ConversationDAO.loadConversations(talker.getId(), "START_CONVO"));
 		talker.setJoinedTopicsList(ConversationDAO.loadConversations(talker.getId(), "JOIN_CONVO"));
-		
-		//TODO: Temporarily - later we'll load all list of topics
-		talker.setNumberOfTopics(ConversationDAO.getNumberOfTopics(talker.getId()));
 		
 		calculateProfileCompletion(talker);
 		
@@ -133,7 +130,6 @@ public class ViewDispatcher extends Controller {
 			profileActions.add(ProfileCompletion.FOLLOW);
 		}
 		
-		
 		//calculate current sum and next item to complete
 		ProfileCompletion nextItem = null;
 		int sum = 0;
@@ -163,15 +159,14 @@ public class ViewDispatcher extends Controller {
 			talker = CommonUtil.loadCachedTalker(session);
 		}
 		
-		ConversationDAO.incrementConvoViews(convo.getId());
-		
 		convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
-		
 		//temporary test data
 		convo.setDetails("Suggestions for friends and family...");
 		convo.setTags(Arrays.asList("support", "help", "testtag"));
 		convo.setSummary("Summary.........");
 		convo.setSumContributors(Arrays.asList("murray", "situ"));
+		
+		ConversationDAO.incrementConvoViews(convo.getId());
 		
 		render("Conversations/viewConvo.html", talker, convo);
     }

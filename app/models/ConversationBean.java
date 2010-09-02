@@ -1,8 +1,23 @@
 package models;
 
+import static util.DBUtil.getCollection;
+import static util.DBUtil.getInt;
+import static util.DBUtil.getStringSet;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+
+import dao.TalkerDAO;
 
 /**
  * @author Osezno
@@ -52,6 +67,72 @@ public class ConversationBean {
 	public ConversationBean(String id) {
 		this.id = id;
 	}
+	
+	
+	public void parseBasicFromDB(DBObject convoDBObject) {
+		setId(convoDBObject.get("_id").toString());
+    	setTid((Integer)convoDBObject.get("tid"));
+    	setTopic((String)convoDBObject.get("topic"));
+    	setCreationDate((Date)convoDBObject.get("cr_date"));
+    	setDisplayTime((Date)convoDBObject.get("disp_date"));
+    	
+    	setMainURL((String)convoDBObject.get("main_url"));
+    	setURLs(getStringSet(convoDBObject, "urls"));
+    	
+    	setViews(getInt(convoDBObject, "views"));
+    	
+    	//author
+    	DBObject talkerDBObject = ((DBRef)convoDBObject.get("uid")).fetch();
+    	TalkerBean talker = new TalkerBean();
+    	talker.parseBasicFromDB(talkerDBObject);
+    	setTalker(talker);
+	}
+	
+	public void parseFromDB(DBObject convoDBObject) {
+		parseBasicFromDB(convoDBObject);
+
+    	//messages from Talk Window
+    	List<MessageBean> messages = new ArrayList<MessageBean>();
+    	Set<String> members = new HashSet<String>();
+    	Collection<DBObject> messagesDBList = (Collection<DBObject>)convoDBObject.get("messages");
+    	if (messagesDBList != null) {
+    		for (DBObject messageDBObject : messagesDBList) {
+    			MessageBean message = new MessageBean();
+    			message.setText((String)messageDBObject.get("text"));
+    			
+    			DBObject fromTalkerDBObject = ((DBRef)messageDBObject.get("uid")).fetch();
+    			TalkerBean fromTalker = 
+    				new TalkerBean(fromTalkerDBObject.get("_id").toString(), (String)fromTalkerDBObject.get("uname"));
+    			message.setFromTalker(fromTalker);
+    			
+    			members.add(fromTalker.getUserName());
+    			messages.add(message);
+    		}
+    	}
+    	setMembers(members);
+    	setMessages(messages);
+    	
+    	//followers of this convo
+    	DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
+    	DBObject query = new BasicDBObject("following_topics", getId());
+    	DBObject fields = BasicDBObjectBuilder.start()
+    		.add("uname", 1)
+    		.add("email", 1)
+    		.add("bio", 1)
+    		.add("email_settings", 1)
+    		.get();
+    	List<DBObject> followersDBList = talkersColl.find(query, fields).toArray();
+    	List<TalkerBean> followers = new ArrayList<TalkerBean>();
+    	for (DBObject followerDBObject : followersDBList) {
+    		TalkerBean followerTalker = new TalkerBean();
+    		followerTalker.parseBasicFromDB(followerDBObject);
+			followers.add(followerTalker);
+    	}
+    	setFollowers(followers);
+	}
+	
+	
+	
 	
 	public String getMainURL() {
 		return mainURL;

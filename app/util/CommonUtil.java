@@ -110,16 +110,24 @@ public class CommonUtil {
 		}
 	}
 	
+	/**
+	 * Updates talker in DB and Cache
+	 */
+	public static void updateTalker(TalkerBean talker, Session session) {
+		TalkerDAO.updateTalker(talker);
+		CommonUtil.refreshCachedTalker(session);
+	}
+	
 	public static TalkerBean loadCachedTalker(Session session) {
 		TalkerBean talker = Cache.get(session.getId() + "-talker", TalkerBean.class);
 	    if (talker == null) {
 	        // Cache miss
-	    	talker = updateCachedTalker(session);
+	    	talker = refreshCachedTalker(session);
 	    }
 	    return talker;
 	}
 	
-	public static TalkerBean updateCachedTalker(Session session) {
+	public static TalkerBean refreshCachedTalker(Session session) {
 		String sessionUserName = session.get("username");
 		if (sessionUserName == null) {
 			return null;
@@ -129,7 +137,6 @@ public class CommonUtil {
 		if (talker != null) {
 			Cache.set(session.getId() + "-talker", talker, "60mn");
 		}
-        
         return talker;
 	}
 	

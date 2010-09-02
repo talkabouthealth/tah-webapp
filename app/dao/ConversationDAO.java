@@ -39,24 +39,26 @@ public class ConversationDAO {
 	
 	public static final String CONVERSATIONS_COLLECTION = "topics";
 	
-	public static void save(ConversationBean topic) {
+	
+	//------------------- Save/Update methods -----------------------
+	
+	public static void save(ConversationBean convo) {
 		//TODO: Same topic? - Do not update anything
-		//TODO: move everything to update?
-		
-		//we try to insert topic 5 times
-		int tid = saveInternal(topic, 5);
+
+		//we try to insert convo 5 times - to prevent not-unique 'tid'
+		int tid = saveInternal(convo, 5);
 		
 		if (tid != -1) {
-			topic.setTid(tid);
+			convo.setTid(tid);
 		} else {
 			//TODO: error handling?
-			new Exception("DB Problem - Topic not inserted into DB").printStackTrace();
+			new Exception("DB Problem - Conversations not inserted into DB").printStackTrace();
 			return;
 		}
 	}
 	
 	/**
-	 * Tries to insert topic 'count' times (in case of duplicate key error on 'tid' field)
+	 * Tries to insert convo 'count' times (in case of duplicate key error on 'tid' field)
 	 * Returns -1 in case of failure
 	 */
 	//TODO: move similar code in one jar ?
@@ -68,9 +70,9 @@ public class ConversationDAO {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
 		//get last tid
-		DBCursor topicsCursor = 
+		DBCursor convosCursor = 
 			convosColl.find(null, new BasicDBObject("tid", "")).sort(new BasicDBObject("tid", -1)).limit(1);
-		int tid = topicsCursor.hasNext() ? ((Integer)topicsCursor.next().get("tid")) + 1 : 1;
+		int tid = convosCursor.hasNext() ? ((Integer)convosCursor.next().get("tid")) + 1 : 1;
 		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, convo.getUid());
 		List<DBRef> topicsDBList = new ArrayList<DBRef>();
@@ -78,7 +80,7 @@ public class ConversationDAO {
 			DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topic.getId());
 			topicsDBList.add(topicRef);
 		}
-		DBObject topicObject = BasicDBObjectBuilder.start()
+		DBObject convoObject = BasicDBObjectBuilder.start()
 			.add("uid", talkerRef)
 			.add("tid", tid)
 			.add("topic", convo.getTopic())
@@ -90,7 +92,7 @@ public class ConversationDAO {
 
 		//Only with STRICT WriteConcern we receive exception on duplicate key
 		try {
-			convosColl.save(topicObject, WriteConcern.SAFE);
+			convosColl.save(convoObject, WriteConcern.SAFE);
 		}
 		catch (MongoException me) {
 			//E11000 duplicate key error index
@@ -101,40 +103,55 @@ public class ConversationDAO {
 			me.printStackTrace();
 		}
 		
-		String topicId = topicObject.get("_id").toString();
-		convo.setId(topicId);
+		String convoId = convoObject.get("_id").toString();
+		convo.setId(convoId);
 		
-		return (Integer)topicObject.get("tid");
+		return (Integer)convoObject.get("tid");
 	}
 	
-	public static void updateTopic(ConversationBean convo) {
+	public static void updateConvo(ConversationBean convo) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
-		DBObject topicObject = BasicDBObjectBuilder.start()
+		DBObject convoObject = BasicDBObjectBuilder.start()
 			.add("topic", convo.getTopic())
 			.add("main_url", convo.getMainURL())
 			.get();
 		
 		DBObject convoId = new BasicDBObject("_id", new ObjectId(convo.getId()));
-		convosColl.update(convoId, new BasicDBObject("$set", topicObject));
+		convosColl.update(convoId, new BasicDBObject("$set", convoObject));
 	}
+	
+	
+	//----------------------- Query methods ------------------------
 	
 	public static ConversationBean getByConvoId(String topicId) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("_id", new ObjectId(topicId));
-		DBObject topicDBObject = convosColl.findOne(query);
+		DBObject convoDBObject = convosColl.findOne(query);
 		
-		return parseConversationBean(topicDBObject);
+		if (convoDBObject == null) {
+			return null;
+		}
+		
+		ConversationBean convo = new ConversationBean();
+		convo.parseFromDB(convoDBObject);
+		return convo;
 	}
 	
 	public static ConversationBean getByTid(Integer tid) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("tid", tid);
-		DBObject topicDBObject = convosColl.findOne(query);
+		DBObject convoDBObject = convosColl.findOne(query);
 		
-		return parseConversationBean(topicDBObject);
+		if (convoDBObject == null) {
+			return null;
+		}
+		
+		ConversationBean convo = new ConversationBean();
+		convo.parseFromDB(convoDBObject);
+		return convo;
 	}
 	
 	/**
@@ -151,141 +168,65 @@ public class ConversationDAO {
 						new BasicDBObject("urls", url)
 					)
 			);
-		DBObject topicDBObject = convosColl.findOne(query);
+		DBObject convoDBObject = convosColl.findOne(query);
 		
-		return parseConversationBean(topicDBObject);
-	}
-	
-	private static ConversationBean parseConversationBean(DBObject topicDBObject) {
-		if (topicDBObject == null) {
+		if (convoDBObject == null) {
 			return null;
 		}
 		
-		//TODO: move to topic bean?
 		ConversationBean convo = new ConversationBean();
-    	convo.setId(topicDBObject.get("_id").toString());
-    	convo.setTid((Integer)topicDBObject.get("tid"));
-    	convo.setTopic((String)topicDBObject.get("topic"));
-    	convo.setCreationDate((Date)topicDBObject.get("cr_date"));
-    	convo.setDisplayTime((Date)topicDBObject.get("disp_date"));
-    	
-    	convo.setMainURL((String)topicDBObject.get("main_url"));
-    	convo.setURLs(getStringSet(topicDBObject, "urls"));
-    	
-    	convo.setViews(getInt(topicDBObject, "views"));
-    	
-    	DBObject talkerDBObject = ((DBRef)topicDBObject.get("uid")).fetch();
-    	TalkerBean talker = new TalkerBean();
-    	talker.parseBasicFromDB(talkerDBObject);
-    	convo.setTalker(talker);
-    	
-    	List<MessageBean> messages = new ArrayList<MessageBean>();
-    	Set<String> members = new HashSet<String>();
-    	Collection<DBObject> messagesDBList = (Collection<DBObject>)topicDBObject.get("messages");
-    	if (messagesDBList != null) {
-    		for (DBObject messageDBObject : messagesDBList) {
-    			MessageBean message = new MessageBean();
-    			message.setText((String)messageDBObject.get("text"));
-    			
-    			DBObject fromTalkerDBObject = ((DBRef)messageDBObject.get("uid")).fetch();
-    			TalkerBean fromTalker = 
-    				new TalkerBean(fromTalkerDBObject.get("_id").toString(), (String)fromTalkerDBObject.get("uname"));
-    			message.setFromTalker(fromTalker);
-    			
-    			members.add(fromTalker.getUserName());
-    			messages.add(message);
-    		}
-    	}
-    	convo.setMembers(members);
-    	convo.setMessages(messages);
-    	
-    	//followers of this convo
-    	DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
-    	DBObject query = new BasicDBObject("following_topics", convo.getId());
-    	DBObject fields = BasicDBObjectBuilder.start()
-    		.add("uname", 1)
-    		.add("email", 1)
-    		.add("bio", 1)
-    		.add("email_settings", 1)
-    		.get();
-    	List<DBObject> followersDBList = talkersColl.find(query, fields).toArray();
-    	List<TalkerBean> followers = new ArrayList<TalkerBean>();
-    	for (DBObject followerDBObject : followersDBList) {
-    		TalkerBean followerTalker = new TalkerBean();
-    		followerTalker.parseBasicFromDB(followerDBObject);
-			followers.add(followerTalker);
-    	}
-    	convo.setFollowers(followers);
-    	
+		convo.parseFromDB(convoDBObject);
 		return convo;
 	}
 	
-	public static List<ConversationBean> loadAllTopics() {
+	
+	public static List<ConversationBean> loadAllConversations() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
-		List<DBObject> topicsDBList = 
+		List<DBObject> convosDBList = 
 			convosColl.find().sort(new BasicDBObject("disp_date", -1)).toArray();
 		
-		List<ConversationBean> topicsList = new ArrayList<ConversationBean>();
-		for (DBObject topicDBObject : topicsDBList) {
-			ConversationBean topic = parseConversationBean(topicDBObject);
-	    	topicsList.add(topic);
+		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
+		for (DBObject convoDBObject : convosDBList) {
+			ConversationBean convo = new ConversationBean();
+			convo.parseFromDB(convoDBObject);
+	    	convosList.add(convo);
 		}
 		
-		return topicsList;
+		return convosList;
 	}
 	
-	public static Map<String, ConversationBean> queryTopics() {
+	public static Map<String, ConversationBean> queryConversations() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
-		List<DBObject> topicsList = 
+		List<DBObject> convosList = 
 			convosColl.find().sort(new BasicDBObject("disp_date", -1)).limit(20).toArray();
 		
-		Map <String, ConversationBean> topicsMap = new LinkedHashMap <String, ConversationBean>(20);
-		for (DBObject topicDBObject : topicsList) {
-			ConversationBean topic = new ConversationBean();
-	    	topic.setId(topicDBObject.get("_id").toString());
-	    	topic.setTid((Integer)topicDBObject.get("tid"));
-	    	topic.setTopic((String)topicDBObject.get("topic"));
-	    	topic.setCreationDate((Date)topicDBObject.get("cr_date"));
-	    	topic.setDisplayTime((Date)topicDBObject.get("disp_date"));
-	    	topic.setMainURL((String)topicDBObject.get("main_url"));
-			
-	    	DBObject talkerDBObject = ((DBRef)topicDBObject.get("uid")).fetch();
-	    	TalkerBean talker = new TalkerBean();
-	    	talker.parseFromDB(talkerDBObject);
-	    	topic.setTalker(talker);
+		Map <String, ConversationBean> convosMap = new LinkedHashMap <String, ConversationBean>(20);
+		for (DBObject convoDBObject : convosList) {
+			ConversationBean convo = new ConversationBean();
+	    	convo.parseBasicFromDB(convoDBObject);
 	    	
-	    	topicsMap.put(topic.getId(), topic);
+	    	convosMap.put(convo.getId(), convo);
 		}
 		
-		return topicsMap;
+		return convosMap;
 	}
 	
-	/**
-	 * # of topics for given Talker ID
-	 * TODO: store additional field - quicker access?
-	 */
-	public static int getNumberOfTopics(String talkerId) {
-		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
-		
-		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
-		DBObject query = new BasicDBObject("uid", talkerRef);
-
-		return convosColl.find(query).count();
-	}
 	
-	public static String getLastTopicId() {
+	//------------------- Other ----------------------
+	
+	public static String getLastConvoId() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
-		DBObject topicDBObject = convosColl.find().sort(new BasicDBObject("cr_date", -1)).next();
-		if (topicDBObject == null) {
+		DBObject convoDBObject = convosColl.find().sort(new BasicDBObject("cr_date", -1)).next();
+		if (convoDBObject == null) {
 			return null;
 		}
 		else {
-			return topicDBObject.get("_id").toString();
+			return convoDBObject.get("_id").toString();
 		}
 	}
 	
-	public static List<Map<String, String>> loadTopicsForDashboard(boolean withNotifications) {
+	public static List<Map<String, String>> loadConvosForDashboard(boolean withNotifications) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		DateFormat dateFormat = new SimpleDateFormat("MM.dd.yyyy HH:mm:ss");
 		
@@ -328,15 +269,15 @@ public class ConversationDAO {
 		return topicsInfoList;
 	}
 	
-	public static void incrementConvoViews(String topicId) {
+	public static void incrementConvoViews(String convoId) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
-		DBObject topicIdDBObject = new BasicDBObject("_id", new ObjectId(topicId));
+		DBObject topicIdDBObject = new BasicDBObject("_id", new ObjectId(convoId));
 		convosColl.update(topicIdDBObject, 
 				new BasicDBObject("$inc", new BasicDBObject("views", 1)));
 	}
 	
-	//Load topics for given activity type
+	//Load convos for given activity type
 	public static List<ConversationBean> loadConversations(String talkerId, String type) {
 		DBCollection activitiesColl = getCollection(ActivityDAO.ACTIVITIES_COLLECTION);
 		
@@ -352,7 +293,8 @@ public class ConversationDAO {
 		for (DBObject activityDBObject : activitiesDBList) {
 			DBObject convoDBObject = ((DBRef)activityDBObject.get("topicId")).fetch();
 			
-			ConversationBean convo = parseConversationBean(convoDBObject);
+			ConversationBean convo = new ConversationBean();
+			convo.parseFromDB(convoDBObject);
 			convosList.add(convo);
 		}
 		return convosList;
@@ -367,7 +309,8 @@ public class ConversationDAO {
 		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
-			ConversationBean convo = parseConversationBean(convoDBObject);
+			ConversationBean convo = new ConversationBean();
+			convo.parseFromDB(convoDBObject);
 			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
 			convosList.add(convo);
 		}
@@ -376,8 +319,6 @@ public class ConversationDAO {
 	
 	
 	public static void main(String[] args) {
-		System.out.println(ConversationDAO.getNumberOfTopics("4c2cb43160adf3055c97d061"));
-		
 //		TopicBean topic = new TopicBean();
 //		topic.setTopic("test");
 //		topic.setUid("4c2cb43160adf3055c97d061");

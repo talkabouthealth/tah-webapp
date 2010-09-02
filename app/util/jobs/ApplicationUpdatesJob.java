@@ -37,11 +37,11 @@ public class ApplicationUpdatesJob extends Job {
 				}
 			}
 			
-			for (ConversationBean topic : ConversationDAO.loadAllTopics()) {
+			for (ConversationBean topic : ConversationDAO.loadAllConversations()) {
 				String name = ApplicationDAO.createURLName(topic.getTopic());
 				
 				topic.setMainURL(name);
-				ConversationDAO.updateTopic(topic);
+				ConversationDAO.updateConvo(topic);
 			}
 		}
 		

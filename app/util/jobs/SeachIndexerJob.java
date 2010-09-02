@@ -71,7 +71,7 @@ public class SeachIndexerJob extends Job {
 			  autocompleteIndexWriter.addDocument(doc2);
 		}
 		
-		for (ConversationBean convo : ConversationDAO.loadAllTopics()) {
+		for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
 //			possibly weight titles, conversation details, summaries, and answers more than the archived real-time conversations?
 			
 			//TODO: should check all tree? (not only top answers)

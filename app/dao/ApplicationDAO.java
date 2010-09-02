@@ -85,8 +85,6 @@ public class ApplicationDAO {
 		Calendar twoWeeksBeforeNow = Calendar.getInstance();
 		twoWeeksBeforeNow.add(Calendar.WEEK_OF_YEAR, -2);
 		
-		System.out.println(twoWeeksBeforeNow.getTime());
-		
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("timestamp", new BasicDBObject("$gt", twoWeeksBeforeNow.getTime()))
 			.get();
@@ -151,7 +149,7 @@ public class ApplicationDAO {
 	/**
 	 * Make URL-like name (without not-allowed symbols).
 	 * Also replaces "_" as it's used for duplicate names.
-	 * Build upon JavaExtensions.slugify() method.
+	 * Build upon Play! JavaExtensions.slugify() method.
 	 */
 	private static String prepareName(String name) {
 		name = JavaExtensions.noAccents(name);

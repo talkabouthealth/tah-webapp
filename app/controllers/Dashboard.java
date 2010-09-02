@@ -26,11 +26,11 @@ public class Dashboard extends Controller {
 	
 	public static void index() {
 		//TODO: use normal beans (not maps)
-		List<Map<String, String>> topicsList = ConversationDAO.loadTopicsForDashboard(false);
-		List<Map<String, String>> topicsWithNotificationsList = ConversationDAO.loadTopicsForDashboard(true);
+		List<Map<String, String>> topicsList = ConversationDAO.loadConvosForDashboard(false);
+		List<Map<String, String>> topicsWithNotificationsList = ConversationDAO.loadConvosForDashboard(true);
 		List<TalkerBean> talkersList = TalkerDAO.loadTalkersForDashboard();
 		
-		String lastTopicId = ConversationDAO.getLastTopicId(); 
+		String lastTopicId = ConversationDAO.getLastConvoId(); 
 		OnlineUsersSingleton onlineUsersSingleton = OnlineUsersSingleton.getInstance();
 		boolean automaticNotification = ConfigDAO.getBooleanConfig(NotificationUtils.AUTOMATIC_NOTIFICATIONS_CONFIG);
 		
@@ -49,7 +49,7 @@ public class Dashboard extends Controller {
 	}
 	
 	public static void checkNewTopic(String oldLastTopic) {
-		String lastTopic = ConversationDAO.getLastTopicId();
+		String lastTopic = ConversationDAO.getLastConvoId();
 		
 		boolean isNewTopic = false;
 		if (lastTopic != null) {

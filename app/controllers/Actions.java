@@ -67,7 +67,7 @@ public class Actions extends Controller {
 		}
 		
 		TalkerDAO.followAction(talker.getId(), followingId, follow);
-		CommonUtil.updateCachedTalker(session);
+		CommonUtil.refreshCachedTalker(session);
 		
 		//Text for the follow link after this action
 		if (follow) {
