@@ -368,7 +368,7 @@ public class ConversationDAO {
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
 			ConversationBean convo = parseConversationBean(convoDBObject);
-			convo.setComments(CommentsDAO.loadConvoComments(convo.getId()));
+			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
 			convosList.add(convo);
 		}
 		return convosList;

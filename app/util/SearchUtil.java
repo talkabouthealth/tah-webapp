@@ -23,13 +23,7 @@ public class SearchUtil {
 	public static final String SEARCH_INDEX_PATH = Play.configuration.getProperty("search.index");
 
 	public static List<String> searchTalker(String query) throws CorruptIndexException, IOException, ParseException {
-		Analyzer analyzer = new StandardAnalyzer();
-		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"talker");
-		QueryParser parser = new MultiFieldQueryParser(new String[] {"uname", "bio"}, analyzer);
-		parser.setAllowLeadingWildcard(true);
-		Query searchQuery = parser.parse("*"+query+"*");
-		
-		Hits hits = is.search(searchQuery);
+		Hits hits = getHits("talker", new String[] {"uname", "bio"}, "*"+query+"*");
 		List<String> results = new ArrayList<String>();
 		for (int i = 0; i < hits.length(); i++) {
 			Document doc = hits.doc(i);
@@ -46,9 +40,36 @@ public class SearchUtil {
 			results.add(result);
 		}
 		
-		is.close();
+		return results;
+	}
+	
+	public static List<String> searchConvo(String query) throws CorruptIndexException, IOException, ParseException {
+		Hits hits = getHits("conversations", new String[] {"title", "answers"}, "*"+query+"*");
+		List<String> results = new ArrayList<String>();
+		for (int i = 0; i < hits.length(); i++) {
+			Document doc = hits.doc(i);
+			
+			String result = doc.get("title");
+			result = result.replaceAll(query, "<b>"+query+"</b>");
+			results.add(result);
+		}
+		
+		System.out.println(results);
 		
 		return results;
+	}
+	
+	private static Hits getHits(String indexName, String[] fields, String query) 
+			throws CorruptIndexException, IOException, ParseException {
+		Analyzer analyzer = new StandardAnalyzer();
+		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+indexName);
+		QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
+		parser.setAllowLeadingWildcard(true);
+		Query searchQuery = parser.parse(query);
+		
+		Hits hits = is.search(searchQuery);
+		//TODO: close indexer?
+		return hits;
 	}
 	
 //	ParallelMultiSearcher pms = new ParallelMultiSearcher(new i);

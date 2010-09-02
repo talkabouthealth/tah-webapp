@@ -88,7 +88,7 @@ public class CommentsDAO {
 		return getString(commentObject, "_id");
 	}
 	
-	public static List<CommentBean> loadConvoComments(String topicId) {
+	public static List<CommentBean> loadConvoAnswers(String topicId) {
 		DBCollection commentsColl = getCollection(TOPIC_COMMENTS_COLLECTION);
 		
 		DBRef topicRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, topicId);

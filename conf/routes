@@ -19,6 +19,7 @@ GET		/verify/{verifyCode}					Profile.verifyEmail
 
 GET		/explore/members						Community.browseMembers(action:'active')
 *		/search/members							Community.browseMembers(action:'search')
+*		/search/conversations					Community.searchConversations
 
 GET		/home/?									Home.index
 GET		/dashboard/?							Dashboard.index

@@ -1,0 +1,55 @@
+#{ extends 'main.html' /}
+	<script type="text/javascript"> 	 
+		$(document).ready(function() {
+			
+		});
+   	</script>
+	<style>
+		body {
+			background:url(/public/images/inner_bg.gif) repeat-x top;
+			font-family:arial;
+			font-size:11px;
+		}
+	</style>
+</head>
+<body>
+	<div id="top_container">
+		<div id="top">
+			#{ logo /}
+			<div id="topnav">
+				#{ include 'menu.html' /}
+			</div>
+		</div>
+	</div>
+	<div id="innerbanner"></div>
+	<div id="innermain">
+		<div class="blacktext2" id="innerheading">Search Conversations</div>
+		<div id="innermiddlearea">
+           	<form name="searchForm" action="@{Community.searchConversations()}" method="POST">
+				<div id="searcharea">
+					<input name="query" type="text" class="search"  value="${flash.query ? flash.query : 'Search Conversations'}" 
+						onclick="if (this.value == 'Search Conversations') this.value=''" onblur=""/>
+				</div>
+				<div id="searchright">
+					<a href="#" onclick="document.searchForm.submit(); return false;">
+						<img src="/public/images/searchbutton.gif" width="34" height="35" border="0"/>
+					</a>
+				</div>
+			</form>
+			
+			#{if results }
+				<div style="font-size: 14px; clear: left">		
+					#{list items:results, as: 'res'}
+						<span style="padding-bottom: 3px">
+							*{ <a href="@{ViewDispatcher.view(res)}">${res}</a> }*
+							${res.raw()}
+						</span>
+						<br/><br/>
+					#{/list}
+					#{else}
+						No results.
+					#{/else}
+				</div>
+			#{/if}
+		</div>
+	</div>

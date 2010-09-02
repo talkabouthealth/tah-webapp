@@ -46,5 +46,23 @@ public class Community extends Controller {
 		}
 		render(talker, action, activeTalkers, newTalkers, results);
 	}
+	
+	public static void searchConversations() {
+		String query = params.get("query");
+		List<String> results = null;
+		if (query != null) {
+			params.flash("query");
+			
+			try {
+				results = SearchUtil.searchConvo(query);
+			}
+			catch (Exception e) {
+				//TODO: better handling?
+				e.printStackTrace();
+			}
+		}
+		
+		render(results);
+	}
 
 }

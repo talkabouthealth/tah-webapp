@@ -165,7 +165,7 @@ public class ViewDispatcher extends Controller {
 		
 		ConversationDAO.incrementConvoViews(convo.getId());
 		
-		convo.setComments(CommentsDAO.loadConvoComments(convo.getId()));
+		convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
 		
 		//temporary test data
 		convo.setDetails("Suggestions for friends and family...");
