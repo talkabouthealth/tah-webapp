@@ -408,7 +408,6 @@ public class Profile extends Controller {
 		DiseaseBean disease = DiseaseDAO.getByName(diseaseName);
 
 		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
-		System.out.println(talkerDisease.getOtherHealthItems().get("symptoms"));
 		
 		//Load all healthItems for this disease
 		Map<String, HealthItemBean> healthItemsMap = new HashMap<String, HealthItemBean>();
@@ -548,7 +547,6 @@ public class Profile extends Controller {
 		
 		renderText("Ok! Email sent.");
 	}
-	
 	
 	public static void deactivateAccount() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);

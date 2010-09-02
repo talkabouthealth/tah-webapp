@@ -39,6 +39,15 @@ public class Security extends Secure.Security {
     	
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
+    	if (talker.isSuspended()) {
+    		session.clear();
+            response.setCookie("rememberme", "", 0);
+            
+            render("Application/suspendedAccount.html");
+    		
+    		return;
+    	}
+    	
     	if (talker.isDeactivated()) {
     		talker.setDeactivated(false);
     		TalkerDAO.updateTalker(talker);

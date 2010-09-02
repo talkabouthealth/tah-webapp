@@ -121,6 +121,7 @@ public class TalkerBean implements Serializable {
 	private String verifyCode;	//code for email verification
 	private Set<EmailBean> emails;
 	private boolean deactivated;
+	private boolean suspended;
 	
 	//Twitter or Facebook account info
 	private String accountType;
@@ -239,28 +240,28 @@ public class TalkerBean implements Serializable {
 	// ----=================== Parse/Save information from/to DB =================----
 	public void parseBasicFromDB(DBObject talkerDBObject) {
 		setId(talkerDBObject.get("_id").toString());
-		setUserName(talkerDBObject.get("uname").toString());
-		setBio((String)talkerDBObject.get("bio"));
-		setEmail((String)talkerDBObject.get("email"));
-		setConnection((String)talkerDBObject.get("connection"));
-		setConnectionVerified(getBoolean(talkerDBObject.get("connection_verified"))); 
-		
-		parseEmailSettings(parseStringList(talkerDBObject.get("email_settings")));
-		
-		//TODO: slooooow?
-		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
-		parseProfilePreferences(parseInt(talkerDBObject.get("prefs")));
-	}
-	
-	public void parseFromDB(DBObject talkerDBObject) {
-		setId(talkerDBObject.get("_id").toString());
-		
 		setUserName((String)talkerDBObject.get("uname"));
 		setPassword((String)talkerDBObject.get("pass"));
+		
 		setEmail((String)talkerDBObject.get("email"));
 		parseEmails((Collection<DBObject>)talkerDBObject.get("emails"));
 		setVerifyCode((String)talkerDBObject.get("verify_code"));
+		
 		setDeactivated(getBoolean(talkerDBObject.get("deactivated"))); 
+		setSuspended(getBoolean(talkerDBObject.get("suspended")));
+		
+		setBio((String)talkerDBObject.get("bio"));
+		setConnection((String)talkerDBObject.get("connection"));
+		setConnectionVerified(getBoolean(talkerDBObject.get("connection_verified"))); 
+		
+		//TODO: slooooow?
+		parseEmailSettings(parseStringList(talkerDBObject.get("email_settings")));
+		parseProfilePreferences(parseInt(talkerDBObject.get("prefs")));
+		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
+	}
+	
+	public void parseFromDB(DBObject talkerDBObject) {
+		parseBasicFromDB(talkerDBObject);
 		
 		setIm((String)talkerDBObject.get("im"));
 		setImUsername((String)talkerDBObject.get("im_uname"));
@@ -287,24 +288,16 @@ public class TalkerBean implements Serializable {
 		setCategory((String)talkerDBObject.get("category"));
 		setRegDate((Date)talkerDBObject.get("timestamp"));
 		
-		setConnection((String)talkerDBObject.get("connection"));
-		setConnectionVerified(getBoolean(talkerDBObject.get("connection_verified"))); 
-		
 		setFirstName((String)talkerDBObject.get("firstname"));
 		setLastName((String)talkerDBObject.get("lastname"));
 		setZip((String)talkerDBObject.get("zip"));
 		setWebpage((String)talkerDBObject.get("webpage"));
-		setBio((String)talkerDBObject.get("bio"));
 		setChildrenAges(parseStringList(talkerDBObject.get("ch_ages")));
 		setKeywords(parseStringList(talkerDBObject.get("keywords")));
 		
-		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
 		parseFollowing((Collection<DBRef>)talkerDBObject.get("following"));
 		setFollowingConvosList(parseStringList(talkerDBObject.get("following_topics")));
 		parseFollowingTopics((Collection<DBRef>)talkerDBObject.get("following_tags"));
-		
-		parseProfilePreferences(parseInt(talkerDBObject.get("prefs")));
-		parseEmailSettings(parseStringList(talkerDBObject.get("email_settings")));
 	}
 	
 	//TODO: move to EmailBean and IMAccountBean ?
@@ -845,5 +838,11 @@ public class TalkerBean implements Serializable {
 	}
 	public void setFollowingTopicsList(List<TopicBean> followingTopicsList) {
 		this.followingTopicsList = followingTopicsList;
+	}
+	public boolean isSuspended() {
+		return suspended;
+	}
+	public void setSuspended(boolean suspended) {
+		this.suspended = suspended;
 	}
 }	

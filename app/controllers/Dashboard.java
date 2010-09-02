@@ -63,6 +63,30 @@ public class Dashboard extends Controller {
 	}
 	
 	
+	// --------------- Manage accounts -----------------------
+	public static void manageAccounts() {
+		List<TalkerBean> talkers = TalkerDAO.loadAllTalkers();
+		render(talkers);
+	}
+	
+	public static void saveAccounts(List<String> selectedTalkerIds) {
+		List<TalkerBean> talkers = TalkerDAO.loadAllTalkers();
+		
+		selectedTalkerIds = (selectedTalkerIds == null ? Collections.EMPTY_LIST : selectedTalkerIds);
+		for (TalkerBean talker : talkers) {
+			if (selectedTalkerIds.contains(talker.getId())) {
+				talker.setSuspended(true);
+			}
+			else {
+				talker.setSuspended(false);
+			}
+			TalkerDAO.updateTalker(talker);
+		}
+		
+		manageAccounts();
+	}
+	
+	
 	// --------------- Verify Professionals ------------------
 
 	public static void verifyProfessionals() {

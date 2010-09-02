@@ -86,6 +86,7 @@ public class TalkerDAO {
 			.add("verify_code", talker.getVerifyCode())
 			.add("emails", talker.emailsToDB())
 			.add("deactivated", talker.isDeactivated())
+			.add("suspended", talker.isSuspended())
 			
 			.add("connection", talker.getConnection())
 			.add("connection_verified", talker.isConnectionVerified())
@@ -280,7 +281,8 @@ public class TalkerDAO {
 	public static List<TalkerBean> loadAllTalkers() {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
-		List<DBObject> talkersDBObjectList = talkersColl.find().toArray();
+		List<DBObject> talkersDBObjectList = 
+			talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
 		
 		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
 		for (DBObject talkerDBObject : talkersDBObjectList) {

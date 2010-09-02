@@ -1,0 +1,38 @@
+#{extends 'static.html' /}
+#{set pageHeader:'Manage User Accounts' /}
+
+<style type="text/css">
+	#signupright {
+		visibility: hidden;
+	}
+	table {
+		font-size: 14px;
+	}
+	table td, table th {
+		padding: 7px;
+	}
+</style>
+
+<form name="manageaccountsform" action="@{Dashboard.saveAccounts()}" method="POST">
+	<table border="1" cellspacing="0">
+		<tr>
+			<th>Username</th>
+			<th>Suspended?</th>
+		</tr>
+		#{list items: talkers, as: 'talker'}
+			<tr>
+				<td>${talker.userName}</td>
+				<td>
+					<input type="checkbox" name="selectedTalkerIds" value="${talker.id}"
+						${talker.suspended ? "checked='checked'" : ""}
+					/>
+				</td>
+			</tr>
+		#{/list}
+	</table>
+	<div class="button">
+		<a href="#" onclick="document.manageaccountsform.submit();">
+			<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" />
+		</a>
+	</div>
+</form>
