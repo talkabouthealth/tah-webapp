@@ -84,10 +84,8 @@ public class Profile extends Controller {
         }
 		
 		if (!StringUtils.equals(oldTalker.getConnection(), talker.getConnection())) {
-			//check if new connection professional and unverify it
-			if (TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.getConnection())) {
-				oldTalker.setConnectionVerified(false);
-			}
+			//check if new connection is professional and unverify it
+			oldTalker.setConnectionVerified(false);
 		}
 		
 		if (!StringUtils.equals(oldTalker.getBio(), talker.getBio())) {
@@ -119,7 +117,6 @@ public class Profile extends Controller {
 		oldTalker.setState(talker.getState());
 		oldTalker.setCountry(talker.getCountry());
 		oldTalker.setChildrenNum(talker.getChildrenNum());
-		
 		oldTalker.setFirstName(talker.getFirstName());
 		oldTalker.setLastName(talker.getLastName());
 		oldTalker.setZip(talker.getZip());
@@ -128,7 +125,6 @@ public class Profile extends Controller {
 		oldTalker.setChildrenAges(talker.getChildrenAges());
 		oldTalker.setKeywords(talker.getKeywords());
 		
-		//TODO duplicates functionality? - move email creation to EmailUtil?
 		if (!oldEmail.equals(talker.getEmail())) {
 			//send verification email
 			oldTalker.setVerifyCode(CommonUtil.generateVerifyCode());
@@ -208,6 +204,7 @@ public class Profile extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 		Map<String, String> paramsMap = params.allSimple();
+		//TODO: the same for all enums?
 		EnumSet<ProfilePreference> preferencesSet = EnumSet.noneOf(ProfilePreference.class);
 		for (String paramName : paramsMap.keySet()) {
 			//try to parse all parameters to ProfilePreference enum
@@ -228,7 +225,6 @@ public class Profile extends Controller {
 	/* -------------- Notifications ------------------------ */
 	public static void notifications() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
 		render(talker);
 	}
 	
@@ -277,7 +273,6 @@ public class Profile extends Controller {
 		
 		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);
 
-		//TODO: duplicate? easier?
 		Map<String, String> paramsMap = params.allSimple();
 		EnumSet<EmailSetting> emailSettings = EnumSet.noneOf(EmailSetting.class);
 		for (String paramName : paramsMap.keySet()) {
@@ -288,8 +283,8 @@ public class Profile extends Controller {
 			}
 			catch (IllegalArgumentException iae) {}
 		}
-		
 		sessionTalker.saveEmailSettings(emailSettings);
+		
 		if (talker == null) {
 			sessionTalker.setNewsletter(false);
 		}
@@ -312,17 +307,16 @@ public class Profile extends Controller {
 		notFoundIfNull(newPrimaryEmailBean);
 		
 		//delete this email from non-primary
-		TalkerDAO.deleteEmail(talker, newPrimaryEmailBean);
-		
+		talker.getEmails().remove(newPrimaryEmailBean);
 		//make old primary non-primary
-		TalkerDAO.saveEmail(talker, new EmailBean(talker.getEmail(), talker.getVerifyCode()));
-		
+		talker.getEmails().add(new EmailBean(talker.getEmail(), talker.getVerifyCode()));
 		//set new primary
 		talker.setEmail(newPrimaryEmailBean.getValue());
 		talker.setVerifyCode(newPrimaryEmailBean.getVerifyCode());
-		TalkerDAO.updateTalker(talker);
 		
+		TalkerDAO.updateTalker(talker);
 		CommonUtil.updateCachedTalker(session);
+		
 		notifications();
 	}
 	
@@ -343,24 +337,28 @@ public class Profile extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		 
 		EmailBean email = new EmailBean(newEmail, CommonUtil.generateVerifyCode());
-		TalkerDAO.saveEmail(talker, email);
+		talker.getEmails().add(email);
+		
+		TalkerDAO.updateTalker(talker);
+		CommonUtil.updateCachedTalker(session);
 		
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("username", talker.getUserName());
 		vars.put("verify_code", email.getVerifyCode());
 		EmailUtil.sendEmail(EmailTemplate.VERIFICATION, email.getValue(), vars, null, false);
 		
-		CommonUtil.updateCachedTalker(session);
+		
 		EmailBean _email = email;
 		render("tags/profileNotificationEmail.html", _email);
 	}
 	
 	public static void deleteEmail(String email) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		talker.getEmails().remove(new EmailBean(email, null));
 		
-		TalkerDAO.deleteEmail(talker, new EmailBean(email, null));
-		
+		TalkerDAO.updateTalker(talker);
 		CommonUtil.updateCachedTalker(session);
+		
 		renderJSON("{\"result\" : \"ok\"}");
 	}
 	
@@ -374,7 +372,6 @@ public class Profile extends Controller {
 		}
         
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
 		talker.getImAccounts().add(imAccount);
 		
 		TalkerDAO.updateTalker(talker);
@@ -521,18 +518,13 @@ public class Profile extends Controller {
 		if (verifyCode.equals(talker.getVerifyCode())) {
 			//primary email
 			talker.setVerifyCode(null);
-			TalkerDAO.updateTalker(talker);
 		}
 		else {
-			//non-primary email
+			//clear verify code for non-primary email
 			EmailBean emailBean = talker.findNonPrimaryEmail(null, verifyCode);
-			
-			//clear verify code in db
-			TalkerDAO.deleteEmail(talker, emailBean);
 			emailBean.setVerifyCode(null);
-			TalkerDAO.saveEmail(talker, emailBean);
 		}
-		
+		TalkerDAO.updateTalker(talker);
 		CommonUtil.updateCachedTalker(session);
 		render();
 	}

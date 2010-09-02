@@ -307,6 +307,7 @@ public class TalkerBean implements Serializable {
 		parseEmailSettings(parseStringList(talkerDBObject.get("email_settings")));
 	}
 	
+	//TODO: move to EmailBean and IMAccountBean ?
 	private void parseEmails(Collection<DBObject> emailsDBList) {
 		Set<EmailBean> emailsSet = new LinkedHashSet<EmailBean>();
 		if (emailsDBList != null) {
@@ -320,6 +321,20 @@ public class TalkerBean implements Serializable {
 		}
 		
 		emails = emailsSet;
+	}
+	
+	public List<DBObject> emailsToDB() {
+		List<DBObject> dbList = new ArrayList<DBObject>();
+		if (emails != null) {
+			for (EmailBean email : emails) {
+				DBObject emailDBObject = BasicDBObjectBuilder.start()
+					.add("value", email.getValue())
+					.add("verify_code", email.getVerifyCode())
+					.get();
+				dbList.add(emailDBObject);
+			}
+		}
+		return dbList;
 	}
 	
 	private void parseIMAccounts(Collection<DBObject> imAccountsDBList) {

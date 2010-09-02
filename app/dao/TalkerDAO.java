@@ -84,6 +84,7 @@ public class TalkerDAO {
 			.add("pass", talker.getPassword())
 			.add("email", talker.getEmail())
 			.add("verify_code", talker.getVerifyCode())
+			.add("emails", talker.emailsToDB())
 			.add("deactivated", talker.isDeactivated())
 			
 			.add("connection", talker.getConnection())
@@ -419,30 +420,6 @@ public class TalkerDAO {
 		
 		return followingConvoList;
 	}
-	
-	//TODO: move to update talker?
-	public static void saveEmail(TalkerBean talker, EmailBean email) {
-		saveOrDeleteEmail(talker, email, "$push");
-	}
-	
-	public static void deleteEmail(TalkerBean talker, EmailBean email) {
-		saveOrDeleteEmail(talker, email, "$pull");
-	}
-	
-	private static void saveOrDeleteEmail(TalkerBean talker, EmailBean email, String action) {
-		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
-		
-		DBObject emailObject = BasicDBObjectBuilder.start()
-			.add("value", email.getValue())
-			.get();
-		if (email.getVerifyCode() != null) {
-			emailObject.put("verify_code", email.getVerifyCode());
-		}
-		
-		DBObject talkerId = new BasicDBObject("_id", new ObjectId(talker.getId()));
-		talkersColl.update(talkerId, new BasicDBObject(action, new BasicDBObject("emails", emailObject)));
-	}
-	
 	
 	public static void main(String[] args) {
 //		TalkerDAO.follow("4c2cb43160adf3055c97d061", "4c35dbeb5165f305eebfc5f2", true);
