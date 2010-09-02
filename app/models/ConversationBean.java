@@ -10,14 +10,19 @@ import java.util.Set;
  */
 public class ConversationBean {
 	
-	enum ConvoType {
+	public enum ConvoType {
 		CONVERSATION,
-		QUESTION
+		QUESTION;
+		
+		public String stringValue() {
+			return toString().toLowerCase();
+		}
 	}
 	
 	private String id;
 	private int tid;
-	private ConvoType convoType;
+	//TODO: handle questions also
+	private ConvoType convoType = ConvoType.CONVERSATION;
 	private String mainURL;
 	private Set<String> URLs;
 	private String topic;

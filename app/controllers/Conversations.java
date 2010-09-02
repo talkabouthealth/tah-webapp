@@ -134,9 +134,22 @@ public class Conversations extends Controller {
     	renderText("Ok!");
     }
     
-    public static void updateTopicField(String name, String value) {
+    public static void updateTopicField(String convoId, String name, String value) {
     	//TODO: list of allowed fields?
     	
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	
+    	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+    	//prepare email params
+    	Map<String, String> vars = new HashMap<String, String>();
+		vars.put("convo", convo.getTopic());
+		vars.put("other_talker", talker.getUserName());
+		vars.put("summary_text", convo.getSummary());
+		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
+		vars.put("convo_url", convoURL);
+    	for (TalkerBean follower : convo.getFollowers()) {
+    		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_RESTART, follower, vars);
+    	}
     }
     
     public static void saveTopicComment(String topicId, String parentId, String text) {
@@ -155,14 +168,17 @@ public class Conversations extends Controller {
 		String id = CommentsDAO.saveTopicComment(comment);
 		comment.setId(id);
 		
-//		if (comment.getParentId() == null) {
-//			ActivityDAO.saveActivity(new ProfileCommentAction(talker, profileTalker));
-//		}
-//		else {
-//			ActivityDAO.saveActivity(new ProfileReplyAction(talker, profileTalker));
-//		}
-//		NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
-//				profileTalker, talker.getUserName()+" left a comment on you profile.");
+		//notify
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("convo", convo.getTopic());
+		vars.put("other_talker", talker.getUserName());
+		vars.put("answer_text", comment.getText());
+		vars.put("convo_type", convo.getConvoType().stringValue());
+		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
+		vars.put("convo_url", convoURL);
+    	for (TalkerBean follower : convo.getFollowers()) {
+    		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_COMMENT, follower, vars);
+    	}
 		
 		//render html of new comment using tag
 		List<CommentBean> _commentsList = Arrays.asList(comment);
