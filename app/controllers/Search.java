@@ -23,35 +23,8 @@ import util.SearchUtil;
 @With(Secure.class)
 public class Search extends Controller {
 	
-	public static void search(String query) throws Exception {
-		if (query == null) {
-			render();
-			return;
-		}
-		
-//		ParallelMultiSearcher pms = new ParallelMultiSearcher(new i);
-		System.out.println(SearchUtil.SEARCH_INDEX_PATH+"talker");
-		
-		Analyzer analyzer = new StandardAnalyzer();
-		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"talker");
-//		QueryParser parser = new QueryParser("uname", analyzer);
-		QueryParser parser = new MultiFieldQueryParser(new String[] {"uname", "bio"}, analyzer);
-		parser.setAllowLeadingWildcard(true);
-		Query searchQuery = parser.parse(query);
-		Hits hits = is.search(searchQuery);
-		
-		List<String> results = new ArrayList<String>();
-		for (int i = 0; i < hits.length(); i++) {
-			Document doc = hits.doc(i);
-//			System.out.println(hits.score(i));
-//			System.out.println(doc.get("uname")+" : "+doc.get("id"));
-			results.add(doc.get("uname"));
-		}
-		
-		is.close();
-		
-		params.flash("query");
-		render(results);
+	public static void search() throws Exception {
+		render();
 	}
 	
 	public static void ajaxSearch(String term) throws Exception {
@@ -66,8 +39,6 @@ public class Search extends Controller {
 		parser.setAllowLeadingWildcard(true);
 		Query searchQuery = parser.parse("*"+term+"*");
 		Hits hits = is.search(searchQuery);
-		
-		
 		
 //		Scorer scorer = new QueryScorer(searchQuery);
 //		Highlighter highlighter = new Highlighter(scorer);
@@ -96,12 +67,20 @@ public class Search extends Controller {
 			
 			results.add(result);
 			
-			if (i == 10) {
+			if (i == 9) {
 				break;
 			}
 		}
 		
 		is.close();
+		
+		//add link to full search
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("label", "Search for <b>"+term+"</b>");
+		result.put("value", term);
+		result.put("url", "#fullsearch");
+		result.put("type", "");
+		results.add(result);
 		
 		renderJSON(results);
 	}

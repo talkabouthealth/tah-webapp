@@ -188,7 +188,7 @@
 				<div id="innerbot"></div>
 			</div>
 			<div id="innerright">
-				<form name="searchForm" action="@{Search.search()}" method="POST">
+				<form name="searchForm" action="@{Community.browseMembers('search')}" method="POST">
 					<div id="searcharea">
 						<input name="query" type="text" class="search"  value="Search Members" 
 							onclick="this.value=''" onblur=""/>
