@@ -96,15 +96,16 @@ public class PublicProfile extends Controller {
 	}
 	
 	
-	//TODO: load more for topics?
+	//TODO: load more methods for topics?
 	public static void conversationsFollowing(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
 		notFoundIfNull(talker);
 		
-		talker.setFollowingConvosFullList(TalkerDAO.loadFollowingConversations(talker.getId()));
+		String topicsType = "Following";
+		List<ConversationBean> topicsList = TalkerDAO.loadFollowingConversations(talker.getId());
 		
-		render(talker, currentTalker);
+		render("@conversationsList", talker, currentTalker, topicsType, topicsList);
 	}
 	
 	public static void conversationsStarted(String userName) {

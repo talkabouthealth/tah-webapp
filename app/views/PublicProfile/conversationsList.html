@@ -50,7 +50,8 @@
 		<div class="blacktext2" id="innerheading">${talker.userName} Conversations ${topicsType}</div>
 		<div id="innerpersonalarea">
 			<div id="signupleftarea">
-				#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.CONVERSATIONS)}
+				#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.CONVERSATIONS)
+						&& topicsList}
 					<div class="activitiestext">
 						#{list items:topicsList.limit(12), as:'topic' }
 							<div class="area">
