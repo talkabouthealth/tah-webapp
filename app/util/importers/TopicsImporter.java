@@ -25,7 +25,7 @@ public class TopicsImporter {
 		importTopics("D:\\topics.txt");
 	}
 	
-	private static void importTopics(String fileName) throws Exception {
+	public static void importTopics(String fileName) throws Exception {
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
 		String line = null;
 		

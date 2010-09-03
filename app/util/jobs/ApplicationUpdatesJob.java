@@ -19,6 +19,7 @@ import play.Play;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import util.DBUtil;
+import util.importers.TopicsImporter;
 
 /**
  * Job is used for different updates in db when deploying new features.
@@ -37,11 +38,17 @@ public class ApplicationUpdatesJob extends Job {
 				}
 			}
 			
-			for (ConversationBean topic : ConversationDAO.loadAllConversations()) {
-				String name = ApplicationDAO.createURLName(topic.getTopic());
+			for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
+				String name = ApplicationDAO.createURLName(convo.getTopic());
 				
-				topic.setMainURL(name);
-				ConversationDAO.updateConvo(topic);
+				convo.setMainURL(name);
+				ConversationDAO.updateConvo(convo);
+			}
+			
+			try {
+				TopicsImporter.importTopics("/home/kan/topics.txt");
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		

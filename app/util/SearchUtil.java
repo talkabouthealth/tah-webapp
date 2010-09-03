@@ -62,6 +62,7 @@ public class SearchUtil {
 	private static Hits getHits(String indexName, String[] fields, String query) 
 			throws CorruptIndexException, IOException, ParseException {
 		Analyzer analyzer = new StandardAnalyzer();
+		//TODO: recommended to use only one searcher? Open after reindex?
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+indexName);
 		QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
 		parser.setAllowLeadingWildcard(true);

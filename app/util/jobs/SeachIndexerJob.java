@@ -34,73 +34,76 @@ public class SeachIndexerJob extends Job {
 		IndexWriter autocompleteIndexWriter = 
 			new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"autocomplete", new StandardAnalyzer(), true);
 		
-		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
-			  Document doc = new Document();
-			  doc.add(new Field("id", talker.getId(), Field.Store.YES,
-			                      Field.Index.NO));
-			  doc.add(new Field("uname", talker.getUserName(), Field.Store.YES,
-			                        Field.Index.TOKENIZED));
-			  
-			  if (talker.isAllowed(ProfilePreference.BIO) && talker.getBio() != null) {
-				  doc.add(new Field("bio", talker.getBio(), Field.Store.YES,
+		try {
+			for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
+				  Document doc = new Document();
+				  doc.add(new Field("id", talker.getId(), Field.Store.YES,
+				                      Field.Index.NO));
+				  doc.add(new Field("uname", talker.getUserName(), Field.Store.YES,
+				                        Field.Index.TOKENIZED));
+				  
+				  if (talker.isAllowed(ProfilePreference.BIO) && talker.getBio() != null) {
+					  doc.add(new Field("bio", talker.getBio(), Field.Store.YES,
+		                      Field.Index.TOKENIZED));
+				  }
+				  
+				  //setBoost
+				  
+	//				  doc.add(new Field("city", hotel.getCity(), Field.Store.YES,
+	//				                        Field.Index.UN_TOKENIZED));
+	//				  doc.add(new Field("description", hotel.getDescription(),
+	//				                   Field.Store.YES,
+	//				                   Field.Index.TOKENIZED));
+	//				  String fullSearchableText
+	//				        = hotel.getName()
+	//				         + " " + hotel.getCity() + " " + hotel.getDescription();
+	//
+	//				  doc.add(new Field("content", fullSearchableText,
+	//				                 Field.Store.NO,
+	//				                 Field.Index.TOKENIZED));
+				  
+				  talkerIndexWriter.addDocument(doc);
+				  
+				  //for autocomplete
+				  Document doc2 = new Document();
+				  doc2.add(new Field("uname", talker.getUserName(), Field.Store.YES,
 	                      Field.Index.TOKENIZED));
-			  }
-			  
-			  //setBoost
-			  
-//				  doc.add(new Field("city", hotel.getCity(), Field.Store.YES,
-//				                        Field.Index.UN_TOKENIZED));
-//				  doc.add(new Field("description", hotel.getDescription(),
-//				                   Field.Store.YES,
-//				                   Field.Index.TOKENIZED));
-//				  String fullSearchableText
-//				        = hotel.getName()
-//				         + " " + hotel.getCity() + " " + hotel.getDescription();
-//
-//				  doc.add(new Field("content", fullSearchableText,
-//				                 Field.Store.NO,
-//				                 Field.Index.TOKENIZED));
-			  
-			  talkerIndexWriter.addDocument(doc);
-			  
-			  //for autocomplete
-			  Document doc2 = new Document();
-			  doc2.add(new Field("uname", talker.getUserName(), Field.Store.YES,
-                      Field.Index.TOKENIZED));
-			  doc2.add(new Field("type", "User", Field.Store.YES, Field.Index.NO));
-			  autocompleteIndexWriter.addDocument(doc2);
-		}
-		
-		for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
-//			possibly weight titles, conversation details, summaries, and answers more than the archived real-time conversations?
-			
-			//TODO: should check all tree? (not only top answers)
-			List<CommentBean> answersList = CommentsDAO.loadConvoAnswers(convo.getId());
-			
-			Document doc = new Document();
-			doc.add(new Field("id", convo.getId(), Field.Store.YES, Field.Index.NO));
-			doc.add(new Field("title", convo.getTopic(), Field.Store.YES, Field.Index.TOKENIZED));
-			StringBuilder answersString = new StringBuilder();
-			for (CommentBean answer : answersList) {
-				answersString.append(answer.getText());
+				  doc2.add(new Field("type", "User", Field.Store.YES, Field.Index.NO));
+				  autocompleteIndexWriter.addDocument(doc2);
 			}
-			doc.add(new Field("answers", answersString.toString(), Field.Store.NO, Field.Index.TOKENIZED));
-			convoIndexWriter.addDocument(doc);
-			  
-					
-			//for autocomplete
-			Document doc2 = new Document();
-			doc2.add(new Field("title", convo.getTopic(), Field.Store.YES, Field.Index.TOKENIZED));
-			doc2.add(new Field("type", "Conversation", Field.Store.YES, Field.Index.NO));
-			//TODO: url can be changed after indexing?
-			doc2.add(new Field("url", convo.getMainURL(), Field.Store.YES, Field.Index.NO));
 			
-			autocompleteIndexWriter.addDocument(doc2);
+			for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
+	//			possibly weight titles, conversation details, summaries, and answers more than the archived real-time conversations?
+				
+				//TODO: should check all tree? (not only top answers)
+				List<CommentBean> answersList = CommentsDAO.loadConvoAnswers(convo.getId());
+				
+				Document doc = new Document();
+				doc.add(new Field("id", convo.getId(), Field.Store.YES, Field.Index.NO));
+				doc.add(new Field("title", convo.getTopic(), Field.Store.YES, Field.Index.TOKENIZED));
+				StringBuilder answersString = new StringBuilder();
+				for (CommentBean answer : answersList) {
+					answersString.append(answer.getText());
+				}
+				doc.add(new Field("answers", answersString.toString(), Field.Store.NO, Field.Index.TOKENIZED));
+				convoIndexWriter.addDocument(doc);
+				  
+						
+				//for autocomplete
+				Document doc2 = new Document();
+				doc2.add(new Field("title", convo.getTopic(), Field.Store.YES, Field.Index.TOKENIZED));
+				doc2.add(new Field("type", "Conversation", Field.Store.YES, Field.Index.NO));
+				//TODO: url can be changed after indexing?
+				doc2.add(new Field("url", convo.getMainURL(), Field.Store.YES, Field.Index.NO));
+				
+				autocompleteIndexWriter.addDocument(doc2);
+			}
 		}
-		
-		talkerIndexWriter.close();
-		convoIndexWriter.close();
-		autocompleteIndexWriter.close();
+		finally {
+			talkerIndexWriter.close();
+			convoIndexWriter.close();
+			autocompleteIndexWriter.close();
+		}
 	}
 	
 	public static void main(String[] args) throws Exception {
