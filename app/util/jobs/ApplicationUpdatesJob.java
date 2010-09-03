@@ -29,6 +29,8 @@ import util.importers.TopicsImporter;
 public class ApplicationUpdatesJob extends Job {
 	
 	public void doJob() {
+		//TODO: make checks for all startups?
+		
 		//update only if "names" is empty
 		if (!ApplicationDAO.isURLNameExists("kangaroo")) {
 			//check all talkers/topics new names 

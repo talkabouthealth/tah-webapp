@@ -423,7 +423,7 @@
 								<ul>
 									<li class="blacktext12"><b>Disease</b>: <span class="blacktext">${talkerDisease.name}</span></li>
 									#{list items: disease.questions, as: 'question'}
-										#{if talkerDisease.healthInfo.get(question.name)}
+										#{if talkerDisease.healthInfo?.get(question.name)}
 											<li class="blacktext12" style="height: auto"><b>${question.displayName}</b>: 
 												<span class="blacktext">${talkerDisease.healthInfo.get(question.name)?.toCommaString()}</span>
 											</li>
