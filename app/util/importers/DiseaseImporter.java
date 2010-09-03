@@ -28,7 +28,7 @@ public class DiseaseImporter {
 		importDiseases("D:\\diseases.txt");
 	}
 	
-	private static void importDiseases(String fileName) throws Exception {
+	public static void importDiseases(String fileName) throws Exception {
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
 		String line = null;
 		

@@ -19,6 +19,7 @@ import play.Play;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import util.DBUtil;
+import util.importers.DiseaseImporter;
 import util.importers.TopicsImporter;
 
 /**
@@ -47,6 +48,7 @@ public class ApplicationUpdatesJob extends Job {
 			
 			try {
 				TopicsImporter.importTopics("/home/kan/topics.txt");
+				DiseaseImporter.importDiseases("/home/kan/diseases.txt");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
