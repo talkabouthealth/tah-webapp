@@ -6,6 +6,7 @@ import static util.DBUtil.getString;
 import static util.DBUtil.getStringSet;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -51,6 +52,16 @@ public class TopicBean {
 	}
 	
 	@Override
+	public String toString() {
+		if (aliases == null) {
+			return title;
+		}
+		else {
+			return title+" "+aliases;
+		}
+	}
+	
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof TopicBean)) {
 			return false;
@@ -69,6 +80,10 @@ public class TopicBean {
 	}
 	
 	public void parseBasicFromDB(DBObject topicDBObject) {
+		if (topicDBObject == null) {
+			return;
+		}
+		
 		setId(getString(topicDBObject, "_id"));
 		
 		setTitle((String)topicDBObject.get("title"));

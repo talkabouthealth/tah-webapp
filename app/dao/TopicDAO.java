@@ -35,6 +35,8 @@ public class TopicDAO {
 			.add("title", topic.getTitle())
 			.add("main_url", topic.getMainURL())
 			.add("cr_date", new Date())
+			.add("aliases", topic.getAliases())
+			.add("children", topic.childrenToList())
 			.get();
 		topicsColl.save(topicDBObject);
 		
@@ -92,7 +94,8 @@ public class TopicDAO {
 	public static List<TopicBean> getTopics() {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
-		List<DBObject> topicsDBList = topicsColl.find().toArray();
+		List<DBObject> topicsDBList = 
+			topicsColl.find().sort(new BasicDBObject("title", 1)).toArray();
 		List<TopicBean> topics = new ArrayList<TopicBean>();
 		for (DBObject topicDBObject : topicsDBList) {
 			TopicBean topic = new TopicBean();
