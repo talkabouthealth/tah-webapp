@@ -59,7 +59,6 @@ public class ConversationBean {
 	private List<MessageBean> messages;
 	private List<TalkerBean> followers;
 	
-	private List<String> tags;
 	private List<TopicBean> topics;
 	
 	public ConversationBean() {}
@@ -81,13 +80,29 @@ public class ConversationBean {
     	
     	setViews(getInt(convoDBObject, "views"));
     	
+    	parseTopics((Collection<DBRef>)convoDBObject.get("topics"));
+    	
     	//author
     	DBObject talkerDBObject = ((DBRef)convoDBObject.get("uid")).fetch();
     	TalkerBean talker = new TalkerBean();
     	talker.parseBasicFromDB(talkerDBObject);
     	setTalker(talker);
+    	
+    	//topics(tags)
+    	
 	}
 	
+	private void parseTopics(Collection<DBRef> topicsDBList) {
+		topics = new ArrayList<TopicBean>();
+		if (topicsDBList != null) {
+			for (DBRef topicDBRef : topicsDBList) {
+				TopicBean topic = new TopicBean();
+				topic.parseBasicFromDB(topicDBRef.fetch());
+				topics.add(topic);
+			}
+		}
+	}
+
 	public void parseFromDB(DBObject convoDBObject) {
 		parseBasicFromDB(convoDBObject);
 
@@ -162,9 +177,6 @@ public class ConversationBean {
 
 	public TalkerBean getTalker() { return talker; }
 	public void setTalker(TalkerBean talker) { this.talker = talker; }
-
-	public List<String> getTags() { return tags; }
-	public void setTags(List<String> tags) { this.tags = tags; }
 
 	public Set<String> getMembers() { return members; }
 	public void setMembers(Set<String> members) { this.members = members; }

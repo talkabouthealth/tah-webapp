@@ -162,7 +162,6 @@ public class ViewDispatcher extends Controller {
 		convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
 		//temporary test data
 		convo.setDetails("Suggestions for friends and family...");
-		convo.setTags(Arrays.asList("support", "help", "testtag"));
 		convo.setSummary("Summary.........");
 		convo.setSumContributors(Arrays.asList("murray", "situ"));
 		

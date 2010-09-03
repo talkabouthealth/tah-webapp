@@ -155,11 +155,12 @@
 				<div id="innerlefttop"></div>
 				<div id="innermid">
 					${convo.details}
-					<br/>
-					#{list items: convo.tags, as: 'tag'}
-						${tag}&nbsp;&nbsp;&nbsp;
+					<br/><br/>
+					Tags: 
+					#{list items: convo.topics, as: 'tag'}
+						<a href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>&nbsp;&nbsp;&nbsp;
 					#{/list}
-					<br/>
+					<br/><br/>
 					#{if talker }
 						<a href="#" class="restartConvoLink">Re-start conversation</a>&nbsp;
 						<a href="#">Start follow up conversation</a>&nbsp;
