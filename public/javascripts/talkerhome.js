@@ -18,7 +18,7 @@ function postNewTopic(form) {
 	//alert(topic);
 	var params = form.name + "=" + topic;
 	form.value = '';
-	httpRequest.open("POST", "/topics/create", true);
+	httpRequest.open("POST", "/conversations/create", true);
 	httpRequest.setRequestHeader("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
 	httpRequest.setRequestHeader("Content-length", params.length);
 	httpRequest.setRequestHeader("Connection", "close");

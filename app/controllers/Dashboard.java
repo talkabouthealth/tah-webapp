@@ -66,6 +66,7 @@ public class Dashboard extends Controller {
 	// --------------- Manage accounts -----------------------
 	public static void manageAccounts() {
 		List<TalkerBean> talkers = TalkerDAO.loadAllTalkers();
+		
 		render(talkers);
 	}
 	

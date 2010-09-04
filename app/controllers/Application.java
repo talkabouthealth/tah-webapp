@@ -308,4 +308,9 @@ public class Application extends Controller {
     	flash.success("ok");
     	updatesEmail();
     }
+    
+    
+    public static void suspendedAccount() {
+    	render();
+    }
 }

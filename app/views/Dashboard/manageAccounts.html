@@ -20,14 +20,16 @@
 			<th>Suspended?</th>
 		</tr>
 		#{list items: talkers, as: 'talker'}
-			<tr>
-				<td>${talker.userName}</td>
-				<td>
-					<input type="checkbox" name="selectedTalkerIds" value="${talker.id}"
-						${talker.suspended ? "checked='checked'" : ""}
-					/>
-				</td>
-			</tr>
+			#{ifnot "admin".equals(talker.userName)}
+				<tr>
+					<td>${talker.userName}</td>
+					<td>
+						<input type="checkbox" name="selectedTalkerIds" value="${talker.id}"
+							${talker.suspended ? "checked='checked'" : ""}
+						/>
+					</td>
+				</tr>
+			#{/ifnot}
 		#{/list}
 	</table>
 	<div class="button">

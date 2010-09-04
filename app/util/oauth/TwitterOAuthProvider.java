@@ -18,6 +18,7 @@ import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
 import play.cache.Cache;
 import play.mvc.Scope.Session;
+import util.CommonUtil;
 import util.TwitterUtil;
 import dao.ApplicationDAO;
 import dao.TalkerDAO;
@@ -113,6 +114,16 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
         //login or signup
         TalkerBean talker = TalkerDAO.getByAccount("twitter", accountId);
         if (talker != null) {
+        	//TODO: better implementation? add "deactivated" update?
+        	if (talker.isSuspended()) {
+        		return "/application/suspendedAccount";
+        	}
+        	
+        	if (talker.isDeactivated()) {
+	    		talker.setDeactivated(false);
+	    		CommonUtil.updateTalker(talker, session);
+	    	}
+        		
         	//simple login
         	ApplicationDAO.saveLogin(talker.getId());
 

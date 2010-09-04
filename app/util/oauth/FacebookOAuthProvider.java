@@ -93,6 +93,15 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			//login or signup
 	        TalkerBean talker = TalkerDAO.getByAccount("facebook", accountId);
 	        if (talker != null) {
+	        	if (talker.isSuspended()) {
+	        		return "/application/suspendedAccount";
+	        	}
+	        	
+	        	if (talker.isDeactivated()) {
+		    		talker.setDeactivated(false);
+		    		CommonUtil.updateTalker(talker, session);
+		    	}
+	        	
 	        	// insert login record into db
 				ApplicationDAO.saveLogin(talker.getId());
 
