@@ -1,7 +1,8 @@
 #{if session.contains("username") }
+	#{set currentUser = session.get("username") /}
 	<div class="chromestyle" id="chromemenu">
 		<ul>
-			#{if session.get("username").equals("admin") }
+			#{if currentUser.equals("admin") }
 				<li><a href="#" rel="dropmenu0"><b>Admin</b></a></li>
 			#{/if}
 			<li><a href="@{Home.index()}">Home</a></li>
@@ -20,22 +21,23 @@
 	</div>
 	<!--1st drop down menu -->                                                   
 	<div id="dropmenu1" class="dropmenudiv">
-		*{ TODO username to variable }*
-		<a href="@{ViewDispatcher.view(session.get('username'))}">Public Profile</a>
-		<a href="@{PublicProfile.userBasedActions(session.get('username'), 'comments')}">Comment Stream</a>
-		<a href="@{PublicProfile.userBasedActions(session.get('username'), 'thankyous')}">Thank you's</a>
-		<a href="@{PublicProfile.userBasedActions(session.get('username'), 'following')}">Following</a>
-		<a href="@{PublicProfile.userBasedActions(session.get('username'), 'followers')}">Followers</a>
+		<a href="@{ViewDispatcher.view(currentUser)}">Public Profile</a>
+		<a href="@{PublicProfile.userBasedActions(currentUser, 'comments')}">Comment Stream</a>
+		<a href="@{PublicProfile.userBasedActions(currentUser, 'thankyous')}">Thank you's</a>
+		<a href="@{PublicProfile.userBasedActions(currentUser, 'following')}">Following</a>
+		<a href="@{PublicProfile.userBasedActions(currentUser, 'followers')}">Followers</a>
 		<!--
 		<a href="#">Conversation History</a>
-		<a href="#">Activity Stream</a>
 		-->
+		<a href="@{PublicProfile.conversationsStarted(currentUser)}">Conversations Started</a>
+		<a href="@{PublicProfile.conversationsJoined(currentUser)}">Conversations Joined</a>
+		<a href="@{PublicProfile.conversationsFollowing(currentUser)}">Conversations Following</a>
 	</div>
 	<!--2nd drop down menu -->                                                
 	<div id="dropmenu2" class="dropmenudiv" style="width: 180px;">
-		<a href="@{Community.browseMembers('active')}">Browse Members</a>
-		<a href="@{Community.browseMembers('search')}">Search Members</a>
 		<a href="@{Community.searchConversations()}">Search Conversations</a>
+		<a href="@{Community.browseMembers('active')}">Browse Members</a>
+		<a href="@{Community.browseMembers('search')}">Find Members</a>
 		<!--
 		<a href="#">Search Conversations</a>
 		<a href="#">Browse Conversations</a>
@@ -43,9 +45,9 @@
 	</div>
 	<!--3rd drop down menu -->                                                   
 	<div id="dropmenu3" class="dropmenudiv" style="width: 180px;">
-		<a href="@{Profile.edit()}">Edit Profile</a>
+		<a href="@{Profile.edit()}">Edit Personal Info</a>
+		<a href="@{Profile.healthDetails()}">Edit Health Info</a>
 		<a href="@{Profile.notifications()}">Notification Settings</a>
-		<a href="@{Profile.healthDetails()}">Edit Health Information</a>
 		<a href="@{Profile.preferences()}">Privacy Settings</a>
 	</div>
 	<div id="dropmenu4" class="dropmenudiv" style="width: 180px;">
