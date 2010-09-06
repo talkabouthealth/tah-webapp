@@ -2,6 +2,8 @@ package util.importers;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,6 +11,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import util.CommonUtil;
 
 import com.google.gson.GsonBuilder;
 
@@ -21,15 +25,12 @@ import models.DiseaseBean.DiseaseQuestion.DiseaseQuestionType;
 
 public class DiseaseImporter {
 	
-	//Breast Cancer
-	private static final String DEFAULT_DISEASE_ID = "4c2ddd873846000000001f4b";
-	
 	public static void main(String[] args) throws Exception {
-		importDiseases("D:\\diseases.txt");
+		importDiseases("diseases.dat");
 	}
 	
 	public static void importDiseases(String fileName) throws Exception {
-		BufferedReader br = new BufferedReader(new FileReader(fileName));
+		BufferedReader br = CommonUtil.createImportReader(fileName);
 		String line = null;
 		
 		DiseaseBean disease = null;

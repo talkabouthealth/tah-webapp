@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import util.CommonUtil;
+
 import com.google.gson.GsonBuilder;
 
 import dao.HealthItemDAO;
@@ -32,11 +34,11 @@ public class HealthItemsImporter {
 	private static final String DEFAULT_DISEASE_ID = "4c2ddd873846000000001f4b";
 	
 	public static void main(String[] args) throws Exception {
-		importHealthItems("D:\\healthitems.txt");
+		importHealthItems("healthitems.dat");
 	}
 	
-	private static void importHealthItems(String fileName) throws Exception {
-		BufferedReader br = new BufferedReader(new FileReader(fileName));
+	public static void importHealthItems(String fileName) throws Exception {
+		BufferedReader br = CommonUtil.createImportReader(fileName);
 		String line = null;
 		
 		HealthItemBean topLevel = null;

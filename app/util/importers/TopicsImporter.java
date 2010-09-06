@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import play.templates.JavaExtensions;
+import util.CommonUtil;
 
 import models.DiseaseBean;
 import models.DiseaseBean.DiseaseQuestion;
@@ -22,11 +23,11 @@ import dao.TopicDAO;
 public class TopicsImporter {
 	
 	public static void main(String[] args) throws Exception {
-		importTopics("D:\\topics.txt");
+		importTopics("topics.dat");
 	}
 	
 	public static void importTopics(String fileName) throws Exception {
-		BufferedReader br = new BufferedReader(new FileReader(fileName));
+		BufferedReader br = CommonUtil.createImportReader(fileName);
 		String line = null;
 		
 		List<TopicBean> topics = new ArrayList<TopicBean>();

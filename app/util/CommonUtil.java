@@ -2,6 +2,7 @@ package util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -32,6 +33,7 @@ import play.cache.Cache;
 import play.mvc.Router;
 import play.mvc.Router.ActionDefinition;
 import play.mvc.Scope.Session;
+import util.importers.DiseaseImporter;
 
 import com.tah.im.IMNotifier;
 
@@ -194,5 +196,16 @@ public class CommonUtil {
 		ActionDefinition actionDef = Router.reverse(action, args);
 		actionDef.absolute();
 		return actionDef.url;
+	}
+	
+	/**
+	 * Create BufferedReader for importer classes
+	 * @param fileName
+	 * @return
+	 */
+	public static BufferedReader createImportReader(String fileName) {
+		InputStream is = CommonUtil.class.getResourceAsStream("/util/importers/data/"+fileName);
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		return br;
 	}
 }

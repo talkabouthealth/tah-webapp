@@ -117,6 +117,11 @@ public class ApplicationDAO {
 		return namesColl.findOne(query) != null;
 	}
 	
+	public static boolean isCollectionEmpty(String collectionName) {
+		DBCollection namesColl = getCollection(collectionName);
+		return namesColl.count() == 0;
+	}
+	
 	public static String createURLName(String name) {
 		name = prepareName(name);
 		

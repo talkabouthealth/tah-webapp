@@ -47,6 +47,7 @@ public class TopicDAO {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
 		DBObject topicObject = BasicDBObjectBuilder.start()
+			.add("main_url", topic.getMainURL())
 			.add("aliases", topic.getAliases())
 			.add("children", topic.childrenToList())
 			.get();
@@ -89,6 +90,20 @@ public class TopicDAO {
 		TopicBean topicBean = new TopicBean();
 		topicBean.parseBasicFromDB(topicDBObject);
 		return topicBean;
+	}
+	
+	public static List<TopicBean> loadAllTopics() {
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
+		List<DBObject> topicsDBList = topicsColl.find().toArray();
+		
+		List<TopicBean> topicsList = new ArrayList<TopicBean>();
+		for (DBObject topicDBObject : topicsDBList) {
+			TopicBean topic = new TopicBean();
+			topic.parseBasicFromDB(topicDBObject);
+	    	topicsList.add(topic);
+		}
+		
+		return topicsList;
 	}
 	
 	public static List<TopicBean> getTopics() {
