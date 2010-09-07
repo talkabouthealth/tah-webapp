@@ -20,6 +20,7 @@ import org.apache.log4j.PropertyConfigurator;
 
 import models.IMAccountBean;
 import models.TalkerBean;
+import models.TalkerBean.EmailSetting;
 import models.TalkerBean.ProfilePreference;
 import play.Logger;
 import play.Play;
@@ -235,6 +236,10 @@ public class Application extends Controller {
         		)
         	);
         talker.saveProfilePreferences(defaultPreferences);
+        
+        //By default all email notifications are checked
+        EnumSet<EmailSetting> emailSettings = EnumSet.allOf(EmailSetting.class);
+        talker.saveEmailSettings(emailSettings);
         
         String hashedPassword = CommonUtil.hashPassword(talker.getPassword());
         talker.setPassword(hashedPassword);
