@@ -23,7 +23,8 @@ public class SearchUtil {
 	public static final String SEARCH_INDEX_PATH = Play.configuration.getProperty("search.index");
 
 	public static List<String> searchTalker(String query) throws CorruptIndexException, IOException, ParseException {
-		Hits hits = getHits("talker", new String[] {"uname", "bio"}, "*"+query+"*");
+		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"talker");
+		Hits hits = getHits(is, new String[] {"uname", "bio"}, "*"+query+"*");
 		List<String> results = new ArrayList<String>();
 		for (int i = 0; i < hits.length(); i++) {
 			Document doc = hits.doc(i);
@@ -40,11 +41,13 @@ public class SearchUtil {
 			results.add(result);
 		}
 		
+		is.close();
 		return results;
 	}
 	
 	public static List<String> searchConvo(String query) throws CorruptIndexException, IOException, ParseException {
-		Hits hits = getHits("conversations", new String[] {"title", "answers"}, "*"+query+"*");
+		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"conversations");
+		Hits hits = getHits(is, new String[] {"title", "answers"}, "*"+query+"*");
 		List<String> results = new ArrayList<String>();
 		for (int i = 0; i < hits.length(); i++) {
 			Document doc = hits.doc(i);
@@ -54,22 +57,20 @@ public class SearchUtil {
 			results.add(result);
 		}
 		
-		System.out.println(results);
-		
+		is.close();
 		return results;
 	}
 	
-	private static Hits getHits(String indexName, String[] fields, String query) 
+	private static Hits getHits(IndexSearcher is, String[] fields, String query) 
 			throws CorruptIndexException, IOException, ParseException {
 		Analyzer analyzer = new StandardAnalyzer();
 		//TODO: recommended to use only one searcher? Open after reindex?
-		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+indexName);
+		
 		QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
 		parser.setAllowLeadingWildcard(true);
 		Query searchQuery = parser.parse(query);
 		
 		Hits hits = is.search(searchQuery);
-		//TODO: close indexer?
 		return hits;
 	}
 	

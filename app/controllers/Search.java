@@ -57,7 +57,7 @@ public class Search extends Controller {
 			}
 			else {
 				label = doc.get("title");
-				url = "/topic/"+doc.get("url");
+				url = "/"+doc.get("url");
 			}
 			
 			result.put("label", label.replaceAll(term, "<b>"+term+"</b>"));

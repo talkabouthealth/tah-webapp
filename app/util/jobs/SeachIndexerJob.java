@@ -7,6 +7,7 @@ import models.CommentBean;
 import models.TalkerBean;
 import models.TalkerBean.ProfilePreference;
 import models.ConversationBean;
+import models.TopicBean;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -18,6 +19,7 @@ import org.apache.lucene.store.LockObtainFailedException;
 import dao.CommentsDAO;
 import dao.TalkerDAO;
 import dao.ConversationDAO;
+import dao.TopicDAO;
 import play.jobs.Every;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
@@ -97,6 +99,16 @@ public class SeachIndexerJob extends Job {
 				doc2.add(new Field("url", convo.getMainURL(), Field.Store.YES, Field.Index.NO));
 				
 				autocompleteIndexWriter.addDocument(doc2);
+			}
+			
+			for (TopicBean topic : TopicDAO.loadAllTopics()) {
+				Document doc = new Document();
+				doc.add(new Field("title", topic.getTitle(), Field.Store.YES, Field.Index.TOKENIZED));
+				doc.add(new Field("type", "Topic", Field.Store.YES, Field.Index.NO));
+				//TODO: url can be changed after indexing?
+				doc.add(new Field("url", topic.getMainURL(), Field.Store.YES, Field.Index.NO));
+				
+				autocompleteIndexWriter.addDocument(doc);
 			}
 		}
 		finally {
