@@ -132,6 +132,7 @@ public class Conversations extends Controller {
     
     public static void updateField(String convoId, String name, String value) {
     	//TODO: list of allowed fields?
+    	//TODO: hide edits from not-logined users
     	
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
@@ -144,17 +145,24 @@ public class Conversations extends Controller {
     		convo.setDetails(value);
     		ConversationDAO.updateConvo(convo);
     	}
+    	else if (name.equalsIgnoreCase("summary")) {
+    		convo.setSummary(value);
+    		convo.getSumContributors().add(talker);
+    		ConversationDAO.updateConvo(convo);
+    		
+        	//prepare email params
+        	Map<String, String> vars = new HashMap<String, String>();
+    		vars.put("convo", convo.getTopic());
+    		vars.put("other_talker", talker.getUserName());
+    		vars.put("summary_text", convo.getSummary());
+    		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
+    		vars.put("convo_url", convoURL);
+        	for (TalkerBean follower : convo.getFollowers()) {
+        		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_SUMMARY, follower, vars);
+        	}
+    	}
     	
-//    	//prepare email params
-//    	Map<String, String> vars = new HashMap<String, String>();
-//		vars.put("convo", convo.getTopic());
-//		vars.put("other_talker", talker.getUserName());
-//		vars.put("summary_text", convo.getSummary());
-//		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
-//		vars.put("convo_url", convoURL);
-//    	for (TalkerBean follower : convo.getFollowers()) {
-//    		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_SUMMARY, follower, vars);
-//    	}
+
     }
     
     public static void saveTopicComment(String topicId, String parentId, String text) {

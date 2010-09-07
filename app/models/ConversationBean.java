@@ -53,7 +53,8 @@ public class ConversationBean {
 	private int views;
 	
 	private String summary;
-	private List<String> sumContributors;
+	private Set<TalkerBean> sumContributors;
+	
 	private Set<String> members;
 	private List<CommentBean> comments;
 	private List<MessageBean> messages;
@@ -76,6 +77,9 @@ public class ConversationBean {
     	setDisplayTime((Date)convoDBObject.get("disp_date"));
     	setDetails((String)convoDBObject.get("details"));
     	
+    	setSummary((String)convoDBObject.get("summary"));
+    	parseSumContributors((Collection<DBRef>)convoDBObject.get("sum_authors"));
+    	
     	setMainURL((String)convoDBObject.get("main_url"));
     	setUrls(getStringSet(convoDBObject, "urls"));
     	
@@ -91,6 +95,17 @@ public class ConversationBean {
     	
     	//topics(tags)
     	
+	}
+	
+	private void parseSumContributors(Collection<DBRef> contributorsDBList) {
+		sumContributors = new HashSet<TalkerBean>();
+		if (contributorsDBList != null) {
+			for (DBRef talkerDBRef : contributorsDBList) {
+				TalkerBean talker = new TalkerBean();
+		    	talker.parseBasicFromDB(talkerDBRef.fetch());
+		    	sumContributors.add(talker);
+			}
+		}
 	}
 	
 	private void parseTopics(Collection<DBRef> topicsDBList) {
@@ -185,8 +200,13 @@ public class ConversationBean {
 	public List<MessageBean> getMessages() { return messages; }
 	public void setMessages(List<MessageBean> messages) { this.messages = messages; }
 	
-	public List<String> getSumContributors() { return sumContributors; }
-	public void setSumContributors(List<String> sumContributors) { this.sumContributors = sumContributors; }
+	public Set<TalkerBean> getSumContributors() {
+		return sumContributors;
+	}
+
+	public void setSumContributors(Set<TalkerBean> sumContributors) {
+		this.sumContributors = sumContributors;
+	}
 
 	public int getViews() { return views; }
 	public void setViews(int views) { this.views = views; }

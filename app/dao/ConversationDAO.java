@@ -113,10 +113,19 @@ public class ConversationDAO {
 	public static void updateConvo(ConversationBean convo) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
+		//TODO: move to convobean?
+		List<DBRef> sumContributorsDBList = new ArrayList<DBRef>();
+		for (TalkerBean talker : convo.getSumContributors()) {
+			DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talker.getId());
+			sumContributorsDBList.add(talkerRef);
+		}
+		
 		DBObject convoObject = BasicDBObjectBuilder.start()
 			.add("topic", convo.getTopic())
 			.add("main_url", convo.getMainURL())
 			.add("details", convo.getDetails())
+			.add("summary", convo.getSummary())
+			.add("sum_authors", sumContributorsDBList)
 			.get();
 		
 		DBObject convoId = new BasicDBObject("_id", new ObjectId(convo.getId()));

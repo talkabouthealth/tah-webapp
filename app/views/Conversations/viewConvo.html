@@ -97,6 +97,16 @@
    	   					}
    	   				);
    			});	
+
+   			$("#summarysave").click(function() {
+   	   			var newValue = $("#summaryinput").val();
+   	   			$.post("@{Conversations.updateField()}", 
+   	   					{ convoId : '${convo.id}', name: 'summary', value: newValue},
+   	   					function() {
+   	   	   					//good save!!
+   	   					}
+   	   				);
+   			});	
 		});
 
 		function updateCommentState(newState) {
@@ -185,6 +195,13 @@
 					#{list items: convo.topics, as: 'tag'}
 						<a href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>&nbsp;&nbsp;&nbsp;
 					#{/list}
+					<br/>
+					<select id="newTopic">
+						#{list items: topicsList, as: 'topicItem'}
+							<option value="${topicItem.id}">${topicItem.title}</option>
+						#{/list}
+					</select>
+					<input id="newTopicBtn" type="button" value="Add" />
 					<br/><br/>
 					#{if talker }
 						<a href="#" class="restartConvoLink">Re-start conversation</a>&nbsp;
@@ -194,9 +211,12 @@
 					<br/><br/>
 					<h3>Conversation Summary:</h3><br/>
 					${convo.summary}<br/>
+					<input id="summaryinput" type="text" value="${convo.summary}"/>
+					<input id="summarysave"  type="button" value="Save"/>
+					<br/>
 					Contributions by: 
-					#{list items: convo.sumContributors, as: 'contributor'}
-						${contributor}&nbsp;&nbsp;&nbsp;
+					#{list items: convo.sumContributors, as: 'talker'}
+						${talker.userName}&nbsp;&nbsp;&nbsp;
 					#{/list}
 					<br/><br/>
 					

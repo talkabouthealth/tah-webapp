@@ -160,20 +160,19 @@ public class ViewDispatcher extends Controller {
 			talker = CommonUtil.loadCachedTalker(session);
 		}
 		
+		ConversationDAO.incrementConvoViews(convo.getId());
+		
 		List<Action> activities = ActivityDAO.loadLatestByConversation(convo);
 		Date latestActivityTime = null;
 		if (activities.size() > 0) {
 			latestActivityTime = activities.get(0).getTime();
 		}
 		
+		List<TopicBean> topicsList = TopicDAO.getTopics();
+		
 		convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
-		//temporary test data
-		convo.setSummary("Summary.........");
-		convo.setSumContributors(Arrays.asList("murray", "situ"));
 		
-		ConversationDAO.incrementConvoViews(convo.getId());
-		
-		render("Conversations/viewConvo.html", talker, convo, latestActivityTime);
+		render("Conversations/viewConvo.html", talker, convo, latestActivityTime, topicsList);
     }
 	
 	private static void showTopic(TopicBean topic) {
