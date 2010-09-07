@@ -79,7 +79,7 @@ public abstract class AbstractAction implements Action {
 		DBRef talkerRef = new DBRef(DBUtil.getDB(), TalkerDAO.TALKERS_COLLECTION, new ObjectId(talker.getId()));
 		DBObject dbObject = BasicDBObjectBuilder.start()
 				.add("uid", talkerRef)
-				.add("type", type)
+				.add("type", type.toString())
 				.add("time", time)
 				.get();
 		
