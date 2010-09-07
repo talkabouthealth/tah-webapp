@@ -1,4 +1,10 @@
 #{ extends 'main.html' /}
+
+#{set perPage = 6 /}
+#{set thankyousFrom = (action.equals('thankyous') ? from : 0) /}
+#{set followingFrom = (action.equals('following') ? from : 0) /}
+#{set followersFrom = (action.equals('followers') ? from : 0) /}
+
 	<script type="text/javascript"> 	 
 		var selectedTalkerId = '';
 		var followingIndex = 30;
@@ -156,10 +162,10 @@
 
    		//createThankYou(String toTalker, String note)
    		function thankYou() {
-   	   		var noteText = $("#thankYouNote").val();
+   	   		var noteText = $("#thankYouListNote").val();
 
    	   		$.fancybox.close();
-   			$("#thankYouNote").val("");
+   			$("#thankYouListNote").val("");
 
    			$.post("@{Actions.createThankYou()}", 
   				{ toTalker: selectedTalkerId, note: noteText}
@@ -254,11 +260,6 @@
 		.profiletext2 {
 			width:250px;
 		}
-		
-		/* Temporary hide unfinished paging */
-		.paging, .seemore {
-			display: none;
-		}
 	</style>
 </head>
 <body>
@@ -347,19 +348,7 @@
 									#{/if}
 					      		</div>
 					      		#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
-						            <div class="paging">
-										<div class="nextprebutton">
-								        	<a href="#"><img src="/public/images/next.gif" width="79" height="24" border="0" /></a>
-								        </div>
-								        <div class="pagenumb">
-								        	<a href="#" class="visited">1</a>&nbsp;|&nbsp;
-								        	<a href="#" class="bluetext11">2</a>&nbsp;|&nbsp;
-								        	<a href="#" class="bluetext11">3</a>
-								        </div>
-								        <div class="nextprebutton">
-											<a href="#"><img src="/public/images/previous.gif" width="79" height="24" border="0" /></a>
-										</div>
-								     </div>
+#{ publicprofile/paging totalSize: talker.thankYouList.size(), from: thankyousFrom, perPage: perPage, action: 'thankyous', talker: talker /}
 						        #{/if}
 						    </div>
 				            <div id="leavethankyouText" style="display:none">
@@ -380,7 +369,7 @@
 							</div>
 				            <div class="thnksarea2">
 				            	#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
-									#{list items:talker.thankYouList.limit(3*10), as:'thankYou'}
+									#{list items:talker.thankYouList.limit(thankyousFrom, perPage), as:'thankYou'}
 										#{ thanksThankYou thankYou: thankYou /}
 									#{/list}
 								#{/if}
@@ -388,23 +377,11 @@
 									<span class="blacktext14" style="margin: 30px 0; float: left">This information has been made private.</span>
 								#{/else}
 				            </div>
-				            #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
-					            <div class="thnksbottom">
-					            	<div class="paging">
-										<div class="nextprebutton">
-								        	<a href="#"><img src="/public/images/next.gif" width="79" height="24" border="0" /></a>
-								        </div>
-								        <div class="pagenumb">
-								        	<a href="#" class="visited">1</a>&nbsp;|&nbsp;
-								        	<a href="#" class="bluetext11">2</a>&nbsp;|&nbsp;
-								        	<a href="#" class="bluetext11">3</a>
-								        </div>
-								        <div class="nextprebutton">
-											<a href="#"><img src="/public/images/previous.gif" width="79" height="24" border="0" /></a>
-										</div>
-								     </div>
-					            </div>
-					        #{/if}
+				            <div class="thnksbottom">
+				            	#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
+#{ publicprofile/paging totalSize: talker.thankYouList.size(), from: thankyousFrom, perPage: perPage, action: 'thankyous', talker: talker /}				      			
+					        	#{/if}
+				            </div>
 			        	</div>
 			        	</div>
 			        
@@ -414,13 +391,13 @@
 					            <div class="tabheading">
 					            	<span class="blacktext25">Following <strong>(${talker.followingList.size()})</strong></span> 
 					            </div>
-					            <div class="seemore">
-					            	<a href="#"><img width="134" height="33" border="0" src="/public/images/seemorebutton.gif"/></a>
-					            </div>
+					            #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
+#{ publicprofile/paging totalSize: talker.followingList.size(), from: followingFrom, perPage: perPage, action: 'following', talker: talker /}
+						        #{/if}
 				            </div>
 				            <div class="thnksarea">
 				            	#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
-									#{list items:talker.followingList.limit(3*10), as:'following' }
+									#{list items:talker.followingList.limit(followingFrom, perPage), as:'following' }
 										<div class="thnksfollowing">
 							            	<div class="thnksfollowingimg">
 												<a href="@{ViewDispatcher.view(following.userName)}">
@@ -471,11 +448,9 @@
 								#{/else}
 				            </div>
 				            <div class="thnksbottom">
-				            	<div class="seemore">
-				            		<a href="#"><img width="134" height="33" 
-				            			border="0" src="/public/images/seemorebutton.gif"/>
-				            		</a>
-				            	</div>
+				            	#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
+#{ publicprofile/paging totalSize: talker.followingList.size(), from: followingFrom, perPage: perPage, action: 'following', talker: talker /}
+						        #{/if}
 				            </div>
 			        	</div>
 				        </div>
@@ -486,13 +461,13 @@
 					            <div class="tabheading">
 					            	<span class="blacktext25">Followers <strong>(${talker.followerList.size()})</strong></span> 
 					            </div>
-					            <div class="seemore">
-					            	<a href="#"><img width="134" height="33" border="0" src="/public/images/seemorebutton.gif"/></a>
-					            </div>
+					            #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWERS) }
+#{ publicprofile/paging totalSize: talker.followerList.size(), from: followersFrom, perPage: perPage, action: 'followers', talker: talker /}
+						        #{/if}
 				            </div>
 				            <div class="thnksarea">
 				            	#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWERS) }
-									#{list items:talker.followerList.limit(3*10), as:'follower' }
+									#{list items:talker.followerList.limit(followersFrom, perPage), as:'follower' }
 										<div class="thnksfollowing">
 							            	<div class="thnksfollowingimg">
 												<a href="@{ViewDispatcher.view(follower.userName)}">
@@ -542,11 +517,9 @@
 								#{/else}
 			        		</div>
 		            		<div class="thnksbottom">
-		            			<div class="seemore">
-		            				<a href="#">
-		            					<img width="134" height="33" border="0" src="/public/images/seemorebutton.gif"/>
-		            				</a>
-		            			</div>
+		            			#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWERS) }
+#{ publicprofile/paging totalSize: talker.followerList.size(), from: followersFrom, perPage: perPage, action: 'followers', talker: talker /}
+						        #{/if}
 		            		</div>
 			        	</div>
     					</div>
@@ -562,7 +535,7 @@
 		<table align="center" cellspacing="10">
 			<tr>
 				<td align="right" valign="top">'Thanks You' note:</td>
-				<td><textarea rows="5" cols="30" id="thankYouNote" name="thankYouNote" ></textarea></td>
+				<td><textarea rows="5" cols="30" id="thankYouListNote" name="thankYouListNote" ></textarea></td>
 			</tr>
 			<tr align="center">
 				<td colspan="2">

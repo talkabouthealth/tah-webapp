@@ -49,6 +49,7 @@ public class TemplateExtensions extends JavaExtensions {
 	 * @return
 	 */
 	public static List<?> limit (List<?> list, int start, int limitSize) {
+		start = (start < 0 ? 0 : start);
 		int size = list.size();
 		int end = start + limitSize;
 		

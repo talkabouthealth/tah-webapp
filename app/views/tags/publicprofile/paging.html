@@ -1,0 +1,36 @@
+#{set lastPage = _totalSize.page(_perPage) /}
+#{set currentPage = (_from+1).page(_perPage) /}
+#{ifnot lastPage == 1}
+	<div class="paging">
+    	#{ifnot currentPage == lastPage}
+     		<div class="nextprebutton">
+			   	<a href="@{PublicProfile.userBasedActions(_talker.userName, _action, _from+_perPage)}">
+			   		<img src="/public/images/next.gif" 
+			   			width="79" height="24" border="0" />
+			   	</a>
+   			</div>
+    	#{/ifnot}
+        <div class="pagenumb">
+        	#{list items:1..lastPage, as: 'pageNum'}
+        		#{if pageNum == currentPage}
+        			<span class="blacktext11">${pageNum}</span>
+        		#{/if}
+        		#{else}
+     			<a href="@{PublicProfile.userBasedActions(_talker.userName, _action, (pageNum-1)*_perPage)}" 
+     				class="bluetext11">${pageNum}</a>
+        		#{/else}
+        		#{ifnot pageNum_isLast}
+        			&nbsp;|&nbsp;
+        		#{/ifnot}
+        	#{/list}
+        </div>
+        #{ifnot currentPage == 1}
+	        <div class="nextprebutton">
+				<a href="@{PublicProfile.userBasedActions(_talker.userName, _action, _from-_perPage)}">
+					<img src="/public/images/previous.gif" 
+						width="79" height="24" border="0" />
+				</a>
+			</div>
+		#{/ifnot}
+     </div>
+#{/ifnot}
