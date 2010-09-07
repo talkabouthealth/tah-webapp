@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -159,15 +160,20 @@ public class ViewDispatcher extends Controller {
 			talker = CommonUtil.loadCachedTalker(session);
 		}
 		
+		List<Action> activities = ActivityDAO.loadLatestByConversation(convo);
+		Date latestActivityTime = null;
+		if (activities.size() > 0) {
+			latestActivityTime = activities.get(0).getTime();
+		}
+		
 		convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
 		//temporary test data
-		convo.setDetails("Suggestions for friends and family...");
 		convo.setSummary("Summary.........");
 		convo.setSumContributors(Arrays.asList("murray", "situ"));
 		
 		ConversationDAO.incrementConvoViews(convo.getId());
 		
-		render("Conversations/viewConvo.html", talker, convo);
+		render("Conversations/viewConvo.html", talker, convo, latestActivityTime);
     }
 	
 	private static void showTopic(TopicBean topic) {

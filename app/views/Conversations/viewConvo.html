@@ -41,7 +41,6 @@
 	  			);
 			});
 
-			*{ TODO: convo or topic ? }*
 			$(".restartConvoLink").click(function() {
 				openChat(tid);
 				$.post("@{Conversations.restart}", {topicId: '${convo.id}'});
@@ -52,7 +51,7 @@
 				$.post("@{Conversations.flag}", {topicId: '${convo.id}'});
 			});
 
-			//comments
+			//----- Comments ------
 			$(".commentreply").each(function() {
 				$(this).val("Reply to comment..").css("color", "#777777");
 			});
@@ -75,7 +74,29 @@
 		   			if ($(this).val() == "") {
 		   				updateReplyState($(this), 'Initial');
 		   			}
-	   			});			
+	   			});		
+
+
+   			//------- Edits ----------
+   			$("#titlesave").click(function() {
+   	   			var newValue = $("#titleinput").val();
+   	   			$.post("@{Conversations.updateField()}", 
+   	   					{ convoId : '${convo.id}', name: 'title', value: newValue},
+   	   					function() {
+   	   	   					//good save!!
+   	   					}
+   	   				);
+   			});	
+
+   			$("#detailssave").click(function() {
+   	   			var newValue = $("#detailsinput").val();
+   	   			$.post("@{Conversations.updateField()}", 
+   	   					{ convoId : '${convo.id}', name: 'details', value: newValue},
+   	   					function() {
+   	   	   					//good save!!
+   	   					}
+   	   				);
+   			});	
 		});
 
 		function updateCommentState(newState) {
@@ -149,12 +170,16 @@
 <div id="innerbanner"></div>
 <div id="bottom_container">
 	<div class="blacktext2" id="innerheading">${convo.topic}</div>
+	<input id="titleinput" type="text" value="${convo.topic}"/>
+	<input id="titlesave"  type="button" value="Save"/>
 	<div id="middle_area_inner">
 		<div id="innerboxarea">
 			<div id="innerleft">
 				<div id="innerlefttop"></div>
 				<div id="innermid">
-					${convo.details}
+					${convo.details}<br/>
+					<input id="detailsinput" type="text" value="${convo.details}"/>
+					<input id="detailssave"  type="button" value="Save"/>
 					<br/><br/>
 					Tags: 
 					#{list items: convo.topics, as: 'tag'}
@@ -251,7 +276,7 @@
 					<div class="innerrightop"></div>
 					<div class="innerrighmid">
 						<b>Question Statistics</b><br/>
-						Latest Activity: <br/>
+						Latest Activity: ${latestActivityTime?.format('M/d/yyyy')}<br/>
 						Views: ${convo.views}<br/>
 						Followed by ${convo.followers?.size()} members<br/>
 						#{list items: convo.followers, as: 'follower'}

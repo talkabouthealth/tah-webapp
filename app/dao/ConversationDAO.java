@@ -88,6 +88,7 @@ public class ConversationDAO {
 			.add("disp_date", convo.getDisplayTime())
 			.add("main_url", convo.getMainURL())
 			.add("topics", topicsDBList)
+			.add("details", convo.getDetails())
 			.get();
 
 		//Only with STRICT WriteConcern we receive exception on duplicate key
@@ -115,6 +116,7 @@ public class ConversationDAO {
 		DBObject convoObject = BasicDBObjectBuilder.start()
 			.add("topic", convo.getTopic())
 			.add("main_url", convo.getMainURL())
+			.add("details", convo.getDetails())
 			.get();
 		
 		DBObject convoId = new BasicDBObject("_id", new ObjectId(convo.getId()));

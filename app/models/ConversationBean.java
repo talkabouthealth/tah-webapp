@@ -39,7 +39,7 @@ public class ConversationBean {
 	//TODO: handle questions also
 	private ConvoType convoType = ConvoType.CONVERSATION;
 	private String mainURL;
-	private Set<String> URLs;
+	private Set<String> urls;
 	private String topic;
 	private Date creationDate;
 	private Date displayTime;	//TODO: old field? how to use it?
@@ -74,9 +74,10 @@ public class ConversationBean {
     	setTopic((String)convoDBObject.get("topic"));
     	setCreationDate((Date)convoDBObject.get("cr_date"));
     	setDisplayTime((Date)convoDBObject.get("disp_date"));
+    	setDetails((String)convoDBObject.get("details"));
     	
     	setMainURL((String)convoDBObject.get("main_url"));
-    	setURLs(getStringSet(convoDBObject, "urls"));
+    	setUrls(getStringSet(convoDBObject, "urls"));
     	
     	setViews(getInt(convoDBObject, "views"));
     	
@@ -199,12 +200,12 @@ public class ConversationBean {
 	public int getTid() { return tid; }
 	public void setTid(int tid) { this.tid = tid; }
 
-	public Set<String> getURLs() {
-		return URLs;
+	public Set<String> getUrls() {
+		return urls;
 	}
 
-	public void setURLs(Set<String> uRLs) {
-		URLs = uRLs;
+	public void setUrls(Set<String> urls) {
+		this.urls = urls;
 	}
 
 	public List<TopicBean> getTopics() {
