@@ -10,14 +10,14 @@ public class JoinConvoAction extends AbstractAction {
 	
 	public JoinConvoAction(TalkerBean talker, ConversationBean topic) {
 		super(ActionType.JOIN_CONVO, talker);
-		this.topic = topic;
+		this.convo = topic;
 	}
 
 	public JoinConvoAction(DBObject dbObject) {
 		super(dbObject);
 	}
 	
-	protected boolean hasTopic() { return true; }
+	protected boolean hasConvo() { return true; }
 
 	public String toHTML() {
 		StringBuilder result = new StringBuilder();

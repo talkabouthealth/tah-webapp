@@ -34,7 +34,7 @@ import com.mongodb.DBRef;
 public class CommentsDAO {
 	
 	public static final String PROFILE_COMMENTS_COLLECTION = "profilecomments";
-	public static final String TOPIC_COMMENTS_COLLECTION = "topiccomments";
+	public static final String CONVO_COMMENTS_COLLECTION = "topiccomments";
 	
 	// ---------------- Profile comments --------------------------
 	public static String saveProfileComment(CommentBean comment) {
@@ -71,7 +71,7 @@ public class CommentsDAO {
 
 	// -------------- Convo comments -----------------
 	public static String saveConvoComment(CommentBean comment) {
-		DBCollection commentsColl = getCollection(TOPIC_COMMENTS_COLLECTION);
+		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
 		
 		DBRef topicRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, comment.getTopicId());
 		DBRef fromTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, comment.getFromTalker().getId());
@@ -89,7 +89,7 @@ public class CommentsDAO {
 	}
 	
 	public static List<CommentBean> loadConvoAnswers(String topicId) {
-		DBCollection commentsColl = getCollection(TOPIC_COMMENTS_COLLECTION);
+		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
 		
 		DBRef topicRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, topicId);
 		DBObject query = BasicDBObjectBuilder.start()
@@ -132,7 +132,7 @@ public class CommentsDAO {
 			//TODO: the same as thankyou?
 			DBObject fromTalkerDBObject = ((DBRef)commentDBObject.get("from")).fetch();
 			TalkerBean fromTalker = new TalkerBean();
-			fromTalker.setUserName((String)fromTalkerDBObject.get("uname"));
+			fromTalker.parseBasicFromDB(fromTalkerDBObject);
 			commentBean.setFromTalker(fromTalker);
 			
 			//save children

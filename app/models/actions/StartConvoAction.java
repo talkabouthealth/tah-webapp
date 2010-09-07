@@ -16,21 +16,26 @@ import models.actions.Action.ActionType;
 
 public class StartConvoAction extends AbstractAction {
 	
-	public StartConvoAction(TalkerBean talker, ConversationBean topic) {
-		super(ActionType.START_CONVO, talker);
-		this.topic = topic;
+	public StartConvoAction(TalkerBean talker, ConversationBean convo, ActionType type) {
+		super(type, talker);
+		this.convo = convo;
 	}
 
 	public StartConvoAction(DBObject dbObject) {
 		super(dbObject);
 	}
 	
-	protected boolean hasTopic() { return true; }
+	protected boolean hasConvo() { return true; }
 
 	public String toHTML() {
 		StringBuilder result = new StringBuilder();
 		result.append(userName());
-		result.append(" started the conversation: ");
+		if (type == ActionType.START_CONVO) {
+			result.append(" started the conversation: ");
+		}
+		else if (type == ActionType.RESTART_CONVO) {
+			result.append(" restarted the conversation: ");
+		}
 		result.append(topicLink());
 		
 		return result.toString();

@@ -13,8 +13,11 @@ import models.ConversationBean;
 import models.TalkerBean;
 import models.TalkerBean.EmailSetting;
 import models.TopicBean;
+import models.actions.AnswerConvoAction;
 import models.actions.FollowConvoAction;
 import models.actions.StartConvoAction;
+import models.actions.Action.ActionType;
+import models.actions.SummaryConvoAction;
 import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
@@ -58,7 +61,7 @@ public class Conversations extends Controller {
 		
 		// insert new topic into database
 		ConversationDAO.save(convo);
-		ActionDAO.saveAction(new StartConvoAction(talker, convo));
+		ActionDAO.saveAction(new StartConvoAction(talker, convo, ActionType.START_CONVO));
 		
 		//send notifications if Automatic Notifications is On
 		NotificationUtils.sendAutomaticNotifications(convo.getId());
@@ -76,9 +79,14 @@ public class Conversations extends Controller {
     }
     
     public static void restart(String topicId) {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	ConversationBean convo = ConversationDAO.getByConvoId(topicId);
+    	notFoundIfNull(convo);
+    	
+    	ActionDAO.saveAction(new StartConvoAction(talker, convo, ActionType.RESTART_CONVO));
+    	
     	NotificationUtils.sendAutomaticNotifications(topicId);
     	
-    	ConversationBean convo = ConversationDAO.getByConvoId(topicId);
     	//prepare email params
     	Map<String, String> vars = new HashMap<String, String>();
 		vars.put("convo", convo.getTopic());
@@ -146,9 +154,17 @@ public class Conversations extends Controller {
     		ConversationDAO.updateConvo(convo);
     	}
     	else if (name.equalsIgnoreCase("summary")) {
+    		String previousSummary = convo.getSummary();
     		convo.setSummary(value);
     		convo.getSumContributors().add(talker);
     		ConversationDAO.updateConvo(convo);
+    		
+    		if (previousSummary == null || previousSummary.length() == 0) {
+    			ActionDAO.saveAction(new SummaryConvoAction(talker, convo, ActionType.SUMMARY_ADDED));
+    		}
+    		else {
+    			ActionDAO.saveAction(new SummaryConvoAction(talker, convo, ActionType.SUMMARY_EDITED));
+    		}
     		
         	//prepare email params
         	Map<String, String> vars = new HashMap<String, String>();
@@ -172,7 +188,8 @@ public class Conversations extends Controller {
 		notFoundIfNull(convo);
 		
 		CommentBean comment = new CommentBean();
-		comment.setParentId(parentId.trim().length() == 0 ? null : parentId);
+		parentId = parentId.trim().length() == 0 ? null : parentId;
+		comment.setParentId(parentId);
 		comment.setTopicId(topicId);
 		comment.setFromTalker(talker);
 		comment.setText(text);
@@ -184,6 +201,15 @@ public class Conversations extends Controller {
 		if (convo.isOpened()) {
 			convo.setOpened(false);
 			ConversationDAO.updateConvo(convo);
+		}
+		
+		//actions
+		if (parentId == null) {
+			ActionDAO.saveAction(new AnswerConvoAction(talker, convo, comment, null, ActionType.ANSWER_CONVO));
+		}
+		else {
+			CommentBean parentAnswer = new CommentBean(parentId);
+			ActionDAO.saveAction(new AnswerConvoAction(talker, convo, parentAnswer, comment, ActionType.REPLY_CONVO));
 		}
 		
 		//notify

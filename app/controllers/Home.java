@@ -50,7 +50,7 @@ public class Home extends Controller {
 		
 		//Convo feed?
 //		- New conversation started in a topic that is being followed
-//		- Conversation restarted in a topic that is being followed
+//		- Conversation restarted in a topic or Conversation(?) that is being followed
 //		- New answer or reply in a Topic or Conversation that is being followed
 //		- Summary created or edited in Conversation that is being followed.
 		

@@ -1,31 +1,40 @@
 package models.actions;
 
+import models.CommentBean;
 import models.TalkerBean;
 import models.ConversationBean;
 
 import com.mongodb.DBObject;
 
-//TODO: finish Convo actions
 public class AnswerConvoAction extends AbstractAction {
 	
-	public AnswerConvoAction(TalkerBean talker, ConversationBean topic) {
-		super(ActionType.ANSWER_CONVO, talker);
-		this.topic = topic;
+	public AnswerConvoAction(TalkerBean talker, ConversationBean convo, 
+			CommentBean answer, CommentBean reply, ActionType type) {
+		super(type, talker);
+		this.convo = convo;
+		this.answer = answer;
+		this.reply = reply;
 	}
 
 	public AnswerConvoAction(DBObject dbObject) {
 		super(dbObject);
 	}
 	
-	protected boolean hasTopic() { return true; }
+	protected boolean hasConvo() { return true; }
+	protected boolean hasAnswer() { return true; }
+	protected boolean hasReply() { return true; }
 
 	public String toHTML() {
 		StringBuilder result = new StringBuilder();
-		result
-			.append(userName())
-			.append(" answered the conversation: ")
-			.append(topicLink())
-			.append("<br/>");
+		result.append(userName());
+		if (type == ActionType.ANSWER_CONVO) {
+			result.append(" answered the conversation: ");
+		}
+		else if (type == ActionType.REPLY_CONVO) {
+			result.append(" replied the conversation: ");
+		}
+		result.append(topicLink());
+		result.append("<br/>");
 		
 		return result.toString();
 	}

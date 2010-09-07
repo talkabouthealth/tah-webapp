@@ -1,5 +1,7 @@
 package models.actions;
 
+import static util.DBUtil.getString;
+
 import java.util.Date;
 
 import org.bson.types.ObjectId;
@@ -11,9 +13,11 @@ import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
+import dao.CommentsDAO;
 import dao.TalkerDAO;
 import dao.ConversationDAO;
 
+import models.CommentBean;
 import models.TalkerBean;
 import models.ConversationBean;
 
@@ -26,8 +30,10 @@ public abstract class AbstractAction implements Action {
 	protected ActionType type;
 	
 	//other possible data
-	protected ConversationBean topic;
+	protected ConversationBean convo;
 	protected TalkerBean otherTalker;
+	protected CommentBean answer;
+	protected CommentBean reply;
 	
 	public AbstractAction(ActionType type, TalkerBean talker) {
 		this.type = type;
@@ -46,16 +52,24 @@ public abstract class AbstractAction implements Action {
 		setTime((Date)dbObject.get("time"));
 		setType(ActionType.valueOf((String)dbObject.get("type")));
 		
-		if (hasTopic()) {
-			topic = parseTopic(dbObject);
+		if (hasConvo()) {
+			convo = parseConvo(dbObject);
 		}
 		if (hasOtherTalker()) {
 			otherTalker = parseOtherTalker(dbObject);
 		}
+		if (hasAnswer()) {
+			answer = parseAnswerOrReply(dbObject, "answer");
+		}
+		if (hasReply()) {
+			answer = parseAnswerOrReply(dbObject, "reply");
+		}
 	}
 	
-	protected boolean hasTopic() { return false; }
+	protected boolean hasConvo() { return false; }
 	protected boolean hasOtherTalker() { return false; }
+	protected boolean hasAnswer() { return false; }
+	protected boolean hasReply() { return false; }
 
 	protected String userName() {
 		return "<b>"+talker.getUserName()+"</b>";
@@ -69,18 +83,24 @@ public abstract class AbstractAction implements Action {
 				.add("time", time)
 				.get();
 		
-		if (hasTopic()) {
-			addTopic(dbObject, topic);
+		if (hasConvo()) {
+			addTopic(dbObject, convo);
 		}
 		if (hasOtherTalker()) {
 			addOtherTalker(dbObject, otherTalker);
+		}
+		if (hasAnswer()) {
+			addAnswerOrReply(dbObject, "answer", answer);
+		}
+		if (hasReply()) {
+			addAnswerOrReply(dbObject, "reply", reply);
 		}
 	
 		return dbObject;
 	}
 	
 	// Topic connected actions
-	protected ConversationBean parseTopic(DBObject dbObject) {
+	protected ConversationBean parseConvo(DBObject dbObject) {
 		DBObject topicDBObject = ((DBRef)dbObject.get("topicId")).fetch();
 		ConversationBean topic = new ConversationBean();
     	topic.setId(topicDBObject.get("_id").toString());
@@ -97,7 +117,7 @@ public abstract class AbstractAction implements Action {
 	}
 	
 	protected Object topicLink() {
-		return topic.getTopic();
+		return convo.getTopic();
 	}
 	
 	// Other talker connected actions
@@ -112,6 +132,36 @@ public abstract class AbstractAction implements Action {
 	protected void addOtherTalker(DBObject dbObject, TalkerBean talker) {
 		DBRef talkerRef = new DBRef(DBUtil.getDB(), TalkerDAO.TALKERS_COLLECTION, new ObjectId(talker.getId()));
 		dbObject.put("otherTalker", talkerRef);
+	}
+	
+	// Answer & Reply actions
+	protected CommentBean parseAnswerOrReply(DBObject dbObject, String name) {
+		DBRef answerDBRef = (DBRef)dbObject.get(name);
+		if (answerDBRef == null) {
+			return null;
+		}
+		
+		DBObject answerDBObject = answerDBRef.fetch();
+		CommentBean answer = new CommentBean();
+		answer.setId(getString(answerDBObject, "_id"));
+		answer.setText((String)answerDBObject.get("text"));
+		answer.setTime((Date)answerDBObject.get("time"));
+		
+		//TODO: the same as thankyou222?
+		DBObject fromTalkerDBObject = ((DBRef)answerDBObject.get("from")).fetch();
+		TalkerBean fromTalker = new TalkerBean();
+		fromTalker.parseBasicFromDB(fromTalkerDBObject);
+		answer.setFromTalker(fromTalker);
+		
+    	return answer;
+	}
+	
+	protected void addAnswerOrReply(DBObject dbObject, String name, CommentBean answer) {
+		if (answer != null) {
+			DBRef answerRef = new DBRef(DBUtil.getDB(), 
+					CommentsDAO.CONVO_COMMENTS_COLLECTION, new ObjectId(answer.getId()));
+			dbObject.put(name, answerRef);
+		}
 	}
 
 	public String getId() {

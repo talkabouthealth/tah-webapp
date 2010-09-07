@@ -10,14 +10,14 @@ public class FollowConvoAction extends AbstractAction {
 	
 	public FollowConvoAction(TalkerBean talker, ConversationBean topic) {
 		super(ActionType.FOLLOW_CONVO, talker);
-		this.topic = topic;
+		this.convo = topic;
 	}
 
 	public FollowConvoAction(DBObject dbObject) {
 		super(dbObject);
 	}
 	
-	protected boolean hasTopic() { return true; }
+	protected boolean hasConvo() { return true; }
 
 	public String toHTML() {
 		StringBuilder result = new StringBuilder();

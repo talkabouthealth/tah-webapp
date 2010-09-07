@@ -41,8 +41,14 @@ public interface Action {
 	public enum ActionType {
 		//convo-related
 		START_CONVO,
+		RESTART_CONVO,
 		JOIN_CONVO,
+		
 		ANSWER_CONVO,
+		REPLY_CONVO,
+		
+		SUMMARY_ADDED,
+		SUMMARY_EDITED,
 		
 		//user-related
 		GIVE_THANKS,
