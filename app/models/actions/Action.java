@@ -38,10 +38,28 @@ User Actions (will appear on User's "Public Profile"):
  */
 public interface Action {
 	
+	public enum ActionType {
+		//convo-related
+		START_CONVO,
+		JOIN_CONVO,
+		ANSWER_CONVO,
+		
+		//user-related
+		GIVE_THANKS,
+		FOLLOW_CONVO,
+		FOLLOW_TALKER,
+		PROFILE_COMMENT,
+		PROFILE_REPLY,
+		
+		UPDATE_BIO,
+		UPDATE_PERSONAL,
+		UPDATE_HEALTH		
+	}
+	
 	public DBObject toDBObject();
 	
 	public Date getTime();
 	
-	public String getType();
+	public ActionType getType();
 
 }

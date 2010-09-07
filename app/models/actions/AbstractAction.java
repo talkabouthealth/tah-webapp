@@ -23,13 +23,13 @@ public abstract class AbstractAction implements Action {
 	protected TalkerBean talker;
 	protected Date time;
 	
-	protected String type;
+	protected ActionType type;
 	
 	//other possible data
 	protected ConversationBean topic;
 	protected TalkerBean otherTalker;
 	
-	public AbstractAction(String type, TalkerBean talker) {
+	public AbstractAction(ActionType type, TalkerBean talker) {
 		this.type = type;
 		this.talker = talker;
 		time = new Date();
@@ -44,7 +44,7 @@ public abstract class AbstractAction implements Action {
 		setTalker(new TalkerBean(talkerId, talkerName));
 		
 		setTime((Date)dbObject.get("time"));
-		setType((String)dbObject.get("type"));
+		setType(ActionType.valueOf((String)dbObject.get("type")));
 		
 		if (hasTopic()) {
 			topic = parseTopic(dbObject);
@@ -138,11 +138,11 @@ public abstract class AbstractAction implements Action {
 		this.time = time;
 	}
 
-	public String getType() {
+	public ActionType getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(ActionType type) {
 		this.type = type;
 	}
 

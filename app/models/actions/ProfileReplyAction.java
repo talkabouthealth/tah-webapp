@@ -1,13 +1,14 @@
 package models.actions;
 
 import models.TalkerBean;
+import models.actions.Action.ActionType;
 
 import com.mongodb.DBObject;
 
 public class ProfileReplyAction extends AbstractAction {
 	
 	public ProfileReplyAction(TalkerBean talker, TalkerBean otherTalker) {
-		super("PROFILE_REPLY", talker);
+		super(ActionType.PROFILE_REPLY, talker);
 		this.otherTalker = otherTalker;
 	}
 

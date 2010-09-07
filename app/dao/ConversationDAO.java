@@ -18,6 +18,7 @@ import models.MessageBean;
 import models.TalkerBean;
 import models.ConversationBean;
 import models.TopicBean;
+import models.actions.Action.ActionType;
 
 import org.bson.types.ObjectId;
 
@@ -338,13 +339,13 @@ public class ConversationDAO {
 	}
 	
 	//Load convos for given activity type
-	public static List<ConversationBean> loadConversations(String talkerId, String type) {
-		DBCollection activitiesColl = getCollection(ActivityDAO.ACTIVITIES_COLLECTION);
+	public static List<ConversationBean> loadConversations(String talkerId, ActionType type) {
+		DBCollection activitiesColl = getCollection(ActionDAO.ACTIVITIES_COLLECTION);
 		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("uid", talkerRef)
-			.add("type", type)
+			.add("type", type.toString())
 			.get();
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();

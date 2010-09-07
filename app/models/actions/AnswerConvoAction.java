@@ -9,7 +9,7 @@ import com.mongodb.DBObject;
 public class AnswerConvoAction extends AbstractAction {
 	
 	public AnswerConvoAction(TalkerBean talker, ConversationBean topic) {
-		super("ANSWER_CONVO", talker);
+		super(ActionType.ANSWER_CONVO, talker);
 		this.topic = topic;
 	}
 

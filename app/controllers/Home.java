@@ -9,6 +9,7 @@ import java.util.Set;
 
 import models.TalkerBean;
 import models.ConversationBean;
+import models.actions.Action.ActionType;
 import play.cache.Cache;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -25,7 +26,7 @@ public class Home extends Controller {
 
     public static void index(String newTopic) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	talker.setJoinedTopicsList(ConversationDAO.loadConversations(talker.getId(), "JOIN_CONVO"));
+    	talker.setJoinedTopicsList(ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO));
     	//TODO: load only count?
     	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		
@@ -47,7 +48,13 @@ public class Home extends Controller {
 			System.out.println("??: "+convoBean.getTopic());
 		}
 		
-		//Convo & Activity feeds?
+		//Convo feed?
+//		- New conversation started in a topic that is being followed
+//		- Conversation restarted in a topic that is being followed
+//		- New answer or reply in a Topic or Conversation that is being followed
+//		- Summary created or edited in Conversation that is being followed.
+		
+		//Action feed?
 		
         render(talker, mapTalkmiTopics, newTopic);
     }

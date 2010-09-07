@@ -25,6 +25,7 @@ import models.TalkerBean.EmailSetting;
 import models.TalkerBean.ProfilePreference;
 import models.TalkerDiseaseBean;
 import models.actions.UpdateProfileAction;
+import models.actions.Action.ActionType;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -41,7 +42,7 @@ import play.mvc.With;
 import util.CommonUtil;
 import util.EmailUtil;
 import util.EmailUtil.EmailTemplate;
-import dao.ActivityDAO;
+import dao.ActionDAO;
 import dao.DiseaseDAO;
 import dao.HealthItemDAO;
 import dao.TalkerDAO;
@@ -89,7 +90,7 @@ public class Profile extends Controller {
 		}
 		
 		if (!StringUtils.equals(oldTalker.getBio(), talker.getBio())) {
-			ActivityDAO.saveActivity(new UpdateProfileAction(oldTalker, "BIO"));
+			ActionDAO.saveAction(new UpdateProfileAction(oldTalker, ActionType.UPDATE_BIO));
 		}
 		
 		//check if any fields were changed
@@ -104,7 +105,7 @@ public class Profile extends Controller {
 				StringUtils.equals(oldTalker.getWebpage(), talker.getWebpage()) &&
 				oldTalker.getKeywords().equals(talker.getKeywords())
 					)) {
-			ActivityDAO.saveActivity(new UpdateProfileAction(oldTalker, "PERSONAL"));
+			ActionDAO.saveAction(new UpdateProfileAction(oldTalker, ActionType.UPDATE_PERSONAL));
 		}
 		
 		oldTalker.setUserName(talker.getUserName());
@@ -433,7 +434,7 @@ public class Profile extends Controller {
 		//Save or update
 		TalkerDiseaseDAO.saveTalkerDisease(talkerDisease);
 		
-		ActivityDAO.saveActivity(new UpdateProfileAction(talker, "HEALTH"));
+		ActionDAO.saveAction(new UpdateProfileAction(talker, ActionType.UPDATE_HEALTH));
 		
 		flash.success("ok");
 		

@@ -20,7 +20,7 @@ import models.actions.FollowTalkerAction;
 import models.actions.GiveThanksAction;
 import models.actions.ProfileCommentAction;
 import models.actions.ProfileReplyAction;
-import dao.ActivityDAO;
+import dao.ActionDAO;
 import dao.CommentsDAO;
 import dao.TalkerDAO;
 
@@ -38,8 +38,8 @@ public class Actions extends Controller {
 		thankYouBean.setTo(toTalker);
 		TalkerDAO.saveThankYou(thankYouBean);
 		
-		//TODO: every email notification is with activity? can we use it?
-		ActivityDAO.saveActivity(new GiveThanksAction(talker, toTalkerBean));
+		//TODO: every email notification is with action? can we use it?
+		ActionDAO.saveAction(new GiveThanksAction(talker, toTalkerBean));
 		
 		//TODO: better implementation?
 		Map<String, String> vars = new HashMap<String, String>();
@@ -72,7 +72,7 @@ public class Actions extends Controller {
 		//Text for the follow link after this action
 		if (follow) {
 			//Follow notifications
-			ActivityDAO.saveActivity(new FollowTalkerAction(talker, followingTalker));
+			ActionDAO.saveAction(new FollowTalkerAction(talker, followingTalker));
 			
 			Map<String, String> vars = new HashMap<String, String>();
 			vars.put("other_talker", talker.getUserName());
@@ -108,10 +108,10 @@ public class Actions extends Controller {
 		comment.setId(id);
 		
 		if (comment.getParentId() == null) {
-			ActivityDAO.saveActivity(new ProfileCommentAction(talker, profileTalker));
+			ActionDAO.saveAction(new ProfileCommentAction(talker, profileTalker));
 		}
 		else {
-			ActivityDAO.saveActivity(new ProfileReplyAction(talker, profileTalker));
+			ActionDAO.saveAction(new ProfileReplyAction(talker, profileTalker));
 		}
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("other_talker", talker.getUserName());

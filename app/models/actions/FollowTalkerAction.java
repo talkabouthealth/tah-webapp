@@ -1,13 +1,14 @@
 package models.actions;
 
 import models.TalkerBean;
+import models.actions.Action.ActionType;
 
 import com.mongodb.DBObject;
 
 public class FollowTalkerAction extends AbstractAction {
 	
 	public FollowTalkerAction(TalkerBean talker, TalkerBean otherTalker) {
-		super("FOLLOW_TALKER", talker);
+		super(ActionType.FOLLOW_TALKER, talker);
 		this.otherTalker = otherTalker;
 	}
 

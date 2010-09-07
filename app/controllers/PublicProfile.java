@@ -19,7 +19,8 @@ import models.actions.ProfileCommentAction;
 import models.actions.ProfileReplyAction;
 import models.actions.StartConvoAction;
 import models.actions.UpdateProfileAction;
-import dao.ActivityDAO;
+import models.actions.Action.ActionType;
+import dao.ActionDAO;
 import dao.CommentsDAO;
 import dao.DiseaseDAO;
 import dao.HealthItemDAO;
@@ -114,7 +115,8 @@ public class PublicProfile extends Controller {
 		notFoundIfNull(talker);
 		
 		String topicsType = "Started";
-		List<ConversationBean> topicsList = ConversationDAO.loadConversations(talker.getId(), "START_CONVO");
+		List<ConversationBean> topicsList = 
+			ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO);
 		
 		render("@conversationsList", talker, currentTalker, topicsType, topicsList);
 	}
@@ -125,7 +127,8 @@ public class PublicProfile extends Controller {
 		notFoundIfNull(talker);
 		
 		String topicsType = "Joined";
-		List<ConversationBean> topicsList = ConversationDAO.loadConversations(talker.getId(), "JOIN_CONVO");
+		List<ConversationBean> topicsList = 
+			ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO);
 		
 		render("@conversationsList", talker, currentTalker, topicsType, topicsList);
 	}

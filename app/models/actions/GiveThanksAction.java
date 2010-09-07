@@ -2,13 +2,14 @@ package models.actions;
 
 import models.TalkerBean;
 import models.ConversationBean;
+import models.actions.Action.ActionType;
 
 import com.mongodb.DBObject;
 
 public class GiveThanksAction extends AbstractAction {
 	
 	public GiveThanksAction(TalkerBean talker, TalkerBean otherTalker) {
-		super("GIVE_THANKS", talker);
+		super(ActionType.GIVE_THANKS, talker);
 		this.otherTalker = otherTalker;
 	}
 

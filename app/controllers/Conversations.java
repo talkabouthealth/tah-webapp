@@ -15,7 +15,7 @@ import models.TalkerBean.EmailSetting;
 import models.TopicBean;
 import models.actions.FollowConvoAction;
 import models.actions.StartConvoAction;
-import dao.ActivityDAO;
+import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.ConversationDAO;
@@ -58,7 +58,7 @@ public class Conversations extends Controller {
 		
 		// insert new topic into database
 		ConversationDAO.save(convo);
-		ActivityDAO.saveActivity(new StartConvoAction(talker, convo));
+		ActionDAO.saveAction(new StartConvoAction(talker, convo));
 		
 		//send notifications if Automatic Notifications is On
 		NotificationUtils.sendAutomaticNotifications(convo.getId());
@@ -67,7 +67,7 @@ public class Conversations extends Controller {
 		talker.getFollowingConvosList().add(convo.getId());
 		CommonUtil.updateTalker(talker, session);
 		
-		ActivityDAO.saveActivity(new FollowConvoAction(talker, convo));
+		ActionDAO.saveAction(new FollowConvoAction(talker, convo));
 
 		newTopic = newTopic.replaceAll("'", "&#39;");
 		newTopic = newTopic.replaceAll("\\|", "&#124;");
@@ -123,7 +123,7 @@ public class Conversations extends Controller {
     	}
     	else {
     		talker.getFollowingConvosList().add(topicId);
-    		ActivityDAO.saveActivity(new FollowConvoAction(talker, new ConversationBean(topicId)));
+    		ActionDAO.saveAction(new FollowConvoAction(talker, new ConversationBean(topicId)));
     	}
     	
     	CommonUtil.updateTalker(talker, session);

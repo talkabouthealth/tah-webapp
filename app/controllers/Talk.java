@@ -1,6 +1,6 @@
 package controllers;
 
-import dao.ActivityDAO;
+import dao.ActionDAO;
 import dao.ConversationDAO;
 import models.TalkerBean;
 import models.ConversationBean;
@@ -18,7 +18,7 @@ public class Talk extends Controller {
 		
 		notFoundIfNull(topic);
 		
-		ActivityDAO.saveActivity(new JoinConvoAction(talker, topic));
+		ActionDAO.saveAction(new JoinConvoAction(talker, topic));
 		
 		render(talker, topic);
 	}

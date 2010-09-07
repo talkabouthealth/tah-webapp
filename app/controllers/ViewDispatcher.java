@@ -16,7 +16,8 @@ import models.TalkerDiseaseBean;
 import models.ConversationBean;
 import models.TopicBean;
 import models.actions.Action;
-import dao.ActivityDAO;
+import models.actions.Action.ActionType;
+import dao.ActionDAO;
 import dao.CommentsDAO;
 import dao.DiseaseDAO;
 import dao.HealthItemDAO;
@@ -84,12 +85,12 @@ public class ViewDispatcher extends Controller {
 		}
 		
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-		talker.setActivityList(ActivityDAO.load(talker.getId()));
+		talker.setActivityList(ActionDAO.load(talker.getId()));
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
 		talker.setFollowingConvosFullList(TalkerDAO.loadFollowingConversations(talker.getId()));
 		
-		talker.setStartedTopicsList(ConversationDAO.loadConversations(talker.getId(), "START_CONVO"));
-		talker.setJoinedTopicsList(ConversationDAO.loadConversations(talker.getId(), "JOIN_CONVO"));
+		talker.setStartedTopicsList(ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO));
+		talker.setJoinedTopicsList(ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO));
 		
 		calculateProfileCompletion(talker);
 		
@@ -109,20 +110,17 @@ public class ViewDispatcher extends Controller {
 //		COMPLETE_HEALTH(10, "Complete your Health Details to get to "),
 		
 		for (Action action : talker.getActivityList()) {
-			String type = action.getType();
-			if (type.equals("START_CONVO")) {
+			ActionType type = action.getType();
+			switch (type) {
+			case START_CONVO:
 				profileActions.add(ProfileCompletion.START_CONVO);
-			}
-			else if (type.equals("JOIN_CONVO")) {
+			case JOIN_CONVO:
 				profileActions.add(ProfileCompletion.JOIN_CONVO);
-			}
-			else if (type.equals("GIVE_THANKS")) {
+			case GIVE_THANKS:
 				profileActions.add(ProfileCompletion.GIVE_THANKYOU);
-			}
-			else if (type.equals("UPDATE_PERSONAL")) {
+			case UPDATE_PERSONAL:
 				profileActions.add(ProfileCompletion.COMPLETE_PERSONAL);
-			}
-			else if (type.equals("UPDATE_HEALTH")) {
+			case UPDATE_HEALTH:
 				profileActions.add(ProfileCompletion.COMPLETE_HEALTH);
 			}
 		}
@@ -162,7 +160,7 @@ public class ViewDispatcher extends Controller {
 		
 		ConversationDAO.incrementConvoViews(convo.getId());
 		
-		List<Action> activities = ActivityDAO.loadLatestByConversation(convo);
+		List<Action> activities = ActionDAO.loadLatestByConversation(convo);
 		Date latestActivityTime = null;
 		if (activities.size() > 0) {
 			latestActivityTime = activities.get(0).getTime();
@@ -182,7 +180,7 @@ public class ViewDispatcher extends Controller {
 		}
 		
 		//load latest activities for convos with this topic
-		List<Action> activities = ActivityDAO.loadLatestByTopic(topic);
+		List<Action> activities = ActionDAO.loadLatestByTopic(topic);
 		
 		TopicDAO.incrementTopicViews(topic.getId());
 		

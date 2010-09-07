@@ -29,7 +29,7 @@ import util.EmailUtil;
 import util.EmailUtil.EmailTemplate;
 import util.NotificationUtils;
 import webapp.LiveConversationsSingleton;
-import dao.ActivityDAO;
+import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.TalkerDAO;

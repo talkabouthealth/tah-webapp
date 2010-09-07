@@ -12,11 +12,12 @@ import dao.ConversationDAO;
 
 import models.TalkerBean;
 import models.ConversationBean;
+import models.actions.Action.ActionType;
 
 public class StartConvoAction extends AbstractAction {
 	
 	public StartConvoAction(TalkerBean talker, ConversationBean topic) {
-		super("START_CONVO", talker);
+		super(ActionType.START_CONVO, talker);
 		this.topic = topic;
 	}
 

@@ -1,13 +1,14 @@
 package models.actions;
 
 import models.TalkerBean;
+import models.actions.Action.ActionType;
 
 import com.mongodb.DBObject;
 
 public class ProfileCommentAction extends AbstractAction {
 	
 	public ProfileCommentAction(TalkerBean talker, TalkerBean otherTalker) {
-		super("PROFILE_COMMENT", talker);
+		super(ActionType.PROFILE_COMMENT, talker);
 		this.otherTalker = otherTalker;
 	}
 

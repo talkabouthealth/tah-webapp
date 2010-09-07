@@ -2,13 +2,14 @@ package models.actions;
 
 import models.TalkerBean;
 import models.ConversationBean;
+import models.actions.Action.ActionType;
 
 import com.mongodb.DBObject;
 
 public class FollowConvoAction extends AbstractAction {
 	
 	public FollowConvoAction(TalkerBean talker, ConversationBean topic) {
-		super("FOLLOW_CONVO", talker);
+		super(ActionType.FOLLOW_CONVO, talker);
 		this.topic = topic;
 	}
 

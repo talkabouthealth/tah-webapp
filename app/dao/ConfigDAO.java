@@ -2,7 +2,6 @@ package dao;
 
 import java.util.Date;
 
-import models.ActivityBean;
 import util.DBUtil;
 
 import com.mongodb.BasicDBObject;
