@@ -39,7 +39,7 @@ public class API extends Controller {
 		comment.setText(text);
 		comment.setTime(new Date());
 		
-		String id = CommentsDAO.saveTopicComment(comment);
+		String id = CommentsDAO.saveConvoComment(comment);
 		comment.setId(id);
 		
 //		@mnjones provided an Answer to your question:

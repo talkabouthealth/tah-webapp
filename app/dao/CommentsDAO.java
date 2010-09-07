@@ -69,8 +69,8 @@ public class CommentsDAO {
 		return topCommentsList;
 	}
 
-	// -------------- Topics comments -----------------
-	public static String saveTopicComment(CommentBean comment) {
+	// -------------- Convo comments -----------------
+	public static String saveConvoComment(CommentBean comment) {
 		DBCollection commentsColl = getCollection(TOPIC_COMMENTS_COLLECTION);
 		
 		DBRef topicRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, comment.getTopicId());

@@ -178,8 +178,13 @@ public class Conversations extends Controller {
 		comment.setText(text);
 		comment.setTime(new Date());
 		
-		String id = CommentsDAO.saveTopicComment(comment);
+		String id = CommentsDAO.saveConvoComment(comment);
 		comment.setId(id);
+		
+		if (convo.isOpened()) {
+			convo.setOpened(false);
+			ConversationDAO.updateConvo(convo);
+		}
 		
 		//notify
 		Map<String, String> vars = new HashMap<String, String>();

@@ -89,6 +89,7 @@ public class ConversationDAO {
 			.add("main_url", convo.getMainURL())
 			.add("topics", topicsDBList)
 			.add("details", convo.getDetails())
+			.add("opened", true)
 			.get();
 
 		//Only with STRICT WriteConcern we receive exception on duplicate key
@@ -124,6 +125,9 @@ public class ConversationDAO {
 			.add("topic", convo.getTopic())
 			.add("main_url", convo.getMainURL())
 			.add("details", convo.getDetails())
+			
+			.add("opened", convo.isOpened())
+			
 			.add("summary", convo.getSummary())
 			.add("sum_authors", sumContributorsDBList)
 			.get();
@@ -194,7 +198,7 @@ public class ConversationDAO {
 	public static List<ConversationBean> loadAllConversations() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		List<DBObject> convosDBList = 
-			convosColl.find().sort(new BasicDBObject("disp_date", -1)).toArray();
+			convosColl.find().sort(new BasicDBObject("cr_date", -1)).toArray();
 		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
@@ -209,7 +213,7 @@ public class ConversationDAO {
 	public static Map<String, ConversationBean> queryConversations() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		List<DBObject> convosList = 
-			convosColl.find().sort(new BasicDBObject("disp_date", -1)).limit(20).toArray();
+			convosColl.find().sort(new BasicDBObject("cr_date", -1)).limit(20).toArray();
 		
 		Map <String, ConversationBean> convosMap = new LinkedHashMap <String, ConversationBean>(20);
 		for (DBObject convoDBObject : convosList) {
@@ -222,6 +226,51 @@ public class ConversationDAO {
 		return convosMap;
 	}
 	
+	public static List<ConversationBean> getLiveConversations() {
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		DBObject query = new BasicDBObject("talkers",
+				BasicDBObjectBuilder.start()
+					.add("$exists", true)
+					.add("$not", new BasicDBObject("$size", 0))
+					.get()
+			);
+		List<DBObject> convosDBList = 
+			convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
+		
+		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
+		for (DBObject convoDBObject : convosDBList) {
+			ConversationBean convo = new ConversationBean();
+			convo.parseFromDB(convoDBObject);
+	    	convosList.add(convo);
+		}
+		
+		return convosList;
+	}
+	
+	/**
+	 * No one answered for question/conversation
+	 * or
+	 * TODO: author joins always!
+	 * No one joined for conversation
+	 * @return
+	 */
+	public static List<ConversationBean> getOpenedConversations() {
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		DBObject query = new BasicDBObject("opened", true);
+		List<DBObject> convosDBList = 
+			convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
+		
+		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
+		for (DBObject convoDBObject : convosDBList) {
+			ConversationBean convo = new ConversationBean();
+			convo.parseFromDB(convoDBObject);
+	    	convosList.add(convo);
+		}
+		
+		return convosList;
+	}
 	
 	//------------------- Other ----------------------
 	

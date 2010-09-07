@@ -36,6 +36,19 @@ public class Home extends Controller {
 			newTopic = "Please enter your Conversation here ...";
 		}
 		
+		//--------- For new Home Page --------------
+		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
+		for (ConversationBean convoBean : liveConversations) {
+			System.out.println("!!: "+convoBean.getTopic());
+		}
+		
+		List<ConversationBean> openedConversations = ConversationDAO.getOpenedConversations();
+		for (ConversationBean convoBean : openedConversations) {
+			System.out.println("??: "+convoBean.getTopic());
+		}
+		
+		//Convo & Activity feeds?
+		
         render(talker, mapTalkmiTopics, newTopic);
     }
     

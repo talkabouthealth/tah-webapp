@@ -1,8 +1,6 @@
 package models;
 
-import static util.DBUtil.getCollection;
-import static util.DBUtil.getInt;
-import static util.DBUtil.getStringSet;
+import static util.DBUtil.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,6 +42,9 @@ public class ConversationBean {
 	private Date creationDate;
 	private Date displayTime;	//TODO: old field? how to use it?
 	
+	//Convo with no answers is opened
+	private boolean opened;
+	
 	//creator
 	private String uid;
 	private TalkerBean talker;
@@ -76,6 +77,8 @@ public class ConversationBean {
     	setCreationDate((Date)convoDBObject.get("cr_date"));
     	setDisplayTime((Date)convoDBObject.get("disp_date"));
     	setDetails((String)convoDBObject.get("details"));
+    	
+    	setOpened(getBoolean(convoDBObject, "opened"));
     	
     	setSummary((String)convoDBObject.get("summary"));
     	parseSumContributors((Collection<DBRef>)convoDBObject.get("sum_authors"));
@@ -242,5 +245,13 @@ public class ConversationBean {
 
 	public void setConvoType(ConvoType convoType) {
 		this.convoType = convoType;
+	}
+
+	public boolean isOpened() {
+		return opened;
+	}
+
+	public void setOpened(boolean opened) {
+		this.opened = opened;
 	}
 }
