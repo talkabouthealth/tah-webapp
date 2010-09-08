@@ -1,5 +1,7 @@
 package util.jobs;
 
+import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,6 +11,7 @@ import org.apache.lucene.document.Field;
 import models.IMAccountBean;
 import models.TalkerBean;
 import models.ConversationBean;
+import models.TalkerBean.EmailSetting;
 import models.TalkerBean.ProfilePreference;
 import models.TopicBean;
 
@@ -22,6 +25,7 @@ import dao.TopicDAO;
 import play.Play;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
+import util.CommonUtil;
 import util.DBUtil;
 import util.importers.DiseaseImporter;
 import util.importers.HealthItemsImporter;
@@ -64,6 +68,36 @@ public class ApplicationUpdatesJob extends Job {
 		
 		if (ApplicationDAO.isCollectionEmpty(TopicDAO.TOPICS_COLLECTION)) {
 			TopicsImporter.importTopics("topics.dat");
+		}
+		
+		//add admin user if missing
+		TalkerBean admin = TalkerDAO.getByUserName("admin");
+		if (admin == null) {
+			admin = new TalkerBean();
+			admin.setUserName("admin");
+			admin.setPassword("admin");
+			admin.setDob(new Date());
+			admin.setEmail("admin@talkabouthealth.com");
+			
+			String hashedPassword = CommonUtil.hashPassword(admin.getPassword());
+			admin.setPassword(hashedPassword);
+			
+			EnumSet<ProfilePreference> defaultPreferences = 
+	        	EnumSet.complementOf(
+	        		EnumSet.of(
+	    				ProfilePreference.PERSONAL_INFO,
+	    				ProfilePreference.HEALTH_INFO,
+	    				ProfilePreference.BASIC_INFO,
+	    				ProfilePreference.BIO
+	        		)
+	        	);
+			admin.saveProfilePreferences(defaultPreferences);
+	        
+	        //By default all email notifications are checked
+	        EnumSet<EmailSetting> emailSettings = EnumSet.allOf(EmailSetting.class);
+	        admin.saveEmailSettings(emailSettings);
+			
+			TalkerDAO.save(admin);
 		}
 		
     }
