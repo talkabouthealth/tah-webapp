@@ -34,6 +34,8 @@ public abstract class AbstractAction implements Action {
 	protected TalkerBean otherTalker;
 	protected CommentBean answer;
 	protected CommentBean reply;
+	protected CommentBean profileComment;
+	protected CommentBean profileReply;
 	
 	public AbstractAction(ActionType type, TalkerBean talker) {
 		this.type = type;
@@ -64,13 +66,21 @@ public abstract class AbstractAction implements Action {
 		if (hasReply()) {
 			reply = parseAnswerOrReply(dbObject, "reply");
 		}
+		if (hasProfileComment()) {
+			profileComment = parseProfileCommentOrReply(dbObject, "profile_comment");
+		}
+		if (hasProfileReply()) {
+			profileReply = parseProfileCommentOrReply(dbObject, "profile_reply");
+		}
 	}
 	
 	protected boolean hasConvo() { return false; }
 	protected boolean hasOtherTalker() { return false; }
 	protected boolean hasAnswer() { return false; }
 	protected boolean hasReply() { return false; }
-
+	protected boolean hasProfileComment() { return false; }
+	protected boolean hasProfileReply() { return false; }
+	
 	protected String userName() {
 		return "<b>"+talker.getUserName()+"</b>";
 	}
@@ -94,6 +104,12 @@ public abstract class AbstractAction implements Action {
 		}
 		if (hasReply()) {
 			addAnswerOrReply(dbObject, "reply", reply);
+		}
+		if (hasProfileComment()) {
+			addProfileCommentOrReply(dbObject, "profile_comment", profileComment);
+		}
+		if (hasProfileReply()) {
+			addProfileCommentOrReply(dbObject, "profile_reply", profileReply);
 		}
 	
 		return dbObject;
@@ -161,6 +177,36 @@ public abstract class AbstractAction implements Action {
 			DBRef answerRef = new DBRef(DBUtil.getDB(), 
 					CommentsDAO.CONVO_COMMENTS_COLLECTION, new ObjectId(answer.getId()));
 			dbObject.put(name, answerRef);
+		}
+	}
+	
+	//Comments/Replies on Profiles
+	protected CommentBean parseProfileCommentOrReply(DBObject dbObject, String name) {
+		DBRef commentDBRef = (DBRef)dbObject.get(name);
+		if (commentDBRef == null) {
+			return null;
+		}
+		
+		DBObject commentDBObject = commentDBRef.fetch();
+		CommentBean comment = new CommentBean();
+		comment.setId(getString(commentDBObject, "_id"));
+		comment.setText((String)commentDBObject.get("text"));
+		comment.setTime((Date)commentDBObject.get("time"));
+		
+		//TODO: the same as thankyou222?
+		DBObject fromTalkerDBObject = ((DBRef)commentDBObject.get("from")).fetch();
+		TalkerBean fromTalker = new TalkerBean();
+		fromTalker.parseBasicFromDB(fromTalkerDBObject);
+		comment.setFromTalker(fromTalker);
+		
+    	return comment;
+	}
+	
+	protected void addProfileCommentOrReply(DBObject dbObject, String name, CommentBean comment) {
+		if (comment != null) {
+			DBRef commentRef = new DBRef(DBUtil.getDB(), 
+					CommentsDAO.PROFILE_COMMENTS_COLLECTION, new ObjectId(comment.getId()));
+			dbObject.put(name, commentRef);
 		}
 	}
 

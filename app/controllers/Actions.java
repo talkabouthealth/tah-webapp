@@ -16,10 +16,10 @@ import models.CommentBean;
 import models.TalkerBean;
 import models.TalkerBean.EmailSetting;
 import models.ThankYouBean;
+import models.actions.Action.ActionType;
 import models.actions.FollowTalkerAction;
 import models.actions.GiveThanksAction;
-import models.actions.ProfileCommentAction;
-import models.actions.ProfileReplyAction;
+import models.actions.PersonalProfileCommentAction;
 import dao.ActionDAO;
 import dao.CommentsDAO;
 import dao.TalkerDAO;
@@ -107,12 +107,18 @@ public class Actions extends Controller {
 		String id = CommentsDAO.saveProfileComment(comment);
 		comment.setId(id);
 		
-		if (comment.getParentId() == null) {
-			ActionDAO.saveAction(new ProfileCommentAction(talker, profileTalker));
+		if (profileTalker.equals(talker)) {
+			if (comment.getParentId() == null) {
+				ActionDAO.saveAction(new PersonalProfileCommentAction(
+						talker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT));
+			}
+			else {
+				CommentBean parentAnswer = new CommentBean(parentId);
+				ActionDAO.saveAction(new PersonalProfileCommentAction(
+						talker, parentAnswer, comment, ActionType.PERSONAL_PROFILE_REPLY));
+			}
 		}
-		else {
-			ActionDAO.saveAction(new ProfileReplyAction(talker, profileTalker));
-		}
+		
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("other_talker", talker.getUserName());
 		vars.put("comment_text", comment.getText());

@@ -30,8 +30,7 @@ import models.actions.FollowConvoAction;
 import models.actions.FollowTalkerAction;
 import models.actions.GiveThanksAction;
 import models.actions.JoinConvoAction;
-import models.actions.ProfileCommentAction;
-import models.actions.ProfileReplyAction;
+import models.actions.PersonalProfileCommentAction;
 import models.actions.StartConvoAction;
 import models.actions.SummaryConvoAction;
 import models.actions.UpdateProfileAction;
@@ -45,6 +44,14 @@ public class ActionDAO {
 			ActionType.ANSWER_CONVO, ActionType.REPLY_CONVO, 
 			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED 
 		);
+	
+	private static final EnumSet<ActionType> ACTIVITY_FEED_ACTIONS = EnumSet.of(
+			ActionType.START_CONVO, ActionType.RESTART_CONVO, ActionType.JOIN_CONVO, 
+			ActionType.ANSWER_CONVO, ActionType.REPLY_CONVO, 
+			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED,
+			ActionType.PERSONAL_PROFILE_COMMENT, ActionType.PERSONAL_PROFILE_REPLY
+		);
+	
 	
 	//TODO: rename to "action?"
 	public static final String ACTIVITIES_COLLECTION = "activities";
@@ -89,14 +96,44 @@ public class ActionDAO {
 			actionTypes.add(actionType.toString());
 		}
 		
-//		System.out.println(convosDBSet);
-//		System.out.println(actionTypes);
-		
 		//load actions for this criterias
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("topicId", new BasicDBObject("$in", convosDBSet))
+			.add("type", new BasicDBObject("$in", actionTypes))
+			.get();
+		List<DBObject> activitiesDBList = 
+			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		
+		List<Action> activitiesList = new ArrayList<Action>();
+		for (DBObject actionDBObject : activitiesDBList) {
+			Action action = actionFromDB(actionDBObject);
+			activitiesList.add(action);
+		}
+		return activitiesList;
+	}
+	
+	public static List<Action> loadActivityFeed(TalkerBean talker) {
+		//TODO: move to FeedLogic?
+		
+		//prepare list of followed talkers
+		Set<DBRef> talkersDBSet = new HashSet<DBRef>();
+		for (TalkerBean followingTalker : talker.getFollowingList()) {
+			talkersDBSet.add(createRef(TalkerDAO.TALKERS_COLLECTION, followingTalker.getId()));
+		}
+		
+		//list of needed actions for this Feed
+		Set<String> actionTypes = new HashSet<String>();
+		for (ActionType actionType : ACTIVITY_FEED_ACTIONS) {
+			actionTypes.add(actionType.toString());
+		}
+		
+		//load actions for this criterias
+		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
+		
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("uid", new BasicDBObject("$in", talkersDBSet))
 			.add("type", new BasicDBObject("$in", actionTypes))
 			.get();
 		List<DBObject> activitiesDBList = 
@@ -190,10 +227,9 @@ public class ActionDAO {
 				return new FollowConvoAction(dbObject);
 			case FOLLOW_TALKER:
 				return new FollowTalkerAction(dbObject);
-			case PROFILE_COMMENT:
-				return new ProfileCommentAction(dbObject);
-			case PROFILE_REPLY:
-				return new ProfileReplyAction(dbObject);
+			case PERSONAL_PROFILE_COMMENT:
+			case PERSONAL_PROFILE_REPLY:
+				return new PersonalProfileCommentAction(dbObject);
 				
 			case UPDATE_BIO:
 			case UPDATE_HEALTH:

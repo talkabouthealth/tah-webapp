@@ -54,7 +54,9 @@ public class Home extends Controller {
 		List<Action> convoFeed = ActionDAO.loadConvoFeed(talker);
 		
 		//Action feed?
-        render(talker, mapTalkmiTopics, newTopic, convoFeed);
+		List<Action> activityFeed = ActionDAO.loadActivityFeed(talker);
+		
+        render(talker, mapTalkmiTopics, newTopic, convoFeed, activityFeed);
     }
     
     /* ---------------- Invitations ----------------- */

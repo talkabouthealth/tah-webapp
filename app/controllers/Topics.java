@@ -15,8 +15,6 @@ import models.TalkerBean.EmailSetting;
 import models.TopicBean;
 import models.actions.Action;
 import models.actions.FollowConvoAction;
-import models.actions.ProfileCommentAction;
-import models.actions.ProfileReplyAction;
 import models.actions.StartConvoAction;
 import play.cache.Cache;
 import play.mvc.Before;

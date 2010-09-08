@@ -15,8 +15,6 @@ import models.actions.FollowConvoAction;
 import models.actions.FollowTalkerAction;
 import models.actions.GiveThanksAction;
 import models.actions.JoinConvoAction;
-import models.actions.ProfileCommentAction;
-import models.actions.ProfileReplyAction;
 import models.actions.StartConvoAction;
 import models.actions.UpdateProfileAction;
 import models.actions.Action.ActionType;
