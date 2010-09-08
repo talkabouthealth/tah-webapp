@@ -47,6 +47,11 @@ public class ViewDispatcher extends Controller {
 		//next - question or conversation
 		ConversationBean convo = ConversationDAO.getByURL(name);
 		if (convo != null) {
+			if (!convo.getMainURL().equals(name)) {
+				//we come here by old url - redirect to main
+				redirect("/"+convo.getMainURL());
+			}
+			
 			showConvo(convo);
 			return;
 		}

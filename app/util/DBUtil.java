@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.bson.types.ObjectId;
@@ -91,6 +92,15 @@ public class DBUtil {
 		}
 		Set<String> set = new LinkedHashSet<String>((Collection<String>)value);
 		return set;
+	}
+	
+	public static Map<String, String> getStringMap(DBObject dbObject, String name) {
+		DBObject value = (DBObject)dbObject.get(name);
+		if (value == null) {
+			return Collections.emptyMap();
+		}
+		Map<String, String> map = value.toMap();
+		return map;
 	}
 	
 	

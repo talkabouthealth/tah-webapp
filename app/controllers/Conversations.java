@@ -10,6 +10,7 @@ import java.util.Map;
 
 import models.CommentBean;
 import models.ConversationBean;
+import models.ConversationBean.ConvoName;
 import models.TalkerBean;
 import models.TalkerBean.EmailSetting;
 import models.TopicBean;
@@ -47,7 +48,7 @@ public class Conversations extends Controller {
     	
     	TopicBean topic = TopicDAO.getByTitle("fatigue");
     	List<TopicBean> topics = new ArrayList<TopicBean>();
-    	topics.add(topic);
+//    	topics.add(topic);
     	
 		
 		ConversationBean convo = new ConversationBean();
@@ -149,7 +150,25 @@ public class Conversations extends Controller {
     	notFoundIfNull(convo);
     	
     	if (name.equalsIgnoreCase("title")) {
-//    		ConversationDAO.updateConvo(convo);
+    		ConvoName currentName = new ConvoName(convo.getTopic(), convo.getMainURL());
+    		ConvoName newName = new ConvoName(value, null);
+    		
+    		//find old name with the same title
+    		ConvoName oldName = convo.getOldNameByTitle(newName.getTitle());
+    		if (oldName != null) {
+    			//convo has already had this title, return it to main title/url
+    			convo.setTopic(oldName.getTitle());
+    			convo.setMainURL(oldName.getUrl());
+    			convo.getOldNames().remove(oldName);
+    		}
+    		else {
+    			//new title for this topic - create it
+    			String newURL = ApplicationDAO.createURLName(newName.getTitle());
+    			convo.setTopic(newName.getTitle());
+    			convo.setMainURL(newURL);
+    		}
+    		convo.getOldNames().add(currentName);
+    		ConversationDAO.updateConvo(convo);
     	}
     	else if (name.equalsIgnoreCase("details")) {
     		convo.setDetails(value);

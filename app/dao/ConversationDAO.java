@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import models.CommentBean;
+import models.ConversationBean.ConvoName;
 import models.MessageBean;
 import models.TalkerBean;
 import models.ConversationBean;
@@ -121,12 +122,21 @@ public class ConversationDAO {
 			DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talker.getId());
 			sumContributorsDBList.add(talkerRef);
 		}
+		List<DBObject> namesDBList = new ArrayList<DBObject>();
+		for (ConvoName convoName : convo.getOldNames()) {
+			DBObject nameDBObject = BasicDBObjectBuilder.start()
+				.add("title", convoName.getTitle())
+				.add("url", convoName.getUrl())
+				.get();
+			namesDBList.add(nameDBObject);
+		}
 		
 		DBObject convoObject = BasicDBObjectBuilder.start()
 			.add("topic", convo.getTopic())
 			.add("main_url", convo.getMainURL())
-			.add("details", convo.getDetails())
+			.add("old_names", namesDBList)
 			
+			.add("details", convo.getDetails())
 			.add("opened", convo.isOpened())
 			
 			.add("summary", convo.getSummary())
@@ -181,7 +191,7 @@ public class ConversationDAO {
 		DBObject query = new BasicDBObject("$or", 
 				Arrays.asList(
 						new BasicDBObject("main_url", url),
-						new BasicDBObject("urls", url)
+						new BasicDBObject("old_names.url", url)
 					)
 			);
 		DBObject convoDBObject = convosColl.findOne(query);
