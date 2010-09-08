@@ -21,13 +21,13 @@ public class Community extends Controller {
 //		Like You - we will implement logic later, I think we can use Lucene or Sphinx
 //		Search - implement later with Lucene or Sphinx
 	public static void browseMembers(String action) {
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 
 		Set<TalkerBean> activeTalkers = ApplicationDAO.getActiveTalkers();
 		Set<TalkerBean> newTalkers = ApplicationDAO.getNewTalkers();
 		
 		String query = params.get("query");
-		List<String> results = null;
+		List<TalkerBean> results = null;
 		if (query != null) {
 			params.flash("query");
 			
@@ -44,7 +44,7 @@ public class Community extends Controller {
 		if (action == null) {
 			action = "active";
 		}
-		render(talker, action, activeTalkers, newTalkers, results);
+		render(currentTalker, action, activeTalkers, newTalkers, results);
 	}
 	
 	public static void searchConversations() {

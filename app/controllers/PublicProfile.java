@@ -71,6 +71,7 @@ public class PublicProfile extends Controller {
 		render(talker, currentTalker, action, from);
 	}
 	
+	//TODO: unused methods?
 	public static void loadMoreThankYous(String userName, int start) {
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
 		notFoundIfNull(talker);

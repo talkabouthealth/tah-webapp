@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.TalkerBean;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -15,6 +17,8 @@ import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 
+import dao.TalkerDAO;
+
 import play.Play;
 import play.Play.Mode;
 
@@ -22,23 +26,31 @@ public class SearchUtil {
 	
 	public static final String SEARCH_INDEX_PATH = Play.configuration.getProperty("search.index");
 
-	public static List<String> searchTalker(String query) throws CorruptIndexException, IOException, ParseException {
+	public static List<TalkerBean> searchTalker(String query) throws CorruptIndexException, IOException, ParseException {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"talker");
 		Hits hits = getHits(is, new String[] {"uname", "bio"}, "*"+query+"*");
-		List<String> results = new ArrayList<String>();
+		
+//		List<String> results = new ArrayList<String>();
+		List<TalkerBean> results = new ArrayList<TalkerBean>();
 		for (int i = 0; i < hits.length(); i++) {
 			Document doc = hits.doc(i);
 //			System.out.println(hits.score(i));
 //			System.out.println(doc.get("uname")+" : "+doc.get("id"));
 			
 			//TODO hide bio and health details
-			String result = doc.get("uname");
-			String bio = doc.get("bio");
-			if (bio != null) {
-				result += ("<br/>" + doc.get("bio"));
+//			String result = doc.get("uname");
+//			String bio = doc.get("bio");
+//			if (bio != null) {
+//				result += ("<br/>" + doc.get("bio"));
+//			}
+//			result = result.replaceAll(query, "<b>"+query+"</b>");
+//			results.add(result);
+			TalkerBean talker = TalkerDAO.getById(doc.get("id"));
+			results.add(talker);
+			
+			if (i == 8) {
+				break;
 			}
-			result = result.replaceAll(query, "<b>"+query+"</b>");
-			results.add(result);
 		}
 		
 		is.close();

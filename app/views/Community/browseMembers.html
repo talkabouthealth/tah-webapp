@@ -67,23 +67,7 @@
 				            </div>
 				            <div class="thnksarea">
 				            	#{list items: activeTalkers, as: 'talker' }
-				            		<div class="thnksfollowing">
-						            	<div class="thnksfollowingimg">
-											<a href="@{ViewDispatcher.view(talker.userName)}">
-												<img width="80" height="80" src="@{Image.show(talker.userName)}" border="0" />
-											</a>
-										</div>
-						            	<div class="thnksfollowingtext">
-						            		<a class="blue13" href="@{ViewDispatcher.view(talker.userName)}">
-					            				<strong>${talker.userName}</strong>
-					            			</a>
-						            		<span class="blue13"> | </span> 
-						            		<span class="blkq13">${talker.levelOfRecognition}</span><br/><br/>
-						            		#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.BIO) }
-						              			<span class="greytext12">${talker.bio}</span><br/>
-						              		#{/if}
-						              	</div>
-						            </div>
+				            		#{talkerInList talker: talker, currentTalker: currentTalker /}
 				            	#{/list}
 				            </div>
 				            <div class="thnksbottom" style="display: none">
@@ -105,23 +89,7 @@
 				            </div>
 				            <div class="thnksarea">
 				            	#{list items: newTalkers, as: 'talker' }
-				            		<div class="thnksfollowing">
-						            	<div class="thnksfollowingimg">
-											<a href="@{ViewDispatcher.view(talker.userName)}">
-												<img width="80" height="80" src="@{Image.show(talker.userName)}" border="0" />
-											</a>
-										</div>
-						            	<div class="thnksfollowingtext">
-						            		<a class="blue13" href="@{ViewDispatcher.view(talker.userName)}">
-					            				<strong>${talker.userName}</strong>
-					            			</a>
-						            		<span class="blue13"> | </span> 
-						            		<span class="blkq13">${talker.levelOfRecognition}</span><br/><br/>
-						            		#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.BIO) }
-						              			<span class="greytext12">${talker.bio}</span><br/>
-						              		#{/if}
-						              	</div>
-						            </div>
+				            		#{talkerInList talker: talker, currentTalker: currentTalker /}
 				            	#{/list}
 				            </div>
 				            <div class="thnksbottom" style="display: none">
@@ -175,13 +143,18 @@
 								</form>
 								
 								#{if results }
-									<div style="font-size: 14px; clear: left">		
-										#{list items:results, as: 'res'}
-											<span style="padding-bottom: 3px">
-												*{ <a href="@{ViewDispatcher.view(res)}">${res}</a> }*
-												${res.raw()}
-											</span>
-											<br/><br/>
+									<div style="font-size: 14px; clear: left; padding-top: 10px">	
+										*{	
+											#{list items:results, as: 'res'}
+												<span style="padding-bottom: 3px">
+													${res.raw()}
+												</span>
+												<br/><br/>
+												
+											#{/list}
+										}*
+										#{list items:results, as: 'talker'}
+											#{talkerInList talker: talker, currentTalker: currentTalker /}
 										#{/list}
 										#{else}
 											No results.
@@ -196,3 +169,8 @@
 			</div>
 		</div>
 	</div>
+	
+<div id="hiddenwindows" style="display: none">
+	#{popups/thankyou /}	
+	#{popups/comment /}
+</div>

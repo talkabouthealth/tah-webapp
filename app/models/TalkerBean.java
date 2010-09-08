@@ -115,6 +115,7 @@ public class TalkerBean implements Serializable {
 	}
 	
 	private String id;
+	//FIXME: add URL field??
 	@Required @Match(ValidateData.USER_REGEX) private String userName;
 	@Required @Match(ValidateData.USER_REGEX) private String password;
 	@Required @Email private String email;
