@@ -29,9 +29,11 @@ public class AnswerConvoAction extends AbstractAction {
 		result.append(userName());
 		if (type == ActionType.ANSWER_CONVO) {
 			result.append(" answered the conversation: ");
+			result.append(" (with "+answer.getText()+") ");
 		}
 		else if (type == ActionType.REPLY_CONVO) {
 			result.append(" replied the conversation: ");
+			result.append(" (with "+answer.getText()+", "+reply.getText()+") ");
 		}
 		result.append(topicLink());
 		result.append("<br/>");

@@ -92,6 +92,17 @@ public class TopicDAO {
 		return topicBean;
 	}
 	
+	public static TopicBean getByTitle(String title) {
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
+		
+		DBObject query = new BasicDBObject("title", title);
+		DBObject topicDBObject = topicsColl.findOne(query);
+		
+		TopicBean topicBean = new TopicBean();
+		topicBean.parseBasicFromDB(topicDBObject);
+		return topicBean;
+	}
+	
 	public static List<TopicBean> loadAllTopics() {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		List<DBObject> topicsDBList = topicsColl.find().toArray();

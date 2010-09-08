@@ -413,9 +413,12 @@ public class TalkerBean implements Serializable {
 	private void parseFollowingTopics(Collection<DBRef> followingTopicsDBList) {
 		followingTopicsList = new ArrayList<TopicBean>();
 		if (followingTopicsDBList != null) {
-			for (DBRef followingDBRef : followingTopicsDBList) {
-				//get only ids - for quick loading
-				followingTopicsList.add(new TopicBean(followingDBRef.getId().toString()));
+			for (DBRef topicDBRef : followingTopicsDBList) {
+				TopicBean topic = new TopicBean();
+				if (topicDBRef.fetch() != null) {
+					topic.parseBasicFromDB(topicDBRef.fetch());
+					followingTopicsList.add(topic);
+				}
 			}
 		}
 	}

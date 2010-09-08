@@ -62,7 +62,7 @@ public abstract class AbstractAction implements Action {
 			answer = parseAnswerOrReply(dbObject, "answer");
 		}
 		if (hasReply()) {
-			answer = parseAnswerOrReply(dbObject, "reply");
+			reply = parseAnswerOrReply(dbObject, "reply");
 		}
 	}
 	

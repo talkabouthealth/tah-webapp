@@ -23,6 +23,7 @@ import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.TalkerDAO;
+import dao.TopicDAO;
 import play.mvc.Controller;
 import play.mvc.Router;
 import play.mvc.With;
@@ -44,8 +45,9 @@ public class Conversations extends Controller {
 //    	topic.setMainURL(ApplicationDAO.createURLName(newTag));
 //    	TopicDAO.save(topic);
     	
+    	TopicBean topic = TopicDAO.getByTitle("fatigue");
     	List<TopicBean> topics = new ArrayList<TopicBean>();
-//    	topics.add(topic);
+    	topics.add(topic);
     	
 		
 		ConversationBean convo = new ConversationBean();

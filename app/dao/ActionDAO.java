@@ -4,7 +4,10 @@ import java.util.ArrayList;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bson.types.ObjectId;
 
@@ -30,11 +33,18 @@ import models.actions.JoinConvoAction;
 import models.actions.ProfileCommentAction;
 import models.actions.ProfileReplyAction;
 import models.actions.StartConvoAction;
+import models.actions.SummaryConvoAction;
 import models.actions.UpdateProfileAction;
 
 import static util.DBUtil.*;
 
 public class ActionDAO {
+	
+	private static final EnumSet<ActionType> CONVO_FEED_ACTIONS = EnumSet.of(
+			ActionType.START_CONVO, ActionType.RESTART_CONVO, 
+			ActionType.ANSWER_CONVO, ActionType.REPLY_CONVO, 
+			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED 
+		);
 	
 	//TODO: rename to "action?"
 	public static final String ACTIVITIES_COLLECTION = "activities";
@@ -55,14 +65,40 @@ public class ActionDAO {
 		return activitiesList;
 	}
 	
-	public static List<Action> loadLatestByTopic(TopicBean topic) {
+	//------------------ Feeds --------------------
+	
+//	- New conversation started in a topic that is being followed
+//	- Conversation restarted in a topic or Conversation(?) that is being followed
+//	- New answer or reply in a Topic or Conversation that is being followed
+//	- TODO?: Summary created or edited in Conversation that is being followed.
+	public static List<Action> loadConvoFeed(TalkerBean talker) {
+		//TODO: move to FeedLogic?
+		
+		//prepare list of followed convos/topics
+		Set<DBRef> convosDBSet = new HashSet<DBRef>();
+		for (String convoId : talker.getFollowingConvosList()) {
+			convosDBSet.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId));
+		}
+		for (TopicBean topic : talker.getFollowingTopicsList()) {	
+			convosDBSet.addAll(getConversationsByTopic(topic));
+		}
+		
+		//list of needed actions for this Feed
+		Set<String> actionTypes = new HashSet<String>();
+		for (ActionType actionType : CONVO_FEED_ACTIONS) {
+			actionTypes.add(actionType.toString());
+		}
+		
+//		System.out.println(convosDBSet);
+//		System.out.println(actionTypes);
+		
+		//load actions for this criterias
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
-		List<DBRef> convosDBList = new ArrayList<DBRef>();
-		for (ConversationBean convo : topic.getConversations()) {
-			convosDBList.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getId()));
-		}
-		DBObject query = new BasicDBObject("topicId", new BasicDBObject("$in", convosDBList));
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("topicId", new BasicDBObject("$in", convosDBSet))
+			.add("type", new BasicDBObject("$in", actionTypes))
+			.get();
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
@@ -72,6 +108,39 @@ public class ActionDAO {
 			activitiesList.add(action);
 		}
 		return activitiesList;
+	}
+	
+	public static List<Action> loadLatestByTopic(TopicBean topic) {
+		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
+		
+		Set<DBRef> convosDBSet = getConversationsByTopic(topic);
+		DBObject query = new BasicDBObject("topicId", new BasicDBObject("$in", convosDBSet));
+		List<DBObject> activitiesDBList = 
+			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		
+		List<Action> activitiesList = new ArrayList<Action>();
+		for (DBObject actionDBObject : activitiesDBList) {
+			Action action = actionFromDB(actionDBObject);
+			activitiesList.add(action);
+		}
+		return activitiesList;
+	}
+	
+	/**
+	 * Includes conversations in children topics also.
+	 * @param topic
+	 * @return
+	 */
+	private static Set<DBRef> getConversationsByTopic(TopicBean topic) {
+		Set<DBRef> convosDBSet = new HashSet<DBRef>();
+		for (String convoId : topic.getConversationsIds()) {
+			convosDBSet.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId));
+		}
+		for (TopicBean child : topic.getChildren()) {
+			TopicBean fullChild = TopicDAO.getById(child.getId());
+			convosDBSet.addAll(getConversationsByTopic(fullChild));
+		}
+		return convosDBSet;
 	}
 	
 	public static List<Action> loadLatestByConversation(ConversationBean convo) {
@@ -85,7 +154,9 @@ public class ActionDAO {
 		List<Action> activitiesList = new ArrayList<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {
 			Action action = actionFromDB(actionDBObject);
-			activitiesList.add(action);
+			if (action != null) {
+				activitiesList.add(action);
+			}
 		}
 		return activitiesList;
 	}
@@ -100,9 +171,19 @@ public class ActionDAO {
 		ActionType type = ActionType.valueOf(strType);
 		switch (type) {
 			case START_CONVO:
+			case RESTART_CONVO:
 				return new StartConvoAction(dbObject);
 			case JOIN_CONVO:
 				return new JoinConvoAction(dbObject);
+				
+			case ANSWER_CONVO:
+			case REPLY_CONVO:
+				return new AnswerConvoAction(dbObject);
+				
+			case SUMMARY_ADDED:
+			case SUMMARY_EDITED:
+				return new SummaryConvoAction(dbObject);
+				
 			case GIVE_THANKS:
 				return new GiveThanksAction(dbObject);
 			case FOLLOW_CONVO:
@@ -113,15 +194,15 @@ public class ActionDAO {
 				return new ProfileCommentAction(dbObject);
 			case PROFILE_REPLY:
 				return new ProfileReplyAction(dbObject);
+				
 			case UPDATE_BIO:
 			case UPDATE_HEALTH:
 			case UPDATE_PERSONAL:
 				return new UpdateProfileAction(dbObject);
-			case ANSWER_CONVO:
-				return new AnswerConvoAction(dbObject);
+			
+			default:
+				throw new IllegalArgumentException("Bad Action Type");
 		}
-		
-		return null;
 	}
 	
 	public static void saveAction(Action action) {
@@ -135,4 +216,5 @@ public class ActionDAO {
 	public static void main(String[] args) {
 //		System.out.println(ActionDAO.load("4c2cb43160adf3055c97d061"));
 	}
+
 }

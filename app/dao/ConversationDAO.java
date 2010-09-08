@@ -378,6 +378,20 @@ public class ConversationDAO {
 		return convosList;
 	}
 	
+	public static List<String> loadConversationsIdsByTopic(String topicId) {
+		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
+		
+		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topicId);
+		DBObject query = new BasicDBObject("topics", topicRef);
+		List<DBObject> convosDBList = convosColl.find(query).toArray();
+		
+		List<String> convosList = new ArrayList<String>();
+		for (DBObject convoDBObject : convosDBList) {
+			convosList.add(getString(convoDBObject, "_id"));
+		}
+		return convosList;
+	}
+	
 	
 	public static void main(String[] args) {
 //		TopicBean topic = new TopicBean();

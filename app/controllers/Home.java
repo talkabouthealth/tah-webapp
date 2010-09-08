@@ -9,6 +9,7 @@ import java.util.Set;
 
 import models.TalkerBean;
 import models.ConversationBean;
+import models.actions.Action;
 import models.actions.Action.ActionType;
 import play.cache.Cache;
 import play.mvc.Controller;
@@ -18,6 +19,7 @@ import util.EmailUtil;
 import util.EmailUtil.EmailTemplate;
 import util.ValidateData;
 import webapp.LiveConversationsSingleton;
+import dao.ActionDAO;
 import dao.TalkerDAO;
 import dao.ConversationDAO;
 
@@ -49,14 +51,10 @@ public class Home extends Controller {
 		}
 		
 		//Convo feed?
-//		- New conversation started in a topic that is being followed
-//		- Conversation restarted in a topic or Conversation(?) that is being followed
-//		- New answer or reply in a Topic or Conversation that is being followed
-//		- Summary created or edited in Conversation that is being followed.
+		List<Action> convoFeed = ActionDAO.loadConvoFeed(talker);
 		
 		//Action feed?
-		
-        render(talker, mapTalkmiTopics, newTopic);
+        render(talker, mapTalkmiTopics, newTopic, convoFeed);
     }
     
     /* ---------------- Invitations ----------------- */
