@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 import models.CommentBean;
+import models.CommentBean.Vote;
 import models.TalkerBean;
+import models.TopicBean;
 
 import org.bson.types.ObjectId;
 
@@ -91,15 +93,38 @@ public class CommentsDAO {
 	public static List<CommentBean> loadConvoAnswers(String topicId) {
 		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
 		
-		DBRef topicRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, topicId);
+		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, topicId);
 		DBObject query = BasicDBObjectBuilder.start()
-			.add("topic", topicRef)
+			.add("topic", convoRef)
 			.get();
 		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
 		//comments without parent (top in hierarchy)
 		List<CommentBean> topCommentsList = parseCommentsTree(commentsList);
 		return topCommentsList;
+	}
+	
+	public static void updateConvoAnswer(CommentBean answer) {
+		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		
+		DBObject answerObject = BasicDBObjectBuilder.start()
+			.add("vote_score", answer.getVoteScore())
+			.add("votes", setToDB(answer.getVotes()))
+			.get();
+		
+		DBObject answerId = new BasicDBObject("_id", new ObjectId(answer.getId()));
+		commentsColl.update(answerId, new BasicDBObject("$set", answerObject));
+	}
+	
+	public static CommentBean getConvoAnswerById(String answerId) {
+		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		
+		DBObject query = new BasicDBObject("_id", new ObjectId(answerId));
+		DBObject answerDBObject = commentsColl.findOne(query);
+		
+		CommentBean answer = new CommentBean();
+		answer.parseBasicFromDB(answerDBObject);
+		return answer;
 	}
 	
 	
@@ -126,14 +151,7 @@ public class CommentsDAO {
 			}
 			topCommentsList.add(commentBean);
 			
-			commentBean.setText((String)commentDBObject.get("text"));
-			commentBean.setTime((Date)commentDBObject.get("time"));
-			
-			//TODO: the same as thankyou?
-			DBObject fromTalkerDBObject = ((DBRef)commentDBObject.get("from")).fetch();
-			TalkerBean fromTalker = new TalkerBean();
-			fromTalker.parseBasicFromDB(fromTalkerDBObject);
-			commentBean.setFromTalker(fromTalker);
+			commentBean.parseBasicFromDB(commentDBObject);
 			
 			//save children
 			List<CommentBean> childrenList = new ArrayList<CommentBean>();
@@ -155,4 +173,5 @@ public class CommentsDAO {
 		
 		return topCommentsList;
 	}
+
 }

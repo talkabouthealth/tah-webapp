@@ -76,6 +76,15 @@
 		   			}
 	   			});		
 
+			$(".votebtn").live("click", function() {
+	   				var value = $(this).val();
+	   				var answerId = $(this).attr("rel");
+
+	   				$.post("@{Conversations.vote}", 
+	   		   				{ answerId : answerId, up : value }
+		   				);
+	   			});
+	   		
 
    			//------- Edits ----------
    			$("#titlesave").click(function() {
@@ -241,7 +250,7 @@
 							</div>
 						#{/if}
 						<div class="commentsarea">
-							#{topicCommentsTree commentsList: convo.comments, level: 1 /}
+							#{convoCommentsTree commentsList: convo.comments, level: 1 /}
 						</div>
 					</div>
 

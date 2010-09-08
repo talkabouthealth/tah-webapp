@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.CommentBean;
+import models.CommentBean.Vote;
 import models.ConversationBean;
 import models.ConversationBean.ConvoName;
 import models.TalkerBean;
@@ -118,6 +119,33 @@ public class Conversations extends Controller {
 		EmailUtil.sendEmail(EmailTemplate.CONTACTUS, EmailUtil.SUPPORT_EMAIL, vars, null, false);
     }
     
+    public static void vote(String answerId, boolean up) {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
+    	notFoundIfNull(answer);
+    	
+    	Vote newVote = new Vote(talker, up);
+    	int voteScore = answer.getVoteScore();
+    	voteScore = voteScore + (up ? 1 : -1);
+    	
+    	Vote oldVote = answer.getVoteByTalker(talker);
+    	if (oldVote != null) {
+    		if (up == oldVote.isUp()) {
+    			//try the same vote - already voted!
+    			return;
+    		}
+    		else {
+    			//remove previous vote from score
+    			voteScore = voteScore + (oldVote.isUp() ? -1 : 1);
+    		}
+    		answer.getVotes().remove(oldVote);
+    	}
+    	
+    	answer.getVotes().add(newVote);
+    	answer.setVoteScore(voteScore);
+    	CommentsDAO.updateConvoAnswer(answer);
+    }
+    
     //for Dashboard
     public static void lastTopicId() {
     	String lastTopicId = ConversationDAO.getLastConvoId();
@@ -198,8 +226,6 @@ public class Conversations extends Controller {
         		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_SUMMARY, follower, vars);
         	}
     	}
-    	
-
     }
     
     public static void saveTopicComment(String topicId, String parentId, String text) {
@@ -248,7 +274,7 @@ public class Conversations extends Controller {
 		//render html of new comment using tag
 		List<CommentBean> _commentsList = Arrays.asList(comment);
 		int _level = (comment.getParentId() == null ? 1 : 2);
-		render("tags/topicCommentsTree.html", _commentsList, _level);
+		render("tags/convoCommentsTree.html", _commentsList, _level);
 	}
     
 }

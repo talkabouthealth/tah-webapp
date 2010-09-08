@@ -10,8 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import models.ConversationBean.ConvoName;
+import models.DBModel;
+
 import org.bson.types.ObjectId;
 
+import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -103,11 +107,49 @@ public class DBUtil {
 		return map;
 	}
 	
+	//--------- Using DBModel -----------
+	
+	//TODO: find better implementation?
+	public static <T extends DBModel> Set<T> parseSet(Class<T> clazz, DBObject dbObject, String name) {
+		Collection<DBObject> value = (Collection<DBObject>)dbObject.get(name);
+		if (value == null) {
+			return new HashSet<T>();
+		}
+		
+		Set<T> valueSet = new HashSet<T>();
+		for (DBObject valueDBObject : value) {
+			T t = null;
+			try {
+				t = clazz.newInstance();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			
+			t.parseDBObject(valueDBObject);
+			valueSet.add(t);
+		}
+		return valueSet;
+	}
+	
+	public static <T extends DBModel> Set<DBObject> setToDB(Set<T> valueSet) {
+		Set<DBObject> dbSet = new HashSet<DBObject>();
+		for (T t : valueSet) {
+			dbSet.add(t.toDBObject());
+		}
+		return dbSet;
+	}
 	
 	
-	
-	
-	
+//	List<DBObject> namesDBList = new ArrayList<DBObject>();
+//	for (ConvoName convoName : convo.getOldNames()) {
+//		DBObject nameDBObject = BasicDBObjectBuilder.start()
+//			.add("title", convoName.getTitle())
+//			.add("url", convoName.getUrl())
+//			.get();
+//		namesDBList.add(nameDBObject);
+//	}
 	
 	public static void main(String[] args) {
 		Set<String> colls = getDB().getCollectionNames();
