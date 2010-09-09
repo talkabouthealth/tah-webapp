@@ -9,12 +9,7 @@
      		<strong>${_talker.userName}</strong>
      	</a>
         <span class="blacktext12">
-			#{if _talker.connection}
-				(${_talker.connection}, ${_talker.levelOfRecognition})
-			#{/if}
-			#{else}
-				(${_talker.levelOfRecognition})
-			#{/else}
+			#{ talkerInfo talker: _talker /}
 		</span><br/>
         #{if _talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.BIO) }
         	<span class="greytext12">

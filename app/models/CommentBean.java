@@ -128,6 +128,10 @@ public class CommentBean extends MessageBean {
 	}
 	
 	public Vote getVoteByTalker(TalkerBean talker) {
+		if (getVotes() == null) {
+			return null;
+		}
+		
 		for (Vote vote : getVotes()) {
 			if (vote.getTalker().equals(talker)) {
 				return vote;
@@ -138,6 +142,9 @@ public class CommentBean extends MessageBean {
 	
 	public Set<Vote> getUpVotes() {
 		Set<Vote> upVotes = new HashSet<Vote>();
+		if (getVotes() == null) {
+			return upVotes;
+		}
 		for (Vote vote : getVotes()) {
 			if (vote.isUp()) {
 				upVotes.add(vote);

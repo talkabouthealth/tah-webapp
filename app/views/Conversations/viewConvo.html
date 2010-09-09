@@ -1,7 +1,8 @@
 #{extends 'main.html' /}
+	<link rel='stylesheet' type='text/css' href='/public/stylesheets/styles.css' />
 	<style>
 		body {
-			background:url(/public/images/inner_bg.gif) repeat-x top;
+			background:url(/public/images/inner_bgmt.gif) repeat-x top;
 			font-size: 14px;
 		}
 		#innermid {
@@ -22,8 +23,90 @@
 			height: 20px;
 			color: #777777;
 		}
+		
+		a {color:#333; text-decoration:none}
+		a:hover {color:#ccc; text-decoration:none}
+		#mask {
+		  position:absolute;
+		  left:0;
+		  top:0;
+		  z-index:9000;
+		 
+		  display:none;
+		}
+		  
+		#boxes .window {
+		  position:absolute;
+		  left:0;
+		  top:0;
+		  width:440px;
+		  height:200px;
+		  display:none;
+		  z-index:9999;
+		  padding:20px;
+		}
+		
+		#boxes #dialog {
+		  width:375px; 
+		  height:203px;
+		  padding:10px;
+		  background-color:#ffffff;
+		}
+		
+		#boxes #dialog1 {
+		  width:685px; height:407px;
+		}
+		
+		#dialog1 .d-header {
+		  background:url(/public/images/login-header.png) no-repeat 0 0 transparent; 
+		  width:375px; 
+		  height:150px;
+		}
+		
+		#dialog1 .d-header input {
+		  position:relative;
+		  top:60px;
+		  left:100px;
+		  border:3px solid #cccccc;
+		  height:22px;
+		  width:200px;
+		  font-size:15px;
+		  padding:5px;
+		  margin-top:4px;
+		}
+		
+		#dialog1 .d-blank {
+		  float:left;
+		  background:url(/public/images/login-blank.png) no-repeat 0 0 transparent; 
+		  width:267px; 
+		  height:53px;
+		}
+		
+		#dialog1 .d-login {
+		  float:left;
+		  width:108px; 
+		  height:53px;
+		}
+		
+		#boxes #dialog2 {
+		  background:url(/public/images/notice.png) no-repeat 0 0 transparent; 
+		  width:326px; 
+		  height:229px;
+		  padding:50px 0 20px 25px;
+		}
+		.style2 {color: #000000}
+		.display {
+			background:#FFF;
+			width:1px;
+			height:1px;
+			margin-left:3px;
+		}
+		
+		/* Different fixes */
 	</style>
 
+	<script type="text/javascript" 
+		src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
 		var tid = '${convo.tid}';
 		$(document).ready(function() {
@@ -87,8 +170,12 @@
 	   		
 
    			//------- Edits ----------
-   			$("#titlesave").click(function() {
+   			$("#titleBtn").click(function() {
    	   			var newValue = $("#titleinput").val();
+   	   			$("#convoTitle").html(newValue);
+   	   			//hide edit
+   	   			shoit('1');
+   	   			$("#hidit1 .display").show();
    	   			$.post("@{Conversations.updateField()}", 
    	   					{ convoId : '${convo.id}', name: 'title', value: newValue},
    	   					function() {
@@ -97,8 +184,12 @@
    	   				);
    			});	
 
-   			$("#detailssave").click(function() {
+   			$("#detailsBtn").click(function() {
    	   			var newValue = $("#detailsinput").val();
+   	   			$("#convoDetails").html(newValue === '' ? 'Add details...' : newValue);
+	   			//hide edit
+	   			shoit('2');
+	   			$("#hidit2 .display").show();
    	   			$.post("@{Conversations.updateField()}", 
    	   					{ convoId : '${convo.id}', name: 'details', value: newValue},
    	   					function() {
@@ -107,8 +198,12 @@
    	   				);
    			});	
 
-   			$("#summarysave").click(function() {
+   			$("#summaryBtn").click(function() {
    	   			var newValue = $("#summaryinput").val();
+	   	   		$("#convoSummary").html(newValue === '' ? 'Add summary...' : newValue);
+	   			//hide edit
+	   			shoit('13');
+	   			$("#hidit13 .display").show();
    	   			$.post("@{Conversations.updateField()}", 
    	   					{ convoId : '${convo.id}', name: 'summary', value: newValue},
    	   					function() {
@@ -116,6 +211,10 @@
    	   					}
    	   				);
    			});	
+
+
+   			/* New Design */
+   			$('.inline-edit').inlineEdit({hover: 'hover'})
 		});
 
 		function updateCommentState(newState) {
@@ -169,6 +268,21 @@
 			}
   			return false;
    		}
+
+		/* Awful, TODO: fix them */
+	    function hidit(id) {
+	    	var e = document.getElementById('hidit'+id);
+	    	e.style.display = 'none';
+			return false;
+	    }
+		function shoit(id)
+		{
+		  var e = document.getElementById('editit'+id);
+	          e.style.display = 'none';
+			  var e = document.getElementById('hidit'+id);
+	         e.style.display = 'block';
+	         return false;
+		}
 	</script>
 </head>
 
@@ -184,17 +298,316 @@
 
 <div id="innerbanner"></div>
 <div id="bottom_container">
-	<div class="blacktext2" id="innerheading">${convo.topic}</div>
-	<input id="titleinput" type="text" value="${convo.topic}"/>
-	<input id="titlesave"  type="button" value="Save"/>
+
+	<div id="targetedtherapy">
+		<div id="innermiddlearea">
+			<div id="mtcover">
+				<div id="mtleft">
+					<div class="mtcontent">
+						<div id="targetedtherapy">
+							<div class="suggescover">
+								<div class="editsWraper">
+									<div class="editsWraper">
+										<div class='inline-edit'>
+											<div id="hidit1">
+												<div id="convoTitle" class="targetedh7" style="display:block;">${convo.topic}</div>
+												<div class="display" style="display:block;">
+													<div class="editit" style="display:block;">
+														<a href="#" onclick="hidit('1')">Edit</a>
+													</div>
+												</div>
+										    </div>
+										    <div style="margin-top:10px; margin-bottom:10px;"></div>
+											<div class='form' id="editit1">
+												<div style="float:left; width:auto; padding-bottom:5px;" >
+										        	<input id="titleinput" type="text"
+										        		value="${convo.topic}" class="edititinputs" style="width:600px"  >
+										        </div>
+												<div style="float:right;margin-right:30px;">
+											        <input id="titleBtn" type="submit"  class="updatebtns" value=" " />
+											        <div class="canclebtnz">
+											        	<a class="cancel" href="#" onclick="shoit('1')">Cancel</a>
+											        </div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div><!--editsWraper-->
+								<div style="clear:both">
+									<div class='inline-edit'>
+										<div class="suggestxt" id="hidit2">
+                      						<p id="convoDetails" style="float:left; padding-top:10px;">
+                      							${convo.details ? convo.details : "Add details..."}</p>
+                      						<div class='display'>
+												<div class="editit" style="padding-top:10px;">
+													<a href="#" onclick="hidit('2')">Edit</a>
+												</div>
+											</div>
+                    					</div>
+										<div class='form' id="editit2">
+											<div style="padding-top:10px;">
+										        <textarea id="detailsinput" class="edititinputx" 
+										        	style="width:600px">${convo.details}</textarea>
+									        </div>
+											<div style="float:right;margin-right:30px;">
+												<input id="detailsBtn" type="submit" class="updatebtns" value=" " />
+												<div class="canclebtnz">
+													<a class="cancel" href="#" onclick="shoit('2')">Cancel</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div> <!--Blank-->   
+							</div><!--suggescover-->
+                  		</div> <!--targetedtherapy-->
+                  		<div class="topipcWraper">
+                    		<div class="topic">
+                      			<div class='inline-edit'>
+									<div class="topictxt" id="hidit4" style="display:block; float:left; width:auto;">
+									<div style="float:left;">Topics: &nbsp;&nbsp;&nbsp;&nbsp;</div>
+									<div class="suuport"><a href="#"></a></div>
+									 <div class="Helptag"><a href="#"></a></div> 
+									              
+									</div>
+									<!--topictxt-->
+										<div class='display' style="padding-top:10px;"><div class="editit"><a href="javascript:void()"  onclick="hidit('4')">Edit</a></div></div>       
+									     <div class='form' style="clear:both; padding-top:5px;" id="editit4">
+									     <div class="topictxt" id="hidit4" style="display:block; float:left; width:auto;">
+									<div style="float:left;">Topics &nbsp;&nbsp;&nbsp;&nbsp;</div>
+									<div class="suuportzz"><a href="#"></a></div>
+									 <div class="Helptagzz"><a href="#"></a></div> 
+									              
+									</div>
+											  <div class="addcomCover" style="width:400px;">
+									                      <input type="text" class="addcominput"  value="" style="float:left; width:215px;"/>
+									                      <input type="submit" value=" " class="addcomsubmit" src="/public//public/images/addcomsubmit.jpg" style="float:left; width:80;"  />
+									                      <div class="canclebtnz" style="float:left; width:auto;"><a href="javascript:void()" onclick="shoit('4')">Cancel</a></div> 
+									                      </div><!--addcomCover-->
+										</div><!--form--> 
+								</div>
+                      
+                      			#{if talker }
+									<div class="tagtxts">
+				                    	<a href="#" class="restartConvoLink">Restart Conversation </a> |  
+				                    	<a href="#">Start Follow up conversation</a>  |  
+				                    	<a href="#" class="flagConvoLink">Flag Question </a> 
+				                    </div>
+								#{/if}
+								<div class="cb"></div>
+							</div> <!--topic-->
+							
+                    		<div class="topic">
+                    			<div class="cscover">
+                    				<div class="cstop">
+					                   <div class='inline-edit'>
+					 						<div class="cstoptext" id="hidit3">Conversation Summary</div>
+										</div>
+                    				</div><!--cstop-->
+				                    <div class="csmid">
+				                    	<div class="cmmidtext">
+                     						<div class='inline-edit' style="width: 100%">
+                     							<div id="hidit13">
+													<div id="convoSummary" style="display:block;padding-right:30px;text-align:justify">
+														${convo.summary ? convo.summary : "Add summary..."}
+													</div> 
+													<div class='display' style="float:right;margin-right:80px;">
+														<div class="editit" style="margin-top:7px;">
+															<a href="" onclick="hidit('13')">Edit</a>
+														</div>
+													</div>
+												</div>
+												<div style="margin-top:10px; margin-bottom:10px; clear: both"></div>
+												<div class='form' id="editit13">
+													<div style="float:left; width:auto;">
+        												<textarea style="width:585px;height:230px;font-size:13px;font-weight:normal" 
+        													id="summaryinput" class="edititinputs">${convo.summary}</textarea>
+        											</div>
+													<div style="float:right; width:auto;margin-right:30px;">
+														<input id="summaryBtn" class="updatebtns" value=" " />
+														<div class="canclebtnz">
+															<a class="cancel" href="javascript:void()" onclick="shoit('13')">Cancel</a>
+														</div>
+													</div>
+												</div>
+    										</div>
+    										<div style="clear: both; padding-top: 10px;">
+    											<span class="blacktext">Contributions By:</span> 
+												<span class="blacktext">
+													#{list items: convo.sumContributors, as: 'contributor'}
+														
+														#{ifnot contributor_isLast}
+															<a href="#">${contributor.userName}</a>, 
+														#{/ifnot}
+														#{else}
+															<a href="#">${contributor.userName}</a>
+														#{/else}
+													#{/list}
+												</span>
+    										</div>
+										</div><!--cmmidtext-->
+                    				</div><!--csmid-->
+                    				<div class="csbot"></div>
+                    			</div>
+                    		</div><!--topic-->
+                    		
+                     		<div class="topic">
+                     			<div class="answerh1">Answers <span class="style2">(${convo.comments.size()})</span></div>
+                      			<div class="topicborder"></div>
+                      		</div>
+                      		#{convoCommentsTree commentsList: convo.comments, level: 1 /}
+                      		
+                      		
+                      			<div class="topic">
+                      				<div class="answerCover">
+					                    <div class="replyWraper">
+					                    	<div class="replyr1">
+	                  							<div class="arrowups">
+	                  								<a href="#" onclick="toggle_visibility('foo');">&nbsp;</a>
+	                  							</div> 
+	                  							<div class="arrowdons">
+	                  								<a href="#" onclick="toggle_visibility('foo');">&nbsp;</a>
+	                  							</div>
+	                    					</div><!--replyr1-->
+	                   				 		<div class="replyl1">
+	                    						<div class="replyz">
+								                    <div class="replytop"></div>
+								                    <div class="replymid">
+								                    	<div class="replypics">
+								                    		<img src="/public/images/replypics.jpg" alt="com" />
+								                    	</div>
+	                    								<div class="replytextarea">
+	                      									<p>
+	                      										<span class="stylzz"><a href="#">Murry</a> </span> 
+	                      										<span class="stylexz"> (Patiant , Advocate) - </span> 
+	                      										<span class="stylezx">03 / 01 / 2010</span>
+	                      									</p>
+	                      									<p>   
+	                     								 		<div class="styles1">
+	                      											<div class="votestxt3"> 3 votes by  
+	                      												<a href="#">Mani</a>,<a href="#">&nbsp;Kan,</a><a href="#">  ...more</a>
+	                      											</div>
+	                        										<span class="styles2">sdfasdf</span>
+	                        									</div>
+										                        <div class="sstyles3">
+											                        <ul>
+												                        <li><a href="#" onclick="toggle_visibility('foo');">1 Reply &nbsp; </a></li>
+												                        <li>| </li>
+												                        <li><a href="#dialog1" name="modal" > &nbsp;Thank&nbsp;</a></li>
+												                      	<li>| </li>
+												                        <li><a href="#dialog1" name="modal" >&nbsp;Flag Comment &nbsp;</a></li> 
+											                       	</ul>
+										                    	</div> 
+										                   </p>
+														</div><!--replytextarea-->
+	                    								<div class="cb"></div>
+	                    							</div><!--replymid-->
+	                    							<div class="replybot"></div>
+	                    							<div class="cb"></div>
+	                    						</div><!--replyz-->
+	                    						<div class="cb"></div>
+                    					
+                    				<div id="bobcontent1" class="switchgroup1">
+                    <div class="replysub">
+                    <div style="clear:both" id="foo">
+                    <div class="replysubmidz" >
+                    <div class="replypics"><img src="/public/images/mani.jpg" alt="com" /></div>
+                    <div class="replytextsub">
+                      <p><span class="stylzz"><a href="#">Murry</a> </span> <span class="stylexz"> (Patiant , Advocate) - </span> <span class="stylezx">03 / 01 / 2010
+                       </span></p>
+                      <p>   
+                      <div class="styles1">
+                      <div class="votestxt3"> 3 votes by  <a href="#">Mani</a>,<a href="#">&nbsp;Kan,</a><a href="#">  ...more</a></div>
+                     
+                        <span class="styles2">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of typeand scrambled it to make a type </div>
+                        <div class="sstyles3">
+                        <ul>
+                        <li><a href="#">1 Reply  &nbsp; </a></li>
+                        <li>| </li>
+                        <li><a href="#dialog1" name="modal" > &nbsp;Thank&nbsp;</a></li>
+                      <li>| </li>
+                        <li><a href="#dialog1" name="modal" >&nbsp;Flag Comment &nbsp;</a></li> 
+                       </ul>
+                    </a></div> </p></div>
+                    <div class="cb"></div>
+                    </div><!--replytextsub-->
+                    <div style="clear:both">
+                    <div class="repcommbox22">
+                    <input type="text" class="repcominput" />
+                    <div class="repcommstextbox">
+                    <input type="submit" class="repcomsubmits" src="/public/images/repcomsubmits.jpg" value=" " />
+                     <span class="canclelz"><a href="#">Cancel</a> </span>                    </div>
+                    <!--repcommstextbox-->
+                    <div class="cb"></div>
+                    </div>
+                    </div><!--Blankdivsub-->
+                    </div><!--Blankdiv-->
+                    
+                    <div class="cb"></div>
+                    </div><!--replysub-->
+                    <div class="cb"></div>
+                    </div>
+                    </div><!--replyl1-->
+                    <div class="cb"></div>
+                    </div><!--replyWraper-->
+                      </div><!--answerCover-->
+                      <div class="cb"></div>
+                    </div> <!--topic-->
+                      <div class="topic">
+                       <div class="answerCover" style="padding-top:2px">
+                    <div class="replyWraper"  > 
+                    <div class="replyr1"><div class="arrowups">   <a href="#">&nbsp;</a> </div> <div class="arrowdons">   <a href="#">&nbsp;</a> </div></div><!--replyr1-->
+                    <div class="replyl1">
+                    <div class="replyz">
+                    <div class="replytop"></div>
+                    <div class="replymid">
+                    <div class="replypics"><img src="/public/images/maryy.jpg" alt="com" /></div>
+                    <div class="replytextarea">
+                      <p><span class="stylzz"><a href="#">Murry</a> </span> <span class="stylexz"> (Patiant , Advocate) - </span> <span class="stylezx">03 / 01 / 2010
+                         </span>
+                      <div class="styles1">
+                     <div class="votestxt3"> 3 votes by  <a href="#">Mani</a>,<a href="#">&nbsp;Kan,</a><a href="#">  ...more</a></div>
+                        <span class="styles2">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of typeand scrambled it to make a type </div>
+                        <div class="sstyles3">
+                        <ul>
+                        <li><a href="#">1 Reply &nbsp; </a></li>
+                        <li>| </li>
+                        <li><a href="#dialog1" name="modal" > &nbsp;Thank&nbsp;</a></li>
+                      <li>| </li>
+                        <li><a href="#dialog1" name="modal" >&nbsp;Flag Comment &nbsp;</a></li> 
+                       </ul>
+                    </a></div>
+                    
+                     </p></div>
+                    <div class="cb"></div>
+                    </div><!--replytextarea-->
+                    <!--replymid-->
+                    <div class="replybot"></div>
+                    <div class="cb"></div>
+                    </div><!--replyz-->
+                    <div class="cb"></div>
+                    <!--replysub-->
+                    </div>
+                    <!--replyl1-->
+                    <div class="cb"></div>
+                    </div><!--replyWraper-->
+                      </div><!--answerCover-->
+                      <div class="cb"></div>
+                    </div> <!--topic-->
+                      <div class="topipcWraper">
+                        <!--topic-->
+<div class="topic">
+                     
+                      <br />
+                      <textarea name="textarea" class="answerinput" onclick="this.value=''" >Add New Answer
+                      </textarea>
+                      <br />
+                      <input type="Submit" src="/public/images/addcomments.jpg" class="addcomments" value=" " />
+
 	<div id="middle_area_inner">
 		<div id="innerboxarea">
 			<div id="innerleft">
 				<div id="innerlefttop"></div>
 				<div id="innermid">
-					${convo.details}<br/>
-					<input id="detailsinput" type="text" value="${convo.details}"/>
-					<input id="detailssave"  type="button" value="Save"/>
 					<br/><br/>
 					Tags: 
 					#{list items: convo.topics, as: 'tag'}
@@ -208,23 +621,8 @@
 					</select>
 					<input id="newTopicBtn" type="button" value="Add" />
 					<br/><br/>
-					#{if talker }
-						<a href="#" class="restartConvoLink">Re-start conversation</a>&nbsp;
-						<a href="#">Start follow up conversation</a>&nbsp;
-						<a href="#" class="flagConvoLink">Flag conversation</a>&nbsp;
-					#{/if}
-					<br/><br/>
-					<h3>Conversation Summary:</h3><br/>
-					${convo.summary}<br/>
-					<input id="summaryinput" type="text" value="${convo.summary}"/>
-					<input id="summarysave"  type="button" value="Save"/>
-					<br/>
-					Contributions by: 
-					#{list items: convo.sumContributors, as: 'contributor'}
-						${contributor.userName}&nbsp;&nbsp;&nbsp;
-					#{/list}
-					<br/><br/>
 					
+					<br/><br/>
 					<div>
 						<h3 id="comments">Comments:</h3><br/>
 

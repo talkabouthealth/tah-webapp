@@ -1,42 +1,85 @@
 #{list items: _commentsList, as: 'comment' }
-	<div id="comment${comment.id}" class="commentbox">
-		<div class="thankyoupic">
-			<img src="@{Image.show(comment.fromTalker.userName)}" border="0" width="48px" height="48px" />
-		</div>
-		<div class="thankyoutext">
-			<span class="navybluetext12">${comment.fromTalker.userName}</span>
-			${comment.voteScore}
-			<input class="votebtn" type="button" value="true" rel="${comment.id}" />
-			<input class="votebtn" type="button" value="false" rel="${comment.id}" />
-			${comment.upVotes.size()} vote(s) by
-			#{list items: comment.upVotes, as: 'vote' }
-				${vote.talker.userName}&nbsp;
-			#{/list}
-			<br />
-		  	<span class="blacktext11">${comment.text}</span>
-		  	<span class="greytext11"><br/>${comment.time.format("MMM dd 'at' HH:mm a")}&nbsp;&nbsp;</span>
-		</div>
-		#{if _level == 1}
-			<div class="commentsreply">
-				#{convoCommentsTree commentsList: comment.children, level: (_level+1)/}
-				#{if session.username }
-					<div id="reply${comment.id}" class="replyForm">
-						<ul>
-							<li>
-								<textarea class="togglecomment commentreply" 
-									rows="5" cols="45" id="replytext${comment.id}">Reply to comment..</textarea>
-						    </li>
-							<li style="display: none;">
-								<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
-									<a href="#reply${comment.id}" onclick="return saveProfileComment('${comment.id}');">
-										<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
-									</a>
-								</div>
-							</li> 
-						</ul>
+	<div id="comment${comment.id}" class="topic">
+    	<div class="answerCover">
+			<div class="replyWraper">
+				<div class="replyr1">
+					<div class="arrowups">
+						<a href="#" class="votebtn" value="true" rel="${comment.id}">&nbsp;</a>
+					</div> 
+					<div class="arrowdons">
+						<a href="#" class="votebtn" value="false" rel="${comment.id}">&nbsp;</a>
 					</div>
-				#{/if}
+	            </div><!--replyr1-->
+	            <div class="replyl1">
+	            	<div class="replyz">
+						<div class="replytop"></div>
+						<div class="replymid">
+	                    	<div class="replypics">
+	                    		<img src="@{Image.show(comment.fromTalker.userName)}" border="0" width="48px" height="48px" />
+	                    	</div>
+	             			<div class="replytextarea">
+								<p>
+									<span class="stylzz"><a href="#">${comment.fromTalker.userName} ${comment.voteScore}</a> </span> 
+									<span class="stylexz"> #{ talkerInfo talker: comment.fromTalker /} - </span> 
+									<span class="stylezx">${comment.time.format("MM / dd / yyyy")}</span>
+								</p>
+	               				<p>   
+						 			<div class="styles1">
+										<div class="votestxt3">
+											${comment.upVotes.size()} vote(s) by
+											<a href="#">Mani</a>,<a href="#">&nbsp;Kan,</a><a href="#">  ...more</a>
+											#{list items: comment.upVotes, as: 'vote' }
+												${vote.talker.userName}&nbsp;
+											#{/list}
+										</div>
+										<span class="styles2">${comment.text}</span>
+									</div>
+			                        <div class="sstyles3">
+				                        <ul>
+					                        <li><a href="#" onclick="toggle_visibility('foo');">1 Reply &nbsp; </a></li>
+					                        <li>| </li>
+					                        <li><a href="#dialog1" name="modal" > &nbsp;Thank&nbsp;</a></li>
+					                      	<li>| </li>
+					                        <li><a href="#dialog1" name="modal" >&nbsp;Flag Comment &nbsp;</a></li> 
+				                       	</ul>
+			                    	</div> 
+			                   	</p>
+							</div><!--replytextarea-->
+	                    	<div class="cb"></div>
+	                   	</div><!--replymid-->
+	                    <div class="replybot"></div>
+	                    <div class="cb"></div>
+	               	</div><!--replyz-->
+	            	<div class="cb"></div>
+	            
+				     #{if _level == 1}
+				     	<div class="replysub">
+			            	<div style="clear:both" id="foo">
+								#{convoCommentsTree commentsList: comment.children, level: (_level+1)/}
+								#{if session.username }
+									<div id="reply${comment.id}" class="replyForm">
+										<ul>
+											<li>
+												<textarea class="togglecomment commentreply" 
+													rows="5" cols="45" id="replytext${comment.id}">Reply to comment..</textarea>
+										    </li>
+											<li style="display: none;">
+												<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
+													<a href="#reply${comment.id}" onclick="return saveProfileComment('${comment.id}');">
+														<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
+													</a>
+												</div>
+											</li> 
+										</ul>
+									</div>
+								#{/if}
+							</div>
+						</div>
+					#{/if}
+				</div>
+				<div class="cb"/>
 			</div>
-		#{/if}
-	</div>
+		</div>
+		<div class="cb"/>
+	</div>       
 #{/list}
