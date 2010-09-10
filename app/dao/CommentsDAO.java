@@ -97,7 +97,7 @@ public class CommentsDAO {
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("topic", convoRef)
 			.get();
-		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("vote_score", -1)).toArray();
 		
 		//comments without parent (top in hierarchy)
 		List<CommentBean> topCommentsList = parseCommentsTree(commentsList);

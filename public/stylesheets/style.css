@@ -1093,8 +1093,8 @@ width:70px;
 .csbot { background:url(../images/csbot.jpg); width:625px; height:12px; background-position:left bottom ;}
 .answerCover { clear:both; padding-top:15px; }
 .replyWraper { clear:both;}
-.replyr1 { float:left; width:20px; padding-top:15px;}
-.replyl1 {float:left; width:570px; padding-left:10px; }
+.replyr1 { float:left; width:20px; padding-top:15px; padding-right:10px;}
+.replyl1 {float:left; width:570px;  } /* padding-left:10px; */
 .replyz { clear:both;}
 .replytop { background:url(../images/replytop.jpg); background-position:left top; width:570px; height:13px; }
 .replymid { background:url(../images/replymid.jpg); background-position:left bottom; width:550px; padding-left:10px; padding-right:10px; }
@@ -1134,7 +1134,7 @@ width:70px;
 .repcommstextbox { float:left; padding-top:25px; }
 .repcomsubmits { float:left; width:78px; height:26px;  border:0; background:url(../images/repcomsubmits.jpg); margin-right:5px;cursor:pointer }
 .repcommbox2 { clear:both; padding-top:10px; padding-bottom:10px; padding-left:50px; }
-.repcommbox22 { clear:both; padding-top:10px; padding-bottom:10px; padding-left:70px; }
+.repcommbox22 { clear:both; padding-top:10px; padding-bottom:10px;} /* padding-left:70px; */
 .repcomflag { float:left; width:78px; height:26px;  border:0; background:url(../images/repcomflag.jpg); margin-right:5px; cursor:pointer}
 .blankdiv {width:100px; height:30px; float:left; height:30px;}
 .topmemtextleft { float:left; font-size:18px; font-weight:normal; text-align:left; width:auto; padding-top:6px; padding-bottom:4px;}

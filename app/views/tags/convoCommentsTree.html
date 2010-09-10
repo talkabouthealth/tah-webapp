@@ -2,14 +2,16 @@
 	<div id="comment${comment.id}" class="topic">
     	<div class="answerCover">
 			<div class="replyWraper">
-				<div class="replyr1">
-					<div class="arrowups">
-						<a href="#" class="votebtn" value="true" rel="${comment.id}">&nbsp;</a>
-					</div> 
-					<div class="arrowdons">
-						<a href="#" class="votebtn" value="false" rel="${comment.id}">&nbsp;</a>
-					</div>
-	            </div><!--replyr1-->
+				#{if _level == 1}
+					<div class="replyr1">
+						<div class="arrowups">
+							<a href="#" class="votebtn" value="true" rel="${comment.id}">&nbsp;</a>
+						</div> 
+						<div class="arrowdons">
+							<a href="#" class="votebtn" value="false" rel="${comment.id}">&nbsp;</a>
+						</div>
+		            </div><!--replyr1-->
+	            #{/if}
 	            <div class="replyl1">
 	            	<div class="replyz">
 						<div class="replytop"></div>
@@ -19,19 +21,25 @@
 	                    	</div>
 	             			<div class="replytextarea">
 								<p>
-									<span class="stylzz"><a href="#">${comment.fromTalker.userName} ${comment.voteScore}</a> </span> 
+									<span class="stylzz"><a href="#">${comment.fromTalker.userName}</a> </span> 
 									<span class="stylexz"> #{ talkerInfo talker: comment.fromTalker /} - </span> 
 									<span class="stylezx">${comment.time.format("MM / dd / yyyy")}</span>
 								</p>
 	               				<p>   
 						 			<div class="styles1">
-										<div class="votestxt3">
-											${comment.upVotes.size()} vote(s) by
-											<a href="#">Mani</a>,<a href="#">&nbsp;Kan,</a><a href="#">  ...more</a>
-											#{list items: comment.upVotes, as: 'vote' }
-												${vote.talker.userName}&nbsp;
-											#{/list}
-										</div>
+						 				#{if comment.upVotes.size() > 0}
+						 					<div class="votestxt3">
+												${comment.upVotes.size()} vote(s) by
+												#{list items: comment.upVotes, as: 'vote' }
+													#{ifnot vote_isLast}
+														<a href="#">${vote.talker.userName}</a>, 
+													#{/ifnot}
+													#{else}
+														<a href="#">${vote.talker.userName}</a>
+													#{/else}
+												#{/list}
+											</div>
+						 				#{/if}
 										<span class="styles2">${comment.text}</span>
 									</div>
 			                        <div class="sstyles3">
@@ -57,29 +65,25 @@
 			            	<div style="clear:both" id="foo">
 								#{convoCommentsTree commentsList: comment.children, level: (_level+1)/}
 								#{if session.username }
-									<div id="reply${comment.id}" class="replyForm">
-										<ul>
-											<li>
-												<textarea class="togglecomment commentreply" 
-													rows="5" cols="45" id="replytext${comment.id}">Reply to comment..</textarea>
-										    </li>
-											<li style="display: none;">
-												<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
-													<a href="#reply${comment.id}" onclick="return saveProfileComment('${comment.id}');">
-														<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
-													</a>
-												</div>
-											</li> 
-										</ul>
-									</div>
+									<div style="clear:both">
+					                    <div class="repcommbox22">
+						                    <input id="replytext${comment.id}" type="text" class="repcominput" />
+						                    <div class="repcommstextbox">
+						                    	<input type="submit" class="repcomsubmits" onclick="return saveProfileComment('${comment.id}');"
+						                    		src="/public/images/repcomsubmits.jpg" value=" " />
+						                     	<span class="canclelz"><a href="#">Cancel</a></span>
+						                    </div>
+						                    <div class="cb"></div>
+					                    </div>
+				                    </div><!--Blankdivsub-->
 								#{/if}
 							</div>
 						</div>
 					#{/if}
 				</div>
-				<div class="cb"/>
+				<div class="cb"></div>
 			</div>
 		</div>
-		<div class="cb"/>
+		<div class="cb"></div>
 	</div>       
 #{/list}

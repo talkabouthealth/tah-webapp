@@ -103,6 +103,7 @@
 		}
 		
 		/* Different fixes */
+		.answerCover { padding-top: 0px }
 	</style>
 
 	<script type="text/javascript" 
@@ -434,7 +435,6 @@
     											<span class="blacktext">Contributions By:</span> 
 												<span class="blacktext">
 													#{list items: convo.sumContributors, as: 'contributor'}
-														
 														#{ifnot contributor_isLast}
 															<a href="#">${contributor.userName}</a>, 
 														#{/ifnot}
@@ -450,261 +450,105 @@
                     			</div>
                     		</div><!--topic-->
                     		
-                     		<div class="topic">
+                     		<div class="topic" style="margin-bottom: 15px;">
                      			<div class="answerh1">Answers <span class="style2">(${convo.comments.size()})</span></div>
                       			<div class="topicborder"></div>
                       		</div>
+                      		
                       		#{convoCommentsTree commentsList: convo.comments, level: 1 /}
-                      		
-                      		
-                      			<div class="topic">
-                      				<div class="answerCover">
-					                    <div class="replyWraper">
-					                    	<div class="replyr1">
-	                  							<div class="arrowups">
-	                  								<a href="#" onclick="toggle_visibility('foo');">&nbsp;</a>
-	                  							</div> 
-	                  							<div class="arrowdons">
-	                  								<a href="#" onclick="toggle_visibility('foo');">&nbsp;</a>
-	                  							</div>
-	                    					</div><!--replyr1-->
-	                   				 		<div class="replyl1">
-	                    						<div class="replyz">
-								                    <div class="replytop"></div>
-								                    <div class="replymid">
-								                    	<div class="replypics">
-								                    		<img src="/public/images/replypics.jpg" alt="com" />
-								                    	</div>
-	                    								<div class="replytextarea">
-	                      									<p>
-	                      										<span class="stylzz"><a href="#">Murry</a> </span> 
-	                      										<span class="stylexz"> (Patiant , Advocate) - </span> 
-	                      										<span class="stylezx">03 / 01 / 2010</span>
-	                      									</p>
-	                      									<p>   
-	                     								 		<div class="styles1">
-	                      											<div class="votestxt3"> 3 votes by  
-	                      												<a href="#">Mani</a>,<a href="#">&nbsp;Kan,</a><a href="#">  ...more</a>
-	                      											</div>
-	                        										<span class="styles2">sdfasdf</span>
-	                        									</div>
-										                        <div class="sstyles3">
-											                        <ul>
-												                        <li><a href="#" onclick="toggle_visibility('foo');">1 Reply &nbsp; </a></li>
-												                        <li>| </li>
-												                        <li><a href="#dialog1" name="modal" > &nbsp;Thank&nbsp;</a></li>
-												                      	<li>| </li>
-												                        <li><a href="#dialog1" name="modal" >&nbsp;Flag Comment &nbsp;</a></li> 
-											                       	</ul>
-										                    	</div> 
-										                   </p>
-														</div><!--replytextarea-->
-	                    								<div class="cb"></div>
-	                    							</div><!--replymid-->
-	                    							<div class="replybot"></div>
-	                    							<div class="cb"></div>
-	                    						</div><!--replyz-->
-	                    						<div class="cb"></div>
-                    					
-                    				<div id="bobcontent1" class="switchgroup1">
-                    <div class="replysub">
-                    <div style="clear:both" id="foo">
-                    <div class="replysubmidz" >
-                    <div class="replypics"><img src="/public/images/mani.jpg" alt="com" /></div>
-                    <div class="replytextsub">
-                      <p><span class="stylzz"><a href="#">Murry</a> </span> <span class="stylexz"> (Patiant , Advocate) - </span> <span class="stylezx">03 / 01 / 2010
-                       </span></p>
-                      <p>   
-                      <div class="styles1">
-                      <div class="votestxt3"> 3 votes by  <a href="#">Mani</a>,<a href="#">&nbsp;Kan,</a><a href="#">  ...more</a></div>
-                     
-                        <span class="styles2">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of typeand scrambled it to make a type </div>
-                        <div class="sstyles3">
-                        <ul>
-                        <li><a href="#">1 Reply  &nbsp; </a></li>
-                        <li>| </li>
-                        <li><a href="#dialog1" name="modal" > &nbsp;Thank&nbsp;</a></li>
-                      <li>| </li>
-                        <li><a href="#dialog1" name="modal" >&nbsp;Flag Comment &nbsp;</a></li> 
-                       </ul>
-                    </a></div> </p></div>
-                    <div class="cb"></div>
-                    </div><!--replytextsub-->
-                    <div style="clear:both">
-                    <div class="repcommbox22">
-                    <input type="text" class="repcominput" />
-                    <div class="repcommstextbox">
-                    <input type="submit" class="repcomsubmits" src="/public/images/repcomsubmits.jpg" value=" " />
-                     <span class="canclelz"><a href="#">Cancel</a> </span>                    </div>
-                    <!--repcommstextbox-->
-                    <div class="cb"></div>
-                    </div>
-                    </div><!--Blankdivsub-->
-                    </div><!--Blankdiv-->
-                    
-                    <div class="cb"></div>
-                    </div><!--replysub-->
-                    <div class="cb"></div>
-                    </div>
-                    </div><!--replyl1-->
-                    <div class="cb"></div>
-                    </div><!--replyWraper-->
-                      </div><!--answerCover-->
-                      <div class="cb"></div>
-                    </div> <!--topic-->
-                      <div class="topic">
-                       <div class="answerCover" style="padding-top:2px">
-                    <div class="replyWraper"  > 
-                    <div class="replyr1"><div class="arrowups">   <a href="#">&nbsp;</a> </div> <div class="arrowdons">   <a href="#">&nbsp;</a> </div></div><!--replyr1-->
-                    <div class="replyl1">
-                    <div class="replyz">
-                    <div class="replytop"></div>
-                    <div class="replymid">
-                    <div class="replypics"><img src="/public/images/maryy.jpg" alt="com" /></div>
-                    <div class="replytextarea">
-                      <p><span class="stylzz"><a href="#">Murry</a> </span> <span class="stylexz"> (Patiant , Advocate) - </span> <span class="stylezx">03 / 01 / 2010
-                         </span>
-                      <div class="styles1">
-                     <div class="votestxt3"> 3 votes by  <a href="#">Mani</a>,<a href="#">&nbsp;Kan,</a><a href="#">  ...more</a></div>
-                        <span class="styles2">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of typeand scrambled it to make a type </div>
-                        <div class="sstyles3">
-                        <ul>
-                        <li><a href="#">1 Reply &nbsp; </a></li>
-                        <li>| </li>
-                        <li><a href="#dialog1" name="modal" > &nbsp;Thank&nbsp;</a></li>
-                      <li>| </li>
-                        <li><a href="#dialog1" name="modal" >&nbsp;Flag Comment &nbsp;</a></li> 
-                       </ul>
-                    </a></div>
-                    
-                     </p></div>
-                    <div class="cb"></div>
-                    </div><!--replytextarea-->
-                    <!--replymid-->
-                    <div class="replybot"></div>
-                    <div class="cb"></div>
-                    </div><!--replyz-->
-                    <div class="cb"></div>
-                    <!--replysub-->
-                    </div>
-                    <!--replyl1-->
-                    <div class="cb"></div>
-                    </div><!--replyWraper-->
-                      </div><!--answerCover-->
-                      <div class="cb"></div>
-                    </div> <!--topic-->
-                      <div class="topipcWraper">
-                        <!--topic-->
                         
-                        
-<div class="topic"><br />
-	<textarea name="textarea" class="answerinput" onclick="this.value=''" >Add New Answer</textarea><br />
-	<input type="Submit" src="/public/images/addcomments.jpg" class="addcomments" value=" " />
-	<div class="answerh2 style1 style2">Conversation</div>
-	<div class="topicborder"></div>
-	
-	<div class="tagtxts"><a href="#">Restart Conversation </a> |  
-		<a href="#">Start Follow up conversation</a>  |  <a href="#">Flag Question </a> </div>
-	
-	<div class="talkerCover">
-		<div class="talkertop">Talkers</div>
-		<div class="talkermid"><br />
-			#{list items: convo.members, as: 'member'}
-				<img src="@{Image.show(member)}" width="48" height="48" border="0" />
-				${member}&nbsp;&nbsp;&nbsp;
-			#{/list}
-			<!--
-              <div class="talkertxt">
-              <div class="talktextleft"><span class="uzername"><a href="#">tom:</a></span></div>
-              <div class="talktextright"><span class="uzername"><a href="#">Janifer</a></div>
-              </div>talkertxt-->
-              
-			#{list items: convo.messages, as: 'message'}
-				<div class="talkertxt1">
-					<span class="uzername"><a href="#">${message.fromTalker.userName}:</a></span>
-					&nbsp;&nbsp;${message.text} 
-				</div>
-			#{/list}
-		</div><!--talkermid-->
-		<div class="talkerbot"></div>
-	</div><!--talkerCover-->
-    <div class="cb"></div>
-</div>
-
-
-	<div class="cb"></div>
-	</div>
-	<div class="cb"></div>
-	</div>
-                  <!--topipcWraper-->
-                  <div class="cb"></div>
+							<div class="topic"><br />
+								<textarea name="textarea" class="answerinput" onclick="this.value=''" >Add New Answer</textarea><br />
+								<input type="Submit" src="/public/images/addcomments.jpg" class="addcomments" value=" " />
+								<div class="answerh2 style1 style2">Conversation</div>
+								<div class="topicborder"></div>
+								
+								<div class="tagtxts"><a href="#">Restart Conversation </a> |  
+									<a href="#">Start Follow up conversation</a>  |  <a href="#">Flag Question </a> </div>
+								
+								<div class="talkerCover">
+									<div class="talkertop">Talkers</div>
+									<div class="talkermid"><br />
+										#{list items: convo.members, as: 'member'}
+											<img src="@{Image.show(member)}" width="48" height="48" border="0" />
+											${member}&nbsp;&nbsp;&nbsp;
+										#{/list}
+										<!--
+							              <div class="talkertxt">
+							              <div class="talktextleft"><span class="uzername"><a href="#">tom:</a></span></div>
+							              <div class="talktextright"><span class="uzername"><a href="#">Janifer</a></div>
+							              </div>talkertxt-->
+							              
+										#{list items: convo.messages, as: 'message'}
+											<div class="talkertxt1">
+												<span class="uzername"><a href="#">${message.fromTalker.userName}:</a></span>
+												&nbsp;&nbsp;${message.text} 
+											</div>
+										#{/list}
+									</div><!--talkermid-->
+									<div class="talkerbot"></div>
+								</div><!--talkerCover-->
+							    <div class="cb"></div>
+							</div>
+							<div class="cb"></div>
+						</div>
+						<div class="cb"></div>
+					</div><!--mtcontent-->
                 </div>
-                <!--mtcontent-->
-                <div class="cb"></div>
-              </div>
-              <!--mtleft-->
-              <div class="cb"></div>
-              
-              <!--mtright-->
-              <div class="cb"></div>
-            </div>
-
-<div id="mtright1">
-	#{if talker }
-		#{if talker.followingConvosList?.contains(convo.id) }
-			<a href="#" id="followConvoLink">Unfollow Conversation</a>
-		#{/if}
-		#{else}
-			<a href="#" id="followConvoLink">Follow Conversation</a>
-		#{/else}
-	#{/if}
-    <!-- <input type="submit" class="followcn"  src="../TalkAboutHealth//public/images/followcn.jpg" value=" "  /> -->
-    <div class="cb"></div>
-	<div class="topipsts">
-		<div class="Statics">
-			<div class="Staticsh1">Question Statistics</div>
-			<p style="color:#000000">
-				<strong>Latest Activity:</strong> ${latestActivityTime?.format('MM / dd / yyyy')} <br />
-				<strong>Views:</strong> ${convo.views}<br />
-				<strong>Followed By:</strong> ${convo.followers?.size()} members<br/>
-				#{list items: convo.followers, as: 'follower'}
-					<a href="@{ViewDispatcher.view(follower.userName)}" title="${follower.userName}" >
-						<img src="@{Image.show(follower.userName)}" width="48" height="48" border="0" />
-					</a>
-				#{/list}
-			</p><br />
-			<div class="topicborder"></div>
-		</div>
-		<div class="cb"></div>
-	</div><!--topipsts-->
-	*{
-                <div class="topipsts">
-               <div class="rconversation">
-              <div class="Staticsh1 style1 style2">Related Conversations</div>
-              <p class="rcpadtop"><a href="#">Printer text of the printing and typesettin
-                industry. Lorem Ipsum has Done</a> </p>
-              <p class="rcpadtop">
-                <a href="#">Since the text of the printing and typeset
-                industry. Lorem Ipsum has Done </a></p>
-              <p class="rcpadtop">
-                <a href="#">ummy text of the printing and typesettin
-                industry. Lorem Ipsum has Done </a></p>
-              <p><br />
-                      <a href="#"><strong>See More Related Conversation</strong></a> </p>
-               </div>
-                <div class="cb"></div>
-                </div><!--topipsts-->
-    }*
-                <div class="cb"></div>
-              </div>
-            <!--mtcover-->
+				<div id="mtright1" style="padding-top: 10px">
+					#{if talker }
+						#{if talker.followingConvosList?.contains(convo.id) }
+							<a href="#" id="followConvoLink">Unfollow Conversation</a>
+						#{/if}
+						#{else}
+							<a href="#" id="followConvoLink">Follow Conversation</a>
+						#{/else}
+					#{/if}
+				    <!-- <input type="submit" class="followcn"  src="../TalkAboutHealth//public/images/followcn.jpg" value=" "  /> -->
+				    <div class="cb"></div>
+					<div class="topipsts">
+						<div class="Statics">
+							<div class="Staticsh1">Question Statistics</div>
+							<p style="color:#000000">
+								<strong>Latest Activity:</strong> ${latestActivityTime?.format('MM / dd / yyyy')} <br />
+								<strong>Views:</strong> ${convo.views}<br />
+								<strong>Followed By:</strong> ${convo.followers?.size()} members<br/>
+								#{list items: convo.followers, as: 'follower'}
+									<a href="@{ViewDispatcher.view(follower.userName)}" title="${follower.userName}" >
+										<img src="@{Image.show(follower.userName)}" width="48" height="48" border="0" />
+									</a>
+								#{/list}
+							</p><br />
+							<!-- <div class="topicborder"></div>  -->
+						</div>
+						<div class="cb"></div>
+					</div><!--topipsts-->
+					*{
+				                <div class="topipsts">
+				               <div class="rconversation">
+				              <div class="Staticsh1 style1 style2">Related Conversations</div>
+				              <p class="rcpadtop"><a href="#">Printer text of the printing and typesettin
+				                industry. Lorem Ipsum has Done</a> </p>
+				              <p class="rcpadtop">
+				                <a href="#">Since the text of the printing and typeset
+				                industry. Lorem Ipsum has Done </a></p>
+				              <p class="rcpadtop">
+				                <a href="#">ummy text of the printing and typesettin
+				                industry. Lorem Ipsum has Done </a></p>
+				              <p><br />
+				                      <a href="#"><strong>See More Related Conversation</strong></a> </p>
+				               </div>
+				                <div class="cb"></div>
+				                </div><!--topipsts-->
+				    }*
+                	<div class="cb"></div>
+				</div>
+            	<div class="cb"></div>
+            </div><!--mtcover-->
             <div class="cb"></div>
-          </div>
-          <div id="signupright"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+		</div>
+	</div>
+</div>
 
 *{
 
@@ -775,6 +619,4 @@
 			</div>
 		</div>
 	</div>
-	
 }*
-</div>
