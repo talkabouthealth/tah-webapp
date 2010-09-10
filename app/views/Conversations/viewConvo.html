@@ -595,13 +595,118 @@
                     </div> <!--topic-->
                       <div class="topipcWraper">
                         <!--topic-->
-<div class="topic">
-                     
-                      <br />
-                      <textarea name="textarea" class="answerinput" onclick="this.value=''" >Add New Answer
-                      </textarea>
-                      <br />
-                      <input type="Submit" src="/public/images/addcomments.jpg" class="addcomments" value=" " />
+                        
+                        
+<div class="topic"><br />
+	<textarea name="textarea" class="answerinput" onclick="this.value=''" >Add New Answer</textarea><br />
+	<input type="Submit" src="/public/images/addcomments.jpg" class="addcomments" value=" " />
+	<div class="answerh2 style1 style2">Conversation</div>
+	<div class="topicborder"></div>
+	
+	<div class="tagtxts"><a href="#">Restart Conversation </a> |  
+		<a href="#">Start Follow up conversation</a>  |  <a href="#">Flag Question </a> </div>
+	
+	<div class="talkerCover">
+		<div class="talkertop">Talkers</div>
+		<div class="talkermid"><br />
+			#{list items: convo.members, as: 'member'}
+				<img src="@{Image.show(member)}" width="48" height="48" border="0" />
+				${member}&nbsp;&nbsp;&nbsp;
+			#{/list}
+			<!--
+              <div class="talkertxt">
+              <div class="talktextleft"><span class="uzername"><a href="#">tom:</a></span></div>
+              <div class="talktextright"><span class="uzername"><a href="#">Janifer</a></div>
+              </div>talkertxt-->
+              
+			#{list items: convo.messages, as: 'message'}
+				<div class="talkertxt1">
+					<span class="uzername"><a href="#">${message.fromTalker.userName}:</a></span>
+					&nbsp;&nbsp;${message.text} 
+				</div>
+			#{/list}
+		</div><!--talkermid-->
+		<div class="talkerbot"></div>
+	</div><!--talkerCover-->
+    <div class="cb"></div>
+</div>
+
+
+	<div class="cb"></div>
+	</div>
+	<div class="cb"></div>
+	</div>
+                  <!--topipcWraper-->
+                  <div class="cb"></div>
+                </div>
+                <!--mtcontent-->
+                <div class="cb"></div>
+              </div>
+              <!--mtleft-->
+              <div class="cb"></div>
+              
+              <!--mtright-->
+              <div class="cb"></div>
+            </div>
+
+<div id="mtright1">
+	#{if talker }
+		#{if talker.followingConvosList?.contains(convo.id) }
+			<a href="#" id="followConvoLink">Unfollow Conversation</a>
+		#{/if}
+		#{else}
+			<a href="#" id="followConvoLink">Follow Conversation</a>
+		#{/else}
+	#{/if}
+    <!-- <input type="submit" class="followcn"  src="../TalkAboutHealth//public/images/followcn.jpg" value=" "  /> -->
+    <div class="cb"></div>
+	<div class="topipsts">
+		<div class="Statics">
+			<div class="Staticsh1">Question Statistics</div>
+			<p style="color:#000000">
+				<strong>Latest Activity:</strong> ${latestActivityTime?.format('MM / dd / yyyy')} <br />
+				<strong>Views:</strong> ${convo.views}<br />
+				<strong>Followed By:</strong> ${convo.followers?.size()} members<br/>
+				#{list items: convo.followers, as: 'follower'}
+					<a href="@{ViewDispatcher.view(follower.userName)}" title="${follower.userName}" >
+						<img src="@{Image.show(follower.userName)}" width="48" height="48" border="0" />
+					</a>
+				#{/list}
+			</p><br />
+			<div class="topicborder"></div>
+		</div>
+		<div class="cb"></div>
+	</div><!--topipsts-->
+	*{
+                <div class="topipsts">
+               <div class="rconversation">
+              <div class="Staticsh1 style1 style2">Related Conversations</div>
+              <p class="rcpadtop"><a href="#">Printer text of the printing and typesettin
+                industry. Lorem Ipsum has Done</a> </p>
+              <p class="rcpadtop">
+                <a href="#">Since the text of the printing and typeset
+                industry. Lorem Ipsum has Done </a></p>
+              <p class="rcpadtop">
+                <a href="#">ummy text of the printing and typesettin
+                industry. Lorem Ipsum has Done </a></p>
+              <p><br />
+                      <a href="#"><strong>See More Related Conversation</strong></a> </p>
+               </div>
+                <div class="cb"></div>
+                </div><!--topipsts-->
+    }*
+                <div class="cb"></div>
+              </div>
+            <!--mtcover-->
+            <div class="cb"></div>
+          </div>
+          <div id="signupright"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+*{
 
 	<div id="middle_area_inner">
 		<div id="innerboxarea">
@@ -662,55 +767,14 @@
 					${convo.creationDate?.format('M/d/yyyy')}
 					<br/>
 					Talkers:
-					#{list items: convo.members, as: 'member'}
-						<img src="@{Image.show(member)}" width="48" height="48" border="0" />
-						${member}&nbsp;&nbsp;&nbsp;
-					#{/list}
+					
 					<br/><br/>
-					#{list items: convo.messages, as: 'message'}
-						${message.fromTalker.userName}: ${message.text}<br/>
-					#{/list}
+					
 				</div>
 				<div id="innerbot"></div>
 			</div>
-			<div id="innerright">
-				<!-- 
-				<div id="searcharea">
-					<input name="" type="text" class="search"  value="Search Conversation" 
-						onclick="this.value=''" onblur="this.value='Search Conversation'"/>
-				</div>
-				<div id="searchright"><img src="/public/images/searchbutton.gif" width="34" height="35" /></div>
-				-->
-				#{if talker }
-				<div class="innerrightbox" style="padding-top: 0px">
-					<div class="innerrightop"></div>
-					<div class="innerrighmid">
-						#{if talker.followingConvosList?.contains(convo.id) }
-							<a href="#" id="followConvoLink">Unfollow Conversation</a>
-						#{/if}
-						#{else}
-							<a href="#" id="followConvoLink">Follow Conversation</a>
-						#{/else}
-					</div>
-					<div class="innerrighbot"></div>
-				</div>
-				#{/if}
-				<div class="innerrightbox">
-					<div class="innerrightop"></div>
-					<div class="innerrighmid">
-						<b>Question Statistics</b><br/>
-						Latest Activity: ${latestActivityTime?.format('M/d/yyyy')}<br/>
-						Views: ${convo.views}<br/>
-						Followed by ${convo.followers?.size()} members<br/>
-						#{list items: convo.followers, as: 'follower'}
-							<a href="@{ViewDispatcher.view(follower.userName)}" title="${follower.userName}" >
-								<img src="@{Image.show(follower.userName)}" width="48" height="48" border="0" />
-							</a>
-						#{/list}
-					</div>
-					<div class="innerrighbot"></div>
-				</div>
-			</div>
 		</div>
 	</div>
+	
+}*
 </div>
