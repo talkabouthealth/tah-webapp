@@ -226,6 +226,31 @@ public class Conversations extends Controller {
         		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_SUMMARY, follower, vars);
         	}
     	}
+    	else if (name.equalsIgnoreCase("topic")) {
+    		String todo = params.get("todo");
+    		if (todo.equalsIgnoreCase("add")) {
+    			TopicBean topic = TopicDAO.getByTitle(value);
+    			if (topic == null) {
+    				//create new topic with this name
+        	    	topic = new TopicBean();
+        	    	topic.setTitle(value);
+        	    	topic.setMainURL(ApplicationDAO.createURLName(value));
+        	    	TopicDAO.save(topic);
+    			}
+
+    	    	convo.getTopics().add(topic);
+    	    	ConversationDAO.updateConvo(convo);
+    	    	
+    	    	renderText(
+    	    			"<a href=\""+topic.getMainURL()+"\">"+topic.getTitle()+"</a>&nbsp;" +
+    	    			"<a class=\"deleteTopicLink\" href=\"#\" rel=\""+topic.getId()+"\">X</a>");
+    		}
+    		else if (todo.equalsIgnoreCase("remove")) {
+    			TopicBean topic = new TopicBean(value);
+    			convo.getTopics().remove(topic);
+    	    	ConversationDAO.updateConvo(convo);
+    		}
+    	}
     }
     
     public static void saveTopicComment(String topicId, String parentId, String text) {

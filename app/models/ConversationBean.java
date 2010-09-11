@@ -19,6 +19,7 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
 import dao.TalkerDAO;
+import dao.TopicDAO;
 
 /**
  * @author Osezno
@@ -181,6 +182,15 @@ public class ConversationBean {
 				topics.add(topic);
 			}
 		}
+	}
+	
+	public List<DBRef> topicsToDB() {
+		List<DBRef> topicsDBList = new ArrayList<DBRef>();
+		for (TopicBean topic : getTopics()) {
+			DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topic.getId());
+			topicsDBList.add(topicRef);
+		}
+		return topicsDBList;
 	}
 
 	public void parseFromDB(DBObject convoDBObject) {

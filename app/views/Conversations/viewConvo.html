@@ -102,8 +102,11 @@
 			margin-left:3px;
 		}
 		
+		.deleteTopicLink { margin-right: 10px }
+		
 		/* Different fixes */
 		.answerCover { padding-top: 0px }
+		.targetenew a { color:#0D94D6; }
 	</style>
 
 	<script type="text/javascript" 
@@ -185,12 +188,25 @@
    	   				);
    			});	
 
+   			$("#addDetailsLink").click(function() {
+   	   			$("#emptyDetailsDiv").hide();
+   	   			$("#editit2").show();
+   	   			return false;
+   			});
+
    			$("#detailsBtn").click(function() {
    	   			var newValue = $("#detailsinput").val();
-   	   			$("#convoDetails").html(newValue === '' ? 'Add details...' : newValue);
+   	   			if (newValue === '') {
+   	   				$("#emptyDetailsDiv").show();
+   	   				$("#detailsDiv").hide();
+   	   			}
+   	   			else {
+   	   				$("#detailsDiv").show();
+   	   				$("#convoDetails").html(newValue);
+   	   				$("#hidit2 .display").show();
+   	   			}
 	   			//hide edit
 	   			shoit('2');
-	   			$("#hidit2 .display").show();
    	   			$.post("@{Conversations.updateField()}", 
    	   					{ convoId : '${convo.id}', name: 'details', value: newValue},
    	   					function() {
@@ -212,6 +228,34 @@
    	   					}
    	   				);
    			});	
+
+
+   			//Topics
+   			$("#addTopicBtn").click(function() {
+   	   			//topicInput
+   	   			var newTopic = $("#topicInput").val();
+   	   			$("#topicInput").val("");
+
+   	   			$.post("@{Conversations.updateField()}", 
+   					{ convoId : '${convo.id}', name: 'topic', value: newTopic, todo: 'add'},
+   					function(html) {
+   	   					$(html).appendTo($("#topicsLinks"));
+   					}
+   				);
+   			});
+   			
+   			$(".deleteTopicLink").live("click", function() {
+   	   			$(this).prev().remove();
+   	   			var topicId = $(this).attr("rel");
+   	   			$(this).remove();
+
+   	   			$.post("@{Conversations.updateField()}", 
+	   					{ convoId : '${convo.id}', name: 'topic', value: topicId, todo: 'remove'},
+	   					function() {
+	   	   					//good save!!
+	   					}
+	   				);
+   			});
 
 
    			/* New Design */
@@ -270,19 +314,15 @@
   			return false;
    		}
 
-		/* Awful, TODO: fix them */
+   		//show and hide for field edits
 	    function hidit(id) {
-	    	var e = document.getElementById('hidit'+id);
-	    	e.style.display = 'none';
+		    $("#hidit"+id).hide();
 			return false;
 	    }
-		function shoit(id)
-		{
-		  var e = document.getElementById('editit'+id);
-	          e.style.display = 'none';
-			  var e = document.getElementById('hidit'+id);
-	         e.style.display = 'block';
-	         return false;
+		function shoit(id) {
+			$("#editit"+id).hide();
+			$("#hidit"+id).show();
+			return false;
 		}
 	</script>
 </head>
@@ -337,11 +377,17 @@
 								<div style="clear:both">
 									<div class='inline-edit'>
 										<div class="suggestxt" id="hidit2">
-                      						<p id="convoDetails" style="float:left; padding-top:10px;">
-                      							${convo.details ? convo.details : "Add details..."}</p>
-                      						<div class='display'>
-												<div class="editit" style="padding-top:10px;">
-													<a href="#" onclick="hidit('2')">Edit</a>
+											<div id="hiditDiv2" style="display: ${convo.details ? 'block' : 'none'}">
+												<p id="convoDetails" style="float:left; padding-top:10px;">${convo.details}</p>
+												<div class='display'>
+													<div class="editit" style="padding-top:10px;">
+														<a href="#" onclick="hidit('2')">Edit</a>
+													</div>
+												</div>
+											</div>
+											<div id="hiditEmptyDiv2" style="display: ${!convo.details ? 'block' : 'none'}">
+												<div class="targetenew">
+													<a id="addDetailsLink" href="#">Add Conversation Details</a>
 												</div>
 											</div>
                     					</div>
@@ -365,26 +411,42 @@
                     		<div class="topic">
                       			<div class='inline-edit'>
 									<div class="topictxt" id="hidit4" style="display:block; float:left; width:auto;">
-									<div style="float:left;">Topics: &nbsp;&nbsp;&nbsp;&nbsp;</div>
-									<div class="suuport"><a href="#"></a></div>
-									 <div class="Helptag"><a href="#"></a></div> 
-									              
+										<div style="float:left;">Topics: &nbsp;&nbsp;&nbsp;&nbsp;</div>
+										#{list items: convo.topics, as: 'tag'}
+											<a href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>&nbsp;&nbsp;&nbsp;
+										#{/list}
+										<!-- 
+											<div class="suuport"><a href="#"></a></div>
+											<div class="Helptag"><a href="#"></a></div> 
+										 -->
 									</div>
-									<!--topictxt-->
-										<div class='display' style="padding-top:10px;"><div class="editit"><a href="javascript:void()"  onclick="hidit('4')">Edit</a></div></div>       
-									     <div class='form' style="clear:both; padding-top:5px;" id="editit4">
-									     <div class="topictxt" id="hidit4" style="display:block; float:left; width:auto;">
-									<div style="float:left;">Topics &nbsp;&nbsp;&nbsp;&nbsp;</div>
-									<div class="suuportzz"><a href="#"></a></div>
-									 <div class="Helptagzz"><a href="#"></a></div> 
-									              
-									</div>
-											  <div class="addcomCover" style="width:400px;">
-									                      <input type="text" class="addcominput"  value="" style="float:left; width:215px;"/>
-									                      <input type="submit" value=" " class="addcomsubmit" src="/public//public/images/addcomsubmit.jpg" style="float:left; width:80;"  />
-									                      <div class="canclebtnz" style="float:left; width:auto;"><a href="javascript:void()" onclick="shoit('4')">Cancel</a></div> 
-									                      </div><!--addcomCover-->
-										</div><!--form--> 
+									<div class='display' style="padding-top:10px;">
+										<div class="editit">
+											<a href="#"  onclick="hidit('4')">Edit</a>
+										</div>
+									</div>       
+									<div class='form' style="clear:both; padding-top:5px;" id="editit4">
+									     <div id="topicsLinks" class="topictxt" style="display:block; float:left; width:auto;">
+											<div style="float:left;">Topics &nbsp;&nbsp;&nbsp;&nbsp;</div>
+											#{list items: convo.topics, as: 'tag'}
+												<a href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>
+												<a class="deleteTopicLink" href="#" rel="${tag.id}">X</a>
+											#{/list}
+											<!-- 
+											<div class="suuportzz"><a href="#"></a></div>
+									 		<div class="Helptagzz"><a href="#"></a></div> 
+									 		-->
+										</div>
+										<div class="addcomCover" style="width:400px;">
+											<input type="text" id="topicInput" 
+												class="addcominput"  value="" style="float:left; width:215px;"/>
+						                   	<input type="submit" value=" " id="addTopicBtn" 
+						                   		class="addcomsubmit" style="float:left; width:80;"  />
+									        <div class="canclebtnz" style="float:left; width:auto;">
+									          	<a class="cancel" href="#" onclick="shoit('4')">Cancel</a>
+									        </div> 
+									    </div>
+									</div><!--form--> 
 								</div>
                       
                       			#{if talker }
@@ -563,11 +625,6 @@
 						<a href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>&nbsp;&nbsp;&nbsp;
 					#{/list}
 					<br/>
-					<select id="newTopic">
-						#{list items: topicsList, as: 'topicItem'}
-							<option value="${topicItem.id}">${topicItem.title}</option>
-						#{/list}
-					</select>
 					<input id="newTopicBtn" type="button" value="Add" />
 					<br/><br/>
 					

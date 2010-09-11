@@ -77,11 +77,6 @@ public class ConversationDAO {
 		int tid = convosCursor.hasNext() ? ((Integer)convosCursor.next().get("tid")) + 1 : 1;
 		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, convo.getUid());
-		List<DBRef> topicsDBList = new ArrayList<DBRef>();
-		for (TopicBean topic : convo.getTopics()) {
-			DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topic.getId());
-			topicsDBList.add(topicRef);
-		}
 		DBObject convoObject = BasicDBObjectBuilder.start()
 			.add("uid", talkerRef)
 			.add("tid", tid)
@@ -89,7 +84,7 @@ public class ConversationDAO {
 			.add("cr_date", convo.getCreationDate())
 			.add("disp_date", convo.getDisplayTime())
 			.add("main_url", convo.getMainURL())
-			.add("topics", topicsDBList)
+			.add("topics", convo.topicsToDB())
 			.add("details", convo.getDetails())
 			.add("opened", true)
 			.get();
@@ -138,6 +133,8 @@ public class ConversationDAO {
 			
 			.add("details", convo.getDetails())
 			.add("opened", convo.isOpened())
+			
+			.add("topics", convo.topicsToDB())
 			
 			.add("summary", convo.getSummary())
 			.add("sum_authors", sumContributorsDBList)

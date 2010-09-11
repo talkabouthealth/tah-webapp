@@ -171,11 +171,11 @@ public class ViewDispatcher extends Controller {
 			latestActivityTime = activities.get(0).getTime();
 		}
 		
-		List<TopicBean> topicsList = TopicDAO.getTopics();
+//		List<TopicBean> topicsList = TopicDAO.getTopics();
 		
 		convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
 		
-		render("Conversations/viewConvo.html", talker, convo, latestActivityTime, topicsList);
+		render("Conversations/viewConvo.html", talker, convo, latestActivityTime);
     }
 	
 	private static void showTopic(TopicBean topic) {
