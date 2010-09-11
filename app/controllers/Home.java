@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import models.IMAccountBean;
 import models.TalkerBean;
 import models.ConversationBean;
 import models.actions.Action;
 import models.actions.Action.ActionType;
 import play.cache.Cache;
+import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
@@ -57,6 +59,23 @@ public class Home extends Controller {
 		List<Action> activityFeed = ActionDAO.loadActivityFeed(talker);
 		
         render(talker, mapTalkmiTopics, newTopic, convoFeed, activityFeed);
+    }
+    
+    public static void saveIM(String imService, String imUsername) {
+    	IMAccountBean imAccount = new IMAccountBean(imUsername, imService);
+    	//check if such IM account exists
+    	TalkerBean otherTalker = TalkerDAO.getByIMAccount(imAccount);
+    	if (otherTalker != null) {
+			renderText(Messages.get("imaccount.exists"));
+			return;
+		}
+        
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		talker.getImAccounts().add(imAccount);
+		
+		CommonUtil.updateTalker(talker, session);
+		
+		CommonUtil.sendIMInvitation(imAccount);
     }
     
     /* ---------------- Invitations ----------------- */

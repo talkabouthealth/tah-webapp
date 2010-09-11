@@ -242,7 +242,7 @@ public class Conversations extends Controller {
     	    	ConversationDAO.updateConvo(convo);
     	    	
     	    	renderText(
-    	    			"<a href=\""+topic.getMainURL()+"\">"+topic.getTitle()+"</a>&nbsp;" +
+    	    			"<a class=\"topicTitle\" href=\""+topic.getMainURL()+"\">"+topic.getTitle()+"</a>&nbsp;" +
     	    			"<a class=\"deleteTopicLink\" href=\"#\" rel=\""+topic.getId()+"\">X</a>");
     		}
     		else if (todo.equalsIgnoreCase("remove")) {

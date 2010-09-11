@@ -103,6 +103,8 @@
 		}
 		
 		.deleteTopicLink { margin-right: 10px }
+		#topicsList { float: left }
+		#topicsList a { margin-right: 10px }
 		
 		/* Different fixes */
 		.answerCover { padding-top: 0px }
@@ -236,12 +238,29 @@
    	   			var newTopic = $("#topicInput").val();
    	   			$("#topicInput").val("");
 
+   	   			shoit('4');
+   	   			$("#display4").show();
+
    	   			$.post("@{Conversations.updateField()}", 
    					{ convoId : '${convo.id}', name: 'topic', value: newTopic, todo: 'add'},
    					function(html) {
    	   					$(html).appendTo($("#topicsLinks"));
+
+   	   					//update static topics
+   	    	   			$("#topicsList").html("");
+   	    	   			$("#topicsLinks a[class='topicTitle']").each(function(i, item) {
+   	    	   	   			$("#topicsList").append($(item).clone());
+   	    	   			});
    					}
    				);
+   			});
+
+   			$("#editit4 .cancel").click(function() {
+   				//update static topics
+   	   			$("#topicsList").html("");
+   	   			$("#topicsLinks a[class='topicTitle']").each(function(i, item) {
+   	   	   			$("#topicsList").append($(item).clone());
+   	   			});
    			});
    			
    			$(".deleteTopicLink").live("click", function() {
@@ -412,15 +431,18 @@
                       			<div class='inline-edit'>
 									<div class="topictxt" id="hidit4" style="display:block; float:left; width:auto;">
 										<div style="float:left;">Topics: &nbsp;&nbsp;&nbsp;&nbsp;</div>
-										#{list items: convo.topics, as: 'tag'}
-											<a href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>&nbsp;&nbsp;&nbsp;
-										#{/list}
+										<div id="topicsList">
+											#{list items: convo.topics, as: 'tag'}
+												<a href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>
+											#{/list}
+										</div>
+										
 										<!-- 
 											<div class="suuport"><a href="#"></a></div>
 											<div class="Helptag"><a href="#"></a></div> 
 										 -->
 									</div>
-									<div class='display' style="padding-top:10px;">
+									<div id="display4" class='display' style="padding-top:10px;">
 										<div class="editit">
 											<a href="#"  onclick="hidit('4')">Edit</a>
 										</div>
@@ -429,7 +451,7 @@
 									     <div id="topicsLinks" class="topictxt" style="display:block; float:left; width:auto;">
 											<div style="float:left;">Topics &nbsp;&nbsp;&nbsp;&nbsp;</div>
 											#{list items: convo.topics, as: 'tag'}
-												<a href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>
+												<a class="topicTitle" href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>
 												<a class="deleteTopicLink" href="#" rel="${tag.id}">X</a>
 											#{/list}
 											<!-- 
