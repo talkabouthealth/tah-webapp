@@ -58,24 +58,11 @@ public class Home extends Controller {
 		//Action feed?
 		List<Action> activityFeed = ActionDAO.loadActivityFeed(talker);
 		
-        render(talker, mapTalkmiTopics, newTopic, convoFeed, activityFeed);
-    }
-    
-    public static void saveIM(String imService, String imUsername) {
-    	IMAccountBean imAccount = new IMAccountBean(imUsername, imService);
-    	//check if such IM account exists
-    	TalkerBean otherTalker = TalkerDAO.getByIMAccount(imAccount);
-    	if (otherTalker != null) {
-			renderText(Messages.get("imaccount.exists"));
-			return;
-		}
-        
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		talker.getImAccounts().add(imAccount);
+		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
+		boolean showIMPopup = (session.get("justloggedin") != null && hasNoIMAccounts);
+		session.remove("justloggedin");
 		
-		CommonUtil.updateTalker(talker, session);
-		
-		CommonUtil.sendIMInvitation(imAccount);
+        render(talker, mapTalkmiTopics, newTopic, convoFeed, activityFeed, showIMPopup);
     }
     
     /* ---------------- Invitations ----------------- */

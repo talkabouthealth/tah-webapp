@@ -102,12 +102,8 @@
 	  			return false;
 			});
 
-			//select all the a tag with name equal to modal
-			//$('a[name=modal]').click(function(e) {
-				//Cancel the link behavior
-				//e.preventDefault();
-				
-				//Get the A tag
+			var showIMPopup = ${showIMPopup};
+			if (showIMPopup) {
 				//var id = $(this).attr('href');
 				var id = "#dialog1";
 			
@@ -133,7 +129,7 @@
 			
 				//transition effect
 				$(id).fadeIn(200); 
-			//});
+			}
 
 			//if close button is clicked
 			$('.window .close, .window #noPopupLink').click(function (e) {
@@ -149,24 +145,32 @@
 				e.preventDefault();
 
 				var imService = $(".window input[checked=true]").val();
-				var imUsername = $("#imUsername").val();
-				$.post("@{Profile.addEmail()}", 
-					{ imService : imService, imUsername : imUsername},
+				var imUserName = $("#imUserName").val();
+
+				if (imService.length == 0) {
+					alert("Please choose IM Service");
+					return;
+				}
+				
+				if (imUserName.length == 0) {
+					alert("Please enter correct IM Username");
+					return;
+				}
+				
+				$.post("@{Profile.addIMAccount()}", 
+					{imUserName : imUserName, imService : imService},
 					function(data) {
 						if (data.indexOf("<tr>") == 0) {
-							$("#newEmail").val("");
-							$("#addEmailForm").hide();
+							$("#imUserName").val("");
 
-							$(data).appendTo($("#emailstable"));
+							$('#mask').hide();
+							$('.window').hide();
 						}
 						else {
-							$("#emailError").html(data);
+							alert(data);
 						}
 					}
 				);
-				
-				$('#mask').hide();
-				$('.window').hide();
 			});	
 			
 			//if mask is clicked
@@ -393,11 +397,15 @@
 					<img src="/public/images/talkabouthealth.jpg" alt="TalkAboutHealth" 
 						onmouseover="this.style.cursor='pointer'"/>
 				</div>
-            <div class="closecover"><div class="close"><img src="/public/images/close.jpg" alt="Close" onmouseover="this.style.cursor='pointer'"/></div></div>
-            <div class="imheading">Please provide your Instant Message or Twitter account.</div>
-            <div class="opheading">(This is optional. TalkAboutHealth notifies you of conversations and questions
- relevant to you via instant message or Twitter.)</div>
- 		<div class="selheading">Select a Service:</div>
+            	<div class="closecover">
+            		<div class="close">
+            			<img src="/public/images/close.jpg" alt="Close" onmouseover="this.style.cursor='pointer'"/>
+            		</div>
+            	</div>
+            	<div class="imheading">Please provide your Instant Message account.</div> <!-- or Twitter  -->
+            	<div class="opheading">(This is optional. TalkAboutHealth notifies you of conversations and questions
+ 					relevant to you via instant message.)</div><!-- or Twitter  -->
+ 				<div class="selheading">Select a Service:</div>
  		
  		#{list items: models.IMAccountBean.IM_SERVICES_MAP.keySet(), as:'imService'}
 		    <div class="poptxtCover">
@@ -409,16 +417,18 @@
 	        	<div class="poptext">${models.IMAccountBean.IM_SERVICES_MAP.get(imService)}</div>
 	        </div>
 		#{/list}
+		<!-- 
 		<div class="poptxtCover">
         	<div class="popradio">
         		<input name="imService" value="Twitter" type="radio" />
         	</div>
         	<div class="poptext">Twitter</div>
         </div>
+        -->
         
         <div class="popuser">
         <div class="popusertxzt">Username:</div>
-        <div class="popuserinput"><input id="imUsername" type="text" class="popinput" /></div>
+        <div class="popuserinput"><input id="imUserName" type="text" class="popinput" /></div>
         </div><!--popuser-->
         <div class="popusertxt1">Just the username (i.e. janesmith), no need for the @gmail.com or @yahoo.com  </div><!--popusertxt1-->
         <div class="popsubmitcover">
