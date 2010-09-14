@@ -26,6 +26,7 @@ import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
+import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.Router;
 import play.mvc.With;
@@ -132,6 +133,7 @@ public class Conversations extends Controller {
     	if (oldVote != null) {
     		if (up == oldVote.isUp()) {
     			//try the same vote - already voted!
+    			renderText(Messages.get("vote.exists"));
     			return;
     		}
     		else {
@@ -144,6 +146,7 @@ public class Conversations extends Controller {
     	answer.getVotes().add(newVote);
     	answer.setVoteScore(voteScore);
     	CommentsDAO.updateConvoAnswer(answer);
+    	renderText("ok");
     }
     
     //for Dashboard

@@ -21,6 +21,8 @@ password.different = New and Confirm passwords are different.
 
 imaccount.exists = This IM account is already registered. Please enter a different one.
 
+vote.exists = You've already voted for this answer.
+
 # Talker fields
 talker.userName = Username
 talker.password = Password

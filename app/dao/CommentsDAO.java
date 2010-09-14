@@ -148,8 +148,9 @@ public class CommentsDAO {
 			if (commentBean == null) {
 				commentBean = new CommentBean(commentId);
 				commentsCacheMap.put(commentId, commentBean);
+				
+				topCommentsList.add(commentBean);
 			}
-			topCommentsList.add(commentBean);
 			
 			commentBean.parseBasicFromDB(commentDBObject);
 			

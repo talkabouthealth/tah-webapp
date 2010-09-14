@@ -9,21 +9,6 @@
 			padding: 10px;
 		}
 		
-		#reply {
-			padding: 10px 0 0 0;
-		}
-		.commentsarea {
-			padding-top: 0px;
-		}
-		#replytext {
-			height: 20px;
-			color: #777777;
-		}
-		.commentreply {
-			height: 20px;
-			color: #777777;
-		}
-		
 		a {color:#333; text-decoration:none}
 		a:hover {color:#ccc; text-decoration:none}
 		#mask {
@@ -141,37 +126,20 @@
 			});
 
 			//----- Comments ------
-			$(".commentreply").each(function() {
-				$(this).val("Reply to comment..").css("color", "#777777");
-			});
-
-   			$("#replytext")
-	   			.click(function() {
-		   			updateCommentState('Extended');
-	   			})
-	   			.blur(function() {
-		   			if ($(this).val() == "") {
-		   				updateCommentState('Initial');
-		   			}
-	   			});
-	
-	   		$(".commentreply")
-	   			.click(function() {
-	   				updateReplyState($(this), 'Extended');
-	   			})
-	   			.blur(function() {
-		   			if ($(this).val() == "") {
-		   				updateReplyState($(this), 'Initial');
-		   			}
-	   			});		
-
 			$(".votebtn").live("click", function() {
-	   				var value = $(this).val();
+	   				var value = $(this).attr("title") === "up" ? true : false;
 	   				var answerId = $(this).attr("rel");
 
 	   				$.post("@{Conversations.vote}", 
-	   		   				{ answerId : answerId, up : value }
+	   		   				{ answerId : answerId, up : value },
+	   		   				function(data) {
+		   		   				if (data !== "ok") {
+			   		   				alert(data);
+		   		   				}
+	   		   				}
 		   				);
+
+	   				return false;
 	   			});
 	   		
 
@@ -295,28 +263,6 @@
    			$('.inline-edit').inlineEdit({hover: 'hover'})
 		});
 
-		function updateCommentState(newState) {
-   	   		if (newState == 'Initial') {
-   	   			$("#replytext").val("What are you thinking?").css("color", "#777777");
-				$("#commentBtn").hide();
-   	   		}
-   	   		else if (newState == 'Extended') {
-	   	   		$("#replytext").val("").css("color", "#000000");
-	   			$("#commentBtn").show();
-   	   		}
-   		}
-
-   		function updateReplyState(replyTextArea, newState) {
-   	   		if (newState == 'Initial') {
-   	   			replyTextArea.val("Reply to comment..").css("color", "#777777");
-   	   			replyTextArea.parent().next().hide();
-   	   		}
-   	   		else if (newState == 'Extended') {
-   	   			replyTextArea.val("").css("color", "#000000");
-	   			replyTextArea.parent().next().show();
-   	   		}
-   		}
-
    		//public static void saveTopicComment(String topicId, String parentId, String text) {
    		function saveProfileComment(parentId) {
    	   		var commentText = $("#replytext"+parentId).val();
@@ -326,24 +272,10 @@
   				{ topicId: '${convo.id}', parentId: parentId, text: commentText},
   				function(html) {
   	  				$("#firstcommentmessage").hide();
-  					//put comment in the tree
-  					if (parentId == '') {
-  	  					//add as first element in the top
-  						$(html).prependTo($(".commentsarea"));
-  					}
-  					else {
-  						//add as last element in subtree
-  						$("#reply"+parentId).before($(html));
-  					}
+  					$("#replyform"+parentId).before($(html));
   				}
   			);
 
-   			if (parentId == '') {
-   				updateCommentState('Initial');
-			}
-			else {
-				updateReplyState($("#replytext"+parentId), 'Initial');
-			}
   			return false;
    		}
 
@@ -567,9 +499,11 @@
                       		
                       		#{convoCommentsTree commentsList: convo.comments, level: 1 /}
                         
-							<div class="topic"><br />
-								<textarea name="textarea" class="answerinput" onclick="this.value=''" >Add New Answer</textarea><br />
-								<input type="Submit" src="/public/images/addcomments.jpg" class="addcomments" value=" " />
+							<div class="topic" id="replyform"><br />
+								<textarea name="textarea" id="replytext" class="answerinput" 
+									onclick="this.value=''">Add New Answer</textarea><br />
+								<input type="submit" onclick="return saveProfileComment('');" 
+									src="/public/images/addcomments.jpg" class="addcomments" value=" " />
 								<div class="answerh2 style1 style2">Conversation</div>
 								<div class="topicborder"></div>
 								

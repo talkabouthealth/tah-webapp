@@ -1,14 +1,14 @@
 #{list items: _commentsList, as: 'comment' }
-	<div id="comment${comment.id}" class="topic">
+	<div id="comment${comment.id}" class="topic" style="padding-bottom:5px;">
     	<div class="answerCover">
 			<div class="replyWraper">
 				#{if _level == 1}
-					<div class="replyr1">
+					<div id="vote${comment.id}" class="replyr1">
 						<div class="arrowups">
-							<a href="#" class="votebtn" value="true" rel="${comment.id}">&nbsp;</a>
+							<a href="#" class="votebtn" title="up" rel="${comment.id}">&nbsp;</a>
 						</div> 
 						<div class="arrowdons">
-							<a href="#" class="votebtn" value="false" rel="${comment.id}">&nbsp;</a>
+							<a href="#" class="votebtn" title="down" rel="${comment.id}">&nbsp;</a>
 						</div>
 		            </div><!--replyr1-->
 	            #{/if}
@@ -17,11 +17,15 @@
 						<div class="replytop"></div>
 						<div class="replymid">
 	                    	<div class="replypics">
-	                    		<img src="@{Image.show(comment.fromTalker.userName)}" border="0" width="48px" height="48px" />
+	                    		<a href="@{ViewDispatcher.view(comment.fromTalker.userName)}" title="${comment.fromTalker.userName}" >
+									<img src="@{Image.show(comment.fromTalker.userName)}" width="48" height="48" border="0" />
+								</a>
 	                    	</div>
 	             			<div class="replytextarea">
 								<p>
-									<span class="stylzz"><a href="#">${comment.fromTalker.userName}</a> </span> 
+									<span class="stylzz">
+										<a href="@{ViewDispatcher.view(comment.fromTalker.userName)}">${comment.fromTalker.userName}</a>
+									</span> 
 									<span class="stylexz"> #{ talkerInfo talker: comment.fromTalker /} - </span> 
 									<span class="stylezx">${comment.time.format("MM / dd / yyyy")}</span>
 								</p>
@@ -32,10 +36,10 @@
 												${comment.upVotes.size()} vote(s) by
 												#{list items: comment.upVotes, as: 'vote' }
 													#{ifnot vote_isLast}
-														<a href="#">${vote.talker.userName}</a>, 
+														<a href="@{ViewDispatcher.view(vote.talker.userName)}">${vote.talker.userName}</a>, 
 													#{/ifnot}
 													#{else}
-														<a href="#">${vote.talker.userName}</a>
+														<a href="@{ViewDispatcher.view(vote.talker.userName)}">${vote.talker.userName}</a>
 													#{/else}
 												#{/list}
 											</div>
@@ -44,11 +48,20 @@
 									</div>
 			                        <div class="sstyles3">
 				                        <ul>
-					                        <li><a href="#" onclick="toggle_visibility('foo');">1 Reply &nbsp; </a></li>
-					                        <li>| </li>
-					                        <li><a href="#dialog1" name="modal" > &nbsp;Thank&nbsp;</a></li>
-					                      	<li>| </li>
-					                        <li><a href="#dialog1" name="modal" >&nbsp;Flag Comment &nbsp;</a></li> 
+				                        	#{if _level == 1}
+				                        		<li><a href="#" onclick="$('#replies${comment.id}').show(); return false;"
+				                        			#{if comment.children?.size() == 0}
+				                        				>Add Reply</a>
+				                        			#{/if}
+					                        		#{else}
+					                        			>${comment.children?.size()} Reply</a>
+					                        		#{/else}
+				                        		</li>
+				                        		<li>&nbsp;|&nbsp;</li>
+					                        #{/if}
+					                        <li><a href="#dialog1" name="modal" >Thank</a></li>
+					                      	<li>&nbsp;|&nbsp;</li>
+					                        <li><a href="#dialog1" name="modal" >Flag Comment</a></li> 
 				                       	</ul>
 			                    	</div> 
 			                   	</p>
@@ -61,17 +74,19 @@
 	            	<div class="cb"></div>
 	            
 				     #{if _level == 1}
-				     	<div class="replysub">
+				     	<div id="replies${comment.id}" class="replysub" style="display: none">
 			            	<div style="clear:both" id="foo">
 								#{convoCommentsTree commentsList: comment.children, level: (_level+1)/}
 								#{if session.username }
-									<div style="clear:both">
+									<div id="replyform${comment.id}" style="clear:both">
 					                    <div class="repcommbox22">
 						                    <input id="replytext${comment.id}" type="text" class="repcominput" />
 						                    <div class="repcommstextbox">
 						                    	<input type="submit" class="repcomsubmits" onclick="return saveProfileComment('${comment.id}');"
 						                    		src="/public/images/repcomsubmits.jpg" value=" " />
-						                     	<span class="canclelz"><a href="#">Cancel</a></span>
+						                     	<span class="canclelz">
+						                     		<a href="#" onclick="$('#replies${comment.id}').hide(); return false;">Cancel</a>
+						                     	</span>
 						                    </div>
 						                    <div class="cb"></div>
 					                    </div>
