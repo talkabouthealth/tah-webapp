@@ -1,18 +1,28 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import models.CommentBean;
 import models.ConversationBean;
 import models.TalkerBean;
+import models.TopicBean;
+import models.actions.FollowConvoAction;
+import models.actions.StartConvoAction;
+import models.actions.Action.ActionType;
+import dao.ActionDAO;
+import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.TalkerDAO;
+import dao.TopicDAO;
 import play.mvc.Before;
 import play.mvc.Controller;
 import util.CommonUtil;
+import util.NotificationUtils;
 
 public class API extends Controller {
 	
@@ -52,5 +62,36 @@ public class API extends Controller {
 		
 		
 	}
+	
+	
+	public static void createConvo(String title) {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	
+		ConversationBean convo = new ConversationBean();
+		convo.setTopic(title);
+		convo.setUid(talker.getId());
+		Date currentDate = Calendar.getInstance().getTime();
+		convo.setCreationDate(currentDate);
+		convo.setDisplayTime(currentDate);
+		convo.setTopics(new ArrayList<TopicBean>());
+
+		String topicURL = ApplicationDAO.createURLName(title);
+		convo.setMainURL(topicURL);
+		
+		// insert new topic into database
+		ConversationDAO.save(convo);
+		ActionDAO.saveAction(new StartConvoAction(talker, convo, ActionType.START_CONVO));
+		
+		//send notifications if Automatic Notifications is On
+		NotificationUtils.sendAutomaticNotifications(convo.getId());
+		
+		//automatically follow started topic
+		talker.getFollowingConvosList().add(convo.getId());
+		CommonUtil.updateTalker(talker, session);
+		
+		ActionDAO.saveAction(new FollowConvoAction(talker, convo));
+
+		renderText("ok");
+    }
 	
 }
