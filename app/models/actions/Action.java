@@ -47,6 +47,8 @@ public interface Action {
 		ANSWER_CONVO,
 		REPLY_CONVO,
 		
+		ANSWER_VOTED,
+		
 		SUMMARY_ADDED,
 		SUMMARY_EDITED,
 		

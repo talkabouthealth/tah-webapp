@@ -29,7 +29,7 @@ public class SummaryConvoAction extends AbstractAction {
 			result.append(" edited summary for the conversation: ");
 		}
 		
-		result.append(topicLink());
+		result.append(convoLink());
 		
 		return result.toString();
 	}

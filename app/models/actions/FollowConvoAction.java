@@ -23,7 +23,7 @@ public class FollowConvoAction extends AbstractAction {
 		StringBuilder result = new StringBuilder();
 		result.append(userName());
 		result.append(" began following: ");
-		result.append(topicLink());
+		result.append(convoLink());
 		
 		return result.toString();
 	}

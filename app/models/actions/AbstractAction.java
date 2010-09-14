@@ -94,7 +94,7 @@ public abstract class AbstractAction implements Action {
 				.get();
 		
 		if (hasConvo()) {
-			addTopic(dbObject, convo);
+			addConvo(dbObject, convo);
 		}
 		if (hasOtherTalker()) {
 			addOtherTalker(dbObject, otherTalker);
@@ -127,12 +127,12 @@ public abstract class AbstractAction implements Action {
     	return topic;
 	}
 	
-	protected void addTopic(DBObject dbObject, ConversationBean topic) {
+	protected void addConvo(DBObject dbObject, ConversationBean topic) {
 		DBRef topicRef = new DBRef(DBUtil.getDB(), ConversationDAO.CONVERSATIONS_COLLECTION, new ObjectId(topic.getId()));
 		dbObject.put("topicId", topicRef);
 	}
 	
-	protected Object topicLink() {
+	protected Object convoLink() {
 		return convo.getTopic();
 	}
 	

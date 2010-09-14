@@ -26,6 +26,7 @@ import models.actions.AbstractAction;
 import models.actions.Action;
 import models.actions.Action.ActionType;
 import models.actions.AnswerConvoAction;
+import models.actions.AnswerVotedAction;
 import models.actions.FollowConvoAction;
 import models.actions.FollowTalkerAction;
 import models.actions.GiveThanksAction;
@@ -50,6 +51,13 @@ public class ActionDAO {
 			ActionType.ANSWER_CONVO, ActionType.REPLY_CONVO, 
 			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED,
 			ActionType.PERSONAL_PROFILE_COMMENT, ActionType.PERSONAL_PROFILE_REPLY
+		);
+	
+	private static final EnumSet<ActionType> COMMUNITY_CONVO_FEED_ACTIONS = EnumSet.of(
+			ActionType.START_CONVO, ActionType.RESTART_CONVO, 
+			ActionType.ANSWER_CONVO, 
+			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED,
+			ActionType.ANSWER_VOTED
 		);
 	
 	
@@ -147,6 +155,30 @@ public class ActionDAO {
 		return activitiesList;
 	}
 	
+	public static List<Action> loadCommunityConvoFeed() {
+		//list of needed actions for this Feed
+		Set<String> actionTypes = new HashSet<String>();
+		for (ActionType actionType : COMMUNITY_CONVO_FEED_ACTIONS) {
+			actionTypes.add(actionType.toString());
+		}
+		
+		//load actions for this criterias
+		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
+		
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("type", new BasicDBObject("$in", actionTypes))
+			.get();
+		List<DBObject> activitiesDBList = 
+			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		
+		List<Action> activitiesList = new ArrayList<Action>();
+		for (DBObject actionDBObject : activitiesDBList) {
+			Action action = actionFromDB(actionDBObject);
+			activitiesList.add(action);
+		}
+		return activitiesList;
+	}
+	
 	public static List<Action> loadLatestByTopic(TopicBean topic) {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
@@ -216,6 +248,9 @@ public class ActionDAO {
 			case ANSWER_CONVO:
 			case REPLY_CONVO:
 				return new AnswerConvoAction(dbObject);
+				
+			case ANSWER_VOTED:
+				return new AnswerVotedAction(dbObject);
 				
 			case SUMMARY_ADDED:
 			case SUMMARY_EDITED:

@@ -35,7 +35,7 @@ public class AnswerConvoAction extends AbstractAction {
 			result.append(" replied the conversation: ");
 			result.append(" (with "+answer.getText()+", "+reply.getText()+") ");
 		}
-		result.append(topicLink());
+		result.append(convoLink());
 		result.append("<br/>");
 		
 		return result.toString();

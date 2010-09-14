@@ -117,6 +117,11 @@ public class CommentBean extends MessageBean {
 		setText((String)commentDBObject.get("text"));
 		setTime((Date)commentDBObject.get("time"));
 		
+		DBRef topicRef = (DBRef)commentDBObject.get("topic");
+		if (topicRef != null) {
+			setTopicId(topicRef.getId().toString());
+		}
+		
 		setVoteScore(getInt(commentDBObject, "vote_score"));
 		setVotes(parseSet(Vote.class, commentDBObject, "votes"));
 		

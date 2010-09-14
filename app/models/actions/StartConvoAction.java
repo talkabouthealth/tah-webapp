@@ -36,7 +36,7 @@ public class StartConvoAction extends AbstractAction {
 		else if (type == ActionType.RESTART_CONVO) {
 			result.append(" restarted the conversation: ");
 		}
-		result.append(topicLink());
+		result.append(convoLink());
 		
 		return result.toString();
 	}

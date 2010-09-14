@@ -16,6 +16,7 @@ import models.TalkerBean;
 import models.TalkerBean.EmailSetting;
 import models.TopicBean;
 import models.actions.AnswerConvoAction;
+import models.actions.AnswerVotedAction;
 import models.actions.FollowConvoAction;
 import models.actions.StartConvoAction;
 import models.actions.Action.ActionType;
@@ -141,6 +142,11 @@ public class Conversations extends Controller {
     			voteScore = voteScore + (oldVote.isUp() ? -1 : 1);
     		}
     		answer.getVotes().remove(oldVote);
+    	}
+    	
+    	if (newVote.isUp()) {
+    		ConversationBean convo = new ConversationBean(answer.getTopicId());
+    		ActionDAO.saveAction(new AnswerVotedAction(talker, convo, answer));
     	}
     	
     	answer.getVotes().add(newVote);

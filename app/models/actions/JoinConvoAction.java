@@ -23,7 +23,7 @@ public class JoinConvoAction extends AbstractAction {
 		StringBuilder result = new StringBuilder();
 		result.append(userName());
 		result.append(" joined the conversation: ");
-		result.append(topicLink());
+		result.append(convoLink());
 		
 		return result.toString();
 	}
