@@ -20,6 +20,7 @@ import dao.CommentsDAO;
 import dao.TalkerDAO;
 import dao.ConversationDAO;
 import dao.TopicDAO;
+import play.Logger;
 import play.jobs.Every;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
@@ -73,6 +74,7 @@ public class SearchIndexerJob extends Job {
 				  autocompleteIndexWriter.addDocument(doc2);
 			}
 			
+			Logger.error("Before convos: "+ConversationDAO.loadAllConversations().size());
 			for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
 	//			possibly weight titles, conversation details, summaries, and answers more than the archived real-time conversations?
 				
@@ -102,6 +104,7 @@ public class SearchIndexerJob extends Job {
 				autocompleteIndexWriter.addDocument(doc2);
 			}
 			
+			Logger.error("Before topics: "+TopicDAO.loadAllTopics().size());
 			for (TopicBean topic : TopicDAO.loadAllTopics()) {
 				Document doc = new Document();
 				doc.add(new Field("title", topic.getTitle(), Field.Store.YES, Field.Index.TOKENIZED));
