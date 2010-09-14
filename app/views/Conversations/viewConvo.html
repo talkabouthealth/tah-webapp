@@ -191,7 +191,7 @@
    			});	
 
    			$("#addDetailsLink").click(function() {
-   	   			$("#emptyDetailsDiv").hide();
+   	   			$("#hiditEmptyDiv2").hide();
    	   			$("#editit2").show();
    	   			return false;
    			});
@@ -199,11 +199,11 @@
    			$("#detailsBtn").click(function() {
    	   			var newValue = $("#detailsinput").val();
    	   			if (newValue === '') {
-   	   				$("#emptyDetailsDiv").show();
-   	   				$("#detailsDiv").hide();
+   	   				$("#hiditEmptyDiv2").show();
+   	   				$("#hiditDiv2").hide();
    	   			}
    	   			else {
-   	   				$("#detailsDiv").show();
+   	   				$("#hiditDiv2").show();
    	   				$("#convoDetails").html(newValue);
    	   				$("#hidit2 .display").show();
    	   			}
@@ -217,9 +217,23 @@
    	   				);
    			});	
 
+   			$("#addSummaryLink").click(function() {
+   	   			$("#hiditEmptyDiv13").hide();
+   	   			$("#editit13").show();
+   	   			return false;
+   			});
+
    			$("#summaryBtn").click(function() {
    	   			var newValue = $("#summaryinput").val();
-	   	   		$("#convoSummary").html(newValue === '' ? 'Add summary...' : newValue);
+   	   			if (newValue === '') {
+	   				$("#hiditEmptyDiv13").show();
+	   				$("#hiditDiv13").hide();
+	   			}
+	   			else {
+	   				$("#hiditDiv13").show();
+	   				$("#convoSummary").html(newValue);
+	   				$("#hidit13 .display").show();
+	   			}
 	   			//hide edit
 	   			shoit('13');
 	   			$("#hidit13 .display").show();
@@ -492,12 +506,19 @@
 				                    	<div class="cmmidtext">
                      						<div class='inline-edit' style="width: 100%">
                      							<div id="hidit13">
-													<div id="convoSummary" style="display:block;padding-right:30px;text-align:justify">
-														${convo.summary ? convo.summary : "Add summary..."}
-													</div> 
-													<div class='display' style="float:right;margin-right:80px;">
-														<div class="editit" style="margin-top:7px;">
-															<a href="" onclick="hidit('13')">Edit</a>
+                     								<div id="hiditDiv13" style="display: ${convo.summary ? 'block' : 'none'}">
+														<div id="convoSummary" style="display:block;padding-right:30px;text-align:justify">
+															${convo.summary ? convo.summary : "Add summary..."}
+														</div> 
+														<div class='display' style="float:right;margin-right:80px;">
+															<div class="editit" style="margin-top:7px;">
+																<a href="" onclick="hidit('13')">Edit</a>
+															</div>
+														</div>
+													</div>
+                     								<div id="hiditEmptyDiv13" style="display: ${!convo.summary ? 'block' : 'none'}">
+														<div class="targetenew">
+															<a id="addSummaryLink" href="#">Add Conversation Summary</a>
 														</div>
 													</div>
 												</div>
@@ -515,19 +536,24 @@
 													</div>
 												</div>
     										</div>
-    										<div style="clear: both; padding-top: 10px;">
-    											<span class="blacktext">Contributions By:</span> 
-												<span class="blacktext">
-													#{list items: convo.sumContributors, as: 'contributor'}
-														#{ifnot contributor_isLast}
-															<a href="#">${contributor.userName}</a>, 
-														#{/ifnot}
-														#{else}
-															<a href="#">${contributor.userName}</a>
-														#{/else}
-													#{/list}
-												</span>
-    										</div>
+    										#{if convo.sumContributors }
+	    										<div style="clear: both; padding-top: 10px;">
+	    											<span class="blacktext">Contributions By:</span> 
+													<span class="blacktext">
+														#{list items: convo.sumContributors, as: 'contributor'}
+															#{ifnot contributor_isLast}
+																<a href="#">${contributor.userName}</a>, 
+															#{/ifnot}
+															#{else}
+																<a href="#">${contributor.userName}</a>
+															#{/else}
+														#{/list}
+													</span>
+	    										</div>
+    										#{/if}
+    										#{else}
+    											<div style="clear: both; padding-top: 10px;">&nbsp;</div>
+    										#{/else}
 										</div><!--cmmidtext-->
                     				</div><!--csmid-->
                     				<div class="csbot"></div>
