@@ -1,6 +1,6 @@
 #{set lastPage = _totalSize.page(_perPage) /}
 #{set currentPage = (_from+1).page(_perPage) /}
-#{ifnot lastPage == 1}
+#{ifnot lastPage <= 1}
 	<div class="paging">
     	#{ifnot currentPage == lastPage}
      		<div class="nextprebutton">
