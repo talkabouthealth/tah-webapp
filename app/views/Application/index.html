@@ -5,6 +5,7 @@
 	<style type="text/css">
 		body {
 			background:url(/public/images/pagebg.gif) repeat-x top;
+			font-size:11px;
 		}
 	</style>
 
@@ -74,8 +75,9 @@
 
 <div id="bottom_container">
 	<div id="middle_area">
+		<!-- 
 		<div id="arealeft">
-			<!-- 
+			
 			<div id="curvetophome"></div>
 			<div id="arealefttextarea">
 				<div id="comingsoonhead" class="bluetext30">&nbsp;Coming Soon</div>
@@ -95,7 +97,7 @@
 			  	<div id="arealefttext">Your email will remain safe and private</div>
 			</div>
 			<div id="curvebottom"></div>
-			-->
+			
 			
 			<h1>Ask a question <span class="text24">or start a new conversation:</span></h1>
 			<div id="curvetop"></div>
@@ -114,22 +116,34 @@
 				</div>
 			</div>
 			<div id="curvebottom"></div>
-			 
 		</div>
+		-->
+		<div id="arealeft">
+			<div id="welcometext">
+				<img src="/public/images/welcome_text.gif" alt="" width="446" height="113" border="0"/>
+			</div>
+			<div id="joinnowbutton">
+				<a href="@{Application.signup()}">
+					<img src="/public/images/join_nowbutton.gif" alt="" width="188" height="61" border="0"/>
+				</a>
+			</div>
+		</div>
+		
 		<div id="arearight">
 			<h1>Current Support Communities</h1>
 			<ul>
 				<li>
-					<span class="blacktext"><strong>Breast Cancer</strong></span><br />
-  					<span class="greytext">3 active conversations |</span> 
-  					<span class="bluetext2">${numberOfMembers} member(s)</span>
-  				</li>
+					<span class="blacktext"><a href="#" class="bluetext12"><strong>Breast Cancer</strong></a></span><br />
+			  		<span class="blacktext11"><strong>3 active conversations | ${numberOfMembers} members</strong></span>
+			  	</li>
 			</ul>
 			<p>
-				<span class="blacktext"><strong>Multiple Sclerosis</strong></span><br />
-  				<span class="bluetext2">Coming Soon!</span>
-  			</p>
+				<span class="blacktext"><a href="#" class="bluetext12"><strong>Multiple Sclerosis</strong></a></span><br />
+ 				<span class="blacktext11"><strong>Coming soon !</strong></span>
+ 			</p>
 		</div>
+		
+		
 		<div id="boxarea_head">
 			<h1>
 				<span class="blacktext2">How does</span> 

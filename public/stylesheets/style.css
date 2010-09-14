@@ -28,7 +28,7 @@ form { padding:0px; margin:0px;}
 #banner { float:left; width:100%; height:119px; margin-top:1px; background:url(../images/banner.jpg) repeat-x; }
 #innerbanner { float:left; width:100%; height:10px;  background:url(../images/colourribbon.gif) repeat-x; }
 #middle_area2 { float:left; padding:45px 0 5px 10px; width:962px; }
-#middle_area { float:left; padding:22px 0 5px 10px; width:962px; }
+#middle_area { float:left; padding:15px 0 5px 10px; width:962px; }
 #middle_area_inner { float:left; padding:22px 0 5px 10px; width:962px; }
 #arealeft2 { float:left;  width:650px; padding-bottom:20px;  }
 #arealeftinner { float:left;  width:685px; padding-bottom:20px;  }
@@ -38,7 +38,9 @@ form { padding:0px; margin:0px;}
 #lefttextareainner {float:left;  width:662px;  background-color:#FFFFFF; border-left:1px solid #9abcca;  padding:10px; border-bottom:1px dotted #939393;border-right:1px solid #9abcca;   }
 #comingsoonhead {float:left; background-color:#FFFFFF;  padding-right:10px; }
 
-#arealeft { float:left;  width:685px; padding-bottom:20px;  }
+#arealeft { float:left;  width:625px; padding-bottom:0px; height:248px; background:url(../images/home_box_left.gif) no-repeat; padding-right:10px;  }
+#welcometext { float:left;  width:630px; padding-left:24px; padding-top:23px; padding-bottom:27px;  }
+#joinnowbutton { float:left;  width:480px; padding-left:25px;   }
 #arealefttextarea {float:left;  width:675px; padding-left:7px; background-color:#e4e4e4; border-left:1px solid #9abcca; border-right:1px solid #9abcca;      }
 #arealeftgrey {float:left;  width:460px; background-color:#e4e4e4;  padding:3px 3px 0 0; height:46px; border-top:1px solid #ffffff; text-align:right; }
 #arealeftgrey2 {float:left;  width:627px; background-color:#ffffff;  padding:10px 3px 0 5px; height:46px; border-top:1px solid #ffffff; text-align:left; }
@@ -64,10 +66,10 @@ form { padding:0px; margin:0px;}
 #arearight2 h1 {font-weight: bold; font-size: 16px; color: #1550a4; font-family:arial; text-decoration: none;}
 #arearight2 p { float:left; padding-bottom:3px; width:247px; padding:0px; margin:0px; padding-top:5px;  }
 
-#arearight { float:left; padding:45px 0 0 27px; width:242px; }
-#arearight ul {padding:0; margin:0; width:247px; float:left; list-style:none;}
-#arearight ul li { float:left; padding-bottom:3px; width:247px; border-bottom:1px dashed #6e6e6e; padding-top:5px;  } 
-#arearight h1 {font-weight: bold; font-size: 16px; color: #1550a4; font-family:arial; text-decoration: none;}
+#arearight { float:left; padding:0px 10px 0px 20px; width:270px; height:248px; background:url(../images/right_boxbg.gif) no-repeat left top;  }
+#arearight ul {padding:0; margin:0; width:216px; float:left; list-style:none;}
+#arearight ul li { float:left; padding-bottom:3px; width:216px; border-bottom:1px dashed #6e6e6e; padding-top:5px;  } 
+#arearight h1 {font-weight: bold; font-size: 18px; color: #000000; font-family:arial; text-decoration: none; padding:20px 0px 10px 0px; }
 #arearight p { float:left; padding-bottom:3px; width:247px; padding:0px; margin:0px; padding-top:5px;  }
 
 #arearightinner { float:left; padding:45px 0 0 27px; width:242px; }
@@ -76,7 +78,7 @@ form { padding:0px; margin:0px;}
 #arearightinner h1 {font-weight: bold; font-size: 16px; color: #1550a4; font-family:arial; text-decoration: none;}
 #arearightinner p { float:left; padding-bottom:3px; width:247px; padding:0px; margin:0px; padding-top:5px;  }
 #boxarea_headmail { float:left;  width:962px; padding-top:30px; height:37px; }
-#boxarea_head { float:left;  width:962px; padding-top:20px; height:37px; }
+#boxarea_head { float:left;  width:962px; padding-top:27px; height:37px; }
 #innerarea_head { float:left;  width:962px; padding-bottom:5px; padding-top:5px; }
 #boxarea {float:left;  width:962px; padding-top:20px; padding-bottom:7px;}
 #innerboxarea {float:left;  width:962px;  padding-bottom:7px;}
@@ -119,7 +121,7 @@ form { padding:0px; margin:0px;}
 #innermain {float:center; margin-left:auto; margin-right:auto; width:942px; padding-left:30px;}
 
 #innerheading { float:left; width: 100%; height:56px; line-height:56px;}
-#innermiddlearea {float:left; width: 942px; padding-top:10px; padding-bottom:20px;}
+#innermiddlearea {float:left; width: 942px; padding-top:20px; padding-bottom:20px;}
 #innerpersonalarea {float:left; width: 942px; padding-top:20px; padding-bottom:10px;}
 .generaltextarea {float:left; width:285px; height:27px; line-height:27px; padding-top:10px;}
 .generaltextarea2 {float:left; width:500px; height:27px; line-height:27px; padding-top:10px;}
@@ -563,6 +565,10 @@ a.visited { font-weight:bold;font-family: arial; font-size: 11px;text-decoration
 .convque { float:left; width:442px; padding:0px 2px 15px 17px; padding-bottom:28px; }
 .convqueimg { float:left; width:80px; padding-right:10px;}
 .convquetext { float:left; width:348px; }
+
+
+
+
 
 
 
@@ -1143,8 +1149,10 @@ width:70px;
 .topmamsee a:hover{ text-decoration:underline; color:#025787;}
 .viewstext { color:#0286BC; float:left; font-size:12px; width:auto; font-weight:bold; }
 .viewstext a { color:#0286BC; text-decoration:none;}
+/* Problems on landing page
 .blacktext  a { color:#4B4B4B; text-decoration:none;}
 .blacktext  a:hover { color:#4B4B4B; text-decoration:underline;}
+*/
 .viewstext a:hover { color:#0286BC; text-decoration:underline;}
 .viewstext1 { color:#000; float:left; font-size:12px; width:auto; font-weight:normal; padding-left:4px; }
 .deletez { background:url(../images/deletez.jpg); width:87px; height:26px; float:left; border:0; text-align:left; background-repeat:no-repeat; }
@@ -1218,12 +1226,6 @@ text-decoration:underline;
 .signfields2 .row label {float: left; display: block; width: 300px; font-size: 18px; padding-top:5px;}
 .signfields2 .row div { background:transparent url(../images/textfieldbluebg.gif) no-repeat scroll center top; height:36px; line-height:36px; padding:1px 0 7px 20px; width:261px; margin-left:300px;}
 
-#text_heading {
-	background:transparent url(../images/homeHeadings1.gif) no-repeat scroll center center;
-	float:left;
-	height:110px;
-	width:972px;
-}
 .commentsreply {
 	padding-top: 0px;
 }
