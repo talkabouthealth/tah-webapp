@@ -26,7 +26,7 @@ import play.jobs.OnApplicationStart;
 import util.SearchUtil;
 
 @Every("5min")
-public class SeachIndexerJob extends Job {
+public class SearchIndexerJob extends Job {
 
 	@Override
 	public void doJob() throws Exception {
@@ -95,7 +95,9 @@ public class SeachIndexerJob extends Job {
 				doc2.add(new Field("title", convo.getTopic(), Field.Store.YES, Field.Index.TOKENIZED));
 				doc2.add(new Field("type", "Conversation", Field.Store.YES, Field.Index.NO));
 				//TODO: url can be changed after indexing?
-				doc2.add(new Field("url", convo.getMainURL(), Field.Store.YES, Field.Index.NO));
+				if (convo.getMainURL() != null) {
+					doc2.add(new Field("url", convo.getMainURL(), Field.Store.YES, Field.Index.NO));
+				}
 				
 				autocompleteIndexWriter.addDocument(doc2);
 			}
@@ -118,7 +120,7 @@ public class SeachIndexerJob extends Job {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		new SeachIndexerJob().doJob();
+		new SearchIndexerJob().doJob();
 		System.out.println("finished");
 	}
 
