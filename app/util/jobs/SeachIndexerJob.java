@@ -25,7 +25,6 @@ import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import util.SearchUtil;
 
-@OnApplicationStart
 @Every("5min")
 public class SeachIndexerJob extends Job {
 
