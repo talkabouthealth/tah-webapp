@@ -131,11 +131,7 @@ public class CommentBean extends MessageBean {
 		setVoteScore(getInt(commentDBObject, "vote_score"));
 		setVotes(parseSet(Vote.class, commentDBObject, "votes"));
 		
-		//TODO: the same as thankyou?
-		DBObject fromTalkerDBObject = ((DBRef)commentDBObject.get("from")).fetch();
-		TalkerBean fromTalker = new TalkerBean();
-		fromTalker.parseBasicFromDB(fromTalkerDBObject);
-		setFromTalker(fromTalker);
+		setFromTalker(parseTalker(commentDBObject, "from"));
 	}
 	
 	public Vote getVoteByTalker(TalkerBean talker) {

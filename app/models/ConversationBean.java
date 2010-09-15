@@ -141,13 +141,9 @@ public class ConversationBean {
     	parseTopics((Collection<DBRef>)convoDBObject.get("topics"));
     	
     	//author
-    	DBObject talkerDBObject = ((DBRef)convoDBObject.get("uid")).fetch();
-    	TalkerBean talker = new TalkerBean();
-    	talker.parseBasicFromDB(talkerDBObject);
-    	setTalker(talker);
+    	setTalker(parseTalker(convoDBObject, "uid"));
     	
     	//topics(tags)
-    	
 	}
 	
 	private void parseSumContributors(Collection<DBRef> contributorsDBList) {

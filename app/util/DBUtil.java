@@ -12,6 +12,7 @@ import java.util.Set;
 
 import models.ConversationBean.ConvoName;
 import models.DBModel;
+import models.TalkerBean;
 
 import org.bson.types.ObjectId;
 
@@ -54,6 +55,18 @@ public class DBUtil {
 	public static DBRef createRef(String collectionName, String objectId) {
 		DBRef ref = new DBRef(getDB(), collectionName, new ObjectId(objectId));
 		return ref;
+	}
+	
+	public static TalkerBean parseTalker(DBObject dbObject, String name) {
+		DBRef talkerRef = (DBRef)dbObject.get(name);
+		if (talkerRef == null) {
+			return null;
+		}
+		
+		DBObject talkerDBObject = talkerRef.fetch();
+		TalkerBean talker = new TalkerBean();
+		talker.parseBasicFromDB(talkerDBObject);
+		return talker;
 	}
 	
 	public static String getString(DBObject dbObject, String name) {

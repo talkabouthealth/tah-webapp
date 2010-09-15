@@ -140,7 +140,6 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			//login or signup
 	        TalkerBean talker = TalkerDAO.getByAccount("twitter", accountId);
 	        if (talker != null) {
-	        	//TODO: better implementation?
 	        	if (talker.isSuspended()) {
 	        		return "/application/suspendedAccount";
 	        	}

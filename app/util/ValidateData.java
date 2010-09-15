@@ -3,8 +3,9 @@ package util;
 import java.util.regex.Pattern;
 
 public class ValidateData {
+	// username can only have alphanumeric, -, and . and cannot be greater than 25 characters
 	public static final Pattern unpwPattern = Pattern
-			.compile("([\\w-_\\.]){1,25}");
+			.compile("([\\w-\\.]){1,25}");
 	
 	public static final String USER_REGEX = "([\\w-_\\.]){1,25}";
 	
@@ -21,61 +22,8 @@ public class ValidateData {
 	public static final Pattern topicPattern = Pattern
 			.compile("([\\w\\s-_\\.,<>/?':;\"\\[\\]\\{\\}|\\\\!~`@#$%^&*()+=и’”]){1,140}");
 
-	//TODO: remove this?
-	
-	public static boolean validateUserName(String un) {
-		// username can only have alphanumeric, _,-, and . and cannot be greater than 25 characters
-		if (!unpwPattern.matcher(un).matches()) {
-			return false;
-		}
-		return true;
-	}
-
-	public static boolean validatePassword(String pw) {
-		// password can only have alphanumeric, _,-, and . and cannot be greater than 25 characters
-		if (unpwPattern.matcher(pw).matches()) {
-			return true;
-		}
-		return false;
-	}
-
 	public static boolean validateEmail(String email) {
 		if (emailPattern.matcher(email).matches()) {
-			return true;
-		}
-		return false;
-	}
-
-	public static boolean validateMonth(String month) {
-		if (monthPattern.matcher(month).matches()) {
-			return true;
-		}
-		return false;
-	}
-
-	public static boolean validateDay(String day) {
-		if (dayPattern.matcher(day).matches()) {
-			return true;
-		}
-		return false;
-	}
-
-	public static boolean validateYear(String year) {
-		if (yearPattern.matcher(year).matches()) {
-			return true;
-		}
-		return false;
-	}
-
-	public static boolean validateGender(String gender) {
-		if (genderPattern.matcher(gender).matches()) {
-			return true;
-		}
-		return false;
-	}
-
-	public static boolean validateTopic(String topic) {
-		if (topicPattern.matcher(topic).matches()) {
 			return true;
 		}
 		return false;

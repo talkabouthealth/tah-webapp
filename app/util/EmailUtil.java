@@ -14,7 +14,6 @@ import dao.TalkerDAO;
  * @author kindcoder
  */
 public class EmailUtil {
-	//TODO: move to Play! configuration?
 	private static final String SAILTHRU_APIKEY = "4007bc4d4b48586353eb44012172eaf3";
 	private static final String SAILTHRU_SECRET = "4ba0a437f0f138fceba76dac5c33e567";
 	
@@ -38,7 +37,6 @@ public class EmailUtil {
 		NOTIFICATION_CONVO_RESTART,
 		NOTIFICATION_CONVO_ANSWER,
 		NOTIFICATION_CONVO_SUMMARY
-		
 		;
 	}
 	

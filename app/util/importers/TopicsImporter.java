@@ -48,7 +48,7 @@ public class TopicsImporter {
 			TopicBean topic = null;
 			for (int i=0; i<lineArr.length && i<4; i++) {
 				if (!lineArr[i].isEmpty()) {
-					//TODO: incorrect? not id in constructor?
+					//we use 'name' as topic id, because topic aren't saved in the DB yet
 					String name = lineArr[i].trim();
 					topic = new TopicBean(name);
 					topic.setChildren(new LinkedHashSet<TopicBean>());
@@ -90,11 +90,10 @@ public class TopicsImporter {
 		TopicDAO.save(parent);
 	}
 	
-	private static void printTopic(TopicBean parent, String prefix) {
-		System.out.println(prefix+parent);
-		for (TopicBean child : parent.getChildren()) {
-			printTopic(child, prefix+"___");
-		}
-	}
-
+//	private static void printTopic(TopicBean parent, String prefix) {
+//		System.out.println(prefix+parent);
+//		for (TopicBean child : parent.getChildren()) {
+//			printTopic(child, prefix+"___");
+//		}
+//	}
 }

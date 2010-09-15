@@ -117,7 +117,7 @@ public class TalkerBean implements Serializable {
 	private String id;
 	//FIXME: add URL field??
 	@Required @Match(ValidateData.USER_REGEX) private String userName;
-	@Required @Match(ValidateData.USER_REGEX) private String password;
+	@Required private String password;
 	@Required @Email private String email;
 	private String verifyCode;	//code for email verification
 	private Set<EmailBean> emails;
@@ -256,7 +256,6 @@ public class TalkerBean implements Serializable {
 		setConnection((String)talkerDBObject.get("connection"));
 		setConnectionVerified(getBoolean(talkerDBObject.get("connection_verified"))); 
 		
-		//TODO: slooooow?
 		parseEmailSettings(parseStringList(talkerDBObject.get("email_settings")));
 		parseProfilePreferences(parseInt(talkerDBObject.get("prefs")));
 		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));

@@ -1,6 +1,6 @@
 package models.actions;
 
-import static util.DBUtil.getString;
+import static util.DBUtil.*;
 
 import java.util.Date;
 
@@ -116,15 +116,16 @@ public abstract class AbstractAction implements Action {
 	}
 	
 	// Topic connected actions
+	//TODO: use parseBasic from ConversationBean
 	protected ConversationBean parseConvo(DBObject dbObject) {
 		DBObject topicDBObject = ((DBRef)dbObject.get("topicId")).fetch();
-		ConversationBean topic = new ConversationBean();
-    	topic.setId(topicDBObject.get("_id").toString());
-    	topic.setTid((Integer)topicDBObject.get("tid"));
-    	topic.setTopic((String)topicDBObject.get("topic"));
-    	topic.setMainURL((String)topicDBObject.get("main_url"));
+		ConversationBean convo = new ConversationBean();
+    	convo.setId(topicDBObject.get("_id").toString());
+    	convo.setTid((Integer)topicDBObject.get("tid"));
+    	convo.setTopic((String)topicDBObject.get("topic"));
+    	convo.setMainURL((String)topicDBObject.get("main_url"));
     	
-    	return topic;
+    	return convo;
 	}
 	
 	protected void addConvo(DBObject dbObject, ConversationBean topic) {
@@ -163,11 +164,7 @@ public abstract class AbstractAction implements Action {
 		answer.setText((String)answerDBObject.get("text"));
 		answer.setTime((Date)answerDBObject.get("time"));
 		
-		//TODO: the same as thankyou222?
-		DBObject fromTalkerDBObject = ((DBRef)answerDBObject.get("from")).fetch();
-		TalkerBean fromTalker = new TalkerBean();
-		fromTalker.parseBasicFromDB(fromTalkerDBObject);
-		answer.setFromTalker(fromTalker);
+		answer.setFromTalker(parseTalker(answerDBObject, "from"));
 		
     	return answer;
 	}
@@ -193,11 +190,7 @@ public abstract class AbstractAction implements Action {
 		comment.setText((String)commentDBObject.get("text"));
 		comment.setTime((Date)commentDBObject.get("time"));
 		
-		//TODO: the same as thankyou222?
-		DBObject fromTalkerDBObject = ((DBRef)commentDBObject.get("from")).fetch();
-		TalkerBean fromTalker = new TalkerBean();
-		fromTalker.parseBasicFromDB(fromTalkerDBObject);
-		comment.setFromTalker(fromTalker);
+		comment.setFromTalker(parseTalker(commentDBObject, "from"));
 		
     	return comment;
 	}
