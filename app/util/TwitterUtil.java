@@ -24,6 +24,8 @@ public class TwitterUtil {
 	private static final String ACCESS_TOKEN = "136322338-kNsQxRvvPQBHYp1EBU8F6CJAKEm9R3FXtT7S19ua";
 	private static final String ACCESS_TOKEN_SECRET = "bROleD290VFQCjtTeSfhPm3IBn6sM69uCID1hHJz44";
 	
+	public static final String TALKFORHEALTH_ID = "136322338";
+	
 	public static void followUser(final String userAccountId) {
 		Executors.newSingleThreadExecutor().execute(new Runnable() {
 			@Override

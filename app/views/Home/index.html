@@ -84,6 +84,8 @@
 		var username = "${talker.userName}";
 		var levelOfRecognition = "${talker.levelOfRecognition}";
 
+		#{ oauthJavaScripts /}
+
 		$(document).ready(function() {
 			$(".followTopicLink").live('click', function() {
 				var topicId = $(this).attr("rel");
@@ -156,21 +158,29 @@
 					alert("Please enter correct IM Username");
 					return;
 				}
-				
-				$.post("@{Profile.addIMAccount()}", 
-					{imUserName : imUserName, imService : imService},
-					function(data) {
-						if (data.indexOf("<tr>") == 0) {
-							$("#imUserName").val("");
 
-							$('#mask').hide();
-							$('.window').hide();
-						}
-						else {
-							alert(data);
-						}
-					}
-				);
+				if (imService === "Twitter") {
+					$('#mask').hide();
+					$('.window').hide();
+					
+					openTwitter();
+				}
+				else {
+					$.post("@{Profile.addIMAccount()}", 
+							{imUserName : imUserName, imService : imService},
+							function(data) {
+								if (data.indexOf("<tr>") == 0) {
+									$("#imUserName").val("");
+
+									$('#mask').hide();
+									$('.window').hide();
+								}
+								else {
+									alert(data);
+								}
+							}
+						);
+				}
 			});	
 			
 			//if mask is clicked
@@ -409,9 +419,9 @@
             			<img src="/public/images/close.jpg" alt="Close" onmouseover="this.style.cursor='pointer'"/>
             		</div>
             	</div>
-            	<div class="imheading">Please provide your Instant Message account.</div> <!-- or Twitter  -->
+            	<div class="imheading">Please provide your Instant Message or Twitter account.</div>
             	<div class="opheading">(This is optional. TalkAboutHealth notifies you of conversations and questions
- 					relevant to you via instant message.)</div><!-- or Twitter  -->
+ 					relevant to you via instant message or Twitter.)</div>
  				<div class="selheading">Select a Service:</div>
  		
  		#{list items: models.IMAccountBean.IM_SERVICES_MAP.keySet(), as:'imService'}
@@ -424,14 +434,12 @@
 	        	<div class="poptext">${models.IMAccountBean.IM_SERVICES_MAP.get(imService)}</div>
 	        </div>
 		#{/list}
-		<!-- 
 		<div class="poptxtCover">
         	<div class="popradio">
         		<input name="imService" value="Twitter" type="radio" />
         	</div>
         	<div class="poptext">Twitter</div>
         </div>
-        -->
         
         <div class="popuser">
         <div class="popusertxzt">Username:</div>

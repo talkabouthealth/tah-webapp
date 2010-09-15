@@ -16,6 +16,7 @@ import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
+import play.Logger;
 import play.cache.Cache;
 import play.mvc.Scope.Session;
 import util.CommonUtil;
@@ -78,8 +79,8 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-        
-        URL url = new URL("http://api.twitter.com/1/account/verify_credentials.xml");
+		
+		URL url = new URL("http://api.twitter.com/1/account/verify_credentials.xml");
         HttpURLConnection req = (HttpURLConnection) url.openConnection();
         //sign the request
         try {
@@ -111,35 +112,61 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
         }
         br.close();
         
-        //login or signup
-        TalkerBean talker = TalkerDAO.getByAccount("twitter", accountId);
-        if (talker != null) {
-        	//TODO: better implementation?
-        	if (talker.isSuspended()) {
-        		return "/application/suspendedAccount";
-        	}
-        	
-        	if (talker.isDeactivated()) {
-	    		talker.setDeactivated(false);
-	    		CommonUtil.updateTalker(talker, session);
-	    	}
-        		
-        	//simple login
-        	ApplicationDAO.saveLogin(talker.getId());
+        boolean isConnected = session.contains("username");
+		if (isConnected) {
+			//it's not login/signup - it's adding of Twitter account for notifications!
+			System.out.println("BEFORE!: "+accountId);
+			try {
+				//follow TAH by this user
+				url = new URL("http://api.twitter.com/1/friendships/create/"+TwitterUtil.TALKFORHEALTH_ID+".xml");
+				HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+				conn.setRequestMethod("POST");
+				consumer.sign(conn);
+				conn.connect();
+				
+				System.out.println("Twitter follow response22: " + conn.getResponseCode() + " "
+		                + conn.getResponseMessage());
+		        
+		        TwitterUtil.followUser(accountId);
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("ERROR: "+e.getMessage());
+			}
+	        
+	        //ok?!
+	        return "/home";
+		}
+		else {
+			//login or signup
+	        TalkerBean talker = TalkerDAO.getByAccount("twitter", accountId);
+	        if (talker != null) {
+	        	//TODO: better implementation?
+	        	if (talker.isSuspended()) {
+	        		return "/application/suspendedAccount";
+	        	}
+	        	
+	        	if (talker.isDeactivated()) {
+		    		talker.setDeactivated(false);
+		    		CommonUtil.updateTalker(talker, session);
+		    	}
+	        		
+	        	//simple login
+	        	ApplicationDAO.saveLogin(talker.getId());
 
-			session.put("username", talker.getUserName());
-			
-			return "/home";
-        }
-        else {
-        	//redirect to signup
-        	TwitterUtil.followUser(accountId);
-        	
-        	session.put("accounttype", "twitter");
-		    session.put("accountid", accountId);
-		     
-		    return "/signup?talker.userName="+screenName+"&from=twitter";
-        }
+				session.put("username", talker.getUserName());
+				
+				return "/home";
+	        }
+	        else {
+	        	//redirect to signup
+	        	TwitterUtil.followUser(accountId);
+	        	
+	        	session.put("accounttype", "twitter");
+			    session.put("accountid", accountId);
+			     
+			    return "/signup?talker.userName="+screenName+"&from=twitter";
+	        }
+		}
 	}
 }
 
