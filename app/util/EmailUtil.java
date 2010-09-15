@@ -26,6 +26,7 @@ public class EmailUtil {
 		FORGOT_PASSWORD,
 		INVITATION,
 		CONTACTUS,
+		FLAGGED,
 		VERIFICATION,
 		
 		

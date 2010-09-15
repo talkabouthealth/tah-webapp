@@ -121,8 +121,14 @@
 			});
 
 			$(".flagConvoLink").click(function() {
-				$(this).after("<span>Thanks!</span>").detach();
-				$.post("@{Conversations.flag}", {topicId: '${convo.id}'});
+				var reason = prompt("Reason:");
+				if (reason) {
+					$(this).after("<span>Thanks!</span>").detach();
+					
+					$.post("@{Conversations.flag}", 
+							{reason: reason, topicId: '${convo.id}'}
+					);
+				}
 			});
 
 			//----- Comments ------

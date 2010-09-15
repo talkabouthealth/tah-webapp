@@ -105,20 +105,23 @@ public class Conversations extends Controller {
     	}
     }
     
-    public static void flag(String topicId) {
+    public static void flag(String topicId, String reason) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	ConversationBean convo = ConversationDAO.getByConvoId(topicId);
     	
     	notFoundIfNull(convo);
     	
     	Map<String, String> vars = new HashMap<String, String>();
+    	vars.put("content_type", "Conversation/Question");
+    	vars.put("content_link", CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL()));
+    	vars.put("reason", reason);
+		vars.put("content", convo.getTopic());
 		vars.put("name", talker.getUserName());
 		vars.put("email", talker.getEmail());
-		vars.put("subject", "FLAGGED CONVERSATION");
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
 		vars.put("message", 
 				"Bad conversation/question: <a href=\""+convoURL+"\">"+convo.getTopic()+"</a>");
-		EmailUtil.sendEmail(EmailTemplate.CONTACTUS, EmailUtil.SUPPORT_EMAIL, vars, null, false);
+		EmailUtil.sendEmail(EmailTemplate.FLAGGED, EmailUtil.SUPPORT_EMAIL, vars, null, false);
     }
     
     public static void vote(String answerId, boolean up) {
