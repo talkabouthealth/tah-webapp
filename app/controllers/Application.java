@@ -175,13 +175,13 @@ public class Application extends Controller {
 			validation.isTrue(otherTalker == null).message("email.exists");
 		}
 		
-		String imService = talker.getIm();
-        String imUsername = talker.getImUsername();
-        if (!imService.isEmpty() && !imUsername.trim().isEmpty()) {
-        	IMAccountBean imAccount = new IMAccountBean(imUsername, imService);
-        	TalkerBean otherTalker = TalkerDAO.getByIMAccount(imAccount);
-        	validation.isTrue(otherTalker == null).message("imaccount.exists");
-        }
+//		String imService = talker.getIm();
+//        String imUsername = talker.getImUsername();
+//        if (!imService.isEmpty() && !imUsername.trim().isEmpty()) {
+//        	IMAccountBean imAccount = new IMAccountBean(imUsername, imService);
+//        	TalkerBean otherTalker = TalkerDAO.getByIMAccount(imAccount);
+//        	validation.isTrue(otherTalker == null).message("imaccount.exists");
+//        }
 	}
 
     /**
@@ -194,18 +194,18 @@ public class Application extends Controller {
 		talker.setAccountType(session.get("accounttype"));
 		talker.setAccountId(session.get("accountid"));
 		
-		String imService = talker.getIm();
-        String imUsername = talker.getImUsername();
-        if (!imService.isEmpty()) {
-        	//if userName empty - parse from email
-        	if (imUsername.trim().isEmpty()) {
-    			int atIndex = talker.getEmail().indexOf('@');
-    			imUsername = talker.getEmail().substring(0, atIndex);
-    		}
-        	
-        	IMAccountBean imAccount = new IMAccountBean(imUsername, imService);
-        	talker.setImAccounts(new HashSet<IMAccountBean>(Arrays.asList(imAccount)));
-        }
+//		String imService = talker.getIm();
+//        String imUsername = talker.getImUsername();
+//        if (!imService.isEmpty()) {
+//        	//if userName empty - parse from email
+//        	if (imUsername.trim().isEmpty()) {
+//    			int atIndex = talker.getEmail().indexOf('@');
+//    			imUsername = talker.getEmail().substring(0, atIndex);
+//    		}
+//        	
+//        	IMAccountBean imAccount = new IMAccountBean(imUsername, imService);
+//        	talker.setImAccounts(new HashSet<IMAccountBean>(Arrays.asList(imAccount)));
+//        }
         
         /*
          	TODO: save settings as enums in App and Strings in DB?

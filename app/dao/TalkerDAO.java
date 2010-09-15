@@ -54,8 +54,6 @@ public class TalkerDAO {
 				.add("dob", talker.getDob())
 				.add("timestamp",  Calendar.getInstance().getTime())
 				
-				.add("im_accounts", talker.imAccountsToDB())
-				
 				.add("connection", talker.getConnection())
 				.add("connection_verified", talker.isConnectionVerified())
 				
