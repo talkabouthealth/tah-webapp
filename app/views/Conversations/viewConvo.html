@@ -284,15 +284,32 @@
    	   		var newValue = $("#answerInput"+answerId).val();
 
    	   		$("#answerText"+answerId).html(newValue);
+   	   		$("#hidit"+answerId+" .display").show();
    	   		shoit(answerId);
 
    	   		$.post("@{Conversations.updateAnswer()}", 
-  				{ answerId: answerId, newText: newValue},
+  				{ answerId: answerId, todo: 'update', newText: newValue},
   				function(html) {
   	  				//...
   				}
   			);
    		}
+
+   		function deleteAnswer(answerId) {
+   	   		var confirmDel = confirm("Are you sure want to delete this answer?");
+   	   		if (confirmDel) {
+   	   	   		$("#comment"+answerId).remove();
+
+   	   	  	$.post("@{Conversations.updateAnswer()}", 
+    				{ answerId: answerId, todo: 'delete', newText: ''},
+    				function(html) {
+    	  				//...
+    				}
+    			);
+   	   		}
+   	   		return false;
+   		}
+   		
 
    		//show and hide for field edits
 	    function hidit(id) {

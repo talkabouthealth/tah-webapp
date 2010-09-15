@@ -1,4 +1,5 @@
 #{list items: _commentsList, as: 'comment' }
+#{ifnot comment.deleted }
 	<div id="comment${comment.id}" class="topic" style="padding-bottom:5px;">
     	<div class="answerCover">
 			<div class="replyWraper">
@@ -47,11 +48,13 @@
 						 				<div class='inline-edit'>
 											<div id="hidit${comment.id}">
 												<span class="styles2" style="float: left" id="answerText${comment.id}">${comment.text}</span>
-												<div class="display" style="display:block;">
-													<div class="editit" style="display:block;">
-														<a href="#" onclick="hidit('${comment.id}')">Edit</a>
+												#{if session.username?.equals(comment.fromTalker.userName) }
+													<div class="display" style="display:block;">
+														<div class="editit" style="display:block;">
+															<a href="#" onclick="hidit('${comment.id}')">Edit</a>
+														</div>
 													</div>
-												</div>
+												#{/if}
 										    </div>
 										    <div style="margin-top:10px; margin-bottom:10px;"></div>
 											<div class='form' id="editit${comment.id}">
@@ -82,11 +85,13 @@
 				                        		</li>
 				                        		<li>&nbsp;|&nbsp;</li>
 					                        #{/if}
-					                        <li><a href="#" rel="${comment.id}" class="deleteAnswer">Delete</a></li>
-					                        <li>&nbsp;|&nbsp;</li>
-					                        <li><a href="#dialog1" name="modal" >Thank</a></li>
+					                        #{if session.username?.equals(comment.fromTalker.userName) }
+					                        	<li><a href="#" onclick="return deleteAnswer('${comment.id}');">Delete</a></li>
+					                        	<li>&nbsp;|&nbsp;</li>
+					                        #{/if}
+					                        <li><a href="#dialog1" name="modal">Thank</a></li>
 					                      	<li>&nbsp;|&nbsp;</li>
-					                        <li><a href="#dialog1" name="modal" >Flag Comment</a></li> 
+					                        <li><a href="#dialog1" name="modal">Flag Comment</a></li> 
 				                       	</ul>
 			                    	</div> 
 			                   	</p>
@@ -125,5 +130,6 @@
 			</div>
 		</div>
 		<div class="cb"></div>
-	</div>       
+	</div>  
+#{/ifnot}     
 #{/list}

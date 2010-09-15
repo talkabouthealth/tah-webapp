@@ -262,7 +262,7 @@ public class Conversations extends Controller {
     	}
     }
     
-    public static void updateAnswer(String answerId, String newText) {
+    public static void updateAnswer(String answerId, String todo, String newText) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
     	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
@@ -271,7 +271,18 @@ public class Conversations extends Controller {
     		return;
     	}
     	
-    	System.out.println("UPDATED!: "+newText);
+    	if (todo.equalsIgnoreCase("update")) {
+    		String oldText = answer.getText();
+    		if (!oldText.equals(newText)) {
+    			answer.getOldTexts().add(oldText);
+    			answer.setText(newText);
+    			CommentsDAO.updateConvoAnswer(answer);
+    		}
+    	}
+    	else if (todo.equalsIgnoreCase("delete")) {
+    		answer.setDeleted(true);
+    		CommentsDAO.updateConvoAnswer(answer);
+    	}
     }
     
     public static void saveTopicComment(String topicId, String parentId, String text) {

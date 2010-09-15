@@ -84,6 +84,10 @@ public class CommentBean extends MessageBean {
 	
 	private String profileTalkerId;
 	private String topicId;
+	private boolean deleted;
+	
+	//old versions of the text
+	private Set<String> oldTexts;
 	
 	private String parentId;
 	private List<CommentBean> children;
@@ -115,7 +119,9 @@ public class CommentBean extends MessageBean {
 
 		setId(getString(commentDBObject, "_id"));
 		setText((String)commentDBObject.get("text"));
+		setOldTexts(getStringSet(commentDBObject, "old_texts"));
 		setTime((Date)commentDBObject.get("time"));
+		setDeleted(getBoolean(commentDBObject, "deleted"));
 		
 		DBRef topicRef = (DBRef)commentDBObject.get("topic");
 		if (topicRef != null) {
@@ -185,4 +191,21 @@ public class CommentBean extends MessageBean {
 	public void setVotes(Set<Vote> votes) {
 		this.votes = votes;
 	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public Set<String> getOldTexts() {
+		return oldTexts;
+	}
+
+	public void setOldTexts(Set<String> oldTexts) {
+		this.oldTexts = oldTexts;
+	}
+
 }
