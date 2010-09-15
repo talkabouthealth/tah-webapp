@@ -38,13 +38,48 @@
 			</form>
 			
 			#{if results }
-				<div style="font-size: 14px; clear: left">		
-					#{list items:results, as: 'res'}
-						<span style="padding-bottom: 3px">
-							*{ <a href="@{ViewDispatcher.view(res)}">${res}</a> }*
-							${res.raw()}
-						</span>
-						<br/><br/>
+				<div class="activitiestext" style="font-size: 14px; clear: left">		
+					#{list items:results, as: 'convo'}
+						<div class="area">
+							<div class="arealeft2">
+								<a href="@{ViewDispatcher.view(convo.talker.userName)}" class="bluetext11">
+									<img src="@{Image.show(convo.talker.userName)}" width="71" height="71" border="0" />
+									<br /><span class="bluetext11">${convo.talker.userName}</span>
+								</a>
+					  			<br/>
+					  			<span class="blacktext11">${convo.talker.levelOfRecognition}</span>
+					  		</div>
+							<div class="arearight">
+							    <div class="areatop"></div>
+							    <div class="areamid">
+							    	<div class="areamidleft">
+							    		<p>
+							    			<span class="blacktext14">
+							    				<a href="@{ViewDispatcher.view(convo.mainURL)}">${convo.topic}</a><br />
+							    				<span class="blacktext12">${convo.comments.size()} answer(s)</span> | 
+					        					<span class="blacktext12">${convo.members.size()} people spoke</span> | 
+					        					<a href="@{ViewDispatcher.view(convo.mainURL)}#comments" class="bluetext12">Comment</a> | 
+					        					<a href="#" class="bluetext12 followTopicLink" rel="${convo.id}">
+												${ talker.followingConvosList?.contains(convo.id) ? 'Unfollow' : 'Follow'}
+												</a> | 
+												<a href="#" class="bluetext12 restartTopicLink" 
+													rel="${convo.id}" rel2="${convo.tid}">Re-start</a> | 
+					        					*{ TODO: joined/started/etc }*
+					        					<span class="blacktext12">${convo.creationDate.since()}</span>
+					        				</span>
+					        			</p>
+					        			#{if convo.comments.size() > 0 }
+					        				<p>
+					        					#{set topAnswer = convo.comments.get(0) /}
+						        				<span class="blacktext14">Top Answer by: ${topAnswer.fromTalker.userName}</span><br/>
+						        				<span class="blacktext12">${topAnswer.text}</span>
+						        			</p>
+					        			#{/if}
+					        		</div>
+								</div>
+				  				<div class="areabot"></div>
+				 	 		</div>
+						</div>		
 					#{/list}
 					#{else}
 						No results.

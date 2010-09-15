@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.ConversationBean;
 import models.TalkerBean;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -17,6 +18,8 @@ import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 
+import dao.CommentsDAO;
+import dao.ConversationDAO;
 import dao.TalkerDAO;
 
 import play.Play;
@@ -57,16 +60,23 @@ public class SearchUtil {
 		return results;
 	}
 	
-	public static List<String> searchConvo(String query) throws CorruptIndexException, IOException, ParseException {
+	public static List<ConversationBean> searchConvo(String query) throws CorruptIndexException, IOException, ParseException {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"conversations");
 		Hits hits = getHits(is, new String[] {"title", "answers"}, "*"+query+"*");
-		List<String> results = new ArrayList<String>();
+		
+		List<ConversationBean> results = new ArrayList<ConversationBean>();
 		for (int i = 0; i < hits.length(); i++) {
 			Document doc = hits.doc(i);
 			
-			String result = doc.get("title");
-			result = result.replaceAll(query, "<b>"+query+"</b>");
-			results.add(result);
+			String convoId = doc.get("id");
+			ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+			convo.setComments(CommentsDAO.loadConvoAnswers(convoId));
+			
+			results.add(convo);
+			
+			if (i == 9) {
+				break;
+			}
 		}
 		
 		is.close();

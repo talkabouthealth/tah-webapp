@@ -6,6 +6,7 @@ import java.util.Set;
 
 import dao.ApplicationDAO;
 
+import models.ConversationBean;
 import models.TalkerBean;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -48,8 +49,10 @@ public class Community extends Controller {
 	}
 	
 	public static void searchConversations() {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
 		String query = params.get("query");
-		List<String> results = null;
+		List<ConversationBean> results = null;
 		if (query != null) {
 			params.flash("query");
 			
@@ -62,7 +65,7 @@ public class Community extends Controller {
 			}
 		}
 		
-		render(results);
+		render(talker, results);
 	}
 
 }
