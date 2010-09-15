@@ -44,7 +44,30 @@
 												#{/list}
 											</div>
 						 				#{/if}
-										<span class="styles2">${comment.text}</span>
+						 				<div class='inline-edit'>
+											<div id="hidit${comment.id}">
+												<span class="styles2" style="float: left" id="answerText${comment.id}">${comment.text}</span>
+												<div class="display" style="display:block;">
+													<div class="editit" style="display:block;">
+														<a href="#" onclick="hidit('${comment.id}')">Edit</a>
+													</div>
+												</div>
+										    </div>
+										    <div style="margin-top:10px; margin-bottom:10px;"></div>
+											<div class='form' id="editit${comment.id}">
+												<div style="float:left; width:auto; padding-bottom:5px;" >
+										        	<input id="answerInput${comment.id}" type="text"
+										        		value="${comment.text}" class="edititinputs" style="width:400px"  >
+										        </div>
+												<div style="float:right;margin-right:30px;">
+											        <input type="submit" class="updatebtns" value=" " 
+											        	onclick="return updateAnswer('${comment.id}');" />
+											        <div class="canclebtnz">
+											        	<a class="cancel" href="#" onclick="shoit('${comment.id}')">Cancel</a>
+											        </div>
+												</div>
+											</div>
+										</div>
 									</div>
 			                        <div class="sstyles3">
 				                        <ul>
@@ -59,6 +82,8 @@
 				                        		</li>
 				                        		<li>&nbsp;|&nbsp;</li>
 					                        #{/if}
+					                        <li><a href="#" rel="${comment.id}" class="deleteAnswer">Delete</a></li>
+					                        <li>&nbsp;|&nbsp;</li>
 					                        <li><a href="#dialog1" name="modal" >Thank</a></li>
 					                      	<li>&nbsp;|&nbsp;</li>
 					                        <li><a href="#dialog1" name="modal" >Flag Comment</a></li> 

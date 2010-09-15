@@ -262,6 +262,18 @@ public class Conversations extends Controller {
     	}
     }
     
+    public static void updateAnswer(String answerId, String newText) {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+    	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
+    	if (!answer.getFromTalker().equals(talker)) {
+    		forbidden();
+    		return;
+    	}
+    	
+    	System.out.println("UPDATED!: "+newText);
+    }
+    
     public static void saveTopicComment(String topicId, String parentId, String text) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
