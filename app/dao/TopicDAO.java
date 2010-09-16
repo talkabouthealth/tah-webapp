@@ -50,6 +50,7 @@ public class TopicDAO {
 			.add("main_url", topic.getMainURL())
 			.add("aliases", topic.getAliases())
 			.add("children", topic.childrenToList())
+			.add("deleted", topic.isDeleted())
 			.get();
 		
 		DBObject topicId = new BasicDBObject("_id", new ObjectId(topic.getId()));

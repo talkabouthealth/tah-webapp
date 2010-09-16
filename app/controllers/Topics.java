@@ -67,6 +67,14 @@ public class Topics extends Controller {
 		render(talker, topic, topicsList);
     }
     
+    public static void delete(String topicId) {
+    	TopicBean topic = TopicDAO.getById(topicId);
+    	notFoundIfNull(topic);
+
+    	topic.setDeleted(true);
+    	TopicDAO.updateTopic(topic);
+    }
+    
     public static void manageAliases(String topicId, String todo, String alias) {
     	TopicBean topic = TopicDAO.getById(topicId);
     	notFoundIfNull(topic);

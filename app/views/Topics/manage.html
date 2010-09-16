@@ -100,6 +100,19 @@
 				);
 				return false;
 			});
+
+			$("#deleteTopicBtn").click(function() {
+				var confirmDel = confirm("Are you sure want to delete this topic?");
+	   	   		if (confirmDel) {
+	   	   	  		$.post("@{Topics.delete()}", 
+	    				{ topicId: '${topic.id}'}
+	    			);
+
+	   	   	  		document.location = "/home";
+	   	   		}
+	   	   		
+	   	   		return false;
+			});
 		});
 	</script>
 </head>
@@ -180,6 +193,10 @@
 						#{/list}
 					</ul>
 					
+					<br/><br/>
+					<br/><br/>
+					<h3>Delete topic</h3><br/>
+					<input id="deleteTopicBtn" type="button" value="Delete" />
 					<br/><br/>
 					<br/><br/>
 					<br/>

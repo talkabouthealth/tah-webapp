@@ -1,9 +1,6 @@
 package models;
 
-import static util.DBUtil.createRef;
-import static util.DBUtil.getCollection;
-import static util.DBUtil.getString;
-import static util.DBUtil.getStringSet;
+import static util.DBUtil.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import sun.security.action.GetBooleanAction;
 import util.DBUtil;
 
 import com.mongodb.BasicDBObject;
@@ -32,6 +30,7 @@ public class TopicBean {
 	private Set<String> aliases;
 	private String summary;
 	private String mainURL;
+	private boolean deleted;
 	
 	private Set<TopicBean> parents;
 	private Set<TopicBean> children;
@@ -90,6 +89,7 @@ public class TopicBean {
 		
 		setTitle((String)topicDBObject.get("title"));
 		setAliases(getStringSet(topicDBObject, "aliases"));
+		setDeleted(getBoolean(topicDBObject, "deleted"));
 		
 		setMainURL((String)topicDBObject.get("main_url"));
 		setViews(DBUtil.getInt(topicDBObject, "views"));
@@ -237,5 +237,11 @@ public class TopicBean {
 	}
 	public void setConversationsIds(List<String> conversationsIds) {
 		this.conversationsIds = conversationsIds;
+	}
+	public boolean isDeleted() {
+		return deleted;
+	}
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 }
