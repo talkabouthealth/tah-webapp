@@ -1,14 +1,65 @@
 #{extends 'static.html' /}
 #{set pageHeader: 'Topics Following' /}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#addDetailsLink").click(function() {
+   	   			$("#hiditEmptyDiv2").hide();
+   	   			$("#editit2").show();
+   	   			return false;
+   			});
+
+   			$("#detailsBtn").click(function() {
+   	   			var newValue = $("#expInput").val();
+   	   			/*
+   	   			if (newValue === '') {
+   	   				$("#hiditEmptyDiv2").show();
+   	   				$("#hiditDiv2").hide();
+   	   			}
+   	   			else {
+   	   				$("#hiditDiv2").show();
+   	   				$("#convoDetails").html(newValue);
+   	   				$("#hidit2 .display").show();
+   	   			}
+	   			//hide edit
+	   			shoit('2');
+	   			*/
+   	   			$.post("asdfasdf", 
+ 	   					{ topicId: topicId, value: newValue},
+ 	   					function() {
+ 	   	   					//good save!!
+ 	   					}
+ 	   				);
+   			});	
+		});
+
+		function endorse(topicId) {
+			$.post("@{Actions.endorse()}", 
+   					{ topicId: topicId, toTalker: '${talker.id}' },
+   					function() {
+   	   					//good save!!
+   					}
+   				);
+		}
+	</script>
 
 <h3>Following ${talker.followingTopicsList?.size()} Topic(s):</h3><br/>
 <div style="font-size: 14px">
 #{list items: talker.followingTopicsList, as: 'topic'}
-	<div style="margin-bottom: 10px">
+	<div style="margin-bottom: 15px; padding-top: 10px; clear: both;">
 		<a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a><br/>
-		#{if talker.topicsInfoMap.get(topic)?.numOfAnswers != 0}
-			${talker.topicsInfoMap.get(topic)?.numOfAnswers} answer(s)<br/>
+		#{set talkerTopicInfo = talker.topicsInfoMap.get(topic) /}
+		#{if talkerTopicInfo?.numOfAnswers != 0}
+			${talkerTopicInfo?.numOfAnswers} answer(s)<br/>
 		#{/if}
+		<br/>
+		${talkerTopicInfo.experience}<br/>
+		Exp: 
+		<textarea id="expInput" class="edititinputx" 
+		        	style="width:400px; height: 20px;">${talkerTopicInfo.experience}</textarea>
+		<input id="expBtn" type="submit" class="updatebtns" value=" " />  
+		<br/><br/>
+		Endorsements: ${talkerTopicInfo.endorsements.size()}
+		<a href="#" onclick="return endorse('${topic.id}');">Endorse</a>      	
 	</div>
 #{/list}
 </div>

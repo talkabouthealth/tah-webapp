@@ -15,7 +15,9 @@ import util.NotificationUtils;
 import models.CommentBean;
 import models.TalkerBean;
 import models.TalkerBean.EmailSetting;
+import models.TalkerTopicInfo;
 import models.ThankYouBean;
+import models.TopicBean;
 import models.actions.Action.ActionType;
 import models.actions.FollowTalkerAction;
 import models.actions.GiveThanksAction;
@@ -23,6 +25,7 @@ import models.actions.PersonalProfileCommentAction;
 import dao.ActionDAO;
 import dao.CommentsDAO;
 import dao.TalkerDAO;
+import dao.TopicDAO;
 
 @With(Secure.class)
 public class Actions extends Controller {
@@ -129,6 +132,30 @@ public class Actions extends Controller {
 		List<CommentBean> _commentsList = Arrays.asList(comment);
 		int _level = (comment.getParentId() == null ? 1 : 2);
 		render("tags/profileCommentsTree.html", _commentsList, _level);
+	}
+	
+	public void endorse(String topicId, String toTalker) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		TalkerBean toTalkerBean = TalkerDAO.getById(toTalker);
+		TopicBean topic = TopicDAO.getById(topicId);
+		
+		if (topic == null || toTalkerBean == null) {
+			notFound();
+			return;
+		}
+		
+		if (talker.equals(toTalkerBean)) {
+			forbidden();
+			return;
+		}
+		
+		TalkerTopicInfo talkerTopicInfo = toTalkerBean.getTopicsInfoMap().get(topic);
+		if (talkerTopicInfo == null) {
+			talkerTopicInfo = new TalkerTopicInfo();
+			toTalkerBean.getTopicsInfoMap().put(topic, talkerTopicInfo);
+		}
+		talkerTopicInfo.getEndorsements().add(talker);
+		TalkerDAO.updateTalker(toTalkerBean);
 	}
 
 }

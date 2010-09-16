@@ -432,6 +432,10 @@ public class TalkerBean implements Serializable {
 		topicsInfoMap = new HashMap<TopicBean, TalkerTopicInfo>();
 	}
 	
+	public List<DBObject> topicsInfoToDB() {
+		return null;
+	}
+	
 	/* 
 	 * Convert from Integer to ProfilePreferences EnumSet and vice versa 
 	 */

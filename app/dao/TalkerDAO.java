@@ -117,7 +117,9 @@ public class TalkerDAO {
 			.add("prefs", talker.profilePreferencesToInt())
 			.add("email_settings", talker.emailSettingsToList())
 			.add("following_topics", talker.getFollowingConvosList())
+			
 			.add("following_tags", talker.followingTopicsToList())
+			.add("tags_info", talker.topicsInfoToDB())
 			
 			.get();
 		
