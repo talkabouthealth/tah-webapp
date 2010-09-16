@@ -2,6 +2,8 @@
  * Inline Text Editing 1.3
  * April 26, 2010
  * Corey Hart @ http://www.codenothing.com
+ * 
+ * Updated on Sep 16, 2010 by Kangaroo
  */ 
 (function( $, undefined ){
 
@@ -14,16 +16,19 @@
 					requestType: 'POST',
 					html: true,
 					load: undefined,
-					display: '.display',
-					form: '.form',
-					text: '.text',
-					save: '.save',
+					display: '.inline_display',
+					editlink: '.inline_editlink',
+					form: '.inline_form',
+					addlink: '.inline_addlink',
+					text: '.inline_text',
+					save: '.inline_save',
 					cancel: '.cancel',
 					revert: '.revert',
 					loadtxt: 'Loading...',
 					hover: undefined,
 					postVar: 'text',
 					postData: {},
+					saveFunction: undefined,
 					postFormat: undefined
 				}, options || {}, $.metadata ? $main.metadata() : {} ),
 
@@ -33,7 +38,12 @@
 				$text = $form.find( settings.text ),
 				$save = $form.find( settings.save ),
 				$revert = $form.find( settings.revert ),
-				$cancel = $form.find( settings.cancel );
+				$cancel = $form.find( settings.cancel ),
+				$view = $main.find('.inline_view'),
+				$editLink = $main.find('.inline_editlink'),
+				$addLink = $main.find('.inline_addlink'),
+				$displayFull = $main.find('.inline_full'),
+				$displayEmpty = $main.find('.inline_empty');
 
 			// Make sure the plugin only get initialized once
 			if ( $.data( self, 'inline-edit' ) === true ) {
@@ -48,20 +58,24 @@
 			});
 	
 			// Display Actions
-			$display.bind( 'click.inline-edit', function(){
+			$editLink.bind( 'click.inline-edit', function(){
 				$display.hide();
 				$form.show();
+				
+				$text.val($view.html()).focus();
 
+				/*
 				if ( settings.html ) {
 					if ( original === undefined ) {
-						original = $display.html();
+						original = $view.html();
 					}
-
+					alert(original);
 					$text.val( original ).focus();
 				}
 				else if ( original === undefined ) {
 					original = $text.val();
 				}
+				*/
 
 				return false;
 			})
@@ -71,12 +85,21 @@
 			.bind( 'mouseleave.inline-edit', function(){
 				$display.removeClass( settings.hover );
 			});
+			
+			$addLink.bind( 'click.inline-edit', function(){
+				$text.val("").focus();
+				
+				$display.hide();
+				$form.show();
+			});
 
 			// Add revert handler
 			$revert.bind( 'click.inline-edit', function(){
 				$text.val( original || '' ).focus();
 				return false;
 			});
+			
+			
 
 			// Cancel Actions
 			$cancel.bind( 'click.inline-edit', function(){
@@ -93,8 +116,23 @@
 
 			// Save Actions
 			$save.bind( 'click.inline-edit', function( event ) {
-				settings.postData[ settings.postVar ] = $text.val();
 				$form.hide();
+				$view.html($text.val());
+				
+				if ($text.val() === '') {
+					$displayEmpty.show();
+					$displayFull.hide();
+				}
+				else {
+					$displayEmpty.hide();
+					$displayFull.show();
+				}
+				$display.show();
+				
+				settings.saveFunction.apply( window, [ 'experience', $text.val() ] );
+
+				
+				/*
 				$display.html( settings.loadtxt ).show();
 
 				if ( $display.hasClass( settings.hover ) ) {
@@ -118,6 +156,7 @@
 						$display.html( response );
 					}
 				});
+				*/
 
 				return false;
 			});

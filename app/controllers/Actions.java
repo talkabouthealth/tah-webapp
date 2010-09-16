@@ -134,7 +134,7 @@ public class Actions extends Controller {
 		render("tags/profileCommentsTree.html", _commentsList, _level);
 	}
 	
-	public void endorse(String topicId, String toTalker) {
+	public static void endorse(String topicId, String toTalker) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		TalkerBean toTalkerBean = TalkerDAO.getById(toTalker);
 		TopicBean topic = TopicDAO.getById(topicId);

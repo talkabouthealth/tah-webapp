@@ -1,46 +1,71 @@
 #{extends 'static.html' /}
 #{set pageHeader: 'Topics Following' /}
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$("#addDetailsLink").click(function() {
-   	   			$("#hiditEmptyDiv2").hide();
-   	   			$("#editit2").show();
-   	   			return false;
-   			});
 
-   			$("#detailsBtn").click(function() {
-   	   			var newValue = $("#expInput").val();
-   	   			/*
-   	   			if (newValue === '') {
-   	   				$("#hiditEmptyDiv2").show();
-   	   				$("#hiditDiv2").hide();
-   	   			}
-   	   			else {
-   	   				$("#hiditDiv2").show();
-   	   				$("#convoDetails").html(newValue);
-   	   				$("#hidit2 .display").show();
-   	   			}
-	   			//hide edit
-	   			shoit('2');
-	   			*/
-   	   			$.post("asdfasdf", 
- 	   					{ topicId: topicId, value: newValue},
- 	   					function() {
- 	   	   					//good save!!
- 	   					}
- 	   				);
-   			});	
-		});
+<link rel='stylesheet' type='text/css' href='/public/stylesheets/styles.css' />
+<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 
-		function endorse(topicId) {
-			$.post("@{Actions.endorse()}", 
-   					{ topicId: topicId, toTalker: '${talker.id}' },
-   					function() {
-   	   					//good save!!
-   					}
-   				);
+<style type="text/css">
+	.inline_form {
+		display:none;
+	}
+	
+	.inline-edit .editdiv {
+		float:left;
+		width:45px;
+	}
+</style>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#addDetailsLink").click(function() {
+  	   			$("#hiditEmptyDiv2").hide();
+  	   			$("#editit2").show();
+  	   			return false;
+  			});
+
+		$("#detailsBtn").click(function() {
+   			var newValue = $("#expInput").val();
+   			/*
+   			if (newValue === '') {
+   				$("#hiditEmptyDiv2").show();
+   				$("#hiditDiv2").hide();
+   			}
+   			else {
+   				$("#hiditDiv2").show();
+   				$("#convoDetails").html(newValue);
+   				$("#hidit2 .display").show();
+   			}
+			//hide edit
+			shoit('2');
+			*/
+   			$.post("asdfasdf", 
+ 					{ topicId: topicId, value: newValue},
+ 					function() {
+ 	   					//good save!!
+ 					}
+ 				);
+		});	
+		
+  		$('.inline-edit').inlineEdit(
+  		  		{ hover: '', saveFunction: updateData}
+  		  	);
+	});
+
+	function updateData(dataType, newValue) {
+		if (dataType === 'experience') {
+			//post to save experience
 		}
-	</script>
+	}
+
+	function endorse(topicId) {
+		$.post("@{Actions.endorse()}", 
+  					{ topicId: topicId, toTalker: '${talker.id}' },
+  					function() {
+  	   					//good save!!
+  					}
+  				);
+	}
+</script>
 
 <h3>Following ${talker.followingTopicsList?.size()} Topic(s):</h3><br/>
 <div style="font-size: 14px">
@@ -52,11 +77,35 @@
 			${talkerTopicInfo?.numOfAnswers} answer(s)<br/>
 		#{/if}
 		<br/>
-		${talkerTopicInfo.experience}<br/>
-		Exp: 
-		<textarea id="expInput" class="edititinputx" 
-		        	style="width:400px; height: 20px;">${talkerTopicInfo.experience}</textarea>
-		<input id="expBtn" type="submit" class="updatebtns" value=" " />  
+		<div class='inline-edit'>
+			<div class="suggestxt inline_display">
+				<div class="inline_full" style="display: ${talkerTopicInfo.experience ? 'block' : 'none'}">
+					<p class="inline_view" style="float:left; padding-top:10px;">${talkerTopicInfo.experience}</p>
+					<div class="editdiv">
+						<div class="editit" style="padding-top:10px;">
+							<a href="#" class="inline_editlink">Edit</a>
+						</div>
+					</div>
+				</div>
+				<div class="inline_empty" style="display: ${!talkerTopicInfo.experience? 'block' : 'none'}">
+					<div class="targetenew">
+						<a class="inline_addlink" href="#">Add your experience</a>
+					</div>
+				</div>
+            </div>
+			<div class='inline_form'>
+				<div style="padding-top:10px;">
+			        <textarea class="edititinputx inline_text" 
+			        	style="width:600px">${talkerTopicInfo.experience}</textarea>
+		        </div>
+				<div style="float:right;margin-right:30px;">
+					<input type="submit" class="updatebtns inline_save" value=" " />
+					<div class="canclebtnz">
+						<a class="cancel" href="#">Cancel</a>
+					</div>
+				</div>
+			</div>
+		</div>
 		<br/><br/>
 		Endorsements: ${talkerTopicInfo.endorsements.size()}
 		<a href="#" onclick="return endorse('${topic.id}');">Endorse</a>      	
