@@ -43,7 +43,8 @@
 				$editLink = $main.find('.inline_editlink'),
 				$addLink = $main.find('.inline_addlink'),
 				$displayFull = $main.find('.inline_full'),
-				$displayEmpty = $main.find('.inline_empty');
+				$displayEmpty = $main.find('.inline_empty'),
+				$dataType = $main.attr('id');
 
 			// Make sure the plugin only get initialized once
 			if ( $.data( self, 'inline-edit' ) === true ) {
@@ -129,7 +130,7 @@
 				}
 				$display.show();
 				
-				settings.saveFunction.apply( window, [ 'experience', $text.val() ] );
+				settings.saveFunction.apply( window, [ $dataType, $text.val() ] );
 
 				
 				/*

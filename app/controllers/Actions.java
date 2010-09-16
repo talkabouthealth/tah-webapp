@@ -134,6 +134,25 @@ public class Actions extends Controller {
 		render("tags/profileCommentsTree.html", _commentsList, _level);
 	}
 	
+	
+	public static void updateTopicExperience(String topicId, String newValue) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		TopicBean topic = TopicDAO.getById(topicId);
+		
+		if (topic == null) {
+			notFound();
+			return;
+		}
+		
+		TalkerTopicInfo talkerTopicInfo = talker.getTopicsInfoMap().get(topic);
+		if (talkerTopicInfo == null) {
+			talkerTopicInfo = new TalkerTopicInfo();
+			talker.getTopicsInfoMap().put(topic, talkerTopicInfo);
+		}
+		talkerTopicInfo.setExperience(newValue);
+		TalkerDAO.updateTalker(talker);
+	}
+	
 	public static void endorse(String topicId, String toTalker) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		TalkerBean toTalkerBean = TalkerDAO.getById(toTalker);

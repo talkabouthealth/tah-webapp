@@ -52,18 +52,23 @@
 	});
 
 	function updateData(dataType, newValue) {
-		if (dataType === 'experience') {
+		if (dataType.indexOf('experienceEdit') == 0) {
+			var topicId = dataType.substring(14);
+			
 			//post to save experience
+			$.post("@{Actions.updateTopicExperience()}", 
+				{ topicId: topicId, newValue: newValue }
+			);
 		}
 	}
 
 	function endorse(topicId) {
 		$.post("@{Actions.endorse()}", 
-  					{ topicId: topicId, toTalker: '${talker.id}' },
-  					function() {
-  	   					//good save!!
-  					}
-  				);
+			{ topicId: topicId, toTalker: '${talker.id}' },
+			function() {
+  					//good save!!
+			}
+		);
 	}
 </script>
 
@@ -77,7 +82,7 @@
 			${talkerTopicInfo?.numOfAnswers} answer(s)<br/>
 		#{/if}
 		<br/>
-		<div class='inline-edit'>
+		<div class='inline-edit' id="experienceEdit${topic.id}">
 			<div class="suggestxt inline_display">
 				<div class="inline_full" style="display: ${talkerTopicInfo.experience ? 'block' : 'none'}">
 					<p class="inline_view" style="float:left; padding-top:10px;">${talkerTopicInfo.experience}</p>
@@ -106,9 +111,12 @@
 				</div>
 			</div>
 		</div>
-		<br/><br/>
-		Endorsements: ${talkerTopicInfo.endorsements.size()}
-		<a href="#" onclick="return endorse('${topic.id}');">Endorse</a>      	
+		<div style="clear: both;">
+			Endorsements: ${talkerTopicInfo.endorsements.size()}
+			#{ifnot session.username.equals(talker.userName)}
+				<a href="#" onclick="return endorse('${topic.id}');">Endorse</a>
+			#{/ifnot}
+		</div>
 	</div>
 #{/list}
 </div>

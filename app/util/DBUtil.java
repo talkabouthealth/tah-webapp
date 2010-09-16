@@ -63,6 +63,10 @@ public class DBUtil {
 			return null;
 		}
 		
+		return parseTalker(talkerRef);
+	}
+	
+	public static TalkerBean parseTalker(DBRef talkerRef) {
 		DBObject talkerDBObject = talkerRef.fetch();
 		TalkerBean talker = new TalkerBean();
 		talker.parseBasicFromDB(talkerDBObject);
@@ -92,6 +96,8 @@ public class DBUtil {
 		}
 		return value.booleanValue();
 	}
+	
+	//move to generic!
 
 	public static List<String> getStringList(DBObject dbObject, String name) {
 		Object value = dbObject.get(name);
@@ -108,6 +114,15 @@ public class DBUtil {
 			return Collections.emptySet();
 		}
 		Set<String> set = new LinkedHashSet<String>((Collection<String>)value);
+		return set;
+	}
+	
+	public static <T> Set<T> getSet(DBObject dbObject, String name) {
+		Object value = dbObject.get(name);
+		if (value == null) {
+			return Collections.emptySet();
+		}
+		Set<T> set = new LinkedHashSet<T>((Collection<T>)value);
 		return set;
 	}
 	
@@ -154,15 +169,6 @@ public class DBUtil {
 		return dbSet;
 	}
 	
-	
-//	List<DBObject> namesDBList = new ArrayList<DBObject>();
-//	for (ConvoName convoName : convo.getOldNames()) {
-//		DBObject nameDBObject = BasicDBObjectBuilder.start()
-//			.add("title", convoName.getTitle())
-//			.add("url", convoName.getUrl())
-//			.get();
-//		namesDBList.add(nameDBObject);
-//	}
 	
 	public static void main(String[] args) {
 		Set<String> colls = getDB().getCollectionNames();

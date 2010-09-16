@@ -29,7 +29,10 @@ import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
+import dao.TalkerDAO;
 import dao.TopicDAO;
+
+import static util.DBUtil.*;
 
 public class TalkerBean implements Serializable {
 	
@@ -430,10 +433,50 @@ public class TalkerBean implements Serializable {
 	
 	private void parseTopicsInfo(Collection<DBObject> topicsInfoCol) {
 		topicsInfoMap = new HashMap<TopicBean, TalkerTopicInfo>();
+		
+		if (topicsInfoCol != null) {
+			for (DBObject topicInfoDBObject : topicsInfoCol) {
+				//topic
+				DBObject topicDBObject = ((DBRef)topicInfoDBObject.get("topic")).fetch();
+				TopicBean topic = new TopicBean();
+				topic.parseBasicFromDB(topicDBObject);
+				
+				//TopicInfo
+				TalkerTopicInfo topicInfo = new TalkerTopicInfo();
+				topicInfo.setExperience((String)topicInfoDBObject.get("experience"));
+				
+				Set<TalkerBean> endorsements = new HashSet<TalkerBean>();
+				for (DBRef talkerDBRef : DBUtil.<DBRef>getSet(topicInfoDBObject, "endorsements")) {
+					endorsements.add(parseTalker(talkerDBRef));
+				}
+				topicInfo.setEndorsements(endorsements);
+				
+				topicsInfoMap.put(topic, topicInfo);
+			}
+		}
 	}
 	
 	public List<DBObject> topicsInfoToDB() {
-		return null;
+		List<DBObject> topicsInfoList = new ArrayList<DBObject>();
+		if (topicsInfoMap != null) {
+			for (TopicBean topic : topicsInfoMap.keySet()) {
+				TalkerTopicInfo topicInfo = topicsInfoMap.get(topic);
+				
+				DBRef topicDBRef = createRef(TopicDAO.TOPICS_COLLECTION, topic.getId());
+				List<DBRef> endorsementTalkers = new ArrayList<DBRef>();
+				for (TalkerBean talker : topicInfo.getEndorsements()) {
+					endorsementTalkers.add(createRef(TalkerDAO.TALKERS_COLLECTION, talker.getId()));
+				}
+				DBObject topicInfoDBObject = new BasicDBObjectBuilder().start()
+					.add("topic", topicDBRef)
+					.add("experience", topicInfo.getExperience())
+					.add("endorsements", endorsementTalkers)
+					.get();
+				
+				topicsInfoList.add(topicInfoDBObject);
+			}
+		}
+		return topicsInfoList;
 	}
 	
 	/* 
