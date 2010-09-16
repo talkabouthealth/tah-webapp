@@ -5,11 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.CommentBean;
 import models.DiseaseBean;
 import models.HealthItemBean;
 import models.TalkerBean;
 import models.TalkerDiseaseBean;
 import models.ConversationBean;
+import models.TalkerTopicInfo;
+import models.TopicBean;
 import models.actions.Action;
 import models.actions.FollowConvoAction;
 import models.actions.FollowTalkerAction;
@@ -130,6 +133,27 @@ public class PublicProfile extends Controller {
 			ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO);
 		
 		render("@conversationsList", talker, currentTalker, topicsType, topicsList);
+	}
+	
+	public static void topicsFollowing(String userName) {
+		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		notFoundIfNull(talker);
+		
+		for (TopicBean topic : talker.getFollowingTopicsList()) {
+			//FIXME how to determine answer or reply? We need to rework whole comments!
+			List<CommentBean> answers = 
+				CommentsDAO.getTalkerConvoAnswersByTopic(talker.getId(), topic);
+			
+			TalkerTopicInfo talkerTopicInfo = talker.getTopicsInfoMap().get(topic);
+			if (talkerTopicInfo == null) {
+				talkerTopicInfo = new TalkerTopicInfo();
+				talker.getTopicsInfoMap().put(topic, talkerTopicInfo);
+			}
+			talkerTopicInfo.setNumOfAnswers(answers.size());
+		}
+		
+		render(talker, currentTalker);
 	}
 	
 }

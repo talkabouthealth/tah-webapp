@@ -47,6 +47,7 @@ GET		/{name}/manage							Topics.manage
 GET		/{userName}/conversationsfollowing		PublicProfile.conversationsFollowing
 GET		/{userName}/conversationsstarted		PublicProfile.conversationsStarted
 GET		/{userName}/conversationsjoined			PublicProfile.conversationsJoined
+GET		/{userName}/topics						PublicProfile.topicsFollowing
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}

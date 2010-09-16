@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import models.CommentBean;
 import models.CommentBean.Vote;
@@ -90,12 +91,29 @@ public class CommentsDAO {
 		return getString(commentObject, "_id");
 	}
 	
-	public static List<CommentBean> loadConvoAnswers(String topicId) {
+	public static List<CommentBean> loadConvoAnswers(String convoId) {
 		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
 		
-		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, topicId);
+		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId);
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("topic", convoRef)
+			.get();
+		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("vote_score", -1)).toArray();
+		
+		//comments without parent (top in hierarchy)
+		List<CommentBean> topCommentsList = parseCommentsTree(commentsList);
+		return topCommentsList;
+	}
+	
+	public static List<CommentBean> getTalkerConvoAnswersByTopic(String talkerId, TopicBean topic) {
+		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		
+		Set<DBRef> convosDBSet = ConversationDAO.getConversationsByTopic(topic);
+		DBRef fromTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("topic", new BasicDBObject("$in", convosDBSet))
+			.add("from", fromTalkerRef)
+			.add("deleted", new BasicDBObject("$ne", true))
 			.get();
 		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("vote_score", -1)).toArray();
 		

@@ -1,0 +1,14 @@
+#{extends 'static.html' /}
+#{set pageHeader: 'Topics Following' /}
+
+<h3>Following ${talker.followingTopicsList?.size()} Topic(s):</h3><br/>
+<div style="font-size: 14px">
+#{list items: talker.followingTopicsList, as: 'topic'}
+	<div style="margin-bottom: 10px">
+		<a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a><br/>
+		#{if talker.topicsInfoMap.get(topic)?.numOfAnswers != 0}
+			${talker.topicsInfoMap.get(topic)?.numOfAnswers} answer(s)<br/>
+		#{/if}
+	</div>
+#{/list}
+</div>

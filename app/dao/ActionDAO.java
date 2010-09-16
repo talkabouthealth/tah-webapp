@@ -95,7 +95,7 @@ public class ActionDAO {
 			convosDBSet.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId));
 		}
 		for (TopicBean topic : talker.getFollowingTopicsList()) {	
-			convosDBSet.addAll(getConversationsByTopic(topic));
+			convosDBSet.addAll(ConversationDAO.getConversationsByTopic(topic));
 		}
 		
 		//list of needed actions for this Feed
@@ -182,7 +182,7 @@ public class ActionDAO {
 	public static List<Action> loadLatestByTopic(TopicBean topic) {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
-		Set<DBRef> convosDBSet = getConversationsByTopic(topic);
+		Set<DBRef> convosDBSet = ConversationDAO.getConversationsByTopic(topic);
 		DBObject query = new BasicDBObject("topicId", new BasicDBObject("$in", convosDBSet));
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
@@ -193,23 +193,6 @@ public class ActionDAO {
 			activitiesList.add(action);
 		}
 		return activitiesList;
-	}
-	
-	/**
-	 * Includes conversations in children topics also.
-	 * @param topic
-	 * @return
-	 */
-	private static Set<DBRef> getConversationsByTopic(TopicBean topic) {
-		Set<DBRef> convosDBSet = new HashSet<DBRef>();
-		for (String convoId : topic.getConversationsIds()) {
-			convosDBSet.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId));
-		}
-		for (TopicBean child : topic.getChildren()) {
-			TopicBean fullChild = TopicDAO.getById(child.getId());
-			convosDBSet.addAll(getConversationsByTopic(fullChild));
-		}
-		return convosDBSet;
 	}
 	
 	public static List<Action> loadLatestByConversation(ConversationBean convo) {

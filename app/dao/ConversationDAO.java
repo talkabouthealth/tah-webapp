@@ -369,6 +369,23 @@ public class ConversationDAO {
 		return convosList;
 	}
 	
+	/**
+	 * Includes conversations in children topics also.
+	 * @param topic
+	 * @return
+	 */
+	public static Set<DBRef> getConversationsByTopic(TopicBean topic) {
+		Set<DBRef> convosDBSet = new HashSet<DBRef>();
+		for (String convoId : topic.getConversationsIds()) {
+			convosDBSet.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId));
+		}
+		for (TopicBean child : topic.getChildren()) {
+			TopicBean fullChild = TopicDAO.getById(child.getId());
+			convosDBSet.addAll(getConversationsByTopic(fullChild));
+		}
+		return convosDBSet;
+	}
+	
 	public static List<ConversationBean> loadConversationsByTopic(String topicId) {
 		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
 		

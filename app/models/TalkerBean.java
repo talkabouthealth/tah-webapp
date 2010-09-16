@@ -194,6 +194,8 @@ public class TalkerBean implements Serializable {
 	private Date latestNotification;
 	private long numOfNotifications;
 	
+	private Map<TopicBean, TalkerTopicInfo> topicsInfoMap;
+	
 	public TalkerBean(){}
 	public TalkerBean(String id) {
 		this.id = id;
@@ -298,7 +300,9 @@ public class TalkerBean implements Serializable {
 		
 		parseFollowing((Collection<DBRef>)talkerDBObject.get("following"));
 		setFollowingConvosList(parseStringList(talkerDBObject.get("following_topics")));
+		
 		parseFollowingTopics((Collection<DBRef>)talkerDBObject.get("following_tags"));
+		parseTopicsInfo((Collection<DBObject>)talkerDBObject.get("tags_info"));
 	}
 	
 	//TODO: move to EmailBean and IMAccountBean ?
@@ -422,6 +426,10 @@ public class TalkerBean implements Serializable {
 				}
 			}
 		}
+	}
+	
+	private void parseTopicsInfo(Collection<DBObject> topicsInfoCol) {
+		topicsInfoMap = new HashMap<TopicBean, TalkerTopicInfo>();
 	}
 	
 	/* 
@@ -848,5 +856,11 @@ public class TalkerBean implements Serializable {
 	}
 	public void setSuspended(boolean suspended) {
 		this.suspended = suspended;
+	}
+	public Map<TopicBean, TalkerTopicInfo> getTopicsInfoMap() {
+		return topicsInfoMap;
+	}
+	public void setTopicsInfoMap(Map<TopicBean, TalkerTopicInfo> topicsInfoMap) {
+		this.topicsInfoMap = topicsInfoMap;
 	}
 }	
