@@ -17,38 +17,9 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		$("#addDetailsLink").click(function() {
-  	   			$("#hiditEmptyDiv2").hide();
-  	   			$("#editit2").show();
-  	   			return false;
-  			});
-
-		$("#detailsBtn").click(function() {
-   			var newValue = $("#expInput").val();
-   			/*
-   			if (newValue === '') {
-   				$("#hiditEmptyDiv2").show();
-   				$("#hiditDiv2").hide();
-   			}
-   			else {
-   				$("#hiditDiv2").show();
-   				$("#convoDetails").html(newValue);
-   				$("#hidit2 .display").show();
-   			}
-			//hide edit
-			shoit('2');
-			*/
-   			$.post("asdfasdf", 
- 					{ topicId: topicId, value: newValue},
- 					function() {
- 	   					//good save!!
- 					}
- 				);
-		});	
-		
   		$('.inline-edit').inlineEdit(
-  		  		{ hover: '', saveFunction: updateData}
-  		  	);
+	  		{ hover: '', saveFunction: updateData}
+	  	);
 	});
 
 	function updateData(dataType, newValue) {

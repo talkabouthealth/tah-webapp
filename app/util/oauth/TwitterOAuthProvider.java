@@ -30,8 +30,8 @@ import dao.TalkerDAO;
  */
 public class TwitterOAuthProvider implements OAuthServiceProvider {
 	
-	private static final String CONSUMER_KEY = "0xkxCSpMbDPH2ltt3MwZA";
-	private static final String CONSUMER_SECRET = "ybARF7Q7ffdBqbTE5FGlPaeSJejGtNHeoLhYmk2gL4";
+	private static final String CONSUMER_KEY = "D9iFrN4G8ObpLCtGJ9w";
+	private static final String CONSUMER_SECRET = "Yy1srQbpldqjtqzzAXpJe3RzuWGxHFKPCF8FPsZKU";
 	private static final String CALLBACK_URL =
 		"http://talkabouthealth.com:9000/oauth/callback?type=twitter";
 	
@@ -115,7 +115,6 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
         boolean isConnected = session.contains("username");
 		if (isConnected) {
 			//it's not login/signup - it's adding of Twitter account for notifications!
-			System.out.println("BEFORE!: "+accountId);
 			try {
 				//follow TAH by this user
 				url = new URL("http://api.twitter.com/1/friendships/create/"+TwitterUtil.TALKFORHEALTH_ID+".xml");
@@ -124,22 +123,12 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 				consumer.sign(conn);
 				conn.connect();
 				
-				System.out.println("Twitter follow response!!!: " + conn.getResponseCode() + " "
-		                + conn.getResponseMessage());
-				
-				br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-		        while ((line = br.readLine()) != null) {
-		        	System.out.println(line);
-		        }
-		        br.close();
-		        
 		        TwitterUtil.followUser(accountId);
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.out.println("ERROR: "+e.getMessage());
 			}
 	        
-	        //ok?!
 	        return "/home";
 		}
 		else {

@@ -94,6 +94,14 @@
 		/* Different fixes */
 		.answerCover { padding-top: 0px }
 		.targetenew a { color:#0D94D6; }
+		.inline_form {
+			display:none;
+		}
+		
+		.inline-edit .editdiv {
+			float:left;
+			width:45px;
+		}
 	</style>
 
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
@@ -263,8 +271,21 @@
 	   				);
    			});
 
-   			$('.inline-edit').inlineEdit({hover: 'hover'})
+   			$('.inline-edit').inlineEdit(
+		  		{ hover: '', saveFunction: updateData}
+		  	);
 		});
+
+		function updateData(dataType, newValue) {
+			if (dataType.indexOf('experienceEdit') == 0) {
+				var topicId = dataType.substring(14);
+				
+				//post to save experience
+				$.post("@{Actions.updateTopicExperience()}", 
+					{ topicId: topicId, newValue: newValue }
+				);
+			}
+		}
 
    		//public static void saveTopicComment(String topicId, String parentId, String text) {
    		function saveProfileComment(parentId) {
