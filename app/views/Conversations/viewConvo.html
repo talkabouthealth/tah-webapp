@@ -315,6 +315,19 @@
    	   		}
    	   		return false;
    		}
+
+   		function deleteConvo() {
+   	   		var confirmDel = confirm("Are you sure want to delete this conversation?");
+   	   		if (confirmDel) {
+   	   	  		$.post("@{Conversations.delete()}", 
+    				{ convoId : '${convo.id}'}
+    			);
+
+   	   	  		document.location = "/home";
+   	   		}
+   	   		
+   	   		return false;
+   		}
    		
 
    		//show and hide for field edits
@@ -460,6 +473,9 @@
 				                    	<a href="#" class="restartConvoLink">Restart Conversation </a> |  
 				                    	<a href="#">Start Follow up conversation</a>  |  
 				                    	<a href="#" class="flagConvoLink">Flag Question </a> 
+				                    	#{if session.username?.equals("admin") }
+				                        	  |  <a href="#" onclick="return deleteConvo();">Delete</a> 
+				                        #{/if}
 				                    </div>
 								#{/if}
 								<div class="cb"></div>

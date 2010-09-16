@@ -83,6 +83,7 @@ public class ConversationBean {
 	private int tid;
 	//TODO: handle questions also
 	private ConvoType convoType = ConvoType.CONVERSATION;
+	private boolean deleted;
 	
 	private String topic;
 	private String mainURL;
@@ -127,6 +128,7 @@ public class ConversationBean {
     	setCreationDate((Date)convoDBObject.get("cr_date"));
     	setDisplayTime((Date)convoDBObject.get("disp_date"));
     	setDetails((String)convoDBObject.get("details"));
+    	setDeleted(getBoolean(convoDBObject, "deleted"));
     	
     	setOpened(getBoolean(convoDBObject, "opened"));
     	
@@ -329,4 +331,11 @@ public class ConversationBean {
 		this.opened = opened;
 	}
 
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
 }

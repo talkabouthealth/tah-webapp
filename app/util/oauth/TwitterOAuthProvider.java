@@ -124,8 +124,14 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 				consumer.sign(conn);
 				conn.connect();
 				
-				System.out.println("Twitter follow response22: " + conn.getResponseCode() + " "
+				System.out.println("Twitter follow response!!!: " + conn.getResponseCode() + " "
 		                + conn.getResponseMessage());
+				
+				br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+		        while ((line = br.readLine()) != null) {
+		        	System.out.println(line);
+		        }
+		        br.close();
 		        
 		        TwitterUtil.followUser(accountId);
 			} catch (Exception e) {

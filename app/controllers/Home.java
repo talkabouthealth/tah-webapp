@@ -66,7 +66,8 @@ public class Home extends Controller {
 		List<Action> communityConvoFeed = ActionDAO.loadCommunityConvoFeed();
 		
 		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
-		boolean showIMPopup = (session.get("justloggedin") != null && hasNoIMAccounts);
+		boolean isAdmin = "admin".equals(Security.connected());
+		boolean showIMPopup = (session.get("justloggedin") != null && hasNoIMAccounts && !isAdmin);
 		session.remove("justloggedin");
 		
         render(talker, mapTalkmiTopics, newTopic, convoFeed, activityFeed, communityConvoFeed, showIMPopup);

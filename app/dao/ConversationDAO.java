@@ -130,6 +130,7 @@ public class ConversationDAO {
 			.add("topic", convo.getTopic())
 			.add("main_url", convo.getMainURL())
 			.add("old_names", namesDBList)
+			.add("deleted", convo.isDeleted())
 			
 			.add("details", convo.getDetails())
 			.add("opened", convo.isOpened())

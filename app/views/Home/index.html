@@ -154,11 +154,6 @@
 					return;
 				}
 				
-				if (imUserName.length == 0) {
-					alert("Please enter correct IM Username");
-					return;
-				}
-
 				if (imService === "Twitter") {
 					$('#mask').hide();
 					$('.window').hide();
@@ -166,6 +161,11 @@
 					openTwitter();
 				}
 				else {
+					if (imUserName.length == 0) {
+						alert("Please enter correct IM Username");
+						return;
+					}
+					
 					$.post("@{Profile.addIMAccount()}", 
 							{imUserName : imUserName, imService : imService},
 							function(data) {
@@ -235,6 +235,8 @@
 		</div>
 	</div>
 </div>
+
+<a href="#" onclick="openTwitter();">CLICK ME!!!!!!!!!</a>
 
 <div id="innerbanner"></div>
 <div id="bottom_container">

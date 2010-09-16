@@ -265,11 +265,25 @@ public class Conversations extends Controller {
     	}
     }
     
+    public static void delete(String convoId) {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+    	notFoundIfNull(convo);
+    	
+    	if (!"admin".equalsIgnoreCase(talker.getUserName())) {
+    		forbidden();
+    		return;
+    	}
+
+    	convo.setDeleted(true);
+    	ConversationDAO.updateConvo(convo);
+    }
+    
     public static void updateAnswer(String answerId, String todo, String newText) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
     	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
-    	if (!answer.getFromTalker().equals(talker)) {
+    	if (!answer.getFromTalker().equals(talker) && !talker.getUserName().equals("admin")) {
     		forbidden();
     		return;
     	}

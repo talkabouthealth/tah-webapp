@@ -85,7 +85,8 @@
 				                        		</li>
 				                        		<li>&nbsp;|&nbsp;</li>
 					                        #{/if}
-					                        #{if session.username?.equals(comment.fromTalker.userName) }
+					                        #{if session.username?.equals(comment.fromTalker.userName) ||
+					                        		session.username?.equals("admin") }
 					                        	<li><a href="#" onclick="return deleteAnswer('${comment.id}');">Delete</a></li>
 					                        	<li>&nbsp;|&nbsp;</li>
 					                        #{/if}
