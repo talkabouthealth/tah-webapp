@@ -175,6 +175,7 @@ public class ViewDispatcher extends Controller {
 		
 		convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
 		
+		//FIXME: fix editing fields
 		render("Conversations/viewConvo.html", talker, convo, latestActivityTime);
     }
 	

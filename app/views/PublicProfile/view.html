@@ -536,7 +536,6 @@
 									class="bluetext12"><strong>see all</strong></a>
 							</div>
 						</div>
-						#{if talker.followingList.contains(currentTalker) || talker.userName.equals(currentTalker.userName)}
 							<div id="reply" class="replyForm">
 								<ul>
 									<li>
@@ -552,7 +551,6 @@
 									</li> 
 								</ul>
 							</div>
-						#{/if}
 						<div class="commentsarea">
 							#{if talker.profileCommentsList?.isEmpty()}
 								<span id="firstcommentmessage" class="blacktext12">

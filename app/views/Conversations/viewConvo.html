@@ -277,13 +277,8 @@
 		});
 
 		function updateData(dataType, newValue) {
-			if (dataType.indexOf('experienceEdit') == 0) {
-				var topicId = dataType.substring(14);
-				
-				//post to save experience
-				$.post("@{Actions.updateTopicExperience()}", 
-					{ topicId: topicId, newValue: newValue }
-				);
+			if (dataType === 'titleEdit') {
+				alert('newValue');				
 			}
 		}
 
@@ -392,7 +387,6 @@
 													</div>
 												</div>
 										    </div>
-										    <div style="margin-top:10px; margin-bottom:10px;"></div>
 											<div class='form' id="editit1">
 												<div style="float:left; width:auto; padding-bottom:5px;" >
 										        	<input id="titleinput" type="text"
