@@ -16,7 +16,7 @@ import models.TalkerBean.EmailSetting;
 
 import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry.Entry;
 import com.tah.im.IMNotifier;
-import com.tah.im.UserInfo;
+import com.tah.im.model.UserInfo;
 import com.tah.im.singleton.OnlineUsersSingleton;
 
 import dao.ConfigDAO;

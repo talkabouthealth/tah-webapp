@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import logic.ConversationLogic;
 import models.CommentBean;
 import models.CommentBean.Vote;
 import models.ConversationBean;
@@ -53,30 +54,9 @@ public class Conversations extends Controller {
     	List<TopicBean> topics = new ArrayList<TopicBean>();
 //    	topics.add(topic);
     	
+    	ConversationBean convo = ConversationLogic.createConvo(newTopic, talker);
 		
-		ConversationBean convo = new ConversationBean();
-		convo.setTopic(newTopic);
-		convo.setUid(talker.getId());
-		Date currentDate = Calendar.getInstance().getTime();
-		convo.setCreationDate(currentDate);
-		convo.setDisplayTime(currentDate);
-		convo.setTopics(topics);
-
-		String topicURL = ApplicationDAO.createURLName(newTopic);
-		convo.setMainURL(topicURL);
-		
-		// insert new topic into database
-		ConversationDAO.save(convo);
-		ActionDAO.saveAction(new StartConvoAction(talker, convo, ActionType.START_CONVO));
-		
-		//send notifications if Automatic Notifications is On
-		NotificationUtils.sendAutomaticNotifications(convo.getId());
-		
-		//automatically follow started topic
-		talker.getFollowingConvosList().add(convo.getId());
-		CommonUtil.updateTalker(talker, session);
-		
-		ActionDAO.saveAction(new FollowConvoAction(talker, convo));
+    	CommonUtil.updateTalker(talker, session);
 
 		newTopic = newTopic.replaceAll("'", "&#39;");
 		newTopic = newTopic.replaceAll("\\|", "&#124;");
@@ -308,42 +288,7 @@ public class Conversations extends Controller {
 		ConversationBean convo = ConversationDAO.getByConvoId(topicId);
 		notFoundIfNull(convo);
 		
-		CommentBean comment = new CommentBean();
-		parentId = parentId.trim().length() == 0 ? null : parentId;
-		comment.setParentId(parentId);
-		comment.setTopicId(topicId);
-		comment.setFromTalker(talker);
-		comment.setText(text);
-		comment.setTime(new Date());
-		
-		String id = CommentsDAO.saveConvoComment(comment);
-		comment.setId(id);
-		
-		if (convo.isOpened()) {
-			convo.setOpened(false);
-			ConversationDAO.updateConvo(convo);
-		}
-		
-		//actions
-		if (parentId == null) {
-			ActionDAO.saveAction(new AnswerConvoAction(talker, convo, comment, null, ActionType.ANSWER_CONVO));
-		}
-		else {
-			CommentBean parentAnswer = new CommentBean(parentId);
-			ActionDAO.saveAction(new AnswerConvoAction(talker, convo, parentAnswer, comment, ActionType.REPLY_CONVO));
-		}
-		
-		//notify
-		Map<String, String> vars = new HashMap<String, String>();
-		vars.put("convo", convo.getTopic());
-		vars.put("other_talker", talker.getUserName());
-		vars.put("answer_text", comment.getText());
-		vars.put("convo_type", convo.getConvoType().stringValue());
-		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
-		vars.put("convo_url", convoURL);
-    	for (TalkerBean follower : convo.getFollowers()) {
-    		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_COMMENT, follower, vars);
-    	}
+		CommentBean comment = ConversationLogic.createAnswer(convo, talker, parentId, text);
 		
 		//render html of new comment using tag
 		List<CommentBean> _commentsList = Arrays.asList(comment);
