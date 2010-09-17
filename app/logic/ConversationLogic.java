@@ -58,6 +58,11 @@ public class ConversationLogic {
 	}
 	
 	public static CommentBean createAnswer(ConversationBean convo, TalkerBean talker, String parentId, String text) {
+		//TODO: if answers - automatically follow topic?
+		talker.getFollowingConvosList().add(convo.getId());
+		ActionDAO.saveAction(new FollowConvoAction(talker, convo));
+		convo.getFollowers().add(talker);
+		
 		CommentBean comment = new CommentBean();
 		parentId = parentId.trim().length() == 0 ? null : parentId;
 		comment.setParentId(parentId);
@@ -104,7 +109,8 @@ public class ConversationLogic {
 			IMNotifier imNotifier = IMNotifier.getInstance();
 			try {
 				String[] uidArray = talkersForNotification.toArray(new String[talkersForNotification.size()]);
-				imNotifier.answerNotify(uidArray, talker.getUserName(), convo.getId(), text);
+				imNotifier.answerNotify(uidArray, talker.getUserName(), convo.getId(), 
+						comment.getParentId(), comment.getId(), comment.getText());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

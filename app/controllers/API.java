@@ -39,8 +39,22 @@ public class API extends Controller {
 	
 	public static void createAnswer(String convoId, String talkerId, String parentId, String text) {
 		TalkerBean authorTalker = TalkerDAO.getById(talkerId);
+		System.out.println("TALKER: "+authorTalker+"<");
 		notFoundIfNull(authorTalker);
-		ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+		
+		ConversationBean convo = null;
+		System.out.println("CONVOID: "+convoId+"<");
+		if(convoId == null || convoId.length() == 0) {
+			//try to find convo by parent answer
+			CommentBean answer = CommentsDAO.getConvoAnswerById(parentId);
+			System.out.println("ANSWER: "+answer);
+			if (answer != null) {
+				convo = ConversationDAO.getByConvoId(answer.getTopicId());
+			}
+		}
+		else {
+			convo = ConversationDAO.getByConvoId(convoId);
+		}
 		notFoundIfNull(convo);
 		
 		CommentBean comment = ConversationLogic.createAnswer(convo, authorTalker, parentId, text);
