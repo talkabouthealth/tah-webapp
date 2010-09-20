@@ -92,13 +92,12 @@ public class Actions extends Controller {
 	public static void saveProfileComment(String profileTalkerId, String parentId, String text) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-		//only people who you follow should be able to leave a 'Comment'
 		TalkerBean profileTalker = TalkerDAO.getById(profileTalkerId);
 		notFoundIfNull(profileTalker);
-		if ( !(profileTalker.getFollowingList().contains(talker) || profileTalker.equals(talker)) ) {
-			forbidden();
-			return;
-		}
+//		if ( !(profileTalker.getFollowingList().contains(talker) || profileTalker.equals(talker)) ) {
+//			forbidden();
+//			return;
+//		}
 		
 		CommentBean comment = new CommentBean();
 		comment.setParentId(parentId.trim().length() == 0 ? null : parentId);
