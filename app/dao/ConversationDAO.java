@@ -1,5 +1,6 @@
 package dao;
 
+import java.awt.image.DataBufferByte;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -147,7 +148,7 @@ public class ConversationDAO {
 	
 	
 	//----------------------- Query methods ------------------------
-	
+	//TODO: handle deleted in this methods?
 	public static ConversationBean getByConvoId(String topicId) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
@@ -186,12 +187,15 @@ public class ConversationDAO {
 	public static ConversationBean getByURL(String url) {
 		DBCollection convosColl = getDB().getCollection(CONVERSATIONS_COLLECTION);
 		
-		DBObject query = new BasicDBObject("$or", 
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("$or", 
 				Arrays.asList(
 						new BasicDBObject("main_url", url),
 						new BasicDBObject("old_names.url", url)
 					)
-			);
+			)
+			.add("deleted", new BasicDBObject("$ne", true))
+			.get();
 		DBObject convoDBObject = convosColl.findOne(query);
 		
 		if (convoDBObject == null) {
@@ -221,8 +225,12 @@ public class ConversationDAO {
 	
 	public static Map<String, ConversationBean> queryConversations() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("deleted", new BasicDBObject("$ne", true))
+			.get();
 		List<DBObject> convosList = 
-			convosColl.find().sort(new BasicDBObject("cr_date", -1)).limit(20).toArray();
+			convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).limit(20).toArray();
 		
 		Map <String, ConversationBean> convosMap = new LinkedHashMap <String, ConversationBean>(20);
 		for (DBObject convoDBObject : convosList) {
@@ -242,6 +250,7 @@ public class ConversationDAO {
 				BasicDBObjectBuilder.start()
 					.add("$exists", true)
 					.add("$not", new BasicDBObject("$size", 0))
+					.add("deleted", new BasicDBObject("$ne", true))
 					.get()
 			);
 		List<DBObject> convosDBList = 
@@ -267,7 +276,10 @@ public class ConversationDAO {
 	public static List<ConversationBean> getOpenedConversations() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
-		DBObject query = new BasicDBObject("opened", true);
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("opened", true)
+			.add("deleted", new BasicDBObject("$ne", true))
+			.get();
 		List<DBObject> convosDBList = 
 			convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
 		
@@ -299,7 +311,10 @@ public class ConversationDAO {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		DateFormat dateFormat = new SimpleDateFormat("MM.dd.yyyy HH:mm:ss");
 		
-		List<DBObject> topicsDBList = convosColl.find().sort(new BasicDBObject("cr_date", -1)).toArray();
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("deleted", new BasicDBObject("$ne", true))
+			.get();
+		List<DBObject> topicsDBList = convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
 		
 		List<Map<String, String>> topicsInfoList = new ArrayList<Map<String,String>>();
 		for (DBObject topicDBObject : topicsDBList) {
@@ -364,7 +379,9 @@ public class ConversationDAO {
 			
 			ConversationBean convo = new ConversationBean();
 			convo.parseFromDB(convoDBObject);
-			convosList.add(convo);
+			if (!convo.isDeleted()) {
+				convosList.add(convo);
+			}
 		}
 		return convosList;
 	}
@@ -397,8 +414,10 @@ public class ConversationDAO {
 		for (DBObject convoDBObject : convosDBList) {
 			ConversationBean convo = new ConversationBean();
 			convo.parseFromDB(convoDBObject);
-			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
-			convosList.add(convo);
+			if (!convo.isDeleted()) {
+				convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
+				convosList.add(convo);
+			}
 		}
 		return convosList;
 	}
