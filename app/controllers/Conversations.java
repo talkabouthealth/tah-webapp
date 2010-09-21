@@ -250,13 +250,14 @@ public class Conversations extends Controller {
     	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
     	notFoundIfNull(convo);
     	
-    	if (!"admin".equalsIgnoreCase(talker.getUserName())) {
+    	if ( !("admin".equalsIgnoreCase(talker.getUserName()) || convo.getTalker().equals(talker))) {
     		forbidden();
     		return;
     	}
 
     	convo.setDeleted(true);
     	ConversationDAO.updateConvo(convo);
+    	renderText("ok");
     }
     
     public static void updateAnswer(String answerId, String todo, String newText) {

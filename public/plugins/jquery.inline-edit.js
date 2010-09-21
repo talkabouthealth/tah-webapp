@@ -117,12 +117,19 @@
 
 			// Save Actions
 			$save.bind( 'click.inline-edit', function( event ) {
-				$form.hide();
-				$view.html($text.val());
+				var newValue = $.trim($text.val());
+				if ($text.hasClass('notempty') && newValue === '') {
+					alert('Incorrect value.');
+					$text.focus();
+					return false;
+				}
 				
-				if ($text.val() === '') {
-					$displayEmpty.show();
+				$form.hide();
+				$view.html(newValue);
+				
+				if (newValue === '') {
 					$displayFull.hide();
+					$displayEmpty.show();
 				}
 				else {
 					$displayEmpty.hide();
@@ -130,7 +137,7 @@
 				}
 				$display.show();
 				
-				settings.saveFunction.apply( window, [ $dataType, $text.val() ] );
+				settings.saveFunction.apply( window, [ $dataType, newValue ] );
 
 				
 				/*

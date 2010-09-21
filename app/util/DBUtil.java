@@ -102,7 +102,7 @@ public class DBUtil {
 	public static List<String> getStringList(DBObject dbObject, String name) {
 		Object value = dbObject.get(name);
 		if (value == null) {
-			return Collections.emptyList();
+			return new ArrayList<String>();
 		}
 		List<String> list = new ArrayList<String>((Collection<String>)value);
 		return list;
@@ -111,7 +111,7 @@ public class DBUtil {
 	public static Set<String> getStringSet(DBObject dbObject, String name) {
 		Object value = dbObject.get(name);
 		if (value == null) {
-			return Collections.emptySet();
+			return new HashSet<String>();
 		}
 		Set<String> set = new LinkedHashSet<String>((Collection<String>)value);
 		return set;
@@ -120,7 +120,7 @@ public class DBUtil {
 	public static <T> Set<T> getSet(DBObject dbObject, String name) {
 		Object value = dbObject.get(name);
 		if (value == null) {
-			return Collections.emptySet();
+			return new HashSet<T>();
 		}
 		Set<T> set = new LinkedHashSet<T>((Collection<T>)value);
 		return set;

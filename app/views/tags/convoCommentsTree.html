@@ -45,6 +45,8 @@
 												#{/list}
 											</div>
 						 				#{/if}
+						 				
+						 				*{
 						 				<div class='inline-edit'>
 											<div id="hidit${comment.id}">
 												<span class="styles2" style="float: left" id="answerText${comment.id}">${comment.text}</span>
@@ -67,6 +69,35 @@
 											        	onclick="return updateAnswer('${comment.id}');" />
 											        <div class="canclebtnz">
 											        	<a class="cancel" href="#" onclick="shoit('${comment.id}')">Cancel</a>
+											        </div>
+												</div>
+											</div>
+										</div>
+										}*
+										
+										<div class='inline-edit' id="answerEdit${comment.id}">
+											<div class="suggestxt inline_display">
+												<div class="inline_full inline_empty">
+													<span class="styles2 inline_view" style="float: left">${comment.text}</span>
+													#{if session.username?.equals(comment.fromTalker.userName) }
+														<div class="editdiv">
+															<div class="editit">
+																<a href="#" class="inline_editlink">Edit</a>
+															</div>
+														</div>
+													#{/if}
+												</div>
+								            </div>
+								            <div style="margin-top:10px; margin-bottom:10px;"></div>
+											<div class='inline_form'>
+												<div style="float:left; width:auto; padding-bottom:5px;" >
+										        	<input id="titleinput" type="text" style="width:400px"  
+										        		value="${comment.text}" class="edititinputs inline_text" >
+										        </div>
+												<div style="float:right;margin-right:30px;">
+											        <input id="titleBtn" type="submit" class="updatebtns inline_save" value=" " />
+											        <div class="canclebtnz">
+											        	<a class="cancel" href="#">Cancel</a>
 											        </div>
 												</div>
 											</div>

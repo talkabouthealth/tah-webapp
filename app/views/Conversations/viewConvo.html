@@ -101,6 +101,7 @@
 		.inline-edit .editdiv {
 			float:left;
 			width:45px;
+			margin-left: 3px;
 		}
 	</style>
 
@@ -154,79 +155,7 @@
 
 	   				return false;
 	   			});
-	   		
-
-   			//------- Edits ----------
-   			$("#titleBtn").click(function() {
-   	   			var newValue = $("#titleinput").val();
-   	   			$("#convoTitle").html(newValue);
-   	   			//hide edit
-   	   			shoit('1');
-   	   			$("#hidit1 .display").show();
-   	   			$.post("@{Conversations.updateField()}", 
-   	   					{ convoId : '${convo.id}', name: 'title', value: newValue},
-   	   					function() {
-   	   	   					//good save!!
-   	   					}
-   	   				);
-   			});	
-
-   			$("#addDetailsLink").click(function() {
-   	   			$("#hiditEmptyDiv2").hide();
-   	   			$("#editit2").show();
-   	   			return false;
-   			});
-
-   			$("#detailsBtn").click(function() {
-   	   			var newValue = $("#detailsinput").val();
-   	   			if (newValue === '') {
-   	   				$("#hiditEmptyDiv2").show();
-   	   				$("#hiditDiv2").hide();
-   	   			}
-   	   			else {
-   	   				$("#hiditDiv2").show();
-   	   				$("#convoDetails").html(newValue);
-   	   				$("#hidit2 .display").show();
-   	   			}
-	   			//hide edit
-	   			shoit('2');
-   	   			$.post("@{Conversations.updateField()}", 
-   	   					{ convoId : '${convo.id}', name: 'details', value: newValue},
-   	   					function() {
-   	   	   					//good save!!
-   	   					}
-   	   				);
-   			});	
-
-   			$("#addSummaryLink").click(function() {
-   	   			$("#hiditEmptyDiv13").hide();
-   	   			$("#editit13").show();
-   	   			return false;
-   			});
-
-   			$("#summaryBtn").click(function() {
-   	   			var newValue = $("#summaryinput").val();
-   	   			if (newValue === '') {
-	   				$("#hiditEmptyDiv13").show();
-	   				$("#hiditDiv13").hide();
-	   			}
-	   			else {
-	   				$("#hiditDiv13").show();
-	   				$("#convoSummary").html(newValue);
-	   				$("#hidit13 .display").show();
-	   			}
-	   			//hide edit
-	   			shoit('13');
-	   			$("#hidit13 .display").show();
-   	   			$.post("@{Conversations.updateField()}", 
-   	   					{ convoId : '${convo.id}', name: 'summary', value: newValue},
-   	   					function() {
-   	   	   					//good save!!
-   	   					}
-   	   				);
-   			});	
-
-
+   			
    			//Topics
    			$("#addTopicBtn").click(function() {
    	   			//topicInput
@@ -278,7 +207,38 @@
 
 		function updateData(dataType, newValue) {
 			if (dataType === 'titleEdit') {
-				alert('newValue');				
+				$.post("@{Conversations.updateField()}", 
+   					{ convoId : '${convo.id}', name: 'title', value: newValue},
+   					function() {
+   	   					//good save!!
+   					}
+   				);
+			}
+			else if (dataType === 'detailsEdit') {
+				$.post("@{Conversations.updateField()}", 
+   					{ convoId : '${convo.id}', name: 'details', value: newValue},
+   					function() {
+   	   					//good save!!
+   					}
+   				);
+			}
+			else if (dataType === 'summaryEdit') {
+				$.post("@{Conversations.updateField()}", 
+   					{ convoId : '${convo.id}', name: 'summary', value: newValue},
+   					function() {
+   	   					//good save!!
+   					}
+   				);
+			}
+			else if (dataType.indexOf('answerEdit') == 0) {
+				var answerId = dataType.substring(10);
+				
+	   	   		$.post("@{Conversations.updateAnswer()}", 
+	  				{ answerId: answerId, todo: 'update', newText: newValue},
+	  				function(html) {
+	  	  				//...
+	  				}
+	  			);
 			}
 		}
 
@@ -296,22 +256,6 @@
   			);
 
   			return false;
-   		}
-
-   		//public static void updateAnswer(String answerId, String newText) {
-   		function updateAnswer(answerId) {
-   	   		var newValue = $("#answerInput"+answerId).val();
-
-   	   		$("#answerText"+answerId).html(newValue);
-   	   		$("#hidit"+answerId+" .display").show();
-   	   		shoit(answerId);
-
-   	   		$.post("@{Conversations.updateAnswer()}", 
-  				{ answerId: answerId, todo: 'update', newText: newValue},
-  				function(html) {
-  	  				//...
-  				}
-  			);
    		}
 
    		function deleteAnswer(answerId) {
@@ -333,10 +277,11 @@
    	   		var confirmDel = confirm("Are you sure want to delete this conversation?");
    	   		if (confirmDel) {
    	   	  		$.post("@{Conversations.delete()}", 
-    				{ convoId : '${convo.id}'}
+    				{ convoId : '${convo.id}'},
+    				function (html) {
+    					document.location = "/home";
+    				}
     			);
-
-   	   	  		document.location = "/home";
    	   		}
    	   		
    	   		return false;
@@ -378,24 +323,31 @@
 							<div class="suggescover">
 								<div class="editsWraper">
 									<div class="editsWraper">
-										<div class='inline-edit'>
-											<div id="hidit1">
-												<div id="convoTitle" class="targetedh7" style="display:block;">${convo.topic}</div>
-												<div class="display" style="display:block;">
-													<div class="editit" style="display:block;">
-														<a href="#" onclick="hidit('1')">Edit</a>
+										<div class='inline-edit' id="titleEdit">
+											<div class="suggestxt inline_display">
+												<div class="inline_full">
+													<div class="inline_view targetedh7">${convo.topic}</div>
+													<div class="editdiv">
+														<div class="editit">
+															<a href="#" class="inline_editlink">Edit</a>
+														</div>
 													</div>
 												</div>
-										    </div>
-											<div class='form' id="editit1">
+												<div class="inline_empty" style="display: none">
+													<div class="targetenew">
+														<a class="inline_addlink" href="#">Add title..</a>
+													</div>
+												</div>
+								            </div>
+											<div class='inline_form'>
 												<div style="float:left; width:auto; padding-bottom:5px;" >
-										        	<input id="titleinput" type="text"
-										        		value="${convo.topic}" class="edititinputs" style="width:600px"  >
+										        	<input id="titleinput" type="text" style="width:600px"  
+										        		value="${convo.topic}" class="edititinputs inline_text notempty" >
 										        </div>
 												<div style="float:right;margin-right:30px;">
-											        <input id="titleBtn" type="submit"  class="updatebtns" value=" " />
+											        <input id="titleBtn" type="submit" class="updatebtns inline_save" value=" " />
 											        <div class="canclebtnz">
-											        	<a class="cancel" href="#" onclick="shoit('1')">Cancel</a>
+											        	<a class="cancel" href="#">Cancel</a>
 											        </div>
 												</div>
 											</div>
@@ -403,31 +355,31 @@
 									</div>
 								</div><!--editsWraper-->
 								<div style="clear:both">
-									<div class='inline-edit'>
-										<div class="suggestxt" id="hidit2">
-											<div id="hiditDiv2" style="display: ${convo.details ? 'block' : 'none'}">
-												<p id="convoDetails" style="float:left; padding-top:10px;">${convo.details}</p>
-												<div class='display'>
+									<div class='inline-edit' id="detailsEdit">
+										<div class="suggestxt inline_display">
+											<div class="inline_full" style="display: ${convo.details ? 'block' : 'none'}">
+												<p style="float:left; padding-top:10px;" class="inline_view">${convo.details}</p>
+												<div class="editdiv">
 													<div class="editit" style="padding-top:10px;">
-														<a href="#" onclick="hidit('2')">Edit</a>
+														<a href="#" class="inline_editlink">Edit</a>
 													</div>
 												</div>
 											</div>
-											<div id="hiditEmptyDiv2" style="display: ${!convo.details ? 'block' : 'none'}">
+											<div class="inline_empty" style="display: ${!convo.details ? 'block' : 'none'}">
 												<div class="targetenew">
-													<a id="addDetailsLink" href="#">Add Conversation Details</a>
+													<a class="inline_addlink" href="#">Add Conversation Details</a>
 												</div>
 											</div>
-                    					</div>
-										<div class='form' id="editit2">
+							            </div>
+										<div class='inline_form'>
 											<div style="padding-top:10px;">
-										        <textarea id="detailsinput" class="edititinputx" 
+										        <textarea id="detailsinput" class="edititinputx inline_text" 
 										        	style="width:600px">${convo.details}</textarea>
 									        </div>
 											<div style="float:right;margin-right:30px;">
-												<input id="detailsBtn" type="submit" class="updatebtns" value=" " />
+												<input id="detailsBtn" type="submit" class="updatebtns inline_save" value=" " />
 												<div class="canclebtnz">
-													<a class="cancel" href="#" onclick="shoit('2')">Cancel</a>
+													<a class="cancel" href="#">Cancel</a>
 												</div>
 											</div>
 										</div>
@@ -485,7 +437,7 @@
 				                    	<a href="#" class="restartConvoLink">Restart Conversation </a> |  
 				                    	<a href="#">Start Follow up conversation</a>  |  
 				                    	<a href="#" class="flagConvoLink">Flag Question </a> 
-				                    	#{if session.username?.equals("admin") }
+				                    	#{if session.username?.equals("admin") || convo.talker.userName.equals(session.username)}
 				                        	  |  <a href="#" onclick="return deleteConvo();">Delete</a> 
 				                        #{/if}
 				                    </div>
@@ -502,38 +454,38 @@
                     				</div><!--cstop-->
 				                    <div class="csmid">
 				                    	<div class="cmmidtext">
-                     						<div class='inline-edit' style="width: 100%">
-                     							<div id="hidit13">
-                     								<div id="hiditDiv13" style="display: ${convo.summary ? 'block' : 'none'}">
-														<div id="convoSummary" style="display:block;padding-right:30px;text-align:justify">
-															${convo.summary ? convo.summary : "Add summary..."}
-														</div> 
-														<div class='display' style="float:right;margin-right:80px;">
-															<div class="editit" style="margin-top:7px;">
-																<a href="" onclick="hidit('13')">Edit</a>
+    										<div class='inline-edit' id="summaryEdit" style="width: 100%">
+												<div class="suggestxt inline_display">
+													<div class="inline_full" style="display: ${convo.summary ? 'block' : 'none'}">
+														<div class="inline_view" 
+															style="display:block;padding-right:30px;text-align:justify">${convo.summary}</div> 
+														<div class="editdiv" style="float:right;margin-right:80px;">
+															<div class="editit" style="padding-top:7px;">
+																<a href="#" class="inline_editlink">Edit</a>
 															</div>
 														</div>
 													</div>
-                     								<div id="hiditEmptyDiv13" style="display: ${!convo.summary ? 'block' : 'none'}">
+													<div class="inline_empty" style="display: ${!convo.summary ? 'block' : 'none'}">
 														<div class="targetenew">
-															<a id="addSummaryLink" href="#">Add Conversation Summary</a>
+															<a class="inline_addlink" href="#">Add Conversation Summary</a>
 														</div>
 													</div>
-												</div>
-												<div style="margin-top:10px; margin-bottom:10px; clear: both"></div>
-												<div class='form' id="editit13">
+									            </div>
+									            <div style="margin-top:10px; margin-bottom:10px; clear: both"></div>
+												<div class='inline_form'>
 													<div style="float:left; width:auto;">
         												<textarea style="width:585px;height:230px;font-size:13px;font-weight:normal" 
-        													id="summaryinput" class="edititinputs">${convo.summary}</textarea>
+        													id="summaryinput" class="edititinputs inline_text">${convo.summary}</textarea>
         											</div>
 													<div style="float:right; width:auto;margin-right:30px;">
-														<input id="summaryBtn" class="updatebtns" value=" " />
+														<input id="summaryBtn" class="updatebtns inline_save" value=" " />
 														<div class="canclebtnz">
-															<a class="cancel" href="javascript:void()" onclick="shoit('13')">Cancel</a>
+															<a class="cancel" href="#">Cancel</a>
 														</div>
 													</div>
 												</div>
-    										</div>
+											</div>
+    										
     										#{if convo.sumContributors }
 	    										<div style="clear: both; padding-top: 10px;">
 	    											<span class="blacktext">Contributions By:</span> 
