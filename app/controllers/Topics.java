@@ -11,6 +11,7 @@ import java.util.Map;
 import models.CommentBean;
 import models.TalkerBean;
 import models.ConversationBean;
+import models.URLName;
 import models.TalkerBean.EmailSetting;
 import models.TopicBean;
 import models.actions.Action;
@@ -56,6 +57,12 @@ public class Topics extends Controller {
     
     public static void manage(String name) {
     	TopicBean topic = TopicDAO.getByURL(name);
+    	if (topic != null) {
+			if (!topic.getMainURL().equals(name)) {
+				//we come here by old url - redirect to main
+				redirect("/"+topic.getMainURL()+"/manage");
+			}
+    	}
     	notFoundIfNull(topic);
 
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
@@ -65,6 +72,37 @@ public class Topics extends Controller {
     	topicsList.remove(topic);
 		
 		render(talker, topic, topicsList);
+    }
+    
+    public static void updateField(String topicId, String name, String value) {
+    	//TODO: list of allowed fields?
+    	//TODO: hide edits from not-logined users
+    	
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	TopicBean topic = TopicDAO.getById(topicId);
+    	notFoundIfNull(topic);
+    	
+    	if (name.equalsIgnoreCase("title")) {
+    		URLName currentName = new URLName(topic.getTitle(), topic.getMainURL());
+    		URLName newName = new URLName(value, null);
+    		
+    		//find old name with the same title
+    		URLName oldName = topic.getOldNameByTitle(newName.getTitle());
+    		if (oldName != null) {
+    			//topic has already had this title, return it to main title/url
+    			topic.setTitle(oldName.getTitle());
+    			topic.setMainURL(oldName.getUrl());
+    			topic.getOldNames().remove(oldName);
+    		}
+    		else {
+    			//new title for this topic - create it
+    			String newURL = ApplicationDAO.createURLName(newName.getTitle());
+    			topic.setTitle(newName.getTitle());
+    			topic.setMainURL(newURL);
+    		}
+    		topic.getOldNames().add(currentName);
+    		TopicDAO.updateTopic(topic);
+    	}
     }
     
     public static void delete(String topicId) {

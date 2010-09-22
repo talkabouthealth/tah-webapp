@@ -47,6 +47,7 @@ public class TopicDAO {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
 		DBObject topicObject = BasicDBObjectBuilder.start()
+			.add("title", topic.getTitle())
 			.add("main_url", topic.getMainURL())
 			.add("old_names", setToDB(topic.getOldNames()))
 			.add("aliases", topic.getAliases())
@@ -67,12 +68,15 @@ public class TopicDAO {
 	public static TopicBean getByURL(String url) {
 		DBCollection topicsColl = getDB().getCollection(TOPICS_COLLECTION);
 		
-		DBObject query = new BasicDBObject("$or", 
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("$or", 
 				Arrays.asList(
 						new BasicDBObject("main_url", url),
-						new BasicDBObject("urls", url)
+						new BasicDBObject("old_names.url", url)
 					)
-			);
+			)
+			.add("deleted", new BasicDBObject("$ne", true))
+			.get();
 		DBObject topicDBObject = topicsColl.findOne(query);
 		
 		if (topicDBObject == null) {

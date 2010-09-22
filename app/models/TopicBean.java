@@ -149,8 +149,6 @@ public class TopicBean {
     	setFollowers(followers);
 	}
 	
-	
-	
 	public List<DBRef> childrenToList() {
 		List<DBRef> dbRefList = new ArrayList<DBRef>();
 		if (children == null) {
@@ -161,6 +159,15 @@ public class TopicBean {
 		}
 		
 		return dbRefList;
+	}
+	
+	public URLName getOldNameByTitle(String title) {
+		for (URLName oldName : getOldNames()) {
+			if (oldName.getTitle().equals(title)) {
+				return oldName;
+			}
+		}
+		return null;
 	}
 	
 	

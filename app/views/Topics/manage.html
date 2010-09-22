@@ -1,4 +1,5 @@
 #{extends 'main.html' /}
+	<link rel='stylesheet' type='text/css' href='/public/stylesheets/styles.css' />
 	<style>
 		body {
 			background:url(/public/images/inner_bg.gif) repeat-x top;
@@ -22,8 +23,18 @@
 			height: 20px;
 			color: #777777;
 		}
+		
+		.inline_form {
+			display:none;
+		}
+		.inline-edit .editdiv {
+			float:left;
+			width:45px;
+			margin-left: 3px;
+		}
 	</style>
 
+	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#followTopicLink").click(function() {
@@ -113,7 +124,23 @@
 	   	   		
 	   	   		return false;
 			});
+			
+
+			$('.inline-edit').inlineEdit(
+		  		{ hover: '', saveFunction: updateData}
+		  	);
 		});
+
+		function updateData(dataType, newValue) {
+			if (dataType === 'titleEdit') {
+				$.post("@{Topics.updateField()}", 
+   					{ topicId : '${topic.id}', name: 'title', value: newValue},
+   					function() {
+   	   					//good save!!
+   					}
+   				);
+			}
+		}
 	</script>
 </head>
 
@@ -129,12 +156,43 @@
 
 <div id="innerbanner"></div>
 <div id="bottom_container">
-	<div class="blacktext2" id="innerheading">${topic.title}</div>
 	<div id="middle_area_inner">
 		<div id="innerboxarea">
 			<div id="innerleft">
 				<div id="innerlefttop"></div>
 				<div id="innermid">
+					<div class='inline-edit' id="titleEdit">
+						<div class="suggestxt inline_display">
+							<div class="inline_full">
+								<div class="inline_view targetedh7">${topic.title}</div>
+								<div class="editdiv">
+									<div class="editit">
+										<a href="#" class="inline_editlink">Edit</a>
+									</div>
+								</div>
+							</div>
+							<div class="inline_empty" style="display: none">
+								<div class="targetenew">
+									<a class="inline_addlink" href="#">Add title..</a>
+								</div>
+							</div>
+			            </div>
+						<div class='inline_form'>
+							<div style="float:left; width:auto; padding-bottom:5px;" >
+					        	<input id="titleinput" type="text" style="width:600px"  
+					        		value="${topic.title}" class="edititinputs inline_text notempty" >
+					        </div>
+							<div style="float:right;margin-right:30px;">
+						        <input id="titleBtn" type="submit" class="updatebtns inline_save" value=" " />
+						        <div class="canclebtnz">
+						        	<a class="cancel" href="#">Cancel</a>
+						        </div>
+							</div>
+						</div>
+					</div>
+										
+					<div style="clear: both; margin-bottom: 10px"></div>					
+										
 					<h3>Topic Summary:</h3><br/>
 					${topic.summary}<br/>
 					Contributions by: 
