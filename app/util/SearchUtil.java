@@ -1,6 +1,7 @@
 package util;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,12 +12,16 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.similar.MoreLikeThis;
 
 import dao.CommentsDAO;
 import dao.ConversationDAO;
@@ -75,6 +80,44 @@ public class SearchUtil {
 			results.add(convo);
 			
 			if (i == 9) {
+				break;
+			}
+		}
+		
+		is.close();
+		return results;
+	}
+	
+	//TODO: update Lucene and queries to most recent version
+	//TODO: check MoreLikeThis again
+	public static List<ConversationBean> getRelatedConvos(ConversationBean searchedConvo) throws Exception {
+		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"conversations");
+//		MoreLikeThis mlt = new MoreLikeThis(is.getIndexReader());
+//		mlt.setAnalyzer(new StandardAnalyzer());
+//		mlt.setFieldNames(new String[] {"title"});
+//		Query searchQuery = mlt.like(new StringReader(searchedConvo.getTopic()));
+//		Hits hits = is.search(searchQuery);
+		
+		Analyzer analyzer = new StandardAnalyzer();
+		QueryParser parser = new MultiFieldQueryParser(new String[] {"title"}, analyzer);
+		Query searchQuery = parser.parse(searchedConvo.getTopic());
+		Hits hits = is.search(searchQuery);
+
+		System.out.println("SEARCH FOR: "+searchedConvo.getTopic()+", "+hits.length());
+		
+		List<ConversationBean> results = new ArrayList<ConversationBean>();
+		for (int i = 0; i < hits.length(); i++) {
+			Document doc = hits.doc(i);
+			
+			String convoId = doc.get("id");
+			if (searchedConvo.getId().equals(convoId)) {
+				continue;
+			}
+			ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+//			convo.setComments(CommentsDAO.loadConvoAnswers(convoId));
+			results.add(convo);
+			
+			if (results.size() == 3) {
 				break;
 			}
 		}

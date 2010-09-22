@@ -28,6 +28,7 @@ import dao.TopicDAO;
 import play.mvc.Controller;
 import play.templates.JavaExtensions;
 import util.CommonUtil;
+import util.SearchUtil;
 
 /**
  * Used for dispatch/show Users, Convos/Questions and Topics,
@@ -174,8 +175,14 @@ public class ViewDispatcher extends Controller {
 //		List<TopicBean> topicsList = TopicDAO.getTopics();
 		
 		convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
+		List<ConversationBean> relatedConvos = null;
+		try {
+			relatedConvos = SearchUtil.getRelatedConvos(convo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-		render("Conversations/viewConvo.html", talker, convo, latestActivityTime);
+		render("Conversations/viewConvo.html", talker, convo, latestActivityTime, relatedConvos);
     }
 	
 	private static void showTopic(TopicBean topic) {

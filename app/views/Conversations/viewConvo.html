@@ -581,28 +581,28 @@
 									</a>
 								#{/list}
 							</p><br />
-							<!-- <div class="topicborder"></div>  -->
+							<div class="topicborder"></div>
 						</div>
 						<div class="cb"></div>
 					</div><!--topipsts-->
-					*{
-				                <div class="topipsts">
-				               <div class="rconversation">
-				              <div class="Staticsh1 style1 style2">Related Conversations</div>
-				              <p class="rcpadtop"><a href="#">Printer text of the printing and typesettin
-				                industry. Lorem Ipsum has Done</a> </p>
-				              <p class="rcpadtop">
-				                <a href="#">Since the text of the printing and typeset
-				                industry. Lorem Ipsum has Done </a></p>
-				              <p class="rcpadtop">
-				                <a href="#">ummy text of the printing and typesettin
-				                industry. Lorem Ipsum has Done </a></p>
-				              <p><br />
-				                      <a href="#"><strong>See More Related Conversation</strong></a> </p>
-				               </div>
-				                <div class="cb"></div>
-				                </div><!--topipsts-->
-				    }*
+					#{if relatedConvos }
+						<div class="topipsts">
+							<div class="rconversation">
+								<div class="Staticsh1 style1 style2">Related Conversations</div>
+								#{list items: relatedConvos, as: 'relatedConvo'}
+									<p class="rcpadtop">
+										<a href="${relatedConvo.mainURL}">${relatedConvo.topic}</a>
+			                		</p>
+								#{/list}
+								<!-- 
+			              		<p><br />
+			                      <a href="#"><strong>See More Related Conversation</strong></a> </p>
+			                    -->
+							</div>
+							<div class="cb"></div>
+						</div><!--topipsts-->
+					#{/if}
+				               
                 	<div class="cb"></div>
 				</div>
             	<div class="cb"></div>
