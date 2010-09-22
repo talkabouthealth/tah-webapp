@@ -218,11 +218,7 @@
 					<br/><br/>
 
 					<h3>Parent topics:</h3><br/>
-					<select id="newParent">
-						#{list items: topicsList, as: 'topicItem'}
-							<option value="${topicItem.id}">${topicItem.title}</option>
-						#{/list}
-					</select>
+					<input id="newParent" type="text" value="" />
 					<input id="newParentBtn" type="button" value="Add Parent" />
 					<ul id="parents">
 						#{list items: topic.parents, as: 'parent'}
@@ -237,11 +233,7 @@
 					<br/>
 					
 					<h3>Children topics:</h3><br/>
-					<select id="newChild">
-						#{list items: topicsList, as: 'topicItem'}
-							<option value="${topicItem.id}">${topicItem.title}</option>
-						#{/list}
-					</select>
+					<input id="newChild" type="text" value="" />
 					<input id="newChildBtn" type="button" value="Add Child" />
 					<ul id="children">
 						#{list items: topic.children, as: 'child'}

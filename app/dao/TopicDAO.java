@@ -105,6 +105,10 @@ public class TopicDAO {
 		DBObject query = new BasicDBObject("title", title);
 		DBObject topicDBObject = topicsColl.findOne(query);
 		
+		if (topicDBObject == null) {
+			return null;
+		}
+		
 		TopicBean topicBean = new TopicBean();
 		topicBean.parseBasicFromDB(topicDBObject);
 		return topicBean;

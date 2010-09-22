@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import logic.TopicLogic;
 import models.CommentBean;
 import models.TalkerBean;
 import models.ConversationBean;
@@ -78,7 +79,7 @@ public class Topics extends Controller {
     	//TODO: list of allowed fields?
     	//TODO: hide edits from not-logined users
     	
-    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+//    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	TopicBean topic = TopicDAO.getById(topicId);
     	notFoundIfNull(topic);
     	
@@ -132,13 +133,15 @@ public class Topics extends Controller {
     public static void manageParents(String topicId, String todo, String parentId) {
     	TopicBean topic = new TopicBean(topicId);
     	
-    	TopicBean parentTopic = TopicDAO.getById(parentId);
-    	notFoundIfNull(parentTopic);
-    	
+    	TopicBean parentTopic = null;
     	if (todo.equalsIgnoreCase("add")) {
+    		parentTopic = TopicLogic.findOrCreateTopic(parentId);
         	parentTopic.getChildren().add(topic);
     	}
     	else {
+    		parentTopic = TopicDAO.getById(parentId);
+        	notFoundIfNull(parentTopic);
+        	
     		parentTopic.getChildren().remove(topic);
     	}
     	TopicDAO.updateTopic(parentTopic);
@@ -151,13 +154,15 @@ public class Topics extends Controller {
     	TopicBean topic = TopicDAO.getById(topicId);
     	notFoundIfNull(topic);
     	
-    	TopicBean childTopic = TopicDAO.getById(childId);
-    	notFoundIfNull(childTopic);
-    	
+    	TopicBean childTopic = null;
     	if (todo.equalsIgnoreCase("add")) {
+    		childTopic = TopicLogic.findOrCreateTopic(childId);
     		topic.getChildren().add(childTopic);
     	}
     	else {
+    		childTopic = TopicDAO.getById(childId);
+        	notFoundIfNull(childTopic);
+        	
     		topic.getChildren().remove(childTopic);
     	}
     	TopicDAO.updateTopic(topic);

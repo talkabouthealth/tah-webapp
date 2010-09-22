@@ -33,15 +33,15 @@ public class TopicBean {
 	private Set<String> aliases;
 	
 	private String summary;
-	private boolean deleted;
+	private Set<String> sumContributors;
 	
 	private Set<TopicBean> parents;
 	private Set<TopicBean> children;
 	
 	private int views;
 	private Date creationDate;
+	private boolean deleted;
 	
-	private List<String> sumContributors;
 	private List<TalkerBean> followers;
 	
 	private List<ConversationBean> conversations;
@@ -49,6 +49,9 @@ public class TopicBean {
 	
 	public TopicBean() {
 		super();
+		
+		children = new HashSet<TopicBean>();
+		parents = new HashSet<TopicBean>();
 	}
 	public TopicBean(String id) {
 		super();
@@ -208,10 +211,10 @@ public class TopicBean {
 	public void setSummary(String summary) {
 		this.summary = summary;
 	}
-	public List<String> getSumContributors() {
+	public Set<String> getSumContributors() {
 		return sumContributors;
 	}
-	public void setSumContributors(List<String> sumContributors) {
+	public void setSumContributors(Set<String> sumContributors) {
 		this.sumContributors = sumContributors;
 	}
 	public List<TalkerBean> getFollowers() {
