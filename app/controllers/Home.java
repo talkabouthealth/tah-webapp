@@ -56,21 +56,21 @@ public class Home extends Controller {
 		List<Action> convoFeed = ActionDAO.loadConvoFeed(talker);
 		
 		//Action feed?
-		List<Action> activityFeed = ActionDAO.loadActivityFeed(talker);
+//		List<Action> activityFeed = ActionDAO.loadActivityFeed(talker);
 		
 //		Community Convo Feed
 //		- Question started or restarted in the community
 //		- Question answered
 //		- Summary added or edited
 //		- Answer voted for
-		List<Action> communityConvoFeed = ActionDAO.loadCommunityConvoFeed();
+//		List<Action> communityConvoFeed = ActionDAO.loadCommunityConvoFeed();
 		
 		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
 		boolean isAdmin = "admin".equals(Security.connected());
 		boolean showIMPopup = (session.get("justloggedin") != null && hasNoIMAccounts && !isAdmin);
 		session.remove("justloggedin");
 		
-        render(talker, mapTalkmiTopics, newTopic, convoFeed, activityFeed, communityConvoFeed, showIMPopup);
+        render(talker, mapTalkmiTopics, newTopic, convoFeed, showIMPopup);
     }
     
     /* ---------------- Invitations ----------------- */

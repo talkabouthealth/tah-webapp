@@ -2,6 +2,7 @@ package dao;
 
 import java.util.ArrayList;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumSet;
@@ -40,11 +41,7 @@ import static util.DBUtil.*;
 
 public class ActionDAO {
 	
-	private static final EnumSet<ActionType> CONVO_FEED_ACTIONS = EnumSet.of(
-			ActionType.START_CONVO, ActionType.RESTART_CONVO, 
-			ActionType.ANSWER_CONVO, ActionType.REPLY_CONVO, 
-			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED 
-		);
+	private static final EnumSet<ActionType> CONVO_FEED_ACTIONS = EnumSet.allOf(ActionType.class);
 	
 	private static final EnumSet<ActionType> ACTIVITY_FEED_ACTIONS = EnumSet.of(
 			ActionType.START_CONVO, ActionType.RESTART_CONVO, ActionType.JOIN_CONVO, 
@@ -82,10 +79,8 @@ public class ActionDAO {
 	
 	//------------------ Feeds --------------------
 	
-//	- New conversation started in a topic that is being followed
-//	- Conversation restarted in a topic or Conversation(?) that is being followed
-//	- New answer or reply in a Topic or Conversation that is being followed
-//	- TODO?: Summary created or edited in Conversation that is being followed.
+	//It contains items based on actions from topics, questions, 
+	//and other users (including comments) that are followed.
 	public static List<Action> loadConvoFeed(TalkerBean talker) {
 		//TODO: move to FeedLogic?
 		
@@ -98,6 +93,12 @@ public class ActionDAO {
 			convosDBSet.addAll(ConversationDAO.getConversationsByTopic(topic));
 		}
 		
+		//prepare list of followed talkers
+		Set<DBRef> talkersDBSet = new HashSet<DBRef>();
+		for (TalkerBean followingTalker : talker.getFollowingList()) {
+			talkersDBSet.add(createRef(TalkerDAO.TALKERS_COLLECTION, followingTalker.getId()));
+		}
+		
 		//list of needed actions for this Feed
 		Set<String> actionTypes = new HashSet<String>();
 		for (ActionType actionType : CONVO_FEED_ACTIONS) {
@@ -108,9 +109,13 @@ public class ActionDAO {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
 		DBObject query = BasicDBObjectBuilder.start()
-			.add("topicId", new BasicDBObject("$in", convosDBSet))
+			.add("$or", Arrays.asList(
+							new BasicDBObject("topicId", new BasicDBObject("$in", convosDBSet)),
+							new BasicDBObject("uid", new BasicDBObject("$in", talkersDBSet))
+						))
 			.add("type", new BasicDBObject("$in", actionTypes))
 			.get();
+
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		

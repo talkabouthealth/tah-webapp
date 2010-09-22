@@ -339,25 +339,13 @@
 				</div>
 				
 				
-				<h3>Latest activities:</h3><br/>
+				<h3>Your TalkAboutHealth Feed:</h3><br/>
 					#{list items: convoFeed, as: 'activity'}
 						<span class="blacktext12">${activity.toHTML().raw()}</span><br/>
 						<span class="greytext11">${activity.time.format("MMM dd 'at' HH:mm a")}</span><br />
 					#{/list}
 					
 				<br/><br/>
-				<h3>Latest USER activities:</h3><br/>
-					#{list items: activityFeed, as: 'activity'}
-						<span class="blacktext12">${activity.toHTML().raw()}</span><br/>
-						<span class="greytext11">${activity.time.format("MMM dd 'at' HH:mm a")}</span><br />
-					#{/list}
-				
-				<br/><br/>
-				<h3>Community Convo Feed:</h3><br/>
-					#{list items: communityConvoFeed, as: 'activity'}
-						<span class="blacktext12">${activity.toHTML().raw()}</span><br/>
-						<span class="greytext11">${activity.time.format("MMM dd 'at' HH:mm a")}</span><br />
-					#{/list}
 						
 				<div id="innerbot"></div>
 			</div>
