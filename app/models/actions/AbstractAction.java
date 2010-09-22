@@ -116,14 +116,10 @@ public abstract class AbstractAction implements Action {
 	}
 	
 	// Topic connected actions
-	//TODO: use parseBasic from ConversationBean
 	protected ConversationBean parseConvo(DBObject dbObject) {
-		DBObject topicDBObject = ((DBRef)dbObject.get("topicId")).fetch();
+		DBObject convoDBObject = ((DBRef)dbObject.get("topicId")).fetch();
 		ConversationBean convo = new ConversationBean();
-    	convo.setId(topicDBObject.get("_id").toString());
-    	convo.setTid((Integer)topicDBObject.get("tid"));
-    	convo.setTopic((String)topicDBObject.get("topic"));
-    	convo.setMainURL((String)topicDBObject.get("main_url"));
+		convo.parseBasicFromDB(convoDBObject);
     	
     	return convo;
 	}

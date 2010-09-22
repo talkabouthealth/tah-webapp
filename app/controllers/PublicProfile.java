@@ -74,31 +74,6 @@ public class PublicProfile extends Controller {
 		render(talker, currentTalker, action, from);
 	}
 	
-	//TODO: unused methods?
-	public static void loadMoreThankYous(String userName, int start) {
-		TalkerBean talker = TalkerDAO.getByUserName(userName);
-		notFoundIfNull(talker);
-		
-		render("@thankYousAjax", talker, start);
-	}
-	
-	public static void loadMoreFollowlist(String userName, String followType, int start) {
-		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
-		TalkerBean talker = TalkerDAO.getByUserName(userName);
-		notFoundIfNull(talker);
-		
-		List<TalkerBean> followList = null;
-		if (followType.equals("following")) {
-			followList = talker.getFollowingList();
-		}
-		else {
-			followList = TalkerDAO.loadFollowers(talker.getId());
-		}
-		
-		render("@followlistAjax", talker, currentTalker, start, followList);
-	}
-	
-	
 	//TODO: load more methods for topics?
 	public static void conversationsFollowing(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);

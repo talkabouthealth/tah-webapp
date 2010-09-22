@@ -140,12 +140,11 @@ public class ConversationBean {
     	
     	setViews(getInt(convoDBObject, "views"));
     	
+    	//topics(tags)
     	parseTopics((Collection<DBRef>)convoDBObject.get("topics"));
     	
     	//author
     	setTalker(parseTalker(convoDBObject, "uid"));
-    	
-    	//topics(tags)
 	}
 	
 	private void parseSumContributors(Collection<DBRef> contributorsDBList) {
