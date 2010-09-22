@@ -60,6 +60,11 @@ public class ViewDispatcher extends Controller {
 		//last - topic
 		TopicBean topic = TopicDAO.getByURL(name);
 		if (topic != null) {
+			if (!topic.getMainURL().equals(name)) {
+				//we come here by old url - redirect to main
+				redirect("/"+topic.getMainURL());
+			}
+			
 			showTopic(topic);
 			return;
 		}

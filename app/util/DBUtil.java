@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import models.ConversationBean.ConvoName;
 import models.DBModel;
 import models.TalkerBean;
 
@@ -163,8 +162,10 @@ public class DBUtil {
 	
 	public static <T extends DBModel> Set<DBObject> setToDB(Set<T> valueSet) {
 		Set<DBObject> dbSet = new HashSet<DBObject>();
-		for (T t : valueSet) {
-			dbSet.add(t.toDBObject());
+		if (valueSet != null) {
+			for (T t : valueSet) {
+				dbSet.add(t.toDBObject());
+			}
 		}
 		return dbSet;
 	}

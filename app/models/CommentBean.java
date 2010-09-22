@@ -15,8 +15,6 @@ import com.mongodb.DBRef;
 
 import dao.TalkerDAO;
 
-import models.ConversationBean.ConvoName;
-
 public class CommentBean extends MessageBean {
 	
 	//TODO: make similar other such classes (e.g. ConvoName)

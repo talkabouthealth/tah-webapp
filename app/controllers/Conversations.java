@@ -12,7 +12,7 @@ import logic.ConversationLogic;
 import models.CommentBean;
 import models.CommentBean.Vote;
 import models.ConversationBean;
-import models.ConversationBean.ConvoName;
+import models.ConversationBean.URLName;
 import models.TalkerBean;
 import models.TalkerBean.EmailSetting;
 import models.TopicBean;
@@ -170,11 +170,11 @@ public class Conversations extends Controller {
     	notFoundIfNull(convo);
     	
     	if (name.equalsIgnoreCase("title")) {
-    		ConvoName currentName = new ConvoName(convo.getTopic(), convo.getMainURL());
-    		ConvoName newName = new ConvoName(value, null);
+    		URLName currentName = new URLName(convo.getTopic(), convo.getMainURL());
+    		URLName newName = new URLName(value, null);
     		
     		//find old name with the same title
-    		ConvoName oldName = convo.getOldNameByTitle(newName.getTitle());
+    		URLName oldName = convo.getOldNameByTitle(newName.getTitle());
     		if (oldName != null) {
     			//convo has already had this title, return it to main title/url
     			convo.setTopic(oldName.getTitle());

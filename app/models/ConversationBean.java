@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import models.ConversationBean.ConvoName;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
@@ -36,49 +34,6 @@ public class ConversationBean {
 		}
 	}
 	
-	public static class ConvoName {
-		private String title;
-		private String url;
-		
-		public ConvoName() {}
-		
-		public ConvoName(String title, String url) {
-			this.title = title;
-			this.url = url;
-		}
-		
-		@Override
-		public boolean equals(Object obj) {
-			if (!(obj instanceof ConvoName)) {
-				return false;
-			}
-			
-			ConvoName other = (ConvoName)obj;
-			return title.equals(other.title);
-		}
-		
-		@Override
-		public int hashCode() {
-			if (title == null) {
-				return 47;
-			}
-			return title.hashCode();
-		}
-		
-		public String getTitle() {
-			return title;
-		}
-		public void setTitle(String title) {
-			this.title = title;
-		}
-		public String getUrl() {
-			return url;
-		}
-		public void setUrl(String url) {
-			this.url = url;
-		}
-	}
-	
 	private String id;
 	private int tid;
 	//TODO: handle questions also
@@ -88,7 +43,7 @@ public class ConversationBean {
 	private String topic;
 	private String mainURL;
 	//includes old titles and urls
-	private Set<ConvoName> oldNames;
+	private Set<URLName> oldNames;
 	
 	private Date creationDate;
 	private Date displayTime;	//TODO: old field? how to use it?
@@ -136,7 +91,7 @@ public class ConversationBean {
     	parseSumContributors((Collection<DBRef>)convoDBObject.get("sum_authors"));
     	
     	setMainURL((String)convoDBObject.get("main_url"));
-    	parseOldNames((Collection<DBObject>)convoDBObject.get("old_names"));
+    	setOldNames(parseSet(URLName.class, convoDBObject, "old_names"));
     	
     	setViews(getInt(convoDBObject, "views"));
     	
@@ -154,18 +109,6 @@ public class ConversationBean {
 				TalkerBean talker = new TalkerBean();
 		    	talker.parseBasicFromDB(talkerDBRef.fetch());
 		    	sumContributors.add(talker);
-			}
-		}
-	}
-	
-	private void parseOldNames(Collection<DBObject> namesDBList) {
-		oldNames = new HashSet<ConvoName>();
-		if (namesDBList != null) {
-			for (DBObject nameDBObject : namesDBList) {
-				ConvoName convoName = new ConvoName();
-				convoName.setTitle((String)nameDBObject.get("title"));
-				convoName.setUrl((String)nameDBObject.get("url"));
-				oldNames.add(convoName);
 			}
 		}
 	}
@@ -234,8 +177,8 @@ public class ConversationBean {
 	}
 	
 	
-	public ConvoName getOldNameByTitle(String title) {
-		for (ConvoName oldName : getOldNames()) {
+	public URLName getOldNameByTitle(String title) {
+		for (URLName oldName : getOldNames()) {
 			if (oldName.getTitle().equals(title)) {
 				return oldName;
 			}
@@ -298,11 +241,11 @@ public class ConversationBean {
 	public int getTid() { return tid; }
 	public void setTid(int tid) { this.tid = tid; }
 
-	public Set<ConvoName> getOldNames() {
+	public Set<URLName> getOldNames() {
 		return oldNames;
 	}
 
-	public void setOldNames(Set<ConvoName> oldNames) {
+	public void setOldNames(Set<URLName> oldNames) {
 		this.oldNames = oldNames;
 	}
 

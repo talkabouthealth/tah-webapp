@@ -26,10 +26,13 @@ import dao.TopicDAO;
 public class TopicBean {
 	
 	private String id;
+	
 	private String title;
-	private Set<String> aliases;
-	private String summary;
 	private String mainURL;
+	private Set<URLName> oldNames;
+	private Set<String> aliases;
+	
+	private String summary;
 	private boolean deleted;
 	
 	private Set<TopicBean> parents;
@@ -92,6 +95,8 @@ public class TopicBean {
 		setDeleted(getBoolean(topicDBObject, "deleted"));
 		
 		setMainURL((String)topicDBObject.get("main_url"));
+		setOldNames(parseSet(URLName.class, topicDBObject, "old_names"));
+    	
 		setViews(DBUtil.getInt(topicDBObject, "views"));
 		setCreationDate((Date)topicDBObject.get("cr_date"));
 		
@@ -243,5 +248,11 @@ public class TopicBean {
 	}
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+	public Set<URLName> getOldNames() {
+		return oldNames;
+	}
+	public void setOldNames(Set<URLName> oldNames) {
+		this.oldNames = oldNames;
 	}
 }

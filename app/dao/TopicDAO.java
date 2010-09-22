@@ -48,7 +48,9 @@ public class TopicDAO {
 		
 		DBObject topicObject = BasicDBObjectBuilder.start()
 			.add("main_url", topic.getMainURL())
+			.add("old_names", setToDB(topic.getOldNames()))
 			.add("aliases", topic.getAliases())
+			
 			.add("children", topic.childrenToList())
 			.add("deleted", topic.isDeleted())
 			.get();
