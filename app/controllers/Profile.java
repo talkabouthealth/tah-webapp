@@ -64,8 +64,8 @@ public class Profile extends Controller {
 		String oldUserName = oldTalker.getUserName();
 		String oldEmail = oldTalker.getEmail();
 		if (!oldUserName.equals(talker.getUserName())) {
-			TalkerBean tmpTalker = TalkerDAO.getByUserName(talker.getUserName());
-			validation.isTrue(tmpTalker == null).message("username.exists");
+			boolean isUserNameUnique = TalkerDAO.isUserNameUnique(talker.getUserName());
+			validation.isTrue(isUserNameUnique).message("username.exists");
 		}
 		if (!oldEmail.equals(talker.getEmail())) {
 			TalkerBean tmpTalker = TalkerDAO.getByEmail(talker.getEmail());
@@ -544,6 +544,9 @@ public class Profile extends Controller {
 	public static void deactivateAccount() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
+		String newUserName = CommonUtil.generateDeactivatedUserName();
+		talker.setOriginalUserName(talker.getUserName());
+		talker.setUserName(newUserName);
 		talker.setDeactivated(true);
 		TalkerDAO.updateTalker(talker);
 		

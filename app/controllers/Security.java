@@ -48,6 +48,11 @@ public class Security extends Secure.Security {
     	}
     	
     	if (talker.isDeactivated()) {
+    		//return to original userName
+    		talker.setUserName(talker.getOriginalUserName());
+    		talker.setOriginalUserName(null);
+    		session.put("username", talker.getUserName());
+    		
     		talker.setDeactivated(false);
     		CommonUtil.updateTalker(talker, session);
     	}

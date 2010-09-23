@@ -16,18 +16,21 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 
 import models.IMAccountBean;
 import models.TalkerBean;
+import models.TopicBean;
 import play.Play;
 import play.cache.Cache;
 import play.mvc.Router;
@@ -35,6 +38,7 @@ import play.mvc.Router.ActionDefinition;
 import play.mvc.Scope.Session;
 import util.importers.DiseaseImporter;
 
+import com.mongodb.DBRef;
 import com.tah.im.IMNotifier;
 
 import dao.TalkerDAO;
@@ -186,6 +190,20 @@ public class CommonUtil {
 		} while (!unique);
 		
 		return verifyCode;
+	}
+	
+	public static String generateDeactivatedUserName() {
+		String userName = null;
+		Random random = new Random();
+		while (true) {
+			int num = random.nextInt(1000)+1;
+			userName = "member"+num;
+			if (TalkerDAO.isUserNameUnique(userName)) {
+				break;
+			}
+		}
+
+		return userName;
 	}
 	
 	//Generate url by Play! action and parameters

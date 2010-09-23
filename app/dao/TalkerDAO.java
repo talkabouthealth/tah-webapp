@@ -85,6 +85,8 @@ public class TalkerDAO {
 			.add("email", talker.getEmail())
 			.add("verify_code", talker.getVerifyCode())
 			.add("emails", talker.emailsToDB())
+			
+			.add("orig_uname", talker.getOriginalUserName())
 			.add("deactivated", talker.isDeactivated())
 			.add("suspended", talker.isSuspended())
 			
@@ -280,6 +282,25 @@ public class TalkerDAO {
 		TalkerBean talker = new TalkerBean();
 		talker.parseFromDB(talkerDBObject);
 		return talker;
+	}
+	
+	//Checks userName and original userName (deactivated users)
+	public static boolean isUserNameUnique(String userName) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		
+		DBObject usernameQuery = BasicDBObjectBuilder.start()
+			.add("uname", userName)
+			.get();
+		DBObject originalUsernameQuery = BasicDBObjectBuilder.start()
+			.add("orig_uname", userName)
+			.get();
+		
+		DBObject query = new BasicDBObject("$or", 
+				Arrays.asList(usernameQuery, originalUsernameQuery)
+			);
+		
+		DBObject talkerDBObject = talkersColl.findOne(query);
+		return (talkerDBObject == null);
 	}
 	
 	

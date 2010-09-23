@@ -123,6 +123,9 @@ public class TalkerBean implements Serializable {
 	@Required @Email private String email;
 	private String verifyCode;	//code for email verification
 	private Set<EmailBean> emails;
+	
+	//used to store original userName when account is deactivated
+	private String originalUserName;
 	private boolean deactivated;
 	private boolean suspended;
 	
@@ -253,6 +256,7 @@ public class TalkerBean implements Serializable {
 		parseEmails((Collection<DBObject>)talkerDBObject.get("emails"));
 		setVerifyCode((String)talkerDBObject.get("verify_code"));
 		
+		setOriginalUserName((String)talkerDBObject.get("orig_uname"));
 		setDeactivated(getBoolean(talkerDBObject.get("deactivated"))); 
 		setSuspended(getBoolean(talkerDBObject.get("suspended")));
 		
@@ -908,5 +912,11 @@ public class TalkerBean implements Serializable {
 	}
 	public void setTopicsInfoMap(Map<TopicBean, TalkerTopicInfo> topicsInfoMap) {
 		this.topicsInfoMap = topicsInfoMap;
+	}
+	public String getOriginalUserName() {
+		return originalUserName;
+	}
+	public void setOriginalUserName(String originalUserName) {
+		this.originalUserName = originalUserName;
 	}
 }	
