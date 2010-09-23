@@ -272,6 +272,21 @@
    	   		return false;
    		}
 
+   		function markNotHelpful(answerId) {
+   	   		var confirmDel = confirm("Are you sure want to mark as 'Not Helpful' this answer?");
+   	   		if (confirmDel) {
+   	   	   		$("#comment"+answerId).hide();
+
+   	   	  		$.post("@{Conversations.updateAnswer()}", 
+    				{ answerId: answerId, todo: 'setNotHelpful', newText: ''},
+    				function(html) {
+    	  				//...
+    				}
+    			);
+   	   		}
+   	   		return false;
+   		}
+
    		function deleteConvo() {
    	   		var confirmDel = confirm("Are you sure want to delete this conversation?");
    	   		if (confirmDel) {

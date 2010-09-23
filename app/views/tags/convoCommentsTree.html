@@ -124,6 +124,15 @@
 					                        <li><a href="#dialog1" name="modal">Thank</a></li>
 					                      	<li>&nbsp;|&nbsp;</li>
 					                        <li><a href="#dialog1" name="modal">Flag Comment</a></li> 
+					                        #{if _level == 1}
+					                        	<li>&nbsp;|&nbsp;</li>
+					                        	#{if comment.notHelpful }
+					                        		<li><a href="#" onclick="return markNotHelpful('${comment.id}')">Undo!</a></li>
+					                        	#{/if}
+					                        	#{else}
+					                        		<li><a href="#" onclick="return markNotHelpful('${comment.id}')">Not Helpful</a></li>
+					                        	#{/else}
+					                        #{/if}
 				                       	</ul>
 			                    	</div> 
 			                   	</p>

@@ -128,9 +128,12 @@ public class CommentsDAO {
 		DBObject answerObject = BasicDBObjectBuilder.start()
 			.add("vote_score", answer.getVoteScore())
 			.add("votes", setToDB(answer.getVotes()))
+			
 			.add("text", answer.getText())
 			.add("old_texts", answer.getOldTexts())
+			
 			.add("deleted", answer.isDeleted())
+			.add("not_helpful", answer.isNotHelpful())
 			.get();
 		
 		DBObject answerId = new BasicDBObject("_id", new ObjectId(answer.getId()));

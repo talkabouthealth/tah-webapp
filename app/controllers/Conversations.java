@@ -264,9 +264,12 @@ public class Conversations extends Controller {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
     	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
-    	if (!answer.getFromTalker().equals(talker) && !talker.getUserName().equals("admin")) {
-    		forbidden();
-    		return;
+    	if (todo.equalsIgnoreCase("update") || todo.equalsIgnoreCase("delete")) {
+    		//TODO: move to util permission check?
+    		if (!answer.getFromTalker().equals(talker) && !talker.getUserName().equals("admin")) {
+        		forbidden();
+        		return;
+        	}
     	}
     	
     	if (todo.equalsIgnoreCase("update")) {
@@ -280,6 +283,21 @@ public class Conversations extends Controller {
     	else if (todo.equalsIgnoreCase("delete")) {
     		answer.setDeleted(true);
     		CommentsDAO.updateConvoAnswer(answer);
+    	}
+    	else if (todo.equalsIgnoreCase("setNotHelpful")) {
+    		answer.setNotHelpful(true);
+    		CommentsDAO.updateConvoAnswer(answer);
+    		
+    		//let's send an email to support@talkabouthealth.com
+    		//TODO: make one method for flagging?
+    		Map<String, String> vars = new HashMap<String, String>();
+        	vars.put("content_type", "Answer");
+        	vars.put("content_link", "");
+        	vars.put("reason", "");
+    		vars.put("content", answer.getText());
+    		vars.put("name", talker.getUserName());
+    		vars.put("email", talker.getEmail());
+    		EmailUtil.sendEmail(EmailTemplate.FLAGGED, EmailUtil.SUPPORT_EMAIL, vars, null, false);
     	}
     }
     
