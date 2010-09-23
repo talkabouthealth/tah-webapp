@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,28 @@ public class Search extends Controller {
 	}
 	
 	public static void ajaxSearch(String term) throws Exception {
+		List<String> allowedTypes = Arrays.asList("User", "Conversation", "Question", "Topic");
+		List<Map<String, String>> results = makeSearch(term, allowedTypes);
+		
+		//add link to full search
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("label", "Search for <b>"+term+"</b>");
+		result.put("value", term);
+		result.put("url", "#fullsearch");
+		result.put("type", "");
+		results.add(result);
+		
+		renderJSON(results);
+	}
+		
+	public static void ajaxConvoSearch(String term) throws Exception {
+		List<String> allowedTypes = Arrays.asList("Conversation", "Question");
+		List<Map<String, String>> results = makeSearch(term, allowedTypes);
+		
+		renderJSON(results);
+	}
+	
+	private static List<Map<String, String>> makeSearch(String term, List<String> allowedTypes) throws Exception {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
 		
 //		Query searchQuery = new PrefixQuery(new Term("uname", term));
@@ -47,64 +70,38 @@ public class Search extends Controller {
 		for (int i = 0; i < hits.length(); i++) {
 			Document doc = hits.doc(i);
 			
-			Map<String, String> result = new HashMap<String, String>();
 			String type = doc.get("type");
-			String label = null;
-			String url = null;
-			if (type.equalsIgnoreCase("User")) {
-				label = doc.get("uname");
-				url = "/"+label;
+			if (allowedTypes.contains(type)) {
+				Map<String, String> result = new HashMap<String, String>();
+				
+				String label = null;
+				String url = null;
+				if (type.equalsIgnoreCase("User")) {
+					label = doc.get("uname");
+					url = "/"+label;
+				}
+				else {
+					label = doc.get("title");
+					url = "/"+doc.get("url");
+				}
+				
+				result.put("label", label.replaceAll(term, "<b>"+term+"</b>"));
+				result.put("value", "");
+				result.put("url", url);
+				result.put("type", type);
+				
+				results.add(result);
 			}
-			else {
-				label = doc.get("title");
-				url = "/"+doc.get("url");
-			}
 			
-			result.put("label", label.replaceAll(term, "<b>"+term+"</b>"));
-			result.put("value", "");
-			result.put("url", url);
-			result.put("type", type);
-			
-			results.add(result);
-			
-			if (i == 9) {
+			if (results.size() == 10) {
 				break;
 			}
 		}
 		
 		is.close();
 		
-		//add link to full search
-		Map<String, String> result = new HashMap<String, String>();
-		result.put("label", "Search for <b>"+term+"</b>");
-		result.put("value", term);
-		result.put("url", "#fullsearch");
-		result.put("type", "");
-		results.add(result);
-		
-		renderJSON(results);
+		return results;
 	}
-	
-//	public static String doHighlighting(String text,String query){
-//	    String delims="/ ;,:\\+-*";
-//	    HashSet<String> queryWords=new HashSet<String>();
-//	    
-//	    StringTokenizer st=new StringTokenizer(query,delims);
-//	    
-//	    /*iterate over words in the query*/
-//	    while(st.hasMoreTokens()){
-//	      String token=st.nextToken().toLowerCase();
-//	      queryWords.add(token);
-//	    }
-//	    
-//	    for(String queryWord:queryWords){
-//	     text=text.replaceAll(queryWord, "<b>"+queryWord+"</b>");
-//	     if(!queryWord.equals(capitalizeFirstChar(queryWord)))
-//	       text=text.replaceAll(capitalizeFirstChar(queryWord), "<b>"+capitalizeFirstChar(queryWord)+"</b>");
-//	    }
-//	    System.out.println(text);
-//	    return text;
-//	  }
 	
 	public static void main(String[] args) throws Exception {
 //		test();

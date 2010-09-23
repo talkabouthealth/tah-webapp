@@ -1,34 +1,38 @@
 package util;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import models.CommentBean;
 import models.ConversationBean;
 import models.TalkerBean;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.CachingTokenFilter;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.similar.MoreLikeThis;
+import org.apache.lucene.search.highlight.Fragmenter;
+import org.apache.lucene.search.highlight.Highlighter;
+import org.apache.lucene.search.highlight.QueryScorer;
+import org.apache.lucene.search.highlight.Scorer;
+import org.apache.lucene.search.highlight.SimpleFragmenter;
+import org.apache.lucene.search.highlight.TokenSources;
+import org.apache.lucene.search.spans.SpanScorer;
 
+import play.Play;
 import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.TalkerDAO;
-
-import play.Play;
-import play.Play.Mode;
 
 public class SearchUtil {
 	
@@ -36,7 +40,8 @@ public class SearchUtil {
 
 	public static List<TalkerBean> searchTalker(String query) throws CorruptIndexException, IOException, ParseException {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"talker");
-		Hits hits = getHits(is, new String[] {"uname", "bio"}, "*"+query+"*");
+		Query searchQuery = getHits(is, new String[] {"uname", "bio"}, "*"+query+"*");
+		Hits hits = is.search(searchQuery);
 		
 //		List<String> results = new ArrayList<String>();
 		List<TalkerBean> results = new ArrayList<TalkerBean>();
@@ -67,7 +72,12 @@ public class SearchUtil {
 	
 	public static List<ConversationBean> searchConvo(String query) throws CorruptIndexException, IOException, ParseException {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"conversations");
-		Hits hits = getHits(is, new String[] {"title", "answers"}, "*"+query+"*");
+//		Query searchQuery = getHits(is, new String[] {"title", "answers"}, "*"+query+"*");
+		Analyzer analyzer = new StandardAnalyzer();
+		QueryParser parser = new MultiFieldQueryParser(new String[] {"title", "answers"}, analyzer);
+		parser.setAllowLeadingWildcard(true);
+		Query searchQuery = parser.parse("*"+query+"*");
+		Hits hits = is.search(searchQuery);
 		
 		List<ConversationBean> results = new ArrayList<ConversationBean>();
 		for (int i = 0; i < hits.length(); i++) {
@@ -76,6 +86,21 @@ public class SearchUtil {
 			String convoId = doc.get("id");
 			ConversationBean convo = ConversationDAO.getByConvoId(convoId);
 			convo.setComments(CommentsDAO.loadConvoAnswers(convoId));
+			
+			StringBuilder answersString = new StringBuilder();
+			for (CommentBean answer : convo.getComments()) {
+				answersString.append(answer.getText());
+			}
+			
+			searchQuery = searchQuery.rewrite(is.getIndexReader());
+			Scorer scorer = new QueryScorer(searchQuery, "answers");
+			Highlighter highlighter = new Highlighter(scorer);
+			Fragmenter fragmenter = new SimpleFragmenter(30);
+			highlighter.setTextFragmenter(fragmenter);
+			String fr = highlighter.getBestFragment(analyzer, "answers", answersString.toString());
+//			String[] fragments = highlighter.getBestFragments(new StandardAnalyzer(), 
+//					"answers", answersString.toString(), 5);
+			System.out.println(answersString.toString()+",  FR: "+fr);
 			
 			results.add(convo);
 			
@@ -87,6 +112,22 @@ public class SearchUtil {
 		is.close();
 		return results;
 	}
+//	hlu.getFragmentsWithHighlightedTerms(analyzer,
+//            query, “contents”, contents, 5, 100);
+
+	private static void getFragmentsWithHighlightedTerms(String fieldName, String text, Analyzer analyzer) {
+//		TokenStream stream = TokenSources.getTokenStream(fieldName, fieldContents, analyzer);
+//		Scorer scorer = new SpanScorer(query, fieldName,
+//				new CachingTokenFilter(stream));
+//		Scorer scorer = new QueryScorer(query, fieldName);
+////		Fragmenter fragmenter = new SimpleSpanFragmenter(scorer, 100);
+//	
+//		Highlighter highlighter = new Highlighter(scorer);
+////		highlighter.setTextFragmenter(fragmenter);
+//		String[] fragments = highlighter.getBestFragments(analyzer, fieldName, text, 5);
+	}
+	
+
 	
 	//TODO: update Lucene and queries to most recent version
 	//TODO: check MoreLikeThis again
@@ -103,7 +144,7 @@ public class SearchUtil {
 		Query searchQuery = parser.parse(searchedConvo.getTopic());
 		Hits hits = is.search(searchQuery);
 
-		System.out.println("SEARCH FOR: "+searchedConvo.getTopic()+", "+hits.length());
+//		System.out.println("SEARCH FOR: "+searchedConvo.getTopic()+", "+hits.length());
 		
 		List<ConversationBean> results = new ArrayList<ConversationBean>();
 		for (int i = 0; i < hits.length(); i++) {
@@ -126,17 +167,15 @@ public class SearchUtil {
 		return results;
 	}
 	
-	private static Hits getHits(IndexSearcher is, String[] fields, String query) 
+	//TODO: recommended to use only one searcher? Open after reindex?
+	private static Query getHits(IndexSearcher is, String[] fields, String query) 
 			throws CorruptIndexException, IOException, ParseException {
 		Analyzer analyzer = new StandardAnalyzer();
-		//TODO: recommended to use only one searcher? Open after reindex?
-		
 		QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
 		parser.setAllowLeadingWildcard(true);
 		Query searchQuery = parser.parse(query);
 		
-		Hits hits = is.search(searchQuery);
-		return hits;
+		return searchQuery;
 	}
 	
 //	ParallelMultiSearcher pms = new ParallelMultiSearcher(new i);

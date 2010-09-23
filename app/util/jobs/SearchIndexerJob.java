@@ -78,12 +78,14 @@ public class SearchIndexerJob extends Job {
 			for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
 	//			possibly weight titles, conversation details, summaries, and answers more than the archived real-time conversations?
 				
-				//TODO: should check all tree? (not only top answers)
 				List<CommentBean> answersList = CommentsDAO.loadConvoAnswers(convo.getId());
 				
 				Document doc = new Document();
 				doc.add(new Field("id", convo.getId(), Field.Store.YES, Field.Index.NO));
 				doc.add(new Field("title", convo.getTopic(), Field.Store.YES, Field.Index.TOKENIZED));
+				
+				//TODO: should check all tree? (not only top answers)
+				//add an answer, reply, or live conversation text ?
 				StringBuilder answersString = new StringBuilder();
 				for (CommentBean answer : answersList) {
 					answersString.append(answer.getText());

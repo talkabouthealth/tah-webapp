@@ -1,4 +1,47 @@
 #{ extends 'main.html' /}
+
+<link rel="stylesheet" href="/public/plugins/ui-lightness/jquery-ui-1.8.4.custom.css" type="text/css" media="screen" />
+<script type="text/javascript" 
+	src="/public/javascripts/jquery-ui-1.8.4.custom.min.js" ></script>
+	
+<script type="text/javascript">
+$(function() {
+	var cache = {};
+	$( "#query" ).autocomplete({
+		minLength: 1,
+		source: function(request, response) {
+			if ( request.term in cache ) {
+				response( cache[ request.term ] );
+				return;
+			}
+			
+			$.ajax({
+				url: "@{Search.ajaxConvoSearch()}",
+				dataType: "json",
+				data: request,
+				success: function( data ) {
+					cache[ request.term ] = data;
+					response( data );
+				}
+			});
+		},
+		select: function(event, ui) {
+			var url = ui.item.url;
+			document.location = url;
+			return false;
+		}
+	})
+	.data( "autocomplete" )._renderItem = function( ul, item ) {
+		return $( "<li></li>" )
+			.data( "item.autocomplete", item )
+			.append( "<a>" + item.label + "&nbsp;<span>" + item.type + "</span></a>" )
+			.appendTo( ul );
+	};
+
+
+});
+</script>
+
 	<script type="text/javascript"> 	 
 		$(document).ready(function() {
 			
@@ -27,7 +70,7 @@
 		<div id="innermiddlearea">
            	<form name="searchForm" action="@{Community.searchConversations()}" method="POST">
 				<div id="searcharea">
-					<input name="query" type="text" class="search"  value="${flash.query ? flash.query : 'Search Conversations'}" 
+					<input id="query" name="query" type="text" class="search"  value="${flash.query ? flash.query : 'Search Conversations'}" 
 						onclick="if (this.value == 'Search Conversations') this.value=''" onblur=""/>
 				</div>
 				<div id="searchright">

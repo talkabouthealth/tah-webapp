@@ -78,7 +78,6 @@ public class ConversationBean {
 		this.id = id;
 	}
 	
-	
 	public void parseBasicFromDB(DBObject convoDBObject) {
 		setId(convoDBObject.get("_id").toString());
     	setTid((Integer)convoDBObject.get("tid"));
@@ -99,8 +98,7 @@ public class ConversationBean {
     	setViews(getInt(convoDBObject, "views"));
     	
     	//topics(tags)
-    	parseTopics((Collection<DBRef>)convoDBObject.get("topics"));
-    	parseRelatedConvos((Collection<DBRef>)convoDBObject.get("related_convos"));
+    	parseTopics((Collection<DBRef>)convoDBObject.get("topics"));    	
     	
     	//author
     	setTalker(parseTalker(convoDBObject, "uid"));
@@ -160,6 +158,8 @@ public class ConversationBean {
 
 	public void parseFromDB(DBObject convoDBObject) {
 		parseBasicFromDB(convoDBObject);
+		
+		parseRelatedConvos((Collection<DBRef>)convoDBObject.get("related_convos"));
 
     	//messages from Talk Window
     	List<MessageBean> messages = new ArrayList<MessageBean>();

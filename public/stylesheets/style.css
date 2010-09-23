@@ -1299,3 +1299,16 @@ text-decoration:underline;
 .nextprebutton { float: right}
 
 .fulltext { display: none }
+
+/* Autocomplete items */
+.ui-menu .ui-menu-item a {
+	font-size: 14px;
+	color: #666666;
+}
+.ui-menu .ui-menu-item a span {
+	color: #BBBBBB;
+	font-size: 70%;
+}
+.ui-menu .ui-menu-item a span b {
+	color: #000000;
+}
