@@ -20,7 +20,6 @@ import dao.TalkerDAO;
 import dao.TopicDAO;
 
 /**
- * @author Osezno
  *
  */
 public class ConversationBean {
@@ -62,6 +61,7 @@ public class ConversationBean {
 	private String summary;
 	private Set<TalkerBean> sumContributors;
 	
+	private Set<ConversationBean> relatedConvos;
 	private Set<String> members;
 	private List<CommentBean> comments;
 	private List<MessageBean> messages;
@@ -97,6 +97,7 @@ public class ConversationBean {
     	
     	//topics(tags)
     	parseTopics((Collection<DBRef>)convoDBObject.get("topics"));
+    	parseRelatedConvos((Collection<DBRef>)convoDBObject.get("topics"));
     	
     	//author
     	setTalker(parseTalker(convoDBObject, "uid"));
@@ -114,6 +115,17 @@ public class ConversationBean {
 	}
 	
 	private void parseTopics(Collection<DBRef> topicsDBList) {
+		topics = new ArrayList<TopicBean>();
+		if (topicsDBList != null) {
+			for (DBRef topicDBRef : topicsDBList) {
+				TopicBean topic = new TopicBean();
+				topic.parseBasicFromDB(topicDBRef.fetch());
+				topics.add(topic);
+			}
+		}
+	}
+	
+	private void parseRelatedConvos(Collection<DBRef> topicsDBList) {
 		topics = new ArrayList<TopicBean>();
 		if (topicsDBList != null) {
 			for (DBRef topicDBRef : topicsDBList) {
@@ -279,5 +291,13 @@ public class ConversationBean {
 
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	public Set<ConversationBean> getRelatedConvos() {
+		return relatedConvos;
+	}
+
+	public void setRelatedConvos(Set<ConversationBean> relatedConvos) {
+		this.relatedConvos = relatedConvos;
 	}
 }
