@@ -163,6 +163,7 @@ public class ViewDispatcher extends Controller {
 		talker.setProfileCompletionValue(sum);
 	}
 	
+	//TODO: make autocomplete for RelatedConvos
 	private static void showConvo(ConversationBean convo) {
 		TalkerBean talker = null;
 		if (Security.isConnected()) {

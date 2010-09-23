@@ -10,12 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import play.ns.com.jhlabs.image.ConvolveFilter;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
+import dao.ConversationDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
 
@@ -97,7 +100,7 @@ public class ConversationBean {
     	
     	//topics(tags)
     	parseTopics((Collection<DBRef>)convoDBObject.get("topics"));
-    	parseRelatedConvos((Collection<DBRef>)convoDBObject.get("topics"));
+    	parseRelatedConvos((Collection<DBRef>)convoDBObject.get("related_convos"));
     	
     	//author
     	setTalker(parseTalker(convoDBObject, "uid"));
@@ -125,13 +128,14 @@ public class ConversationBean {
 		}
 	}
 	
-	private void parseRelatedConvos(Collection<DBRef> topicsDBList) {
-		topics = new ArrayList<TopicBean>();
-		if (topicsDBList != null) {
-			for (DBRef topicDBRef : topicsDBList) {
-				TopicBean topic = new TopicBean();
-				topic.parseBasicFromDB(topicDBRef.fetch());
-				topics.add(topic);
+	//TODO: make one methods for all DBRefs!!
+	private void parseRelatedConvos(Collection<DBRef> relatedDBList) {
+		relatedConvos = new HashSet<ConversationBean>();
+		if (relatedDBList != null) {
+			for (DBRef convoDBRef : relatedDBList) {
+				ConversationBean convo = new ConversationBean();
+				convo.parseBasicFromDB(convoDBRef.fetch());
+				relatedConvos.add(convo);
 			}
 		}
 	}
@@ -143,6 +147,15 @@ public class ConversationBean {
 			topicsDBList.add(topicRef);
 		}
 		return topicsDBList;
+	}
+	
+	public Set<DBRef> relatedConvosToDB() {
+		Set<DBRef> relatedDBList = new HashSet<DBRef>();
+		for (ConversationBean convo : getRelatedConvos()) {
+			DBRef topicRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getId());
+			relatedDBList.add(topicRef);
+		}
+		return relatedDBList;
 	}
 
 	public void parseFromDB(DBObject convoDBObject) {
@@ -197,6 +210,26 @@ public class ConversationBean {
 		}
 		return null;
 	}
+	
+	//TODO: MOVE TO ABSTRACT DBModel class?
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof ConversationBean)) {
+			return false;
+		}
+		
+		ConversationBean other = (ConversationBean)obj;
+		return id.equals(other.id);
+	}
+	
+	@Override
+	public int hashCode() {
+		if (id == null) {
+			return 47;
+		}
+		return id.hashCode();
+	}
+
 	
 	public String getMainURL() {
 		return mainURL;

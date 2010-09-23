@@ -102,6 +102,9 @@
 			width:45px;
 			margin-left: 3px;
 		}
+		#relatedConvosList .deleteConvoLink {
+			display: none;
+		}
 	</style>
 
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
@@ -199,12 +202,26 @@
 	   				);
    			});
 
+   			$(".deleteConvoLink").live("click", function() {
+   				var relatedConvoId = $(this).attr("rel");
+   	   			$(this).parent().remove();
+
+   	   			$.post("@{Conversations.updateField()}", 
+   					{ convoId : '${convo.id}', name: 'relatedConvos', value: relatedConvoId, todo: 'remove'},
+   					function(html) {
+   	   					$("#relatedConvosList").html($("#relatedConvosEditList").html());
+   					}
+   				);
+   				
+   				return false;
+   			});
+
    			$('.inline-edit').inlineEdit(
-		  		{ hover: '', saveFunction: updateData}
+		  		{ hover: '', saveFunction: saveData, updateFunction: updateData}
 		  	);
 		});
 
-		function updateData(dataType, newValue) {
+		function saveData(dataType, newValue) {
 			if (dataType === 'titleEdit') {
 				$.post("@{Conversations.updateField()}", 
    					{ convoId : '${convo.id}', name: 'title', value: newValue},
@@ -238,6 +255,19 @@
 	  	  				//...
 	  				}
 	  			);
+			}
+		}
+
+		function updateData(dataType, newValue) {
+			if (dataType === 'relatedConvosEdit') {
+				$.post("@{Conversations.updateField()}", 
+   					{ convoId : '${convo.id}', name: 'relatedConvos', value: newValue, todo: 'add'},
+   					function(html) {
+   	   					$(html).appendTo($("#relatedConvosEditList"));
+
+   	   					$("#relatedConvosList").html($("#relatedConvosEditList").html());
+   					}
+   				);
 			}
 		}
 
@@ -602,12 +632,56 @@
 					#{if relatedConvos }
 						<div class="topipsts">
 							<div class="rconversation">
-								<div class="Staticsh1 style1 style2">Related Conversations</div>
-								#{list items: relatedConvos, as: 'relatedConvo'}
-									<p class="rcpadtop">
-										<a href="${relatedConvo.mainURL}">${relatedConvo.topic}</a>
-			                		</p>
-								#{/list}
+								<div class='inline-edit' id="relatedConvosEdit">
+									<div class="suggestxt inline_display">
+										<div class="inline_full" style="display: ${convo.details ? 'block' : 'none'}">
+											<div class="Staticsh1 style1 style2" style="float:left; padding-top:10px;">
+												Related Conversations</div>
+											<div class="editdiv">
+												<div class="editit" style="padding-top:10px;">
+													<a href="#" class="inline_editlink">Edit</a>
+												</div>
+											</div>
+											<div id="relatedConvosList">
+												#{list items: convo.relatedConvos, as: 'relatedConvo'}
+													<p class="rcpadtop">
+														<a href="${relatedConvo.mainURL}">${relatedConvo.topic}</a>
+							                		</p>
+												#{/list}
+											</div>
+											#{list items: relatedConvos, as: 'relatedConvo'}
+												<p class="rcpadtop">
+													<a href="${relatedConvo.mainURL}">${relatedConvo.topic}</a>
+						                		</p>
+											#{/list}
+										</div>
+										<div class="inline_empty" style="display: ${!convo.details ? 'block' : 'none'}">
+											<div class="targetenew">
+												<a class="inline_addlink" href="#">Add Conversation Details</a>
+											</div>
+										</div>
+						            </div>
+									<div class='inline_form'>
+										<div id="relatedConvosEditList">
+											#{list items: convo.relatedConvos, as: 'relatedConvo'}
+												<p class="rcpadtop">
+													<a href="${relatedConvo.mainURL}">${relatedConvo.topic}</a>&nbsp;
+													<a class="deleteConvoLink" href="#" rel="${relatedConvo.id}">X</a>
+						                		</p>
+											#{/list}
+										</div>
+										<div style="padding-top:10px;">
+									        <textarea id="detailsinput" class="edititinputx inline_text" 
+									        	style="width:200px"></textarea>
+								        </div>
+										<div style="float:right; margin-right:30px;">
+											<input id="detailsBtn" type="submit" class="inline_add" value="Add" />
+											<div class="canclebtnz">
+												<a class="cancel" href="#">Done</a>
+											</div>
+										</div>
+									</div>
+								</div>
 								<!-- 
 			              		<p><br />
 			                      <a href="#"><strong>See More Related Conversation</strong></a> </p>

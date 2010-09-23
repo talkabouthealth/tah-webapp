@@ -243,6 +243,25 @@ public class Conversations extends Controller {
     	    	ConversationDAO.updateConvo(convo);
     		}
     	}
+    	else if (name.equalsIgnoreCase("relatedConvos")) {
+    		String todo = params.get("todo");
+    		if (todo.equalsIgnoreCase("add")) {
+    			ConversationBean relatedConvo = ConversationDAO.getByTitle(value);
+    			if (relatedConvo != null) {
+    				convo.getRelatedConvos().add(relatedConvo);
+    				ConversationDAO.updateConvo(convo);
+    				
+        	    	renderText(
+		    			"<p class=\"rcpadtop\"><a href=\""+relatedConvo.getMainURL()+"\">"+relatedConvo.getTopic()+"</a>&nbsp;" +
+		    			"<a class=\"deleteConvoLink\" href=\"#\" rel=\""+relatedConvo.getId()+"\">X</a></p>");
+    			}
+    		}
+    		else if (todo.equalsIgnoreCase("remove")) {
+    			ConversationBean relatedConvo = new ConversationBean(value);
+    			convo.getRelatedConvos().remove(relatedConvo);
+    	    	ConversationDAO.updateConvo(convo);
+    		}
+    	}
     }
     
     public static void delete(String convoId) {

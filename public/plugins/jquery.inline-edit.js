@@ -29,6 +29,7 @@
 					postVar: 'text',
 					postData: {},
 					saveFunction: undefined,
+					updateFunction: undefined,
 					postFormat: undefined
 				}, options || {}, $.metadata ? $main.metadata() : {} ),
 
@@ -39,6 +40,8 @@
 				$save = $form.find( settings.save ),
 				$revert = $form.find( settings.revert ),
 				$cancel = $form.find( settings.cancel ),
+				$addBtn = $form.find('.inline_add'),
+				$doneBtn = $form.find('.inline_done'),
 				$view = $main.find('.inline_view'),
 				$editLink = $main.find('.inline_editlink'),
 				$addLink = $main.find('.inline_addlink'),
@@ -93,7 +96,13 @@
 				$display.hide();
 				$form.show();
 			});
-
+			
+			$addBtn.bind( 'click.inline-edit', function() {
+				var newValue = $.trim($text.val());
+				
+				settings.updateFunction.apply( window, [ $dataType, newValue] );
+			});
+			
 			// Add revert handler
 			$revert.bind( 'click.inline-edit', function(){
 				$text.val( original || '' ).focus();

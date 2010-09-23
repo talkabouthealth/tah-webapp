@@ -135,8 +135,6 @@ public class DBUtil {
 	}
 	
 	//--------- Using DBModel -----------
-	
-	//TODO: find better implementation?
 	public static <T extends DBModel> Set<T> parseSet(Class<T> clazz, DBObject dbObject, String name) {
 		Collection<DBObject> value = (Collection<DBObject>)dbObject.get(name);
 		if (value == null) {

@@ -130,6 +130,7 @@ public class Topics extends Controller {
     }
     
     //TODO: check valid add/remove? (Topic can't be children and parent at the same time)
+	//TODO: make autocomplete for parents/children
     public static void manageParents(String topicId, String todo, String parentId) {
     	TopicBean topic = new TopicBean(topicId);
     	

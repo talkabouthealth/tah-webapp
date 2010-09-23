@@ -128,6 +128,7 @@ public class ConversationDAO {
 			.add("opened", convo.isOpened())
 			
 			.add("topics", convo.topicsToDB())
+			.add("related_convos", convo.relatedConvosToDB())
 			
 			.add("summary", convo.getSummary())
 			.add("sum_authors", sumContributorsDBList)
@@ -167,6 +168,21 @@ public class ConversationDAO {
 		
 		ConversationBean convo = new ConversationBean();
 		convo.parseFromDB(convoDBObject);
+		return convo;
+	}
+	
+	public static ConversationBean getByTitle(String title) {
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		DBObject query = new BasicDBObject("topic", title);
+		DBObject convoDBObject = convosColl.findOne(query);
+		
+		if (convoDBObject == null) {
+			return null;
+		}
+		
+		ConversationBean convo = new ConversationBean();
+		convo.parseBasicFromDB(convoDBObject);
 		return convo;
 	}
 	
