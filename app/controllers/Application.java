@@ -133,6 +133,8 @@ public class Application extends Controller {
 		}
 
 		//Successful signup!
+        //Reserve this name as URL
+        ApplicationDAO.createURLName(talker.getUserName());
         if (talker.getImAccounts() != null) {
         	for (IMAccountBean imAccount : talker.getImAccounts()) {
         		CommonUtil.sendIMInvitation(imAccount);

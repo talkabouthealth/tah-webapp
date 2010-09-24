@@ -43,6 +43,7 @@ import util.CommonUtil;
 import util.EmailUtil;
 import util.EmailUtil.EmailTemplate;
 import dao.ActionDAO;
+import dao.ApplicationDAO;
 import dao.DiseaseDAO;
 import dao.HealthItemDAO;
 import dao.TalkerDAO;
@@ -64,8 +65,8 @@ public class Profile extends Controller {
 		String oldUserName = oldTalker.getUserName();
 		String oldEmail = oldTalker.getEmail();
 		if (!oldUserName.equals(talker.getUserName())) {
-			boolean isUserNameUnique = TalkerDAO.isUserNameUnique(talker.getUserName());
-			validation.isTrue(isUserNameUnique).message("username.exists");
+			boolean nameNotExists = !ApplicationDAO.isURLNameExists(talker.getUserName());
+			validation.isTrue(nameNotExists).message("username.exists");
 		}
 		if (!oldEmail.equals(talker.getEmail())) {
 			TalkerBean tmpTalker = TalkerDAO.getByEmail(talker.getEmail());
@@ -137,6 +138,10 @@ public class Profile extends Controller {
 		}
 		
 		CommonUtil.updateTalker(oldTalker, session);
+		
+		if (!oldUserName.equals(talker.getUserName())) {
+			ApplicationDAO.createURLName(talker.getUserName());
+		}
 		
 		flash.success("ok");
 		talker = oldTalker;
@@ -544,6 +549,7 @@ public class Profile extends Controller {
 	public static void deactivateAccount() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
+		//TODO: on registration check 'member' uniqueness?
 		String newUserName = CommonUtil.generateDeactivatedUserName();
 		talker.setOriginalUserName(talker.getUserName());
 		talker.setUserName(newUserName);
