@@ -90,17 +90,19 @@ public class SearchUtil {
 			StringBuilder answersString = new StringBuilder();
 			for (CommentBean answer : convo.getComments()) {
 				answersString.append(answer.getText());
+				answersString.append(" ... ");
 			}
 			
 			searchQuery = searchQuery.rewrite(is.getIndexReader());
 			Scorer scorer = new QueryScorer(searchQuery, "answers");
 			Highlighter highlighter = new Highlighter(scorer);
-			Fragmenter fragmenter = new SimpleFragmenter(30);
+			Fragmenter fragmenter = new SimpleFragmenter(60);
 			highlighter.setTextFragmenter(fragmenter);
 			String fr = highlighter.getBestFragment(analyzer, "answers", answersString.toString());
 //			String[] fragments = highlighter.getBestFragments(new StandardAnalyzer(), 
 //					"answers", answersString.toString(), 5);
-			System.out.println(answersString.toString()+",  FR: "+fr);
+//			System.out.println(answersString.toString()+",  FR: "+fr);
+			convo.setSearchFragment(fr);
 			
 			results.add(convo);
 			

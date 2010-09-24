@@ -111,13 +111,18 @@ $(function() {
 					        					<span class="blacktext12">${convo.creationDate.since()}</span>
 					        				</span>
 					        			</p>
-					        			#{if convo.comments.size() > 0 }
+					        			#{if convo.searchFragment }
+					        				<p>
+					        					...${convo.searchFragment.raw()}
+					        				</p>
+					        			#{/if}
+					        			#{elseif convo.comments.size() > 0 }
 					        				<p>
 					        					#{set topAnswer = convo.comments.get(0) /}
 						        				<span class="blacktext14">Top Answer by: ${topAnswer.fromTalker.userName}</span><br/>
 						        				<span class="blacktext12">${topAnswer.text}</span>
 						        			</p>
-					        			#{/if}
+					        			#{/elseif}
 					        		</div>
 								</div>
 				  				<div class="areabot"></div>

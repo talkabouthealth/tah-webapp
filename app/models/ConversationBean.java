@@ -72,6 +72,9 @@ public class ConversationBean {
 	
 	private List<TopicBean> topics;
 	
+	//used for search display
+	private String searchFragment;
+	
 	public ConversationBean() {}
 	
 	public ConversationBean(String id) {
@@ -332,5 +335,13 @@ public class ConversationBean {
 
 	public void setRelatedConvos(Set<ConversationBean> relatedConvos) {
 		this.relatedConvos = relatedConvos;
+	}
+
+	public String getSearchFragment() {
+		return searchFragment;
+	}
+
+	public void setSearchFragment(String searchFragment) {
+		this.searchFragment = searchFragment;
 	}
 }
