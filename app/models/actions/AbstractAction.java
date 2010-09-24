@@ -20,6 +20,7 @@ import dao.ConversationDAO;
 import models.CommentBean;
 import models.TalkerBean;
 import models.ConversationBean;
+import models.TopicBean;
 
 public abstract class AbstractAction implements Action {
 	
@@ -41,6 +42,24 @@ public abstract class AbstractAction implements Action {
 		this.type = type;
 		this.talker = talker;
 		time = new Date();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof AbstractAction)) {
+			return false;
+		}
+		
+		AbstractAction other = (AbstractAction)obj;
+		return id.equals(other.id);
+	}
+	
+	@Override
+	public int hashCode() {
+		if (id == null) {
+			return 47;
+		}
+		return id.hashCode();
 	}
 	
 	public AbstractAction(DBObject dbObject) {

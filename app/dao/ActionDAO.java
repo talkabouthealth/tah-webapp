@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -81,7 +82,7 @@ public class ActionDAO {
 	
 	//It contains items based on actions from topics, questions, 
 	//and other users (including comments) that are followed.
-	public static List<Action> loadConvoFeed(TalkerBean talker) {
+	public static Set<Action> loadConvoFeed(TalkerBean talker) {
 		//TODO: move to FeedLogic?
 		
 		//prepare list of followed convos/topics
@@ -119,12 +120,12 @@ public class ActionDAO {
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
-		List<Action> activitiesList = new ArrayList<Action>();
+		Set<Action> activitiesSet = new LinkedHashSet<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {
 			Action action = actionFromDB(actionDBObject);
-			activitiesList.add(action);
+			activitiesSet.add(action);
 		}
-		return activitiesList;
+		return activitiesSet;
 	}
 	
 	public static List<Action> loadActivityFeed(TalkerBean talker) {

@@ -1,5 +1,6 @@
 package controllers;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -53,7 +54,8 @@ public class Home extends Controller {
 		}
 		
 		//Convo feed?
-		List<Action> convoFeed = ActionDAO.loadConvoFeed(talker);
+		//TODO: truncate to 40?
+		Set<Action> convoFeed = ActionDAO.loadConvoFeed(talker);
 		
 		//Action feed?
 //		List<Action> activityFeed = ActionDAO.loadActivityFeed(talker);
@@ -63,7 +65,10 @@ public class Home extends Controller {
 //		- Question answered
 //		- Summary added or edited
 //		- Answer voted for
-//		List<Action> communityConvoFeed = ActionDAO.loadCommunityConvoFeed();
+		if (convoFeed.size() < 40) {
+			List<Action> communityConvoFeed = ActionDAO.loadCommunityConvoFeed();
+			convoFeed.addAll(communityConvoFeed);
+		}
 		
 		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
 		boolean isAdmin = "admin".equals(Security.connected());
