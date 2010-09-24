@@ -23,7 +23,7 @@ import dao.ConversationDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
 
-public class TopicBean {
+public class TopicBean implements Comparable<TopicBean> {
 	
 	private String id;
 	
@@ -84,6 +84,11 @@ public class TopicBean {
 			return 47;
 		}
 		return id.hashCode();
+	}
+	
+	@Override
+	public int compareTo(TopicBean o) {
+		return title.compareTo(o.title);
 	}
 	
 	public void parseBasicFromDB(DBObject topicDBObject) {

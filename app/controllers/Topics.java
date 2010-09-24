@@ -5,8 +5,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import logic.TopicLogic;
 import models.CommentBean;
@@ -171,5 +174,33 @@ public class Topics extends Controller {
     	renderText("<li>"+childTopic.getTitle()+"&nbsp;<a href='#' rel='"+
     			childTopic.getId()+"' class='removeChildrenLink'>remove</a></li>");
     }
+    
+    public static void browseTopics() {
+    	Set<TopicBean> topics = TopicDAO.loadAllTopics();
+    	Map<String, TopicBean> topicsMap = new HashMap<String, TopicBean>();
+    	for (TopicBean topic : topics) {
+    		topicsMap.put(topic.getId(), topic);
+    	}
+    	
+    	Set<TopicBean> topicsTree = new HashSet<TopicBean>();
+    	for (TopicBean topic : topics) {
+    		if (topic.getParents() == null || topic.getParents().size() == 0) {
+    			topicsTree.add(topic);
+    			topic.setChildren(buildTree(topic, topicsMap));
+    		}
+    	}
+    	
+    	render(topicsTree);
+    }
+
+	private static Set<TopicBean> buildTree(TopicBean topic, Map<String, TopicBean> topicsMap) {
+		Set<TopicBean> newChildren = new TreeSet<TopicBean>();
+		for (TopicBean child : topic.getChildren()) {
+			TopicBean newChild = topicsMap.get(child.getId());
+			newChildren.add(newChild);
+			newChild.setChildren(buildTree(newChild, topicsMap));
+		}
+		return newChildren;
+	}
     
 }

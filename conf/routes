@@ -21,6 +21,8 @@ GET		/explore/members						Community.browseMembers(action:'active')
 *		/search/members							Community.browseMembers(action:'search')
 *		/search/conversations					Community.searchConversations
 
+GET		/explore/topics							Topics.browseTopics
+
 GET		/home/?									Home.index
 GET		/dashboard/?							Dashboard.index
 

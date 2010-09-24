@@ -1,0 +1,8 @@
+<a href="@{ViewDispatcher.view(_topic.mainURL)}">${_topic.title}</a><br/>
+<ul>
+#{list items: _topic.children, as: 'child' }
+	<li>
+		#{ topicsTree topic: child /}
+	</li>
+#{/list}
+</ul>

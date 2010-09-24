@@ -1,0 +1,14 @@
+#{extends 'static.html' /}
+#{set pageHeader:'Browse Topics' /}
+
+<style type="text/css">
+	ul {
+		padding-left: 50px;
+	}	
+</style>
+
+<div class="blacktext14">
+#{list items: topicsTree, as: 'topic' }
+	#{ topicsTree topic: topic /}
+#{/list}
+</div>

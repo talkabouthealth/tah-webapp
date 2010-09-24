@@ -114,18 +114,18 @@ public class TopicDAO {
 		return topicBean;
 	}
 	
-	public static List<TopicBean> loadAllTopics() {
+	public static Set<TopicBean> loadAllTopics() {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		List<DBObject> topicsDBList = topicsColl.find().toArray();
 		
-		List<TopicBean> topicsList = new ArrayList<TopicBean>();
+		Set<TopicBean> topicsSet = new HashSet<TopicBean>();
 		for (DBObject topicDBObject : topicsDBList) {
 			TopicBean topic = new TopicBean();
 			topic.parseBasicFromDB(topicDBObject);
-	    	topicsList.add(topic);
+			topicsSet.add(topic);
 		}
 		
-		return topicsList;
+		return topicsSet;
 	}
 	
 	public static List<TopicBean> getTopics() {
