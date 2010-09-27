@@ -1,84 +1,11 @@
 #{extends 'main.html' /}
-	<link rel='stylesheet' type='text/css' href='/public/stylesheets/styles.css' />
 	<style>
 		body {
 			background:url(/public/images/inner_bgmt.gif) repeat-x top;
 			font-size: 14px;
 		}
-		#innermid {
-			padding: 10px;
-		}
-		
-		a {color:#333; text-decoration:none}
+		a {color:#1a6a96; text-decoration:none}
 		a:hover {color:#ccc; text-decoration:none}
-		#mask {
-		  position:absolute;
-		  left:0;
-		  top:0;
-		  z-index:9000;
-		 
-		  display:none;
-		}
-		  
-		#boxes .window {
-		  position:absolute;
-		  left:0;
-		  top:0;
-		  width:440px;
-		  height:200px;
-		  display:none;
-		  z-index:9999;
-		  padding:20px;
-		}
-		
-		#boxes #dialog {
-		  width:375px; 
-		  height:203px;
-		  padding:10px;
-		  background-color:#ffffff;
-		}
-		
-		#boxes #dialog1 {
-		  width:685px; height:407px;
-		}
-		
-		#dialog1 .d-header {
-		  background:url(/public/images/login-header.png) no-repeat 0 0 transparent; 
-		  width:375px; 
-		  height:150px;
-		}
-		
-		#dialog1 .d-header input {
-		  position:relative;
-		  top:60px;
-		  left:100px;
-		  border:3px solid #cccccc;
-		  height:22px;
-		  width:200px;
-		  font-size:15px;
-		  padding:5px;
-		  margin-top:4px;
-		}
-		
-		#dialog1 .d-blank {
-		  float:left;
-		  background:url(/public/images/login-blank.png) no-repeat 0 0 transparent; 
-		  width:267px; 
-		  height:53px;
-		}
-		
-		#dialog1 .d-login {
-		  float:left;
-		  width:108px; 
-		  height:53px;
-		}
-		
-		#boxes #dialog2 {
-		  background:url(/public/images/notice.png) no-repeat 0 0 transparent; 
-		  width:326px; 
-		  height:229px;
-		  padding:50px 0 20px 25px;
-		}
 		.style2 {color: #000000}
 		.display {
 			background:#FFF;
@@ -86,12 +13,14 @@
 			height:1px;
 			margin-left:3px;
 		}
+		li { list-style:none; }
+		caption, th { text-align:left; }
 		
+		/* Different fixes */
 		.deleteTopicLink { margin-right: 10px }
 		#topicsList { float: left }
 		#topicsList a { margin-right: 10px }
 		
-		/* Different fixes */
 		.answerCover { padding-top: 0px }
 		.targetenew a { color:#0D94D6; }
 		.inline_form {
@@ -346,14 +275,7 @@
 </head>
 
 <body>
-<div id="top_container">
-	<div id="top">
-		#{ logo /}
-		<div id="topnav">
-			#{include 'menu.html' /}
-		</div>
-	</div>
-</div>
+#{include 'header.html' /}
 
 <div id="innerbanner"></div>
 <div id="bottom_container">
