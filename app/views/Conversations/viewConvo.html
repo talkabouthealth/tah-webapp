@@ -17,10 +17,6 @@
 		caption, th { text-align:left; }
 		
 		/* Different fixes */
-		.deleteTopicLink { margin-right: 10px }
-		#topicsList { float: left }
-		#topicsList a { margin-right: 10px }
-		
 		.answerCover { padding-top: 0px }
 		.targetenew a { color:#0D94D6; }
 		.inline_form {
@@ -32,6 +28,13 @@
 			margin-left: 3px;
 		}
 		#relatedConvosList .deleteConvoLink {
+			display: none;
+		}
+		
+		.topicTitle { margin-left: 10px; }
+		.deleteTopicLink { margin-right: 10px }
+		#topicsList, #topicsEditList { float: left }
+		#topicsList .deleteTopicLink {
 			display: none;
 		}
 	</style>
@@ -87,37 +90,6 @@
 	   				return false;
 	   			});
    			
-   			//Topics
-   			$("#addTopicBtn").click(function() {
-   	   			//topicInput
-   	   			var newTopic = $("#topicInput").val();
-   	   			$("#topicInput").val("");
-
-   	   			shoit('4');
-   	   			$("#display4").show();
-
-   	   			$.post("@{Conversations.updateField()}", 
-   					{ convoId : '${convo.id}', name: 'topic', value: newTopic, todo: 'add'},
-   					function(html) {
-   	   					$(html).appendTo($("#topicsLinks"));
-
-   	   					//update static topics
-   	    	   			$("#topicsList").html("");
-   	    	   			$("#topicsLinks a[class='topicTitle']").each(function(i, item) {
-   	    	   	   			$("#topicsList").append($(item).clone());
-   	    	   			});
-   					}
-   				);
-   			});
-
-   			$("#editit4 .cancel").click(function() {
-   				//update static topics
-   	   			$("#topicsList").html("");
-   	   			$("#topicsLinks a[class='topicTitle']").each(function(i, item) {
-   	   	   			$("#topicsList").append($(item).clone());
-   	   			});
-   			});
-   			
    			$(".deleteTopicLink").live("click", function() {
    	   			$(this).prev().remove();
    	   			var topicId = $(this).attr("rel");
@@ -126,9 +98,11 @@
    	   			$.post("@{Conversations.updateField()}", 
 	   					{ convoId : '${convo.id}', name: 'topic', value: topicId, todo: 'remove'},
 	   					function() {
-	   	   					//good save!!
+	   						$("#topicsList").html($("#topicsEditList").html());
 	   					}
 	   				);
+
+   	   			return false;
    			});
 
    			$(".deleteConvoLink").live("click", function() {
@@ -195,6 +169,16 @@
    	   					$(html).appendTo($("#relatedConvosEditList"));
 
    	   					$("#relatedConvosList").html($("#relatedConvosEditList").html());
+   					}
+   				);
+			}
+			else if (dataType === 'topicsEdit') {
+				$.post("@{Conversations.updateField()}", 
+   					{ convoId : '${convo.id}', name: 'topic', value: newValue, todo: 'add'},
+   					function(html) {
+   						$(html).appendTo($("#topicsEditList"));
+
+   	   					$("#topicsList").html($("#topicsEditList").html());
    					}
    				);
 			}
@@ -355,47 +339,50 @@
                   		</div> <!--targetedtherapy-->
                   		<div class="topipcWraper">
                     		<div class="topic">
-                      			<div class='inline-edit'>
-									<div class="topictxt" id="hidit4" style="display:block; float:left; width:auto;">
-										<div style="float:left;">Topics: &nbsp;&nbsp;&nbsp;&nbsp;</div>
-										<div id="topicsList">
-											#{list items: convo.topics, as: 'tag'}
-												<a href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>
-											#{/list}
+                    		
+								<div class='inline-edit' id="topicsEdit">
+									<div class="suggestxt inline_display">
+										<div class="inline_full" style="display: ${convo.topics ? 'block' : 'none'}">
+											<div style="display: block; float: left; width: auto;" class="topictxt">
+                        						<div style="float: left;">Topics: </div>
+                        						<div id="topicsList">
+	                        						#{list items: convo.topics, as: 'tag'}
+														<a class="topicTitle" href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>
+													#{/list}
+                        						</div>
+											</div>
+											<div class="editdiv">
+												<div class="editit" style="padding-top:10px;">
+													<a href="#" class="inline_editlink">Edit</a>
+												</div>
+											</div>
 										</div>
-										
-										<!-- 
-											<div class="suuport"><a href="#"></a></div>
-											<div class="Helptag"><a href="#"></a></div> 
-										 -->
-									</div>
-									<div id="display4" class='display' style="padding-top:10px;">
-										<div class="editit">
-											<a href="#"  onclick="hidit('4')">Edit</a>
+										<div class="inline_empty" style="display: ${!convo.topics ? 'block' : 'none'}">
+											<div class="targetenew">
+												<a class="inline_addlink" href="#">Add Topics</a>
+											</div>
 										</div>
-									</div>       
-									<div class='form' style="clear:both; padding-top:5px;" id="editit4">
-									     <div id="topicsLinks" class="topictxt" style="display:block; float:left; width:auto;">
-											<div style="float:left;">Topics &nbsp;&nbsp;&nbsp;&nbsp;</div>
-											#{list items: convo.topics, as: 'tag'}
-												<a class="topicTitle" href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>
-												<a class="deleteTopicLink" href="#" rel="${tag.id}">X</a>
-											#{/list}
-											<!-- 
-											<div class="suuportzz"><a href="#"></a></div>
-									 		<div class="Helptagzz"><a href="#"></a></div> 
-									 		-->
+						            </div>
+									<div class='inline_form'>
+										<div style="display: block; float: left; width: auto;" class="topictxt">
+                       						<div style="float: left;">Topics: </div>
+                       						<div id="topicsEditList">
+                        						#{list items: convo.topics, as: 'tag'}
+													<a class="topicTitle" href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>
+													<a class="deleteTopicLink" href="#" rel="${tag.id}">X</a>
+												#{/list}
+                       						</div>
 										</div>
 										<div class="addcomCover" style="width:400px;">
 											<input type="text" id="topicInput" 
-												class="addcominput"  value="" style="float:left; width:215px;"/>
+												class="addcominput inline_text"  value="" style="float:left; width:215px;"/>
 						                   	<input type="submit" value=" " id="addTopicBtn" 
-						                   		class="addcomsubmit" style="float:left; width:80;"  />
+						                   		class="addcomsubmit inline_add" style="float:left; width:80;"  />
 									        <div class="canclebtnz" style="float:left; width:auto;">
-									          	<a class="cancel" href="#" onclick="shoit('4')">Cancel</a>
+									          	<a class="cancel" href="#">Cancel</a>
 									        </div> 
 									    </div>
-									</div><!--form--> 
+									</div>
 								</div>
                       
                       			#{if talker }
@@ -556,7 +543,7 @@
 							<div class="rconversation">
 								<div class='inline-edit' id="relatedConvosEdit">
 									<div class="suggestxt inline_display">
-										<div class="inline_full" style="display: ${convo.details ? 'block' : 'none'}">
+										<div class="inline_full" style="display: ${(convo.relatedConvos || relatedConvos) ? 'block' : 'none'}">
 											<div class="Staticsh1 style1 style2" style="float:left; padding-top:10px;">
 												Related Conversations</div>
 											<div class="editdiv">
@@ -577,9 +564,9 @@
 						                		</p>
 											#{/list}
 										</div>
-										<div class="inline_empty" style="display: ${!convo.details ? 'block' : 'none'}">
+										<div class="inline_empty" style="display: ${!(convo.relatedConvos || relatedConvos) ? 'block' : 'none'}">
 											<div class="targetenew">
-												<a class="inline_addlink" href="#">Add Conversation Details</a>
+												<a class="inline_addlink" href="#">Add Related Conversations</a>
 											</div>
 										</div>
 						            </div>
