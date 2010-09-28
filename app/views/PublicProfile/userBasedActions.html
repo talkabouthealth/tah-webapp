@@ -5,6 +5,7 @@
 #{set followingFrom = (action.equals('following') ? from : 0) /}
 #{set followersFrom = (action.equals('followers') ? from : 0) /}
 
+	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 	<script type="text/javascript"> 	 
 		//maps actions to tabs
 		var tabs = {
@@ -62,6 +63,8 @@
    				$('#thankYouNote').focus(); 
    				return false;
 	   		});
+
+			$('.moretext').truncatable({ limit: 80, more: '... more', less: true, hideText: '' }); 
    		});
 
    		function updateCommentState(newState) {
