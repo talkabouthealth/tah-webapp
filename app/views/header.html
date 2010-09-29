@@ -39,100 +39,107 @@
 	}*
 	<div id="top">
         <div id="logoac">
+        	<a href="@{Application.index()}">
         		<img width="328" height="73" class="logotopmargin" 
         			alt="Talk About Health" src="/public/images/logo2.gif" border="0"/>
+        	</a>
         </div>
         <div style="padding-left: 15px;" id="topnav3">
-			<div class="topnavigationz">
-				<div class="top4ie7"></div>
-	            <ul id="jsddm">
-	              <!-- <li><a href="#">Inbox</a></li>
-	              <li class="separator">|</li> -->
-	              <li style="margin-right: 5px;"> <a class="libull" href="#">Settings</a>
-	                <ul>
-	                  <li><a href="@{Profile.edit()}">Edit Personal Info</a></li>
-	                  <li><a href="@{Profile.healthDetails()}">Edit Health Info</a></li>
-	                  <li><a href="@{Profile.notifications()}">Notification Settings</a></li>
-	                  <li><a href="@{Profile.preferences()}">Privacy Settings</a></li>
-	                </ul>
-	              </li>
-	              <li class="separator">|</li>
-	              <li> <a class="libull2" href="#">Help</a>
-	                <ul>
-	                  <li><a href="@{Static.faq()}">FAQ</a></li>
-	                  <li><a href="@{Static.communityguidelines()}">Community Guidelines</a></li>
-	                  <li><a href="http://blog.talkabouthealth.com">Blog</a></li>
-	                  <li><a href="@{Application.contactus()}">Feedback</a></li>
-	                  <li><a href="#" onclick="openInvitationsWindow();">Share TalkAboutHealth</a></li>
-	                </ul>
-	              </li>
-	              <li class="separator">|</li>
-	              <li class="tell"><a href="#" onclick="openInvitationsWindow();">Invite a Friend</a></li>
-	              <li class="separator">|</li>
-	              <li><a href="@{Secure.logout()}">Logout</a></li>
-	            </ul>
-            	<div class="cb"></div>
-          	</div>
-          <!--topnavigations-->
-          <div class="cb"></div>
-          <div class="topnavCover">
-            <div class="topnavCover1">
-              <ul id="nav">
-                <li class="home no-hov"><a href="#">Home</a></li>
-                <li class="profile"><a href="#" class="menu1">You</a>
-                  <ul>
-                    <li><a href="#">Public Profile</a></li>
-                    <li><a href="#">Journal</a></li>
-                    <li><a href="#">Conversation Feed</a></li>
-                    <li class="gap"><a href="#">Thank You's'</a></li>
-                    <li><a href="#">Members Following</a></li>
-                    <li><a href="#">Followers</a></li>
-                    <li class="gap"><a href="#">Topics Following</a></li>
-                    <li><a href="#">Conversations Following</a></li>
-                    <li><a href="#">Conversations Started</a></li>
-                    <li><a href="#">Conversations Joined</a></li>
-                  </ul>
-                </li>
-                <li class="explore"> <a href="#" class="menu2">Explore</a>
-                  <ul>
-                    <li><a href="#">Live Talks</a></li>
-                    <li><a href="#">Open Questions</a></li>
-                    <li class="gap"><a href="#">Browse Members</a></li>
-                    <li><a href="#">Find Members</a></li>
-                    <li class="gap"><a href="#">Browse Topics</a></li>
-                    <li><a href="#">Search Conversations</a></li>
-                  </ul>
-                </li>
-                <!--  <li class="community"> <a class="menu3" href="$">Group</a>
-                  <ul>
-                    <li><a href="#">Your Contacts</a></li>
-                    <li><a href="#">Browse People</a></li>
-                    <li><a href="#">Contributor Dash</a></li>
-                    <li class="gap"><a href="#">Blog</a></li>
-                    <li><a href="#">Forum</a></li>
-                  </ul>
-                </li>-->
-              </ul>
-              <!--nave-->
-            </div>
-            <!--topnavCover1-->
-            <div style="float: right; width: 290px;">
-              <div class="topnavCover2">
-                <div style="padding-left: 25px;" class="topsearchCover">
-                  <div class="topsearchinput">
-                    <input type="text" class="topserchz iebox"/>
-                  </div>
-                  <!--topsearchinput-->
-                  <div class="topsubmitsz">
-                    <input type="submit" style="cursor: pointer;" value=" " src="images/topsubmitbtn.png" class="topsubmit"/>
-                  </div>
-                </div>
-                <!--topsearchCover-->
-              </div>
-              <!--topnavCover2-->
-            </div>
-            <!--blank-->
-          </div>
+        	#{if session.contains("username") }
+				#{set currentUser = session.get("username") /}
+			
+				<div class="topnavigationz">
+					<div class="top4ie7"></div>
+		            <ul id="jsddm">
+		              <!-- <li><a href="#">Inbox</a></li>
+		              <li class="separator">|</li> -->
+		              <li style="margin-right: 5px;"> <a class="libull" href="#">Settings</a>
+		                <ul>
+		                  <li><a href="@{Profile.edit()}">Edit Personal Info</a></li>
+		                  <li><a href="@{Profile.healthDetails()}">Edit Health Info</a></li>
+		                  <li><a href="@{Profile.notifications()}">Notification Settings</a></li>
+		                  <li><a href="@{Profile.preferences()}">Privacy Settings</a></li>
+		                </ul>
+		              </li>
+		              <li class="separator">|</li>
+		              <li> <a class="libull2" href="#">Help</a>
+		                <ul>
+		                  <li><a href="@{Static.faq()}">FAQ</a></li>
+		                  <li><a href="@{Static.communityguidelines()}">Community Guidelines</a></li>
+		                  <li><a href="http://blog.talkabouthealth.com">Blog</a></li>
+		                  <li><a href="@{Application.contactus()}">Feedback</a></li>
+		                  <li><a href="#" onclick="openInvitationsWindow();">Share TalkAboutHealth</a></li>
+		                </ul>
+		              </li>
+		              <li class="separator">|</li>
+		              <li class="tell"><a href="#" onclick="openInvitationsWindow();">Invite a Friend</a></li>
+		              <li class="separator">|</li>
+		              <li><a href="@{Secure.logout()}">Logout</a></li>
+		            </ul>
+	            	<div class="cb"></div>
+	          	</div>
+	          <!--topnavigations-->
+	          <div class="cb"></div>
+          
+	          <div class="topnavCover">
+	            <div class="topnavCover1">
+	              <ul id="nav">
+	                <li class="home no-hov"><a href="@{Home.index()}">Home</a></li>
+	                <li class="profile"><a href="#" class="menu1">You</a>
+	                  <ul>
+	                    <li><a href="@{ViewDispatcher.view(currentUser)}">Public Profile</a></li>
+	                    <li><a href="@{PublicProfile.userBasedActions(currentUser, 'comments')}">Journal</a></li>
+	                    <li><a href="#">Conversation Feed</a></li>
+	                    <li class="gap"><a href="@{PublicProfile.userBasedActions(currentUser, 'thankyous')}">Thank You's</a></li>
+	                    <li><a href="@{PublicProfile.userBasedActions(currentUser, 'following')}">Members Following</a></li>
+	                    <li><a href="@{PublicProfile.userBasedActions(currentUser, 'followers')}">Followers</a></li>
+	                    <li class="gap"><a href="@{PublicProfile.topicsFollowing(currentUser)}">Topics Following</a></li>
+	                    <li><a href="@{PublicProfile.conversationsFollowing(currentUser)}">Conversations Following</a></li>
+	                    <li><a href="@{PublicProfile.conversationsStarted(currentUser)}">Conversations Started</a></li>
+	                    <li><a href="@{PublicProfile.conversationsJoined(currentUser)}">Conversations Joined</a></li>
+	                  </ul>
+	                </li>
+	                <li class="explore"> <a href="#" class="menu2">Explore</a>
+	                  <ul>
+	                    <li><a href="#">Live Talks</a></li>
+	                    <li><a href="#">Open Questions</a></li>
+	                    <li class="gap"><a href="@{Community.browseMembers('active')}">Browse Members</a></li>
+	                    <li><a href="@{Community.browseMembers('search')}">Find Members</a></li>
+	                    <li class="gap"><a href="@{Topics.browseTopics()}">Browse Topics</a></li>
+	                    <li><a href="@{Community.searchConversations()}">Search Conversations</a></li>
+	                  </ul>
+	                </li>
+	                <!--  <li class="community"> <a class="menu3" href="$">Group</a>
+	                  <ul>
+	                    <li><a href="#">Your Contacts</a></li>
+	                    <li><a href="#">Browse People</a></li>
+	                    <li><a href="#">Contributor Dash</a></li>
+	                    <li class="gap"><a href="#">Blog</a></li>
+	                    <li><a href="#">Forum</a></li>
+	                  </ul>
+	                </li>-->
+	              </ul>
+	              <!--nave-->
+	            </div>
+	            <!--topnavCover1-->
+	            <div style="float: right; width: 290px;">
+	              <div class="topnavCover2">
+	                <div style="padding-left: 25px;" class="topsearchCover">
+	                  <div class="topsearchinput">
+	                    <input type="text" class="topserchz iebox"/>
+	                  </div>
+	                  <!--topsearchinput-->
+	                  <div class="topsubmitsz">
+	                    <input type="submit" style="cursor: pointer;" value=" " src="images/topsubmitbtn.png" class="topsubmit"/>
+	                  </div>
+	                </div>
+	                <!--topsearchCover-->
+	              </div>
+	              <!--topnavCover2-->
+	            </div>
+	            <!--blank-->
+	          </div>
+	      #{/if}
           <!--topnavCover-->
           <div class="cb"></div>
         </div>

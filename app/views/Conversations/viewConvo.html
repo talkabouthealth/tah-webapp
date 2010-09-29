@@ -37,6 +37,8 @@
 		#topicsList .deleteTopicLink {
 			display: none;
 		}
+		
+		.rcpadtop { width:260px; }
 	</style>
 
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
@@ -122,6 +124,56 @@
    			$('.inline-edit').inlineEdit(
 		  		{ hover: '', saveFunction: saveData, updateFunction: updateData}
 		  	);
+
+
+		  	// Pop-up windows
+   			//select all the a tag with name equal to modal
+   			$('a[name=modal]').click(function(e) {
+   				//Cancel the link behavior
+   				e.preventDefault();
+   				
+   				//Get the A tag
+   				var id = $(this).attr('href');
+   			
+   				//Get the screen height and width
+   				var maskHeight = $(document).height();
+   				var maskWidth = $(window).width();
+   			
+   				//Set heigth and width to mask to fill up the whole screen
+   				$('#mask1').css({'width':maskWidth,'height':maskHeight});
+   				
+   				//transition effect		
+   				$('#mask1').fadeIn(1000);	
+   				$('#mask1').fadeTo("slow",0.8);	
+   			
+   				//Get the window height and width
+   				var winH = $(window).height();
+   				var winW = $(window).width();
+   		              
+   				//Set the popup window to center
+   				$(id).css('top',  winH/2-$(id).height()/2);
+   				$(id).css('left', winW/2-$(id).width()/2);
+   			
+   				//transition effect
+   				$(id).fadeIn(2000); 
+   			
+   			});
+   			
+   			//if close button is clicked
+   			$('.window1 .close').click(function (e) {
+   				//Cancel the link behavior
+   				e.preventDefault();
+   				
+   				$('#mask1').hide();
+   				$('.window1').hide();
+   			});		
+   			
+   			//if mask is clicked
+   			$('#mask1').click(function () {
+   				$(this).hide();
+   				$('.window1').hide();
+   			});			
+   				  	
 		});
 
 		function saveData(dataType, newValue) {
@@ -541,7 +593,7 @@
 						<div class="topipsts">
 							<div class="rconversation">
 								<div class='inline-edit' id="relatedConvosEdit">
-									<div class="suggestxt inline_display">
+									<div class="inline_display">
 										<div class="inline_full" style="display: ${(convo.relatedConvos || relatedConvos) ? 'block' : 'none'}">
 											<div class="Staticsh1 style1 style2" style="float:left; padding-top:10px;">
 												Related Conversations</div>

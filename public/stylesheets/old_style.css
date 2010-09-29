@@ -978,19 +978,9 @@ topnavigationz { clear:both; float:right; margin:0; padding:5px 31px 0 0;}
 .topnavigations li { list-style:none; float:left; width:auto; color:#0680c5; font-size:11px; font-weight:normal; }
 .topnavigations li a{ color:#0680c5; text-decoration:none; padding-left:5px; padding-right:5px; background:none; }
 .libuttlets { background-repeat:no-repeat; padding-left:0; padding-right:5px; padding-top:5px; width:auto; }
-.topsearchCover { float:left; width:260px; padding-top:20px;}
-.topsearchinput { width: 225px; height:24px; float:left;  }
 .topsearch { width: 215px; height:24px; float:left; background:url(../images/topsearch.png); background-repeat:no-repeat; padding-left:10px; font-size:11px; border:0; }
 .topsubmits { float:left; width:26px; height:24px; background:
 url(../images/topsubmit.png); background-repeat:no-repeat;}
-.topsubmit { 
-background:url("../images/topsubmitbtn.png") repeat scroll 0 0 transparent;
-border:0 none;
-height:20px;
-margin-left:1px;
-margin-top:2px;
-width:17px;
-}
 .topnavCover { clear:both; }
 .topnavCover1 {
 float:left;
