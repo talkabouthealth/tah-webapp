@@ -1,0 +1,330 @@
+#{extends 'main.html' /}
+	<style type="text/css">
+		#innermiddlearea { padding-top: 10px }
+		.seeall { padding-top: 20px }
+	</style>
+<div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
+  <div id="managtopic">
+  	#{include 'header.html' /}
+        <div id="innermiddlearea">
+          <div id="mtcover">
+            <div id="mtleft">
+              <div class="mtcontent">
+                <div id="targetedtherapy">
+                  <div class="comh1">Ask a question or start a talk</div>
+                  <div class="comborder"></div>
+                </div>
+                <div class="topipcWraper">
+                  <div class="startsearchbox">
+                    <div class="startserch">
+                      <div class="demo">
+                        <div class="ui-widget">
+                          <textarea name="textarea" class="edititinputx" rows="4"  cols="3" style="width:450px;height:40px" ></textarea>
+                        </div>
+                      </div>
+                      <!-- End demo -->
+                    </div>
+                    <input type="submit" src="/public/images/startsubmit.jpg" value=" " class="startsubmit" />
+                  </div>
+
+                  <!--startsearchbox-->
+                  <div class="topic">
+                  	*{
+                    <div class="newpage1">Live Community Talks (8)</div>
+                    <a href="#"><img src="/public/images/refreshicon.jpg" alt="refresh" border="0" style="float:left; padding-left:4px; padding-top:22px"  /></a>
+                    <div class="seeall"><a href="#">See All</a></div>
+                    <div class="topicborder"></div>
+                    <!--mtinputbox-->
+                    <div class="cb"></div>
+                    }*
+
+                    <div class="newpageCover">
+                      *{
+                      <div class="joinbox">
+                        <div class="joinpic"><img src="/public/images/joinpic.jpg" alt="join" /></div>
+                        <div class="jointxtbox">
+                          <div class="jointextstop"> <a href="#">Received 2 different Diagnoses today, What do i do next?
+                            Shouldi speak to another...</a></div>
+                          <div class="joinztextlink"><a href="#">3 members speaking</a> | <a href="#"> Follow</a> | <a href="#">Flag</a> | <a href="#">Stated 4 minutes ago</a></div>
+
+                          <div class="jointxtlink1">Question by<a href="#"> jill</a> (Patient) in topic<a href="#"> Just Diagnosed</a> ...<a href="#" style="font-size:11px; font-weight:normal;"> more</a></div>
+                        </div>
+                        <!--jointxtbox-->
+
+                        <div class="joinconbox">
+                          <input type="submit" src="/public/images/joinconversation.jpg" value=" " class="joinconversation" />
+                        </div>
+                        <div class="cb"></div>
+                        <div class="joinborder"></div>
+                      </div>
+                      }*
+                     
+                      <!--joinbox-->
+                      <div class="topic">
+                        <div class="newpage1">Conversation Feed</div>
+
+                        <div class="seeall"><a href="#">See All</a></div>
+                        <div class="topicborder"></div>
+                        <div class="cb"></div>
+                      </div>
+                      <!--topic-->
+                      <div class="topic">
+                        <div class="joinbox">
+                          <div class="joinpic"><img src="/public/images/joinpic.jpg" alt="join" /></div>
+
+                          <div class="jointxtbox">
+                            <div class="jointextstop"> <a href="#">Received 2 different Diagnoses today, What do i do next?
+                              Shouldi speak to another&nbsp;&nbsp;&nbsp;...</a> <a href="#" style="font-size:11px; font-weight:normal;"> more</a></div>
+                            <div class="joinztextlink"><a href="#">3 members speaking</a> | <a href="#"> Follow</a> | <a href="#">Flag</a> | <a href="#">Stated 4 minutes ago</a></div>
+
+                            <div class="jointxtlink1">Question by<a href="#"> jill</a> (Patient) in topic<a href="#"> Just Diagnosed</a> ...<a href="#" style="font-size:11px; font-weight:normal;"> more</a></div>
+                            <div class="jointxtlink2">Need a study partner? Sure you do! Studying with others is not only fun, but one of the best ways to learn. So Grockit has added a cool new feature ......<a href="#" style="font-size:11px; font-weight:normal;"> more</a></div>
+
+                          </div>
+                          <!--jointxtbox-->
+                          <div class="cb"></div>
+                          <div class="joinborder"></div>
+                        </div>
+                        #{list items: convoFeed, as: 'activity'}
+							<div class="joinbox">
+								<div class="joinpic">
+									<a href="@{ViewDispatcher.view(activity.talker.userName)}">
+										<img src="@{Image.show(activity.talker.userName)}" width="48" height="48" border="0" />
+									</a>
+								</div>
+								<div class="jointxtbox">
+									<div class="jointextstop">
+										<a href="#">Received 2 different Diagnoses today, </a>
+									</div>
+									<div class="joinztextlink">
+										<a href="#">3 members speaking</a> | <a href="#"> Follow</a> | 
+										<a href="#">Flag</a> | <a href="#">Stated 4 minutes ago</a>
+									</div>
+									<div class="jointxtlink1">Question by<a href="#"> jill</a> (Patient) 
+										in topic<a href="#"> Just Diagnosed</a> 
+									</div>
+									<div class="jointxtlink2">${activity.toHTML().raw()}</div>
+								</div>
+								<div class="cb"></div>
+								<div class="joinborder"></div>
+							</div>
+						#{/list}
+                        <div class="cb"></div>
+                      </div>
+                      <!--topic-->
+                      <div class="cb"></div>
+                    </div>
+                    <!--newpageCover-->
+                    <div class="cb"></div>
+                  </div>
+                  <!--topic-->
+                  <div class="cb"></div>
+                </div>
+                <!--topipcWraper-->
+                <div class="cb"></div>
+              </div>
+              <!--mtcontent-->
+              <div class="cb"></div>
+            </div>
+            <!--mtleft-->
+            
+            <div id="comright" style="padding-left:30px;">
+              <div class="topipsts"> <br />
+                <div class="comtopbox">
+                  <div class="comrightimg">
+                  	<a href="@{ViewDispatcher.view(talker.userName)}">
+						<img src="@{Image.show(talker.userName)}" width="58" height="58" border="0" />
+					</a>
+                  </div>
+                  <div class="topr">
+                    <div class="comrighttext">
+                      <div class="topiptextl">
+                      	<a href="@{ViewDispatcher.view(talker.userName)}">
+							<strong>${talker.userName}</strong>
+						</a>
+                      </div>
+                      #{if talker.connection}
+                      	<div class="topiptext2">${talker.connection}</div>
+                      #{/if}
+                      <div class="topiptext2">${talker.levelOfRecognition}</div>
+                    </div>
+                    <!--comrighttext-->
+                  </div>
+                  <!--topr-->
+                  <div class="cb"></div>
+                </div>
+
+                <!--comtopbox-->
+                <div class="tpcover">
+                  <div class="thanktxt">
+                    <div class="thanktxtl">
+                      <div class="thanktxtblack">Thank You's:&nbsp;&nbsp;</div>
+                      <div class="thanktxtblue">
+                      	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.userName, 'thankyous')}">
+				    		${talker.thankYouList.size()}
+				    	</a>
+				      </div>
+                    </div>
+                    <!--thanktxtl-->
+
+                    <div class="thanktxtr">
+                      <div class="thanktxtblack">Following:&nbsp;&nbsp;</div>
+                      <div class="thanktxtblue">
+                      	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.userName, 'following')}">
+					    	${talker.followingList.size()}
+					    </a>
+                      </div>
+                    </div>
+                    <!--thanktxtr-->
+                    <div class="cb"></div>
+                  </div>
+                  <!--thanktxt-->
+
+                  <div class="thanktxt">
+                    <div class="thanktxtl">
+                      <div class="thanktxtblack">Top Answers:&nbsp;&nbsp;</div>
+                      <div class="thanktxtblue">0</div>
+                    </div>
+                    <!--thanktxtl-->
+                    <div class="thanktxtr">
+                      <div class="thanktxtblack">Followers:&nbsp;&nbsp;</div>
+                      <div class="thanktxtblue">
+                      	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.userName, 'followers')}">
+					    	${talker.followerList.size()}
+					    </a>
+                      </div>
+                    </div>
+                    <!--thanktxtr-->
+                    <div class="cb"></div>
+                  </div>
+                  <!--thanktxt-->
+                </div>
+                <!--tpcover-->
+
+                <div class="mtop"></div>
+                <div class="topicborder"></div>
+              </div>
+              <!--topipsts-->
+              <div class="cb"></div>
+              <div class="topipsts">
+                <div class="mtrighttxt"><a class="current" href="#">Home</a></div>
+                <div class="mtrighttxt"><a href="#">Journal</a></div>
+                <div class="mtrighttxt"><a href="#">Conversation Feed</a></div>
+                <div class="mtrighttxt"><a href="#">Open Questions</a></div>
+                <div class="mtrighttxt"><a href="#">Live Conversations</a></div>
+                <div class="mtop"></div>
+                <div class="topicborder"></div>
+                <div class="cb"></div>
+              </div>
+
+              <!--topipsts-->
+              <div class="topipsts">
+                <div class="mtrighttxt1">Tell Us About You</div>
+                <div class="topixtext">
+                  <div class="tellustext">Tell us more about you to be notified of<br />
+                    relevent conversation just for you.</div>
+                  <div class="tellustext1">
+                  	<a href="@{Profile.edit()}">Profile Information</a><br />
+					<a href="@{Profile.healthDetails()}">Health Information</a><br />
+					<a href="@{Profile.notifications()}">Notification Settings</a>
+                  </div>
+                </div>
+                <!--topixtext-->
+                <div class="mtop"></div>
+                <div class="topicborder"></div>
+              </div>
+
+              <!--topipsts-->
+              <!--topipsts-->
+              <div class="topipsts">
+                <div class="mtrighttxt1">Share TalkAboutHealth</div>
+                <div class="topixtext"> Invite friends to join Community </div>
+                <!--topixtext-->
+                <div class="membersarea">
+
+                  <div class="sharicons"><img src="/public/images/emailicon.jpg" alt="Emails" class="rpad" /> <a href="#">Email</a> </div>
+                  <div class="sharicons"><img src="/public/images/twittericon.jpg" alt="Twitter" class="rpad" /><a href="#">Twitter</a></div>
+                  <div class="sharicons"><img src="/public/images/facebookicon.jpg" alt="Members" class="rpad" /><a href="#">Facebook</a></div>
+                </div>
+                <!--membersarea-->
+                <div class="topicborder"></div>
+
+              </div>
+              <!--topipsts-->
+              <div class="topipsts">
+                <div class="mtrighttxt1">Trending Topics &amp; People</div>
+                <div class="topbox1">
+                  <div class="topleftimg"><img src="/public/images/topanswer1.jpg" alt="topanser" /></div>
+                  <div class="topr">
+
+                    <div class="trendingtext">
+                      <div class="topictxtnew"><a href="#">Murray</a> <span class="styles1">asked the Question</span> <span class="vieztext1"><a href="#">What are some things you
+                        wish people had said or ...</a></span></div>
+                    </div>
+                    <!--trendingtext-->
+                    <div class="follow">
+                      <input type="submit" class="followers" value=" " />
+
+                    </div>
+                  </div>
+                  <!--topr-->
+                  <div class="cb"></div>
+                </div>
+                <!--topbox-->
+                <div class="topbox1">
+                  <div class="topleftimg"><img src="/public/images/topanswer1.jpg" alt="topanser" /></div>
+                  <div class="topr">
+
+                    <div class="trendingtext">
+                      <div class="topictxtnew"><a href="#">Situ</a> <span class="style2 styles1">asked the Question</span> <span class="vieztext1"><a href="#">What are some things you
+                        wish people had said or ...</a></span></div>
+                    </div>
+                    <!--trendingtext-->
+                    <div class="follow">
+                      <input type="submit" class="followers" value=" " />
+
+                    </div>
+                  </div>
+                  <!--topr-->
+                  <div class="cb"></div>
+                </div>
+                <!--topbox-->
+                <div class="topbox1">
+                  <div class="topleftimg"><img src="/public/images/topanswer1.jpg" alt="topanser" /></div>
+                  <div class="topr">
+
+                    <div class="trendingtext">
+                      <div class="topictxtnew"><a href="#">Maria</a> <span class="styles1">asked the Question</span><span class="vieztext1"><a href="#">What are some things you
+                        wish people had said or ...</a></span></div>
+                    </div>
+                    <!--trendingtext-->
+                    <div class="follow">
+                      <input type="submit" class="followers" value=" " />
+                    </div>
+
+                  </div>
+                  <!--topr-->
+                  <div class="cb"></div>
+                </div>
+                <!--topbox-->
+              </div>
+              <!--topipsts-->
+              <div class="mtop"></div>
+              <br />
+
+              <div class="cb"></div>
+              <br />
+              <div class="cb"></div>
+            </div>
+            <!--mtright-->
+            <div class="cb"></div>
+          </div>
+          <!--mtcover-->
+          <div class="cb"></div>
+
+        </div>
+        <div id="signupright"></div>
+      </div>
+    </div>
+  </div>
+</div>

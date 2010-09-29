@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,19 +44,18 @@ public class Home extends Controller {
 		}
 		
 		//--------- For new Home Page --------------
-		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
-		for (ConversationBean convoBean : liveConversations) {
-			System.out.println("!!: "+convoBean.getTopic());
-		}
-		
-		List<ConversationBean> openedConversations = ConversationDAO.getOpenedConversations();
-		for (ConversationBean convoBean : openedConversations) {
-			System.out.println("??: "+convoBean.getTopic());
-		}
+//		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
+//		for (ConversationBean convoBean : liveConversations) {
+//			System.out.println("!!: "+convoBean.getTopic());
+//		}
+//		
+//		List<ConversationBean> openedConversations = ConversationDAO.getOpenedConversations();
+//		for (ConversationBean convoBean : openedConversations) {
+//			System.out.println("??: "+convoBean.getTopic());
+//		}
 		
 		//Convo feed?
-		//TODO: truncate to 40?
-		Set<Action> convoFeed = ActionDAO.loadConvoFeed(talker);
+		Set<Action> convoFeedActions = ActionDAO.loadConvoFeed(talker);
 		
 		//Action feed?
 //		List<Action> activityFeed = ActionDAO.loadActivityFeed(talker);
@@ -65,9 +65,23 @@ public class Home extends Controller {
 //		- Question answered
 //		- Summary added or edited
 //		- Answer voted for
-		if (convoFeed.size() < 40) {
+		if (convoFeedActions.size() < 40) {
 			List<Action> communityConvoFeed = ActionDAO.loadCommunityConvoFeed();
-			convoFeed.addAll(communityConvoFeed);
+			convoFeedActions.addAll(communityConvoFeed);
+		}
+	
+		//TODO: better truncate to 40?
+		Set<Action> convoFeed = new LinkedHashSet<Action>();
+		if (convoFeedActions.size() > 20) {
+			for (Action action : convoFeedActions) {
+				convoFeed.add(action);
+				if (convoFeed.size() > 20) {
+					break;
+				}
+			}
+		}
+		else {
+			convoFeed = convoFeedActions;
 		}
 		
 		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
@@ -75,7 +89,8 @@ public class Home extends Controller {
 		boolean showIMPopup = (session.get("justloggedin") != null && hasNoIMAccounts && !isAdmin);
 		session.remove("justloggedin");
 		
-        render(talker, mapTalkmiTopics, newTopic, convoFeed, showIMPopup);
+//        render(talker, mapTalkmiTopics, newTopic, convoFeed, showIMPopup);
+		render("@newhome", talker, mapTalkmiTopics, newTopic, convoFeed, showIMPopup);
     }
     
     /* ---------------- Invitations ----------------- */
