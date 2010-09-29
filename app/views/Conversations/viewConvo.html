@@ -48,13 +48,15 @@
 			$("#followConvoLink").click(function() {
 				$.post("@{Conversations.follow()}", 
 	  				{ topicId: '${convo.id}'},
-	  				function(data) {
-	  					if ($("#followConvoLink").html() == "Follow Conversation") {
-	  						$("#followConvoLink").html("Unfollow Conversation");
-	  					}
-	  					else {
-	  						$("#followConvoLink").html("Follow Conversation");
-	  					}
+	  				function(nextAction) {
+	  					var linkDiv = $("#followConvoLink").children().first();
+	  					linkDiv.removeClass();
+		  				if (nextAction === "follow") {
+		  					linkDiv.addClass("followcn");
+		  				}
+		  				else {
+		  					linkDiv.addClass("followcnzz");
+		  				}
 	  				}
 	  			);
 			});
@@ -171,7 +173,7 @@
    			//if mask is clicked
    			$('#mask1').click(function () {
    				$(this).hide();
-   				$('.window1').hide();
+   				$('.window, .window1').hide();
    			});			
    				  	
 		});
@@ -565,10 +567,10 @@
 				<div id="mtright1" style="padding-top: 10px">
 					#{if talker }
 						#{if talker.followingConvosList?.contains(convo.id) }
-							<a href="#" id="followConvoLink">Unfollow Conversation</a>
+							<a href="#" id="followConvoLink"><div class="followcnzz"></div></a>
 						#{/if}
 						#{else}
-							<a href="#" id="followConvoLink">Follow Conversation</a>
+							<a href="#" id="followConvoLink"><div class="followcn"></div></a>
 						#{/else}
 					#{/if}
 				    <!-- <input type="submit" class="followcn"  src="../TalkAboutHealth//public/images/followcn.jpg" value=" "  /> -->
@@ -675,7 +677,6 @@
 	          <div class="selheadingza">Please expain why you are flagging this content. Thank you.</div>
 	          <div class="selheadinginputs">
 	            <textarea class="popinputs" cols="4" rows="3"></textarea>
-
 	          </div>
 	        </div>
 	        <!--commentsCover-->
@@ -699,7 +700,7 @@
 	  <div id="innermiddleareazs">
 	    <div class="popboxWraper">
 	      <div class="popboxflagzx1">
-	        <div class="imheadingz">Give a Thank you to Ali</div>
+	        <div class="imheadingz">Give a Thank you</div>
 	        <div class="commentsCover">
 	          <!--	<div class="selheadingza">&nbsp;</div>-->
 	          <div class="selheadinginputs">

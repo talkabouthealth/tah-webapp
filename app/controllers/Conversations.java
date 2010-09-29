@@ -148,17 +148,20 @@ public class Conversations extends Controller {
     public static void follow(String topicId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
+    	String nextAction = null;
     	if (talker.getFollowingConvosList().contains(topicId)) {
     		//unfollow
     		talker.getFollowingConvosList().remove(topicId);
+    		nextAction = "follow";
     	}
     	else {
     		talker.getFollowingConvosList().add(topicId);
     		ActionDAO.saveAction(new FollowConvoAction(talker, new ConversationBean(topicId)));
+    		nextAction = "unfollow";
     	}
     	
     	CommonUtil.updateTalker(talker, session);
-    	renderText("Ok!");
+    	renderText(nextAction);
     }
     
     public static void updateField(String convoId, String name, String value) {
