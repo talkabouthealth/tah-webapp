@@ -19,6 +19,7 @@ import dao.ConversationDAO;
 import dao.TalkerDAO;
 import models.CommentBean;
 import models.ConversationBean;
+import models.ConversationBean.ConvoType;
 import models.TalkerBean;
 import models.TopicBean;
 import models.TalkerBean.EmailSetting;
@@ -29,14 +30,17 @@ import models.actions.Action.ActionType;
 
 public class ConversationLogic {
 	
-	public static ConversationBean createConvo(String title, TalkerBean talker) {
+	public static ConversationBean createConvo(ConvoType type, String title, 
+			TalkerBean talker, String details, Set<TopicBean> topicsSet) {
 		ConversationBean convo = new ConversationBean();
+		convo.setConvoType(type);
 		convo.setTopic(title);
 		convo.setUid(talker.getId());
 		Date currentDate = Calendar.getInstance().getTime();
 		convo.setCreationDate(currentDate);
 		convo.setDisplayTime(currentDate);
-		convo.setTopics(new ArrayList<TopicBean>());
+		convo.setDetails(details);
+		convo.setTopics(topicsSet);
 
 		String topicURL = ApplicationDAO.createURLName(title);
 		convo.setMainURL(topicURL);

@@ -11,6 +11,7 @@ import models.CommentBean;
 import models.ConversationBean;
 import models.TalkerBean;
 import models.TopicBean;
+import models.ConversationBean.ConvoType;
 import models.actions.FollowConvoAction;
 import models.actions.StartConvoAction;
 import models.actions.Action.ActionType;
@@ -66,7 +67,8 @@ public class API extends Controller {
     	TalkerBean talker = TalkerDAO.getById(talkerId);
     	notFoundIfNull(talker);
     	
-    	ConversationBean convo = ConversationLogic.createConvo(title, talker);
+    	//FIXME: make type
+    	ConversationBean convo = ConversationLogic.createConvo(ConvoType.CONVERSATION, title, talker, null, null);
     	
 		renderText(convo.getTid());
     }

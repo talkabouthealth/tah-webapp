@@ -1,7 +1,151 @@
 #{extends 'main.html' /}
+	<script type="text/javascript">
+		var username = "${talker.userName}";
+		var levelOfRecognition = "${talker.levelOfRecognition}";
+
+		#{ oauthJavaScripts /}
+
+		$(document).ready(function() {
+			$(".followTopicLink").live('click', function() {
+				var topicId = $(this).attr("rel");
+				if ($(this).html().indexOf("Unfollow") != -1) {
+					$(this).html("Follow");
+				}
+				else {
+					$(this).html("Unfollow");
+				}
+				$.post("@{Conversations.follow()}", 
+	  				{ topicId: topicId},
+	  				function(data) {
+	  					//...
+	  				}
+	  			);
+	  			return false;
+			});
+
+			var showIMPopup = ${showIMPopup};
+			if (showIMPopup) {
+				var id = "#dialog1";
+				showPopup(id);
+			}
+
+			$('.window #saveIMBtn').click(function (e) {
+				//Cancel the link behavior
+				e.preventDefault();
+
+				var imService = $(".window input[checked=true]").val();
+				var imUserName = $("#imUserName").val();
+
+				if (imService.length == 0) {
+					alert("Please choose IM Service");
+					return;
+				}
+				
+				if (imService === "Twitter") {
+					$('#mask').hide();
+					$('.window').hide();
+					
+					openTwitter();
+				}
+				else {
+					if (imUserName.length == 0) {
+						alert("Please enter correct IM Username");
+						return;
+					}
+					
+					$.post("@{Profile.addIMAccount()}", 
+						{imUserName : imUserName, imService : imService},
+						function(data) {
+							if (data.indexOf("<tr>") == 0) {
+								$("#imUserName").val("");
+
+								$('#mask').hide();
+								$('.window').hide();
+							}
+							else {
+								alert(data);
+							}
+						}
+					);
+				}
+			});	
+
+			$('#saveConvoBtn').click(function (e) {
+				var type = "QUESTION";
+				if ($("#newConvoTypeConvo").attr("checked")) {
+					type = "CONVERSATION";
+				}
+				var title = $("#newConvoTitle").val();
+				var details = $("#newConvoDetails").val();
+				var topics = $("#newConvoTopics").val();
+
+				$.post("@{Conversations.create()}", 
+	  				{ type: type, title: title, details: details, topics: topics},
+	  				function(data) {
+	  					//...
+	  				}
+	  			);
+
+				$("#convoText").val("");
+				$("#newConvoTitle").val("");
+				$("#newConvoDetails").val("");
+				$("#newConvoTopics").val("");
+				hideAll();
+	  			return false;
+			});
+
+			//if close button is clicked
+			$('.window .close, .window .cancelLink').click(function (e) {
+				//Cancel the link behavior
+				e.preventDefault();
+				hideAll();
+			});		
+
+			$("#startLink").click(function(e) {
+				//Cancel the link behavior
+				e.preventDefault();
+
+				$("#newConvoTitle").val($("#convoText").val());
+				showPopup("#startDialog");
+			});
+		});
+
+		function showPopup(id) {
+			//Get the screen height and width
+			var maskHeight = $(document).height();
+			var maskWidth = $(window).width();
+		
+			//Set heigth and width to mask to fill up the whole screen
+			$('#mask').css({'width':maskWidth,'height':maskHeight});
+			
+			//transition effect		
+			$('#mask').fadeIn(500);	
+			$('#mask').fadeTo("slow",0.6);	
+		
+			//Get the window height and width
+			var winH = $(window).height();
+			var winW = $(window).width();
+	              
+			//Set the popup window to center
+			$(id).css('top',  winH/3-$(id).height()/2);
+			$(id).css('left', winW/2-$(id).width()/2);
+		
+			//transition effect
+			$(id).fadeIn(200); 
+		}
+
+		function hideAll() {
+			$('#mask').hide();
+			$('.window').hide();
+		}
+	</script>
+		
 	<style type="text/css">
 		#innermiddlearea { padding-top: 10px }
 		.seeall { padding-top: 20px }
+		
+		#mask { background-color:#e6e6e6; }
+		
 	</style>
 <div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
   <div id="managtopic">
@@ -19,12 +163,13 @@
                     <div class="startserch">
                       <div class="demo">
                         <div class="ui-widget">
-                          <textarea name="textarea" class="edititinputx" rows="4"  cols="3" style="width:450px;height:40px" ></textarea>
+                          <textarea id="convoText" name="textarea" class="edititinputx" 
+                          	rows="4"  cols="3" style="width:450px;height:40px" ></textarea>
                         </div>
                       </div>
                       <!-- End demo -->
                     </div>
-                    <input type="submit" src="/public/images/startsubmit.jpg" value=" " class="startsubmit" />
+                    <input id="startLink" type="submit" src="/public/images/startsubmit.jpg" value=" " class="startsubmit" />
                   </div>
 
                   <!--startsearchbox-->
@@ -335,4 +480,99 @@
       </div>
     </div>
   </div>
+</div>
+
+<div id="boxes">
+  <div id="dialog" class="window"> </div>
+  <!-- Start of Login Dialog -->
+  <div id="startDialog" class="window">
+    <div class="boxtopcenter">
+      <div class="popboxWraper">
+        <div class="popbox2">
+          <div class="closecover">
+            <div class="close"><img src="/public/images/close.jpg" alt="Close" /></div>
+          </div>
+          <div class="iwant">I want to</div>
+          <div class="askquestion">
+
+            <div class="askquestionbox">
+              <div class="askradio1">
+                <input id="newConvoTypeQuestion" name="newConvoType" checked="checked" type="radio" />
+              </div>
+              <div class="asktext1">Ask a Question</div>
+              <div class="asktext2">Or</div>
+              <div class="askradio1">
+                <input id="newConvoTypeConvo" name="newConvoType" type="radio" />
+              </div>
+              <div class="asktext3">Start a Live Conversation </div>
+            </div>
+            <!--askquestionbox-->
+          </div>
+          <!--askquestion-->
+          <div class="askheadingCoverz">
+            <div class="asktextl">Headline:</div>
+            <div class="askinputCover">
+				<textarea id="newConvoTitle" class="askkinput" cols="4" rows="4"></textarea>
+            </div>
+          </div>
+          <!--askheadingCoverz-->
+          <div class="askheadingCover">
+            <div class="asktextl">Details:<br />
+              <span class="asksubtxt">(Optional)</span></div>
+            <div class="askinputCover">
+              <textarea id="newConvoDetails" class="askinput2" cols="4" rows="3"></textarea>
+            </div>
+          </div>
+          <!--askheadingCover-->
+          <div class="askheadingCover">
+            <div class="asktextl">Topics:<br />
+              <span class="asksubtxt">(Optional)</span></div>
+
+            <div class="askinputCover">
+              <textarea id="newConvoTopics" class="askkinput" cols="4" rows="3"></textarea>
+            </div>
+          </div>
+          <!--askheadingCover-->
+          <div class="popsubmitcovar">
+            <div class="notetext">Note: The more descriptive your request, the more like you are to receive support.</div>
+            <div class="popnothanks1"><a href="#" class="cancelLink">Cancel</a></div>
+
+            <div class="popsubmitbox1">
+              <div class="popupsubmits"><a href="#" id="saveConvoBtn">Submit</a></div>
+            </div>
+          </div>
+          <!--popsubmitcover-->
+          <div class="cb"></div>
+        </div>
+        <!--popbox2-->
+
+      </div>
+      <!--popboxWraper-->
+      <div class="popboxWraper" style="display: none;">
+        <div class="popbox3">
+          <div class="closecover">
+            <div class="close"><img src="/public/images/close.jpg" alt="Close" /></div>
+          </div>
+          <div class="iwant1">Thank you for sharing your question</div>
+
+          <div class="popusertxt3">We will noitify other members of your question. Responses will be sent to your email account as well as viewable at the
+            following link: <a href="http://www.talkabouthealth.com/mani">http://www.talkabouthealth.com/mani</a></div>
+          <div class="popsubmitcover1">
+            <div class="popnothanks3"><a href="#">Close</a></div>
+          </div>
+          <!--popsubmitcover-->
+          <div class="cb"></div>
+        </div>
+
+        <!--popbox2-->
+      </div>
+      <!--popboxWraper-->
+      <div class="cb"></div>
+    </div>
+    <!--boxtopcenter-->
+  </div>
+  <!-- End of Login Dialog -->
+  <!-- Mask to cover the whole screen -->
+
+  <div id="mask"></div>
 </div>

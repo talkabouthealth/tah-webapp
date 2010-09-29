@@ -5,12 +5,15 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import logic.ConversationLogic;
 import models.CommentBean;
 import models.CommentBean.Vote;
+import models.ConversationBean.ConvoType;
 import models.ConversationBean;
 import models.TalkerBean;
 import models.TalkerBean.EmailSetting;
@@ -40,28 +43,34 @@ import util.EmailUtil.EmailTemplate;
 @With(Secure.class)
 public class Conversations extends Controller {
 	
-	public static void create(String newTopic) {
+	public static void create(String type, String title, String details, String topics) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
-    	//create or get? topics for new convo
-//    	String newTag = "thirdtopic";
-//    	TopicBean topic = new TopicBean();
-//    	topic.setTitle(newTag);
-//    	topic.setMainURL(ApplicationDAO.createURLName(newTag));
-//    	TopicDAO.save(topic);
+    	//prepare params
+    	ConvoType convoType = ConvoType.valueOf(type);
     	
-    	TopicBean topic = TopicDAO.getByTitle("fatigue");
-    	List<TopicBean> topics = new ArrayList<TopicBean>();
-//    	topics.add(topic);
+    	Set<TopicBean> topicsSet = new HashSet<TopicBean>();
+    	String[] topicsArr = topics.split(" ");
+    	for (String topicTitle : topicsArr) {
+    		TopicBean topic = TopicDAO.getByTitle(topicTitle);
+    		if (topic != null) {
+    			topicsSet.add(topic);
+    		}
+    		
+        	//create or get? topics for new convo
+//        	String newTag = "thirdtopic";
+//        	TopicBean topic = new TopicBean();
+//        	topic.setTitle(newTag);
+//        	topic.setMainURL(ApplicationDAO.createURLName(newTag));
+//        	TopicDAO.save(topic);
+    	}
     	
-    	ConversationBean convo = ConversationLogic.createConvo(newTopic, talker);
-		
+//    	System.out.println(convoType+" : "+title+" : "+details+" : "+topicsSet);
+    	
+    	ConversationBean convo = ConversationLogic.createConvo(convoType, title, talker, details, topicsSet);
     	CommonUtil.updateTalker(talker, session);
 
-		newTopic = newTopic.replaceAll("'", "&#39;");
-		newTopic = newTopic.replaceAll("\\|", "&#124;");
-		//TODO: make as template!
-		renderText(convo.getTid() + "|" + newTopic + "|" + convo.getId() + "|" + convo.getMainURL());
+		renderText("ok");
     }
     
     public static void restart(String topicId) {

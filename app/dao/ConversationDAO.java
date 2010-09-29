@@ -80,6 +80,7 @@ public class ConversationDAO {
 		DBObject convoObject = BasicDBObjectBuilder.start()
 			.add("uid", talkerRef)
 			.add("tid", tid)
+			.add("type", convo.getConvoType().toString())
 			.add("topic", convo.getTopic())
 			.add("cr_date", convo.getCreationDate())
 			.add("disp_date", convo.getDisplayTime())

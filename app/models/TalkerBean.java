@@ -376,7 +376,6 @@ public class TalkerBean implements Serializable {
 	
 	//TODO: load count() of thankyous for recognition?
 	public void parseThankYous(Collection<DBObject> thankYouDBList) {
-		System.out.println("PARSING THANK YOU??: "+ userName);
 		//TODO: move thanks you load to separate function (to prevent delays)?
 		List<ThankYouBean> thankYous = new ArrayList<ThankYouBean>();
 		if (thankYouDBList != null) {

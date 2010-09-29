@@ -70,7 +70,7 @@ public class ConversationBean {
 	private List<MessageBean> messages;
 	private List<TalkerBean> followers;
 	
-	private List<TopicBean> topics;
+	private Set<TopicBean> topics;
 	
 	//used for search display
 	private String searchFragment;
@@ -89,6 +89,11 @@ public class ConversationBean {
     	setDisplayTime((Date)convoDBObject.get("disp_date"));
     	setDetails((String)convoDBObject.get("details"));
     	setDeleted(getBoolean(convoDBObject, "deleted"));
+    	
+    	String type = (String)convoDBObject.get("type");
+    	if (type != null) {
+    		convoType = ConvoType.valueOf(type);
+    	}
     	
     	setOpened(getBoolean(convoDBObject, "opened"));
     	
@@ -119,7 +124,7 @@ public class ConversationBean {
 	}
 	
 	private void parseTopics(Collection<DBRef> topicsDBList) {
-		topics = new ArrayList<TopicBean>();
+		topics = new HashSet<TopicBean>();
 		if (topicsDBList != null) {
 			for (DBRef topicDBRef : topicsDBList) {
 				TopicBean topic = new TopicBean();
@@ -297,11 +302,11 @@ public class ConversationBean {
 		this.oldNames = oldNames;
 	}
 
-	public List<TopicBean> getTopics() {
+	public Set<TopicBean> getTopics() {
 		return topics;
 	}
 
-	public void setTopics(List<TopicBean> topics) {
+	public void setTopics(Set<TopicBean> topics) {
 		this.topics = topics;
 	}
 
