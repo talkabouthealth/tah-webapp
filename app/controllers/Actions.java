@@ -90,6 +90,31 @@ public class Actions extends Controller {
 	}
 	
 	public static void saveProfileComment(String profileTalkerId, String parentId, String text) {
+		CommentBean comment = saveProfileCommentInternal(profileTalkerId, parentId, text);
+		
+		//render html of new comment using tag
+		List<CommentBean> _commentsList = Arrays.asList(comment);
+		int _level = (comment.getParentId() == null ? 1 : 2);
+		render("tags/profileCommentsTree.html", _commentsList, _level);
+	}
+	
+	/**
+	 * Version for new design - returns other html to caller
+	 * @param profileTalkerId
+	 * @param parentId
+	 * @param text
+	 */
+	public static void saveProfileComment2(String profileTalkerId, String parentId, String text) {
+		CommentBean comment = saveProfileCommentInternal(profileTalkerId, parentId, text);
+		
+		//render html of new comment using tag
+		List<CommentBean> _commentsList = Arrays.asList(comment);
+		int _level = (comment.getParentId() == null ? 1 : 2);
+		render("tags/profileCommentsTree2.html", _commentsList, _level);
+	}
+	
+	
+	private static CommentBean saveProfileCommentInternal(String profileTalkerId, String parentId, String text) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 		TalkerBean profileTalker = TalkerDAO.getById(profileTalkerId);
@@ -127,13 +152,9 @@ public class Actions extends Controller {
 		NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
 				profileTalker, vars);
 		
-		//render html of new comment using tag
-		List<CommentBean> _commentsList = Arrays.asList(comment);
-		int _level = (comment.getParentId() == null ? 1 : 2);
-		render("tags/profileCommentsTree.html", _commentsList, _level);
+		return comment;
 	}
-	
-	
+
 	public static void updateTopicExperience(String topicId, String newValue) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		TopicBean topic = TopicDAO.getById(topicId);

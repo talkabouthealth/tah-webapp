@@ -146,8 +146,9 @@
 				}
 				$display.show();
 				
-				settings.saveFunction.apply( window, [ $dataType, newValue ] );
-
+				if (settings.saveFunction) {
+					settings.saveFunction.apply( window, [ $dataType, newValue ] );
+				}
 				
 				/*
 				$display.html( settings.loadtxt ).show();

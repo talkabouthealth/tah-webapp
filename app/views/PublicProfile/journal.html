@@ -6,12 +6,46 @@
 		#mask { background-color:#e6e6e6; }
 		
 		.commentsreply { padding-left:50px; }
+		.comreply { margin-bottom: 2px }
+		
+		.inline_form { display:none; }
 	</style>
 	
+	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			
+			$('.inline-edit').inlineEdit(
+		  		{ hover: ''}
+		  	);
 		});
+
+		//saveProfileComment(String profileTalkerId, String parentId, String text)
+   		function saveProfileComment(parentId) {
+   	   		var commentText = $("#replytext"+parentId).val();
+   			$("#replytext"+parentId).val("");
+
+   			$.post("@{Actions.saveProfileComment2()}", 
+  				{ profileTalkerId: '${talker.id}', parentId: parentId, text: commentText},
+  				function(html) {
+  	  				$("#firstcommentmessage").hide();
+  					//put comment in the tree
+  					if (parentId == '') {
+  	  					//add as first element in the top
+  						$(html).prependTo($(".commentsarea"));
+
+  	  					//add inline edit for new comment
+  						$('.inline-edit').inlineEdit( { hover: ''} );
+  					}
+  					else {
+  						//add as last element in subtree
+  						$("#reply"+parentId).before($(html));
+  					}
+  				}
+  			);
+
+   			
+  			return false;
+   		}
 	</script>
 		
 <div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">

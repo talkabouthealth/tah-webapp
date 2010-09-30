@@ -30,34 +30,36 @@
 		<div class="commentsreply">
 			#{profileCommentsTree2 commentsList: comment.children, level: (_level+1)/}
 			
-			<div class="replytommentbax">
+			<div id="reply${comment.id}" class="replytommentbax">
 				<div class="cb"></div>
-					<div class="editsWraper">
-						<div class="cb"></div>
-							<div class='inline-edit'>
-								<div class="cb"></div>
-									<div id="hidit1" >
-										<div class='display' style="display:block; clear:both; height:30px; 
-										margin-bottom:7px; position:relative;"><a href="" onclick="hidit('1')">
-             <textarea class="edititanputx" rows="3" cols="4"  style="width:470px; height:30px;">Reply to comment</textarea>
-             </a></div>
-
-         </div>
-         <div style="margin-top:3px; margin-bottom:7px;">&nbsp;</div>
-         <div class='form'  id="editit1">
-           <div class="addnewansar" style="text-align:left">Reply to comment</div>
-           <div style="float:left;">
-             <textarea class="edititinputx" style="width:470px" cols="4" rows="3" >&nbsp;</textarea>
-             <input type="submit" class="repcomsubmits" src="/public/images/repcomsubmits.jpg" value=" "  style="float:right;margin-right:2px; margin-top:7px;cursor:pointer"/>
-           </div>
-
-         </div>
-       </div>
-     </div>
-   </div>
-   <!--replytommentbox-->
+				<div>
+					<div class="cb"></div>
+					<div class="inline-edit" id="replyAdd">
+						<div class="inline_display">
+							<div class="inline_full inline_empty">
+								<div style="clear:both; height:30px; margin-bottom:7px; position:relative;">
+									<a href="#" class="inline_editlink">
+					             		<textarea class="edititanputx" rows="1" cols="4" 
+					             			style="width:444px; height:20px;">Reply to comment</textarea>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class='inline_form'>
+							<div class="addnewansar" style="text-align:left">Reply to comment</div>
+							<div style="float:left;">
+								<textarea id="replytext${comment.id}" class="edititinputx inline_text" 
+									style="width:444px" cols="4" rows="3" ></textarea>
+								<input type="submit" class="repcomsubmits inline_save" src="/public/images/repcomsubmits.jpg" value=" " 
+									onclick="return saveProfileComment('${comment.id}');" 
+									style="float:right;margin-right:2px; margin-top:7px;cursor:pointer"/>
+							</div>
+						</div>
+					</div>						
+				</div>
+			</div>
 		</div>
 	#{/if}
-   <div class="cb"></div>
+	<div class="cb"></div>
 </div>
 #{/list}
