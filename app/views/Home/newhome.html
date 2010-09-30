@@ -79,10 +79,24 @@
 				var details = $("#newConvoDetails").val();
 				var topics = $("#newConvoTopics").val();
 
+				if (title === "") {
+					alert("Please input headline.");
+					return false;
+				}
+
 				$.post("@{Conversations.create()}", 
 	  				{ type: type, title: title, details: details, topics: topics},
 	  				function(data) {
-	  					//...
+	  					if (type == "CONVERSATION") {
+	  						hideAll();
+	  						openChat(data.tid);
+	  					}
+	  					else {
+	  						$("#questionLink").attr("href", data.url).html(data.url);
+		  					
+	  						$("#newConvoForm").hide();
+	  						$("#newQuestionConfirm").show();
+	  					}
 	  				}
 	  			);
 
@@ -90,7 +104,7 @@
 				$("#newConvoTitle").val("");
 				$("#newConvoDetails").val("");
 				$("#newConvoTopics").val("");
-				hideAll();
+
 	  			return false;
 			});
 
@@ -105,6 +119,8 @@
 				//Cancel the link behavior
 				e.preventDefault();
 
+				$("#newConvoForm").show();
+				$("#newQuestionConfirm").hide();
 				$("#newConvoTitle").val($("#convoText").val());
 				showPopup("#startDialog");
 			});
@@ -141,11 +157,12 @@
 	</script>
 		
 	<style type="text/css">
+		body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
+		
 		#innermiddlearea { padding-top: 10px }
 		.seeall { padding-top: 20px }
 		
 		#mask { background-color:#e6e6e6; }
-		
 	</style>
 <div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
   <div id="managtopic">
@@ -480,14 +497,14 @@
       </div>
     </div>
   </div>
-</div>
+
 
 <div id="boxes">
   <div id="dialog" class="window"> </div>
   <!-- Start of Login Dialog -->
   <div id="startDialog" class="window">
     <div class="boxtopcenter">
-      <div class="popboxWraper">
+      <div id="newConvoForm" class="popboxWraper">
         <div class="popbox2">
           <div class="closecover">
             <div class="close"><img src="/public/images/close.jpg" alt="Close" /></div>
@@ -548,17 +565,17 @@
 
       </div>
       <!--popboxWraper-->
-      <div class="popboxWraper" style="display: none;">
+      <div id="newQuestionConfirm" class="popboxWraper" style="display: none;">
         <div class="popbox3">
           <div class="closecover">
             <div class="close"><img src="/public/images/close.jpg" alt="Close" /></div>
           </div>
           <div class="iwant1">Thank you for sharing your question</div>
 
-          <div class="popusertxt3">We will noitify other members of your question. Responses will be sent to your email account as well as viewable at the
-            following link: <a href="http://www.talkabouthealth.com/mani">http://www.talkabouthealth.com/mani</a></div>
+          <div class="popusertxt3">We will notify other members of your question. Responses will be sent to your email account as well as viewable at the
+            following link: <a id="questionLink" href="#"></a></div>
           <div class="popsubmitcover1">
-            <div class="popnothanks3"><a href="#">Close</a></div>
+            <div class="popnothanks3"><a class="cancelLink" href="#">Close</a></div>
           </div>
           <!--popsubmitcover-->
           <div class="cb"></div>

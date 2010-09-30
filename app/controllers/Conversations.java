@@ -69,8 +69,9 @@ public class Conversations extends Controller {
     	
     	ConversationBean convo = ConversationLogic.createConvo(convoType, title, talker, details, topicsSet);
     	CommonUtil.updateTalker(talker, session);
-
-		renderText("ok");
+    	
+    	String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
+		renderJSON("{ \"tid\" : \""+convo.getTid()+"\", \"url\" : \""+convoURL+"\" }");
     }
     
     public static void restart(String topicId) {
