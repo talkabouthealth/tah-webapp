@@ -1,332 +1,99 @@
-#{extends 'main.html' /}
-	<link rel='stylesheet' type='text/css' href='/public/stylesheets/styles.css' />
-	<style>
-		body {
-			background:url(/public/images/inner_bg.gif) repeat-x top;
-			font-size: 14px;
-		}
-		#innermid {
-			padding: 10px;
-		}
-		
-		#reply {
-			padding: 10px 0 0 0;
-		}
-		.commentsarea {
-			padding-top: 0px;
-		}
-		#replytext {
-			height: 20px;
-			color: #777777;
-		}
-		.commentreply {
-			height: 20px;
-			color: #777777;
-		}
-		
-		.inline_form {
-			display:none;
-		}
-		.inline-edit .editdiv {
-			float:left;
-			width:45px;
-			margin-left: 3px;
-		}
-	</style>
-
-	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$("#followTopicLink").click(function() {
-				$.post("@{Topics.follow()}", 
-	  				{ topicId: '${topic.id}'},
-	  				function(data) {
-	  					if ($("#followTopicLink").html() == "Follow Topic") {
-	  						$("#followTopicLink").html("Unfollow Topic");
-	  					}
-	  					else {
-	  						$("#followTopicLink").html("Follow Topic");
-	  					}
-	  				}
-	  			);
-			});
-
-			//Aliases
-			$("#newAliasBtn").click(function() {
-				var newAlias = $("#newAlias").val();
-				$("#newAlias").val("");
-				$.post("@{Topics.manageAliases()}", 
-					{topicId: "${topic.id}", todo: "add", alias : newAlias},
-					function(data) {
-						$(data).appendTo($("#aliases"));
-					}
-				);
-				return false;
-			});
-
-			$(".removeAliasLink").live("click", function() {
-				var alias = $(this).attr("rel");
-				$(this).parent().remove();
-				$.post("@{Topics.manageAliases()}", 
-					{topicId: "${topic.id}", todo: "remove", alias : alias}
-				);
-				return false;
-			});
-
-			//Relatives
-			$("#newParentBtn").click(function() {
-				var newParent = $("#newParent").val();
-				$.post("@{Topics.manageParents()}", 
-					{topicId: "${topic.id}", todo: "add", parentId: newParent},
-					function(data) {
-						$(data).appendTo($("#parents"));
-					}
-				);
-				return false;
-			});
-			$(".removeParentLink").live("click", function() {
-				var parentId = $(this).attr("rel");
-				$(this).parent().remove();
-				$.post("@{Topics.manageParents()}", 
-					{topicId: "${topic.id}", todo: "remove", parentId: parentId}
-				);
-				return false;
-			});
-
-			$("#newChildBtn").click(function() {
-				var newChild = $("#newChild").val();
-				$.post("@{Topics.manageChildren()}", 
-					{topicId: "${topic.id}", todo: "add", childId: newChild},
-					function(data) {
-						$(data).appendTo($("#children"));
-					}
-				);
-				return false;
-			});
-			$(".removeChildLink").live("click", function() {
-				var childrenId = $(this).attr("rel");
-				$(this).parent().remove();
-				$.post("@{Topics.manageChildren()}", 
-					{topicId: "${topic.id}", todo: "remove", childId: childrenId}
-				);
-				return false;
-			});
-
-			$("#deleteTopicBtn").click(function() {
-				var confirmDel = confirm("Are you sure want to delete this topic?");
-	   	   		if (confirmDel) {
-	   	   	  		$.post("@{Topics.delete()}", 
-	    				{ topicId: '${topic.id}'}
-	    			);
-
-	   	   	  		document.location = "/home";
-	   	   		}
-	   	   		
-	   	   		return false;
-			});
-			
-
-			$('.inline-edit').inlineEdit(
-		  		{ hover: '', saveFunction: updateData}
-		  	);
-		});
-
-		function updateData(dataType, newValue) {
-			if (dataType === 'titleEdit') {
-				$.post("@{Topics.updateField()}", 
-   					{ topicId : '${topic.id}', name: 'title', value: newValue},
-   					function() {
-   	   					//good save!!
-   					}
-   				);
-			}
-		}
-	</script>
-</head>
-
-<body>
-<div id="top_container">
-	<div id="top">
-		#{ logo /}
-		<div id="topnav">
-			#{include 'menu.html' /}
-		</div>
-	</div>
-</div>
-
-<div id="innerbanner"></div>
-<div id="bottom_container">
-	<div id="middle_area_inner">
-		<div id="innerboxarea">
-			<div id="innerleft">
-				<div id="innerlefttop"></div>
-				<div id="innermid">
-					<div class='inline-edit' id="titleEdit">
-						<div class="suggestxt inline_display">
-							<div class="inline_full">
-								<div class="inline_view targetedh7">${topic.title}</div>
-								<div class="editdiv">
-									<div class="editit">
-										<a href="#" class="inline_editlink">Edit</a>
-									</div>
+#{extends 'Topics/topicPage.html' /}
+<div class="cb"></div>
+<div class="mtborder" style="margin-top: 20px;"></div>
+<div class="topipcWraper">
+                    <div class="topic">
+                      <div class="topich1">Topic Aliases</div>
+                      <div class="topicborder"></div>
+                      <div class="topictxt">Topic aliases are used for misspelling , abbreviations, and alternative names.</div>
+                      <div class="mtinputbox">
+                        <div class="inputCover">
+                          <input id="newAlias" type="text" class="mtinput"/>
+                        </div>
+                        <input id="newAliasBtn" type="submit" value=" " src="/public/images/addaliasbtn.jpg" class="allaliasbtn"/>
+                        <div class="cb"></div>
+                      </div>
+                      <!--mtinputbox-->
+						<div id="aliases">
+							#{list items: topic.aliases, as: 'alias'}
+								<div class="topictxt1">
+									${alias}&nbsp;&nbsp;<a href="#" rel="${alias}" class="removeAliasLink style2">remove</a>
 								</div>
-							</div>
-							<div class="inline_empty" style="display: none">
-								<div class="targetenew">
-									<a class="inline_addlink" href="#">Add title..</a>
-								</div>
-							</div>
-			            </div>
-						<div class='inline_form'>
-							<div style="float:left; width:auto; padding-bottom:5px;" >
-					        	<input id="titleinput" type="text" style="width:600px"  
-					        		value="${topic.title}" class="edititinputs inline_text notempty" >
-					        </div>
-							<div style="float:right;margin-right:30px;">
-						        <input id="titleBtn" type="submit" class="updatebtns inline_save" value=" " />
-						        <div class="canclebtnz">
-						        	<a class="cancel" href="#">Cancel</a>
-						        </div>
-							</div>
+							#{/list}
 						</div>
-					</div>
-										
-					<div style="clear: both; margin-bottom: 10px"></div>					
-										
-					<h3>Topic Summary:</h3><br/>
-					${topic.summary}<br/>
-					Contributions by: 
-					#{list items: topic.sumContributors, as: 'contributor'}
-						${contributor}&nbsp;&nbsp;&nbsp;
-					#{/list}
-					<br/><br/><br/><br/>
-					
-					<div style="clear: both"></div>
-					<h3>Topic Aliases:</h3><br/>
-					Topic aliases are used to capture common misspellings, 
-					alternative names and common abbreviations for the relevant topic. <br/>
-					<input id="newAlias" type="text" value="" size="40"/>
-					<input id="newAliasBtn" type="button" value="Add Alias" />
-					<ul id="aliases">
-						#{list items: topic.aliases, as: 'alias'}
-							<li>
-								${alias}&nbsp;<a href="#" rel="${alias}" class="removeAliasLink">remove</a>
-							</li>
-						#{/list}
-					</ul>
-					<br/><br/>
-					<br/><br/>
-
-					<h3>Parent topics:</h3><br/>
-					<input id="newParent" type="text" value="" />
-					<input id="newParentBtn" type="button" value="Add Parent" />
-					<ul id="parents">
+                        <div class="cb"></div>
+                    </div>
+                    <!--topic-->
+                    <div class="topic" style="display: none;">
+                      <div class="topich1">Merge Topics</div>
+                      <div class="topicborder"></div>
+                      <div class="mtinputbox">
+                        <div class="inputCover">
+                          <input type="text" class="mtinput"/>
+                        </div>
+                        <input type="submit" value=" " src="/public/images/mergebtn.jpg" class="mergebtn"/>
+                        <div class="cb"></div>
+                      </div>
+                      <!--mtinputbox-->
+                      <div class="cb"></div>
+                    </div>
+                    <!--topic-->
+                    
+                    <div class="topic">
+                      <div class="topich1">Parent Topics</div>
+                      <div class="topicborder"></div>
+                      <div class="mtinputbox">
+                        <div class="inputCover">
+                          <input id="newParent" type="text" class="mtinput"/>
+                        </div>
+                        <input id="newParentBtn" type="submit" value=" " src="/public/images/addbtn.jpg" class="addbtn"/>
+                        <div class="cb"></div>
+                      </div>
+                      <!--mtinputbox-->
+					  <div id="parents">
 						#{list items: topic.parents, as: 'parent'}
-							<li>
-								${parent.title}&nbsp;<a href="#" rel="${parent.id}" class="removeParentLink">remove</a>
-							</li>
+							<div class="topictxtz">
+								${parent.title}&nbsp;&nbsp;<a href="#" rel="${parent.id}" class="removeParentLink style2">remove</a>
+							</div>
 						#{/list}
-					</ul>
+					  </div>
 					
-					<br/><br/>
-					<br/><br/>
-					<br/>
-					
-					<h3>Children topics:</h3><br/>
-					<input id="newChild" type="text" value="" />
-					<input id="newChildBtn" type="button" value="Add Child" />
-					<ul id="children">
+                      
+                      <div class="cb"></div>
+                    </div>
+                    <!--topic-->
+                    <div class="topic">
+                      <div class="topich1">Child Topics</div>
+                      <div class="topicborder"></div>
+                      <div class="mtinputbox">
+                        <div class="inputCover">
+                          <input  id="newChild"  type="text" class="mtinput"/>
+                        </div>
+                        <input id="newChildBtn"  type="submit" value=" " src="/public/images/addbtn.jpg" class="addbtn"/>
+                        <div class="cb"></div>
+                      </div>
+                      <!--mtinputbox-->
+                      <div id="children">
 						#{list items: topic.children, as: 'child'}
-							<li>
-								${child.title}&nbsp;<a href="#" rel="${child.id}" class="removeChildLink">remove</a>
-							</li>
+							<div class="topictxtz">
+								${child.title}&nbsp;&nbsp;<a href="#" rel="${child.id}" class="removeChildLink style2">remove</a>
+							</div>
 						#{/list}
-					</ul>
-					
-					<br/><br/>
-					<br/><br/>
-					<h3>Delete topic</h3><br/>
-					<input id="deleteTopicBtn" type="button" value="Delete" />
-					<br/><br/>
-					<br/><br/>
-					<br/>
-					${topic.creationDate?.format('M/d/yyyy')}
-					<br/>
-				</div>
-				<div id="innerbot"></div>
-			</div>
-			<div id="innerright">
-				<!-- 
-				<div id="searcharea">
-					<input name="" type="text" class="search"  value="Search Conversation" 
-						onclick="this.value=''" onblur="this.value='Search Conversation'"/>
-				</div>
-				<div id="searchright"><img src="/public/images/searchbutton.gif" width="34" height="35" /></div>
-				-->
-				#{if talker }
-				<div class="innerrightbox" style="padding-top: 0px">
-					<div class="innerrightop"></div>
-					<div class="innerrighmid">
-						#{if talker.followingTopicsList?.contains(topic) }
-							<a href="#" id="followTopicLink">Unfollow Topic</a>
-						#{/if}
-						#{else}
-							<a href="#" id="followTopicLink">Follow Topic</a>
-						#{/else}
-					</div>
-					<div class="innerrighbot"></div>
-				</div>
-				#{/if}
-				<div class="innerrightbox">
-					<div class="innerrightop"></div>
-					<div class="innerrighmid">
-						<a href="@{Home.index()}">Home</a><br/>
-						<a href="#">Your Feeds</a><br/>
-						<a href="#">Your Comment</a><br/>
-						<a href="#">Open Questions</a><br/><br/><br/>
-						
-						<a href="@{Topics.manage(topic.mainURL)}">Manage Topic</a>
-					</div>
-					<div class="innerrighbot"></div>
-				</div>
-				<div class="innerrightbox">
-					<div class="innerrightop"></div>
-					<div class="innerrighmid">
-						<b>Topic Statistics</b><br/>
-						Conversations/Questions: ${topic.conversations?.size()}<br/>
-						Views: ${topic.views}<br/>
-						Followed by ${topic.followers?.size()} members<br/>
-						#{list items: topic.followers, as: 'follower'}
-							<a href="@{ViewDispatcher.view(follower.userName)}" title="${follower.userName}" >
-								<img src="@{Image.show(follower.userName)}" width="48" height="48" border="0" />
-							</a>
-						#{/list}
-					</div>
-					<div class="innerrighbot"></div>
-				</div>
-				<div class="innerrightbox">
-					<div class="innerrightop"></div>
-					<div class="innerrighmid">
-						<b>Ontology</b><br/>
-						Parent topics:
-						#{list items: topic.parents, as: 'parent'}
-							${parent.title}${ parent_isLast ? '' : ', ' }
-						#{/list}
-						#{else}
-							none
-						#{/else}
-						<br/>
-						Children topics:
-						#{list items: topic.children, as: 'children'}
-							${children.title}${ children_isLast ? '' : ', ' }
-						#{/list}
-						#{else}
-							none
-						#{/else}
-					</div>
-					<div class="innerrighbot"></div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+					  </div>
+                      <div class="cb"></div>
+                    </div>
+                    <!--topic-->
+                    <div class="topic" style="display: none">
+                      <div class="topich1">Delete Topic</div>
+                      <div class="topicborder"></div>
+                      <div class="topictxt">Deleting a topic will remove all connection with conversations and users.</div>
+                      <div class="mtinputbox">
+                        <input type="submit" value=" " src="/public/images/deletez.jpg" class="deletez"/>
+                        <div class="cb"></div>
+                      </div>
+                      <!--mtinputbox-->
+                      <div class="cb"></div>
+                    </div>
+                    <!--topic-->
+                    <div class="cb"></div>
+                  </div>

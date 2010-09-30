@@ -139,7 +139,8 @@ public class Topics extends Controller {
     	}
     	TopicDAO.updateTopic(topic);
     	
-    	renderText("<li>"+alias+"&nbsp;<a href='#' rel='"+alias+"' class='removeAliasLink'>remove</a></li>");
+    	renderText("<div class='topictxt1'>"+alias+"&nbsp;&nbsp;<a href='#' rel='"+
+    			alias+"' class='removeAliasLink style2'>remove</a></div>");
     }
     
     //TODO: check valid add/remove? (Topic can't be children and parent at the same time)
@@ -160,8 +161,8 @@ public class Topics extends Controller {
     	}
     	TopicDAO.updateTopic(parentTopic);
     	
-    	renderText("<li>"+parentTopic.getTitle()+"&nbsp;<a href='#' rel='"+
-    			parentTopic.getId()+"' class='removeParentLink'>remove</a></li>");
+    	renderText("<div class='topictxtz'>"+parentTopic.getTitle()+"&nbsp;&nbsp;<a href='#' rel='"+
+    			parentTopic.getId()+"' class='removeParentLink style2'>remove</a></div>");
     }
     
     public static void manageChildren(String topicId, String todo, String childId) {
@@ -181,8 +182,8 @@ public class Topics extends Controller {
     	}
     	TopicDAO.updateTopic(topic);
     	
-    	renderText("<li>"+childTopic.getTitle()+"&nbsp;<a href='#' rel='"+
-    			childTopic.getId()+"' class='removeChildrenLink'>remove</a></li>");
+    	renderText("<div class='topictxtz'>"+childTopic.getTitle()+"&nbsp;&nbsp;<a href='#' rel='"+
+    			childTopic.getId()+"' class='removeChildLink style2'>remove</a></div>");
     }
     
     public static void browseTopics() {

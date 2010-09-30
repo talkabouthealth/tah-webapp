@@ -1,0 +1,428 @@
+#{extends 'main.html' /}
+	<style>
+		body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
+		#innermiddlearea { padding-top: 10px }
+		
+		.inline_form { display:none; }
+		.inline-edit .editdiv { float:left; width:45px; margin-left: 3px; }
+		
+		h1 {
+			color:#000000;
+			font-family:arial;
+			font-size:20px;
+			text-decoration:none;
+		}
+		h2 {
+			font-size:14px;
+			font-weight:normal;
+		}
+		
+		.style1 { color: #000 }
+		.style2 {
+			font-size: 11px;
+			font-style: italic;
+			color: #404040;
+		}
+		.topictxt1 a {
+			color:#0167A0;
+			text-decoration:none;
+		}
+		
+		.cfollowtopic, .cunfollow { margin-left:60px; } 
+	</style>
+	
+	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#followTopicLink").click(function() {
+				$.post("@{Topics.follow()}", 
+	  				{ topicId: '${topic.id}'},
+	  				function(nextAction) {
+	  					var linkBtn = $("#followTopicLink");
+	  					linkBtn.removeClass();
+		  				if (nextAction === "follow") {
+		  					linkBtn.addClass("cfollowtopic");
+		  				}
+		  				else {
+		  					linkBtn.addClass("cunfollow");
+		  				}
+	  				}
+	  			);
+			});
+
+			$(".followTopicLink").live('click', function() {
+				var topicId = $(this).attr("rel");
+				if ($(this).html().indexOf("Unfollow") != -1) {
+					$(this).html("Follow");
+				}
+				else {
+					$(this).html("Unfollow");
+				}
+				$.post("@{Conversations.follow()}", 
+	  				{ topicId: topicId},
+	  				function(data) {
+	  					//...
+	  				}
+	  			);
+	  			return false;
+			});
+
+
+			//Aliases
+			$("#newAliasBtn").click(function() {
+				var newAlias = $("#newAlias").val();
+				$("#newAlias").val("");
+				$.post("@{Topics.manageAliases()}", 
+					{topicId: "${topic.id}", todo: "add", alias : newAlias},
+					function(data) {
+						$(data).appendTo($("#aliases"));
+					}
+				);
+				return false;
+			});
+
+			$(".removeAliasLink").live("click", function() {
+				var alias = $(this).attr("rel");
+				$(this).parent().remove();
+				$.post("@{Topics.manageAliases()}", 
+					{topicId: "${topic.id}", todo: "remove", alias : alias}
+				);
+				return false;
+			});
+
+			//Relatives
+			$("#newParentBtn").click(function() {
+				var newParent = $("#newParent").val();
+				$.post("@{Topics.manageParents()}", 
+					{topicId: "${topic.id}", todo: "add", parentId: newParent},
+					function(data) {
+						$(data).appendTo($("#parents"));
+					}
+				);
+				return false;
+			});
+			$(".removeParentLink").live("click", function() {
+				var parentId = $(this).attr("rel");
+				$(this).parent().remove();
+				$.post("@{Topics.manageParents()}", 
+					{topicId: "${topic.id}", todo: "remove", parentId: parentId}
+				);
+				return false;
+			});
+
+			$("#newChildBtn").click(function() {
+				var newChild = $("#newChild").val();
+				$.post("@{Topics.manageChildren()}", 
+					{topicId: "${topic.id}", todo: "add", childId: newChild},
+					function(data) {
+						$(data).appendTo($("#children"));
+					}
+				);
+				return false;
+			});
+			$(".removeChildLink").live("click", function() {
+				var childrenId = $(this).attr("rel");
+				$(this).parent().remove();
+				$.post("@{Topics.manageChildren()}", 
+					{topicId: "${topic.id}", todo: "remove", childId: childrenId}
+				);
+				return false;
+			});
+
+			$("#deleteTopicBtn").click(function() {
+				var confirmDel = confirm("Are you sure want to delete this topic?");
+	   	   		if (confirmDel) {
+	   	   	  		$.post("@{Topics.delete()}", 
+	    				{ topicId: '${topic.id}'}
+	    			);
+
+	   	   	  		document.location = "/home";
+	   	   		}
+	   	   		
+	   	   		return false;
+			});
+
+			$('.inline-edit').inlineEdit(
+		  		{ hover: '', saveFunction: saveData}
+		  	);
+		});
+
+		function saveData(dataType, newValue) {
+			if (dataType === 'titleEdit') {
+				$.post("@{Topics.updateField()}", 
+   					{ topicId : '${topic.id}', name: 'title', value: newValue},
+   					function() {
+   	   					//good save!!
+   					}
+   				);
+			}
+			else if (dataType === 'summaryEdit') {
+				$.post("@{Topics.updateField()}", 
+   					{ topicId : '${topic.id}', name: 'summary', value: newValue},
+   					function() {
+   	   					//good save!!
+   					}
+   				);
+			}
+		}
+
+		function restartConvo(tid, convoId) {
+			openChat(tid);
+			$.post("@{Conversations.restart}", {topicId: convoId});
+			return false;
+		}
+	</script>
+</head>
+
+<body>
+#{include 'header.html' /}
+	<div id="targetedtherapy">
+          <div id="innermiddlearea">
+            <div id="comcover">
+              <div id="comleft">
+                <div class="comcontent">
+                  <div id="targestedtherapy">
+                    <div class="editsWraper">
+						<div class="inline-edit" id="titleEdit">
+							<div class="inline_display">
+								<div class="inline_full">
+									<div class="targetedh7"><h1 class="inline_view">${topic.title}</h1></div>
+									<div class="editdiv">
+										<div class="editit">
+											<a href="#" class="inline_editlink">Edit</a>
+										</div>
+									</div>
+								</div>
+								<div class="inline_empty" style="display: none"></div>
+							</div>
+							<div class='inline_form'>
+								<div style="float:left; width:auto; padding-bottom:5px;" >
+							       	<input id="titleinput" type="text" style="width:600px"  
+							       		value="${topic.title}" class="edititinputs inline_text notempty" >
+						       </div>
+								<div style="float:right; clear:both;">
+							        <input id="titleBtn" type="submit" class="updatebtns inline_save" value=" " />
+							        <div class="canclebtnz">
+							        	<a class="cancel" href="#">Cancel</a>
+							        </div>
+								</div>
+							</div>
+						</div>
+                    </div>
+                    <!--editsWraper-->
+                    <div class="cb"></div>
+                    <br/>
+                    <!--<div class="topicborder"></div>-->
+                  </div>
+                  <!--targetedtherapy-->
+                  <div class="topipcWraper">
+                    <!--comsearchbox-->
+                    <!--comments-->
+                    <div style="width: 600px; margin-top: -10px;" class="comments">
+						<div class='inline-edit' id="summaryEdit" style="width: 600px;">
+							<div class="suggestxt inline_display" style="width: 600px">
+								<div class="inline_full" style="display: ${topic.summary ? 'block' : 'none'}">
+									<div style="float: left; width: 540px;">
+										<h2 class="inline_view" style="text-align: justify;">${topic.summary}</h2>
+									</div>
+									<div style="float:right; margin-right:10px;">
+										<div class="editit">
+											<a href="#" class="inline_editlink">Edit</a>
+										</div>
+									</div>
+								</div>
+								<div class="inline_empty" style="display: ${!topic.summary ? 'block' : 'none'}">
+									<div class="targetenew">
+										<a class="inline_addlink" href="#">Add Topic Summary</a>
+									</div>
+								</div>
+						          </div>
+							<div class='inline_form'>
+								<div style="padding-top:10px;">
+							        <textarea id="summaryinput" class="edititinputx inline_text" 
+							        	style="width: 585px; height: 100px; font-size: 14px; font-weight: normal;" rows="3" cols="4"
+							        	>${topic.summary}</textarea>
+						        </div>
+								<div style="float:right;margin-right:30px;">
+									<input id="summaryBtn" type="submit" class="updatebtns inline_save" value=" " />
+									<div class="canclebtnz">
+										<a class="cancel" href="#">Cancel</a>
+									</div>
+								</div>
+							</div>
+						</div>                      
+                      
+                      	#{doLayout /}
+                      
+                      <!--comreplyCover-->
+                      <div class="cb"></div>
+                    </div>
+                    <!--comments-->
+                    <div class="cb"></div>
+                  </div>
+                  <!--topipcWraper-->
+                  <div class="cb"></div>
+                </div>
+                <!--comcontent-->
+                <div class="cb"></div>
+              </div>
+              <!--comleft-->
+              <div style="margin-left: 30px;" id="mtright">
+              	#{if talker }
+					<div class="topipsts"> <br/>
+						#{if talker.followingTopicsList?.contains(topic) }
+							<input type="submit" id="followTopicLink" value=" " class="cunfollow"/>
+						#{/if}
+						#{else}
+							<input type="submit" id="followTopicLink" value=" " class="cfollowtopic"/>
+						#{/else}
+	                  <div class="mtop"></div>
+	                  <div class="topicborder"></div>
+	                </div>
+	                <div class="cb"></div>
+				#{/if}
+                <div class="topipsts">
+                  <div class="mtrighttxt"><a href="@{ViewDispatcher.view(topic.mainURL)}">Topic Home</a></div>
+                  <div class="mtrighttxt"><a href="@{Topics.manage(topic.mainURL)}">Manage Topic</a></div>
+                  <div class="mtop"></div>
+                  <div class="topicborder"></div>
+                  <div class="cb"></div>
+                </div>
+                <!--topipsts-->
+                <div class="topipsts">
+                  <div class="mtrighttxt1">Topic Statistics</div>
+                  <div class="latextCover">
+                    <div class="latextr"><strong><span class="black">Conversations/Questions:&nbsp;&nbsp;</span></strong> </div>
+                    <div style="float: left; width: auto;" class="vieztext">${topic.conversations?.size()}</div>
+                  </div>
+                  <!--topixtext-->
+                  <div class="latextCover">
+                    <div class="latextr"><strong><span class="black">Views:&nbsp;&nbsp;</span></strong> </div>
+                    <div style="float: left; width: auto;" class="vieztext">${topic.views}</div>
+                  </div>
+                  <!--topixtext-->
+                  <div class="latextCover">
+                    <div class="latextr"><strong><span class="black">Followed By:&nbsp;&nbsp;</span></strong> </div>
+                    <div style="float: left; width: auto;" class="vieztext">${topic.followers?.size()} Members</div>
+                  </div>
+                  <!--topixtext-->
+                  <div class="membersarea">
+                  	#{list items: topic.followers, as: 'follower'}
+						<a href="@{ViewDispatcher.view(follower.userName)}" title="${follower.userName}" >
+							<img src="@{Image.show(follower.userName)}" width="25" height="25" border="0" />
+						</a>
+					#{/list}
+                  </div>
+                  <!--membersarea-->
+                  <div class="topicborder"></div>
+                </div>
+                <!--topipsts-->
+                <div class="topipsts">
+                  <div class="mtrighttxt1">Ontology</div>
+                  <div class="topixtext">
+                    <div class="viewstext"><a href="#">Parent Topics</a>: </div>
+                    <div class="viewstext1">
+	                    #{list items: topic.parents, as: 'parent'}
+							${parent.title}${ parent_isLast ? '' : ', ' }
+						#{/list}
+						#{else}
+							none
+						#{/else}
+                    </div>
+                  </div>
+                  <!--topixtext-->
+                  <div class="topixtext">
+                    <div class="viewstext"><a href="#">Child Topics</a>: </div>
+                    <div class="viewstext1">
+                    	#{list items: topic.children, as: 'children'}
+							${children.title}${ children_isLast ? '' : ', ' }
+						#{/list}
+						#{else}
+							none
+						#{/else}
+                    </div>
+                  </div>
+                  <!--topixtext-->
+                  <br/>
+                  <div class="mtop"></div>
+                  <div class="topicborder"></div>
+                </div>
+                <!--topipsts-->
+                <div class="topipsts">
+                  <div class="mtrighttxt1">Share Topic</div>
+                  <!--topixtext-->
+                  <div class="membersarea">
+                    <div class="sharicons"><img alt="Emailz" src="/public/images/emailicon.jpg"/> <a href="#">Email</a> </div>
+                    <div class="sharicons"><img class="rpad" alt="Twitter" src="/public/images/twittericon.jpg"/><a href="#">Twitter</a></div>
+                    <div class="sharicons"><img class="rpad" alt="Members" src="/public/images/facebookicon.jpg"/><a href="#">Facebook</a></div>
+                  </div>
+                  <!--membersarea-->
+                  <div class="topicborder"></div>
+                </div>
+                <!--topipsts-->
+                <!--topipsts-->
+                <div class="topipsts">
+                  <div class="mtrighttxt1">Top Answerers</div>
+                  <div class="topbox">
+                    <div style="float: left;" class="topleftimg"><img alt="topanser" src="/public/images/topanswer1.jpg"/></div>
+                    <div class="topr">
+                      <div class="toprighttext">
+                        <div class="latextleft"><strong><strong><a href="#">Murray</a></strong></strong></div>
+                        <div class="latextrigtz">  (Physician, Advocate)</div>
+                      </div>
+                      <!--toprighttext-->
+                      <div class="toprighttext">
+                        <div class="topiptextl"><a href="#">101 Answers</a></div>
+                      </div>
+                      <!--toprighttext-->
+                    </div>
+                    <!--topr-->
+                    <div class="cb"></div>
+                  </div>
+                  <!--topbox-->
+                  <div class="topbox">
+                    <div class="topleftimg"><img alt="topanser" src="/public/images/topanswer2.jpg"/></div>
+                    <div class="topr">
+                      <div class="toprighttext">
+                        <div class="latextleft"><strong><strong><a href="#">Ali</a></strong></strong></div>
+                        <div class="latextrigtz">  (Physician, Advocate)</div>
+                      </div>
+                      <!--toprighttext-->
+                      <div class="toprighttext">
+                        <div class="topiptextl"><a href="#">101 Answers</a></div>
+                      </div>
+                      <!--toprighttext-->
+                    </div>
+                    <!--topr-->
+                    <div class="cb"></div>
+                  </div>
+                  <!--topbox-->
+                  <div class="topbox">
+                    <div class="topleftimg"><img alt="topanser" src="/public/images/topanswer3.jpg"/></div>
+                    <div class="topr">
+                      <div class="toprighttext">
+                        <div class="latextleft"><strong><a href="#">Nasir</a></strong></div>
+                        <div class="latextrigtz">  (Physician, Advocate)</div>
+                      </div>
+                      <!--toprighttext-->
+                      <div class="toprighttext">
+                        <div class="topiptextl"><a href="#">101 Answers</a></div>
+                      </div>
+                      <!--toprighttext-->
+                    </div>
+                    <!--topr-->
+                    <div class="cb"></div>
+                  </div>
+                  <!--topbox-->
+                </div>
+                <!--topipsts-->
+                <div class="cb"></div>
+              </div>
+              <!--comright-->
+              <div class="cb"></div>
+            </div>
+            <!--comcover-->
+            <div class="cb"></div>
+          </div>
+          <div id="signupright"></div>
+    </div>
