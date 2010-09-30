@@ -1,0 +1,77 @@
+#{extends 'main.html' /}
+	<style type="text/css">
+		body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
+		#innermiddlearea { padding-top: 10px }
+		
+		#mask { background-color:#e6e6e6; }
+		
+		.commentsreply { padding-left:50px; }
+	</style>
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			
+		});
+	</script>
+		
+<div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
+  <div id="managtopic">
+  	#{include 'header.html' /}
+    <div id="targetedtherapy">
+          <div id="innerpersonalareaz">
+            <div id="mtcover">
+              <div id="comleft">
+                <div class="comcontent">
+                  <div id="combox">
+                    <div class="comh1"><a href="@{ViewDispatcher.view(talker.userName)}" 
+                    	class="bluetext20">${talker.userName}'s</a> Journal</div>
+                    <div class="comborder" style="width:620px;"></div>
+                  </div>
+                  <!--combox-->
+                  <div class="topipcWraper">
+                 #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) }
+                    <div id="reply" class="comsearchbox">
+                      <div class="comh1" style="font-size:18px"> What are you thinking about?<br /></div>
+                      <div class="comsearch">
+                        <textarea id="replytext" class="edititinputx" style="width:490px" cols="4" rows="3" ></textarea>
+                      </div>
+                      <input type="submit" src="/public/images/postcomments.jpg" value=" " class="postcomments" 
+                      	onclick="return saveProfileComment('');"/>
+                    </div>
+                    <!--comsearchbox-->
+                    <div class="commentsarea">
+						#{if talker?.profileCommentsList?.isEmpty()}
+							<span id="firstcommentmessage" class="blacktext12">
+								${talker.userName} does not have any Comments, be the first to leave a Comment.
+							</span>
+						#{/if}
+						#{profileCommentsTree2 commentsList: talker.profileCommentsList, level: 1 /}
+					</div>
+                    <div class="cb"></div>
+                  </div>
+                  	#{/if}
+					#{else}
+						<span class="blacktext14">This information has been made private.</span>
+					#{/else}
+                  <!--topipcWraper-->
+                  <div class="cb"></div>
+                </div>
+                <!--comcontent-->
+
+                <div class="cb"></div>
+              </div>
+            
+            #{ set currentPage = 'journal' /}
+            #{ include 'right.html' /}
+            
+            <!--mtright-->
+            <div class="cb"></div>
+          </div>
+          <!--mtcover-->
+          <div class="cb"></div>
+
+        </div>
+        <div id="signupright"></div>
+      </div>
+    </div>
+  </div>

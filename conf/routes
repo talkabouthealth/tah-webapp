@@ -36,6 +36,8 @@ GET     /public/                                staticDir:public
 
 GET		/{name}/?								ViewDispatcher.view
 
+GET		/{userName}/journal						PublicProfile.journal
+
 GET		/{userName}/thankyous/{from}			PublicProfile.userBasedActions(action:'thankyous', from)
 GET		/{userName}/following/{from}			PublicProfile.userBasedActions(action:'following', from)
 GET		/{userName}/followers/{from}			PublicProfile.userBasedActions(action:'followers', from)

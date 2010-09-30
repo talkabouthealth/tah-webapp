@@ -63,6 +63,12 @@ public class PublicProfile extends Controller {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param userName
+	 * @param action
+	 * @param from item to start from (used for paging)
+	 */
 	public static void userBasedActions(String userName, String action, int from) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
@@ -72,6 +78,17 @@ public class PublicProfile extends Controller {
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
 		
 		render(talker, currentTalker, action, from);
+	}
+	
+	public static void journal(String userName) {
+		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		notFoundIfNull(talker);
+		
+		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
+		
+		render(talker, currentTalker);
 	}
 	
 	//TODO: load more methods for topics?

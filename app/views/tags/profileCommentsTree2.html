@@ -1,0 +1,63 @@
+#{list items: _commentsList, as: 'comment' }
+<div id="comment${comment.id}" class="${_level == 1 ? 'comments' : 'comreply'}">
+	<div class="commentstop">
+		<div class="${_level == 1 ? 'compic' : 'comreplypic'}">
+			#{if _level == 1}
+				<img src="@{Image.show(comment.fromTalker.userName)}" border="0" width="40px" height="40px" />
+			#{/if}
+			#{else}
+				<img src="@{Image.show(comment.fromTalker.userName)}" border="0" width="31px" height="31px" />
+			#{/else}
+		</div>
+		<div class="${_level == 1 ? 'comtextr' : 'comreplytxt'}">
+			<div class="${_level == 1 ? 'comtext' : 'comreplytext'}">
+				<span class="comname">
+					<a href="@{ViewDispatcher.view(comment.fromTalker.userName)}">${comment.fromTalker.userName}</a>
+				</span>&nbsp;&nbsp;&nbsp;
+				${comment.text}
+			</div>
+			<div class="${_level == 1 ? 'comadd' : 'comreplytext1'}">
+				${comment.time.since()}
+				#{if _level == 1}
+				&nbsp;|&nbsp;<a href="#">Comments</a>
+				#{/if}
+			 </div>
+		</div>
+		<div class="cb"></div>
+	</div>
+	<div class="cb"></div>
+	#{if _level == 1}
+		<div class="commentsreply">
+			#{profileCommentsTree2 commentsList: comment.children, level: (_level+1)/}
+			
+			<div class="replytommentbax">
+				<div class="cb"></div>
+					<div class="editsWraper">
+						<div class="cb"></div>
+							<div class='inline-edit'>
+								<div class="cb"></div>
+									<div id="hidit1" >
+										<div class='display' style="display:block; clear:both; height:30px; 
+										margin-bottom:7px; position:relative;"><a href="" onclick="hidit('1')">
+             <textarea class="edititanputx" rows="3" cols="4"  style="width:470px; height:30px;">Reply to comment</textarea>
+             </a></div>
+
+         </div>
+         <div style="margin-top:3px; margin-bottom:7px;">&nbsp;</div>
+         <div class='form'  id="editit1">
+           <div class="addnewansar" style="text-align:left">Reply to comment</div>
+           <div style="float:left;">
+             <textarea class="edititinputx" style="width:470px" cols="4" rows="3" >&nbsp;</textarea>
+             <input type="submit" class="repcomsubmits" src="/public/images/repcomsubmits.jpg" value=" "  style="float:right;margin-right:2px; margin-top:7px;cursor:pointer"/>
+           </div>
+
+         </div>
+       </div>
+     </div>
+   </div>
+   <!--replytommentbox-->
+		</div>
+	#{/if}
+   <div class="cb"></div>
+</div>
+#{/list}

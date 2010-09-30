@@ -1,0 +1,192 @@
+<div id="comright" style="padding-left:30px;">
+         <div class="topipsts"> <br />
+           <div class="comtopbox">
+             <div class="comrightimg">
+             	<a href="@{ViewDispatcher.view(talker.userName)}">
+					<img src="@{Image.show(talker.userName)}" width="58" height="58" border="0" />
+				</a>
+             </div>
+             <div class="topr">
+               <div class="comrighttext">
+                 <div class="topiptextl">
+                 	<a href="@{ViewDispatcher.view(talker.userName)}">
+						<strong>${talker.userName}</strong>
+					</a>
+                 </div>
+                 #{if talker.connection}
+                 	<div class="topiptext2">${talker.connection}</div>
+                 #{/if}
+                 <div class="topiptext2">${talker.levelOfRecognition}</div>
+               </div>
+               <!--comrighttext-->
+       </div>
+       <!--topr-->
+       <div class="cb"></div>
+     </div>
+
+     <!--comtopbox-->
+     <div class="tpcover">
+       <div class="thanktxt">
+         <div class="thanktxtl">
+           <div class="thanktxtblack">Thank You's:&nbsp;&nbsp;</div>
+           <div class="thanktxtblue">
+           	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.userName, 'thankyous')}">
+				${talker.thankYouList.size()}
+			</a>
+			 </div>
+           </div>
+           <!--thanktxtl-->
+
+         <div class="thanktxtr">
+           <div class="thanktxtblack">Following:&nbsp;&nbsp;</div>
+           <div class="thanktxtblue">
+           	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.userName, 'following')}">
+				${talker.followingList.size()}
+			</a>
+             </div>
+           </div>
+           <!--thanktxtr-->
+         <div class="cb"></div>
+       </div>
+       <!--thanktxt-->
+
+       <div class="thanktxt">
+         <div class="thanktxtl">
+           <div class="thanktxtblack">Top Answers:&nbsp;&nbsp;</div>
+           <div class="thanktxtblue">0</div>
+         </div>
+         <!--thanktxtl-->
+         <div class="thanktxtr">
+           <div class="thanktxtblack">Followers:&nbsp;&nbsp;</div>
+           <div class="thanktxtblue">
+           	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.userName, 'followers')}">
+				${talker.followerList.size()}
+			</a>
+             </div>
+           </div>
+           <!--thanktxtr-->
+         <div class="cb"></div>
+       </div>
+       <!--thanktxt-->
+     </div>
+     <!--tpcover-->
+
+     <div class="mtop"></div>
+     <div class="topicborder"></div>
+   </div>
+   <!--topipsts-->
+   <div class="cb"></div>
+   <div class="topipsts">
+     <div class="mtrighttxt">
+     	<a class="${currentPage.equals('home') ? 'current' : ''}" href="@{Home.index()}">Home</a>
+     </div>
+     <div class="mtrighttxt">
+     	<a class="${currentPage.equals('journal') ? 'current' : ''}" href="@{PublicProfile.journal(talker.userName)}">Journal</a>
+     </div>
+     <div class="mtrighttxt"><a href="#">Conversation Feed</a></div>
+     <div class="mtrighttxt"><a href="#">Open Questions</a></div>
+     <div class="mtrighttxt"><a href="#">Live Conversations</a></div>
+     <div class="mtop"></div>
+     <div class="topicborder"></div>
+     <div class="cb"></div>
+   </div>
+
+   <!--topipsts-->
+         <div class="topipsts">
+           <div class="mtrighttxt1">Tell Us About You</div>
+           <div class="topixtext">
+             <div class="tellustext">Tell us more about you to be notified of<br />
+               relevent conversation just for you.</div>
+             <div class="tellustext1">
+             	<a href="@{Profile.edit()}">Profile Information</a><br />
+				<a href="@{Profile.healthDetails()}">Health Information</a><br />
+				<a href="@{Profile.notifications()}">Notification Settings</a>
+             </div>
+           </div>
+           <!--topixtext-->
+     <div class="mtop"></div>
+     <div class="topicborder"></div>
+   </div>
+
+   <!--topipsts-->
+   <!--topipsts-->
+   <div class="topipsts">
+     <div class="mtrighttxt1">Share TalkAboutHealth</div>
+     <div class="topixtext"> Invite friends to join Community </div>
+     <!--topixtext-->
+     <div class="membersarea">
+
+       <div class="sharicons"><img src="/public/images/emailicon.jpg" alt="Emails" class="rpad" /> <a href="#">Email</a> </div>
+       <div class="sharicons"><img src="/public/images/twittericon.jpg" alt="Twitter" class="rpad" /><a href="#">Twitter</a></div>
+       <div class="sharicons"><img src="/public/images/facebookicon.jpg" alt="Members" class="rpad" /><a href="#">Facebook</a></div>
+     </div>
+     <!--membersarea-->
+     <div class="topicborder"></div>
+
+   </div>
+   <!--topipsts-->
+   <div class="topipsts">
+     <div class="mtrighttxt1">Trending Topics &amp; People</div>
+     <div class="topbox1">
+       <div class="topleftimg"><img src="/public/images/topanswer1.jpg" alt="topanser" /></div>
+       <div class="topr">
+
+         <div class="trendingtext">
+           <div class="topictxtnew"><a href="#">Murray</a> <span class="styles1">asked the Question</span> <span class="vieztext1"><a href="#">What are some things you
+             wish people had said or ...</a></span></div>
+         </div>
+         <!--trendingtext-->
+         <div class="follow">
+           <input type="submit" class="followers" value=" " />
+
+         </div>
+       </div>
+       <!--topr-->
+       <div class="cb"></div>
+     </div>
+     <!--topbox-->
+     <div class="topbox1">
+       <div class="topleftimg"><img src="/public/images/topanswer1.jpg" alt="topanser" /></div>
+       <div class="topr">
+
+         <div class="trendingtext">
+           <div class="topictxtnew"><a href="#">Situ</a> <span class="style2 styles1">asked the Question</span> <span class="vieztext1"><a href="#">What are some things you
+             wish people had said or ...</a></span></div>
+         </div>
+         <!--trendingtext-->
+         <div class="follow">
+           <input type="submit" class="followers" value=" " />
+
+         </div>
+       </div>
+       <!--topr-->
+       <div class="cb"></div>
+     </div>
+     <!--topbox-->
+     <div class="topbox1">
+       <div class="topleftimg"><img src="/public/images/topanswer1.jpg" alt="topanser" /></div>
+       <div class="topr">
+
+         <div class="trendingtext">
+           <div class="topictxtnew"><a href="#">Maria</a> <span class="styles1">asked the Question</span><span class="vieztext1"><a href="#">What are some things you
+             wish people had said or ...</a></span></div>
+         </div>
+         <!--trendingtext-->
+         <div class="follow">
+           <input type="submit" class="followers" value=" " />
+         </div>
+
+       </div>
+       <!--topr-->
+       <div class="cb"></div>
+     </div>
+     <!--topbox-->
+   </div>
+   <!--topipsts-->
+   <div class="mtop"></div>
+   <br />
+
+   <div class="cb"></div>
+   <br />
+   <div class="cb"></div>
+ </div>
