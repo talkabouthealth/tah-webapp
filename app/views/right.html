@@ -78,12 +78,17 @@
    <div class="cb"></div>
    <div class="topipsts">
      <div class="mtrighttxt">
-     	<a class="${currentPage.equals('home') ? 'current' : ''}" href="@{Home.index()}">Home</a>
+     	<a class="${currentPage.equals('home') ? 'current' : ''}" 
+     		href="@{Home.index()}">Home</a>
      </div>
      <div class="mtrighttxt">
-     	<a class="${currentPage.equals('journal') ? 'current' : ''}" href="@{PublicProfile.journal(talker.userName)}">Journal</a>
+     	<a class="${currentPage.equals('journal') ? 'current' : ''}" 
+     		href="@{PublicProfile.journal(talker.userName)}">Journal</a>
      </div>
-     <div class="mtrighttxt"><a href="#">Conversation Feed</a></div>
+     <div class="mtrighttxt">
+     	<a class="${currentPage.equals('convoFeed') ? 'current' : ''}" 
+     		href="@{Home.conversationFeed()}">Conversation Feed</a>
+     </div>
      <div class="mtrighttxt"><a href="#">Open Questions</a></div>
      <div class="mtrighttxt"><a href="#">Live Conversations</a></div>
      <div class="mtop"></div>

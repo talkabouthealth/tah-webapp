@@ -1,0 +1,124 @@
+#{extends 'main.html' /}
+	<style type="text/css">
+		body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
+		
+		#innermiddlearea { padding-top: 10px }
+		
+		#mask { background-color:#e6e6e6; }
+	</style>
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$(".followTopicLink").live('click', function() {
+				var topicId = $(this).attr("rel");
+				if ($(this).html().indexOf("Unfollow") != -1) {
+					$(this).html("Follow");
+				}
+				else {
+					$(this).html("Unfollow");
+				}
+				$.post("@{Conversations.follow()}", 
+	  				{ topicId: topicId},
+	  				function(data) {
+	  					//...
+	  				}
+	  			);
+	  			return false;
+			});
+
+		});
+	</script>
+		
+<div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
+  <div id="managtopic">
+  	#{include 'header.html' /}
+        <div id="targetedtherapy">
+
+          <div id="innermiddlearea">
+            <div id="mtcover">
+              <div id="mtleft">
+                <div class="mtcontent">
+                  <div id="targetedtheradpy">
+                    <div class="youactivity">
+                      <div class="ycf1"><a href="#">Your Conversation Feed</a></div>
+                      <div class="ccf"><a href="#">Community Conversation Feed</a></div>
+
+                    </div>
+                    <!--youactivity-->
+                    <div class="yaline"></div>
+                  </div>
+                  <!--targetedtherapy-->
+                  <div class="topipcWraper">
+                    <!--startsearchbox-->
+                    <div class="topic">
+                      <div class="newpage1">Your Conversation Feed</div>
+
+                      <div class="cb"></div>
+                      <div class="joinborder"></div>
+                      <!--mtinputbox-->
+                      <div class="cb"></div>
+                      <div class="topic">
+                        #{list items: convoFeed, as: 'activity'}
+							<div class="joinbox">
+								<div class="joinpic">
+									<a href="@{ViewDispatcher.view(activity.talker.userName)}">
+										<img src="@{Image.show(activity.talker.userName)}" width="48" height="48" border="0" />
+									</a>
+								</div>
+								<div class="jointxtbox">
+									#{if activity.convo}
+										<div class="jointextstop">
+											<a href="${activity.convo.mainURL}">${activity.convo.topic}</a>
+										</div>
+										<div class="joinztextlink">
+											<span>3 members speaking</span> | 
+											<a href="#" class="followTopicLink" rel="${activity.convo.id}">
+												${talker.followingConvosList?.contains(activity.convo.id) ? 'Unfollow' : 'Follow'}
+											</a> | 
+											<a href="#">Flag</a> | 
+											<span>Started ${activity.convo.creationDate.since()}</span>
+										</div>
+									#{/if}
+									<div class="jointxtlink1">
+										${activity.toHTML().raw()}
+									</div>
+									<div class="jointxtlink2"></div>
+								</div>
+								<div class="cb"></div>
+								<div class="joinborder"></div>
+							</div>
+						#{/list}
+                        <div class="replytommentbox" style="display: none;">
+                          <input type="submit" src="images/seemore.jpg" value=" " class="seemorecom" />
+                        </div>
+                        <div class="cb"></div>
+                      </div>
+                      <!--newpageCover-->
+                      <div class="cb"></div>
+                    </div>
+                    <!--topic-->
+                    <div class="cb"></div>
+                  </div>
+                  <!--topipcWraper-->
+
+                  <div class="cb"></div>
+                </div>
+                <!--mtcontent-->
+                <div class="cb"></div>
+              </div>
+              <!--mtleft-->
+            
+            #{ set currentPage = 'convoFeed' /}
+            #{ include 'right.html' /}
+            
+            <!--mtright-->
+            <div class="cb"></div>
+          </div>
+          <!--mtcover-->
+          <div class="cb"></div>
+
+        </div>
+        <div id="signupright"></div>
+      </div>
+    </div>
+  </div>

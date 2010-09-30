@@ -24,6 +24,7 @@ GET		/explore/members						Community.browseMembers(action:'active')
 GET		/explore/topics							Topics.browseTopics
 
 GET		/home/?									Home.index
+GET		/conversationfeed/?						Home.conversationFeed
 GET		/dashboard/?							Dashboard.index
 
 GET		/talk/{convoId}							Talk.talkApp

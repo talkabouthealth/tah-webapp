@@ -89,7 +89,7 @@
 	                  <ul>
 	                    <li><a href="@{ViewDispatcher.view(currentUser)}">Public Profile</a></li>
 	                    <li><a href="@{PublicProfile.journal(currentUser)}">Journal</a></li>
-	                    <li><a href="#">Conversation Feed</a></li>
+	                    <li><a href="@{Home.conversationFeed()}">Conversation Feed</a></li>
 	                    <li class="gap"><a href="@{PublicProfile.userBasedActions(currentUser, 'thankyous')}">Thank You's</a></li>
 	                    <li><a href="@{PublicProfile.userBasedActions(currentUser, 'following')}">Members Following</a></li>
 	                    <li><a href="@{PublicProfile.userBasedActions(currentUser, 'followers')}">Followers</a></li>

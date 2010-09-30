@@ -93,6 +93,34 @@ public class Home extends Controller {
 		render("@newhome", talker, mapTalkmiTopics, newTopic, convoFeed, showIMPopup);
     }
     
+    public static void conversationFeed() {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+		
+		Set<Action> convoFeedActions = ActionDAO.loadConvoFeed(talker);
+		
+//		if (convoFeedActions.size() < 40) {
+//			List<Action> communityConvoFeed = ActionDAO.loadCommunityConvoFeed();
+//			convoFeedActions.addAll(communityConvoFeed);
+//		}
+	
+		//TODO: better truncate to 40?
+		Set<Action> convoFeed = new LinkedHashSet<Action>();
+		if (convoFeedActions.size() > 20) {
+			for (Action action : convoFeedActions) {
+				convoFeed.add(action);
+				if (convoFeed.size() > 20) {
+					break;
+				}
+			}
+		}
+		else {
+			convoFeed = convoFeedActions;
+		}
+		
+		render(talker, convoFeed);
+    }
+    
     /* ---------------- Invitations ----------------- */
     public static void invitations() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
