@@ -47,16 +47,19 @@ public class Topics extends Controller {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	TopicBean topic = new TopicBean(topicId);
     	
+    	String nextAction = null;
     	if (talker.getFollowingTopicsList().contains(topic)) {
     		//unfollow action
     		talker.getFollowingTopicsList().remove(topic);
+    		nextAction = "follow";
     	}
     	else {
     		talker.getFollowingTopicsList().add(topic);
+    		nextAction = "unfollow";
     	}
     	
     	CommonUtil.updateTalker(talker, session);
-    	renderText("Ok!");
+    	renderText(nextAction);
     }
     
     public static void manage(String name) {
@@ -79,10 +82,13 @@ public class Topics extends Controller {
     }
     
     public static void updateField(String topicId, String name, String value) {
-    	//TODO: list of allowed fields?
     	//TODO: hide edits from not-logined users
     	
-//    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	if (talker == null) {
+    		forbidden();
+    		return;
+    	}
     	TopicBean topic = TopicDAO.getById(topicId);
     	notFoundIfNull(topic);
     	
@@ -105,6 +111,10 @@ public class Topics extends Controller {
     			topic.setMainURL(newURL);
     		}
     		topic.getOldNames().add(currentName);
+    		TopicDAO.updateTopic(topic);
+    	}
+    	else if (name.equalsIgnoreCase("summary")) {
+    		topic.setSummary(value);
     		TopicDAO.updateTopic(topic);
     	}
     }

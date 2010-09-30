@@ -1,4 +1,13 @@
 #{extends 'main.html' /}
+	<style type="text/css">
+		body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
+		
+		#innermiddlearea { padding-top: 10px }
+		.seeall { padding-top: 20px }
+		
+		#mask { background-color:#e6e6e6; }
+	</style>
+	
 	<script type="text/javascript">
 		var username = "${talker.userName}";
 		var levelOfRecognition = "${talker.levelOfRecognition}";
@@ -156,14 +165,6 @@
 		}
 	</script>
 		
-	<style type="text/css">
-		body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
-		
-		#innermiddlearea { padding-top: 10px }
-		.seeall { padding-top: 20px }
-		
-		#mask { background-color:#e6e6e6; }
-	</style>
 <div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
   <div id="managtopic">
   	#{include 'header.html' /}

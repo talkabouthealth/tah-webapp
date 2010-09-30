@@ -99,6 +99,7 @@ public class TopicBean implements Comparable<TopicBean> {
 		setId(getString(topicDBObject, "_id"));
 		
 		setTitle((String)topicDBObject.get("title"));
+		setSummary((String)topicDBObject.get("summary"));
 		setAliases(getStringSet(topicDBObject, "aliases"));
 		setDeleted(getBoolean(topicDBObject, "deleted"));
 		

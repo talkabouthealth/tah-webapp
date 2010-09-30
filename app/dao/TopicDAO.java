@@ -52,6 +52,8 @@ public class TopicDAO {
 			.add("old_names", setToDB(topic.getOldNames()))
 			.add("aliases", topic.getAliases())
 			
+			.add("summary", topic.getSummary())
+			
 			.add("children", topic.childrenToList())
 			.add("deleted", topic.isDeleted())
 			.get();
