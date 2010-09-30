@@ -281,7 +281,7 @@ public class ConversationDAO {
 	 * No one joined for conversation
 	 * @return
 	 */
-	public static List<ConversationBean> getOpenedConversations() {
+	public static List<ConversationBean> getOpenQuestions() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
 		DBObject query = BasicDBObjectBuilder.start()

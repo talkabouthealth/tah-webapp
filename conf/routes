@@ -25,6 +25,7 @@ GET		/explore/topics							Topics.browseTopics
 
 GET		/home/?									Home.index
 GET		/conversationfeed/?						Home.conversationFeed
+GET		/openquestions/?						Home.openQuestions
 GET		/dashboard/?							Dashboard.index
 
 GET		/talk/{convoId}							Talk.talkApp

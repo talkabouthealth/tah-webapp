@@ -121,6 +121,14 @@ public class Home extends Controller {
 		render(talker, convoFeed);
     }
     
+    public static void openQuestions() {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+		
+		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions();
+		render(talker, openQuestions);
+    }
+    
     /* ---------------- Invitations ----------------- */
     public static void invitations() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);

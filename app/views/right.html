@@ -89,7 +89,10 @@
      	<a class="${currentPage.equals('convoFeed') ? 'current' : ''}" 
      		href="@{Home.conversationFeed()}">Conversation Feed</a>
      </div>
-     <div class="mtrighttxt"><a href="#">Open Questions</a></div>
+     <div class="mtrighttxt">
+     	<a class="${currentPage.equals('openQuestions') ? 'current' : ''}" 
+     		href="@{Home.openQuestions()}">Open Questions</a>
+     </div>
      <div class="mtrighttxt"><a href="#">Live Conversations</a></div>
      <div class="mtop"></div>
      <div class="topicborder"></div>

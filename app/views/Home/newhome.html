@@ -33,8 +33,9 @@
 			});
 
 			var showIMPopup = ${showIMPopup};
+			//showIMPopup = true;
 			if (showIMPopup) {
-				var id = "#dialog1";
+				var id = "#imDialog";
 				showPopup(id);
 			}
 
@@ -134,35 +135,6 @@
 				showPopup("#startDialog");
 			});
 		});
-
-		function showPopup(id) {
-			//Get the screen height and width
-			var maskHeight = $(document).height();
-			var maskWidth = $(window).width();
-		
-			//Set heigth and width to mask to fill up the whole screen
-			$('#mask').css({'width':maskWidth,'height':maskHeight});
-			
-			//transition effect		
-			$('#mask').fadeIn(500);	
-			$('#mask').fadeTo("slow",0.6);	
-		
-			//Get the window height and width
-			var winH = $(window).height();
-			var winW = $(window).width();
-	              
-			//Set the popup window to center
-			$(id).css('top',  winH/3-$(id).height()/2);
-			$(id).css('left', winW/2-$(id).width()/2);
-		
-			//transition effect
-			$(id).fadeIn(200); 
-		}
-
-		function hideAll() {
-			$('#mask').hide();
-			$('.window').hide();
-		}
 	</script>
 		
 <div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
@@ -405,7 +377,64 @@
     <!--boxtopcenter-->
   </div>
   <!-- End of Login Dialog -->
+  
+  <div id="imDialog" class="window">
+	<div id="innermiddlearea">
+		<div class="popboxWraper">
+			<div class="popbox">
+				<div class="closecover">
+            		<div class="close">
+            			<img src="/public/images/close.jpg" alt="Close" onmouseover="this.style.cursor='pointer'"/>
+            		</div>
+            	</div>
+				<div class="tah">
+					<img src="/public/images/talkabouthealth.jpg" alt="TalkAboutHealth" 
+						onmouseover="this.style.cursor='pointer'"/>
+				</div>
+            	<div class="imheading">Please provide your Instant Message or Twitter account.</div>
+            	<div class="opheading">(This is optional. TalkAboutHealth notifies you of conversations and questions
+ 					relevant to you via instant message or Twitter.)</div>
+ 				<div class="selheading">Select a Service:</div>
+ 		
+ 		#{list items: models.IMAccountBean.IM_SERVICES_MAP.keySet(), as:'imService'}
+		    <div class="poptxtCover">
+	        	<div class="popradio">
+	        		<input name="imService" value="${imService}" 
+	        			#{if "GoogleTalk".equals(imService) } checked="true" #{/if}
+	        			type="radio" />
+	        	</div>
+	        	<div class="poptext">${models.IMAccountBean.IM_SERVICES_MAP.get(imService)}</div>
+	        </div>
+		#{/list}
+		<div class="poptxtCover">
+        	<div class="popradio">
+        		<input name="imService" value="Twitter" type="radio" />
+        	</div>
+        	<div class="poptext">Twitter</div>
+        </div>
+        
+        <div class="popuser">
+        <div class="popusertxzt">Username:</div>
+        <div class="popuserinput"><input id="imUserName" type="text" class="popinput" /></div>
+        </div><!--popuser-->
+        <div class="popusertxt1">Just the username (i.e. janesmith), no need for the @gmail.com or @yahoo.com  </div><!--popusertxt1-->
+        <div class="popsubmitcover">
+        <div class="popsubmitbox">
+        	<input type="submit" id="saveIMBtn" src="/public/images/popsubmit.jpg" value=" " class="popsubmit" 
+        		onmouseover="this.style.cursor='pointer'"/>
+        </div>
+        <div class="popnothanks" ><a id="noPopupLink" href="#">No thanks</a></div>
+        </div><!--popsubmitcover-->
+            <div class="cb"></div>
+            </div>
+            <!--popbox-->
+            </div><!--popboxWraper-->
+           
+            <div class="cb"></div>
+          </div>
+	</div>
+  
+  
   <!-- Mask to cover the whole screen -->
-
   <div id="mask"></div>
 </div>
