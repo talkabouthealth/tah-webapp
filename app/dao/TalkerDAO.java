@@ -153,6 +153,10 @@ public class TalkerDAO {
 		return getByField("_id", new ObjectId(talkerId));
 	}
 	
+	public static TalkerBean getByOriginalUsername(String userName) {
+		return getByField("orig_uname", userName);
+	}
+	
 	public static TalkerBean getByEmail(String email) {
 		TalkerBean talker = getByField("email", email);
 		
@@ -232,9 +236,13 @@ public class TalkerDAO {
 			.add("emails.value", usernameOrEmail)
 			.add("pass", password)
 			.get();
+		DBObject deactivatedUsernameQuery = BasicDBObjectBuilder.start()
+			.add("orig_uname", usernameOrEmail)
+			.add("pass", password)
+			.get();
 		
 		DBObject query = new BasicDBObject("$or", 
-				Arrays.asList(usernameQuery, emailQuery, notPrimaryEmailQuery)
+				Arrays.asList(usernameQuery, emailQuery, notPrimaryEmailQuery, deactivatedUsernameQuery)
 			);
 		
 		DBObject talkerDBObject = talkersColl.findOne(query);

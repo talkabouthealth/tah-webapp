@@ -39,6 +39,11 @@ public class Security extends Secure.Security {
     	
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
+    	if (talker == null) {
+    		//user signed with old (original, before deactivation) username 
+    		talker = TalkerDAO.getByOriginalUsername(connectedUser);
+    	}
+    	
     	if (talker.isSuspended()) {
     		session.clear();
             response.setCookie("rememberme", "", 0);
