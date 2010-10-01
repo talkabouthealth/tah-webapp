@@ -14,18 +14,19 @@
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$(".followTopicLink").live('click', function() {
+			$(".followTopicLink, .unfollowTopicLink").live('click', function() {
 				var topicId = $(this).attr("rel");
-				if ($(this).html().indexOf("Unfollow") != -1) {
-					$(this).html("Follow");
-				}
-				else {
-					$(this).html("Unfollow");
-				}
-				$.post("@{Conversations.follow()}", 
+				$.post("@{Topics.follow()}", 
 	  				{ topicId: topicId},
-	  				function(data) {
-	  					//...
+	  				function(nextAction) {
+	  					if (nextAction === "follow") {
+		  					$("#topicUnfollowDiv"+topicId).hide();
+		  					$("#topicFollowDiv"+topicId).show();
+	  					}
+	  					else {
+	  						$("#topicUnfollowDiv"+topicId).show();
+		  					$("#topicFollowDiv"+topicId).hide();
+	  					}
 	  				}
 	  			);
 	  			return false;
@@ -71,56 +72,81 @@
           <div id="innermiddlearea">
             <div id="mtcover">
               <div id="mtleft">
-  		
-<h3>Following ${talker.followingTopicsList?.size()} Topic(s):</h3><br/>
-<div style="font-size: 14px">
+              
+              <div class="profileCatant">
+                  <div class="topicfolth1">
+                  	<a href="@{ViewDispatcher.view(talker.userName)}" 
+                    	class="bluetext20">${talker.userName}'s</a> Topics Following
+                  </div>
+                  <div class="topicborder"></div>
+                  <div class="topicborder"></div>
+                  
 #{list items: talker.followingTopicsList, as: 'topic'}
-	<div style="margin-bottom: 15px; padding-top: 10px; clear: both;">
-		<a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a><br/>
-		#{set talkerTopicInfo = talker.topicsInfoMap.get(topic) /}
-		#{if talkerTopicInfo?.numOfAnswers != 0}
-			${talkerTopicInfo?.numOfAnswers} answer(s)<br/>
-		#{/if}
-		<br/>
-		<div class='inline-edit' id="experienceEdit${topic.id}">
-			<div class="suggestxt inline_display">
-				<div class="inline_full" style="display: ${talkerTopicInfo.experience ? 'block' : 'none'}">
-					<p class="inline_view" style="float:left; padding-top:10px;">${talkerTopicInfo.experience}</p>
-					<div class="editdiv">
-						<div class="editit" style="padding-top:10px;">
-							<a href="#" class="inline_editlink">Edit</a>
+	#{set talkerTopicInfo = talker.topicsInfoMap.get(topic) /}
+	
+	<div class="topicfoltxtCover">
+		<div class="topicfoltxt1">
+			<a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a> - 
+			<span class="topicfoltxtsub">
+				<a href="#">
+					#{if talkerTopicInfo?.numOfAnswers != 0}
+						${talkerTopicInfo?.numOfAnswers} answer(s)
+					#{/if}
+				</a> | 
+				Endorsements: ${talkerTopicInfo.endorsements.size()}
+				#{ifnot session.username.equals(talker.userName)}
+					<a href="#" onclick="return endorse('${topic.id}');">Endorse</a>
+				#{/ifnot}
+			</span>
+		</div>
+		<div class="topicfoltxt2">
+			#{set isFollowingTopic = currentTalker.getFollowingTopicsList().contains(topic) /}
+			<div id="topicUnfollowDiv${topic.id}" style="display : ${ isFollowingTopic ? 'block' : 'none' }">
+				<img class="topicfolright" alt="right" src="/public/images/right.jpg"/>
+				<div class="topicfoltxtsub1">Following</div>
+				<input type="submit" rel="${topic.id}" value=" " 
+					class="unfollowz unfollowTopicLink" src="/public/images/unfollowz.jpg"/>
+			</div>
+			<div id="topicFollowDiv${topic.id}" style="display : ${ !isFollowingTopic ? 'block' : 'none' }">
+				<input type="submit" rel="${topic.id}" value=" " 
+					class="topiczfollow followTopicLink" src="/public/images/ppfollow.jpg" />
+			</div>
+		</div>
+		
+		<div style="border: 1px solid white; clear: both;">
+			<div class='inline-edit' id="experienceEdit${topic.id}">
+				<div class="suggestxt inline_display">
+					<div class="inline_full" style="display: ${talkerTopicInfo.experience ? 'block' : 'none'}">
+						<div class="topicfoltxt4 inline_view" style="clear: none; float: left;">${talkerTopicInfo.experience}</div>
+						<div class="editdiv">
+							<div class="editit" >
+								<a href="#" class="inline_editlink">Edit</a>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="inline_empty" style="display: ${!talkerTopicInfo.experience? 'block' : 'none'}">
-					<div class="targetenew">
-						<a class="inline_addlink" href="#">Add your experience</a>
+					<div class="inline_empty topicfoltxt3" style="display: ${!talkerTopicInfo.experience? 'block' : 'none'}">
+						<a class="inline_addlink" href="#">Describe your ${topic.title} expertise</a>
 					</div>
-				</div>
-            </div>
-			<div class='inline_form'>
-				<div style="padding-top:10px;">
-			        <textarea class="edititinputx inline_text" 
-			        	style="width:600px">${talkerTopicInfo.experience}</textarea>
-		        </div>
-				<div style="float:right;margin-right:30px;">
-					<input type="submit" class="updatebtns inline_save" value=" " />
-					<div class="canclebtnz">
-						<a class="cancel" href="#">Cancel</a>
-					</div>
+	            </div>
+				<div class='inline_form'>
+					<div style="float: left;">
+                       <textarea rows="3" cols="4" class="topfoltxtarea inline_text">${talkerTopicInfo.experience}</textarea>
+                       <br/>
+                       <div class="topiccanlcel">
+                         <div class="topiccanlceltxt"> <a class="cancel" href="#">Cancel </a></div>
+                         <input type="submit" value=" " class="topicupdate inline_save" src="/public/images/topicupdate.jpg"/>
+                       </div>
+                     </div>
 				</div>
 			</div>
 		</div>
-		<div style="clear: both;">
-			Endorsements: ${talkerTopicInfo.endorsements.size()}
-			#{ifnot session.username.equals(talker.userName)}
-				<a href="#" onclick="return endorse('${topic.id}');">Endorse</a>
-			#{/ifnot}
-		</div>
+		<div class="cb"></div>
 	</div>
-#{/list}
-</div>
-        
+#{/list}            
+
+				<input type="submit" style="margin-top: 10px; display: none;" class="seemorecom" value=" " src="images/seemore.jpg"/>
+			</div>     
+
             </div>
             <!--mtleft-->
             
