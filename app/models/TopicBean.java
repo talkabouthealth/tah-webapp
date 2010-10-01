@@ -179,6 +179,20 @@ public class TopicBean implements Comparable<TopicBean> {
 		return null;
 	}
 	
+	//titles of children for display
+	public String getChildrenInfo() {
+		StringBuilder sb = new StringBuilder();
+		if (!children.isEmpty()) {
+			for (TopicBean child : children) {
+				sb.append(child.getTitle()+", ");
+			}
+			//delete last comma and space
+			sb.delete(sb.length()-2, sb.length());
+		}
+		
+		return sb.toString();
+	}
+	
 	
 	
 	public String getId() {
