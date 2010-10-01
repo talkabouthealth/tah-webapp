@@ -49,14 +49,14 @@
 				var topicId = dataType.substring(14);
 				
 				//post to save experience
-				$.post("@{Actions.updateTopicExperience()}", 
+				$.post("@{Topics.updateTopicExperience()}", 
 					{ topicId: topicId, newValue: newValue }
 				);
 			}
 		}
 
 		function endorse(topicId) {
-			$.post("@{Actions.endorse()}", 
+			$.post("@{Topics.endorse()}", 
 				{ topicId: topicId, toTalker: '${talker.id}' },
 				function() {
 	  					//good save!!
@@ -95,7 +95,7 @@
 				</a> | 
 				Endorsements: ${talkerTopicInfo.endorsements.size()}
 				#{ifnot session.username.equals(talker.userName)}
-					<a href="#" onclick="return endorse('${topic.id}');">Endorse</a>
+					&nbsp;|&nbsp;<a href="#" onclick="return endorse('${topic.id}');">Endorse</a>
 				#{/ifnot}
 			</span>
 		</div>
@@ -118,14 +118,18 @@
 				<div class="suggestxt inline_display">
 					<div class="inline_full" style="display: ${talkerTopicInfo.experience ? 'block' : 'none'}">
 						<div class="topicfoltxt4 inline_view" style="clear: none; float: left;">${talkerTopicInfo.experience}</div>
-						<div class="editdiv">
-							<div class="editit" >
-								<a href="#" class="inline_editlink">Edit</a>
+						#{if session.username.equals(talker.userName)}
+							<div class="editdiv">
+								<div class="editit" >
+									<a href="#" class="inline_editlink">Edit</a>
+								</div>
 							</div>
-						</div>
+						#{/if}
 					</div>
 					<div class="inline_empty topicfoltxt3" style="display: ${!talkerTopicInfo.experience? 'block' : 'none'}">
-						<a class="inline_addlink" href="#">Describe your ${topic.title} expertise</a>
+						#{if session.username.equals(talker.userName)}
+							<a class="inline_addlink" href="#">Describe your ${topic.title} expertise</a>
+						#{/if}
 					</div>
 	            </div>
 				<div class='inline_form'>

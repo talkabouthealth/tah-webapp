@@ -15,6 +15,7 @@ import logic.TopicLogic;
 import models.CommentBean;
 import models.TalkerBean;
 import models.ConversationBean;
+import models.TalkerTopicInfo;
 import models.URLName;
 import models.TalkerBean.EmailSetting;
 import models.TopicBean;
@@ -212,6 +213,49 @@ public class Topics extends Controller {
 			newChild.setChildren(buildTree(newChild, topicsMap));
 		}
 		return newChildren;
+	}
+	
+	
+	public static void updateTopicExperience(String topicId, String newValue) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		TopicBean topic = TopicDAO.getById(topicId);
+		
+		if (topic == null) {
+			notFound();
+			return;
+		}
+		
+		TalkerTopicInfo talkerTopicInfo = talker.getTopicsInfoMap().get(topic);
+		if (talkerTopicInfo == null) {
+			talkerTopicInfo = new TalkerTopicInfo();
+			talker.getTopicsInfoMap().put(topic, talkerTopicInfo);
+		}
+		talkerTopicInfo.setExperience(newValue);
+		TalkerDAO.updateTalker(talker);
+	}
+	
+	public static void endorse(String topicId, String toTalker) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		TalkerBean toTalkerBean = TalkerDAO.getById(toTalker);
+		TopicBean topic = TopicDAO.getById(topicId);
+		
+		if (topic == null || toTalkerBean == null) {
+			notFound();
+			return;
+		}
+		
+		if (talker.equals(toTalkerBean)) {
+			forbidden();
+			return;
+		}
+		
+		TalkerTopicInfo talkerTopicInfo = toTalkerBean.getTopicsInfoMap().get(topic);
+		if (talkerTopicInfo == null) {
+			talkerTopicInfo = new TalkerTopicInfo();
+			toTalkerBean.getTopicsInfoMap().put(topic, talkerTopicInfo);
+		}
+		talkerTopicInfo.getEndorsements().add(talker);
+		TalkerDAO.updateTalker(toTalkerBean);
 	}
     
 }
