@@ -1,0 +1,311 @@
+#{extends 'main.html' /}
+	<style type="text/css">
+		body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
+		
+		#innermiddlearea { padding-top: 10px }
+		.seeall { padding-top: 20px }
+		
+		#mask { background-color:#e6e6e6; }
+	</style>
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			//if close button is clicked
+			$('.window .close, .window .cancelLink').click(function (e) {
+				//Cancel the link behavior
+				e.preventDefault();
+				hideAll();
+			});		
+		});
+	</script>
+		
+<div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
+  <div id="managtopic">
+  	#{include 'header.html' /}
+		<div id="targetedtherapy">
+          <div id="innermiddlearea">
+            <div id="mtcover">
+              <div id="mtleft">
+
+
+			  <div class="profileCatant">
+                  <div class="mtcontent">
+                    <div class="pph1Cover">
+                      <div class="pph1">
+                      		${talker.userName} 
+                      		#{if talker.connection}
+								(${talker.connection}
+								#{if models.TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.connection)}
+									#{if talker.connectionVerified }
+										<span class="blacktext12">(Verified)</span>,
+									#{/if}
+									#{else}
+										<span class="red12">(Not Verified)</span>,
+									#{/else}
+								#{/if}
+								${talker.levelOfRecognition})
+							#{/if}
+							#{else}
+								(${talker.levelOfRecognition})
+							#{/else}
+							#{ifnot talker.userName.equals(currentTalker.userName) }
+								<a id="followActionImagelink" href="#" class="navybluetext12" style="margin-left:15px;">
+									#{if currentTalker.followingList.contains(talker)}
+										Unfollow
+									#{/if}
+									#{else}
+										<img src="/public/images/ppfollow.jpg" width="52" height="19" border="0"/>
+									#{/else}
+								</a>
+							#{/ifnot}
+                      </div>
+                    </div>
+                    <!--pph1Cover-->
+                    <div class="profiletxtCantant">
+                      <div class="profileCantanttxt1"><strong>Community:</strong> Breast Cancer</div>
+                      <div class="profileCantanttxt2">
+                      	<strong>Thank You's:</strong>
+                      	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.userName, 'thankyous')}">
+							${talker.thankYouList.size()}
+						</a>
+					  </div>
+                    </div>
+                    <!--profiletxtCantant-->
+                    <div class="profiletxtCantant">
+                      <div class="profileCantanttxt1"><strong>Member Since:&nbsp;</strong>${talker.regDate.format('MMM. yyyy')}</div>
+                      <div class="profileCantanttxt2"><strong>Top Answers:&nbsp;</strong>0</div>
+                    </div>
+                    <!--profiletxtCantant-->
+                    <div class="profiletxtCantant">
+                      <div class="profileCantanttxt1"><strong>Conversations:&nbsp;</strong>${talker.startedTopicsList?.size()}</div>
+                      <div class="profileCantanttxt2"><strong>Answers:&nbsp;</strong>0</div>
+                    </div>
+                    <!--profiletxtCantant-->
+                    #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.BIO) && talker.bio}
+						<div class="profilebio">Bio</div>
+	                    <div class="topicborder"></div>
+	                    <div class="profilebiotxt">${talker.bio}</div>
+					#{/if}
+					#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.PERSONAL_INFO) }
+							<div class="Profileperson">Personal Info</div>
+		                    <div class="topicborder"></div>
+		                    <div class="profiletxtCantant">
+		                      #{if talker.state && talker.city}
+		                      	<div class="profileCantanttxt1">
+			                      	<strong>Location:</strong> <span class="Profilepersonsub">${talker.state}, ${talker.city}</span>
+			                    </div>
+		                      #{/if}
+		                      <div class="profileCantanttxt2">
+		                      	<strong>No of children:</strong><span class="Profilepersonsub"> ${talker.childrenNum}</span>
+		                      </div>
+		                    </div>
+		                    <!--profiletxtCantant-->
+		                    <div class="profiletxtCantant">
+		                      <div class="profileCantanttxt1">
+		                      	<strong>Age:</strong> <span class="Profilepersonsub">${talker.age}</span>
+		                      </div>
+		                      <div class="profileCantanttxt2">
+		                      	<strong>Ages of children:</strong>
+		                      	<span class="Profilepersonsub"> ${talker.childrenAges?.toCommaString()}</span>
+		                      </div>
+		                    </div>
+		                    <!--profiletxtCantant-->
+		                    <div class="profiletxtCantant">
+		                      <div class="profileCantanttxt1">
+		                      	<strong>Gender:</strong> <span class="Profilepersonsub">${talker.fullGender}</span>
+		                      </div>
+		                      <div class="profileCantanttxt2">
+		                      	<strong>Webpage:</strong><span class="Profilepersonsub"> ${talker.webpage}</span>
+		                      </div>
+		                    </div>
+		                    <!--profiletxtCantant-->
+		                    <div class="profiletxtCantant">
+		                      <div class="profileCantanttxt1">
+		                      	<strong>Marital Status:</strong> <span class="Profilepersonsub">${talker.maritalStatus}</span>
+		                      </div>
+		                      <div class="profileCantanttxt2">
+		                      	<strong>Conversation Topics:</strong>
+		                      	<span class="Profilepersonsub"> ${talker.keywords?.toCommaString()}</span>
+		                      </div>
+		                    </div>
+					#{/if}
+					
+					#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.HEALTH_INFO) && talkerDisease }
+							<div class="ProfileHealth">Health Info</div>
+                    		<div class="topicborder"></div>
+							<div class="profiletext2">
+								<ul>
+									<li class="blacktext12"><b>Disease</b>: <span class="blacktext">${talkerDisease.name}</span></li>
+									#{list items: disease.questions, as: 'question'}
+										#{if talkerDisease.healthInfo?.get(question.name)}
+											<li class="blacktext12" style="height: auto"><b>${question.displayName}</b>: 
+												<span class="blacktext">${talkerDisease.healthInfo.get(question.name)?.toCommaString()}</span>
+											</li>
+										#{/if}
+									#{/list}
+									#{if talkerDisease.symptomDate}
+										<li class="blacktext12"><b>Date of first symptom</b>: 
+											<span class="blacktext">${talkerDisease.symptomDate?.format('MM/dd/yyyy')}</span>
+										</li>
+									#{/if}
+									#{if talkerDisease.diagnoseDate}
+										<li class="blacktext12"><b>Date of diagnosis</b>: 
+											<span class="blacktext">${talkerDisease.diagnoseDate?.format('MM/dd/yyyy')}</span>
+										</li>
+									#{/if}
+									<li class="blacktext12"><b>Recurrent</b>:
+										<span class="blacktext">${talkerDisease.recurrent?.yesno('yes', 'no')}</span>
+									</li>
+									
+									<li class="blacktext12 healthitemtitle" style="padding-top:10px;"><strong>Initial Symptoms</strong></li>
+									<!-- We need span to hide health items titles without children using jQuery -->
+									#{ healthItemsList healthItem: healthItemsMap.symptoms, talkerDisease: talkerDisease /}
+									#{list items: talkerDisease.otherHealthItems?.symptoms, as: 'item' }
+										<li class="blacktext12">${item}</li>
+									#{/list}
+									
+									<li class="blacktext12 healthitemtitle" style="padding-top:10px;"><strong>Tests</strong></li>
+									#{ healthItemsList healthItem:healthItemsMap.tests, talkerDisease: talkerDisease /}
+									#{list items: talkerDisease.otherHealthItems?.tests, as: 'item' }
+										<li class="blacktext12">${item}</li>
+									#{/list}
+								</ul>
+							</div>
+							<div class="profiletext2">
+								<ul>
+									<li class="blacktext12 healthitemtitle"><strong>Procedures/Surgeries</strong></li>
+										#{ healthItemsList healthItem:healthItemsMap["procedures"], talkerDisease: talkerDisease /}
+										#{list items: talkerDisease.otherHealthItems?.procedures, as: 'item' }
+											<li class="blacktext12">${item}</li>
+										#{/list}
+									
+									<li class="blacktext12 healthitemtitle" style="padding-top:10px;">
+										<strong>Medications and Treatments</strong>
+									</li>
+										#{ healthItemsList healthItem:healthItemsMap["treatments"], talkerDisease: talkerDisease /}
+										#{list items: talkerDisease.otherHealthItems?.treatments, as: 'item' }
+											<li class="blacktext12">${item}</li>
+										#{/list}
+									
+									<li class="blacktext12 healthitemtitle" style="padding-top:10px;">
+										<strong>Side effects from medications/treatments</strong>
+									</li>
+										#{ healthItemsList healthItem:healthItemsMap["sideeffects"], talkerDisease: talkerDisease /}
+										#{list items: talkerDisease.otherHealthItems?.sideeffects, as: 'item' }
+											<li class="blacktext12">${item}</li>
+										#{/list}
+								</ul>
+							</div>
+					#{/if}
+                    
+*{                   
+                    <div class="profiletxtCantant">
+                      <div class="profileCantanttxt1"><strong>Disease Type:</strong> <span class="Profilepersonsub">Type 1</span></div>
+                      <div class="profileCantanttxt2"><strong>Disease Syptoms </strong></div>
+                    </div>
+                    <!--profiletxtCantant-->
+                    <div class="profiletxtCantant">
+                      <div class="profileCantanttxt1"><strong>Stage of Disease:</strong> <span class="Profilepersonsub">Stage 1</span></div>
+                      <div class="profileCantanttxt2"><span class="Profilepersonsub1">Discoloration of Moles - Mild</span></div>
+                    </div>
+                    <!--profiletxtCantant-->
+                    <div class="profiletxtCantant">
+                      <div class="profileCantanttxt1"><strong>Date of First Symptom:</strong> <span class="Profilepersonsub">10/23/2007</span></div>
+                      <div class="profileCantanttxt2"><span class="Profilepersonsub1">Vomiting - Mild</span></div>
+                    </div>
+                    <!--profiletxtCantant-->
+                    <div class="profiletxtCantant">
+                      <div class="profileCantanttxt1"><strong>Date of Diagnosis:</strong> <span class="Profilepersonsub">10/23/2008</span></div>
+                      <div class="profileCantanttxt2"><span class="Profilepersonsub1">Vomiting - Mild</span></div>
+                    </div>
+                    <!--profiletxtCantant-->
+                    <div class="profiletxtCantant">
+                      <div class="profileCantanttxt1"><strong>Re Current:</strong> <span class="Profilepersonsub">No</span></div>
+                      <div class="profileCantanttxt2"><span class="Profilepersonsub1">Vomiting - Mild</span></div>
+                    </div>
+                    <!--profiletxtCantant-->
+                    <div class="profiletxtCantant">
+                      <div class="profileCantanttxt1"><strong>Initial Symptoms:</strong></div>
+                      <div class="profileCantanttxt2"><span class="Profilepersonsub1">Vomiting - Mild</span></div>
+                    </div>
+                    <!--profiletxtCantant-->
+                    <div class="profiletxtCantant">
+                      <div class="profileCantanttxt1"><span class="Profilepersonsub1">Lump in brest</span></div>
+                      <div class="profileCantanttxt2"><strong>Medication And Treatments </strong></div>
+                    </div>
+                    <!--profiletxtCantant-->
+                    <div class="profiletxtCantant">
+                      <div class="profileCantanttxt1"><strong>Tests</strong></div>
+                      <div class="profileCantanttxt2"><span class="Profilepersonsub1">Chemotherapy</span></div>
+                    </div>
+                    <!--profiletxtCantant-->
+                    <div class="profiletxtCantant">
+                      <div class="profileCantanttxt1"><span class="Profilepersonsub1">Mammogram</span></div>
+                      <div class="profileCantanttxt2"><span class="Profilepersonsub1">hercetion</span></div>
+                    </div>
+                    <!--profiletxtCantant-->
+                    <div class="profiletxtCantant">
+                      <div class="profileCantanttxt1"><span class="Profilepersonsub1">Brest Biopsy</span></div>
+                      <div class="profileCantanttxt2"><span class="Profilepersonsub1">Side Efects from Medication/Treatments </span></div>
+                    </div>
+                    <!--profiletxtCantant-->
+                    <div class="profiletxtCantant">
+                      <div class="profileCantanttxt1"><strong>Procedures/ Surgeries</strong></div>
+                      <div class="profileCantanttxt2"><span class="Profilepersonsub1"> Depression - Severe</span></div>
+                    </div>
+                    <!--profiletxtCantant-->
+                    <div class="profiletxtCantant">
+                      <div class="profileCantanttxt1"><span class="Profilepersonsub1">Mastectomy</span></div>
+                      <div class="profileCantanttxt2"><span class="Profilepersonsub1"> Vomiting - Severe</span></div>
+                    </div>
+                    <!--profiletxtCantant-->
+                    <div class="profiletxtCantant">
+                      <div class="profileCantanttxt1"><span class="Profilepersonsub1">Lumpectomy</span></div>
+                      <div class="profileCantanttxt2"><strong>Medication/Treatments For Side - Effects</strong></div>
+                    </div>
+                    <!--profiletxtCantant-->
+                    <div class="profiletxtCantant">
+                      <div class="profileCantanttxt1"> </div>
+                      <div class="profileCantanttxt2"><span class="Profilepersonsub1">Aspirin</span></div>
+                    </div>
+ }*
+                    
+                    #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.ACTIVITY_STREAM) 
+							&& talker.activityList}
+						<div class="Profilemurray">${talker.userName} Activites (${talker.activityList.size()})</div>
+	                    <div class="topicborder"></div>
+	                    <div class="profilema">
+	                    	#{list items:talker.activityList.limit(6), as:'activity' }
+	                    	<div class="topic">
+	                      		<div class="profilemah1">${activity.toHTML().raw()}</div>
+	                      		<div class="profilehour">${activity.time.since()}</div>
+	                      	</div>
+	                      	#{/list}
+	                    	<input type="submit" style="display: none;" value=" " src="/public/images/profilemore.jpg" class="profilemore"/>
+                      		<div class="cb"></div>
+                    	</div>
+					#{/if}
+                    <div class="cb"></div>
+                  </div>
+                  <!--profileCatant-->
+                  <div class="cb"></div>
+                </div>
+              
+
+			  </div>
+            	<!--mtleft-->
+            
+            	#{ set currentPage = 'publicProfile' /}
+            	#{ include 'PublicProfile/profileRight.html' /}
+            
+            <!--mtright-->
+            <div class="cb"></div>
+          </div>
+          <!--mtcover-->
+          <div class="cb"></div>
+
+        </div>
+        <div id="signupright"></div>
+      </div>
+    </div>
+   </div>

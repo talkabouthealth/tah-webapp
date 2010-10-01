@@ -16,14 +16,17 @@
                 </div>
                 <!--followpicbox-->
                 <div class="topipsts">
-                  <div class="mtrighttxt"><a href="#">Profile</a></div>
+                  <div class="mtrighttxt">
+			     	<a class="${currentPage.equals('publicProfile') ? 'current' : ''}" 
+			     		href="@{ViewDispatcher.view(talker.userName)}">Profile</a>
+			      </div>
                   <div class="mtrighttxt"><a href="#">Journal</a></div>
                   <div class="mtrighttxt"><a href="#">Answers</a></div>
                   <div class="mtrighttxt"><a href="#">Questions & Talks</a></div>
                   <div class="mtrighttxt">
 			     	<a class="${currentPage.equals('topicsFollowing') ? 'current' : ''}" 
 			     		href="@{PublicProfile.topicsFollowing(talker.userName)}">Topics Following</a>
-			     </div>
+			      </div>
                   <div class="mtrighttxt"><a href="#">Thank You's</a></div>
                   <div class="mtop"></div>
                   <div class="topicborder"></div>
