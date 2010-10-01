@@ -1,0 +1,135 @@
+<div style="padding-left: 30px;" id="mtright"> <br/>
+                <div class="followpicbox">
+                  <div class="followpic">
+                  	<img src="@{Image.show(talker.userName)}" width="81" height="81"/>
+                  </div>
+                  <div class="foloowpictext"> <a href="#">Follow</a><br/>
+                    <a href="#">Comment</a><br/>
+                    <a href="#">Give a Thank You</a><br/>
+                    <a href="#">Private Message</a><br/>
+                  </div>
+                  <!--foloowpictext-->
+                  <div class="mtop"></div>
+                  <div class="topicborder"></div>
+                  <br/>
+                  <div class="cb"></div>
+                </div>
+                <!--followpicbox-->
+                <div class="topipsts">
+                  <div class="mtrighttxt"><a href="#">Profile</a></div>
+                  <div class="mtrighttxt"><a href="#">Journal</a></div>
+                  <div class="mtrighttxt"><a href="#">Answers</a></div>
+                  <div class="mtrighttxt"><a href="#">Questions & Talks</a></div>
+                  <div class="mtrighttxt">
+			     	<a class="${currentPage.equals('topicsFollowing') ? 'current' : ''}" 
+			     		href="@{PublicProfile.topicsFollowing(talker.userName)}">Topics Following</a>
+			     </div>
+                  <div class="mtrighttxt"><a href="#">Thank You's</a></div>
+                  <div class="mtop"></div>
+                  <div class="topicborder"></div>
+                  <div class="cb"></div>
+                </div>
+                <!--topipsts-->
+                #{if talker.userName.equals(currentTalker.userName) }
+	                <div class="profilecompletion">
+	                  <div class="profilecompletionh1">Profile Completion</div>
+	                  <!-- 
+	                  <div class="completion" >
+	                    <div class="completiotxt">${talker.profileCompletionValue} %</div>
+	                  </div>
+	                   -->
+	                  <style type="text/css">
+						#profilebar {
+							width: 200px;
+							height: 20px;
+							border: 1px solid #CCCCCC;
+						}
+						#profileprogress {
+							background-color: #0386bc;
+							padding-left: 5px;
+							line-height: 20px;
+							width: ${2*talker.profileCompletionValue}px;
+							height: 100%;
+						}
+					</style>
+					<div id="profilebar">
+						<div id="profileprogress">
+							<span class="whitetext12">${talker.profileCompletionValue}%</span>
+						</div>
+					</div>
+	                  <div class="profilecompletiontxt">${talker.profileCompletionMessage}</div>
+	                  <div class="topicborder"></div>
+	                  <div class="cb"></div>
+	                </div>
+				#{/if}
+                
+                #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
+                	<div class="followingbox">
+	                  <div class="followingtoptxt">
+	                    <div class="followingh1">
+	                    	<a href="@{PublicProfile.userBasedActions(talker.userName, 'following')}">
+	                    		Following (${talker.followingList.size()})</a>
+	                    </div>
+	                    <div class="followingseeall">
+	                    	<a href="@{PublicProfile.userBasedActions(talker.userName, 'following')}">see all</a>
+	                    </div>
+	                  </div>
+	                  <!--followingtoptxt-->
+	                  <div class="cb"></div>
+	                </div>
+	                
+	                <div class="followingpicbox">
+	                  #{list items:talker.followingList.limit(8), as:'following' }
+							<div class="followingtxtpic">
+			                    <div class="followingpic">
+			                    	<a href="@{ViewDispatcher.view(following.userName)}">
+										<img src="@{Image.show(following.userName)}" width="48" height="48" border="0" />
+									</a>
+			                    </div>
+			                    <div class="followingpictxt">
+			                    	<a href="@{ViewDispatcher.view(following.userName)}">${following.userName}</a>
+			                    </div>
+			                    <div class="cb"></div>
+			                  </div>
+						#{/list}
+	                </div>
+	                
+	                <!--followingpicbox-->
+	                <div class="cb"></div>
+	                <br/>
+	                <div class="topicborder"></div>
+				#{/if}
+				
+				#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWERS) }
+                	<div class="followingbox">
+	                  <div class="followingtoptxt">
+	                    <div class="followingh1">
+	                    	<a href="@{PublicProfile.userBasedActions(talker.userName, 'followers')}">
+	                    		Followers (${talker.followerList.size()})</a>
+	                    </div>
+	                    <div class="followingseeall">
+	                    	<a href="@{PublicProfile.userBasedActions(talker.userName, 'followers')}">see all</a>
+	                    </div>
+	                  </div>
+	                  <!--followingtoptxt-->
+	                  <div class="cb"></div>
+	                </div>
+	                
+	                <div class="followingpicbox">
+	                  #{list items:talker.followerList.limit(8), as:'following' }
+							<div class="followingtxtpic">
+			                    <div class="followingpic">
+			                    	<a href="@{ViewDispatcher.view(following.userName)}">
+										<img src="@{Image.show(following.userName)}" width="48" height="48" border="0" />
+									</a>
+			                    </div>
+			                    <div class="followingpictxt">
+			                    	<a href="@{ViewDispatcher.view(following.userName)}">${following.userName}</a>
+			                    </div>
+			                    <div class="cb"></div>
+			                  </div>
+						#{/list}
+	                </div>
+	                <div class="cb"></div>
+				#{/if}
+</div>

@@ -1,48 +1,77 @@
-#{extends 'static.html' /}
-#{set pageHeader: 'Topics Following' /}
-
-<link rel='stylesheet' type='text/css' href='/public/stylesheets/styles.css' />
-<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
-
-<style type="text/css">
-	.inline_form {
-		display:none;
-	}
+#{extends 'main.html' /}
+	<style type="text/css">
+		body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
+		
+		#innermiddlearea { padding-top: 10px }
+		.seeall { padding-top: 20px }
+		
+		#mask { background-color:#e6e6e6; }
+		
+		.inline_form { display:none; }
+		.inline-edit .editdiv { float:left; width:45px; }
+	</style>
 	
-	.inline-edit .editdiv {
-		float:left;
-		width:45px;
-	}
-</style>
+	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$(".followTopicLink").live('click', function() {
+				var topicId = $(this).attr("rel");
+				if ($(this).html().indexOf("Unfollow") != -1) {
+					$(this).html("Follow");
+				}
+				else {
+					$(this).html("Unfollow");
+				}
+				$.post("@{Conversations.follow()}", 
+	  				{ topicId: topicId},
+	  				function(data) {
+	  					//...
+	  				}
+	  			);
+	  			return false;
+			});
 
-<script type="text/javascript">
-	$(document).ready(function() {
-  		$('.inline-edit').inlineEdit(
-	  		{ hover: '', saveFunction: updateData}
-	  	);
-	});
+			//if close button is clicked
+			$('.window .close, .window .cancelLink').click(function (e) {
+				//Cancel the link behavior
+				e.preventDefault();
+				hideAll();
+			});		
 
-	function updateData(dataType, newValue) {
-		if (dataType.indexOf('experienceEdit') == 0) {
-			var topicId = dataType.substring(14);
-			
-			//post to save experience
-			$.post("@{Actions.updateTopicExperience()}", 
-				{ topicId: topicId, newValue: newValue }
+			$('.inline-edit').inlineEdit(
+		  		{ hover: '', saveFunction: updateData}
+		  	);
+		});
+
+		function updateData(dataType, newValue) {
+			if (dataType.indexOf('experienceEdit') == 0) {
+				var topicId = dataType.substring(14);
+				
+				//post to save experience
+				$.post("@{Actions.updateTopicExperience()}", 
+					{ topicId: topicId, newValue: newValue }
+				);
+			}
+		}
+
+		function endorse(topicId) {
+			$.post("@{Actions.endorse()}", 
+				{ topicId: topicId, toTalker: '${talker.id}' },
+				function() {
+	  					//good save!!
+				}
 			);
 		}
-	}
-
-	function endorse(topicId) {
-		$.post("@{Actions.endorse()}", 
-			{ topicId: topicId, toTalker: '${talker.id}' },
-			function() {
-  					//good save!!
-			}
-		);
-	}
-</script>
-
+	</script>
+		
+<div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
+  <div id="managtopic">
+  	#{include 'header.html' /}
+		<div id="targetedtherapy">
+          <div id="innermiddlearea">
+            <div id="mtcover">
+              <div id="mtleft">
+  		
 <h3>Following ${talker.followingTopicsList?.size()} Topic(s):</h3><br/>
 <div style="font-size: 14px">
 #{list items: talker.followingTopicsList, as: 'topic'}
@@ -91,3 +120,21 @@
 	</div>
 #{/list}
 </div>
+        
+            </div>
+            <!--mtleft-->
+            
+            #{ set currentPage = 'topicsFollowing' /}
+            #{ include 'PublicProfile/profileRight.html' /}
+            
+            <!--mtright-->
+            <div class="cb"></div>
+          </div>
+          <!--mtcover-->
+          <div class="cb"></div>
+
+        </div>
+        <div id="signupright"></div>
+      </div>
+    </div>
+   </div>

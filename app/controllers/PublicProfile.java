@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import logic.TalkerLogic;
 import models.CommentBean;
 import models.DiseaseBean;
 import models.HealthItemBean;
@@ -34,34 +35,6 @@ import util.CommonUtil;
 
 @With(Secure.class)
 public class PublicProfile extends Controller {
-	
-	enum ProfileCompletion {
-		BASIC(25, "Sign Up"),
-		JOIN_CONVO(5, "Join a Conversation to get to "),
-		START_CONVO(10, "Start a Conversation to get to "),
-		GIVE_THANKYOU(10, "Give a Thank you to get to "),
-		COMMENT_CONVO(10, "Comment on a Conversation to get to "),
-		FOLLOW(10, "Follow another member to get to "),
-		COMPLETE_PERSONAL(15, "Complete your Personal Info to get to "),
-		COMPLETE_HEALTH(10, "Complete your Health Details to get to "),
-		WRITE_SUMMARY(5, "Write or edit a summary of a Conversation to get to ");
-		
-		private final int value;
-		private final String description;
-		
-		private ProfileCompletion(int value, String description) {
-			this.value = value;
-			this.description = description;
-		}
-
-		public int getValue() {
-			return value;
-		}
-
-		public String getDescription() {
-			return description;
-		}
-	}
 	
 	/**
 	 * 
@@ -144,6 +117,10 @@ public class PublicProfile extends Controller {
 			}
 			talkerTopicInfo.setNumOfAnswers(answers.size());
 		}
+		
+		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+		talker.setActivityList(ActionDAO.load(talker.getId()));
+		TalkerLogic.calculateProfileCompletion(talker);
 		
 		render(talker, currentTalker);
 	}
