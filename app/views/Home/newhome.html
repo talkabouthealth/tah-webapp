@@ -153,8 +153,9 @@
                     <div class="startserch">
                       <div class="demo">
                         <div class="ui-widget">
-                          <textarea id="convoText" name="textarea" class="edititinputx" 
-                          	rows="4"  cols="3" style="width:450px;height:40px" ></textarea>
+                          <textarea id="convoText" name="textarea" 
+                          	onKeyDown="limitText(this, 150);" onKeyUp="limitText(this, 150);" 
+                            class="edititinputx" rows="4"  cols="3" style="width:450px;height:40px" ></textarea>
                         </div>
                       </div>
                       <!-- End demo -->

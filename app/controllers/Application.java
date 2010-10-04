@@ -236,10 +236,10 @@ public class Application extends Controller {
         EnumSet<ProfilePreference> defaultPreferences = 
         	EnumSet.complementOf(
         		EnumSet.of(
-    				ProfilePreference.PERSONAL_INFO,
-    				ProfilePreference.HEALTH_INFO,
-    				ProfilePreference.BASIC_INFO,
-    				ProfilePreference.BIO
+    				ProfilePreference.PERSONAL_INFO
+//    				ProfilePreference.HEALTH_INFO,
+//    				ProfilePreference.BASIC_INFO,
+//    				ProfilePreference.BIO
         		)
         	);
         talker.saveProfilePreferences(defaultPreferences);
