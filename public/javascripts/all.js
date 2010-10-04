@@ -5,6 +5,10 @@ function openChat(convoId){
 	window.open("/talk/"+convoId, "TalkerWindow", "width=730,height=565");
 }
 
+function openInvitationsWindow() {
+	window.open("/home/invitations", "TalkAboutHealthInvitations", "width=600,height=350");
+}
+
 //createThankYou(String toTalker, String note)
 function sendThankYou() {
 	var noteText = $("#thankYouListNote").val();
@@ -87,6 +91,8 @@ function showPopup(id) {
 function hideAll() {
 	$('#mask').hide();
 	$('.window').hide();
+	
+	return false;
 }
 
 function limitText(limitField, limitNum) {

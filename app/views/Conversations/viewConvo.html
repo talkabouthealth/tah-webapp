@@ -4,6 +4,8 @@
 			background:url(/public/images/inner_bgmt.gif) repeat-x top;
 			font-size: 14px;
 		}
+		#innermiddlearea { padding-top: 10px }
+		
 		a {color:#1a6a96; text-decoration:none}
 		a:hover {color:#ccc; text-decoration:none}
 		.style2 {color: #000000}
@@ -39,11 +41,25 @@
 		}
 		
 		.rcpadtop { width:260px; }
+		
+		h1 {
+			color:#000000;
+			font-family:arial;
+			font-size:20px;
+			text-decoration:none;
+		}
+		
+		/* for popups */
+		.popboxflagzx { top: 0px; left: 0px }
 	</style>
 
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
 		var tid = '${convo.tid}';
+		
+		var flagType = '';
+		var flagAnswerId = '';
+		
 		$(document).ready(function() {
 			$("#followConvoLink").click(function() {
 				$.post("@{Conversations.follow()}", 
@@ -67,14 +83,8 @@
 			});
 
 			$(".flagConvoLink").click(function() {
-				var reason = prompt("Reason:");
-				if (reason) {
-					$(this).after("<span>Thanks!</span>").detach();
-					
-					$.post("@{Conversations.flag}", 
-							{reason: reason, topicId: '${convo.id}'}
-					);
-				}
+				flagType = "convo";
+				showPopup("#flagPopup");
 			});
 
 			//----- Comments ------
@@ -93,6 +103,13 @@
 
 	   				return false;
 	   			});
+   			
+			$(".flagAnswerLink").live("click", function() {
+				flagType = "answer";
+				flagAnswerId = $(this).attr("rel");
+				showPopup("#flagPopup");
+			});
+			
    			
    			$(".deleteTopicLink").live("click", function() {
    	   			$(this).prev().remove();
@@ -297,6 +314,25 @@
    	   		
    	   		return false;
    		}
+
+   		//flag convo or answer
+   		function flag() {
+   	   		var reason = $("#flagReason").val();
+   	   		$("#flagReason").val("");
+   			if (flagType === "convo") {
+				$.post("@{Conversations.flag}", 
+						{reason: reason, convoId: '${convo.id}'}
+				);
+			}
+   			else if (flagType === "answer") {
+   				$.post("@{Conversations.flagAnswer}", 
+					{reason: reason, answerId: flagAnswerId}
+				);
+   			}
+
+   			hideAll();
+   			return false;
+   		}
    		
 
    		//show and hide for field edits
@@ -328,9 +364,11 @@
 								<div class="editsWraper">
 									<div class="editsWraper">
 										<div class='inline-edit' id="titleEdit">
-											<div class="suggestxt inline_display">
+											<div class="inline_display">
 												<div class="inline_full">
-													<div class="inline_view targetedh7">${convo.topic}</div>
+													<div class="targetedh7">
+														<h1 class="inline_view">${convo.topic}</h1>
+													</div>
 													<div class="editdiv">
 														<div class="editit">
 															<a href="#" class="inline_editlink">Edit</a>
@@ -441,9 +479,9 @@
                       
                       			#{if talker }
 									<div class="tagtxts">
-				                    	<a href="#" class="restartConvoLink">Restart Conversation </a> |  
+				                    	<a href="#" class="restartConvoLink">Restart Conversation</a> |  
 				                    	<a href="#">Start Follow up conversation</a>  |  
-				                    	<a href="#" class="flagConvoLink">Flag Question </a> 
+				                    	<a href="#" class="flagConvoLink">Flag Question</a> 
 				                    	#{if session.username?.equals("admin") || convo.talker.userName.equals(session.username)}
 				                        	  |  <a href="#" onclick="return deleteConvo();">Delete</a> 
 				                        #{/if}
@@ -667,8 +705,7 @@
 <div id="boxes">
 	<div id="dialog" class="window"></div>
 	<!-- Start of Login Dialog -->
-	<div id="dialog1" class="window">
-
+	<div id="flagPopup" class="window">
 	  <div id="innermiddleareaz">
 	    <div class="popboxWraper">
 	      <div class="popboxflagzx">
@@ -676,13 +713,14 @@
 	        <div class="commentsCover">
 	          <div class="selheadingza">Please expain why you are flagging this content. Thank you.</div>
 	          <div class="selheadinginputs">
-	            <textarea class="popinputs" cols="4" rows="3"></textarea>
+	            <textarea id="flagReason" class="popinputs" cols="4" rows="3"></textarea>
 	          </div>
 	        </div>
 	        <!--commentsCover-->
 	        <div class="poptxtzzCover">
-	          <div  class="cancs" ><a href="#">Cancel</a></div>
-	          <input type="submit" value=" " class="submitspops"  src="images/submitspops.jpg" alt="sub" />
+	          <div  class="cancs" ><a href="#" onclick="return hideAll();">Cancel</a></div>
+	          <input type="submit" value=" " onclick="return flag();" 
+	          	class="submitspops"  src="images/submitspops.jpg" alt="sub" />
 	        </div>
 	        <!--poptxtCover-->
 
@@ -726,4 +764,4 @@
 
 </div>
 <!-- Mask to cover the whole screen -->
-<div id="mask1"></div>
+<div id="mask"></div>

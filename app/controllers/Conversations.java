@@ -95,9 +95,9 @@ public class Conversations extends Controller {
     	}
     }
     
-    public static void flag(String topicId, String reason) {
+    public static void flag(String convoId, String reason) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	ConversationBean convo = ConversationDAO.getByConvoId(topicId);
+    	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
     	
     	notFoundIfNull(convo);
     	
@@ -108,9 +108,22 @@ public class Conversations extends Controller {
 		vars.put("content", convo.getTopic());
 		vars.put("name", talker.getUserName());
 		vars.put("email", talker.getEmail());
-		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
-		vars.put("message", 
-				"Bad conversation/question: <a href=\""+convoURL+"\">"+convo.getTopic()+"</a>");
+		EmailUtil.sendEmail(EmailTemplate.FLAGGED, EmailUtil.SUPPORT_EMAIL, vars, null, false);
+    }
+    
+    public static void flagAnswer(String answerId, String reason) {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
+    	notFoundIfNull(answer);
+    	ConversationBean convo = ConversationDAO.getByConvoId(answer.getTopicId());
+    	
+    	Map<String, String> vars = new HashMap<String, String>();
+    	vars.put("content_type", "Answer/Reply");
+    	vars.put("content_link", CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL()));
+    	vars.put("reason", reason);
+		vars.put("content", answer.getText());
+		vars.put("name", talker.getUserName());
+		vars.put("email", talker.getEmail());
 		EmailUtil.sendEmail(EmailTemplate.FLAGGED, EmailUtil.SUPPORT_EMAIL, vars, null, false);
     }
     
