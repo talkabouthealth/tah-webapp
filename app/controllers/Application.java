@@ -110,6 +110,10 @@ public class Application extends Controller {
     }
     
     public static void register(@Valid TalkerBean talker, String newTopic) {
+    	String privacyAgreeString = params.get("privacyagree");
+    	validation.isTrue("on".equalsIgnoreCase(privacyAgreeString))
+    		.message("Please agree to the TalkAboutHealth Terms of Service and Privacy Policy.");
+    	
 		validateTalker(talker);
 		
 //		System.out.println(validation.errorsMap());
@@ -159,14 +163,14 @@ public class Application extends Controller {
     }
     
     private static void validateTalker(TalkerBean talker) {
-		Date dateOfBirth = CommonUtil.parseDate(talker.getDobMonth(), talker.getDobDay(), talker.getDobYear());
-		if (dateOfBirth != null) {
-			validation.past(dateOfBirth);
-			talker.setDob(dateOfBirth);
-		}
-		else {
-			validation.required(dateOfBirth).message("Date of Birth is incorrect");
-		}
+//		Date dateOfBirth = CommonUtil.parseDate(talker.getDobMonth(), talker.getDobDay(), talker.getDobYear());
+//		if (dateOfBirth != null) {
+//			validation.past(dateOfBirth);
+//			talker.setDob(dateOfBirth);
+//		}
+//		else {
+//			validation.required(dateOfBirth).message("Date of Birth is incorrect");
+//		}
 		
 		if (!validation.hasError("talker.userName")) {
 			boolean nameNotExists = !ApplicationDAO.isURLNameExists(talker.getUserName());

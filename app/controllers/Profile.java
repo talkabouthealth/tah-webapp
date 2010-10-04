@@ -63,15 +63,15 @@ public class Profile extends Controller {
 		TalkerBean oldTalker = CommonUtil.loadCachedTalker(session);
 		
 		String oldUserName = oldTalker.getUserName();
-		String oldEmail = oldTalker.getEmail();
+//		String oldEmail = oldTalker.getEmail();
 		if (!oldUserName.equals(talker.getUserName())) {
 			boolean nameNotExists = !ApplicationDAO.isURLNameExists(talker.getUserName());
 			validation.isTrue(nameNotExists).message("username.exists");
 		}
-		if (!oldEmail.equals(talker.getEmail())) {
-			TalkerBean tmpTalker = TalkerDAO.getByEmail(talker.getEmail());
-			validation.isTrue(tmpTalker == null).message("email.exists");
-		}
+//		if (!oldEmail.equals(talker.getEmail())) {
+//			TalkerBean tmpTalker = TalkerDAO.getByEmail(talker.getEmail());
+//			validation.isTrue(tmpTalker == null).message("email.exists");
+//		}
 		
 		talker.setKeywords(CommonUtil.parseCommaSerapatedList(talker.getKeywords().get(0)));
 		
@@ -110,7 +110,9 @@ public class Profile extends Controller {
 		}
 		
 		oldTalker.setUserName(talker.getUserName());
-		oldTalker.setEmail(talker.getEmail());
+//		oldTalker.setEmail(talker.getEmail());
+//		oldTalker.setFirstName(talker.getFirstName());
+//		oldTalker.setLastName(talker.getLastName());
 		oldTalker.setDob(dateOfBirth);
 		oldTalker.setGender(talker.getGender());
 		oldTalker.setMaritalStatus(talker.getMaritalStatus());
@@ -119,23 +121,21 @@ public class Profile extends Controller {
 		oldTalker.setState(talker.getState());
 		oldTalker.setCountry(talker.getCountry());
 		oldTalker.setChildrenNum(talker.getChildrenNum());
-		oldTalker.setFirstName(talker.getFirstName());
-		oldTalker.setLastName(talker.getLastName());
 		oldTalker.setZip(talker.getZip());
 		oldTalker.setWebpage(talker.getWebpage());
 		oldTalker.setBio(talker.getBio());
 		oldTalker.setChildrenAges(talker.getChildrenAges());
 		oldTalker.setKeywords(talker.getKeywords());
 		
-		if (!oldEmail.equals(talker.getEmail())) {
-			//send verification email
-			oldTalker.setVerifyCode(CommonUtil.generateVerifyCode());
-			
-			Map<String, String> vars = new HashMap<String, String>();
-			vars.put("username", oldTalker.getUserName());
-			vars.put("verify_code", oldTalker.getVerifyCode());
-			EmailUtil.sendEmail(EmailTemplate.VERIFICATION, oldTalker.getEmail(), vars, null, false);
-		}
+//		if (!oldEmail.equals(talker.getEmail())) {
+//			//send verification email
+//			oldTalker.setVerifyCode(CommonUtil.generateVerifyCode());
+//			
+//			Map<String, String> vars = new HashMap<String, String>();
+//			vars.put("username", oldTalker.getUserName());
+//			vars.put("verify_code", oldTalker.getVerifyCode());
+//			EmailUtil.sendEmail(EmailTemplate.VERIFICATION, oldTalker.getEmail(), vars, null, false);
+//		}
 		
 		CommonUtil.updateTalker(oldTalker, session);
 		

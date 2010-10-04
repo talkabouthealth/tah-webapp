@@ -38,7 +38,7 @@
 	  var updateprofileForm = document.getElementById("updateprofile");
 		
 	  reason += validateUsername(document.getElementById("talker.userName"));
-	  reason += validateEmail(document.getElementById("talker.email"));
+	  //reason += validateEmail(document.getElementById("talker.email"));
 	  //reason += validateEmpty(document.getElementById("talker.dobString"));
 	    
 	  if (reason != "") {
@@ -160,6 +160,10 @@
 									value="${talker.userName}" />
 						</div>
 					</div>
+					
+					<input name="talker.email" type="hidden" class="personalfields" 
+						id="talker.email" value="bad@email.com" />
+					*{
 					<div class="personalmain">
 						<div class="personaltextarea">
 							<span class="blacktext14">Email</span>
@@ -188,6 +192,7 @@
 									value="${talker.lastName}" />
 						</div>
 					</div>
+					}*
 					<div class="personalmain">
 						<div class="personaltextarea"><span class="blacktext14">Birth Date</span></div>
 						<div class="personaltextfield">
