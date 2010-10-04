@@ -25,10 +25,9 @@ public class AnswerVotedAction extends AbstractAction {
 
 	public String toHTML() {
 		StringBuilder result = new StringBuilder();
-		result.append(userName());
+		result.append(fullUserName(talker));
 		result.append(" voted for answer by ");
-		result.append(answer.getFromTalker().getUserName()+" in ");
-		result.append(convoLink());
+		result.append(fullUserName(answer.getFromTalker()));
 		
 		return result.toString();
 	}

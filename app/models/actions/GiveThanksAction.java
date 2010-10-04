@@ -21,9 +21,9 @@ public class GiveThanksAction extends AbstractAction {
 
 	public String toHTML() {
 		StringBuilder result = new StringBuilder();
-		result.append(userName());
+		result.append(fullUserName(talker));
 		result.append(" gave a 'Thank you' to ");
-		result.append(otherTalker.getUserName());
+		result.append(fullUserName(otherTalker));
 		
 		return result.toString();
 	}

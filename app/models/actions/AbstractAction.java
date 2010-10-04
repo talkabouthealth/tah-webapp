@@ -6,6 +6,7 @@ import java.util.Date;
 
 import org.bson.types.ObjectId;
 
+import util.CommonUtil;
 import util.DBUtil;
 
 import com.mongodb.BasicDBObject;
@@ -68,7 +69,8 @@ public abstract class AbstractAction implements Action {
 		DBObject talkerDBObject = ((DBRef)dbObject.get("uid")).fetch();
 		String talkerId = talkerDBObject.get("_id").toString();
 		String talkerName = (String)talkerDBObject.get("uname");
-		setTalker(new TalkerBean(talkerId, talkerName));
+		String connection = (String)talkerDBObject.get("connection");
+		setTalker(new TalkerBean(talkerId, talkerName, connection));
 		
 		setTime((Date)dbObject.get("time"));
 		setType(ActionType.valueOf((String)dbObject.get("type")));
@@ -102,6 +104,35 @@ public abstract class AbstractAction implements Action {
 	
 	protected String userName() {
 		return "<b>"+talker.getUserName()+"</b>";
+	}
+	
+	protected String fullUserName(TalkerBean user) {
+		if (user == null) {
+			return "";
+		}
+		String url = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", user.getUserName());
+		String link = "<a href='"+url+"'>"+user.getUserName()+"</a>";
+		if (user.getConnection() != null && user.getConnection().length() != 0) {
+			link = link+" ("+user.getConnection()+")";
+		}
+		return link;
+	}
+	
+	protected String convoTopics() {
+		StringBuilder topicsString = new StringBuilder();
+		for (TopicBean topic : convo.getTopics()) {
+			String topicURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", topic.getMainURL());
+			String topicLink = "<a href='"+topicURL+"'>"+topic.getTitle()+"</a>";
+
+			topicsString.append(topicLink);
+			topicsString.append(", ");
+		}
+		int len = topicsString.length();
+		if (len != 0) {
+			topicsString.delete(len-2, len);
+			topicsString.insert(0, " in topic ");
+		}
+		return topicsString.toString();
 	}
 	
 	public DBObject toDBObject() {
@@ -154,11 +185,16 @@ public abstract class AbstractAction implements Action {
 	
 	// Other talker connected actions
 	protected TalkerBean parseOtherTalker(DBObject dbObject) {
-		DBObject talkerDBObject = ((DBRef)dbObject.get("otherTalker")).fetch();
-		String talkerId = talkerDBObject.get("_id").toString();
-		String talkerName = (String)talkerDBObject.get("uname");
-    	
-    	return new TalkerBean(talkerId, talkerName);
+		DBRef otherTalkerDBRef = (DBRef)dbObject.get("otherTalker");
+		if (otherTalkerDBRef != null) {
+			DBObject talkerDBObject = otherTalkerDBRef.fetch();
+			String talkerId = talkerDBObject.get("_id").toString();
+			String talkerName = (String)talkerDBObject.get("uname");
+			String connection = (String)talkerDBObject.get("connection");
+	    	
+	    	return new TalkerBean(talkerId, talkerName, connection);
+		}
+		return null;
 	}
 	
 	protected void addOtherTalker(DBObject dbObject, TalkerBean talker) {

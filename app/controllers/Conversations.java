@@ -128,6 +128,7 @@ public class Conversations extends Controller {
     }
     
     public static void vote(String answerId, boolean up) {
+    	//TODO: talker can vote for his/her answer/reply?
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
     	notFoundIfNull(answer);

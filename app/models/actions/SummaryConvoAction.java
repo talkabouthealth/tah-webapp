@@ -21,15 +21,17 @@ public class SummaryConvoAction extends AbstractAction {
 
 	public String toHTML() {
 		StringBuilder result = new StringBuilder();
-		result.append(userName());
+		
 		if (type == ActionType.SUMMARY_ADDED) {
-			result.append(" added summary for the conversation: ");
+			result.append("Answer summary created by ");
+			result.append(fullUserName(talker));
+			result.append(convoTopics());
 		}
 		else if (type == ActionType.SUMMARY_EDITED) {
-			result.append(" edited summary for the conversation: ");
+			result.append(fullUserName(talker));
+			result.append(" edited the summary ");
+			result.append(convoTopics());
 		}
-		
-		result.append(convoLink());
 		
 		return result.toString();
 	}

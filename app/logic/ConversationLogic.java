@@ -63,9 +63,12 @@ public class ConversationLogic {
 	
 	public static CommentBean createAnswer(ConversationBean convo, TalkerBean talker, String parentId, String text) {
 		//TODO: if answers - automatically follow topic?
-		talker.getFollowingConvosList().add(convo.getId());
-		ActionDAO.saveAction(new FollowConvoAction(talker, convo));
-		convo.getFollowers().add(talker);
+		if (!talker.getFollowingConvosList().contains(convo.getId())) {
+			talker.getFollowingConvosList().add(convo.getId());
+			TalkerDAO.updateTalker(talker);
+			ActionDAO.saveAction(new FollowConvoAction(talker, convo));
+			convo.getFollowers().add(talker);
+		}
 		
 		CommentBean comment = new CommentBean();
 		parentId = parentId.trim().length() == 0 ? null : parentId;

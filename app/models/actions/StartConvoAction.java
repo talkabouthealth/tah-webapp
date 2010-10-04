@@ -29,14 +29,14 @@ public class StartConvoAction extends AbstractAction {
 
 	public String toHTML() {
 		StringBuilder result = new StringBuilder();
-		result.append(userName());
+		result.append(fullUserName(talker));
 		if (type == ActionType.START_CONVO) {
-			result.append(" started the conversation: ");
+			result.append(" started the conversation ");
 		}
 		else if (type == ActionType.RESTART_CONVO) {
-			result.append(" restarted the conversation: ");
+			result.append(" restarted the conversation ");
 		}
-		result.append(convoLink());
+		result.append(convoTopics());
 		
 		return result.toString();
 	}

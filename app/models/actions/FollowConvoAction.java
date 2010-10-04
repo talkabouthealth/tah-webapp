@@ -21,9 +21,8 @@ public class FollowConvoAction extends AbstractAction {
 
 	public String toHTML() {
 		StringBuilder result = new StringBuilder();
-		result.append(userName());
-		result.append(" began following: ");
-		result.append(convoLink());
+		result.append(fullUserName(talker));
+		result.append(" began following the conversation.");
 		
 		return result.toString();
 	}

@@ -21,9 +21,9 @@ public class JoinConvoAction extends AbstractAction {
 
 	public String toHTML() {
 		StringBuilder result = new StringBuilder();
-		result.append(userName());
-		result.append(" joined the conversation: ");
-		result.append(convoLink());
+		result.append(fullUserName(talker));
+		result.append(" joined the conversation");
+		result.append(convoTopics());
 		
 		return result.toString();
 	}

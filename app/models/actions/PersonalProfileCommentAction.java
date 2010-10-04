@@ -8,6 +8,7 @@ import com.mongodb.DBObject;
 
 public class PersonalProfileCommentAction extends AbstractAction {
 	
+	//TODO: how to display them?
 	public PersonalProfileCommentAction(TalkerBean talker, CommentBean profileComment, CommentBean profileReply, ActionType type) {
 		super(type, talker);
 		this.profileComment = profileComment;
@@ -23,7 +24,7 @@ public class PersonalProfileCommentAction extends AbstractAction {
 	
 	public String toHTML() {
 		StringBuilder result = new StringBuilder();
-		result.append(userName());
+		result.append(fullUserName(talker));
 		if (type == ActionType.PERSONAL_PROFILE_COMMENT) {
 			result.append(" left a comment '"+profileComment.getText()+"'");
 		}

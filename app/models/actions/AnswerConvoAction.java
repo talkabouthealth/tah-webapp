@@ -26,17 +26,16 @@ public class AnswerConvoAction extends AbstractAction {
 
 	public String toHTML() {
 		StringBuilder result = new StringBuilder();
-		result.append(userName());
 		if (type == ActionType.ANSWER_CONVO) {
-			result.append(" answered the conversation: ");
-			result.append(" (with "+answer.getText()+") ");
+			result.append("New answer by ");
+			result.append(fullUserName(talker));
+			result.append(convoTopics());
 		}
 		else if (type == ActionType.REPLY_CONVO) {
-			result.append(" replied the conversation: ");
-			result.append(" (with "+answer.getText()+", "+reply.getText()+") ");
+			result.append(fullUserName(talker));
+			result.append(" replied to answer by ");
+			result.append(fullUserName(answer.getFromTalker()));
 		}
-		result.append(convoLink());
-		result.append("<br/>");
 		
 		return result.toString();
 	}

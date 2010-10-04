@@ -245,7 +245,14 @@
 									<div class="jointxtlink1">
 										${activity.toHTML().raw()}
 									</div>
-									<div class="jointxtlink2"></div>
+									<div class="jointxtlink2">
+										#{if activity.reply}
+											${activity.reply.text}
+										#{/if}
+										#{elseif activity.answer}
+											${activity.answer.text}
+										#{/elseif}
+									</div>
 								</div>
 								<div class="cb"></div>
 								<div class="joinborder"></div>
