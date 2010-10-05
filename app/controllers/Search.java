@@ -50,6 +50,13 @@ public class Search extends Controller {
 		renderJSON(results);
 	}
 	
+	public static void ajaxTopicSearch(String term) throws Exception {
+		List<String> allowedTypes = Arrays.asList("Topic");
+		List<Map<String, String>> results = makeSearch(term, allowedTypes);
+		
+		renderJSON(results);
+	}
+	
 	private static List<Map<String, String>> makeSearch(String term, List<String> allowedTypes) throws Exception {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
 		
@@ -86,7 +93,7 @@ public class Search extends Controller {
 				}
 				
 				result.put("label", label.replaceAll(term, "<b>"+term+"</b>"));
-				result.put("value", "");
+				result.put("value", label);
 				result.put("url", url);
 				result.put("type", type);
 				

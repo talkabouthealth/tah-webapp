@@ -144,55 +144,8 @@
 		  		{ hover: '', saveFunction: saveData, updateFunction: updateData}
 		  	);
 
-
-		  	// Pop-up windows
-   			//select all the a tag with name equal to modal
-   			$('a[name=modal]').click(function(e) {
-   				//Cancel the link behavior
-   				e.preventDefault();
-   				
-   				//Get the A tag
-   				var id = $(this).attr('href');
-   			
-   				//Get the screen height and width
-   				var maskHeight = $(document).height();
-   				var maskWidth = $(window).width();
-   			
-   				//Set heigth and width to mask to fill up the whole screen
-   				$('#mask1').css({'width':maskWidth,'height':maskHeight});
-   				
-   				//transition effect		
-   				$('#mask1').fadeIn(1000);	
-   				$('#mask1').fadeTo("slow",0.8);	
-   			
-   				//Get the window height and width
-   				var winH = $(window).height();
-   				var winW = $(window).width();
-   		              
-   				//Set the popup window to center
-   				$(id).css('top',  winH/2-$(id).height()/2);
-   				$(id).css('left', winW/2-$(id).width()/2);
-   			
-   				//transition effect
-   				$(id).fadeIn(2000); 
-   			
-   			});
-   			
-   			//if close button is clicked
-   			$('.window1 .close').click(function (e) {
-   				//Cancel the link behavior
-   				e.preventDefault();
-   				
-   				$('#mask1').hide();
-   				$('.window1').hide();
-   			});		
-   			
-   			//if mask is clicked
-   			$('#mask1').click(function () {
-   				$(this).hide();
-   				$('.window, .window1').hide();
-   			});			
-   				  	
+   			makeAutocomplete("#topicInput", "topic");
+   			makeAutocomplete("#relatedConvosInput", "convo");
 		});
 
 		function saveData(dataType, newValue) {
@@ -671,14 +624,14 @@
 											#{/list}
 										</div>
 										<div style="padding-top:10px;">
-									        <textarea id="detailsinput" class="edititinputx inline_text" 
-									        	style="width:200px"></textarea>
+									        <input type="text" id="relatedConvosInput" class="edititinputx inline_text" 
+									        	style="width:200px; height: 23px;" value="" />
 								        </div>
 										<div style="float:right; margin-right:30px;">
-											<input id="detailsBtn" type="submit" class="inline_add" value="Add" />
-											<div class="canclebtnz">
-												<a class="cancel" href="#">Done</a>
-											</div>
+											<input id="detailsBtn" type="submit" class="inline_add" 
+												value="Add" style="float: left;"/>
+											<input id="detailsBtn" type="submit" class="cancel" 
+												value="Done" style="float: left; margin-left: 10px;"/>
 										</div>
 									</div>
 								</div>

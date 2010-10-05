@@ -31,41 +31,7 @@
 		$('#jsddm > li').bind('mouseover', jsddm_open);
 		$('#jsddm > li').bind('mouseout',  jsddm_timer);
 
-		var cache = {};
-		$( "#topSearchBox" ).autocomplete({
-			minLength: 1,
-			source: function(request, response) {
-				if ( request.term in cache ) {
-					response( cache[ request.term ] );
-					return;
-				}
-				
-				$.ajax({
-					url: "@{Search.ajaxSearch()}",
-					dataType: "json",
-					data: request,
-					success: function( data ) {
-						cache[ request.term ] = data;
-						response( data );
-					}
-				});
-			},
-			select: function(event, ui) {
-				var url = ui.item.url;
-				if (url === "#fullsearch") {
-					//go to full conversations search
-					url = "@{Community.searchConversations()}?query="+ui.item.value;
-				}
-				document.location = url;
-				return false;
-			}
-		})
-		.data( "autocomplete" )._renderItem = function( ul, item ) {
-			return $( "<li></li>" )
-				.data( "item.autocomplete", item )
-				.append( "<a>" + item.label + "&nbsp;<span>" + item.type + "</span></a>" )
-				.appendTo( ul );
-		};
+		makeAutocomplete("#topSearchBox", "all");
 	});
 	
 	document.onclick = jsddm_close;

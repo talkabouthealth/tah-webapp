@@ -100,3 +100,59 @@ function limitText(limitField, limitNum) {
         limitField.value = limitField.value.substring(0, limitNum);
     } 
 }
+
+function makeAutocomplete(id, type) {
+	var url = "";
+	if (type === "all") {
+		url = "/search/ajaxSearch";
+	}
+	else if (type === "convo") {
+		url = "/search/ajaxConvoSearch";
+	}
+	else if (type === "topic") {
+		url = "/search/ajaxTopicSearch";
+	}
+	
+	var cache = {};
+	$(id).autocomplete({
+		minLength: 1,
+		source: function(request, response) {
+			if ( request.term in cache ) {
+				response( cache[ request.term ] );
+				return;
+			}
+			
+			$.ajax({
+				url: url,
+				dataType: "json",
+				data: request,
+				success: function( data ) {
+					cache[ request.term ] = data;
+					response( data );
+				}
+			});
+		},
+		select: function(event, ui) {
+			if (type === "all") {
+				var url = ui.item.url;
+				if (url === "#fullsearch") {
+					//go to full conversations search
+					url = "/search/conversations?query="+ui.item.value;
+				}
+				document.location = url;
+			}
+			else {
+				$(id).val(ui.item.value);
+			}
+			
+			return false;
+		}
+	})
+	.data( "autocomplete" )._renderItem = function( ul, item ) {
+		return $( "<li></li>" )
+			.data( "item.autocomplete", item )
+			.append( "<a>" + item.label + "&nbsp;<span>" + item.type + "</span></a>" )
+			.appendTo( ul );
+	};
+	
+}

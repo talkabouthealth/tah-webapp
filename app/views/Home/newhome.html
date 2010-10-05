@@ -10,10 +10,13 @@
 		var username = "${talker.userName}";
 		var levelOfRecognition = "${talker.levelOfRecognition}";
 
+		var flagType = "convo";
+		var flagConvoId = "";
+
 		#{ oauthJavaScripts /}
 
 		$(document).ready(function() {
-			$(".followTopicLink").live('click', function() {
+			$(".followConvoLink").live('click', function() {
 				var topicId = $(this).attr("rel");
 				if ($(this).html().indexOf("Unfollow") != -1) {
 					$(this).html("Follow");
@@ -28,6 +31,12 @@
 	  				}
 	  			);
 	  			return false;
+			});
+
+			$(".flagConvoLink").click(function() {
+				flagType = "convo";
+				flagConvoId = $(this).attr("rel");
+				showPopup("#flagPopup");
 			});
 
 			var showIMPopup = ${showIMPopup};
@@ -133,6 +142,24 @@
 				showPopup("#startDialog");
 			});
 		});
+
+		function flag() {
+   	   		var reason = $("#flagReason").val();
+   	   		$("#flagReason").val("");
+   			if (flagType === "convo") {
+				$.post("@{Conversations.flag}", 
+						{reason: reason, convoId: flagConvoId}
+				);
+			}
+   			else if (flagType === "answer") {
+   				$.post("@{Conversations.flagAnswer}", 
+					{reason: reason, answerId: flagAnswerId}
+				);
+   			}
+
+   			hideAll();
+   			return false;
+   		}
 	</script>
 		
 <div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
@@ -218,9 +245,8 @@
 										<div class="joinztextlink">
 											<!-- <span>3 members speaking</span> |  --> 
 											<a href="#" class="followConvoLink" rel="${activity.convo.id}">
-												${talker.followingConvosList?.contains(activity.convo.id) ? 'Unfollow' : 'Follow'}
-											</a> | 
-											<a href="#">Flag</a> | 
+												${talker.followingConvosList?.contains(activity.convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
+											<a href="#" class="flagConvoLink" rel="${activity.convo.id}">Flag</a> | 
 											<span>Started ${activity.convo.creationDate.since()}</span>
 										</div>
 									#{/if}
@@ -420,6 +446,36 @@
            
             <div class="cb"></div>
           </div>
+	</div>
+	
+	
+	
+	<div id="flagPopup" class="window">
+	  <div id="innermiddleareaz">
+	    <div class="popboxWraper">
+	      <div class="popboxflagzx">
+	        <div class="imheadingz">Flag Content</div>
+	        <div class="commentsCover">
+	          <div class="selheadingza">Please expain why you are flagging this content. Thank you.</div>
+	          <div class="selheadinginputs">
+	            <textarea id="flagReason" class="popinputs" cols="4" rows="3"></textarea>
+	          </div>
+	        </div>
+	        <!--commentsCover-->
+	        <div class="poptxtzzCover">
+	          <div  class="cancs" ><a href="#" onclick="return hideAll();">Cancel</a></div>
+	          <input type="submit" value=" " onclick="return flag();" 
+	          	class="submitspops"  src="images/submitspops.jpg" alt="sub" />
+	        </div>
+	        <!--poptxtCover-->
+
+	        <div class="cb"></div>
+	      </div>
+	      <!--popbox-->
+	    </div>
+	    <!--popboxWraper-->
+	    <div class="cb"></div>
+	  </div>
 	</div>
   
   
