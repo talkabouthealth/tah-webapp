@@ -231,40 +231,7 @@
                       <!--topic-->
                       <div class="topic">
                         #{list items: convoFeed, as: 'activity'}
-							<div class="joinbox">
-								<div class="joinpic">
-									<a href="@{ViewDispatcher.view(activity.talker.userName)}">
-										<img src="@{Image.show(activity.talker.userName)}" width="48" height="48" border="0" />
-									</a>
-								</div>
-								<div class="jointxtbox">
-									#{if activity.convo}
-										<div class="jointextstop">
-											<a href="${activity.convo.mainURL}">${activity.convo.topic}</a>
-										</div>
-										<div class="joinztextlink">
-											<!-- <span>3 members speaking</span> |  --> 
-											<a href="#" class="followConvoLink" rel="${activity.convo.id}">
-												${talker.followingConvosList?.contains(activity.convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
-											<a href="#" class="flagConvoLink" rel="${activity.convo.id}">Flag</a> | 
-											<span>Started ${activity.convo.creationDate.since()}</span>
-										</div>
-									#{/if}
-									<div class="jointxtlink1">
-										${activity.toHTML().raw()}
-									</div>
-									<div class="jointxtlink2">
-										#{if activity.reply}
-											${activity.reply.text}
-										#{/if}
-										#{elseif activity.answer}
-											${activity.answer.text}
-										#{/elseif}
-									</div>
-								</div>
-								<div class="cb"></div>
-								<div class="joinborder"></div>
-							</div>
+							#{feedActivity activity: activity, talker: talker /}
 						#{/list}
                         <div class="cb"></div>
                       </div>
@@ -448,37 +415,8 @@
           </div>
 	</div>
 	
+	#{ popups/flag /}
 	
-	
-	<div id="flagPopup" class="window">
-	  <div id="innermiddleareaz">
-	    <div class="popboxWraper">
-	      <div class="popboxflagzx">
-	        <div class="imheadingz">Flag Content</div>
-	        <div class="commentsCover">
-	          <div class="selheadingza">Please expain why you are flagging this content. Thank you.</div>
-	          <div class="selheadinginputs">
-	            <textarea id="flagReason" class="popinputs" cols="4" rows="3"></textarea>
-	          </div>
-	        </div>
-	        <!--commentsCover-->
-	        <div class="poptxtzzCover">
-	          <div  class="cancs" ><a href="#" onclick="return hideAll();">Cancel</a></div>
-	          <input type="submit" value=" " onclick="return flag();" 
-	          	class="submitspops"  src="images/submitspops.jpg" alt="sub" />
-	        </div>
-	        <!--poptxtCover-->
-
-	        <div class="cb"></div>
-	      </div>
-	      <!--popbox-->
-	    </div>
-	    <!--popboxWraper-->
-	    <div class="cb"></div>
-	  </div>
-	</div>
-  
-  
   <!-- Mask to cover the whole screen -->
   <div id="mask"></div>
 </div>

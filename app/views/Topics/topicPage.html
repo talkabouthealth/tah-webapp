@@ -29,10 +29,15 @@
 		}
 		
 		.cfollowtopic, .cunfollow { margin-left:60px; } 
+		
+		.tabContent { padding-top: 10px }
 	</style>
 	
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
+		var flagType = "convo";
+		var flagConvoId = "";
+	
 		$(document).ready(function() {
 			$("#followTopicLink").click(function() {
 				$.post("@{Topics.follow()}", 
@@ -50,7 +55,7 @@
 	  			);
 			});
 
-			$(".followTopicLink").live('click', function() {
+			$(".followConvoLink").live('click', function() {
 				var topicId = $(this).attr("rel");
 				if ($(this).html().indexOf("Unfollow") != -1) {
 					$(this).html("Follow");
@@ -65,6 +70,12 @@
 	  				}
 	  			);
 	  			return false;
+			});
+
+			$(".flagConvoLink").click(function() {
+				flagType = "convo";
+				flagConvoId = $(this).attr("rel");
+				showPopup("#flagPopup");
 			});
 
 
@@ -145,6 +156,16 @@
 			$('.inline-edit').inlineEdit(
 		  		{ hover: '', saveFunction: saveData}
 		  	);
+
+		  	//tabs?
+			$(".tabLink").click(function() {
+   				$(".latestactivity").removeClass("latestactivity").addClass("latestactivity1"); //Remove any "active" class
+   				$(this).parent().addClass("latestactivity"); //Add "active" class to selected tab
+   				var id = $(this).attr("id");
+   				$(".tabContent").hide(); //Hide all tab content
+   				$("#"+id+"Content").fadeIn(); //Fade in the active content
+   				return false;
+   			});
 		});
 
 		function saveData(dataType, newValue) {
@@ -171,6 +192,24 @@
 			$.post("@{Conversations.restart}", {topicId: convoId});
 			return false;
 		}
+
+		function flag() {
+   	   		var reason = $("#flagReason").val();
+   	   		$("#flagReason").val("");
+   			if (flagType === "convo") {
+				$.post("@{Conversations.flag}", 
+						{reason: reason, convoId: flagConvoId}
+				);
+			}
+   			else if (flagType === "answer") {
+   				$.post("@{Conversations.flagAnswer}", 
+					{reason: reason, answerId: flagAnswerId}
+				);
+   			}
+
+   			hideAll();
+   			return false;
+   		}
 	</script>
 </head>
 
@@ -352,15 +391,21 @@
                   <div class="mtrighttxt1">Share Topic</div>
                   <!--topixtext-->
                   <div class="membersarea">
-                    <div class="sharicons"><img alt="Emailz" src="/public/images/emailicon.jpg"/> <a href="#">Email</a> </div>
+                    <div class="sharicons">
+                    	<img alt="Emailz" src="/public/images/emailicon.jpg"/>
+                    	<a href="#" onclick="return openInvitationsWindow();">Email</a>
+                    </div>
+                    
+                    *{
                     <div class="sharicons"><img class="rpad" alt="Twitter" src="/public/images/twittericon.jpg"/><a href="#">Twitter</a></div>
                     <div class="sharicons"><img class="rpad" alt="Members" src="/public/images/facebookicon.jpg"/><a href="#">Facebook</a></div>
+                    }*
                   </div>
                   <!--membersarea-->
                   <div class="topicborder"></div>
                 </div>
-                <!--topipsts-->
-                <!--topipsts-->
+                
+                *{
                 <div class="topipsts">
                   <div class="mtrighttxt1">Top Answerers</div>
                   <div class="topbox">
@@ -415,6 +460,8 @@
                   </div>
                   <!--topbox-->
                 </div>
+                }*
+                
                 <!--topipsts-->
                 <div class="cb"></div>
               </div>
@@ -426,3 +473,11 @@
           </div>
           <div id="signupright"></div>
     </div>
+    
+<div id="boxes">
+	<div id="dialog" class="window"></div>
+	
+	#{ popups/flag /}
+</div>
+<!-- Mask to cover the whole screen -->
+<div id="mask"></div>    

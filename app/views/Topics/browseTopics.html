@@ -10,15 +10,11 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$(".categoryLink").click(function() {
-				$(".categoryLink").each(function() {
-					$(this).removeClass("currentcat");
-				});
+				$(".categoryLink").removeClass("currentcat");
 				$(this).addClass("currentcat");
 
 				var categoryId = $(this).attr("rel");
-				$(".catbox2").each(function() {
-					$(this).hide();
-				});
+				$(".catbox2").hide();
 				$("#children"+categoryId).show();
 			});
 

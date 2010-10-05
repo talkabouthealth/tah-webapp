@@ -144,6 +144,9 @@ public class ViewDispatcher extends Controller {
 		
 		//load latest activities for convos with this topic
 		List<Action> activities = ActionDAO.loadLatestByTopic(topic);
+		if (activities.size() > 20) {
+			activities = activities.subList(0, 20);
+		}
 		
 		TopicDAO.incrementTopicViews(topic.getId());
 		

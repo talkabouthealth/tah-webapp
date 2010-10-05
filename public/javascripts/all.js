@@ -154,5 +154,4 @@ function makeAutocomplete(id, type) {
 			.append( "<a>" + item.label + "&nbsp;<span>" + item.type + "</span></a>" )
 			.appendTo( ul );
 	};
-	
 }

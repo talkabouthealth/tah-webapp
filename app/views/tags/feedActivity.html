@@ -1,0 +1,34 @@
+<div class="joinbox">
+	<div class="joinpic">
+		<a href="@{ViewDispatcher.view(_activity.talker.userName)}">
+			<img src="@{Image.show(_activity.talker.userName)}" width="48" height="48" border="0" />
+		</a>
+	</div>
+	<div class="jointxtbox">
+		#{if _activity.convo}
+			<div class="jointextstop">
+				<a href="${_activity.convo.mainURL}">${_activity.convo.topic}</a>
+			</div>
+			<div class="joinztextlink">
+				<!-- <span>3 members speaking</span> |  --> 
+				<a href="#" class="followConvoLink" rel="${_activity.convo.id}">
+					${_talker.followingConvosList?.contains(_activity.convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
+				<a href="#" class="flagConvoLink" rel="${_activity.convo.id}">Flag</a> | 
+				<span>Started ${_activity.convo.creationDate.since()}</span>
+			</div>
+		#{/if}
+		<div class="jointxtlink1">
+			${_activity.toHTML().raw()}
+		</div>
+		<div class="jointxtlink2">
+			#{if _activity.reply}
+				${_activity.reply.text}
+			#{/if}
+			#{elseif _activity.answer}
+				${_activity.answer.text}
+			#{/elseif}
+		</div>
+	</div>
+	<div class="cb"></div>
+	<div class="joinborder"></div>
+</div>
