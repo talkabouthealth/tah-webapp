@@ -1,4 +1,8 @@
 <!-- js for the Settings menu in top right -->
+<link rel="stylesheet" href="/public/plugins/ui-lightness/jquery-ui-1.8.4.custom.css" type="text/css" media="screen" />
+<script type="text/javascript" 
+	src="/public/javascripts/jquery-ui-1.8.4.custom.min.js" ></script>
+	
 <script type="text/javascript">
 	var timeout         = 500;
 	var closetimer		= 0;
@@ -23,8 +27,46 @@
 		}
 	
 	$(document).ready(function()
-	{	$('#jsddm > li').bind('mouseover', jsddm_open);
-		$('#jsddm > li').bind('mouseout',  jsddm_timer);});
+	{
+		$('#jsddm > li').bind('mouseover', jsddm_open);
+		$('#jsddm > li').bind('mouseout',  jsddm_timer);
+
+		var cache = {};
+		$( "#topSearchBox" ).autocomplete({
+			minLength: 1,
+			source: function(request, response) {
+				if ( request.term in cache ) {
+					response( cache[ request.term ] );
+					return;
+				}
+				
+				$.ajax({
+					url: "@{Search.ajaxSearch()}",
+					dataType: "json",
+					data: request,
+					success: function( data ) {
+						cache[ request.term ] = data;
+						response( data );
+					}
+				});
+			},
+			select: function(event, ui) {
+				var url = ui.item.url;
+				if (url === "#fullsearch") {
+					//go to full conversations search
+					url = "@{Community.searchConversations()}?query="+ui.item.value;
+				}
+				document.location = url;
+				return false;
+			}
+		})
+		.data( "autocomplete" )._renderItem = function( ul, item ) {
+			return $( "<li></li>" )
+				.data( "item.autocomplete", item )
+				.append( "<a>" + item.label + "&nbsp;<span>" + item.type + "</span></a>" )
+				.appendTo( ul );
+		};
+	});
 	
 	document.onclick = jsddm_close;
 </script>
@@ -126,7 +168,7 @@
 	              <div class="topnavCover2">
 	                <div style="padding-left: 25px;" class="topsearchCover">
 	                  <div class="topsearchinput">
-	                    <input type="text" class="topserchz iebox"/>
+	                    <input id="topSearchBox" type="text" class="topserchz iebox"/>
 	                  </div>
 	                  <!--topsearchinput-->
 	                  <div class="topsubmitsz">

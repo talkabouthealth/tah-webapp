@@ -106,7 +106,6 @@ public class SearchIndexerJob extends Job {
 				autocompleteIndexWriter.addDocument(doc2);
 			}
 			
-			Logger.error("Before topics: "+TopicDAO.loadAllTopics().size());
 			for (TopicBean topic : TopicDAO.loadAllTopics()) {
 				Document doc = new Document();
 				doc.add(new Field("title", topic.getTitle(), Field.Store.YES, Field.Index.TOKENIZED));
