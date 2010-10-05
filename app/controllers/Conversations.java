@@ -50,9 +50,9 @@ public class Conversations extends Controller {
     	ConvoType convoType = ConvoType.valueOf(type);
     	
     	Set<TopicBean> topicsSet = new HashSet<TopicBean>();
-    	String[] topicsArr = topics.split(" ");
+    	String[] topicsArr = topics.split(",");
     	for (String topicTitle : topicsArr) {
-    		TopicBean topic = TopicDAO.getByTitle(topicTitle);
+    		TopicBean topic = TopicDAO.getByTitle(topicTitle.trim());
     		if (topic != null) {
     			topicsSet.add(topic);
     		}
