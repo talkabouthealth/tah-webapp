@@ -66,7 +66,9 @@
 				$display.hide();
 				$form.show();
 				
-				$text.val($view.html()).focus();
+				var editText = $view.html();
+				editText = editText.replace(/<br>/g, '\n');
+				$text.val(editText).focus();
 
 				/*
 				if ( settings.html ) {
@@ -134,6 +136,8 @@
 				}
 				
 				$form.hide();
+				
+				newValue = newValue.replace(/\n/g, '<br/>');
 				$view.html(newValue);
 				
 				if (newValue === '') {

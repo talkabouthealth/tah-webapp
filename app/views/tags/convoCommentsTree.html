@@ -46,39 +46,10 @@
 											</div>
 						 				#{/if}
 						 				
-						 				*{
-						 				<div class='inline-edit'>
-											<div id="hidit${comment.id}">
-												<span class="styles2" style="float: left" id="answerText${comment.id}">${comment.text}</span>
-												#{if session.username?.equals(comment.fromTalker.userName) }
-													<div class="display" style="display:block;">
-														<div class="editit" style="display:block;">
-															<a href="#" onclick="hidit('${comment.id}')">Edit</a>
-														</div>
-													</div>
-												#{/if}
-										    </div>
-										    <div style="margin-top:10px; margin-bottom:10px;"></div>
-											<div class='form' id="editit${comment.id}">
-												<div style="float:left; width:auto; padding-bottom:5px;" >
-										        	<input id="answerInput${comment.id}" type="text"
-										        		value="${comment.text}" class="edititinputs" style="width:400px"  >
-										        </div>
-												<div style="float:right;margin-right:30px;">
-											        <input type="submit" class="updatebtns" value=" " 
-											        	onclick="return updateAnswer('${comment.id}');" />
-											        <div class="canclebtnz">
-											        	<a class="cancel" href="#" onclick="shoit('${comment.id}')">Cancel</a>
-											        </div>
-												</div>
-											</div>
-										</div>
-										}*
-										
 										<div class='inline-edit' id="answerEdit${comment.id}">
 											<div class="suggestxt inline_display">
 												<div class="inline_full inline_empty">
-													<span class="styles2 inline_view" style="float: left">${comment.text}</span>
+													<span class="styles2 inline_view" style="float: left">${comment.text.nl2br()}</span>
 													#{if session.username?.equals(comment.fromTalker.userName) }
 														<div class="editdiv">
 															<div class="editit">
@@ -91,8 +62,8 @@
 								            <div style="margin-top:10px; margin-bottom:10px;"></div>
 											<div class='inline_form'>
 												<div style="float:left; width:auto; padding-bottom:5px;" >
-										        	<input id="titleinput" type="text" style="width:400px"  
-										        		value="${comment.text}" class="edititinputs inline_text" >
+										        	<textarea id="titleinput" type="text" style="width:400px; height: auto;"  
+										        		class="edititinputs inline_text">${comment.text}</textarea>
 										        </div>
 												<div style="float:right;margin-right:30px;">
 											        <input id="titleBtn" type="submit" class="updatebtns inline_save" value=" " />
@@ -151,7 +122,7 @@
 								#{if session.username }
 									<div id="replyform${comment.id}" style="clear:both">
 					                    <div class="repcommbox22">
-						                    <input id="replytext${comment.id}" type="text" class="repcominput" />
+						                    <textarea id="replytext${comment.id}" type="text" class="repcominput" ></textarea>
 						                    <div class="repcommstextbox">
 						                    	<input type="submit" class="repcomsubmits" onclick="return saveProfileComment('${comment.id}');"
 						                    		src="/public/images/repcomsubmits.jpg" value=" " />
