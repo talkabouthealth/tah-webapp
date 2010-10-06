@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -42,9 +43,6 @@ public class Home extends Controller {
 		
 		//--------- For new Home Page --------------
 		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
-//		for (ConversationBean convoBean : liveConversations) {
-//			System.out.println("!!: "+convoBean.getTopic());
-//		}
 		
 //		List<ConversationBean> openedConversations = ConversationDAO.getOpenedConversations();
 //		for (ConversationBean convoBean : openedConversations) {
@@ -54,31 +52,39 @@ public class Home extends Controller {
 		//Convo feed?
 		Set<Action> convoFeedActions = ActionDAO.loadConvoFeed(talker);
 		
-		//Action feed?
-//		List<Action> activityFeed = ActionDAO.loadActivityFeed(talker);
-		
 //		Community Convo Feed
-//		- Question started or restarted in the community
-//		- Question answered
-//		- Summary added or edited
-//		- Answer voted for
-		if (convoFeedActions.size() < 40) {
-			List<Action> communityConvoFeed = ActionDAO.loadCommunityConvoFeed();
-			convoFeedActions.addAll(communityConvoFeed);
-		}
+//		if (convoFeedActions.size() < 40) {
+//			List<Action> communityConvoFeed = ActionDAO.loadCommunityConvoFeed();
+//			convoFeedActions.addAll(communityConvoFeed);
+//		}
 	
 		//TODO: better truncate to 40?
+		
+		//!!! Conversations should not appear more than once in the Conversation Feed
+		//except for Answers, Replies, and Add and Edit Summaries. 
+		//TODO: move to logic?
+		EnumSet<ActionType> okActions = EnumSet.of(
+			ActionType.ANSWER_CONVO, ActionType.REPLY_CONVO, 
+			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED,
+			ActionType.ANSWER_VOTED
+		);
+		
 		Set<Action> convoFeed = new LinkedHashSet<Action>();
-		if (convoFeedActions.size() > 20) {
-			for (Action action : convoFeedActions) {
-				convoFeed.add(action);
-				if (convoFeed.size() > 20) {
-					break;
+		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();
+		for (Action action : convoFeedActions) {
+			ConversationBean actionConvo = action.getConvo();
+			if (actionConvo != null && !okActions.contains(action.getType())) {
+				if (!addedConvos.contains(actionConvo)) {
+					convoFeed.add(action);
+					addedConvos.add(actionConvo);
 				}
 			}
-		}
-		else {
-			convoFeed = convoFeedActions;
+			else {
+				convoFeed.add(action);
+			}
+			if (convoFeed.size() > 20) {
+				break;
+			}
 		}
 		
 		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);

@@ -2,6 +2,8 @@ package models.actions;
 
 import java.util.Date;
 
+import models.ConversationBean;
+
 import com.mongodb.DBObject;
 
 
@@ -69,5 +71,7 @@ public interface Action {
 	public Date getTime();
 	
 	public ActionType getType();
+	
+	public ConversationBean getConvo();
 
 }

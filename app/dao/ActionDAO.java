@@ -85,6 +85,8 @@ public class ActionDAO {
 	public static Set<Action> loadConvoFeed(TalkerBean talker) {
 		//TODO: move to FeedLogic?
 		
+		DBRef currentTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talker.getId());
+		
 		//prepare list of followed convos/topics
 		Set<DBRef> convosDBSet = new HashSet<DBRef>();
 		for (String convoId : talker.getFollowingConvosList()) {
@@ -111,10 +113,16 @@ public class ActionDAO {
 		
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("$or", Arrays.asList(
-							new BasicDBObject("topicId", new BasicDBObject("$in", convosDBSet)),
+							BasicDBObjectBuilder.start()
+								.add("topicId", new BasicDBObject("$in", convosDBSet))
+								//we do not need if other user followed convo
+								.add("type", new BasicDBObject("$ne", ActionType.FOLLOW_CONVO.toString()))
+								.get(),
 							new BasicDBObject("uid", new BasicDBObject("$in", talkersDBSet))
 						))
 			.add("type", new BasicDBObject("$in", actionTypes))
+			//user shouldn't see personal actions in the ConvoFeed
+			.add("uid", new BasicDBObject("$ne", currentTalkerRef))
 			.get();
 
 		List<DBObject> activitiesDBList = 

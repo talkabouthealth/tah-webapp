@@ -259,6 +259,14 @@ public abstract class AbstractAction implements Action {
 	public void setId(String id) {
 		this.id = id;
 	}
+	
+	public ConversationBean getConvo() {
+		return convo;
+	}
+
+	public void setConvo(ConversationBean convo) {
+		this.convo = convo;
+	}
 
 	public TalkerBean getTalker() {
 		return talker;
