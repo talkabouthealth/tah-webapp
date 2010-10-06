@@ -187,12 +187,6 @@
 			}
 		}
 
-		function restartConvo(tid, convoId) {
-			openChat(tid);
-			$.post("@{Conversations.restart}", {topicId: convoId});
-			return false;
-		}
-
 		function flag() {
    	   		var reason = $("#flagReason").val();
    	   		$("#flagReason").val("");

@@ -168,8 +168,10 @@ public abstract class AbstractAction implements Action {
 	// Topic connected actions
 	protected ConversationBean parseConvo(DBObject dbObject) {
 		DBObject convoDBObject = ((DBRef)dbObject.get("topicId")).fetch();
+		
 		ConversationBean convo = new ConversationBean();
 		convo.parseBasicFromDB(convoDBObject);
+		convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
     	
     	return convo;
 	}
@@ -177,10 +179,6 @@ public abstract class AbstractAction implements Action {
 	protected void addConvo(DBObject dbObject, ConversationBean topic) {
 		DBRef topicRef = new DBRef(DBUtil.getDB(), ConversationDAO.CONVERSATIONS_COLLECTION, new ObjectId(topic.getId()));
 		dbObject.put("topicId", topicRef);
-	}
-	
-	protected Object convoLink() {
-		return convo.getTopic();
 	}
 	
 	// Other talker connected actions

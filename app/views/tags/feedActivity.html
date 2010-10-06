@@ -10,11 +10,17 @@
 				<a href="${_activity.convo.mainURL}">${_activity.convo.topic}</a>
 			</div>
 			<div class="joinztextlink">
-				<!-- <span>3 members speaking</span> |  --> 
+				#{if _activity.convo.comments.size() == 0}
+					<a href="${_activity.convo.mainURL}#answers">Answer</a> | 
+				#{/if}
+				#{else}
+					<a href="${_activity.convo.mainURL}#answers">${_activity.convo.comments.size()} 
+						Answer${_activity.convo.comments.pluralize()}</a> | 
+				#{/else}
 				<a href="#" class="followConvoLink" rel="${_activity.convo.id}">
 					${_talker.followingConvosList?.contains(_activity.convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
-				<a href="#" class="flagConvoLink" rel="${_activity.convo.id}">Flag</a> | 
-				<span>Started ${_activity.convo.creationDate.since()}</span>
+				<a href="#" onclick="restartConvo(${_activity.convo.tid}, '${_activity.convo.id}')">Re-start talk</a> | 
+				<span>${_activity.convo.creationDate.since()}</span>
 			</div>
 		#{/if}
 		<div class="jointxtlink1">

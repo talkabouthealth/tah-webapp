@@ -18,7 +18,10 @@ public class Talk extends Controller {
 		
 		notFoundIfNull(topic);
 		
-		ActionDAO.saveAction(new JoinConvoAction(talker, topic));
+		//we do not save "Join Action" for author
+		if (!topic.getTalker().equals(talker)) {
+			ActionDAO.saveAction(new JoinConvoAction(talker, topic));
+		}
 		
 		render(talker, topic);
 	}

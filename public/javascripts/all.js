@@ -9,6 +9,12 @@ function openInvitationsWindow() {
 	window.open("/home/invitations", "TalkAboutHealthInvitations", "width=600,height=350");
 }
 
+function restartConvo(tid, convoId) {
+	openChat(tid);
+	$.post("/conversations/restart", {topicId: convoId});
+	return false;
+}
+
 //createThankYou(String toTalker, String note)
 function sendThankYou() {
 	var noteText = $("#thankYouListNote").val();

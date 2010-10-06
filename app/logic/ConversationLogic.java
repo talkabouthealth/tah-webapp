@@ -56,8 +56,6 @@ public class ConversationLogic {
 		talker.getFollowingConvosList().add(convo.getId());
 		TalkerDAO.updateTalker(talker);
 
-		ActionDAO.saveAction(new FollowConvoAction(talker, convo));
-		
 		return convo;
 	}
 	

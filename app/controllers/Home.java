@@ -36,19 +36,16 @@ public class Home extends Controller {
     	//TODO: load only count?
     	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		
-    	//TODO: use cache?
-    	Map<String, ConversationBean> mapTalkmiTopics = ConversationDAO.queryConversations();
-		
 		if (newTopic == null || newTopic.trim().length() == 0) {
 			newTopic = "Please enter your Conversation here ...";
 		}
 		
 		//--------- For new Home Page --------------
-//		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
+		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
 //		for (ConversationBean convoBean : liveConversations) {
 //			System.out.println("!!: "+convoBean.getTopic());
 //		}
-//		
+		
 //		List<ConversationBean> openedConversations = ConversationDAO.getOpenedConversations();
 //		for (ConversationBean convoBean : openedConversations) {
 //			System.out.println("??: "+convoBean.getTopic());
@@ -90,7 +87,7 @@ public class Home extends Controller {
 		session.remove("justloggedin");
 		
 //        render(talker, mapTalkmiTopics, newTopic, convoFeed, showIMPopup);
-		render("@newhome", talker, mapTalkmiTopics, newTopic, convoFeed, showIMPopup);
+		render("@newhome", talker, newTopic, convoFeed, liveConversations, showIMPopup);
     }
     
     public static void conversationFeed() {

@@ -33,12 +33,6 @@
 	  			return false;
 			});
 
-			$(".flagConvoLink").click(function() {
-				flagType = "convo";
-				flagConvoId = $(this).attr("rel");
-				showPopup("#flagPopup");
-			});
-
 			var showIMPopup = ${showIMPopup};
 			//showIMPopup = true;
 			if (showIMPopup) {
@@ -104,7 +98,7 @@
 				$.post("@{Conversations.create()}", 
 	  				{ type: type, title: title, details: details, topics: topics},
 	  				function(data) {
-	  					if (type == "CONVERSATION") {
+	  					if (type === "CONVERSATION") {
 	  						hideAll();
 	  						openChat(data.tid);
 	  					}
@@ -200,24 +194,6 @@
 			};
 				
 		});
-
-		function flag() {
-   	   		var reason = $("#flagReason").val();
-   	   		$("#flagReason").val("");
-   			if (flagType === "convo") {
-				$.post("@{Conversations.flag}", 
-						{reason: reason, convoId: flagConvoId}
-				);
-			}
-   			else if (flagType === "answer") {
-   				$.post("@{Conversations.flagAnswer}", 
-					{reason: reason, answerId: flagAnswerId}
-				);
-   			}
-
-   			hideAll();
-   			return false;
-   		}
 	</script>
 		
 <div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
@@ -248,37 +224,59 @@
 
                   <!--startsearchbox-->
                   <div class="topic">
-                  	*{
-                    <div class="newpage1">Live Community Talks (8)</div>
-                    <a href="#"><img src="/public/images/refreshicon.jpg" alt="refresh" border="0" style="float:left; padding-left:4px; padding-top:22px"  /></a>
+                    <div class="newpage1">Live Community Talks (${liveConversations.size()})</div>
+                    <!-- <a href="#"><img src="/public/images/refreshicon.jpg" alt="refresh" 
+                    	border="0" style="float:left; padding-left:4px; padding-top:22px"  /></a> -->
                     <div class="seeall"><a href="#">See All</a></div>
                     <div class="topicborder"></div>
                     <!--mtinputbox-->
                     <div class="cb"></div>
-                    }*
 
                     <div class="newpageCover">
-                      *{
-                      <div class="joinbox">
-                        <div class="joinpic"><img src="/public/images/joinpic.jpg" alt="join" /></div>
-                        <div class="jointxtbox">
-                          <div class="jointextstop"> <a href="#">Received 2 different Diagnoses today, What do i do next?
-                            Shouldi speak to another...</a></div>
-                          <div class="joinztextlink"><a href="#">3 members speaking</a> | <a href="#"> Follow</a> | <a href="#">Flag</a> | <a href="#">Stated 4 minutes ago</a></div>
-
-                          <div class="jointxtlink1">Question by<a href="#"> jill</a> (Patient) in topic<a href="#"> Just Diagnosed</a> ...<a href="#" style="font-size:11px; font-weight:normal;"> more</a></div>
-                        </div>
-                        <!--jointxtbox-->
-
-                        <div class="joinconbox">
-                          <input type="submit" src="/public/images/joinconversation.jpg" value=" " class="joinconversation" />
-                        </div>
-                        <div class="cb"></div>
-                        <div class="joinborder"></div>
-                      </div>
-                      }*
-                     
+                   		#{list items: liveConversations, as: 'convo'}
+<div class="joinbox">
+	<div class="joinpic">
+		<a href="@{ViewDispatcher.view(convo.talker.userName)}">
+			<img src="@{Image.show(convo.talker.userName)}" width="48" height="48" border="0" />
+		</a>
+	</div>
+	<div class="jointxtbox">
+		<div class="jointextstop">
+			<a href="${convo.mainURL}">${convo.topic}</a>
+		</div>
+		<div class="joinztextlink">
+			<a href="#" class="followConvoLink" rel="${convo.id}">
+				${_talker.followingConvosList?.contains(convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
+			<span>${convo.creationDate.since()}</span>
+		</div>
+		<div class="jointxtlink1">
+			Conversation by 
+			<a href="@{ViewDispatcher.view(convo.talker.userName)}" 
+				class="blue13"><strong>${convo.talker.userName}</strong></a>
+			<span class="blacktext12">
+				#{if convo.talker.connection}
+					(${convo.talker.connection}, ${convo.talker.levelOfRecognition})
+				#{/if}
+				#{else}
+					(${convo.talker.levelOfRecognition})
+				#{/else}
+			</span>
+		</div>
+		<div class="jointxtlink2"></div>
+	</div>
+	<div class="joinconbox">
+		<input type="submit" src="/public/images/joinconversation.jpg" 
+			value=" " class="joinconversation" onclick="return openChat('${convo.tid}');" />
+	</div>
+	<div class="cb"></div>
+	<div class="joinborder"></div>
+</div>		                      
+						#{/list}
+						#{else}
+							<span class="blacktext14">Be the first to start a live talk.</span>
+						#{/else}
                       <!--joinbox-->
+                      
                       <div class="topic">
                         <div class="newpage1">Conversation Feed</div>
 
@@ -472,8 +470,6 @@
             <div class="cb"></div>
           </div>
 	</div>
-	
-	#{ popups/flag /}
 	
   <!-- Mask to cover the whole screen -->
   <div id="mask"></div>
