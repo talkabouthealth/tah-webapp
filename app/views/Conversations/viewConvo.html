@@ -59,6 +59,8 @@
 		
 		var flagType = '';
 		var flagAnswerId = '';
+
+		var selectedTalkerId = '';
 		
 		$(document).ready(function() {
 			$("#followConvoLink").click(function() {
@@ -109,8 +111,7 @@
 				flagAnswerId = $(this).attr("rel");
 				showPopup("#flagPopup");
 			});
-			
-   			
+
    			$(".deleteTopicLink").live("click", function() {
    	   			$(this).prev().remove();
    	   			var topicId = $(this).attr("rel");
@@ -268,6 +269,25 @@
    	   		return false;
    		}
 
+   		function thankYou(talkerId, userName) {
+   			$("#thankYouUser").html(userName);
+   			selectedTalkerId = talkerId;
+   			
+			showPopup("#thankYouPopup");
+			return false;
+   		}
+
+   		function saveThankYou() {
+   			var noteText = $("#thankYouListNote").val();
+   			hideAll();
+   			$("#thankYouListNote").val("");
+
+   			$.post("/actions/createThankYou", 
+   				{ toTalker: selectedTalkerId, note: noteText}
+   			);
+   			return false;
+   		}
+
    		//flag convo or answer
    		function flag() {
    	   		var reason = $("#flagReason").val();
@@ -286,18 +306,6 @@
    			hideAll();
    			return false;
    		}
-   		
-
-   		//show and hide for field edits
-	    function hidit(id) {
-		    $("#hidit"+id).hide();
-			return false;
-	    }
-		function shoit(id) {
-			$("#editit"+id).hide();
-			$("#hidit"+id).show();
-			return false;
-		}
 	</script>
 </head>
 
@@ -433,7 +441,7 @@
                       			#{if talker }
 									<div class="tagtxts">
 				                    	<a href="#" class="restartConvoLink">Restart Conversation</a> |  
-				                    	<a href="#">Start Follow up conversation</a>  |  
+				                    	<!-- <a href="#">Start Follow up conversation</a>  |  -->  
 				                    	<a href="#" class="flagConvoLink">Flag Question</a> 
 				                    	#{if session.username?.equals("admin") || convo.talker.userName.equals(session.username)}
 				                        	  |  <a href="#" onclick="return deleteConvo();">Delete</a> 
@@ -661,22 +669,21 @@
 	
 	#{ popups/flag /}
 
-	<div id="dialog2" class="window1" >
+	<div id="thankYouPopup" class="window" >
 	  <div id="innermiddleareazs">
 	    <div class="popboxWraper">
 	      <div class="popboxflagzx1">
-	        <div class="imheadingz">Give a Thank you</div>
+	        <div class="imheadingz">Give a 'Thank you' to <span id="thankYouUser"></span></div>
 	        <div class="commentsCover">
 	          <!--	<div class="selheadingza">&nbsp;</div>-->
 	          <div class="selheadinginputs">
-
-	            <textarea class="popinputs" cols="4" rows="3" style="height:50px" ></textarea>
+	            <textarea id="thankYouListNote" class="popinputs" cols="4" rows="3" style="height:50px" ></textarea>
 	          </div>
 	        </div>
 	        <!--commentsCover-->
 	        <div class="poptxtzzCover">
-	          <div  class="cancs" ><a href="#">Cancel</a></div>
-	          <input type="submit" value="" class="submitspopss"   src="images/submitsthanks.jpg" />
+	          <div  class="cancs" ><a href="#" onclick="return hideAll();">Cancel</a></div>
+	          <input type="submit" onclick="return saveThankYou();" value="" class="submitspopss"   src="images/submitsthanks.jpg" />
 	        </div>
 
 	        <!--poptxtCover-->

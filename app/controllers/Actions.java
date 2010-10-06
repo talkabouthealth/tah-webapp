@@ -34,6 +34,11 @@ public class Actions extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		TalkerBean toTalkerBean = TalkerDAO.getById(toTalker);
 		
+		if (talker.equals(toTalkerBean)) {
+			forbidden();
+			return;
+		}
+		
 		ThankYouBean thankYouBean = new ThankYouBean();
 		thankYouBean.setTime(new Date());
 		thankYouBean.setNote(note);

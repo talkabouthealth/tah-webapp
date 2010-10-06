@@ -92,9 +92,11 @@
 					                        	<li><a href="#" onclick="return deleteAnswer('${comment.id}');">Delete</a></li>
 					                        	<li>&nbsp;|&nbsp;</li>
 					                        #{/if}
-					                        <li><a href="#dialog" name="modal">Thank</a></li>
-					                      	<li>&nbsp;|&nbsp;</li>
-					                        <li><a href="#" class="flagAnswerLink" rel="${comment.id}">Flag Comment</a></li> 
+				<li><a href="#" onclick="return thankYou('${comment.fromTalker.id}', '${comment.fromTalker.userName}');">Thank</a></li>
+											<!-- 
+						                      	<li>&nbsp;|&nbsp;</li>
+						                        <li><a href="#" class="flagAnswerLink" rel="${comment.id}">Flag Comment</a></li> 
+					                         -->
 					                        #{if _level == 1}
 					                        	<li>&nbsp;|&nbsp;</li>
 					                        	#{if comment.notHelpful }
