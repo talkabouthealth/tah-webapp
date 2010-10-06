@@ -68,6 +68,7 @@
 				
 				var editText = $view.html();
 				editText = editText.replace(/<br>/g, '\n');
+				editText = editText.replace(/<BR>/g, '\n');
 				$text.val(editText).focus();
 
 				/*

@@ -6,6 +6,7 @@
 		.seeall { padding-top: 20px }
 	</style>
 	
+	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 	<script type="text/javascript">
 		var username = "${talker.userName}";
 		var levelOfRecognition = "${talker.levelOfRecognition}";
@@ -192,7 +193,8 @@
 					.append( "<a>" + item.label + "&nbsp;<span>" + item.type + "</span></a>" )
 					.appendTo( ul );
 			};
-				
+
+			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
 		});
 	</script>
 		

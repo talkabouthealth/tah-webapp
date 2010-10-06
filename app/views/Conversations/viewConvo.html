@@ -518,7 +518,7 @@
                         
 							<div class="topic" id="replyform"><br />
 								<textarea name="textarea" id="replytext" class="answerinput" 
-									onclick="this.value=''">Add New Answer</textarea><br />
+									onclick="if (this.value === 'Add New Answer') this.value='';">Add New Answer</textarea><br />
 								<input type="submit" onclick="return saveProfileComment('');" 
 									src="/public/images/addcomments.jpg" class="addcomments" value=" " />
 								<div class="answerh2 style1 style2">Conversation</div>
