@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import logic.FeedsLogic;
 import models.IMAccountBean;
 import models.TalkerBean;
 import models.ConversationBean;
@@ -49,43 +50,7 @@ public class Home extends Controller {
 //			System.out.println("??: "+convoBean.getTopic());
 //		}
 		
-		//Convo feed?
-		Set<Action> convoFeedActions = ActionDAO.loadConvoFeed(talker);
-		
-//		Community Convo Feed
-//		if (convoFeedActions.size() < 40) {
-//			List<Action> communityConvoFeed = ActionDAO.loadCommunityConvoFeed();
-//			convoFeedActions.addAll(communityConvoFeed);
-//		}
-	
-		//TODO: better truncate to 40?
-		
-		//!!! Conversations should not appear more than once in the Conversation Feed
-		//except for Answers, Replies, and Add and Edit Summaries. 
-		//TODO: move to logic?
-		EnumSet<ActionType> okActions = EnumSet.of(
-			ActionType.ANSWER_CONVO, ActionType.REPLY_CONVO, 
-			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED,
-			ActionType.ANSWER_VOTED
-		);
-		
-		Set<Action> convoFeed = new LinkedHashSet<Action>();
-		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();
-		for (Action action : convoFeedActions) {
-			ConversationBean actionConvo = action.getConvo();
-			if (actionConvo != null && !okActions.contains(action.getType())) {
-				if (!addedConvos.contains(actionConvo)) {
-					convoFeed.add(action);
-					addedConvos.add(actionConvo);
-				}
-			}
-			else {
-				convoFeed.add(action);
-			}
-			if (convoFeed.size() > 20) {
-				break;
-			}
-		}
+		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker);
 		
 		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
 		boolean isAdmin = "admin".equals(Security.connected());
@@ -100,28 +65,10 @@ public class Home extends Controller {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		
-		Set<Action> convoFeedActions = ActionDAO.loadConvoFeed(talker);
+    	Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker);
+    	List<Action> communityConvoFeed = ActionDAO.loadCommunityConvoFeed();
 		
-//		if (convoFeedActions.size() < 40) {
-//			List<Action> communityConvoFeed = ActionDAO.loadCommunityConvoFeed();
-//			convoFeedActions.addAll(communityConvoFeed);
-//		}
-	
-		//TODO: better truncate to 40?
-		Set<Action> convoFeed = new LinkedHashSet<Action>();
-		if (convoFeedActions.size() > 20) {
-			for (Action action : convoFeedActions) {
-				convoFeed.add(action);
-				if (convoFeed.size() > 20) {
-					break;
-				}
-			}
-		}
-		else {
-			convoFeed = convoFeedActions;
-		}
-		
-		render(talker, convoFeed);
+		render(talker, convoFeed, communityConvoFeed);
     }
     
     public static void openQuestions() {

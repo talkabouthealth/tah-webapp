@@ -160,7 +160,7 @@
 		  	//tabs?
 			$(".tabLink").click(function() {
    				$(".latestactivity").removeClass("latestactivity").addClass("latestactivity1"); //Remove any "active" class
-   				$(this).parent().addClass("latestactivity"); //Add "active" class to selected tab
+   				$(this).parent().removeClass("latestactivity1").addClass("latestactivity"); //Add "active" class to selected tab
    				var id = $(this).attr("id");
    				$(".tabContent").hide(); //Hide all tab content
    				$("#"+id+"Content").fadeIn(); //Fade in the active content

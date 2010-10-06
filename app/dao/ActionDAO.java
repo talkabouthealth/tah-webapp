@@ -183,7 +183,7 @@ public class ActionDAO {
 			.add("type", new BasicDBObject("$in", actionTypes))
 			.get();
 		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(20).toArray();
 		
 		List<Action> activitiesList = new ArrayList<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {

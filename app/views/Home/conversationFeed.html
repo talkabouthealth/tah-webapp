@@ -5,8 +5,13 @@
 		#innermiddlearea { padding-top: 10px }
 		
 		#mask { background-color:#e6e6e6; }
+		
+		.latestactivity, .latestactivity1 { width: auto }
+		.latestactivity a, .latestactivity1 a { width: auto; padding-left: 8px; padding-right: 8px }
+		.latestactivity a:hover, .latestactivity1 a:hover { width: auto; padding-left: 8px; padding-right: 8px }
 	</style>
 	
+	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$(".followTopicLink").live('click', function() {
@@ -26,6 +31,16 @@
 	  			return false;
 			});
 
+			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
+
+			$(".tabLink").click(function() {
+   				$(".latestactivity").removeClass("latestactivity").addClass("latestactivity1"); //Remove any "active" class
+   				$(this).parent().removeClass("latestactivity1").addClass("latestactivity"); //Add "active" class to selected tab
+   				var id = $(this).attr("id");
+   				$(".tabContent").hide(); //Hide all tab content
+   				$("#"+id+"Content").fadeIn(); //Fade in the active content
+   				return false;
+   			});
 		});
 	</script>
 		
@@ -38,6 +53,7 @@
             <div id="mtcover">
               <div id="mtleft">
                 <div class="mtcontent">
+                  *{
                   <div id="targetedtheradpy">
                     <div class="youactivity">
                       <div class="ycf1"><a href="#">Your Conversation Feed</a></div>
@@ -47,56 +63,59 @@
                     <!--youactivity-->
                     <div class="yaline"></div>
                   </div>
-                  <!--targetedtherapy-->
+                  }*
                   <div class="topipcWraper">
-                    <!--startsearchbox-->
-                    <div class="topic">
-                      <div class="newpage1">Your Conversation Feed</div>
-
-                      <div class="cb"></div>
-                      <div class="joinborder"></div>
-                      <!--mtinputbox-->
-                      <div class="cb"></div>
-                      <div class="topic">
-                        #{list items: convoFeed, as: 'activity'}
-							<div class="joinbox">
-								<div class="joinpic">
-									<a href="@{ViewDispatcher.view(activity.talker.userName)}">
-										<img src="@{Image.show(activity.talker.userName)}" width="48" height="48" border="0" />
-									</a>
-								</div>
-								<div class="jointxtbox">
-									#{if activity.convo}
-										<div class="jointextstop">
-											<a href="${activity.convo.mainURL}">${activity.convo.topic}</a>
-										</div>
-										<div class="joinztextlink">
-											<span>3 members speaking</span> | 
-											<a href="#" class="followTopicLink" rel="${activity.convo.id}">
-												${talker.followingConvosList?.contains(activity.convo.id) ? 'Unfollow' : 'Follow'}
-											</a> | 
-											<a href="#">Flag</a> | 
-											<span>Started ${activity.convo.creationDate.since()}</span>
-										</div>
-									#{/if}
-									<div class="jointxtlink1">
-										${activity.toHTML().raw()}
-									</div>
-									<div class="jointxtlink2"></div>
-								</div>
-								<div class="cb"></div>
-								<div class="joinborder"></div>
-							</div>
-						#{/list}
-                        <div class="replytommentbox" style="display: none;">
-                          <input type="submit" src="images/seemore.jpg" value=" " class="seemorecom" />
-                        </div>
-                        <div class="cb"></div>
-                      </div>
-                      <!--newpageCover-->
-                      <div class="cb"></div>
-                    </div>
-                    <!--topic-->
+                  	<div style="padding-top: 10px; height: 30px;" class="lacover">
+					  <div class="latestactivity"><a href="#" id="latestActivity" class="tabLink">Your Conversation Feed</a></div>
+					  <div class="latestactivity1"><a href="#" id="openQuestions" class="tabLink">Community Conversation Feed</a></div>
+					  <div class="laborder"></div>
+					</div>
+					<div class="cb"></div>
+					<div>
+						<div id="latestActivityContent" class="tabContent">	
+							<div class="topic">
+		                      <div class="newpage1">Your Conversation Feed</div>
+		
+		                      <div class="cb"></div>
+		                      <div class="joinborder"></div>
+		                      <!--mtinputbox-->
+		                      <div class="cb"></div>
+		                      <div class="topic">
+		                        #{list items: convoFeed, as: 'activity'}
+									#{feedActivity activity: activity, talker: talker /}
+								#{/list}
+		                        <div class="replytommentbox" style="display: none;">
+		                          <input type="submit" src="images/seemore.jpg" value=" " class="seemorecom" />
+		                        </div>
+		                        <div class="cb"></div>
+		                      </div>
+		                      <!--newpageCover-->
+		                      <div class="cb"></div>
+		                    </div> 
+						</div>
+						<div id="openQuestionsContent" class="tabContent" style="display: none;">
+							<div class="topic">
+		                      <div class="newpage1">Community Conversation Feed</div>
+		
+		                      <div class="cb"></div>
+		                      <div class="joinborder"></div>
+		                      <!--mtinputbox-->
+		                      <div class="cb"></div>
+		                      <div class="topic">
+		                        #{list items: communityConvoFeed, as: 'activity'}
+									#{feedActivity activity: activity, talker: talker /}
+								#{/list}
+		                        <div class="replytommentbox" style="display: none;">
+		                          <input type="submit" src="images/seemore.jpg" value=" " class="seemorecom" />
+		                        </div>
+		                        <div class="cb"></div>
+		                      </div>
+		                      <!--newpageCover-->
+		                      <div class="cb"></div>
+		                    </div> 
+						</div>
+					</div>
+                    
                     <div class="cb"></div>
                   </div>
                   <!--topipcWraper-->
