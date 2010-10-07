@@ -56,7 +56,8 @@ public class ActionDAO {
 			ActionType.START_CONVO, ActionType.RESTART_CONVO, 
 			ActionType.ANSWER_CONVO, 
 			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED,
-			ActionType.ANSWER_VOTED
+			ActionType.ANSWER_VOTED,
+			ActionType.TOPIC_ADDED
 		);
 	
 	
