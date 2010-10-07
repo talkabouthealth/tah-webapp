@@ -14,7 +14,7 @@ import models.actions.Action.ActionType;
 
 public class FeedsLogic {
 	
-	public static Set<Action> getConvoFeed(TalkerBean talker) {
+	public static Set<Action> getConvoFeed(TalkerBean talker, String actionId) {
 		
 		Set<Action> convoFeedActions = ActionDAO.loadConvoFeed(talker);
 		
@@ -48,7 +48,7 @@ public class FeedsLogic {
 			else {
 				convoFeed.add(action);
 			}
-			if (convoFeed.size() > 20) {
+			if (convoFeed.size() > 3) {
 				break;
 			}
 		}

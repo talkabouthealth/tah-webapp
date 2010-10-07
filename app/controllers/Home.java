@@ -50,7 +50,7 @@ public class Home extends Controller {
 //			System.out.println("??: "+convoBean.getTopic());
 //		}
 		
-		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker);
+		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
 		
 		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
 		boolean isAdmin = "admin".equals(Security.connected());
@@ -65,11 +65,26 @@ public class Home extends Controller {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		
-    	Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker);
+    	Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
     	List<Action> communityConvoFeed = ActionDAO.loadCommunityConvoFeed();
 		
 		render(talker, convoFeed, communityConvoFeed);
     }
+    
+    public static void conversationFeedAjax(String afterActionId) {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	
+    	Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, afterActionId);
+    	for (Action action : convoFeed) {
+    		//#{feedActivity activity: activity, talker: talker /}
+    		Action _activity = action;
+    		TalkerBean _talker = talker;
+    		render("tags/feedActivity.html", _activity, _talker);
+    		break;
+    	}
+    }
+    
+    
     
     public static void openQuestions() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);

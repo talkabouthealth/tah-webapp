@@ -196,6 +196,20 @@
 
 			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
 		});
+
+		function loadMoreConvoFeed() {
+			var lastActionId = $("#convoFeedList").children().last().attr("id");
+
+			//public static void conversationFeedAjax(String afterActionId) {
+			$.get("@{Home.conversationFeedAjax()}", 
+					{afterActionId: lastActionId},
+					function(data) {
+						$(data).appendTo($("#convoFeedList"));
+					}
+				);
+			
+			return false;
+		}
 	</script>
 		
 <div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
@@ -288,9 +302,14 @@
                       </div>
                       <!--topic-->
                       <div class="topic">
-                        #{list items: convoFeed, as: 'activity'}
-							#{feedActivity activity: activity, talker: talker /}
-						#{/list}
+                        <div id="convoFeedList">
+	                        #{list items: convoFeed, as: 'activity'}
+								#{feedActivity activity: activity, talker: talker /}
+							#{/list}
+						</div>
+						<div class="replytommentbox">
+                          <input type="submit" src="images/seemore.jpg" onclick="return loadMoreConvoFeed();"value=" " class="seemorecom" />
+                        </div>
                         <div class="cb"></div>
                       </div>
                       <!--topic-->
