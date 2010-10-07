@@ -19,7 +19,16 @@
 			<div class="${_level == 1 ? 'comadd' : 'comreplytext1'}">
 				${comment.time.since()}
 				#{if _level == 1}
-				&nbsp;|&nbsp;<a href="#">Comments</a>
+					&nbsp;|&nbsp;
+					#{if comment.children?.size() == 0 }
+						<a href="#" onclick="return showReplyForm('${comment.id}');">Reply</a>
+					#{/if}
+					#{elseif comment.children?.size() == 1}
+						1 Reply
+					#{/elseif}
+					#{else}
+						${comment.children?.size()} Replies
+					#{/else}
 				#{/if}
 			 </div>
 		</div>
@@ -30,7 +39,11 @@
 		<div class="commentsreply">
 			#{profileCommentsTree2 commentsList: comment.children, level: (_level+1)/}
 			
-			<div id="reply${comment.id}" class="replytommentbax">
+			<div id="reply${comment.id}" class="replytommentbax"
+					#{if comment.children?.size() == 0}
+						style="display: none;"
+					#{/if}
+				>
 				<div class="cb"></div>
 				<div>
 					<div class="cb"></div>

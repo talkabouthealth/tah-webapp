@@ -156,6 +156,7 @@ public class TopicDAO {
 			TopicBean parentTopic = new TopicBean();
 			parentTopic.setId(topicDBObject.get("_id").toString());
 			parentTopic.setTitle((String)topicDBObject.get("title"));
+			parentTopic.setMainURL((String)topicDBObject.get("main_url"));
 			parentTopics.add(parentTopic);
 		}
 		return parentTopics;

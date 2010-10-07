@@ -122,8 +122,10 @@ public class TopicBean implements Comparable<TopicBean> {
 		if (childrenDBList != null) {
 			for (DBRef childDBRef : childrenDBList) {
 				TopicBean child = new TopicBean();
-				child.setId(childDBRef.fetch().get("_id").toString());
-				child.setTitle((String)childDBRef.fetch().get("title"));
+				DBObject childDBObject = childDBRef.fetch();
+				child.setId(childDBObject.get("_id").toString());
+				child.setTitle((String)childDBObject.get("title"));
+				child.setMainURL((String)childDBObject.get("main_url"));
 				children.add(child);
 			}
 		}

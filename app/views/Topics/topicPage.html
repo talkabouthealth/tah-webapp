@@ -325,18 +325,18 @@
                 <div class="topipsts">
                   <div class="mtrighttxt1">Topic Statistics</div>
                   <div class="latextCover">
-                    <div class="latextr"><strong><span class="black">Conversations/Questions:&nbsp;&nbsp;</span></strong> </div>
-                    <div style="float: left; width: auto;" class="vieztext">${topic.conversations?.size()}</div>
+                    <div class="latextr"><strong><span class="black">Conversations/Questions:</span></strong> </div>
+                    <div style="float: left; width: auto;" class="viewstext1">${topic.conversations?.size()}</div>
                   </div>
                   <!--topixtext-->
                   <div class="latextCover">
-                    <div class="latextr"><strong><span class="black">Views:&nbsp;&nbsp;</span></strong> </div>
-                    <div style="float: left; width: auto;" class="vieztext">${topic.views}</div>
+                    <div class="latextr"><strong><span class="black">Views:</span></strong> </div>
+                    <div style="float: left; width: auto;" class="viewstext1">${topic.views}</div>
                   </div>
                   <!--topixtext-->
                   <div class="latextCover">
-                    <div class="latextr"><strong><span class="black">Followed By:&nbsp;&nbsp;</span></strong> </div>
-                    <div style="float: left; width: auto;" class="vieztext">${topic.followers?.size()} Members</div>
+                    <div class="latextr"><strong><span class="black">Followed By:</span></strong> </div>
+                    <div style="float: left; width: auto;" class="viewstext1">${topic.followers?.size()} Members</div>
                   </div>
                   <!--topixtext-->
                   <div class="membersarea">
@@ -353,10 +353,10 @@
                 <div class="topipsts">
                   <div class="mtrighttxt1">Ontology</div>
                   <div class="topixtext">
-                    <div class="viewstext"><a href="#">Parent Topics</a>: </div>
+                    <div class="viewstext" style="color: #000000;">Parent Topics: </div>
                     <div class="viewstext1">
 	                    #{list items: topic.parents, as: 'parent'}
-							${parent.title}${ parent_isLast ? '' : ', ' }
+							<a href="@{ViewDispatcher.view(parent.mainURL)}">${parent.title}</a>${ parent_isLast ? '' : ', ' }
 						#{/list}
 						#{else}
 							none
@@ -365,10 +365,10 @@
                   </div>
                   <!--topixtext-->
                   <div class="topixtext">
-                    <div class="viewstext"><a href="#">Child Topics</a>: </div>
+                    <div class="viewstext" style="color: #000000;">Child Topics: </div>
                     <div class="viewstext1">
                     	#{list items: topic.children, as: 'children'}
-							${children.title}${ children_isLast ? '' : ', ' }
+							<a href="@{ViewDispatcher.view(children.mainURL)}">${children.title}</a>${ children_isLast ? '' : ', ' }
 						#{/list}
 						#{else}
 							none
