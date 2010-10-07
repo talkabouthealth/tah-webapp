@@ -72,18 +72,11 @@ public class Home extends Controller {
     }
     
     public static void conversationFeedAjax(String afterActionId) {
-    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
     	
-    	Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, afterActionId);
-    	for (Action action : convoFeed) {
-    		//#{feedActivity activity: activity, talker: talker /}
-    		Action _activity = action;
-    		TalkerBean _talker = talker;
-    		render("tags/feedActivity.html", _activity, _talker);
-    		break;
-    	}
+    	Set<Action> _convoFeed = FeedsLogic.getConvoFeed(_talker, afterActionId);
+    	render("tags/convoFeedList.html", _convoFeed, _talker);
     }
-    
     
     
     public static void openQuestions() {

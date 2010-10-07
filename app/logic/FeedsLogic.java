@@ -14,7 +14,7 @@ import models.actions.Action.ActionType;
 
 public class FeedsLogic {
 	
-	public static Set<Action> getConvoFeed(TalkerBean talker, String actionId) {
+	public static Set<Action> getConvoFeed(TalkerBean talker, String afterActionId) {
 		
 		Set<Action> convoFeedActions = ActionDAO.loadConvoFeed(talker);
 		
@@ -24,11 +24,8 @@ public class FeedsLogic {
 //			convoFeedActions.addAll(communityConvoFeed);
 //		}
 	
-		//TODO: better truncate to 40?
-		
 		//!!! Conversations should not appear more than once in the Conversation Feed
 		//except for Answers, Replies, and Add and Edit Summaries. 
-		//TODO: move to logic?
 		EnumSet<ActionType> okActions = EnumSet.of(
 			ActionType.ANSWER_CONVO, ActionType.REPLY_CONVO, 
 			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED,
@@ -37,19 +34,29 @@ public class FeedsLogic {
 		
 		Set<Action> convoFeed = new LinkedHashSet<Action>();
 		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();
+		boolean canAdd = (afterActionId == null);
 		for (Action action : convoFeedActions) {
 			ConversationBean actionConvo = action.getConvo();
 			if (actionConvo != null && !okActions.contains(action.getType())) {
 				if (!addedConvos.contains(actionConvo)) {
-					convoFeed.add(action);
+					if (canAdd) {
+						convoFeed.add(action);
+					}
 					addedConvos.add(actionConvo);
 				}
 			}
 			else {
-				convoFeed.add(action);
+				if (canAdd) {
+					convoFeed.add(action);
+				}
 			}
-			if (convoFeed.size() > 3) {
+			
+			if (convoFeed.size() >= 20) {
 				break;
+			}
+			
+			if (action.getId().equals(afterActionId)) {
+				canAdd = true;
 			}
 		}
 		

@@ -75,5 +75,7 @@ public interface Action {
 	public ActionType getType();
 	
 	public ConversationBean getConvo();
+	
+	public String getId();
 
 }

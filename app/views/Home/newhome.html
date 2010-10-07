@@ -303,9 +303,7 @@
                       <!--topic-->
                       <div class="topic">
                         <div id="convoFeedList">
-	                        #{list items: convoFeed, as: 'activity'}
-								#{feedActivity activity: activity, talker: talker /}
-							#{/list}
+	                        #{convoFeedList convoFeed: convoFeed, talker: talker /}
 						</div>
 						<div class="replytommentbox">
                           <input type="submit" src="images/seemore.jpg" onclick="return loadMoreConvoFeed();"value=" " class="seemorecom" />
