@@ -36,6 +36,7 @@ import models.actions.JoinConvoAction;
 import models.actions.PersonalProfileCommentAction;
 import models.actions.StartConvoAction;
 import models.actions.SummaryConvoAction;
+import models.actions.TopicAddedAction;
 import models.actions.UpdateProfileAction;
 
 import static util.DBUtil.*;
@@ -252,6 +253,9 @@ public class ActionDAO {
 			case SUMMARY_ADDED:
 			case SUMMARY_EDITED:
 				return new SummaryConvoAction(dbObject);
+				
+			case TOPIC_ADDED:
+				return new TopicAddedAction(dbObject);
 				
 			case GIVE_THANKS:
 				return new GiveThanksAction(dbObject);

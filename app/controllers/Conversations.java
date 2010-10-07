@@ -25,6 +25,7 @@ import models.actions.FollowConvoAction;
 import models.actions.StartConvoAction;
 import models.actions.Action.ActionType;
 import models.actions.SummaryConvoAction;
+import models.actions.TopicAddedAction;
 import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
@@ -259,6 +260,8 @@ public class Conversations extends Controller {
 
     	    	convo.getTopics().add(topic);
     	    	ConversationDAO.updateConvo(convo);
+    	    	
+    	    	ActionDAO.saveAction(new TopicAddedAction(talker, convo, topic));
     	    	
     	    	renderText(
     	    			"<a class=\"topicTitle\" href=\""+topic.getMainURL()+"\">"+topic.getTitle()+"</a>&nbsp;" +

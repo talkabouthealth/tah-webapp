@@ -54,6 +54,8 @@ public interface Action {
 		SUMMARY_ADDED,
 		SUMMARY_EDITED,
 		
+		TOPIC_ADDED,
+		
 		//user-related
 		GIVE_THANKS,
 		FOLLOW_CONVO,

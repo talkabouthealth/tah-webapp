@@ -17,6 +17,7 @@ import com.mongodb.DBRef;
 import dao.CommentsDAO;
 import dao.TalkerDAO;
 import dao.ConversationDAO;
+import dao.TopicDAO;
 
 import models.CommentBean;
 import models.TalkerBean;
@@ -33,6 +34,7 @@ public abstract class AbstractAction implements Action {
 	
 	//other possible data
 	protected ConversationBean convo;
+	protected TopicBean topic;
 	protected TalkerBean otherTalker;
 	protected CommentBean answer;
 	protected CommentBean reply;
@@ -78,6 +80,9 @@ public abstract class AbstractAction implements Action {
 		if (hasConvo()) {
 			convo = parseConvo(dbObject);
 		}
+		if (hasTopic()) {
+			topic = parseTopic(dbObject);
+		}
 		if (hasOtherTalker()) {
 			otherTalker = parseOtherTalker(dbObject);
 		}
@@ -95,7 +100,41 @@ public abstract class AbstractAction implements Action {
 		}
 	}
 	
+	public DBObject toDBObject() {
+		DBRef talkerRef = new DBRef(DBUtil.getDB(), TalkerDAO.TALKERS_COLLECTION, new ObjectId(talker.getId()));
+		DBObject dbObject = BasicDBObjectBuilder.start()
+				.add("uid", talkerRef)
+				.add("type", type.toString())
+				.add("time", time)
+				.get();
+		
+		if (hasConvo()) {
+			addConvo(dbObject, convo);
+		}
+		if (hasTopic()) {
+			addTopic(dbObject, topic);
+		}
+		if (hasOtherTalker()) {
+			addOtherTalker(dbObject, otherTalker);
+		}
+		if (hasAnswer()) {
+			addAnswerOrReply(dbObject, "answer", answer);
+		}
+		if (hasReply()) {
+			addAnswerOrReply(dbObject, "reply", reply);
+		}
+		if (hasProfileComment()) {
+			addProfileCommentOrReply(dbObject, "profile_comment", profileComment);
+		}
+		if (hasProfileReply()) {
+			addProfileCommentOrReply(dbObject, "profile_reply", profileReply);
+		}
+	
+		return dbObject;
+	}
+	
 	protected boolean hasConvo() { return false; }
+	protected boolean hasTopic() { return false; }
 	protected boolean hasOtherTalker() { return false; }
 	protected boolean hasAnswer() { return false; }
 	protected boolean hasReply() { return false; }
@@ -135,37 +174,18 @@ public abstract class AbstractAction implements Action {
 		return topicsString.toString();
 	}
 	
-	public DBObject toDBObject() {
-		DBRef talkerRef = new DBRef(DBUtil.getDB(), TalkerDAO.TALKERS_COLLECTION, new ObjectId(talker.getId()));
-		DBObject dbObject = BasicDBObjectBuilder.start()
-				.add("uid", talkerRef)
-				.add("type", type.toString())
-				.add("time", time)
-				.get();
-		
-		if (hasConvo()) {
-			addConvo(dbObject, convo);
-		}
-		if (hasOtherTalker()) {
-			addOtherTalker(dbObject, otherTalker);
-		}
-		if (hasAnswer()) {
-			addAnswerOrReply(dbObject, "answer", answer);
-		}
-		if (hasReply()) {
-			addAnswerOrReply(dbObject, "reply", reply);
-		}
-		if (hasProfileComment()) {
-			addProfileCommentOrReply(dbObject, "profile_comment", profileComment);
-		}
-		if (hasProfileReply()) {
-			addProfileCommentOrReply(dbObject, "profile_reply", profileReply);
-		}
-	
-		return dbObject;
+	protected String topic() {
+		String topicURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", topic.getMainURL());
+		String topicLink = "<a href='"+topicURL+"'>"+topic.getTitle()+"</a>";
+		return topicLink;
 	}
 	
-	// Topic connected actions
+	protected void addConvo(DBObject dbObject, ConversationBean convo) {
+		DBRef topicRef = new DBRef(DBUtil.getDB(), ConversationDAO.CONVERSATIONS_COLLECTION, new ObjectId(convo.getId()));
+		dbObject.put("topicId", topicRef);
+	}
+	
+	// Convo connected actions
 	protected ConversationBean parseConvo(DBObject dbObject) {
 		DBObject convoDBObject = ((DBRef)dbObject.get("topicId")).fetch();
 		
@@ -176,9 +196,17 @@ public abstract class AbstractAction implements Action {
     	return convo;
 	}
 	
-	protected void addConvo(DBObject dbObject, ConversationBean topic) {
-		DBRef topicRef = new DBRef(DBUtil.getDB(), ConversationDAO.CONVERSATIONS_COLLECTION, new ObjectId(topic.getId()));
-		dbObject.put("topicId", topicRef);
+	protected void addTopic(DBObject dbObject, TopicBean topic) {
+		DBRef topicRef = new DBRef(DBUtil.getDB(), TopicDAO.TOPICS_COLLECTION, new ObjectId(topic.getId()));
+		dbObject.put("tagId", topicRef);
+	}
+	
+	protected TopicBean parseTopic(DBObject dbObject) {
+		DBObject topicDBObject = ((DBRef)dbObject.get("tagId")).fetch();
+		
+		TopicBean topic = new TopicBean();
+		topic.parseBasicFromDB(topicDBObject);
+    	return topic;
 	}
 	
 	// Other talker connected actions
