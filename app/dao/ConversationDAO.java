@@ -254,13 +254,15 @@ public class ConversationDAO {
 	public static List<ConversationBean> getLiveConversations() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
-		DBObject query = new BasicDBObject("talkers",
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("talkers",
 				BasicDBObjectBuilder.start()
 					.add("$exists", true)
 					.add("$not", new BasicDBObject("$size", 0))
-					.add("deleted", new BasicDBObject("$ne", true))
 					.get()
-			);
+				)
+			.add("deleted", new BasicDBObject("$ne", true))
+			.get();
 		List<DBObject> convosDBList = 
 			convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
 		

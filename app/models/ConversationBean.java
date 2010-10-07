@@ -172,7 +172,7 @@ public class ConversationBean {
     	//messages from Talk Window
     	List<MessageBean> messages = new ArrayList<MessageBean>();
     	Set<String> members = new HashSet<String>();
-    	Collection<DBObject> messagesDBList = (Collection<DBObject>)convoDBObject.get("messages");
+    	Collection<DBObject> messagesDBList = (Collection<DBObject>)convoDBObject.get("comments");
     	if (messagesDBList != null) {
     		for (DBObject messageDBObject : messagesDBList) {
     			MessageBean message = new MessageBean();
