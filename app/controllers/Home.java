@@ -87,6 +87,17 @@ public class Home extends Controller {
 		render(talker, openQuestions);
     }
     
+    public static void liveTalks() {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+		
+    	List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
+		render(talker, liveTalks);
+    }
+    
+    
+    
+    
     /* ---------------- Invitations ----------------- */
     public static void invitations() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);

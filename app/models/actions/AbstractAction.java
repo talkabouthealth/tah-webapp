@@ -146,32 +146,11 @@ public abstract class AbstractAction implements Action {
 	}
 	
 	protected String fullUserName(TalkerBean user) {
-		if (user == null) {
-			return "";
-		}
-		String url = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", user.getUserName());
-		String link = "<a href='"+url+"'>"+user.getUserName()+"</a>";
-		if (user.getConnection() != null && user.getConnection().length() != 0) {
-			link = link+" ("+user.getConnection()+")";
-		}
-		return link;
+		return CommonUtil.talkerToHTML(user);
 	}
 	
 	protected String convoTopics() {
-		StringBuilder topicsString = new StringBuilder();
-		for (TopicBean topic : convo.getTopics()) {
-			String topicURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", topic.getMainURL());
-			String topicLink = "<a href='"+topicURL+"'>"+topic.getTitle()+"</a>";
-
-			topicsString.append(topicLink);
-			topicsString.append(", ");
-		}
-		int len = topicsString.length();
-		if (len != 0) {
-			topicsString.delete(len-2, len);
-			topicsString.insert(0, " in topic ");
-		}
-		return topicsString.toString();
+		return CommonUtil.topicsToHTML(convo);
 	}
 	
 	protected String topic() {

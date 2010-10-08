@@ -93,7 +93,10 @@
      	<a class="${currentPage.equals('openQuestions') ? 'current' : ''}" 
      		href="@{Home.openQuestions()}">Open Questions</a>
      </div>
-     <div class="mtrighttxt"><a href="#">Live Talks</a></div>
+     <div class="mtrighttxt">
+     	<a class="${currentPage.equals('liveTalks') ? 'current' : ''}" 
+     		href="@{Home.liveTalks()}">Live Talks</a>
+     </div>
      <div class="mtop"></div>
      <div class="topicborder"></div>
      <div class="cb"></div>

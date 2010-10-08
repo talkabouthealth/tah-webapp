@@ -28,6 +28,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 
+import models.ConversationBean;
 import models.IMAccountBean;
 import models.TalkerBean;
 import models.TopicBean;
@@ -225,5 +226,37 @@ public class CommonUtil {
 		InputStream is = CommonUtil.class.getResourceAsStream("/util/importers/data/"+fileName);
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 		return br;
+	}
+	
+	
+	
+	//for displaying info
+	public static String talkerToHTML(TalkerBean talker) {
+		if (talker == null) {
+			return "";
+		}
+		String url = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", talker.getUserName());
+		String html = "<a href='"+url+"'>"+talker.getUserName()+"</a>";
+		if (talker.getConnection() != null && talker.getConnection().length() != 0) {
+			html = html+" ("+talker.getConnection()+")";
+		}
+		return html;
+	}
+	
+	public static String topicsToHTML(ConversationBean convo) {
+		StringBuilder topicsHTML = new StringBuilder();
+		for (TopicBean topic : convo.getTopics()) {
+			String topicURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", topic.getMainURL());
+			String topicLink = "<a href='"+topicURL+"'>"+topic.getTitle()+"</a>";
+
+			topicsHTML.append(topicLink);
+			topicsHTML.append(", ");
+		}
+		int len = topicsHTML.length();
+		if (len != 0) {
+			topicsHTML.delete(len-2, len);
+			topicsHTML.insert(0, " in topic(s) ");
+		}
+		return topicsHTML.toString();
 	}
 }

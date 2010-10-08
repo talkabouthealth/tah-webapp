@@ -181,14 +181,14 @@
                     <input id="startLink" type="submit" src="/public/images/startsubmit.jpg" value=" " class="startsubmit" />
                   </div>
 
-                  <div class="stylez2">Open Questions (${openQuestions.size()})</div>
+                  <div class="stylez2">Live Community Talks (${liveTalks.size()})</div>
                     <div class="topicborder"></div>
                     <!--mtinputbox-->
 
                     <div class="cb"></div>
                     <div class="topic">
                     
-#{list items: openQuestions, as: 'convo'}
+#{list items: liveTalks, as: 'convo'}
 <div class="joinbox">
 	<div class="joinpic">
 		<a href="@{ViewDispatcher.view(convo.talker.userName)}">
@@ -200,20 +200,36 @@
 			<a href="${convo.mainURL}">${convo.topic}</a>
 		</div>
 		<div class="joinztextlink">
-			<a href="${convo.mainURL}#answers">Answer</a> | 
 			<a href="#" class="followConvoLink" rel="${convo.id}">
 				${talker.followingConvosList?.contains(convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
-			<a href="#" onclick="restartConvo(${convo.tid}, '${convo.id}')">Re-start talk</a> | 
 			<span>${convo.creationDate.since()}</span>
 		</div>
 		<div class="jointxtlink1">
-			${convo.htmlDetails.raw()}
+			Conversation by 
+			<a href="@{ViewDispatcher.view(convo.talker.userName)}" 
+				class="blue13"><strong>${convo.talker.userName}</strong></a>
+			<span class="blacktext12">
+				#{if convo.talker.connection}
+					(${convo.talker.connection}, ${convo.talker.levelOfRecognition})
+				#{/if}
+				#{else}
+					(${convo.talker.levelOfRecognition})
+				#{/else}
+			</span>
 		</div>
+		<div class="jointxtlink2"></div>
+	</div>
+	<div class="joinconbox">
+		<input type="submit" src="/public/images/joinconversation.jpg" 
+			value=" " class="joinconversation" onclick="return openChat('${convo.tid}');" />
 	</div>
 	<div class="cb"></div>
 	<div class="joinborder"></div>
-</div>
-#{/list}                    
+</div>		                      
+						#{/list}
+						#{else}
+							<span class="blacktext14">Be the first to start a live talk.</span>
+						#{/else}
 						
                       <div class="replytommentbox1" style="display: none;">
                         <input type="submit" src="images/seemore.jpg" value=" " class="seemorecom" />
@@ -234,7 +250,7 @@
             </div>
             <!--mtleft-->
             
-            #{ set currentPage = 'openQuestions' /}
+            #{ set currentPage = 'liveTalks' /}
             #{ include 'right.html' /}
             
             <!--mtright-->

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import play.ns.com.jhlabs.image.ConvolveFilter;
+import util.CommonUtil;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
@@ -236,6 +237,21 @@ public class ConversationBean {
 			return 47;
 		}
 		return id.hashCode();
+	}
+	
+	//for displaying
+	public String getHtmlDetails() {
+		StringBuilder htmlDetails = new StringBuilder();
+		if (convoType == ConvoType.CONVERSATION) {
+			htmlDetails.append("Live talk by ");
+		}
+		else {
+			htmlDetails.append("Question by ");
+		}
+		htmlDetails.append(CommonUtil.talkerToHTML(talker)+" ");
+		htmlDetails.append(CommonUtil.topicsToHTML(this));
+		
+		return htmlDetails.toString();
 	}
 
 	
