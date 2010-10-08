@@ -10,6 +10,7 @@ import com.mongodb.DBRef;
 import dao.TalkerDAO;
 import dao.ConversationDAO;
 
+import models.ConversationBean.ConvoType;
 import models.TalkerBean;
 import models.ConversationBean;
 import models.actions.Action.ActionType;
@@ -30,11 +31,17 @@ public class StartConvoAction extends AbstractAction {
 	public String toHTML() {
 		StringBuilder result = new StringBuilder();
 		result.append(fullUserName(talker));
-		if (type == ActionType.START_CONVO) {
-			result.append(" started the conversation ");
+		
+		String action = " started ";
+		if (type == ActionType.RESTART_CONVO) {
+			action = " restarted ";
 		}
-		else if (type == ActionType.RESTART_CONVO) {
-			result.append(" restarted the conversation ");
+		result.append(action);
+		if (convo.getConvoType() == ConvoType.CONVERSATION) {
+			result.append("the live talk ");
+		}
+		else {
+			result.append("the question ");
 		}
 		result.append(convoTopics());
 		
