@@ -18,7 +18,7 @@
 						Answer${_activity.convo.comments.pluralize()}</a> | 
 				#{/else}
 				<a href="#" class="followConvoLink" rel="${_activity.convo.id}">
-					${_talker.followingConvosList?.contains(_activity.convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
+					${_talker?.followingConvosList?.contains(_activity.convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
 				<a href="#" onclick="restartConvo(${_activity.convo.tid}, '${_activity.convo.id}')">Re-start talk</a> | 
 				<span>${_activity.convo.creationDate.since()}</span>
 			</div>

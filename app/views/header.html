@@ -1,7 +1,6 @@
 <!-- js for the Settings menu in top right -->
 <link rel="stylesheet" href="/public/plugins/ui-lightness/jquery-ui-1.8.4.custom.css" type="text/css" media="screen" />
-<script type="text/javascript" 
-	src="/public/javascripts/jquery-ui-1.8.4.custom.min.js" ></script>
+<script type="text/javascript" src="/public/javascripts/jquery-ui-1.8.4.custom.min.js" ></script>
 	
 <script type="text/javascript">
 	var timeout         = 500;
@@ -37,14 +36,6 @@
 	document.onclick = jsddm_close;
 </script>
 <div id="top_container">
-	*{
-	<div id="top">
-		#{ logo /}
-		<div id="topnav">
-			#{include 'menu.html' /}
-		</div>
-	</div>
-	}*
 	<div id="top">
         <div id="logoac">
         	<a href="@{Application.index()}">
@@ -55,7 +46,6 @@
         <div style="padding-left: 15px;" id="topnav3">
         	#{if session.contains("username") }
 				#{set currentUser = session.get("username") /}
-			
 				<div class="topnavigationz">
 					<div class="top4ie7"></div>
 		            <ul id="jsddm">
@@ -148,7 +138,63 @@
 	            <!--blank-->
 	          </div>
 	      #{/if}
-          <!--topnavCover-->
+	      #{else}
+				<div class="topnavigationz">
+					<div class="top4ie7"></div>
+		            <ul id="jsddm">
+		              <li class="tell"><a href="@{Application.signup()}">Join Now</a></li>
+		              <li class="separator">|</li>
+		              <li class="tell"><a href="@{Secure.login()}">Sign In</a></li>
+		              <li class="separator">|</li>
+		              <li> <a class="libull2" href="#">Help</a>
+		                <ul>
+		                  <li><a href="@{Static.faq()}">FAQ</a></li>
+		                  <li><a href="@{Static.communityguidelines()}">Community Guidelines</a></li>
+		                  <li><a href="http://blog.talkabouthealth.com">Blog</a></li>
+		                  <li><a href="@{Application.contactus()}">Feedback</a></li>
+		                  <li><a href="#" onclick="openInvitationsWindow();">Share TalkAboutHealth</a></li>
+		                </ul>
+		              </li>
+		            </ul>
+	            	<div class="cb"></div>
+	          	</div>
+	          	
+	          <div class="cb"></div>
+          
+	          <div class="topnavCover">
+	            <div class="topnavCover1">
+	              <ul id="nav" style="float: right;">
+	                <li class="explore"> <a href="#" class="menu2">Explore</a>
+	                  <ul>
+	                    <li><a href="@{Home.liveTalks()}">Live Talks</a></li>
+	                    <li><a href="@{Home.openQuestions()}">Open Questions</a></li>
+	                    <li class="gap"><a href="@{Topics.browseTopics()}">Browse Topics</a></li>
+	                    <li><a href="@{Community.searchConversations()}">Search Conversations</a></li>
+	                  </ul>
+	                </li>
+	              </ul>
+	              <!--nave-->
+	            </div>
+	            <!--topnavCover1-->
+	            <div style="float: right; width: 290px;">
+	              <div class="topnavCover2">
+	                <div style="padding-left: 25px;" class="topsearchCover">
+	                  <div class="topsearchinput">
+	                    <input id="topSearchBox" type="text" class="topserchz iebox"/>
+	                  </div>
+	                  <!--topsearchinput-->
+	                  <div class="topsubmitsz">
+	                    <input type="submit" style="cursor: pointer;" value=" " src="images/topsubmitbtn.png" class="topsubmit"/>
+	                  </div>
+	                </div>
+	                <!--topsearchCover-->
+	              </div>
+	              <!--topnavCover2-->
+	            </div>
+	            <!--blank-->
+	          </div>	      
+	      #{/else}
+	      
           <div class="cb"></div>
         </div>
       </div>

@@ -11,7 +11,7 @@
 		<div class="joinztextlink">
 			<!-- <span>3 members speaking</span> |  --> 
 			<a href="#" class="followConvoLink" rel="${_convo.id}">
-				${_talker.followingConvosList?.contains(_convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
+				${_talker?.followingConvosList?.contains(_convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
 			<a href="#" class="flagConvoLink" rel="${_convo.id}">Flag</a> | 
 			<span>Started ${_convo.creationDate.since()}</span>
 		</div>

@@ -21,7 +21,6 @@ import play.mvc.Controller;
 import play.mvc.With;
 import util.SearchUtil;
 
-@With(Secure.class)
 public class Search extends Controller {
 	
 	public static void search() throws Exception {
