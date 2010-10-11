@@ -70,7 +70,7 @@ $(document).ready(function() {
 		})
 });
 
-function showPopup(id) {
+function showPopup(id, popupWidth) {
 	//Get the screen height and width
 	var maskHeight = $(document).height();
 	var maskWidth = $(window).width();
@@ -87,8 +87,8 @@ function showPopup(id) {
 	var winW = $(window).width();
           
 	//Set the popup window to center
-	$(id).css('top',  winH/3-$(id).height()/2);
-	$(id).css('left', winW/2-$(id).width()/2);
+	$(id).css('top', 50);
+	$(id).css('left', winW/2-popupWidth);
 
 	//transition effect
 	$(id).fadeIn(200); 

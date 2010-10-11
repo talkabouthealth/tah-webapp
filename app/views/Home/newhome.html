@@ -40,7 +40,7 @@
 			//showIMPopup = true;
 			if (showIMPopup) {
 				var id = "#imDialog";
-				showPopup(id);
+				showPopup(id, 350);
 			}
 
 			$('.window #saveIMBtn').click(function (e) {
@@ -136,7 +136,7 @@
 				$("#newConvoForm").show();
 				$("#newQuestionConfirm").hide();
 				$("#newConvoTitle").val($("#convoText").val());
-				showPopup("#startDialog");
+				showPopup("#startDialog", 350);
 			});
 
 			//----- Topics autocomplete -----------

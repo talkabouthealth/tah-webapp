@@ -88,7 +88,7 @@
 
 			$(".flagConvoLink").click(function() {
 				flagType = "convo";
-				showPopup("#flagPopup");
+				showPopup("#flagPopup", 200);
 			});
 
 			//----- Comments ------
@@ -111,7 +111,7 @@
 			$(".flagAnswerLink").live("click", function() {
 				flagType = "answer";
 				flagAnswerId = $(this).attr("rel");
-				showPopup("#flagPopup");
+				showPopup("#flagPopup", 200);
 			});
 
    			$(".deleteTopicLink").live("click", function() {
@@ -275,7 +275,7 @@
    			$("#thankYouUser").html(userName);
    			selectedTalkerId = talkerId;
    			
-			showPopup("#thankYouPopup");
+			showPopup("#thankYouPopup", 200);
 			return false;
    		}
 
