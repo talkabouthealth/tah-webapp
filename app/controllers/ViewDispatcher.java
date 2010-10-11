@@ -1,6 +1,9 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -150,7 +153,21 @@ public class ViewDispatcher extends Controller {
 		
 		TopicDAO.incrementTopicViews(topic.getId());
 		
-		render("Topics/viewTopic.html", talker, topic, activities);
+		//- "Popular Conversations" - ordered by page views
+		List<ConversationBean> popularConvos = 
+			new ArrayList<ConversationBean>(topic.getConversations());
+		Collections.sort(popularConvos, new Comparator<ConversationBean>() {
+			@Override
+			public int compare(ConversationBean o1, ConversationBean o2) {
+				return o2.getViews()-o1.getViews();
+			}
+		});
+		
+		//- "Trending Conversations" - ordered by page views in the last two weeks, 
+		//cannot contain conversations in the top 10 of "Popular Conversations" tab
+		List<ConversationBean> trendingConvos = new ArrayList<ConversationBean>();
+		
+		render("Topics/viewTopic.html", talker, topic, activities, popularConvos, trendingConvos);
 	}
 
 }

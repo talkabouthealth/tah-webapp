@@ -1,9 +1,17 @@
 #{extends 'Topics/topicPage.html' /}
 
+<style type="text/css">
+		.latestactivity, .latestactivity1 { width: auto }
+		.latestactivity a, .latestactivity1 a { width: auto; padding-left: 8px; padding-right: 8px }
+		.latestactivity a:hover, .latestactivity1 a:hover { width: auto; padding-left: 8px; padding-right: 8px }
+</style>
+
 <br/>
 <div style="padding-top: 10px; height: 30px;" class="lacover">
   <div class="latestactivity"><a href="#" id="latestActivity" class="tabLink">Latest Activity</a></div>
-  <div class="latestactivity1"><a href="#" id="openQuestions" class="tabLink">Open Questions</a></div>
+  <div class="latestactivity1"><a href="#" id="openQuestions" class="tabLink">Unanswered Conversations</a></div>
+  <div class="latestactivity1"><a href="#" id="popularConvos" class="tabLink">Popular Conversations</a></div>
+  <!-- <div class="latestactivity1"><a href="#" id="trendingConvos" class="tabLink">Trending Conversations</a></div>  -->
   <div class="laborder"></div>
 </div>
 <div class="cb"></div>
@@ -15,7 +23,23 @@
 	</div>
 	<div id="openQuestionsContent" class="tabContent" style="display: none;">
 		#{list items: topic.conversations, as: 'convo' }
+			#{if convo.opened}
+				#{listConvo convo: convo, talker: talker /}
+			#{/if}
+		#{/list}	
+	</div>
+	<div id="popularConvosContent" class="tabContent" style="display: none;">
+		#{list items: popularConvos, as: 'convo' }
 			#{listConvo convo: convo, talker: talker /}
 		#{/list}	
 	</div>
+	*{
+		<div id="trendingConvosContent" class="tabContent" style="display: none;">
+			#{list items: topic.conversations, as: 'convo' }
+				#{if convo.opened}
+					#{listConvo convo: convo, talker: talker /}
+				#{/if}
+			#{/list}	
+		</div>
+	 }*
 </div>
