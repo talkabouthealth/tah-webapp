@@ -61,6 +61,8 @@
 		var flagAnswerId = '';
 
 		var selectedTalkerId = '';
+
+		var titleLimit = 150;
 		
 		$(document).ready(function() {
 			$("#followConvoLink").click(function() {
@@ -345,7 +347,8 @@
 											<div class='inline_form'>
 												<div style="float:left; width:auto; padding-bottom:5px;" >
 										        	<input id="titleinput" type="text" style="width:600px"  
-										        		value="${convo.topic}" class="edititinputs inline_text notempty" >
+										        		value="${convo.topic}" class="edititinputs inline_text notempty" 
+										        		onKeyDown="limitText(this, titleLimit);" onKeyUp="limitText(this, titleLimit);" >
 										        </div>
 												<div style="float:right;margin-right:30px;">
 											        <input id="titleBtn" type="submit" class="updatebtns inline_save" value=" " />

@@ -14,6 +14,8 @@
 		var flagType = "convo";
 		var flagConvoId = "";
 
+		var titleLimit = 150;
+
 		#{ oauthJavaScripts /}
 
 		$(document).ready(function() {
@@ -229,7 +231,7 @@
                       <div class="demo">
                         <div class="ui-widget">
                           <textarea id="convoText" name="textarea" 
-                          	onKeyDown="limitText(this, 150);" onKeyUp="limitText(this, 150);" 
+                          	onKeyDown="limitText(this, titleLimit);" onKeyUp="limitText(this, titleLimit);" 
                             class="edititinputx" rows="4"  cols="3" style="width:450px;height:40px" ></textarea>
                         </div>
                       </div>
@@ -373,7 +375,8 @@
           <div class="askheadingCoverz">
             <div class="asktextl">Headline:</div>
             <div class="askinputCover">
-				<textarea id="newConvoTitle" class="askkinput" cols="4" rows="4"></textarea>
+				<textarea id="newConvoTitle" class="askkinput" cols="4" rows="4" 
+					onKeyDown="limitText(this, titleLimit);" onKeyUp="limitText(this, titleLimit);" ></textarea>
             </div>
           </div>
           <!--askheadingCoverz-->
