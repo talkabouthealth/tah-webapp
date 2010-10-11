@@ -1,0 +1,182 @@
+#{extends 'main.html' /}
+	<style type="text/css">
+		body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
+		
+		#innermiddlearea { padding-top: 10px }
+		.seeall { padding-top: 20px }
+		
+		#mask { background-color:#e6e6e6; }
+		
+		.stylez2 {
+			font-size:22px;
+			color:#000000;
+			clear:both;
+			padding-top:5px;
+			text-align:left;
+			padding-bottom:4px;
+		}
+		.style2 {
+			color: #000000
+		}
+	</style>
+	
+	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$(".followConvoLink").live('click', function() {
+				var topicId = $(this).attr("rel");
+				if ($(this).html().indexOf("Unfollow") != -1) {
+					$(this).html("Follow");
+				}
+				else {
+					$(this).html("Unfollow");
+				}
+				$.post("@{Conversations.follow()}", 
+	  				{ topicId: topicId},
+	  				function(data) {
+	  					//...
+	  				}
+	  			);
+	  			return false;
+			});
+
+			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
+		});
+	</script>
+		
+<div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
+  <div id="managtopic">
+  	#{include 'header.html' /}
+        <div id="innermiddlearea">
+          <div id="mtcover">
+            <div id="mtleft">
+              <div class="mtcontent">
+              	<div id="targetedthderapy">
+                    <div class="targetedh1">Breast Cancer Community</div>
+                    <div class="cb"></div>
+                    <br/>
+                    <div class="mtborder"></div>
+                </div>
+                  
+                <div class="topipcWraper">
+                  <div class="newpage1">Live Community Talks (${liveTalks.size()})</div>
+                    <div class="topicborder"></div>
+                    <!--mtinputbox-->
+
+                    <div class="cb"></div>
+                    <div class="topic">
+                    
+#{list items: liveTalks, as: 'convo'}
+<div class="joinbox">
+	<div class="joinpic">
+		<a href="@{ViewDispatcher.view(convo.talker.userName)}">
+			<img src="@{Image.show(convo.talker.userName)}" width="48" height="48" border="0" />
+		</a>
+	</div>
+	<div class="jointxtbox">
+		<div class="jointextstop">
+			<a href="${convo.mainURL}">${convo.topic}</a>
+		</div>
+		<div class="joinztextlink">
+			<a href="#" class="followConvoLink" rel="${convo.id}">
+				${talker.followingConvosList?.contains(convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
+			<span>${convo.creationDate.since()}</span>
+		</div>
+		<div class="jointxtlink1">
+			Conversation by 
+			<a href="@{ViewDispatcher.view(convo.talker.userName)}" 
+				class="blue13"><strong>${convo.talker.userName}</strong></a>
+			<span class="blacktext12">
+				#{if convo.talker.connection}
+					(${convo.talker.connection}, ${convo.talker.levelOfRecognition})
+				#{/if}
+				#{else}
+					(${convo.talker.levelOfRecognition})
+				#{/else}
+			</span>
+		</div>
+		<div class="jointxtlink2"></div>
+	</div>
+	<div class="joinconbox">
+		<input type="submit" src="/public/images/joinconversation.jpg" 
+			value=" " class="joinconversation" onclick="return openChat('${convo.tid}');" />
+	</div>
+	<div class="cb"></div>
+	<div class="joinborder"></div>
+</div>		                      
+						#{/list}
+						#{else}
+							<span class="blacktext14">Be the first to start a live talk.</span>
+						#{/else}
+						
+                      <div class="replytommentbox1" style="display: none;">
+                        <input type="submit" src="images/seemore.jpg" value=" " class="seemorecom" />
+                      </div>
+
+                      <div class="cb"></div>
+                    </div>
+
+					<div class="topic">
+                        <div class="newpage1">Conversation Feed</div>
+
+                        <div class="seeall"><a href="@{Home.conversationFeed()}">See All</a></div>
+                        <div class="topicborder"></div>
+                        <div class="cb"></div>
+                      </div>
+                      <!--topic-->
+                      <div class="topic">
+                        <div id="convoFeedList">
+	                        #{convoFeedList convoFeed: communityConvoFeed, talker: talker /}
+						</div>
+						<div class="replytommentbox" style="display: none;">
+                          <input type="submit" src="images/seemore.jpg" onclick="return loadMoreConvoFeed();"value=" " class="seemorecom" />
+                        </div>
+                        <div class="cb"></div>
+                      </div>
+                  <div class="cb"></div>
+                </div>
+                <!--topipcWraper-->
+                <div class="cb"></div>
+              </div>
+              <!--mtcontent-->
+              <div class="cb"></div>
+            </div>
+            <!--mtleft-->
+            
+<div id="comright" style="padding-left:30px;">
+
+                <div class="topipsts">
+                  <div class="mtrighttxt1">Community Members</div>
+                  <div class="topbox">
+                    <div class="topleftimg" style="float: left;">
+                    	<img src="/public/images/topanswer1.jpg" alt="topanser"></div>
+                    <div class="topr">
+                      <div class="toprighttext">
+                        <div class="latextleft"><strong><strong><a href="#">Murray</a></strong></strong></div>
+                        <div class="latextrigtz">&nbsp;(Physician, Advocate)</div>
+                      </div>
+                      <!--toprighttext-->
+                      <div class="toprighttext">
+                        <div class="topiptextl"><a href="#">101 Answers</a></div>
+                      </div>
+                      <!--toprighttext-->
+                    </div>
+                    <!--topr-->
+                    <div class="cb"></div>
+                  </div>                  
+                </div>
+                <!--topipsts-->
+                <div class="cb"></div>
+              
+</div>            
+            <!--mtright-->
+            <div class="cb"></div>
+          </div>
+          <!--mtcover-->
+          <div class="cb"></div>
+
+        </div>
+        <div id="signupright"></div>
+      </div>
+    </div>
+  </div>

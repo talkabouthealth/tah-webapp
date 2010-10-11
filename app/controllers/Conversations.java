@@ -112,6 +112,7 @@ public class Conversations extends Controller {
 		EmailUtil.sendEmail(EmailTemplate.FLAGGED, EmailUtil.SUPPORT_EMAIL, vars, null, false);
     }
     
+    //flag answer or reply
     public static void flagAnswer(String answerId, String reason) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);

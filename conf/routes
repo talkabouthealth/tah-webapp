@@ -17,6 +17,7 @@ POST	/updatesemail/?							Application.saveUpdatesEmail
 
 GET		/verify/{verifyCode}					Profile.verifyEmail
 
+GET		/community/breast-cancer				Community.viewCommunity
 GET		/explore/members						Community.browseMembers(action:'active')
 *		/search/members							Community.browseMembers(action:'search')
 *		/search/conversations					Community.searchConversations

@@ -81,8 +81,11 @@
 				                        			#{if comment.children?.size() == 0}
 				                        				>Add Reply</a>
 				                        			#{/if}
+					                        		#{elseif comment.children?.size() == 1}
+					                        			>1 Reply</a>
+					                        		#{/elseif}
 					                        		#{else}
-					                        			>${comment.children?.size()} Reply</a>
+					                        			>${comment.children?.size()} Replies</a>
 					                        		#{/else}
 				                        		</li>
 				                        		<li>&nbsp;|&nbsp;</li>
@@ -93,10 +96,11 @@
 					                        	<li>&nbsp;|&nbsp;</li>
 					                        #{/if}
 				<li><a href="#" onclick="return thankYou('${comment.fromTalker.id}', '${comment.fromTalker.userName}');">Thank</a></li>
-											<!-- 
-						                      	<li>&nbsp;|&nbsp;</li>
-						                        <li><a href="#" class="flagAnswerLink" rel="${comment.id}">Flag Comment</a></li> 
-					                         -->
+				
+					                      	<li>&nbsp;|&nbsp;</li>
+					                        <li><a href="#" class="flagAnswerLink" rel="${comment.id}"
+					                        	>Flag ${ _level == 1 ? 'Answer' : 'Reply' }</a></li> 
+					                        
 					                        #{if _level == 1}
 					                        	<li>&nbsp;|&nbsp;</li>
 					                        	#{if comment.notHelpful }

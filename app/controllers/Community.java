@@ -1,20 +1,33 @@
 package controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import dao.ApplicationDAO;
-
 import models.ConversationBean;
 import models.TalkerBean;
+import models.actions.Action;
 import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
 import util.SearchUtil;
+import dao.ActionDAO;
+import dao.ApplicationDAO;
+import dao.ConversationDAO;
+import dao.TalkerDAO;
 
 @With(Secure.class)
 public class Community extends Controller {
+	
+	public static void viewCommunity() {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		List<TalkerBean> communityMembers = TalkerDAO.loadAllTalkers();
+		
+		List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
+		List<Action> communityConvoFeed = ActionDAO.loadCommunityConvoFeed();
+		
+		render(talker, liveTalks, communityConvoFeed);
+	}
 	
 //	For the 4 tabs:
 //		Active Users - Latest users to log in
