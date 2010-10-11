@@ -339,14 +339,14 @@ public class Conversations extends Controller {
     		
     		//let's send an email to support@talkabouthealth.com
     		//TODO: make one method for flagging?
-    		Map<String, String> vars = new HashMap<String, String>();
-        	vars.put("content_type", "Answer");
-        	vars.put("content_link", "");
-        	vars.put("reason", "");
-    		vars.put("content", answer.getText());
-    		vars.put("name", talker.getUserName());
-    		vars.put("email", talker.getEmail());
-    		EmailUtil.sendEmail(EmailTemplate.FLAGGED, EmailUtil.SUPPORT_EMAIL, vars, null, false);
+//    		Map<String, String> vars = new HashMap<String, String>();
+//        	vars.put("content_type", "Answer");
+//        	vars.put("content_link", "");
+//        	vars.put("reason", "");
+//    		vars.put("content", answer.getText());
+//    		vars.put("name", talker.getUserName());
+//    		vars.put("email", talker.getEmail());
+//    		EmailUtil.sendEmail(EmailTemplate.FLAGGED, EmailUtil.SUPPORT_EMAIL, vars, null, false);
     	}
     }
     

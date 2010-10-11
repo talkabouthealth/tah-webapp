@@ -14,13 +14,13 @@
 				<span class="comname">
 					<a href="@{ViewDispatcher.view(comment.fromTalker.userName)}">${comment.fromTalker.userName}</a>
 				</span>&nbsp;&nbsp;&nbsp;
-				${comment.text}
+				${comment.text.nl2br()}
 			</div>
 			<div class="${_level == 1 ? 'comadd' : 'comreplytext1'}">
 				${comment.time.since()}
 				#{if _level == 1}
 					&nbsp;|&nbsp;
-					#{if comment.children?.size() == 0 }
+					#{if comment.children == null || comment.children?.size() == 0 }
 						<a href="#" onclick="return showReplyForm('${comment.id}');">Reply</a>
 					#{/if}
 					#{elseif comment.children?.size() == 1}
@@ -40,7 +40,7 @@
 			#{profileCommentsTree2 commentsList: comment.children, level: (_level+1)/}
 			
 			<div id="reply${comment.id}" class="replytommentbax"
-					#{if comment.children?.size() == 0}
+					#{if comment.children == null || comment.children?.size() == 0}
 						style="display: none;"
 					#{/if}
 				>
