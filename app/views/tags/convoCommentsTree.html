@@ -1,5 +1,5 @@
 #{list items: _commentsList, as: 'comment' }
-#{ifnot comment.deleted }
+#{ifnot comment.deleted}
 	<div id="comment${comment.id}" class="topic" style="padding-bottom:5px;">
     	<div class="answerCover">
 			<div class="replyWraper">
@@ -100,7 +100,7 @@
 					                        #{if _level == 1}
 					                        	<li>&nbsp;|&nbsp;</li>
 					                        	#{if comment.notHelpful }
-					                        		<li><a href="#" onclick="return markNotHelpful('${comment.id}')">Undo!</a></li>
+					                        		<li><a href="#" onclick="return markNotHelpful('${comment.id}')">Not Helpful</a></li>
 					                        	#{/if}
 					                        	#{else}
 					                        		<li><a href="#" onclick="return markNotHelpful('${comment.id}')">Not Helpful</a></li>

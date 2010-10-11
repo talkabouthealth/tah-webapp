@@ -253,6 +253,26 @@ public class ConversationBean {
 		
 		return htmlDetails.toString();
 	}
+	
+	public List<CommentBean> getNotHelpfulAnswers() {
+		return filterAnswers(true);
+	}
+	
+	public List<CommentBean> getHelpfulAnswers() {
+		return filterAnswers(false);
+	}
+	
+	public List<CommentBean> filterAnswers(boolean notHelpful) {
+		List<CommentBean> filteredAnswers = new ArrayList<CommentBean>();
+		for (CommentBean answer : getComments()) {
+			if ((notHelpful && answer.isNotHelpful())
+					|| (!notHelpful && !answer.isNotHelpful())) {
+				filteredAnswers.add(answer);
+			}
+		}
+		
+		return filteredAnswers;
+	}
 
 	
 	public String getMainURL() {

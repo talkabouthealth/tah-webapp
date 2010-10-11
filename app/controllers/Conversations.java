@@ -138,7 +138,7 @@ public class Conversations extends Controller {
     	int voteScore = answer.getVoteScore();
     	voteScore = voteScore + (up ? 1 : -1);
     	
-    	Vote oldVote = answer.getVoteByTalker(talker);
+    	Vote oldVote = answer.getVoteByTalker(talker, answer.getVotes());
     	if (oldVote != null) {
     		if (up == oldVote.isUp()) {
     			//try the same vote - already voted!
@@ -153,8 +153,25 @@ public class Conversations extends Controller {
     	}
     	
     	if (newVote.isUp()) {
-    		ConversationBean convo = new ConversationBean(answer.getTopicId());
+    		ConversationBean convo = ConversationDAO.getByConvoId(answer.getTopicId());
     		ActionDAO.saveAction(new AnswerVotedAction(talker, convo, answer));
+    		
+    		//If a "Not Helpful" answer receives a vote, let's make it visible again. 
+    		//But also send an email to "support@talkabouthealth.com" add a comment
+    		
+    		if (answer.isNotHelpful()) {
+    			answer.setNotHelpful(false);
+    			
+        		//TODO: make one method for flagging?
+        		Map<String, String> vars = new HashMap<String, String>();
+            	vars.put("content_type", "Answer");
+            	vars.put("content_link", CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL()));
+            	vars.put("reason", "User voted up for this 'Not Helpful' answer");
+        		vars.put("content", answer.getText());
+        		vars.put("name", talker.getUserName());
+        		vars.put("email", talker.getEmail());
+        		EmailUtil.sendEmail(EmailTemplate.FLAGGED, EmailUtil.SUPPORT_EMAIL, vars, null, false);
+    		}
     	}
     	
     	answer.getVotes().add(newVote);
@@ -313,6 +330,8 @@ public class Conversations extends Controller {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
     	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
+    	notFoundIfNull(answer);
+    	
     	if (todo.equalsIgnoreCase("update") || todo.equalsIgnoreCase("delete")) {
     		//TODO: move to util permission check?
     		if (!answer.getFromTalker().equals(talker) && !talker.getUserName().equals("admin")) {
@@ -334,19 +353,28 @@ public class Conversations extends Controller {
     		CommentsDAO.updateConvoAnswer(answer);
     	}
     	else if (todo.equalsIgnoreCase("setNotHelpful")) {
-    		answer.setNotHelpful(true);
-    		CommentsDAO.updateConvoAnswer(answer);
+    		Vote notHelpfulVote = new Vote(talker, false);
     		
-    		//let's send an email to support@talkabouthealth.com
-    		//TODO: make one method for flagging?
-//    		Map<String, String> vars = new HashMap<String, String>();
-//        	vars.put("content_type", "Answer");
-//        	vars.put("content_link", "");
-//        	vars.put("reason", "");
-//    		vars.put("content", answer.getText());
-//    		vars.put("name", talker.getUserName());
-//    		vars.put("email", talker.getEmail());
-//    		EmailUtil.sendEmail(EmailTemplate.FLAGGED, EmailUtil.SUPPORT_EMAIL, vars, null, false);
+    		Vote oldVote = answer.getVoteByTalker(talker, answer.getNotHelpfulVotes());
+    		if (oldVote != null) {
+				//try the same vote - already voted!
+				renderText(Messages.get("vote.exists"));
+				return;
+    		}
+    		
+    		answer.getNotHelpfulVotes().add(notHelpfulVote);
+    		
+    		//Also, in order for an answer to disappear, let's say it must have 3 "Not Helpful" votes. 
+    		//Unless "Admin" marks it as unhelpful.
+    		if (!answer.isNotHelpful()) {
+    			//check if we should make it nothelpful
+    			if (talker.getUserName().equalsIgnoreCase("admin") 
+    					|| answer.getNotHelpfulVotes().size() == 3) {
+    				answer.setNotHelpful(true);
+    			}
+    		}
+    		
+    		CommentsDAO.updateConvoAnswer(answer);
     	}
     }
     

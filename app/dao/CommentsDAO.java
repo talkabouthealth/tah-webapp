@@ -133,7 +133,10 @@ public class CommentsDAO {
 			.add("old_texts", answer.getOldTexts())
 			
 			.add("deleted", answer.isDeleted())
+			
 			.add("not_helpful", answer.isNotHelpful())
+			.add("not_helpful_votes", setToDB(answer.getNotHelpfulVotes()))
+			
 			.get();
 		
 		DBObject answerId = new BasicDBObject("_id", new ObjectId(answer.getId()));

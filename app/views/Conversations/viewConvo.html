@@ -243,7 +243,7 @@
    		function markNotHelpful(answerId) {
    	   		var confirmDel = confirm("Are you sure want to mark as 'Not Helpful' this answer?");
    	   		if (confirmDel) {
-   	   	   		$("#comment"+answerId).hide();
+   	   	   		//$("#comment"+answerId).hide();
 
    	   	  		$.post("@{Conversations.updateAnswer()}", 
     				{ answerId: answerId, todo: 'setNotHelpful', newText: ''},
@@ -522,7 +522,17 @@
                       			<div class="topicborder"></div>
                       		</div>
                       		
-                      		#{convoCommentsTree commentsList: convo.comments, level: 1 /}
+                      		#{convoCommentsTree commentsList: convo.helpfulAnswers, level: 1 /}
+                      		
+                      		#{set notHelpfulAnswers = convo.notHelpfulAnswers /}
+                      		#{if notHelpfulAnswers.size() != 0 }
+                      			<a href="#" onclick="$('#notHelpfulAnswers').show(); return false;"
+                      				>View ${notHelpfulAnswers.size()} Answer(s) Marked Not Helpful</a>
+	                      		<div id="notHelpfulAnswers" style="display: none; margin-top: 3px;">
+	                      			#{convoCommentsTree commentsList: notHelpfulAnswers, level: 1 /}
+	                      		</div>	
+                      		#{/if}
+                      		
                         
 							<div class="topic" id="replyform"><br />
 								<textarea name="textarea" id="replytext" class="answerinput" 

@@ -83,7 +83,6 @@ public class CommentBean extends MessageBean {
 	private String profileTalkerId;
 	private String topicId;
 	private boolean deleted;
-	private boolean notHelpful;
 	
 	//old versions of the text
 	private Set<String> oldTexts;
@@ -93,6 +92,9 @@ public class CommentBean extends MessageBean {
 	
 	private int voteScore;
 	private Set<Vote> votes;
+	
+	private boolean notHelpful;
+	private Set<Vote> notHelpfulVotes;
 	
 	
 	public CommentBean() {}
@@ -131,15 +133,17 @@ public class CommentBean extends MessageBean {
 		setVoteScore(getInt(commentDBObject, "vote_score"));
 		setVotes(parseSet(Vote.class, commentDBObject, "votes"));
 		
+		setNotHelpfulVotes(parseSet(Vote.class, commentDBObject, "not_helpful_votes"));
+		
 		setFromTalker(parseTalker(commentDBObject, "from"));
 	}
 	
-	public Vote getVoteByTalker(TalkerBean talker) {
-		if (getVotes() == null) {
+	public Vote getVoteByTalker(TalkerBean talker, Set<Vote> votesSet) {
+		if (votesSet == null) {
 			return null;
 		}
 		
-		for (Vote vote : getVotes()) {
+		for (Vote vote : votesSet) {
 			if (vote.getTalker().equals(talker)) {
 				return vote;
 			}
@@ -210,6 +214,14 @@ public class CommentBean extends MessageBean {
 
 	public void setNotHelpful(boolean notHelpful) {
 		this.notHelpful = notHelpful;
+	}
+
+	public Set<Vote> getNotHelpfulVotes() {
+		return notHelpfulVotes;
+	}
+
+	public void setNotHelpfulVotes(Set<Vote> notHelpfulVotes) {
+		this.notHelpfulVotes = notHelpfulVotes;
 	}
 	
 }
