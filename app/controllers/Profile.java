@@ -443,7 +443,7 @@ public class Profile extends Controller {
 		
 		flash.success("ok");
 		
-		//TODO strange fix for redirect with "#reference". Discussed here:
+		//Strange fix for redirect with "#reference". Discussed here:
 		//http://groups.google.com/group/play-framework/browse_thread/thread/93c2ec3e34c20f4e/bf94f63fcb2e529d?lnk=gst&q=addRef#bf94f63fcb2e529d
 //		ActionDefinition action = reverse(); {
 //			//render("@edit", talker);

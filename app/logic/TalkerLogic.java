@@ -40,10 +40,6 @@ public class TalkerLogic {
 		//check what items are completed
 		EnumSet<ProfileCompletion> profileActions = EnumSet.of(ProfileCompletion.BASIC);
 		
-		//TODO: finish this items
-//		COMMENT_CONVO(10, "Comment on a Conversation to get to "),
-//		WRITE_SUMMARY(5, "Write or edit a summary of a Conversation to get to ");
-		
 		//TODO: if user deletes info after entering?
 //		COMPLETE_PERSONAL(15, "Complete your Personal Info to get to "),
 //		COMPLETE_HEALTH(10, "Complete your Health Details to get to "),
@@ -53,16 +49,31 @@ public class TalkerLogic {
 			switch (type) {
 			case START_CONVO:
 				profileActions.add(ProfileCompletion.START_CONVO);
+				break;
 			case JOIN_CONVO:
 				profileActions.add(ProfileCompletion.JOIN_CONVO);
+				break;
+			case ANSWER_CONVO:
+			case REPLY_CONVO:
+				profileActions.add(ProfileCompletion.COMMENT_CONVO);
+				break;
 			case GIVE_THANKS:
 				profileActions.add(ProfileCompletion.GIVE_THANKYOU);
+				break;
 			case UPDATE_PERSONAL:
 				profileActions.add(ProfileCompletion.COMPLETE_PERSONAL);
+				break;
 			case UPDATE_HEALTH:
 				profileActions.add(ProfileCompletion.COMPLETE_HEALTH);
+				break;
+			case SUMMARY_ADDED:
+			case SUMMARY_EDITED:
+				profileActions.add(ProfileCompletion.WRITE_SUMMARY);
+				break;
 			}
 		}
+		
+		System.out.println("!!!: "+talker.getFollowingList());
 		
 		if (!talker.getFollowingList().isEmpty()) {
 			profileActions.add(ProfileCompletion.FOLLOW);

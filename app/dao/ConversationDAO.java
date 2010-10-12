@@ -63,7 +63,6 @@ public class ConversationDAO {
 	 * Tries to insert convo 'count' times (in case of duplicate key error on 'tid' field)
 	 * Returns -1 in case of failure
 	 */
-	//TODO: move similar code in one jar ?
 	private static int saveInternal(ConversationBean convo, int count) {
 		if (count == 0) {
 			return -1;
@@ -278,9 +277,6 @@ public class ConversationDAO {
 	
 	/**
 	 * No one answered for question/conversation
-	 * or
-	 * TODO: author joins always!
-	 * No one joined for conversation
 	 * @return
 	 */
 	public static List<ConversationBean> getOpenQuestions() {

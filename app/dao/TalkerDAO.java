@@ -182,7 +182,6 @@ public class TalkerDAO {
 	public static TalkerBean getByVerifyCode(String verifyCode) {
 		TalkerBean talker = getByField("verify_code", verifyCode);
 		
-		//TODO: later we can use OR in Mongo?
 		if (talker == null) {
 			//check non-primary emails
 			DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
