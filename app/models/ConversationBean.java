@@ -49,7 +49,6 @@ public class ConversationBean {
 	private Set<URLName> oldNames;
 	
 	private Date creationDate;
-	private Date displayTime;	//TODO: old field? how to use it?
 	
 	//Convo with no answers is opened
 	private boolean opened;
@@ -87,7 +86,6 @@ public class ConversationBean {
     	setTid((Integer)convoDBObject.get("tid"));
     	setTopic((String)convoDBObject.get("topic"));
     	setCreationDate((Date)convoDBObject.get("cr_date"));
-    	setDisplayTime((Date)convoDBObject.get("disp_date"));
     	setDetails((String)convoDBObject.get("details"));
     	setDeleted(getBoolean(convoDBObject, "deleted"));
     	
@@ -292,9 +290,6 @@ public class ConversationBean {
 	public Date getCreationDate() { return creationDate; }
 	public void setCreationDate(Date creationDate) { this.creationDate = creationDate; }
 	
-	public void setDisplayTime(Date displayTime) { this.displayTime = displayTime; }
-	public Date getDisplayTime() { return displayTime; }
-
 	public String getUid() { return uid; }
 	public void setUid(String uid) { this.uid = uid; }
 

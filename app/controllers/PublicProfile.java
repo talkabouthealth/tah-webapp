@@ -64,7 +64,7 @@ public class PublicProfile extends Controller {
 		render(talker, currentTalker);
 	}
 	
-	//TODO: load more methods for topics?
+	//TODO: 'load more' methods for conversations?
 	public static void conversationsFollowing(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByUserName(userName);

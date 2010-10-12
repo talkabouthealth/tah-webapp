@@ -111,7 +111,6 @@ public class ViewDispatcher extends Controller {
 		render("PublicProfile/newview.html", talker, disease, talkerDisease, healthItemsMap, currentTalker);
 	}
 	
-	//TODO: make autocomplete for RelatedConvos
 	private static void showConvo(ConversationBean convo) {
 		TalkerBean talker = null;
 		if (Security.isConnected()) {

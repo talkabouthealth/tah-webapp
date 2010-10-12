@@ -82,7 +82,6 @@ public class ConversationDAO {
 			.add("type", convo.getConvoType().toString())
 			.add("topic", convo.getTopic())
 			.add("cr_date", convo.getCreationDate())
-			.add("disp_date", convo.getDisplayTime())
 			.add("main_url", convo.getMainURL())
 			.add("topics", convo.topicsToDB())
 			.add("details", convo.getDetails())
@@ -449,7 +448,6 @@ public class ConversationDAO {
 //		topic.setUid("4c2cb43160adf3055c97d061");
 //		Date currentDate = Calendar.getInstance().getTime();
 //		topic.setCreationDate(currentDate);
-//		topic.setDisplayTime(currentDate);
 //		TopicDAO.save(topic);
 	}
 

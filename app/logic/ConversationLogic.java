@@ -38,7 +38,6 @@ public class ConversationLogic {
 		convo.setUid(talker.getId());
 		Date currentDate = Calendar.getInstance().getTime();
 		convo.setCreationDate(currentDate);
-		convo.setDisplayTime(currentDate);
 		convo.setDetails(details);
 		convo.setTopics(topicsSet);
 

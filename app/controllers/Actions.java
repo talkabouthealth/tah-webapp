@@ -49,7 +49,6 @@ public class Actions extends Controller {
 		//TODO: every email notification is with action? can we use it?
 		ActionDAO.saveAction(new GiveThanksAction(talker, toTalkerBean));
 		
-		//TODO: better implementation?
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("other_talker", talker.getUserName());
 		vars.put("thankyou_text", thankYouBean.getNote());

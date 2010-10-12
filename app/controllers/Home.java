@@ -34,8 +34,7 @@ public class Home extends Controller {
 
     public static void index(String newTopic) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	talker.setJoinedTopicsList(ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO));
-    	//TODO: load only count?
+//    	talker.setJoinedTopicsList(ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO));
     	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		
 		if (newTopic == null || newTopic.trim().length() == 0) {

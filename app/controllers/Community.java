@@ -49,7 +49,6 @@ public class Community extends Controller {
 				results = SearchUtil.searchTalker(query);
 			}
 			catch (Exception e) {
-				//TODO: better handling?
 				e.printStackTrace();
 			}
 		}

@@ -3,14 +3,16 @@
 	<div id="comment${comment.id}" class="topic" style="padding-bottom:5px;">
     	<div class="answerCover">
 			<div class="replyWraper">
-				#{if _level == 1}
+				#{if _level == 1 }
 					<div id="vote${comment.id}" class="replyr1">
-						<div class="arrowups">
-							<a href="#" class="votebtn" title="up" rel="${comment.id}">&nbsp;</a>
-						</div> 
-						<div class="arrowdons">
-							<a href="#" class="votebtn" title="down" rel="${comment.id}">&nbsp;</a>
-						</div>
+						#{ifnot session.username?.equals(comment.fromTalker.userName)}
+							<div class="arrowups">
+								<a href="#" class="votebtn" title="up" rel="${comment.id}">&nbsp;</a>
+							</div> 
+							<div class="arrowdons">
+								<a href="#" class="votebtn" title="down" rel="${comment.id}">&nbsp;</a>
+							</div>
+						#{/ifnot}
 		            </div><!--replyr1-->
 	            #{/if}
 	            <div class="replyl1">

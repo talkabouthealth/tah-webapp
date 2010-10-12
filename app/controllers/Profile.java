@@ -242,7 +242,6 @@ public class Profile extends Controller {
 			talker = new TalkerBean();
 		}
 		
-		//TODO: save as strings in db?
 		sessionTalker.setNfreq(talker.getNfreq());
 		sessionTalker.setNtime(talker.getNtime());
 		sessionTalker.setCtype(talker.getCtype());

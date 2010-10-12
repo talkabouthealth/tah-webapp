@@ -130,10 +130,15 @@ public class Conversations extends Controller {
     }
     
     public static void vote(String answerId, boolean up) {
-    	//TODO: talker can vote for his/her answer/reply?
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
     	notFoundIfNull(answer);
+    	
+    	//talker cannot vote for his/her answer/reply
+    	if (talker.equals(answer.getFromTalker())) {
+    		forbidden();
+    		return;
+    	}
     	
     	Vote newVote = new Vote(talker, up);
     	int voteScore = answer.getVoteScore();
@@ -208,7 +213,6 @@ public class Conversations extends Controller {
     }
     
     public static void updateField(String convoId, String name, String value) {
-    	//TODO: list of allowed fields?
     	//TODO: hide edits from not-logined users
     	
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
