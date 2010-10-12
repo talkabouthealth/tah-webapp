@@ -3,7 +3,10 @@ package models;
 import java.util.HashMap;
 import java.util.Map;
 
-public class IMAccountBean {
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBObject;
+
+public class IMAccountBean implements DBModel {
 	
 	public static final Map<String, String> IM_SERVICES_MAP = new HashMap<String, String>();
 	static {
@@ -18,6 +21,24 @@ public class IMAccountBean {
 	public IMAccountBean(String userName, String service) {
 		this.userName = userName;
 		this.service = service;
+	}
+	
+	@Override
+	public DBObject toDBObject() {
+		DBObject imAccountDBObject = BasicDBObjectBuilder.start()
+			.add("uname", getUserName())
+			.add("service", getService())
+			.get();
+		return imAccountDBObject;
+	}
+	
+	@Override
+	public void parseDBObject(DBObject dbObject) {
+		String userName = (String)dbObject.get("uname");
+		String service = (String)dbObject.get("service");
+		
+		setUserName(userName);
+		setService(service);
 	}
 	
 	@Override

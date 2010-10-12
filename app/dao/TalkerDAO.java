@@ -84,7 +84,7 @@ public class TalkerDAO {
 			.add("pass", talker.getPassword())
 			.add("email", talker.getEmail())
 			.add("verify_code", talker.getVerifyCode())
-			.add("emails", talker.emailsToDB())
+			.add("emails", setToDB(talker.getEmails()))
 			
 			.add("orig_uname", talker.getOriginalUserName())
 			.add("deactivated", talker.isDeactivated())
@@ -93,7 +93,7 @@ public class TalkerDAO {
 			.add("connection", talker.getConnection())
 			.add("connection_verified", talker.isConnectionVerified())
 			
-			.add("im_accounts", talker.imAccountsToDB())
+			.add("im_accounts", setToDB(talker.getImAccounts()))
 			
 			.add("dob", talker.getDob())
 			.add("gender", talker.getGender())

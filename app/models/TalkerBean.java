@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import models.CommentBean.Vote;
 import models.actions.Action;
 
 import org.bson.types.ObjectId;
@@ -117,7 +118,6 @@ public class TalkerBean implements Serializable {
 	}
 	
 	private String id;
-	//FIXME: add URL field??
 	@Required @Match(ValidateData.USER_REGEX) private String userName;
 	@Required private String password;
 	@Required @Email private String email;
@@ -259,7 +259,7 @@ public class TalkerBean implements Serializable {
 		setPassword((String)talkerDBObject.get("pass"));
 		
 		setEmail((String)talkerDBObject.get("email"));
-		parseEmails((Collection<DBObject>)talkerDBObject.get("emails"));
+		setEmails(parseSet(EmailBean.class, talkerDBObject, "emails"));
 		setVerifyCode((String)talkerDBObject.get("verify_code"));
 		
 		setOriginalUserName((String)talkerDBObject.get("orig_uname"));
@@ -279,7 +279,7 @@ public class TalkerBean implements Serializable {
 		
 		setIm((String)talkerDBObject.get("im"));
 		setImUsername((String)talkerDBObject.get("im_uname"));
-		parseIMAccounts((Collection<DBObject>)talkerDBObject.get("im_accounts"));
+		setImAccounts(parseSet(IMAccountBean.class, talkerDBObject, "im_accounts"));
 		
 		setNewsletter((Boolean)talkerDBObject.get("newsletter"));
 		setGender((String)talkerDBObject.get("gender"));
@@ -317,67 +317,6 @@ public class TalkerBean implements Serializable {
 		
 		parseFollowingTopics((Collection<DBRef>)talkerDBObject.get("following_tags"));
 		parseTopicsInfo((Collection<DBObject>)talkerDBObject.get("tags_info"));
-	}
-	
-	//TODO: move to EmailBean and IMAccountBean ?
-	private void parseEmails(Collection<DBObject> emailsDBList) {
-		Set<EmailBean> emailsSet = new LinkedHashSet<EmailBean>();
-		if (emailsDBList != null) {
-			for (DBObject emailDBObject : emailsDBList) {
-				String emailValue = (String)emailDBObject.get("value");
-				String verifyCode = (String)emailDBObject.get("verify_code");
-				EmailBean email = new EmailBean(emailValue, verifyCode);
-				
-				emailsSet.add(email);
-			}
-		}
-		
-		emails = emailsSet;
-	}
-	
-	public List<DBObject> emailsToDB() {
-		List<DBObject> dbList = new ArrayList<DBObject>();
-		if (emails != null) {
-			for (EmailBean email : emails) {
-				DBObject emailDBObject = BasicDBObjectBuilder.start()
-					.add("value", email.getValue())
-					.add("verify_code", email.getVerifyCode())
-					.get();
-				dbList.add(emailDBObject);
-			}
-		}
-		return dbList;
-	}
-	
-	private void parseIMAccounts(Collection<DBObject> imAccountsDBList) {
-		Set<IMAccountBean> imAccountsSet = new LinkedHashSet<IMAccountBean>();
-		if (imAccountsDBList != null) {
-			for (DBObject emailDBObject : imAccountsDBList) {
-				String userName = (String)emailDBObject.get("uname");
-				String service = (String)emailDBObject.get("service");
-				IMAccountBean imAccount = new IMAccountBean(userName, service);
-				
-				imAccountsSet.add(imAccount);
-			}
-		}
-		
-		imAccounts = imAccountsSet;
-	}
-	
-	public List<DBObject> imAccountsToDB() {
-		List<DBObject> dbList = new ArrayList<DBObject>();
-		
-		if (imAccounts != null) {
-			for (IMAccountBean imAccount : imAccounts) {
-				DBObject imAccountDBObject = BasicDBObjectBuilder.start()
-					.add("uname", imAccount.getUserName())
-					.add("service", imAccount.getService())
-					.get();
-				dbList.add(imAccountDBObject);
-			}
-		}
-		
-		return dbList;
 	}
 	
 	//TODO: load count() of thankyous for recognition?
