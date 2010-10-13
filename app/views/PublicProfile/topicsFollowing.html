@@ -88,13 +88,11 @@
 		<div class="topicfoltxt1">
 			<a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a> - 
 			<span class="topicfoltxtsub">
-				<a href="#">
-					#{if talkerTopicInfo?.numOfAnswers != 0}
-						${talkerTopicInfo?.numOfAnswers} answer(s)
-					#{/if}
-				</a> | 
+				#{if talkerTopicInfo?.numOfAnswers != 0}
+					${talkerTopicInfo?.numOfAnswers} answer(s) | 
+				#{/if}
 				Endorsements: ${talkerTopicInfo.endorsements.size()}
-				#{ifnot session.username.equals(talker.userName)}
+				#{ifnot session.username.equals(talker.userName) || talkerTopicInfo.endorsements.contains(currentTalker) }
 					&nbsp;|&nbsp;<a href="#" onclick="return endorse('${topic.id}');">Endorse</a>
 				#{/ifnot}
 			</span>
