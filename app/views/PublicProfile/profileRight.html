@@ -1,12 +1,68 @@
+<script type="text/javascript"> 	 
+   		$(document).ready(function() {
+   			$("#thankYouUser").html('${talker.userName}');
+   			$("#commentUser").html('${talker.userName}');
+   			
+   			$("#followActionlink").click(function() {
+   				$.post("@{Actions.follow()}", 
+   		  				{ followingId: '${talker.id}'},
+   		  				function(data) {
+   		  					//$("#followResult").html("Ok! ");
+   		  					$("#followActionlink").html(data);
+
+   		  					//$("#followActionImagelink img").attr("src", "/public/images/"+data.toLowerCase()+"_icon.gif");
+   		  					if ($("#followActionImagelink")) {
+	   		  					if (data == 'Follow') {
+	   		  						$("#followActionImagelink").html(
+	   		   		  						'<img src="/public/images/follow_icon.gif" width="52" height="19" border="0"/>');
+	   		  					}
+	   		  					else {
+	   		  						$("#followActionImagelink").html('Unfollow');
+	   		  					}
+   		  					}
+   		  				}
+   		  			);
+	   		});
+   		});
+
+   		function saveThankYou() {
+   			var noteText = $("#thankYouListNote").val();
+   			hideAll();
+   			$("#thankYouListNote").val("");
+
+   			$.post("/actions/createThankYou", 
+   				{ toTalker: '${talker.id}', note: noteText}
+   			);
+   			return false;
+   		}
+
+   		function sendProfileComment() {
+   			var commentText = $("#commentText").val();
+   			hideAll();
+   			$("#commentText").val("");
+
+   			$.post("/actions/saveProfileComment", 
+   				{ profileTalkerId: '${talker.id}', parentId: '', text: commentText}
+   			);
+   		}
+</script>
 <div style="padding-left: 30px;" id="mtright"> <br/>
                 <div class="followpicbox">
                   <div class="followpic">
                   	<img src="@{Image.show(talker.userName)}" width="81" height="81"/>
                   </div>
-                  <div class="foloowpictext"> <a href="#">Follow</a><br/>
-                    <a href="#">Comment</a><br/>
-                    <a href="#">Give a Thank You</a><br/>
-                    <a href="#">Private Message</a><br/>
+                  <div class="foloowpictext">
+                    #{ifnot talker.userName.equals(currentTalker.userName) }
+						<a id="followActionlink" href="#">
+						${ currentTalker.followingList.contains(talker) ? 'Unfollow' : 'Follow'}
+						</a>
+						<br/>
+					#{/ifnot}
+                    <a href="#" onclick="return showPopup('#commentPopup', 200);">Comment</a><br/>
+                    #{ifnot talker.userName.equals(currentTalker.userName) }
+                    	<a href="#" onclick="return showPopup('#thankYouPopup', 200);">Give a Thank You</a><br/>
+                    #{/ifnot}
+                    <!-- <a href="#">Private Message</a><br/>  -->
                   </div>
                   <!--foloowpictext-->
                   <div class="mtop"></div>
@@ -20,14 +76,20 @@
 			     	<a class="${currentPage.equals('publicProfile') ? 'current' : ''}" 
 			     		href="@{ViewDispatcher.view(talker.userName)}">Profile</a>
 			      </div>
-                  <div class="mtrighttxt"><a href="#">Journal</a></div>
-                  <div class="mtrighttxt"><a href="#">Answers</a></div>
-                  <div class="mtrighttxt"><a href="#">Questions & Talks</a></div>
+                  <div class="mtrighttxt"><a href="@{PublicProfile.journal(talker.userName)}">Journal</a></div>
+                  <!-- 
+	                  <div class="mtrighttxt"><a href="#">Answers</a></div>
+	              -->
+	              <div class="mtrighttxt">
+	              	<a href="@{PublicProfile.conversationsStarted(talker.userName)}">Questions & Talks</a>
+	              </div>
                   <div class="mtrighttxt">
 			     	<a class="${currentPage.equals('topicsFollowing') ? 'current' : ''}" 
 			     		href="@{PublicProfile.topicsFollowing(talker.userName)}">Topics Following</a>
 			      </div>
-                  <div class="mtrighttxt"><a href="#">Thank You's</a></div>
+                  <div class="mtrighttxt">
+                  	<a href="@{PublicProfile.userBasedActions(talker.userName, 'thankyous')}">Thank You's</a>
+                  </div>
                   <div class="mtop"></div>
                   <div class="topicborder"></div>
                   <div class="cb"></div>
@@ -136,3 +198,11 @@
 	                <div class="cb"></div>
 				#{/if}
 </div>
+
+<div id="boxes">
+	<div id="dialog" class="window"></div>
+	
+	#{ popups/thankyou2 /}
+	#{ popups/comment2 /}
+</div>
+<div id="mask"></div>

@@ -92,6 +92,8 @@ function showPopup(id, popupWidth) {
 
 	//transition effect
 	$(id).fadeIn(200); 
+	
+	return false;
 }
 
 function hideAll() {
