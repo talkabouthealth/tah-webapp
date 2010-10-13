@@ -23,6 +23,8 @@
 	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
+			makeAutocomplete("#convoText", "convo");
+			
 			$(".followConvoLink").live('click', function() {
 				var topicId = $(this).attr("rel");
 				if ($(this).html().indexOf("Unfollow") != -1) {
@@ -168,18 +170,7 @@
                   <div class="comborder"></div>
                 </div>
                 <div class="topipcWraper">
-                  <div class="startsearchbox">
-                    <div class="startserch">
-                      <div class="demo">
-                        <div class="ui-widget">
-                          <textarea id="convoText" name="textarea" class="edititinputx" 
-                          	rows="4"  cols="3" style="width:450px;height:40px" ></textarea>
-                        </div>
-                      </div>
-                      <!-- End demo -->
-                    </div>
-                    <input id="startLink" type="submit" src="/public/images/startsubmit.jpg" value=" " class="startsubmit" />
-                  </div>
+                  #{startConvoInput /}
 
                   <div class="stylez2">Open Questions (${openQuestions.size()})</div>
                     <div class="topicborder"></div>
