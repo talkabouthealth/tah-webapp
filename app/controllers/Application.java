@@ -226,22 +226,17 @@ public class Application extends Controller {
         		"Informational", "Advice and opinions", "Meet new people", "Emotional support"});
         
         /*
-         	By default the following sections should be unchecked:
-				- Personal Info
-				- Health Info
-				- Basic Info
-				- Bio
-				other sections should be checked
+         	By default all sections should be checked:
         */
-        EnumSet<ProfilePreference> defaultPreferences = 
-        	EnumSet.complementOf(
-        		EnumSet.of(
-    				ProfilePreference.PERSONAL_INFO
+        EnumSet<ProfilePreference> defaultPreferences = EnumSet.allOf(ProfilePreference.class);
+//        	EnumSet.complementOf(
+//        		EnumSet.of(
+//    				ProfilePreference.PERSONAL_INFO
 //    				ProfilePreference.HEALTH_INFO,
 //    				ProfilePreference.BASIC_INFO,
 //    				ProfilePreference.BIO
-        		)
-        	);
+//        		)
+//        	);
         talker.saveProfilePreferences(defaultPreferences);
         
         //By default all email notifications are checked

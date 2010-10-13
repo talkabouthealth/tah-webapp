@@ -542,12 +542,15 @@
 									onclick="if (this.value === 'Add New Answer') this.value='';">Add New Answer</textarea><br />
 								<input type="submit" onclick="return saveProfileComment('');" 
 									src="/public/images/addcomments.jpg" class="addcomments" value=" " />
+								
+								#{if session.username}
 								<div class="answerh2 style1 style2">Conversation</div>
 								<div class="topicborder"></div>
 								
 								<div class="tagtxts"><a href="#">Restart Conversation </a> |  
 									<a href="#">Start Follow up conversation</a>  |  
-									<a href="#" class="flagConvoLink">Flag Conversation</a> </div>
+									<a href="#" class="flagConvoLink">Flag Conversation</a>
+								</div>
 								
 								<div class="talkerCover">
 									<div class="talkertop">Talkers</div>
@@ -571,6 +574,8 @@
 									</div><!--talkermid-->
 									<div class="talkerbot"></div>
 								</div><!--talkerCover-->
+								#{/if}
+								
 							    <div class="cb"></div>
 							</div>
 							<div class="cb"></div>
