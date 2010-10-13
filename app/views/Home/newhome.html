@@ -4,12 +4,6 @@
 		
 		#innermiddlearea { padding-top: 10px }
 		.seeall { padding-top: 20px }
-		
-		.inline_form {
-			display:none;
-		}
-		
-		.ui-menu .ui-menu-item a { font-size: 16px }
 	</style>
 	
 	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
@@ -148,9 +142,7 @@
 				showPopup("#startDialog", 350);
 			});
 
-			$('.inline-edit').inlineEdit(
-			  		{ hover: ''}
-			  	);
+			$('.inline-edit').inlineEdit( { hover: ''} );
 
 			//----- Topics autocomplete -----------
 			function split( val ) {
