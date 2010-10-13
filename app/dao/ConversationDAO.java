@@ -45,15 +45,12 @@ public class ConversationDAO {
 	//------------------- Save/Update methods -----------------------
 	
 	public static void save(ConversationBean convo) {
-		//TODO: Same topic? - Do not update anything
-
 		//we try to insert convo 5 times - to prevent not-unique 'tid'
 		int tid = saveInternal(convo, 5);
 		
 		if (tid != -1) {
 			convo.setTid(tid);
 		} else {
-			//TODO: error handling?
 			new Exception("DB Problem - Conversations not inserted into DB").printStackTrace();
 			return;
 		}
@@ -139,7 +136,7 @@ public class ConversationDAO {
 	
 	
 	//----------------------- Query methods ------------------------
-	//TODO: handle deleted in this methods?
+	//FIXME: handle deleted in this methods?
 	public static ConversationBean getByConvoId(String topicId) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		

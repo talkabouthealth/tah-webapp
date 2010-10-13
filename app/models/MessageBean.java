@@ -15,7 +15,6 @@ public class MessageBean {
 		id = messageId;
 	}
 	
-	//TODO check eq and hashCode
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof MessageBean)) {

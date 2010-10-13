@@ -59,7 +59,7 @@ public class ConversationLogic {
 	}
 	
 	public static CommentBean createAnswer(ConversationBean convo, TalkerBean talker, String parentId, String text) {
-		//TODO: if answers - automatically follow topic?
+		//FIXME: if answers - automatically follow topic?
 		if (!talker.getFollowingConvosList().contains(convo.getId())) {
 			talker.getFollowingConvosList().add(convo.getId());
 			TalkerDAO.updateTalker(talker);

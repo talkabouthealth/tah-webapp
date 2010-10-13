@@ -12,7 +12,6 @@ public class ThankYouBean implements Comparable<ThankYouBean> {
 	private String to;
 	private TalkerBean fromTalker;
 	
-	//TODO: move to Comparator? - ThankYou, Activity, Comments?
 	public int compareTo(ThankYouBean o) {
 		//reverse order
 		return o.time.compareTo(time);

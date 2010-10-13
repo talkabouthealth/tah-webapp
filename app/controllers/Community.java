@@ -72,7 +72,6 @@ public class Community extends Controller {
 				results = SearchUtil.searchConvo(query);
 			}
 			catch (Exception e) {
-				//TODO: better handling?
 				e.printStackTrace();
 			}
 		}

@@ -213,7 +213,7 @@ public class Conversations extends Controller {
     }
     
     public static void updateField(String convoId, String name, String value) {
-    	//TODO: hide edits from not-logined users
+    	//FIXME: hide edits from not-logined users
     	
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	ConversationBean convo = ConversationDAO.getByConvoId(convoId);

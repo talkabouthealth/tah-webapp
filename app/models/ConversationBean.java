@@ -39,7 +39,7 @@ public class ConversationBean {
 	
 	private String id;
 	private int tid;
-	//TODO: handle questions also
+	//FIXME: handle questions also
 	private ConvoType convoType = ConvoType.CONVERSATION;
 	private boolean deleted;
 	

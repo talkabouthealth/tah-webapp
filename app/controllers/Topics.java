@@ -83,7 +83,7 @@ public class Topics extends Controller {
     }
     
     public static void updateField(String topicId, String name, String value) {
-    	//TODO: hide edits from not-logined users
+    	//FIXME: hide edits from not-logined users
     	
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	if (talker == null) {
@@ -144,8 +144,8 @@ public class Topics extends Controller {
     			alias+"' class='removeAliasLink style2'>remove</a></div>");
     }
     
-    //TODO: check valid add/remove? (Topic can't be children and parent at the same time)
-	//TODO: make autocomplete for parents/children
+    //FIXME: check valid add/remove? (Topic can't be children and parent at the same time)
+	//FIXME: make autocomplete for parents/children
     public static void manageParents(String topicId, String todo, String parentId) {
     	TopicBean topic = new TopicBean(topicId);
     	

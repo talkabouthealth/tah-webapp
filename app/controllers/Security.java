@@ -20,7 +20,6 @@ public class Security extends Secure.Security {
     	return talker != null;
     }
     
-    //TODO: test rememberme?
     static boolean check(String profile) {
         if("admin".equals(profile)) {
         	//Talker with userName "admin" is administrator

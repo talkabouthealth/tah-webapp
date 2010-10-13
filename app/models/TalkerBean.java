@@ -55,7 +55,6 @@ public class TalkerBean implements Serializable {
 	);
 	
 	/**
-	 * TODO: is it ok? Or find other solution?
 	 * An order of elements is important - displayed on Profile Preference page.
 	 * 
 	 * TODO: save as array in db?

@@ -61,7 +61,7 @@ public class ActionDAO {
 		);
 	
 	
-	//TODO: rename to "action?"
+	//FIXME: rename to "action?"
 	public static final String ACTIVITIES_COLLECTION = "activities";
 	
 	public static List<Action> load(String talkerId) {
@@ -147,8 +147,6 @@ public class ActionDAO {
 	}
 	
 	public static List<Action> loadActivityFeed(TalkerBean talker) {
-		//TODO: move to FeedLogic?
-		
 		//prepare list of followed talkers
 		Set<DBRef> talkersDBSet = new HashSet<DBRef>();
 		for (TalkerBean followingTalker : talker.getFollowingList()) {

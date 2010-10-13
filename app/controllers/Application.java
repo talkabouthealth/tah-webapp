@@ -41,6 +41,7 @@ public class Application extends Controller {
 	//As we have profile link as "http://talkabouthealth.com/{userName}" 
 	//we need to disallow usernames equal to application routes - controllers, static files, etc
 	//TODO: maybe we can user Play! configuration for this?
+	//FIXME: update this
 	public static final List<String> RESERVED_WORDS = Arrays.asList(new String[]{
 		"login", "logout", "signup", "register", "forgotpassword", "sendnewpassword", 
 		"home", "dashboard", "talk", "profile", "public", "image", 
@@ -214,7 +215,7 @@ public class Application extends Controller {
 //        }
         
         /*
-         	TODO: save settings as enums in App and Strings in DB?
+         	FIXME: save settings as enums in App and Strings in DB?
          	Default notification settings:
 			- 2 to 5 times per day
 			- whenever I am online

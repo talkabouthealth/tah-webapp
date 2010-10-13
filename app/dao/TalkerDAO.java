@@ -449,7 +449,7 @@ public class TalkerDAO {
 			return new ArrayList<ConversationBean>();
 		}
 		
-		//TODO: use DBRef for topics?
+		//FIXME: use DBRef for topics?
 		List<ConversationBean> followingConvoList = new ArrayList<ConversationBean>();
 		for (String topicId : talker.getFollowingConvosList()) {
 			ConversationBean topic = ConversationDAO.getByConvoId(topicId);

@@ -209,7 +209,6 @@ public class Profile extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 		Map<String, String> paramsMap = params.allSimple();
-		//TODO: the same for all enums?
 		EnumSet<ProfilePreference> preferencesSet = EnumSet.noneOf(ProfilePreference.class);
 		for (String paramName : paramsMap.keySet()) {
 			//try to parse all parameters to ProfilePreference enum
