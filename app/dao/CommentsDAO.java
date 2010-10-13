@@ -69,6 +69,15 @@ public class CommentsDAO {
 		
 		//comments without parent (top in hierarchy)
 		List<CommentBean> topCommentsList = parseCommentsTree(commentsList);
+		
+//		for (CommentBean cb : topCommentsList) {
+//			System.out.println("!"+cb.getFromTalker());
+//			if (cb.getChildren() != null) {
+//				for (CommentBean c : cb.getChildren()) {
+//					System.out.println("!!!!!"+c.getFromTalker()+" : "+c.getText());
+//				}
+//			}
+//		}
 		return topCommentsList;
 	}
 
@@ -152,6 +161,17 @@ public class CommentsDAO {
 		CommentBean answer = new CommentBean();
 		answer.parseBasicFromDB(answerDBObject);
 		return answer;
+	}
+	
+	public static CommentBean getProfileCommentById(String commentId) {
+		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
+		
+		DBObject query = new BasicDBObject("_id", new ObjectId(commentId));
+		DBObject answerDBObject = commentsColl.findOne(query);
+		
+		CommentBean comment = new CommentBean();
+		comment.parseBasicFromDB(answerDBObject);
+		return comment;
 	}
 	
 	

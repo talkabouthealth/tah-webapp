@@ -120,7 +120,15 @@ public class ActionDAO {
 								//we do not need if other user followed convo
 								.add("type", new BasicDBObject("$ne", ActionType.FOLLOW_CONVO.toString()))
 								.get(),
-							new BasicDBObject("uid", new BasicDBObject("$in", talkersDBSet))
+							new BasicDBObject("uid", new BasicDBObject("$in", talkersDBSet)),
+							//load all comments from followings' journals
+							BasicDBObjectBuilder.start()
+								.add("otherTalker", new BasicDBObject("$in", talkersDBSet))
+								.add("type", new BasicDBObject("$in", 
+										Arrays.asList(ActionType.PERSONAL_PROFILE_COMMENT.toString(), 
+												ActionType.PERSONAL_PROFILE_REPLY.toString()))
+									)
+								.get()
 						))
 			.add("type", new BasicDBObject("$in", actionTypes))
 			//user shouldn't see personal actions in the ConvoFeed

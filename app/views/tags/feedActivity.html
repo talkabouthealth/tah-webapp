@@ -26,6 +26,15 @@
 		<div class="jointxtlink1">
 			${_activity.toHTML().raw()}
 		</div>
+		
+		#{if _activity.profileComment}
+			#{profileCommentsTree2 commentsList: [_activity.profileComment], level: 1 /}
+		#{/if}
+		#{if _activity.profileReply}
+			<div style="margin-left: 21px;">
+				#{profileCommentsTree2 commentsList: [_activity.profileReply], level: 2 /}			
+			</div>
+		#{/if}
 		<div class="jointxtlink2 moretext">
 			#{if _activity.reply}
 				${_activity.reply.text}

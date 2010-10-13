@@ -121,6 +121,13 @@ public class Actions extends Controller {
 	private static CommentBean saveProfileCommentInternal(String profileTalkerId, String parentId, String text) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
+		if (parentId != null && parentId.length() != 0) {
+			CommentBean parentAnswer = CommentsDAO.getProfileCommentById(parentId);
+			if (parentAnswer != null) {
+				profileTalkerId = parentAnswer.getProfileTalkerId();
+			}
+		}
+		
 		TalkerBean profileTalker = TalkerDAO.getById(profileTalkerId);
 		notFoundIfNull(profileTalker);
 //		if ( !(profileTalker.getFollowingList().contains(talker) || profileTalker.equals(talker)) ) {
@@ -135,19 +142,20 @@ public class Actions extends Controller {
 		comment.setText(text);
 		comment.setTime(new Date());
 		
+//		System.out.println(comment.getParentId());
+//		System.out.println(comment.getProfileTalkerId());
+		
 		String id = CommentsDAO.saveProfileComment(comment);
 		comment.setId(id);
 		
-		if (profileTalker.equals(talker)) {
-			if (comment.getParentId() == null) {
-				ActionDAO.saveAction(new PersonalProfileCommentAction(
-						talker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT));
-			}
-			else {
-				CommentBean parentAnswer = new CommentBean(parentId);
-				ActionDAO.saveAction(new PersonalProfileCommentAction(
-						talker, parentAnswer, comment, ActionType.PERSONAL_PROFILE_REPLY));
-			}
+		if (comment.getParentId() == null) {
+			ActionDAO.saveAction(new PersonalProfileCommentAction(
+					talker, profileTalker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT));
+		}
+		else {
+			CommentBean parentAnswer = new CommentBean(comment.getParentId());
+			ActionDAO.saveAction(new PersonalProfileCommentAction(
+					talker, profileTalker, parentAnswer, comment, ActionType.PERSONAL_PROFILE_REPLY));
 		}
 		
 		Map<String, String> vars = new HashMap<String, String>();

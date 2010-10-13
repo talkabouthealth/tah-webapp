@@ -40,9 +40,11 @@
 			#{profileCommentsTree2 commentsList: comment.children, level: (_level+1)/}
 			
 			<div id="reply${comment.id}" class="replytommentbax"
+					*{ 
 					#{if comment.children == null || comment.children?.size() == 0}
 						style="display: none;"
 					#{/if}
+					}*
 				>
 				<div class="cb"></div>
 				<div>

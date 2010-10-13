@@ -136,6 +136,11 @@ public class CommentBean extends MessageBean {
 		setNotHelpfulVotes(parseSet(Vote.class, commentDBObject, "not_helpful_votes"));
 		
 		setFromTalker(parseTalker(commentDBObject, "from"));
+		
+		DBRef profileTalkeRef = (DBRef)commentDBObject.get("profile");
+		if (profileTalkeRef != null) {
+			setProfileTalkerId(profileTalkeRef.getId().toString());
+		}
 	}
 	
 	public Vote getVoteByTalker(TalkerBean talker, Set<Vote> votesSet) {
