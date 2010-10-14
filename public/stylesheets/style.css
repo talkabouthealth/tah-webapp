@@ -4720,12 +4720,12 @@ a.product, a.cat_close, a.cat_open {
 	clear:both;
 	padding-top:5px;
 	padding-bottom:5px;
-	font-size:12px;
+	font-size:16px;
 	color:#404040;
 }
 .popusertxt3 a {
 	text-decoration:none;
-	color:#404040;
+	/* color:#404040; */
 }
 .popsubmitcover {
 	clear:both;
@@ -4771,7 +4771,7 @@ border:0;
 .popbox3 {
 	width:670px;
 	padding-left:15px;
-	height:120px;
+	height:140px;
 	background:#f7fcff;
 	border:1px solid #a6c4d6;
 	margin-top:15px;
@@ -4787,7 +4787,7 @@ border:0;
 .iwant1 {
 	clear:both;
 	color:#0286bc;
-	font-size:16px;
+	font-size:20px;
 	padding-bottom:5px;
 	font-weight:bold;
 }

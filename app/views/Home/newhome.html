@@ -88,13 +88,20 @@
 			});	
 
 			$('#saveConvoBtn').click(function (e) {
+				//openChat(2);
+				//return;
+				
 				var type = "QUESTION";
 				if ($("#newConvoTypeConvo").attr("checked")) {
 					type = "CONVERSATION";
 				}
 				var title = $("#newConvoTitle").val();
 				var details = $("#newConvoDetails").val();
-				var topics = $("#newConvoTopics").val();
+				if (details === 'This is the place to provide context or further details for your request.') {
+					details = '';
+				}
+				//var topics = $("#newConvoTopics").val();
+				var topics = '';
 
 				if (title === "") {
 					alert("Please input headline.");
@@ -114,13 +121,13 @@
 	  						$("#newConvoForm").hide();
 	  						$("#newQuestionConfirm").show();
 	  					}
+
+	  					$("#convoText").val("");
+	  					$("#newConvoTitle").val("");
+	  					$("#newConvoDetails").val("This is the place to provide context or further details for your request.");
+	  					//$("#newConvoTopics").val("");
 	  				}
 	  			);
-
-				$("#convoText").val("");
-				$("#newConvoTitle").val("");
-				$("#newConvoDetails").val("");
-				$("#newConvoTopics").val("");
 
 	  			return false;
 			});
@@ -380,7 +387,7 @@
   <div id="startDialog" class="window">
     <div class="boxtopcenter">
       <div id="newConvoForm" class="popboxWraper">
-        <div class="popbox2">
+        <div class="popbox2" style="height: 350px;">
           <div class="closecover">
             <div class="close"><img src="/public/images/close.jpg" alt="Close" /></div>
           </div>
@@ -396,7 +403,7 @@
               <div class="askradio1">
                 <input id="newConvoTypeConvo" name="newConvoType" type="radio" />
               </div>
-              <div class="asktext3">Start a Live Conversation </div>
+              <div class="asktext3">Start a Live Talk</div>
             </div>
             <!--askquestionbox-->
           </div>
@@ -413,10 +420,13 @@
             <div class="asktextl">Details:<br />
               <span class="asksubtxt">(Optional)</span></div>
             <div class="askinputCover">
-              <textarea id="newConvoDetails" class="askinput2" cols="4" rows="3"></textarea>
+              <textarea id="newConvoDetails" class="askinput2" 
+                onclick="if (this.value == 'This is the place to provide context or further details for your request.') this.value=''" 
+                onblur="if (this.value == '') this.value='This is the place to provide context or further details for your request.'"
+              	cols="4" rows="3">This is the place to provide context or further details for your request.</textarea>
             </div>
           </div>
-          <!--askheadingCover-->
+          <!--
           <div class="askheadingCover">
             <div class="asktextl">Topics:<br />
               <span class="asksubtxt">(Optional)</span></div>
@@ -425,10 +435,10 @@
               <textarea id="newConvoTopics" class="askkinput" cols="4" rows="3"></textarea>
             </div>
           </div>
-          <!--askheadingCover-->
+          -->
           <div class="popsubmitcovar">
             <div class="notetext">Note: The more descriptive your request, the more like you are to receive support.</div>
-            <div class="popnothanks1"><a href="#" class="cancelLink">Cancel</a></div>
+            <!-- <div class="popnothanks1"><a href="#" class="cancelLink">Cancel</a></div>  -->
 
             <div class="popsubmitbox1">
               <div class="popupsubmits"><a href="#" id="saveConvoBtn">Submit</a></div>
@@ -448,7 +458,8 @@
           </div>
           <div class="iwant1">Thank you for sharing your question</div>
 
-          <div class="popusertxt3">We will notify other members of your question. Responses will be sent to your email account as well as viewable at the
+          <div class="popusertxt3">We will notify other members of your question. 
+          Responses will be sent to your email account as well as viewable at the
             following link: <a id="questionLink" href="#"></a></div>
           <div class="popsubmitcover1">
             <div class="popnothanks3"><a class="cancelLink" href="#">Close</a></div>
