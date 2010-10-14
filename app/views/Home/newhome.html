@@ -50,14 +50,14 @@
 				//Cancel the link behavior
 				e.preventDefault();
 
-				var imService = $(".window input[checked=true]").val();
+				var imService = $("#imDialog input[checked=true]").val();
 				var imUserName = $("#imUserName").val();
 
 				if (imService.length == 0) {
 					alert("Please choose IM Service");
 					return;
 				}
-				
+
 				if (imService === "Twitter") {
 					$('#mask').hide();
 					$('.window').hide();
@@ -480,8 +480,8 @@
 						onmouseover="this.style.cursor='pointer'"/>
 				</div>
             	<div class="imheading">Please provide your Instant Message or Twitter account.</div>
-            	<div class="opheading">(This is optional. TalkAboutHealth notifies you of conversations and questions
- 					relevant to you via instant message or Twitter.)</div>
+            	<div class="opheading">This is optional. TalkAboutHealth notifies you of conversations and questions
+ 					relevant to you via instant message or Twitter.</div>
  				<div class="selheading">Select a Service:</div>
  		
  		#{list items: models.IMAccountBean.IM_SERVICES_MAP.keySet(), as:'imService'}
@@ -511,7 +511,7 @@
         	<input type="submit" id="saveIMBtn" src="/public/images/popsubmit.jpg" value=" " class="popsubmit" 
         		onmouseover="this.style.cursor='pointer'"/>
         </div>
-        <div class="popnothanks" ><a id="noPopupLink" href="#">No thanks</a></div>
+        <div class="popnothanks" ><a href="#" onclick="return hideAll();">No thanks</a></div>
         </div><!--popsubmitcover-->
             <div class="cb"></div>
             </div>

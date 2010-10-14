@@ -4614,10 +4614,13 @@ a.product, a.cat_close, a.cat_open {
 	padding-left:30px;
 	height:450px;
 	background:#f7fcff;
-	position:absolute;
-	top:125px;
 	border:1px solid #77e4ff;
 	text-align:left;
+	
+	/* 
+	position:absolute;
+	top:125px; 
+	*/
 }
 .close {
 	padding-right:10px;
@@ -4643,7 +4646,7 @@ a.product, a.cat_close, a.cat_open {
 	height:40px;
 }
 .opheading {
-	color:#9d9d9d;
+	color:#000;
 	font-size:13px;
 	font-weight:bolder;
 	height:40px;
@@ -4730,7 +4733,8 @@ a.product, a.cat_close, a.cat_open {
 .popnothanks {
 	float:left;
 	color:#0286bc;
-	font-size:13px;
+	font-size:15px;
+	font-weight: bold;
 	padding-top:13px;
 }
 .popsubmitbox
