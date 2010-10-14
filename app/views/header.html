@@ -89,16 +89,16 @@
 	                <li class="home no-hov"><a href="@{Home.index()}">Home</a></li>
 	                <li class="profile"><a href="#" class="menu1">You</a>
 	                  <ul>
-	                    <li><a href="@{ViewDispatcher.view(currentUser)}">Public Profile</a></li>
-	                    <li><a href="@{PublicProfile.journal(currentUser)}">Journal</a></li>
-	                    <li><a href="@{Home.conversationFeed()}">Conversation Feed</a></li>
-	                    <li class="gap"><a href="@{PublicProfile.userBasedActions(currentUser, 'thankyous')}">Thank You's</a></li>
-	                    <li><a href="@{PublicProfile.userBasedActions(currentUser, 'following')}">Members Following</a></li>
-	                    <li><a href="@{PublicProfile.userBasedActions(currentUser, 'followers')}">Followers</a></li>
-	                    <li class="gap"><a href="@{PublicProfile.topicsFollowing(currentUser)}">Topics Following</a></li>
-	                    <li><a href="@{PublicProfile.conversationsFollowing(currentUser)}">Conversations Following</a></li>
-	                    <li><a href="@{PublicProfile.conversationsStarted(currentUser)}">Conversations Started</a></li>
-	                    <li><a href="@{PublicProfile.conversationsJoined(currentUser)}">Conversations Joined</a></li>
+	                    <li><a href="@{ViewDispatcher.view(currentUser)}">Your Profile</a></li>
+	                    <li><a href="@{PublicProfile.journal(currentUser)}">Your Journal</a></li>
+	                    <li><a href="@{Home.conversationFeed()}">Your Conversation Feed</a></li>
+	                    <li class="gap"><a href="@{PublicProfile.userBasedActions(currentUser, 'thankyous')}">Your Thank you's</a></li>
+	                    <li><a href="@{PublicProfile.userBasedActions(currentUser, 'following')}">Members You Follow</a></li>
+	                    <li><a href="@{PublicProfile.userBasedActions(currentUser, 'followers')}">Your Followers</a></li>
+	                    <li class="gap"><a href="@{PublicProfile.topicsFollowing(currentUser)}">Topics You Follow</a></li>
+	                    <li><a href="@{PublicProfile.conversationsFollowing(currentUser)}">Conversations You Follow</a></li>
+	                    <li><a href="@{PublicProfile.conversationsStarted(currentUser)}">Conversations You Started</a></li>
+	                    <li><a href="@{PublicProfile.conversationsJoined(currentUser)}">Conversations You Joined</a></li>
 	                  </ul>
 	                </li>
 	                <li class="explore"> <a href="#" class="menu2">Explore</a>
