@@ -61,7 +61,21 @@ public class PublicProfile extends Controller {
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
 		
-		render(talker, currentTalker);
+		//If the user views his own journal he should see the following text under the text box 
+		//until the user posts for the first time (even if another user posts first, this should still appear):
+		boolean firstTimeComment = false;
+		if (talker.equals(currentTalker)) {
+			firstTimeComment = true;
+			//user views his own journal - check if he
+			for (CommentBean cb : talker.getProfileCommentsList()) {
+				if (cb.getFromTalker().equals(talker)) {
+					firstTimeComment = false;
+					break;
+				}
+			}
+		}
+		
+		render(talker, currentTalker, firstTimeComment);
 	}
 	
 	public static void conversationsFollowing(String userName) {

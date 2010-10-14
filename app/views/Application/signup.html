@@ -372,28 +372,29 @@
 						<div class="signupmain"></div>
 					</div>								
 					<div class="signdown">
-						<div id="checkboxarea2">
+						<div id="checkboxarea2" style="padding-top: 10px;  font-weight: bold;">
 							<input id="privacyagree" name="privacyagree" 
 								type="checkbox" #{if flash['privacyagree']} checked #{/if} /> 
 							By signing up I agree to the TalkAboutHealth 
 							<a href="@{Static.tos()}" target="_blank" class="bluetext14">Terms Of Service</a> and 
 							<a href="@{Static.privacy()}" target="_blank" class="bluetext14">Privacy Policy</a>.
 							<br />
-	   						<strong>Note:</strong> Your information will remain safe and private.
+	   						<strong>Note:</strong>
+	   						<span style="font-weight: normal;">Your information will remain safe and private.</span>
 						</div>
-						<div id="checkboxarea2">
-							<input id="talker.newsletter" name="talker.newsletter" 
-								type="checkbox" #{if flash['talker.newsletter']} checked #{/if} /> 
-							Sign me up for the TalkAboutHealth newsletter
-						</div>
-						<div class="signupbutton">
+						<div class="signupbutton"  style="padding-top: 30px;">
 							<a href="#" onclick="validateFormOnSubmit(document.signup);">
 								<img src="/public/images/signupbutton.gif" border="0" width="126" height="46" />
 							</a>
 						</div>
-						<div id="alreadyuser">
+						<div id="alreadyuser" style="padding-top: 30px;">
 							<span class="blacktext14">Already have an account?&nbsp;</span> 
 							<a href="@{Secure.login()}" class="bluetext16">Sign in</a>
+						</div>
+						<div id="checkboxarea2" style="padding-top: 10px;">
+							<input id="talker.newsletter" name="talker.newsletter" 
+								type="checkbox" #{if flash['talker.newsletter']} checked #{/if} /> 
+							Sign me up for the TalkAboutHealth newsletter
 						</div>
 					</div>
 				#{/form}

@@ -65,25 +65,30 @@
                 <div class="comcontent">
                   <div id="combox">
                     <div class="comh1"><a href="@{ViewDispatcher.view(talker.userName)}" 
-                    	class="bluetext20">${talker.userName}'s</a> Journal</div>
+                    	class="bluetext20">${talker.userName}'s</a> Journal to the Community</div>
                     <div class="comborder" style="width:620px;"></div>
                   </div>
                   <!--combox-->
                   <div class="topipcWraper">
                  #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) }
                     <div id="reply" class="comsearchbox">
-                      <div class="comh1" style="font-size:18px"> What are you thinking about?<br /></div>
+                      <div class="comh1" style="font-size:18px">What are you thinking about or feeling? (To share with the community)<br /></div>
                       <div class="comsearch">
                         <textarea id="replytext" class="edititinputx" style="width:490px" cols="4" rows="3" ></textarea>
                       </div>
                       <input type="submit" src="/public/images/postcomments.jpg" value=" " class="postcomments" 
                       	onclick="return saveProfileComment('');"/>
+                      #{if firstTimeComment}
+                      	<div class="comh1" style="font-size:14px; clear: both; margin-top: 5px; width: 100%;">
+                      		Your journal is a place for you to share your thoughts and feelings with the TalkAboutHealth community.
+                      	</div>
+                      #{/if}
                     </div>
                     <!--comsearchbox-->
-                    <div class="commentsarea">
+                    <div class="commentsarea" style="clear: both;">
 						#{if talker?.profileCommentsList?.isEmpty()}
 							<span id="firstcommentmessage" class="blacktext12">
-								${talker.userName} does not have any Comments, be the first to leave a Comment.
+								${talker.userName} does not have any Comments, be the first to welcome ${talker.userName}.
 							</span>
 						#{/if}
 						#{profileCommentsTree2 commentsList: talker.profileCommentsList, level: 1 /}
