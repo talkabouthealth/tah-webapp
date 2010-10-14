@@ -457,9 +457,11 @@
                     		<div class="topic inline-edit" id="summaryEdit">
                     			<div class="inline_display">
                     				<div class="inline_empty" style="display: ${!convo.summary ? 'block' : 'none'}">
-										<div class="targetenew" style="margin-top: 10px;">
-											<a class="inline_addlink" href="#">Add Conversation Summary</a>
-										</div>
+                    					#{if talker }
+											<div class="targetenew" style="margin-top: 10px;">
+												<a class="inline_addlink" href="#">Add Conversation Summary</a>
+											</div>
+										#{/if}
 									</div>
 	                    			<div class="cscover inline_full" style="display: ${convo.summary ? 'block' : 'none'}">
 	                    				<div class="cstop">
@@ -473,11 +475,13 @@
 													<div class="suggestxt">
 														<div class="inline_view" 
 															style="display:block;padding-right:30px;text-align:justify">${convo.summary}</div> 
-														<div class="editdiv" style="float:right;margin-right:80px;">
-															<div class="editit" style="padding-top:7px;">
-																<a href="#" class="inline_editlink">Edit</a>
+														#{if talker }
+															<div class="editdiv" style="float:right;margin-right:80px;">
+																<div class="editit" style="padding-top:7px;">
+																	<a href="#" class="inline_editlink">Edit</a>
+																</div>
 															</div>
-														</div>
+														#{/if}
 										            </div>
 										            <div style="margin-top:10px; margin-bottom:10px; clear: both"></div>
 												</div>

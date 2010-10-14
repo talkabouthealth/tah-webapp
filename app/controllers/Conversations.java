@@ -213,8 +213,6 @@ public class Conversations extends Controller {
     }
     
     public static void updateField(String convoId, String name, String value) {
-    	//FIXME: hide edits from not-logined users
-    	
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
     	notFoundIfNull(convo);
@@ -245,6 +243,10 @@ public class Conversations extends Controller {
     		ConversationDAO.updateConvo(convo);
     	}
     	else if (name.equalsIgnoreCase("summary")) {
+    		if (talker == null) {
+    			forbidden();
+    			return;
+    		}
     		String previousSummary = convo.getSummary();
     		convo.setSummary(value);
     		convo.getSumContributors().add(talker);

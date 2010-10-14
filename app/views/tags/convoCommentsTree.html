@@ -81,7 +81,12 @@
 				                        	#{if _level == 1}
 				                        		<li><a href="#" onclick="$('#replies${comment.id}').show(); return false;"
 				                        			#{if comment.children?.size() == 0}
-				                        				>Add Reply</a>
+				                        				#{if session.username}
+				                        					>Add Reply</a>
+				                        				#{/if}
+				                        				#{else}
+				                        					></a>
+				                        				#{/else}
 				                        			#{/if}
 					                        		#{elseif comment.children?.size() == 1}
 					                        			>1 Reply</a>
@@ -90,28 +95,32 @@
 					                        			>${comment.children?.size()} Replies</a>
 					                        		#{/else}
 				                        		</li>
-				                        		<li>&nbsp;|&nbsp;</li>
+				                        		#{if session.username}
+				                        			<li>&nbsp;|&nbsp;</li>
+				                        		#{/if}
 					                        #{/if}
 					                        #{if session.username?.equals(comment.fromTalker.userName) ||
 					                        		session.username?.equals("admin") }
 					                        	<li><a href="#" onclick="return deleteAnswer('${comment.id}');">Delete</a></li>
 					                        	<li>&nbsp;|&nbsp;</li>
 					                        #{/if}
+					                  		#{if session.username}
 				<li><a href="#" onclick="return thankYou('${comment.fromTalker.id}', '${comment.fromTalker.userName}');">Thank</a></li>
 				
-					                      	<li>&nbsp;|&nbsp;</li>
-					                        <li><a href="#" class="flagAnswerLink" rel="${comment.id}"
-					                        	>Flag ${ _level == 1 ? 'Answer' : 'Reply' }</a></li> 
-					                        
-					                        #{if _level == 1}
-					                        	<li>&nbsp;|&nbsp;</li>
-					                        	#{if comment.notHelpful }
-					                        		<li><a href="#" onclick="return markNotHelpful('${comment.id}')">Not Helpful</a></li>
-					                        	#{/if}
-					                        	#{else}
-					                        		<li><a href="#" onclick="return markNotHelpful('${comment.id}')">Not Helpful</a></li>
-					                        	#{/else}
-					                        #{/if}
+						                      	<li>&nbsp;|&nbsp;</li>
+						                        <li><a href="#" class="flagAnswerLink" rel="${comment.id}"
+						                        	>Flag ${ _level == 1 ? 'Answer' : 'Reply' }</a></li> 
+						                        
+						                        #{if _level == 1}
+						                        	<li>&nbsp;|&nbsp;</li>
+						                        	#{if comment.notHelpful }
+						                        		<li><a href="#" onclick="return markNotHelpful('${comment.id}')">Not Helpful</a></li>
+						                        	#{/if}
+						                        	#{else}
+						                        		<li><a href="#" onclick="return markNotHelpful('${comment.id}')">Not Helpful</a></li>
+						                        	#{/else}
+						                        #{/if}
+						                    #{/if}
 				                       	</ul>
 			                    	</div> 
 			                   	</p>

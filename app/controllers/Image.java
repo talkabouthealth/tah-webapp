@@ -17,6 +17,12 @@ public class Image extends Controller {
 	public static final String DEFAULT_IMAGE = "public/images/img1.gif"; 
 	
 	public static void show(String userName) {
+		if (!Security.isConnected()) {
+			//not authenticated users can't see images
+			renderBinary(Play.getFile(DEFAULT_IMAGE));
+			return;
+		}
+		
 		byte[] imageArray = TalkerDAO.loadTalkerImage(userName);
 		
 		response.setHeader("Content-Type", "image/gif");
