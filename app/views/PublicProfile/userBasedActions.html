@@ -177,64 +177,16 @@
 	<div id="innermain">
 		<div class="blacktext2" id="innerheading">
 			<a href="@{ViewDispatcher.view(talker.userName)}" class="bluetext20">${talker.userName}'s</a> 
-			Contacts, Comment Stream, and Thank you's</div>
+			Contacts and Thank you's</div>
 		<div id="innermiddlearea">
 			<div class="tabbed_box" id="tabbed_box_1">
     			<div class="tabbed_area">
 			        <ul class="tabs">
-			        	<li><a href="#tab1"><span>Comments (${talker.profileCommentsList.size()})</span></a></li>
 			            <li><a href="#tab2"><span>Thank you's (${talker.thankYouList.size()})</span></a></li>
 			            <li><a href="#tab3"><span>Following (${talker.followingList.size()})</span></a></li>
 			            <li><a href="#tab4"><span>Followers (${talker.followerList.size()})</span></a></li>
 			        </ul>
 			        <div class="tab_container">
-				        <div id="tab1" class="tab_content">
-				        <div>
-				        	<div class="headingarea">
-					            <div class="tabheading">
-					            	<span class="blacktext25">Comment Stream</span> 
-					            </div>
-				            </div>
-				            <div class="thnksarea">
-				            	#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) }
-										<div id="reply" class="replyForm">
-											<ul>
-												<li>
-													<textarea class="togglecomment" rows="1" cols="45" 
-														id="replytext">What are you thinking?</textarea>
-											    </li>
-												<li id="commentBtn" style="display: none">
-													<div style="height: 46px; padding-top: 2px;" class="personaltextarea">
-														<a href="#" onclick="return saveProfileComment('');">
-															<img width="145" height="32" border="0" src="/public/images/addcomment_btn.gif"/>
-														</a>
-													</div>
-												</li> 
-											</ul>
-										</div>
-									<div class="commentsarea">
-										#{if talker?.profileCommentsList?.isEmpty()}
-											<span id="firstcommentmessage" class="blacktext12">
-												${talker.userName} does not have any Comments, be the first to leave a Comment.
-											</span>
-										#{/if}
-										#{profileCommentsTree commentsList: talker.profileCommentsList, level: 1 /}
-									</div>
-								#{/if}
-								#{else}
-									<span class="blacktext14">This information has been made private.</span>
-								#{/else}
-				            </div>
-				            <div class="thnksbottom" style="display: none">
-				            	<div class="seemore">
-				            		<a href="#"><img width="134" height="33" 
-				            			border="0" src="/public/images/seemorebutton.gif"/>
-				            		</a>
-				            	</div>
-				            </div>
-			        	</div>
-			        	</div>
-			        
 			       		<div id="tab2" class="tab_content">
 				        <div>
 				        	<div class="headingarea">

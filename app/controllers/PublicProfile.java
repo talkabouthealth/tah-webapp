@@ -48,7 +48,6 @@ public class PublicProfile extends Controller {
 		notFoundIfNull(talker);
 		
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
 		
 		render(talker, currentTalker, action, from);
 	}
