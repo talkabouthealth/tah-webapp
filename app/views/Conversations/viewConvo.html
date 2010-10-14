@@ -454,18 +454,23 @@
 								<div class="cb"></div>
 							</div> <!--topic-->
 							
-                    		<div class="topic">
-                    			<div class="cscover">
-                    				<div class="cstop">
-					                   <div class='inline-edit'>
-					 						<div class="cstoptext" id="hidit3">Conversation Summary</div>
+                    		<div class="topic inline-edit" id="summaryEdit">
+                    			<div class="inline_display">
+                    				<div class="inline_empty" style="display: ${!convo.summary ? 'block' : 'none'}">
+										<div class="targetenew" style="margin-top: 10px;">
+											<a class="inline_addlink" href="#">Add Conversation Summary</a>
 										</div>
-                    				</div><!--cstop-->
-				                    <div class="csmid">
-				                    	<div class="cmmidtext">
-    										<div class='inline-edit' id="summaryEdit" style="width: 100%">
-												<div class="suggestxt inline_display">
-													<div class="inline_full" style="display: ${convo.summary ? 'block' : 'none'}">
+									</div>
+	                    			<div class="cscover inline_full" style="display: ${convo.summary ? 'block' : 'none'}">
+	                    				<div class="cstop">
+						                   <div>
+						 						<div class="cstoptext" id="hidit3">Conversation Summary</div>
+											</div>
+	                    				</div><!--cstop-->
+					                    <div class="csmid">
+					                    	<div class="cmmidtext">
+	    										<div style="width: 100%">
+													<div class="suggestxt">
 														<div class="inline_view" 
 															style="display:block;padding-right:30px;text-align:justify">${convo.summary}</div> 
 														<div class="editdiv" style="float:right;margin-right:80px;">
@@ -473,15 +478,42 @@
 																<a href="#" class="inline_editlink">Edit</a>
 															</div>
 														</div>
-													</div>
-													<div class="inline_empty" style="display: ${!convo.summary ? 'block' : 'none'}">
-														<div class="targetenew">
-															<a class="inline_addlink" href="#">Add Conversation Summary</a>
-														</div>
-													</div>
-									            </div>
-									            <div style="margin-top:10px; margin-bottom:10px; clear: both"></div>
-												<div class='inline_form'>
+										            </div>
+										            <div style="margin-top:10px; margin-bottom:10px; clear: both"></div>
+												</div>
+	    										
+	    										#{if convo.sumContributors }
+		    										<div style="clear: both; padding-top: 10px;">
+		    											<span class="blacktext">Contributions By:</span> 
+														<span class="blacktext">
+															#{list items: convo.sumContributors, as: 'contributor'}
+																#{ifnot contributor_isLast}
+																	<a href="#">${contributor.userName}</a>, 
+																#{/ifnot}
+																#{else}
+																	<a href="#">${contributor.userName}</a>
+																#{/else}
+															#{/list}
+														</span>
+		    										</div>
+	    										#{/if}
+	    										#{else}
+	    											<div style="clear: both; padding-top: 10px;">&nbsp;</div>
+	    										#{/else}
+											</div><!--cmmidtext-->
+	                    				</div><!--csmid-->
+	                    				<div class="csbot"></div>
+	                    			</div>
+                    			</div>
+                    			<div class="cscover inline_form">
+	                    				<div class="cstop">
+						                   <div>
+						 						<div class="cstoptext" id="hidit3">Conversation Summary</div>
+											</div>
+	                    				</div><!--cstop-->
+					                    <div class="csmid">
+					                    	<div class="cmmidtext">
+	    										<div style="width: 100%">
 													<div style="float:left; width:auto;">
         												<textarea style="width:585px;height:230px;font-size:13px;font-weight:normal" 
         													id="summaryinput" class="edititinputs inline_text">${convo.summary}</textarea>
@@ -493,30 +525,29 @@
 														</div>
 													</div>
 												</div>
-											</div>
-    										
-    										#{if convo.sumContributors }
-	    										<div style="clear: both; padding-top: 10px;">
-	    											<span class="blacktext">Contributions By:</span> 
-													<span class="blacktext">
-														#{list items: convo.sumContributors, as: 'contributor'}
-															#{ifnot contributor_isLast}
-																<a href="#">${contributor.userName}</a>, 
-															#{/ifnot}
-															#{else}
-																<a href="#">${contributor.userName}</a>
-															#{/else}
-														#{/list}
-													</span>
-	    										</div>
-    										#{/if}
-    										#{else}
-    											<div style="clear: both; padding-top: 10px;">&nbsp;</div>
-    										#{/else}
-										</div><!--cmmidtext-->
-                    				</div><!--csmid-->
-                    				<div class="csbot"></div>
-                    			</div>
+	    										
+	    										#{if convo.sumContributors }
+		    										<div style="clear: both; padding-top: 10px;">
+		    											<span class="blacktext">Contributions By:</span> 
+														<span class="blacktext">
+															#{list items: convo.sumContributors, as: 'contributor'}
+																#{ifnot contributor_isLast}
+																	<a href="#">${contributor.userName}</a>, 
+																#{/ifnot}
+																#{else}
+																	<a href="#">${contributor.userName}</a>
+																#{/else}
+															#{/list}
+														</span>
+		    										</div>
+	    										#{/if}
+	    										#{else}
+	    											<div style="clear: both; padding-top: 10px;">&nbsp;</div>
+	    										#{/else}
+											</div><!--cmmidtext-->
+	                    				</div><!--csmid-->
+	                    				<div class="csbot"></div>
+	                    			</div>
                     		</div><!--topic-->
                     		
                      		<div class="topic" style="margin-bottom: 15px;">
@@ -543,37 +574,37 @@
 								<input type="submit" onclick="return saveProfileComment('');" 
 									src="/public/images/addcomments.jpg" class="addcomments" value=" " />
 								
-								#{if session.username}
-								<div class="answerh2 style1 style2">Conversation</div>
-								<div class="topicborder"></div>
-								
-								<div class="tagtxts"><a href="#">Restart Conversation </a> |  
-									<a href="#">Start Follow up conversation</a>  |  
-									<a href="#" class="flagConvoLink">Flag Conversation</a>
-								</div>
-								
-								<div class="talkerCover">
-									<div class="talkertop">Talkers</div>
-									<div class="talkermid"><br />
-										#{list items: convo.members, as: 'member'}
-											<img src="@{Image.show(member)}" width="48" height="48" border="0" />
-											${member}&nbsp;&nbsp;&nbsp;
-										#{/list}
-										<!--
-							              <div class="talkertxt">
-							              <div class="talktextleft"><span class="uzername"><a href="#">tom:</a></span></div>
-							              <div class="talktextright"><span class="uzername"><a href="#">Janifer</a></div>
-							              </div>talkertxt-->
-							              
-										#{list items: convo.messages, as: 'message'}
-											<div class="talkertxt1">
-												<span class="uzername"><a href="#">${message.fromTalker.userName}:</a></span>
-												&nbsp;&nbsp;${message.text} 
-											</div>
-										#{/list}
-									</div><!--talkermid-->
-									<div class="talkerbot"></div>
-								</div><!--talkerCover-->
+								#{if session.username && convo.messages}
+									<div class="answerh2 style1 style2">Conversation</div>
+									<div class="topicborder"></div>
+									
+									<div class="tagtxts"><a href="#">Restart Conversation </a> |  
+										<a href="#">Start Follow up conversation</a>  |  
+										<a href="#" class="flagConvoLink">Flag Conversation</a>
+									</div>
+									
+									<div class="talkerCover">
+										<div class="talkertop">Talkers</div>
+										<div class="talkermid"><br />
+											#{list items: convo.members, as: 'member'}
+												<img src="@{Image.show(member)}" width="48" height="48" border="0" />
+												${member}&nbsp;&nbsp;&nbsp;
+											#{/list}
+											<!--
+								              <div class="talkertxt">
+								              <div class="talktextleft"><span class="uzername"><a href="#">tom:</a></span></div>
+								              <div class="talktextright"><span class="uzername"><a href="#">Janifer</a></div>
+								              </div>talkertxt-->
+								              
+											#{list items: convo.messages, as: 'message'}
+												<div class="talkertxt1">
+													<span class="uzername"><a href="#">${message.fromTalker.userName}:</a></span>
+													&nbsp;&nbsp;${message.text} 
+												</div>
+											#{/list}
+										</div><!--talkermid-->
+										<div class="talkerbot"></div>
+									</div><!--talkerCover-->
 								#{/if}
 								
 							    <div class="cb"></div>
