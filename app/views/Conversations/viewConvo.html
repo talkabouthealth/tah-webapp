@@ -221,6 +221,10 @@
   				function(html) {
   	  				$("#firstcommentmessage").hide();
   					$("#replyform"+parentId).before($(html));
+
+  					$('.inline-edit').inlineEdit(
+				  		{ hover: '', saveFunction: saveData, updateFunction: updateData}
+				  	);
   				}
   			);
 
@@ -454,6 +458,7 @@
 								<div class="cb"></div>
 							</div> <!--topic-->
 							
+							#{if convo.helpfulAnswers?.size > 1}
                     		<div class="topic inline-edit" id="summaryEdit">
                     			<div class="inline_display">
                     				<div class="inline_empty" style="display: ${!convo.summary ? 'block' : 'none'}">
@@ -552,7 +557,8 @@
 	                    				</div><!--csmid-->
 	                    				<div class="csbot"></div>
 	                    			</div>
-                    		</div><!--topic-->
+                    		</div>
+                    		#{/if}
                     		
                      		<div class="topic" style="margin-bottom: 15px;">
                      			<a id="answers"></a>

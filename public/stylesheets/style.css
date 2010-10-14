@@ -2694,10 +2694,16 @@ width:auto;
 	text-decoration:underline;
 }
 .styles2 {
-	font-size:12px;
+	float: left;
 	color:#000000;
 	text-align:left;
 	line-height:20px;
+}
+.styles2answers {
+	font-size: 14px;
+}
+.styles2replies {
+	font-size:12px;
 }
 .styles3 {
 	color: #0286bc;

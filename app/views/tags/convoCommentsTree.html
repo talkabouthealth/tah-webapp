@@ -51,7 +51,8 @@
 										<div class='inline-edit' id="answerEdit${comment.id}">
 											<div class="suggestxt inline_display">
 												<div class="inline_full inline_empty">
-													<span class="styles2 inline_view" style="float: left">${comment.text.nl2br()}</span>
+													<span class="styles2 inline_view ${ _level == 1 ? 'styles2answers' : 'styles2replies'}"
+														>${comment.text.nl2br()}</span>
 													#{if session.username?.equals(comment.fromTalker.userName) }
 														<div class="editdiv">
 															<div class="editit">
