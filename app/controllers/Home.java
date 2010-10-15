@@ -58,8 +58,8 @@ public class Home extends Controller {
 		
 		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
 		boolean isAdmin = "admin".equals(Security.connected());
-		boolean showIMPopup = (session.get("justloggedin") != null && hasNoIMAccounts && !isAdmin);
-		session.remove("justloggedin");
+		boolean showIMPopup = (session.get("justregistered") != null && hasNoIMAccounts && !isAdmin);
+		session.remove("justregistered");
 		
 		//FIXME: number of answers for this user??!
 		

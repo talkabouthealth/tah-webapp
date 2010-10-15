@@ -3,6 +3,7 @@ package controllers;
 import java.util.List;
 import java.util.Set;
 
+import logic.FeedsLogic;
 import models.ConversationBean;
 import models.TalkerBean;
 import models.actions.Action;
@@ -15,7 +16,7 @@ import dao.ApplicationDAO;
 import dao.ConversationDAO;
 import dao.TalkerDAO;
 
-@With(Secure.class)
+//FIXME - check permissions?
 public class Community extends Controller {
 	
 	public static void viewCommunity() {
@@ -24,7 +25,7 @@ public class Community extends Controller {
 		List<TalkerBean> communityMembers = TalkerDAO.loadAllTalkers();
 		
 		List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
-		Set<Action> communityConvoFeed = ActionDAO.loadCommunityFeed();
+		Set<Action> communityConvoFeed = FeedsLogic.getCommunityFeed(null);
 		
 		render(talker, liveTalks, communityConvoFeed);
 	}

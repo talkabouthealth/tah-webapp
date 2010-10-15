@@ -72,7 +72,6 @@ public class Security extends Secure.Security {
 	    if (url != null && url.trim().length() != 0) {
 	    	flash.put("url", url);
 	    }
-	    session.put("justloggedin", true);
     }
     
     static void onDisconnected() {

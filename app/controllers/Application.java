@@ -159,7 +159,7 @@ public class Application extends Controller {
 		ApplicationDAO.saveLogin(talker.getId());
 		session.put("username", talker.getUserName());
 
-		session.put("justloggedin", true);
+		session.put("justregistered", true);
         index(newTopic);
     }
     
