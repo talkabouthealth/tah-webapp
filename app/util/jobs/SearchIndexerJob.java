@@ -74,7 +74,7 @@ public class SearchIndexerJob extends Job {
 				  autocompleteIndexWriter.addDocument(doc2);
 			}
 			
-			Logger.error("Before convos: "+ConversationDAO.loadAllConversations().size());
+			//Logger.error("Before convos: "+ConversationDAO.loadAllConversations().size());
 			for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
 	//			possibly weight titles, conversation details, summaries, and answers more than the archived real-time conversations?
 				

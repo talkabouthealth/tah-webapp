@@ -541,12 +541,15 @@ public class TalkerBean implements Serializable {
 		return profilePreferences.contains(preference);
 	}
 	
-	public long getAge() {
+	public String getAge() {
+		if (dob == null) {
+			return "";
+		}
 		Date now = new Date();
         long delta = (now.getTime() - dob.getTime()) / 1000;
 
         long years = delta / (365 * 24 * 60 * 60);
-        return years;
+        return ""+years;
 	}
 	
 	public String getFullGender() {
