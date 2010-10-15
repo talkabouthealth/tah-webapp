@@ -32,6 +32,15 @@ public class TemplateExtensions extends JavaExtensions {
 		}
 	}
 	
+	public static String toCommaStringView(List<String> list, String fieldName) {
+		if (list == null || list.size() == 0) {
+			return "";
+		}
+		else {
+			return toCommaString(list, fieldName);
+		}
+	}
+	
 	/**
 	 * Returns part of given list.
 	 * @param list

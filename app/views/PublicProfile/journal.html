@@ -88,8 +88,8 @@
                     </div>
                     <!--comsearchbox-->
                     <div class="commentsarea" style="clear: both;">
-						#{if talker?.profileCommentsList?.isEmpty()}
-							<span id="firstcommentmessage" class="blacktext12">
+						#{if talker?.profileCommentsList?.isEmpty() && !talker.equals(currentTalker)}
+							<span id="firstcommentmessage" class="blacktext14">
 								${talker.userName} does not have any Comments, be the first to welcome ${talker.userName}.
 							</span>
 						#{/if}

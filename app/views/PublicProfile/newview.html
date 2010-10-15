@@ -59,8 +59,8 @@
                       <div class="pph1">
                       		${talker.userName} 
                       		#{if talker.connection}
-								(${talker.connection}
 								#{if models.TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.connection)}
+									(${talker.connection}
 									#{if talker.connectionVerified }
 										<span class="blacktext12">(Verified)</span>,
 									#{/if}
@@ -68,6 +68,9 @@
 										<span class="red12">(Not Verified)</span>,
 									#{/else}
 								#{/if}
+								#{else}
+									(${talker.connection},
+								#{/else}
 								${talker.levelOfRecognition})
 							#{/if}
 							#{else}
@@ -131,7 +134,7 @@
 		                      </div>
 		                      <div class="profileCantanttxt2">
 		                      	<strong>Ages of children:</strong>
-		                      	<span class="Profilepersonsub"> ${talker.childrenAges?.toCommaString()}</span>
+		                      	<span class="Profilepersonsub"> ${talker.childrenAges?.toCommaStringView()}</span>
 		                      </div>
 		                    </div>
 		                    <!--profiletxtCantant-->
@@ -150,7 +153,7 @@
 		                      </div>
 		                      <div class="profileCantanttxt2">
 		                      	<strong>Conversation Topics:</strong>
-		                      	<span class="Profilepersonsub"> ${talker.keywords?.toCommaString()}</span>
+		                      	<span class="Profilepersonsub"> ${talker.keywords?.toCommaStringView()}</span>
 		                      </div>
 		                    </div>
 					#{/if}
@@ -164,7 +167,7 @@
 									#{list items: disease.questions, as: 'question'}
 										#{if talkerDisease.healthInfo?.get(question.name)}
 											<li class="blacktext12" style="height: auto"><b>${question.displayName}</b>: 
-												<span class="blacktext">${talkerDisease.healthInfo.get(question.name)?.toCommaString()}</span>
+												<span class="blacktext">${talkerDisease.healthInfo.get(question.name)?.toCommaStringView()}</span>
 											</li>
 										#{/if}
 									#{/list}
