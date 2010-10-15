@@ -90,61 +90,6 @@
 				}
 			});	
 
-			$('#saveConvoBtn').click(function (e) {
-				//openChat(2);
-				//return;
-				
-				var type = "QUESTION";
-				if ($("#newConvoTypeConvo").attr("checked")) {
-					type = "CONVERSATION";
-				}
-				var title = $("#newConvoTitle").val();
-				var details = $("#newConvoDetails").val();
-				if (details === 'This is the place to provide context or further details for your request.') {
-					details = '';
-				}
-				//var topics = $("#newConvoTopics").val();
-				var topics = '';
-
-				if (title === "") {
-					alert("Please input headline.");
-					return false;
-				}
-
-				$.post("@{Conversations.create()}", 
-	  				{ type: type, title: title, details: details, topics: topics},
-	  				function(data) {
-	  					if (type === "CONVERSATION") {
-		  					$("#startTalkBtn").click(function() {
-			  					openChat(data.tid);
-			  					$.post("@{Conversations.start}", {topicId: data.id});
-			  					hideAll();
-		  					});
-	  						$("#newTalkConfirm").show();
-	  					}
-	  					else {
-	  						$("#questionLink").attr("href", data.url).html(data.url);
-	  						$("#newQuestionConfirm").show();
-	  					}
-	  					$("#newConvoForm").hide();
-
-	  					$("#convoText").val("");
-	  					$("#newConvoTitle").val("");
-	  					$("#newConvoDetails").val("This is the place to provide context or further details for your request.");
-	  					//$("#newConvoTopics").val("");
-	  				}
-	  			);
-
-	  			return false;
-			});
-
-			//if close button is clicked
-			$('.window .close, .window .cancelLink').click(function (e) {
-				//Cancel the link behavior
-				e.preventDefault();
-				hideAll();
-			});		
-
 			$(".startLink").click(function(e) {
 				$("#newConvoForm").show();
 				$("#newQuestionConfirm").hide();
@@ -154,88 +99,8 @@
 			});
 
 			$('.inline-edit').inlineEdit( { hover: ''} );
-
-			//----- Topics autocomplete -----------
-			function split( val ) {
-				return val.split( /,\s*/ );
-			}
-			function extractLast( term ) {
-				return split( term ).pop();
-			}
-			/*
-			var cache = {};
-			$( "#newConvoTopics" ).autocomplete({
-				minLength: 1,
-				source: function(request, response) {
-					if ( request.term in cache ) {
-						response( cache[ request.term ] );
-						return;
-					}
-					
-					$.ajax({
-						url: "/search/ajaxTopicSearch",
-						dataType: "json",
-						data: request,
-						success: function( data ) {
-							cache[ request.term ] = data;
-							response( data );
-						}
-					});
-				},
-				search: function() {
-					// custom minLength
-					var term = extractLast( this.value );
-					if ( term.length < 1 ) {
-						return false;
-					}
-				},
-				focus: function() {
-					// prevent value inserted on focus
-					return false;
-				},
-				select: function( event, ui ) {
-					var terms = split( this.value );
-					// remove the current input
-					terms.pop();
-					// add the selected item
-					terms.push( ui.item.value );
-					// add placeholder to get the comma-and-space at the end
-					terms.push( "" );
-					this.value = terms.join( ", " );
-					return false;
-				}
-			})
-			.data( "autocomplete" )._renderItem = function( ul, item ) {
-				return $( "<li></li>" )
-					.data( "item.autocomplete", item )
-					.append( "<a>" + item.label + "&nbsp;<span>" + item.type + "</span></a>" )
-					.appendTo( ul );
-			};
-			*/
-
 			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
 		});
-
-		function loadMoreFeed(type) {
-			var lastActionId = $("#"+type+"List").children().last().attr("id");
-
-			//public static void conversationFeedAjax(String afterActionId) {
-			$.get("@{Home.feedAjaxLoad()}", {afterActionId: lastActionId, feedType: type},
-					function(data) {
-						var feedSize = $(data).find(".joinpic").size();
-						if (feedSize < feedsPerPage) {
-							//no more feeds - hide 'More' link
-							$("#"+type+"Btn").hide();
-						}
-						
-						$(data).appendTo($("#"+type+"List"));
-						
-						$('.inline-edit').inlineEdit( { hover: ''} );
-					}
-				);
-			
-			return false;
-		}
 
 		//for comments/replies in feed
 		function showReplyForm(commentId) {
@@ -430,61 +295,7 @@
   
   #{popups/startConvo /}
   
-  <div id="imDialog" class="window">
-	<div id="innermiddlearea">
-		<div class="popboxWraper">
-			<div class="popbox">
-				<div class="closecover">
-            		<div class="close">
-            			<img src="/public/images/close.jpg" alt="Close" onmouseover="this.style.cursor='pointer'"/>
-            		</div>
-            	</div>
-				<div class="tah">
-					<img src="/public/images/talkabouthealth.jpg" alt="TalkAboutHealth" 
-						onmouseover="this.style.cursor='pointer'"/>
-				</div>
-            	<div class="imheading">Please provide your Instant Message or Twitter account.</div>
-            	<div class="opheading">This is optional. TalkAboutHealth notifies you of conversations and questions
- 					relevant to you via instant message or Twitter.</div>
- 				<div class="selheading">Select a Service:</div>
- 		
- 		#{list items: models.IMAccountBean.IM_SERVICES_MAP.keySet(), as:'imService'}
-		    <div class="poptxtCover">
-	        	<div class="popradio">
-	        		<input name="imService" value="${imService}" 
-	        			#{if "GoogleTalk".equals(imService) } checked="true" #{/if}
-	        			type="radio" />
-	        	</div>
-	        	<div class="poptext">${models.IMAccountBean.IM_SERVICES_MAP.get(imService)}</div>
-	        </div>
-		#{/list}
-		<div class="poptxtCover">
-        	<div class="popradio">
-        		<input name="imService" value="Twitter" type="radio" />
-        	</div>
-        	<div class="poptext">Twitter</div>
-        </div>
-        
-        <div class="popuser">
-        <div class="popusertxzt">Username:</div>
-        <div class="popuserinput"><input id="imUserName" type="text" class="popinput" /></div>
-        </div><!--popuser-->
-        <div class="popusertxt1">Just the username (i.e. janesmith), no need for the @gmail.com or @yahoo.com  </div><!--popusertxt1-->
-        <div class="popsubmitcover">
-        <div class="popsubmitbox">
-        	<input type="submit" id="saveIMBtn" src="/public/images/popsubmit.jpg" value=" " class="popsubmit" 
-        		onmouseover="this.style.cursor='pointer'"/>
-        </div>
-        <div class="popnothanks" ><a href="#" onclick="return hideAll();">No thanks</a></div>
-        </div><!--popsubmitcover-->
-            <div class="cb"></div>
-            </div>
-            <!--popbox-->
-            </div><!--popboxWraper-->
-           
-            <div class="cb"></div>
-          </div>
-	</div>
+  #{popups/imSettings /}
 	
   <!-- Mask to cover the whole screen -->
   <div id="mask"></div>

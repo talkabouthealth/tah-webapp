@@ -59,15 +59,12 @@ $(document).ready(function() {
  			);
 		});
 	
-	//Dialog popus
-	//Hack to use Fancybox with 'live' event - fancybox on mouseover
-	$(".commentLink, .thankYouLink").live('mouseover', function(event) {
-			selectedTalkerId = $(this).attr("rel2");
-			$(this).fancybox({
-				    'hideOnContentClick': false,
-				    'showCloseButton': false
-				});
-		})
+	//if close button is clicked
+	$('.window .close, .window .cancelLink').click(function (e) {
+		//Cancel the link behavior
+		e.preventDefault();
+		hideAll();
+	});
 });
 
 function showPopup(id, popupWidth) {
@@ -162,4 +159,72 @@ function makeAutocomplete(id, type) {
 			.append( "<a>" + item.label + "&nbsp;<span>" + item.type + "</span></a>" )
 			.appendTo( ul );
 	};
+}
+
+
+function loadMoreFeed(type) {
+	var lastActionId = $("#"+type+"List").children().last().attr("id");
+
+	//public static void conversationFeedAjax(String afterActionId) {
+	$.get("/home/feedAjaxLoad", {afterActionId: lastActionId, feedType: type},
+			function(data) {
+				var feedSize = $(data).find(".joinpic").size();
+				if (feedSize < feedsPerPage) {
+					//no more feeds - hide 'More' link
+					$("#"+type+"Btn").hide();
+				}
+				
+				$(data).appendTo($("#"+type+"List"));
+				
+				$('.inline-edit').inlineEdit( { hover: ''} );
+			}
+		);
+	
+	return false;
+}
+
+
+function saveConvo() {
+	var type = "QUESTION";
+	if ($("#newConvoTypeConvo").attr("checked")) {
+		type = "CONVERSATION";
+	}
+	var title = $("#newConvoTitle").val();
+	var details = $("#newConvoDetails").val();
+	if (details === 'This is the place to provide context or further details for your request.') {
+		details = '';
+	}
+	//var topics = $("#newConvoTopics").val();
+	var topics = '';
+
+	if (title === "") {
+		alert("Please input headline.");
+		return false;
+	}
+
+	$.post("/conversations/create", 
+			{ type: type, title: title, details: details, topics: topics},
+			function(data) {
+				if (type === "CONVERSATION") {
+					$("#startTalkBtn").click(function() {
+  					openChat(data.tid);
+  					$.post("/conversations/start}", {topicId: data.id});
+  					hideAll();
+					});
+					$("#newTalkConfirm").show();
+				}
+				else {
+					$("#questionLink").attr("href", data.url).html(data.url);
+					$("#newQuestionConfirm").show();
+				}
+				$("#newConvoForm").hide();
+
+				$("#convoText").val("");
+				$("#newConvoTitle").val("");
+				$("#newConvoDetails").val("This is the place to provide context or further details for your request.");
+				//$("#newConvoTopics").val("");
+			}
+		);
+
+	return false;
 }

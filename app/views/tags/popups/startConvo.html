@@ -55,7 +55,7 @@
             <!-- <div class="popnothanks1"><a href="#" class="cancelLink">Cancel</a></div>  -->
 
             <div class="popsubmitbox1">
-              <div class="popupsubmits"><a href="#" id="saveConvoBtn">Submit</a></div>
+              <div class="popupsubmits"><a href="#" id="saveConvoBtn" onclick="return saveConvo();">Submit</a></div>
             </div>
           </div>
           <!--popsubmitcover-->
@@ -107,3 +107,64 @@
     </div>
     <!--boxtopcenter-->
   </div>
+  
+*{
+
+//----- Topics autocomplete -----------
+			function split( val ) {
+				return val.split( /,\s*/ );
+			}
+			function extractLast( term ) {
+				return split( term ).pop();
+			}
+			/*
+			var cache = {};
+			$( "#newConvoTopics" ).autocomplete({
+				minLength: 1,
+				source: function(request, response) {
+					if ( request.term in cache ) {
+						response( cache[ request.term ] );
+						return;
+					}
+					
+					$.ajax({
+						url: "/search/ajaxTopicSearch",
+						dataType: "json",
+						data: request,
+						success: function( data ) {
+							cache[ request.term ] = data;
+							response( data );
+						}
+					});
+				},
+				search: function() {
+					// custom minLength
+					var term = extractLast( this.value );
+					if ( term.length < 1 ) {
+						return false;
+					}
+				},
+				focus: function() {
+					// prevent value inserted on focus
+					return false;
+				},
+				select: function( event, ui ) {
+					var terms = split( this.value );
+					// remove the current input
+					terms.pop();
+					// add the selected item
+					terms.push( ui.item.value );
+					// add placeholder to get the comma-and-space at the end
+					terms.push( "" );
+					this.value = terms.join( ", " );
+					return false;
+				}
+			})
+			.data( "autocomplete" )._renderItem = function( ul, item ) {
+				return $( "<li></li>" )
+					.data( "item.autocomplete", item )
+					.append( "<a>" + item.label + "&nbsp;<span>" + item.type + "</span></a>" )
+					.appendTo( ul );
+			};
+			*/
+}*

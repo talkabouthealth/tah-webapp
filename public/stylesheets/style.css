@@ -382,6 +382,21 @@ a {
 	background-position:6px 6px;
 	color:#FFF;
 }
+#jsddm li a.libull3 {
+	width: 95px;
+	background:url(../images/libuttlets.png);
+	background-position:112px 11px;
+	background-repeat:no-repeat;
+	height:13px;
+}
+#jsddm li a.libull3:hover {
+	display:block;
+	height:12px;
+	background:url(../images/settingbg1.jpg);
+	background-repeat:no-repeat;
+	background-position:6px 6px;
+	color:#FFF;
+}
 /*------------------------------------Search box---------------------------------*/		
 .topsearchCover {
 	float:left;
@@ -2484,21 +2499,27 @@ padding-top:30px;
 }
 
 .replytop {
+	/*
 	background:url(../images/replytop.jpg);
 	background-position:left top;
+	*/
 	width:570px;
 	height:13px;
 }
 .replymid {
+	/*
 	background:url(../images/replymid.jpg);
 	background-position:left bottom;
+	*/
 	width:550px;
 	padding-left:10px;
 	padding-right:10px;
 }
 .replybot {
+	/*
 	background:url(../images/replybot.jpg);
 	background-position:left bottom;
+	*/
 	width:570px;
 	height:13px;
 }

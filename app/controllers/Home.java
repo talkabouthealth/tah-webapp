@@ -72,9 +72,9 @@ public class Home extends Controller {
     	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		
     	Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
-    	Set<Action> communityConvoFeed = FeedsLogic.getCommunityFeed(null);
+    	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null);
 		
-		render(talker, convoFeed, communityConvoFeed);
+		render(talker, convoFeed, communityFeed);
     }
     
     public static void feedAjaxLoad(String feedType, String afterActionId) {

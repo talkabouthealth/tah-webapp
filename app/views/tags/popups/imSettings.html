@@ -1,0 +1,55 @@
+<div id="imDialog" class="window">
+	<div id="innermiddlearea">
+		<div class="popboxWraper">
+			<div class="popbox">
+				<div class="closecover">
+            		<div class="close">
+            			<img src="/public/images/close.jpg" alt="Close" onmouseover="this.style.cursor='pointer'"/>
+            		</div>
+            	</div>
+				<div class="tah">
+					<img src="/public/images/talkabouthealth.jpg" alt="TalkAboutHealth" 
+						onmouseover="this.style.cursor='pointer'"/>
+				</div>
+            	<div class="imheading">Please provide your Instant Message or Twitter account.</div>
+            	<div class="opheading">This is optional. TalkAboutHealth notifies you of conversations and questions
+ 					relevant to you via instant message or Twitter.</div>
+ 				<div class="selheading">Select a Service:</div>
+ 		
+ 		#{list items: models.IMAccountBean.IM_SERVICES_MAP.keySet(), as:'imService'}
+		    <div class="poptxtCover">
+	        	<div class="popradio">
+	        		<input name="imService" value="${imService}" 
+	        			#{if "GoogleTalk".equals(imService) } checked="true" #{/if}
+	        			type="radio" />
+	        	</div>
+	        	<div class="poptext">${models.IMAccountBean.IM_SERVICES_MAP.get(imService)}</div>
+	        </div>
+		#{/list}
+		<div class="poptxtCover">
+        	<div class="popradio">
+        		<input name="imService" value="Twitter" type="radio" />
+        	</div>
+        	<div class="poptext">Twitter</div>
+        </div>
+        
+        <div class="popuser">
+        <div class="popusertxzt">Username:</div>
+        <div class="popuserinput"><input id="imUserName" type="text" class="popinput" /></div>
+        </div><!--popuser-->
+        <div class="popusertxt1">Just the username (i.e. janesmith), no need for the @gmail.com or @yahoo.com  </div><!--popusertxt1-->
+        <div class="popsubmitcover">
+        <div class="popsubmitbox">
+        	<input type="submit" id="saveIMBtn" src="/public/images/popsubmit.jpg" value=" " class="popsubmit" 
+        		onmouseover="this.style.cursor='pointer'"/>
+        </div>
+        <div class="popnothanks" ><a href="#" onclick="return hideAll();">No thanks</a></div>
+        </div><!--popsubmitcover-->
+            <div class="cb"></div>
+            </div>
+            <!--popbox-->
+            </div><!--popboxWraper-->
+           
+            <div class="cb"></div>
+          </div>
+	</div>

@@ -16,6 +16,8 @@
 	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
+		var feedsPerPage = ${logic.FeedsLogic.FEEDS_PER_PAGE};
+	
 		$(document).ready(function() {
 			$(".followTopicLink").live('click', function() {
 				var topicId = $(this).attr("rel");
@@ -124,12 +126,21 @@
 		                      <!--mtinputbox-->
 		                      <div class="cb"></div>
 		                      <div class="topic">
-		                        #{list items: convoFeed, as: 'activity'}
-									#{feedActivity activity: activity, talker: talker /}
-								#{/list}
-		                        <div class="replytommentbox" style="display: none;">
-		                          <input type="submit" src="images/seemore.jpg" value=" " class="seemorecom" />
-		                        </div>
+		                        <div id="convoFeedList">
+			                    	#{list items: convoFeed, as: 'activity'}
+										#{feedActivity activity: activity, talker: talker /}
+									#{/list}
+									#{else}
+										<span class="blacktext16">When you Follow Topics, Conversations, and
+											other members, your Conversation Feed will be filled with their updates.</span>
+									#{/else}
+								</div>
+								#{if convoFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+									<div class="replytommentbox" id="convoFeedBtn">
+			                          <input type="submit" src="images/seemore.jpg" 
+			                          	onclick="return loadMoreFeed('convoFeed');" value=" " class="seemorecom" />
+			                        </div>
+								#{/if}
 		                        <div class="cb"></div>
 		                      </div>
 		                      <!--newpageCover-->
@@ -145,12 +156,17 @@
 		                      <!--mtinputbox-->
 		                      <div class="cb"></div>
 		                      <div class="topic">
-		                        #{list items: communityConvoFeed, as: 'activity'}
-									#{feedActivity activity: activity, talker: talker /}
-								#{/list}
-		                        <div class="replytommentbox" style="display: none;">
-		                          <input type="submit" src="images/seemore.jpg" value=" " class="seemorecom" />
-		                        </div>
+		                        <div id="communityFeedList">
+			                    	#{list items: communityFeed, as: 'activity'}
+										#{feedActivity activity: activity, talker: talker /}
+									#{/list}
+								</div>
+								#{if communityFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+									<div class="replytommentbox" id="communityFeedBtn">
+			                          <input type="submit" src="images/seemore.jpg" 
+			                          	onclick="return loadMoreFeed('communityFeed');" value=" " class="seemorecom" />
+			                        </div>
+								#{/if}
 		                        <div class="cb"></div>
 		                      </div>
 		                      <!--newpageCover-->
