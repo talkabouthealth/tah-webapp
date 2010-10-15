@@ -15,12 +15,7 @@
 </head>
 <body>
 
-<div id="top_container">
-	<div id="top">
-		#{ logo /}
-		<div id="topnav">
-			#{ include 'menu.html' /}
-		</div>
+#{include 'header.html' /}
 		<div id="innerbanner"></div>
 		<div id="innermain">
 		<form id="profilepreferencesform" name="profilepreferencesform" action="@{Profile.savePreferences()}" method="POST" >

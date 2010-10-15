@@ -11,13 +11,8 @@
 	</style>
 </head>
 <body>
+#{include 'header.html' /}
 
-<div id="top_container">
-	<div id="top">
-		#{ logo /}
-		<div id="topnav">
-			#{ include 'menu.html' /}
-		</div>
 		<div id="innerbanner"></div>
 		<form id="uploadimageform" name="uploadimageform" enctype="multipart/form-data"
 			action="@{Profile.uploadImage()}" method="POST" />

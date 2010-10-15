@@ -127,14 +127,7 @@
 </head>
 
 <body>
-	<div id="top_container">
-		<div id="top">
-			#{ logo /}
-			<div id="topnav">
-				#{ include 'menu.html' /}
-			</div>
-		</div>
-	</div>
+	#{include 'header.html' /}
 	<div id="innerbanner"></div>
 	<div id="innermain">
 	<form id="changePrimaryForm" action="@{Profile.makePrimaryEmail()}" method="POST">
