@@ -52,12 +52,16 @@ public class ActionDAO {
 			ActionType.PERSONAL_PROFILE_COMMENT, ActionType.PERSONAL_PROFILE_REPLY
 		);
 	
+//	- conversation started
+//	- question answered
+//	- reply to answer
+//	- summary added or edited
+//	- answer received vote
 	private static final EnumSet<ActionType> COMMUNITY_CONVO_FEED_ACTIONS = EnumSet.of(
-			ActionType.START_CONVO, ActionType.RESTART_CONVO, 
-			ActionType.ANSWER_CONVO, 
+			ActionType.START_CONVO,
+			ActionType.ANSWER_CONVO, ActionType.REPLY_CONVO, 
 			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED,
-			ActionType.ANSWER_VOTED,
-			ActionType.TOPIC_ADDED
+			ActionType.ANSWER_VOTED
 		);
 	
 	
@@ -146,38 +150,7 @@ public class ActionDAO {
 		return activitiesSet;
 	}
 	
-	public static List<Action> loadActivityFeed(TalkerBean talker) {
-		//prepare list of followed talkers
-		Set<DBRef> talkersDBSet = new HashSet<DBRef>();
-		for (TalkerBean followingTalker : talker.getFollowingList()) {
-			talkersDBSet.add(createRef(TalkerDAO.TALKERS_COLLECTION, followingTalker.getId()));
-		}
-		
-		//list of needed actions for this Feed
-		Set<String> actionTypes = new HashSet<String>();
-		for (ActionType actionType : ACTIVITY_FEED_ACTIONS) {
-			actionTypes.add(actionType.toString());
-		}
-		
-		//load actions for this criterias
-		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
-		
-		DBObject query = BasicDBObjectBuilder.start()
-			.add("uid", new BasicDBObject("$in", talkersDBSet))
-			.add("type", new BasicDBObject("$in", actionTypes))
-			.get();
-		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
-		
-		List<Action> activitiesList = new ArrayList<Action>();
-		for (DBObject actionDBObject : activitiesDBList) {
-			Action action = actionFromDB(actionDBObject);
-			activitiesList.add(action);
-		}
-		return activitiesList;
-	}
-	
-	public static List<Action> loadCommunityConvoFeed() {
+	public static Set<Action> loadCommunityFeed() {
 		//list of needed actions for this Feed
 		Set<String> actionTypes = new HashSet<String>();
 		for (ActionType actionType : COMMUNITY_CONVO_FEED_ACTIONS) {
@@ -190,15 +163,16 @@ public class ActionDAO {
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("type", new BasicDBObject("$in", actionTypes))
 			.get();
+		//FIXME: make db paging for community feed
 		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(20).toArray();
+			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
-		List<Action> activitiesList = new ArrayList<Action>();
+		Set<Action> activitiesSet = new LinkedHashSet<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {
 			Action action = actionFromDB(actionDBObject);
-			activitiesList.add(action);
+			activitiesSet.add(action);
 		}
-		return activitiesList;
+		return activitiesSet;
 	}
 	
 	public static List<Action> loadLatestByTopic(TopicBean topic) {

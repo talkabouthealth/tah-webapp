@@ -50,6 +50,11 @@ public class Home extends Controller {
 //		}
 		
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
+		Set<Action> communityFeed = null;
+//		System.out.println(convoFeed.size()+" :::::: "+FeedsLogic.FEEDS_PER_PAGE);
+		if (convoFeed.size() < FeedsLogic.FEEDS_PER_PAGE) {
+			communityFeed = FeedsLogic.getCommunityFeed(null);
+		}
 		
 		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
 		boolean isAdmin = "admin".equals(Security.connected());
@@ -59,7 +64,7 @@ public class Home extends Controller {
 		//FIXME: number of answers for this user??!
 		
 //        render(talker, mapTalkmiTopics, newTopic, convoFeed, showIMPopup);
-		render("@newhome", talker, newTopic, convoFeed, liveConversations, showIMPopup);
+		render("@newhome", talker, newTopic, liveConversations, convoFeed, communityFeed, showIMPopup);
     }
     
     public static void conversationFeed() {
@@ -67,15 +72,21 @@ public class Home extends Controller {
     	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		
     	Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
-    	List<Action> communityConvoFeed = ActionDAO.loadCommunityConvoFeed();
+    	Set<Action> communityConvoFeed = FeedsLogic.getCommunityFeed(null);
 		
 		render(talker, convoFeed, communityConvoFeed);
     }
     
-    public static void conversationFeedAjax(String afterActionId) {
+    public static void feedAjaxLoad(String feedType, String afterActionId) {
     	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
     	
-    	Set<Action> _convoFeed = FeedsLogic.getConvoFeed(_talker, afterActionId);
+    	Set<Action> _convoFeed = null;
+    	if ("convoFeed".equalsIgnoreCase(feedType)) {
+    		_convoFeed = FeedsLogic.getConvoFeed(_talker, afterActionId);
+    	}
+    	else {
+    		_convoFeed = FeedsLogic.getCommunityFeed(afterActionId);
+    	}
     	render("tags/convoFeedList.html", _convoFeed, _talker);
     }
     

@@ -4,6 +4,8 @@
 		
 		#innermiddlearea { padding-top: 10px }
 		.seeall { padding-top: 20px }
+		
+		.inline_form { display:none; }
 	</style>
 	
 	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
@@ -16,6 +18,7 @@
 		var flagConvoId = "";
 
 		var titleLimit = 150;
+		var feedsPerPage = ${logic.FeedsLogic.FEEDS_PER_PAGE};
 
 		#{ oauthJavaScripts /}
 
@@ -209,14 +212,21 @@
 			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
 		});
 
-		function loadMoreConvoFeed() {
-			var lastActionId = $("#convoFeedList").children().last().attr("id");
+		function loadMoreFeed(type) {
+			var lastActionId = $("#"+type+"List").children().last().attr("id");
 
 			//public static void conversationFeedAjax(String afterActionId) {
-			$.get("@{Home.conversationFeedAjax()}", 
-					{afterActionId: lastActionId},
+			$.get("@{Home.feedAjaxLoad()}", {afterActionId: lastActionId, feedType: type},
 					function(data) {
-						$(data).appendTo($("#convoFeedList"));
+						var feedSize = $(data).find(".joinpic").size();
+						if (feedSize < feedsPerPage) {
+							//no more feeds - hide 'More' link
+							$("#"+type+"Btn").hide();
+						}
+						
+						$(data).appendTo($("#"+type+"List"));
+						
+						$('.inline-edit').inlineEdit( { hover: ''} );
 					}
 				);
 			
@@ -332,20 +342,50 @@
                       <!--joinbox-->
                       
                       <div class="topic">
-                        <div class="newpage1">Conversation Feed</div>
+                        <div class="newpage1">Your Conversation Feed</div>
                         <div class="topicborder"></div>
                         <div class="cb"></div>
                       </div>
-                      <!--topic-->
                       <div class="topic">
                         <div id="convoFeedList">
-	                        #{convoFeedList convoFeed: convoFeed, talker: talker /}
+	                    	#{list items: convoFeed, as: 'activity'}
+								#{feedActivity activity: activity, talker: talker /}
+							#{/list}
+							#{else}
+								<span class="blacktext16">When you Follow Topics, Conversations, and
+									other members, your Conversation Feed will be filled with their updates.</span>
+							#{/else}
 						</div>
-						<div class="replytommentbox">
-                          <input type="submit" src="images/seemore.jpg" onclick="return loadMoreConvoFeed();"value=" " class="seemorecom" />
-                        </div>
+						#{if convoFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+							<div class="replytommentbox" id="convoFeedBtn">
+	                          <input type="submit" src="images/seemore.jpg" 
+	                          	onclick="return loadMoreFeed('convoFeed');" value=" " class="seemorecom" />
+	                        </div>
+						#{/if}
                         <div class="cb"></div>
                       </div>
+                      
+                      #{if communityFeed}
+                      	<div class="topic">
+	                        <div class="newpage1">Community Conversation Feed</div>
+	                        <div class="topicborder"></div>
+	                        <div class="cb"></div>
+	                      </div>
+	                      <div class="topic">
+	                        <div id="communityFeedList">
+		                    	#{list items: communityFeed, as: 'activity'}
+									#{feedActivity activity: activity, talker: talker /}
+								#{/list}
+							</div>
+							#{if communityFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+								<div class="replytommentbox" id="communityFeedBtn">
+		                          <input type="submit" src="images/seemore.jpg" 
+		                          	onclick="return loadMoreFeed('communityFeed');" value=" " class="seemorecom" />
+		                        </div>
+							#{/if}
+	                        <div class="cb"></div>
+	                      </div>
+                      #{/if}
                       <!--topic-->
                       <div class="cb"></div>
                     </div>
