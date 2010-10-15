@@ -411,16 +411,20 @@
 													#{/list}
                         						</div>
 											</div>
-											<div class="editdiv">
-												<div class="editit" style="padding-top:10px;">
-													<a href="#" class="inline_editlink">Edit</a>
+											#{if talker }
+												<div class="editdiv">
+													<div class="editit" style="padding-top:10px;">
+														<a href="#" class="inline_editlink">Edit</a>
+													</div>
 												</div>
-											</div>
+											#{/if}
 										</div>
 										<div class="inline_empty" style="display: ${!convo.topics ? 'block' : 'none'}">
-											<div class="targetenew">
-												<a class="inline_addlink" href="#">Add Topics</a>
-											</div>
+											#{if talker }
+												<div class="targetenew">
+													<a class="inline_addlink" href="#">Add Topics</a>
+												</div>
+											#{/if}
 										</div>
 						            </div>
 									<div class='inline_form'>

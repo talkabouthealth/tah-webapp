@@ -275,6 +275,10 @@ public class Conversations extends Controller {
         	}
     	}
     	else if (name.equalsIgnoreCase("topic")) {
+    		if (talker == null) {
+    			forbidden();
+    			return;
+    		}
     		String todo = params.get("todo");
     		if (todo.equalsIgnoreCase("add")) {
     			TopicBean topic = TopicDAO.getByTitle(value);

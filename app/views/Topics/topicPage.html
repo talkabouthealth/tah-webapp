@@ -220,11 +220,13 @@
 							<div class="inline_display">
 								<div class="inline_full">
 									<div class="targetedh7"><h1 class="inline_view">${topic.title}</h1></div>
-									<div class="editdiv">
-										<div class="editit">
-											<a href="#" class="inline_editlink">Edit</a>
+									#{if talker }
+										<div class="editdiv">
+											<div class="editit">
+												<a href="#" class="inline_editlink">Edit</a>
+											</div>
 										</div>
-									</div>
+									#{/if}
 								</div>
 								<div class="inline_empty" style="display: none"></div>
 							</div>
@@ -258,16 +260,20 @@
 									<div style="float: left; width: 540px;">
 										<h2 class="inline_view" style="text-align: justify;">${topic.summary}</h2>
 									</div>
-									<div style="float:right; margin-right:10px;">
-										<div class="editit">
-											<a href="#" class="inline_editlink">Edit</a>
+									#{if talker }
+										<div style="float:right; margin-right:10px;">
+											<div class="editit">
+												<a href="#" class="inline_editlink">Edit</a>
+											</div>
 										</div>
-									</div>
+									#{/if}
 								</div>
 								<div class="inline_empty" style="display: ${!topic.summary ? 'block' : 'none'}">
-									<div class="targetenew">
-										<a class="inline_addlink" href="#">Add Topic Summary</a>
-									</div>
+									#{if talker }
+										<div class="targetenew">
+											<a class="inline_addlink" href="#">Add Topic Summary</a>
+										</div>
+									#{/if}
 								</div>
 						          </div>
 							<div class='inline_form'>
@@ -316,7 +322,9 @@
 				#{/if}
                 <div class="topipsts">
                   <div class="mtrighttxt"><a href="@{ViewDispatcher.view(topic.mainURL)}">Topic Home</a></div>
-                  <div class="mtrighttxt"><a href="@{Topics.manage(topic.mainURL)}">Manage Topic</a></div>
+                  #{if talker }
+                  	<div class="mtrighttxt"><a href="@{Topics.manage(topic.mainURL)}">Manage Topic</a></div>
+                  #{/if}
                   <div class="mtop"></div>
                   <div class="topicborder"></div>
                   <div class="cb"></div>

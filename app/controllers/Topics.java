@@ -83,13 +83,6 @@ public class Topics extends Controller {
     }
     
     public static void updateField(String topicId, String name, String value) {
-    	//FIXME: hide edits from not-logined users
-    	
-    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	if (talker == null) {
-    		forbidden();
-    		return;
-    	}
     	TopicBean topic = TopicDAO.getById(topicId);
     	notFoundIfNull(topic);
     	
