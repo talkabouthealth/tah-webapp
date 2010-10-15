@@ -65,7 +65,8 @@ public class API extends Controller {
     	notFoundIfNull(talker);
     	
     	//FIXME: make type
-    	ConversationBean convo = ConversationLogic.createConvo(ConvoType.CONVERSATION, title, talker, null, null);
+    	ConversationBean convo = 
+    		ConversationLogic.createConvo(ConvoType.CONVERSATION, title, talker, null, null, true);
     	
 		renderText(convo.getTid());
     }

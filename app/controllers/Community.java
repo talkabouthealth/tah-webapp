@@ -24,7 +24,7 @@ public class Community extends Controller {
 		List<TalkerBean> communityMembers = TalkerDAO.loadAllTalkers();
 		
 		List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
-		List<Action> communityConvoFeed = ActionDAO.loadCommunityConvoFeed();
+		Set<Action> communityConvoFeed = ActionDAO.loadCommunityFeed();
 		
 		render(talker, liveTalks, communityConvoFeed);
 	}

@@ -57,23 +57,27 @@ public class Conversations extends Controller {
     		if (topic != null) {
     			topicsSet.add(topic);
     		}
-    		
-        	//create or get? topics for new convo
-//        	String newTag = "thirdtopic";
-//        	TopicBean topic = new TopicBean();
-//        	topic.setTitle(newTag);
-//        	topic.setMainURL(ApplicationDAO.createURLName(newTag));
-//        	TopicDAO.save(topic);
     	}
     	
 //    	System.out.println(convoType+" : "+title+" : "+details+" : "+topicsSet);
     	
-    	ConversationBean convo = ConversationLogic.createConvo(convoType, title, talker, details, topicsSet);
+    	//in this case we notify only after new question
+    	boolean notifyTalkers = (convoType == ConvoType.QUESTION);
+    	ConversationBean convo = 
+    		ConversationLogic.createConvo(convoType, title, talker, details, topicsSet, notifyTalkers);
     	CommonUtil.updateTalker(talker, session);
     	
     	String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
-		renderJSON("{ \"tid\" : \""+convo.getTid()+"\", \"url\" : \""+convoURL+"\" }");
+		renderJSON("{ \"id\" : \""+convo.getId()+"\", \"tid\" : \""+convo.getTid()+"\", \"url\" : \""+convoURL+"\" }");
     }
+	
+	//start Talk after creating it
+	public static void start(String topicId) {
+    	ConversationBean convo = ConversationDAO.getByConvoId(topicId);
+    	notFoundIfNull(convo);
+    	
+    	NotificationUtils.sendAutomaticNotifications(convo.getId());
+	}
     
     public static void restart(String topicId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);

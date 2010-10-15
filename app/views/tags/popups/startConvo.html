@@ -1,0 +1,109 @@
+<div id="startDialog" class="window">
+    <div class="boxtopcenter">
+      <div id="newConvoForm" class="popboxWraper">
+        <div class="popbox2" style="height: 350px;">
+          <div class="closecover">
+            <div class="close"><img src="/public/images/close.jpg" alt="Close" /></div>
+          </div>
+          <div class="iwant">I want to</div>
+          <div class="askquestion">
+
+            <div class="askquestionbox">
+              <div class="askradio1">
+                <input id="newConvoTypeQuestion" name="newConvoType" checked="checked" type="radio" />
+              </div>
+              <div class="asktext1">Ask a Question</div>
+              <div class="asktext2">Or</div>
+              <div class="askradio1">
+                <input id="newConvoTypeConvo" name="newConvoType" type="radio" />
+              </div>
+              <div class="asktext3">Start a Live Talk</div>
+            </div>
+            <!--askquestionbox-->
+          </div>
+          <!--askquestion-->
+          <div class="askheadingCoverz">
+            <div class="asktextl">Headline:</div>
+            <div class="askinputCover">
+				<textarea id="newConvoTitle" class="askkinput" cols="4" rows="4" 
+					onKeyDown="limitText(this, titleLimit);" onKeyUp="limitText(this, titleLimit);" ></textarea>
+            </div>
+          </div>
+          <!--askheadingCoverz-->
+          <div class="askheadingCover">
+            <div class="asktextl">Details:<br />
+              <span class="asksubtxt">(Optional)</span></div>
+            <div class="askinputCover">
+              <textarea id="newConvoDetails" class="askinput2" 
+                onclick="if (this.value == 'This is the place to provide context or further details for your request.') this.value=''" 
+                onblur="if (this.value == '') this.value='This is the place to provide context or further details for your request.'"
+              	cols="4" rows="3">This is the place to provide context or further details for your request.</textarea>
+            </div>
+          </div>
+          <!--
+          <div class="askheadingCover">
+            <div class="asktextl">Topics:<br />
+              <span class="asksubtxt">(Optional)</span></div>
+
+            <div class="askinputCover">
+              <textarea id="newConvoTopics" class="askkinput" cols="4" rows="3"></textarea>
+            </div>
+          </div>
+          -->
+          <div class="popsubmitcovar">
+            <div class="notetext">Note: The more descriptive your request, the more like you are to receive support.</div>
+            <!-- <div class="popnothanks1"><a href="#" class="cancelLink">Cancel</a></div>  -->
+
+            <div class="popsubmitbox1">
+              <div class="popupsubmits"><a href="#" id="saveConvoBtn">Submit</a></div>
+            </div>
+          </div>
+          <!--popsubmitcover-->
+          <div class="cb"></div>
+        </div>
+        <!--popbox2-->
+
+      </div>
+      <!--popboxWraper-->
+      <div id="newQuestionConfirm" class="popboxWraper" style="display: none;">
+        <div class="popbox3">
+          <div class="closecover">
+            <div class="close"><img src="/public/images/close.jpg" alt="Close" /></div>
+          </div>
+          <div class="iwant1">Thank you for sharing your question</div>
+
+          <div class="popusertxt3">We will notify other members of your question. 
+          Responses will be sent to your email account as well as viewable at the
+            following link: <a id="questionLink" href="#"></a></div>
+          <div class="popsubmitcover1">
+            <div class="popnothanks3"><a class="cancelLink" href="#">Close</a></div>
+          </div>
+          <!--popsubmitcover-->
+          <div class="cb"></div>
+        </div>
+
+        <!--popbox2-->
+      </div>
+      
+      <div id="newTalkConfirm" class="popboxWraper" style="display: none;">
+        <div class="popbox3">
+          <div class="closecover">
+            <div class="close"><img src="/public/images/close.jpg" alt="Close" /></div>
+          </div>
+          <div class="iwant1">We are finding other members now to join the talk.</div>
+
+          <div class="popusertxt3">
+          	Click here to start the talk.<br/><br/>
+          	<input id="startTalkBtn" type="submit" 
+          		src="/public/images/startsubmit.jpg" value=" " class="startsubmit" />
+          </div>
+          <div class="cb"></div>
+        </div>
+
+        <!--popbox2-->
+      </div>
+      
+      <div class="cb"></div>
+    </div>
+    <!--boxtopcenter-->
+  </div>

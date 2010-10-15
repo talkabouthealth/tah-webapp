@@ -31,7 +31,7 @@ import models.actions.Action.ActionType;
 public class ConversationLogic {
 	
 	public static ConversationBean createConvo(ConvoType type, String title, 
-			TalkerBean talker, String details, Set<TopicBean> topicsSet) {
+			TalkerBean talker, String details, Set<TopicBean> topicsSet, boolean notifyTalkers) {
 		ConversationBean convo = new ConversationBean();
 		convo.setConvoType(type);
 		convo.setTopic(title);
@@ -48,8 +48,10 @@ public class ConversationLogic {
 		ConversationDAO.save(convo);
 		ActionDAO.saveAction(new StartConvoAction(talker, convo, ActionType.START_CONVO));
 		
-		//send notifications if Automatic Notifications is On
-		NotificationUtils.sendAutomaticNotifications(convo.getId());
+		if (notifyTalkers) {
+			//send notifications if Automatic Notifications is On
+			NotificationUtils.sendAutomaticNotifications(convo.getId());
+		}
 		
 		//automatically follow started topic
 		talker.getFollowingConvosList().add(convo.getId());
