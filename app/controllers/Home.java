@@ -56,6 +56,8 @@ public class Home extends Controller {
 		boolean showIMPopup = (session.get("justloggedin") != null && hasNoIMAccounts && !isAdmin);
 		session.remove("justloggedin");
 		
+		//FIXME: number of answers for this user??!
+		
 //        render(talker, mapTalkmiTopics, newTopic, convoFeed, showIMPopup);
 		render("@newhome", talker, newTopic, convoFeed, liveConversations, showIMPopup);
     }

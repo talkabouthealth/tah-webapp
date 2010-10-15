@@ -139,10 +139,7 @@
 				hideAll();
 			});		
 
-			$("#startLink").click(function(e) {
-				//Cancel the link behavior
-				e.preventDefault();
-
+			$(".startLink").click(function(e) {
 				$("#newConvoForm").show();
 				$("#newQuestionConfirm").hide();
 				$("#newConvoTitle").val($("#convoText").val());
@@ -281,7 +278,9 @@
                     <div class="newpage1">Live Community Talks (${liveConversations.size()})</div>
                     <!-- <a href="#"><img src="/public/images/refreshicon.jpg" alt="refresh" 
                     	border="0" style="float:left; padding-left:4px; padding-top:22px"  /></a> -->
-                    <div class="seeall"><a href="#">See All</a></div>
+                    #{if liveConversations?.size() > 5}
+                    	<div class="seeall"><a href="#">See All</a></div>
+                    #{/if}
                     <div class="topicborder"></div>
                     <!--mtinputbox-->
                     <div class="cb"></div>
@@ -327,14 +326,12 @@
 </div>		                      
 						#{/list}
 						#{else}
-							<span class="blacktext14">Be the first to start a live talk.</span>
+							<a href="#" class="startLink" style="font-size: 16px;">Be the first to start a live talk.</a>
 						#{/else}
                       <!--joinbox-->
                       
                       <div class="topic">
                         <div class="newpage1">Conversation Feed</div>
-
-                        <div class="seeall"><a href="@{Home.conversationFeed()}">See All</a></div>
                         <div class="topicborder"></div>
                         <div class="cb"></div>
                       </div>
