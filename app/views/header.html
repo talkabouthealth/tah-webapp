@@ -55,6 +55,16 @@
 		            <ul id="jsddm">
 		              <!-- <li><a href="#">Inbox</a></li>
 		              <li class="separator">|</li> -->
+		              #{if currentUser.equals("admin") }
+							<li style="margin-right: 5px;"> <a class="libull" href="#"><b>Admin</b></a>
+				                <ul>
+				                  <li><a href="@{Dashboard.index()}">Dashboard</a></li>
+				                  <li><a href="@{Dashboard.manageAccounts()}">Manage Accounts</a></li>
+				                  <li><a href="@{Dashboard.verifyProfessionals()}">Verify Professionals</a></li>
+				                </ul>
+				            </li>
+				            <li class="separator">|</li>
+					  #{/if}
 		              <li style="margin-right: 5px;"> <a class="libull" href="#">Settings</a>
 		                <ul>
 		                  <li><a href="@{Profile.edit()}">Edit Personal Info</a></li>

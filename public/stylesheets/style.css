@@ -2439,11 +2439,14 @@ padding-top:30px;
 	background:url("../images/flagbg.gif") repeat scroll 0 0 transparent;
 	height:197px;
 	left:2px;
-	padding-left:30px;
-	position:relative;
-	top:320px;
+	padding-left:20px;
+	padding-right:10px;
 	width:400px;
+	/*
+	position:relative;
 	left:-180px;
+	top:320px;
+	*/
 }
 
 .commentsCover {
