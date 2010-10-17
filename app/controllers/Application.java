@@ -229,15 +229,15 @@ public class Application extends Controller {
         /*
          	By default all sections should be checked:
         */
-        EnumSet<ProfilePreference> defaultPreferences = EnumSet.allOf(ProfilePreference.class);
-//        	EnumSet.complementOf(
-//        		EnumSet.of(
-//    				ProfilePreference.PERSONAL_INFO
-//    				ProfilePreference.HEALTH_INFO,
-//    				ProfilePreference.BASIC_INFO,
-//    				ProfilePreference.BIO
-//        		)
-//        	);
+        EnumSet<ProfilePreference> defaultPreferences = 
+//        	EnumSet.allOf(ProfilePreference.class);
+        	EnumSet.complementOf(
+        		EnumSet.of(
+    				ProfilePreference.PERSONAL_INFO,
+    				ProfilePreference.HEALTH_INFO,
+    				ProfilePreference.BIO
+        		)
+        	);
         talker.saveProfilePreferences(defaultPreferences);
         
         //By default all email notifications are checked

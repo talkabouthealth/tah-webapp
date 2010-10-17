@@ -63,8 +63,8 @@ public class TalkerBean implements Serializable {
 	public enum ProfilePreference {
 		PERSONAL_INFO(0, "Display my Personal Info in my Public Profile"),
 		HEALTH_INFO(1, "Display my Health Info in my Public Profile"),
-		BASIC_INFO(2, "Display my Basic Info in my Public Profile (Recognition level, " +
-				"No. of conversations)"),
+//		BASIC_INFO(2, "Display my Basic Info in my Public Profile (Recognition level, " +
+//				"No. of conversations)"),
 		BIO(3, "Display my Bio in my Public Profile"),
 		FOLLOWERS(4, "Display my Followers in my Public Profile"),
 		FOLLOWING(5, "Display who I am Following in my Public Profile"),
@@ -72,7 +72,8 @@ public class TalkerBean implements Serializable {
 		CONVERSATIONS(7, "Display the Conversations I have started and joined in my Public Profile"),
 		COMMENTS(8, "Display my Comments in my Public Profile"),
 		ACTIVITY_STREAM(9, "Display my Activity Stream in my Public Profile"),
-		CONVERSATIONS_FOLLOWED(10, "Display my Conversations Followed in my Public Profile");
+		CONVERSATIONS_FOLLOWED(10, "Display my Conversations Followed in my Public Profile"),
+		TOPICS_FOLLOWED(11, "Display the Topics I Follow in my Public Profile");
 		
 		private final int value;
 		private final String description;

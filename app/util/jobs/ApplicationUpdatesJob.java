@@ -87,7 +87,6 @@ public class ApplicationUpdatesJob extends Job {
 	        		EnumSet.of(
 	    				ProfilePreference.PERSONAL_INFO,
 	    				ProfilePreference.HEALTH_INFO,
-	    				ProfilePreference.BASIC_INFO,
 	    				ProfilePreference.BIO
 	        		)
 	        	);
