@@ -45,13 +45,6 @@ public class ActionDAO {
 	
 	private static final EnumSet<ActionType> CONVO_FEED_ACTIONS = EnumSet.allOf(ActionType.class);
 	
-	private static final EnumSet<ActionType> ACTIVITY_FEED_ACTIONS = EnumSet.of(
-			ActionType.START_CONVO, ActionType.RESTART_CONVO, ActionType.JOIN_CONVO, 
-			ActionType.ANSWER_CONVO, ActionType.REPLY_CONVO, 
-			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED,
-			ActionType.PERSONAL_PROFILE_COMMENT, ActionType.PERSONAL_PROFILE_REPLY
-		);
-	
 //	- conversation started
 //	- question answered
 //	- reply to answer

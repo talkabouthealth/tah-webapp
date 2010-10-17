@@ -147,7 +147,7 @@
 		  		{ hover: '', saveFunction: saveData, updateFunction: updateData}
 		  	);
 
-   			makeAutocomplete("#topicInput", "topic");
+   			makeTopicsAutocomplete("#topicInput");
    			makeAutocomplete("#relatedConvosInput", "convo");
 		});
 
@@ -200,6 +200,7 @@
    				);
 			}
 			else if (dataType === 'topicsEdit') {
+				//possible comma-separated topics
 				$.post("@{Conversations.updateField()}", 
    					{ convoId : '${convo.id}', name: 'topic', value: newValue, todo: 'add'},
    					function(html) {
@@ -454,7 +455,7 @@
 									<div class="tagtxts">
 				                    	<a href="#" class="restartConvoLink">Restart Conversation</a> |  
 				                    	<!-- <a href="#">Start Follow up conversation</a>  |  -->  
-				                    	<a href="#" class="flagConvoLink">Flag Question</a> 
+				                    	<a href="#" class="flagConvoLink">Flag As Inappropriate</a> 
 				                    	#{if session.username?.equals("admin") || convo.talker.userName.equals(session.username)}
 				                        	  |  <a href="#" onclick="return deleteConvo();">Delete</a> 
 				                        #{/if}
@@ -595,7 +596,7 @@
 									
 									<div class="tagtxts"><a href="#">Restart Conversation </a> |  
 										<a href="#">Start Follow up conversation</a>  |  
-										<a href="#" class="flagConvoLink">Flag Conversation</a>
+										<a href="#" class="flagConvoLink">Flag As Inappropriate</a>
 									</div>
 									
 									<div class="talkerCover">

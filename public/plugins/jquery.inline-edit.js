@@ -104,6 +104,7 @@
 			
 			$addBtn.bind( 'click.inline-edit', function() {
 				var newValue = $.trim($text.val());
+				$text.val("");
 				
 				settings.updateFunction.apply( window, [ $dataType, newValue] );
 			});

@@ -746,6 +746,9 @@ a {
 	background-repeat:no-repeat;
 	background-position:0 3px;
 }
+.editdiv .editit a {
+	color:#4B4B4B;
+}
 .editit a:hover {
 	float:left;
 	display:block;

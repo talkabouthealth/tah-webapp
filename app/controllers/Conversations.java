@@ -281,23 +281,33 @@ public class Conversations extends Controller {
     		}
     		String todo = params.get("todo");
     		if (todo.equalsIgnoreCase("add")) {
-    			TopicBean topic = TopicDAO.getByTitle(value);
-    			if (topic == null) {
-    				//create new topic with this name
-        	    	topic = new TopicBean();
-        	    	topic.setTitle(value);
-        	    	topic.setMainURL(ApplicationDAO.createURLName(value));
-        	    	TopicDAO.save(topic);
-    			}
+    			//possible comma-separated list of topics
+    			String[] valueArr = value.split(",\\s*");
+    			System.out.println(value+" : "+Arrays.toString(valueArr));
+    			
+    			StringBuilder htmlToRender = new StringBuilder();
+    			for (String topicName : valueArr) {
+    				TopicBean topic = TopicDAO.getByTitle(topicName);
+        			if (topic == null) {
+        				//create new topic with this name
+            	    	topic = new TopicBean();
+            	    	topic.setTitle(topicName);
+            	    	topic.setMainURL(ApplicationDAO.createURLName(topicName));
+            	    	TopicDAO.save(topic);
+        			}
 
-    	    	convo.getTopics().add(topic);
-    	    	ConversationDAO.updateConvo(convo);
-    	    	
-    	    	ActionDAO.saveAction(new TopicAddedAction(talker, convo, topic));
-    	    	
-    	    	renderText(
+        	    	convo.getTopics().add(topic);
+        	    	ConversationDAO.updateConvo(convo);
+        	    	
+        	    	ActionDAO.saveAction(new TopicAddedAction(talker, convo, topic));
+        	    	
+        	    	htmlToRender.append(
     	    			"<a class=\"topicTitle\" href=\""+topic.getMainURL()+"\">"+topic.getTitle()+"</a>&nbsp;" +
-    	    			"<a class=\"deleteTopicLink\" href=\"#\" rel=\""+topic.getId()+"\">X</a>");
+    	    			"<a class=\"deleteTopicLink\" href=\"#\" rel=\""+topic.getId()+"\">X</a>"
+        	    	);
+    			}
+    	    	
+    	    	renderText(htmlToRender.toString());
     		}
     		else if (todo.equalsIgnoreCase("remove")) {
     			TopicBean topic = new TopicBean(value);

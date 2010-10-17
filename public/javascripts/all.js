@@ -161,6 +161,67 @@ function makeAutocomplete(id, type) {
 	};
 }
 
+/* Autocompete for topis - allows adding multiply topics (separated by space) */
+function makeTopicsAutocomplete(id) {
+	var cache = {};
+	$(id).autocomplete({
+		minLength: 1,
+		source: function(request, response) {
+			var currentTerm = extractLast( request.term );
+			
+			if ( currentTerm in cache ) {
+				response( cache[ currentTerm ] );
+				return;
+			}
+			
+			$.ajax({
+				url: "/search/ajaxTopicSearch",
+				dataType: "json",
+				data: { term : currentTerm },
+				success: function( data ) {
+					cache[ currentTerm ] = data;
+					response( data );
+				}
+			});
+		},
+		search: function() {
+			// custom minLength
+			var term = extractLast( this.value );
+			if ( term.length < 1 ) {
+				return false;
+			}
+		},
+		focus: function() {
+			// prevent value inserted on focus
+			return false;
+		},
+		select: function( event, ui ) {
+			var terms = split( this.value );
+			// remove the current input
+			terms.pop();
+			// add the selected item
+			terms.push( ui.item.value );
+			// add placeholder to get the comma-and-space at the end
+			terms.push( "" );
+			this.value = terms.join( ", " );
+			return false;
+		}
+	})
+	.data( "autocomplete" )._renderItem = function( ul, item ) {
+		return $( "<li></li>" )
+			.data( "item.autocomplete", item )
+			.append( "<a>" + item.label + "&nbsp;<span>" + item.type + "</span></a>" )
+			.appendTo( ul );
+	};
+}
+function split( val ) {
+	return val.split( /,\s*/ );
+}
+function extractLast( term ) {
+	return split( term ).pop();
+}
+
+
 
 function loadMoreFeed(type) {
 	var lastActionId = $("#"+type+"List").children().last().attr("id");
