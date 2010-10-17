@@ -27,10 +27,10 @@
 				${ _currentTalker.followingList.contains(_talker) ? 'Unfollow' : 'Follow'}
 				</a> | 
 			#{/ifnot}
-			*{ TODO Not rel2 ? }* 
-		 	<a href="#commentform" rel2="${_talker.id}" class="bluetext12 commentLink">Comment</a>
+		 	<a href="#" onclick="return showPopupForm('comment', '${_talker.id}', '${_talker.userName}');" 
+			 	class="bluetext12 commentLink">Comment</a>
 		 	#{ifnot _currentTalker?.equals(_talker) }
-			 	 | <a href="#thankyouform" rel2="${_talker.id}" 
+			 	 | <a href="#" onclick="return showPopupForm('thankYou', '${_talker.id}', '${_talker.userName}');" 
 			 	 		class="bluetext12 thankYouLink">Thank</a>
 			#{/ifnot}
         </span>

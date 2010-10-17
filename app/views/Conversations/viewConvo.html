@@ -60,8 +60,6 @@
 		var flagType = '';
 		var flagAnswerId = '';
 
-		var selectedTalkerId = '';
-
 		var titleLimit = 150;
 		
 		$(document).ready(function() {
@@ -274,25 +272,6 @@
    	   		}
    	   		
    	   		return false;
-   		}
-
-   		function thankYou(talkerId, userName) {
-   			$("#thankYouUser").html(userName);
-   			selectedTalkerId = talkerId;
-   			
-			showPopup("#thankYouPopup", 200);
-			return false;
-   		}
-
-   		function saveThankYou() {
-   			var noteText = $("#thankYouListNote").val();
-   			hideAll();
-   			$("#thankYouListNote").val("");
-
-   			$.post("/actions/createThankYou", 
-   				{ toTalker: selectedTalkerId, note: noteText}
-   			);
-   			return false;
    		}
 
    		//flag convo or answer

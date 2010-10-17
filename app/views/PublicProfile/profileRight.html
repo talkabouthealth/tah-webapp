@@ -1,4 +1,7 @@
-<script type="text/javascript"> 	 
+<script type="text/javascript">
+		//for ThankYou and Comment popups
+		selectedTalkerId = '${talker.id}';
+	 
    		$(document).ready(function() {
    			$("#thankYouUser").html('${talker.userName}');
    			$("#commentUser").html('${talker.userName}');
@@ -25,26 +28,6 @@
 	   		});
    		});
 
-   		function saveThankYou() {
-   			var noteText = $("#thankYouListNote").val();
-   			hideAll();
-   			$("#thankYouListNote").val("");
-
-   			$.post("/actions/createThankYou", 
-   				{ toTalker: '${talker.id}', note: noteText}
-   			);
-   			return false;
-   		}
-
-   		function sendProfileComment() {
-   			var commentText = $("#commentText").val();
-   			hideAll();
-   			$("#commentText").val("");
-
-   			$.post("/actions/saveProfileComment", 
-   				{ profileTalkerId: '${talker.id}', parentId: '', text: commentText}
-   			);
-   		}
 </script>
 <div style="padding-left: 30px;" id="mtright"> <br/>
                 <div class="followpicbox">

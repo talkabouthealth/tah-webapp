@@ -106,7 +106,8 @@
 					                        	<li>&nbsp;|&nbsp;</li>
 					                        #{/if}
 					                  		#{if session.username}
-				<li><a href="#" onclick="return thankYou('${comment.fromTalker.id}', '${comment.fromTalker.userName}');">Thank</a></li>
+				<li><a href="#" 
+					onclick="return showPopupForm('thankYou', '${comment.fromTalker.id}', '${comment.fromTalker.userName}');">Thank</a></li>
 				
 												#{if _level == 1}
 						                        	<li>&nbsp;|&nbsp;</li>

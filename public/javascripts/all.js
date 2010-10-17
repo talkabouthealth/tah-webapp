@@ -289,3 +289,37 @@ function saveConvo() {
 
 	return false;
 }
+
+
+
+//'thankYou' or 'comment' popups
+var selectedTalkerId = '';
+
+function showPopupForm (type, talkerId, userName) {
+	$("#"+type+"User").html(userName);
+	selectedTalkerId = talkerId;
+
+	showPopup("#"+type+"Popup", 200);
+	return false;
+}
+
+function saveThankYou() {
+	var noteText = $("#thankYouListNote").val();
+	hideAll();
+	$("#thankYouListNote").val("");
+
+	$.post("/actions/createThankYou", 
+		{ toTalker: selectedTalkerId, note: noteText}
+	);
+	return false;
+}
+
+function sendProfileComment() {
+	var commentText = $("#commentText").val();
+	hideAll();
+	$("#commentText").val("");
+
+	$.post("/actions/saveProfileComment", 
+		{ profileTalkerId: selectedTalkerId, parentId: '', text: commentText}
+	);
+}

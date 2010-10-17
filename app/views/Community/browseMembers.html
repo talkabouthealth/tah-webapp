@@ -7,7 +7,7 @@
 	   		//"likeyou" : "tab3",
 	   		"search" : "tab4" 
 		}
-	
+
 		$(document).ready(function() {
 			//Default Action
 			var activeTab = tabs["${action}"];
@@ -163,7 +163,10 @@
 		</div>
 	</div>
 	
-<div id="hiddenwindows" style="display: none">
-	#{popups/thankyou /}	
-	#{popups/comment /}
+<div id="boxes">
+	<div id="dialog" class="window"></div>
+	
+	#{ popups/thankyou2 /}
+	#{ popups/comment2 /}
 </div>
+<div id="mask"></div>

@@ -120,7 +120,7 @@
    		}
 
    		//createThankYou(String toTalker, String note)
-   		function saveThankYou() {
+   		function saveThankYouNote() {
    	   		var noteText = $("#thankYouNote").val();
    			$("#thankYouNote").val("");
 
@@ -205,7 +205,7 @@
 									</li>
 									<li>
 										<div class="personaltextarea" style="height:46px; padding-top:2px;">
-											<a href="#thankyouSection" onclick="saveThankYou()">
+											<a href="#thankyouSection" onclick="saveThankYouNote()">
 												<img src="/public/images/addcomment_btn.gif" width="145" height="32" border="0" />
 											</a>
 										</div>
@@ -291,7 +291,10 @@
 		</div>
 	</div>
 
-<div id="hiddenwindows" style="display: none">
-	#{popups/thankyou /}	
-	#{popups/comment /}
+<div id="boxes">
+	<div id="dialog" class="window"></div>
+	
+	#{ popups/thankyou2 /}
+	#{ popups/comment2 /}
 </div>
+<div id="mask"></div>
