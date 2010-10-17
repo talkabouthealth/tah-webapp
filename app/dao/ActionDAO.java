@@ -168,7 +168,7 @@ public class ActionDAO {
 		return activitiesSet;
 	}
 	
-	public static List<Action> loadLatestByTopic(TopicBean topic) {
+	public static Set<Action> loadLatestByTopic(TopicBean topic) {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
 		Set<DBRef> convosDBSet = ConversationDAO.getConversationsByTopic(topic);
@@ -176,12 +176,12 @@ public class ActionDAO {
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
-		List<Action> activitiesList = new ArrayList<Action>();
+		Set<Action> activitiesSet = new LinkedHashSet<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {
 			Action action = actionFromDB(actionDBObject);
-			activitiesList.add(action);
+			activitiesSet.add(action);
 		}
-		return activitiesList;
+		return activitiesSet;
 	}
 	
 	public static List<Action> loadLatestByConversation(ConversationBean convo) {

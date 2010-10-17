@@ -9,7 +9,9 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import logic.FeedsLogic;
 import logic.TalkerLogic;
 import models.DiseaseBean;
 import models.HealthItemBean;
@@ -145,10 +147,7 @@ public class ViewDispatcher extends Controller {
 		}
 		
 		//load latest activities for convos with this topic
-		List<Action> activities = ActionDAO.loadLatestByTopic(topic);
-		if (activities.size() > 20) {
-			activities = activities.subList(0, 20);
-		}
+		Set<Action> activities = FeedsLogic.getTopicFeed(topic, null);
 		
 		TopicDAO.incrementTopicViews(topic.getId());
 		
