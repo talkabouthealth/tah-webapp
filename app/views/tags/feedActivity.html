@@ -7,7 +7,7 @@
 	<div class="jointxtbox">
 		#{if _activity.convo}
 			<div class="jointextstop">
-				<a href="${_activity.convo.mainURL}">${_activity.convo.topic}</a>
+				<a href="@{ViewDispatcher.view(_activity.convo.mainURL)}">${_activity.convo.topic}</a>
 			</div>
 			<div class="joinztextlink">
 				#{if _activity.convo.comments.size() == 0}

@@ -77,7 +77,7 @@
 	</div>
 	<div class="jointxtbox">
 		<div class="jointextstop">
-			<a href="${convo.mainURL}">${convo.topic}</a>
+			<a href="@{ViewDispatcher.view(convo.mainURL)}">${convo.topic}</a>
 		</div>
 		<div class="joinztextlink">
 			<a href="#" class="followConvoLink" rel="${convo.id}">
@@ -146,7 +146,7 @@
             <!--mtleft-->
             
 <div id="comright" style="padding-left:30px;">
-
+	#{if talker}
                 <div class="topipsts">
                   <div class="mtrighttxt1">Community Members</div>
                   <div class="topbox">
@@ -169,7 +169,7 @@
                 </div>
                 <!--topipsts-->
                 <div class="cb"></div>
-              
+	#{/if}              
 </div>            
             <!--mtright-->
             <div class="cb"></div>

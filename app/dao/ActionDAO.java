@@ -82,8 +82,6 @@ public class ActionDAO {
 	//It contains items based on actions from topics, questions, 
 	//and other users (including comments) that are followed.
 	public static Set<Action> loadConvoFeed(TalkerBean talker) {
-		//TODO: move to FeedLogic?
-		
 		DBRef currentTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talker.getId());
 		
 		//prepare list of followed convos/topics
@@ -128,8 +126,12 @@ public class ActionDAO {
 								.get()
 						))
 			.add("type", new BasicDBObject("$in", actionTypes))
-			//user shouldn't see personal actions in the ConvoFeed
-			.add("uid", new BasicDBObject("$ne", currentTalkerRef))
+			//.add("uid", new BasicDBObject("$ne", currentTalkerRef))
+			.add("$or", Arrays.asList(
+						//user shouldn't see personal actions in the ConvoFeed - only Started Question/Talk
+						new BasicDBObject("uid", new BasicDBObject("$ne", currentTalkerRef)),
+						new BasicDBObject("type", ActionType.START_CONVO.toString()) 
+					))
 			.get();
 
 		List<DBObject> activitiesDBList = 
