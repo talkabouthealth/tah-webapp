@@ -323,9 +323,15 @@
 	                <div class="cb"></div>
 				#{/if}
                 <div class="topipsts">
-                  <div class="mtrighttxt"><a href="@{ViewDispatcher.view(topic.mainURL)}">Topic Home</a></div>
+                	<div class="mtrighttxt">
+				     	<a class="${currentPage.equals('viewTopic') ? 'current' : ''}" 
+				     		href="@{ViewDispatcher.view(topic.mainURL)}">Topic Home</a>
+				    </div>
                   #{if talker }
-                  	<div class="mtrighttxt"><a href="@{Topics.manage(topic.mainURL)}">Manage Topic</a></div>
+                  	<div class="mtrighttxt">
+				     	<a class="${currentPage.equals('manageTopic') ? 'current' : ''}" 
+				     		href="@{Topics.manage(topic.mainURL)}">Manage Topic</a>
+				    </div>
                   #{/if}
                   <div class="mtop"></div>
                   <div class="topicborder"></div>
@@ -363,7 +369,7 @@
                 </div>
                 <!--topipsts-->
                 <div class="topipsts">
-                  <div class="mtrighttxt1">Ontology</div>
+                  <div class="mtrighttxt1">Topic Organization</div>
                   <div class="topixtext">
                     <div class="viewstext" style="color: #000000;">Parent Topics: </div>
                     <div class="viewstext1">
@@ -377,7 +383,7 @@
                   </div>
                   <!--topixtext-->
                   <div class="topixtext">
-                    <div class="viewstext" style="color: #000000;">Child Topics: </div>
+                    <div class="viewstext" style="color: #000000;">Sub-topics: </div>
                     <div class="viewstext1">
                     	#{list items: topic.children, as: 'children'}
 							<a href="@{ViewDispatcher.view(children.mainURL)}">${children.title}</a>${ children_isLast ? '' : ', ' }
