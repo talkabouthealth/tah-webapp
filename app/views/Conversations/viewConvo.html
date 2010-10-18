@@ -476,7 +476,7 @@
 										            <div style="margin-top:10px; margin-bottom:10px; clear: both"></div>
 												</div>
 	    										
-	    										#{if convo.sumContributors }
+	    										#{if convo.sumContributors && talker}
 		    										<div style="clear: both; padding-top: 10px;">
 		    											<span class="blacktext">Contributions By:</span> 
 														<span class="blacktext">
@@ -520,7 +520,7 @@
 													</div>
 												</div>
 	    										
-	    										#{if convo.sumContributors }
+	    										#{if convo.sumContributors && talker }
 		    										<div style="clear: both; padding-top: 10px;">
 		    											<span class="blacktext">Contributions By:</span> 
 														<span class="blacktext">
@@ -627,11 +627,13 @@
 								<strong>Latest Activity:</strong> ${latestActivityTime?.format('MM / dd / yyyy')} <br />
 								<strong>Views:</strong> ${convo.views}<br />
 								<strong>Followed By:</strong> ${convo.followers?.size()} members<br/>
-								#{list items: convo.followers, as: 'follower'}
-									<a href="@{ViewDispatcher.view(follower.userName)}" title="${follower.userName}" >
-										<img src="@{Image.show(follower.userName)}" width="48" height="48" border="0" />
-									</a>
-								#{/list}
+								#{if talker}
+									#{list items: convo.followers, as: 'follower'}
+										<a href="@{ViewDispatcher.view(follower.userName)}" title="${follower.userName}" >
+											<img src="@{Image.show(follower.userName)}" width="48" height="48" border="0" />
+										</a>
+									#{/list}
+								#{/if}
 							</p><br />
 							<div class="topicborder"></div>
 						</div>

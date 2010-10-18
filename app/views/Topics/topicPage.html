@@ -350,11 +350,13 @@
                   </div>
                   <!--topixtext-->
                   <div class="membersarea">
-                  	#{list items: topic.followers, as: 'follower'}
-						<a href="@{ViewDispatcher.view(follower.userName)}" title="${follower.userName}" >
-							<img src="@{Image.show(follower.userName)}" width="25" height="25" border="0" />
-						</a>
-					#{/list}
+                  	#{if talker }
+	                  	#{list items: topic.followers, as: 'follower'}
+							<a href="@{ViewDispatcher.view(follower.userName)}" title="${follower.userName}" >
+								<img src="@{Image.show(follower.userName)}" width="25" height="25" border="0" />
+							</a>
+						#{/list}
+					#{/if}
                   </div>
                   <!--membersarea-->
                   <div class="topicborder"></div>

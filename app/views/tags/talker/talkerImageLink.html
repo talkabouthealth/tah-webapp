@@ -1,5 +1,5 @@
 #{if session.username}
-	<a href="@{ViewDispatcher.view(_userName)}">
+	<a href="@{ViewDispatcher.view(_userName)}" title="${_userName}">
 		<img src="@{Image.show(_userName)}" width="${_size}" height="${_size}" border="0" />
 	</a>
 #{/if}

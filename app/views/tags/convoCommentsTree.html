@@ -20,14 +20,12 @@
 						<div class="replytop"></div>
 						<div class="replymid">
 	                    	<div class="replypics">
-	                    		<a href="@{ViewDispatcher.view(comment.fromTalker.userName)}" title="${comment.fromTalker.userName}" >
-									<img src="@{Image.show(comment.fromTalker.userName)}" width="48" height="48" border="0" />
-								</a>
+	                    		#{talker/talkerImageLink size: 48, userName: comment.fromTalker.userName /}
 	                    	</div>
 	             			<div class="replytextarea">
 								<p>
 									<span class="stylzz">
-										<a href="@{ViewDispatcher.view(comment.fromTalker.userName)}">${comment.fromTalker.userName}</a>
+										#{talker/talkerLink userName: comment.fromTalker.userName /}
 									</span> 
 									<span class="stylexz"> #{talker/talkerInfo talker: comment.fromTalker /} - </span> 
 									<span class="stylezx">${comment.time.format("MM / dd / yyyy")}</span>
@@ -39,10 +37,10 @@
 												${comment.upVotes.size()} vote(s) by
 												#{list items: comment.upVotes, as: 'vote' }
 													#{ifnot vote_isLast}
-														<a href="@{ViewDispatcher.view(vote.talker.userName)}">${vote.talker.userName}</a>, 
+														#{talker/talkerLink userName: vote.talker.userName /},
 													#{/ifnot}
 													#{else}
-														<a href="@{ViewDispatcher.view(vote.talker.userName)}">${vote.talker.userName}</a>
+														#{talker/talkerLink userName: vote.talker.userName /}
 													#{/else}
 												#{/list}
 											</div>
