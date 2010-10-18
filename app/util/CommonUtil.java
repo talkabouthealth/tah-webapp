@@ -34,6 +34,7 @@ import models.TalkerBean;
 import models.TopicBean;
 import play.Play;
 import play.cache.Cache;
+import play.mvc.Http.Request;
 import play.mvc.Router;
 import play.mvc.Router.ActionDefinition;
 import play.mvc.Scope.Session;
@@ -193,13 +194,13 @@ public class CommonUtil {
 		return verifyCode;
 	}
 	
-	public static String generateDeactivatedUserName() {
+	public static String generateDeactivatedUserName(boolean checkUnique) {
 		String userName = null;
 		Random random = new Random();
 		while (true) {
 			int num = random.nextInt(1000)+1;
 			userName = "member"+num;
-			if (TalkerDAO.isUserNameUnique(userName)) {
+			if (!checkUnique || TalkerDAO.isUserNameUnique(userName)) {
 				break;
 			}
 		}
@@ -244,7 +245,7 @@ public class CommonUtil {
 			}
 		}
 		else {
-			html.append("member124");
+			html.append(getAnonymousName(talker.getUserName()));
 		}
 		
 		return html.toString();
@@ -265,5 +266,23 @@ public class CommonUtil {
 			topicsHTML.insert(0, " in topic(s) ");
 		}
 		return topicsHTML.toString();
+	}
+	
+	public static String getAnonymousName(String userName) {
+		Request req = Request.current();
+		Map<String, String> namesMap = (Map<String, String>)req.args.get("namesMap");
+		if (namesMap == null) {
+			namesMap = new HashMap<String, String>();
+			req.args.put("namesMap", namesMap);
+		}
+		
+		String anonymName = namesMap.get(userName);
+		if (anonymName == null) {
+			anonymName = generateDeactivatedUserName(true);
+			//TODO: check if this anonynName is unique on the current page?
+			namesMap.put(userName, anonymName);
+		}
+		
+		return anonymName;
 	}
 }
