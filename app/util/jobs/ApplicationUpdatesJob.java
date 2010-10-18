@@ -3,11 +3,13 @@ package util.jobs;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 
+import models.CommentBean;
 import models.IMAccountBean;
 import models.TalkerBean;
 import models.ConversationBean;
@@ -16,6 +18,7 @@ import models.TalkerBean.ProfilePreference;
 import models.TopicBean;
 
 import dao.ApplicationDAO;
+import dao.CommentsDAO;
 import dao.DiseaseDAO;
 import dao.HealthItemDAO;
 import dao.TalkerDAO;
@@ -99,5 +102,13 @@ public class ApplicationUpdatesJob extends Job {
 			TalkerDAO.save(admin);
 		}
 		
+		//Set 'answer' marker to all answers (to distinguish them from replies)
+		List<CommentBean> answersList = CommentsDAO.loadAllAnswers();
+		for (CommentBean answer : answersList) {
+			if (!answer.isAnswer()) {
+				answer.setAnswer(true);
+				CommentsDAO.updateConvoAnswer(answer);
+			}
+		}
     }
 }

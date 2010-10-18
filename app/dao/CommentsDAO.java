@@ -92,12 +92,35 @@ public class CommentsDAO {
 			.add("from", fromTalkerRef)
 			.add("text", comment.getText())
 			.add("time", comment.getTime())
+			.add("answer", comment.isAnswer())
 			.get();
 		commentsColl.save(commentObject);
 		
 		updateParent(commentsColl, comment.getParentId(), getString(commentObject, "_id")); 
 		
 		return getString(commentObject, "_id");
+	}
+	
+	public static void updateConvoAnswer(CommentBean answer) {
+		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		
+		DBObject answerObject = BasicDBObjectBuilder.start()
+			.add("vote_score", answer.getVoteScore())
+			.add("votes", setToDB(answer.getVotes()))
+			
+			.add("text", answer.getText())
+			.add("old_texts", answer.getOldTexts())
+			
+			.add("deleted", answer.isDeleted())
+			.add("answer", answer.isAnswer())
+			
+			.add("not_helpful", answer.isNotHelpful())
+			.add("not_helpful_votes", setToDB(answer.getNotHelpfulVotes()))
+			
+			.get();
+		
+		DBObject answerId = new BasicDBObject("_id", new ObjectId(answer.getId()));
+		commentsColl.update(answerId, new BasicDBObject("$set", answerObject));
 	}
 	
 	public static List<CommentBean> loadConvoAnswers(String convoId) {
@@ -114,42 +137,39 @@ public class CommentsDAO {
 		return topCommentsList;
 	}
 	
-	public static List<CommentBean> getTalkerConvoAnswersByTopic(String talkerId, TopicBean topic) {
+	public static List<CommentBean> loadAllAnswers() {
 		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
 		
-		Set<DBRef> convosDBSet = ConversationDAO.getConversationsByTopic(topic);
-		DBRef fromTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
-		DBObject query = BasicDBObjectBuilder.start()
-			.add("topic", new BasicDBObject("$in", convosDBSet))
-			.add("from", fromTalkerRef)
-			.add("deleted", new BasicDBObject("$ne", true))
-			.get();
-		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("vote_score", -1)).toArray();
+		List<DBObject> commentsList = commentsColl.find().sort(new BasicDBObject("vote_score", -1)).toArray();
 		
 		//comments without parent (top in hierarchy)
 		List<CommentBean> topCommentsList = parseCommentsTree(commentsList);
 		return topCommentsList;
 	}
 	
-	public static void updateConvoAnswer(CommentBean answer) {
+	public static List<CommentBean> getTalkerConvoAnswers(String talkerId, TopicBean topic) {
 		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
 		
-		DBObject answerObject = BasicDBObjectBuilder.start()
-			.add("vote_score", answer.getVoteScore())
-			.add("votes", setToDB(answer.getVotes()))
-			
-			.add("text", answer.getText())
-			.add("old_texts", answer.getOldTexts())
-			
-			.add("deleted", answer.isDeleted())
-			
-			.add("not_helpful", answer.isNotHelpful())
-			.add("not_helpful_votes", setToDB(answer.getNotHelpfulVotes()))
-			
-			.get();
+		DBRef fromTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start()
+			.add("from", fromTalkerRef)
+			.add("deleted", new BasicDBObject("$ne", true))
+			.add("answer", true);
+		if (topic != null) {
+			Set<DBRef> convosDBSet = ConversationDAO.getConversationsByTopic(topic);
+			queryBuilder.add("topic", new BasicDBObject("$in", convosDBSet));
+		}
 		
-		DBObject answerId = new BasicDBObject("_id", new ObjectId(answer.getId()));
-		commentsColl.update(answerId, new BasicDBObject("$set", answerObject));
+		DBObject query = queryBuilder.get();
+		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("vote_score", -1)).toArray();
+		
+		List<CommentBean> answersList = new ArrayList<CommentBean>();
+		for (DBObject answerDBObject : commentsList) {
+			CommentBean answer = new CommentBean();
+			answer.parseBasicFromDB(answerDBObject);
+			answersList.add(answer);
+		}
+		return answersList;
 	}
 	
 	public static CommentBean getConvoAnswerById(String answerId) {
@@ -221,5 +241,5 @@ public class CommentsDAO {
 		
 		return topCommentsList;
 	}
-
+	
 }

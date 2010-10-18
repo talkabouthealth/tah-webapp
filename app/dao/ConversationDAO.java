@@ -395,6 +395,9 @@ public class ConversationDAO {
 	 */
 	public static Set<DBRef> getConversationsByTopic(TopicBean topic) {
 		Set<DBRef> convosDBSet = new HashSet<DBRef>();
+		if (topic == null) {
+			return convosDBSet;
+		}
 		for (String convoId : topic.getConversationsIds()) {
 			convosDBSet.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId));
 		}

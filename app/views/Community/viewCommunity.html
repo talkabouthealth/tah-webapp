@@ -149,23 +149,32 @@
 	#{if talker}
                 <div class="topipsts">
                   <div class="mtrighttxt1">Community Members</div>
-                  <div class="topbox">
-                    <div class="topleftimg" style="float: left;">
-                    	<img src="/public/images/topanswer1.jpg" alt="topanser"></div>
-                    <div class="topr">
-                      <div class="toprighttext">
-                        <div class="latextleft"><strong><strong><a href="#">Murray</a></strong></strong></div>
-                        <div class="latextrigtz">&nbsp;(Physician, Advocate)</div>
-                      </div>
-                      <!--toprighttext-->
-                      <div class="toprighttext">
-                        <div class="topiptextl"><a href="#">101 Answers</a></div>
-                      </div>
-                      <!--toprighttext-->
-                    </div>
-                    <!--topr-->
-                    <div class="cb"></div>
-                  </div>                  
+                  #{list items: communityMembers, as: 'member'}
+                  	<div class="topbox">
+	                    <div class="topleftimg" style="float: left;">
+	                    	<a href="@{ViewDispatcher.view(member.userName)}">
+								<img src="@{Image.show(member.userName)}" width="39" height="39" border="0" />
+							</a>
+	                    </div>
+	                    <div class="topr">
+	                      <div class="toprighttext">
+	                        <div class="latextleft">
+	                        	<a href="@{ViewDispatcher.view(member.userName)}">
+									<strong>${member.userName}</strong>
+								</a>
+							</div>
+	                        <div class="latextrigtz">&nbsp;#{talkerInfo talker: member /}</div>
+	                      </div>
+	                      <!--toprighttext-->
+	                      <div class="toprighttext">
+	                        <div class="topiptextl" style="color: #000;">${member.numOfConvoAnswers} Answers</div>
+	                      </div>
+	                      <!--toprighttext-->
+	                    </div>
+	                    <!--topr-->
+	                    <div class="cb"></div>
+	                </div>
+                  #{/list}
                 </div>
                 <!--topipsts-->
                 <div class="cb"></div>

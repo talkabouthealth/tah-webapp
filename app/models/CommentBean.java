@@ -83,6 +83,8 @@ public class CommentBean extends MessageBean {
 	private String profileTalkerId;
 	private String topicId;
 	private boolean deleted;
+	//is it answer or reply ?
+	private boolean answer;
 	
 	//old versions of the text
 	private Set<String> oldTexts;
@@ -123,6 +125,7 @@ public class CommentBean extends MessageBean {
 		setOldTexts(getStringSet(commentDBObject, "old_texts"));
 		setTime((Date)commentDBObject.get("time"));
 		setDeleted(getBoolean(commentDBObject, "deleted"));
+		setAnswer(getBoolean(commentDBObject, "answer"));
 		setNotHelpful(getBoolean(commentDBObject, "not_helpful"));
 		
 		DBRef topicRef = (DBRef)commentDBObject.get("topic");
@@ -228,5 +231,12 @@ public class CommentBean extends MessageBean {
 	public void setNotHelpfulVotes(Set<Vote> notHelpfulVotes) {
 		this.notHelpfulVotes = notHelpfulVotes;
 	}
-	
+
+	public boolean isAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(boolean answer) {
+		this.answer = answer;
+	}
 }

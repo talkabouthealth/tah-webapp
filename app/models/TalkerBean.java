@@ -192,6 +192,9 @@ public class TalkerBean implements Serializable {
 	private EnumSet<ProfilePreference> profilePreferences;
 	private EnumSet<EmailSetting> emailSettings;
 	
+	//additional
+	private int numOfConvoAnswers;
+	
 	//variable for displaying
 	private String profileCompletionMessage;
 	private int profileCompletionValue;
@@ -319,7 +322,7 @@ public class TalkerBean implements Serializable {
 		parseTopicsInfo((Collection<DBObject>)talkerDBObject.get("tags_info"));
 	}
 	
-	//TODO: load count() of thankyous for recognition?
+	//FIXME: load count() of thankyous for recognition?
 	public void parseThankYous(Collection<DBObject> thankYouDBList) {
 		//TODO: move thanks you load to separate function (to prevent delays)?
 		List<ThankYouBean> thankYous = new ArrayList<ThankYouBean>();
@@ -868,5 +871,11 @@ public class TalkerBean implements Serializable {
 	}
 	public void setOriginalUserName(String originalUserName) {
 		this.originalUserName = originalUserName;
+	}
+	public int getNumOfConvoAnswers() {
+		return numOfConvoAnswers;
+	}
+	public void setNumOfConvoAnswers(int numOfConvoAnswers) {
+		this.numOfConvoAnswers = numOfConvoAnswers;
 	}
 }	

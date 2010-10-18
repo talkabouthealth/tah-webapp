@@ -77,6 +77,11 @@ public class ConversationLogic {
 		comment.setText(text);
 		comment.setTime(new Date());
 		
+		if (parentId == null) {
+			//it's an answer (not reply)
+			comment.setAnswer(true);
+		}
+		
 		String id = CommentsDAO.saveConvoComment(comment);
 		comment.setId(id);
 		

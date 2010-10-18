@@ -118,9 +118,8 @@ public class PublicProfile extends Controller {
 		notFoundIfNull(talker);
 		
 		for (TopicBean topic : talker.getFollowingTopicsList()) {
-			//FIXME how to determine answer or reply? We need to rework whole comments!
 			List<CommentBean> answers = 
-				CommentsDAO.getTalkerConvoAnswersByTopic(talker.getId(), topic);
+				CommentsDAO.getTalkerConvoAnswers(talker.getId(), topic);
 			
 			TalkerTopicInfo talkerTopicInfo = talker.getTopicsInfoMap().get(topic);
 			if (talkerTopicInfo == null) {

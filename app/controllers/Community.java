@@ -1,9 +1,12 @@
 package controllers;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
 import logic.FeedsLogic;
+import models.CommentBean;
 import models.ConversationBean;
 import models.TalkerBean;
 import models.actions.Action;
@@ -13,6 +16,7 @@ import util.CommonUtil;
 import util.SearchUtil;
 import dao.ActionDAO;
 import dao.ApplicationDAO;
+import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.TalkerDAO;
 
@@ -23,11 +27,26 @@ public class Community extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 		List<TalkerBean> communityMembers = TalkerDAO.loadAllTalkers();
+		for (TalkerBean member : communityMembers) {
+			List<CommentBean> answers = CommentsDAO.getTalkerConvoAnswers(member.getId(), null);
+			member.setNumOfConvoAnswers(answers.size());
+		}
+		
+		//get only Top 3 by answers
+		Collections.sort(communityMembers, new Comparator<TalkerBean>() {
+			@Override
+			public int compare(TalkerBean o1, TalkerBean o2) {
+				return o2.getNumOfConvoAnswers()-o1.getNumOfConvoAnswers();
+			}
+		});
+		if (communityMembers.size() > 3) {
+			communityMembers = communityMembers.subList(0, 3);
+		}
 		
 		List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
 		Set<Action> communityConvoFeed = FeedsLogic.getCommunityFeed(null);
 		
-		render(talker, liveTalks, communityConvoFeed);
+		render(talker, liveTalks, communityConvoFeed, communityMembers);
 	}
 	
 //	For the 4 tabs:
