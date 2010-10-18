@@ -14,7 +14,7 @@ public class UpdateProfileAction extends AbstractAction {
 		super(dbObject);
 	}
 	
-	public String toHTML() {
+	public String toHTML(boolean authenticated) {
 		StringBuilder result = new StringBuilder();
 		result.append(userName());
 		result.append(" updated ");

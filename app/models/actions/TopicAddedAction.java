@@ -22,7 +22,7 @@ public class TopicAddedAction extends AbstractAction {
 	protected boolean hasConvo() { return true; }
 	protected boolean hasTopic() { return true; }
 
-	public String toHTML() {
+	public String toHTML(boolean authenticated) {
 		StringBuilder result = new StringBuilder();
 		
 		//Conversation added to topic Breast Cancer

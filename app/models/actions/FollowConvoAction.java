@@ -19,9 +19,9 @@ public class FollowConvoAction extends AbstractAction {
 	
 	protected boolean hasConvo() { return true; }
 
-	public String toHTML() {
+	public String toHTML(boolean authenticated) {
 		StringBuilder result = new StringBuilder();
-		result.append(fullUserName(talker));
+		result.append(fullUserName(talker, authenticated));
 		result.append(" began following the conversation.");
 		
 		return result.toString();

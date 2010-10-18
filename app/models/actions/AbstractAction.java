@@ -145,8 +145,8 @@ public abstract class AbstractAction implements Action {
 		return "<b>"+talker.getUserName()+"</b>";
 	}
 	
-	protected String fullUserName(TalkerBean user) {
-		return CommonUtil.talkerToHTML(user);
+	protected String fullUserName(TalkerBean user, boolean authenticated) {
+		return CommonUtil.talkerToHTML(user, authenticated);
 	}
 	
 	protected String convoTopics() {

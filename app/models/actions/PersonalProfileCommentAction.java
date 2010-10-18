@@ -24,16 +24,16 @@ public class PersonalProfileCommentAction extends AbstractAction {
 	protected boolean hasProfileReply() { return true; }
 	protected boolean hasOtherTalker() { return true; }
 	
-	public String toHTML() {
+	public String toHTML(boolean authenticated) {
 		StringBuilder result = new StringBuilder();
-		result.append(fullUserName(talker));
+		result.append(fullUserName(talker, authenticated));
 		if (type == ActionType.PERSONAL_PROFILE_COMMENT) {
 			result.append(" left a comment for ");
 		}
 		else if (type == ActionType.PERSONAL_PROFILE_REPLY) {
 			result.append(" replied to ");
 		}
-		result.append(fullUserName(otherTalker));
+		result.append(fullUserName(otherTalker, authenticated));
 		
 		return result.toString();
 	}

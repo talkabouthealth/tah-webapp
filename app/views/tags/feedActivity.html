@@ -1,8 +1,6 @@
 <div class="joinbox" id="${_activity.id}">
 	<div class="joinpic">
-		<a href="@{ViewDispatcher.view(_activity.talker.userName)}">
-			<img src="@{Image.show(_activity.talker.userName)}" width="48" height="48" border="0" />
-		</a>
+		#{talker/talkerImageLink size: 48, userName: _activity.talker.userName /}
 	</div>
 	<div class="jointxtbox">
 		#{if _activity.convo}
@@ -11,20 +9,22 @@
 			</div>
 			<div class="joinztextlink">
 				#{if _activity.convo.comments.size() == 0}
-					<a href="${_activity.convo.mainURL}#answers">Answer</a> | 
+					<a href="@{ViewDispatcher.view(_activity.convo.mainURL)}#answers">Answer</a> | 
 				#{/if}
 				#{else}
-					<a href="${_activity.convo.mainURL}#answers">${_activity.convo.comments.size()} 
+					<a href="@{ViewDispatcher.view(_activity.convo.mainURL)}#answers">${_activity.convo.comments.size()} 
 						Answer${_activity.convo.comments.pluralize()}</a> | 
 				#{/else}
-				<a href="#" class="followConvoLink" rel="${_activity.convo.id}">
-					${_talker?.followingConvosList?.contains(_activity.convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
-				<a href="#" onclick="restartConvo(${_activity.convo.tid}, '${_activity.convo.id}')">Re-start talk</a> | 
+				#{if session.username}
+					<a href="#" class="followConvoLink" rel="${_activity.convo.id}">
+						${_talker?.followingConvosList?.contains(_activity.convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
+					<a href="#" onclick="restartConvo(${_activity.convo.tid}, '${_activity.convo.id}')">Re-start talk</a> | 
+				#{/if}
 				<span>${_activity.time.since()}</span>
 			</div>
 		#{/if}
 		<div class="jointxtlink1">
-			${_activity.toHTML().raw()}
+			${_activity.toHTML(session.username != null).raw()}
 		</div>
 		
 		#{if _activity.profileComment}

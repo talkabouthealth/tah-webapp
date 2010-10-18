@@ -1,5 +1,6 @@
 package models.actions;
 
+import play.Play;
 import models.CommentBean;
 import models.TalkerBean;
 import models.ConversationBean;
@@ -24,17 +25,17 @@ public class AnswerConvoAction extends AbstractAction {
 	protected boolean hasAnswer() { return true; }
 	protected boolean hasReply() { return true; }
 
-	public String toHTML() {
+	public String toHTML(boolean authenticated) {
 		StringBuilder result = new StringBuilder();
 		if (type == ActionType.ANSWER_CONVO) {
 			result.append("New answer by ");
-			result.append(fullUserName(talker));
+			result.append(fullUserName(talker, authenticated));
 			result.append(convoTopics());
 		}
 		else if (type == ActionType.REPLY_CONVO) {
-			result.append(fullUserName(talker));
+			result.append(fullUserName(talker, authenticated));
 			result.append(" replied to answer by ");
-			result.append(fullUserName(answer.getFromTalker()));
+			result.append(fullUserName(answer.getFromTalker(), authenticated));
 		}
 		
 		return result.toString();

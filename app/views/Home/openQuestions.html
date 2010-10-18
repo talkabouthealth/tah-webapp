@@ -98,7 +98,7 @@
 			<span>${convo.creationDate.since()}</span>
 		</div>
 		<div class="jointxtlink1">
-			${convo.htmlDetails.raw()}
+			${convo.getHtmlDetails(session.username != null).raw()}
 		</div>
 	</div>
 	<div class="cb"></div>

@@ -305,7 +305,7 @@
 	                    <div class="profilema">
 	                    	#{list items:talker.activityList.limit(6), as:'activity' }
 	                    	<div class="topic">
-	                      		<div class="profilemah1">${activity.toHTML().raw()}</div>
+	                      		<div class="profilemah1">${activity.toHTML(session.username != null).raw()}</div>
 	                      		<div class="profilehour">${activity.time.since()}</div>
 	                      	</div>
 	                      	#{/list}

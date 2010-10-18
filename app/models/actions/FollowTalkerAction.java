@@ -18,7 +18,7 @@ public class FollowTalkerAction extends AbstractAction {
 	
 	protected boolean hasOtherTalker() { return true; }
 
-	public String toHTML() {
+	public String toHTML(boolean authenticated) {
 		StringBuilder result = new StringBuilder();
 		result.append(userName());
 		result.append(" began following ");

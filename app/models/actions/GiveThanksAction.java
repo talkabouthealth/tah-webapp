@@ -19,11 +19,11 @@ public class GiveThanksAction extends AbstractAction {
 	
 	protected boolean hasOtherTalker() { return true; }
 
-	public String toHTML() {
+	public String toHTML(boolean authenticated) {
 		StringBuilder result = new StringBuilder();
-		result.append(fullUserName(talker));
+		result.append(fullUserName(talker, authenticated));
 		result.append(" gave a 'Thank you' to ");
-		result.append(fullUserName(otherTalker));
+		result.append(fullUserName(otherTalker, authenticated));
 		
 		return result.toString();
 	}

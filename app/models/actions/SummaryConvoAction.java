@@ -19,16 +19,16 @@ public class SummaryConvoAction extends AbstractAction {
 	
 	protected boolean hasConvo() { return true; }
 
-	public String toHTML() {
+	public String toHTML(boolean authenticated) {
 		StringBuilder result = new StringBuilder();
 		
 		if (type == ActionType.SUMMARY_ADDED) {
 			result.append("Answer summary created by ");
-			result.append(fullUserName(talker));
+			result.append(fullUserName(talker, authenticated));
 			result.append(convoTopics());
 		}
 		else if (type == ActionType.SUMMARY_EDITED) {
-			result.append(fullUserName(talker));
+			result.append(fullUserName(talker, authenticated));
 			result.append(" edited the summary ");
 			result.append(convoTopics());
 		}

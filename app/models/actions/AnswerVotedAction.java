@@ -23,11 +23,11 @@ public class AnswerVotedAction extends AbstractAction {
 	protected boolean hasConvo() { return true; }
 	protected boolean hasAnswer() { return true; }
 
-	public String toHTML() {
+	public String toHTML(boolean authenticated) {
 		StringBuilder result = new StringBuilder();
-		result.append(fullUserName(talker));
+		result.append(fullUserName(talker, authenticated));
 		result.append(" voted for answer by ");
-		result.append(fullUserName(answer.getFromTalker()));
+		result.append(fullUserName(answer.getFromTalker(), authenticated));
 		
 		return result.toString();
 	}

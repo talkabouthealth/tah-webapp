@@ -404,6 +404,7 @@ public class Conversations extends Controller {
     }
     
     public static void saveTopicComment(String topicId, String parentId, String text) {
+    	//FIXME: notsigned user?!
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 		ConversationBean convo = ConversationDAO.getByConvoId(topicId);

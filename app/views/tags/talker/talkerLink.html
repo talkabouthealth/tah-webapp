@@ -1,0 +1,6 @@
+#{if session.username}
+	<a href="@{ViewDispatcher.view(_userName)}" class="blue13"><strong>${_userName}</strong></a>
+#{/if}
+#{else}
+	<strong>member123</strong>
+#{/else}

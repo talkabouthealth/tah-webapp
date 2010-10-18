@@ -9,7 +9,7 @@
      		<strong>${_talker.userName}</strong>
      	</a>
         <span class="blacktext12">
-			#{ talkerInfo talker: _talker /}
+			#{talker/talkerInfo talker: _talker /}
 		</span><br/>
         #{if _talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.BIO) }
         	<span class="greytext12">

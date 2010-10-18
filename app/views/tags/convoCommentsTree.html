@@ -29,7 +29,7 @@
 									<span class="stylzz">
 										<a href="@{ViewDispatcher.view(comment.fromTalker.userName)}">${comment.fromTalker.userName}</a>
 									</span> 
-									<span class="stylexz"> #{ talkerInfo talker: comment.fromTalker /} - </span> 
+									<span class="stylexz"> #{talker/talkerInfo talker: comment.fromTalker /} - </span> 
 									<span class="stylezx">${comment.time.format("MM / dd / yyyy")}</span>
 								</p>
 	               				<p>   

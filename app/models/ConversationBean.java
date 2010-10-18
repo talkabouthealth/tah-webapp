@@ -238,7 +238,7 @@ public class ConversationBean {
 	}
 	
 	//for displaying
-	public String getHtmlDetails() {
+	public String getHtmlDetails(boolean authenticated) {
 		StringBuilder htmlDetails = new StringBuilder();
 		if (convoType == ConvoType.CONVERSATION) {
 			htmlDetails.append("Live talk by ");
@@ -246,7 +246,7 @@ public class ConversationBean {
 		else {
 			htmlDetails.append("Question by ");
 		}
-		htmlDetails.append(CommonUtil.talkerToHTML(talker)+" ");
+		htmlDetails.append(CommonUtil.talkerToHTML(talker, authenticated)+" ");
 		htmlDetails.append(CommonUtil.topicsToHTML(this));
 		
 		return htmlDetails.toString();

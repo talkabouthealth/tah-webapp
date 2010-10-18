@@ -231,16 +231,23 @@ public class CommonUtil {
 	
 	
 	//for displaying info
-	public static String talkerToHTML(TalkerBean talker) {
+	public static String talkerToHTML(TalkerBean talker, boolean authenticated) {
 		if (talker == null) {
 			return "";
 		}
-		String url = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", talker.getUserName());
-		String html = "<a href='"+url+"'>"+talker.getUserName()+"</a>";
-		if (talker.getConnection() != null && talker.getConnection().length() != 0) {
-			html = html+" ("+talker.getConnection()+")";
+		StringBuilder html = new StringBuilder();
+		if (authenticated) {
+			String url = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", talker.getUserName());
+			html.append("<a href='"+url+"'>"+talker.getUserName()+"</a>");
+			if (talker.getConnection() != null && talker.getConnection().length() != 0) {
+				html.append(" ("+talker.getConnection()+")");
+			}
 		}
-		return html;
+		else {
+			html.append("member124");
+		}
+		
+		return html.toString();
 	}
 	
 	public static String topicsToHTML(ConversationBean convo) {
