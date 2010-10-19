@@ -45,7 +45,13 @@ public class NotificationUtils {
 		
 		Set<String> talkersForNotification = new HashSet<String>();
 		
-		//With automatic notification, always send a notification to murrayjones@gmail.com
+		//With automatic notification, let's have support@talkabouthealth.com receive all notifications via IM
+//		Map<String, String> vars = new HashMap<String, String>();
+//		vars.put("name", session.get("username") == null ? "" : session.get("username"));
+//		vars.put("email", email);
+//		vars.put("subject", subject);
+//		vars.put("message", message);
+//		EmailUtil.sendEmail(EmailTemplate.CONTACTUS, EmailUtil.SUPPORT_EMAIL, vars, null, false);
 		TalkerBean murrayTalker = TalkerDAO.getByEmail(EmailUtil.MURRAY_EMAIL);
 		if (murrayTalker == null) {
 			Logger.error("Can't send automatic notification to Murray!");
