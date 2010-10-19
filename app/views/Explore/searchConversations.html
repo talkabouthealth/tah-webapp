@@ -4,47 +4,26 @@
 <script type="text/javascript" 
 	src="/public/javascripts/jquery-ui-1.8.4.custom.min.js" ></script>
 	
-<script type="text/javascript">
-$(function() {
-	var cache = {};
-	$( "#query" ).autocomplete({
-		minLength: 1,
-		source: function(request, response) {
-			if ( request.term in cache ) {
-				response( cache[ request.term ] );
-				return;
-			}
-			
-			$.ajax({
-				url: "@{Search.ajaxConvoSearch()}",
-				dataType: "json",
-				data: request,
-				success: function( data ) {
-					cache[ request.term ] = data;
-					response( data );
-				}
-			});
-		},
-		select: function(event, ui) {
-			var url = ui.item.url;
-			document.location = url;
-			return false;
-		}
-	})
-	.data( "autocomplete" )._renderItem = function( ul, item ) {
-		return $( "<li></li>" )
-			.data( "item.autocomplete", item )
-			.append( "<a>" + item.label + "&nbsp;<span>" + item.type + "</span></a>" )
-			.appendTo( ul );
-	};
-
-
-});
-</script>
-
 	<script type="text/javascript"> 	 
 		$(document).ready(function() {
-			
+			makeAutocomplete("#query", "convo");
+
+			$(".followConvoLink").live('click', function() {
+				var topicId = $(this).attr("rel");
+				if ($(this).html().indexOf("Unfollow") != -1) {
+					$(this).html("Follow");
+				}
+				else {
+					$(this).html("Unfollow");
+				}
+				$.post("@{Conversations.follow()}", 
+	  				{ topicId: topicId},
+	  				function(data) {
+	  					//...
+	  				}
+	  			);
+	  			return false;
+			});
 		});
    	</script>
 	<style>
@@ -61,7 +40,7 @@ $(function() {
 	<div id="innermain">
 		<div class="blacktext2" id="innerheading">Search Conversations</div>
 		<div id="innermiddlearea">
-           	<form name="searchForm" action="@{Community.searchConversations()}" method="POST">
+           	<form name="searchForm" action="@{Explore.searchConversations()}" method="POST">
 				<div id="searcharea">
 					<input id="query" name="query" type="text" class="search"  value="${flash.query ? flash.query : 'Search Conversations'}" 
 						onclick="if (this.value == 'Search Conversations') this.value=''" onblur=""/>
@@ -75,7 +54,43 @@ $(function() {
 			
 			#{if results }
 				<div class="activitiestext" style="font-size: 14px; clear: left">		
-					#{list items:results, as: 'convo'}
+					#{list items:results, as: '_convo'}
+						<div class="joinbox">
+							<div class="joinpic">
+								#{talker/talkerImageLink size: 48, userName: _convo.talker.userName /}
+							</div>
+							<div class="jointxtbox">
+								<div class="jointextstop">
+									<a href="@{ViewDispatcher.view(_convo.mainURL)}">${_convo.topic}</a>
+								</div>
+								<div class="joinztextlink">
+									<a href="@{ViewDispatcher.view(_convo.mainURL)}#answers">${_convo.comments.size()} answer(s)</a> | 
+									#{if session.username}
+										<a href="#" class="followConvoLink" rel="${_convo.id}">
+											${talker?.followingConvosList?.contains(_convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
+										<a href="#" onclick="restartConvo(${_convo.tid}, '${_convo.id}')">Re-start talk</a> | 
+									#{/if}
+									<span>${_convo.creationDate.since()}</span>
+								</div>
+								<div class="jointxtlink1" style="font-weight: normal;">
+									#{if _convo.searchFragment }
+				        				<p>
+				        					...${_convo.searchFragment.raw()}
+				        				</p>
+				        			#{/if}
+				        			#{elseif _convo.comments.size() > 0 }
+				        				<p>
+				        					#{set topAnswer = _convo.comments.get(0) /}
+					        				<span class="blacktext14">Top Answer by: ${topAnswer.fromTalker.userName}</span><br/>
+					        				<span class="blacktext12">${topAnswer.text}</span>
+					        			</p>
+				        			#{/elseif}
+								</div>
+							</div>
+							<div class="cb"></div>
+							<div class="joinborder"></div>
+						</div>
+						*{
 						<div class="area">
 							<div class="arealeft2">
 								<a href="@{ViewDispatcher.view(convo.talker.userName)}" class="bluetext11">
@@ -96,11 +111,10 @@ $(function() {
 					        					<span class="blacktext12">${convo.members.size()} people spoke</span> | 
 					        					<a href="@{ViewDispatcher.view(convo.mainURL)}#comments" class="bluetext12">Comment</a> | 
 					        					<a href="#" class="bluetext12 followTopicLink" rel="${convo.id}">
-												${ talker.followingConvosList?.contains(convo.id) ? 'Unfollow' : 'Follow'}
+												${ talker?.followingConvosList?.contains(convo.id) ? 'Unfollow' : 'Follow'}
 												</a> | 
 												<a href="#" class="bluetext12 restartTopicLink" 
 													rel="${convo.id}" rel2="${convo.tid}">Re-start</a> | 
-					        					*{ TODO: joined/started/etc }*
 					        					<span class="blacktext12">${convo.creationDate.since()}</span>
 					        				</span>
 					        			</p>
@@ -120,7 +134,8 @@ $(function() {
 								</div>
 				  				<div class="areabot"></div>
 				 	 		</div>
-						</div>		
+						</div>	
+						}*	
 					#{/list}
 					#{else}
 						No results.

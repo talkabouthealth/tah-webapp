@@ -180,35 +180,6 @@ public class Topics extends Controller {
     			childTopic.getId()+"' class='removeChildLink style2'>remove</a></div>");
     }
     
-    public static void browseTopics() {
-    	Set<TopicBean> topics = TopicDAO.loadAllTopics();
-    	Map<String, TopicBean> topicsMap = new HashMap<String, TopicBean>();
-    	for (TopicBean topic : topics) {
-    		topicsMap.put(topic.getId(), topic);
-    	}
-    	
-    	Set<TopicBean> topicsTree = new HashSet<TopicBean>();
-    	for (TopicBean topic : topics) {
-    		if (topic.getParents() == null || topic.getParents().size() == 0) {
-    			topicsTree.add(topic);
-    			topic.setChildren(buildTree(topic, topicsMap));
-    		}
-    	}
-    	
-    	render(topicsTree);
-    }
-
-	private static Set<TopicBean> buildTree(TopicBean topic, Map<String, TopicBean> topicsMap) {
-		Set<TopicBean> newChildren = new TreeSet<TopicBean>();
-		for (TopicBean child : topic.getChildren()) {
-			TopicBean newChild = topicsMap.get(child.getId());
-			newChildren.add(newChild);
-			newChild.setChildren(buildTree(newChild, topicsMap));
-		}
-		return newChildren;
-	}
-	
-	
 	public static void updateTopicExperience(String topicId, String newValue) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		TopicBean topic = TopicDAO.getById(topicId);

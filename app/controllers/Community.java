@@ -54,7 +54,9 @@ public class Community extends Controller {
 //		New Users - Latest users to sign up
 //		Like You - we will implement logic later, I think we can use Lucene or Sphinx
 //		Search - implement later with Lucene or Sphinx
-	public static void browseMembers(String action) {
+	public static void browseMembers(String action) throws Throwable {
+		Secure.checkAccess();
+		
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 
 		Set<TalkerBean> activeTalkers = ApplicationDAO.getActiveTalkers();
@@ -78,25 +80,6 @@ public class Community extends Controller {
 			action = "active";
 		}
 		render(currentTalker, action, activeTalkers, newTalkers, results);
-	}
-	
-	public static void searchConversations() {
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
-		String query = params.get("query");
-		List<ConversationBean> results = null;
-		if (query != null) {
-			params.flash("query");
-			
-			try {
-				results = SearchUtil.searchConvo(query);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		render(talker, results);
 	}
 
 }

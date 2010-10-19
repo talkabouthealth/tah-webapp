@@ -17,17 +17,17 @@ POST	/updatesemail/?							Application.saveUpdatesEmail
 
 GET		/verify/{verifyCode}					Profile.verifyEmail
 
-GET		/community/breast-cancer				Community.viewCommunity
 GET		/explore/members						Community.browseMembers(action:'active')
 *		/search/members							Community.browseMembers(action:'search')
-*		/search/conversations					Community.searchConversations
 
-GET		/explore/topics							Topics.browseTopics
+GET		/community/breast-cancer				Community.viewCommunity
+*		/search/conversations					Explore.searchConversations
+GET		/openquestions/?						Explore.openQuestions
+GET		/livetalks/?							Explore.liveTalks
+GET		/explore/topics/?						Explore.browseTopics
 
 GET		/home/?									Home.index
 GET		/conversationfeed/?						Home.conversationFeed
-GET		/openquestions/?						Home.openQuestions
-GET		/livetalks/?							Home.liveTalks
 GET		/dashboard/?							Dashboard.index
 
 GET		/talk/{convoId}							Talk.talkApp
