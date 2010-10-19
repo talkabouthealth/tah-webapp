@@ -114,7 +114,8 @@ public class Actions extends Controller {
 		//render html of new comment using tag
 		List<CommentBean> _commentsList = Arrays.asList(comment);
 		int _level = (comment.getParentId() == null ? 1 : 2);
-		render("tags/profileCommentsTree2.html", _commentsList, _level);
+		boolean _showDelete = false;
+		render("tags/profileCommentsTree2.html", _commentsList, _level, _showDelete);
 	}
 	
 	

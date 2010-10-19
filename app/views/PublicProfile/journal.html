@@ -53,6 +53,21 @@
    			
   			return false;
    		}
+
+   		function deleteComment(commentId) {
+   	   		var confirmDel = confirm("Are you sure want to delete this comment?");
+   	   		if (confirmDel) {
+   	   	   		$("#comment"+commentId).remove();
+
+   	   	  		$.post("@{PublicProfile.deleteComment()}", 
+    				{ commentId : commentId},
+    				function(html) {
+    	  				//...
+    				}
+    			);
+   	   		}
+   	   		return false;
+   		}
 	</script>
 		
 <div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
@@ -93,7 +108,7 @@
 								${talker.userName} does not have any Comments, be the first to welcome ${talker.userName}.
 							</span>
 						#{/if}
-						#{profileCommentsTree2 commentsList: talker.profileCommentsList, level: 1 /}
+						#{profileCommentsTree2 commentsList: talker.profileCommentsList, level: 1, showDelete: talker.equals(currentTalker) /}
 					</div>
                     <div class="cb"></div>
                   </div>

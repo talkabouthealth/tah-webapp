@@ -77,6 +77,26 @@ public class PublicProfile extends Controller {
 		render(talker, currentTalker, firstTimeComment);
 	}
 	
+	public static void deleteComment(String commentId) {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	CommentBean comment = CommentsDAO.getProfileCommentById(commentId);
+    	notFoundIfNull(comment);
+    	
+    	if (!talker.getId().equals(comment.getProfileTalkerId())) {
+    		forbidden();
+    		return;
+    	}
+    	
+    	comment.setDeleted(true);
+		CommentsDAO.updateProfileComment(comment);
+		
+		//remove all actions connected with this comment
+		ActionDAO.deleteActionByProfileComment(comment);
+
+    	renderText("ok");
+    }
+	
+	
 	public static void conversationsFollowing(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByUserName(userName);

@@ -21,6 +21,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
+import models.CommentBean;
 import models.TalkerBean;
 import models.ConversationBean;
 import models.TopicBean;
@@ -260,6 +261,18 @@ public class ActionDAO {
 		activitiesColl.save(actionDBObject);
 	}
 	
+	public static void deleteActionByProfileComment(CommentBean comment) {
+		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
+
+		DBRef commentRef = createRef(CommentsDAO.PROFILE_COMMENTS_COLLECTION, comment.getId());
+		DBObject query = new BasicDBObject("$or", 
+				Arrays.asList(
+					new BasicDBObject("profile_comment", commentRef),
+					new BasicDBObject("profile_reply", commentRef)
+				)
+			);
+		activitiesColl.remove(query);
+	}
 
 	public static void main(String[] args) {
 //		System.out.println(ActionDAO.load("4c2cb43160adf3055c97d061"));

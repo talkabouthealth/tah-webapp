@@ -58,6 +58,17 @@ public class CommentsDAO {
 		return getString(commentObject, "_id");
 	}
 	
+	public static void updateProfileComment(CommentBean comment) {
+		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
+		
+		DBObject commentObject = BasicDBObjectBuilder.start()
+			.add("deleted", comment.isDeleted())
+			.get();
+		
+		DBObject commentId = new BasicDBObject("_id", new ObjectId(comment.getId()));
+		commentsColl.update(commentId, new BasicDBObject("$set", commentObject));
+	}
+	
 	public static List<CommentBean> loadProfileComments(String talkerId) {
 		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
 		
@@ -193,7 +204,6 @@ public class CommentsDAO {
 		comment.parseBasicFromDB(answerDBObject);
 		return comment;
 	}
-	
 	
 	//update parent - add new comment "_id" to children array
 	private static void updateParent(DBCollection commentsColl, String parentCommentId, String commentId) {
