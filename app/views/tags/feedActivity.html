@@ -23,18 +23,23 @@
 				<span>${_activity.time.since()}</span>
 			</div>
 		#{/if}
-		<div class="jointxtlink1">
-			${_activity.toHTML(session.username != null).raw()}
-		</div>
-		
 		#{if _activity.profileComment}
-			#{profileCommentsTree2 commentsList: [_activity.profileComment], level: 1, showDelete: false /}
+			#{if _activity.otherTalker.equals(_activity.talker)}
+				#{profileCommentsTree2 commentsList: [_activity.profileComment], level: 1, showDelete: false, isFeed: true /}
+			#{/if}
+			#{else}
+				<div class="jointxtlink1">
+					${_activity.toHTML(session.username != null).raw()}
+				</div>
+				#{profileCommentsTree2 commentsList: [_activity.profileComment], level: 1, showDelete: false, isFeed: true /}
+			#{/else}
 		#{/if}
-		#{if _activity.profileReply}
-			<div style="margin-left: 21px;">
-				#{profileCommentsTree2 commentsList: [_activity.profileReply], level: 2, showDelete: false /}			
+		#{else}
+			<div class="jointxtlink1">
+				${_activity.toHTML(session.username != null).raw()}
 			</div>
-		#{/if}
+		#{/else}
+		
 		<div class="jointxtlink2 moretext">
 			#{if _activity.reply}
 				${_activity.reply.text}

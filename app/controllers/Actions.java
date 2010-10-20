@@ -115,7 +115,8 @@ public class Actions extends Controller {
 		List<CommentBean> _commentsList = Arrays.asList(comment);
 		int _level = (comment.getParentId() == null ? 1 : 2);
 		boolean _showDelete = false;
-		render("tags/profileCommentsTree2.html", _commentsList, _level, _showDelete);
+		boolean _isFeed = false;
+		render("tags/profileCommentsTree2.html", _commentsList, _level, _showDelete, _isFeed);
 	}
 	
 	

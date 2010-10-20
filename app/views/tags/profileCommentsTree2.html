@@ -2,14 +2,16 @@
 #{ifnot comment.deleted}
 <div id="comment${comment.id}" class="${_level == 1 ? 'comments' : 'comreply'}">
 	<div class="commentstop">
-		<div class="${_level == 1 ? 'compic' : 'comreplypic'}">
-			#{if _level == 1}
+		#{if _level == 1 && !_isFeed}
+			<div class="compic">
 				<img src="@{Image.show(comment.fromTalker.userName)}" border="0" width="40px" height="40px" />
-			#{/if}
-			#{else}
+			</div>
+		#{/if}
+		#{if _level != 1}
+			<div class="comreplypic">
 				<img src="@{Image.show(comment.fromTalker.userName)}" border="0" width="31px" height="31px" />
-			#{/else}
-		</div>
+			</div>
+		#{/if}
 		<div class="${_level == 1 ? 'comtextr' : 'comreplytxt'}">
 			<div class="${_level == 1 ? 'comtext' : 'comreplytext'}">
 				<span class="comname">
@@ -42,7 +44,7 @@
 	<div class="cb"></div>
 	#{if _level == 1}
 		<div class="commentsreply">
-			#{profileCommentsTree2 commentsList: comment.children, level: (_level+1), showDelete: _showDelete/}
+			#{profileCommentsTree2 commentsList: comment.children, level: (_level+1), showDelete: _showDelete, isFeed: _isFeed /}
 			
 			<div id="reply${comment.id}" class="replytommentbax"
 					*{ 

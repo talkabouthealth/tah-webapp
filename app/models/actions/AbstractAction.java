@@ -2,7 +2,9 @@ package models.actions;
 
 import static util.DBUtil.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 
@@ -245,8 +247,17 @@ public abstract class AbstractAction implements Action {
 		comment.setId(getString(commentDBObject, "_id"));
 		comment.setText((String)commentDBObject.get("text"));
 		comment.setTime((Date)commentDBObject.get("time"));
-		
 		comment.setFromTalker(parseTalker(commentDBObject, "from"));
+		
+		if (name.equalsIgnoreCase("profile_comment")) {
+			List<CommentBean> childrenList = new ArrayList<CommentBean>();
+			List<String> childrenIdsList = getStringList(commentDBObject, "children");
+			for (String childId : childrenIdsList) {
+				CommentBean child = CommentsDAO.getProfileCommentById(childId);
+				childrenList.add(child);
+			}
+			comment.setChildren(childrenList);
+		}
 		
     	return comment;
 	}
