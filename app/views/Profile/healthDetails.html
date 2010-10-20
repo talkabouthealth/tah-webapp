@@ -47,6 +47,32 @@
 			<div class="blacktext2" id="innerheading">General Health Details</div>
 			<div id="innerpersonalarea">
 				<div id="signupleft">
+#{ifnot talker.hideHealthHelp}
+<div class="helpInfo">
+      <div class="popboxWraper">
+        <div class="popbox2">
+          <div class="closecover" style="clear: none; float: right;">
+            <div class="close" onclick="return hideHelpInfo('health');"><img src="/public/images/close.jpg" alt="Close" /></div>
+          </div>
+          <div class="note">
+		  	<strong>Why provide health information?</strong><br/>
+		  	- We can match you better for questions and talks most relevant to you.<br/>
+		  	- Enables other members with similar concerns to find you.<br/>
+		  	- The more information everyone in the community shares, the more we help each other.<br/>
+		  	<br/>
+		  	<strong>Is the health information I provide private?</strong><br/>
+		  	Yes. By default, the information you provide is private. 
+		  	You may make this information viewable to the community by changing your Privacy Settings.<br/>
+		  	<br/>
+          </div>
+          <div class="cb"></div>
+        </div>
+        <!--popbox2-->
+
+      </div>
+      <div class="cb"></div>
+</div> 
+#{/ifnot}
 					<div id="signupleftarea">
 						
 						#{list items:disease.questions, as:'question'}
@@ -205,18 +231,28 @@
 				</div>
 				<div id="signupright">
 					<div class="personalinfosignrightbox">
-						<div class="generalinfosignrighttop"></div>
-						<div class="signrighmid">
-							<span class="blacktext14">Filling in your health details enables 
-							us to find others just like you for 
-							conversations. <br /><br />
-							
-							The more information you provide, 
-							the better we can match you with 
-							conversations and other members.</span>
-						</div>
-						<div class="signrighbot"></div>
+					<div class="personalinfosignrighttop"></div>
+					<div class="signrighmid">
+						<span class="blacktext14"><strong>Why provide your health information?</strong></span>
+						<span class="blacktext12"><br />
+						Filling in your health details enables us to find questions
+						and talks most relevant to you.
+						<br /><br />					 
+						The more information you provide, the better we can match you
+						with other members for conversations.
+						<br /><br />
+						The more information everyone in the community shares, the more we help each other.
+						</span>
+						<span class="blacktext14"><strong><br />
+						<br />Is the information I provide private?</strong></span>
+						<span class="blacktext12"><br />
+						Yes. The information you provide is private by default. 
+						You can make your information viewable to the community 
+						by changing your Privacy Settings.</span></span><br />
+						<br />
 					</div>
+					<div class="signrighbot"></div>
+				</div>
 				</div>
 			</div>
 		</div>

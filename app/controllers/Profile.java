@@ -413,7 +413,7 @@ public class Profile extends Controller {
 			healthItemsMap.put(itemName, healthItem);
 		}
 		
-		render(talkerDisease, disease, healthItemsMap);
+		render(talker, talkerDisease, disease, healthItemsMap);
 	}
 	
 	public static void saveHealthDetails(TalkerDiseaseBean talkerDisease, String section) {
@@ -559,5 +559,18 @@ public class Profile extends Controller {
 		} catch (Throwable e) {
 			Logger.error("Logout error", e);
 		}
+	}
+	
+	public static void hideHelpInfo(String type) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		if ("profile".equalsIgnoreCase(type)) {
+			talker.setHideProfileHelp(true);
+		}
+		else {
+			talker.setHideHealthHelp(true);
+		}
+		TalkerDAO.updateTalker(talker);
+		renderText("ok");
 	}
 }

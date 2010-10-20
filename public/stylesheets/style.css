@@ -4992,3 +4992,17 @@ border:0;
 }
 
 
+/* For Info Divs on Profile and Health Edit pages */
+.helpInfo { padding-bottom: 20px }
+.helpInfo .note {
+	padding-top: 15px;
+	font-size: 14px;
+}
+.helpInfo .popbox2 {
+	height: auto;
+	width: auto;
+	padding-right: 10px;
+}
+.helpInfo .close { padding-right: 0px; }
+
+

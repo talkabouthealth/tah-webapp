@@ -165,8 +165,11 @@ public class TalkerBean implements Serializable {
 	private String country;
 	private String zip;
 	private int childrenNum;
-	
 	private int numberOfTopics;
+	
+	//Show/Hide help info on Profile and Health edit pages?
+	private boolean hideProfileHelp;
+	private boolean hideHealthHelp;
 	
 	//Notifications settings
 	private String[] ctype;
@@ -280,11 +283,14 @@ public class TalkerBean implements Serializable {
 	public void parseFromDB(DBObject talkerDBObject) {
 		parseBasicFromDB(talkerDBObject);
 		
+		setHideProfileHelp(getBoolean(talkerDBObject.get("hide_profilehelp")));
+		setHideHealthHelp(getBoolean(talkerDBObject.get("hide_healthhelp")));
+		
 		setIm((String)talkerDBObject.get("im"));
 		setImUsername((String)talkerDBObject.get("im_uname"));
 		setImAccounts(parseSet(IMAccountBean.class, talkerDBObject, "im_accounts"));
 		
-		setNewsletter((Boolean)talkerDBObject.get("newsletter"));
+		setNewsletter(getBoolean(talkerDBObject.get("newsletter")));
 		setGender((String)talkerDBObject.get("gender"));
 		setDob((Date)talkerDBObject.get("dob"));
 		setInvitations(parseInt(talkerDBObject.get("invites")));
@@ -877,5 +883,17 @@ public class TalkerBean implements Serializable {
 	}
 	public void setNumOfConvoAnswers(int numOfConvoAnswers) {
 		this.numOfConvoAnswers = numOfConvoAnswers;
+	}
+	public boolean isHideProfileHelp() {
+		return hideProfileHelp;
+	}
+	public void setHideProfileHelp(boolean hideProfileHelp) {
+		this.hideProfileHelp = hideProfileHelp;
+	}
+	public boolean isHideHealthHelp() {
+		return hideHealthHelp;
+	}
+	public void setHideHealthHelp(boolean hideHealthHelp) {
+		this.hideHealthHelp = hideHealthHelp;
 	}
 }	

@@ -95,6 +95,9 @@ public class TalkerDAO {
 			
 			.add("im_accounts", setToDB(talker.getImAccounts()))
 			
+			.add("hide_profilehelp", talker.isHideProfileHelp())
+			.add("hide_healthhelp", talker.isHideHealthHelp())
+			
 			.add("dob", talker.getDob())
 			.add("gender", talker.getGender())
 			.add("mar_status", talker.getMaritalStatus())

@@ -323,3 +323,10 @@ function sendProfileComment() {
 		{ profileTalkerId: selectedTalkerId, parentId: '', text: commentText}
 	);
 }
+
+
+function hideHelpInfo(type) {
+	$(".helpInfo").hide();
+	$.post("/profile/hideHelpInfo", {type: type});
+	return false;
+}

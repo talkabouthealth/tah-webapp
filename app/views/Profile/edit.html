@@ -122,6 +122,7 @@
 	    }
 	    return error;
 	}
+
 </script>
 </head>
 <body>
@@ -131,6 +132,36 @@
 		<div class="blacktext2" id="innerheading">Personal Info and Password</div>
 		<div id="innerpersonalarea">
 			<div id="signupleft">
+#{ifnot talker.hideProfileHelp}
+<div class="helpInfo">
+      <div class="popboxWraper">
+        <div class="popbox2">
+          <div class="closecover" style="clear: none; float: right;">
+            <div class="close" onclick="return hideHelpInfo('profile');"><img src="/public/images/close.jpg" alt="Close" /></div>
+          </div>
+          <div class="note">
+		  	<strong>Why provide profile information?</strong><br/>
+		  	- We can match you better for questions and talks.<br/>
+		  	- Enables other members with similar concerns to find you.<br/>
+		  	- The more information everyone in the community shares, the more we help each other.<br/>
+		  	<br/>
+		  	<strong>Username visibility.</strong><br/>
+		  	Your username will be visible to other members. 
+		  	If you want to remain anonymous, please make your username different than your real name.<br/>
+		  	<br/>
+		  	<strong>Is the other profile information I provide private?</strong><br/>
+		  	Yes. By default, the information you provide is private, including your photo. 
+		  	You may make your profile viewable by the community by changing your Privacy Settings.<br/>
+		  	<br/>
+          </div>
+          <div class="cb"></div>
+        </div>
+        <!--popbox2-->
+
+      </div>
+      <div class="cb"></div>
+</div> 
+#{/ifnot}
 			#{form @Profile.save() , id:'updateprofile' }
 				<!-- We need this field to pass TalkerBean validation -->
 				<input type="hidden" id="talker.password" name="talker.password" value="pass" />
