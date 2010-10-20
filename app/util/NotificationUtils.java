@@ -85,7 +85,14 @@ public class NotificationUtils {
 		//TODO: make "StopFollowing" page for conversation emails?
 		if (talker.loadEmailSettings().contains(emailSetting)) {
 			vars.put("username", talker.getUserName());
-			EmailUtil.sendEmail(emailSetting.getEmailTemplate(), talker.getEmail(), vars, null, true);
+			
+			if (emailSetting == EmailSetting.CONVO_COMMENT && vars.get("reply_text") != null) {
+				//for replies we have separate template
+				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_CONVO_REPLY_TO_ANSWER, talker.getEmail(), vars, null, true);
+			}
+			else {
+				EmailUtil.sendEmail(emailSetting.getEmailTemplate(), talker.getEmail(), vars, null, true);
+			}
 		}
 	}
 

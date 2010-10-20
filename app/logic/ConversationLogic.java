@@ -105,7 +105,14 @@ public class ConversationLogic {
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("convo", convo.getTopic());
 		vars.put("other_talker", talker.getUserName());
-		vars.put("answer_text", comment.getText());
+		if (comment.isAnswer()) {
+			vars.put("answer_text", comment.getText());
+		}
+		else {
+			CommentBean answer = CommentsDAO.getConvoAnswerById(parentId);
+			vars.put("reply_text", comment.getText());
+			vars.put("answer_text", answer.getText());
+		}
 		vars.put("convo_type", convo.getConvoType().stringValue());
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
 		vars.put("convo_url", convoURL);
