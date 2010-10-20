@@ -20,7 +20,6 @@ import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.TalkerDAO;
 
-//FIXME - check permissions?
 public class Community extends Controller {
 	
 	public static void viewCommunity() {
