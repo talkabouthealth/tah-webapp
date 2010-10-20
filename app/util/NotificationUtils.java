@@ -33,7 +33,7 @@ public class NotificationUtils {
 	 * - don't notify more than 1x every 3 hours
 	 * - don't notify more the 3x per day
 	 */
-	public static void sendAutomaticNotifications(String topicId) {
+	public static void sendAutomaticNotifications(String topicId, String restartTalkerId) {
 		boolean automaticNotification = ConfigDAO.getBooleanConfig(AUTOMATIC_NOTIFICATIONS_CONFIG);
 		if (!automaticNotification) {
 			return;
@@ -44,21 +44,6 @@ public class NotificationUtils {
 		Map<String, UserInfo> onlineUsers = onlineUsersSingleton.getOnlineUserMap();
 		
 		Set<String> talkersForNotification = new HashSet<String>();
-		
-		//With automatic notification, let's have support@talkabouthealth.com receive all notifications via IM
-//		Map<String, String> vars = new HashMap<String, String>();
-//		vars.put("name", session.get("username") == null ? "" : session.get("username"));
-//		vars.put("email", email);
-//		vars.put("subject", subject);
-//		vars.put("message", message);
-//		EmailUtil.sendEmail(EmailTemplate.CONTACTUS, EmailUtil.SUPPORT_EMAIL, vars, null, false);
-		TalkerBean murrayTalker = TalkerDAO.getByEmail(EmailUtil.MURRAY_EMAIL);
-		if (murrayTalker == null) {
-			Logger.error("Can't send automatic notification to Murray!");
-		}
-		else {
-			talkersForNotification.add(murrayTalker.getId());
-		}
 		
 		for (UserInfo userInfo : onlineUsers.values()) {
 			//notifications for last 3 hours and day
@@ -74,15 +59,25 @@ public class NotificationUtils {
 		
 		System.out.println("Notifying: "+talkersForNotification);
 		
-		if (!talkersForNotification.isEmpty()) {
+//		if (!talkersForNotification.isEmpty()) {
 			IMNotifier imNotifier = IMNotifier.getInstance();
 			try {
 				String[] uidArray = talkersForNotification.toArray(new String[talkersForNotification.size()]);
-				imNotifier.broadcast(uidArray, topicId);
+				String notificationText = imNotifier.broadcast(uidArray, topicId, restartTalkerId);
+				
+				if (notificationText != null) {
+					//With automatic notification, let's have support@talkabouthealth.com receive all notifications via IM
+					Map<String, String> vars = new HashMap<String, String>();
+					vars.put("name", "NotificationBot");
+					vars.put("email", "");
+					vars.put("subject", "New Notification");
+					vars.put("message", notificationText);
+					EmailUtil.sendEmail(EmailTemplate.CONTACTUS, EmailUtil.SUPPORT_EMAIL, vars, null, false);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
+//		}
 	}
 	
 	public static void sendEmailNotification(EmailSetting emailSetting, 

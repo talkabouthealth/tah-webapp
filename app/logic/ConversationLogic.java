@@ -50,7 +50,7 @@ public class ConversationLogic {
 		
 		if (notifyTalkers) {
 			//send notifications if Automatic Notifications is On
-			NotificationUtils.sendAutomaticNotifications(convo.getId());
+			NotificationUtils.sendAutomaticNotifications(convo.getId(), null);
 		}
 		
 		//automatically follow started topic

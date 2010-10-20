@@ -40,7 +40,7 @@ public class Dashboard extends Controller {
 	public static void notification(String[] uidArray, String topicId, String topic) {
 		IMNotifier imNotifier = IMNotifier.getInstance();
 		try {
-			imNotifier.broadcast(uidArray, topicId);
+			imNotifier.broadcast(uidArray, topicId, null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

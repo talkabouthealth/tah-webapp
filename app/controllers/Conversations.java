@@ -76,7 +76,7 @@ public class Conversations extends Controller {
     	ConversationBean convo = ConversationDAO.getByConvoId(topicId);
     	notFoundIfNull(convo);
     	
-    	NotificationUtils.sendAutomaticNotifications(convo.getId());
+    	NotificationUtils.sendAutomaticNotifications(convo.getId(), null);
 	}
     
     public static void restart(String topicId) {
@@ -86,7 +86,7 @@ public class Conversations extends Controller {
     	
     	ActionDAO.saveAction(new StartConvoAction(talker, convo, ActionType.RESTART_CONVO));
     	
-    	NotificationUtils.sendAutomaticNotifications(topicId);
+    	NotificationUtils.sendAutomaticNotifications(topicId, talker.getId());
     	
     	//prepare email params
     	Map<String, String> vars = new HashMap<String, String>();
