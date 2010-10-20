@@ -132,8 +132,30 @@
 		<div class="blacktext2" id="innerheading">Personal Info and Password</div>
 		<div id="innerpersonalarea">
 			<div id="signupleft">
+#{if verifiedEmail}
+<div id="verifiedEmailHelp" class="helpInfo">
+      <div class="popboxWraper">
+        <div class="popbox2">
+          <div class="closecover" style="clear: none; float: right;">
+            <div class="close" onclick="return hideHelpInfo('verifiedEmail');"><img src="/public/images/close.jpg" alt="Close" /></div>
+          </div>
+          <div class="note">
+		  	<strong>Email verified successfully. Thank you.</strong><br/><br/>
+		  	Please tell us more about you so that we can better match you for conversations
+		  	and other community members with similar concerns can find you.
+		  	<br/>
+		  	<br/>
+          </div>
+          <div class="cb"></div>
+        </div>
+        <!--popbox2-->
+
+      </div>
+      <div class="cb"></div>
+</div> 	
+#{/if}			
 #{ifnot talker.hideProfileHelp}
-<div class="helpInfo">
+<div id="profileHelp" class="helpInfo">
       <div class="popboxWraper">
         <div class="popbox2">
           <div class="closecover" style="clear: none; float: right;">

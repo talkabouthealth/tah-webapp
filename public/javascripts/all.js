@@ -326,7 +326,9 @@ function sendProfileComment() {
 
 
 function hideHelpInfo(type) {
-	$(".helpInfo").hide();
-	$.post("/profile/hideHelpInfo", {type: type});
+	$("#"+type+"Help").hide();
+	if (type === "profile" || type === "health") {
+		$.post("/profile/hideHelpInfo", {type: type});
+	}
 	return false;
 }

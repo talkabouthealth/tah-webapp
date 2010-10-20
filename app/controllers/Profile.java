@@ -53,9 +53,9 @@ import dao.ConversationDAO;
 @With(Secure.class)
 public class Profile extends Controller {
 
-    public static void edit() {
+    public static void edit(boolean verifiedEmail) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	render(talker);
+    	render(talker, verifiedEmail);
     }
 	
 	public static void save(@Valid TalkerBean talker) {
@@ -521,7 +521,7 @@ public class Profile extends Controller {
 		}
 		CommonUtil.updateTalker(talker, session);
 		
-		render();
+		edit(true);
 	}
 	
 	public static void resendVerificationEmail(String email) {
