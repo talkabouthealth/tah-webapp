@@ -32,7 +32,9 @@ public class FeedsLogic {
 	}
 	
 	public static Set<Action> getTopicFeed(TopicBean topic, String afterActionId) {
+		long start = System.currentTimeMillis();
 		Set<Action> topicFeedActions = ActionDAO.loadLatestByTopic(topic);
+		System.out.println("END22:::::::: "+(System.currentTimeMillis()-start)/1000);
 		
 		Set<Action> topicFeed = filter(topicFeedActions, afterActionId);
 		return topicFeed;

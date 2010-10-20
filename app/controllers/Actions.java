@@ -160,11 +160,13 @@ public class Actions extends Controller {
 					talker, profileTalker, parentAnswer, comment, ActionType.PERSONAL_PROFILE_REPLY));
 		}
 		
-		Map<String, String> vars = new HashMap<String, String>();
-		vars.put("other_talker", talker.getUserName());
-		vars.put("comment_text", comment.getText());
-		NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
-				profileTalker, vars);
+		if (!talker.equals(profileTalker)) {
+			Map<String, String> vars = new HashMap<String, String>();
+			vars.put("other_talker", talker.getUserName());
+			vars.put("comment_text", comment.getText());
+			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
+					profileTalker, vars);
+		}
 		
 		return comment;
 	}

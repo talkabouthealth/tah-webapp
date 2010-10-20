@@ -147,7 +147,9 @@ public class ViewDispatcher extends Controller {
 		}
 		
 		//load latest activities for convos with this topic
+//		long start = System.currentTimeMillis();
 		Set<Action> activities = FeedsLogic.getTopicFeed(topic, null);
+//		System.out.println("END:::::::: "+(System.currentTimeMillis()-start)/1000);
 		
 		TopicDAO.incrementTopicViews(topic.getId());
 		

@@ -44,11 +44,6 @@ public class Home extends Controller {
 		//--------- For new Home Page --------------
 		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
 		
-//		List<ConversationBean> openedConversations = ConversationDAO.getOpenedConversations();
-//		for (ConversationBean convoBean : openedConversations) {
-//			System.out.println("??: "+convoBean.getTopic());
-//		}
-		
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
 		Set<Action> communityFeed = null;
 //		System.out.println(convoFeed.size()+" :::::: "+FeedsLogic.FEEDS_PER_PAGE);
