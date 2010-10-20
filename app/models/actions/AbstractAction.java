@@ -13,6 +13,7 @@ import util.DBUtil;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
@@ -253,7 +254,19 @@ public abstract class AbstractAction implements Action {
 			List<CommentBean> childrenList = new ArrayList<CommentBean>();
 			List<String> childrenIdsList = getStringList(commentDBObject, "children");
 			for (String childId : childrenIdsList) {
-				CommentBean child = CommentsDAO.getProfileCommentById(childId);
+//				CommentBean child = CommentsDAO.getProfileCommentById(childId);
+//				childrenList.add(child);
+				
+				DBCollection commentsColl = getCollection(CommentsDAO.PROFILE_COMMENTS_COLLECTION);
+				
+				DBObject query = new BasicDBObject("_id", new ObjectId(childId));
+				DBObject answerDBObject = commentsColl.findOne(query);
+				
+				CommentBean child = new CommentBean();
+				child.setId(getString(answerDBObject, "_id"));
+				child.setText((String)answerDBObject.get("text"));
+				child.setTime((Date)answerDBObject.get("time"));
+				child.setFromTalker(parseTalker(answerDBObject, "from"));
 				childrenList.add(child);
 			}
 			comment.setChildren(childrenList);
