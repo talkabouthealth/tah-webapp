@@ -44,7 +44,31 @@ import static util.DBUtil.*;
 
 public class ActionDAO {
 	
-	private static final EnumSet<ActionType> CONVO_FEED_ACTIONS = EnumSet.allOf(ActionType.class);
+	/*
+So the following member actions trigger items in the feed:
+- Member followed starts/restarts a conversation or asks a question
+- Member followed joins conversation
+- Member followed answers or replies to a question
+- Member followed edits or adds a Summary
+- Member followed leaves comment on their own journal or another member leaves a comment in their journal
+- Member followed voted for an answer
+
+Conversation actions that trigger feeds:
+- Conversation/question started or restarted in a topic that is being followed
+- New answer in a Topic or Conversation that is being followed
+- Reply in a conversation that is being followed
+- Summary created or edited in Conversation/Topic that is being followed.
+- Conversation added to a topic being followed	 
+	 */
+	
+	private static final EnumSet<ActionType> CONVO_FEED_ACTIONS = EnumSet.of(
+			ActionType.START_CONVO, ActionType.RESTART_CONVO, ActionType.JOIN_CONVO,
+			ActionType.ANSWER_CONVO, ActionType.REPLY_CONVO, 
+			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED,
+			ActionType.ANSWER_VOTED,
+			ActionType.TOPIC_ADDED,
+			ActionType.PERSONAL_PROFILE_COMMENT, ActionType.PERSONAL_PROFILE_REPLY
+		);
 	
 //	- conversation started
 //	- question answered
@@ -113,8 +137,6 @@ public class ActionDAO {
 			.add("$or", Arrays.asList(
 							BasicDBObjectBuilder.start()
 								.add("topicId", new BasicDBObject("$in", convosDBSet))
-								//we do not need if other user followed convo
-								.add("type", new BasicDBObject("$ne", ActionType.FOLLOW_CONVO.toString()))
 								.get(),
 							new BasicDBObject("uid", new BasicDBObject("$in", talkersDBSet)),
 							//load all comments from followings' journals

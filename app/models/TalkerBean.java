@@ -278,6 +278,9 @@ public class TalkerBean implements Serializable {
 		
 		parseEmailSettings(parseStringList(talkerDBObject.get("email_settings")));
 		parseProfilePreferences(parseInt(talkerDBObject.get("prefs")));
+		
+		Collection<DBObject> thankYousCollection = (Collection<DBObject>)talkerDBObject.get("thankyous");
+		setNumOfThankYous(thankYousCollection == null ? 0 : thankYousCollection.size());
 	}
 	
 	public void parseFromDB(DBObject talkerDBObject) {
@@ -318,7 +321,6 @@ public class TalkerBean implements Serializable {
 		setChildrenAges(parseStringList(talkerDBObject.get("ch_ages")));
 		setKeywords(parseStringList(talkerDBObject.get("keywords")));
 		
-		//FIXME fix number of thankyous in basic parsing
 		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
 		
 		parseFollowing((Collection<DBRef>)talkerDBObject.get("following"));
@@ -328,9 +330,7 @@ public class TalkerBean implements Serializable {
 		parseTopicsInfo((Collection<DBObject>)talkerDBObject.get("tags_info"));
 	}
 	
-	//FIXME: load count() of thankyous for recognition?
 	public void parseThankYous(Collection<DBObject> thankYouDBList) {
-		//TODO: move thanks you load to separate function (to prevent delays)?
 		List<ThankYouBean> thankYous = new ArrayList<ThankYouBean>();
 		if (thankYouDBList != null) {
 			for (DBObject thankYouDBObject : thankYouDBList) {
