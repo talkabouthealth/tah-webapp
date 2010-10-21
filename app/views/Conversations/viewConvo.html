@@ -317,16 +317,20 @@
 													<div class="targetedh7">
 														<h1 class="inline_view">${convo.topic}</h1>
 													</div>
-													<div class="editdiv">
-														<div class="editit">
-															<a href="#" class="inline_editlink">Edit</a>
+													#{if talker }
+														<div class="editdiv">
+															<div class="editit">
+																<a href="#" class="inline_editlink">Edit</a>
+															</div>
 														</div>
-													</div>
+													#{/if}
 												</div>
 												<div class="inline_empty" style="display: none">
+													#{if talker }
 													<div class="targetenew">
 														<a class="inline_addlink" href="#">Add title..</a>
 													</div>
+													#{/if}
 												</div>
 								            </div>
 											<div class='inline_form'>
@@ -350,16 +354,20 @@
 										<div class="suggestxt inline_display">
 											<div class="inline_full" style="display: ${convo.details ? 'block' : 'none'}">
 												<p style="float:left; padding-top:10px;" class="inline_view">${convo.details}</p>
+												#{if talker }
 												<div class="editdiv">
 													<div class="editit" style="padding-top:10px;">
 														<a href="#" class="inline_editlink">Edit</a>
 													</div>
 												</div>
+												#{/if}
 											</div>
 											<div class="inline_empty" style="display: ${!convo.details ? 'block' : 'none'}">
-												<div class="targetenew">
-													<a class="inline_addlink" href="#">Add Conversation Details</a>
-												</div>
+												#{if talker }
+													<div class="targetenew">
+														<a class="inline_addlink" href="#">Add Conversation Details</a>
+													</div>
+												#{/if}
 											</div>
 							            </div>
 										<div class='inline_form'>
@@ -564,10 +572,12 @@
                       		
                         
 							<div class="topic" id="replyform"><br />
-								<textarea name="textarea" id="replytext" class="answerinput" 
-									onclick="if (this.value === 'Add New Answer') this.value='';">Add New Answer</textarea><br />
-								<input type="submit" onclick="return saveProfileComment('');" 
-									src="/public/images/addcomments.jpg" class="addcomments" value=" " />
+								#{if talker }
+									<textarea name="textarea" id="replytext" class="answerinput" 
+										onclick="if (this.value === 'Add New Answer') this.value='';">Add New Answer</textarea><br />
+									<input type="submit" onclick="return saveProfileComment('');" 
+										src="/public/images/addcomments.jpg" class="addcomments" value=" " />
+								#{/if}
 								
 								#{if session.username && convo.messages}
 									<div class="answerh2 style1 style2">Conversation</div>
@@ -650,11 +660,13 @@
 										<div class="inline_full" style="display: ${(convo.relatedConvos || relatedConvos) ? 'block' : 'none'}">
 											<div class="Staticsh1 style1 style2" style="float:left; padding-top:10px;">
 												Related Conversations</div>
-											<div class="editdiv">
-												<div class="editit" style="padding-top:10px;">
-													<a href="#" class="inline_editlink">Edit</a>
+											#{if talker }
+												<div class="editdiv">
+													<div class="editit" style="padding-top:10px;">
+														<a href="#" class="inline_editlink">Edit</a>
+													</div>
 												</div>
-											</div>
+											#{/if}
 											<div id="relatedConvosList">
 												#{list items: convo.relatedConvos, as: 'relatedConvo'}
 													<p class="rcpadtop">
@@ -669,9 +681,11 @@
 											#{/list}
 										</div>
 										<div class="inline_empty" style="display: ${!(convo.relatedConvos || relatedConvos) ? 'block' : 'none'}">
-											<div class="targetenew">
-												<a class="inline_addlink" href="#">Add Related Conversations</a>
-											</div>
+											#{if talker }
+												<div class="targetenew">
+													<a class="inline_addlink" href="#">Add Related Conversations</a>
+												</div>
+											#{/if}
 										</div>
 						            </div>
 									<div class='inline_form'>

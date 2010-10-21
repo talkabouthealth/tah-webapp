@@ -45,6 +45,9 @@ public class NotificationUtils {
 		
 		Set<String> talkersForNotification = new HashSet<String>();
 		
+		//let's have support@talkabouthealth.com receive all notifications via IM
+		talkersForNotification.add(EmailUtil.SUPPORT_EMAIL);
+		
 		for (UserInfo userInfo : onlineUsers.values()) {
 			//notifications for last 3 hours and day
 			Calendar threeHoursBeforeNow = Calendar.getInstance();

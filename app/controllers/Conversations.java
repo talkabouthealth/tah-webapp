@@ -247,10 +247,6 @@ public class Conversations extends Controller {
     		ConversationDAO.updateConvo(convo);
     	}
     	else if (name.equalsIgnoreCase("summary")) {
-    		if (talker == null) {
-    			forbidden();
-    			return;
-    		}
     		String previousSummary = convo.getSummary();
     		convo.setSummary(value);
     		convo.getSumContributors().add(talker);
@@ -275,10 +271,6 @@ public class Conversations extends Controller {
         	}
     	}
     	else if (name.equalsIgnoreCase("topic")) {
-    		if (talker == null) {
-    			forbidden();
-    			return;
-    		}
     		String todo = params.get("todo");
     		if (todo.equalsIgnoreCase("add")) {
     			//possible comma-separated list of topics
