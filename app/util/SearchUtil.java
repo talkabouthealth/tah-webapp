@@ -50,7 +50,7 @@ public class SearchUtil {
 //			System.out.println(hits.score(i));
 //			System.out.println(doc.get("uname")+" : "+doc.get("id"));
 			
-			//FIXME hide bio and health details
+			//TODO hide bio and health details
 //			String result = doc.get("uname");
 //			String bio = doc.get("bio");
 //			if (bio != null) {
