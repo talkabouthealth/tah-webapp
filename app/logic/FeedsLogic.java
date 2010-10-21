@@ -45,8 +45,7 @@ public class FeedsLogic {
 		//except for Answers, Replies, and Add and Edit Summaries. 
 		EnumSet<ActionType> okActions = EnumSet.of(
 			ActionType.ANSWER_CONVO, ActionType.REPLY_CONVO, 
-			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED,
-			ActionType.ANSWER_VOTED
+			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED
 		);
 		
 		Set<Action> feed = new LinkedHashSet<Action>();

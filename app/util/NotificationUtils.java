@@ -59,25 +59,15 @@ public class NotificationUtils {
 		
 		System.out.println("Notifying: "+talkersForNotification);
 		
-//		if (!talkersForNotification.isEmpty()) {
+		if (!talkersForNotification.isEmpty()) {
 			IMNotifier imNotifier = IMNotifier.getInstance();
 			try {
 				String[] uidArray = talkersForNotification.toArray(new String[talkersForNotification.size()]);
-				String notificationText = imNotifier.broadcast(uidArray, topicId, restartTalkerId);
-				
-				if (notificationText != null) {
-					//With automatic notification, let's have support@talkabouthealth.com receive all notifications via IM
-					Map<String, String> vars = new HashMap<String, String>();
-					vars.put("name", "NotificationBot");
-					vars.put("email", "");
-					vars.put("subject", "New Notification");
-					vars.put("message", notificationText);
-					EmailUtil.sendEmail(EmailTemplate.CONTACTUS, EmailUtil.SUPPORT_EMAIL, vars, null, false);
-				}
+				imNotifier.broadcast(uidArray, topicId, restartTalkerId);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-//		}
+		}
 	}
 	
 	public static void sendEmailNotification(EmailSetting emailSetting, 
