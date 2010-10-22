@@ -132,16 +132,21 @@ Conversation actions that trigger feeds:
 		
 		//load actions for this criterias
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
-		
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("$or", Arrays.asList(
 							BasicDBObjectBuilder.start()
+								.add("type", ActionType.START_CONVO.toString())
+								.add("uid", currentTalkerRef)
+								.get(),
+							BasicDBObjectBuilder.start()
 								.add("topicId", new BasicDBObject("$in", convosDBSet))
+								.add("uid", new BasicDBObject("$ne", currentTalkerRef))
 								.get(),
 							new BasicDBObject("uid", new BasicDBObject("$in", talkersDBSet)),
 							//load all comments from followings' journals
 							BasicDBObjectBuilder.start()
 								.add("otherTalker", new BasicDBObject("$in", talkersDBSet))
+								.add("uid", new BasicDBObject("$ne", currentTalkerRef))
 								.add("type", new BasicDBObject("$in", 
 										Arrays.asList(ActionType.PERSONAL_PROFILE_COMMENT.toString(), 
 												ActionType.PERSONAL_PROFILE_REPLY.toString()))
@@ -149,12 +154,12 @@ Conversation actions that trigger feeds:
 								.get()
 						))
 			.add("type", new BasicDBObject("$in", actionTypes))
-			//.add("uid", new BasicDBObject("$ne", currentTalkerRef))
-			.add("$or", Arrays.asList(
-						//user shouldn't see personal actions in the ConvoFeed - only Started Question/Talk
-						new BasicDBObject("uid", new BasicDBObject("$ne", currentTalkerRef)),
-						new BasicDBObject("type", ActionType.START_CONVO.toString()) 
-					))
+//			.add("uid", new BasicDBObject("$ne", currentTalkerRef))
+//			.add("$or", Arrays.asList(
+//						user shouldn't see personal actions in the ConvoFeed - only Started Question/Talk
+//						new BasicDBObject("uid", new BasicDBObject("$ne", currentTalkerRef))
+//						new BasicDBObject("type", ActionType.START_CONVO.toString()) 
+//					))
 			.get();
 
 		List<DBObject> activitiesDBList = 

@@ -20,6 +20,8 @@ public class FeedsLogic {
 	public static Set<Action> getConvoFeed(TalkerBean talker, String afterActionId) {
 		Set<Action> convoFeedActions = ActionDAO.loadConvoFeed(talker);
 		
+		System.out.println("SIZE:: "+convoFeedActions.size());
+		
 		Set<Action> convoFeed = filter(convoFeedActions, afterActionId);
 		return convoFeed;
 	}
