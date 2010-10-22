@@ -19,7 +19,7 @@
 		<div id="innerbanner"></div>
 		<div id="innermain">
 		<form id="profilepreferencesform" name="profilepreferencesform" action="@{Profile.savePreferences()}" method="POST" >
-			<div class="blacktext2" id="innerheading">Profile Preferences</div>
+			<div class="blacktext2" id="innerheading">Privacy Settings</div>
 			<div id="innerpersonalarea">
 				<div id="signupleft">
 					<div id="signupleftarea">
@@ -50,7 +50,7 @@
 						<div class="generalinfosignrighttop"></div>
 						<div class="signrighmid">
 							<span class="blacktext14">
-								Displaying your health details enables others just 
+								Displaying your profile and health details enables others just 
 								like you to find you to request advice or just talk.<br /><br />
 								The more information everyone in the community shares, 
 								the more we help each other. 
@@ -70,7 +70,7 @@
 						Deactivating your account means that you'll never
 						hear from TalkAboutHealth again. If you change
 						your mind, you can always reactivate your account by
-						logging in with your email address and password.
+						logging in with your username or email address and password.
 					</span><br/><br/><br/><br/><br/>
 					<form action="@{Profile.deactivateAccount()}" method="POST" 
 							onsubmit="if (!confirm('Are you sure want to deactivate your account?')) return false;">

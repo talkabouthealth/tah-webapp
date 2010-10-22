@@ -61,19 +61,19 @@ public class TalkerBean implements Serializable {
 	 * Value is needed for conversion EnumSet to integer value (to save in DB).
 	 */
 	public enum ProfilePreference {
-		PERSONAL_INFO(0, "Display my Personal Info in my Public Profile"),
-		HEALTH_INFO(1, "Display my Health Info in my Public Profile"),
+		PERSONAL_INFO(0, "Display my Personal Info to the community (location, age, etc.)"),
+		HEALTH_INFO(1, "Display my Health Info to the community (disease, symptoms, medications, etc.)"),
 //		BASIC_INFO(2, "Display my Basic Info in my Public Profile (Recognition level, " +
 //				"No. of conversations)"),
-		BIO(3, "Display my Bio in my Public Profile"),
-		FOLLOWERS(4, "Display my Followers in my Public Profile"),
-		FOLLOWING(5, "Display who I am Following in my Public Profile"),
-		THANKYOUS(6, "Display my Thank you's in my Public Profile"),
-		CONVERSATIONS(7, "Display the Conversations I have started and joined in my Public Profile"),
-		COMMENTS(8, "Display my Comments in my Public Profile"),
-		ACTIVITY_STREAM(9, "Display my Activity Stream in my Public Profile"),
-		CONVERSATIONS_FOLLOWED(10, "Display my Conversations Followed in my Public Profile"),
-		TOPICS_FOLLOWED(11, "Display the Topics I Follow in my Public Profile");
+		BIO(3, "Display my Bio to the community"),
+		FOLLOWERS(4, "Display my Followers to the community"),
+		FOLLOWING(5, "Display who I Follow to the community"),
+		THANKYOUS(6, "Display my Thank you's to the community"),
+		CONVERSATIONS(7, "Display the Conversations I started and joined to the community"),
+		COMMENTS(8, "Display my Journal to the community"),
+		ACTIVITY_STREAM(9, "Display my Activity Stream to the community"),
+		CONVERSATIONS_FOLLOWED(10, "Display the Conversations I Follow to the community"),
+		TOPICS_FOLLOWED(11, "Display the Topics I Follow to the community");
 		
 		private final int value;
 		private final String description;
