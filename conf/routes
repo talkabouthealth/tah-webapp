@@ -15,6 +15,10 @@ POST    /contactus/?							Application.sendContactEmail
 GET		/updatesemail/?							Application.updatesEmail
 POST	/updatesemail/?							Application.saveUpdatesEmail
 
+*		/profile/profileinfo					Profile.edit
+*		/profile/healthinfo						Profile.healthDetails
+*		/profile/notificationsettings			Profile.notifications
+*		/profile/privacysettings				Profile.preferences
 GET		/verify/{verifyCode}					Profile.verifyEmail
 
 GET		/explore/members						Community.browseMembers(action:'active')
