@@ -55,6 +55,8 @@ public class FeedsLogic {
 		//we can add items only after given action (for paging)
 		boolean canAdd = (afterActionId == null);
 		for (Action action : feedActions) {
+//			if (action.getType() == ActionType.PERSONAL_PROFILE_COMMENT)
+			
 			ConversationBean actionConvo = action.getConvo();
 			//check repeated conversations
 			if (actionConvo != null && !okActions.contains(action.getType())) {

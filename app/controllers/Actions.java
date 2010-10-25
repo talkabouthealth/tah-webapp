@@ -18,6 +18,7 @@ import models.TalkerBean.EmailSetting;
 import models.TalkerTopicInfo;
 import models.ThankYouBean;
 import models.TopicBean;
+import models.actions.Action;
 import models.actions.Action.ActionType;
 import models.actions.FollowTalkerAction;
 import models.actions.GiveThanksAction;
@@ -155,9 +156,11 @@ public class Actions extends Controller {
 					talker, profileTalker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT));
 		}
 		else {
-			CommentBean parentAnswer = new CommentBean(comment.getParentId());
-			ActionDAO.saveAction(new PersonalProfileCommentAction(
-					talker, profileTalker, parentAnswer, comment, ActionType.PERSONAL_PROFILE_REPLY));
+			//for replies we update action for parent comment
+			ActionDAO.updateProfileCommentAction(comment.getParentId());
+//			CommentBean parentAnswer = new CommentBean(comment.getParentId());
+//			ActionDAO.saveAction(new PersonalProfileCommentAction(
+//					talker, profileTalker, parentAnswer, comment, ActionType.PERSONAL_PROFILE_REPLY));
 		}
 		
 		if (!talker.equals(profileTalker)) {

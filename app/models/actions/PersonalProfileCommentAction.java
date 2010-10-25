@@ -27,12 +27,12 @@ public class PersonalProfileCommentAction extends AbstractAction {
 	public String toHTML(boolean authenticated) {
 		StringBuilder result = new StringBuilder();
 		result.append(fullUserName(talker, authenticated));
-		if (type == ActionType.PERSONAL_PROFILE_COMMENT) {
+		//if (type == ActionType.PERSONAL_PROFILE_COMMENT) {
 			result.append(" left a comment for ");
-		}
-		else if (type == ActionType.PERSONAL_PROFILE_REPLY) {
-			result.append(" replied to ");
-		}
+//		}
+//		else if (type == ActionType.PERSONAL_PROFILE_REPLY) {
+//			result.append(" replied to ");
+//		}
 		result.append(fullUserName(otherTalker, authenticated));
 		
 		return result.toString();

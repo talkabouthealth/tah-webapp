@@ -300,6 +300,19 @@ Conversation actions that trigger feeds:
 			);
 		activitiesColl.remove(query);
 	}
+	
+	public static void updateProfileCommentAction(String commentId) {
+		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
+		
+		DBRef commentRef = createRef(CommentsDAO.PROFILE_COMMENTS_COLLECTION, commentId);
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("type", ActionType.PERSONAL_PROFILE_COMMENT.toString())
+			.add("profile_comment", commentRef)
+			.get();
+		
+		activitiesColl.update(query,
+				new BasicDBObject("$set", new BasicDBObject("time", new Date())));
+	}
 
 	public static void main(String[] args) {
 //		System.out.println(ActionDAO.load("4c2cb43160adf3055c97d061"));
