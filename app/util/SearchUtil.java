@@ -85,6 +85,9 @@ public class SearchUtil {
 			
 			String convoId = doc.get("id");
 			ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+			if (convo == null) {
+				continue;
+			}
 			convo.setComments(CommentsDAO.loadConvoAnswers(convoId));
 			
 			StringBuilder answersString = new StringBuilder();

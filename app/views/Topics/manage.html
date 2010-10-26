@@ -45,11 +45,13 @@
                       <div class="topich1">Parent Topics</div>
                       <div class="topicborder"></div>
                       <div class="mtinputbox">
-                        <div class="inputCover">
-                          <input id="newParent" type="text" class="mtinput"/>
-                        </div>
-                        <input id="newParentBtn" type="submit" value=" " src="/public/images/addbtn.jpg" class="addbtn"/>
-                        <div class="cb"></div>
+                        #{ifnot topic.fixed }
+	                         <div class="inputCover">
+	                          <input id="newParent" type="text" class="mtinput"/>
+	                        </div>
+	                        <input id="newParentBtn" type="submit" value=" " src="/public/images/addbtn.jpg" class="addbtn"/>
+	                        <div class="cb"></div>
+                        #{/ifnot}
                       </div>
                       <!--mtinputbox-->
 					  <div id="parents">

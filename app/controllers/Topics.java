@@ -87,6 +87,10 @@ public class Topics extends Controller {
     	notFoundIfNull(topic);
     	
     	if (name.equalsIgnoreCase("title")) {
+    		if (topic.isFixed()) {
+    			forbidden();
+    			return;
+    		}
     		URLName currentName = new URLName(topic.getTitle(), topic.getMainURL());
     		URLName newName = new URLName(value, null);
     		
