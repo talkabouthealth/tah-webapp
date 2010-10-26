@@ -31,6 +31,8 @@ public class TopicBean implements Comparable<TopicBean> {
 	private String mainURL;
 	private Set<URLName> oldNames;
 	private Set<String> aliases;
+	//top (fixed) topic?
+	private boolean fixed;
 	
 	private String summary;
 	private Set<String> sumContributors;
@@ -75,6 +77,11 @@ public class TopicBean implements Comparable<TopicBean> {
 		}
 		
 		TopicBean other = (TopicBean)obj;
+//		if (id == null) {
+//			Exception e = new RuntimeException();
+//			e.printStackTrace(System.out);
+//			throw new RuntimeException("excepppppppp");
+//		}
 		return id.equals(other.id);
 	}
 	
@@ -286,5 +293,11 @@ public class TopicBean implements Comparable<TopicBean> {
 	}
 	public void setOldNames(Set<URLName> oldNames) {
 		this.oldNames = oldNames;
+	}
+	public boolean isFixed() {
+		return fixed;
+	}
+	public void setFixed(boolean fixed) {
+		this.fixed = fixed;
 	}
 }

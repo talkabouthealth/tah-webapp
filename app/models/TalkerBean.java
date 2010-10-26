@@ -400,6 +400,11 @@ public class TalkerBean implements Serializable {
 				TopicBean topic = new TopicBean();
 				topic.parseBasicFromDB(topicDBObject);
 				
+				if (topic.getId() == null) {
+					//maybe deleted topic
+					continue;
+				}
+				
 				//TopicInfo
 				TalkerTopicInfo topicInfo = new TalkerTopicInfo();
 				topicInfo.setExperience((String)topicInfoDBObject.get("experience"));

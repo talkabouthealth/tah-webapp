@@ -127,6 +127,12 @@ public class ConversationBean {
 			for (DBRef topicDBRef : topicsDBList) {
 				TopicBean topic = new TopicBean();
 				topic.parseBasicFromDB(topicDBRef.fetch());
+				
+				if (topic.getId() == null) {
+					//maybe deleted topic
+					continue;
+				}
+				
 				topics.add(topic);
 			}
 		}

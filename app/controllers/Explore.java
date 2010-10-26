@@ -48,7 +48,7 @@ public class Explore extends Controller {
     		topicsMap.put(topic.getId(), topic);
     	}
     	
-    	Set<TopicBean> topicsTree = new HashSet<TopicBean>();
+    	Set<TopicBean> topicsTree = new TreeSet<TopicBean>();
     	for (TopicBean topic : topics) {
     		if (topic.getParents() == null || topic.getParents().size() == 0) {
     			topicsTree.add(topic);

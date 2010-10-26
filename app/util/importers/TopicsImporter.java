@@ -22,6 +22,8 @@ import dao.TopicDAO;
 
 public class TopicsImporter {
 	
+	final static int TOPIC_LEVELS = 5;
+	
 	public static void main(String[] args) throws Exception {
 		importTopics("topics.dat");
 	}
@@ -33,7 +35,7 @@ public class TopicsImporter {
 		List<TopicBean> topics = new ArrayList<TopicBean>();
 		
 		//parent topics at each level
-		TopicBean[] levels = new TopicBean[4];
+		TopicBean[] levels = new TopicBean[TOPIC_LEVELS];
 		while ((line = br.readLine()) != null && line.length() != 0) {
 			line = line.trim();
 			String[] lineArr = line.split(";");
@@ -46,7 +48,7 @@ public class TopicsImporter {
 		
 			//check all levels
 			TopicBean topic = null;
-			for (int i=0; i<lineArr.length && i<4; i++) {
+			for (int i=0; i<lineArr.length && i<TOPIC_LEVELS; i++) {
 				if (!lineArr[i].isEmpty()) {
 					//we use 'name' as topic id, because topic aren't saved in the DB yet
 					String name = lineArr[i].trim();
@@ -56,6 +58,7 @@ public class TopicsImporter {
 					topic.setMainURL(ApplicationDAO.createURLName(name));
 					
 					if (i == 0) {
+						topic.setFixed(true);
 						topics.add(topic);
 					}
 					else {
@@ -68,8 +71,8 @@ public class TopicsImporter {
 			}
 			
 			//check aliases
-			if (lineArr.length >= 5) {
-				String[] aliases = lineArr[4].split(", ");
+			if (lineArr.length > TOPIC_LEVELS) {
+				String[] aliases = lineArr[TOPIC_LEVELS].split(", ");
 				topic.setAliases(new LinkedHashSet<String>(Arrays.asList(aliases)));
 			}
 		}

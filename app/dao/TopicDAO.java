@@ -37,6 +37,7 @@ public class TopicDAO {
 			.add("cr_date", new Date())
 			.add("aliases", topic.getAliases())
 			.add("children", topic.childrenToList())
+			.add("fixed", topic.isFixed())
 			.get();
 		topicsColl.save(topicDBObject);
 		
