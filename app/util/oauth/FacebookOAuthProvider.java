@@ -25,7 +25,7 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 	private static final String APP_ID = "131545373528131";
 	private static final String APP_SECRET = "0620bead67e2ffa4e9e46f60b3376dec";
 	private static final String CALLBACK_URL =
-		"http://talkabouthealth.com:9000/oauth/callback?type=facebook";
+		"http://talkabouthealth.com/oauth/callback?type=facebook";
 	
 // Test settings	
 //	private static final String APP_ID = "126479497379490";

@@ -33,7 +33,7 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 	private static final String CONSUMER_KEY = "D9iFrN4G8ObpLCtGJ9w";
 	private static final String CONSUMER_SECRET = "Yy1srQbpldqjtqzzAXpJe3RzuWGxHFKPCF8FPsZKU";
 	private static final String CALLBACK_URL =
-		"http://talkabouthealth.com:9000/oauth/callback?type=twitter";
+		"http://talkabouthealth.com/oauth/callback?type=twitter";
 	
 //	Test values
 //	private static final String CONSUMER_KEY = "7VymbW3wmOOoQ892BqIsaA";
