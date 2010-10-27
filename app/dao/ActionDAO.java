@@ -83,7 +83,6 @@ Conversation actions that trigger feeds:
 		);
 	
 	
-	//FIXME: rename to "action?"
 	public static final String ACTIVITIES_COLLECTION = "activities";
 	
 	public static List<Action> load(String talkerId) {
@@ -139,7 +138,7 @@ Conversation actions that trigger feeds:
 								.add("uid", currentTalkerRef)
 								.get(),
 							BasicDBObjectBuilder.start()
-								.add("topicId", new BasicDBObject("$in", convosDBSet))
+								.add("convoId", new BasicDBObject("$in", convosDBSet))
 								.add("uid", new BasicDBObject("$ne", currentTalkerRef))
 								.get(),
 							new BasicDBObject("uid", new BasicDBObject("$in", talkersDBSet)),
@@ -202,7 +201,7 @@ Conversation actions that trigger feeds:
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
 		Set<DBRef> convosDBSet = ConversationDAO.getConversationsByTopic(topic);
-		DBObject query = new BasicDBObject("topicId", new BasicDBObject("$in", convosDBSet));
+		DBObject query = new BasicDBObject("convoId", new BasicDBObject("$in", convosDBSet));
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
@@ -218,7 +217,7 @@ Conversation actions that trigger feeds:
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
 		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getId());
-		DBObject query = new BasicDBObject("topicId", convoRef);
+		DBObject query = new BasicDBObject("convoId", convoRef);
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		

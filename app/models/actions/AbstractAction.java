@@ -164,12 +164,12 @@ public abstract class AbstractAction implements Action {
 	
 	protected void addConvo(DBObject dbObject, ConversationBean convo) {
 		DBRef topicRef = new DBRef(DBUtil.getDB(), ConversationDAO.CONVERSATIONS_COLLECTION, new ObjectId(convo.getId()));
-		dbObject.put("topicId", topicRef);
+		dbObject.put("convoId", topicRef);
 	}
 	
 	// Convo connected actions
 	protected ConversationBean parseConvo(DBObject dbObject) {
-		DBObject convoDBObject = ((DBRef)dbObject.get("topicId")).fetch();
+		DBObject convoDBObject = ((DBRef)dbObject.get("convoId")).fetch();
 		
 		ConversationBean convo = new ConversationBean();
 		convo.parseBasicFromDB(convoDBObject);
@@ -180,11 +180,11 @@ public abstract class AbstractAction implements Action {
 	
 	protected void addTopic(DBObject dbObject, TopicBean topic) {
 		DBRef topicRef = new DBRef(DBUtil.getDB(), TopicDAO.TOPICS_COLLECTION, new ObjectId(topic.getId()));
-		dbObject.put("tagId", topicRef);
+		dbObject.put("topicId", topicRef);
 	}
 	
 	protected TopicBean parseTopic(DBObject dbObject) {
-		DBObject topicDBObject = ((DBRef)dbObject.get("tagId")).fetch();
+		DBObject topicDBObject = ((DBRef)dbObject.get("topicId")).fetch();
 		
 		TopicBean topic = new TopicBean();
 		topic.parseBasicFromDB(topicDBObject);

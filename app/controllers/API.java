@@ -28,7 +28,7 @@ import util.NotificationUtils;
 
 public class API extends Controller {
 	
-	private static final String API_PASS = "TestPass";
+	private static final String API_PASS = "b6-$2NNs7dq1!p";
 	
 	@Before(unless={})
     static void checkAccess() throws Throwable {
@@ -47,7 +47,7 @@ public class API extends Controller {
 			//try to find convo by parent answer
 			CommentBean answer = CommentsDAO.getConvoAnswerById(parentId);
 			if (answer != null) {
-				convo = ConversationDAO.getByConvoId(answer.getTopicId());
+				convo = ConversationDAO.getByConvoId(answer.getConvoId());
 			}
 		}
 		else {
@@ -60,13 +60,16 @@ public class API extends Controller {
 	}
 	
 	
-	public static void createConvo(String title, String talkerId) {
+	public static void createConvo(String type, String title, String talkerId) {
     	TalkerBean talker = TalkerDAO.getById(talkerId);
     	notFoundIfNull(talker);
     	
-    	//FIXME: make type
+    	ConvoType convoType = ConvoType.CONVERSATION;
+    	if ("Question".equalsIgnoreCase(type)) {
+    		convoType = ConvoType.QUESTION;
+    	}
     	ConversationBean convo = 
-    		ConversationLogic.createConvo(ConvoType.CONVERSATION, title, talker, null, null, true);
+    		ConversationLogic.createConvo(convoType, title, talker, null, null, true);
     	
 		renderText(convo.getTid());
     }

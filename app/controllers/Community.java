@@ -27,7 +27,7 @@ public class Community extends Controller {
 		
 		List<TalkerBean> communityMembers = TalkerDAO.loadAllTalkers();
 		for (TalkerBean member : communityMembers) {
-			List<CommentBean> answers = CommentsDAO.getTalkerConvoAnswers(member.getId(), null);
+			List<CommentBean> answers = CommentsDAO.getTalkerAnswers(member.getId(), null);
 			member.setNumOfConvoAnswers(answers.size());
 		}
 		

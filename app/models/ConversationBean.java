@@ -196,7 +196,7 @@ public class ConversationBean {
     	
     	//followers of this convo
     	DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
-    	DBObject query = new BasicDBObject("following_topics", getId());
+    	DBObject query = new BasicDBObject("following_convos", getId());
     	DBObject fields = BasicDBObjectBuilder.start()
     		.add("uname", 1)
     		.add("email", 1)

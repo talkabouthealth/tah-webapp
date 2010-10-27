@@ -151,7 +151,7 @@ public class TopicBean implements Comparable<TopicBean> {
 		//TODO: similar to convos?
     	DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
     	DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, getId());
-    	DBObject query = new BasicDBObject("following_tags", topicRef);
+    	DBObject query = new BasicDBObject("following_topics", topicRef);
     	DBObject fields = BasicDBObjectBuilder.start()
     		.add("uname", 1)
     		.add("email", 1)

@@ -72,21 +72,21 @@ public class Conversations extends Controller {
     }
 	
 	//start Talk after creating it
-	public static void start(String topicId) {
-    	ConversationBean convo = ConversationDAO.getByConvoId(topicId);
+	public static void start(String convoId) {
+    	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
     	notFoundIfNull(convo);
     	
     	NotificationUtils.sendAutomaticNotifications(convo.getId(), null);
 	}
     
-    public static void restart(String topicId) {
+    public static void restart(String convoId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	ConversationBean convo = ConversationDAO.getByConvoId(topicId);
+    	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
     	notFoundIfNull(convo);
     	
     	ActionDAO.saveAction(new StartConvoAction(talker, convo, ActionType.RESTART_CONVO));
     	
-    	NotificationUtils.sendAutomaticNotifications(topicId, talker.getId());
+    	NotificationUtils.sendAutomaticNotifications(convoId, talker.getId());
     	
     	//prepare email params
     	Map<String, String> vars = new HashMap<String, String>();
@@ -121,7 +121,7 @@ public class Conversations extends Controller {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
     	notFoundIfNull(answer);
-    	ConversationBean convo = ConversationDAO.getByConvoId(answer.getTopicId());
+    	ConversationBean convo = ConversationDAO.getByConvoId(answer.getConvoId());
     	
     	Map<String, String> vars = new HashMap<String, String>();
     	vars.put("content_type", "Answer/Reply");
@@ -163,7 +163,7 @@ public class Conversations extends Controller {
     	}
     	
     	if (newVote.isUp()) {
-    		ConversationBean convo = ConversationDAO.getByConvoId(answer.getTopicId());
+    		ConversationBean convo = ConversationDAO.getByConvoId(answer.getConvoId());
     		ActionDAO.saveAction(new AnswerVotedAction(talker, convo, answer));
     		
     		//If a "Not Helpful" answer receives a vote, let's make it visible again. 
@@ -192,23 +192,23 @@ public class Conversations extends Controller {
     
     //for Dashboard
     public static void lastTopicId() {
-    	String lastTopicId = ConversationDAO.getLastConvoId();
-    	renderText(lastTopicId);
+    	String lastConvoId = ConversationDAO.getLastConvoId();
+    	renderText(lastConvoId);
     }
     
-    //follow or unfollow topic
-    public static void follow(String topicId) {
+    //follow or unfollow convo
+    public static void follow(String convoId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
     	String nextAction = null;
-    	if (talker.getFollowingConvosList().contains(topicId)) {
+    	if (talker.getFollowingConvosList().contains(convoId)) {
     		//unfollow
-    		talker.getFollowingConvosList().remove(topicId);
+    		talker.getFollowingConvosList().remove(convoId);
     		nextAction = "follow";
     	}
     	else {
-    		talker.getFollowingConvosList().add(topicId);
-    		ActionDAO.saveAction(new FollowConvoAction(talker, new ConversationBean(topicId)));
+    		talker.getFollowingConvosList().add(convoId);
+    		ActionDAO.saveAction(new FollowConvoAction(talker, new ConversationBean(convoId)));
     		nextAction = "unfollow";
     	}
     	
@@ -395,10 +395,10 @@ public class Conversations extends Controller {
     	}
     }
     
-    public static void saveTopicComment(String topicId, String parentId, String text) {
+    public static void saveConvoComment(String convoId, String parentId, String text) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-		ConversationBean convo = ConversationDAO.getByConvoId(topicId);
+		ConversationBean convo = ConversationDAO.getByConvoId(convoId);
 		notFoundIfNull(convo);
 		
 		CommentBean comment = ConversationLogic.createAnswer(convo, talker, parentId, text);

@@ -41,12 +41,14 @@ public class Application extends Controller {
 	//As we have profile link as "http://talkabouthealth.com/{userName}" 
 	//we need to disallow usernames equal to application routes - controllers, static files, etc
 	//TODO: maybe we can user Play! configuration for this?
-	//FIXME: update this
+	//TODO: update this
 	public static final List<String> RESERVED_WORDS = Arrays.asList(new String[]{
 		"login", "logout", "signup", "register", "forgotpassword", "sendnewpassword", 
+		"contactus", "updatesemail", "verify",
 		"home", "dashboard", "talk", "profile", "public", "image", 
 		"actions", "application", "oauth", "security", "static", "topics",
 		"errors", 
+		"explore", "search", "community", "openquestions", "livetalks", "conversationfeed"
 	});
 
     public static void index(String newTopic) {

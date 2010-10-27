@@ -37,10 +37,10 @@ public class Dashboard extends Controller {
 		render(topicsList, topicsWithNotificationsList, talkersList, lastTopicId, onlineUsersSingleton, automaticNotification);
 	}
 		
-	public static void notification(String[] uidArray, String topicId, String topic) {
+	public static void notification(String[] uidArray, String convoId, String topic) {
 		IMNotifier imNotifier = IMNotifier.getInstance();
 		try {
-			imNotifier.broadcast(uidArray, topicId, null);
+			imNotifier.broadcast(uidArray, convoId, null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

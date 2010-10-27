@@ -20,8 +20,6 @@ public class FeedsLogic {
 	public static Set<Action> getConvoFeed(TalkerBean talker, String afterActionId) {
 		Set<Action> convoFeedActions = ActionDAO.loadConvoFeed(talker);
 		
-		System.out.println("SIZE:: "+convoFeedActions.size());
-		
 		Set<Action> convoFeed = filter(convoFeedActions, afterActionId);
 		return convoFeed;
 	}
@@ -34,9 +32,7 @@ public class FeedsLogic {
 	}
 	
 	public static Set<Action> getTopicFeed(TopicBean topic, String afterActionId) {
-		long start = System.currentTimeMillis();
 		Set<Action> topicFeedActions = ActionDAO.loadLatestByTopic(topic);
-		System.out.println("END22:::::::: "+(System.currentTimeMillis()-start)/1000);
 		
 		Set<Action> topicFeed = filter(topicFeedActions, afterActionId);
 		return topicFeed;
@@ -45,10 +41,10 @@ public class FeedsLogic {
 	private static Set<Action> filter(Set<Action> feedActions, String afterActionId) {
 		//!!! Conversations should not appear more than once in the feeds
 		//except for Answers, Replies, and Add and Edit Summaries. 
-		EnumSet<ActionType> okActions = EnumSet.of(
-			ActionType.ANSWER_CONVO, ActionType.REPLY_CONVO, 
-			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED
-		);
+		EnumSet<ActionType> okActions = EnumSet.noneOf(ActionType.class);
+//			ActionType.ANSWER_CONVO, ActionType.REPLY_CONVO, 
+//			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED
+//		);
 		
 		Set<Action> feed = new LinkedHashSet<Action>();
 		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();

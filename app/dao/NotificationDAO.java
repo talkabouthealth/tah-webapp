@@ -63,12 +63,12 @@ public class NotificationDAO {
 		}
 	}
 	
-	public static int getNotiNumByTopic(String topicId) {
+	public static int getNotiNumByTopic(String convoId) {
 		DBCollection notificationsColl = getCollection(NOTIFICATIONS_COLLECTION);
 		
-		DBRef topicRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, topicId);
+		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId);
 		DBObject query = BasicDBObjectBuilder.start()
-			.add("topic_id", topicRef)
+			.add("convoId", convoRef)
 			.get();
 		
 		return notificationsColl.find(query).count();

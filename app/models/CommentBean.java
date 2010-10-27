@@ -81,7 +81,7 @@ public class CommentBean extends MessageBean {
 	}
 	
 	private String profileTalkerId;
-	private String topicId;
+	private String convoId;
 	private boolean deleted;
 	//is it answer or reply ?
 	private boolean answer;
@@ -128,9 +128,9 @@ public class CommentBean extends MessageBean {
 		setAnswer(getBoolean(commentDBObject, "answer"));
 		setNotHelpful(getBoolean(commentDBObject, "not_helpful"));
 		
-		DBRef topicRef = (DBRef)commentDBObject.get("topic");
-		if (topicRef != null) {
-			setTopicId(topicRef.getId().toString());
+		DBRef convoRef = (DBRef)commentDBObject.get("convo");
+		if (convoRef != null) {
+			setConvoId(convoRef.getId().toString());
 		}
 		
 		setVoteScore(getInt(commentDBObject, "vote_score"));
@@ -181,8 +181,13 @@ public class CommentBean extends MessageBean {
 	public List<CommentBean> getChildren() { return children; }
 	public void setChildren(List<CommentBean> children) { this.children = children; }
 
-	public String getTopicId() { return topicId; }
-	public void setTopicId(String topicId) { this.topicId = topicId; }
+	public String getConvoId() {
+		return convoId;
+	}
+
+	public void setConvoId(String convoId) {
+		this.convoId = convoId;
+	}
 
 	public int getVoteScore() {
 		return voteScore;

@@ -37,7 +37,7 @@ import com.mongodb.DBRef;
 public class CommentsDAO {
 	
 	public static final String PROFILE_COMMENTS_COLLECTION = "profilecomments";
-	public static final String CONVO_COMMENTS_COLLECTION = "topiccomments";
+	public static final String CONVO_COMMENTS_COLLECTION = "convocomments";
 	
 	// ---------------- Profile comments --------------------------
 	public static String saveProfileComment(CommentBean comment) {
@@ -96,10 +96,10 @@ public class CommentsDAO {
 	public static String saveConvoComment(CommentBean comment) {
 		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
 		
-		DBRef topicRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, comment.getTopicId());
+		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, comment.getConvoId());
 		DBRef fromTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, comment.getFromTalker().getId());
 		DBObject commentObject = BasicDBObjectBuilder.start()
-			.add("topic", topicRef)
+			.add("convo", convoRef)
 			.add("from", fromTalkerRef)
 			.add("text", comment.getText())
 			.add("time", comment.getTime())
@@ -139,7 +139,7 @@ public class CommentsDAO {
 		
 		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId);
 		DBObject query = BasicDBObjectBuilder.start()
-			.add("topic", convoRef)
+			.add("convo", convoRef)
 			.get();
 		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("vote_score", -1)).toArray();
 		
@@ -158,7 +158,8 @@ public class CommentsDAO {
 		return topCommentsList;
 	}
 	
-	public static List<CommentBean> getTalkerConvoAnswers(String talkerId, TopicBean topic) {
+	//by topic or all answers
+	public static List<CommentBean> getTalkerAnswers(String talkerId, TopicBean topic) {
 		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
 		
 		DBRef fromTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
@@ -168,7 +169,7 @@ public class CommentsDAO {
 			.add("answer", true);
 		if (topic != null) {
 			Set<DBRef> convosDBSet = ConversationDAO.getConversationsByTopic(topic);
-			queryBuilder.add("topic", new BasicDBObject("$in", convosDBSet));
+			queryBuilder.add("convo", new BasicDBObject("$in", convosDBSet));
 		}
 		
 		DBObject query = queryBuilder.get();

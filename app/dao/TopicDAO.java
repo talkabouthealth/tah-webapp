@@ -26,7 +26,7 @@ import com.mongodb.DBRef;
 
 public class TopicDAO {
 	
-	public static final String TOPICS_COLLECTION = "tags";
+	public static final String TOPICS_COLLECTION = "topics";
 	
 	public static void save(TopicBean topic) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);

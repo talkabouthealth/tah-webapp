@@ -121,10 +121,10 @@ public class TalkerDAO {
 			
 			.add("prefs", talker.profilePreferencesToInt())
 			.add("email_settings", talker.emailSettingsToList())
-			.add("following_topics", talker.getFollowingConvosList())
+			.add("following_convos", talker.getFollowingConvosList())
 			
-			.add("following_tags", talker.followingTopicsToList())
-			.add("tags_info", talker.topicsInfoToDB())
+			.add("following_topics", talker.followingTopicsToList())
+			.add("topics_info", talker.topicsInfoToDB())
 			
 			.get();
 		
@@ -452,11 +452,11 @@ public class TalkerDAO {
 			return new ArrayList<ConversationBean>();
 		}
 		
-		//FIXME: use DBRef for topics?
+		//TODO: use DBRef for convos?
 		List<ConversationBean> followingConvoList = new ArrayList<ConversationBean>();
-		for (String topicId : talker.getFollowingConvosList()) {
-			ConversationBean topic = ConversationDAO.getByConvoId(topicId);
-			followingConvoList.add(topic);
+		for (String convoId : talker.getFollowingConvosList()) {
+			ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+			followingConvoList.add(convo);
 		}
 		
 		return followingConvoList;

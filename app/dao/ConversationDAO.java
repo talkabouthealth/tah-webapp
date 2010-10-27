@@ -39,7 +39,7 @@ import static util.DBUtil.*;
 
 public class ConversationDAO {
 	
-	public static final String CONVERSATIONS_COLLECTION = "topics";
+	public static final String CONVERSATIONS_COLLECTION = "convos";
 	
 	
 	//------------------- Save/Update methods -----------------------
@@ -92,7 +92,7 @@ public class ConversationDAO {
 		catch (MongoException me) {
 			//E11000 duplicate key error index
 			if (me.getCode() == 11000) {
-				System.err.println("Duplicate key error while saving topic");
+				System.err.println("Duplicate key error while saving convo");
 				return saveInternal(convo, --count);
 			}
 			me.printStackTrace();
@@ -137,10 +137,10 @@ public class ConversationDAO {
 	
 	//----------------------- Query methods ------------------------
 	//FIXME: handle deleted in this methods?
-	public static ConversationBean getByConvoId(String topicId) {
+	public static ConversationBean getByConvoId(String convoId) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
-		DBObject query = new BasicDBObject("_id", new ObjectId(topicId));
+		DBObject query = new BasicDBObject("_id", new ObjectId(convoId));
 		DBObject convoDBObject = convosColl.findOne(query);
 		
 		if (convoDBObject == null) {
@@ -358,8 +358,8 @@ public class ConversationDAO {
 	public static void incrementConvoViews(String convoId) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
-		DBObject topicIdDBObject = new BasicDBObject("_id", new ObjectId(convoId));
-		convosColl.update(topicIdDBObject, 
+		DBObject convoIdDBObject = new BasicDBObject("_id", new ObjectId(convoId));
+		convosColl.update(convoIdDBObject, 
 				new BasicDBObject("$inc", new BasicDBObject("views", 1)));
 	}
 	
@@ -377,7 +377,7 @@ public class ConversationDAO {
 		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject activityDBObject : activitiesDBList) {
-			DBObject convoDBObject = ((DBRef)activityDBObject.get("topicId")).fetch();
+			DBObject convoDBObject = ((DBRef)activityDBObject.get("convoId")).fetch();
 			
 			ConversationBean convo = new ConversationBean();
 			convo.parseFromDB(convoDBObject);
@@ -388,6 +388,7 @@ public class ConversationDAO {
 		return convosList;
 	}
 	
+	//TODO: similar methods?
 	/**
 	 * Includes conversations in children topics also.
 	 * @param topic

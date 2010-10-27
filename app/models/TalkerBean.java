@@ -324,10 +324,10 @@ public class TalkerBean implements Serializable {
 		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
 		
 		parseFollowing((Collection<DBRef>)talkerDBObject.get("following"));
-		setFollowingConvosList(parseStringList(talkerDBObject.get("following_topics")));
+		setFollowingConvosList(parseStringList(talkerDBObject.get("following_convos")));
 		
-		parseFollowingTopics((Collection<DBRef>)talkerDBObject.get("following_tags"));
-		parseTopicsInfo((Collection<DBObject>)talkerDBObject.get("tags_info"));
+		parseFollowingTopics((Collection<DBRef>)talkerDBObject.get("following_topics"));
+		parseTopicsInfo((Collection<DBObject>)talkerDBObject.get("topics_info"));
 	}
 	
 	public void parseThankYous(Collection<DBObject> thankYouDBList) {

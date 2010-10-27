@@ -82,7 +82,7 @@ public class ConversationLogic {
 		CommentBean comment = new CommentBean();
 		parentId = parentId.trim().length() == 0 ? null : parentId;
 		comment.setParentId(parentId);
-		comment.setTopicId(convo.getId());
+		comment.setConvoId(convo.getId());
 		comment.setFromTalker(talker);
 		comment.setText(text);
 		comment.setTime(new Date());

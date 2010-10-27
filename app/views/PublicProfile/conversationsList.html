@@ -2,7 +2,7 @@
 	<script type="text/javascript"> 	 
    		$(document).ready(function() {
    			$(".followTopicLink").live('click', function() {
-				var topicId = $(this).attr("rel");
+				var convoId = $(this).attr("rel");
 				if ($(this).html().indexOf("Unfollow") != -1) {
 					$(this).html("Follow");
 				}
@@ -10,7 +10,7 @@
 					$(this).html("Unfollow");
 				}
 				$.post("@{Conversations.follow()}", 
-	  				{ topicId: topicId},
+	  				{ convoId: convoId},
 	  				function(data) {
 	  					//...
 	  				}
@@ -19,10 +19,10 @@
 			});
 
    			$(".restartTopicLink").click(function() {
-				var topicId = $(this).attr("rel");
+				var convoId = $(this).attr("rel");
 				var tid = $(this).attr("rel2");
 				openChat(tid);
-				$.post("@{Conversations.restart}", {topicId: topicId});
+				$.post("@{Conversations.restart}", {convoId: convoId});
 			});
    		});
    	</script>

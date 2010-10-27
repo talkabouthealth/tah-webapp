@@ -33,7 +33,7 @@ public class NotificationUtils {
 	 * - don't notify more than 1x every 3 hours
 	 * - don't notify more the 3x per day
 	 */
-	public static void sendAutomaticNotifications(String topicId, String restartTalkerId) {
+	public static void sendAutomaticNotifications(String convoId, String restartTalkerId) {
 		boolean automaticNotification = ConfigDAO.getBooleanConfig(AUTOMATIC_NOTIFICATIONS_CONFIG);
 		if (!automaticNotification) {
 			return;
@@ -66,7 +66,7 @@ public class NotificationUtils {
 			IMNotifier imNotifier = IMNotifier.getInstance();
 			try {
 				String[] uidArray = talkersForNotification.toArray(new String[talkersForNotification.size()]);
-				imNotifier.broadcast(uidArray, topicId, restartTalkerId);
+				imNotifier.broadcast(uidArray, convoId, restartTalkerId);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -88,7 +88,7 @@
 
 		$(document).ready(function() {
 			$(".followTopicLink").live('click', function() {
-				var topicId = $(this).attr("rel");
+				var convoId = $(this).attr("rel");
 				if ($(this).html().indexOf("Unfollow") != -1) {
 					$(this).html("Follow");
 				}
@@ -96,7 +96,7 @@
 					$(this).html("Unfollow");
 				}
 				$.post("@{Conversations.follow()}", 
-	  				{ topicId: topicId},
+	  				{ convoId: convoId},
 	  				function(data) {
 	  					//...
 	  				}

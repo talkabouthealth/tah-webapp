@@ -65,7 +65,7 @@
 		$(document).ready(function() {
 			$("#followConvoLink").click(function() {
 				$.post("@{Conversations.follow()}", 
-	  				{ topicId: '${convo.id}'},
+	  				{ convoId: '${convo.id}'},
 	  				function(nextAction) {
 	  					var linkDiv = $("#followConvoLink").children().first();
 	  					linkDiv.removeClass();
@@ -81,7 +81,7 @@
 
 			$(".restartConvoLink").click(function() {
 				openChat(tid);
-				$.post("@{Conversations.restart}", {topicId: '${convo.id}'});
+				$.post("@{Conversations.restart}", {convoId: '${convo.id}'});
 			});
 
 			$(".flagConvoLink").click(function() {
@@ -211,12 +211,13 @@
 		}
 
    		//public static void saveTopicComment(String topicId, String parentId, String text) {
+   		//TODO: what's correct name for this?
    		function saveProfileComment(parentId) {
    	   		var commentText = $("#replytext"+parentId).val();
    			$("#replytext"+parentId).val("");
 
-   			$.post("@{Conversations.saveTopicComment()}", 
-  				{ topicId: '${convo.id}', parentId: parentId, text: commentText},
+   			$.post("@{Conversations.saveConvoComment()}", 
+  				{ convoId: '${convo.id}', parentId: parentId, text: commentText},
   				function(html) {
   	  				$("#firstcommentmessage").hide();
   					$("#replyform"+parentId).before($(html));

@@ -11,7 +11,7 @@ function openInvitationsWindow() {
 
 function restartConvo(tid, convoId) {
 	openChat(tid);
-	$.post("/conversations/restart", {topicId: convoId});
+	$.post("/conversations/restart", {convoId: convoId});
 	return false;
 }
 
@@ -268,9 +268,9 @@ function saveConvo() {
 			function(data) {
 				if (type === "CONVERSATION") {
 					$("#startTalkBtn").click(function() {
-  					openChat(data.tid);
-  					$.post("/conversations/start}", {topicId: data.id});
-  					hideAll();
+	  					openChat(data.tid);
+	  					$.post("/conversations/start}", {convoId: data.id});
+	  					hideAll();
 					});
 					$("#newTalkConfirm").show();
 				}

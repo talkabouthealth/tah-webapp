@@ -139,7 +139,7 @@ public class PublicProfile extends Controller {
 		
 		for (TopicBean topic : talker.getFollowingTopicsList()) {
 			List<CommentBean> answers = 
-				CommentsDAO.getTalkerConvoAnswers(talker.getId(), topic);
+				CommentsDAO.getTalkerAnswers(talker.getId(), topic);
 			
 			TalkerTopicInfo talkerTopicInfo = talker.getTopicsInfoMap().get(topic);
 			if (talkerTopicInfo == null) {
