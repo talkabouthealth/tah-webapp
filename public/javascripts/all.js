@@ -107,6 +107,10 @@ function limitText(limitField, limitNum) {
 }
 
 function makeAutocomplete(id, type) {
+	if ($(id).size() === 0) {
+		return;
+	}
+	
 	var url = "";
 	if (type === "all") {
 		url = "/search/ajaxSearch";

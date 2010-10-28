@@ -399,12 +399,12 @@ public class ConversationDAO {
 		if (topic == null) {
 			return convosDBSet;
 		}
-		for (String convoId : topic.getConversationsIds()) {
+		
+		for (String convoId : ConversationDAO.loadConversationsIdsByTopic(topic.getId())) {
 			convosDBSet.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId));
 		}
 		for (TopicBean child : topic.getChildren()) {
-			TopicBean fullChild = TopicDAO.getById(child.getId());
-			convosDBSet.addAll(getConversationsByTopic(fullChild));
+			convosDBSet.addAll(getConversationsByTopic(new TopicBean(child.getId())));
 		}
 		return convosDBSet;
 	}

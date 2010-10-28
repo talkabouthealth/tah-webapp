@@ -222,7 +222,7 @@
 							<div class="inline_display">
 								<div class="inline_full">
 									<div class="targetedh7"><h1 class="inline_view">${topic.title}</h1></div>
-									#{if talker && !topic.fixed }
+									#{if talker && (!topic.fixed || session.username?.equals("admin")) }
 										<div class="editdiv">
 											<div class="editit">
 												<a href="#" class="inline_editlink">Edit</a>

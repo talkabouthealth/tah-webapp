@@ -87,7 +87,7 @@ public class Topics extends Controller {
     	notFoundIfNull(topic);
     	
     	if (name.equalsIgnoreCase("title")) {
-    		if (topic.isFixed()) {
+    		if (topic.isFixed() && !Security.connected().equalsIgnoreCase("admin")) {
     			forbidden();
     			return;
     		}

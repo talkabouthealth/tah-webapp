@@ -1,9 +1,17 @@
 #{extends 'Topics/topicPage.html' /}
 #{set currentPage = 'manageTopic' /}
 
+<script type="text/javascript">
+	$(document).ready(function() {
+		makeAutocomplete("#newParent", "topic");
+		makeAutocomplete("#newChild", "topic");
+	});
+</script>
+
 <div class="cb"></div>
 <div class="mtborder" style="margin-top: 20px;"></div>
 <div class="topipcWraper">
+				*{
                     <div class="topic">
                       <div class="topich1">Topic Aliases</div>
                       <div class="topicborder"></div>
@@ -25,6 +33,7 @@
 						</div>
                         <div class="cb"></div>
                     </div>
+                
                     <!--topic-->
                     <div class="topic" style="display: none;">
                       <div class="topich1">Merge Topics</div>
@@ -40,7 +49,7 @@
                       <div class="cb"></div>
                     </div>
                     <!--topic-->
-                    
+                 }*   
                     <div class="topic">
                       <div class="topich1">Parent Topics</div>
                       <div class="topicborder"></div>
