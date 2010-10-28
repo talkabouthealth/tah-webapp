@@ -59,8 +59,8 @@ public class FeedsLogic {
 				if (!addedConvos.contains(actionConvo)) {
 					if (canAdd) {
 						feed.add(action);
+						addedConvos.add(actionConvo);
 					}
-					addedConvos.add(actionConvo);
 				}
 			}
 			else {

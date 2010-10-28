@@ -8,9 +8,9 @@ import com.mongodb.DBObject;
 
 public class FollowConvoAction extends AbstractAction {
 	
-	public FollowConvoAction(TalkerBean talker, ConversationBean topic) {
+	public FollowConvoAction(TalkerBean talker, ConversationBean convo) {
 		super(ActionType.FOLLOW_CONVO, talker);
-		this.convo = topic;
+		this.convo = convo;
 	}
 
 	public FollowConvoAction(DBObject dbObject) {
