@@ -36,6 +36,7 @@ public class NotificationUtils {
 	public static void sendAutomaticNotifications(String convoId, String restartTalkerId) {
 		boolean automaticNotification = ConfigDAO.getBooleanConfig(AUTOMATIC_NOTIFICATIONS_CONFIG);
 		if (!automaticNotification) {
+			System.out.println("NO AUTOMAT!");
 			return;
 		}
 		

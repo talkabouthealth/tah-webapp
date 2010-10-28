@@ -71,13 +71,13 @@ public class ConversationLogic {
 	}
 	
 	public static CommentBean createAnswer(ConversationBean convo, TalkerBean talker, String parentId, String text) {
-		//FIXME: if answers - automatically follow topic?
-		if (!talker.getFollowingConvosList().contains(convo.getId())) {
-			talker.getFollowingConvosList().add(convo.getId());
-			TalkerDAO.updateTalker(talker);
-			ActionDAO.saveAction(new FollowConvoAction(talker, convo));
-			convo.getFollowers().add(talker);
-		}
+		//Follow convo automatically on answer?
+//		if (!talker.getFollowingConvosList().contains(convo.getId())) {
+//			talker.getFollowingConvosList().add(convo.getId());
+//			TalkerDAO.updateTalker(talker);
+//			ActionDAO.saveAction(new FollowConvoAction(talker, convo));
+//			convo.getFollowers().add(talker);
+//		}
 		
 		CommentBean comment = new CommentBean();
 		parentId = parentId.trim().length() == 0 ? null : parentId;
@@ -101,17 +101,16 @@ public class ConversationLogic {
 		}
 		
 		//actions
+		CommentBean answer = null;
 		if (parentId == null) {
 			ActionDAO.saveAction(new AnswerConvoAction(talker, convo, comment, null, ActionType.ANSWER_CONVO));
 		}
 		else {
-			CommentBean parentAnswer = new CommentBean(parentId);
-			ActionDAO.saveAction(new AnswerConvoAction(talker, convo, parentAnswer, comment, ActionType.REPLY_CONVO));
+			answer = CommentsDAO.getConvoAnswerById(parentId);
+			ActionDAO.saveAction(new AnswerConvoAction(talker, convo, answer, comment, ActionType.REPLY_CONVO));
 		}
 		
 		//Email and IM notifications
-		Set<String> talkersForNotification = new HashSet<String>();
-		
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("convo", convo.getTopic());
 		vars.put("other_talker", talker.getUserName());
@@ -119,7 +118,6 @@ public class ConversationLogic {
 			vars.put("answer_text", comment.getText());
 		}
 		else {
-			CommentBean answer = CommentsDAO.getConvoAnswerById(parentId);
 			vars.put("reply_text", comment.getText());
 			vars.put("answer_text", answer.getText());
 		}
@@ -128,11 +126,20 @@ public class ConversationLogic {
 		vars.put("convo_url", convoURL);
     	for (TalkerBean follower : convo.getFollowers()) {
     		if (!talker.equals(follower)) { //do not send notification to himself
-    			talkersForNotification.add(follower.getId());
         		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_COMMENT, follower, vars);
     		}
     	}
     	
+//    	The exception is users will receive IM notifications of answers 
+//    	if they started the conversation/question or if they answered a question and 
+//    	the user who started the question wants to follow up.
+    	Set<String> talkersForNotification = new HashSet<String>();
+    	talkersForNotification.add(convo.getTalker().getId());
+    	if (answer != null) {
+    		talkersForNotification.add(answer.getFromTalker().getId());
+    	}
+    	//do not send notification to himself
+    	talkersForNotification.remove(talker.getId());
     	if (!talkersForNotification.isEmpty()) {
 			IMNotifier imNotifier = IMNotifier.getInstance();
 			try {
@@ -143,14 +150,6 @@ public class ConversationLogic {
 				e.printStackTrace();
 			}
 		}
-    	
-//		@mnjones provided an Answer to your question:
-//		"You will need lots of pillows."
-//		(To reply to @mnjones, just reply with your message.)
-//
-//		@mnj5 replied to your answer:
-//		"What are the pillows for?'"
-//		(To reply to mnj5, just reply to this message.)
     	
     	return comment;
 	}
