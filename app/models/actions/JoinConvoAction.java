@@ -8,9 +8,9 @@ import com.mongodb.DBObject;
 
 public class JoinConvoAction extends AbstractAction {
 	
-	public JoinConvoAction(TalkerBean talker, ConversationBean topic) {
+	public JoinConvoAction(TalkerBean talker, ConversationBean convo) {
 		super(ActionType.JOIN_CONVO, talker);
-		this.convo = topic;
+		this.convo = convo;
 	}
 
 	public JoinConvoAction(DBObject dbObject) {

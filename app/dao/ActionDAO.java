@@ -312,9 +312,26 @@ Conversation actions that trigger feeds:
 		activitiesColl.update(query,
 				new BasicDBObject("$set", new BasicDBObject("time", new Date())));
 	}
+	
+	public static void deleteActionsByAnswer(CommentBean answer) {
+		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 
-	public static void main(String[] args) {
-//		System.out.println(ActionDAO.load("4c2cb43160adf3055c97d061"));
+		DBRef answerRef = createRef(CommentsDAO.CONVO_COMMENTS_COLLECTION, answer.getId());
+		DBObject query = new BasicDBObject("$or", 
+				Arrays.asList(
+					new BasicDBObject("answer", answerRef),
+					new BasicDBObject("reply", answerRef)
+				)
+			);
+		activitiesColl.remove(query);
+	}
+
+	public static void deleteActionsByConvo(ConversationBean convo) {
+		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
+
+		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getId());
+		DBObject query = new BasicDBObject("convoId", convoRef);
+		activitiesColl.remove(query);
 	}
 
 }

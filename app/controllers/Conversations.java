@@ -340,6 +340,10 @@ public class Conversations extends Controller {
 
     	convo.setDeleted(true);
     	ConversationDAO.updateConvo(convo);
+    	
+    	//remove related actions
+    	ActionDAO.deleteActionsByConvo(convo);
+    	
     	renderText("ok");
     }
     
@@ -368,6 +372,9 @@ public class Conversations extends Controller {
     	else if (todo.equalsIgnoreCase("delete")) {
     		answer.setDeleted(true);
     		CommentsDAO.updateConvoAnswer(answer);
+    		
+    		//remove related actions
+    		ActionDAO.deleteActionsByAnswer(answer);
     	}
     	else if (todo.equalsIgnoreCase("setNotHelpful")) {
     		Vote notHelpfulVote = new Vote(talker, false);
