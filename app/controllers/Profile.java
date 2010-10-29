@@ -567,6 +567,9 @@ public class Profile extends Controller {
 		if ("profile".equalsIgnoreCase(type)) {
 			talker.setHideProfileHelp(true);
 		}
+		else if ("topicManage".equalsIgnoreCase(type)) {
+			talker.setHideTopicManageHelp(true);
+		}
 		else {
 			talker.setHideHealthHelp(true);
 		}

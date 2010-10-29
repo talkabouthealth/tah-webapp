@@ -168,8 +168,10 @@ public class TalkerBean implements Serializable {
 	private int numberOfTopics;
 	
 	//Show/Hide help info on Profile and Health edit pages?
+	//TODO: implement this better!
 	private boolean hideProfileHelp;
 	private boolean hideHealthHelp;
+	private boolean hideTopicManageHelp;
 	
 	//Notifications settings
 	private String[] ctype;
@@ -288,6 +290,7 @@ public class TalkerBean implements Serializable {
 		
 		setHideProfileHelp(getBoolean(talkerDBObject.get("hide_profilehelp")));
 		setHideHealthHelp(getBoolean(talkerDBObject.get("hide_healthhelp")));
+		setHideTopicManageHelp(getBoolean(talkerDBObject.get("hide_topicmanagehelp")));
 		
 		setIm((String)talkerDBObject.get("im"));
 		setImUsername((String)talkerDBObject.get("im_uname"));
@@ -902,5 +905,11 @@ public class TalkerBean implements Serializable {
 	}
 	public void setHideHealthHelp(boolean hideHealthHelp) {
 		this.hideHealthHelp = hideHealthHelp;
+	}
+	public boolean isHideTopicManageHelp() {
+		return hideTopicManageHelp;
+	}
+	public void setHideTopicManageHelp(boolean hideTopicManageHelp) {
+		this.hideTopicManageHelp = hideTopicManageHelp;
 	}
 }	

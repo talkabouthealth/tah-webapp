@@ -142,6 +142,29 @@
             <div id="comcover">
               <div id="comleft">
                 <div class="comcontent">
+                
+#{if currentPage.equals('manageTopic') && !talker?.hideTopicManageHelp}
+<div id="topicManageHelp" class="helpInfo">
+      <div class="popboxWraper">
+        <div class="popbox2" style="width: 600px;">
+          <div class="closecover" style="clear: none; float: right;">
+            <div class="close" onclick="return hideHelpInfo('topicManage');"><img src="/public/images/close.jpg" alt="Close" /></div>
+          </div>
+          <div class="note">
+		  	<strong>What can I do on the Manage Topic page?</strong><br/>
+		  	This page is how we organize the content on TalkAboutHealth so that it is easier to find.
+		  	<br/><br/>
+		  	All members are invited to help organize and improve the content on TalkAboutHealth.
+		  	<br/><br/>
+          </div>
+          <div class="cb"></div>
+        </div>
+        <!--popbox2-->
+
+      </div>
+      <div class="cb"></div>
+</div> 
+#{/if}
                   <div id="targestedtherapy">
                     <div class="editsWraper">
 						<div class="inline-edit" id="titleEdit">
