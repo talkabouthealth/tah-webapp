@@ -168,6 +168,10 @@ public class Topics extends Controller {
     	if (todo.equalsIgnoreCase("add")) {
     		parentId = JavaExtensions.capitalizeWords(parentId);
     		parentTopic = TopicLogic.findOrCreateTopic(parentId);
+    		if (parentTopic.equals(topic)) {
+    			forbidden();
+        		return;
+    		}
         	parentTopic.getChildren().add(topic);
         	
         	//remove topic from previous parent
@@ -201,6 +205,11 @@ public class Topics extends Controller {
     	if (todo.equalsIgnoreCase("add")) {
     		childId = JavaExtensions.capitalizeWords(childId);
     		childTopic = TopicLogic.findOrCreateTopic(childId);
+    		
+    		if (childTopic.equals(topic)) {
+    			forbidden();
+        		return;
+    		}
     		
     		//check if child topic already has a parent
     		if (childTopic.getParents() != null && childTopic.getParents().size() > 0) {
