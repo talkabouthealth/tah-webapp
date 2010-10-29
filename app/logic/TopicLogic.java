@@ -6,6 +6,8 @@ import dao.TopicDAO;
 
 public class TopicLogic {
 	
+	public static final String DEFAULT_TOPIC = "Unorganized";
+	
 	public static TopicBean findOrCreateTopic(String topicTitle) {
     	TopicBean topic = TopicDAO.getByTitle(topicTitle);
     	if (topic == null) {
@@ -16,6 +18,14 @@ public class TopicLogic {
     	}
     	
     	return topic;
+	}
+
+	public static void addToDefaultParent(TopicBean topic) {
+		TopicBean defaultTopic = TopicDAO.getByTitle(DEFAULT_TOPIC);
+		if (defaultTopic != null) {
+			defaultTopic.getChildren().add(topic);
+			TopicDAO.updateTopic(defaultTopic);
+		}
 	}
 
 }

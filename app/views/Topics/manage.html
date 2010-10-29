@@ -35,7 +35,7 @@
 			$.post("@{Topics.manageParents()}", 
 				{topicId: "${topic.id}", todo: "add", parentId: newParent},
 				function(data) {
-					$(data).appendTo($("#parents"));
+					$("#parents").html($(data));
 				}
 			);
 			return false;
@@ -80,10 +80,11 @@
 			var confirmDel = confirm("Are you sure want to delete this topic?");
    	   		if (confirmDel) {
    	   	  		$.post("@{Topics.delete()}", 
-    				{ topicId: '${topic.id}'}
+    				{ topicId: '${topic.id}'},
+    				function(data) {
+    					document.location = "/home";
+    				}
     			);
-
-   	   	  		document.location = "/home";
    	   		}
    	   		
    	   		return false;
@@ -146,21 +147,9 @@
                     <!--topic-->
                  }*   
                     <div class="topic">
-                      <div class="topich1">Parent Topics</div>
+                      <div class="topich1">Parent Topic</div>
                       <div class="topicborder"></div>
-                      #{ifnot topic.fixed }
-	                      <div class="mtinputbox">
-	                        
-		                         <div class="inputCover">
-		                          <input id="newParent" type="text" class="mtinput"/>
-		                        </div>
-		                        <input id="newParentBtn" type="submit" value=" " src="/public/images/addbtn.jpg" class="addbtn"/>
-		                        <div class="cb"></div>
-	                        
-	                      </div>
-	                  #{/ifnot}
-	                  
-					  <div id="parents">
+                      <div id="parents">
 						#{list items: topic.parents, as: 'parent'}
 							<div class="topictxtz">
 								<a href="/${parent.mainURL}">${parent.title}</a>&nbsp;
@@ -170,8 +159,17 @@
 							</div>
 						#{/list}
 					  </div>
-					
-                      
+                      #{ifnot topic.fixed }
+	                      <div class="mtinputbox">
+	                        
+		                         <div class="inputCover">
+		                          <input id="newParent" type="text" class="mtinput"/>
+		                        </div>
+		                        <input id="newParentBtn" type="submit" value="Change" />
+		                        <div class="cb"></div>
+	                        
+	                      </div>
+	                  #{/ifnot}
                       <div class="cb"></div>
                     </div>
                     <!--topic-->
@@ -201,14 +199,20 @@
                     </div>
                     
                     #{ifnot topic.fixed }
-	                    <div class="topic">
+                   		<div class="topic">
 	                      <div class="topich1">Delete Topic</div>
 	                      <div class="topicborder"></div>
-	                      <div class="topictxt">Deleting a topic will remove all connection with conversations and users.</div>
-	                      <div class="mtinputbox">
-	                        <input type="submit" value=" " src="/public/images/deletez.jpg" class="deletez"/>
-	                        <div class="cb"></div>
-	                      </div>
+	                      #{if topic.children.size() == 0 && topic.conversations.size() == 0}
+		                      <div class="topictxt">Deleting a topic will remove all connection with conversations and users.</div>
+		                      <div class="mtinputbox">
+		                        <input id="deleteTopicBtn" type="submit" value=" " src="/public/images/deletez.jpg" class="deletez"/>
+		                        <div class="cb"></div>
+		                      </div>
+		                  #{/if}
+	                      #{else}
+	                    	<div class="topictxt">A Topic may only be deleted if it does not have any Sub-topics or 
+	                    		Conversations associated with it.</div>	
+	                      #{/else}
 	                      <!--mtinputbox-->
 	                      <div class="cb"></div>
 	                    </div>

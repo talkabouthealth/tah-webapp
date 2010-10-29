@@ -64,6 +64,18 @@ public class ViewDispatcher extends Controller {
 		//last - topic
 		TopicBean topic = TopicDAO.getByURL(name);
 		if (topic != null) {
+			if (topic.isDeleted()) {
+				if (Security.isConnected()) {
+					talker = CommonUtil.loadCachedTalker(session);
+					talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+				}
+				else {
+					talker = null;
+				}
+				
+				render("Topics/notExists.html", talker);
+				return;
+			}
 			if (!topic.getMainURL().equals(name)) {
 				//we come here by old url - redirect to main
 				redirect("/"+topic.getMainURL());

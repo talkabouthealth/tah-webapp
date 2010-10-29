@@ -384,7 +384,9 @@ public class TalkerBean implements Serializable {
 				TopicBean topic = new TopicBean();
 				if (topicDBRef.fetch() != null) {
 					topic.parseBasicFromDB(topicDBRef.fetch());
-					followingTopicsList.add(topic);
+					if (!topic.isDeleted()) {
+						followingTopicsList.add(topic);
+					}
 				}
 			}
 		}

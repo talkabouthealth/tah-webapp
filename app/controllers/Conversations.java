@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import logic.ConversationLogic;
+import logic.TopicLogic;
 import models.CommentBean;
 import models.CommentBean.Vote;
 import models.ConversationBean.ConvoType;
@@ -286,6 +287,8 @@ public class Conversations extends Controller {
             	    	topic.setTitle(topicName);
             	    	topic.setMainURL(ApplicationDAO.createURLName(topicName));
             	    	TopicDAO.save(topic);
+            	    	
+            	    	TopicLogic.addToDefaultParent(topic);
         			}
 
         	    	convo.getTopics().add(topic);

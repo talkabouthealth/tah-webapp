@@ -75,11 +75,7 @@ public class Topics extends Controller {
 
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
-    	List<TopicBean> topicsList = TopicDAO.getTopics();
-    	//we can't add this topic as parent/children to itself
-    	topicsList.remove(topic);
-		
-		render(talker, topic, topicsList);
+		render(talker, topic);
     }
     
     public static void updateField(String topicId, String name, String value) {
@@ -133,6 +129,14 @@ public class Topics extends Controller {
 
     	topic.setDeleted(true);
     	TopicDAO.updateTopic(topic);
+    	
+    	//remove from parent topic
+    	if (!topic.getParents().isEmpty()) {
+    		TopicBean oldParent = topic.getParents().iterator().next();
+    		TopicBean oldParentFull = TopicDAO.getById(oldParent.getId());
+    		oldParentFull.getChildren().remove(topic);
+    		TopicDAO.updateTopic(oldParentFull);
+    	}
     }
     
     public static void manageAliases(String topicId, String todo, String alias) {
@@ -164,14 +168,25 @@ public class Topics extends Controller {
     	if (todo.equalsIgnoreCase("add")) {
     		parentTopic = TopicLogic.findOrCreateTopic(parentId);
         	parentTopic.getChildren().add(topic);
+        	
+        	//remove topic from previous parent
+        	if (!topic.getParents().isEmpty()) {
+        		TopicBean oldParent = topic.getParents().iterator().next();
+        		TopicBean oldParentFull = TopicDAO.getById(oldParent.getId());
+        		oldParentFull.getChildren().remove(topic);
+        		TopicDAO.updateTopic(oldParentFull);
+        	}
+        	TopicDAO.updateTopic(parentTopic);
     	}
     	else {
     		parentTopic = TopicDAO.getById(parentId);
         	notFoundIfNull(parentTopic);
         	
     		parentTopic.getChildren().remove(topic);
+    		TopicDAO.updateTopic(parentTopic);
+    		
+    		TopicLogic.addToDefaultParent(topic);
     	}
-    	TopicDAO.updateTopic(parentTopic);
     	
     	renderText("<div class='topictxtz'>"+parentTopic.getTitle()+"&nbsp;&nbsp;<a href='#' rel='"+
     			parentTopic.getId()+"' class='removeParentLink style2'>remove</a></div>");
@@ -187,8 +202,16 @@ public class Topics extends Controller {
     		
     		//check if child topic already has a parent
     		if (childTopic.getParents() != null && childTopic.getParents().size() > 0) {
-    			renderText("Sorry, this topic cannot be a sub-topic. It already has a parent topic.");
-    			return;
+    			TopicBean oldParent = childTopic.getParents().iterator().next();
+    			if (oldParent.getTitle().equals(TopicLogic.DEFAULT_TOPIC)) {
+    				TopicBean oldParentFull = TopicDAO.getById(oldParent.getId());
+            		oldParentFull.getChildren().remove(childTopic);
+            		TopicDAO.updateTopic(oldParentFull);
+    			}
+    			else {
+    				renderText("Sorry, this topic cannot be a sub-topic. It already has a parent topic.");
+        			return;
+    			}
     		}
     		
     		topic.getChildren().add(childTopic);

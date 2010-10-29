@@ -36,6 +36,7 @@ public class TopicDAO {
 			.add("main_url", topic.getMainURL())
 			.add("cr_date", new Date())
 			.add("aliases", topic.getAliases())
+			
 			.add("children", topic.childrenToList())
 			.add("fixed", topic.isFixed())
 			.get();
@@ -79,7 +80,6 @@ public class TopicDAO {
 						new BasicDBObject("old_names.url", url)
 					)
 			)
-			.add("deleted", new BasicDBObject("$ne", true))
 			.get();
 		DBObject topicDBObject = topicsColl.findOne(query);
 		
@@ -120,7 +120,9 @@ public class TopicDAO {
 	
 	public static Set<TopicBean> loadAllTopics() {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
-		List<DBObject> topicsDBList = topicsColl.find().toArray();
+		
+		DBObject query = new BasicDBObject("deleted", new BasicDBObject("$ne", true));
+		List<DBObject> topicsDBList = topicsColl.find(query).toArray();
 		
 		Set<TopicBean> topicsSet = new HashSet<TopicBean>();
 		for (DBObject topicDBObject : topicsDBList) {
@@ -130,20 +132,6 @@ public class TopicDAO {
 		}
 		
 		return topicsSet;
-	}
-	
-	public static List<TopicBean> getTopics() {
-		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
-		
-		List<DBObject> topicsDBList = 
-			topicsColl.find().sort(new BasicDBObject("title", 1)).toArray();
-		List<TopicBean> topics = new ArrayList<TopicBean>();
-		for (DBObject topicDBObject : topicsDBList) {
-			TopicBean topic = new TopicBean();
-			topic.parseBasicFromDB(topicDBObject);
-			topics.add(topic);
-		}
-		return topics;
 	}
 	
 	public static Set<TopicBean> getParentTopics(String topicId) {

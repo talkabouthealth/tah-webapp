@@ -1,0 +1,37 @@
+#{extends 'main.html' /}
+	<style type="text/css">
+		body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
+		#innermiddlearea { padding-top: 10px }
+		.seeall { padding-top: 20px }
+	</style>
+	
+<div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
+  <div id="managtopic">
+  	#{include 'header.html' /}
+  	<div id="bottom_container">
+      	<div class="haderbanner"><div id="innerbanner"></div></div>
+        <div id="innermiddlearea">
+          <div id="mtcover">
+            <div id="mtleft">
+              <div class="mtcontent" style="margin: 10px 0 100px; font-size: 16px;">
+               	This Topic no longer exists.
+                <div class="cb"></div>
+              </div>
+              <!--mtcontent-->
+              <div class="cb"></div>
+            </div>
+            <!--mtleft-->
+            
+            #{ include 'right.html' /}
+            
+            <!--mtright-->
+            <div class="cb"></div>
+          </div>
+          <!--mtcover-->
+          <div class="cb"></div>
+
+        </div>
+        <div id="signupright"></div>
+      </div>
+    </div>
+  </div>

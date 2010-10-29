@@ -31,13 +31,11 @@ import models.actions.Action.ActionType;
 
 public class ConversationLogic {
 	
-	public static final String DEFAULT_TOPIC = "Unorganized";
-	
 	public static ConversationBean createConvo(ConvoType type, String title, 
 			TalkerBean talker, String details, Set<TopicBean> topicsSet, boolean notifyTalkers) {
 		
 		//when a new topic is created, it automatically has a parent topic of "Unorganized"
-		TopicBean topic = TopicDAO.getByTitle(DEFAULT_TOPIC);
+		TopicBean topic = TopicDAO.getByTitle(TopicLogic.DEFAULT_TOPIC);
 		if (topic != null) {
 			topicsSet.add(topic);
 		}
