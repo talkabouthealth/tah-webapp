@@ -404,7 +404,8 @@ public class ConversationDAO {
 			convosDBSet.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId));
 		}
 		for (TopicBean child : topic.getChildren()) {
-			convosDBSet.addAll(getConversationsByTopic(new TopicBean(child.getId())));
+			TopicBean fullChild = TopicDAO.getById(child.getId());
+			convosDBSet.addAll(getConversationsByTopic(fullChild));
 		}
 		return convosDBSet;
 	}

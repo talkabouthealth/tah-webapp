@@ -52,6 +52,7 @@ public class TopicDAO {
 			.add("main_url", topic.getMainURL())
 			.add("old_names", setToDB(topic.getOldNames()))
 			.add("aliases", topic.getAliases())
+			.add("fixed", topic.isFixed())
 			
 			.add("summary", topic.getSummary())
 			

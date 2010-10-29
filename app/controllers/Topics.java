@@ -115,6 +115,16 @@ public class Topics extends Controller {
     		topic.setSummary(value);
     		TopicDAO.updateTopic(topic);
     	}
+    	else if (name.equalsIgnoreCase("freeze")) {
+    		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    		if (!talker.getUserName().equalsIgnoreCase("admin")) {
+    			forbidden();
+    		}
+    		
+    		boolean newValue = Boolean.parseBoolean(value);
+    		topic.setFixed(newValue);
+    		TopicDAO.updateTopic(topic);
+    	}
     }
     
     public static void delete(String topicId) {
@@ -143,7 +153,12 @@ public class Topics extends Controller {
     
     //FIXME: check valid add/remove? (Topic can't be children and parent at the same time)
     public static void manageParents(String topicId, String todo, String parentId) {
-    	TopicBean topic = new TopicBean(topicId);
+    	TopicBean topic = TopicDAO.getById(topicId);
+    	notFoundIfNull(topic);
+    	if (topic.isFixed()) {
+    		forbidden();
+    		return;
+    	}
     	
     	TopicBean parentTopic = null;
     	if (todo.equalsIgnoreCase("add")) {
@@ -169,9 +184,20 @@ public class Topics extends Controller {
     	TopicBean childTopic = null;
     	if (todo.equalsIgnoreCase("add")) {
     		childTopic = TopicLogic.findOrCreateTopic(childId);
+    		
+    		//check if child topic already has a parent
+    		if (childTopic.getParents() != null && childTopic.getParents().size() > 0) {
+    			renderText("Sorry, this topic cannot be a sub-topic. It already has a parent topic.");
+    			return;
+    		}
+    		
     		topic.getChildren().add(childTopic);
     	}
     	else {
+    		if (topic.isFixed()) {
+        		forbidden();
+        		return;
+        	}
     		childTopic = TopicDAO.getById(childId);
         	notFoundIfNull(childTopic);
         	
@@ -179,8 +205,16 @@ public class Topics extends Controller {
     	}
     	TopicDAO.updateTopic(topic);
     	
-    	renderText("<div class='topictxtz'>"+childTopic.getTitle()+"&nbsp;&nbsp;<a href='#' rel='"+
-    			childTopic.getId()+"' class='removeChildLink style2'>remove</a></div>");
+    	StringBuilder htmlResponse = new StringBuilder();
+    	htmlResponse.append("<div class='topictxtz'>");
+    	htmlResponse.append("<a href='/"+childTopic.getMainURL()+"'>"+childTopic.getTitle()+"</a>&nbsp;");
+    	if (!topic.isFixed()) {
+    		htmlResponse.append("<a href='#' rel='"+
+    			childTopic.getId()+"' class='removeChildLink style2'>remove</a>");
+    	}
+    	htmlResponse.append("</div>");
+    	
+    	renderText(htmlResponse.toString());
     }
     
 	public static void updateTopicExperience(String topicId, String newValue) {

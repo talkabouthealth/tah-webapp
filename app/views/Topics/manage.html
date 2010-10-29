@@ -5,7 +5,102 @@
 	$(document).ready(function() {
 		makeAutocomplete("#newParent", "topic");
 		makeAutocomplete("#newChild", "topic");
+
+		//Aliases
+		$("#newAliasBtn").click(function() {
+			var newAlias = $("#newAlias").val();
+			$("#newAlias").val("");
+			$.post("@{Topics.manageAliases()}", 
+				{topicId: "${topic.id}", todo: "add", alias : newAlias},
+				function(data) {
+					$(data).appendTo($("#aliases"));
+				}
+			);
+			return false;
+		});
+
+		$(".removeAliasLink").live("click", function() {
+			var alias = $(this).attr("rel");
+			$(this).parent().remove();
+			$.post("@{Topics.manageAliases()}", 
+				{topicId: "${topic.id}", todo: "remove", alias : alias}
+			);
+			return false;
+		});
+
+		//Relatives
+		$("#newParentBtn").click(function() {
+			var newParent = $("#newParent").val();
+			$("#newParent").val("");
+			$.post("@{Topics.manageParents()}", 
+				{topicId: "${topic.id}", todo: "add", parentId: newParent},
+				function(data) {
+					$(data).appendTo($("#parents"));
+				}
+			);
+			return false;
+		});
+		$(".removeParentLink").live("click", function() {
+			var parentId = $(this).attr("rel");
+			$(this).parent().remove();
+			$.post("@{Topics.manageParents()}", 
+				{topicId: "${topic.id}", todo: "remove", parentId: parentId}
+			);
+			return false;
+		});
+
+		$("#newChildBtn").click(function() {
+			$("#childError").html("");
+			var newChild = $("#newChild").val();
+			$("#newChild").val("");
+			$.post("@{Topics.manageChildren()}", 
+				{topicId: "${topic.id}", todo: "add", childId: newChild},
+				function(data) {
+					if (data.charAt(0) === '<') {
+						$(data).appendTo($("#children"));
+					}
+					else {
+						//error
+						$("#childError").html(data);
+					}
+				}
+			);
+			return false;
+		});
+		$(".removeChildLink").live("click", function() {
+			var childrenId = $(this).attr("rel");
+			$(this).parent().remove();
+			$.post("@{Topics.manageChildren()}", 
+				{topicId: "${topic.id}", todo: "remove", childId: childrenId}
+			);
+			return false;
+		});
+
+		$("#deleteTopicBtn").click(function() {
+			var confirmDel = confirm("Are you sure want to delete this topic?");
+   	   		if (confirmDel) {
+   	   	  		$.post("@{Topics.delete()}", 
+    				{ topicId: '${topic.id}'}
+    			);
+
+   	   	  		document.location = "/home";
+   	   		}
+   	   		
+   	   		return false;
+		});
 	});
+
+	function updateFrozen(newValue) {
+		$.post("@{Topics.updateField()}", 
+			{ topicId : '${topic.id}', name: 'freeze', value: newValue},
+			function() {
+				window.location.reload();
+			}
+		);
+
+		//window.location.reload();
+		return false;
+	}
 </script>
 
 <div class="cb"></div>
@@ -53,20 +148,25 @@
                     <div class="topic">
                       <div class="topich1">Parent Topics</div>
                       <div class="topicborder"></div>
-                      <div class="mtinputbox">
-                        #{ifnot topic.fixed }
-	                         <div class="inputCover">
-	                          <input id="newParent" type="text" class="mtinput"/>
-	                        </div>
-	                        <input id="newParentBtn" type="submit" value=" " src="/public/images/addbtn.jpg" class="addbtn"/>
-	                        <div class="cb"></div>
-                        #{/ifnot}
-                      </div>
-                      <!--mtinputbox-->
+                      #{ifnot topic.fixed }
+	                      <div class="mtinputbox">
+	                        
+		                         <div class="inputCover">
+		                          <input id="newParent" type="text" class="mtinput"/>
+		                        </div>
+		                        <input id="newParentBtn" type="submit" value=" " src="/public/images/addbtn.jpg" class="addbtn"/>
+		                        <div class="cb"></div>
+	                        
+	                      </div>
+	                  #{/ifnot}
+	                  
 					  <div id="parents">
 						#{list items: topic.parents, as: 'parent'}
 							<div class="topictxtz">
-								${parent.title}&nbsp;&nbsp;<a href="#" rel="${parent.id}" class="removeParentLink style2">remove</a>
+								<a href="/${parent.mainURL}">${parent.title}</a>&nbsp;
+								#{ifnot topic.fixed }
+									<a href="#" rel="${parent.id}" class="removeParentLink style2">remove</a>
+								#{/ifnot}
 							</div>
 						#{/list}
 					  </div>
@@ -83,30 +183,68 @@
                           <input  id="newChild"  type="text" class="mtinput"/>
                         </div>
                         <input id="newChildBtn"  type="submit" value=" " src="/public/images/addbtn.jpg" class="addbtn"/>
-                        <div class="cb"></div>
+                        <div class="cb" style="margin-bottom:3px;"></div>
+                        <span id="childError" style="color: red;"></span>
                       </div>
                       <!--mtinputbox-->
                       <div id="children">
 						#{list items: topic.children, as: 'child'}
 							<div class="topictxtz">
-								${child.title}&nbsp;&nbsp;<a href="#" rel="${child.id}" class="removeChildLink style2">remove</a>
+								<a href="/${child.mainURL}">${child.title}</a>&nbsp;
+								#{ifnot topic.fixed }
+									<a href="#" rel="${child.id}" class="removeChildLink style2">remove</a>
+								#{/ifnot}
 							</div>
 						#{/list}
 					  </div>
                       <div class="cb"></div>
                     </div>
-                    <!--topic-->
-                    <div class="topic" style="display: none">
-                      <div class="topich1">Delete Topic</div>
-                      <div class="topicborder"></div>
-                      <div class="topictxt">Deleting a topic will remove all connection with conversations and users.</div>
-                      <div class="mtinputbox">
-                        <input type="submit" value=" " src="/public/images/deletez.jpg" class="deletez"/>
-                        <div class="cb"></div>
-                      </div>
-                      <!--mtinputbox-->
-                      <div class="cb"></div>
-                    </div>
-                    <!--topic-->
+                    
+                    #{ifnot topic.fixed }
+	                    <div class="topic">
+	                      <div class="topich1">Delete Topic</div>
+	                      <div class="topicborder"></div>
+	                      <div class="topictxt">Deleting a topic will remove all connection with conversations and users.</div>
+	                      <div class="mtinputbox">
+	                        <input type="submit" value=" " src="/public/images/deletez.jpg" class="deletez"/>
+	                        <div class="cb"></div>
+	                      </div>
+	                      <!--mtinputbox-->
+	                      <div class="cb"></div>
+	                    </div>
+	                #{/ifnot}
+	                
+	                #{if topic.fixed }
+	                    <div class="topic" style="margin-top: 30px;">
+	                      <div class="topictxt">
+	                      	<span style="color: red;">This Topic has been frozen by administrator.</span><br/>
+	                      	- New Sub-topics may be added, but not removed. (To remove a Sub-topic, 
+	                      		the Parent Topic must be removed from the Sub-topic.)<br/>
+	                      	- The Topic may not be deleted and the Parent Topic may not be changed.<br/>
+	                      	- Email <a href="mailto:support@talkabouthealth.com">support@talkabouthealth.com</a>
+	                      		to suggest a change to the Topic Organization.	                      		                      	
+	                      </div>
+	                      <div class="cb"></div>
+	                    </div>
+	                #{/if}
+                    
+                    #{if session.username?.equals("admin") }
+	                    <div class="topic">
+	                      <div class="topich1">Admin settings</div>
+	                      <div class="topicborder"></div>
+	                      <div class="topictxt">
+	                      #{if topic.fixed }
+	                      	 This topic is Frozen. <a href="#" onclick="return updateFrozen('false');">Unfreeze Topic</a>
+	                      #{/if}
+	                      #{else}
+	                      	<a href="#" onclick="return updateFrozen('true');">Freeze Topic</a>
+	                      #{/else}
+	                      </div>
+	                      
+	                      <div class="cb"></div>
+	                    </div>
+                    #{/if}
+                    
+                    
                     <div class="cb"></div>
                   </div>
