@@ -166,6 +166,7 @@ public class Topics extends Controller {
     	
     	TopicBean parentTopic = null;
     	if (todo.equalsIgnoreCase("add")) {
+    		parentId = JavaExtensions.capitalizeWords(parentId);
     		parentTopic = TopicLogic.findOrCreateTopic(parentId);
         	parentTopic.getChildren().add(topic);
         	
@@ -198,6 +199,7 @@ public class Topics extends Controller {
     	
     	TopicBean childTopic = null;
     	if (todo.equalsIgnoreCase("add")) {
+    		childId = JavaExtensions.capitalizeWords(childId);
     		childTopic = TopicLogic.findOrCreateTopic(childId);
     		
     		//check if child topic already has a parent

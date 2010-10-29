@@ -37,6 +37,7 @@ import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.Router;
 import play.mvc.With;
+import play.templates.JavaExtensions;
 import util.CommonUtil;
 import util.EmailUtil;
 import util.NotificationUtils;
@@ -280,6 +281,7 @@ public class Conversations extends Controller {
     			
     			StringBuilder htmlToRender = new StringBuilder();
     			for (String topicName : valueArr) {
+    				topicName = JavaExtensions.capitalizeWords(topicName);
     				TopicBean topic = TopicDAO.getByTitle(topicName);
         			if (topic == null) {
         				//create new topic with this name
