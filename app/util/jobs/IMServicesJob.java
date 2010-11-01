@@ -16,9 +16,9 @@ import play.jobs.OnApplicationStart;
 public class IMServicesJob extends Job {
 	
 	private static final LoginInfo[] PROD_LOGIN_ARRAY = new LoginInfo[] {
-		new LoginInfo(IMService.GOOGLE, "talkabouthealth.com@gmail.com", "CarrotCake917"),
-		new LoginInfo(IMService.MSN, "talkabouthealth.com@live.com", "CarrotCake917"),
-		new LoginInfo(IMService.YAHOO, "talkabouthealth@ymail.com", "CarrotCake917"),
+		new LoginInfo(IMService.GOOGLE, "talkabouthealth.com@gmail.com", "g!5o$OG6_#8le"),
+		new LoginInfo(IMService.MSN, "talkabouthealth.com@live.com", "l4%i(V)95-e-"),
+		new LoginInfo(IMService.YAHOO, "talkabouthealth@ymail.com", "y7$!A8h__o~o#"),
 	};
 	private static final LoginInfo[] DEV_LOGIN_ARRAY = new LoginInfo[] {
 		new LoginInfo(IMService.GOOGLE, "talkabouthealth.com.test@gmail.com", "CarrotCake917"),
