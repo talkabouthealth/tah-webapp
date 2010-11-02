@@ -15,6 +15,13 @@ function restartConvo(tid, convoId) {
 	return false;
 }
 
+function closeLiveTalk(convoId) {
+	$.post("/conversations/close", {convoId: convoId});
+	
+	$("#liveTalk"+convoId).remove();
+	return false;
+}
+
 //createThankYou(String toTalker, String note)
 function sendThankYou() {
 	var noteText = $("#thankYouListNote").val();

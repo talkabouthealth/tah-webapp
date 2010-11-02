@@ -102,6 +102,17 @@ public class Conversations extends Controller {
     	}
     }
     
+    //Close LiveTalk
+    public static void close(String convoId) {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	if (!talker.getUserName().equalsIgnoreCase("admin")) {
+    		forbidden();
+    		return;
+    	}
+    	
+    	ConversationDAO.closeLiveTalk(convoId);
+	}
+    
     public static void flag(String convoId, String reason) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	ConversationBean convo = ConversationDAO.getByConvoId(convoId);

@@ -1,4 +1,4 @@
-<div class="joinbox">
+<div id="liveTalk${_convo.id}" class="joinbox">
 	<div class="joinpic">
 		#{talker/talkerImageLink size: 48, userName: _convo.talker.userName /}
 	</div>
@@ -10,6 +10,9 @@
 			#{if session.username}
 				<a href="#" class="followConvoLink" rel="${_convo.id}">
 					${_talker?.followingConvosList?.contains(_convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
+			#{/if}
+			#{if session.username?.equals("admin")}
+				<a href="#" onclick="return closeLiveTalk('${_convo.id}')">Close Live Talk</a>&nbsp;| 
 			#{/if}
 			<span>${_convo.creationDate.since()}</span>
 		</div>
@@ -26,6 +29,11 @@
 		<div class="joinconbox">
 			<input type="submit" src="/public/images/joinconversation.jpg" 
 				value=" " class="joinconversation" onclick="return openChat('${_convo.tid}');" />
+		</div>
+	#{/if}
+	#{if session.username?.equals("admin")}
+		<div class="joinconbox">
+			<a href="#">Close Live Talk</a>
 		</div>
 	#{/if}
 	<div class="cb"></div>

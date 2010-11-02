@@ -271,6 +271,20 @@ public class ConversationDAO {
 		return convosList;
 	}
 	
+	/*
+	 	Used by admin to close an old LiveTalk (which wasn't closed automatically).
+	 */
+	public static void closeLiveTalk(String convoId) {
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		DBObject convoObject = BasicDBObjectBuilder.start()
+			.add("talkers", new ArrayList<DBObject>())
+			.get();
+		
+		DBObject query = new BasicDBObject("_id", new ObjectId(convoId));
+		convosColl.update(query, new BasicDBObject("$set", convoObject));
+	}
+	
 	/**
 	 * No one answered for question/conversation
 	 * @return
@@ -451,6 +465,28 @@ public class ConversationDAO {
 //		Date currentDate = Calendar.getInstance().getTime();
 //		topic.setCreationDate(currentDate);
 //		TopicDAO.save(topic);
+		
+//		updateLiveTalkers(3, "4cc94906b8682ba9e5eba5f2", "kangaroo", true);
+	}
+	
+	//used for testing
+	private static void updateLiveTalkers(int tid, String talkerId, 
+			String talkerName, boolean connected) {
+		DBCollection convosColl = getDB().getCollection(CONVERSATIONS_COLLECTION);
+		
+		DBRef talkerRef = new DBRef(getDB(), "talkers", new ObjectId(talkerId));
+		DBObject talkerDBObject = BasicDBObjectBuilder.start()
+			.add("uid", talkerRef)
+			.add("uname", talkerName)
+			.get();
+		
+		DBObject tidDBObject = new BasicDBObject("tid", tid);
+		String operation = "$pull"; //for disconnected
+		if (connected) {
+			operation = "$push";
+		}
+		convosColl.update(tidDBObject, 
+				new BasicDBObject(operation, new BasicDBObject("talkers", talkerDBObject)));
 	}
 
 }
