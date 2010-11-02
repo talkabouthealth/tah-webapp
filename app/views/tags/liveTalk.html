@@ -14,7 +14,7 @@
 			<span>${_convo.creationDate.since()}</span>
 		</div>
 		<div class="jointxtlink1">
-			Conversation by 
+			Live Talk started by 
 			#{talker/talkerLink userName: _convo.talker.userName /}
 			<span class="blacktext12">
 				#{talker/talkerInfo talker: _convo.talker /}
@@ -22,10 +22,12 @@
 		</div>
 		<div class="jointxtlink2"></div>
 	</div>
-	<div class="joinconbox">
-		<input type="submit" src="/public/images/joinconversation.jpg" 
-			value=" " class="joinconversation" onclick="return openChat('${_convo.tid}');" />
-	</div>
+	#{if session.username}
+		<div class="joinconbox">
+			<input type="submit" src="/public/images/joinconversation.jpg" 
+				value=" " class="joinconversation" onclick="return openChat('${_convo.tid}');" />
+		</div>
+	#{/if}
 	<div class="cb"></div>
 	<div class="joinborder"></div>
 </div>

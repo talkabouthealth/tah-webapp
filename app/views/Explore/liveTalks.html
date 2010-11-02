@@ -88,7 +88,12 @@
 							#{liveTalk convo: convo, talker: talker /}
 						#{/list}
 						#{else}
-							<span class="blacktext14">Be the first to start a live talk.</span>
+							#{if talker}
+				                <span class="blacktext14">Be the first to start a live talk.</span>
+				            #{/if}
+				            #{else}
+				            	<span class="blacktext14">No Live Talks at the moment.</span>
+				            #{/else}
 						#{/else}
 						
                       <div class="replytommentbox1" style="display: none;">

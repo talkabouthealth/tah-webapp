@@ -19,7 +19,7 @@ public class Image extends Controller {
 	public static void show(String userName) {
 		if (!Security.isConnected()) {
 			//not authenticated users can't see images
-			renderBinary(Play.getFile(DEFAULT_IMAGE));
+			//renderBinary(Play.getFile(DEFAULT_IMAGE));
 			return;
 		}
 		

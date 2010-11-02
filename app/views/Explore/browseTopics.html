@@ -87,7 +87,9 @@
 <!--catbox1-->
 #{list items: topicsTree, as: 'topic' }
 <div id="children${topic.id}" class="catbox2" style="display: ${topic_index == 1 ? 'block' : 'none'};">
-	<div class="cath11">${topic.title}</div>
+	<div class="cath11">
+		<a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a>
+	</div>
 	<div class="contentz">
 		<ul class="menuz root">
 			#{topicsTree topic: topic /}
