@@ -72,6 +72,18 @@ public class Security extends Secure.Security {
 	    if (url != null && url.trim().length() != 0) {
 	    	flash.put("url", url);
 	    }
+	    
+	    /*
+	     	When user fails to login (so comes to login page from 'login' url) -
+	     	after successful login he's redirected to login page again. 
+	     	It's bad, better redirect to home page.
+	     	TODO: report this as Secure plugin bug?? 
+	     	Or it's my bug because of IE8 updates (see previous lines)
+	     */
+	    url = flash.get("url");
+        if(url != null && url.trim().length() == 0) {
+        	flash.put("url", "/");
+        }
     }
     
     static void onDisconnected() {

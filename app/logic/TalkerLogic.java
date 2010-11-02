@@ -73,8 +73,6 @@ public class TalkerLogic {
 			}
 		}
 		
-		System.out.println("!!!: "+talker.getFollowingList());
-		
 		if (!talker.getFollowingList().isEmpty()) {
 			profileActions.add(ProfileCompletion.FOLLOW);
 		}
