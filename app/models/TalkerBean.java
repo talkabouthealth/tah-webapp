@@ -65,7 +65,7 @@ public class TalkerBean implements Serializable {
 		HEALTH_INFO(1, "Display my Health Info to the community (disease, symptoms, medications, etc.)"),
 //		BASIC_INFO(2, "Display my Basic Info in my Public Profile (Recognition level, " +
 //				"No. of conversations)"),
-		BIO(3, "Display my Bio to the community"),
+//		BIO(3, "Display my Bio to the community"),
 		FOLLOWERS(4, "Display my Followers to the community"),
 		FOLLOWING(5, "Display who I Follow to the community"),
 		THANKYOUS(6, "Display my Thank you's to the community"),
@@ -170,11 +170,8 @@ public class TalkerBean implements Serializable {
 	private String zip;
 	private int numberOfTopics;
 	
-	//Show/Hide help info on Profile and Health edit pages?
-	//TODO: implement this better!
-	private boolean hideProfileHelp;
-	private boolean hideHealthHelp;
-	private boolean hideTopicManageHelp;
+	//a set of hidden help popups for this user
+	private Set<String> hiddenHelps;
 	
 	//Notifications settings
 	private String[] ctype;
@@ -291,9 +288,7 @@ public class TalkerBean implements Serializable {
 	public void parseFromDB(DBObject talkerDBObject) {
 		parseBasicFromDB(talkerDBObject);
 		
-		setHideProfileHelp(getBoolean(talkerDBObject.get("hide_profilehelp")));
-		setHideHealthHelp(getBoolean(talkerDBObject.get("hide_healthhelp")));
-		setHideTopicManageHelp(getBoolean(talkerDBObject.get("hide_topicmanagehelp")));
+		setHiddenHelps(getStringSet(talkerDBObject, "hidden_helps"));
 		
 		setIm((String)talkerDBObject.get("im"));
 		setImUsername((String)talkerDBObject.get("im_uname"));
@@ -900,28 +895,17 @@ public class TalkerBean implements Serializable {
 	public void setNumOfConvoAnswers(int numOfConvoAnswers) {
 		this.numOfConvoAnswers = numOfConvoAnswers;
 	}
-	public boolean isHideProfileHelp() {
-		return hideProfileHelp;
-	}
-	public void setHideProfileHelp(boolean hideProfileHelp) {
-		this.hideProfileHelp = hideProfileHelp;
-	}
-	public boolean isHideHealthHelp() {
-		return hideHealthHelp;
-	}
-	public void setHideHealthHelp(boolean hideHealthHelp) {
-		this.hideHealthHelp = hideHealthHelp;
-	}
-	public boolean isHideTopicManageHelp() {
-		return hideTopicManageHelp;
-	}
-	public void setHideTopicManageHelp(boolean hideTopicManageHelp) {
-		this.hideTopicManageHelp = hideTopicManageHelp;
-	}
 	public String getChildrenNumStr() {
 		return childrenNumStr;
 	}
 	public void setChildrenNumStr(String childrenNumStr) {
 		this.childrenNumStr = childrenNumStr;
 	}
+	public Set<String> getHiddenHelps() {
+		return hiddenHelps;
+	}
+	public void setHiddenHelps(Set<String> hiddenHelps) {
+		this.hiddenHelps = hiddenHelps;
+	}
+	
 }	

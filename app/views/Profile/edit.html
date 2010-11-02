@@ -154,7 +154,7 @@
       <div class="cb"></div>
 </div> 	
 #{/if}			
-#{ifnot talker.hideProfileHelp}
+#{ifnot talker?.hiddenHelps.contains('profile') }
 <div id="profileHelp" class="helpInfo">
       <div class="popboxWraper">
         <div class="popbox2">

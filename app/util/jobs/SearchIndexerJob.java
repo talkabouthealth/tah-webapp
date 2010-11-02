@@ -44,7 +44,7 @@ public class SearchIndexerJob extends Job {
 				  doc.add(new Field("uname", talker.getUserName(), Field.Store.YES,
 				                        Field.Index.TOKENIZED));
 				  
-				  if (talker.isAllowed(ProfilePreference.BIO) && talker.getBio() != null) {
+				  if (talker.isAllowed(ProfilePreference.PERSONAL_INFO) && talker.getBio() != null) {
 					  doc.add(new Field("bio", talker.getBio(), Field.Store.YES,
 		                      Field.Index.TOKENIZED));
 				  }

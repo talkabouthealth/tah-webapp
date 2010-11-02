@@ -47,7 +47,7 @@
 			<div class="blacktext2" id="innerheading">General Health Details</div>
 			<div id="innerpersonalarea">
 				<div id="signupleft">
-#{ifnot talker.hideHealthHelp}
+#{ifnot talker?.hiddenHelps.contains('health')}
 <div id="healthHelp" class="helpInfo">
       <div class="popboxWraper">
         <div class="popbox2">

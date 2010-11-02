@@ -577,16 +577,8 @@ public class Profile extends Controller {
 	public static void hideHelpInfo(String type) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-		if ("profile".equalsIgnoreCase(type)) {
-			talker.setHideProfileHelp(true);
-		}
-		else if ("topicManage".equalsIgnoreCase(type)) {
-			talker.setHideTopicManageHelp(true);
-		}
-		else {
-			talker.setHideHealthHelp(true);
-		}
-		TalkerDAO.updateTalker(talker);
+		talker.getHiddenHelps().add(type);
+		CommonUtil.updateTalker(talker, session);
 		renderText("ok");
 	}
 }

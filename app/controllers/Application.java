@@ -236,8 +236,7 @@ public class Application extends Controller {
         	EnumSet.complementOf(
         		EnumSet.of(
     				ProfilePreference.PERSONAL_INFO,
-    				ProfilePreference.HEALTH_INFO,
-    				ProfilePreference.BIO
+    				ProfilePreference.HEALTH_INFO
         		)
         	);
         talker.saveProfilePreferences(defaultPreferences);

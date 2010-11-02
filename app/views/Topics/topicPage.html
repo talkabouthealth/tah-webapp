@@ -142,8 +142,7 @@
             <div id="comcover">
               <div id="comleft">
                 <div class="comcontent">
-                
-#{if currentPage.equals('manageTopic') && !talker?.hideTopicManageHelp}
+#{if currentPage.equals('manageTopic') && !talker?.hiddenHelps.contains('topicManage')}
 <div id="topicManageHelp" class="helpInfo">
       <div class="popboxWraper">
         <div class="popbox2" style="width: 600px;">

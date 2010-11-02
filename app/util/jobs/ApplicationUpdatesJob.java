@@ -89,8 +89,7 @@ public class ApplicationUpdatesJob extends Job {
 	        	EnumSet.complementOf(
 	        		EnumSet.of(
 	    				ProfilePreference.PERSONAL_INFO,
-	    				ProfilePreference.HEALTH_INFO,
-	    				ProfilePreference.BIO
+	    				ProfilePreference.HEALTH_INFO
 	        		)
 	        	);
 			admin.saveProfilePreferences(defaultPreferences);

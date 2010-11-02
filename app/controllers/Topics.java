@@ -74,6 +74,7 @@ public class Topics extends Controller {
     	notFoundIfNull(topic);
 
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	System.out.println(talker.getHiddenHelps());
     	
 		render(talker, topic);
     }
