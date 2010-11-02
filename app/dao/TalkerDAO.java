@@ -65,6 +65,8 @@ public class TalkerDAO {
 				.add("prefs", talker.profilePreferencesToInt())
 				.add("email_settings", talker.emailSettingsToList())
 				
+				.add("ch_num", -1)
+				
 				.add("nfreq", talker.getNfreq())
 				.add("ntime", talker.getNtime())
 				.add("ctype", talker.getCtype())

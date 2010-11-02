@@ -176,9 +176,11 @@
 			                      	<strong>Location:</strong> <span class="Profilepersonsub">${talker.state}, ${talker.city}</span>
 			                    </div>
 		                      #{/if}
-		                      <div class="profileCantanttxt2">
-		                      	<strong>Number of children:</strong><span class="Profilepersonsub"> ${talker.childrenNum}</span>
-		                      </div>
+		                      #{if talker.childrenNum != -1}
+		                      	<div class="profileCantanttxt2">
+			                      	<strong>Number of children:</strong><span class="Profilepersonsub"> ${talker.childrenNum}</span>
+			                    </div>
+		                      #{/if}
 		                    </div>
 		                    <!--profiletxtCantant-->
 		                    <div class="profiletxtCantant">

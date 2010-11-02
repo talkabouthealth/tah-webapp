@@ -62,6 +62,19 @@ public class Profile extends Controller {
 		flash.put("currentForm", "editForm");
 		TalkerBean oldTalker = CommonUtil.loadCachedTalker(session);
 		
+		String childrenNumStr = talker.getChildrenNumStr();
+		if (childrenNumStr == null || childrenNumStr.trim().length() == 0) {
+			//default value
+			talker.setChildrenNum(-1);
+		}
+		else {
+			int childrenNum = -1;
+			try {
+				childrenNum = Integer.parseInt(childrenNumStr);
+			} catch (NumberFormatException nfe) {}
+			talker.setChildrenNum(childrenNum);
+		}
+		
 		String oldUserName = oldTalker.getUserName();
 //		String oldEmail = oldTalker.getEmail();
 		if (!oldUserName.equals(talker.getUserName())) {

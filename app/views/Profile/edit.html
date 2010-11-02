@@ -322,10 +322,10 @@
 						</div>
 					</div>
 					<div class="personalmain">
-						<div class="personaltextarea"><span class="blacktext14">No. Of Children</span></div>
+						<div class="personaltextarea"><span class="blacktext14">Number of children</span></div>
 						<div class="personaltextfield">
-							<input name="talker.childrenNum" type="text" class="personalfields" id="talker.childrenNum" 
-									value="${talker.childrenNum}" />
+							<input id="talker.childrenNumStr" name="talker.childrenNumStr" type="text" class="personalfields" 
+									value="${talker.childrenNum == -1 ? '' : talker.childrenNum}" />
 						</div>
 					</div>
 					<div class="personalmain">
@@ -372,8 +372,9 @@
 					</div>
 					<div class="personalmain">
 						<div class="personaltextarea2">
-							<span class="blacktext14">Conversation Topics<br />
-								<span class="footerlink">Key words of what you like to talk about (i.e. cooking, sports)</span>
+							<span class="blacktext14">Ask me about<br />
+								<span class="footerlink">Key words of topics other members 
+									may ask you about (i.e. Clinical Trials, Herceptin, etc.).</span>
 							</span>
 						</div>
 						<div class="textareabig">
@@ -383,7 +384,7 @@
 						</div>
 					</div>
 					<div class="personalmain">
-						<div class="personaltextarea"><span class="blacktext14">Bio (About you)</span></div>
+						<div class="personaltextarea"><span class="blacktext14">Personal Bio (About you)</span></div>
 						<div class="textareabig">
 							<textarea name="talker.bio" cols="45" rows="5" class="textarea3">${talker.bio}</textarea>
 						</div>

@@ -150,6 +150,10 @@ public class TalkerBean implements Serializable {
 	
 	private String firstName;
 	private String lastName;
+	
+	private int childrenNum;
+	//for editing (we can't show/save default value with int)
+	private String childrenNumStr;
 	private List<String> childrenAges;
 	private String webpage;
 	private List<String> keywords;
@@ -164,7 +168,6 @@ public class TalkerBean implements Serializable {
 	private String state;
 	private String country;
 	private String zip;
-	private int childrenNum;
 	private int numberOfTopics;
 	
 	//Show/Hide help info on Profile and Health edit pages?
@@ -576,8 +579,11 @@ public class TalkerBean implements Serializable {
 		if ("F".equals(gender)) {
 			return "Female";
 		}
-		else {
+		else if ("M".equals(gender)) {
 			return "Male";
+		}
+		else {
+			return null;
 		}
 	}
 	
@@ -911,5 +917,11 @@ public class TalkerBean implements Serializable {
 	}
 	public void setHideTopicManageHelp(boolean hideTopicManageHelp) {
 		this.hideTopicManageHelp = hideTopicManageHelp;
+	}
+	public String getChildrenNumStr() {
+		return childrenNumStr;
+	}
+	public void setChildrenNumStr(String childrenNumStr) {
+		this.childrenNumStr = childrenNumStr;
 	}
 }	
