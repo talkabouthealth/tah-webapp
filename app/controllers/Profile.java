@@ -77,7 +77,7 @@ public class Profile extends Controller {
 		
 		Date dateOfBirth = CommonUtil.parseDate(talker.getDobMonth(), talker.getDobDay(), talker.getDobYear());
 		talker.setDob(dateOfBirth);
-		validation.required(dateOfBirth).message("Please input correct Birth Date");
+//		validation.required(dateOfBirth).message("Please input correct Birth Date");
 		
 		if(validation.hasErrors()) {
 			flash.success("");

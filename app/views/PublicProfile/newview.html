@@ -55,6 +55,59 @@
 
 			  <div class="profileCatant">
                   <div class="mtcontent">
+                  	#{if notProvidedInfo }
+                  		<div id="provideInfoHelp" class="helpInfo">
+						      <div class="popboxWraper">
+						        <div class="popbox2">
+						          <div class="closecover" style="clear: none; float: right;">
+						            <div class="close" onclick="return hideHelpInfo('provideInfo');">
+						            	<img src="/public/images/close.jpg" alt="Close" /></div>
+						          </div>
+						          <div class="note">
+								  	<strong>Notice:</strong>
+								  	You have not provided Personal Info or Health Info. 
+								  	You may provide this information using the 
+								  	<a href="@{Profile.edit()}">Edit Profile</a> and 
+								  	<a href="@{Profile.healthDetails()}">Edit Health Info</a> pages. 
+								  	<br/>
+								  	<br/>
+								  	Your Personal Info and Health Info will never be viewable by the public.
+								  	<br/>
+								  	<br/>
+						          </div>
+						          <div class="cb"></div>
+						        </div>
+						        <!--popbox2-->
+						
+						      </div>
+						      <div class="cb"></div>
+						</div> 
+                  	#{/if}
+                  	#{if !notProvidedInfo && notViewableInfo }
+                  		<div id="viewableInfoHelp" class="helpInfo">
+						      <div class="popboxWraper">
+						        <div class="popbox2">
+						          <div class="closecover" style="clear: none; float: right;">
+						            <div class="close" onclick="return hideHelpInfo('viewableInfo');">
+						            	<img src="/public/images/close.jpg" alt="Close" /></div>
+						          </div>
+						          <div class="note">
+								  	<strong>Notice:</strong>
+								  	Some of your profile information is private and no one else may view it. 
+								  	You may share your profile information with the TalkAboutHealth Community 
+								  	by changing your <a href="@{Profile.preferences()}">Privacy Settings</a>.
+								  	<br/>
+								  	<br/>
+						          </div>
+						          <div class="cb"></div>
+						        </div>
+						        <!--popbox2-->
+						
+						      </div>
+						      <div class="cb"></div>
+						</div> 
+                  	#{/if}
+                  
                     <div class="pph1Cover">
                       <div class="pph1">
                       		${talker.userName} 
@@ -110,7 +163,7 @@
                     </div>
                     <!--profiletxtCantant-->
                     #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.BIO) && talker.bio}
-						<div class="profilebio">Bio</div>
+						<div class="profilebio">Personal Bio</div>
 	                    <div class="topicborder"></div>
 	                    <div class="profilebiotxt">${talker.bio}</div>
 					#{/if}
@@ -124,7 +177,7 @@
 			                    </div>
 		                      #{/if}
 		                      <div class="profileCantanttxt2">
-		                      	<strong>No of children:</strong><span class="Profilepersonsub"> ${talker.childrenNum}</span>
+		                      	<strong>Number of children:</strong><span class="Profilepersonsub"> ${talker.childrenNum}</span>
 		                      </div>
 		                    </div>
 		                    <!--profiletxtCantant-->
@@ -152,13 +205,16 @@
 		                      	<strong>Marital Status:</strong> <span class="Profilepersonsub">${talker.maritalStatus}</span>
 		                      </div>
 		                      <div class="profileCantanttxt2">
-		                      	<strong>Conversation Topics:</strong>
+		                      	<strong>Ask me about:</strong>
 		                      	<span class="Profilepersonsub"> ${talker.keywords?.toCommaStringView()}</span>
 		                      </div>
 		                    </div>
 					#{/if}
 					
 					#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.HEALTH_INFO) && talkerDisease }
+							<div class="profilebio">Health Bio</div>
+	                    	<div class="topicborder"></div>
+	                    	<div class="profilebiotxt">${talkerDisease.healthBio}</div>
 							<div class="ProfileHealth">Health Info</div>
                     		<div class="topicborder"></div>
 							<div class="profiletext2">
@@ -300,7 +356,7 @@
                     
                     #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.ACTIVITY_STREAM) 
 							&& talker.activityList}
-						<div class="Profilemurray">${talker.userName} Activites (${talker.activityList.size()})</div>
+						<div class="Profilemurray">${talker.userName} Activities (${talker.activityList.size()})</div>
 	                    <div class="topicborder"></div>
 	                    <div class="profilema">
 	                    	#{list items:talker.activityList.limit(6), as:'activity' }

@@ -13,6 +13,8 @@ public class TalkerDiseaseBean {
 	private String type;
 	private boolean recurrent;
 	
+	private String healthBio;
+	
 	private Date symptomDate;
 	private int symptomMonth;
 	private int symptomYear;
@@ -74,6 +76,12 @@ public class TalkerDiseaseBean {
 	}
 	public void setHealthInfo(Map<String, List<String>> healthInfo) {
 		this.healthInfo = healthInfo;
+	}
+	public String getHealthBio() {
+		return healthBio;
+	}
+	public void setHealthBio(String healthBio) {
+		this.healthBio = healthBio;
 	}
 }
 

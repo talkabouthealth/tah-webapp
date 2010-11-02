@@ -16,6 +16,7 @@ import logic.TalkerLogic;
 import models.DiseaseBean;
 import models.HealthItemBean;
 import models.TalkerBean;
+import models.TalkerBean.ProfilePreference;
 import models.TalkerDiseaseBean;
 import models.ConversationBean;
 import models.TopicBean;
@@ -121,8 +122,20 @@ public class ViewDispatcher extends Controller {
 		
 		TalkerLogic.calculateProfileCompletion(talker);
 		
-//		render("PublicProfile/view.html", talker, disease, talkerDisease, healthItemsMap, currentTalker);
-		render("PublicProfile/newview.html", talker, disease, talkerDisease, healthItemsMap, currentTalker);
+		boolean notProvidedInfo = false;
+		boolean notViewableInfo = false;
+		if (currentTalker.equals(talker)) {
+			//show help info or not
+			//FIXME: finish yes info
+			
+			if (!talker.loadProfilePreferences().contains(ProfilePreference.PERSONAL_INFO)
+					|| !talker.loadProfilePreferences().contains(ProfilePreference.HEALTH_INFO)) {
+				notViewableInfo = true;
+			}
+		}
+		
+		render("PublicProfile/newview.html", talker, disease, talkerDisease, 
+				healthItemsMap, currentTalker, notProvidedInfo, notViewableInfo);
 	}
 	
 	private static void showConvo(ConversationBean convo) {
