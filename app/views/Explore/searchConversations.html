@@ -32,6 +32,10 @@
 			font-family:arial;
 			font-size:11px;
 		}
+		
+		.activitiestext span {
+			font-size: 12px;
+		}
 	</style>
 </head>
 <body>
@@ -90,10 +94,13 @@
 							<div class="cb"></div>
 							<div class="joinborder"></div>
 						</div>
+
 					#{/list}
 					#{else}
 						No results.
 					#{/else}
+					
+					#{ notLoggedNotice /}
 				</div>
 			#{/if}
 		</div>
