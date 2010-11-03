@@ -125,9 +125,17 @@ public class ViewDispatcher extends Controller {
 		boolean notProvidedInfo = false;
 		boolean notViewableInfo = false;
 		if (currentTalker.equals(talker)) {
-			//show help info or not
-			//FIXME: finish yes info
+			//if user has not provided Personal Info or Health Info
+			EnumSet<ActionType> userActionTypes = EnumSet.noneOf(ActionType.class);
+			for (Action action : talker.getActivityList()) {
+				userActionTypes.add(action.getType());
+			}
+			if (!userActionTypes.contains(ActionType.UPDATE_PERSONAL)
+					|| !userActionTypes.contains(ActionType.UPDATE_HEALTH)) {
+				notProvidedInfo = true;
+			}
 			
+			//if user has not made the information viewable to the Community
 			if (!talker.loadProfilePreferences().contains(ProfilePreference.PERSONAL_INFO)
 					|| !talker.loadProfilePreferences().contains(ProfilePreference.HEALTH_INFO)) {
 				notViewableInfo = true;

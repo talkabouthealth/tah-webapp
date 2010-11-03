@@ -561,7 +561,7 @@ public class TalkerBean implements Serializable {
 	
 	public String getAge() {
 		if (dob == null) {
-			return "";
+			return null;
 		}
 		Date now = new Date();
         long delta = (now.getTime() - dob.getTime()) / 1000;

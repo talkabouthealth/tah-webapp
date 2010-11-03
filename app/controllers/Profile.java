@@ -86,7 +86,7 @@ public class Profile extends Controller {
 //			validation.isTrue(tmpTalker == null).message("email.exists");
 //		}
 		
-		talker.setKeywords(CommonUtil.parseCommaSerapatedList(talker.getKeywords().get(0)));
+		talker.setKeywords(CommonUtil.parseCommaSerapatedList(talker.getKeywords().get(0), "Keywords (please separate by commas)"));
 		
 		Date dateOfBirth = CommonUtil.parseDate(talker.getDobMonth(), talker.getDobDay(), talker.getDobYear());
 		talker.setDob(dateOfBirth);
@@ -505,8 +505,9 @@ public class Profile extends Controller {
 			if (paramName.startsWith("other")) {
 				String id = paramName.substring(5);
 				String otherValue = paramsMap.get(paramName);
-				if (!otherValue.equals("Other (please separate by commas)")) {
-					List<String> otherItems = CommonUtil.parseCommaSerapatedList(otherValue);
+				
+				List<String> otherItems = CommonUtil.parseCommaSerapatedList(otherValue, "Other (please separate by commas)");
+				if (!otherItems.isEmpty()) {
 					otherHealthItems.put(id, otherItems);
 				}
 			}

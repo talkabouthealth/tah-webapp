@@ -164,7 +164,7 @@ public class CommonUtil {
 		return parseDate(month+"/"+day+"/"+year);
 	}
 
-	public static List<String> parseCommaSerapatedList(String otherItems) {
+	public static List<String> parseCommaSerapatedList(String otherItems, String defaultValue) {
 		if (otherItems == null) {
 			return null;
 		}
@@ -175,7 +175,7 @@ public class CommonUtil {
 		List<String> itemsList = new ArrayList<String>();
 		for (String otherItem : otherArray) {
 			otherItem = otherItem.trim();
-			if (otherItem.length() != 0) {
+			if (otherItem.length() != 0 && !otherItem.equalsIgnoreCase(defaultValue)) {
 				itemsList.add(otherItem);
 			}
 		}

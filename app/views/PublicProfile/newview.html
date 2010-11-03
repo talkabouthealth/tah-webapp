@@ -162,55 +162,72 @@
                       <div class="profileCantanttxt2"><strong>Answers:&nbsp;</strong>0</div>
                     </div>
                     <!--profiletxtCantant-->
-                    #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.BIO) && talker.bio}
-						<div class="profilebio">Personal Bio</div>
-	                    <div class="topicborder"></div>
-	                    <div class="profilebiotxt">${talker.bio}</div>
-					#{/if}
 					#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.PERSONAL_INFO) }
+							#{if talker.bio}
+								<div class="profilebio">Personal Bio</div>
+			                    <div class="topicborder"></div>
+			                    <div class="profilebiotxt">${talker.bio}</div>
+							#{/if}
 							<div class="Profileperson">Personal Info</div>
 		                    <div class="topicborder"></div>
+		                    #{if talker.state && talker.city}
 		                    <div class="profiletxtCantant">
-		                      #{if talker.state && talker.city}
 		                      	<div class="profileCantanttxt1">
 			                      	<strong>Location:</strong> <span class="Profilepersonsub">${talker.state}, ${talker.city}</span>
 			                    </div>
-		                      #{/if}
-		                      #{if talker.childrenNum != -1}
-		                      	<div class="profileCantanttxt2">
-			                      	<strong>Number of children:</strong><span class="Profilepersonsub"> ${talker.childrenNum}</span>
-			                    </div>
-		                      #{/if}
 		                    </div>
-		                    <!--profiletxtCantant-->
+		                    #{/if}
+		                    #{if talker.age}
 		                    <div class="profiletxtCantant">
 		                      <div class="profileCantanttxt1">
 		                      	<strong>Age:</strong> <span class="Profilepersonsub">${talker.age}</span>
 		                      </div>
-		                      <div class="profileCantanttxt2">
-		                      	<strong>Ages of children:</strong>
-		                      	<span class="Profilepersonsub"> ${talker.childrenAges?.toCommaStringView()}</span>
-		                      </div>
 		                    </div>
-		                    <!--profiletxtCantant-->
+		                    #{/if}
+		                    #{if talker.fullGender}
 		                    <div class="profiletxtCantant">
-		                      <div class="profileCantanttxt1">
-		                      	<strong>Gender:</strong> <span class="Profilepersonsub">${talker.fullGender}</span>
-		                      </div>
-		                      <div class="profileCantanttxt2">
+		                    	<div class="profileCantanttxt1">
+			                      	<strong>Gender:</strong> <span class="Profilepersonsub">${talker.fullGender}</span>
+			                    </div>
+			                </div>
+			                #{/if}
+			                #{if talker.maritalStatus}
+			                <div class="profiletxtCantant">
+		                    	<div class="profileCantanttxt1">
+		                      		<strong>Marital Status:</strong> <span class="Profilepersonsub">${talker.maritalStatus}</span>
+		                        </div>
+			                </div>
+			                #{/if}
+			                #{if talker.childrenNum != -1}
+			                    <div class="profiletxtCantant">
+			                    	<div class="profileCantanttxt1">
+				                      	<strong>Number of children:</strong><span class="Profilepersonsub"> ${talker.childrenNum}</span>
+				                    </div>
+				                </div>
+			                #{/if}
+			                #{if talker.childrenAges}
+			                <div class="profiletxtCantant">
+		                    	<div class="profileCantanttxt1">
+			                      	<strong>Ages of children:</strong>
+		                      		<span class="Profilepersonsub"> ${talker.childrenAges?.toCommaStringView()}</span>
+			                    </div>
+			                </div>
+			                #{/if}
+			                #{if talker.webpage}
+			                <div class="profiletxtCantant">
+		                    	<div class="profileCantanttxt1">
 		                      	<strong>Webpage:</strong><span class="Profilepersonsub"> ${talker.webpage}</span>
 		                      </div>
-		                    </div>
-		                    <!--profiletxtCantant-->
-		                    <div class="profiletxtCantant">
-		                      <div class="profileCantanttxt1">
-		                      	<strong>Marital Status:</strong> <span class="Profilepersonsub">${talker.maritalStatus}</span>
-		                      </div>
-		                      <div class="profileCantanttxt2">
+			                </div>
+			                #{/if}
+			                #{if talker.keywords}
+			                <div class="profiletxtCantant">
+		                    	<div class="profileCantanttxt1">
 		                      	<strong>Ask me about:</strong>
 		                      	<span class="Profilepersonsub"> ${talker.keywords?.toCommaStringView()}</span>
 		                      </div>
-		                    </div>
+			                </div>
+			                #{/if}
 					#{/if}
 					
 					#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.HEALTH_INFO) && talkerDisease }
