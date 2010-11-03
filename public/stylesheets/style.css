@@ -3555,6 +3555,7 @@ a.popup_black10s:hover {
 	float:left;
 	border:0;
 	background:url(../images/postcomments.jpg);
+	cursor:pointer;
 }
 .start {
 	width:87px;

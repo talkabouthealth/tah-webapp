@@ -29,6 +29,10 @@
 		//saveProfileComment(String profileTalkerId, String parentId, String text)
    		function saveProfileComment(parentId) {
    	   		var commentText = $("#replytext"+parentId).val();
+   	   		if (commentText === '') {
+   	   	   		alert('Please input comment');
+   	   	   		return;
+   	   		}
    			$("#replytext"+parentId).val("");
 
    			$.post("@{Actions.saveProfileComment2()}", 

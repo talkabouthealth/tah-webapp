@@ -224,9 +224,13 @@ public class Topics extends Controller {
     				renderText("Sorry, this topic cannot be a sub-topic. It already has a parent topic.");
         			return;
     			}
+    			
+    			topic.getChildren().add(childTopic);
     		}
-    		
-    		topic.getChildren().add(childTopic);
+    		else {
+    			//top level topic (should be without parents)
+    			renderText("Sorry, this topic cannot be a sub-topic.");
+    		}
     	}
     	else {
     		if (topic.isFixed()) {
