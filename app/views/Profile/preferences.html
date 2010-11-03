@@ -22,6 +22,34 @@
 			<div class="blacktext2" id="innerheading">Privacy Settings</div>
 			<div id="innerpersonalarea">
 				<div id="signupleft">
+				
+#{ifnot talker?.hiddenHelps.contains('privacy') }
+<div id="privacyHelp" class="helpInfo">
+      <div class="popboxWraper">
+        <div class="popbox2">
+          <div class="closecover" style="clear: none; float: right;">
+            <div class="close" onclick="return hideHelpInfo('privacy', true);"><img src="/public/images/close.jpg" alt="Close" /></div>
+          </div>
+          <div class="note">
+		  	<strong>What are Privacy Settings?</strong><br/>
+		  	Privacy Settings are how you control who may view your information. 
+		  	You may choose to make your information private or viewable by the Community.
+		  	Your information will never be viewable by the public.
+		  	<br/><br/>
+		  	<strong>Is the information I provide private?</strong><br/>
+		  	By default, all infromation that you provide is private and all of the infromation from
+		  	your actions on TalkAboutHealth is viewable by the Community. 
+		  	Your control the privacy of your information using the check boxes below.
+		  	<br/><br/>
+          </div>
+          <div class="cb"></div>
+        </div>
+        <!--popbox2-->
+
+      </div>
+      <div class="cb"></div>
+</div> 
+#{/ifnot}					
 					<div id="signupleftarea">
 						#{if flash.success}
 							<div class="signupmain" style="text-align: center">

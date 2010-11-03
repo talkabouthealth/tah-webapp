@@ -215,7 +215,7 @@ public class Profile extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		EnumSet<ProfilePreference> profilePreferences = talker.loadProfilePreferences();
 		
-		render(profilePreferences);
+		render(talker, profilePreferences);
 	}
 	
 	public static void savePreferences() {

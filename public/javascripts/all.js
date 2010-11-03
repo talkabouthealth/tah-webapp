@@ -336,10 +336,10 @@ function sendProfileComment() {
 }
 
 
-function hideHelpInfo(type) {
+function hideHelpInfo(type, saveFlag) {
 	$("#"+type+"Help").hide();
-	if (type === "profile" || type === "health" 
-			|| type === "topicManage") {
+	
+	if (saveFlag) {
 		$.post("/profile/hideHelpInfo", {type: type});
 	}
 	return false;
