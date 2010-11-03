@@ -19,6 +19,8 @@
 			);
 			return false;
 		});
+
+		makeTopicsAutocomplete("#talkerkeywords");
 	});
 	
 	function validatePasswordForm() {
@@ -379,11 +381,18 @@
 									may ask you about (i.e. Clinical Trials, Herceptin, etc.).</span>
 							</span>
 						</div>
+						<div class="personaltextfield">
+							<input id="talkerkeywords" name="talker.keywords" type="text" class="personalfields"
+									onclick="if (this.value == 'Keywords (please separate by commas)') this.value = ''"
+									value="${talker.keywords?.toCommaString('Keywords')}"/>
+						</div>
+						*{
 						<div class="textareabig">
-							<textarea name="talker.keywords" cols="45" rows="5" 
+							<textarea id="talkerkeywords" name="talker.keywords" cols="45" rows="5" 
 								onclick="if (this.value == 'Keywords (please separate by commas)') this.value = ''"
 								class="textarea3">${talker.keywords?.toCommaString('Keywords')}</textarea>
 						</div>
+						}*
 					</div>
 					<div class="personalmain">
 						<div class="personaltextarea"><span class="blacktext14">Personal Bio (About you)</span></div>

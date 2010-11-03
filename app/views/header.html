@@ -34,8 +34,30 @@
 		$('#jsddm > li').bind('mouseover', jsddm_open);
 		$('#jsddm > li').bind('mouseout',  jsddm_timer);
 
+		/*
+		$("#topSearchBox").keydown(function(c) {
+			if (c.keyCode === 13) {
+				//alert(c.keyCode);
+				alert( $("#topSearchBox").autocomplete().selectedItem );
+				//a.menu.element.is(":visible")
+				//makeFullSearch();
+				return false;
+			}
+		});
+		*/
+		
 		makeAutocomplete("#topSearchBox", "all");
 	});
+
+	function makeFullSearch() {
+		var query = $("#topSearchBox").val();
+		if (query === '') {
+			alert("Please enter search query");
+			return false;
+		}
+		var url = "/search/conversations?query="+query;
+		document.location = url;
+	}
 	
 	document.onclick = jsddm_close;
 </script>
@@ -143,7 +165,8 @@
 	                  </div>
 	                  <!--topsearchinput-->
 	                  <div class="topsubmitsz">
-	                    <input type="submit" style="cursor: pointer;" value=" " src="images/topsubmitbtn.png" class="topsubmit"/>
+	                    <input type="submit" onclick="return makeFullSearch();" 
+	                    	style="cursor: pointer;" value=" " src="images/topsubmitbtn.png" class="topsubmit"/>
 	                  </div>
 	                </div>
 	                <!--topsearchCover-->
