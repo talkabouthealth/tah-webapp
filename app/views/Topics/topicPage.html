@@ -164,6 +164,35 @@
       <div class="cb"></div>
 </div> 
 #{/if}
+#{if currentPage.equals('viewTopic') && !talker?.hiddenHelps.contains('topic')}
+<div id="topicHelp" class="helpInfo">
+      <div class="popboxWraper">
+        <div class="popbox2" style="width: 600px;">
+          <div class="closecover" style="clear: none; float: right;">
+            <div class="close" onclick="return hideHelpInfo('topic', true);"><img src="/public/images/close.jpg" alt="Close" /></div>
+          </div>
+          <div class="note">
+		  	<strong>What can I do on the Topic page?</strong><br/>
+		  	The Topic page has a description of the Topic and 
+		  	lists all of the Conversations associated with the Topic.
+		  	<br/><br/>
+		  	Members are encouraged to tag Conversations with Topics, create new Topics, 
+		  	edit the Topic description, and organize Topics using the Manage Topic page.
+		  	<br/><br/>
+		  	<strong>Following a Topic</strong><br/>
+		  	If you decide to follow a Topic, you will receive updates in your Conversation Feed 
+		  	when conversations are added to the Topic, for new answers in the Topic, 
+		  	and when conversations in the Topic have been re-stared.
+		  	<br/><br/>
+          </div>
+          <div class="cb"></div>
+        </div>
+        <!--popbox2-->
+
+      </div>
+      <div class="cb"></div>
+</div> 
+#{/if}
                   <div id="targestedtherapy">
                     <div class="editsWraper">
 						<div class="inline-edit" id="titleEdit">
@@ -221,7 +250,7 @@
 								<div class="inline_empty" style="display: ${!topic.summary ? 'block' : 'none'}">
 									#{if talker }
 										<div class="targetenew">
-											<a class="inline_addlink" href="#">Add Topic Summary</a>
+											<a class="inline_addlink" href="#">Add Topic Description</a>
 										</div>
 									#{/if}
 								</div>

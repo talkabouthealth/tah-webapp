@@ -156,7 +156,8 @@
 
                   <!--startsearchbox-->
                   <div class="topic">
-                    <div class="newpage1">Live Community Talks (${liveConversations.size()})</div>
+                    <div class="newpage1">
+                    	<a href="@{Explore.liveTalks()}">Live Breast Cancer Community Talks (${liveConversations.size()})</a></div>
                     <!-- <a href="#"><img src="/public/images/refreshicon.jpg" alt="refresh" 
                     	border="0" style="float:left; padding-left:4px; padding-top:22px"  /></a> -->
                     #{if liveConversations?.size() > 5}
@@ -176,7 +177,7 @@
                       <!--joinbox-->
                       
                       <div class="topic">
-                        <div class="newpage1">Your Conversation Feed</div>
+                        <div class="newpage1"><a href="@{Home.conversationFeed()}">Your Conversation Feed</a></div>
                         <div class="topicborder"></div>
                         <div class="cb"></div>
                       </div>
@@ -201,7 +202,7 @@
                       
                       #{if communityFeed}
                       	<div class="topic">
-	                        <div class="newpage1">Community Conversation Feed</div>
+	                        <div class="newpage1"><a href="@{Home.conversationFeed()}">Breast Cancer Community Feed</a></div>
 	                        <div class="topicborder"></div>
 	                        <div class="cb"></div>
 	                      </div>
