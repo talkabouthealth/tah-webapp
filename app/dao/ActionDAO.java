@@ -45,43 +45,43 @@ import static util.DBUtil.*;
 public class ActionDAO {
 	
 	/*
-So the following member actions trigger items in the feed:
-- Member followed starts/restarts a conversation or asks a question
-- Member followed joins conversation
-- Member followed answers or replies to a question
-- Member followed edits or adds a Summary
-- Member followed leaves comment on their own journal or another member leaves a comment in their journal
-- Member followed voted for an answer
-
-Conversation actions that trigger feeds:
-- Conversation/question started or restarted in a topic that is being followed
+- Conversation actions that trigger feeds:
+- Talk/Question started or restarted in a Topic or Conversation that is being followed
 - New answer in a Topic or Conversation that is being followed
-- Reply in a conversation that is being followed
-- Summary created or edited in Conversation/Topic that is being followed.
-- Conversation added to a topic being followed	 
+- Summary created or edited in Conversation or Topic that is being followed.
+- Conversation added to a Topic being followed
+
+- Member actions that trigger feeds:
+- Member followed starts/restarts a Talk or asks a Question
+- Member followed joins Conversation
+- Member followed Answers a question
+- Member followed edits or adds a Summary
+- Member followed leaves Comment in their own Journal or another member leaves a comment in their journal
+- Member followed voted for an answer 
 	 */
 	
 	private static final EnumSet<ActionType> CONVO_FEED_ACTIONS = EnumSet.of(
+			//TODO: join convo for following convo?
 			ActionType.START_CONVO, ActionType.RESTART_CONVO, ActionType.JOIN_CONVO,
-			ActionType.ANSWER_CONVO, ActionType.REPLY_CONVO, 
+			ActionType.ANSWER_CONVO,
 			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED,
 			ActionType.ANSWER_VOTED,
 			ActionType.TOPIC_ADDED,
 			ActionType.PERSONAL_PROFILE_COMMENT, ActionType.PERSONAL_PROFILE_REPLY
 		);
 	
-//	- conversation started
-//	- question answered
-//	- reply to answer
-//	- summary added or edited
-//	- answer received vote
+//	Community Conversation Feed:
+//		- Talk started or Question asked
+//		- Question answered
+//		- Summary added or edited
+//		- Answer received vote
 	private static final EnumSet<ActionType> COMMUNITY_CONVO_FEED_ACTIONS = EnumSet.of(
 			ActionType.START_CONVO,
-			ActionType.ANSWER_CONVO, ActionType.REPLY_CONVO, 
+			ActionType.ANSWER_CONVO, 
 			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED,
 			ActionType.ANSWER_VOTED
 		);
-	
+	private static final EnumSet<ActionType> TOPIC_FEED_ACTIONS = COMMUNITY_CONVO_FEED_ACTIONS;
 	
 	public static final String ACTIVITIES_COLLECTION = "activities";
 	
@@ -200,8 +200,17 @@ Conversation actions that trigger feeds:
 	public static Set<Action> loadLatestByTopic(TopicBean topic) {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
+		//list of needed actions for this Feed
+		Set<String> actionTypes = new HashSet<String>();
+		for (ActionType actionType : TOPIC_FEED_ACTIONS) {
+			actionTypes.add(actionType.toString());
+		}
 		Set<DBRef> convosDBSet = ConversationDAO.getConversationsByTopic(topic);
-		DBObject query = new BasicDBObject("convoId", new BasicDBObject("$in", convosDBSet));
+		
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("type", new BasicDBObject("$in", actionTypes))
+			.add("convoId", new BasicDBObject("$in", convosDBSet))
+			.get();
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
