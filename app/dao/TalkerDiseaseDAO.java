@@ -46,7 +46,7 @@ public class TalkerDiseaseDAO {
 		DBObject diseaseObject = BasicDBObjectBuilder.start()
 			.add("stage", talkerDisease.getStage())
 			.add("type", talkerDisease.getType())
-			.add("recur", talkerDisease.isRecurrent())
+			.add("recur", talkerDisease.getRecurrent())
 			.add("symp_date", talkerDisease.getSymptomDate())
 			.add("diag_date", talkerDisease.getDiagnoseDate())
 			.add("health_info", healthInfoDBObject)
@@ -75,7 +75,7 @@ public class TalkerDiseaseDAO {
 		talkerDisease.setUid(talkerId);
 //		talkerDisease.setStage((String)diseaseDBObject.get("stage"));
 //		talkerDisease.setType((String)diseaseDBObject.get("type"));
-		talkerDisease.setRecurrent((Boolean)diseaseDBObject.get("recur"));
+		talkerDisease.setRecurrent((String)diseaseDBObject.get("recur"));
 		talkerDisease.setSymptomDate((Date)diseaseDBObject.get("symp_date"));
 		talkerDisease.setDiagnoseDate((Date)diseaseDBObject.get("diag_date"));
 		

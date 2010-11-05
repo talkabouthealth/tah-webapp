@@ -11,7 +11,8 @@ public class TalkerDiseaseBean {
 	private String name;
 	private String stage;
 	private String type;
-	private boolean recurrent;
+	//done as string to handle "user-not-entered-info" case
+	private String recurrent;
 	
 	private String healthBio;
 	
@@ -30,9 +31,12 @@ public class TalkerDiseaseBean {
 	//Map for "Other" fields
 	private Map<String, List<String>> otherHealthItems;
 	
-	public boolean isRecurrent() { return recurrent; }
-	public void setRecurrent(boolean recurrent) { this.recurrent = recurrent; }
-	
+	public String getRecurrent() {
+		return recurrent;
+	}
+	public void setRecurrent(String recurrent) {
+		this.recurrent = recurrent;
+	}
 	public Date getSymptomDate() { return symptomDate; }
 	public void setSymptomDate(Date symptomDate) { this.symptomDate = symptomDate; }
 	

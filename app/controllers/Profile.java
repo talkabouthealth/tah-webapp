@@ -482,7 +482,7 @@ public class Profile extends Controller {
 		Map<String, List<String>> healthInfo = new HashMap<String, List<String>>();
 		for (DiseaseQuestion question : disease.getQuestions()) {
 			String[] values = paramsMap.get(question.getName());
-			if (values != null) {
+			if (values != null && values[0].length() != 0) {
 				healthInfo.put(question.getName(), Arrays.asList(values));
 			}
 		}

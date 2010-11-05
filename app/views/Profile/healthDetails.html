@@ -75,7 +75,15 @@
 </div> 
 #{/ifnot}
 					<div id="signupleftarea">
-						
+						<div class="signupmain">
+							<div class="generaltextarea">
+								<span class="blacktext16"><strong>Health Bio</strong></span>
+							</div>
+							<div class="textareabig">
+								<textarea name="talkerDisease.healthBio" cols="45" rows="5" 
+									class="textarea3">${talkerDisease?.healthBio}</textarea>
+							</div>
+						</div>
 						#{list items:disease.questions, as:'question'}
 							<div class="signupmain">
 							<a name="symptoms"></a>
@@ -85,6 +93,7 @@
 								</div>
 								<div class="personaltextfield">
 									<select name="${question.name}" class="personalfields">
+										<option value=""></option>
 										#{list items:question.choices, as:'choice' }
 											<option value="${choice}" 
 										    	#{if talkerDisease?.healthInfo?.get(question.name)?.contains(choice) } 
@@ -151,11 +160,12 @@
 								<span class="blacktext16"><strong>Is it recurrent?</strong></span>
 							</div>
 							<div class="personaltextfield">
-								<select name="talkerDisease.recurrent" class="personalfields">											
-							 		<option value="false">no</option>
-							 		<option value="true" 
-							 		#{if talkerDisease?.recurrent } selected #{/if} 
-							 		>yes</option>
+								<select name="talkerDisease.recurrent" class="personalfields">
+									#{list items:['', 'no', 'yes'], as:'val' }
+										<option value="${val}" 
+									    #{if val.equals(talkerDisease?.recurrent) } selected #{/if} 
+									    >${val}</option>
+									#{/list}	
 								</select>
 							</div>
 						</div>

@@ -231,9 +231,11 @@
 					#{/if}
 					
 					#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.HEALTH_INFO) && talkerDisease }
-							<div class="profilebio">Health Bio</div>
-	                    	<div class="topicborder"></div>
-	                    	<div class="profilebiotxt">${talkerDisease.healthBio}</div>
+							#{if talkerDisease.healthBio }
+								<div class="profilebio">Health Bio</div>
+		                    	<div class="topicborder"></div>
+		                    	<div class="profilebiotxt">${talkerDisease.healthBio}</div>
+							#{/if}
 							<div class="ProfileHealth">Health Info</div>
                     		<div class="topicborder"></div>
 							<div class="profiletext2">
@@ -256,9 +258,11 @@
 											<span class="blacktext">${talkerDisease.diagnoseDate?.format('MM/dd/yyyy')}</span>
 										</li>
 									#{/if}
+									#{if talkerDisease.recurrent}
 									<li class="blacktext12"><b>Recurrent</b>:
-										<span class="blacktext">${talkerDisease.recurrent?.yesno('yes', 'no')}</span>
+										<span class="blacktext">${talkerDisease.recurrent}</span>
 									</li>
+									#{/if}
 									
 									<li class="blacktext12 healthitemtitle" style="padding-top:10px;"><strong>Initial Symptoms</strong></li>
 									<!-- We need span to hide health items titles without children using jQuery -->
