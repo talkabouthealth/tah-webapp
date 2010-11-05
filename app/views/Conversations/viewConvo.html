@@ -310,6 +310,38 @@
 					<div class="mtcontent">
 						<div id="targetedtherapy">
 							<div class="suggescover">
+							
+#{if !talker?.hiddenHelps.contains('convo')}
+<div id="convoHelp" class="helpInfo">
+      <div class="popboxWraper">
+        <div class="popbox2" style="width: 600px;">
+          <div class="closecover" style="clear: none; float: right;">
+            <div class="close" onclick="return hideHelpInfo('convo', true);"><img src="/public/images/close.jpg" alt="Close" /></div>
+          </div>
+          <div class="note">
+		  	<strong>What can I do on the Conversation Summary page?</strong><br/>
+		  	Members are encouraged to contribute and improve the 
+		  	content for all Conversations:<br/>
+		 	- answer questions<br/>
+		 	- improve the headline and Conversation details<br/>
+		 	- tag the Conversation with relevant Topics<br/>
+		 	- vote for and suggest improvements to Answers<br/>
+		 	- create Conversation summaries
+		  	<br/><br/>
+		  	<strong>Following a Conversation</strong><br/>
+		  	If you decide to follow a Conversation, you will receive
+		  	updates to the Conversation in your Conversation Feed and email.
+		  	<br/><br/>
+          </div>
+          <div class="cb"></div>
+        </div>
+        <!--popbox2-->
+
+      </div>
+      <div class="cb"></div>
+</div> 
+#{/if}								
+							
 								<div class="editsWraper">
 									<div class="editsWraper">
 										<div class='inline-edit' id="titleEdit">

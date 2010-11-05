@@ -32,16 +32,16 @@ public class StartConvoAction extends AbstractAction {
 		StringBuilder result = new StringBuilder();
 		result.append(fullUserName(talker, authenticated));
 		
-		String action = " started ";
 		if (type == ActionType.RESTART_CONVO) {
-			action = " restarted ";
-		}
-		result.append(action);
-		if (convo.getConvoType() == ConvoType.CONVERSATION) {
-			result.append("the live talk ");
+			result.append(" restarted the live talk ");
 		}
 		else {
-			result.append("the question ");
+			if (convo.getConvoType() == ConvoType.CONVERSATION) {
+				result.append(" started the live talk ");
+			}
+			else {
+				result.append(" asked the question ");
+			}
 		}
 		result.append(convoTopics());
 		

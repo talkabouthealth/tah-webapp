@@ -79,7 +79,7 @@
 				                        <ul>
 				                        	#{if _level == 1}
 				                        		<li><a href="#" onclick="$('#replies${comment.id}').show(); return false;"
-				                        			#{if comment.children?.size() == 0}
+				                        			#{if comment.children == null || comment.children?.size() == 0}
 				                        				#{if session.username}
 				                        					>Add Reply</a>
 				                        				#{/if}
@@ -101,9 +101,8 @@
 					                        #{if session.username?.equals(comment.fromTalker.userName) ||
 					                        		session.username?.equals("admin") }
 					                        	<li><a href="#" onclick="return deleteAnswer('${comment.id}');">Delete</a></li>
-					                        	<li>&nbsp;|&nbsp;</li>
 					                        #{/if}
-					                  		#{if session.username}
+					                  		#{if session.username && !session.username?.equals(comment.fromTalker.userName)}
 				<li><a href="#" 
 					onclick="return showPopupForm('thankYou', '${comment.fromTalker.id}', '${comment.fromTalker.userName}');">Thank</a></li>
 				

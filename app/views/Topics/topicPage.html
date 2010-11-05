@@ -164,7 +164,7 @@
       <div class="cb"></div>
 </div> 
 #{/if}
-#{if currentPage.equals('viewTopic') && !talker?.hiddenHelps.contains('topic')}
+#{if currentPage.equals('viewTopic') && talker && !talker?.hiddenHelps?.contains('topic')}
 <div id="topicHelp" class="helpInfo">
       <div class="popboxWraper">
         <div class="popbox2" style="width: 600px;">

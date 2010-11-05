@@ -3320,30 +3320,6 @@ a.popup_black10s:hover {
 	height:32px;
 	float:left;
 }
-.latestactivity a {
-	display:block;
-	width:112px;
-	height:24px;
-	background:url(../images/latestactivity.jpg);
-	text-align:center;
-	padding-top:8px;
-	font-size:13px;
-	font-weight:normal;
-	color:#FFFFFF;
-	text-decoration:none;
-}
-.latestactivity a:hover {
-	width:112px;
-	height:24px;
-	background:url(../images/latestactivity.jpg);
-	text-align:center;
-	padding-top:8px;
-	font-size:13px;
-	font-weight:normal;
-	color:#FFFFFF;
-	text-decoration:none;
-	display:block;
-}
 .latestactivity1 {
 	width:112px;
 	height:32px;
@@ -3360,17 +3336,20 @@ a.popup_black10s:hover {
 	color:#000000;
 	text-decoration:none;
 }
-.latestactivity1 a:hover {
+.latestactivity a, .latestactivity a:hover, .latestactivity1 a:hover {
+	display:block;
 	width:112px;
 	height:24px;
-	background:url(../images/latestactivity.jpg);
 	text-align:center;
 	padding-top:8px;
 	font-size:13px;
 	font-weight:normal;
 	color:#FFFFFF;
 	text-decoration:none;
-	display:block;
+	background:url(../images/latestactivity.jpg);
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-color: #0b95d6;
 }
 
 .laborder {
