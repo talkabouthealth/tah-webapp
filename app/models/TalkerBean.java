@@ -120,6 +120,7 @@ public class TalkerBean implements Serializable {
 	private String id;
 	@Required @Match(ValidateData.USER_REGEX) private String userName;
 	@Required private String password;
+	private String confirmPassword;
 	@Required @Email private String email;
 	private String verifyCode;	//code for email verification
 	private Set<EmailBean> emails;
@@ -906,6 +907,12 @@ public class TalkerBean implements Serializable {
 	}
 	public void setHiddenHelps(Set<String> hiddenHelps) {
 		this.hiddenHelps = hiddenHelps;
+	}
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
 	}
 	
 }	
