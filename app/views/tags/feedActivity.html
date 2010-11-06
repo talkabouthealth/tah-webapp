@@ -45,7 +45,7 @@
 				${_activity.reply.text}
 			#{/if}
 			#{elseif _activity.answer}
-				${_activity.answer.text}
+				${_activity.answer.text.nl2br()}
 			#{/elseif}
 		</div>
 	</div>

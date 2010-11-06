@@ -66,7 +66,10 @@
 				$display.hide();
 				$form.show();
 				
-				var editText = $view.html();
+				var editText = "";
+				if ($view.size() != 0) {
+					editText = $view.html();
+				}
 				if (editText) {
 					editText = editText.replace(/<br>/g, '\n');
 					editText = editText.replace(/<BR>/g, '\n');
