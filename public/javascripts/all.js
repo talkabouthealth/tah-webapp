@@ -1,6 +1,10 @@
 /* Scripts for all pages */
 var selectedTalkerId = '';
 
+var flagType = "";
+var flagConvoId = "";
+var flagAnswerId = "";
+
 function openChat(convoId){
 	window.open("/talk/"+convoId, "TalkerWindow", "width=730,height=565");
 }
@@ -19,6 +23,25 @@ function closeLiveTalk(convoId) {
 	$.post("/conversations/close", {convoId: convoId});
 	
 	$("#liveTalk"+convoId).remove();
+	return false;
+}
+
+function flag() {
+	var reason = $("#flagReason").val();
+	$("#flagReason").val("");
+	if (flagType === "convo") {
+		$.post("/conversations/flag", 
+				{reason: reason, convoId: flagConvoId}
+		);
+	}
+	else if (flagType === "answer") {
+		$.post("/conversations/flaganswer", 
+			{reason: reason, answerId: flagAnswerId}
+		);
+	}
+
+	hideAll();
+	showPopup("#flagConfirm", 200);
 	return false;
 }
 

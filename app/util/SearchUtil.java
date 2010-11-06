@@ -85,7 +85,7 @@ public class SearchUtil {
 			
 			String convoId = doc.get("id");
 			ConversationBean convo = ConversationDAO.getByConvoId(convoId);
-			if (convo == null) {
+			if (convo == null || convo.isDeleted()) {
 				continue;
 			}
 			convo.setComments(CommentsDAO.loadConvoAnswers(convoId));

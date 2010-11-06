@@ -35,9 +35,6 @@
 	
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
-		var flagType = "convo";
-		var flagConvoId = "";
-	
 		$(document).ready(function() {
 			$("#followTopicLink").click(function() {
 				$.post("@{Topics.follow()}", 
@@ -112,24 +109,6 @@
    				);
 			}
 		}
-
-		function flag() {
-   	   		var reason = $("#flagReason").val();
-   	   		$("#flagReason").val("");
-   			if (flagType === "convo") {
-				$.post("@{Conversations.flag}", 
-						{reason: reason, convoId: flagConvoId}
-				);
-			}
-   			else if (flagType === "answer") {
-   				$.post("@{Conversations.flagAnswer}", 
-					{reason: reason, answerId: flagAnswerId}
-				);
-   			}
-
-   			hideAll();
-   			return false;
-   		}
 	</script>
 </head>
 

@@ -57,9 +57,6 @@
 	<script type="text/javascript">
 		var tid = '${convo.tid}';
 		
-		var flagType = '';
-		var flagAnswerId = '';
-
 		var titleLimit = 150;
 		
 		$(document).ready(function() {
@@ -86,6 +83,7 @@
 
 			$(".flagConvoLink").click(function() {
 				flagType = "convo";
+				flagConvoId = '${convo.id}';
 				showPopup("#flagPopup", 200);
 			});
 
@@ -273,25 +271,6 @@
    	   		}
    	   		
    	   		return false;
-   		}
-
-   		//flag convo or answer
-   		function flag() {
-   	   		var reason = $("#flagReason").val();
-   	   		$("#flagReason").val("");
-   			if (flagType === "convo") {
-				$.post("@{Conversations.flag}", 
-						{reason: reason, convoId: '${convo.id}'}
-				);
-			}
-   			else if (flagType === "answer") {
-   				$.post("@{Conversations.flagAnswer}", 
-					{reason: reason, answerId: flagAnswerId}
-				);
-   			}
-
-   			hideAll();
-   			return false;
    		}
 	</script>
 </head>

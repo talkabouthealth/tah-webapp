@@ -78,6 +78,10 @@ public class SearchIndexerJob extends Job {
 			for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
 	//			possibly weight titles, conversation details, summaries, and answers more than the archived real-time conversations?
 				
+				if (convo.isDeleted()) {
+					continue;
+				}
+				
 				List<CommentBean> answersList = CommentsDAO.loadConvoAnswers(convo.getId());
 				
 				Document doc = new Document();
@@ -88,7 +92,9 @@ public class SearchIndexerJob extends Job {
 				//add an answer, reply, or live conversation text ?
 				StringBuilder answersString = new StringBuilder();
 				for (CommentBean answer : answersList) {
-					answersString.append(answer.getText());
+					if (!answer.isDeleted()) {
+						answersString.append(answer.getText());
+					}
 				}
 				doc.add(new Field("answers", answersString.toString(), Field.Store.NO, Field.Index.TOKENIZED));
 				convoIndexWriter.addDocument(doc);
@@ -107,6 +113,10 @@ public class SearchIndexerJob extends Job {
 			}
 			
 			for (TopicBean topic : TopicDAO.loadAllTopics()) {
+				if (topic.isDeleted()) {
+					continue;
+				}
+				
 				Document doc = new Document();
 				doc.add(new Field("title", topic.getTitle(), Field.Store.YES, Field.Index.TOKENIZED));
 				doc.add(new Field("type", "Topic", Field.Store.YES, Field.Index.NO));
