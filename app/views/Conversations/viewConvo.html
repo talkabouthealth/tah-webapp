@@ -659,9 +659,7 @@
 								<strong>Followed By:</strong> ${convo.followers?.size()} members<br/>
 								#{if talker}
 									#{list items: convo.followers, as: 'follower'}
-										<a href="@{ViewDispatcher.view(follower.userName)}" title="${follower.userName}" >
-											<img src="@{Image.show(follower.userName)}" width="48" height="48" border="0" />
-										</a>
+										#{talker/talkerImageLink size: 48, userName: follower.userName /}
 									#{/list}
 								#{/if}
 							</p><br />

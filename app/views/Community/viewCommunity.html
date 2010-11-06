@@ -116,9 +116,7 @@
                   #{list items: communityMembers, as: 'member'}
                   	<div class="topbox">
 	                    <div class="topleftimg" style="float: left;">
-	                    	<a href="@{ViewDispatcher.view(member.userName)}">
-								<img src="@{Image.show(member.userName)}" width="39" height="39" border="0" />
-							</a>
+							#{talker/talkerImageLink size: 39, userName: member.userName /}
 	                    </div>
 	                    <div class="topr">
 	                      <div class="toprighttext">

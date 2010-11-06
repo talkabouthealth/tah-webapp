@@ -314,9 +314,7 @@
                   <div class="membersarea">
                   	#{if talker }
 	                  	#{list items: topic.followers, as: 'follower'}
-							<a href="@{ViewDispatcher.view(follower.userName)}" title="${follower.userName}" >
-								<img src="@{Image.show(follower.userName)}" width="25" height="25" border="0" />
-							</a>
+							#{talker/talkerImageLink size: 25, userName: follower.userName /}
 						#{/list}
 					#{/if}
                   </div>

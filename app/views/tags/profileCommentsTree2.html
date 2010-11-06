@@ -4,12 +4,12 @@
 	<div class="commentstop">
 		#{if _level == 1 && !_isFeed}
 			<div class="compic">
-				<img src="@{Image.show(comment.fromTalker.userName)}" border="0" width="40px" height="40px" />
+				#{talker/talkerImageLink size: 40, userName: comment.fromTalker.userName /}
 			</div>
 		#{/if}
 		#{if _level != 1}
 			<div class="comreplypic">
-				<img src="@{Image.show(comment.fromTalker.userName)}" border="0" width="31px" height="31px" />
+				#{talker/talkerImageLink size: 31, userName: comment.fromTalker.userName /}
 			</div>
 		#{/if}
 		<div class="${_level == 1 ? 'comtextr' : 'comreplytxt'}">

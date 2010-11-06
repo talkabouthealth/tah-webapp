@@ -145,9 +145,7 @@
 	                  #{list items:talker.followingList.limit(8), as:'following' }
 							<div class="followingtxtpic">
 			                    <div class="followingpic">
-			                    	<a href="@{ViewDispatcher.view(following.userName)}">
-										<img src="@{Image.show(following.userName)}" width="48" height="48" border="0" />
-									</a>
+									#{talker/talkerImageLink size: 48, userName: following.userName /}
 			                    </div>
 			                    <div class="followingpictxt">
 			                    	<a href="@{ViewDispatcher.view(following.userName)}">${following.userName.limitSize(8)}</a>
@@ -179,9 +177,7 @@
 	                  #{list items:talker.followerList.limit(8), as:'following' }
 							<div class="followingtxtpic">
 			                    <div class="followingpic">
-			                    	<a href="@{ViewDispatcher.view(following.userName)}">
-										<img src="@{Image.show(following.userName)}" width="48" height="48" border="0" />
-									</a>
+			                    	#{talker/talkerImageLink size: 48, userName: following.userName /}
 			                    </div>
 			                    <div class="followingpictxt">
 			                    	<a href="@{ViewDispatcher.view(following.userName)}">${following.userName.limitSize(8)}</a>

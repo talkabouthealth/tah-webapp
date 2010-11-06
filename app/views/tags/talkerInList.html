@@ -1,8 +1,6 @@
 <div class="thnksfollowing">
     <div class="thnksfollowingimg">
-		<a href="@{ViewDispatcher.view(_talker.userName)}">
-			<img width="80" height="80" src="@{Image.show(_talker.userName)}" border="0" />
-		</a>
+		#{talker/talkerImageLink size: 80, userName: _talker.userName /}
 	</div>
 	<div class="thnksfollowingtext">
       	<a class="blue13" href="@{ViewDispatcher.view(_talker.userName)}">

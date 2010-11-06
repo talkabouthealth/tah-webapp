@@ -1,8 +1,6 @@
 <div class="profiletext2">
 	<div class="thankyoupic">
-		<a href="@{ViewDispatcher.view(_thankYou.fromTalker.userName)}">
-			<img width="48" height="48" src="@{Image.show(_thankYou.fromTalker.userName)}" border="0" />
-		</a>
+		#{talker/talkerImageLink size: 48, userName: _thankYou.fromTalker.userName /}
 	</div>
 	<div class="thankyoutext">
 		<a href="@{ViewDispatcher.view(_thankYou.fromTalker.userName)}" 

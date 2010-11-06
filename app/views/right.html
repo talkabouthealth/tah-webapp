@@ -11,9 +11,7 @@
          	
            <div class="comtopbox">
              <div class="comrightimg">
-             	<a href="@{ViewDispatcher.view(talker.userName)}">
-					<img src="@{Image.show(talker.userName)}" width="58" height="58" border="0" />
-				</a>
+				#{talker/talkerImageLink size: 58, userName: talker.userName /}
              </div>
              <div class="topr">
                <div class="comrighttext">
