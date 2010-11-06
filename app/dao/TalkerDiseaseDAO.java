@@ -49,6 +49,7 @@ public class TalkerDiseaseDAO {
 			.add("recur", talkerDisease.getRecurrent())
 			.add("symp_date", talkerDisease.getSymptomDate())
 			.add("diag_date", talkerDisease.getDiagnoseDate())
+			.add("health_bio", talkerDisease.getHealthBio())
 			.add("health_info", healthInfoDBObject)
 			.add("healthitems", talkerDisease.getHealthItems())
 			.add("other_healthitems", otherHealthItems)
@@ -75,9 +76,19 @@ public class TalkerDiseaseDAO {
 		talkerDisease.setUid(talkerId);
 //		talkerDisease.setStage((String)diseaseDBObject.get("stage"));
 //		talkerDisease.setType((String)diseaseDBObject.get("type"));
-		talkerDisease.setRecurrent((String)diseaseDBObject.get("recur"));
+		
+		//TODO: remove befor db clean
+		Object recurObj = diseaseDBObject.get("recur");
+		if (recurObj instanceof Boolean) {
+			talkerDisease.setRecurrent(((Boolean)recurObj).toString());
+		}
+		else {
+			talkerDisease.setRecurrent((String)diseaseDBObject.get("recur"));
+		}
+		
 		talkerDisease.setSymptomDate((Date)diseaseDBObject.get("symp_date"));
 		talkerDisease.setDiagnoseDate((Date)diseaseDBObject.get("diag_date"));
+		talkerDisease.setHealthBio((String)diseaseDBObject.get("health_bio"));
 		
 		DBObject healthInfoDBObject = (DBObject)diseaseDBObject.get("health_info");
 		if (healthInfoDBObject != null) {
