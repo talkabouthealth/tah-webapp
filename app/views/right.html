@@ -1,6 +1,14 @@
 <div id="comright" style="padding-left:30px;">
 #{if session.username }
          <div class="topipsts"> <br />
+         	#{if session.username.equals(talker.userName) }
+         		Welcome 
+               	<a href="@{ViewDispatcher.view(talker.userName)}"><strong>${talker.userName}</strong></a>!
+         	#{/if}
+         	#{else}
+         		<a href="@{ViewDispatcher.view(talker.userName)}"><strong>${talker.userName}'s</strong></a> Profile
+         	#{/else}
+         	
            <div class="comtopbox">
              <div class="comrightimg">
              	<a href="@{ViewDispatcher.view(talker.userName)}">
@@ -9,11 +17,7 @@
              </div>
              <div class="topr">
                <div class="comrighttext">
-                 <div class="topiptextl">
-                 	<a href="@{ViewDispatcher.view(talker.userName)}">
-						<strong>${talker.userName}</strong>
-					</a>
-                 </div>
+                 
                  #{if talker.connection}
                  	<div class="topiptext2">${talker.connection}</div>
                  #{/if}
