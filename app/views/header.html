@@ -34,17 +34,19 @@
 		$('#jsddm > li').bind('mouseover', jsddm_open);
 		$('#jsddm > li').bind('mouseout',  jsddm_timer);
 
-		/*
-		$("#topSearchBox").keydown(function(c) {
-			if (c.keyCode === 13) {
-				//alert(c.keyCode);
-				alert( $("#topSearchBox").autocomplete().selectedItem );
-				//a.menu.element.is(":visible")
-				//makeFullSearch();
-				return false;
-			}
-		});
-		*/
+		$("#topSearchBox")
+			.focus(function() {
+				$("#topSearchBox").autocomplete( "search" );
+			})
+			.keydown(function(c) {
+				if (c.keyCode === 13) {
+					//alert(c.keyCode);
+					//alert( $("#topSearchBox").autocomplete().element );
+					//a.menu.element.is(":visible")
+					makeFullSearch();
+					return false;
+				}
+			});
 		
 		makeAutocomplete("#topSearchBox", "all");
 	});

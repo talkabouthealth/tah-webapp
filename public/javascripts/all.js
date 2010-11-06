@@ -122,7 +122,9 @@ function makeAutocomplete(id, type) {
 	if (type === "all") {
 		url = "/search/ajaxSearch";
 	}
-	else if (type === "convo") {
+	//'convo' - redirects user to selected convo
+	//'convoedit' - just copies convo to an input
+	else if (type === "convo" || type === "convoedit") {
 		url = "/search/ajaxConvoSearch";
 	}
 	else if (type === "topic") {
@@ -149,7 +151,7 @@ function makeAutocomplete(id, type) {
 			});
 		},
 		select: function(event, ui) {
-			if (type === "all") {
+			if (type === "all" || type === "convo") {
 				var url = ui.item.url;
 				if (url === "#fullsearch") {
 					//go to full conversations search
