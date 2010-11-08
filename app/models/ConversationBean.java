@@ -242,7 +242,7 @@ public class ConversationBean {
 		return id.hashCode();
 	}
 	
-	//for displaying
+	//for displaying (e.g. in OpenQuestions)
 	public String getHtmlDetails(boolean authenticated) {
 		StringBuilder htmlDetails = new StringBuilder();
 		if (convoType == ConvoType.CONVERSATION) {

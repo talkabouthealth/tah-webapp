@@ -24,10 +24,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 
+import logic.ConversationLogic;
+import logic.TopicLogic;
 import models.ConversationBean;
 import models.IMAccountBean;
 import models.TalkerBean;
@@ -253,7 +256,14 @@ public class CommonUtil {
 	
 	public static String topicsToHTML(ConversationBean convo) {
 		StringBuilder topicsHTML = new StringBuilder();
-		for (TopicBean topic : convo.getTopics()) {
+		
+		Set<TopicBean> convoTopics = convo.getTopics();
+		if (convoTopics.size() == 1 && convoTopics.iterator().next().getTitle().equals(TopicLogic.DEFAULT_TOPIC)) {
+			//do not show default (Unorganized) topic
+			return "";
+		}
+		
+		for (TopicBean topic : convoTopics) {
 			String topicURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", topic.getMainURL());
 			String topicLink = "<a href='"+topicURL+"'>"+topic.getTitle()+"</a>";
 

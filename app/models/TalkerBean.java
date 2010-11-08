@@ -58,6 +58,7 @@ public class TalkerBean implements Serializable {
 	 * An order of elements is important - displayed on Profile Preference page.
 	 * 
 	 * TODO: save as array in db?
+	 * TODO: user should be able to view own hidden info
 	 * Value is needed for conversion EnumSet to integer value (to save in DB).
 	 */
 	public enum ProfilePreference {

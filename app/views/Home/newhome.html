@@ -87,6 +87,19 @@
 			});	
 
 			$(".startLink").click(function(e) {
+				$("#newConvoTypeQuestion").attr("checked", "checked");
+				
+				$("#newConvoForm").show();
+				$("#newQuestionConfirm").hide();
+				$("#newTalkConfirm").hide();
+				$("#newConvoTitle").val($("#convoText").val());
+				showPopup("#startDialog", 350);
+			});
+
+			//TODO: move everything to one .js function
+			$(".startLink2").click(function(e) {
+				$("#newConvoTypeConvo").attr("checked", "checked");
+				
 				$("#newConvoForm").show();
 				$("#newQuestionConfirm").hide();
 				$("#newTalkConfirm").hide();
@@ -169,7 +182,7 @@
 							#{liveTalk convo: convo, talker: talker /}		                      
 						#{/list}
 						#{else}
-							<a href="#" class="startLink" style="font-size: 16px;">Be the first to start a live talk.</a>
+							<a href="#" class="startLink2" style="font-size: 16px;">Be the first to start a live talk.</a>
 						#{/else}
                       <!--joinbox-->
                       
