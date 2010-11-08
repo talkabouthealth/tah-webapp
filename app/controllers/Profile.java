@@ -1,5 +1,6 @@
 package controllers;
 
+import java.awt.image.ImageFilter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,6 +40,7 @@ import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.Router.ActionDefinition;
 import play.mvc.With;
+import play.ns.nl.captcha.util.ImageUtil;
 import util.CommonUtil;
 import util.EmailUtil;
 import util.EmailUtil.EmailTemplate;
@@ -195,6 +197,7 @@ public class Profile extends Controller {
 	public static void uploadImage(String submitAction, File imageFile) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
+		//ImageUtil.applyFilter(bi, arg1)
 		if ("Remove current image".equals(submitAction)) {
 			TalkerDAO.updateTalkerImage(talker, null);
 		}

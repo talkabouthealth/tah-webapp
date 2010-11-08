@@ -290,7 +290,7 @@
 						<div id="targetedtherapy">
 							<div class="suggescover">
 							
-#{if !talker?.hiddenHelps.contains('convo')}
+#{if talker && !talker?.hiddenHelps?.contains('convo')}
 <div id="convoHelp" class="helpInfo">
       <div class="popboxWraper">
         <div class="popbox2" style="width: 600px;">
