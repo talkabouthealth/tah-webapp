@@ -187,7 +187,7 @@ public class ActionDAO {
 			.get();
 		//FIXME: make db paging for community feed
 		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(40).toArray();
 		
 		Set<Action> activitiesSet = new LinkedHashSet<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {

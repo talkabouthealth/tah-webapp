@@ -101,13 +101,5 @@ public class ApplicationUpdatesJob extends Job {
 			TalkerDAO.save(admin);
 		}
 		
-		//Set 'answer' marker to all answers (to distinguish them from replies)
-		List<CommentBean> answersList = CommentsDAO.loadAllAnswers();
-		for (CommentBean answer : answersList) {
-			if (!answer.isAnswer()) {
-				answer.setAnswer(true);
-				CommentsDAO.updateConvoAnswer(answer);
-			}
-		}
     }
 }
