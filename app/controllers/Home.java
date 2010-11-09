@@ -24,7 +24,6 @@ import util.CommonUtil;
 import util.EmailUtil;
 import util.EmailUtil.EmailTemplate;
 import util.ValidateData;
-import webapp.LiveConversationsSingleton;
 import dao.ActionDAO;
 import dao.TalkerDAO;
 import dao.ConversationDAO;

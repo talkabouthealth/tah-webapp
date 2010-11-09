@@ -68,7 +68,6 @@ public class ApplicationDAO {
 			
 			TalkerBean talker = new TalkerBean();
 			talker.setId(getString(talkerDBObject, "_id"));
-			
 			if (!activeTalkers.contains(talker)) {
 				talker.parseBasicFromDB(talkerDBObject);
 				activeTalkers.add(talker);
@@ -106,6 +105,11 @@ public class ApplicationDAO {
 		return activeTalkers;
 	}
 	
+	public static boolean isCollectionEmpty(String collectionName) {
+		DBCollection namesColl = getCollection(collectionName);
+		return namesColl.count() == 0;
+	}
+	
 	public static boolean isURLNameExists(String name) {
 		if (Application.RESERVED_WORDS.contains(name)) {
 			return true;
@@ -115,11 +119,6 @@ public class ApplicationDAO {
 		
 		DBObject query = new BasicDBObject("name", name);
 		return namesColl.findOne(query) != null;
-	}
-	
-	public static boolean isCollectionEmpty(String collectionName) {
-		DBCollection namesColl = getCollection(collectionName);
-		return namesColl.count() == 0;
 	}
 	
 	public static String createURLName(String name) {

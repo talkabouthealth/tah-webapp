@@ -27,6 +27,7 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
 /*
+	//TODO: check methods' usage and update names?
  	We store profile comments in separate collection, as "child lists" tree.
  	Example "child lists" structure:
 		{"_id": "A", "children": ["B", "C"]}
@@ -81,15 +82,6 @@ public class CommentsDAO {
 		
 		//comments without parent (top in hierarchy)
 		List<CommentBean> topCommentsList = parseCommentsTree(commentsList);
-		
-//		for (CommentBean cb : topCommentsList) {
-//			System.out.println("!"+cb.getFromTalker());
-//			if (cb.getChildren() != null) {
-//				for (CommentBean c : cb.getChildren()) {
-//					System.out.println("!!!!!"+c.getFromTalker()+" : "+c.getText());
-//				}
-//			}
-//		}
 		return topCommentsList;
 	}
 

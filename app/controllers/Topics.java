@@ -32,7 +32,6 @@ import util.DBUtil;
 import util.EmailUtil;
 import util.EmailUtil.EmailTemplate;
 import util.NotificationUtils;
-import webapp.LiveConversationsSingleton;
 import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;

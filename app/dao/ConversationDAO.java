@@ -43,7 +43,6 @@ public class ConversationDAO {
 	
 	
 	//------------------- Save/Update methods -----------------------
-	
 	public static void save(ConversationBean convo) {
 		//we try to insert convo 5 times - to prevent not-unique 'tid'
 		int tid = saveInternal(convo, 5);
@@ -224,26 +223,6 @@ public class ConversationDAO {
 		}
 		
 		return convosList;
-	}
-	
-	public static Map<String, ConversationBean> queryConversations() {
-		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
-		
-		DBObject query = BasicDBObjectBuilder.start()
-			.add("deleted", new BasicDBObject("$ne", true))
-			.get();
-		List<DBObject> convosList = 
-			convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).limit(20).toArray();
-		
-		Map <String, ConversationBean> convosMap = new LinkedHashMap <String, ConversationBean>(20);
-		for (DBObject convoDBObject : convosList) {
-			ConversationBean convo = new ConversationBean();
-	    	convo.parseBasicFromDB(convoDBObject);
-	    	
-	    	convosMap.put(convo.getId(), convo);
-		}
-		
-		return convosMap;
 	}
 	
 	public static List<ConversationBean> getLiveConversations() {
@@ -470,24 +449,24 @@ public class ConversationDAO {
 	}
 	
 	//used for testing
-	private static void updateLiveTalkers(int tid, String talkerId, 
-			String talkerName, boolean connected) {
-		DBCollection convosColl = getDB().getCollection(CONVERSATIONS_COLLECTION);
-		
-		DBRef talkerRef = new DBRef(getDB(), "talkers", new ObjectId(talkerId));
-		DBObject talkerDBObject = BasicDBObjectBuilder.start()
-			.add("uid", talkerRef)
-			.add("uname", talkerName)
-			.get();
-		
-		DBObject tidDBObject = new BasicDBObject("tid", tid);
-		String operation = "$pull"; //for disconnected
-		if (connected) {
-			operation = "$push";
-		}
-		convosColl.update(tidDBObject, 
-				new BasicDBObject(operation, new BasicDBObject("talkers", talkerDBObject)));
-	}
+//	private static void updateLiveTalkers(int tid, String talkerId, 
+//			String talkerName, boolean connected) {
+//		DBCollection convosColl = getDB().getCollection(CONVERSATIONS_COLLECTION);
+//		
+//		DBRef talkerRef = new DBRef(getDB(), "talkers", new ObjectId(talkerId));
+//		DBObject talkerDBObject = BasicDBObjectBuilder.start()
+//			.add("uid", talkerRef)
+//			.add("uname", talkerName)
+//			.get();
+//		
+//		DBObject tidDBObject = new BasicDBObject("tid", tid);
+//		String operation = "$pull"; //for disconnected
+//		if (connected) {
+//			operation = "$push";
+//		}
+//		convosColl.update(tidDBObject, 
+//				new BasicDBObject(operation, new BasicDBObject("talkers", talkerDBObject)));
+//	}
 
 }
 
