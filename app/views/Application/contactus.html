@@ -28,7 +28,7 @@
 						populate in hidden fields the username and email
 					- if user not logged in, have the email, subject, and message fields.
 				}*
-				#{if session.contains("username") }
+				#{if session.username }
 					<input name="email" type="hidden" value="${talker.email}" />
 				#{/if}
 				#{else}

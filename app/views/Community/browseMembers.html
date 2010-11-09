@@ -1,6 +1,6 @@
 #{ extends 'main.html' /}
 	<script type="text/javascript"> 	 
-	//maps actions to tabs
+		//maps actions to tabs
 		var tabs = {
 	   		"active" : "tab1",
 	   		"new" : "tab2",
@@ -11,6 +11,8 @@
 		$(document).ready(function() {
 			//Default Action
 			var activeTab = tabs["${action}"];
+
+			//TODO: we can move tabs code to separate js
 			
 			$(".tab_content").hide(); //Hide all content
 			//activate initial tab
@@ -137,15 +139,6 @@
 								
 								#{if results }
 									<div style="font-size: 14px; clear: left; padding-top: 10px">	
-										*{	
-											#{list items:results, as: 'res'}
-												<span style="padding-bottom: 3px">
-													${res.raw()}
-												</span>
-												<br/><br/>
-												
-											#{/list}
-										}*
 										#{list items:results, as: 'talker'}
 											#{talkerInList talker: talker, currentTalker: currentTalker /}
 										#{/list}

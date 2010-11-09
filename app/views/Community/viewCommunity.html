@@ -23,6 +23,8 @@
 	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
+
+			//TODO: convo following - move to one function
 			$(".followConvoLink").live('click', function() {
 				var convoId = $(this).attr("rel");
 				if ($(this).html().indexOf("Unfollow") != -1) {
@@ -109,8 +111,8 @@
             </div>
             <!--mtleft-->
             
-<div id="comright" style="padding-left:30px;">
-	#{if talker}
+		<div id="comright" style="padding-left:30px;">
+			#{if talker}
                 <div class="topipsts">
                   <div class="mtrighttxt1">Community Members</div>
                   #{list items: communityMembers, as: 'member'}
@@ -127,11 +129,9 @@
 							</div>
 	                        <div class="latextrigtz">&nbsp;#{talker/talkerInfo talker: member /}</div>
 	                      </div>
-	                      <!--toprighttext-->
 	                      <div class="toprighttext">
 	                        <div class="topiptextl" style="color: #000;">${member.numOfConvoAnswers} Answers</div>
 	                      </div>
-	                      <!--toprighttext-->
 	                    </div>
 	                    <!--topr-->
 	                    <div class="cb"></div>
@@ -140,8 +140,8 @@
                 </div>
                 <!--topipsts-->
                 <div class="cb"></div>
-	#{/if}              
-</div>            
+			#{/if}              
+		</div>            
             <!--mtright-->
             <div class="cb"></div>
           </div>

@@ -1,7 +1,4 @@
 #{extends 'main.html' /}
-	<link rel="stylesheet" href="/public/plugins/jquery-tooltip/jquery.tooltip.css" type="text/css" media="screen" />
-	<script type="text/javascript" src="/public/plugins/jquery-tooltip/jquery.tooltip.js" ></script>
-
 	<style type="text/css">
 		body {
 			background:url(/public/images/pagebg.gif) repeat-x top;
@@ -17,7 +14,8 @@
 	<!-- scripts -->
 	<script language="javascript">
 		#{ oauthJavaScripts /}
-		
+
+		//methods below are used for landing page with new-convo form
 		function checkForm() {
 			//Check topic name field
 			var newTopicField = document.postnewtopic.newtopic;
@@ -81,9 +79,9 @@
   			</div> 
 		</div>
 		<div id="topmid">
-			<a href="@{Application.signup}" class="bluetext">Join Now</a>
+			<a href="@{Application.signup()}" class="bluetext">Join Now</a>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a href="@{Secure.login}" class="redtext">Sign In</a>
+			<a href="@{Secure.login()}" class="redtext">Sign In</a>
 		</div>
 	</div>
 	<div id="text_heading"></div>
