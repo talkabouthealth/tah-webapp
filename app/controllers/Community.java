@@ -48,6 +48,7 @@ public class Community extends Controller {
 		render(talker, liveTalks, communityConvoFeed, communityMembers);
 	}
 	
+	//TODO: move it to Explore?
 //	For the 4 tabs:
 //		Active Users - Latest users to log in
 //		New Users - Latest users to sign up
@@ -70,10 +71,10 @@ public class Community extends Controller {
 				results = SearchUtil.searchTalker(query);
 			}
 			catch (Exception e) {
+				//TODO: logging?
 				e.printStackTrace();
 			}
 		}
-		
 		
 		if (action == null) {
 			action = "active";

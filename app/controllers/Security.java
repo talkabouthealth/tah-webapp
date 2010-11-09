@@ -11,10 +11,6 @@ import dao.TalkerDAO;
 public class Security extends Secure.Security {
 	
     static boolean authenticate(String usernameOrEmail, String password) {
-//    	if ("admin".equals(usernameOrEmail) && "admin".equals(password)) {
-//    		return true;
-//    	}
-    	
     	TalkerBean talker = 
     		TalkerDAO.getByLoginInfo(usernameOrEmail, CommonUtil.hashPassword(password));
     	return talker != null;

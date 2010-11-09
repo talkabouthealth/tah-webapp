@@ -40,7 +40,7 @@ public class CommentsDAO {
 	public static final String CONVO_COMMENTS_COLLECTION = "convocomments";
 	
 	// ---------------- Profile comments --------------------------
-	public static String saveProfileComment(CommentBean comment) {
+	public static void saveProfileComment(CommentBean comment) {
 		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
 		
 		DBRef profileTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, comment.getProfileTalkerId());
@@ -55,7 +55,8 @@ public class CommentsDAO {
 		
 		updateParent(commentsColl, comment.getParentId(), getString(commentObject, "_id"));
 		
-		return getString(commentObject, "_id");
+		String id = getString(commentObject, "_id");
+		comment.setId(id);
 	}
 	
 	public static void updateProfileComment(CommentBean comment) {

@@ -65,7 +65,7 @@ public class PublicProfile extends Controller {
 		boolean firstTimeComment = false;
 		if (talker.equals(currentTalker)) {
 			firstTimeComment = true;
-			//user views his own journal - check if he
+			//user views his own journal - check if he's made comment
 			for (CommentBean cb : talker.getProfileCommentsList()) {
 				if (cb.getFromTalker().equals(talker)) {
 					firstTimeComment = false;

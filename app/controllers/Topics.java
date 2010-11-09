@@ -41,6 +41,7 @@ import dao.ConversationDAO;
 import dao.TopicDAO;
 
 @With(Secure.class)
+//TODO: refactor manage topic methods
 public class Topics extends Controller {
 	
 	//follow or unfollow topic

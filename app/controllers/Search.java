@@ -21,6 +21,7 @@ import play.mvc.Controller;
 import play.mvc.With;
 import util.SearchUtil;
 
+//TODO: clean up search
 public class Search extends Controller {
 	
 	public static void search() throws Exception {

@@ -64,6 +64,7 @@ public class Profile extends Controller {
 		flash.put("currentForm", "editForm");
 		TalkerBean oldTalker = CommonUtil.loadCachedTalker(session);
 		
+		//to have default value we use string param
 		String childrenNumStr = talker.getChildrenNumStr();
 		if (childrenNumStr == null || childrenNumStr.trim().length() == 0) {
 			//default value
@@ -312,7 +313,6 @@ public class Profile extends Controller {
 		}
 		
 		CommonUtil.updateTalker(sessionTalker, session);
-		
 		flash.success("ok");
 		notifications();
 	}

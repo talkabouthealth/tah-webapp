@@ -34,14 +34,8 @@ public class Home extends Controller {
 
     public static void index(String newTopic) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-//    	talker.setJoinedTopicsList(ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO));
     	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		
-		if (newTopic == null || newTopic.trim().length() == 0) {
-			newTopic = "Please enter your Conversation here ...";
-		}
-		
-		//--------- For new Home Page --------------
 		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
 		
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
@@ -58,7 +52,6 @@ public class Home extends Controller {
 		
 		//TODO: number of answers for this user??!
 		
-//        render(talker, mapTalkmiTopics, newTopic, convoFeed, showIMPopup);
 		render("@newhome", talker, newTopic, liveConversations, convoFeed, communityFeed, showIMPopup);
     }
     

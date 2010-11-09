@@ -96,7 +96,8 @@ public class Application extends Controller {
 		validation.isTrue(result).message("Not verified email or unknown error. " +
 				"Please contact support at <a href=\"mailto:"+EmailUtil.SUPPORT_EMAIL+"\">"+EmailUtil.SUPPORT_EMAIL+"</a>");
 		if(validation.hasErrors()) {
-            params.flash(); // add http parameters to the flash scope
+			//TODO: test flash() & keep()
+            params.flash();
             validation.keep();
             forgotPassword();
             return;
@@ -142,11 +143,6 @@ public class Application extends Controller {
 		//Successful signup!
         //Reserve this name as URL
         ApplicationDAO.createURLName(talker.getUserName());
-        if (talker.getImAccounts() != null) {
-        	for (IMAccountBean imAccount : talker.getImAccounts()) {
-        		CommonUtil.sendIMInvitation(imAccount);
-        	}
-        }
 		
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("username", talker.getUserName());
@@ -276,7 +272,6 @@ public class Application extends Controller {
 	/* ----------------- Contact Us ------------------------- */
 	public static void contactus() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
 		render(talker);
     }
     

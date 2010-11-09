@@ -34,7 +34,6 @@ public class Actions extends Controller {
 	public static void createThankYou(String toTalker, String note, String tagFile) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		TalkerBean toTalkerBean = TalkerDAO.getById(toTalker);
-		
 		if (talker.equals(toTalkerBean)) {
 			forbidden();
 			return;
@@ -47,7 +46,6 @@ public class Actions extends Controller {
 		thankYouBean.setTo(toTalker);
 		TalkerDAO.saveThankYou(thankYouBean);
 		
-		//TODO: every email notification is with action? can we use it?
 		ActionDAO.saveAction(new GiveThanksAction(talker, toTalkerBean));
 		
 		Map<String, String> vars = new HashMap<String, String>();
@@ -133,10 +131,6 @@ public class Actions extends Controller {
 		
 		TalkerBean profileTalker = TalkerDAO.getById(profileTalkerId);
 		notFoundIfNull(profileTalker);
-//		if ( !(profileTalker.getFollowingList().contains(talker) || profileTalker.equals(talker)) ) {
-//			forbidden();
-//			return;
-//		}
 		
 		CommentBean comment = new CommentBean();
 		comment.setParentId(parentId.trim().length() == 0 ? null : parentId);
@@ -145,11 +139,7 @@ public class Actions extends Controller {
 		comment.setText(text);
 		comment.setTime(new Date());
 		
-//		System.out.println(comment.getParentId());
-//		System.out.println(comment.getProfileTalkerId());
-		
-		String id = CommentsDAO.saveProfileComment(comment);
-		comment.setId(id);
+		CommentsDAO.saveProfileComment(comment);
 		
 		if (comment.getParentId() == null) {
 			ActionDAO.saveAction(new PersonalProfileCommentAction(
@@ -158,9 +148,6 @@ public class Actions extends Controller {
 		else {
 			//for replies we update action for parent comment
 			ActionDAO.updateProfileCommentAction(comment.getParentId());
-//			CommentBean parentAnswer = new CommentBean(comment.getParentId());
-//			ActionDAO.saveAction(new PersonalProfileCommentAction(
-//					talker, profileTalker, parentAnswer, comment, ActionType.PERSONAL_PROFILE_REPLY));
 		}
 		
 		if (!talker.equals(profileTalker)) {
