@@ -274,6 +274,7 @@ function loadMoreFeed(type) {
 				$(data).appendTo($("#"+type+"List"));
 				
 				$('.inline-edit').inlineEdit( { hover: ''} );
+				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
 			}
 		);
 	

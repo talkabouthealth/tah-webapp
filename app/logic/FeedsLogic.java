@@ -25,9 +25,28 @@ public class FeedsLogic {
 	}
 	
 	public static Set<Action> getCommunityFeed(String afterActionId) {
-		Set<Action> communityFeedActions = ActionDAO.loadCommunityFeed();
+		Set<Action> communityFeed = new LinkedHashSet<Action>();
+		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();
 		
-		Set<Action> communityFeed = filter(communityFeedActions, afterActionId);
+		boolean exit = false;
+		String nextActionId = null;
+		while (true) {
+			Set<Action> communityFeedActions = ActionDAO.loadCommunityFeed(nextActionId);
+			if (communityFeedActions.size() == 0) {
+				//no more feeds
+				break;
+			}
+			if (communityFeedActions.size() < 80 ) {
+				exit = true;
+			}
+			
+			nextActionId = filter2(communityFeed, communityFeedActions, addedConvos, afterActionId);
+			
+			if (exit || communityFeed.size() >= FEEDS_PER_PAGE) {
+				break;
+			}
+		}
+		
 		return communityFeed;
 	}
 	
@@ -36,6 +55,46 @@ public class FeedsLogic {
 		
 		Set<Action> topicFeed = filter(topicFeedActions, afterActionId);
 		return topicFeed;
+	}
+	
+	private static String filter2(Set<Action> feed, 
+			Set<Action> feedActions, Set<ConversationBean> addedConvos, String afterActionId) {
+		Action lastAction = null;
+		boolean canAdd = (afterActionId == null);
+		for (Action action : feedActions) {
+			ConversationBean actionConvo = action.getConvo();
+			//check repeated conversations
+			if (actionConvo != null) {
+				if (!addedConvos.contains(actionConvo)) {
+					if (canAdd) {
+						feed.add(action);
+					}
+					addedConvos.add(actionConvo);
+				}
+			}
+			else {
+				if (canAdd) {
+					feed.add(action);
+				}
+			}
+
+			lastAction = action;
+			
+			if (feed.size() >= FEEDS_PER_PAGE) {
+				break;
+			}
+			
+			if (action.getId().equals(afterActionId)) {
+				canAdd = true;
+			}
+		}
+		
+		if (lastAction != null) {
+			return lastAction.getId();
+		}
+		else {
+			return null;
+		}
 	}
 	
 	private static Set<Action> filter(Set<Action> feedActions, String afterActionId) {

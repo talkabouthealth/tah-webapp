@@ -172,21 +172,31 @@ public class ActionDAO {
 		return activitiesSet;
 	}
 	
-	public static Set<Action> loadCommunityFeed() {
+	public static Set<Action> loadCommunityFeed(String afterActionId) {
 		//list of needed actions for this Feed
 		Set<String> actionTypes = new HashSet<String>();
 		for (ActionType actionType : COMMUNITY_CONVO_FEED_ACTIONS) {
 			actionTypes.add(actionType.toString());
 		}
 		
+		Date firstActionTime = null;
+		if (afterActionId != null) {
+			firstActionTime = getActionTime(afterActionId);
+		}
+		
 		//load actions for this criterias
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
-		DBObject query = BasicDBObjectBuilder.start()
-			.add("type", new BasicDBObject("$in", actionTypes))
-			.get();
+		BasicDBObjectBuilder queryBuilder = 
+			BasicDBObjectBuilder.start()
+				.add("type", new BasicDBObject("$in", actionTypes));
+		if (firstActionTime != null) {
+			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
+		}
+		DBObject query = queryBuilder.get();
+			
 		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(40).toArray();
+			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(80).toArray();
 		
 		Set<Action> activitiesSet = new LinkedHashSet<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {
@@ -293,6 +303,17 @@ public class ActionDAO {
 
 		DBObject actionDBObject = action.toDBObject();
 		activitiesColl.save(actionDBObject);
+	}
+	
+	public static Date getActionTime(String actionId) {
+		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
+
+		DBObject query = new BasicDBObject("_id", new ObjectId(actionId));
+		DBObject actionDBObject = activitiesColl.findOne(query);
+		if (actionDBObject != null) {
+			return (Date)actionDBObject.get("time");
+		}
+		return null;
 	}
 	
 	public static void deleteActionByProfileComment(CommentBean comment) {
