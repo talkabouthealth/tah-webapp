@@ -21,6 +21,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
+import logic.FeedsLogic;
 import models.CommentBean;
 import models.TalkerBean;
 import models.ConversationBean;
@@ -172,7 +173,7 @@ public class ActionDAO {
 		return activitiesSet;
 	}
 	
-	public static Set<Action> loadCommunityFeed(String afterActionId) {
+	public static List<Action> loadCommunityFeed(String nextActionId) {
 		//list of needed actions for this Feed
 		Set<String> actionTypes = new HashSet<String>();
 		for (ActionType actionType : COMMUNITY_CONVO_FEED_ACTIONS) {
@@ -180,8 +181,8 @@ public class ActionDAO {
 		}
 		
 		Date firstActionTime = null;
-		if (afterActionId != null) {
-			firstActionTime = getActionTime(afterActionId);
+		if (nextActionId != null) {
+			firstActionTime = getActionTime(nextActionId);
 		}
 		
 		//load actions for this criterias
@@ -196,13 +197,14 @@ public class ActionDAO {
 		DBObject query = queryBuilder.get();
 			
 		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(80).toArray();
+			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(FeedsLogic.ACTIONS_PRELOAD).toArray();
 		
-		Set<Action> activitiesSet = new LinkedHashSet<Action>();
+		List<Action> activitiesSet = new ArrayList<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {
 			Action action = actionFromDB(actionDBObject);
 			activitiesSet.add(action);
 		}
+//		System.out.println("RES: "+nextActionId+", "+activitiesSet.size());
 		return activitiesSet;
 	}
 	
