@@ -196,6 +196,7 @@ public class ActionDAO {
 		}
 		DBObject query = queryBuilder.get();
 			
+//		System.out.println("SSS2"+FeedsLogic.ACTIONS_PRELOAD);
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(FeedsLogic.ACTIONS_PRELOAD).toArray();
 		

@@ -73,7 +73,7 @@ public class FeedsLogic {
 			ConversationBean actionConvo = action.getConvo();
 			//check repeated conversations
 			if (actionConvo != null) {
-//				System.out.println("T: "+actionConvo.getTopic()+", add: "+canAdd);
+				System.out.println("T: "+actionConvo.getTopic()+", add: "+canAdd);
 				if (!addedConvos.contains(actionConvo)) {
 					if (canAdd) {
 						feed.add(action);
