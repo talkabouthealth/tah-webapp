@@ -165,7 +165,7 @@ public class ActionDAO {
 		DBObject query = queryBuilder.get();
 
 		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(FeedsLogic.ACTIONS_PRELOAD).toArray();
 		
 		List<Action> activitiesSet = new ArrayList<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {
