@@ -121,9 +121,14 @@ public class ViewDispatcher extends Controller {
 		Logger.error("After health");
 		
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+		Logger.error("After 1");
 		talker.setActivityList(ActionDAO.load(talker.getId()));
+		Logger.error("After 2");
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
+		Logger.error("After 3");
 		talker.setFollowingConvosFullList(TalkerDAO.loadFollowingConversations(talker.getId()));
+		
+		Logger.error("After 4");
 		
 		talker.setStartedTopicsList(ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO));
 		talker.setJoinedTopicsList(ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO));
