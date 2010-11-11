@@ -106,8 +106,13 @@ public class ActionDAO {
 	
 	//It contains items based on actions from topics, questions, 
 	//and other users (including comments) that are followed.
-	public static Set<Action> loadConvoFeed(TalkerBean talker) {
+	public static List<Action> loadConvoFeed(TalkerBean talker, String nextActionId) {
 		DBRef currentTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talker.getId());
+		
+		Date firstActionTime = null;
+		if (nextActionId != null) {
+			firstActionTime = getActionTime(nextActionId);
+		}
 		
 		//prepare list of followed convos/topics
 		Set<DBRef> convosDBSet = new HashSet<DBRef>();
@@ -132,7 +137,7 @@ public class ActionDAO {
 		
 		//load actions for this criterias
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
-		DBObject query = BasicDBObjectBuilder.start()
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start()
 			.add("$or", Arrays.asList(
 							BasicDBObjectBuilder.start()
 								.add("type", ActionType.START_CONVO.toString())
@@ -153,19 +158,16 @@ public class ActionDAO {
 									)
 								.get()
 						))
-			.add("type", new BasicDBObject("$in", actionTypes))
-//			.add("uid", new BasicDBObject("$ne", currentTalkerRef))
-//			.add("$or", Arrays.asList(
-//						user shouldn't see personal actions in the ConvoFeed - only Started Question/Talk
-//						new BasicDBObject("uid", new BasicDBObject("$ne", currentTalkerRef))
-//						new BasicDBObject("type", ActionType.START_CONVO.toString()) 
-//					))
-			.get();
+			.add("type", new BasicDBObject("$in", actionTypes));
+		if (firstActionTime != null) {
+			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
+		}
+		DBObject query = queryBuilder.get();
 
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
-		Set<Action> activitiesSet = new LinkedHashSet<Action>();
+		List<Action> activitiesSet = new ArrayList<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {
 			Action action = actionFromDB(actionDBObject);
 			activitiesSet.add(action);
