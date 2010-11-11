@@ -234,7 +234,7 @@ public class ActionDAO {
 		return activitiesSet;
 	}
 	
-	public static Set<Action> loadLatestByTopic(TopicBean topic, String nextActionId) {
+	public static List<Action> loadLatestByTopic(TopicBean topic, String nextActionId) {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
 		Date firstActionTime = null;
@@ -261,7 +261,7 @@ public class ActionDAO {
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(FeedsLogic.ACTIONS_PRELOAD).toArray();
 		
-		Set<Action> activitiesSet = new LinkedHashSet<Action>();
+		List<Action> activitiesSet = new ArrayList<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {
 //			Action action = actionFromDB(actionDBObject);
 			Action action = new PreloadAction(actionDBObject);
