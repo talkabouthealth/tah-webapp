@@ -36,6 +36,7 @@ import util.EmailUtil.EmailTemplate;
 import dao.ApplicationDAO;
 import dao.TalkerDAO;
 
+@With( LoggerController.class )
 public class Application extends Controller {
 	
 	//As we have profile link as "http://talkabouthealth.com/{userName}" 

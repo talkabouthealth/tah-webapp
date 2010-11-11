@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import play.mvc.Controller;
+import play.mvc.With;
 
 import models.ConversationBean;
 import models.TalkerBean;
@@ -18,6 +19,7 @@ import dao.ConversationDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
 
+@With( LoggerController.class )
 public class Explore extends Controller {
 	
 	public static void openQuestions() {

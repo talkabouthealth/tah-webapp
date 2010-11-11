@@ -31,6 +31,7 @@ import dao.TalkerDiseaseDAO;
 import dao.ConversationDAO;
 import dao.TopicDAO;
 import play.mvc.Controller;
+import play.mvc.With;
 import play.templates.JavaExtensions;
 import util.CommonUtil;
 import util.SearchUtil;
@@ -40,6 +41,7 @@ import util.SearchUtil;
  * as they all share one url: http://talkabouthealth.com/{name} 
  *
  */
+@With( LoggerController.class )
 public class ViewDispatcher extends Controller {
 	
 	public static void view(String name) throws Throwable {

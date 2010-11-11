@@ -29,7 +29,7 @@ import dao.ActionDAO;
 import dao.TalkerDAO;
 import dao.ConversationDAO;
 
-@With(Secure.class)
+@With( { Secure.class, LoggerController.class } )
 public class Home extends Controller {
 
     public static void index(String newTopic) {

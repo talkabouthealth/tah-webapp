@@ -136,7 +136,8 @@ public class ActionDAO {
 //			System.out.println(r);
 //		}
 		
-		Logger.error("After preparing data111:");
+		
+//		Logger.error("After preparing data111:");
 		
 		//prepare list of followed talkers
 		Set<DBRef> talkersDBSet = new HashSet<DBRef>();
