@@ -30,6 +30,7 @@ import dao.TalkerDAO;
 import dao.TalkerDiseaseDAO;
 import dao.ConversationDAO;
 import dao.TopicDAO;
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.With;
 import play.templates.JavaExtensions;
@@ -45,6 +46,8 @@ import util.SearchUtil;
 public class ViewDispatcher extends Controller {
 	
 	public static void view(String name) throws Throwable {
+		Logger.error("Before talker");
+		
 		//first try user
 		TalkerBean talker = TalkerDAO.getByUserName(name);
 		if (talker != null) {
@@ -64,6 +67,7 @@ public class ViewDispatcher extends Controller {
 			return;
 		}
 		
+		Logger.error("Before topic");
 		//last - topic
 		TopicBean topic = TopicDAO.getByURL(name);
 		if (topic != null) {
@@ -114,6 +118,8 @@ public class ViewDispatcher extends Controller {
 			healthItemsMap.put(itemName, healthItem);
 		}
 		
+		Logger.error("After health");
+		
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		talker.setActivityList(ActionDAO.load(talker.getId()));
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
@@ -121,6 +127,8 @@ public class ViewDispatcher extends Controller {
 		
 		talker.setStartedTopicsList(ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO));
 		talker.setJoinedTopicsList(ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO));
+		
+		Logger.error("After lists");
 		
 		TalkerLogic.calculateProfileCompletion(talker);
 		
@@ -143,6 +151,8 @@ public class ViewDispatcher extends Controller {
 				notViewableInfo = true;
 			}
 		}
+		
+		Logger.error("Before rendering");
 		
 		render("PublicProfile/newview.html", talker, disease, talkerDisease, 
 				healthItemsMap, currentTalker, notProvidedInfo, notViewableInfo);
@@ -182,9 +192,9 @@ public class ViewDispatcher extends Controller {
 		}
 		
 		//load latest activities for convos with this topic
-//		long start = System.currentTimeMillis();
+		Logger.error("Bef feed");
 		Set<Action> activities = FeedsLogic.getTopicFeed(topic, null);
-//		System.out.println("END:::::::: "+(System.currentTimeMillis()-start)/1000);
+		Logger.error("After feed");
 		
 		TopicDAO.incrementTopicViews(topic.getId());
 		
@@ -202,6 +212,8 @@ public class ViewDispatcher extends Controller {
 		//cannot contain conversations in the top 10 of "Popular Conversations" tab
 		//TODO: make trending convos
 		List<ConversationBean> trendingConvos = new ArrayList<ConversationBean>();
+		
+		Logger.error("After convolists");
 		
 		render("Topics/viewTopic.html", talker, topic, activities, popularConvos, trendingConvos);
 	}
