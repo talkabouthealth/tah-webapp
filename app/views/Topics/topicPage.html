@@ -33,6 +33,7 @@
 		.tabContent { padding-top: 10px }
 	</style>
 	
+	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -79,6 +80,7 @@
 			$('.inline-edit').inlineEdit(
 		  		{ hover: '', saveFunction: saveData}
 		  	);
+			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
 
 		  	//tabs?
 			$(".tabLink").click(function() {

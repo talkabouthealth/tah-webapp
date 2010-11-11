@@ -95,7 +95,7 @@ public class ActionDAO {
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		DBObject query = new BasicDBObject("uid", talkerRef);
 		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(34).toArray();
 		
 		List<Action> activitiesList = new ArrayList<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {
@@ -234,8 +234,13 @@ public class ActionDAO {
 		return activitiesSet;
 	}
 	
-	public static Set<Action> loadLatestByTopic(TopicBean topic) {
+	public static Set<Action> loadLatestByTopic(TopicBean topic, String nextActionId) {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
+		
+		Date firstActionTime = null;
+		if (nextActionId != null) {
+			firstActionTime = getActionTime(nextActionId);
+		}
 		
 		//list of needed actions for this Feed
 		Set<String> actionTypes = new HashSet<String>();
@@ -244,16 +249,22 @@ public class ActionDAO {
 		}
 		Set<DBRef> convosDBSet = ConversationDAO.getConversationsByTopic(topic);
 		
-		DBObject query = BasicDBObjectBuilder.start()
-			.add("type", new BasicDBObject("$in", actionTypes))
-			.add("convoId", new BasicDBObject("$in", convosDBSet))
-			.get();
+		BasicDBObjectBuilder queryBuilder = 
+			BasicDBObjectBuilder.start()
+				.add("type", new BasicDBObject("$in", actionTypes))
+				.add("convoId", new BasicDBObject("$in", convosDBSet));
+		if (firstActionTime != null) {
+			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
+		}
+		DBObject query = queryBuilder.get();
+		
 		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(FeedsLogic.ACTIONS_PRELOAD).toArray();
 		
 		Set<Action> activitiesSet = new LinkedHashSet<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {
-			Action action = actionFromDB(actionDBObject);
+//			Action action = actionFromDB(actionDBObject);
+			Action action = new PreloadAction(actionDBObject);
 			activitiesSet.add(action);
 		}
 		return activitiesSet;

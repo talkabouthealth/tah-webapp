@@ -150,6 +150,7 @@ public class PublicProfile extends Controller {
 		}
 		
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+		//TODO: we need it only for Profile Completion calculation?
 		talker.setActivityList(ActionDAO.load(talker.getId()));
 		TalkerLogic.calculateProfileCompletion(talker);
 		

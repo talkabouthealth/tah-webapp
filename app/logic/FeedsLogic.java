@@ -91,10 +91,40 @@ public class FeedsLogic {
 	}
 	
 	public static Set<Action> getTopicFeed(TopicBean topic, String afterActionId) {
-		Set<Action> topicFeedActions = ActionDAO.loadLatestByTopic(topic);
+//		Set<Action> topicFeedActions = ActionDAO.loadLatestByTopic(topic);
+//		
+//		Set<Action> topicFeed = filter(topicFeedActions, afterActionId);
+//		return topicFeed;
 		
-		Set<Action> topicFeed = filter(topicFeedActions, afterActionId);
-		return topicFeed;
+		Set<Action> communityFeed = new LinkedHashSet<Action>();
+		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();
+		
+		boolean exit = false;
+		String nextActionId = null;
+		boolean canAdd = (afterActionId == null);
+		while (true) {
+			List<Action> topicFeedActions = ActionDAO.loadCommunityFeed(nextActionId);
+			if (topicFeedActions.size() == 0) {
+				//no more feeds
+				break;
+			}
+			if (topicFeedActions.size() < ACTIONS_PRELOAD ) {
+				exit = true;
+			}
+			
+			canAdd = filter2(communityFeed, topicFeedActions, 
+					addedConvos, afterActionId, canAdd);
+			
+			if (exit || communityFeed.size() >= FEEDS_PER_PAGE) {
+				break;
+			}
+			
+			//id for next pre-load from db
+			int s = topicFeedActions.size();
+			nextActionId = topicFeedActions.get(s-1).getId();
+		}
+		
+		return communityFeed;
 	}
 	
 	private static boolean filter2(Set<Action> feed, 
