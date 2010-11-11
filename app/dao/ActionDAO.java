@@ -38,6 +38,7 @@ import models.actions.FollowTalkerAction;
 import models.actions.GiveThanksAction;
 import models.actions.JoinConvoAction;
 import models.actions.PersonalProfileCommentAction;
+import models.actions.PreloadAction;
 import models.actions.StartConvoAction;
 import models.actions.SummaryConvoAction;
 import models.actions.TopicAddedAction;
@@ -116,7 +117,7 @@ public class ActionDAO {
 			firstActionTime = getActionTime(nextActionId);
 		}
 		
-		Logger.error("After 1:");
+//		Logger.error("After 1:");
 		
 		//prepare list of followed convos/topics
 		Set<DBRef> convosDBSet = new HashSet<DBRef>();
@@ -124,7 +125,7 @@ public class ActionDAO {
 			convosDBSet.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId));
 		}
 		
-		Logger.error("After 2:");
+//		Logger.error("After 2:");
 		
 //		for (TopicBean topic : talker.getFollowingTopicsList()) {	
 //			convosDBSet.addAll(ConversationDAO.getConversationsByTopic(topic));
@@ -148,8 +149,6 @@ public class ActionDAO {
 		for (ActionType actionType : CONVO_FEED_ACTIONS) {
 			actionTypes.add(actionType.toString());
 		}
-		
-		Logger.error("After preparing data222:");
 		
 		//load actions for this criterias
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
@@ -187,9 +186,8 @@ public class ActionDAO {
 		
 		List<Action> activitiesSet = new ArrayList<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {
-//			Logger.error("Before:");
-			Action action = actionFromDB(actionDBObject);
-//			Logger.error("After: "+action.getType().toString());
+//			Action action = actionFromDB(actionDBObject);
+			Action action = new PreloadAction(actionDBObject);
 			activitiesSet.add(action);
 		}
 		
@@ -227,7 +225,8 @@ public class ActionDAO {
 		
 		List<Action> activitiesSet = new ArrayList<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {
-			Action action = actionFromDB(actionDBObject);
+//			Action action = actionFromDB(actionDBObject);
+			Action action = new PreloadAction(actionDBObject);
 			activitiesSet.add(action);
 		}
 //		System.out.println("RES: "+nextActionId+", "+activitiesSet.size());
@@ -277,7 +276,7 @@ public class ActionDAO {
 		return activitiesList;
 	}
 	
-	private static Action actionFromDB(DBObject dbObject) {
+	public static Action actionFromDB(DBObject dbObject) {
 		String strType = (String)dbObject.get("type");
 		
 		if (strType == null) {

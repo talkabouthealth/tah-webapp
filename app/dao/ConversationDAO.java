@@ -390,7 +390,7 @@ public class ConversationDAO {
 			return convosDBSet;
 		}
 		
-		Logger.error("After 11:");
+//		Logger.error("After 11:");
 		//FIXME: restructure topics to make it more effective?
 		//http://www.mongodb.org/display/DOCS/Trees+in+MongoDB#TreesinMongoDB-ArrayofAncestors
 		List<DBRef> allTopics = new ArrayList<DBRef>();
@@ -409,7 +409,7 @@ public class ConversationDAO {
 		for (DBObject convoDBObject : convosDBList) {
 			convosDBSet.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, getString(convoDBObject, "_id")));
 		}
-		Logger.error("After 33:");
+//		Logger.error("After 33:");
 		
 		return convosDBSet;
 	}

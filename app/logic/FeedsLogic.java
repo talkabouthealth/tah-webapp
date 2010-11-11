@@ -15,11 +15,12 @@ import models.TalkerBean;
 import models.TopicBean;
 import models.actions.Action;
 import models.actions.Action.ActionType;
+import models.actions.PreloadAction;
 
 public class FeedsLogic {
 	
 	public static final int FEEDS_PER_PAGE = 40;
-	public static final int ACTIONS_PRELOAD = 80;
+	public static final int ACTIONS_PRELOAD = 160;
 	
 	public static Set<Action> getConvoFeed(TalkerBean talker, String afterActionId) {
 		Set<Action> convoFeed = new LinkedHashSet<Action>();
@@ -98,8 +99,6 @@ public class FeedsLogic {
 	
 	private static boolean filter2(Set<Action> feed, 
 			List<Action> feedActions, Set<ConversationBean> addedConvos, String afterActionId, boolean canAdd) {
-		Action lastAction = null;
-		
 		for (Action action : feedActions) {
 			ConversationBean actionConvo = action.getConvo();
 			//check repeated conversations
@@ -107,19 +106,19 @@ public class FeedsLogic {
 //				System.out.println("T: "+actionConvo.getTopic()+", add: "+canAdd);
 				if (!addedConvos.contains(actionConvo)) {
 					if (canAdd) {
-						feed.add(action);
+						PreloadAction preAction = (PreloadAction)action;
+						feed.add(preAction.getFullAction());
 					}
 					addedConvos.add(actionConvo);
 				}
 			}
 			else {
 				if (canAdd) {
-					feed.add(action);
+					PreloadAction preAction = (PreloadAction)action;
+					feed.add(preAction.getFullAction());
 				}
 			}
 
-			lastAction = action;
-			
 			if (feed.size() >= FEEDS_PER_PAGE) {
 				break;
 			}
