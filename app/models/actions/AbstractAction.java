@@ -172,7 +172,7 @@ public abstract class AbstractAction implements Action {
 		DBObject convoDBObject = ((DBRef)dbObject.get("convoId")).fetch();
 		
 		ConversationBean convo = new ConversationBean();
-		convo.parseBasicFromDB(convoDBObject);
+		convo.parseSuperBasicFromDB(convoDBObject);
 		convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
     	
     	return convo;
@@ -187,7 +187,7 @@ public abstract class AbstractAction implements Action {
 		DBObject topicDBObject = ((DBRef)dbObject.get("topicId")).fetch();
 		
 		TopicBean topic = new TopicBean();
-		topic.parseBasicFromDB(topicDBObject);
+		topic.parseSuperBasicFromDB(topicDBObject);
     	return topic;
 	}
 	

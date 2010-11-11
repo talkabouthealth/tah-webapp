@@ -88,7 +88,7 @@ public class SearchUtil {
 			if (convo == null || convo.isDeleted()) {
 				continue;
 			}
-			convo.setComments(CommentsDAO.loadConvoAnswers(convoId));
+			convo.setComments(CommentsDAO.loadConvoAnswersTree(convoId));
 			
 			StringBuilder answersString = new StringBuilder();
 			for (CommentBean answer : convo.getComments()) {

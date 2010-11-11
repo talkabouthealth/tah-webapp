@@ -162,7 +162,7 @@ public class ViewDispatcher extends Controller {
 		
 //		List<TopicBean> topicsList = TopicDAO.getTopics();
 		
-		convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
+		convo.setComments(CommentsDAO.loadConvoAnswersTree(convo.getId()));
 		List<ConversationBean> relatedConvos = null;
 		try {
 			relatedConvos = SearchUtil.getRelatedConvos(convo);

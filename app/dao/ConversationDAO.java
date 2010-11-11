@@ -415,7 +415,7 @@ public class ConversationDAO {
 			ConversationBean convo = new ConversationBean();
 			convo.parseFromDB(convoDBObject);
 			if (!convo.isDeleted()) {
-				convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
+				convo.setComments(CommentsDAO.loadConvoAnswersTree(convo.getId()));
 				convosList.add(convo);
 			}
 		}

@@ -82,7 +82,7 @@ public class SearchIndexerJob extends Job {
 					continue;
 				}
 				
-				List<CommentBean> answersList = CommentsDAO.loadConvoAnswers(convo.getId());
+				List<CommentBean> answersList = CommentsDAO.loadConvoAnswersTree(convo.getId());
 				
 				Document doc = new Document();
 				doc.add(new Field("id", convo.getId(), Field.Store.YES, Field.Index.NO));

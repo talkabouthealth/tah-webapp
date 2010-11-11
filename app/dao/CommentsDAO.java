@@ -133,6 +133,28 @@ public class CommentsDAO {
 		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId);
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("convo", convoRef)
+			.add("deleted", new BasicDBObject("$ne", true))
+			.add("answer", true)
+			.get();
+		List<DBObject> commentsList = commentsColl.find(query).toArray();
+		
+		List<CommentBean> answersList = new ArrayList<CommentBean>();
+		for (DBObject answerDBObject : commentsList) {
+			CommentBean answer = new CommentBean();
+			//TODO: only count is important?
+//			answer.parseBasicFromDB(answerDBObject);
+			answer.setId(answerDBObject.get("_id").toString());
+			answersList.add(answer);
+		}
+		return answersList;
+	}
+	
+	public static List<CommentBean> loadConvoAnswersTree(String convoId) {
+		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		
+		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId);
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("convo", convoRef)
 			.get();
 		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("vote_score", -1)).toArray();
 		

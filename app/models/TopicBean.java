@@ -98,20 +98,29 @@ public class TopicBean implements Comparable<TopicBean> {
 		return title.compareTo(o.title);
 	}
 	
-	public void parseBasicFromDB(DBObject topicDBObject) {
+	public void parseSuperBasicFromDB(DBObject topicDBObject) {
 		if (topicDBObject == null) {
 			return;
 		}
 		
 		setId(getString(topicDBObject, "_id"));
-		
 		setTitle((String)topicDBObject.get("title"));
-		setSummary((String)topicDBObject.get("summary"));
-		setAliases(getStringSet(topicDBObject, "aliases"));
 		setFixed(getBoolean(topicDBObject, "fixed"));
 		setDeleted(getBoolean(topicDBObject, "deleted"));
-		
 		setMainURL((String)topicDBObject.get("main_url"));
+	}
+	
+	public void parseBasicFromDB(DBObject topicDBObject) {
+		if (topicDBObject == null) {
+			return;
+		}
+		
+		parseSuperBasicFromDB(topicDBObject);
+
+		
+		setSummary((String)topicDBObject.get("summary"));
+		setAliases(getStringSet(topicDBObject, "aliases"));
+		
 		setOldNames(parseSet(URLName.class, topicDBObject, "old_names"));
     	
 		setViews(DBUtil.getInt(topicDBObject, "views"));

@@ -80,7 +80,7 @@ public class ConversationBean {
 		this.id = id;
 	}
 	
-	public void parseBasicFromDB(DBObject convoDBObject) {
+	public void parseSuperBasicFromDB(DBObject convoDBObject) {
 		setId(convoDBObject.get("_id").toString());
     	setTid((Integer)convoDBObject.get("tid"));
     	setTopic((String)convoDBObject.get("topic"));
@@ -93,18 +93,25 @@ public class ConversationBean {
     		convoType = ConvoType.valueOf(type);
     	}
     	
+    	setMainURL((String)convoDBObject.get("main_url"));
+    	
+    	//topics(tags)
+    	parseTopics((Collection<DBRef>)convoDBObject.get("topics"));  
+	}
+	
+	public void parseBasicFromDB(DBObject convoDBObject) {
+		parseSuperBasicFromDB(convoDBObject);
+    	
     	setOpened(getBoolean(convoDBObject, "opened"));
     	
     	setSummary((String)convoDBObject.get("summary"));
     	parseSumContributors((Collection<DBRef>)convoDBObject.get("sum_authors"));
     	
-    	setMainURL((String)convoDBObject.get("main_url"));
     	setOldNames(parseSet(URLName.class, convoDBObject, "old_names"));
     	
     	setViews(getInt(convoDBObject, "views"));
     	
-    	//topics(tags)
-    	parseTopics((Collection<DBRef>)convoDBObject.get("topics"));    	
+    	  	
     	
     	//author
     	setTalker(parseTalker(convoDBObject, "uid"));
@@ -126,7 +133,7 @@ public class ConversationBean {
 		if (topicsDBList != null) {
 			for (DBRef topicDBRef : topicsDBList) {
 				TopicBean topic = new TopicBean();
-				topic.parseBasicFromDB(topicDBRef.fetch());
+				topic.parseSuperBasicFromDB(topicDBRef.fetch());
 				
 				if (topic.getId() == null) {
 					//maybe deleted topic

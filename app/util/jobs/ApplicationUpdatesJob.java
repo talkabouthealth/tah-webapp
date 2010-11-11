@@ -101,5 +101,20 @@ public class ApplicationUpdatesJob extends Job {
 			TalkerDAO.save(admin);
 		}
 		
+		//create indexes
+//		activities
+//		configs
+//		convocomments
+//		convos
+//		diseases
+//		healthitems
+//		logins
+//		names
+//		notifications
+//		profilecomments
+//		system.indexes
+//		talkers
+//		topics
+		
     }
 }
