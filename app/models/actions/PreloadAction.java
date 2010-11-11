@@ -28,9 +28,8 @@ public class PreloadAction implements Action {
 		
 		DBRef convoRef = (DBRef)dbObject.get("convoId");
 		if (convoRef != null) {
-			DBObject convoDBObject = convoRef.fetch();
 			ConversationBean convo = new ConversationBean();
-			convo.setId(convoDBObject.get("_id").toString());
+			convo.setId(convoRef.getId().toString());
 			setConvo(convo);
 		}
 	}

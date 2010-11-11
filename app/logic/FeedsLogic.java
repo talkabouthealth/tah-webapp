@@ -20,7 +20,7 @@ import models.actions.PreloadAction;
 public class FeedsLogic {
 	
 	public static final int FEEDS_PER_PAGE = 40;
-	public static final int ACTIONS_PRELOAD = 160;
+	public static final int ACTIONS_PRELOAD = 300;
 	
 	public static Set<Action> getConvoFeed(TalkerBean talker, String afterActionId) {
 		Set<Action> convoFeed = new LinkedHashSet<Action>();

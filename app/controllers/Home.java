@@ -41,7 +41,7 @@ public class Home extends Controller {
 		Logger.error("Start Convo Feed");
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
 		Set<Action> communityFeed = null;
-		Logger.error(convoFeed.size()+" :::::: "+FeedsLogic.FEEDS_PER_PAGE);
+//		Logger.error(convoFeed.size()+" :::::: "+FeedsLogic.FEEDS_PER_PAGE);
 		if (convoFeed.size() < FeedsLogic.FEEDS_PER_PAGE) {
 			communityFeed = FeedsLogic.getCommunityFeed(null);
 		}
