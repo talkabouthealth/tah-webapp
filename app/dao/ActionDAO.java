@@ -177,7 +177,9 @@ public class ActionDAO {
 		
 		List<Action> activitiesSet = new ArrayList<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {
+			Logger.error("Before:");
 			Action action = actionFromDB(actionDBObject);
+			Logger.error("After: "+action.getType().toString());
 			activitiesSet.add(action);
 		}
 		
