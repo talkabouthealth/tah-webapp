@@ -37,9 +37,10 @@ public class Home extends Controller {
 		
 		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
 		
+		System.out.println("Start Convo Feed");
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
 		Set<Action> communityFeed = null;
-//		System.out.println(convoFeed.size()+" :::::: "+FeedsLogic.FEEDS_PER_PAGE);
+		System.out.println(convoFeed.size()+" :::::: "+FeedsLogic.FEEDS_PER_PAGE);
 		if (convoFeed.size() < FeedsLogic.FEEDS_PER_PAGE) {
 			communityFeed = FeedsLogic.getCommunityFeed(null);
 		}

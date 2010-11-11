@@ -20,11 +20,6 @@ public class FeedsLogic {
 	public static final int ACTIONS_PRELOAD = 80;
 	
 	public static Set<Action> getConvoFeed(TalkerBean talker, String afterActionId) {
-//		Set<Action> convoFeedActions = ActionDAO.loadConvoFeed(talker);
-//		
-//		Set<Action> convoFeed = filter(convoFeedActions, afterActionId);
-//		return convoFeed;
-		
 		Set<Action> convoFeed = new LinkedHashSet<Action>();
 		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();
 		
@@ -32,7 +27,9 @@ public class FeedsLogic {
 		String nextActionId = null;
 		boolean canAdd = (afterActionId == null);
 		while (true) {
+			System.out.println("TRYING: "+afterActionId);
 			List<Action> convoFeedActions = ActionDAO.loadConvoFeed(talker, nextActionId);
+			System.out.println("RESULT: "+convoFeedActions.size());
 			if (convoFeedActions.size() == 0) {
 				//no more feeds
 				break;
@@ -43,6 +40,8 @@ public class FeedsLogic {
 			
 			canAdd = filter2(convoFeed, convoFeedActions, 
 					addedConvos, afterActionId, canAdd);
+			
+			System.out.println("FILTER: "+convoFeed.size());
 			
 			if (exit || convoFeed.size() >= FEEDS_PER_PAGE) {
 				break;
