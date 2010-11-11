@@ -13,6 +13,8 @@ import java.util.Set;
 
 import org.bson.types.ObjectId;
 
+import play.Logger;
+
 import util.DBUtil;
 
 import com.mongodb.BasicDBObject;
@@ -123,6 +125,8 @@ public class ActionDAO {
 			convosDBSet.addAll(ConversationDAO.getConversationsByTopic(topic));
 		}
 		
+		Logger.error("After preparing data111:");
+		
 		//prepare list of followed talkers
 		Set<DBRef> talkersDBSet = new HashSet<DBRef>();
 		for (TalkerBean followingTalker : talker.getFollowingList()) {
@@ -134,6 +138,8 @@ public class ActionDAO {
 		for (ActionType actionType : CONVO_FEED_ACTIONS) {
 			actionTypes.add(actionType.toString());
 		}
+		
+		Logger.error("After preparing data222:");
 		
 		//load actions for this criterias
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
@@ -167,11 +173,16 @@ public class ActionDAO {
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(FeedsLogic.ACTIONS_PRELOAD).toArray();
 		
+		Logger.error("After request111:");
+		
 		List<Action> activitiesSet = new ArrayList<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {
 			Action action = actionFromDB(actionDBObject);
 			activitiesSet.add(action);
 		}
+		
+		Logger.error("After request222:");
+		
 		return activitiesSet;
 	}
 	
