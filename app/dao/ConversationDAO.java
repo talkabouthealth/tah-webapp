@@ -23,6 +23,8 @@ import models.actions.Action.ActionType;
 
 import org.bson.types.ObjectId;
 
+import play.Logger;
+
 import util.DBUtil;
 
 import com.mongodb.BasicDBList;
@@ -388,10 +390,12 @@ public class ConversationDAO {
 			return convosDBSet;
 		}
 		
+		Logger.error("After 11:");
 		List<DBRef> allTopics = new ArrayList<DBRef>();
 		for (TopicBean topic : topics) {
 			getAllTopics(allTopics, topic);
 		}
+		Logger.error("After 22:");
 		
 		//find 
 		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
@@ -403,6 +407,7 @@ public class ConversationDAO {
 		for (DBObject convoDBObject : convosDBList) {
 			convosDBSet.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, getString(convoDBObject, "_id")));
 		}
+		Logger.error("After 33:");
 		
 		return convosDBSet;
 	}

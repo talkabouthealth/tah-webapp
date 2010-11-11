@@ -116,17 +116,18 @@ public class ActionDAO {
 			firstActionTime = getActionTime(nextActionId);
 		}
 		
+		Logger.error("After 1:");
+		
 		//prepare list of followed convos/topics
 		Set<DBRef> convosDBSet = new HashSet<DBRef>();
 		for (String convoId : talker.getFollowingConvosList()) {
 			convosDBSet.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId));
 		}
+		
+		Logger.error("After 2:");
+		
 //		for (TopicBean topic : talker.getFollowingTopicsList()) {	
 //			convosDBSet.addAll(ConversationDAO.getConversationsByTopic(topic));
-//		}
-//		System.out.println("1S"+convosDBSet.size());
-//		for (DBRef r : convosDBSet) {
-//			System.out.println(r);
 //		}
 		convosDBSet.addAll(ConversationDAO.getConversationsByTopics(talker.getFollowingTopicsList()));
 //		System.out.println("2S"+convosDBSet.size());
