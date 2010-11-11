@@ -16,6 +16,7 @@ import models.TalkerBean;
 import models.ConversationBean;
 import models.actions.Action;
 import models.actions.Action.ActionType;
+import play.Logger;
 import play.cache.Cache;
 import play.i18n.Messages;
 import play.mvc.Controller;
@@ -37,10 +38,10 @@ public class Home extends Controller {
 		
 		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
 		
-		System.out.println("Start Convo Feed");
+		Logger.error("Start Convo Feed");
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
 		Set<Action> communityFeed = null;
-		System.out.println(convoFeed.size()+" :::::: "+FeedsLogic.FEEDS_PER_PAGE);
+		Logger.error(convoFeed.size()+" :::::: "+FeedsLogic.FEEDS_PER_PAGE);
 		if (convoFeed.size() < FeedsLogic.FEEDS_PER_PAGE) {
 			communityFeed = FeedsLogic.getCommunityFeed(null);
 		}

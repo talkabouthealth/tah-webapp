@@ -6,6 +6,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import play.Logger;
+
 import dao.ActionDAO;
 
 import models.ConversationBean;
@@ -27,9 +29,9 @@ public class FeedsLogic {
 		String nextActionId = null;
 		boolean canAdd = (afterActionId == null);
 		while (true) {
-			System.out.println("TRYING: "+afterActionId);
+			Logger.error("TRYING: "+afterActionId);
 			List<Action> convoFeedActions = ActionDAO.loadConvoFeed(talker, nextActionId);
-			System.out.println("RESULT: "+convoFeedActions.size());
+			Logger.error("RESULT: "+convoFeedActions.size());
 			if (convoFeedActions.size() == 0) {
 				//no more feeds
 				break;
@@ -41,7 +43,7 @@ public class FeedsLogic {
 			canAdd = filter2(convoFeed, convoFeedActions, 
 					addedConvos, afterActionId, canAdd);
 			
-			System.out.println("FILTER: "+convoFeed.size());
+			Logger.error("FILTER: "+convoFeed.size());
 			
 			if (exit || convoFeed.size() >= FEEDS_PER_PAGE) {
 				break;
