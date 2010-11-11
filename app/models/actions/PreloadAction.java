@@ -30,8 +30,7 @@ public class PreloadAction implements Action {
 		if (convoRef != null) {
 			DBObject convoDBObject = convoRef.fetch();
 			ConversationBean convo = new ConversationBean();
-			convo.parseSuperBasicFromDB(convoDBObject);
-			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
+			convo.setId(convoDBObject.get("_id").toString());
 			setConvo(convo);
 		}
 	}
