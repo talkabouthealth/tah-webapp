@@ -391,6 +391,8 @@ public class ConversationDAO {
 		}
 		
 		Logger.error("After 11:");
+		//FIXME: restructure topics to make it more effective?
+		//http://www.mongodb.org/display/DOCS/Trees+in+MongoDB#TreesinMongoDB-ArrayofAncestors
 		List<DBRef> allTopics = new ArrayList<DBRef>();
 		for (TopicBean topic : topics) {
 			getAllTopics(allTopics, topic);
@@ -418,7 +420,24 @@ public class ConversationDAO {
 			allTopics.add(topicRef);
 			
 			for (TopicBean child : topic.getChildren()) {
-				TopicBean fullChild = TopicDAO.getById(child.getId());
+//				TopicBean fullChild = TopicDAO.getById(child.getId());
+				
+				DBCollection topicsColl = getCollection(TopicDAO.TOPICS_COLLECTION);
+				DBObject query = new BasicDBObject("_id", new ObjectId(child.getId()));
+				DBObject topicDBObject = topicsColl.findOne(query);
+				
+				TopicBean fullChild = new TopicBean();
+				fullChild.setId(getString(topicDBObject, "_id"));
+				//children
+				Collection<DBRef> childrenDBList = (Collection<DBRef>)topicDBObject.get("children");
+				Set<TopicBean> children = new HashSet<TopicBean>();
+				if (childrenDBList != null) {
+					for (DBRef childDBRef : childrenDBList) {
+						children.add(new TopicBean(childDBRef.getId().toString()));
+					}
+				}
+				fullChild.setChildren(children);
+				
 				getAllTopics(allTopics, fullChild);
 			}
 		}
