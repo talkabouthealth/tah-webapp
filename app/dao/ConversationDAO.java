@@ -381,7 +381,46 @@ public class ConversationDAO {
 		return convosList;
 	}
 	
+	
+	public static Set<DBRef> getConversationsByTopics(List<TopicBean> topics) {
+		Set<DBRef> convosDBSet = new HashSet<DBRef>();
+		if (topics == null || topics.size() == 0) {
+			return convosDBSet;
+		}
+		
+		List<DBRef> allTopics = new ArrayList<DBRef>();
+		for (TopicBean topic : topics) {
+			getAllTopics(allTopics, topic);
+		}
+		
+		//find 
+		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
+		
+		DBObject query = new BasicDBObject("topics", 
+				new BasicDBObject("$in", allTopics));
+		List<DBObject> convosDBList = convosColl.find(query).toArray();
+		
+		for (DBObject convoDBObject : convosDBList) {
+			convosDBSet.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, getString(convoDBObject, "_id")));
+		}
+		
+		return convosDBSet;
+	}
+	
+	private static void getAllTopics(List<DBRef> allTopics, TopicBean topic) {
+		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topic.getId());
+		if (!allTopics.contains(topicRef)) {
+			allTopics.add(topicRef);
+			
+			for (TopicBean child : topic.getChildren()) {
+				TopicBean fullChild = TopicDAO.getById(child.getId());
+				getAllTopics(allTopics, fullChild);
+			}
+		}
+	}
+	
 	//TODO: similar methods?
+	//TODO: load topics tree with one method?
 	/**
 	 * Includes conversations in children topics also.
 	 * @param topic
@@ -446,6 +485,12 @@ public class ConversationDAO {
 //		TopicDAO.save(topic);
 		
 //		updateLiveTalkers(3, "4cc94906b8682ba9e5eba5f2", "kangaroo", true);
+		
+		
+		
+//		List<DBRef> allTopics = new ArrayList<DBRef>();
+//		getAllTopics(allTopics, TopicDAO.getById("4cc944b0b8682ba9e3eba5f2"));
+//		System.out.println(allTopics.size());
 	}
 	
 	//used for testing

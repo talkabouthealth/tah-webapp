@@ -121,9 +121,18 @@ public class ActionDAO {
 		for (String convoId : talker.getFollowingConvosList()) {
 			convosDBSet.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId));
 		}
-		for (TopicBean topic : talker.getFollowingTopicsList()) {	
-			convosDBSet.addAll(ConversationDAO.getConversationsByTopic(topic));
-		}
+//		for (TopicBean topic : talker.getFollowingTopicsList()) {	
+//			convosDBSet.addAll(ConversationDAO.getConversationsByTopic(topic));
+//		}
+//		System.out.println("1S"+convosDBSet.size());
+//		for (DBRef r : convosDBSet) {
+//			System.out.println(r);
+//		}
+		convosDBSet.addAll(ConversationDAO.getConversationsByTopics(talker.getFollowingTopicsList()));
+//		System.out.println("2S"+convosDBSet.size());
+//		for (DBRef r : convosDBSet) {
+//			System.out.println(r);
+//		}
 		
 		Logger.error("After preparing data111:");
 		
