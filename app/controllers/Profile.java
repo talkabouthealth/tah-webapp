@@ -240,6 +240,10 @@ public class Profile extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		EnumSet<ProfilePreference> profilePreferences = talker.loadProfilePreferences();
 		
+		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+    	talker.setActivityList(ActionDAO.load(talker.getId()));
+		TalkerLogic.calculateProfileCompletion(talker);
+		
 		render(talker, profilePreferences);
 	}
 	

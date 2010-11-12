@@ -5,12 +5,18 @@
 		}
 	</script>
 	<style>
-		body {
-			background:url(/public/images/inner_bg.gif) repeat-x top;
+		body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
+		#innerpersonalarea { padding-top: 10px; padding-bottom: 10px;}
+		
+		#mtright { margin-top:-50px; }
+		#signupright { margin-right:40px; }
+		
+		.button { position: relative; width: 600px; }
+		.savednote {
+			left:210px;
+			position:absolute;
+			top:14px;
 		}
-		#innerpersonalarea {
-			padding-bottom: 50px;
-		} 
 	</style>
 </head>
 <body>
@@ -18,11 +24,10 @@
 #{include 'header.html' /}
 		<div id="innerbanner"></div>
 		<div id="innermain">
-		<form id="profilepreferencesform" name="profilepreferencesform" action="@{Profile.savePreferences()}" method="POST" >
-			<div class="blacktext2" id="innerheading">Privacy Settings</div>
+			<div class="blacktext2" id="innerheading">Your Privacy Settings</div>
 			<div id="innerpersonalarea">
 				<div id="signupleft">
-				
+					<form id="profilepreferencesform" name="profilepreferencesform" action="@{Profile.savePreferences()}" method="POST" >
 #{ifnot talker?.hiddenHelps.contains('privacy') }
 <div id="privacyHelp" class="helpInfo">
       <div class="popboxWraper">
@@ -51,11 +56,6 @@
 </div> 
 #{/ifnot}					
 					<div id="signupleftarea">
-						#{if flash.success}
-							<div class="signupmain" style="text-align: center">
-								<span class="success">Changes are saved!</span>
-							</div>
-						#{/if}
 						<div class="signupmain">
 							<div class="generalcheck">
 								#{list items:models.TalkerBean.ProfilePreference.values(), as:'preference' }
@@ -68,11 +68,44 @@
 								#{/list}
 							</div>
 						</div>
-						<a id="savebutton" href="#" onclick="document.profilepreferencesform.submit();">
-							<img src="/public/images/save.gif" width="186" height="46" border="0"/>
-						</a>
+						<div class="button">
+							<a id="savebutton" href="#" onclick="document.profilepreferencesform.submit();">
+								<img src="/public/images/save.gif" width="186" height="46" border="0"/>
+							</a>
+							#{if flash.success}
+								<span class="success savednote">
+									Changes saved!<br/>
+									<span style="color: black; font-weight: bold;">
+										Next step: Update your <a href="@{Profile.notifications()}">Notification Settings</a>.
+									</span>
+								</span>
+							#{/if}
+						</div>
+					</div>
+					</form>
+					
+					<div class="blacktext2" id="innerheading" style="margin-top: 30px;">Account Deactivation</div>
+					<div id="innerpersonalarea">
+						<div id="signupleft">
+							<span class="blacktext14">
+								Deactivating your account means that you'll never
+								hear from TalkAboutHealth again. If you change
+								your mind, you can always reactivate your account by
+								logging in with your username or email address and password.
+							</span><br/><br/><br/><br/><br/>
+							<form action="@{Profile.deactivateAccount()}" method="POST" 
+									onsubmit="if (!confirm('Are you sure want to deactivate your account?')) return false;">
+								<input type="submit" style="padding: 10px" 
+									value="Deactivate Account" />
+							</form>
+						</div>
 					</div>
 				</div>
+				
+				#{ set currentPage = 'publicProfile' /}
+				#{ set currentTalker = talker /}
+            	#{ include 'PublicProfile/profileRight.html' /}
+            
 				<div id="signupright">
 					<div class="personalinfosignrightbox">
 						<div class="generalinfosignrighttop"></div>
@@ -86,25 +119,6 @@
 						</div>
 						<div class="signrighbot"></div>
 					</div>
-				</div>
-				
-			</form>
-			</div>
-			
-			<div class="blacktext2" id="innerheading">Account Deactivation</div>
-			<div id="innerpersonalarea">
-				<div id="signupleft">
-					<span class="blacktext14">
-						Deactivating your account means that you'll never
-						hear from TalkAboutHealth again. If you change
-						your mind, you can always reactivate your account by
-						logging in with your username or email address and password.
-					</span><br/><br/><br/><br/><br/>
-					<form action="@{Profile.deactivateAccount()}" method="POST" 
-							onsubmit="if (!confirm('Are you sure want to deactivate your account?')) return false;">
-						<input type="submit" style="padding: 10px" 
-							value="Deactivate Account" />
-					</form>
 				</div>
 			</div>
 		</div>
