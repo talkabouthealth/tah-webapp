@@ -2611,7 +2611,7 @@ width:auto;
 	height:17px;
 	background:url(../images/arrowup.jpg);
 }
-.arrowups a:hover {
+.arrowups a:hover, .arrowups a.selected {
 	display:block;
 	border:0;
 	width:17px;
@@ -2631,7 +2631,7 @@ width:auto;
 	height:17px;
 	background:url(../images/arrowdown.jpg)
 }
-.arrowdons a:hover {
+.arrowdons a:hover, .arrowdons a.selected {
 	display:block;
 	border:0;
 	width:17px;

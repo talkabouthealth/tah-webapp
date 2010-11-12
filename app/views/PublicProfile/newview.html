@@ -166,7 +166,7 @@
 							#{if talker.bio}
 								<div class="profilebio">Personal Bio</div>
 			                    <div class="topicborder"></div>
-			                    <div class="profilebiotxt">${talker.bio}</div>
+			                    <div class="profilebiotxt">${talker.bio.nl2br()}</div>
 							#{/if}
 							<div class="Profileperson">Personal Info</div>
 		                    <div class="topicborder"></div>
@@ -234,7 +234,7 @@
 							#{if talkerDisease.healthBio }
 								<div class="profilebio">Health Bio</div>
 		                    	<div class="topicborder"></div>
-		                    	<div class="profilebiotxt">${talkerDisease.healthBio}</div>
+		                    	<div class="profilebiotxt">${talkerDisease.healthBio.nl2br()}</div>
 							#{/if}
 							<div class="ProfileHealth">Health Info</div>
                     		<div class="topicborder"></div>

@@ -6,11 +6,14 @@
 				#{if _level == 1 }
 					<div id="vote${comment.id}" class="replyr1">
 						#{ifnot session.username?.equals(comment.fromTalker.userName) || !session.username}
+							#{set talkerVote = comment.getVoteByTalker(_talker, comment.getVotes()) /}
 							<div class="arrowups">
-								<a href="#" class="votebtn" title="up" rel="${comment.id}">&nbsp;</a>
+								<a href="#" class="votebtnup ${ (talkerVote && talkerVote.up) ? 'selected' : ''} " 
+									rel="${comment.id}">&nbsp;</a>
 							</div> 
 							<div class="arrowdons">
-								<a href="#" class="votebtn" title="down" rel="${comment.id}">&nbsp;</a>
+								<a href="#" class="votebtndown ${ (talkerVote && !talkerVote.up) ? 'selected' : ''} "
+									rel="${comment.id}">&nbsp;</a>
 							</div>
 						#{/ifnot}
 		            </div><!--replyr1-->
@@ -135,7 +138,7 @@
 				     #{if _level == 1}
 				     	<div id="replies${comment.id}" class="replysub" style="display: none">
 			            	<div style="clear:both" id="foo">
-								#{convoCommentsTree commentsList: comment.children, level: (_level+1)/}
+								#{convoCommentsTree commentsList: comment.children, level: (_level+1), talker: _talker /}
 								#{if session.username }
 									<div id="replyform${comment.id}" style="clear:both">
 					                    <div class="repcommbox22">

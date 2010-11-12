@@ -419,17 +419,17 @@ public class Conversations extends Controller {
     }
     
     public static void saveConvoComment(String convoId, String parentId, String text) {
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		TalkerBean _talker = CommonUtil.loadCachedTalker(session);
 		
 		ConversationBean convo = ConversationDAO.getByConvoId(convoId);
 		notFoundIfNull(convo);
 		
-		CommentBean comment = ConversationLogic.createAnswer(convo, talker, parentId, text);
+		CommentBean comment = ConversationLogic.createAnswer(convo, _talker, parentId, text);
 		
 		//render html of new comment using tag
 		List<CommentBean> _commentsList = Arrays.asList(comment);
 		int _level = (comment.getParentId() == null ? 1 : 2);
-		render("tags/convoCommentsTree.html", _commentsList, _level);
+		render("tags/convoCommentsTree.html", _commentsList, _level, _talker);
 	}
     
 }

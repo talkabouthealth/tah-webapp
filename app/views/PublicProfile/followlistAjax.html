@@ -13,7 +13,7 @@
            		<span class="blue13"> | </span> 
            		<span class="blkq13">${following.levelOfRecognition}</span><br/>
            		#{if following.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.PERSONAL) }
-             			<span class="greytext12">${following.bio}</span><br/>
+             			<span class="greytext12">${following.bio.nl2br()}</span><br/>
              		#{/if}
              		<span class="bluetext12">
               		#{ifnot currentTalker?.equals(following) }

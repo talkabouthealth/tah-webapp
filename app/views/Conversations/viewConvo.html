@@ -87,8 +87,8 @@
 			});
 
 			//----- Comments ------
-			$(".votebtn").live("click", function() {
-	   				var value = $(this).attr("title") === "up" ? true : false;
+			$(".votebtnup, .votebtndown").live("click", function() {
+	   				var value = $(this).hasClass("votebtnup") ? true : false;
 	   				var answerId = $(this).attr("rel");
 
 	   				$.post("@{Conversations.vote}", 
@@ -96,6 +96,16 @@
 	   		   				function(data) {
 		   		   				if (data !== "ok") {
 			   		   				alert(data);
+		   		   				}
+		   		   				else {
+			   		   				if (value) {
+			   			   				$("#vote"+answerId+" .votebtnup").addClass("selected");
+			   			   				$("#vote"+answerId+" .votebtndown").removeClass("selected");
+			   		   				}
+			   		   				else {
+			   		   					$("#vote"+answerId+" .votebtnup").removeClass("selected");
+			   			   				$("#vote"+answerId+" .votebtndown").addClass("selected");
+			   		   				}
 		   		   				}
 	   		   				}
 		   				);
@@ -571,14 +581,14 @@
                       			<div class="topicborder"></div>
                       		</div>
                       		
-                      		#{convoCommentsTree commentsList: convo.helpfulAnswers, level: 1 /}
+                      		#{convoCommentsTree commentsList: convo.helpfulAnswers, level: 1, talker: talker /}
                       		
                       		#{set notHelpfulAnswers = convo.notHelpfulAnswers /}
                       		#{if notHelpfulAnswers.size() != 0 }
                       			<a href="#" onclick="$('#notHelpfulAnswers').show(); return false;"
                       				>View ${notHelpfulAnswers.size()} Answer(s) Marked Not Helpful</a>
 	                      		<div id="notHelpfulAnswers" style="display: none; margin-top: 3px;">
-	                      			#{convoCommentsTree commentsList: notHelpfulAnswers, level: 1 /}
+	                      			#{convoCommentsTree commentsList: notHelpfulAnswers, level: 1, talker: talker /}
 	                      		</div>	
                       		#{/if}
                       		
