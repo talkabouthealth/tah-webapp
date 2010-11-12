@@ -1,11 +1,21 @@
 #{ extends 'main.html' /}
 
 <style>
-	body {
-		background:url(/public/images/inner_bg.gif) repeat-x top;
-		font-family:arial;
-		font-size:11px;
+	body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
+	#innerpersonalarea { padding-top: 10px; padding-bottom: 10px;}
+	#innermiddlearea { width: 655px }
+	#innerheading { width:500px; }
+	
+	#mtright { float: right; margin-top:-50px; }
+	#signupright { margin-right:40px; }
+	
+	.button { position: relative; width: 600px; }
+	.savednote {
+		left:210px;
+		position:absolute;
+		top:14px;
 	}
+	
 	.note {
 		float: left; 
 		clear: left; 
@@ -19,6 +29,10 @@
 	#emailstable td, #imstable td {
 		padding: 7px;
 		font-size: 14px;
+	}
+	.notiblueareamid, .signfields2 {
+		background: none;
+		border: none;
 	}
 </style>
 
@@ -136,19 +150,7 @@
 		<div id="innermiddlearea">
 			<div class="notifactionboxtop"></div>
 			<div class="notifactionboxmid">
-				#{if "accountsForm".equals(flash.currentForm)}
-					#{if flash.success}
-					   <div class="notibluearea">
-							<div class="notiblueareatop"></div>
-							<div class="signfields2">
-								<h4>Changes are saved!</h4>
-							</div>
-							<div class="notiblueareabot"></div>
-						</div>
-					#{/if}
-				#{/if}
 				<div class="notibluearea">
-					<div class="notiblueareatop"></div>
 					<div class="signfields2">
 						<h1>Email</h1>
 						<table id="emailstable" border="0">
@@ -177,10 +179,8 @@
 							<input id="newEmailBtn" type="button" value="Add email" />
 						</div>
 					</div>
-					<div class="notiblueareabot"></div>
 				</div>
 				<div class="notibluearea">
-					<div class="notiblueareatop"></div>
 					<div class="signfields2">
 						<h1>IM</h1>
 						<table id="imstable" border="0">
@@ -207,36 +207,25 @@
 							<input id="newIMBtn" type="button" value="Add IM account" />
 						</div>
 					</div>
-					<div class="notiblueareabot"></div>
 				</div>
 			</div>
 			<div class="notifactionboxbot"></div>
 		</div>
 	</form>
-	</div>
+		
+		#{ set currentPage = 'publicProfile' /}
+		#{ set currentTalker = talker /}
+        #{ include 'PublicProfile/profileRight.html' /}
+            	
 	
-	<div id="midnoticontainer">
-		<div id="midnoticontainermain">
-		<a name="notificationsform"></a>
-		<form id="NofifyFrequency" name="setNotifyFrequency" action="@{Profile.saveNotifications()}#notificationsform" method="post"  >
-			<div id="boxarea_head2" class="blacktext2">IM Notification Settings</div>
-			<div id="notifactionbox2">
-			
+	<form id="NofifyFrequency" name="setNotifyFrequency" action="@{Profile.saveNotifications()}#notificationsform" method="post"  >
+		<div class="blacktext2" id="innerheading">
+			IM Notification Settings
+		</div>
+		<div id="innermiddlearea">
 			<div class="notifactionboxtop"></div>
 				<div class="notifactionboxmid">
-					#{if "notificationsForm".equals(flash.currentForm)}
-						#{if flash.success}
-						   <div class="notibluearea">
-								<div class="notiblueareatop"></div>
-								<div class="signfields2">
-									<h4>Changes are saved!</h4>
-								</div>
-								<div class="notiblueareabot"></div>
-							</div>
-						#{/if}
-					#{/if}
 					<div class="notibluearea">
-						<div class="notiblueareatop"></div>
 						<div class="notiblueareamid">
 							<h1>How often do you want to be notified?</h1>
 							<ul>
@@ -250,10 +239,9 @@
 	#{/list}
 							</ul>
 						</div>
-						<div class="notiblueareabot"></div>
 					</div>
+					<a name="notificationsform"></a>
 					<div class="notibluearea">
-						<div class="notiblueareatop"></div>
 						<div class="notiblueareamid">
 							<h1>When do you want to be notified?</h1>
 							<ul>
@@ -267,10 +255,8 @@
 			#{/list}
 							</ul>
 						</div>
-						<div class="notiblueareabot"></div>
 					</div>
 					<div class="notibluearea">
-						<div class="notiblueareatop"></div>
 						<div class="notiblueareamid">
 							<h1>What types of conversations interest you the most?</h1>
 							<ul>	
@@ -280,45 +266,41 @@
 							/>&nbsp;<span class='blacktext' >${cType}</span></li>
 						#{/list}				
 								<li>
-									<textarea class="textarea3" rows="5" cols="45" style="padding: 5px"
+									<textarea class="textarea3" rows="5" cols="45" style="padding: 5px; border: 1px solid #999999;"
 										onclick="if (this.value == 'Other (please separate by commas)') this.value='';" 
 										id="otherCTypes" name="otherCTypes">${talker.getOtherCTypes()}</textarea>
 								</li>	
 							</ul>
 						</div>
-						<div class="notiblueareabot"></div>
 					</div>
 <!-- <div id="savebutton"><a href="/tah-java/SetNotification"><img src="/public/images/save.gif" width="186" height="46" /></a></div> -->
-					<input id="submit" name="submit1" type="image" src="/public/images/save.gif" value="save changes"> 
+					<div class="button">
+						<input id="submit" name="submit1" type="image" src="/public/images/save.gif" value="save changes"> 
+						#{if "notificationsForm".equals(flash.currentForm)}
+							#{if flash.success}
+								<span class="success savednote">
+									Changes saved!<br/>
+									<span style="color: black; font-weight: bold;">
+										Next step: Update your email settings below.
+									</span>
+								</span>
+							#{/if}
+						#{/if}
+					</div>
 				</div>
 				<div class="notifactionboxbot"></div>
 			</div>
 		</form>
+		
+	<form id="emailsettings" name="emailsettings" action="@{Profile.saveEmailSettings()}#emailsettingsform" method="post">
+		<div class="blacktext2" id="innerheading">
+			<a name="emailsettingsform"></a>
+			Email Settings
 		</div>
-	</div>
-			
-	
-	<div id="midnoticontainer">
-		<div id="midnoticontainermain">
-		<a name="emailsettingsform"></a>
-		<form id="emailsettings" name="emailsettings" action="@{Profile.saveEmailSettings()}#emailsettings" method="post">
-			<div id="boxarea_head2" class="blacktext2">Email Settings</div>
-			<div id="notifactionbox2">
-				<div class="notifactionboxtop"></div>
-				<div class="notifactionboxmid">
-					#{if "emailsettingsForm".equals(flash.currentForm)}
-						#{if flash.success}
-						   <div class="notibluearea">
-								<div class="notiblueareatop"></div>
-								<div class="signfields2">
-									<h4>Changes are saved!</h4>
-								</div>
-								<div class="notiblueareabot"></div>
-							</div>
-						#{/if}
-					#{/if}
+		<div id="innermiddlearea">
+			<div class="notifactionboxtop"></div>
+			<div class="notifactionboxmid">
 					<div class="notibluearea">
-						<div class="notiblueareatop"></div>
 						<div class="signfields2">
 							<div class="generalcheck">
 								<h1>User Related</h1>
@@ -347,12 +329,24 @@
 								</div>
 							</div>
 						</div>
-						<div class="notiblueareabot"></div>
 					</div>
-					<input id="submit" name="submit1" type="image" src="/public/images/save.gif" value="save changes"> 
+					<div class="button">
+						<input id="submit" name="submit1" type="image" src="/public/images/save.gif" value="save changes">  
+						#{if "emailsettingsForm".equals(flash.currentForm)}
+							#{if flash.success}
+								<span class="success savednote">
+									Changes saved!<br/>
+									<span style="color: black; font-weight: bold;">
+										Next step: Update your <a href="@{Profile.edit()}">Profile</a> and
+										<a href="@{Profile.healthDetails()}">Health</a> Information.
+									</span>
+								</span>
+							#{/if}
+						#{/if}
+					</div>
 				</div>
 				<div class="notifactionboxbot"></div>
 			</div>
-		</form>
-		</div>
-	</div>
+	</form>	
+		
+	</div>			

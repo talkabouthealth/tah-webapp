@@ -271,6 +271,11 @@ public class Profile extends Controller {
 	/* -------------- Notifications ------------------------ */
 	public static void notifications() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+    	talker.setActivityList(ActionDAO.load(talker.getId()));
+		TalkerLogic.calculateProfileCompletion(talker);
+		
 		render(talker);
 	}
 	
@@ -357,7 +362,6 @@ public class Profile extends Controller {
 		talker.setVerifyCode(newPrimaryEmailBean.getVerifyCode());
 		
 		CommonUtil.updateTalker(talker, session);
-		
 		notifications();
 	}
 	
