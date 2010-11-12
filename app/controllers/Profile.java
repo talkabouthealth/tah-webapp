@@ -1,6 +1,11 @@
 package controllers;
 
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.awt.image.ImageFilter;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,6 +20,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.imageio.ImageIO;
 
 import logic.TalkerLogic;
 import models.DiseaseBean;
@@ -219,15 +226,35 @@ public class Profile extends Controller {
 	public static void uploadImage(String submitAction, File imageFile) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-		//ImageUtil.applyFilter(bi, arg1)
 		if ("Remove current image".equals(submitAction)) {
 			TalkerDAO.updateTalkerImage(talker, null);
 		}
-		else {
-	        try {
-				TalkerDAO.updateTalkerImage(talker, FileUtils.readFileToByteArray(imageFile));
+		else if (imageFile != null) {
+			try {
+				if (imageFile.length() < 10000) {
+					//less then 10kb
+					TalkerDAO.updateTalkerImage(talker, FileUtils.readFileToByteArray(imageFile));
+				}
+				else {
+					BufferedImage bsrc = ImageIO.read(imageFile);
+					
+					int width = 100;
+					int height = 100;
+					BufferedImage bdest =
+					      new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+					Graphics2D g = bdest.createGraphics();
+					AffineTransform at =
+					      AffineTransform.getScaleInstance((double)width/bsrc.getWidth(),
+					          (double)height/bsrc.getHeight());
+					g.drawRenderedImage(bsrc,at);
+					
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		        
+		        	ImageIO.write(bdest, "GIF", baos);
+		        	TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
+				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.error(e, "Error converting image!");
 			}
 		}
 		
