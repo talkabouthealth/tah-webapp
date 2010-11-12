@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import logic.TalkerLogic;
 import models.DiseaseBean;
 import models.DiseaseBean.DiseaseQuestion;
 import models.EmailBean;
@@ -57,6 +58,12 @@ public class Profile extends Controller {
 
     public static void edit(boolean verifiedEmail) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	
+    	//TODO move to one logic method - info is the same
+    	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+    	talker.setActivityList(ActionDAO.load(talker.getId()));
+		TalkerLogic.calculateProfileCompletion(talker);
+		
     	render(talker, verifiedEmail);
     }
 	
@@ -96,6 +103,17 @@ public class Profile extends Controller {
 //		validation.required(dateOfBirth).message("Please input correct Birth Date");
 		
 		if(validation.hasErrors()) {
+			//prepare info for displaying page
+			//TODO: it's not good
+			talker.setHiddenHelps(oldTalker.getHiddenHelps());
+			talker.saveProfilePreferences(oldTalker.loadProfilePreferences());
+			talker.setFollowingTopicsList(oldTalker.getFollowingTopicsList());
+			talker.setThankYouList(oldTalker.getThankYouList());
+			talker.setFollowingList(oldTalker.getFollowingList());
+			talker.setFollowerList(TalkerDAO.loadFollowers(oldTalker.getId()));
+	    	talker.setActivityList(ActionDAO.load(oldTalker.getId()));
+			TalkerLogic.calculateProfileCompletion(talker);
+			
 			flash.success("");
 			render("@edit", talker);
             return;
@@ -161,6 +179,9 @@ public class Profile extends Controller {
 		
 		flash.success("ok");
 		talker = oldTalker;
+		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+    	talker.setActivityList(ActionDAO.load(talker.getId()));
+		TalkerLogic.calculateProfileCompletion(talker);
 		render("@edit", talker);
 	}
 	
@@ -429,6 +450,10 @@ public class Profile extends Controller {
 			healthItemsMap.put(itemName, healthItem);
 		}
 		
+		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+    	talker.setActivityList(ActionDAO.load(talker.getId()));
+		TalkerLogic.calculateProfileCompletion(talker);
+		
 		render(talker, talkerDisease, disease, healthItemsMap);
 	}
 	
@@ -473,7 +498,7 @@ public class Profile extends Controller {
 			redirect(action.toString()); 
 		}
 		else {
-			flash.put(section, "Changes saved");
+			flash.put(section, "Changes saved!");
 			
 			redirect(action.addRef(section).toString()); 
 		}

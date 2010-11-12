@@ -508,8 +508,7 @@ public class ConversationDAO {
 //		topic.setCreationDate(currentDate);
 //		TopicDAO.save(topic);
 		
-//		updateLiveTalkers(3, "4cc94906b8682ba9e5eba5f2", "kangaroo", true);
-		
+		updateLiveTalkers(3, "4cc94906b8682ba9e5eba5f2", "kangaroo", true);
 		
 		
 //		List<DBRef> allTopics = new ArrayList<DBRef>();
@@ -518,24 +517,24 @@ public class ConversationDAO {
 	}
 	
 	//used for testing
-//	private static void updateLiveTalkers(int tid, String talkerId, 
-//			String talkerName, boolean connected) {
-//		DBCollection convosColl = getDB().getCollection(CONVERSATIONS_COLLECTION);
-//		
-//		DBRef talkerRef = new DBRef(getDB(), "talkers", new ObjectId(talkerId));
-//		DBObject talkerDBObject = BasicDBObjectBuilder.start()
-//			.add("uid", talkerRef)
-//			.add("uname", talkerName)
-//			.get();
-//		
-//		DBObject tidDBObject = new BasicDBObject("tid", tid);
-//		String operation = "$pull"; //for disconnected
-//		if (connected) {
-//			operation = "$push";
-//		}
-//		convosColl.update(tidDBObject, 
-//				new BasicDBObject(operation, new BasicDBObject("talkers", talkerDBObject)));
-//	}
+	private static void updateLiveTalkers(int tid, String talkerId, 
+			String talkerName, boolean connected) {
+		DBCollection convosColl = getDB().getCollection(CONVERSATIONS_COLLECTION);
+		
+		DBRef talkerRef = new DBRef(getDB(), "talkers", new ObjectId(talkerId));
+		DBObject talkerDBObject = BasicDBObjectBuilder.start()
+			.add("uid", talkerRef)
+			.add("uname", talkerName)
+			.get();
+		
+		DBObject tidDBObject = new BasicDBObject("tid", tid);
+		String operation = "$pull"; //for disconnected
+		if (connected) {
+			operation = "$push";
+		}
+		convosColl.update(tidDBObject, 
+				new BasicDBObject(operation, new BasicDBObject("talkers", talkerDBObject)));
+	}
 
 }
 

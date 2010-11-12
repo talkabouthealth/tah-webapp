@@ -1,9 +1,11 @@
 #{extends 'main.html' /}
 
 <style>
-	body {
-		background:url(/public/images/inner_bg.gif) repeat-x top;
-	}
+	body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
+	#innerpersonalarea { padding-top: 10px }
+	
+	#mtright { margin-top:-50px; }
+	#signupright { margin-right:43px; }
 </style>
 <script type="text/javascript" charset="utf-8">
 
@@ -131,7 +133,7 @@
 #{include 'header.html' /}
 	<div id="innerbanner"></div>
 	<div id="innermain">
-		<div class="blacktext2" id="innerheading">Personal Info and Password</div>
+		<div class="blacktext2" id="innerheading">Edit Your Profile Information</div>
 		<div id="innerpersonalarea">
 			<div id="signupleft">
 #{if verifiedEmail}
@@ -195,7 +197,10 @@
 					<div class="personalmain" style="text-align: center">
 						#{if "editForm".equals(flash.currentForm)}
 							#{if flash.success}
-							    <span class="success">Changes are saved!</span>
+							    <span class="success">Changes saved!</span>&nbsp;&nbsp;&nbsp;
+							    <span style="font-size: 14px; font-weight: bold;">Next step: Edit your 
+							    	<a href="@{Profile.healthDetails()}">Health Info</a>
+							    </span>
 							#{/if}
 							#{ifErrors}
 							   #{errors}
@@ -419,6 +424,10 @@
 				</div>
 			#{/form}
 			</div>
+			
+			#{ set currentPage = 'publicProfile' /}
+			#{ set currentTalker = talker /}
+            #{ include 'PublicProfile/profileRight.html' /}
 			
 			<div id="signupright">
 				<div class="personalinfosignrightbox">

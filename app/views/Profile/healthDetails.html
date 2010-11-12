@@ -1,14 +1,12 @@
 #{ extends 'main.html' /}
 
 	<style>
-		body {
-			margin: 0px;
-			padding:0px;
-			font-family:arial;
-			font-size:11px;
-			color:#000000;
-			background:url(/public/images/inner_bg.gif) repeat-x top;
-		}
+		body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
+		#innerpersonalarea { padding-top: 10px }
+		
+		#mtright { margin-top:-50px; }
+		#signupright { margin-right:43px; }
+		
 		.signfields2 ul {
 			padding-top: 0px;
 		}
@@ -24,7 +22,7 @@
 		.savednote {
 			left:200px;
 			position:absolute;
-			top:25px;
+			top:8px;
 		}
 	</style>
 	
@@ -44,7 +42,7 @@
 		<form id="healthdetailsform" name="healthdetailsform" action="@{Profile.saveHealthDetails()}" method="POST">
 		<input type="hidden" name="section" id="section" />
 		<div id="innermain">
-			<div class="blacktext2" id="innerheading">General Health Details</div>
+			<div class="blacktext2" id="innerheading">Edit Your Health Information</div>
 			<div id="innerpersonalarea">
 				<div id="signupleft">
 #{ifnot talker?.hiddenHelps.contains('health')}
@@ -86,7 +84,6 @@
 						</div>
 						#{list items:disease.questions, as:'question'}
 							<div class="signupmain">
-							<a name="symptoms"></a>
 							#{if question.type == models.DiseaseBean.DiseaseQuestion.DiseaseQuestionType.SELECT}
 								<div class="generaltextarea">
 									<span class="blacktext16"><strong>${question.text}</strong></span>
@@ -156,6 +153,7 @@
 						}*
 						
 						<div class="signupmain">
+							<a name="symptoms"></a>
 							<div class="generaltextarea">
 								<span class="blacktext16"><strong>Is it recurrent?</strong></span>
 							</div>
@@ -234,12 +232,25 @@
 								<a href="" onclick="return submitForm('symptoms');">
 									<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" />
 								</a>
-								<span class="success savednote">${flash.symptoms}</span>
+								#{if flash.symptoms}
+									<span class="success savednote">
+										${flash.symptoms}<br/>
+										<span style="color: black; font-weight: bold;">
+											After entering your health info, the next <br/>
+											step is to update your <a href="@{Profile.preferences()}">Privacy Settings</a>.
+										</span>
+									</span>
+								#{/if}
 							</div>
 						</div>
 						<div class="signupmain"></div>
 					</div>
 				</div>
+				
+				#{ set currentPage = 'publicProfile' /}
+				#{ set currentTalker = talker /}
+            	#{ include 'PublicProfile/profileRight.html' /}
+            
 				<div id="signupright">
 					<div class="personalinfosignrightbox">
 					<div class="personalinfosignrighttop"></div>
@@ -293,7 +304,15 @@
 						<a href="" onclick="return submitForm('procedures');">
 							<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" />
 						</a>
-						<span class="success savednote">${flash.procedures}</span>
+						#{if flash.procedures}
+							<span class="success savednote">
+								${flash.procedures}<br/>
+								<span style="color: black; font-weight: bold;">
+									After entering your health info, the next <br/>
+									step is to update your <a href="@{Profile.preferences()}">Privacy Settings</a>.
+								</span>
+							</span>
+						#{/if}
 					</div>
 					<div class="signupmain"></div>
 				</div>
@@ -305,10 +324,10 @@
 				<div id="boxarea_head2" class="blacktext2">Treatments and medications</div>
 				<div class="signupleftarea2">
 					<div class="generalsubhead">
-						<a name="treatments"></a>
 						What treatments / medications have you taken?
 					</div>
 					<div class="generalcheck">
+						<a name="treatments"></a>
 						#{ healthItemsTree healthItem:healthItemsMap["treatments"], checkedItems: talkerDisease?.healthItems /}
 					</div>
 					<div class="textareabig">
@@ -318,7 +337,15 @@
 						<a href="" onclick="return submitForm('treatments');">
 							<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" />
 						</a>
-						<span class="success savednote">${flash.treatments}</span>
+						#{if flash.treatments}
+							<span class="success savednote">
+								${flash.treatments}<br/>
+								<span style="color: black; font-weight: bold;">
+									After entering your health info, the next <br/>
+									step is to update your <a href="@{Profile.preferences()}">Privacy Settings</a>.
+								</span>
+							</span>
+						#{/if}
 					</div>
 					<div class="signupmain"></div>
 				</div>
@@ -341,7 +368,15 @@
 						<a href="" onclick="return submitForm('sideeffects');">
 							<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" />
 						</a>
-						<span class="success savednote">${flash.sideeffects}</span>
+						#{if flash.sideeffects}
+							<span class="success savednote">
+								${flash.sideeffects}<br/>
+								<span style="color: black; font-weight: bold;">
+									After entering your health info, the next <br/>
+									step is to update your <a href="@{Profile.preferences()}">Privacy Settings</a>.
+								</span>
+							</span>
+						#{/if}
 					</div>
 					<div class="signupmain"></div>
 				</div>
