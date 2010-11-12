@@ -20,6 +20,7 @@ import models.TalkerBean;
 import models.TalkerBean.EmailSetting;
 import models.TopicBean;
 import models.URLName;
+import models.actions.Action;
 import models.actions.AnswerConvoAction;
 import models.actions.AnswerVotedAction;
 import models.actions.FollowConvoAction;
@@ -33,11 +34,18 @@ import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
+import play.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer;
+import play.data.validation.Validation;
+import play.exceptions.UnexpectedException;
 import play.i18n.Messages;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Router;
+import play.mvc.Scope;
 import play.mvc.With;
 import play.templates.JavaExtensions;
+import play.templates.Template;
+import play.templates.TemplateLoader;
 import util.CommonUtil;
 import util.EmailUtil;
 import util.NotificationUtils;
@@ -46,7 +54,7 @@ import util.EmailUtil.EmailTemplate;
 @With(Secure.class)
 public class Conversations extends Controller {
 	
-	public static void create(String type, String title, String details, String topics) {
+	public static void create(String type, String title, String details, String topics, String fromPage) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
     	//prepare params
@@ -61,8 +69,6 @@ public class Conversations extends Controller {
     		}
     	}
     	
-//    	System.out.println(convoType+" : "+title+" : "+details+" : "+topicsSet);
-    	
     	//in this case we notify only after new question
     	boolean notifyTalkers = (convoType == ConvoType.QUESTION);
     	ConversationBean convo = 
@@ -70,7 +76,39 @@ public class Conversations extends Controller {
     	CommonUtil.updateTalker(talker, session);
     	
     	String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
-		renderJSON("{ \"id\" : \""+convo.getId()+"\", \"tid\" : \""+convo.getTid()+"\", \"url\" : \""+convoURL+"\" }");
+    	
+    	//TODO: move to separate?
+    	String templateName = "";
+    	Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
+        templateBinding.put("session", Scope.Session.current());
+        templateBinding.put("request", Http.Request.current());
+        templateBinding.put("_talker", talker);
+    	if (fromPage.equalsIgnoreCase("home")) {
+    		//#{feedActivity activity: activity, talker: talker /}
+    		templateName = "tags/feedActivity.html";
+    		Action activity = new StartConvoAction(talker, convo, ActionType.START_CONVO);
+    		activity.getConvo().setComments(new ArrayList<CommentBean>());
+    		templateBinding.put("_activity", activity);
+    	}
+    	else if (fromPage.equalsIgnoreCase("liveTalks")) {
+    		//#{liveTalk convo: convo, talker: talker /}
+    		templateName = "tags/liveTalk.html";
+    		templateBinding.put("_convo", convo);
+    	}
+    	else if (fromPage.equalsIgnoreCase("openQuestions")) {
+    		//#{openQuestion convo: convo, talker: talker /}
+    		templateName = "tags/openQuestion.html";
+    		templateBinding.put("_convo", convo);
+    	}
+        Template template = TemplateLoader.load(templateName);
+    	String html = template.render(templateBinding.data);
+    	
+    	Map<String, String> jsonData = new HashMap<String, String>();
+    	jsonData.put("id", convo.getId());
+    	jsonData.put("tid", ""+convo.getTid());
+    	jsonData.put("url", convoURL);
+    	jsonData.put("html", html);
+    	renderJSON(jsonData);
     }
 	
 	//start Talk after creating it

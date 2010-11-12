@@ -282,7 +282,7 @@ function loadMoreFeed(type) {
 }
 
 
-function saveConvo() {
+function saveConvo(page) {
 	var type = "QUESTION";
 	if ($("#newConvoTypeConvo").attr("checked")) {
 		type = "CONVERSATION";
@@ -301,7 +301,7 @@ function saveConvo() {
 	}
 
 	$.post("/conversations/create", 
-			{ type: type, title: title, details: details, topics: topics},
+			{ type: type, title: title, details: details, topics: topics, fromPage: page},
 			function(data) {
 				if (type === "CONVERSATION") {
 					$("#startTalkBtn").click(function() {
@@ -316,6 +316,10 @@ function saveConvo() {
 					$("#newQuestionConfirm").show();
 				}
 				$("#newConvoForm").hide();
+				
+				if (!(type === "QUESTION" && page === "liveTalks")) {
+					$(data.html).prependTo($(".conversationsList"));
+				}
 
 				$("#convoText").val("");
 				$("#newConvoTitle").val("");

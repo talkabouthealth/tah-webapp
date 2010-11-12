@@ -81,7 +81,7 @@
                     <!--mtinputbox-->
 
                     <div class="cb"></div>
-                    <div class="topic">
+                    <div class="topic conversationsList">
                     
 #{list items: openQuestions, as: 'convo'}
 	#{openQuestion convo: convo, talker: talker /}
@@ -127,7 +127,7 @@
 <div id="boxes">
   <div id="dialog" class="window"> </div>
   
-  #{popups/startConvo /}
+  #{popups/startConvo page: 'openQuestions' /}
 
   <div id="mask"></div>
 </div>

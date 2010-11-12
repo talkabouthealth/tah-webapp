@@ -192,7 +192,7 @@
                         <div class="cb"></div>
                       </div>
                       <div class="topic">
-                        <div id="convoFeedList">
+                        <div id="convoFeedList" class="conversationsList">
 	                    	#{list items: convoFeed, as: 'activity'}
 								#{feedActivity activity: activity, talker: talker /}
 							#{/list}
@@ -267,7 +267,7 @@
 <div id="boxes">
   <div id="dialog" class="window"> </div>
   
-  #{popups/startConvo /}
+  #{popups/startConvo page: 'home' /}
   
   #{popups/imSettings /}
 	
