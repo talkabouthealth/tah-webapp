@@ -27,7 +27,8 @@
 			<div class="blacktext2" id="innerheading">Your Privacy Settings</div>
 			<div id="innerpersonalarea">
 				<div id="signupleft">
-					<form id="profilepreferencesform" name="profilepreferencesform" action="@{Profile.savePreferences()}" method="POST" >
+					<form id="profilepreferencesform" name="profilepreferencesform" 
+						action="@{Profile.preferencesSave()}" method="POST" >
 #{ifnot talker?.hiddenHelps.contains('privacy') }
 <div id="privacyHelp" class="helpInfo">
       <div class="popboxWraper">

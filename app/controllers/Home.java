@@ -49,6 +49,14 @@ public class Home extends Controller {
 		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
 		boolean isAdmin = "admin".equals(Security.connected());
 		boolean showIMPopup = (session.get("justregistered") != null && hasNoIMAccounts && !isAdmin);
+		if (showIMPopup) {
+			//pre-populate the fields based on user entries
+			//if user provides an email from gmail, windows live, or yahoo - 
+			//automatically populate the username with that item and check the option for what they provided
+			
+			//If user signs up via twitter, populate the Username field with the twitter username 
+			//and automatically have the Twitter option checked
+		}
 		session.remove("justregistered");
 		
 		//TODO: number of answers for this user??!

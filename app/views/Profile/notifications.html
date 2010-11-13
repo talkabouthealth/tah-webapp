@@ -218,7 +218,7 @@
         #{ include 'PublicProfile/profileRight.html' /}
             	
 	
-	<form id="NofifyFrequency" name="setNotifyFrequency" action="@{Profile.saveNotifications()}#notificationsform" method="post"  >
+	<form id="NofifyFrequency" name="setNotifyFrequency" action="@{Profile.notificationsSave()}#notificationsform" method="post"  >
 		<div class="blacktext2" id="innerheading">
 			IM Notification Settings
 		</div>
@@ -292,7 +292,7 @@
 			</div>
 		</form>
 		
-	<form id="emailsettings" name="emailsettings" action="@{Profile.saveEmailSettings()}#emailsettingsform" method="post">
+	<form id="emailsettings" name="emailsettings" action="@{Profile.emailSettingsSave()}#emailsettingsform" method="post">
 		<div class="blacktext2" id="innerheading">
 			<a name="emailsettingsform"></a>
 			Email Settings

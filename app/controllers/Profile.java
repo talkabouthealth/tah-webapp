@@ -274,7 +274,7 @@ public class Profile extends Controller {
 		render(talker, profilePreferences);
 	}
 	
-	public static void savePreferences() {
+	public static void preferencesSave() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 		Map<String, String> paramsMap = params.allSimple();
@@ -306,7 +306,7 @@ public class Profile extends Controller {
 		render(talker);
 	}
 	
-	public static void saveNotifications(TalkerBean talker, String otherCTypes) {
+	public static void notificationsSave(TalkerBean talker, String otherCTypes) {
 		flash.put("currentForm", "notificationsForm");
 		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);
 		
@@ -345,7 +345,7 @@ public class Profile extends Controller {
 		notifications();
 	}
 	
-	public static void saveEmailSettings(TalkerBean talker) {
+	public static void emailSettingsSave(TalkerBean talker) {
 		flash.put("currentForm", "emailsettingsForm");
 		
 		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);

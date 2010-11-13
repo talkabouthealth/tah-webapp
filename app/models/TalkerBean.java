@@ -135,7 +135,6 @@ public class TalkerBean implements Serializable {
 	private String accountType;
 	private String accountId;
 
-	//im and imUsername are used only for parsing data from form on registration
 	private String im;
 	private String imUsername;
 	private Set<IMAccountBean> imAccounts;
