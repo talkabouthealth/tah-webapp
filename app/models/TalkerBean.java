@@ -71,7 +71,7 @@ public class TalkerBean implements Serializable {
 		FOLLOWING(5, "Display who I Follow to the community"),
 		THANKYOUS(6, "Display my Thank you's to the community"),
 		CONVERSATIONS(7, "Display the Conversations I started and joined to the community"),
-		COMMENTS(8, "Display my Journal to the community"),
+		COMMENTS(8, "Display my Thoughts to the community"),
 		ACTIVITY_STREAM(9, "Display my Activity Stream to the community"),
 		CONVERSATIONS_FOLLOWED(10, "Display the Conversations I Follow to the community"),
 		TOPICS_FOLLOWED(11, "Display the Topics I Follow to the community");

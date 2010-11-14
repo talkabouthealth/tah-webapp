@@ -44,7 +44,7 @@ GET     /public/                                staticDir:public
 
 GET		/{name}/?								ViewDispatcher.view
 
-GET		/{userName}/journal						PublicProfile.journal
+GET		/{userName}/thoughts					PublicProfile.thoughts
 
 GET		/{userName}/thankyous/{from}			PublicProfile.userBasedActions(action:'thankyous', from)
 GET		/{userName}/following/{from}			PublicProfile.userBasedActions(action:'following', from)

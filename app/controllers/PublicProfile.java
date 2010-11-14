@@ -52,7 +52,7 @@ public class PublicProfile extends Controller {
 		render(talker, currentTalker, action, from);
 	}
 	
-	public static void journal(String userName) {
+	public static void thoughts(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
 		notFoundIfNull(talker);
@@ -60,12 +60,12 @@ public class PublicProfile extends Controller {
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
 		
-		//If the user views his own journal he should see the following text under the text box 
+		//If the user views his own thoughts he should see the following text under the text box 
 		//until the user posts for the first time (even if another user posts first, this should still appear):
 		boolean firstTimeComment = false;
 		if (talker.equals(currentTalker)) {
 			firstTimeComment = true;
-			//user views his own journal - check if he's made comment
+			//user views his own thoughts - check if he's made comment
 			for (CommentBean cb : talker.getProfileCommentsList()) {
 				if (cb.getFromTalker().equals(talker)) {
 					firstTimeComment = false;
