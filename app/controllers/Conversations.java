@@ -138,6 +138,9 @@ public class Conversations extends Controller {
     	for (TalkerBean follower : convo.getFollowers()) {
     		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_RESTART, follower, vars);
     	}
+    	
+    	convo.setCreationDate(new Date());
+    	ConversationDAO.updateConvo(convo);
     }
     
     //Close LiveTalk

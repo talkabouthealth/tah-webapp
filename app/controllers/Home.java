@@ -49,7 +49,6 @@ public class Home extends Controller {
 		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
 		boolean isAdmin = "admin".equals(Security.connected());
 		boolean showIMPopup = (session.get("justregistered") != null && hasNoIMAccounts && !isAdmin);
-		showIMPopup = true;
 		if (showIMPopup) {
 			//pre-populate the fields based on user entries
 			
@@ -72,7 +71,6 @@ public class Home extends Controller {
 		session.remove("justregistered");
 		
 		//TODO: number of answers for this user??!
-		
 		render("@newhome", talker, newTopic, liveConversations, convoFeed, communityFeed, showIMPopup);
     }
     

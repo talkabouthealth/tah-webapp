@@ -119,6 +119,7 @@ public class ConversationDAO {
 			.add("topic", convo.getTopic())
 			.add("main_url", convo.getMainURL())
 			.add("old_names", setToDB(convo.getOldNames()))
+			.add("cr_date", convo.getCreationDate())
 			
 			.add("deleted", convo.isDeleted())
 			.add("details", convo.getDetails())

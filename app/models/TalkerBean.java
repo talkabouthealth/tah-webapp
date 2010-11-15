@@ -71,7 +71,7 @@ public class TalkerBean implements Serializable {
 		FOLLOWING(5, "Display who I Follow to the community"),
 		THANKYOUS(6, "Display my Thank you's to the community"),
 		CONVERSATIONS(7, "Display the Conversations I started and joined to the community"),
-		COMMENTS(8, "Display my Thoughts to the community"),
+		COMMENTS(8, "Display my Thoughts Feed to the community"),
 		ACTIVITY_STREAM(9, "Display my Activity Stream to the community"),
 		CONVERSATIONS_FOLLOWED(10, "Display the Conversations I Follow to the community"),
 		TOPICS_FOLLOWED(11, "Display the Topics I Follow to the community");
@@ -91,7 +91,7 @@ public class TalkerBean implements Serializable {
 	
 	//Convo-related items start with "CONVO" - we use it for display
 	public enum EmailSetting {
-		RECEIVE_COMMENT ("Send me an email when I receive a comment in my journal.", EmailTemplate.NOTIFICATION_PROFILE_COMMENT),
+		RECEIVE_COMMENT ("Send me an email when I receive a comment in my Thoughts Feed.", EmailTemplate.NOTIFICATION_PROFILE_COMMENT),
 		RECEIVE_THANKYOU ("Send me an email when I receive a 'Thank You'.", EmailTemplate.NOTIFICATION_THANKYOU),
 		RECEIVE_DIRECT ("Send me an email when I receive a Direct Message.", EmailTemplate.NOTIFICATION_DIRECT_MESSAGE),
 		NEW_FOLLOWER ("Send me an email when someone follows me.", EmailTemplate.NOTIFICATION_FOLLOWER),
