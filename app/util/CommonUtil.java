@@ -45,6 +45,7 @@ import util.importers.DiseaseImporter;
 
 import com.mongodb.DBRef;
 import com.tah.im.IMNotifier;
+import com.tah.im.model.IMAccount;
 
 import dao.TalkerDAO;
 
@@ -294,5 +295,35 @@ public class CommonUtil {
 		}
 		
 		return anonymName;
+	}
+
+	public static IMAccountBean parseIMAccount(String email) {
+		//default
+		String imService = "GoogleTalk";
+		String imUsername = null;
+		if (email.contains("@gmail")) {
+			//Google service
+			imService = "GoogleTalk";
+			imUsername = removeService(email);
+		}
+		else if (email.contains("@live") || email.contains("@hotmail")) {
+			imService = "WindowLive";
+			imUsername = removeService(email);
+		}
+		else if (email.contains("@yahoo")){
+			//for now default - Yahoo
+			imService = "YahooIM";
+			imUsername = removeService(email);
+		}
+		
+		return new IMAccountBean(imUsername, imService);
+	}
+	
+	private static String removeService(String imUsername) {
+		int end = imUsername.indexOf("@");
+		if (end != -1) {
+			imUsername = imUsername.substring(0, end);
+		}
+		return imUsername;
 	}
 }

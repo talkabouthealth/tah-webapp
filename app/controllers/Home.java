@@ -49,13 +49,25 @@ public class Home extends Controller {
 		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
 		boolean isAdmin = "admin".equals(Security.connected());
 		boolean showIMPopup = (session.get("justregistered") != null && hasNoIMAccounts && !isAdmin);
+		showIMPopup = true;
 		if (showIMPopup) {
 			//pre-populate the fields based on user entries
-			//if user provides an email from gmail, windows live, or yahoo - 
-			//automatically populate the username with that item and check the option for what they provided
 			
 			//If user signs up via twitter, populate the Username field with the twitter username 
 			//and automatically have the Twitter option checked
+			System.out.println(talker.getAccountType());
+			if (talker.getAccountType() != null && talker.getAccountType().equalsIgnoreCase("twitter")) {
+				talker.setIm("Twitter");
+				//TODO: it's not always the same? (User can change it on signup)
+				talker.setImUsername(talker.getUserName());
+			}
+			else {
+				//if user provides an email from gmail, windows live, or yahoo - 
+				//automatically populate the username with that item and check the option for what they provided
+				IMAccountBean imInfo = CommonUtil.parseIMAccount(talker.getEmail());
+				talker.setIm(imInfo.getService());
+				talker.setImUsername(imInfo.getUserName());
+			}
 		}
 		session.remove("justregistered");
 		

@@ -20,7 +20,7 @@
 		    <div class="poptxtCover">
 	        	<div class="popradio">
 	        		<input name="imService" value="${imService}" 
-	        			#{if "GoogleTalk".equals(imService) } checked="true" #{/if}
+	        			${ _talker.im?.equals(imService) ? 'checked="true"' : '' }
 	        			type="radio" />
 	        	</div>
 	        	<div class="poptext">${models.IMAccountBean.IM_SERVICES_MAP.get(imService)}</div>
@@ -28,14 +28,16 @@
 		#{/list}
 		<div class="poptxtCover">
         	<div class="popradio">
-        		<input name="imService" value="Twitter" type="radio" />
+        		<input name="imService" value="Twitter"
+        			${ _talker.im?.equalsIgnoreCase("Twitter") ? 'checked="true"' : '' }
+        			type="radio" />
         	</div>
         	<div class="poptext">Twitter</div>
         </div>
         
         <div class="popuser">
         <div class="popusertxzt">Username:</div>
-        <div class="popuserinput"><input id="imUserName" type="text" class="popinput" /></div>
+        <div class="popuserinput"><input id="imUserName" type="text" class="popinput" value="${_talker.imUsername}" /></div>
         </div><!--popuser-->
         <div class="popusertxt1">Just the username (i.e. janesmith), no need for the @gmail.com or @yahoo.com  </div><!--popusertxt1-->
         <div class="popsubmitcover">

@@ -13,6 +13,7 @@ import org.bson.types.ObjectId;
 
 import util.DBUtil;
 
+import logic.TopicLogic;
 import models.CommentBean;
 import models.ConversationBean;
 import models.TalkerBean;
@@ -103,6 +104,8 @@ public class TopicDAO {
 		return topicBean;
 	}
 	
+	//Also recreates topic if it was deleted
+	//TODO: additional functionality - is it good?
 	public static TopicBean getByTitle(String title) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
@@ -115,6 +118,13 @@ public class TopicDAO {
 		
 		TopicBean topicBean = new TopicBean();
 		topicBean.parseBasicFromDB(topicDBObject);
+		
+		if (topicBean.isDeleted()) {
+			topicBean.setDeleted(false);
+			TopicLogic.addToDefaultParent(topicBean);
+			updateTopic(topicBean);
+		}
+		
 		return topicBean;
 	}
 	

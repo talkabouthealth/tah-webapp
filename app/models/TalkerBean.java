@@ -294,6 +294,8 @@ public class TalkerBean implements Serializable {
 		setIm((String)talkerDBObject.get("im"));
 		setImUsername((String)talkerDBObject.get("im_uname"));
 		setImAccounts(parseSet(IMAccountBean.class, talkerDBObject, "im_accounts"));
+		setAccountType((String)talkerDBObject.get("act_type"));
+		setAccountId((String)talkerDBObject.get("act_id"));
 		
 		setNewsletter(getBoolean(talkerDBObject.get("newsletter")));
 		setGender((String)talkerDBObject.get("gender"));
