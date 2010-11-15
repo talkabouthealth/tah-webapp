@@ -245,7 +245,13 @@ public class CommonUtil {
 			String url = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", talker.getUserName());
 			html.append("<a href='"+url+"'>"+talker.getUserName()+"</a>");
 			if (talker.getConnection() != null && talker.getConnection().length() != 0) {
-				html.append(" ("+talker.getConnection()+")");
+				String notVerifiedStr = "";
+				if (TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.getConnection())) {
+					if (!talker.isConnectionVerified()) {
+						notVerifiedStr = " <span class=\"red12\">(not verified)</span>";
+					}
+				}
+				html.append(" ("+talker.getConnection()+notVerifiedStr+")");
 			}
 		}
 		else {

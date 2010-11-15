@@ -7,7 +7,7 @@
 			class="blue13"><strong>${_thankYou.fromTalker.userName}</strong></a>
 		<span class="blacktext12">
 			#{if _thankYou.fromTalker.connection}
-				(${_thankYou.fromTalker.connection}, ${_thankYou.fromTalker.levelOfRecognition})
+				(#{talker/connectionInfo talker: _thankYou.fromTalker /}, ${_thankYou.fromTalker.levelOfRecognition})
 			#{/if}
 			#{else}
 				(${_thankYou.fromTalker.levelOfRecognition})

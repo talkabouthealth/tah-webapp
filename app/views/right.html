@@ -17,7 +17,7 @@
                <div class="comrighttext">
                  
                  #{if talker.connection}
-                 	<div class="topiptext2">${talker.connection}</div>
+                 	<div class="topiptext2">#{talker/connectionInfo talker: talker /}</div>
                  #{/if}
                  <div class="topiptext2">${talker.levelOfRecognition}</div>
                </div>

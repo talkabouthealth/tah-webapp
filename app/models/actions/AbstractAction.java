@@ -75,7 +75,8 @@ public abstract class AbstractAction implements Action {
 		String talkerId = talkerDBObject.get("_id").toString();
 		String talkerName = (String)talkerDBObject.get("uname");
 		String connection = (String)talkerDBObject.get("connection");
-		setTalker(new TalkerBean(talkerId, talkerName, connection));
+		boolean connectionVerified = DBUtil.getBoolean(talkerDBObject, "connection_verified"); 
+		setTalker(new TalkerBean(talkerId, talkerName, connection, connectionVerified));
 		
 		setTime((Date)dbObject.get("time"));
 		setType(ActionType.valueOf((String)dbObject.get("type")));
@@ -199,8 +200,9 @@ public abstract class AbstractAction implements Action {
 			String talkerId = talkerDBObject.get("_id").toString();
 			String talkerName = (String)talkerDBObject.get("uname");
 			String connection = (String)talkerDBObject.get("connection");
+			boolean connectionVerified = DBUtil.getBoolean(talkerDBObject, "connection_verified"); 
 	    	
-	    	return new TalkerBean(talkerId, talkerName, connection);
+	    	return new TalkerBean(talkerId, talkerName, connection, connectionVerified);
 		}
 		return null;
 	}
