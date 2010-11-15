@@ -1,0 +1,11 @@
+#{if _votes.size() > 0}
+	${_votes.size()} vote(s) by
+	#{list items: _votes, as: 'vote' }
+		#{ifnot vote_isLast}
+			#{talker/talkerLink userName: vote.talker.userName /},
+		#{/ifnot}
+		#{else}
+			#{talker/talkerLink userName: vote.talker.userName /}
+		#{/else}
+	#{/list}
+#{/if}
