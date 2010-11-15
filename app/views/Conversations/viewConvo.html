@@ -94,10 +94,7 @@
 	   				$.post("@{Conversations.vote}", 
 	   		   				{ answerId : answerId, up : value },
 	   		   				function(data) {
-		   		   				if (data !== "ok") {
-			   		   				alert(data);
-		   		   				}
-		   		   				else {
+		   		   				if (data !== "Error") {
 			   		   				if (value) {
 			   			   				$("#vote"+answerId+" .votebtnup").addClass("selected");
 			   			   				$("#vote"+answerId+" .votebtndown").removeClass("selected");
@@ -106,6 +103,7 @@
 			   		   					$("#vote"+answerId+" .votebtnup").removeClass("selected");
 			   			   				$("#vote"+answerId+" .votebtndown").addClass("selected");
 			   		   				}
+			   		   				$("#comment"+answerId+" .votestxt3").html(data);
 		   		   				}
 	   		   				}
 		   				);

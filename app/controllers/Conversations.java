@@ -203,7 +203,7 @@ public class Conversations extends Controller {
     	if (oldVote != null) {
     		if (up == oldVote.isUp()) {
     			//try the same vote - already voted!
-    			renderText(Messages.get("vote.exists"));
+    			renderText("Error");
     			return;
     		}
     		else {
@@ -219,7 +219,6 @@ public class Conversations extends Controller {
     		
     		//If a "Not Helpful" answer receives a vote, let's make it visible again. 
     		//But also send an email to "support@talkabouthealth.com" add a comment
-    		
     		if (answer.isNotHelpful()) {
     			answer.setNotHelpful(false);
     			
@@ -238,7 +237,9 @@ public class Conversations extends Controller {
     	answer.getVotes().add(newVote);
     	answer.setVoteScore(voteScore);
     	CommentsDAO.updateConvoAnswer(answer);
-    	renderText("ok");
+    	
+    	Set<Vote> _votes = answer.getUpVotes();
+    	render("tags/answerVotesInfo.html", _votes);
     }
     
     //for Dashboard
@@ -330,6 +331,9 @@ public class Conversations extends Controller {
     			
     			StringBuilder htmlToRender = new StringBuilder();
     			for (String topicName : valueArr) {
+    				if (topicName == null || topicName.trim().length() == 0) {
+    					continue;
+    				}
     				topicName = JavaExtensions.capitalizeWords(topicName);
     				TopicBean topic = TopicDAO.getByTitle(topicName);
         			if (topic == null) {

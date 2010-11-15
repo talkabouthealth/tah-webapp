@@ -35,19 +35,9 @@
 								</p>
 	               				<p>   
 						 			<div class="styles1">
-						 				#{if comment.upVotes.size() > 0}
-						 					<div class="votestxt3">
-												${comment.upVotes.size()} vote(s) by
-												#{list items: comment.upVotes, as: 'vote' }
-													#{ifnot vote_isLast}
-														#{talker/talkerLink userName: vote.talker.userName /},
-													#{/ifnot}
-													#{else}
-														#{talker/talkerLink userName: vote.talker.userName /}
-													#{/else}
-												#{/list}
-											</div>
-						 				#{/if}
+					 					<div class="votestxt3">
+					 						#{answerVotesInfo votes: comment.upVotes /}
+										</div>
 						 				
 										<div class='inline-edit' id="answerEdit${comment.id}">
 											<div class="suggestxt inline_display">
