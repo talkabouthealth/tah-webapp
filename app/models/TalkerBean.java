@@ -45,13 +45,13 @@ public class TalkerBean implements Serializable {
 	public static final String[] CONNECTIONS_ARRAY = new String[] {
 		"Patient", "Former Patient", "Parent", "Caregiver", "Family member", "Friend", 
 		//"professionals"
-		"Physician", "Pharmacist", "Nurse", "Psychiatrist", "Social worker",
+		"Physician", "Pharmacist", "Nurse", "Psychologist", "Social worker", "Researcher",
 		
 		 "other"
 	};
 	// only professionals in this list
 	public static final List<String> PROFESSIONAL_CONNECTIONS_LIST = Arrays.asList(
-		"Physician", "Pharmacist", "Nurse", "Psychiatrist", "Social worker"
+		"Physician", "Pharmacist", "Nurse", "Psychologist", "Social worker", "Researcher"
 	);
 	
 	/**

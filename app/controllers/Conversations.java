@@ -63,9 +63,11 @@ public class Conversations extends Controller {
     	Set<TopicBean> topicsSet = new HashSet<TopicBean>();
     	String[] topicsArr = topics.split(",");
     	for (String topicTitle : topicsArr) {
-    		TopicBean topic = TopicDAO.getByTitle(topicTitle.trim());
-    		if (topic != null) {
-    			topicsSet.add(topic);
+    		if (topicTitle.trim().length() != 0) {
+    			TopicBean topic = TopicDAO.getByTitle(topicTitle.trim());
+        		if (topic != null) {
+        			topicsSet.add(topic);
+        		}
     		}
     	}
     	

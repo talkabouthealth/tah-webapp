@@ -259,9 +259,13 @@ public class CommonUtil {
 		StringBuilder topicsHTML = new StringBuilder();
 		
 		Set<TopicBean> convoTopics = convo.getTopics();
-		if (convoTopics.size() == 1 && convoTopics.iterator().next().getTitle().equals(TopicLogic.DEFAULT_TOPIC)) {
-			//do not show default (Unorganized) topic
-			return "";
+		if (convoTopics.size() == 1) {
+			String topicTitle = convoTopics.iterator().next().getTitle();
+			if (topicTitle.equals(ConversationLogic.DEFAULT_QUESTION_TOPIC)
+					|| topicTitle.equals(ConversationLogic.DEFAULT_TALK_TOPIC)) {
+				//do not show default topic
+				return "";
+			}
 		}
 		
 		for (TopicBean topic : convoTopics) {
