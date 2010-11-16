@@ -7,6 +7,7 @@ import util.oauth.TwitterOAuthProvider;
 
 public class OAuth extends Controller {
 	
+	//FIXME: Twitter & Facebook on https page?
 	public static void getAuth(String type) {
 		OAuthServiceProvider oauthProvider = getProvider(type);
 		redirect(oauthProvider.getAuthURL(session));
