@@ -203,20 +203,7 @@
           
 	          <div class="topnavCover">
 	            <div class="topnavCover1">
-	              <ul id="nav">
-	                <li class="explore"> <a href="#" class="menu2">Explore</a>
-	                  <ul>
-	                    <li><a href="@{Explore.liveTalks()}">Live Talks</a></li>
-	                    <li><a href="@{Explore.openQuestions()}">Open Questions</a></li>
-	                    <li class="gap"><a href="@{Explore.browseTopics()}">Browse Topics</a></li>
-	                    <li><a href="@{Explore.searchConversations()}">Search Conversations</a></li>
-	                  </ul>
-	                </li>
-	                <li><a href="http://blog.talkabouthealth.com">Blog</a></li>
-	                <li><a href="@{Static.faq()}">FAQ</a></li>
-	                <li><a href="@{Static.aboutus()}">About</a></li>
-	              </ul>
-	              <!--nave-->
+	            	#{include 'notloggedinMenu.html' /}
 	            </div>
 	            <!--topnavCover1-->
 	            <div style="float: right; width: 290px;">

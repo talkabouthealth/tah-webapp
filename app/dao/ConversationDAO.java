@@ -212,11 +212,30 @@ public class ConversationDAO {
 		return convo;
 	}
 	
-	
+	//includes deleted
 	public static List<ConversationBean> loadAllConversations() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		List<DBObject> convosDBList = 
 			convosColl.find().sort(new BasicDBObject("cr_date", -1)).toArray();
+		
+		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
+		for (DBObject convoDBObject : convosDBList) {
+			ConversationBean convo = new ConversationBean();
+			convo.parseFromDB(convoDBObject);
+	    	convosList.add(convo);
+		}
+		
+		return convosList;
+	}
+	
+	public static List<ConversationBean> loadPopularConversations() {
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("deleted", new BasicDBObject("$ne", true))
+			.get();
+		List<DBObject> convosDBList = 
+			convosColl.find(query).sort(new BasicDBObject("views", -1)).limit(20).toArray();
 		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {

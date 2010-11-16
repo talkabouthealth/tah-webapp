@@ -180,9 +180,9 @@ public class Application extends Controller {
 			TalkerBean otherTalker = TalkerDAO.getByEmail(talker.getEmail());
 			validation.isTrue(otherTalker == null).message("email.exists");
 		}
-		if (!validation.hasError("talker.password")) {
-			validation.isTrue(talker.getPassword().equals(talker.getConfirmPassword())).message("password.different");
-		}
+//		if (!validation.hasError("talker.password")) {
+//			validation.isTrue(talker.getPassword().equals(talker.getConfirmPassword())).message("password.different");
+//		}
 		
 //		String imService = talker.getIm();
 //        String imUsername = talker.getImUsername();

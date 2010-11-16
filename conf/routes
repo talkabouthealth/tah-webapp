@@ -29,6 +29,8 @@ GET		/community/breast-cancer				Community.viewCommunity
 GET		/openquestions/?						Explore.openQuestions
 GET		/livetalks/?							Explore.liveTalks
 GET		/explore/topics/?						Explore.browseTopics
+GET		/explore/conversationfeed/?				Explore.conversations(action:'feed')
+GET		/explore/popular/?						Explore.conversations(action:'popular')
 
 GET		/home/?									Home.index
 GET		/conversationfeed/?						Home.conversationFeed

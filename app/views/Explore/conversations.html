@@ -1,0 +1,139 @@
+#{extends 'main.html' /}
+	<style type="text/css">
+		body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
+		#innermiddlearea { padding-top: 10px }
+		#mask { background-color:#e6e6e6; }
+		
+		.latestactivity, .latestactivity1 { width: auto }
+		.latestactivity a, .latestactivity1 a { width: auto; padding-left: 8px; padding-right: 8px }
+		.latestactivity a:hover, .latestactivity1 a:hover { width: auto; padding-left: 8px; padding-right: 8px }
+	</style>
+	
+	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
+	<script type="text/javascript">
+		var feedsPerPage = ${logic.FeedsLogic.FEEDS_PER_PAGE};
+		var action = '${action}';
+	
+		$(document).ready(function() {
+			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
+
+			$(".tabLink").click(function() {
+   				$(".latestactivity").removeClass("latestactivity").addClass("latestactivity1"); //Remove any "active" class
+   				$(this).parent().removeClass("latestactivity1").addClass("latestactivity"); //Add "active" class to selected tab
+   				var id = $(this).attr("id");
+   				$(".tabContent").hide(); //Hide all tab content
+   				$("#"+id+"Content").fadeIn(); //Fade in the active content
+   				return false;
+   			});
+
+   			if (action === 'popular') {
+   	   			$("#popularConvos").click();
+   			}
+
+			$(".flagConvoLink").click(function() {
+				flagType = "convo";
+				flagConvoId = $(this).attr("rel");
+				showPopup("#flagPopup", 200);
+			});
+		});
+	</script>
+		
+<div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
+  <div id="managtopic">
+  	#{include 'header.html' /}
+  	<div id="bottom_container">
+      	<div class="haderbanner"><div id="innerbanner"></div></div>
+        <div id="targetedtherapy">
+
+          <div id="innermiddlearea">
+            <div id="mtcover">
+              <div id="mtleft">
+                <div class="mtcontent">
+                  <div class="topipcWraper">
+                  	<div style="padding-top: 10px; height: 30px;" class="lacover">
+					  <div class="latestactivity"><a href="#" id="convoFeed" class="tabLink">Community Conversation Feed</a></div>
+					  <div class="latestactivity1"><a href="#" id="popularConvos" class="tabLink">Popular Conversations</a></div>
+					  <div class="laborder"></div>
+					</div>
+					<div class="cb"></div>
+					<div>
+						<div id="convoFeedContent" class="tabContent">	
+							<div class="topic">
+		                      <div class="newpage1">Community Conversation Feed</div>
+		
+		                      <div class="cb"></div>
+		                      <div class="joinborder"></div>
+		                      <!--mtinputbox-->
+		                      <div class="cb"></div>
+		                      <div class="topic">
+		                        <div id="communityFeedList">
+			                    	#{list items: communityFeed, as: 'activity'}
+										#{feedActivity activity: activity, talker: talker /}
+									#{/list}
+								</div>
+								*{
+									#{if communityFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+										<div class="replytommentbox" id="communityFeedBtn">
+				                          <input type="submit" src="images/seemore.jpg" 
+				                          	onclick="return loadMoreFeed('communityFeed');" value=" " class="seemorecom" />
+				                        </div>
+									#{/if}
+								}*
+		                        <div class="cb"></div>
+		                      </div>
+		                      <!--newpageCover-->
+		                      <div class="cb"></div>
+		                    </div> 
+						</div>
+						<div id="popularConvosContent" class="tabContent" style="display: none;">
+							<div class="topic">
+		                      <div class="newpage1">Popular Conversations</div>
+		
+		                      <div class="cb"></div>
+		                      <div class="joinborder"></div>
+		                      <!--mtinputbox-->
+		                      <div class="cb"></div>
+		                      <div class="topic">
+		                        #{list items: popularConvos, as: 'convo' }
+									#{listConvo convo: convo, talker: talker /}
+								#{/list}
+		                        <div class="cb"></div>
+		                      </div>
+		                      <!--newpageCover-->
+		                      <div class="cb"></div>
+		                    </div> 
+						</div>
+					</div>
+					
+					#{ notLoggedNotice /} 
+                    
+                    <div class="cb"></div>
+                  </div>
+                  <!--topipcWraper-->
+
+                  <div class="cb"></div>
+                </div>
+                <!--mtcontent-->
+                
+                <div class="cb"></div>
+              </div>
+              <!--mtleft-->
+              
+            <div class="cb"></div>
+          </div>
+          <!--mtcover-->
+          <div class="cb"></div>
+
+        </div>
+        <div id="signupright"></div>
+      </div>
+    </div>
+  </div>
+  
+<div id="boxes">
+	<div id="dialog" class="window"></div>
+	
+	#{ popups/flag /}
+</div>
+<!-- Mask to cover the whole screen -->
+<div id="mask"></div>    

@@ -1,5 +1,8 @@
 package controllers;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -10,9 +13,11 @@ import java.util.TreeSet;
 import play.mvc.Controller;
 import play.mvc.With;
 
+import logic.FeedsLogic;
 import models.ConversationBean;
 import models.TalkerBean;
 import models.TopicBean;
+import models.actions.Action;
 import util.CommonUtil;
 import util.SearchUtil;
 import dao.ConversationDAO;
@@ -90,4 +95,22 @@ public class Explore extends Controller {
 		render(talker, results);
 	}
 
+	public static void conversations(String action) {
+		Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null);
+		
+		//- "Popular Conversations" - ordered by page views
+		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations();
+		//TODO: move to comparator?
+		Collections.sort(popularConvos, new Comparator<ConversationBean>() {
+			@Override
+			public int compare(ConversationBean o1, ConversationBean o2) {
+				return o2.getViews()-o1.getViews();
+			}
+		});
+		
+		if (action == null) {
+			action = "active";
+		}
+		render(action, communityFeed, popularConvos);
+	}
 }

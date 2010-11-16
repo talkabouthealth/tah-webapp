@@ -107,12 +107,20 @@
 						</div>
 						*{ TODO: test input name/id for the forms }*
 						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">Email</span></div>
+							<div class="personaltextfield">
+							  	<input name="talker.email" type="text" class="personalfields" id="talker.email" 
+									value="${flash['talker.email']}" />
+							</div>
+						</div>
+						<div class="signupmain">
 							<div class="signuptextarea"><span class="blacktext14">Password</span></div>
 							<div class="personaltextfield">
 							  	<input name="talker.password" type="password" class="personalfields" id="talker.password" 
 									value="" />
 							</div>
 						</div>
+						*{
 						<div class="signupmain">
 							<div class="signuptextarea"><span class="blacktext14">Confirm Password</span></div>
 							<div class="personaltextfield">
@@ -120,15 +128,8 @@
 									value="" />
 							</div>
 						</div>
-						<div class="signupmain">
-							<div class="signuptextarea"><span class="blacktext14">Email</span></div>
-							<div class="personaltextfield">
-							  	<input name="talker.email" type="text" class="personalfields" id="talker.email" 
-									value="${flash['talker.email']}" />
-							</div>
-						</div>
 						
-						*{ Now it's added through popup on Home page or on Notifications page
+						Now it's added through popup on Home page or on Notifications page
 						<div class="signupmain">
 							<div class="signtag">
 								<span class="textgreylight12">TalkAboutHealth notifies you of conversations via IM.</span>
