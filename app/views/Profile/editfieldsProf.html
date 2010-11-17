@@ -1,0 +1,12 @@
+<div class="personalmain">
+	<div class="personaltextarea"><span class="blacktext14">Credentials</span></div>
+	<div class="personaltextfield">
+		<select name="pr_credentials" class="personalfields">
+			#{list items:["", "Single", "Married/partnered relationship", "Divorced", "Separated", "Widowed"], as:'maritalStatus'}
+			 		<option value="${maritalStatus}" 
+			    #{if maritalStatus.equals(talker.maritalStatus) } selected #{/if} 
+			    >${maritalStatus}</option>
+			#{/list}
+		</select>
+	</div>
+</div>

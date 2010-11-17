@@ -168,8 +168,9 @@ public class Topics extends Controller {
     	TopicBean parentTopic = null;
     	if (todo.equalsIgnoreCase("add")) {
     		parentId = JavaExtensions.capitalizeWords(parentId);
-    		parentTopic = TopicLogic.findOrCreateTopic(parentId);
-    		if (parentTopic.equals(topic)) {
+    		//in order to be a Parent topic, the topic must exist.
+    		parentTopic = TopicDAO.getByTitle(parentId);
+    		if (parentTopic == null || parentTopic.equals(topic)) {
     			forbidden();
         		return;
     		}
@@ -205,9 +206,8 @@ public class Topics extends Controller {
     	TopicBean childTopic = null;
     	if (todo.equalsIgnoreCase("add")) {
     		childId = JavaExtensions.capitalizeWords(childId);
-    		childTopic = TopicLogic.findOrCreateTopic(childId);
-    		
-    		if (childTopic.equals(topic)) {
+    		childTopic = TopicDAO.getByTitle(childId);
+    		if (childTopic == null || childTopic.equals(topic)) {
     			forbidden();
         		return;
     		}

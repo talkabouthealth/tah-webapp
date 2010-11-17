@@ -373,7 +373,8 @@ public class TalkerBean implements Serializable {
 				DBObject followingDBOBject = followingDBRef.fetch();
 				
 				boolean isDeactivated = getBoolean(followingDBOBject.get("deactivated"));
-				if (isDeactivated) {
+				boolean isSuspended = getBoolean(followingDBOBject.get("suspended"));
+				if (isDeactivated || isSuspended) {
 					continue;
 				}
 				

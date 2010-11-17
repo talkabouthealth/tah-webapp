@@ -1,0 +1,196 @@
+
+					*{
+					<div class="personalmain">
+						<div class="personaltextarea">
+							<span class="blacktext14">Email</span>
+						</div>
+						<div class="personaltextfield" style="height: auto">
+						  	<input name="talker.email" type="text" class="personalfields" id="talker.email" 
+									value="${talker.email}" /><br/>
+							#{if talker.verifyCode != null }
+								<a href="#" id="verificationResendLink" 
+									class="red12">(email not verified - resend verification e-mail)</a>
+								<span id="verificationResendResult" class="blacktext12"></span>
+							#{/if}
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">First Name</span></div>
+						<div class="personaltextfield">
+						  	<input name="talker.firstName" type="text" class="personalfields"
+									value="${talker.firstName}" />
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Last Name</span></div>
+						<div class="personaltextfield">
+							<input name="talker.lastName" type="text" class="personalfields"
+									value="${talker.lastName}" />
+						</div>
+					</div>
+					}*
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Birth Date</span></div>
+						<div class="personaltextfield">
+							<select size="1"  name="talker.dobMonth" id="talker.dobMonth" class="textarea2">
+#{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
+    <option value="${i_index-1}" 
+ 	#{if talker.dob?.month == i_index-2 } selected #{/if}  
+    >${i}</option>
+#{/list}
+							</select>
+							<select size="1" name="talker.dobDay" class="textarea2" id="talker.dobDay">
+						  		<option selected value='0'>Day</option>
+						  		#{list items:1..31, as:'i'}
+								    <option value="${i}"
+								    #{if talker.dob?.date == i } selected #{/if} 
+								    >${i}</option>
+								#{/list}
+							</select>
+							<select size="1"  name="talker.dobYear" class="textarea2" id="talker.dobYear">
+						  		<option selected value='0'>Year</option>
+						  		#{list items:1991..1900, as:'i'}
+								    <option value="${i}"
+								    #{if talker.dob?.year == i - 1900} selected #{/if} 
+								    >${i}</option>
+								#{/list}
+							</select>
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Gender</span></div>
+						<div class="personaltextfield">
+							<select class="personalfields" id="talker.gender" name="talker.gender">
+								<option value=""></option>
+								#{list items:['Male', 'Female'], as:'gender'}
+							  		<option value="${gender.charAt(0)}" 
+								    #{if talker.gender?.equals(""+gender.charAt(0)) } selected #{/if} 
+								    >${gender}</option>
+								#{/list}
+							</select>
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">City</span></div>
+						<div class="personaltextfield">
+							<input name="talker.city" type="text" class="personalfields" id="talker.city" 
+									value="${talker.city}" />
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">State</span></div>
+						<div class="personaltextfield">
+							<input name="talker.state" type="text" class="personalfields" id="talker.state" 
+									value="${talker.state}" />
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Zip Code</span></div>
+						<div class="personaltextfield">
+							<input name="talker.zip" type="text" class="personalfields"
+									value="${talker.zip}" />
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Country</span></div>
+						<div class="personaltextfield" style="border:0;">
+							<input name="talker.country" type="text" class="personalfields" id="talker.country" 
+									value="${talker.country}" />
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Martial Status</span></div>
+						<div class="personaltextfield">
+							<select id="talker.maritalStatus" name="talker.maritalStatus" class="personalfields">
+		#{list items:["", "Single", "Married/partnered relationship", "Divorced", "Separated", "Widowed"], as:'maritalStatus'}
+	  		<option value="${maritalStatus}" 
+		    #{if maritalStatus.equals(talker.maritalStatus) } selected #{/if} 
+		    >${maritalStatus}</option>
+		#{/list}
+							</select>
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Number of children</span></div>
+						<div class="personaltextfield">
+							<input id="talker.childrenNumStr" name="talker.childrenNumStr" type="text" class="personalfields" 
+									value="${talker.childrenNum == -1 ? '' : talker.childrenNum}" />
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Ages of Children</span></div>
+						<div class="personalcheck">
+							#{list items:models.TalkerBean.CHILDREN_AGES_ARRAY, as:'age'}
+								#{if age_parity.equals('odd') }
+									<div class="personalcheck1">
+								#{/if}
+								#{else}
+									<div class="personalcheck2">
+								#{/else}
+										<input name="talker.childrenAges" type="checkbox" value="${age}" 
+										${talker.childrenAges?.contains(age) ? 'checked="true"' : ''}
+										/>
+										&nbsp; <span class="blacktext14">${age}</span>
+									</div>
+							#{/list}
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea" style="padding-top: 0px;">
+							<span class="blacktext14">Patient, Physician, Caregiver, etc.</span></div>
+						<div class="personaltextfield">
+							<select size="1" name="talker.connection" class="personalfields" id="talker.connection">
+						  		<option selected value=''></option>
+						  		#{list items:models.TalkerBean.CONNECTIONS_ARRAY, as:'connection'}
+								    <option value="${connection}"
+								    #{if connection.equals(talker.connection) } selected #{/if} 
+								    >${connection}</option>
+								#{/list}
+							</select>
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea">
+							<span class="blacktext14">Web Page<br/>
+								<span class="footerlink">(i.e. http://www.yourblog.com)</span>
+							</span>
+						</div>
+						<div class="personaltextfield">
+							<input name="talker.webpage" type="text" class="personalfields"
+									value="${talker.webpage}" />
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea2">
+							<span class="blacktext14">Ask me about<br />
+								<span class="footerlink">Key words of topics other members 
+									may ask you about (i.e. Clinical Trials, Herceptin, etc.).</span>
+							</span>
+						</div>
+						<div class="personaltextfield">
+							<input id="talkerkeywords" name="talker.keywords" type="text" class="personalfields"
+									onclick="if (this.value == 'Keywords (please separate by commas)') this.value = ''"
+									value="${talker.keywords?.toCommaString('Keywords')}"/>
+						</div>
+						*{
+						<div class="textareabig">
+							<textarea id="talkerkeywords" name="talker.keywords" cols="45" rows="5" 
+								onclick="if (this.value == 'Keywords (please separate by commas)') this.value = ''"
+								class="textarea3">${talker.keywords?.toCommaString('Keywords')}</textarea>
+						</div>
+						}*
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Personal Bio (About you)</span></div>
+						<div class="textareabig">
+							<textarea name="talker.bio" cols="45" rows="5" class="textarea3">${talker.bio}</textarea>
+						</div>
+					</div>
+					<div class="personalmain">
+						<div class="personaltextarea"></div>
+						<div class="personaltextarea" >
+							<a href="#" onclick="validateProfileForm()">
+								<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" /></a>
+						</div>
+					</div>
+					<div class="personalmain"></div>

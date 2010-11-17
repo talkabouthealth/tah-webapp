@@ -8,6 +8,7 @@ public class TopicLogic {
 	
 	public static final String DEFAULT_TOPIC = "Unorganized";
 	
+	//TODO: not used?
 	public static TopicBean findOrCreateTopic(String topicTitle) {
     	TopicBean topic = TopicDAO.getByTitle(topicTitle);
     	if (topic == null) {

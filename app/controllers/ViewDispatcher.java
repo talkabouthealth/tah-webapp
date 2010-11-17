@@ -101,6 +101,12 @@ public class ViewDispatcher extends Controller {
 		
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		
+		if (talker.isSuspended()) {
+			currentTalker.setFollowerList(TalkerDAO.loadFollowers(currentTalker.getId()));
+			render("PublicProfile/suspended.html", currentTalker);
+			return;
+		}
+		
 		//Health info
 		//For now we have only one disease - Breast Cancer
 		final String diseaseName = "Breast Cancer";

@@ -71,6 +71,11 @@ public class Profile extends Controller {
     	talker.setActivityList(ActionDAO.load(talker.getId()));
 		TalkerLogic.calculateProfileCompletion(talker);
 		
+//		List<DiseaseQuestion> questions = new ArrayList<DiseaseQuestion>();
+//		DiseaseQuestion dq = new DiseaseQuestion();
+//		questions.add();
+		
+		
     	render(talker, verifiedEmail);
     }
 	

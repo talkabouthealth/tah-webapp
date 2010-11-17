@@ -435,7 +435,8 @@ public class TalkerDAO {
 			TalkerBean followerTalker = new TalkerBean();
 			
 			boolean isDeactivated = followerTalker.getBoolean(followerDBObject.get("deactivated"));
-			if (isDeactivated) {
+			boolean isSuspended = followerTalker.getBoolean(followerDBObject.get("suspended"));
+			if (isDeactivated || isSuspended) {
 				continue;
 			}
 			

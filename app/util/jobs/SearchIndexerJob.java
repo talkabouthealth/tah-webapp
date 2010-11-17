@@ -38,6 +38,10 @@ public class SearchIndexerJob extends Job {
 		
 		try {
 			for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
+				  if (talker.isSuspended()) {
+					  continue;
+				  }
+				  
 				  Document doc = new Document();
 				  doc.add(new Field("id", talker.getId(), Field.Store.YES,
 				                      Field.Index.NO));
