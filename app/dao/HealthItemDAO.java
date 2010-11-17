@@ -2,6 +2,7 @@ package dao;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -59,6 +60,20 @@ public class HealthItemDAO {
 		HealthItemBean healthItem = loadHealthItem(healthItemsColl, 
 				healthItemDBObject.get("_id").toString(), (String)healthItemDBObject.get("name"), true);
 		return healthItem;
+	}
+	
+	public static List<HealthItemBean> getAllHealthItems(String diseaseId) {
+		DBCollection healthItemsColl = getCollection(HEALTH_ITEMS_COLLECTION);
+		
+		List<DBObject> healthItemsDBList = healthItemsColl.find().toArray();
+		
+		List<HealthItemBean> healthItems = new ArrayList<HealthItemBean>();
+		for (DBObject healthItemDBObject : healthItemsDBList) {
+			HealthItemBean healthItem = 
+				new HealthItemBean(healthItemDBObject.get("_id").toString(), (String)healthItemDBObject.get("name"));
+			healthItems.add(healthItem);
+		}
+		return healthItems;
 	}
 
 	/**

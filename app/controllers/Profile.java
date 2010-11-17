@@ -33,6 +33,7 @@ import models.TalkerBean;
 import models.TalkerBean.EmailSetting;
 import models.TalkerBean.ProfilePreference;
 import models.TalkerDiseaseBean;
+import models.TopicBean;
 import models.actions.UpdateProfileAction;
 import models.actions.Action.ActionType;
 
@@ -49,6 +50,7 @@ import play.mvc.Controller;
 import play.mvc.Router.ActionDefinition;
 import play.mvc.With;
 import play.ns.nl.captcha.util.ImageUtil;
+import play.templates.JavaExtensions;
 import util.CommonUtil;
 import util.EmailUtil;
 import util.EmailUtil.EmailTemplate;
@@ -59,6 +61,7 @@ import dao.HealthItemDAO;
 import dao.TalkerDAO;
 import dao.TalkerDiseaseDAO;
 import dao.ConversationDAO;
+import dao.TopicDAO;
 
 @With(Secure.class)
 public class Profile extends Controller {
@@ -514,6 +517,44 @@ public class Profile extends Controller {
 		talkerDisease.setSymptomDate(symptomDate);
 		Date diagnoseDate = CommonUtil.parseDate(talkerDisease.getDiagnoseMonth(), 1, talkerDisease.getDiagnoseYear());
 		talkerDisease.setDiagnoseDate(diagnoseDate);
+		
+		//Automatically follow topics based on HealthInfo
+		//Let's only have this happen the first time they save their Health Info.
+		if (TalkerDiseaseDAO.getByTalkerId(talker.getId()) == null) {
+			List<List<String>> stringHealthInfo = new ArrayList<List<String>>();
+			
+			Map<String, List<String>> healthInfo = talkerDisease.getHealthInfo();
+			for (String key : healthInfo.keySet()) {
+				stringHealthInfo.add(healthInfo.get(key));
+			}
+			
+			Set<String> healthItems = talkerDisease.getHealthItems();
+			List<HealthItemBean> allHealthItems = HealthItemDAO.getAllHealthItems(diseaseName);
+			for (HealthItemBean healthItem : allHealthItems) {
+				if (healthItems.contains(healthItem.getId())) {
+					stringHealthInfo.add(Arrays.asList(healthItem.getName()));
+				}
+			}
+			
+			Map<String, List<String>> otherHealthItems = talkerDisease.getOtherHealthItems();
+			for (String key : otherHealthItems.keySet()) {
+				stringHealthInfo.add(otherHealthItems.get(key));
+			}
+			
+			for (List<String> hi : stringHealthInfo) {
+				for (String possibleTopic : hi ) {
+					if (possibleTopic != null && possibleTopic.trim().length() != 0) {
+						possibleTopic = JavaExtensions.capitalizeWords(possibleTopic);
+						TopicBean topic = TopicDAO.getByTitle(possibleTopic);
+						if (topic != null) {
+							talker.getFollowingTopicsList().add(topic);
+						}
+					}
+				}
+			}
+			
+			CommonUtil.updateTalker(talker, session);
+		}
 		
 		//Save or update
 		TalkerDiseaseDAO.saveTalkerDisease(talkerDisease);
