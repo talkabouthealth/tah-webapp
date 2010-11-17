@@ -199,6 +199,10 @@ function makeAutocomplete(id, type) {
 
 /* Autocompete for topis - allows adding multiply topics (separated by space) */
 function makeTopicsAutocomplete(id) {
+	if ($(id).size() === 0) {
+		return;
+	}
+	
 	var cache = {};
 	$(id).autocomplete({
 		minLength: 1,

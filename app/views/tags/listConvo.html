@@ -12,7 +12,21 @@
 				<a href="#" class="followConvoLink" rel="${_convo.id}">
 					${_talker?.followingConvosList?.contains(_convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
 			#{/if}
-			<a href="#" class="flagConvoLink" rel="${_convo.id}">Flag</a> | 
+			
+			*{ when the user is not logged in, change the link for "Flag" to "5 Answers" or "Answer" }*
+			#{if session.username }
+				<a href="#" class="flagConvoLink" rel="${_convo.id}">Flag</a> | 
+			#{/if}
+			#{else}
+				#{if _convo.comments.size() == 0}
+					<a href="@{ViewDispatcher.view(_convo.mainURL)}#answers">Answer</a> | 
+				#{/if}
+				#{else}
+					<a href="@{ViewDispatcher.view(_convo.mainURL)}#answers">${_convo.comments.size()} 
+						Answer${_convo.comments.pluralize()}</a> | 
+				#{/else}
+			#{/else}
+			
 			<span>Started ${_convo.creationDate.since()}</span>
 		</div>
 		<div class="jointxtlink1">

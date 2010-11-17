@@ -241,6 +241,8 @@ public class ConversationDAO {
 		for (DBObject convoDBObject : convosDBList) {
 			ConversationBean convo = new ConversationBean();
 			convo.parseFromDB(convoDBObject);
+			//TODO: set comments - get only number of comments? 
+			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
 	    	convosList.add(convo);
 		}
 		

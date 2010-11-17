@@ -139,6 +139,9 @@ public class TalkerBean implements Serializable {
 	private String imUsername;
 	private Set<IMAccountBean> imAccounts;
 	
+	//info from professional profiles
+	private Map<String, String> profInfo;
+	
 	private Date dob;
 	private int dobMonth;
 	private int dobDay;
@@ -918,5 +921,10 @@ public class TalkerBean implements Serializable {
 	public void setConfirmPassword(String confirmPassword) {
 		this.confirmPassword = confirmPassword;
 	}
-	
+	public Map<String, String> getProfInfo() {
+		return profInfo;
+	}
+	public void setProfInfo(Map<String, String> profInfo) {
+		this.profInfo = profInfo;
+	}
 }	
