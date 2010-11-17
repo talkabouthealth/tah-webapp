@@ -5,39 +5,37 @@
           <div class="closecover">
             <div class="close"><img src="/public/images/close.jpg" alt="Close" /></div>
           </div>
-          <div class="iwant">I want to</div>
           <div class="askquestion">
-
+            <b class="askquestionbox">I want to:</b>
             <div class="askquestionbox">
-              <div class="askradio1">
-                <input id="newConvoTypeQuestion" name="newConvoType" checked="checked" type="radio" />
+              <div class="asktext1">
+              	<input id="newConvoTypeQuestion" name="newConvoType" checked="checked" type="radio" />
+              	Ask a question (You will receive answers via email)<br/>
+              	<input id="newConvoTypeConvo" name="newConvoType" type="radio" />
+              	Start a live talk (You will start a video chat and other will join within minutes)
               </div>
-              <div class="asktext1">Ask a Question</div>
-              <div class="asktext2">Or</div>
-              <div class="askradio1">
-                <input id="newConvoTypeConvo" name="newConvoType" type="radio" />
-              </div>
-              <div class="asktext3">Start a Live Talk</div>
             </div>
-            <!--askquestionbox-->
+            <div style="clear: both;"></div>
           </div>
           <!--askquestion-->
           <div class="askheadingCoverz">
-            <div class="asktextl">Headline:</div>
             <div class="askinputCover">
 				<textarea id="newConvoTitle" class="askkinput" cols="4" rows="4" 
-					onKeyDown="limitText(this, titleLimit);" onKeyUp="limitText(this, titleLimit);" ></textarea>
+					onKeyDown="limitText(this, titleLimit);" onKeyUp="limitText(this, titleLimit);" 
+					onclick="if (this.value == 'Enter your question or request here.') this.value=''" 
+			        onblur="if (this.value == '') this.value='Enter your question or request here.'"	
+				>Enter your question or request here.</textarea>
             </div>
           </div>
-          <!--askheadingCoverz-->
           <div class="askheadingCover">
-            <div class="asktextl">Details:<br />
-              <span class="asksubtxt">(Optional)</span></div>
+            <div class="asktext2"><b>Optional:</b> What context or background information is relevant to this request?</div>
+          </div>
+          <div class="askheadingCover">
             <div class="askinputCover">
               <textarea id="newConvoDetails" class="askinput2" 
-                onclick="if (this.value == 'This is the place to provide context or further details for your request.') this.value=''" 
-                onblur="if (this.value == '') this.value='This is the place to provide context or further details for your request.'"
-              	cols="4" rows="3">This is the place to provide context or further details for your request.</textarea>
+                onclick="if (this.value == 'For example. Will the stage of disease, current medications, or patient history help to answer the question?') this.value=''" 
+                onblur="if (this.value == '') this.value='For example. Will the stage of disease, current medications, or patient history help to answer the question?'"
+              	cols="4" rows="3">For example. Will the stage of disease, current medications, or patient history help to answer the question?</textarea>
             </div>
           </div>
           <!--
@@ -52,9 +50,9 @@
           -->
           <div class="popsubmitcovar">
             <div class="notetext" style="color: #000; width: 500px;">
-            	<b>Notes:</b> <br/>
-            	- The more clear and thorough your request, the more likely you will receive support.<br/>
-            	- Many of our members are learning from this information 
+            	Notes: <br/>
+            	The more clear and thorough your request, the more likely you will receive support.<br/>
+            	Many of our members are learning from this information 
             	or english might not be their first language.
             	Please use standard english and spell out all words.
             	For example, use 'you' instead of 'u'.

@@ -4791,65 +4791,31 @@ border:0;
 	margin-top:15px;
 	text-align:left;
 }
-.iwant {
-	clear:both;
-	color:#000000;
-	font-size:16px;
-	padding-bottom:5px;
-	font-weight:bold;
-}
-.iwant1 {
-	clear:both;
-	color:#0286bc;
-	font-size:20px;
-	padding-bottom:5px;
-	font-weight:bold;
-}
 .askquestion {
-	clear:both;
 	width:635px;
 	border-bottom:1px solid #c5d0d6;
-	height:30px;
-	font-size:14px;
-	font-weight:bold;
-	padding-top:20px;
+	height:60px;
+	font-size:16px;
+	margin-top: -10px;
+}
+.asktext1 {
+	margin-left: 20px;
 }
 .askquestionbox {
 	float:left;
-	padding-left:50px;
-}
-.askradio1 {
-	float:left;
-	width:auto;
-}
-.asktext1 {
-	float:left;
-	padding-left:5px;
-	width:140px;
-}
-.asktext2 {
-	float:left;
-	width: 55px;
-}
-.asktext3 {
-	float:left;
-	width: 220px;
 }
 .askheadingCoverz {
 	clear:both;
-	padding-top:20px;
+	padding-top:10px;
 }
-.asktextl {
+.asktext2 {
 	float:left;
-	font-size:15px;
-	font-weight:bold;
+	font-size:16px;
 	padding-top:7px;
-	width:80px;
 }
 .askinputCover {
 	float:left;
-	width:545px;
-	padding-left:5px;
+	width:620px;
 }
 .askheadingCover {
 	clear:both;
@@ -4862,7 +4828,7 @@ border:0;
 }
 .askinput2 {
 	float:left;
-	width:530px;
+	width:620px;
 	height:110px;
 	padding-top:6px;
 	padding-left:10px;
@@ -4947,8 +4913,9 @@ border:0;
 }
 .askkinput {
 	float:left;
-	width:537px;
-	height:29px;
+	width:620px;
+	height:25px;
+	padding-top: 4px;
 	padding-left:3px;
 	color:#737373;
 	font-size:13px;

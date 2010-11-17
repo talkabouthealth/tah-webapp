@@ -292,8 +292,11 @@ function saveConvo(page) {
 		type = "CONVERSATION";
 	}
 	var title = $("#newConvoTitle").val();
+	if (title === 'Enter your question or request here.') {
+		title = '';
+	}
 	var details = $("#newConvoDetails").val();
-	if (details === 'This is the place to provide context or further details for your request.') {
+	if (details === 'For example. Will the stage of disease, current medications, or patient history help to answer the question?') {
 		details = '';
 	}
 	//var topics = $("#newConvoTopics").val();

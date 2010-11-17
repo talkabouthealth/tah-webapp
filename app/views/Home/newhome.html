@@ -92,7 +92,9 @@
 				$("#newConvoForm").show();
 				$("#newQuestionConfirm").hide();
 				$("#newTalkConfirm").hide();
-				$("#newConvoTitle").val($("#convoText").val());
+				if ($("#convoText").val() !== "") {
+					$("#newConvoTitle").val($("#convoText").val());
+				}
 				showPopup("#startDialog", 350);
 			});
 
@@ -103,7 +105,9 @@
 				$("#newConvoForm").show();
 				$("#newQuestionConfirm").hide();
 				$("#newTalkConfirm").hide();
-				$("#newConvoTitle").val($("#convoText").val());
+				if ($("#convoText").val() !== "") {
+					$("#newConvoTitle").val($("#convoText").val());
+				}
 				showPopup("#startDialog", 350);
 			});
 
