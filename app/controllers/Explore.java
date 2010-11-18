@@ -14,12 +14,14 @@ import play.mvc.Controller;
 import play.mvc.With;
 
 import logic.FeedsLogic;
+import logic.TalkerLogic;
 import models.ConversationBean;
 import models.TalkerBean;
 import models.TopicBean;
 import models.actions.Action;
 import util.CommonUtil;
 import util.SearchUtil;
+import dao.ActionDAO;
 import dao.ConversationDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
@@ -31,6 +33,8 @@ public class Explore extends Controller {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	if (talker != null) {
     		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+    		talker.setActivityList(ActionDAO.load(talker.getId()));
+    		TalkerLogic.calculateProfileCompletion(talker);
     	}
 		
 		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions();
@@ -41,6 +45,8 @@ public class Explore extends Controller {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	if (talker != null) {
     		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+    		talker.setActivityList(ActionDAO.load(talker.getId()));
+    		TalkerLogic.calculateProfileCompletion(talker);
     	}
 		
     	List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();

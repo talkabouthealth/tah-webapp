@@ -110,21 +110,23 @@
    </div>
 
    <!--topipsts-->
-         <div class="topipsts">
-           <div class="mtrighttxt1">Tell Us About You</div>
+    #{if session.username.equals(talker.userName) && talker.nextStepMessage }
+		<div class="topipsts">
+           <div class="mtrighttxt1">Next Step</div>
            <div class="topixtext">
-             <div class="tellustext">Tell us more about you to be notified of<br />
-               relevant conversations just for you.</div>
-             <div class="tellustext1">
-             	<a href="@{Profile.edit()}">Profile Information</a><br />
-				<a href="@{Profile.healthDetails()}">Health Information</a><br />
-				<a href="@{Profile.notifications()}">Notification Settings</a>
+             <div class="tellustext">
+             	<span style="font-size: 16px;">${talker.nextStepMessage?.raw()}</span>
+             	#{if talker.nextStepNote}
+             		<br/><br/>
+             		${talker.nextStepNote}
+             	#{/if}
              </div>
            </div>
            <!--topixtext-->
-     <div class="mtop"></div>
-     <div class="topicborder"></div>
-   </div>
+	     <div class="mtop"></div>
+	     <div class="topicborder"></div>
+	   </div>
+ 	#{/if}
 
 	
    <div class="topipsts">
@@ -215,3 +217,14 @@
    <div class="cb"></div>
 #{/if}
  </div>
+ 
+<div id="boxes">
+  <div id="dialog" class="window"> </div>
+  
+  #{popups/startConvo page: currentPage /}
+  
+  #{popups/imSettings talker: talker /}
+	
+  <!-- Mask to cover the whole screen -->
+  <div id="mask"></div>
+</div>

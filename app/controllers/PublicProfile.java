@@ -59,6 +59,8 @@ public class PublicProfile extends Controller {
 		
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
+		talker.setActivityList(ActionDAO.load(talker.getId()));
+		TalkerLogic.calculateProfileCompletion(talker);
 		
 		//If the user views his own thoughts he should see the following text under the text box 
 		//until the user posts for the first time (even if another user posts first, this should still appear):

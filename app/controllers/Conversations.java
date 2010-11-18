@@ -97,7 +97,7 @@ public class Conversations extends Controller {
     		templateName = "tags/liveTalk.html";
     		templateBinding.put("_convo", convo);
     	}
-    	else if (fromPage.equalsIgnoreCase("openQuestions")) {
+    	else {
     		//#{openQuestion convo: convo, talker: talker /}
     		templateName = "tags/openQuestion.html";
     		templateBinding.put("_convo", convo);

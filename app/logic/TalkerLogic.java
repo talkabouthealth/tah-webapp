@@ -12,33 +12,61 @@ public class TalkerLogic {
 	
 	enum ProfileCompletion {
 		BASIC(25, "Sign Up"),
-		UPDATE_HEALTH(5, "Share your <a href='"+CommonUtil.generateAbsoluteURL("Profile.healthDetails")+"'>Health Info</a> to get to "),
-		UPDATE_PERSONAL(10, "Update your <a href='"+CommonUtil.generateAbsoluteURL("Profile.edit")+"'>Profile Info</a> to get to "),
-		VIEW_PRIVACY(10, "Update your <a href='"+CommonUtil.generateAbsoluteURL("Profile.preferences")+"'>Privacy Settings</a> to get to "),
-		START_CONVO(10, "Ask a <a href='#' onclick='return showQuestionDialog();'>Question</a> to get to "),
-		COMMENT_CONVO(10, "Answer a <a href='"+CommonUtil.generateAbsoluteURL("Explore.openQuestions")+"'>Question</a> to get to "),
-		GIVE_THANKYOU(10, "Give a Thank you to get to "),
+		UPDATE_HEALTH(5, 
+			"Share your <a href='"+CommonUtil.generateAbsoluteURL("Profile.healthDetails")+"'>Health Info</a>",
+			"So we can match you with Members, Topics, and Conversations most relevant to you."),
+		UPDATE_PERSONAL(10, 
+			"Update your <a href='"+CommonUtil.generateAbsoluteURL("Profile.edit")+"'>Profile Info</a>",
+			"So other members similar to you can find you."
+			),
+		VIEW_PRIVACY(10,
+			"Update your <a href='"+CommonUtil.generateAbsoluteURL("Profile.preferences")+"'>Privacy Settings</a>",
+			"So other members can find and reach out to you."),
+		START_CONVO(10, "Ask a <a href='#' onclick='return showQuestionDialog();'>Question</a>"),
+		COMMENT_CONVO(10, "Answer a <a href='"+CommonUtil.generateAbsoluteURL("Explore.openQuestions")+"'>Question</a>"),
+		GIVE_THANKYOU(10, "Give a Thank you"),
 		COMMENT_THOUGHTS(5, "Comment in your <a href='"+
-				CommonUtil.generateAbsoluteURL("PublicProfile.thoughts", "userName", "<username>")+"'>Thoughts Feed</a> to get to "),
+				CommonUtil.generateAbsoluteURL("PublicProfile.thoughts", "userName", "<username>")+"'>Thoughts Feed</a>"),
 		FOLLOW(5, "Follow <a href='"+
-				CommonUtil.generateAbsoluteURL("Community.browseMembers", "action", "active")+"'>another member</a> to get to "),
-		FOLLOW_TOPIC(5, "Follow a <a href='"+CommonUtil.generateAbsoluteURL("Explore.browseTopics")+"'>Topic</a> to get to "),
-		JOIN_CONVO(5, "Join a <a href='"+CommonUtil.generateAbsoluteURL("Explore.liveTalks")+"'>Live Talk</a> to get to ");
+				CommonUtil.generateAbsoluteURL("Community.browseMembers", "action", "active")+"'>another member</a>"),
+		FOLLOW_TOPIC(5, "Follow a <a href='"+CommonUtil.generateAbsoluteURL("Explore.browseTopics")+"'>Topic</a>"),
+		JOIN_CONVO(5, "Join a <a href='"+CommonUtil.generateAbsoluteURL("Explore.liveTalks")+"'>Live Talk</a>");
+		
 		
 		private final int value;
 		private final String description;
+		private final String stepMessage;
+		private final String stepNote;
 		
-		private ProfileCompletion(int value, String description) {
+		private ProfileCompletion(int value, String stepMessage) {
+			this(value, null, stepMessage, null);
+		}
+		
+		private ProfileCompletion(int value, String stepMessage, String stepNote) {
+			this(value, null, stepMessage, stepNote);
+		}
+		
+		private ProfileCompletion(int value, String description, String stepMessage, String stepNote) {
 			this.value = value;
 			this.description = description;
+			this.stepMessage = stepMessage;
+			this.stepNote = stepNote;
 		}
 
 		public int getValue() {
 			return value;
 		}
-
 		public String getDescription() {
+			if (description == null) {
+				return stepMessage+" to get to ";
+			}
 			return description;
+		}
+		public String getStepMessage() {
+			return stepMessage;
+		}
+		public String getStepNote() {
+			return stepNote;
 		}
 	}
 	
@@ -100,16 +128,21 @@ public class TalkerLogic {
 				}
 			}
 		}
-		String message = null;
+		talker.setProfileCompletionValue(sum);
+		
 		if (sum != 100) {
 			int nextSum = sum + nextItem.getValue();
-			String nextDescription = nextItem.getDescription();
-			nextDescription = nextDescription.replaceAll("<username>", talker.getUserName());
-			message = nextDescription+" "+nextSum+"%.";
+			String nextMessage = nextItem.getStepMessage();
+			nextMessage = nextMessage.replaceAll("<username>", talker.getUserName());
+			String message = nextMessage+" to go to "+nextSum+"%.";
+			
+			talker.setProfileCompletionMessage(message);
+			talker.setNextStepMessage(nextMessage);
+			talker.setNextStepNote(nextItem.getStepNote());
 		}
 		
-		talker.setProfileCompletionMessage(message);
-		talker.setProfileCompletionValue(sum);
+		
+		
 	}
 
 }

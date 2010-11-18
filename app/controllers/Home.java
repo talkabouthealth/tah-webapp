@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import logic.FeedsLogic;
+import logic.TalkerLogic;
 import models.IMAccountBean;
 import models.TalkerBean;
 import models.ConversationBean;
@@ -70,6 +71,9 @@ public class Home extends Controller {
 		}
 		session.remove("justregistered");
 		
+		talker.setActivityList(ActionDAO.load(talker.getId()));
+		TalkerLogic.calculateProfileCompletion(talker);
+		
 		//TODO: number of answers for this user??!
 		render("@newhome", talker, newTopic, liveConversations, convoFeed, communityFeed, showIMPopup);
     }
@@ -80,6 +84,10 @@ public class Home extends Controller {
 		
     	Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null);
+    	
+    	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+		talker.setActivityList(ActionDAO.load(talker.getId()));
+		TalkerLogic.calculateProfileCompletion(talker);
 		
 		render(talker, convoFeed, communityFeed);
     }

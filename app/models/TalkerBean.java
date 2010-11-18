@@ -207,6 +207,8 @@ public class TalkerBean implements Serializable {
 	//variable for displaying
 	private String profileCompletionMessage;
 	private int profileCompletionValue;
+	private String nextStepMessage;
+	private String nextStepNote;
 	
 	private Date latestNotification;
 	private long numOfNotifications;
@@ -928,4 +930,17 @@ public class TalkerBean implements Serializable {
 	public void setProfInfo(Map<String, String> profInfo) {
 		this.profInfo = profInfo;
 	}
+	public String getNextStepMessage() {
+		return nextStepMessage;
+	}
+	public void setNextStepMessage(String nextStepMessage) {
+		this.nextStepMessage = nextStepMessage;
+	}
+	public String getNextStepNote() {
+		return nextStepNote;
+	}
+	public void setNextStepNote(String nextStepNote) {
+		this.nextStepNote = nextStepNote;
+	}
+	
 }	

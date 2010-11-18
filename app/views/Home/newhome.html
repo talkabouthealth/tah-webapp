@@ -13,7 +13,6 @@
 	<script type="text/javascript">
 		var username = "${talker.userName}";
 
-		var titleLimit = 150;
 		var feedsPerPage = ${logic.FeedsLogic.FEEDS_PER_PAGE};
 
 		#{ oauthJavaScripts /}
@@ -266,15 +265,3 @@
       </div>
     </div>
   </div>
-
-
-<div id="boxes">
-  <div id="dialog" class="window"> </div>
-  
-  #{popups/startConvo page: 'home' /}
-  
-  #{popups/imSettings talker: talker /}
-	
-  <!-- Mask to cover the whole screen -->
-  <div id="mask"></div>
-</div>
