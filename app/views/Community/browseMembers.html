@@ -36,6 +36,8 @@
 			font-family:arial;
 			font-size:11px;
 		}
+		
+		ul.tabs li a { padding: 0 10px; }
 	</style>
 </head>
 <body>
@@ -49,8 +51,10 @@
     				<ul class="tabs">
 			        	<li><a href="#tab1"><span>Active</span></a></li>
 			            <li><a href="#tab2"><span>New</span></a></li>
-			            <!-- <li><a href="#tab3"><span>Like You</span></a></li> -->
 			            <li><a href="#tab4"><span>Search</span></a></li>
+			            #{list items: members.keySet(), as: 'memberType'}
+			            	<li><a href="#tab${memberType_index+4}"><span>${memberType}</span></a></li>
+			            #{/list}
 			        </ul>
 			        <div class="tab_container">
 				        <div id="tab1" class="tab_content">
@@ -150,6 +154,30 @@
 				            </div>
 			        	</div>
     					</div>
+    					
+    					#{list items: members.keySet(), as: 'memberType'}
+    						<div id="tab${memberType_index+4}" class="tab_content">
+					   			<div>
+						        	<div class="headingarea">
+							            <div class="tabheading">
+							            	<span class="blacktext25">${memberType}</span> 
+							            </div>
+						            </div>
+						            <div class="thnksarea">
+						            	#{list items: members.get(memberType), as: 'talker' }
+						            		#{talkerInList talker: talker, currentTalker: currentTalker /}
+						            	#{/list}
+						            </div>
+						            <div class="thnksbottom" style="display: none">
+						            	<div class="seemore">
+						            		<a href="#"><img width="134" height="33" 
+						            			border="0" src="/public/images/seemorebutton.gif"/>
+						            		</a>
+						            	</div>
+						            </div>
+					        	</div>
+					        </div>
+			            #{/list}
     				</div>
     			</div>
 			</div>

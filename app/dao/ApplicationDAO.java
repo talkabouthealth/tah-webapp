@@ -50,14 +50,18 @@ public class ApplicationDAO {
 	}
 	
 	//Latest users to log in - for one day
-	public static Set<TalkerBean> getActiveTalkers() {
+	public static Set<TalkerBean> getActiveTalkers(Date afterTime) {
 		DBCollection loginsColl = getCollection(LOGIN_HISTORY_COLLECTION);
 		
-		Calendar oneDayBeforeNow = Calendar.getInstance();
-		oneDayBeforeNow.add(Calendar.DAY_OF_MONTH, -1);
+		if (afterTime == null) {
+			//TODO: possibly long time?
+			Calendar oneDayBeforeNow = Calendar.getInstance();
+			oneDayBeforeNow.add(Calendar.DAY_OF_MONTH, -30);
+			afterTime = oneDayBeforeNow.getTime();
+		}
 		
 		DBObject query = BasicDBObjectBuilder.start()
-			.add("log_time", new BasicDBObject("$gt", oneDayBeforeNow.getTime()))
+			.add("log_time", new BasicDBObject("$gt", afterTime))
 			.get();
 		List<DBObject> loginsDBList = 
 			loginsColl.find(query).sort(new BasicDBObject("log_time", -1)).toArray();
