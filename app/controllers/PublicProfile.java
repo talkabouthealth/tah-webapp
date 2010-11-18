@@ -1,9 +1,11 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import logic.TalkerLogic;
 import models.CommentBean;
@@ -29,6 +31,7 @@ import dao.HealthItemDAO;
 import dao.TalkerDAO;
 import dao.TalkerDiseaseDAO;
 import dao.ConversationDAO;
+import dao.TopicDAO;
 import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
@@ -156,7 +159,20 @@ public class PublicProfile extends Controller {
 		talker.setActivityList(ActionDAO.load(talker.getId()));
 		TalkerLogic.calculateProfileCompletion(talker);
 		
-		render(talker, currentTalker);
+		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
+		
+		//TODO: filter already followed topics
+		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();
+		if (talkerDisease != null) {
+			recommendedTopics = TalkerLogic.getRecommendedTopics(talkerDisease);
+		}
+		if (recommendedTopics.isEmpty()) {
+			//display most popular Topics based on number of questions
+			//FIXME correct it
+			recommendedTopics = new ArrayList<TopicBean>(TopicDAO.loadAllTopics());
+		}
+		
+		render(talker, currentTalker, talkerDisease, recommendedTopics);
 	}
 	
 }

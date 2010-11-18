@@ -1,10 +1,22 @@
 package logic;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import play.templates.JavaExtensions;
+import dao.HealthItemDAO;
+import dao.TopicDAO;
 
 import util.CommonUtil;
 
+import models.HealthItemBean;
 import models.TalkerBean;
+import models.TalkerDiseaseBean;
+import models.TopicBean;
 import models.actions.Action;
 import models.actions.Action.ActionType;
 
@@ -140,9 +152,44 @@ public class TalkerLogic {
 			talker.setNextStepMessage(nextMessage);
 			talker.setNextStepNote(nextItem.getStepNote());
 		}
+	}
+	
+	public static List<TopicBean> getRecommendedTopics(TalkerDiseaseBean talkerDisease) {
+		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();
 		
+		List<List<String>> stringHealthInfo = new ArrayList<List<String>>();
 		
+		Map<String, List<String>> healthInfo = talkerDisease.getHealthInfo();
+		for (String key : healthInfo.keySet()) {
+			stringHealthInfo.add(healthInfo.get(key));
+		}
 		
+		Set<String> healthItems = talkerDisease.getHealthItems();
+		List<HealthItemBean> allHealthItems = HealthItemDAO.getAllHealthItems(null);
+		for (HealthItemBean healthItem : allHealthItems) {
+			if (healthItems.contains(healthItem.getId())) {
+				stringHealthInfo.add(Arrays.asList(healthItem.getName()));
+			}
+		}
+		
+		Map<String, List<String>> otherHealthItems = talkerDisease.getOtherHealthItems();
+		for (String key : otherHealthItems.keySet()) {
+			stringHealthInfo.add(otherHealthItems.get(key));
+		}
+		
+		for (List<String> hi : stringHealthInfo) {
+			for (String possibleTopic : hi ) {
+				if (possibleTopic != null && possibleTopic.trim().length() != 0) {
+					possibleTopic = JavaExtensions.capitalizeWords(possibleTopic);
+					TopicBean topic = TopicDAO.getByTitle(possibleTopic);
+					if (topic != null) {
+						recommendedTopics.add(topic);
+					}
+				}
+			}
+		}
+		
+		return recommendedTopics;
 	}
 
 }

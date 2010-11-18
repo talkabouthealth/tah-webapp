@@ -81,8 +81,15 @@
                     	class="bluetext20">${talker.userName}'s</a> Topics Following
                   </div>
                   <div class="topicborder"></div>
-                  <div class="topicborder"></div>
+                  <div class="topicborder" style="margin-bottom: 10px;"></div>
 #{if talker.equals(currentTalker) || talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.TOPICS_FOLLOWED) }
+	
+	#{if talker.followingTopicsList.size() == 0 }
+		Currently no Topics being followed.<br/>
+	#{/if}
+	#{if talker.equals(currentTalker) && talkerDisease == null}
+		Please fill out your <a href="@{Profile.healthDetails()}">Health Information</a> so that we can recommend Topics most relevant to you.
+	#{/if}
                   
 	#{list items: talker.followingTopicsList, as: 'topic'}
 		#{set talkerTopicInfo = talker.topicsInfoMap.get(topic) /}
@@ -147,13 +154,49 @@
 			</div>
 			<div class="cb"></div>
 		</div>
-	#{/list}            
-				<input type="submit" style="margin-top: 10px; display: none;" class="seemorecom" value=" " src="images/seemore.jpg"/>
+	#{/list} 
+		
+		<input type="submit" style="margin-top: 10px; display: none;" class="seemorecom" value=" " src="images/seemore.jpg"/>
 
 #{/if}
 #{else}
 	<span class="blacktext14">This information has been made private.</span>
 #{/else}				
+
+#{if talker.equals(currentTalker) }
+	<div class="topicfolth1" style="padding-top: 50px; padding-bottom: 10px;">
+       	Recommended Topics for you
+    </div>
+    #{if talkerDisease == null}
+		Please fill out your <a href="@{Profile.healthDetails()}">Health Information</a> so that we can recommend Topics most relevant to you.
+	#{/if}
+	
+	
+	#{list items: recommendedTopics.limit(10), as: 'topic'}
+		<div class="topicfoltxtCover">
+			<div class="topicfoltxt1">
+				<a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a>
+			</div>
+			<div class="topicfoltxt2" style="margin-right: 250px;">
+				#{set isFollowingTopic = currentTalker.getFollowingTopicsList().contains(topic) /}
+				<div id="topicUnfollowDiv${topic.id}" style="display : ${ isFollowingTopic ? 'block' : 'none' }">
+					<img class="topicfolright" alt="right" src="/public/images/right.jpg"/>
+					<div class="topicfoltxtsub1">Following</div>
+					<input type="submit" rel="${topic.id}" value=" " 
+						class="unfollowz unfollowTopicLink" src="/public/images/unfollowz.jpg"/>
+				</div>
+				<div id="topicFollowDiv${topic.id}" style="display : ${ !isFollowingTopic ? 'block' : 'none' }">
+					<input type="submit" rel="${topic.id}" value=" " 
+						class="topiczfollow followTopicLink" src="/public/images/ppfollow.jpg" />
+				</div>
+			</div>
+			<div class="cb"></div>
+		</div>
+	#{/list} 
+	<input type="submit" style="margin-top: 10px;" class="seemorecom" value=" " src="images/seemore.jpg"/>
+	
+#{/if}
+				
 			</div>     
 
             </div>
