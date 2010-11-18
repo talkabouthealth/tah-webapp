@@ -275,6 +275,13 @@ public class Profile extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		EnumSet<ProfilePreference> profilePreferences = talker.loadProfilePreferences();
 		
+		//user just needs to view their Privacy Settings page for ProfileCompletion
+		//TODO: rename 'hiddenHelps' to some common name - we can put there all actions
+		if (!talker.getHiddenHelps().contains("privacyViewed")) {
+			talker.getHiddenHelps().add("privacyViewed");
+			CommonUtil.updateTalker(talker, session);
+		}
+		
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
     	talker.setActivityList(ActionDAO.load(talker.getId()));
 		TalkerLogic.calculateProfileCompletion(talker);

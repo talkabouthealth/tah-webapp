@@ -114,7 +114,7 @@
 							background-color: #0386bc;
 							padding-left: 5px;
 							line-height: 20px;
-							width: ${2*talker.profileCompletionValue}px;
+							width: ${2*talker.profileCompletionValue-5}px;
 							height: 100%;
 						}
 					</style>
@@ -123,7 +123,7 @@
 							<span class="whitetext12">${talker.profileCompletionValue}%</span>
 						</div>
 					</div>
-	                  <div class="profilecompletiontxt">${talker.profileCompletionMessage}</div>
+	                  <div class="profilecompletiontxt">${talker.profileCompletionMessage?.raw()}</div>
 	                  <div class="topicborder"></div>
 	                  <div class="cb"></div>
 	                </div>
@@ -195,5 +195,7 @@
 	
 	#{ popups/thankyou2 /}
 	#{ popups/comment2 /}
+	
+	#{popups/startConvo page: 'openQuestions' /}
 </div>
 <div id="mask"></div>

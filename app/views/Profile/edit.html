@@ -219,7 +219,7 @@
 					<input name="talker.email" type="hidden" class="personalfields" 
 						id="talker.email" value="bad@email.com" />
 					
-					#{if models.TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.connection)}
+					#{if models.TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.connection) && false}
 						#{include 'Profile/editfieldsProf.html' /}
 					#{/if}
 					#{else}

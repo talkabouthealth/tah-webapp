@@ -285,6 +285,19 @@ function loadMoreFeed(type) {
 	return false;
 }
 
+function showQuestionDialog() {
+	$("#newConvoTypeQuestion").attr("checked", "checked");
+	
+	$("#newConvoForm").show();
+	$("#newQuestionConfirm").hide();
+	$("#newTalkConfirm").hide();
+	if ($("#convoText") && $("#convoText").val() !== "") {
+		$("#newConvoTitle").val($("#convoText").val());
+	}
+	showPopup("#startDialog", 350);
+	
+	return false;
+}
 
 function saveConvo(page) {
 	var type = "QUESTION";
@@ -325,7 +338,9 @@ function saveConvo(page) {
 				$("#newConvoForm").hide();
 				
 				if (!(type === "QUESTION" && page === "liveTalks")) {
-					$(data.html).prependTo($(".conversationsList"));
+					if ($(".conversationsList")) {
+						$(data.html).prependTo($(".conversationsList"));
+					}
 				}
 
 				$("#convoText").val("");

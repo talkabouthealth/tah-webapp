@@ -215,11 +215,17 @@ public class CommonUtil {
 	//Generate url by Play! action and parameters
 	public static String generateAbsoluteURL(String action, String paramName, Object paramValue) {
 		Map<String, Object> args = new HashMap<String, Object>(1);
-		args.put(paramName, paramValue);
+		if (paramName != null) {
+			args.put(paramName, paramValue);
+		}
 		
 		ActionDefinition actionDef = Router.reverse(action, args);
 		actionDef.absolute();
 		return actionDef.url;
+	}
+	
+	public static String generateAbsoluteURL(String action) {
+		return generateAbsoluteURL(action, null, null);
 	}
 	
 	/**
