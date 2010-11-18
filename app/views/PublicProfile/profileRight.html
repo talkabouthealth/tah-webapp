@@ -15,12 +15,14 @@
 
    		  					//$("#followActionImagelink img").attr("src", "/public/images/"+data.toLowerCase()+"_icon.gif");
    		  					if ($("#followActionImagelink")) {
+   		  						$("#followingConfirm").hide();
 	   		  					if (data == 'Follow') {
 	   		  						$("#followActionImagelink").html(
 	   		   		  						'<img src="/public/images/follow_icon.gif" width="52" height="19" border="0"/>');
 	   		  					}
 	   		  					else {
 	   		  						$("#followActionImagelink").html('Unfollow');
+	   		  						$("#followingConfirm").show();
 	   		  					}
    		  					}
    		  				}

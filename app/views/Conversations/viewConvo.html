@@ -59,6 +59,7 @@
 		
 		$(document).ready(function() {
 			$("#followConvoLink").click(function() {
+				$("#followingConfirm").hide();
 				$.post("@{Conversations.follow()}", 
 	  				{ convoId: '${convo.id}'},
 	  				function(nextAction) {
@@ -69,6 +70,7 @@
 		  				}
 		  				else {
 		  					linkDiv.addClass("followcnzz");
+		  					$("#followingConfirm").show();
 		  				}
 	  				}
 	  			);
@@ -653,6 +655,10 @@
 						#{else}
 							<a href="#" id="followConvoLink"><div class="followcn"></div></a>
 						#{/else}
+						<div id="followingConfirm" style="clear: left; padding-top: 3px; margin-left: 45px; display: none;">
+							<img class="topicfolright" alt="right" src="/public/images/right.jpg"/>
+							<div class="topicfoltxtsub1"><b>Following</b></div>
+						</div>
 					#{/if}
 				    <!-- <input type="submit" class="followcn"  src="../TalkAboutHealth//public/images/followcn.jpg" value=" "  /> -->
 				    <div class="cb"></div>
