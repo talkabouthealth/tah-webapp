@@ -3,7 +3,8 @@
 		${_email.value}<br/>
 		#{if _email.verifyCode != null }
 			<a href="#" title="${_email.value}" 
-				class="red12 verificationResendLink">(email not verified - resend verification e-mail)</a>
+				onclick="return sendVerificationLink(this);"
+				class="red12">(email not verified - resend verification e-mail)</a>
 			<span id="verificationResendResult" class="blacktext12"></span>
 		#{/if}
 	</td>

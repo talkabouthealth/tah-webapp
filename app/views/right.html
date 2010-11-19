@@ -108,8 +108,27 @@
      <div class="topicborder"></div>
      <div class="cb"></div>
    </div>
-
-   <!--topipsts-->
+    
+    #{if session.username.equals(talker.userName) && talker.verifyCode != null }
+		<div class="topipsts">
+           <div class="mtrighttxt1">Please verify your email</div>
+           <div class="topixtext">
+             <div class="tellustext">
+             	So that we can send you answers and updates for your conversations.
+             	<br/><br/>
+             	<span style="font-size: 16px;">
+             		<a href="#" title="${talker.email}" 
+             			onclick="return sendVerificationLink(this);">Resend verification email.</a>
+             		<span id="verificationResendResult" class="blacktext12"></span>
+             	</span>
+             </div>
+           </div>
+           <!--topixtext-->
+	     <div class="mtop"></div>
+	     <div class="topicborder"></div>
+	   </div>
+ 	#{/if}
+   
     #{if session.username.equals(talker.userName) && talker.nextStepMessage }
 		<div class="topipsts">
            <div class="mtrighttxt1">Next Step</div>

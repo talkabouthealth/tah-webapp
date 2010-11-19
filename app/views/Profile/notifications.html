@@ -39,21 +39,6 @@
 <script type="text/javascript" charset="utf-8">
 	$(document).ready(function() {
 		// ------------ Emails --------------
-		$(".verificationResendLink").live("click", function() {
-			$(this).html("Sending...");
-			var email = $(this).attr("title");
-			var verificationLink = $(this);
-			var verificationResult = $(this).next("span");
-			$.post("@{Profile.resendVerificationEmail()}", 
-				{email: email},
-				function(data) {
-					verificationLink.hide();
-					verificationResult.html(data).show();
-				}
-			);
-			return false;
-		});
-
 		$("#newEmailBtn").click(function() {
 			$("#emailError").html("");
 			var newEmail = $("#newEmail").val();
@@ -157,8 +142,9 @@
 							<tr>
 								<td>${talker.email}<br/>
 									#{if talker.verifyCode != null }
-										<a href="#" title="${talker.email}"
-											class="red12 verificationResendLink">(email not verified - resend verification e-mail)</a>
+										<a href="#" title="${talker.email}" 
+											onclick="return sendVerificationLink(this);"
+											class="red12">(email not verified - resend verification e-mail)</a>
 										<span id="verificationResendResult" class="blacktext12"></span>
 									#{/if}
 								</td>

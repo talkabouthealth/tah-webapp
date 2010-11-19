@@ -47,6 +47,21 @@ function flag() {
 	return false;
 }
 
+function sendVerificationLink(link) {
+	$(link).html("Sending...");
+	var email = $(link).attr("title");
+	var verificationLink = $(link);
+	var verificationResult = $(link).next("span");
+	$.post("/profile/resendVerificationEmail", 
+		{email: email},
+		function(data) {
+			verificationLink.hide();
+			verificationResult.html(data).show();
+		}
+	);
+	return false;
+}
+
 //createThankYou(String toTalker, String note)
 function sendThankYou() {
 	var noteText = $("#thankYouListNote").val();
