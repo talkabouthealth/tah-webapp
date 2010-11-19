@@ -338,6 +338,8 @@ public class TalkerBean implements Serializable {
 		
 		parseFollowingTopics((Collection<DBRef>)talkerDBObject.get("following_topics"));
 		parseTopicsInfo((Collection<DBObject>)talkerDBObject.get("topics_info"));
+		
+		parseProfInfo((DBObject)talkerDBObject.get("prof_info"));
 	}
 	
 	public void parseThankYous(Collection<DBObject> thankYouDBList) {
@@ -430,6 +432,14 @@ public class TalkerBean implements Serializable {
 				
 				topicsInfoMap.put(topic, topicInfo);
 			}
+		}
+	}
+	
+	private void parseProfInfo(DBObject profInfoDBObject) {
+		profInfo = new HashMap<String, String>();
+		
+		if (profInfoDBObject != null) {
+			profInfo = profInfoDBObject.toMap();
 		}
 	}
 	

@@ -88,6 +88,8 @@ public class TalkerDAO {
 			.add("verify_code", talker.getVerifyCode())
 			.add("emails", setToDB(talker.getEmails()))
 			
+			.add("prof_info", talker.getProfInfo())
+			
 			.add("orig_uname", talker.getOriginalUserName())
 			.add("deactivated", talker.isDeactivated())
 			.add("suspended", talker.isSuspended())

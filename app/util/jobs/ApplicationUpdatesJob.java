@@ -31,6 +31,7 @@ import play.jobs.OnApplicationStart;
 import util.CommonUtil;
 import util.DBUtil;
 import util.importers.DiseaseImporter;
+import util.importers.FieldsDataImporter;
 import util.importers.HealthItemsImporter;
 import util.importers.TopicsImporter;
 
@@ -41,6 +42,8 @@ import util.importers.TopicsImporter;
 public class ApplicationUpdatesJob extends Job {
 	
 	public void doJob() throws Exception {
+		
+		FieldsDataImporter.importData("fields.dat");
 		
 		if (ApplicationDAO.isCollectionEmpty(DiseaseDAO.DISEASES_COLLECTION)) {
 			DiseaseImporter.importDiseases("diseases.dat");

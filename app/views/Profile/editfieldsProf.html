@@ -1,12 +1,16 @@
+#{set talkerType = talker.connection /}
+#{set profInfo = talker.profInfo /}
+
+#{profile/field type: 'select', des: 'Credentials', name: 'credentials', talkerType: talkerType, profInfo: profInfo /}
+
+#{profile/field type: 'text_multiple', des: 'What states are you licensed in?', name: 'states_lic', talkerType: talkerType, profInfo: profInfo /}
+
+
 <div class="personalmain">
-	<div class="personaltextarea"><span class="blacktext14">Credentials</span></div>
-	<div class="personaltextfield">
-		<select name="pr_credentials" class="personalfields">
-			#{list items:["", "Single", "Married/partnered relationship", "Divorced", "Separated", "Widowed"], as:'maritalStatus'}
-			 		<option value="${maritalStatus}" 
-			    #{if maritalStatus.equals(talker.maritalStatus) } selected #{/if} 
-			    >${maritalStatus}</option>
-			#{/list}
-		</select>
+	<div class="personaltextarea"></div>
+	<div class="personaltextarea" >
+		<a href="#" onclick="validateProfileForm()">
+			<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" /></a>
 	</div>
 </div>
+<div class="personalmain"></div>

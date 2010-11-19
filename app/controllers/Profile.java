@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -75,11 +76,6 @@ public class Profile extends Controller {
     	talker.setActivityList(ActionDAO.load(talker.getId()));
 		TalkerLogic.calculateProfileCompletion(talker);
 		
-//		List<DiseaseQuestion> questions = new ArrayList<DiseaseQuestion>();
-//		DiseaseQuestion dq = new DiseaseQuestion();
-//		questions.add();
-		
-		
     	render(talker, verifiedEmail);
     }
 	
@@ -102,17 +98,14 @@ public class Profile extends Controller {
 		}
 		
 		String oldUserName = oldTalker.getUserName();
-//		String oldEmail = oldTalker.getEmail();
 		if (!oldUserName.equals(talker.getUserName())) {
 			boolean nameNotExists = !ApplicationDAO.isURLNameExists(talker.getUserName());
 			validation.isTrue(nameNotExists).message("username.exists");
 		}
-//		if (!oldEmail.equals(talker.getEmail())) {
-//			TalkerBean tmpTalker = TalkerDAO.getByEmail(talker.getEmail());
-//			validation.isTrue(tmpTalker == null).message("email.exists");
-//		}
 		
-		talker.setKeywords(CommonUtil.parseCommaSerapatedList(talker.getKeywords().get(0), "Keywords (please separate by commas)"));
+		if (talker.getKeywords() != null) {
+			talker.setKeywords(CommonUtil.parseCommaSerapatedList(talker.getKeywords().get(0), "Keywords (please separate by commas)"));
+		}
 		
 		Date dateOfBirth = CommonUtil.parseDate(talker.getDobMonth(), talker.getDobDay(), talker.getDobYear());
 		talker.setDob(dateOfBirth);
@@ -121,6 +114,7 @@ public class Profile extends Controller {
 		if(validation.hasErrors()) {
 			//prepare info for displaying page
 			//TODO: it's not good
+			talker.setProfInfo(oldTalker.getProfInfo());
 			talker.setHiddenHelps(oldTalker.getHiddenHelps());
 			talker.saveProfilePreferences(oldTalker.loadProfilePreferences());
 			talker.setFollowingTopicsList(oldTalker.getFollowingTopicsList());
@@ -135,63 +129,88 @@ public class Profile extends Controller {
             return;
         }
 		
-		if (!StringUtils.equals(oldTalker.getConnection(), talker.getConnection())) {
-			//check if new connection is professional and unverify it
-			oldTalker.setConnectionVerified(false);
+		if (TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(oldTalker.getConnection())) {
+			//TODO: username, birthday, etc.
+			
+			Map<String, String> profInfo = new HashMap<String, String>();
+			
+			//parse "pr_"
+			Map<String, String> paramsMap = params.allSimple();
+			for (Entry<String, String> param : paramsMap.entrySet()) {
+				if (param.getKey().startsWith("pr_")) {
+					//profile info parameter
+					String value = param.getValue();
+					if (value != null && value.equals("(separate by commas if multiple)")) {
+						value = "";
+					}
+					profInfo.put(param.getKey().substring(3), value);
+				}
+			}
+			oldTalker.setProfInfo(profInfo);
+			
+			CommonUtil.updateTalker(oldTalker, session);
+		}
+		else {
+			if (!StringUtils.equals(oldTalker.getBio(), talker.getBio())) {
+				ActionDAO.saveAction(new UpdateProfileAction(oldTalker, ActionType.UPDATE_BIO));
+			}
+			
+			//check if any fields were changed
+			if ( !(
+					StringUtils.equals(oldTalker.getGender(), talker.getGender()) &&
+					StringUtils.equals(oldTalker.getCountry(), talker.getCountry()) &&
+					StringUtils.equals(oldTalker.getState(), talker.getState()) &&
+					StringUtils.equals(oldTalker.getCity(), talker.getCity()) &&
+					StringUtils.equals(oldTalker.getMaritalStatus(), talker.getMaritalStatus()) &&
+					oldTalker.getChildrenNum() == oldTalker.getChildrenNum() &&
+					oldTalker.getChildrenAges().equals(talker.getChildrenAges()) &&
+					StringUtils.equals(oldTalker.getWebpage(), talker.getWebpage()) &&
+					oldTalker.getKeywords().equals(talker.getKeywords())
+						)) {
+				ActionDAO.saveAction(new UpdateProfileAction(oldTalker, ActionType.UPDATE_PERSONAL));
+			}
+			
+			oldTalker.setUserName(talker.getUserName());
+//			oldTalker.setEmail(talker.getEmail());
+//			oldTalker.setFirstName(talker.getFirstName());
+//			oldTalker.setLastName(talker.getLastName());
+			oldTalker.setDob(dateOfBirth);
+			oldTalker.setGender(talker.getGender());
+			oldTalker.setMaritalStatus(talker.getMaritalStatus());
+			oldTalker.setConnection(talker.getConnection());
+			oldTalker.setCity(talker.getCity());
+			oldTalker.setState(talker.getState());
+			oldTalker.setCountry(talker.getCountry());
+			oldTalker.setChildrenNum(talker.getChildrenNum());
+			oldTalker.setZip(talker.getZip());
+			oldTalker.setWebpage(talker.getWebpage());
+			oldTalker.setBio(talker.getBio());
+			oldTalker.setChildrenAges(talker.getChildrenAges());
+			oldTalker.setKeywords(talker.getKeywords());
+			
+//			if (!oldEmail.equals(talker.getEmail())) {
+//				//send verification email
+//				oldTalker.setVerifyCode(CommonUtil.generateVerifyCode());
+//				
+//				Map<String, String> vars = new HashMap<String, String>();
+//				vars.put("username", oldTalker.getUserName());
+//				vars.put("verify_code", oldTalker.getVerifyCode());
+//				EmailUtil.sendEmail(EmailTemplate.VERIFICATION, oldTalker.getEmail(), vars, null, false);
+//			}
+			
+			CommonUtil.updateTalker(oldTalker, session);
+			
+			if (!oldUserName.equals(talker.getUserName())) {
+				ApplicationDAO.createURLName(talker.getUserName());
+			}
 		}
 		
-		if (!StringUtils.equals(oldTalker.getBio(), talker.getBio())) {
-			ActionDAO.saveAction(new UpdateProfileAction(oldTalker, ActionType.UPDATE_BIO));
-		}
-		
-		//check if any fields were changed
-		if ( !(
-				StringUtils.equals(oldTalker.getGender(), talker.getGender()) &&
-				StringUtils.equals(oldTalker.getCountry(), talker.getCountry()) &&
-				StringUtils.equals(oldTalker.getState(), talker.getState()) &&
-				StringUtils.equals(oldTalker.getCity(), talker.getCity()) &&
-				StringUtils.equals(oldTalker.getMaritalStatus(), talker.getMaritalStatus()) &&
-				oldTalker.getChildrenNum() == oldTalker.getChildrenNum() &&
-				oldTalker.getChildrenAges().equals(talker.getChildrenAges()) &&
-				StringUtils.equals(oldTalker.getWebpage(), talker.getWebpage()) &&
-				oldTalker.getKeywords().equals(talker.getKeywords())
-					)) {
-			ActionDAO.saveAction(new UpdateProfileAction(oldTalker, ActionType.UPDATE_PERSONAL));
-		}
-		
-		oldTalker.setUserName(talker.getUserName());
-//		oldTalker.setEmail(talker.getEmail());
-//		oldTalker.setFirstName(talker.getFirstName());
-//		oldTalker.setLastName(talker.getLastName());
-		oldTalker.setDob(dateOfBirth);
-		oldTalker.setGender(talker.getGender());
-		oldTalker.setMaritalStatus(talker.getMaritalStatus());
-		oldTalker.setConnection(talker.getConnection());
-		oldTalker.setCity(talker.getCity());
-		oldTalker.setState(talker.getState());
-		oldTalker.setCountry(talker.getCountry());
-		oldTalker.setChildrenNum(talker.getChildrenNum());
-		oldTalker.setZip(talker.getZip());
-		oldTalker.setWebpage(talker.getWebpage());
-		oldTalker.setBio(talker.getBio());
-		oldTalker.setChildrenAges(talker.getChildrenAges());
-		oldTalker.setKeywords(talker.getKeywords());
-		
-//		if (!oldEmail.equals(talker.getEmail())) {
-//			//send verification email
-//			oldTalker.setVerifyCode(CommonUtil.generateVerifyCode());
-//			
-//			Map<String, String> vars = new HashMap<String, String>();
-//			vars.put("username", oldTalker.getUserName());
-//			vars.put("verify_code", oldTalker.getVerifyCode());
-//			EmailUtil.sendEmail(EmailTemplate.VERIFICATION, oldTalker.getEmail(), vars, null, false);
+//		if (!StringUtils.equals(oldTalker.getConnection(), talker.getConnection())) {
+//			//check if new connection is professional and unverify it
+//			oldTalker.setConnectionVerified(false);
 //		}
 		
-		CommonUtil.updateTalker(oldTalker, session);
 		
-		if (!oldUserName.equals(talker.getUserName())) {
-			ApplicationDAO.createURLName(talker.getUserName());
-		}
 		
 		flash.success("ok");
 		talker = oldTalker;

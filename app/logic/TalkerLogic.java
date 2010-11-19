@@ -22,6 +22,23 @@ import models.actions.Action.ActionType;
 
 public class TalkerLogic {
 	
+	private static Map<String, List<String>> fieldsDataMap;
+	
+	public static void setFieldsDataMap(Map<String, List<String>> fieldsDataMap) {
+		TalkerLogic.fieldsDataMap = fieldsDataMap;
+	}
+	
+	public static List<String> getFieldsData(String fieldName, String talkerType) {
+		String key = fieldName+"|"+talkerType;
+		if (fieldsDataMap.containsKey(key)) {
+			return fieldsDataMap.get(key);
+		}
+		else {
+			key = fieldName+"|all";
+			return fieldsDataMap.get(key);
+		}
+	}
+
 	enum ProfileCompletion {
 		BASIC(25, "Sign Up"),
 		UPDATE_HEALTH(5, 
