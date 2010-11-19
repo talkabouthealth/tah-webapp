@@ -16,6 +16,7 @@ import models.TalkerDiseaseBean;
 import models.ConversationBean;
 import models.TalkerTopicInfo;
 import models.TopicBean;
+import models.CommentBean.Vote;
 import models.actions.Action;
 import models.actions.FollowConvoAction;
 import models.actions.FollowTalkerAction;
@@ -32,6 +33,7 @@ import dao.TalkerDAO;
 import dao.TalkerDiseaseDAO;
 import dao.ConversationDAO;
 import dao.TopicDAO;
+import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
@@ -98,6 +100,26 @@ public class PublicProfile extends Controller {
 		//remove all actions connected with this comment
 		ActionDAO.deleteActionByProfileComment(comment);
 
+    	renderText("ok");
+    }
+	
+	public static void updateComment(String commentId, String newText) {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	CommentBean comment = CommentsDAO.getProfileCommentById(commentId);
+    	notFoundIfNull(comment);
+    	
+    	if (!talker.getId().equals(comment.getProfileTalkerId())) {
+    		forbidden();
+    		return;
+    	}
+    	
+    	String oldText = comment.getText();
+		if (!oldText.equals(newText)) {
+			comment.getOldTexts().add(oldText);
+			comment.setText(newText);
+			CommentsDAO.updateProfileComment(comment);
+		}
+		
     	renderText("ok");
     }
 	

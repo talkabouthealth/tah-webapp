@@ -64,6 +64,8 @@ public class CommentsDAO {
 		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
 		
 		DBObject commentObject = BasicDBObjectBuilder.start()
+			.add("text", comment.getText())
+			.add("old_texts", comment.getOldTexts())
 			.add("deleted", comment.isDeleted())
 			.get();
 		

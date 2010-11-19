@@ -15,9 +15,22 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('.inline-edit').inlineEdit(
-		  		{ hover: ''}
+		  		{ hover: '', saveFunction: saveData}
 		  	);
 		});
+
+		function saveData(dataType, newValue) {
+			if (dataType.indexOf('commentEdit') == 0) {
+				var commentId = dataType.substring(11);
+				
+	   	   		$.post("@{PublicProfile.updateComment()}", 
+	  				{ commentId: commentId, newText: newValue},
+	  				function(html) {
+	  	  				//...
+	  				}
+	  			);
+			}
+		}
 
 		function showReplyForm(commentId) {
 			$("#reply"+commentId+" .inline_display").hide();

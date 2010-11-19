@@ -14,10 +14,36 @@
 		#{/if}
 		<div class="${_level == 1 ? 'comtextr' : 'comreplytxt'}">
 			<div class="${_level == 1 ? 'comtext' : 'comreplytext'}">
-				<span class="comname">
-					<a href="@{ViewDispatcher.view(comment.fromTalker.userName)}">${comment.fromTalker.userName}</a>
-				</span>&nbsp;&nbsp;&nbsp;
-				${comment.text.nl2br()}
+				<div class='inline-edit' id="commentEdit${comment.id}">
+					<div class="suggestxt inline_display">
+						<div class="inline_full inline_empty">
+							<span class="comname">
+								<a href="@{ViewDispatcher.view(comment.fromTalker.userName)}">${comment.fromTalker.userName}</a>
+							</span>&nbsp;&nbsp;&nbsp;
+							<span class="inline_view" style="color:#000000;">${comment.text.nl2br()}</span>
+							#{if _showDelete && session.username?.equals(comment.fromTalker.userName)}
+								<span class="editit2">
+									<a href="#" class="inline_editlink">Edit</a>
+								</span>
+							#{/if}
+						</div>
+		            </div>
+					<div class='inline_form'>
+						<div style="float:left; width:auto; padding-bottom:5px;" >
+							<span class="comname" style="font-size: 14px;">
+								<a href="@{ViewDispatcher.view(comment.fromTalker.userName)}">${comment.fromTalker.userName}</a>
+							</span>
+				        	<textarea id="titleinput" type="text" style="width:470px; height: 100px;"  
+				        		class="edititinputs inline_text">${comment.text}</textarea>
+				        </div>
+						<div style="float:right;margin-right:30px;">
+					        <input id="titleBtn" type="submit" class="updatebtns inline_save" value=" " />
+					        <div class="canclebtnz">
+					        	<a class="cancel" href="#">Cancel</a>
+					        </div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="${_level == 1 ? 'comadd' : 'comreplytext1'}">
 				${comment.time.since()}
