@@ -103,6 +103,7 @@
 				
 				$display.hide();
 				$form.show();
+				return false;
 			});
 			
 			$addBtn.bind( 'click.inline-edit', function() {

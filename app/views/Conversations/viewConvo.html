@@ -49,6 +49,12 @@
 			text-decoration:none;
 		}
 		
+		.bigRestartBtn {
+			height:30px;
+			margin-top:5px;
+			width:171px;
+		}
+		
 		/* for popups */
 		.popboxflagzx { top: 0px; left: 0px }
 	</style>
@@ -335,15 +341,13 @@
 											<div class="inline_display">
 												<div class="inline_full">
 													<div class="targetedh7">
-														<h1 class="inline_view">${convo.topic}</h1>
-													</div>
-													#{if talker }
-														<div class="editdiv">
-															<div class="editit">
+														<h1 class="inline_view" style="display: inline;">${convo.topic}</h1>
+														#{if talker }
+															<span class="editit2" style="float: none;">
 																<a href="#" class="inline_editlink">Edit</a>
-															</div>
-														</div>
-													#{/if}
+															</span>
+														#{/if}
+													</div>
 												</div>
 												<div class="inline_empty" style="display: none">
 													#{if talker }
@@ -373,13 +377,11 @@
 									<div class='inline-edit' id="detailsEdit">
 										<div class="suggestxt inline_display">
 											<div class="inline_full" style="display: ${convo.details ? 'block' : 'none'}">
-												<p style="float:left; padding-top:10px;" class="inline_view">${convo.details}</p>
+												<p style="display: inline; padding-top:10px;" class="inline_view">${convo.details}</p>
 												#{if talker }
-												<div class="editdiv">
-													<div class="editit" style="padding-top:10px;">
+													<span class="editit2" style="float: none;">
 														<a href="#" class="inline_editlink">Edit</a>
-													</div>
-												</div>
+													</span>
 												#{/if}
 											</div>
 											<div class="inline_empty" style="display: ${!convo.details ? 'block' : 'none'}">
@@ -414,7 +416,7 @@
 									<div class="suggestxt inline_display">
 										<div class="inline_full" style="display: ${convo.topics ? 'block' : 'none'}">
 											<div style="display: block; float: left; width: auto;" class="topictxt">
-                        						<div style="float: left;">Topics: </div>
+                        						<div style="float: left;">Topics (Tags): </div>
                         						<div id="topicsList">
 	                        						#{list items: convo.topics, as: 'tag'}
 														<a class="topicTitle" href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>
@@ -471,6 +473,9 @@
 								#{/if}
 								<div class="cb"></div>
 							</div> <!--topic-->
+							
+							<div class="topicborder" style="margin-top: 10px;"></div>
+                    		<div class="topicborder" style="margin-bottom: 5px;"></div>
 							
 							#{if convo.helpfulAnswers?.size > 1}
                     		<div class="topic inline-edit" id="summaryEdit">
@@ -594,6 +599,8 @@
                         
 							<div class="topic" id="replyform"><br />
 								#{if talker }
+									<div class="topicborder" style="margin-top: 7px;"></div>
+									<div class="answerh1">Add Answer</div>
 									<textarea name="textarea" id="replytext" class="answerinput" 
 										onclick="if (this.value === 'Add New Answer') this.value='';">Add New Answer</textarea><br />
 									<input type="submit" onclick="return saveProfileComment('');" 
@@ -659,9 +666,11 @@
 							<img class="topicfolright" alt="right" src="/public/images/right.jpg"/>
 							<div class="topicfoltxtsub1"><b>Following</b></div>
 						</div>
+						<input type="button" class="restartConvoLink bigRestartBtn" value="Re-start Talk" />
 					#{/if}
 				    <!-- <input type="submit" class="followcn"  src="../TalkAboutHealth//public/images/followcn.jpg" value=" "  /> -->
 				    <div class="cb"></div>
+				    <div class="topicborder" style="margin-top: 10px;"></div>
 					<div class="topipsts">
 						<div class="Statics">
 							<div class="Staticsh1">Question Statistics</div>

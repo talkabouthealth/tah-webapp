@@ -1,6 +1,7 @@
 #{list items: _commentsList, as: 'comment' }
 #{ifnot comment.deleted}
-	<div id="comment${comment.id}" class="topic" style="padding-bottom:5px;">
+	<div id="comment${comment.id}" class="topic" 
+			style="padding-bottom:5px; ${_level == 1 ? 'margin-left:-40px;' : ''} ">
     	<div class="answerCover">
 			<div class="replyWraper">
 				#{if _level == 1 }

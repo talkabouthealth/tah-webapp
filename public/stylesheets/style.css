@@ -2814,7 +2814,7 @@ width:auto;
 	text-decoration:none;
 }
 .replypics {
-	float:left;
+	float: right;
 	width:60px;
 }
 .replytextarea {
@@ -4954,3 +4954,31 @@ border:0;
 .helpInfo .close { padding-right: 0px; }
 
 .inline_form { display:none; }
+
+.editit2 {
+	font-size:11px;
+	font-weight: normal;
+	height:10px;
+	margin-left:5px;
+	width:auto;
+}
+.editit2 a {
+	background:transparent url(../images/edi.jpg) no-repeat scroll 0 3px;
+	color:#4B4B4B;
+	height:12px;
+	padding-left:12px;
+	padding-top:3px;
+	text-decoration:none;
+	width:27px;
+}
+.editit2 a:hover {
+	width:27px;
+	color:#4B4B4B;
+	height:12px;
+	padding-top:3px;
+	padding-left:12px;
+	padding-right:5px;
+	background-repeat:no-repeat;
+	background-position:0 3px;
+	background:url(../images/edi1.jpg);
+}
