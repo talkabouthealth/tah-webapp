@@ -117,6 +117,7 @@ public class TalkerDAO {
 			.add("zip", talker.getZip())
 			.add("webpage", talker.getWebpage())
 			.add("bio", talker.getBio())
+			.add("prof_statement", talker.getProfStatement())
 			.add("ch_ages", talker.getChildrenAges())
 			.add("ch_num", talker.getChildrenNum())
 			.add("invites", talker.getInvitations())

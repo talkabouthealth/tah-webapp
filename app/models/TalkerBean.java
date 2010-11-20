@@ -162,6 +162,8 @@ public class TalkerBean implements Serializable {
 	private String webpage;
 	private List<String> keywords;
 	private String bio;
+	private String profStatement;
+	
 	private boolean newsletter;
 	private String gender;
 	private int invitations;
@@ -282,6 +284,7 @@ public class TalkerBean implements Serializable {
 		setSuspended(getBoolean(talkerDBObject.get("suspended")));
 		
 		setBio((String)talkerDBObject.get("bio"));
+		setProfStatement((String)talkerDBObject.get("prof_statement"));
 		setConnection((String)talkerDBObject.get("connection"));
 		setConnectionVerified(getBoolean(talkerDBObject.get("connection_verified"))); 
 		
@@ -572,6 +575,10 @@ public class TalkerBean implements Serializable {
 	
 	
 	// ----========= Useful methods for displaying data ============----
+	
+	public boolean isProf() {
+		return PROFESSIONAL_CONNECTIONS_LIST.contains(connection);
+	}
 	public boolean isAllowed(ProfilePreference preference) {
 		if (profilePreferences == null) {
 			return false;
@@ -951,6 +958,12 @@ public class TalkerBean implements Serializable {
 	}
 	public void setNextStepNote(String nextStepNote) {
 		this.nextStepNote = nextStepNote;
+	}
+	public String getProfStatement() {
+		return profStatement;
+	}
+	public void setProfStatement(String profStatement) {
+		this.profStatement = profStatement;
 	}
 	
 }	

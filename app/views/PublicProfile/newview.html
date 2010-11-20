@@ -171,74 +171,138 @@
                     </div>
                     <!--profiletxtCantant-->
 					#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.PERSONAL_INFO) }
+							#{if talker.isProf()}
+								#{if talker.profStatement}
+									<div class="profilebio">Professional Statement</div>
+				                    <div class="topicborder"></div>
+				                    <div class="profilebiotxt">${talker.profStatement.nl2br()}</div>
+								#{/if}
+								
+								<div class="Profileperson">Profile Info</div>
+			                    <div class="topicborder"></div>
+			                    
+			                    #{list items: profFields.keySet(), as: 'field'}
+			                    	#{if field.equals("gender")}
+				                    	#{if talker.fullGender}
+						                    <div class="profiletxtCantant">
+						                    	<div class="profileCantanttxt1">
+							                      	<strong>Gender:</strong> <span class="Profilepersonsub">${talker.fullGender}</span>
+							                    </div>
+							                </div>
+						                #{/if}
+					                #{/if}
+					                #{elseif field.equals("age")}
+				                    	#{if talker.age}
+						                    <div class="profiletxtCantant">
+						                      <div class="profileCantanttxt1">
+						                      	<strong>Age:</strong> <span class="Profilepersonsub">${talker.age}</span>
+						                      </div>
+						                    </div>
+					                    #{/if}
+					                #{/elseif}
+					                #{elseif field.equals("web")}
+				                    	#{if talker.webpage}
+							                <div class="profiletxtCantant">
+						                    	<div class="profileCantanttxt1">
+						                      	<strong>Webpage:</strong><span class="Profilepersonsub"> ${talker.webpage}</span>
+						                      </div>
+							                </div>
+						                #{/if}
+					                #{/elseif}
+					                #{elseif field.equals("pract_adr") && talker.connection.equals("Physician")}
+						                <div class="profiletxtCantant">
+					                    	<div class="profileCantanttxt1">
+					                      	<strong>Practice address:</strong>
+					                      	<span class="Profilepersonsub">
+					                      		${talker.profInfo.get("pract_adr1")} ${talker.profInfo.get("pract_adr2")}
+					                      		${talker.profInfo.get("pract_city")}, ${talker.profInfo.get("pract_state")} 
+					                      		${talker.profInfo.get("pract_zip")}
+					                      	</span>
+					                      </div>
+						                </div>
+					                #{/elseif}
+			                    	#{elseif talker.profInfo.get(field) || (field.equals("educ") && talker.connection.equals("Physician"))}
+					                    <div class="profiletxtCantant">
+					                      <div class="profileCantanttxt1">
+					                      	<strong>${profFields.get(field)?.raw()}:</strong> 
+					                      	<span class="Profilepersonsub">${talker.profInfo.get(field)}</span>
+					                      </div>
+					                    </div>
+				                    #{/elseif}
+			                    #{/list}
+							#{/if}
+							
 							#{if talker.bio}
 								<div class="profilebio">Personal Bio</div>
 			                    <div class="topicborder"></div>
 			                    <div class="profilebiotxt">${talker.bio.nl2br()}</div>
 							#{/if}
-							<div class="Profileperson">Personal Info</div>
-		                    <div class="topicborder"></div>
-		                    #{if talker.state && talker.city}
-		                    <div class="profiletxtCantant">
-		                      	<div class="profileCantanttxt1">
-			                      	<strong>Location:</strong> <span class="Profilepersonsub">${talker.state}, ${talker.city}</span>
+							
+							#{ifnot talker.isProf()}
+								<div class="Profileperson">Personal Info</div>
+			                    <div class="topicborder"></div>
+			                    #{if talker.state && talker.city}
+			                    <div class="profiletxtCantant">
+			                      	<div class="profileCantanttxt1">
+				                      	<strong>Location:</strong> <span class="Profilepersonsub">${talker.state}, ${talker.city}</span>
+				                    </div>
 			                    </div>
-		                    </div>
-		                    #{/if}
-		                    #{if talker.age}
-		                    <div class="profiletxtCantant">
-		                      <div class="profileCantanttxt1">
-		                      	<strong>Age:</strong> <span class="Profilepersonsub">${talker.age}</span>
-		                      </div>
-		                    </div>
-		                    #{/if}
-		                    #{if talker.fullGender}
-		                    <div class="profiletxtCantant">
-		                    	<div class="profileCantanttxt1">
-			                      	<strong>Gender:</strong> <span class="Profilepersonsub">${talker.fullGender}</span>
+			                    #{/if}
+			                    #{if talker.age}
+			                    <div class="profiletxtCantant">
+			                      <div class="profileCantanttxt1">
+			                      	<strong>Age:</strong> <span class="Profilepersonsub">${talker.age}</span>
+			                      </div>
 			                    </div>
-			                </div>
-			                #{/if}
-			                #{if talker.maritalStatus}
-			                <div class="profiletxtCantant">
-		                    	<div class="profileCantanttxt1">
-		                      		<strong>Marital Status:</strong> <span class="Profilepersonsub">${talker.maritalStatus}</span>
-		                        </div>
-			                </div>
-			                #{/if}
-			                #{if talker.childrenNum != -1}
+			                    #{/if}
+			                    #{if talker.fullGender}
 			                    <div class="profiletxtCantant">
 			                    	<div class="profileCantanttxt1">
-				                      	<strong>Number of children:</strong><span class="Profilepersonsub"> ${talker.childrenNum}</span>
+				                      	<strong>Gender:</strong> <span class="Profilepersonsub">${talker.fullGender}</span>
 				                    </div>
 				                </div>
-			                #{/if}
-			                #{if talker.childrenAges}
-			                <div class="profiletxtCantant">
-		                    	<div class="profileCantanttxt1">
-			                      	<strong>Ages of children:</strong>
-		                      		<span class="Profilepersonsub"> ${talker.childrenAges?.toCommaStringView()}</span>
-			                    </div>
-			                </div>
-			                #{/if}
-			                #{if talker.webpage}
-			                <div class="profiletxtCantant">
-		                    	<div class="profileCantanttxt1">
-		                      	<strong>Webpage:</strong><span class="Profilepersonsub"> ${talker.webpage}</span>
-		                      </div>
-			                </div>
-			                #{/if}
-			                #{if talker.keywords}
-			                <div class="profiletxtCantant">
-		                    	<div class="profileCantanttxt1">
-		                      	<strong>Ask me about:</strong>
-		                      	<span class="Profilepersonsub"> ${talker.keywords?.toCommaStringView()}</span>
-		                      </div>
-			                </div>
-			                #{/if}
+				                #{/if}
+				                #{if talker.maritalStatus}
+				                <div class="profiletxtCantant">
+			                    	<div class="profileCantanttxt1">
+			                      		<strong>Marital Status:</strong> <span class="Profilepersonsub">${talker.maritalStatus}</span>
+			                        </div>
+				                </div>
+				                #{/if}
+				                #{if talker.childrenNum != -1}
+				                    <div class="profiletxtCantant">
+				                    	<div class="profileCantanttxt1">
+					                      	<strong>Number of children:</strong><span class="Profilepersonsub"> ${talker.childrenNum}</span>
+					                    </div>
+					                </div>
+				                #{/if}
+				                #{if talker.childrenAges}
+				                <div class="profiletxtCantant">
+			                    	<div class="profileCantanttxt1">
+				                      	<strong>Ages of children:</strong>
+			                      		<span class="Profilepersonsub"> ${talker.childrenAges?.toCommaStringView()}</span>
+				                    </div>
+				                </div>
+				                #{/if}
+				                #{if talker.webpage}
+				                <div class="profiletxtCantant">
+			                    	<div class="profileCantanttxt1">
+			                      	<strong>Webpage:</strong><span class="Profilepersonsub"> ${talker.webpage}</span>
+			                      </div>
+				                </div>
+				                #{/if}
+				                #{if talker.keywords}
+				                <div class="profiletxtCantant">
+			                    	<div class="profileCantanttxt1">
+			                      	<strong>Ask me about:</strong>
+			                      	<span class="Profilepersonsub"> ${talker.keywords?.toCommaStringView()}</span>
+			                      </div>
+				                </div>
+				                #{/if}
+							#{/ifnot}
 					#{/if}
 					
-					#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.HEALTH_INFO) && talkerDisease }
+					#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.HEALTH_INFO) && talkerDisease && !talker.isProf() }
 							#{if talkerDisease.healthBio }
 								<div class="profilebio">Health Bio</div>
 		                    	<div class="topicborder"></div>

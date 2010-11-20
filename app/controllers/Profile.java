@@ -129,8 +129,18 @@ public class Profile extends Controller {
             return;
         }
 		
-		if (TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(oldTalker.getConnection())) {
-			//TODO: username, birthday, etc.
+		if (!StringUtils.equals(oldTalker.getBio(), talker.getBio())) {
+			ActionDAO.saveAction(new UpdateProfileAction(oldTalker, ActionType.UPDATE_BIO));
+		}
+		
+		if (oldTalker.isProf()) {
+			//TODO: check all notifications/
+			oldTalker.setUserName(talker.getUserName());
+			oldTalker.setDob(dateOfBirth);
+			oldTalker.setGender(talker.getGender());
+			oldTalker.setProfStatement(talker.getProfStatement());
+			oldTalker.setWebpage(talker.getWebpage());
+			oldTalker.setBio(talker.getBio());
 			
 			Map<String, String> profInfo = new HashMap<String, String>();
 			
@@ -141,19 +151,16 @@ public class Profile extends Controller {
 					//profile info parameter
 					String value = param.getValue();
 					if (value != null && value.equals("(separate by commas if multiple)")) {
-						value = "";
+						value = null;
 					}
+					
 					profInfo.put(param.getKey().substring(3), value);
 				}
 			}
 			oldTalker.setProfInfo(profInfo);
 			
-			CommonUtil.updateTalker(oldTalker, session);
 		}
 		else {
-			if (!StringUtils.equals(oldTalker.getBio(), talker.getBio())) {
-				ActionDAO.saveAction(new UpdateProfileAction(oldTalker, ActionType.UPDATE_BIO));
-			}
 			
 			//check if any fields were changed
 			if ( !(
@@ -197,12 +204,11 @@ public class Profile extends Controller {
 //				vars.put("verify_code", oldTalker.getVerifyCode());
 //				EmailUtil.sendEmail(EmailTemplate.VERIFICATION, oldTalker.getEmail(), vars, null, false);
 //			}
-			
-			CommonUtil.updateTalker(oldTalker, session);
-			
-			if (!oldUserName.equals(talker.getUserName())) {
-				ApplicationDAO.createURLName(talker.getUserName());
-			}
+		}
+		
+		CommonUtil.updateTalker(oldTalker, session);
+		if (!oldUserName.equals(talker.getUserName())) {
+			ApplicationDAO.createURLName(talker.getUserName());
 		}
 		
 //		if (!StringUtils.equals(oldTalker.getConnection(), talker.getConnection())) {

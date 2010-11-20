@@ -1,22 +1,48 @@
 <div class="personalmain">
-	<div class="personaltextarea"><span class="blacktext14">${_des}</span></div>
-	<div class="personaltextfield">
-		#{if _type.equals("text") }
-			<input name="pr_${_name}" type="text" class="personalfields" value="${_profInfo.get(_name)}" />
-		#{/if}
-		#{elseif _type.equals("text_multiple") }
-			<input name="pr_${_name}" type="text" class="personalfields" 
-				onclick="if (this.value == '(separate by commas if multiple)') this.value=''"
-				value="${_profInfo.get(_name) == null ? '(separate by commas if multiple)' : _profInfo.get(_name)}" />
-		#{/elseif}
-		#{elseif _type.equals("select") }
-			<select name="pr_${_name}" class="personalfields">
-				#{list items: logic.TalkerLogic.getFieldsData(_name, _talkerType), as:'val'}
-				 		<option value="${val}" 
-				    		#{if val.equals(_profInfo.get(_name)) } selected #{/if} 
-				    		>${val}</option>
-				#{/list}
-			</select>
-		#{/elseif}
+	<div class="personaltextarea">
+		<span class="blacktext14">
+			${_des.raw()}
+			#{if _note}
+				<br/>
+				<span class="footerlink" style="line-height: 7px;">${_note}</span>
+			#{/if}
+		</span>
 	</div>
+	#{if _type.equals("textarea_multiple") || _type.equals("textarea")  }
+		<div class="textareabig">
+			#{if _type.equals("textarea_multiple")}
+				<textarea name="pr_${_name}" cols="45" rows="5" class="textarea3"
+					onclick="if (this.value == '(separate by commas if multiple)') this.value=''"
+					>${_profInfo.get(_name) ? _profInfo.get(_name) : '(separate by commas if multiple)'}</textarea>
+			#{/if}
+			#{else}
+				<textarea name="pr_${_name}" cols="45" rows="5" class="textarea3">${_profInfo.get(_name)}</textarea>
+			#{/else}
+		</div>
+	#{/if}
+	#{else}
+		<div class="personaltextfield">
+			#{if _type.equals("text") }
+				<input name="pr_${_name}" type="text" class="personalfields" value="${_profInfo.get(_name)}" />
+			#{/if}
+			#{elseif _type.equals("text_multiple") }
+				<input name="pr_${_name}" type="text" class="personalfields" 
+					onclick="if (this.value == '(separate by commas if multiple)') this.value=''"
+					value="${_profInfo.get(_name) ? _profInfo.get(_name) : '(separate by commas if multiple)'}" />
+			#{/elseif}
+			#{elseif _type.equals("select") }
+				<select name="pr_${_name}" class="personalfields">
+					#{list items: logic.TalkerLogic.getFieldsData(_name, _talkerType), as:'val'}
+					 		<option value="${val}" 
+					    		#{if val.equals(_profInfo.get(_name)) } selected #{/if} 
+					    		>${val}</option>
+					#{/list}
+				</select>
+			#{/elseif}
+		</div>
+	#{/else}
+	
+	
+						
 </div>
+

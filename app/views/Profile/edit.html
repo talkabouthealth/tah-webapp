@@ -133,9 +133,17 @@
             	<img src="/public/images/close.jpg" alt="Close" /></div>
           </div>
           <div class="note">
-		  	<strong>Email verified successfully. Thank you.</strong><br/><br/>
-		  	Please tell us more about you so that we can match you for conversations most relevant to you.
-		  	Also, other community members with similar concerns can find and connect with you.
+          	#{if talker.isProf()}
+          		<strong>Email verified successfully.  Thank you.</strong><br/><br/>
+				Please tell us more about you so that we can personalize your experience and recommend topics and conversations. 
+				As well, this enables community members to find you and follow your answers and comments if you choose.  
+				Providing profile information is optional.
+          	#{/if}
+          	#{else}
+          		<strong>Email verified successfully. Thank you.</strong><br/><br/>
+			  	Please tell us more about you so that we can match you for conversations most relevant to you.
+			  	Also, other community members with similar concerns can find and connect with you.
+          	#{/else}
 		  	<br/>
 		  	<br/>
           </div>
@@ -156,18 +164,35 @@
             	<img src="/public/images/close.jpg" alt="Close" /></div>
           </div>
           <div class="note">
-		  	<strong>Why provide profile information?</strong><br/>
-		  	- We can match you for questions and talks most relevant to you.<br/>
-		  	- Enables other members with similar concerns to find and connect with you.<br/>
-		  	- The more information everyone in the community shares, the more we help each other.<br/>
+          	#{if talker.isProf()}
+          		<strong>Why provide profile information?</strong><br/>
+				- We can personalize your experience and recommend topics and conversations most relevant to you.<br/>
+				- Enables community members to find you based on location, health concerns, specialty, etc.<br/>
+				- The more information everyone in the community shares, the more we help each other.<br/>
+				<br/>
+				<strong>Username visibility.</strong><br/>
+				Your username will be visible to other members. 
+				If you want to remain anonymous, please make your username different than your real name.<br/>
+				<br/>
+				<strong>Is the other profile information I provide private?</strong><br/>
+				Yes. By default, the information you provide is private, including your photo. 
+				You may make your profile viewable to the community by changing you <a href="@{Profile.preferences()}">Privacy Settings</a>.
+          	#{/if}
+          	#{else}
+          		<strong>Why provide profile information?</strong><br/>
+			  	- We can match you for questions and talks most relevant to you.<br/>
+			  	- Enables other members with similar concerns to find and connect with you.<br/>
+			  	- The more information everyone in the community shares, the more we help each other.<br/>
+			  	<br/>
+			  	<strong>Username visibility.</strong><br/>
+			  	Your username will be visible to other members. 
+			  	If you want to remain anonymous, please make your username different than your real name.<br/>
+			  	<br/>
+			  	<strong>Is the other profile information I provide private?</strong><br/>
+			  	Yes. By default, the information you provide is private.
+			  	You may make your profile viewable by the community by changing your <a href="@{Profile.preferences()}">Privacy Settings</a>.
+          	#{/else}
 		  	<br/>
-		  	<strong>Username visibility.</strong><br/>
-		  	Your username will be visible to other members. 
-		  	If you want to remain anonymous, please make your username different than your real name.<br/>
-		  	<br/>
-		  	<strong>Is the other profile information I provide private?</strong><br/>
-		  	Yes. By default, the information you provide is private.
-		  	You may make your profile viewable by the community by changing your <a href="@{Profile.preferences()}">Privacy Settings.</a><br/>
 		  	<br/>
           </div>
           <div class="cb"></div>
@@ -243,11 +268,18 @@
 						</span>
 						<span class="blacktext14"><strong><br /><br />Why provide more information?</strong></span>
 						<span class="blacktext12"><br />
-						Filling in your profile information enables us to match you with 
-						questions and talks most relevant to you. <br/><br/>
-						The more information you provide, the more likely other members with similar concerns will find and connect with you.
-						<br /><br />
-						The more information everyone in the community shares, the more we help each other.
+							#{if talker.isProf()}
+				          		Providing your profile information enables us to personalize your experience 
+				          		and recommend topics and conversations most relevant to you.<br/><br/>
+				          		The more information everyone in the community shares, the more we help each other.
+				          	#{/if}
+				          	#{else}
+				          		Filling in your profile information enables us to match you with 
+								questions and talks most relevant to you. <br/><br/>
+								The more information you provide, the more likely other members with similar concerns will find and connect with you.
+								<br /><br />
+								The more information everyone in the community shares, the more we help each other.
+				          	#{/else}
 						</span>
 						<span class="blacktext14"><strong><br />
 						<br />Is the information I provide private?</strong></span>

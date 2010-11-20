@@ -2,7 +2,113 @@
 MD
 DO
 
----specialties|Physician
+---credentials|Nurse
+APN
+RN
+LPN
+
+---credentials|Pharmacist
+BS
+PharmD
+
+---credentials|Researcher
+MS
+PhD
+
+---credentials|Psychologist
+MA/MS
+MSW
+MSC
+DMFT
+Lpsy
+PsyD
+PhD
+
+---licenses|Psychologist
+CASAC
+LMFT
+LCSW
+LMSW
+CRC
+LMHC
+LPC
+LPC-BE
+
+---prim_specialty|Physician
+Allergy and Immunology
+Anesthesiology
+Cardiology - Electrophysiology
+Cardiology - Interventional
+Critical Care
+Dentistry
+Dermatology
+Ear-Nose-Throat (ENT)
+Emergency Med - Pediatrics
+Emergency Med - Toxicology
+Emergency Medicine
+Endocrinology
+Family Medicine
+Gastroenterology
+General Practitioner (Primary Care)
+Geriatrics
+Hospice / Palliative Care
+Hematology
+Hospitalist
+Infectious Diseases
+Internal Medicine
+Med/Peds
+Nephrology
+Neurology
+Neurosurgery
+OBGYN - Obstetrics-Gynecology
+OBGYN - Gynecologic Oncology
+OBGYN - Maternal and Fetal Med
+OBGYN - Reproductive Medicine
+Oncology - Hematology/Oncology
+Oncology - Radiation
+Ophthalmology (Eyes)
+Orthopaedic
+Orthopaedic - Hand Surgery
+Orthopaedic - Sports Medicine
+Osteopathy
+Otalaryngology
+Otalaryngology - Pediatric
+Pain Medicine
+Pathology
+Pediatrics
+Pediatrics - Adolescents
+Pediatrics - Cardiology
+Pediatrics - Critical Care
+Pediatrics - Endocrinology
+Pediatrics - Gastroenterology
+Pediatrics - Hematology/Oncology
+Pediatrics - Infectious Disease
+Pediatrics - Nephrology
+Pediatrics - Neurology
+Pediatrics- Pulmonology
+Physical Medicine and Rehab
+Podiatrist
+Psychiatry
+Psychiatry - child
+Psychology
+Pulmonology
+Radiology
+Radiology - Interventional
+Radiology - Nuclear Medicine
+Radiology - Pediatric
+Rheumatology
+Surgery - Colon and Rectal
+Surgery - General
+Surgery - Plastic
+Surgery - Surgical Oncology
+Surgery - Thoracic
+Surgery - Transplant
+Surgery - Vascular
+Urology
+Urology - Pediatric
+Women's Health
+
+---sec_specialty|Physician
 Allergy and Immunology
 Anesthesiology
 Cardiology - Electrophysiology
@@ -248,4 +354,103 @@ Western Health Advantage
 Workers' Compensation
 Zenith
 Zurich
+
+---specialty|Nurse
+Ambulatory care
+Advanced practice
+Behavioral health
+Burn
+Camp
+Cardiac
+Cardiac catheter laboratory
+Case management
+Certified Managed Care
+Clinical nurse specialist
+Clinical research
+Community health
+Correctional
+Critical care
+Developmental disabilities
+District
+Emergency
+Environmental Health
+Flight
+Forensic
+Gastroenterology
+Genetics
+Geriatric
+Hematology oncology
+HIV/AIDS
+Home health
+Hospice
+Hyperbaric Oxygen Therapy
+Immunology and Allergy
+Intavenous therapy
+Infectious disease
+Legal
+Legal Nurse Investigator
+Maternal-child
+Matron
+Medical-surgical
+Medical Device Regulation
+Military and uniformed services
+Neonatal
+Neuro-surgical
+Nurse anesthetist
+Nurse-midwife
+Nurse practitioner
+Nursing educator
+Nursing informatics
+Nursing management
+Obstetrics gynecology
+Occupational health
+Oncology
+Operating room
+Orthopaedic
+Ostomy
+Pain management and palliative care
+Pediatric
+Perianesthesia
+Perioperative
+Plastic and reconstructive surgical
+Private duty
+Psychiatric or mental health
+Public health
+Pulmonary
+Quality improvement
+Radiology
+Rehabilitation
+Renal dialysis
+Renal
+Sub-acute
+Substance abuse
+Surgical
+Telenursing
+Telemetry
+Telephone triage
+Transplantation
+Trauma
+Travel
+Urology
+Utilization management
+Wound care
+
+---specialty|Pharmacist
+Ambulatory Care
+Nuclear Pharmacy
+Nutrition Support
+Oncology
+Pharmacotherapy
+Psychiatric
+
+---specialty|Psychologist
+Child and adolescent
+Family and relationship counseling
+Forensic
+Health
+Neuropsychological disorders
+Organization and business
+School
+Specific disorder (e.g. trauma, addiction, eating, sleep, sex, clinical depression, anxiety, or phobias)
+Sport
 
