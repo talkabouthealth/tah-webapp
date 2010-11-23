@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import logic.FeedsLogic;
 import logic.TalkerLogic;
 import models.CommentBean;
 import models.DiseaseBean;
@@ -183,19 +184,51 @@ public class PublicProfile extends Controller {
 		
 		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
 		
-		//TODO: filter already followed topics
-		//TODO: prof doesn't have HealthInfo
+		List<TopicBean> recommendedTopics = loadRecommendedTopics(talker, talkerDisease, null);
+		
+		render(talker, currentTalker, talkerDisease, recommendedTopics);
+	}
+	
+	public static void recommendedTopicsAjaxLoad(String afterId) {
+		//FIXME: improve speed?
+    	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
+    	TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(_talker.getId());
+    	
+    	List<TopicBean> _recommendedTopics = loadRecommendedTopics(_talker, talkerDisease, afterId);
+    	
+    	render("tags/recommendedTopicsList.html", _recommendedTopics, _talker);
+    }
+	
+	private static List<TopicBean> loadRecommendedTopics(TalkerBean talker, 
+			TalkerDiseaseBean talkerDisease, String afterId) {
 		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();
-		if (talkerDisease != null) {
-			recommendedTopics = TalkerLogic.getRecommendedTopics(talkerDisease);
+		
+		List<TopicBean> loadedTopics = new ArrayList<TopicBean>();
+		if (!talker.isProf() && talkerDisease != null) {
+			loadedTopics = TalkerLogic.getRecommendedTopics(talkerDisease);
 		}
 		if (recommendedTopics.isEmpty()) {
 			//display most popular Topics based on number of questions
-			//FIXME correct it
-			recommendedTopics = new ArrayList<TopicBean>(TopicDAO.loadAllTopics());
+			loadedTopics = new ArrayList<TopicBean>(TopicDAO.loadAllTopics());
 		}
 		
-		render(talker, currentTalker, talkerDisease, recommendedTopics);
+		final int numberOfPages = 10;
+		boolean canAdd = (afterId == null);
+		for (TopicBean topic : loadedTopics) {
+			if (canAdd && !talker.getFollowingTopicsList().contains(topic)) {
+				recommendedTopics.add(topic);
+			}
+			
+			if (topic.getId().equals(afterId)) {
+				canAdd = true;
+			}
+			
+			if (recommendedTopics.size() == numberOfPages) {
+				break;
+			}
+		}
+		
+		return recommendedTopics;
 	}
 	
 }

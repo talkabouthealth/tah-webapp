@@ -1,0 +1,21 @@
+#{list items: _recommendedTopics, as: 'topic'}
+	<div id="${topic.id}" class="topicfoltxtCover">
+		<div class="topicfoltxt1">
+			<a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a>
+		</div>
+		<div class="topicfoltxt2" style="margin-right: 250px;">
+			#{set isFollowingTopic = _talker.getFollowingTopicsList().contains(topic) /}
+			<div id="topicUnfollowDiv${topic.id}" style="display : ${ isFollowingTopic ? 'block' : 'none' }">
+				<img class="topicfolright" alt="right" src="/public/images/right.jpg"/>
+				<div class="topicfoltxtsub1">Following</div>
+				<input type="submit" rel="${topic.id}" value=" " 
+					class="unfollowz unfollowTopicLink" src="/public/images/unfollowz.jpg"/>
+			</div>
+			<div id="topicFollowDiv${topic.id}" style="display : ${ !isFollowingTopic ? 'block' : 'none' }">
+				<input type="submit" rel="${topic.id}" value=" " 
+					class="topiczfollow followTopicLink" src="/public/images/ppfollow.jpg" />
+			</div>
+		</div>
+		<div class="cb"></div>
+	</div>
+#{/list} 

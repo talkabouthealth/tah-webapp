@@ -63,6 +63,25 @@
 				}
 			);
 		}
+
+		function loadMoreTopics() {
+			var lastId = $("#recommendedTopics").children().last().attr("id");
+
+			//public static void conversationFeedAjax(String afterActionId) {
+			$.get("/publicprofile/recommendedTopicsAjaxLoad", {afterId: lastId},
+				function(data) {
+					var feedSize = $(data).find(".topicfoltxt1").size();
+					if (feedSize < 10) {
+						//no more topics - hide 'More' link
+						$("#recommendedTopicsBtn").hide();
+					}
+					
+					$(data).appendTo($("#recommendedTopics"));
+				}
+			);
+			
+			return false;
+		}
 	</script>
 		
 <div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
@@ -174,28 +193,15 @@
 	#{/if}
 	
 	
-	#{list items: recommendedTopics.limit(10), as: 'topic'}
-		<div class="topicfoltxtCover">
-			<div class="topicfoltxt1">
-				<a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a>
-			</div>
-			<div class="topicfoltxt2" style="margin-right: 250px;">
-				#{set isFollowingTopic = currentTalker.getFollowingTopicsList().contains(topic) /}
-				<div id="topicUnfollowDiv${topic.id}" style="display : ${ isFollowingTopic ? 'block' : 'none' }">
-					<img class="topicfolright" alt="right" src="/public/images/right.jpg"/>
-					<div class="topicfoltxtsub1">Following</div>
-					<input type="submit" rel="${topic.id}" value=" " 
-						class="unfollowz unfollowTopicLink" src="/public/images/unfollowz.jpg"/>
-				</div>
-				<div id="topicFollowDiv${topic.id}" style="display : ${ !isFollowingTopic ? 'block' : 'none' }">
-					<input type="submit" rel="${topic.id}" value=" " 
-						class="topiczfollow followTopicLink" src="/public/images/ppfollow.jpg" />
-				</div>
-			</div>
-			<div class="cb"></div>
-		</div>
-	#{/list} 
-	<input type="submit" style="margin-top: 25px;" class="seemorecom" value=" " src="images/seemore.jpg"/>
+	<div id="recommendedTopics">
+		#{ recommendedTopicsList recommendedTopics: recommendedTopics, talker: currentTalker /}
+	</div>
+	#{if recommendedTopics.size() == 10 }
+		<input id="recommendedTopicsBtn" type="submit" style="margin-top: 25px;" 
+			onclick="return loadMoreTopics();"
+			class="seemorecom" value=" " src="images/seemore.jpg"/>
+	#{/if}
+	
 	
 #{/if}
 				

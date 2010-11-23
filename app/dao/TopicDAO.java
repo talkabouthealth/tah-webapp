@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -132,9 +133,9 @@ public class TopicDAO {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("deleted", new BasicDBObject("$ne", true));
-		List<DBObject> topicsDBList = topicsColl.find(query).toArray();
+		List<DBObject> topicsDBList = topicsColl.find(query).sort(new BasicDBObject("views", -1)).toArray();
 		
-		Set<TopicBean> topicsSet = new HashSet<TopicBean>();
+		Set<TopicBean> topicsSet = new LinkedHashSet<TopicBean>();
 		for (DBObject topicDBObject : topicsDBList) {
 			TopicBean topic = new TopicBean();
 			topic.parseBasicFromDB(topicDBObject);
