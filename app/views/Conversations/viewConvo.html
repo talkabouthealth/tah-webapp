@@ -377,7 +377,7 @@
 									<div class='inline-edit' id="detailsEdit">
 										<div class="suggestxt inline_display">
 											<div class="inline_full" style="display: ${convo.details ? 'block' : 'none'}">
-												<p style="display: inline; padding-top:10px;" class="inline_view">${convo.details}</p>
+												<p style="display: inline; padding-top:10px;" class="inline_view">${convo.details.nl2br()}</p>
 												#{if talker }
 													<span class="editit2" style="float: none;">
 														<a href="#" class="inline_editlink">Edit</a>

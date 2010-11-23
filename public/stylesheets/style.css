@@ -2202,14 +2202,14 @@ padding-top:30px;
 /*----------------------------------Conversation Summary---------------------------------*/
 .tagtxts {
 	font-size:12px;
-	color:#0286bc;
+	color:#555555;
 	font-weight:normal;
 	text-align:left;
 	padding-top:10px;
 	clear:both
 }
 .tagtxts a {
-	color:#0286bc;
+	color:#555555;
 	text-decoration:none
 }
 .tagtxts a:hover {
@@ -2514,7 +2514,7 @@ padding-top:30px;
 	background:url(../images/replymid.jpg);
 	background-position:left bottom;
 	*/
-	width:550px;
+	width:640px;
 	padding-left:10px;
 	padding-right:10px;
 }
@@ -2721,7 +2721,6 @@ width:auto;
 	text-decoration:underline;
 }
 .styles2 {
-	float: left;
 	color:#000000;
 	text-align:left;
 	line-height:20px;
@@ -2745,9 +2744,9 @@ width:auto;
 	text-decoration:underline;
 }
 .sstyles3 {
-	color: #0286bc;
+	color: #555555;
 	clear:both;
-	font-size:11px;
+	font-size:12px;
 }
 .sstyles3 ul {
 	padding:0;
@@ -2762,7 +2761,7 @@ width:auto;
 	width:auto;
 }
 .sstyles3 li a {
-	color:#0286BC;
+	color:#555555;
 	text-decoration:none;
 }
 .sstyles3 li a:hover {
@@ -2770,7 +2769,7 @@ width:auto;
 	text-decoration:underline;
 }
 .sstyles3 a {
-	color: #0286bc;
+	color: #555555;
 	text-decoration:none;
 }
 .stylzz {

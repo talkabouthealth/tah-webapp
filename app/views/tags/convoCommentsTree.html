@@ -40,17 +40,15 @@
 					 						#{answerVotesInfo votes: comment.upVotes /}
 										</div>
 						 				
-										<div class='inline-edit' id="answerEdit${comment.id}">
+										<div class='inline-edit' id="answerEdit${comment.id}" style="padding: 7px 0;">
 											<div class="suggestxt inline_display">
 												<div class="inline_full inline_empty">
 													<span class="styles2 inline_view ${ _level == 1 ? 'styles2answers' : 'styles2replies'}"
 														>${comment.text.nl2br()}</span>
 													#{if session.username?.equals(comment.fromTalker.userName) }
-														<div class="editdiv">
-															<div class="editit">
-																<a href="#" class="inline_editlink">Edit</a>
-															</div>
-														</div>
+														<span class="editit2" style="float: none;">
+															<a href="#" class="inline_editlink">Edit</a>
+														</span>
 													#{/if}
 												</div>
 								            </div>

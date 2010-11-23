@@ -22,7 +22,7 @@
             <div class="askinputCover">
 				<textarea id="newConvoTitle" class="askkinput" cols="4" rows="4" 
 					onKeyDown="limitText(this, titleLimit);" onKeyUp="limitText(this, titleLimit);" 
-					onclick="if (this.value == 'Enter your question or request here.') this.value=''" 
+					onfocus="if (this.value == 'Enter your question or request here.') this.value=''" 
 			        onblur="if (this.value == '') this.value='Enter your question or request here.'"	
 				>Enter your question or request here.</textarea>
             </div>
@@ -33,7 +33,7 @@
           <div class="askheadingCover">
             <div class="askinputCover">
               <textarea id="newConvoDetails" class="askinput2" 
-                onclick="if (this.value == 'For example. Will the stage of disease, current medications, or patient history help to answer the question?') this.value=''"                 
+                onfocus="if (this.value == 'For example. Will the stage of disease, current medications, or patient history help to answer the question?') this.value=''"                 
               	cols="4" rows="3">For example. Will the stage of disease, current medications, or patient history help to answer the question?</textarea>
             </div>
           </div>

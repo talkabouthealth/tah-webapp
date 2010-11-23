@@ -164,9 +164,11 @@
 #{/else}				
 
 #{if talker.equals(currentTalker) }
-	<div class="topicfolth1" style="padding-top: 50px; padding-bottom: 10px;">
+	<div class="topicfolth1" style="padding-top: 50px;">
        	Recommended Topics for you
     </div>
+    <div class="topicborder"></div>
+    <div class="topicborder" style="margin-bottom: 10px;"></div>
     #{if talkerDisease == null}
 		Please fill out your <a href="@{Profile.healthDetails()}">Health Information</a> so that we can recommend Topics most relevant to you.
 	#{/if}
@@ -193,7 +195,7 @@
 			<div class="cb"></div>
 		</div>
 	#{/list} 
-	<input type="submit" style="margin-top: 10px;" class="seemorecom" value=" " src="images/seemore.jpg"/>
+	<input type="submit" style="margin-top: 25px;" class="seemorecom" value=" " src="images/seemore.jpg"/>
 	
 #{/if}
 				
