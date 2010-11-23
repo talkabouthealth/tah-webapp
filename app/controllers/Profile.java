@@ -552,9 +552,12 @@ public class Profile extends Controller {
 		talkerDisease.setDiagnoseDate(diagnoseDate);
 		
 		//Automatically follow topics based on HealthInfo
-		//Let's only have this happen the first time they save their Health Info.
+		//Let's only have this happen the first session the user updates their Health Info
 		if (TalkerDiseaseDAO.getByTalkerId(talker.getId()) == null) {
-			
+			session.put("firstHealthInfo", true);
+		}
+		
+		if (session.contains("firstHealthInfo")) {
 			List<TopicBean> recommendedTopics = TalkerLogic.getRecommendedTopics(talkerDisease);
 			if (!recommendedTopics.isEmpty()) {
 				for (TopicBean topic : recommendedTopics) {

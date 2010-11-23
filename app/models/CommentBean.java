@@ -115,6 +115,14 @@ public class CommentBean extends MessageBean {
 		return id.equals(other.id);
 	}
 	
+	@Override
+	public int hashCode() {
+		if (id == null) {
+			return 47;
+		}
+		return id.hashCode();
+	}
+	
 	public void parseBasicFromDB(DBObject commentDBObject) {
 		if (commentDBObject == null) {
 			return;

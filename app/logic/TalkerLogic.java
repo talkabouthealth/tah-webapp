@@ -17,6 +17,7 @@ import models.HealthItemBean;
 import models.TalkerBean;
 import models.TalkerDiseaseBean;
 import models.TopicBean;
+import models.ConversationBean.ConvoType;
 import models.actions.Action;
 import models.actions.Action.ActionType;
 
@@ -46,12 +47,12 @@ public class TalkerLogic {
 			"So we can match you with Members, Topics, and Conversations most relevant to you."),
 		UPDATE_PERSONAL(10, 
 			"Update your <a href='"+CommonUtil.generateAbsoluteURL("Profile.edit")+"'>Profile Info</a>",
-			"So other members similar to you can find you."
+			"So other member similar to you can find you if you choose."
 			),
 		VIEW_PRIVACY(10,
 			"Update your <a href='"+CommonUtil.generateAbsoluteURL("Profile.preferences")+"'>Privacy Settings</a>",
-			"So other members can find and reach out to you."),
-		START_CONVO(10, "Ask a <a href='#' onclick='return showQuestionDialog();'>Question</a>"),
+			"So other member similar to you can find and reach out to you if you choose."),
+		ASK_QUESTION(10, "Ask a <a href='#' onclick='return showQuestionDialog();'>Question</a>"),
 		COMMENT_CONVO(10, "Answer a <a href='"+CommonUtil.generateAbsoluteURL("Explore.openQuestions")+"'>Question</a>"),
 		GIVE_THANKYOU(10, "Give a Thank you"),
 		COMMENT_THOUGHTS(5, "Comment in your <a href='"+
@@ -59,7 +60,7 @@ public class TalkerLogic {
 		FOLLOW(5, "Follow <a href='"+
 				CommonUtil.generateAbsoluteURL("Community.browseMembers", "action", "active")+"'>another member</a>"),
 		FOLLOW_TOPIC(5, "Follow a <a href='"+CommonUtil.generateAbsoluteURL("Explore.browseTopics")+"'>Topic</a>"),
-		JOIN_CONVO(5, "Join a <a href='"+CommonUtil.generateAbsoluteURL("Explore.liveTalks")+"'>Live Talk</a>");
+		START_OR_JOIN_TALK(5, "Start or join a <a href='"+CommonUtil.generateAbsoluteURL("Explore.liveTalks")+"'>Live Talk</a>");
 		
 		
 		private final int value;
@@ -111,10 +112,15 @@ public class TalkerLogic {
 			ActionType type = action.getType();
 			switch (type) {
 			case START_CONVO:
-				profileActions.add(ProfileCompletion.START_CONVO);
+				if (action.getConvo().getConvoType() == ConvoType.CONVERSATION) {
+					profileActions.add(ProfileCompletion.START_OR_JOIN_TALK);
+				}
+				else {
+					profileActions.add(ProfileCompletion.ASK_QUESTION);
+				}
 				break;
 			case JOIN_CONVO:
-				profileActions.add(ProfileCompletion.JOIN_CONVO);
+				profileActions.add(ProfileCompletion.START_OR_JOIN_TALK);
 				break;
 			case ANSWER_CONVO:
 				profileActions.add(ProfileCompletion.COMMENT_CONVO);

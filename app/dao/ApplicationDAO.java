@@ -74,7 +74,9 @@ public class ApplicationDAO {
 			talker.setId(getString(talkerDBObject, "_id"));
 			if (!activeTalkers.contains(talker)) {
 				talker.parseBasicFromDB(talkerDBObject);
-				activeTalkers.add(talker);
+				if (!talker.isSuspended()) {
+					activeTalkers.add(talker);
+				}
 			}
 		}
 		
@@ -102,7 +104,9 @@ public class ApplicationDAO {
 			
 			if (!activeTalkers.contains(talker)) {
 				talker.parseBasicFromDB(talkerDBObject);
-				activeTalkers.add(talker);
+				if (!talker.isSuspended()) {
+					activeTalkers.add(talker);
+				}
 			}
 		}
 		
