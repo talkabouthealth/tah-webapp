@@ -87,7 +87,7 @@
 	#{if talker.followingTopicsList.size() == 0 }
 		Currently no Topics being followed.<br/>
 	#{/if}
-	#{if talker.equals(currentTalker) && talkerDisease == null}
+	#{if talker.equals(currentTalker) && !talker.isProf() && talkerDisease == null}
 		Please fill out your <a href="@{Profile.healthDetails()}">Health Information</a> so that we can recommend Topics most relevant to you.
 	#{/if}
                   
@@ -169,7 +169,7 @@
     </div>
     <div class="topicborder"></div>
     <div class="topicborder" style="margin-bottom: 10px;"></div>
-    #{if talkerDisease == null}
+    #{if talkerDisease == null && !talker.isProf()}
 		Please fill out your <a href="@{Profile.healthDetails()}">Health Information</a> so that we can recommend Topics most relevant to you.
 	#{/if}
 	

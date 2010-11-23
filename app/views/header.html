@@ -93,7 +93,9 @@
 		                <a class="libull" href="#">Settings</a>
 		                <ul>
 		                  <li><a href="@{Profile.edit()}">Edit Profile and Password</a></li>
-		                  <li><a href="@{Profile.healthDetails()}">Edit Health Info</a></li>
+		                  #{ifnot session.prof }
+		                  	<li><a href="@{Profile.healthDetails()}">Edit Health Info</a></li>
+		                  #{/ifnot}
 		                  <li><a href="@{Profile.notifications()}">Notification Settings</a></li>
 		                  <li><a href="@{Profile.preferences()}">Privacy Settings</a></li>
 		                </ul>

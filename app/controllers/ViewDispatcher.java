@@ -150,8 +150,10 @@ public class ViewDispatcher extends Controller {
 			for (Action action : talker.getActivityList()) {
 				userActionTypes.add(action.getType());
 			}
-			if (!userActionTypes.contains(ActionType.UPDATE_PERSONAL)
-					|| !userActionTypes.contains(ActionType.UPDATE_HEALTH)) {
+			if (!userActionTypes.contains(ActionType.UPDATE_PERSONAL)) {
+				notProvidedInfo = true;
+			}
+			if (talker.isProf() && !userActionTypes.contains(ActionType.UPDATE_HEALTH)) {
 				notProvidedInfo = true;
 			}
 			

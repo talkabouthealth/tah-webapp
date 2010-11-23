@@ -322,10 +322,17 @@
 							#{if flash.success}
 								<span class="success savednote">
 									Changes saved!<br/>
-									<span style="color: black; font-weight: bold;">
-										Next step: Update your <a href="@{Profile.edit()}">Profile</a> and
-										<a href="@{Profile.healthDetails()}">Health</a> Information.
-									</span>
+									#{if talker.isProf() }
+								    	<span style="color: black; font-weight: bold;">
+											Next step: Update your <a href="@{Profile.edit()}">Profile</a> Information.
+										</span>
+								    #{/if}
+								    #{else}
+								    	<span style="color: black; font-weight: bold;">
+											Next step: Update your <a href="@{Profile.edit()}">Profile</a> and
+											<a href="@{Profile.healthDetails()}">Health</a> Information.
+										</span>
+								    #{/else}
 								</span>
 							#{/if}
 						#{/if}

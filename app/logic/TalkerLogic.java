@@ -149,6 +149,11 @@ public class TalkerLogic {
 		if (talker.getHiddenHelps().contains("privacyViewed")) {
 			profileActions.add(ProfileCompletion.VIEW_PRIVACY);
 		}
+		if (talker.isProf()) {
+			//Profs can skip these steps and automatically receive the percentage.
+			profileActions.add(ProfileCompletion.UPDATE_HEALTH);
+			profileActions.add(ProfileCompletion.START_OR_JOIN_TALK);
+		}
 		
 		//calculate current sum and next item to complete
 		ProfileCompletion nextItem = null;

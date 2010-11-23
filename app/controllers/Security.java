@@ -57,6 +57,10 @@ public class Security extends Secure.Security {
     		CommonUtil.updateTalker(talker, session);
     	}
     	
+    	if (talker.isProf()) {
+    		session.put("prof", "true");
+    	}
+    	
 		ApplicationDAO.saveLogin(talker.getId());
 		
 		 /*

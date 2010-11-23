@@ -6,6 +6,29 @@
 		.seeall { padding-top: 20px }
 		
 		.inline_form { display:none; }
+		
+		#feedbackImage {
+			background-color:#0087CC;
+			background-image:url(/public/images/feedbackImage.png);
+			background-position:2px 50%;
+			background-repeat:no-repeat;
+			
+			display:block;
+			position:fixed;
+			top:45%;
+			left:0;
+			width:25px;
+			height:98px;
+			
+			margin:-45px 0 0;
+			padding:0;
+			
+			text-indent:-4000px;
+			z-index:99999;
+			border-color:#0087CC #0087CC #0087CC -moz-use-text-color;
+			border-style:outset outset outset none;
+			border-width:1px 1px 1px medium;
+		}
 	</style>
 	
 	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
@@ -265,3 +288,6 @@
       </div>
     </div>
   </div>
+  
+<!-- Left Feedback image -->
+<a href="/feedback-for-talkabouthealth" id="feedbackImage">Feedback</a>

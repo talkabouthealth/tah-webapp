@@ -184,6 +184,7 @@ public class PublicProfile extends Controller {
 		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
 		
 		//TODO: filter already followed topics
+		//TODO: prof doesn't have HealthInfo
 		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();
 		if (talkerDisease != null) {
 			recommendedTopics = TalkerLogic.getRecommendedTopics(talkerDisease);

@@ -67,13 +67,24 @@
 						          </div>
 						          <div class="note">
 								  	<strong>Notice:</strong>
-								  	You have not provided Personal Info or Health Info. 
-								  	You may provide this information using the 
-								  	<a href="@{Profile.edit()}">Edit Profile</a> and 
-								  	<a href="@{Profile.healthDetails()}">Edit Health Info</a> pages. 
-								  	<br/>
-								  	<br/>
-								  	Your Personal Info and Health Info will never be viewable by the public.
+								  	#{if talker.isProf() }
+								    	You have not provided Personal Info. 
+									  	You may provide this information using the 
+									  	<a href="@{Profile.edit()}">Edit Profile</a> page. 
+									  	<br/>
+									  	<br/>
+									  	Your Personal Info will never be viewable by the public.
+								    #{/if}
+								    #{else}
+								    	You have not provided Personal Info or Health Info. 
+									  	You may provide this information using the 
+									  	<a href="@{Profile.edit()}">Edit Profile</a> and 
+									  	<a href="@{Profile.healthDetails()}">Edit Health Info</a> pages. 
+									  	<br/>
+									  	<br/>
+									  	Your Personal Info and Health Info will never be viewable by the public.
+								    #{/else}
+								  	
 								  	<br/>
 								  	<br/>
 						          </div>

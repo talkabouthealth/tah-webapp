@@ -59,7 +59,9 @@
                     #{else}
                     	#{if currentPage.equals('publicProfile') }
                     		<a href="@{Profile.edit()}">Edit Profile</a><br />
-							<a href="@{Profile.healthDetails()}">Edit Health Info</a><br />
+                    		#{ifnot talker.isProf()}
+                    			<a href="@{Profile.healthDetails()}">Edit Health Info</a><br />
+                    		#{/ifnot}
 							<a href="@{Profile.preferences()}">Privacy Settings</a>
                     	#{/if}
                     #{/else}

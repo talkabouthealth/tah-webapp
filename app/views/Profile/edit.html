@@ -211,9 +211,16 @@
 						#{if "editForm".equals(flash.currentForm)}
 							#{if flash.success}
 							    <span class="success">Changes saved!</span>&nbsp;&nbsp;&nbsp;
-							    <span style="font-size: 14px; font-weight: bold;">Next step: Edit your 
-							    	<a href="@{Profile.healthDetails()}">Health Info</a>
-							    </span>
+							    #{if talker.isProf() }
+							    	<span style="font-size: 14px; font-weight: bold;">
+							    		Next step: Update your <a href="@{Profile.preferences()}">Privacy Settings</a>
+								    </span>
+							    #{/if}
+							    #{else}
+							    	<span style="font-size: 14px; font-weight: bold;">Next step: Edit your 
+								    	<a href="@{Profile.healthDetails()}">Health Info</a>
+								    </span>
+							    #{/else}
 							#{/if}
 							#{ifErrors}
 							   #{errors}
