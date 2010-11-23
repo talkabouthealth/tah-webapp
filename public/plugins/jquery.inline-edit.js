@@ -73,6 +73,10 @@
 				if (editText) {
 					editText = editText.replace(/<br>/g, '\n');
 					editText = editText.replace(/<BR>/g, '\n');
+					
+					//<a href="http://$2" target="_blank">$2</a>
+					editText = editText.replace(/<a[^>]*>/g, '');
+					editText = editText.replace(/<\/a>/g, '');
 				}
 				$text.val(editText).focus();
 
@@ -145,6 +149,7 @@
 				
 				$form.hide();
 				
+				newValue = linkify(newValue);
 				newValue = newValue.replace(/\n/g, '<br/>');
 				$view.html(newValue);
 				
