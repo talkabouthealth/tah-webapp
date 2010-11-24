@@ -35,6 +35,7 @@ import dao.TopicDAO;
 
 import static util.DBUtil.*;
 
+//TODO: check serialization (this bean is stored in a cache)
 public class TalkerBean implements Serializable {
 	
 	public static final String[] CHILDREN_AGES_ARRAY = new String[] {
@@ -133,7 +134,17 @@ public class TalkerBean implements Serializable {
 	
 	//Twitter or Facebook account info
 	private String accountType;
+	private String accountName;
 	private String accountId;
+	
+	//Twitter settings
+	private boolean followTAH;
+	//Share my Twitter posts in my TalkAboutHealth Thoughts Feed.
+	private boolean shareTwitterToThoughts;
+	//Share my TalkAboutHealth Thoughts Feed posts with my Twitter feed.
+	private boolean shareThoughtsToTwitter;
+	//Post on Twitter when I answer a question.
+	private boolean postOnTwitter;
 
 	private String im;
 	private String imUsername;
@@ -303,8 +314,14 @@ public class TalkerBean implements Serializable {
 		setIm((String)talkerDBObject.get("im"));
 		setImUsername((String)talkerDBObject.get("im_uname"));
 		setImAccounts(parseSet(IMAccountBean.class, talkerDBObject, "im_accounts"));
+		
 		setAccountType((String)talkerDBObject.get("act_type"));
+		setAccountName((String)talkerDBObject.get("act_name"));
 		setAccountId((String)talkerDBObject.get("act_id"));
+		setFollowTAH(getBoolean(talkerDBObject.get("tw_follow")));
+		setShareTwitterToThoughts(getBoolean(talkerDBObject.get("tw_share")));
+		setShareThoughtsToTwitter(getBoolean(talkerDBObject.get("tw_sharethoughts")));
+		setPostOnTwitter(getBoolean(talkerDBObject.get("tw_post")));
 		
 		setNewsletter(getBoolean(talkerDBObject.get("newsletter")));
 		setGender((String)talkerDBObject.get("gender"));
@@ -965,5 +982,34 @@ public class TalkerBean implements Serializable {
 	public void setProfStatement(String profStatement) {
 		this.profStatement = profStatement;
 	}
-	
+	public String getAccountName() {
+		return accountName;
+	}
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
+	public boolean isShareTwitterToThoughts() {
+		return shareTwitterToThoughts;
+	}
+	public void setShareTwitterToThoughts(boolean shareTwitterToThoughts) {
+		this.shareTwitterToThoughts = shareTwitterToThoughts;
+	}
+	public boolean isShareThoughtsToTwitter() {
+		return shareThoughtsToTwitter;
+	}
+	public void setShareThoughtsToTwitter(boolean shareThoughtsToTwitter) {
+		this.shareThoughtsToTwitter = shareThoughtsToTwitter;
+	}
+	public boolean isPostOnTwitter() {
+		return postOnTwitter;
+	}
+	public void setPostOnTwitter(boolean postOnTwitter) {
+		this.postOnTwitter = postOnTwitter;
+	}
+	public boolean isFollowTAH() {
+		return followTAH;
+	}
+	public void setFollowTAH(boolean followTAH) {
+		this.followTAH = followTAH;
+	}
 }	

@@ -58,8 +58,7 @@ public class Home extends Controller {
 			System.out.println(talker.getAccountType());
 			if (talker.getAccountType() != null && talker.getAccountType().equalsIgnoreCase("twitter")) {
 				talker.setIm("Twitter");
-				//TODO: it's not always the same? (User can change it on signup)
-				talker.setImUsername(talker.getUserName());
+				talker.setImUsername(talker.getAccountName());
 			}
 			else {
 				//if user provides an email from gmail, windows live, or yahoo - 

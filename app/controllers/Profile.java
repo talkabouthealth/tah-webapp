@@ -508,6 +508,18 @@ public class Profile extends Controller {
 		renderText("Ok");
 	}
 	
+	//FIXME: refactor to array?? (if Twitter and Facebook together)
+	public static void deleteTwitterAccount() {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		talker.setAccountId(null);
+		talker.setAccountName(null);
+		talker.setAccountType(null);
+		CommonUtil.updateTalker(talker, session);
+		
+		renderText("Ok");
+	}
+	
 	/* ------------- Health Info -------------------------- */
 	public static void healthDetails() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);

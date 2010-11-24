@@ -153,6 +153,11 @@ public class Application extends Controller {
 		vars = new HashMap<String, String>();
 		vars.put("username", talker.getUserName());
 		EmailUtil.sendEmail(EmailTemplate.WELCOME, talker.getEmail(), vars, null, false);
+		
+		if (talker.isFollowTAH()) {
+			//follow TAH by this user
+			//FIXME: finish
+		}
 
 		//login
 		ApplicationDAO.saveLogin(talker.getId());
@@ -201,6 +206,7 @@ public class Application extends Controller {
 		
 		//if user signed up through Twitter or Facebook
 		talker.setAccountType(session.get("accounttype"));
+		talker.setAccountName(session.get("accountname"));
 		talker.setAccountId(session.get("accountid"));
 		
 //		String imService = talker.getIm();

@@ -198,6 +198,43 @@
 						<div class="signupmain"></div>
 					</div>								
 					<div class="signdown">
+						#{if flash.from?.equals("twitter") }
+						<div style="padding-left: 10px">
+							<div class="generalcheck" style="padding-top: 3px; padding-bottom:0px;">
+								<div class="preferencescheck">
+									<input type="checkbox" value="true" name="talker.followTAH" style="margin-bottom: 0px;"
+										#{if flash['talker.followTAH'] } checked='checked' #{/if}
+									/>
+									<span class="blacktext14">&nbsp;Follow TalkAboutHealth on Twitter.</span>
+								</div>
+							</div>
+							<div class="generalcheck" style="padding-bottom:0px;">
+								<div class="preferencescheck">
+									<input type="checkbox" value="true" name="talker.shareTwitterToThoughts" style="margin-bottom: 0px;"
+										#{if flash['talker.shareTwitterToThoughts'] } checked='checked' #{/if}
+									/>
+									<span class="blacktext14">&nbsp;Share my Twitter posts in my TalkAboutHealth Thoughts Feed.</span>
+								</div>
+							</div>
+							<div class="generalcheck" style="padding-bottom: 0px;">
+								<div class="preferencescheck">
+									<input type="checkbox" value="true" name="talker.shareThoughtsToTwitter" style="margin-bottom: 0px;"
+										#{if flash['talker.shareThoughtsToTwitter']} checked='checked' #{/if}
+									/>
+									<span class="blacktext14">&nbsp;Share my TalkAboutHealth Thoughts Feed posts with my Twitter feed.</span>
+								</div>
+							</div>
+							<div class="generalcheck" style="padding-bottom: 0px;">
+								<div class="preferencescheck">
+									<input type="checkbox" value="true" name="talker.postOnTwitter" style="margin-bottom: 0px;"
+										#{if flash['talker.postOnTwitter']} checked='checked' #{/if}
+									/>
+									<span class="blacktext14">&nbsp;Post on Twitter when I answer a question.</span>
+								</div>
+							</div>
+						</div>
+						#{/if}
+						
 						<div id="checkboxarea2" style="padding-top: 10px;  font-weight: bold;">
 							<input id="privacyagree" name="privacyagree" 
 								type="checkbox" #{if flash['privacyagree']} checked #{/if} /> 

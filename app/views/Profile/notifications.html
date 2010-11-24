@@ -37,6 +37,8 @@
 </style>
 
 <script type="text/javascript" charset="utf-8">
+	#{ oauthJavaScripts /}
+
 	$(document).ready(function() {
 		// ------------ Emails --------------
 		$("#newEmailBtn").click(function() {
@@ -120,6 +122,21 @@
 				function(data) {}
 			);
 		});
+
+		//-----------Twitter
+		$(".deleteTwitterLink").click(function() {
+			var confirmDel = confirm("Are you sure want to delete your Twitter info?");
+   	   		if (confirmDel) {
+   	   	  		$.post("@{Profile.deleteTwitterAccount()}", 
+    				{},
+    				function(data) {
+    					window.location.reload();
+    				}
+    			);
+   	   		}
+   	   		
+   	   		return false;
+		});
 	});
 </script>
 
@@ -194,6 +211,47 @@
 						</div>
 					</div>
 				</div>
+				<div class="notibluearea">
+					<div class="signfields2">
+						<h1>Twitter</h1>
+						<div style="font-size: 14px;">
+							#{if talker.accountType?.equals("twitter")}
+								<br/><br/>
+								&nbsp;${ talker.accountName ? talker.accountName : talker.uname } 
+								&nbsp;&nbsp;&nbsp;<a href="#" class="deleteTwitterLink">delete</a>
+								<br/>
+								<div class="generalcheck" style="padding-top: 3px; padding-bottom:0px;">
+									<div class="preferencescheck">
+										<input type="checkbox" value="" name="test" style="margin-bottom: 0px;"
+											#{if false } checked='checked' #{/if}
+										/>
+										<span class="blacktext14">&nbsp;Share my Twitter posts in my TalkAboutHealth Thoughts Feed.</span>
+									</div>
+								</div>
+								<div class="generalcheck" style="padding-bottom: 0px;">
+									<div class="preferencescheck">
+										<input type="checkbox" value="" name="test" style="margin-bottom: 0px;"
+											#{if false } checked='checked' #{/if}
+										/>
+										<span class="blacktext14">&nbsp;Share my TalkAboutHealth Thoughts Feed posts with my Twitter feed.</span>
+									</div>
+								</div>
+								<div class="generalcheck" style="padding-bottom: 0px;">
+									<div class="preferencescheck">
+										<input type="checkbox" value="" name="test" style="margin-bottom: 0px;"
+											#{if false } checked='checked' #{/if}
+										/>
+										<span class="blacktext14">&nbsp;Post on Twitter when I answer a question.</span>
+									</div>
+								</div>
+							#{/if}
+							#{else}
+								<a href="#" style="font-size:14px;"
+									onclick="return openTwitter();">add your Twitter account</a>
+							#{/else}
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="notifactionboxbot"></div>
 		</div>
@@ -206,7 +264,7 @@
 	
 	<form id="NofifyFrequency" name="setNotifyFrequency" action="@{Profile.notificationsSave()}#notificationsform" method="post"  >
 		<div class="blacktext2" id="innerheading">
-			IM Notification Settings
+			IM and Twitter Notification Settings
 		</div>
 		<div id="innermiddlearea">
 			<div class="notifactionboxtop"></div>

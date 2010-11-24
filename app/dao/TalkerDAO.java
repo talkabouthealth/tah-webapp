@@ -58,9 +58,16 @@ public class TalkerDAO {
 				.add("connection_verified", talker.isConnectionVerified())
 				
 				.add("newsletter", talker.isNewsletter())
-				.add("act_type", talker.getAccountType())
-				.add("act_id", talker.getAccountId())
 				.add("invites", talker.getInvitations())
+				
+				.add("act_type", talker.getAccountType())
+				.add("act_name", talker.getAccountName())
+				.add("act_id", talker.getAccountId())
+				.add("tw_follow", talker.isFollowTAH())
+				.add("tw_share", talker.isShareTwitterToThoughts())
+				.add("tw_sharethoughts", talker.isShareThoughtsToTwitter())
+				.add("tw_post", talker.isPostOnTwitter())
+				
 				
 				.add("prefs", talker.profilePreferencesToInt())
 				.add("email_settings", talker.emailSettingsToList())
@@ -98,6 +105,13 @@ public class TalkerDAO {
 			.add("connection_verified", talker.isConnectionVerified())
 			
 			.add("im_accounts", setToDB(talker.getImAccounts()))
+			.add("act_type", talker.getAccountType())
+			.add("act_name", talker.getAccountName())
+			.add("act_id", talker.getAccountId())
+			.add("tw_follow", talker.isFollowTAH())
+			.add("tw_share", talker.isShareTwitterToThoughts())
+			.add("tw_sharethoughts", talker.isShareThoughtsToTwitter())
+			.add("tw_post", talker.isPostOnTwitter())
 			
 			.add("hidden_helps", talker.getHiddenHelps())
 			

@@ -112,6 +112,7 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 	        }
 	        else {
 	        	session.put("accounttype", "facebook");
+	        	session.put("accountname", userEmail);
 			    session.put("accountid", accountId);
 			    
 			    return "/signup?talker.email="+userEmail+"&from=facebook";

@@ -112,6 +112,7 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
         }
         br.close();
         
+        //TODO: check uniqueness
         boolean isConnected = session.contains("username");
 		if (isConnected) {
 			//it's not login/signup - it's adding of Twitter account for notifications!
@@ -128,8 +129,14 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 				e.printStackTrace();
 				System.out.println("ERROR: "+e.getMessage());
 			}
+			
+			TalkerBean talker = CommonUtil.loadCachedTalker(session);
+			talker.setAccountType("twitter");
+			talker.setAccountName(screenName);
+			talker.setAccountId(accountId);
+    		CommonUtil.updateTalker(talker, session);
 	        
-	        return "/home";
+	        return "/profile/notificationsettings";
 		}
 		else {
 			//login or signup
@@ -143,6 +150,11 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 		    		talker.setDeactivated(false);
 		    		CommonUtil.updateTalker(talker, session);
 		    	}
+	        	
+	        	if (talker.getAccountName() == null) {
+	        		talker.setAccountName(screenName);
+	        		CommonUtil.updateTalker(talker, session);
+	        	}
 	        		
 	        	//simple login
 	        	ApplicationDAO.saveLogin(talker.getId());
@@ -156,6 +168,7 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 	        	TwitterUtil.followUser(accountId);
 	        	
 	        	session.put("accounttype", "twitter");
+	        	session.put("accountname", screenName);
 			    session.put("accountid", accountId);
 			     
 			    return "/signup?talker.userName="+screenName+"&from=twitter";
