@@ -30,8 +30,8 @@ import dao.TalkerDAO;
  */
 public class TwitterOAuthProvider implements OAuthServiceProvider {
 	
-	private static final String CONSUMER_KEY = "D9iFrN4G8ObpLCtGJ9w";
-	private static final String CONSUMER_SECRET = "Yy1srQbpldqjtqzzAXpJe3RzuWGxHFKPCF8FPsZKU";
+	public static final String CONSUMER_KEY = "D9iFrN4G8ObpLCtGJ9w";
+	public static final String CONSUMER_SECRET = "Yy1srQbpldqjtqzzAXpJe3RzuWGxHFKPCF8FPsZKU";
 	private static final String CALLBACK_URL =
 		"http://talkabouthealth.com/oauth/callback?type=twitter";
 	
@@ -76,6 +76,9 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 		try {
 			consumer.setTokenWithSecret(token, tokenSecret);
 			provider.retrieveAccessToken(consumer, oauthVerifier);
+			
+			session.put("twitter_token", consumer.getToken());
+			session.put("twitter_token_secret", consumer.getTokenSecret());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -118,11 +121,11 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			//it's not login/signup - it's adding of Twitter account for notifications!
 			try {
 				//follow TAH by this user
-				url = new URL("http://api.twitter.com/1/friendships/create/"+TwitterUtil.TALKFORHEALTH_ID+".xml");
-				HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-				conn.setRequestMethod("POST");
-				consumer.sign(conn);
-				conn.connect();
+//				url = new URL("http://api.twitter.com/1/friendships/create/"+TwitterUtil.TALKFORHEALTH_ID+".xml");
+//				HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+//				conn.setRequestMethod("POST");
+//				consumer.sign(conn);
+//				conn.connect();
 				
 		        TwitterUtil.followUser(accountId);
 			} catch (Exception e) {

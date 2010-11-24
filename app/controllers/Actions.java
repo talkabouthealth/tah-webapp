@@ -11,6 +11,7 @@ import play.mvc.With;
 
 import util.CommonUtil;
 import util.NotificationUtils;
+import util.TwitterUtil;
 
 import models.CommentBean;
 import models.TalkerBean;
@@ -144,6 +145,14 @@ public class Actions extends Controller {
 		if (comment.getParentId() == null) {
 			ActionDAO.saveAction(new PersonalProfileCommentAction(
 					talker, profileTalker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT));
+			
+			//post to personal Thoughts Feed?
+			if (talker.equals(profileTalker)) {
+				if (talker.isShareThoughtsToTwitter()) {
+					TwitterUtil.makeUserTwit(comment.getText(), 
+							(String)session.get("twitter_token"), (String)session.get("twitter_token_secret"));
+				}
+			}
 		}
 		else {
 			//for replies we update action for parent comment

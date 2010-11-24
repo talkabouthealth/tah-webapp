@@ -520,6 +520,23 @@ public class Profile extends Controller {
 		renderText("Ok");
 	}
 	
+	public static void updateTwitterSetting(String name, boolean value) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		if ("shareTwitterToThoughts".equals(name)) {
+			talker.setShareTwitterToThoughts(value);
+		}
+		else if ("shareThoughtsToTwitter".equals(name)) {
+			talker.setShareThoughtsToTwitter(value);
+		}
+		else if ("postOnTwitter".equals(name)) {
+			talker.setPostOnTwitter(value);
+		}
+		CommonUtil.updateTalker(talker, session);
+		
+		renderText("Ok");
+	}
+	
 	/* ------------- Health Info -------------------------- */
 	public static void healthDetails() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);

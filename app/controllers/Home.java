@@ -48,6 +48,9 @@ public class Home extends Controller {
 		}
 		
 		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
+		if (talker.getAccountType() != null && talker.getAccountType().equals("twitter")) {
+			hasNoIMAccounts = false;
+		}
 		boolean isAdmin = "admin".equals(Security.connected());
 		boolean showIMPopup = (session.get("justregistered") != null && hasNoIMAccounts && !isAdmin);
 		if (showIMPopup) {

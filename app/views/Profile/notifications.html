@@ -34,6 +34,8 @@
 		background: none;
 		border: none;
 	}
+	
+	.twitterSetting { margin-bottom: 0px; }
 </style>
 
 <script type="text/javascript" charset="utf-8">
@@ -137,6 +139,17 @@
    	   		
    	   		return false;
 		});
+		$(".twitterSetting").click(function() {
+			var textElement = $(this).next();
+			var name = $(this).attr("name");
+			var value = $(this).attr("checked");
+			$.post("@{Profile.updateTwitterSetting()}", 
+   				{name: name, value: value},
+   				function(data) {
+   					textElement.after("<span><img src='/public/images/right.jpg'/>&nbsp;Updated</span>");
+   				}
+   			);
+		});
 	});
 </script>
 
@@ -222,24 +235,24 @@
 								<br/>
 								<div class="generalcheck" style="padding-top: 3px; padding-bottom:0px;">
 									<div class="preferencescheck">
-										<input type="checkbox" value="" name="test" style="margin-bottom: 0px;"
-											#{if false } checked='checked' #{/if}
+										<input type="checkbox" value="" name="shareTwitterToThoughts" class="twitterSetting"
+											#{if talker.shareTwitterToThoughts} checked='checked' #{/if}
 										/>
 										<span class="blacktext14">&nbsp;Share my Twitter posts in my TalkAboutHealth Thoughts Feed.</span>
 									</div>
 								</div>
 								<div class="generalcheck" style="padding-bottom: 0px;">
 									<div class="preferencescheck">
-										<input type="checkbox" value="" name="test" style="margin-bottom: 0px;"
-											#{if false } checked='checked' #{/if}
+										<input type="checkbox" value="" name="shareThoughtsToTwitter" class="twitterSetting"
+											#{if talker.shareThoughtsToTwitter } checked='checked' #{/if}
 										/>
 										<span class="blacktext14">&nbsp;Share my TalkAboutHealth Thoughts Feed posts with my Twitter feed.</span>
 									</div>
 								</div>
 								<div class="generalcheck" style="padding-bottom: 0px;">
 									<div class="preferencescheck">
-										<input type="checkbox" value="" name="test" style="margin-bottom: 0px;"
-											#{if false } checked='checked' #{/if}
+										<input type="checkbox" value="" name="postOnTwitter" class="twitterSetting"
+											#{if talker.postOnTwitter } checked='checked' #{/if}
 										/>
 										<span class="blacktext14">&nbsp;Post on Twitter when I answer a question.</span>
 									</div>
