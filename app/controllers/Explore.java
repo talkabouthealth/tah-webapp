@@ -19,6 +19,7 @@ import models.ConversationBean;
 import models.TalkerBean;
 import models.TopicBean;
 import models.actions.Action;
+import util.BitlyUtil;
 import util.CommonUtil;
 import util.SearchUtil;
 import dao.ActionDAO;
@@ -48,7 +49,7 @@ public class Explore extends Controller {
     		talker.setActivityList(ActionDAO.load(talker.getId()));
     		TalkerLogic.calculateProfileCompletion(talker);
     	}
-		
+    	
     	List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
 		render(talker, liveTalks);
     }
