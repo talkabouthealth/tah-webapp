@@ -106,6 +106,7 @@ public class ActionDAO {
 	}
 	
 	//------------------ Feeds --------------------
+	//FIXME: check again feeds and clear code after updates
 	
 	//It contains items based on actions from topics, questions, 
 	//and other users (including comments) that are followed.

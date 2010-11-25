@@ -42,10 +42,10 @@
 		         	#{/else}
 		        </div>
                 <div class="followpicbox" style="padding-top: 3px;">
-                  <div class="followpic">
-                  	<img src="@{Image.show(talker.userName)}" width="81" height="81"/>
+                  <div class="followpic" style="width: 110px; height: 110px;">
+                  	<img src="@{Image.show(talker.userName)}" width="110" height="110"/>
                   </div>
-                  <div class="foloowpictext">
+                  <div class="foloowpictext" style="width: 110px;">
                     #{ifnot talker.userName.equals(currentTalker.userName) }
 						<a id="followActionlink" href="#">
 						${ currentTalker.followingList.contains(talker) ? 'Unfollow' : 'Follow'}
