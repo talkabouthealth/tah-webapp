@@ -113,7 +113,7 @@ public class Profile extends Controller {
 		
 		if(validation.hasErrors()) {
 			//prepare info for displaying page
-			//TODO: it's not good
+			//TODO: it's not good?
 			talker.setProfInfo(oldTalker.getProfInfo());
 			talker.setHiddenHelps(oldTalker.getHiddenHelps());
 			talker.saveProfilePreferences(oldTalker.loadProfilePreferences());
@@ -223,6 +223,17 @@ public class Profile extends Controller {
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
     	talker.setActivityList(ActionDAO.load(talker.getId()));
 		TalkerLogic.calculateProfileCompletion(talker);
+		render("@edit", talker);
+	}
+	
+	public static void changeInsuranceAccepted(List<String> insuranceAccepted) {
+		flash.put("currentForm", "changeInsuranceForm");
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		talker.setInsuranceAccepted(insuranceAccepted);
+		CommonUtil.updateTalker(talker, session);
+		
+		flash.success("ok");
 		render("@edit", talker);
 	}
 	
@@ -561,8 +572,50 @@ public class Profile extends Controller {
 		
 		render(talker, talkerDisease, disease, healthItemsMap);
 	}
-	
+
 	public static void saveHealthDetails(TalkerDiseaseBean talkerDisease, String section) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+//		for (String key : params.all().keySet()) {
+//			System.out.println(key+" : "+Arrays.toString(params.all().get(key)));
+//		}
+		final String diseaseName = "Breast Cancer";
+		DiseaseBean disease = DiseaseDAO.getByName(diseaseName);
+		
+		parseHealthQuestions(disease, talkerDisease);
+		parseHealthItems(talkerDisease);
+		talkerDisease.setUid(talker.getId());
+		
+		Date symptomDate = CommonUtil.parseDate(talkerDisease.getSymptomMonth(), 1, talkerDisease.getSymptomYear());
+		talkerDisease.setSymptomDate(symptomDate);
+		Date diagnoseDate = CommonUtil.parseDate(talkerDisease.getDiagnoseMonth(), 1, talkerDisease.getDiagnoseYear());
+		talkerDisease.setDiagnoseDate(diagnoseDate);
+		
+		//Automatically follow topics based on HealthInfo
+		//Let's only have this happen the first session the user updates their Health Info
+		if (TalkerDiseaseDAO.getByTalkerId(talker.getId()) == null) {
+			session.put("firstHealthInfo", true);
+		}
+		
+		if (session.contains("firstHealthInfo")) {
+			List<TopicBean> recommendedTopics = TalkerLogic.getRecommendedTopics(talkerDisease);
+			if (!recommendedTopics.isEmpty()) {
+				for (TopicBean topic : recommendedTopics) {
+					talker.getFollowingTopicsList().add(topic);
+				}
+				CommonUtil.updateTalker(talker, session);
+			}
+		}
+		
+		//Save or update
+		TalkerDiseaseDAO.saveTalkerDisease(talkerDisease);
+		
+		ActionDAO.saveAction(new UpdateProfileAction(talker, ActionType.UPDATE_HEALTH));
+		
+		renderText("ok");
+	}
+	
+	public static void saveHealthDetails2(TalkerDiseaseBean talkerDisease, String section) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 //		for (String key : params.all().keySet()) {

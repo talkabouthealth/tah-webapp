@@ -42,8 +42,20 @@ import util.importers.TopicsImporter;
 public class ApplicationUpdatesJob extends Job {
 	
 	public void doJob() throws Exception {
-		
+		//Fields data for Profiles
 		FieldsDataImporter.importData("fields.dat");
+		
+		//update topic from "," to "/"
+		for (TopicBean topic : TopicDAO.loadAllTopics()) {
+			String topicTitle = topic.getTitle();
+			if (topicTitle.contains(",")) {
+				topicTitle = topicTitle.replaceAll(", ", "/");
+				topicTitle = topicTitle.replaceAll(",", "/");
+				topic.setTitle(topicTitle);
+			}
+			TopicDAO.updateTopic(topic);
+		}
+		
 		
 		if (ApplicationDAO.isCollectionEmpty(DiseaseDAO.DISEASES_COLLECTION)) {
 			DiseaseImporter.importDiseases("diseases.dat");

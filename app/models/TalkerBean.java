@@ -163,6 +163,9 @@ public class TalkerBean implements Serializable {
 	private String connection;
 	private boolean connectionVerified;
 	
+	//For Physician
+	private List<String> insuranceAccepted;
+	
 	private String firstName;
 	private String lastName;
 	
@@ -350,6 +353,8 @@ public class TalkerBean implements Serializable {
 		setWebpage((String)talkerDBObject.get("webpage"));
 		setChildrenAges(parseStringList(talkerDBObject.get("ch_ages")));
 		setKeywords(parseStringList(talkerDBObject.get("keywords")));
+		
+		setInsuranceAccepted(parseStringList(talkerDBObject.get("insurance_accept")));
 		
 		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
 		
@@ -1011,5 +1016,11 @@ public class TalkerBean implements Serializable {
 	}
 	public void setFollowTAH(boolean followTAH) {
 		this.followTAH = followTAH;
+	}
+	public List<String> getInsuranceAccepted() {
+		return insuranceAccepted;
+	}
+	public void setInsuranceAccepted(List<String> insuranceAccepted) {
+		this.insuranceAccepted = insuranceAccepted;
 	}
 }	

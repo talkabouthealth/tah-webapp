@@ -103,6 +103,7 @@ public class TalkerDAO {
 			
 			.add("connection", talker.getConnection())
 			.add("connection_verified", talker.isConnectionVerified())
+			.add("insurance_accept", talker.getInsuranceAccepted())
 			
 			.add("im_accounts", setToDB(talker.getImAccounts()))
 			.add("act_type", talker.getAccountType())

@@ -257,6 +257,51 @@
 					</div>
 				</div>
 			#{/form}
+			
+			#{if talker.connection?.equals("Physician")}
+				<div id="personalleft1" style="padding-left: 0px; padding-top: 20px;">
+					<a name="insuranceform"></a>
+					<div class="personaltextarea"><span class="blacktext14">Insurance Accepted</span></div>
+					<form id="changeInsuranceForm" name="changeInsuranceForm" 
+							action="@{Profile.changeInsuranceAccepted()}#insuranceform" method="post">
+						<div class="personalmain" style="text-align: center">
+							#{if "changeInsuranceForm".equals(flash.currentForm)}
+								#{if flash.success}
+								    <span class="success">Changes saved!</span>&nbsp;&nbsp;&nbsp;
+							    	<span style="font-size: 14px; font-weight: bold;">
+							    		Next step: Update your <a href="@{Profile.preferences()}">Privacy Settings</a>
+								    </span>
+								#{/if}
+								#{ifErrors}
+								   #{errors}
+								       <span class="error">${error}</span><br/>
+								   #{/errors}
+								#{/ifErrors}
+							#{/if}
+						</div>
+						#{list items: logic.TalkerLogic.getFieldsData("insuranceAccepted", talker.connection), as: 'insurance' }
+							#{ifnot insurance.equals("")}
+								<div style="clear: both;">
+									<input name='insuranceAccepted' value="${insurance}" type='checkbox'
+									#{if talker.insuranceAccepted?.contains(insurance) }
+										checked='checked'
+									#{/if}
+									/>&nbsp; <span class="blacktext14">${insurance}</span>
+								</div>
+							#{/ifnot}
+						#{/list}
+						<div class="personalmain">
+							<div class="personaltextarea"></div>
+							<div class="personaltextarea" style="height:46px; padding-top:2px;">
+								<a href="#insuranceform" onclick="document.changeInsuranceForm.submit();">
+									<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" />
+								</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			#{/if}
+			
 			</div>
 			
 			#{ set currentPage = 'publicProfile' /}
