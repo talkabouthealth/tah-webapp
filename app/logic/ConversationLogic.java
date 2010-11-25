@@ -8,10 +8,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import play.mvc.Scope.Session;
+
 import com.tah.im.IMNotifier;
 
+import util.BitlyUtil;
 import util.CommonUtil;
 import util.NotificationUtils;
+import util.TwitterUtil;
 import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
@@ -62,9 +66,15 @@ public class ConversationLogic {
 
 		String topicURL = ApplicationDAO.createURLName(title);
 		convo.setMainURL(topicURL);
+
+		//TODO: check it for time?
+		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
+		convo.setBitly(BitlyUtil.shortLink(convoURL));
 		
 		//insert new topic into database
 		ConversationDAO.save(convo);
+		
+		
 		ActionDAO.saveAction(new StartConvoAction(talker, convo, ActionType.START_CONVO));
 		
 		if (notifyTalkers) {
@@ -137,6 +147,26 @@ public class ConversationLogic {
     		if (!talker.equals(follower)) { //do not send notification to himself
         		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_COMMENT, follower, vars);
     		}
+    	}
+    	
+    	if (comment.isAnswer() && talker.isPostOnTwitter()) {
+    		//Twitter notification
+    		//Just answered a question on TalkAboutHealth: "What are the ..." http://bit.ly/lksa
+    		StringBuilder twit = new StringBuilder();
+    		twit.append("Just answered a question on TalkAboutHealth: \"");
+    		
+    		//for title we have only 72 characters
+    		String convoTitle = convo.getTopic();
+    		if (convoTitle.length() > 65) {
+    			convoTitle = convoTitle.substring(0, 65)+"...";
+    		}
+    		twit.append(convoTitle+"\" ");
+    		twit.append(convo.getBitly());
+    		
+    		//TODO: better session parameter handling?
+    		Session session = Session.current();
+    		TwitterUtil.makeUserTwit(twit.toString(), 
+    				(String)session.get("twitter_token"), (String)session.get("twitter_token_secret"));
     	}
     	
 //    	The exception is users will receive IM notifications of answers 

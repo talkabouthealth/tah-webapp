@@ -15,6 +15,11 @@ public class BitlyUtil {
 		String result = WS.url("http://api.bit.ly/v3/shorten?login=%s&apiKey=%s&longUrl=%s&format=txt",
 				BITLY_LOGIN, BITLY_APIKEY, longURL).get().getString();
 		
+		if (result != null && result.length() > 5) {
+			//remove carriage return at the end
+			result = result.substring(0, result.length()-1);
+		}
+		
 		return result;
 	}
 }

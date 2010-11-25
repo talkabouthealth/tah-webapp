@@ -366,7 +366,7 @@ function saveConvo(page) {
 
 				$("#convoText").val("");
 				$("#newConvoTitle").val("");
-				$("#newConvoDetails").val("This is the place to provide context or further details for your request.");
+				$("#newConvoDetails").val("For example. Will the stage of disease, current medications, or patient history help to answer the question?");
 				//$("#newConvoTopics").val("");
 			}
 		);

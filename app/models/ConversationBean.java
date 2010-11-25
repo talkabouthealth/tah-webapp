@@ -46,6 +46,7 @@ public class ConversationBean {
 	private String mainURL;
 	//includes old titles and urls
 	private Set<URLName> oldNames;
+	private String bitly;
 	
 	private Date creationDate;
 	
@@ -86,6 +87,7 @@ public class ConversationBean {
     	setTopic((String)convoDBObject.get("topic"));
     	setCreationDate((Date)convoDBObject.get("cr_date"));
     	setDetails((String)convoDBObject.get("details"));
+    	setBitly((String)convoDBObject.get("bitly"));
     	setDeleted(getBoolean(convoDBObject, "deleted"));
     	
     	String type = (String)convoDBObject.get("type");
@@ -392,4 +394,13 @@ public class ConversationBean {
 	public void setSearchFragment(String searchFragment) {
 		this.searchFragment = searchFragment;
 	}
+
+	public String getBitly() {
+		return bitly;
+	}
+
+	public void setBitly(String bitly) {
+		this.bitly = bitly;
+	}
+	
 }

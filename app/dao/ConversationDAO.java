@@ -58,6 +58,7 @@ public class ConversationDAO {
 	}
 	
 	/**
+	 * TODO: better implementation of synchro saving?
 	 * Tries to insert convo 'count' times (in case of duplicate key error on 'tid' field)
 	 * Returns -1 in case of failure
 	 */
@@ -83,6 +84,7 @@ public class ConversationDAO {
 			.add("main_url", convo.getMainURL())
 			.add("topics", convo.topicsToDB())
 			.add("details", convo.getDetails())
+			.add("bitly", convo.getBitly())
 			.add("opened", true)
 			.get();
 
@@ -124,6 +126,7 @@ public class ConversationDAO {
 			.add("deleted", convo.isDeleted())
 			.add("details", convo.getDetails())
 			.add("opened", convo.isOpened())
+			.add("bitly", convo.getBitly())
 			
 			.add("topics", convo.topicsToDB())
 			.add("related_convos", convo.relatedConvosToDB())
