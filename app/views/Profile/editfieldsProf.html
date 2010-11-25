@@ -136,7 +136,7 @@
 	#{profile/field type: 'text', des: 'Vitals.com link', note: '(http://www.vitals.com/doctors/Dr_John_Doe.html)', name: 'vitals', talkerType: talkerType, profInfo: profInfo /}
 	#{profile/field type: 'text', des: 'Zocdoc link', note: '(http://www.zocdoc.com/doctor/john-doe-md-1234)', name: 'zocdoc', talkerType: talkerType, profInfo: profInfo /}
 #{/if}
-#{if talkerType.equals("Nurse") || talkerType.equals("Pharmacist") || talkerType.equals("Psychologist") || talkerType.equals("Researcher")}
+#{ifnot talkerType.equals("Physician")}
 	#{profile/field type: 'text', des: 'Hospital or other affiliation', name: 'other_affiliation', talkerType: talkerType, profInfo: profInfo /}
 	<div class="personalmain">
 		<div class="personaltextarea">
@@ -149,7 +149,36 @@
 					value="${talker.webpage}" />
 		</div>
 	</div>
-#{/if}
+	
+	<div class="personalmain">
+		<div class="personaltextarea"><span class="blacktext14">City</span></div>
+		<div class="personaltextfield">
+			<input name="talker.city" type="text" class="personalfields" id="talker.city" 
+					value="${talker.city}" />
+		</div>
+	</div>
+	<div class="personalmain">
+		<div class="personaltextarea"><span class="blacktext14">State</span></div>
+		<div class="personaltextfield">
+			<input name="talker.state" type="text" class="personalfields" id="talker.state" 
+					value="${talker.state}" />
+		</div>
+	</div>
+	<div class="personalmain">
+		<div class="personaltextarea"><span class="blacktext14">Zip Code</span></div>
+		<div class="personaltextfield">
+			<input name="talker.zip" type="text" class="personalfields"
+					value="${talker.zip}" />
+		</div>
+	</div>
+	<div class="personalmain">
+		<div class="personaltextarea"><span class="blacktext14">Country</span></div>
+		<div class="personaltextfield" style="border:0;">
+			<input name="talker.country" type="text" class="personalfields" id="talker.country" 
+					value="${talker.country}" />
+		</div>
+	</div>
+#{/ifnot}
 
 
 

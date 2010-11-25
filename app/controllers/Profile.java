@@ -142,6 +142,11 @@ public class Profile extends Controller {
 			oldTalker.setWebpage(talker.getWebpage());
 			oldTalker.setBio(talker.getBio());
 			
+			oldTalker.setCity(talker.getCity());
+			oldTalker.setState(talker.getState());
+			oldTalker.setCountry(talker.getCountry());
+			oldTalker.setZip(talker.getZip());
+			
 			Map<String, String> profInfo = new HashMap<String, String>();
 			
 			//parse "pr_"
@@ -224,6 +229,16 @@ public class Profile extends Controller {
     	talker.setActivityList(ActionDAO.load(talker.getId()));
 		TalkerLogic.calculateProfileCompletion(talker);
 		render("@edit", talker);
+	}
+	
+	public static void changeConnection(String value) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		talker.setConnection(value);
+		talker.setConnectionVerified(false);
+		CommonUtil.updateTalker(talker, session);
+		
+		renderText("Ok");
 	}
 	
 	public static void changeInsuranceAccepted(List<String> insuranceAccepted) {

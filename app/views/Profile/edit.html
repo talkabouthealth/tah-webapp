@@ -12,6 +12,18 @@
 	$(document).ready(function() {
 		makeTopicsAutocomplete("#talkerkeywords");
 	});
+
+	function changeConnection(elem) {
+		var newConnection = $(elem).val();
+		$.post("@{Profile.changeConnection()}", 
+			{value: newConnection},
+			function(data) {
+				window.location = "/profile/profileinfo";
+			}
+		);
+		
+		return false;
+	}
 	
 	function validatePasswordForm() {
 		var reason = "";
@@ -238,6 +250,23 @@
 					</div>
 					<input name="talker.email" type="hidden" class="personalfields" 
 						id="talker.email" value="bad@email.com" />
+					
+					<div class="personalmain">
+						<div class="personaltextarea" style="padding-top: 0px;">
+							<span class="blacktext14">Patient, Physician, Caregiver, etc.</span></div>
+						<div class="personaltextfield">
+							<select size="1" name="talker.connection" class="personalfields" 
+								onchange="return changeConnection(this);"
+								id="talker.connection">
+						  		<option selected value=''></option>
+						  		#{list items:models.TalkerBean.CONNECTIONS_ARRAY, as:'connection'}
+								    <option value="${connection}"
+								    #{if connection.equals(talker.connection) } selected #{/if} 
+								    >${connection}</option>
+								#{/list}
+							</select>
+						</div>
+					</div>
 					
 					#{if models.TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.connection)}
 						#{include 'Profile/editfieldsProf.html' /}

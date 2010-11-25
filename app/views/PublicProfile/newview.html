@@ -241,6 +241,18 @@
 					                    </div>
 				                    #{/elseif}
 			                    #{/list}
+			                    
+			                    #{if talker.insuranceAccepted?.size() > 0 }
+			                    	<div class="profiletxtCantant">
+										<div class="profileCantanttxt1">
+											<br/>
+			                      			<strong>Insurance accepted:</strong> <br/>
+			                      			#{list items: talker.insuranceAccepted, as: 'insurance' }
+			                      				${insurance}<br/>
+			                      			#{/list}
+			                      		</div>
+			                    	</div>
+			                    #{/if}
 							#{/if}
 							
 							#{if talker.bio}
@@ -249,7 +261,40 @@
 			                    <div class="profilebiotxt">${talker.bio.nl2br()}</div>
 							#{/if}
 							
-							#{ifnot talker.isProf()}
+							#{if talker.isProf()}
+								#{ifnot talker.connection.equals("Physician")}
+									<br/>
+									#{if talker.city}
+					                    <div class="profiletxtCantant">
+					                      <div class="profileCantanttxt1">
+					                      	<strong>City:</strong> <span class="Profilepersonsub">${talker.city}</span>
+					                      </div>
+					                    </div>
+				                    #{/if}
+				                    #{if talker.state}
+					                    <div class="profiletxtCantant">
+					                      <div class="profileCantanttxt1">
+					                      	<strong>State:</strong> <span class="Profilepersonsub">${talker.state}</span>
+					                      </div>
+					                    </div>
+				                    #{/if}
+				                    #{if talker.zip}
+					                    <div class="profiletxtCantant">
+					                      <div class="profileCantanttxt1">
+					                      	<strong>Zip:</strong> <span class="Profilepersonsub">${talker.zip}</span>
+					                      </div>
+					                    </div>
+				                    #{/if}
+				                    #{if talker.country}
+					                    <div class="profiletxtCantant">
+					                      <div class="profileCantanttxt1">
+					                      	<strong>Country:</strong> <span class="Profilepersonsub">${talker.country}</span>
+					                      </div>
+					                    </div>
+				                    #{/if}
+								#{/ifnot}
+							#{/if}
+							#{else}
 								<div class="Profileperson">Personal Info</div>
 			                    <div class="topicborder"></div>
 			                    #{if talker.state && talker.city}
@@ -310,7 +355,7 @@
 			                      </div>
 				                </div>
 				                #{/if}
-							#{/ifnot}
+							#{/else}
 					#{/if}
 					
 					#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.HEALTH_INFO) && talkerDisease && !talker.isProf() }
