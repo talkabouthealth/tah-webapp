@@ -32,6 +32,7 @@ import play.mvc.With;
 import play.mvc.Scope.Session;
 import util.CommonUtil;
 import util.EmailUtil;
+import util.TwitterUtil;
 import util.EmailUtil.EmailTemplate;
 import dao.ApplicationDAO;
 import dao.TalkerDAO;
@@ -156,7 +157,7 @@ public class Application extends Controller {
 		
 		if (talker.isFollowTAH()) {
 			//follow TAH by this user
-			//FIXME: finish
+			TwitterUtil.followTAH((String)session.get("twitter_token"), (String)session.get("twitter_token_secret"));
 		}
 
 		//login

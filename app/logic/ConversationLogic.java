@@ -67,13 +67,12 @@ public class ConversationLogic {
 		String topicURL = ApplicationDAO.createURLName(title);
 		convo.setMainURL(topicURL);
 
-		//TODO: check it for time?
+		//TODO: check it for execution time delay?
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
 		convo.setBitly(BitlyUtil.shortLink(convoURL));
 		
 		//insert new topic into database
 		ConversationDAO.save(convo);
-		
 		
 		ActionDAO.saveAction(new StartConvoAction(talker, convo, ActionType.START_CONVO));
 		

@@ -77,6 +77,7 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			consumer.setTokenWithSecret(token, tokenSecret);
 			provider.retrieveAccessToken(consumer, oauthVerifier);
 			
+			//TODO: can we user this tokens from session to session?
 			session.put("twitter_token", consumer.getToken());
 			session.put("twitter_token_secret", consumer.getTokenSecret());
 		} catch (Exception e) {
@@ -120,13 +121,6 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 		if (isConnected) {
 			//it's not login/signup - it's adding of Twitter account for notifications!
 			try {
-				//follow TAH by this user
-//				url = new URL("http://api.twitter.com/1/friendships/create/"+TwitterUtil.TALKFORHEALTH_ID+".xml");
-//				HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-//				conn.setRequestMethod("POST");
-//				consumer.sign(conn);
-//				conn.connect();
-				
 		        TwitterUtil.followUser(accountId);
 			} catch (Exception e) {
 				e.printStackTrace();

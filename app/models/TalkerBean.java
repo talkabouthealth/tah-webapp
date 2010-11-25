@@ -297,6 +297,10 @@ public class TalkerBean implements Serializable {
 		setDeactivated(getBoolean(talkerDBObject.get("deactivated"))); 
 		setSuspended(getBoolean(talkerDBObject.get("suspended")));
 		
+		setAccountType((String)talkerDBObject.get("act_type"));
+		setAccountName((String)talkerDBObject.get("act_name"));
+		setAccountId((String)talkerDBObject.get("act_id"));
+		
 		setBio((String)talkerDBObject.get("bio"));
 		setProfStatement((String)talkerDBObject.get("prof_statement"));
 		setConnection((String)talkerDBObject.get("connection"));
@@ -318,9 +322,7 @@ public class TalkerBean implements Serializable {
 		setImUsername((String)talkerDBObject.get("im_uname"));
 		setImAccounts(parseSet(IMAccountBean.class, talkerDBObject, "im_accounts"));
 		
-		setAccountType((String)talkerDBObject.get("act_type"));
-		setAccountName((String)talkerDBObject.get("act_name"));
-		setAccountId((String)talkerDBObject.get("act_id"));
+		
 		setFollowTAH(getBoolean(talkerDBObject.get("tw_follow")));
 		setShareTwitterToThoughts(getBoolean(talkerDBObject.get("tw_share")));
 		setShareThoughtsToTwitter(getBoolean(talkerDBObject.get("tw_sharethoughts")));

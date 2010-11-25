@@ -1,5 +1,7 @@
 package util;
 
+import improject.IMSession.IMService;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -11,6 +13,8 @@ import java.util.Set;
 import play.Logger;
 import util.EmailUtil.EmailTemplate;
 
+import models.ConversationBean;
+import models.ConversationBean.ConvoType;
 import models.TalkerBean;
 import models.TalkerBean.EmailSetting;
 
@@ -20,6 +24,7 @@ import com.tah.im.model.UserInfo;
 import com.tah.im.singleton.OnlineUsersSingleton;
 
 import dao.ConfigDAO;
+import dao.ConversationDAO;
 import dao.NotificationDAO;
 import dao.TalkerDAO;
 
@@ -70,6 +75,52 @@ public class NotificationUtils {
 				imNotifier.broadcast(uidArray, convoId, restartTalkerId);
 			} catch (Exception e) {
 				e.printStackTrace();
+			}
+			
+			//Try twitter notifications
+			ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+			TalkerBean restartTalker = null;
+			if (restartTalkerId != null) {
+				restartTalker = TalkerDAO.getById(restartTalkerId);
+			}
+			else {
+				restartTalker = convo.getTalker();
+			}
+			
+			StringBuilder message = new StringBuilder();
+			message.append(restartTalker.getUserName());
+			if (convo.getConvoType() == ConvoType.QUESTION) {
+				//mnj5 asked the question: What items come in handy after a mastectomy... To answer: http://bit.ly/dfsqe
+				message.append(" asked the question: \"");
+	    		
+	    		String convoTitle = convo.getTopic();
+	    		if (convoTitle.length() > 55) {
+	    			convoTitle = convoTitle.substring(0, 55)+"...";
+	    		}
+	    		message.append(convoTitle+"\" To answer: ");
+			}
+			else {
+				//mnj5 started the talk: What items come in handy after a mastectomy... To join the talk: http://bit.ly/dfsqe
+				message.append(" started the talk: \"");
+	    		
+	    		String convoTitle = convo.getTopic();
+	    		if (convoTitle.length() > 50) {
+	    			convoTitle = convoTitle.substring(0, 50)+"...";
+	    		}
+	    		message.append(convoTitle+"\" To join the talk:");
+			}
+			message.append(convo.getBitly());
+	    	
+			for (String talkerId : talkersForNotification) {
+				//do not send notification to author of the event
+				if (talkerId.equals(restartTalker.getId()) || talkerId.equalsIgnoreCase(EmailUtil.SUPPORT_EMAIL)) {
+					continue;
+				}
+				
+				TalkerBean talker = TalkerDAO.getById(talkerId);
+				if (talker.getAccountId() != null) {
+					TwitterUtil.sendDirect(talker.getAccountId(), message.toString());
+				}
 			}
 		}
 	}

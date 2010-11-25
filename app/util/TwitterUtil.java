@@ -1,6 +1,7 @@
 package util;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -14,6 +15,7 @@ import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
+import oauth.signpost.http.HttpParameters;
 import oauth.signpost.http.HttpRequest;
 import play.Logger;
 import util.oauth.TwitterOAuthProvider;
@@ -28,6 +30,7 @@ public class TwitterUtil {
 	
 	public static final String TALKFORHEALTH_ID = "136322338";
 	
+	/* Operation from TAH account */
 	public static void followUser(final String userAccountId) {
 		Executors.newSingleThreadExecutor().execute(new Runnable() {
 			@Override
@@ -52,6 +55,62 @@ public class TwitterUtil {
 			}
 		});
 	}
+	
+	public static void sendDirect(final String userAccountId, final String text) {
+		Executors.newSingleThreadExecutor().execute(new Runnable() {
+			@Override
+			public void run() {
+				OAuthConsumer consumer = new DefaultOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
+				consumer.setTokenWithSecret(ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
+				
+				try {
+					String urlParameters =
+				        "user_id=" + userAccountId +
+				        "&text=" + URLEncoder.encode(text, "UTF-8");
+					URL url = new URL("http://api.twitter.com/1/direct_messages/new.xml?"+urlParameters);
+					
+					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+					conn.setRequestMethod("POST");
+					
+					consumer.sign(conn);
+					conn.connect();
+					
+					System.out.println("Twitter follow response: " + conn.getResponseCode() + " "
+			                + conn.getResponseMessage());
+				} catch (Exception e) {
+					e.printStackTrace();
+					Logger.error(e, "Wasn't able to follow Twitter user!");
+				}
+			}
+		});
+	}
+	
+	
+	/* Operations from user's account */
+	public static void followTAH(final String token, final String tokenSecret) {
+		Executors.newSingleThreadExecutor().execute(new Runnable() {
+			@Override
+			public void run() {
+				OAuthConsumer consumer = new DefaultOAuthConsumer(TwitterOAuthProvider.CONSUMER_KEY, TwitterOAuthProvider.CONSUMER_SECRET);
+				consumer.setTokenWithSecret(token, tokenSecret);
+				
+				try {
+					URL url = new URL("http://api.twitter.com/1/friendships/create/"+TALKFORHEALTH_ID+".xml");
+					
+					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+					conn.setRequestMethod("POST");
+					consumer.sign(conn);
+					
+					conn.connect();
+					System.out.println("Twitter update response: " + conn.getResponseCode() + " "
+			                + conn.getResponseMessage());
+				} catch (Exception e) {
+					Logger.error(e, "Wasn't able to follow Twitter user!");
+				}
+			}
+		});
+	}
+	
 	
 	public static void makeUserTwit(String fullText, final String token, final String tokenSecret) {
 		if (fullText.length() > 137) {
