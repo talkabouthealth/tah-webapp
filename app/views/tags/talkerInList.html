@@ -11,12 +11,12 @@
 		</span><br/>
         #{if _talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.PERSONAL_INFO) }
         	<span class="greytext12">
-				${_talker.bio?.limitSize(80).nl2br()}
+				${_talker.bio?.limitSize(80)?.nl2br()}
 				#{if _talker.bio?.size() > 80 }
 					&nbsp;<a href="#" class="more11">more</a>
 				#{/if}
 			</span>
-			<span class="greytext12 fulltext">${_talker.bio.nl2br()}</span>
+			<span class="greytext12 fulltext">${_talker.bio?.nl2br()}</span>
 			<br/>
         #{/if}
         <span class="bluetext12">
