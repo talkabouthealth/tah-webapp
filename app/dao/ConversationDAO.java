@@ -409,7 +409,7 @@ public class ConversationDAO {
 	}
 	
 	
-	public static Set<DBRef> getConversationsByTopics(List<TopicBean> topics) {
+	public static Set<DBRef> getConversationsByTopics(Set<TopicBean> topics) {
 		Set<DBRef> convosDBSet = new HashSet<DBRef>();
 		if (topics == null || topics.size() == 0) {
 			return convosDBSet;

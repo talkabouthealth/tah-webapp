@@ -248,7 +248,7 @@ public class ActionDAO {
 		for (ActionType actionType : TOPIC_FEED_ACTIONS) {
 			actionTypes.add(actionType.toString());
 		}
-		Set<DBRef> convosDBSet = ConversationDAO.getConversationsByTopics(Arrays.asList(topic));
+		Set<DBRef> convosDBSet = ConversationDAO.getConversationsByTopics(new HashSet(Arrays.asList(topic)));
 		
 		BasicDBObjectBuilder queryBuilder = 
 			BasicDBObjectBuilder.start()

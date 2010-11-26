@@ -36,6 +36,10 @@ import dao.TopicDAO;
 import static util.DBUtil.*;
 
 //TODO: check serialization (this bean is stored in a cache)
+/**
+ * @author Osezno
+ *
+ */
 public class TalkerBean implements Serializable {
 	
 	public static final String[] CHILDREN_AGES_ARRAY = new String[] {
@@ -210,7 +214,7 @@ public class TalkerBean implements Serializable {
 	//TODO: what's the best solution for partial load?
 	private List<String> followingConvosList;
 	private List<ConversationBean> followingConvosFullList;
-	private List<TopicBean> followingTopicsList;
+	private Set<TopicBean> followingTopicsList;
 	private List<ConversationBean> startedTopicsList;
 	private List<ConversationBean> joinedTopicsList;
 	
@@ -418,7 +422,7 @@ public class TalkerBean implements Serializable {
 	}
 	
 	private void parseFollowingTopics(Collection<DBRef> followingTopicsDBList) {
-		followingTopicsList = new ArrayList<TopicBean>();
+		followingTopicsList = new LinkedHashSet<TopicBean>();
 		if (followingTopicsDBList != null) {
 			for (DBRef topicDBRef : followingTopicsDBList) {
 				TopicBean topic = new TopicBean();
@@ -917,10 +921,10 @@ public class TalkerBean implements Serializable {
 	public void setNumOfThankYous(int numOfThankYous) {
 		this.numOfThankYous = numOfThankYous;
 	}
-	public List<TopicBean> getFollowingTopicsList() {
+	public Set<TopicBean> getFollowingTopicsList() {
 		return followingTopicsList;
 	}
-	public void setFollowingTopicsList(List<TopicBean> followingTopicsList) {
+	public void setFollowingTopicsList(Set<TopicBean> followingTopicsList) {
 		this.followingTopicsList = followingTopicsList;
 	}
 	public boolean isSuspended() {
