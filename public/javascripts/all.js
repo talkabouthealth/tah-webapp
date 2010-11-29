@@ -219,7 +219,7 @@ function makeAutocomplete(id, type) {
 }
 
 /* Autocompete for topis - allows adding multiply topics (separated by space) */
-function makeTopicsAutocomplete(id) {
+function makeTopicsAutocomplete(id, parent) {
 	if ($(id).size() === 0) {
 		return;
 	}
@@ -238,7 +238,7 @@ function makeTopicsAutocomplete(id) {
 			$.ajax({
 				url: "/search/ajaxTopicSearch",
 				dataType: "json",
-				data: { term : currentTerm },
+				data: { term : currentTerm, parent : parent },
 				success: function( data ) {
 					cache[ currentTerm ] = data;
 					response( data );
@@ -265,6 +265,7 @@ function makeTopicsAutocomplete(id) {
 			// add placeholder to get the comma-and-space at the end
 			terms.push( "" );
 			this.value = terms.join( ", " );
+			$(this).change();
 			return false;
 		}
 	})

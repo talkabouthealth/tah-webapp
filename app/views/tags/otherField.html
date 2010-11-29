@@ -1,3 +1,4 @@
+*{
 <textarea name="other${_name}" id="other${_name}" cols="45" rows="5" 
 	onclick="if (this.value == 'Other (please separate by commas)') this.value='';"
 	class="textarea3"
@@ -7,3 +8,14 @@
 	#{else}
 		>${_values[_name].toCommaString('Other')}</textarea>
 	#{/else}
+}*
+
+<input name="other${_name}" id="other${_name}" type="text" 
+	class="personalfields" onclick="if (this.value == 'Other (please separate by commas)') this.value='';"
+	#{if _values == null || _values[_name] == null }
+		value="Other (please separate by commas)"
+	#{/if}
+	#{else}
+		value="${_values[_name].toCommaString('Other')}"
+	#{/else}
+	/>

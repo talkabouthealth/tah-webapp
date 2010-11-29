@@ -439,7 +439,7 @@ public class ConversationDAO {
 		return convosDBSet;
 	}
 	
-	private static void getAllTopics(List<DBRef> allTopics, TopicBean topic) {
+	public static void getAllTopics(List<DBRef> allTopics, TopicBean topic) {
 		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topic.getId());
 		if (!allTopics.contains(topicRef)) {
 			allTopics.add(topicRef);

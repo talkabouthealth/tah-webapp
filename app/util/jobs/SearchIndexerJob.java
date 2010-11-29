@@ -122,6 +122,7 @@ public class SearchIndexerJob extends Job {
 				}
 				
 				Document doc = new Document();
+				doc.add(new Field("id", topic.getId(), Field.Store.YES, Field.Index.NO));
 				doc.add(new Field("title", topic.getTitle(), Field.Store.YES, Field.Index.TOKENIZED));
 				doc.add(new Field("type", "Topic", Field.Store.YES, Field.Index.NO));
 				doc.add(new Field("url", topic.getMainURL(), Field.Store.YES, Field.Index.NO));

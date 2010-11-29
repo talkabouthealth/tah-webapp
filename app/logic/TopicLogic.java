@@ -1,7 +1,13 @@
 package logic;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.mongodb.DBRef;
+
 import models.TopicBean;
 import dao.ApplicationDAO;
+import dao.ConversationDAO;
 import dao.TopicDAO;
 
 public class TopicLogic {
@@ -27,6 +33,17 @@ public class TopicLogic {
 			defaultTopic.getChildren().add(topic);
 			TopicDAO.updateTopic(defaultTopic);
 		}
+	}
+	
+	public static List<String> getTopicsTree(TopicBean parentTopic) {
+		List<DBRef> allTopics = new ArrayList<DBRef>();
+		ConversationDAO.getAllTopics(allTopics, parentTopic);
+		
+		List<String> topicsTree = new ArrayList<String>();
+		for (DBRef topicRef : allTopics) {
+			topicsTree.add(topicRef.getId().toString());
+		}
+		return topicsTree;
 	}
 
 }

@@ -239,6 +239,13 @@ public class Profile extends Controller {
 		talker.setConnectionVerified(false);
 		CommonUtil.updateTalker(talker, session);
 		
+		if (talker.isProf()) {
+			session.put("prof", "true");
+		}
+		else {
+			session.remove("prof");
+		}
+		
 		renderText("Ok");
 	}
 	

@@ -69,6 +69,12 @@
 				$('#healthdetailsform').ajaxSubmit(options); 
 				return false;
 			});
+
+			makeTopicsAutocomplete("#othersymptoms", "Breast Cancer Symptoms");
+			makeTopicsAutocomplete("#othertests", "Tests");
+			makeTopicsAutocomplete("#otherprocedures", "Procedures");
+			makeTopicsAutocomplete("#othertreatments", "Medications");
+			makeTopicsAutocomplete("#othersideeffects", "Side Effects");
 		});
 
 		var options = { 
@@ -309,8 +315,8 @@
 								#{ healthItemsTree healthItem:healthItemsMap["symptoms"], checkedItems: talkerDisease?.healthItems /}
 							</div>
 							<div class="signupmain">
-								<div class="textareabig">
-									#{ otherField name:'symptoms', values: talkerDisease?.otherHealthItems /}
+								<div class="personaltextfield">
+								  	#{ otherField name:'symptoms', values: talkerDisease?.otherHealthItems /}
 								</div>
 							</div>
 							<div class="button">
@@ -372,7 +378,7 @@
 					<div class="generalcheck">
 						#{ healthItemsTree healthItem:healthItemsMap["tests"], checkedItems: talkerDisease?.healthItems /}
 					</div>
-					<div class="textareabig">
+					<div class="personaltextfield">
 						#{ otherField name:'tests', values: talkerDisease?.otherHealthItems /}
 					</div>
 					<div class="generalsubhead">
@@ -382,7 +388,7 @@
 					<div class="generalcheck">
 						#{ healthItemsTree healthItem:healthItemsMap["procedures"], checkedItems: talkerDisease?.healthItems /}
 					</div>
-					<div class="textareabig">
+					<div class="personaltextfield">
 						#{ otherField name:'procedures', values: talkerDisease?.otherHealthItems /}
 					</div>
 					<div class="button">
@@ -415,7 +421,7 @@
 						<a name="treatments"></a>
 						#{ healthItemsTree healthItem:healthItemsMap["treatments"], checkedItems: talkerDisease?.healthItems /}
 					</div>
-					<div class="textareabig">
+					<div class="personaltextfield">
 						#{ otherField name:'treatments', values: talkerDisease?.otherHealthItems /}
 					</div>
 					<div class="button">
@@ -445,7 +451,7 @@
 					<div class="generalcheck">
 						#{ healthItemsTree healthItem:healthItemsMap["sideeffects"], checkedItems: talkerDisease?.healthItems /}
 					</div>
-					<div class="textareabig">
+					<div class="personaltextfield">
 						<a name="sideeffects"></a>
 						#{ otherField name:'sideeffects', values: talkerDisease?.otherHealthItems /}
 					</div>
