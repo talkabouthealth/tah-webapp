@@ -38,10 +38,15 @@
 	.twitterSetting { margin-bottom: 0px; }
 </style>
 
+<script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
 <script type="text/javascript" charset="utf-8">
 	#{ oauthJavaScripts /}
 
 	$(document).ready(function() {
+
+		addAjaxForm("#setNotifyFrequency");
+		addAjaxForm("#emailsettings");
+		
 		// ------------ Emails --------------
 		$("#newEmailBtn").click(function() {
 			$("#emailError").html("");
@@ -275,7 +280,7 @@
         #{ include 'PublicProfile/profileRight.html' /}
             	
 	
-	<form id="NofifyFrequency" name="setNotifyFrequency" action="@{Profile.notificationsSave()}#notificationsform" method="post"  >
+	<form id="setNotifyFrequency" name="setNotifyFrequency" action="@{Profile.notificationsSave()}#notificationsform" method="post"  >
 		<div class="blacktext2" id="innerheading">
 			IM and Twitter Notification Settings
 		</div>
@@ -330,20 +335,6 @@
 							</ul>
 						</div>
 					</div>
-<!-- <div id="savebutton"><a href="/tah-java/SetNotification"><img src="/public/images/save.gif" width="186" height="46" /></a></div> -->
-					<div class="button">
-						<input id="submit" name="submit1" type="image" src="/public/images/save.gif" value="save changes"> 
-						#{if "notificationsForm".equals(flash.currentForm)}
-							#{if flash.success}
-								<span class="success savednote">
-									Changes saved!<br/>
-									<span style="color: black; font-weight: bold;">
-										Next step: Update your email settings below.
-									</span>
-								</span>
-							#{/if}
-						#{/if}
-					</div>
 				</div>
 				<div class="notifactionboxbot"></div>
 			</div>
@@ -387,30 +378,16 @@
 							</div>
 						</div>
 					</div>
-					<div class="button">
-						<input id="submit" name="submit1" type="image" src="/public/images/save.gif" value="save changes">  
-						#{if "emailsettingsForm".equals(flash.currentForm)}
-							#{if flash.success}
-								<span class="success savednote">
-									Changes saved!<br/>
-									#{if talker.isProf() }
-								    	<span style="color: black; font-weight: bold;">
-											Next step: Update your <a href="@{Profile.edit()}">Profile</a> Information.
-										</span>
-								    #{/if}
-								    #{else}
-								    	<span style="color: black; font-weight: bold;">
-											Next step: Update your <a href="@{Profile.edit()}">Profile</a> and
-											<a href="@{Profile.healthDetails()}">Health</a> Information.
-										</span>
-								    #{/else}
-								</span>
-							#{/if}
-						#{/if}
-					</div>
 				</div>
 				<div class="notifactionboxbot"></div>
 			</div>
+			
+			#{if talker.nextStepMessage }
+			 	<div class="generalsubhead">
+				 	Next Step: ${talker.nextStepMessage?.raw()}.
+				 	Or go to the <a href="@{Home.index()}">Home</a> page.
+				</div>
+		 	#{/if}
 	</form>	
 		
 	</div>			

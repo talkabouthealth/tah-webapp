@@ -25,27 +25,6 @@
 			top:8px;
 		}
 		
-		#savedHelp {
-			display:none;
-			margin:0 auto;
-			position:fixed;
-			top:0;
-			left:50%;
-			margin:0 auto 0 -200px;
-			width:400px;
-			height: 60px;
-			z-index:1001;
-			
-			text-align: center;
-			border-top: none;
-			
-			-moz-border-radius-bottomleft: 10px;
-			-moz-border-radius-bottomright: 10px;
-			border-bottom-left-radius: 10px;
-			border-bottom-right-radius: 10px;
-		}
-		#savedHelp .note { margin-top: 15px }
-		
 		.button { display: none; }
 	</style>
 	
@@ -59,17 +38,8 @@
 		}
 
 		$(document).ready(function() {
-			$("#healthdetailsform input, #healthdetailsform select, #healthdetailsform textarea").change(function() {
-				if (closeInterval) {
-					window.clearInterval(closeInterval);
-				}
-				$("#savedHelp .note").html("Saving...");
-				$("#savedHelp").fadeIn(300);
-				
-				$('#healthdetailsform').ajaxSubmit(options); 
-				return false;
-			});
-
+			addAjaxForm("#healthdetailsform");
+			
 			makeTopicsAutocomplete("#othersymptoms", "Breast Cancer Symptoms");
 			makeTopicsAutocomplete("#othertests", "Tests");
 			makeTopicsAutocomplete("#otherprocedures", "Procedures");
@@ -77,55 +47,9 @@
 			makeTopicsAutocomplete("#othersideeffects", "Side Effects");
 		});
 
-		var options = { 
-		        //target:        '#output2',   // target element(s) to be updated with server response 
-		        //beforeSubmit:  showRequest,  // pre-submit callback 
-		        success:       showResponse  // post-submit callback 
-		 
-		        // other available options: 
-		        //url:       url         // override for form's 'action' attribute 
-		        //type:      type        // 'get' or 'post', override for form's 'method' attribute 
-		        //dataType:  null        // 'xml', 'script', or 'json' (expected server response type) 
-		        //clearForm: true        // clear all form fields after successful submit 
-		        //resetForm: true        // reset the form after successful submit 
-		 
-		        // $.ajax options can be used here too, for example: 
-		        //timeout:   3000 
-		    }; 
-
-		var lastElement;
-		var closeInterval;
-		function ajaxSubmitForm(elem) {
-			if (closeInterval) {
-				window.clearInterval(closeInterval);
-			}
-			$("#savedHelp .note").html("Saving...");
-			$("#savedHelp").fadeIn(300);
-			
-			lastElement = elem;
-			$('#healthdetailsform').ajaxSubmit(options); 
-			
-			return false;
-		}
-		
-		function showResponse(responseText, statusText, xhr, $form)  {
-			$("#savedHelp .note").html("Saved!"); 
-			closeInterval = setInterval(function() { $("#savedHelp").fadeOut(200) }, 2500);
-		} 
 	</script>
 </head>
 <body>
-
-<div id="savedHelp" class="popbox2">
-	<div style="clear: none; float: right;" class="closecover">
-		<div onclick="return hideHelpInfo('saved', false);" class="close">
-			<img alt="Close" src="/public/images/close.jpg"/>
-		</div>
-	</div>
-	<div class="note">
-	  	Saving...
-	</div>
-</div>
 
 #{include 'header.html' /}
 
@@ -455,6 +379,12 @@
 						<a name="sideeffects"></a>
 						#{ otherField name:'sideeffects', values: talkerDisease?.otherHealthItems /}
 					</div>
+					#{if talker.nextStepMessage }
+					 	<div class="generalsubhead">
+						 	Next Step: ${talker.nextStepMessage?.raw()}.
+						 	Or go to the <a href="@{Home.index()}">Home</a> page.
+						</div>
+				 	#{/if}
 					<div class="button">
 						<a href="" onclick="return submitForm('sideeffects');">
 							<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" />

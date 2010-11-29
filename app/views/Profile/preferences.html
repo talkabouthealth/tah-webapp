@@ -1,8 +1,9 @@
 #{ extends 'main.html' /}
+	<script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
 	<script type="text/javascript">
-		function confirmDeactivation() {
-			return false;
-		}
+		$(document).ready(function() {
+			addAjaxForm("#profilepreferencesform");
+		});
 	</script>
 	<style>
 		body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
@@ -69,19 +70,12 @@
 								#{/list}
 							</div>
 						</div>
-						<div class="button">
-							<a id="savebutton" href="#" onclick="document.profilepreferencesform.submit();">
-								<img src="/public/images/save.gif" width="186" height="46" border="0"/>
-							</a>
-							#{if flash.success}
-								<span class="success savednote">
-									Changes saved!<br/>
-									<span style="color: black; font-weight: bold;">
-										Next step: Update your <a href="@{Profile.notifications()}">Notification Settings</a>.
-									</span>
-								</span>
-							#{/if}
-						</div>
+						#{if talker.nextStepMessage }
+						 	<div class="generalsubhead">
+							 	Next Step: ${talker.nextStepMessage?.raw()}.
+							 	Or go to the <a href="@{Home.index()}">Home</a> page.
+							</div>
+					 	#{/if}
 					</div>
 					</form>
 					

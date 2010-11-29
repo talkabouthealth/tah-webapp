@@ -46,6 +46,7 @@ import org.apache.commons.lang.StringUtils;
 
 import play.Logger;
 import play.Play;
+import play.data.validation.Error;
 import play.data.validation.Valid;
 import play.i18n.Messages;
 import play.mvc.Controller;
@@ -97,6 +98,7 @@ public class Profile extends Controller {
 			talker.setChildrenNum(childrenNum);
 		}
 		
+		//FIXME: validate for empty name
 		String oldUserName = oldTalker.getUserName();
 		if (!oldUserName.equals(talker.getUserName())) {
 			boolean nameNotExists = !ApplicationDAO.isURLNameExists(talker.getUserName());
@@ -124,8 +126,11 @@ public class Profile extends Controller {
 	    	talker.setActivityList(ActionDAO.load(oldTalker.getId()));
 			TalkerLogic.calculateProfileCompletion(talker);
 			
-			flash.success("");
-			render("@edit", talker);
+			//flash.success("");
+			//render("@edit", talker);
+			
+			Error error = validation.errors().get(0);
+			renderText("Error:"+error.message());
             return;
         }
 		
@@ -224,12 +229,13 @@ public class Profile extends Controller {
 		
 		
 		
-		flash.success("ok");
-		talker = oldTalker;
-		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-    	talker.setActivityList(ActionDAO.load(talker.getId()));
-		TalkerLogic.calculateProfileCompletion(talker);
-		render("@edit", talker);
+//		flash.success("ok");
+//		talker = oldTalker;
+//		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+//    	talker.setActivityList(ActionDAO.load(talker.getId()));
+//		TalkerLogic.calculateProfileCompletion(talker);
+//		render("@edit", talker);
+		renderText("ok");
 	}
 	
 	public static void changeConnection(String value) {
@@ -246,7 +252,7 @@ public class Profile extends Controller {
 			session.remove("prof");
 		}
 		
-		renderText("Ok");
+		renderText("ok");
 	}
 	
 	public static void changeInsuranceAccepted(List<String> insuranceAccepted) {
@@ -256,8 +262,9 @@ public class Profile extends Controller {
 		talker.setInsuranceAccepted(insuranceAccepted);
 		CommonUtil.updateTalker(talker, session);
 		
-		flash.success("ok");
-		render("@edit", talker);
+		renderText("ok");
+//		flash.success("ok");
+//		render("@edit", talker);
 	}
 	
 	public static void changePassword(String curPassword, String newPassword, String confirmPassword) {
@@ -366,8 +373,9 @@ public class Profile extends Controller {
 		talker.saveProfilePreferences(preferencesSet);
 		TalkerDAO.updateTalker(talker);
 		
-		flash.success("ok");
-		preferences();
+		renderText("ok");
+//		flash.success("ok");
+//		preferences();
 	}
 	
 	/* -------------- Notifications ------------------------ */
@@ -416,8 +424,9 @@ public class Profile extends Controller {
 		}
 		
 		TalkerDAO.updateTalker(sessionTalker);
-		flash.success("ok");
-		notifications();
+		renderText("ok");
+//		flash.success("ok");
+//		notifications();
 	}
 	
 	public static void emailSettingsSave(TalkerBean talker) {
@@ -445,8 +454,9 @@ public class Profile extends Controller {
 		}
 		
 		CommonUtil.updateTalker(sessionTalker, session);
-		flash.success("ok");
-		notifications();
+		renderText("ok");
+//		flash.success("ok");
+//		notifications();
 	}
 	
 	public static void makePrimaryEmail(String newPrimaryEmail) {

@@ -7,10 +7,15 @@
 	#mtright { margin-top:-50px; }
 	#signupright { margin-right:43px; }
 </style>
+
+<script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
 <script type="text/javascript" charset="utf-8">
 
 	$(document).ready(function() {
 		makeTopicsAutocomplete("#talkerkeywords");
+
+		addAjaxForm("#updateprofile");
+		addAjaxForm("#changeInsuranceForm");
 	});
 
 	function changeConnection(elem) {
@@ -219,28 +224,6 @@
 				<!-- We need this field to pass TalkerBean validation -->
 				<input type="hidden" id="talker.password" name="talker.password" value="pass" />
 				<div id="personalleft">
-					<div class="personalmain" style="text-align: center">
-						#{if "editForm".equals(flash.currentForm)}
-							#{if flash.success}
-							    <span class="success">Changes saved!</span>&nbsp;&nbsp;&nbsp;
-							    #{if talker.isProf() }
-							    	<span style="font-size: 14px; font-weight: bold;">
-							    		Next step: Update your <a href="@{Profile.preferences()}">Privacy Settings</a>
-								    </span>
-							    #{/if}
-							    #{else}
-							    	<span style="font-size: 14px; font-weight: bold;">Next step: Edit your 
-								    	<a href="@{Profile.healthDetails()}">Health Info</a>
-								    </span>
-							    #{/else}
-							#{/if}
-							#{ifErrors}
-							   #{errors}
-							       <span class="error">${error}</span><br/>
-							   #{/errors}
-							#{/ifErrors}
-						#{/if}
-					</div>
 					<div class="personalmain">
 						<div class="personaltextarea"><span class="blacktext14">Username</span></div>
 						<div class="personaltextfield">
@@ -330,6 +313,13 @@
 					</form>
 				</div>
 			#{/if}
+			
+				#{if talker.nextStepMessage }
+				 	<div class="generalsubhead">
+					 	Next Step: ${talker.nextStepMessage?.raw()}.
+					 	Or go to the <a href="@{Home.index()}">Home</a> page.
+					</div>
+				#{/if}
 			
 			</div>
 			
