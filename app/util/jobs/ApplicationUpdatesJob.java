@@ -33,6 +33,7 @@ import util.DBUtil;
 import util.importers.DiseaseImporter;
 import util.importers.FieldsDataImporter;
 import util.importers.HealthItemsImporter;
+import util.importers.HealthItemsUpdater;
 import util.importers.TopicsImporter;
 
 /**
@@ -42,8 +43,28 @@ import util.importers.TopicsImporter;
 public class ApplicationUpdatesJob extends Job {
 	
 	public void doJob() throws Exception {
+		/*
+		 	Before deploy:
+		 	1. Update health items
+		 		
+				Navelbine (vinorelbine)|Vinorelbine (Navelbine) - also move this to the medications section
+				remove 'Symptoms'
+				remove Doxil (doxorubicin)
+				
+		 		db.healthitems.find({ name : 'Vinorelbine (Navelbine)'})
+		 		db.healthitems.find({ _id : ObjectId("4cc944afb8682ba91ae9a5f2")})
+		 		db.healthitems.remove({ _id : ObjectId("4cc944afb8682ba948e9a5f2")})
+		 		
+		 		db.healthitems.remove({ name : 'Symptoms'})
+		 		db.healthitems.remove({ name : 'Doxil (doxorubicin)'})
+		 
+		 */
+		
+		
 		//Fields data for Profiles
 		FieldsDataImporter.importData("fields.dat");
+		
+		HealthItemsUpdater.updateHealthItems("healthitemsupd.dat");
 		
 		//update topic from "," to "/"
 		for (TopicBean topic : TopicDAO.loadAllTopics()) {
@@ -55,7 +76,6 @@ public class ApplicationUpdatesJob extends Job {
 			}
 			TopicDAO.updateTopic(topic);
 		}
-		
 		
 		if (ApplicationDAO.isCollectionEmpty(DiseaseDAO.DISEASES_COLLECTION)) {
 			DiseaseImporter.importDiseases("diseases.dat");

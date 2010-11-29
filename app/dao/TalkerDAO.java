@@ -66,7 +66,8 @@ public class TalkerDAO {
 				.add("tw_follow", talker.isFollowTAH())
 				.add("tw_share", talker.isShareTwitterToThoughts())
 				.add("tw_sharethoughts", talker.isShareThoughtsToTwitter())
-				.add("tw_post", talker.isPostOnTwitter())
+				.add("tw_post_answer", talker.isTwitterPostOnAnswer())
+				.add("tw_post_start", talker.isTwitterPostOnStart())
 				
 				
 				.add("prefs", talker.profilePreferencesToInt())
@@ -112,7 +113,8 @@ public class TalkerDAO {
 			.add("tw_follow", talker.isFollowTAH())
 			.add("tw_share", talker.isShareTwitterToThoughts())
 			.add("tw_sharethoughts", talker.isShareThoughtsToTwitter())
-			.add("tw_post", talker.isPostOnTwitter())
+			.add("tw_post_answer", talker.isTwitterPostOnAnswer())
+			.add("tw_post_start", talker.isTwitterPostOnStart())
 			
 			.add("hidden_helps", talker.getHiddenHelps())
 			

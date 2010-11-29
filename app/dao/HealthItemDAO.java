@@ -47,6 +47,17 @@ public class HealthItemDAO {
 		return getString(healthItemObject, "_id");
 	}
 	
+	public static void update(HealthItemBean healthItem) {
+		DBCollection healthItemsColl = getCollection(HEALTH_ITEMS_COLLECTION);
+		
+		DBObject healthItemObject = BasicDBObjectBuilder.start()
+			.add("name", healthItem.getName())
+			.get();
+
+		DBObject healthItemId = new BasicDBObject("_id", new ObjectId(healthItem.getId()));
+		healthItemsColl.update(healthItemId, new BasicDBObject("$set", healthItemObject));
+	}
+	
 	//For now we don't use "diseaseId" because we have one disease
 	//TODO: make it more efficient? - read Mongo articles
 	//FIXME: add indexes!!
@@ -56,6 +67,10 @@ public class HealthItemDAO {
 		//get root health item by name
 		DBObject query = new BasicDBObject("name", name);
 		DBObject healthItemDBObject = healthItemsColl.findOne(query);
+		
+		if (healthItemDBObject == null) {
+			return null;
+		}
 		
 		HealthItemBean healthItem = loadHealthItem(healthItemsColl, 
 				healthItemDBObject.get("_id").toString(), (String)healthItemDBObject.get("name"), true);

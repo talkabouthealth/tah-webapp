@@ -148,7 +148,7 @@ public class ConversationLogic {
     		}
     	}
     	
-    	if (comment.isAnswer() && talker.isPostOnTwitter()) {
+    	if (comment.isAnswer() && talker.isTwitterPostOnAnswer()) {
     		//Twitter notification
     		//Just answered a question on TalkAboutHealth: "What are the ..." http://bit.ly/lksa
     		StringBuilder twit = new StringBuilder();

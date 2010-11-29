@@ -567,14 +567,15 @@ public class Profile extends Controller {
 	public static void updateTwitterSetting(String name, boolean value) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
+		//TODO: use enum!
 		if ("shareTwitterToThoughts".equals(name)) {
 			talker.setShareTwitterToThoughts(value);
 		}
 		else if ("shareThoughtsToTwitter".equals(name)) {
 			talker.setShareThoughtsToTwitter(value);
 		}
-		else if ("postOnTwitter".equals(name)) {
-			talker.setPostOnTwitter(value);
+		else if ("twitterPostOnAnswer".equals(name)) {
+			talker.setTwitterPostOnAnswer(value);
 		}
 		CommonUtil.updateTalker(talker, session);
 		

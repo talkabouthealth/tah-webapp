@@ -148,7 +148,8 @@ public class TalkerBean implements Serializable {
 	//Share my TalkAboutHealth Thoughts Feed posts with my Twitter feed.
 	private boolean shareThoughtsToTwitter;
 	//Post on Twitter when I answer a question.
-	private boolean postOnTwitter;
+	private boolean twitterPostOnAnswer;
+	private boolean twitterPostOnStart;
 
 	private String im;
 	private String imUsername;
@@ -330,7 +331,8 @@ public class TalkerBean implements Serializable {
 		setFollowTAH(getBoolean(talkerDBObject.get("tw_follow")));
 		setShareTwitterToThoughts(getBoolean(talkerDBObject.get("tw_share")));
 		setShareThoughtsToTwitter(getBoolean(talkerDBObject.get("tw_sharethoughts")));
-		setPostOnTwitter(getBoolean(talkerDBObject.get("tw_post")));
+		setTwitterPostOnAnswer(getBoolean(talkerDBObject.get("tw_post_answer")));
+		setTwitterPostOnStart(getBoolean(talkerDBObject.get("tw_post_start")));
 		
 		setNewsletter(getBoolean(talkerDBObject.get("newsletter")));
 		setGender((String)talkerDBObject.get("gender"));
@@ -1011,12 +1013,6 @@ public class TalkerBean implements Serializable {
 	public void setShareThoughtsToTwitter(boolean shareThoughtsToTwitter) {
 		this.shareThoughtsToTwitter = shareThoughtsToTwitter;
 	}
-	public boolean isPostOnTwitter() {
-		return postOnTwitter;
-	}
-	public void setPostOnTwitter(boolean postOnTwitter) {
-		this.postOnTwitter = postOnTwitter;
-	}
 	public boolean isFollowTAH() {
 		return followTAH;
 	}
@@ -1028,5 +1024,17 @@ public class TalkerBean implements Serializable {
 	}
 	public void setInsuranceAccepted(List<String> insuranceAccepted) {
 		this.insuranceAccepted = insuranceAccepted;
+	}
+	public boolean isTwitterPostOnAnswer() {
+		return twitterPostOnAnswer;
+	}
+	public void setTwitterPostOnAnswer(boolean twitterPostOnAnswer) {
+		this.twitterPostOnAnswer = twitterPostOnAnswer;
+	}
+	public boolean isTwitterPostOnStart() {
+		return twitterPostOnStart;
+	}
+	public void setTwitterPostOnStart(boolean twitterPostOnStart) {
+		this.twitterPostOnStart = twitterPostOnStart;
 	}
 }	

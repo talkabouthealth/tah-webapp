@@ -201,11 +201,15 @@
 						#{if flash.from?.equals("twitter") }
 						<div style="padding-left: 10px">
 							<div class="generalcheck" style="padding-top: 3px; padding-bottom:0px;">
+								<span class="blacktext16"><b>Optional:</b></span>
+							</div>
+							<div class="generalcheck" style="padding-top: 3px; padding-bottom:0px;">
 								<div class="preferencescheck">
-									<input type="checkbox" value="true" name="talker.followTAH" style="margin-bottom: 0px;"
-										#{if flash['talker.followTAH'] } checked='checked' #{/if}
+									<input type="checkbox" value="true" name="talker.twitterNotify" style="margin-bottom: 0px;"
+										#{if flash['talker.twitterNotify'] } checked='checked' #{/if}
 									/>
-									<span class="blacktext14">&nbsp;Follow TalkAboutHealth on Twitter.</span>
+									<span class="blacktext14">&nbsp;Notify me of relevant questions and 
+										live chats via Twitter direct message.</span>
 								</div>
 							</div>
 							<div class="generalcheck" style="padding-bottom:0px;">
@@ -226,10 +230,26 @@
 							</div>
 							<div class="generalcheck" style="padding-bottom: 0px;">
 								<div class="preferencescheck">
-									<input type="checkbox" value="true" name="talker.postOnTwitter" style="margin-bottom: 0px;"
-										#{if flash['talker.postOnTwitter']} checked='checked' #{/if}
+									<input type="checkbox" value="true" name="talker.twitterPostOnAnswer" style="margin-bottom: 0px;"
+										#{if flash['talker.twitterPostOnAnswer']} checked='checked' #{/if}
 									/>
 									<span class="blacktext14">&nbsp;Post on Twitter when I answer a question.</span>
+								</div>
+							</div>
+							<div class="generalcheck" style="padding-bottom: 0px;">
+								<div class="preferencescheck">
+									<input type="checkbox" value="true" name="talker.twitterPostOnStart" style="margin-bottom: 0px;"
+										#{if flash['talker.twitterPostOnStart']} checked='checked' #{/if}
+									/>
+									<span class="blacktext14">&nbsp;Post on Twitter when I ask a question or start a live chat.</span>
+								</div>
+							</div>
+							<div class="generalcheck" style="padding-top: 0px; padding-bottom:0px;">
+								<div class="preferencescheck">
+									<input type="checkbox" value="true" name="talker.followTAH" style="margin-bottom: 0px;"
+										#{if flash['talker.followTAH'] } checked='checked' #{/if}
+									/>
+									<span class="blacktext14">&nbsp;Follow TalkAboutHealth on Twitter.</span>
 								</div>
 							</div>
 						</div>
