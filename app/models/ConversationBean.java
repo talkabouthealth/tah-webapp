@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import play.ns.com.jhlabs.image.ConvolveFilter;
 import util.CommonUtil;
 
 import com.mongodb.BasicDBObject;

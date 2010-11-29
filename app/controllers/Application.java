@@ -163,6 +163,9 @@ public class Application extends Controller {
 		//login
 		ApplicationDAO.saveLogin(talker.getId());
 		session.put("username", talker.getUserName());
+		if (talker.isProf()) {
+    		session.put("prof", "true");
+    	}
 
 		session.put("justregistered", true);
         index(newTopic);

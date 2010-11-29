@@ -164,6 +164,7 @@ public class Profile extends Controller {
 			}
 			oldTalker.setProfInfo(profInfo);
 			
+			ActionDAO.saveAction(new UpdateProfileAction(oldTalker, ActionType.UPDATE_PERSONAL));
 		}
 		else {
 			

@@ -242,7 +242,9 @@
   
   #{popups/startConvo page: currentPage /}
   
-  #{popups/imSettings talker: talker /}
+  #{if talker}
+  	#{popups/imSettings talker: talker /}
+  #{/if}
 	
   <!-- Mask to cover the whole screen -->
   <div id="mask"></div>
