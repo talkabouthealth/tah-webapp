@@ -30,18 +30,6 @@
 		return false;
 	}
 	
-	function validatePasswordForm() {
-		var reason = "";
-		
-		reason += validatePassword(document.changePasswordForm.newPassword);
-		if (reason != "") {
-		    alert(reason);
-		    return false;
-		}
-		
-		document.changePasswordForm.submit();
-	}
-	
 	function validateProfileForm() {
 	  var reason = "";
 	  var updateprofileForm = document.getElementById("updateprofile");
@@ -86,27 +74,6 @@
 	    }
 	    return error;
 	}
-	function validatePassword(fld) {
-	    var error = "";
-	    var illegalChars = /[\W_]/; // allow only letters and numbers 
-	 
-	    if (fld.value == "") {
-	        fld.style.background = 'Yellow';
-	        error = "You didn't enter a password.\n";
-	    } else if ((fld.value.length < 1) || (fld.value.length > 15)) {
-	        error = "The password is the wrong length. \n";
-	        fld.style.background = 'Yellow';
-	    } else if (illegalChars.test(fld.value)) {
-	        error = "The password contains illegal characters.\n";
-	        fld.style.background = 'Yellow';
-	    } else if (!((fld.value.search(/(a-z)+/)) && (fld.value.search(/(0-9)+/)))) {
-	        error = "The password must contain at least one numeral.\n";
-	        fld.style.background = 'Yellow';
-	    } else {
-	        fld.style.background = 'White';
-	    }
-	   return error;
-	}  
 	function trim(s)
 	{
 	  return s.replace(/^\s+|\s+$/, '');
@@ -363,53 +330,6 @@
 					<div class="signrighbot"></div>
 				</div>
 			</div>	
-		</div>
-	</div>
-</div>
-<div id="personalarea">
-	<div id="personalinner">
-		<div id="personalleft1">
-		<a name="passwordform"></a>
-		<form id="changePasswordForm" name="changePasswordForm" action="@{Profile.changePassword()}#changePasswordForm" method="post">
-			<div class="personalmain" style="text-align: center">
-				#{if "changePasswordForm".equals(flash.currentForm)}
-					#{if flash.success}
-					    <span class="success">Password is changed!</span>
-					#{/if}
-					#{ifErrors}
-					   #{errors}
-					       <span class="error">${error}</span><br/>
-					   #{/errors}
-					#{/ifErrors}
-				#{/if}
-			</div>
-			<div class="personalmain">
-				<div class="personaltextarea"><span class="blacktext14">Current Password</span></div>
-				<div class="personaltextfield">
-					<input name="curPassword" id="curPassword" type="password" class="personalfields" value="" />
-				</div>
-			</div>
-			<div class="personalmain">
-				<div class="personaltextarea"><span class="blacktext14">New Password</span></div>
-				<div class="personaltextfield">
-					<input name="newPassword" id="newPassword" type="password" class="personalfields" value="" />
-				</div>
-			</div>
-			<div class="personalmain">
-				<div class="personaltextarea"><span class="blacktext14">Confirm Password</span></div>
-				<div class="personaltextfield">
-					<input name="confirmPassword" id="confirmPassword" type="password" class="personalfields" value="" />
-				</div>
-			</div>
-			<div class="personalmain">
-				<div class="personaltextarea"></div>
-				<div class="personaltextarea" style="height:46px; padding-top:2px;">
-					<a href="#passwordform" onclick="validatePasswordForm()">
-						<img src="/public/images/changepass_btn.gif" width="186" height="46" border="0" />
-					</a>
-				</div>
-			</div>
-		</form>
 		</div>
 	</div>
 </div>

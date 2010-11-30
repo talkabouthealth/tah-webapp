@@ -57,7 +57,8 @@ public class ApplicationUpdatesJob extends Job {
 		 		
 		 		db.healthitems.remove({ name : 'Symptoms'})
 		 		db.healthitems.remove({ name : 'Doxil (doxorubicin)'})
-		 
+		 		
+		 	2. Move Twitter/Facebook to the new format?
 		 */
 		
 		

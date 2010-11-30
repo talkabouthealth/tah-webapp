@@ -278,8 +278,8 @@ public class Profile extends Controller {
 		
 		if(validation.hasErrors()) {
 			flash.success("");
-			render("@edit", talker);
-			
+			validation.keep();
+			notifications();
             return;
         }
 		
@@ -287,7 +287,7 @@ public class Profile extends Controller {
 		TalkerDAO.updateTalker(talker);
 		
 		flash.success("ok");
-		render("@edit", talker);
+		notifications();
 	}
 	
 	/* -------------- Image ------------------------ */

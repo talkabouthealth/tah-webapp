@@ -191,11 +191,13 @@ public class ConversationBean {
     			message.setText((String)messageDBObject.get("text"));
     			
     			DBObject fromTalkerDBObject = ((DBRef)messageDBObject.get("uid")).fetch();
-    			TalkerBean fromTalker = 
-    				new TalkerBean(fromTalkerDBObject.get("_id").toString(), (String)fromTalkerDBObject.get("uname"));
-    			message.setFromTalker(fromTalker);
+    			if (fromTalkerDBObject != null) {
+    				TalkerBean fromTalker = 
+        				new TalkerBean(fromTalkerDBObject.get("_id").toString(), (String)fromTalkerDBObject.get("uname"));
+        			message.setFromTalker(fromTalker);
+        			members.add(fromTalker.getUserName());
+    			}
     			
-    			members.add(fromTalker.getUserName());
     			messages.add(message);
     		}
     	}
