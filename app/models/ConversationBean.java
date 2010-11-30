@@ -256,7 +256,7 @@ public class ConversationBean {
 	public String getHtmlDetails(boolean authenticated) {
 		StringBuilder htmlDetails = new StringBuilder();
 		if (convoType == ConvoType.CONVERSATION) {
-			htmlDetails.append("Live talk by ");
+			htmlDetails.append("Live chat by ");
 		}
 		else {
 			htmlDetails.append("Question by ");

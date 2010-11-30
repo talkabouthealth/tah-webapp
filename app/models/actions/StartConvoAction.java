@@ -33,11 +33,11 @@ public class StartConvoAction extends AbstractAction {
 		result.append(fullUserName(talker, authenticated));
 		
 		if (type == ActionType.RESTART_CONVO) {
-			result.append(" restarted the live talk ");
+			result.append(" restarted the live chat ");
 		}
 		else {
 			if (convo.getConvoType() == ConvoType.CONVERSATION) {
-				result.append(" started the live talk ");
+				result.append(" started the live chat ");
 			}
 			else {
 				result.append(" asked the question ");

@@ -27,7 +27,7 @@ GET		/explore/members						Community.browseMembers(action:'active')
 GET		/community/breast-cancer				Community.viewCommunity
 *		/search/conversations					Explore.searchConversations
 GET		/openquestions/?						Explore.openQuestions
-GET		/livetalks/?							Explore.liveTalks
+GET		/livechats/?							Explore.liveTalks
 GET		/explore/topics/?						Explore.browseTopics
 GET		/explore/conversationfeed/?				Explore.conversations(action:'feed')
 GET		/explore/popular/?						Explore.conversations(action:'popular')
@@ -36,8 +36,8 @@ GET		/home/?									Home.index
 GET		/conversationfeed/?						Home.conversationFeed
 GET		/dashboard/?							Dashboard.index
 
-GET		/talk/{convoId}							Talk.talkApp
-GET		/talk/?									Talk.talkApp
+GET		/chat/{convoId}							Talk.talkApp
+GET		/chat/?									Talk.talkApp
 
 GET		/image/{userName}						Image.show
 

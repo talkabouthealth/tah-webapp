@@ -12,12 +12,12 @@
 					${_talker?.followingConvosList?.contains(_convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
 			#{/if}
 			#{if session.username?.equals("admin")}
-				<a href="#" onclick="return closeLiveTalk('${_convo.id}')">Close Live Talk</a>&nbsp;| 
+				<a href="#" onclick="return closeLiveTalk('${_convo.id}')">Close Live Chat</a>&nbsp;| 
 			#{/if}
 			<span>${_convo.creationDate.since()}</span>
 		</div>
 		<div class="jointxtlink1">
-			Live Talk started by 
+			Live Chat started by 
 			#{talker/talkerLink userName: _convo.talker.userName /}
 			<span class="blacktext12">
 				#{talker/talkerInfo talker: _convo.talker /}
@@ -33,7 +33,7 @@
 	#{/if}
 	#{if session.username?.equals("admin")}
 		<div class="joinconbox">
-			<a href="#">Close Live Talk</a>
+			<a href="#">Close Live Chat</a>
 		</div>
 	#{/if}
 	<div class="cb"></div>

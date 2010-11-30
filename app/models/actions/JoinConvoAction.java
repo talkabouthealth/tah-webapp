@@ -22,7 +22,7 @@ public class JoinConvoAction extends AbstractAction {
 	public String toHTML(boolean authenticated) {
 		StringBuilder result = new StringBuilder();
 		result.append(fullUserName(talker, authenticated));
-		result.append(" joined the live talk");
+		result.append(" joined the live chat");
 		result.append(convoTopics());
 		
 		return result.toString();

@@ -101,13 +101,13 @@ public class NotificationUtils {
 			}
 			else {
 				//mnj5 started the talk: What items come in handy after a mastectomy... To join the talk: http://bit.ly/dfsqe
-				message.append(" started the talk: \"");
+				message.append(" started the chat: \"");
 	    		
 	    		String convoTitle = convo.getTopic();
 	    		if (convoTitle.length() > 50) {
 	    			convoTitle = convoTitle.substring(0, 50)+"...";
 	    		}
-	    		message.append(convoTitle+"\" To join the talk:");
+	    		message.append(convoTitle+"\" To join the chat:");
 			}
 			message.append(convo.getBitly());
 	    	
