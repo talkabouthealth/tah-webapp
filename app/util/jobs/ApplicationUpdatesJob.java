@@ -32,6 +32,7 @@ import util.CommonUtil;
 import util.DBUtil;
 import util.importers.DiseaseImporter;
 import util.importers.FieldsDataImporter;
+import util.importers.HealthItems2Topics;
 import util.importers.HealthItemsImporter;
 import util.importers.HealthItemsUpdater;
 import util.importers.TopicsImporter;
@@ -61,9 +62,11 @@ public class ApplicationUpdatesJob extends Job {
 		 	2. Move Twitter/Facebook to the new format?
 		 */
 		
-		
 		//Fields data for Profiles
 		FieldsDataImporter.importData("fields.dat");
+		
+		//HealthItems -> Topics mapping
+		HealthItems2Topics.importData("healthitems2topics.dat");
 		
 		HealthItemsUpdater.updateHealthItems("healthitemsupd.dat");
 		

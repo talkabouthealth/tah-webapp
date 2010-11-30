@@ -24,11 +24,18 @@ import models.actions.Action.ActionType;
 public class TalkerLogic {
 	
 	private static Map<String, List<String>> fieldsDataMap;
+	private static Map<String, List<String>> healthItems2TopicsMap;
 	
 	public static void setFieldsDataMap(Map<String, List<String>> fieldsDataMap) {
 		TalkerLogic.fieldsDataMap = fieldsDataMap;
 	}
-	
+	public static void setHealthItems2TopicsMap(
+			Map<String, List<String>> healthItems2TopicsMap) {
+		TalkerLogic.healthItems2TopicsMap = healthItems2TopicsMap;
+	}
+
+
+
 	public static List<String> getFieldsData(String fieldName, String talkerType) {
 		String key = fieldName+"|"+talkerType;
 		if (fieldsDataMap.containsKey(key)) {
@@ -185,35 +192,64 @@ public class TalkerLogic {
 	public static List<TopicBean> getRecommendedTopics(TalkerDiseaseBean talkerDisease) {
 		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();
 		
-		List<List<String>> stringHealthInfo = new ArrayList<List<String>>();
+		//No topics should be followed for "What part of the breast did the cancer begin?"
+		//Tumor grade, Level of lymph node involvement,
+		//When did first symptom appear?, When were you first diagnosed?
+		List<String> skipHealthItems = Arrays.asList("beginpart", "tumorgrade", "lymphnodes");
 		
+		List<String> topicNames = new ArrayList<String>();
 		Map<String, List<String>> healthInfo = talkerDisease.getHealthInfo();
 		for (String key : healthInfo.keySet()) {
-			stringHealthInfo.add(healthInfo.get(key));
+			if (skipHealthItems.contains(key)) {
+				continue;
+			}
+			
+			for (String healthItemValue : healthInfo.get(key)) {
+				//If the user selects 'yes' for HER2+, automatically have user follow "Her2-Positive Breast Cancer (Her2+)"
+				if (key.equals("her2")) {
+					if (healthItemValue.equals("yes")) {
+						topicNames.add("Her2-Positive Breast Cancer (Her2+)");
+					}
+					continue;
+				}
+				
+				List<String> healthItemsTopics = healthItems2TopicsMap.get(healthItemValue);
+				if (healthItemsTopics != null) {
+					topicNames.addAll(healthItemsTopics);
+				}
+				else {
+					String possibleTopic = JavaExtensions.capitalizeWords(healthItemValue);
+					topicNames.add(possibleTopic);
+				}
+			}
+		}
+		
+		//If user selects 'yes' Recurrent, make sure they follow the 'Recurrent (Recurring) topic.
+		if ("yes".equals(talkerDisease.getRecurrent())) {
+			topicNames.add("Recurrent (Recurring)");
 		}
 		
 		Set<String> healthItems = talkerDisease.getHealthItems();
 		List<HealthItemBean> allHealthItems = HealthItemDAO.getAllHealthItems(null);
 		for (HealthItemBean healthItem : allHealthItems) {
 			if (healthItems.contains(healthItem.getId())) {
-				stringHealthInfo.add(Arrays.asList(healthItem.getName()));
+				List<String> healthItemsTopics = healthItems2TopicsMap.get(healthItem.getName());
+				if (healthItemsTopics != null) {
+					topicNames.addAll(healthItemsTopics);
+				}
+				else {
+					String possibleTopic = JavaExtensions.capitalizeWords(healthItem.getName());
+					topicNames.add(possibleTopic);
+				}
 			}
 		}
 		
-		Map<String, List<String>> otherHealthItems = talkerDisease.getOtherHealthItems();
-		for (String key : otherHealthItems.keySet()) {
-			stringHealthInfo.add(otherHealthItems.get(key));
-		}
+//		System.out.println("REC1:"+topicNames);
 		
-		for (List<String> hi : stringHealthInfo) {
-			for (String possibleTopic : hi ) {
-				if (possibleTopic != null && possibleTopic.trim().length() != 0) {
-					possibleTopic = JavaExtensions.capitalizeWords(possibleTopic);
-					TopicBean topic = TopicDAO.getByTitle(possibleTopic);
-					if (topic != null) {
-						recommendedTopics.add(topic);
-					}
-				}
+		for (String possibleTopic : topicNames) {
+			TopicBean topic = TopicDAO.getByTitle(possibleTopic);
+			if (topic != null) {
+				recommendedTopics.add(topic);
 			}
 		}
 		
