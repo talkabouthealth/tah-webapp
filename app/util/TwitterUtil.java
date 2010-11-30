@@ -11,6 +11,17 @@ import java.net.URLEncoder;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import com.google.gson.GsonBuilder;
+
+import fr.zenexity.json.JSON;
+
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthConsumer;
@@ -20,6 +31,7 @@ import oauth.signpost.http.HttpRequest;
 import play.Logger;
 import util.oauth.TwitterOAuthProvider;
 
+//TODO: rewrite it with new Play OAuth API
 public class TwitterUtil {
 	/* Account @talkforhealth */
 	private static final String CONSUMER_KEY = "dntMSxZl859YGyAeKcTFcg";
@@ -133,6 +145,100 @@ public class TwitterUtil {
 					conn.connect();
 					System.out.println("Twitter update response: " + conn.getResponseCode() + " "
 			                + conn.getResponseMessage());
+				} catch (Exception e) {
+					Logger.error(e, "Wasn't able to follow Twitter user!");
+				}
+			}
+		});
+	}
+	
+	public static void importTweets(final String token, final String tokenSecret) {
+		Executors.newSingleThreadExecutor().execute(new Runnable() {
+			@Override
+			public void run() {
+				OAuthConsumer consumer = new DefaultOAuthConsumer(TwitterOAuthProvider.CONSUMER_KEY, TwitterOAuthProvider.CONSUMER_SECRET);
+				consumer.setTokenWithSecret(token, tokenSecret);
+				
+				try {
+					URL url = new URL("http://api.twitter.com/1/statuses/user_timeline.xml?count=200");
+					
+					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+					conn.setRequestMethod("GET");
+					consumer.sign(conn);
+					
+					conn.connect();
+					
+					System.out.println("Twitter update response: " + conn.getResponseCode() + " "
+			                + conn.getResponseMessage());
+					
+					DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+					DocumentBuilder db = dbf.newDocumentBuilder();
+					Document doc = db.parse(conn.getInputStream());
+					
+					NodeList statusNodeList = doc.getFirstChild().getChildNodes();
+					for (int i=0; i<statusNodeList.getLength(); i++) {
+						Node statusNode = statusNodeList.item(i);
+						NodeList childNodes = statusNode.getChildNodes();
+//						  <created_at>Tue Mar 10 14:17:11 +0000 2009</created_at>
+//						  <id>1305504773</id>
+//						  <text>hi kan!</text>
+						for (int j=0; j<childNodes.getLength(); j++) {
+							Node child = childNodes.item(j);
+							if (child.getNodeName().equals("text")) {
+								System.out.println(":"+child.getFirstChild().getNodeValue());
+							}
+						}
+						
+
+					}
+					
+				} catch (Exception e) {
+					Logger.error(e, "Wasn't able to follow Twitter user!");
+				}
+			}
+		});
+	}
+	
+	public static void loadMentions() {
+		Executors.newSingleThreadExecutor().execute(new Runnable() {
+			@Override
+			public void run() {
+				OAuthConsumer consumer = new DefaultOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
+				consumer.setTokenWithSecret(ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
+				
+				try {
+					URL url = new URL("http://api.twitter.com/1/statuses/mentions.xml?count=200");
+					
+					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+					conn.setRequestMethod("GET");
+					consumer.sign(conn);
+					
+					conn.connect();
+					
+					System.out.println("Twitter update response: " + conn.getResponseCode() + " "
+			                + conn.getResponseMessage());
+					
+					DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+					DocumentBuilder db = dbf.newDocumentBuilder();
+					Document doc = db.parse(conn.getInputStream());
+					
+					NodeList statusNodeList = doc.getFirstChild().getChildNodes();
+					for (int i=0; i<statusNodeList.getLength(); i++) {
+						Node statusNode = statusNodeList.item(i);
+						NodeList childNodes = statusNode.getChildNodes();
+//						  <created_at>Tue Mar 10 14:17:11 +0000 2009</created_at>
+//						  <id>1305504773</id>
+//						  <text>hi kan!</text>
+						for (int j=0; j<childNodes.getLength(); j++) {
+							Node child = childNodes.item(j);
+							if (child.getNodeName().equals("text")) {
+								System.out.println(":"+child.getFirstChild().getNodeValue());
+							}
+						}
+						
+
+					}
+					
 				} catch (Exception e) {
 					Logger.error(e, "Wasn't able to follow Twitter user!");
 				}
