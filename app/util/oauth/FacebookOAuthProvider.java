@@ -26,6 +26,8 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 	private static final String APP_SECRET = "0620bead67e2ffa4e9e46f60b3376dec";
 	private static final String CALLBACK_URL =
 		"http://talkabouthealth.com/oauth/callback?type=facebook";
+	private static final String CALLBACK_URL2 =
+		"https://talkabouthealth.com/oauth/callback?type=facebook";
 	
 // Test settings	
 //	private static final String APP_ID = "126479497379490";
@@ -37,9 +39,11 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 	public String getAuthURL(Session session) {
 		String authURL = null;
 		try {
+			//TODO: user offline_access permission?
 			authURL = "https://graph.facebook.com/oauth/authorize?" +
-				"client_id="+APP_ID+"&redirect_uri="+URLEncoder.encode(CALLBACK_URL, "UTF-8")+
-				"&scope=email,user_about_me,user_birthday";
+				//"client_id="+APP_ID+"&redirect_uri="+URLEncoder.encode(CALLBACK_URL, "UTF-8")+
+				"client_id="+APP_ID+"&redirect_uri="+URLEncoder.encode(CALLBACK_URL2, "UTF-8")+
+				"&scope=email,user_about_me,user_birthday,publish_stream";
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -53,7 +57,7 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			String url = "https://graph.facebook.com/oauth/access_token";
 			String urlParams = 
 			    "client_id="+APP_ID+
-			    "&redirect_uri="+URLEncoder.encode(CALLBACK_URL, "UTF-8")+
+			    "&redirect_uri="+URLEncoder.encode(CALLBACK_URL2, "UTF-8")+
 			    "&client_secret="+APP_SECRET+
 			    "&code="+URLEncoder.encode(code, "UTF-8");
 			List<String> lines = CommonUtil.makeGET(url, urlParams);
@@ -67,6 +71,9 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 					accessToken = line.substring(13, separatorIndex);
 				}
 			}
+			
+			System.out.println("TOKEN: "+accessToken);
+			session.put("fb_token", accessToken);
 			
 			//parse Facebook id and email from reply
 			String accountId = null;
@@ -111,6 +118,7 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 				return "/home";
 	        }
 	        else {
+	        	System.out.println("ACT: "+accountId);
 	        	session.put("accounttype", "facebook");
 	        	session.put("accountname", userEmail);
 			    session.put("accountid", accountId);

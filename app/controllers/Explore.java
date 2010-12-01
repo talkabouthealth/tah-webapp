@@ -21,6 +21,7 @@ import models.TopicBean;
 import models.actions.Action;
 import util.BitlyUtil;
 import util.CommonUtil;
+import util.FacebookUtil;
 import util.SearchUtil;
 import util.TwitterUtil;
 import dao.ActionDAO;
@@ -54,7 +55,9 @@ public class Explore extends Controller {
     	//FIXME
     	//TwitterUtil.importTweets((String)session.get("twitter_token"), (String)session.get("twitter_token_secret"));
     	//TwitterUtil.loadMentions();
-    	
+    	//FacebookUtil.post("Test cool", (String)session.get("fb_token"));
+    	//FacebookUtil.likeTAH((String)session.get("fb_token"));
+    	//FacebookUtil.importPosts((String)session.get("fb_token"));
     	
     	List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
 		render(talker, liveTalks);

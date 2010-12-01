@@ -60,6 +60,8 @@ public class ApplicationUpdatesJob extends Job {
 		 		db.healthitems.remove({ name : 'Doxil (doxorubicin)'})
 		 		
 		 	2. Move Twitter/Facebook to the new format?
+		 	
+		 	3. Update ConversationBean from the server code
 		 */
 		
 		//Fields data for Profiles
