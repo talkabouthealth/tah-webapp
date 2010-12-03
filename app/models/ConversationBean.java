@@ -186,9 +186,18 @@ public class ConversationBean {
     	Set<String> members = new HashSet<String>();
     	Collection<DBObject> messagesDBList = (Collection<DBObject>)convoDBObject.get("messages");
     	if (messagesDBList != null) {
+    		int cnt = -1;
     		for (DBObject messageDBObject : messagesDBList) {
+    			cnt++;
+    			
+    			boolean isDeleted = getBoolean(messageDBObject, "deleted");
+    			if (isDeleted) {
+    				continue;
+    			}
+    			
     			MessageBean message = new MessageBean();
     			message.setText((String)messageDBObject.get("text"));
+    			message.setIndex(cnt);
     			
     			DBObject fromTalkerDBObject = ((DBRef)messageDBObject.get("uid")).fetch();
     			if (fromTalkerDBObject != null) {
@@ -196,9 +205,12 @@ public class ConversationBean {
         				new TalkerBean(fromTalkerDBObject.get("_id").toString(), (String)fromTalkerDBObject.get("uname"));
         			message.setFromTalker(fromTalker);
         			members.add(fromTalker.getUserName());
+        			
+        			messages.add(message);
     			}
-    			
-    			messages.add(message);
+    			else {
+    				//TODO: log message
+    			}
     		}
     	}
     	setMembers(members);
@@ -285,6 +297,18 @@ public class ConversationBean {
 		}
 		
 		return filteredAnswers;
+	}
+	
+	public boolean hasUserAnswer(TalkerBean talker) {
+		if (comments == null || talker == null) {
+			return false;
+		}
+		for (CommentBean comment : comments) {
+			if (talker.equals(comment.getFromTalker())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	

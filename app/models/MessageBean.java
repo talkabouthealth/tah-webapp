@@ -9,6 +9,9 @@ public class MessageBean {
 	private String text;
 	private Date time;
 	
+	//index in the 'messages' array, used for updating
+	private int index;
+	
 	public MessageBean() {}
 
 	public MessageBean(String messageId) {
@@ -45,4 +48,12 @@ public class MessageBean {
 
 	public Date getTime() { return time; }
 	public void setTime(Date time) { this.time = time; }
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
 }

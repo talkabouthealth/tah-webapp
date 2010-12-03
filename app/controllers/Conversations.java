@@ -479,4 +479,18 @@ public class Conversations extends Controller {
 		render("tags/convoCommentsTree.html", _commentsList, _level, _talker);
 	}
     
+    public static void deleteChatMessage(String convoId, int index) {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+    	notFoundIfNull(convo);
+    	
+    	if (!talker.isAdmin()) {
+    		forbidden();
+    		return;
+    	}
+
+    	ConversationDAO.deleteChatMessage(convo.getId(), index);
+    	renderText("ok");
+    }
+    
 }

@@ -234,6 +234,12 @@
   	  				$("#firstcommentmessage").hide();
   					$("#replyform"+parentId).before($(html));
 
+  					//user can post only one answer per convo
+  					if (parentId === '') {
+  	  					$("#answerFormDiv").hide();
+  	  					$("#noAnswerText").show();
+  					}
+
   					$('.inline-edit').inlineEdit(
 				  		{ hover: '', saveFunction: saveData, updateFunction: updateData}
 				  	);
@@ -284,6 +290,23 @@
     			);
    	   		}
    	   		
+   	   		return false;
+   		}
+
+   		//used by admin
+   		function deleteChatMessage(index) {
+   	   		var confirmDel = confirm("Are you sure want to delete this message?");
+   	   		if (confirmDel) {
+   	   	   		$("#chatMessage"+index).remove();
+
+	   	   	  	$.post("@{Conversations.deleteChatMessage()}", 
+	  				{ convoId : '${convo.id}', index: index},
+	  				function (html) {
+	  					//...
+	  				}
+	  			);
+	   		}
+	   		
    	   		return false;
    		}
 	</script>
@@ -599,12 +622,17 @@
                         
 							<div class="topic" id="replyform"><br />
 								#{if talker }
-									<div class="topicborder" style="margin-top: 7px;"></div>
-									<div class="answerh1">Add Answer</div>
-									<textarea name="textarea" id="replytext" class="answerinput" 
-										onclick="if (this.value === 'Add New Answer') this.value='';">Add New Answer</textarea><br />
-									<input type="submit" onclick="return saveProfileComment('');" 
-										src="/public/images/addcomments.jpg" class="addcomments" value=" " />
+									<div id="answerFormDiv" style="display: ${userHasAnswer ? 'none' : 'block'};">
+										<div class="topicborder" style="margin-top: 7px;"></div>
+										<div class="answerh1">Add Answer</div>
+										<textarea name="textarea" id="replytext" class="answerinput" 
+											onclick="if (this.value === 'Add New Answer') this.value='';">Add New Answer</textarea><br />
+										<input type="submit" onclick="return saveProfileComment('');" 
+											src="/public/images/addcomments.jpg" class="addcomments" value=" " />
+									</div>
+									<div id="noAnswerText" style="display: ${!userHasAnswer ? 'none' : 'block'};">
+										Only one answer per conversation per user. You may edit your answer though.
+									</div>
 								#{/if}
 								
 								#{if session.username && convo.messages}
@@ -618,21 +646,25 @@
 									
 									<div class="talkerCover">
 										<div class="talkertop">Talkers</div>
-										<div class="talkermid"><br />
-											#{list items: convo.members, as: 'member'}
-												<img src="@{Image.show(member)}" width="48" height="48" border="0" />
-												${member}&nbsp;&nbsp;&nbsp;
-											#{/list}
-											<!--
-								              <div class="talkertxt">
-								              <div class="talktextleft"><span class="uzername"><a href="#">tom:</a></span></div>
-								              <div class="talktextright"><span class="uzername"><a href="#">Janifer</a></div>
-								              </div>talkertxt-->
-								              
+										<div class="talkermid">
+											<div class="talkertxt1" style="padding-top: 10px;">
+												#{list items: convo.members, as: 'member'}
+													#{ talker/talkerImageLink userName: member, size: 48 /}
+													${member}&nbsp;&nbsp;&nbsp;
+												#{/list}
+											</div>
+											
 											#{list items: convo.messages, as: 'message'}
-												<div class="talkertxt1">
-													<span class="uzername"><a href="#">${message.fromTalker.userName}:</a></span>
-													&nbsp;&nbsp;${message.text} 
+												<div id="chatMessage${message.index}" class="talkertxt1">
+													<span class="uzername">
+														<a href="@{ViewDispatcher.view(message.fromTalker.userName)}"
+															>${message.fromTalker.userName}</a>:
+													</span>
+													&nbsp;&nbsp;${message.text}
+													#{if talker?.isAdmin() }
+														&nbsp;&nbsp;
+														<a href="#" onclick="return deleteChatMessage(${message.index});">X</a>
+													#{/if}
 												</div>
 											#{/list}
 										</div><!--talkermid-->

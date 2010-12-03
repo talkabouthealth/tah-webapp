@@ -222,6 +222,8 @@ public class ViewDispatcher extends Controller {
 //		List<TopicBean> topicsList = TopicDAO.getTopics();
 		
 		convo.setComments(CommentsDAO.loadConvoAnswersTree(convo.getId()));
+		boolean userHasAnswer = convo.hasUserAnswer(talker);
+		
 		List<ConversationBean> relatedConvos = null;
 		try {
 			relatedConvos = SearchUtil.getRelatedConvos(convo);
@@ -229,7 +231,7 @@ public class ViewDispatcher extends Controller {
 			e.printStackTrace();
 		}
 		
-		render("Conversations/viewConvo.html", talker, convo, latestActivityTime, relatedConvos);
+		render("Conversations/viewConvo.html", talker, convo, latestActivityTime, relatedConvos, userHasAnswer);
     }
 	
 	private static void showTopic(TopicBean topic) {

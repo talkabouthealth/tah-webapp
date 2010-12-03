@@ -609,6 +609,11 @@ public class TalkerBean implements Serializable {
 	public boolean isProf() {
 		return PROFESSIONAL_CONNECTIONS_LIST.contains(connection);
 	}
+	
+	public boolean isAdmin() {
+		return (userName != null && userName.equals("admin"));
+	}
+	
 	public boolean isAllowed(ProfilePreference preference) {
 		if (profilePreferences == null) {
 			return false;

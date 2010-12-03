@@ -524,8 +524,20 @@ public class ConversationDAO {
 		return convosList;
 	}
 	
+	public static void deleteChatMessage(String conversationId, int index) {
+		//t.update( {'comments.by':'joe'}, {$inc:{'comments.$.votes':1}}, false, true )
+		
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		DBObject messageObj = new BasicDBObject("messages."+index+".deleted", true);
+		DBObject convoId = new BasicDBObject("_id", new ObjectId(conversationId));
+		convosColl.update(convoId, new BasicDBObject("$set", messageObj));
+	}
+	
 	
 	public static void main(String[] args) {
+		deleteChatMessage("4cc94ac5b8682ba9efeba5f2", 0);
+		
 //		TopicBean topic = new TopicBean();
 //		topic.setTopic("test");
 //		topic.setUid("4c2cb43160adf3055c97d061");
@@ -533,7 +545,7 @@ public class ConversationDAO {
 //		topic.setCreationDate(currentDate);
 //		TopicDAO.save(topic);
 		
-		updateLiveTalkers(3, "4cc94906b8682ba9e5eba5f2", "kangaroo", true);
+//		updateLiveTalkers(3, "4cc94906b8682ba9e5eba5f2", "kangaroo", true);
 		
 		
 //		List<DBRef> allTopics = new ArrayList<DBRef>();
