@@ -487,3 +487,20 @@ function showResponse(responseText, statusText, xhr, $form)  {
 		closeInterval = setInterval(function() { $("#savedHelp").fadeOut(200) }, 2500);
 	}
 } 
+
+
+
+function shareTopic() {
+	var emails = $("#shareEmails").val();
+	var userName = $("#shareUserName").val();
+	var note = $("#shareNote").val();
+
+	$.post("/home/share", 
+		{ emails: emails, from: userName, note: note },
+		function(data) {
+			//set status message
+		}
+	);
+
+	return false;
+}

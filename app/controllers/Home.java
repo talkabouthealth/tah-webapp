@@ -155,5 +155,39 @@ public class Home extends Controller {
     	flash.success("ok");
     	invitations();
     }
+    
+    
+    public static void share(String emails, String from, String note) {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	
+    	System.out.println(emails+" : "+from+" : "+note);
+		
+		//parse and validate emails
+		Set<String> emailsToSend = new HashSet<String>();
+		String[] emailsArr = emails.split(",");	
+		for (String email : emailsArr) {
+			email = email.trim();
+			if (ValidateData.validateEmail(email)) {
+				emailsToSend.add(email);
+			}
+		}
+		
+		validation.isTrue(!emailsToSend.isEmpty()).message("emails.incorrect");
+//		validation.isTrue(emailsToSend.size() <= talker.getInvitations()).message("emails.noinvites");
+		
+		if(validation.hasErrors()) {
+			renderText("Error");
+            return;
+        }
+		
+//		Map<String, String> vars = new HashMap<String, String>();
+//		vars.put("username", talker.getUserName());
+//		vars.put("invitation_note", note);
+//		for (String email : emailsToSend) {
+//			EmailUtil.sendEmail(EmailTemplate.INVITATION, email, vars, null, false);
+//		}
+		
+		renderText("Ok");
+    }
 
 }

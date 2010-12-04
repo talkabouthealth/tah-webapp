@@ -113,6 +113,13 @@
    				);
 			}
 		}
+
+		function sharePopup() {
+			//$("#newConvoForm").show();
+			//$("#newQuestionConfirm").hide();
+			//$("#newTalkConfirm").hide();
+			showPopup("#shareDialogs", 350);
+		}
 	</script>
 </head>
 
@@ -363,20 +370,27 @@
                 </div>
                 <!--topipsts-->
                 <div class="topipsts">
-                  <div class="mtrighttxt1">Share Topic</div>
+                  <div class="mtrighttxt1">Share and Like Topic</div>
                   <!--topixtext-->
                   <div class="membersarea">
                     <div class="sharicons">
                     	<img alt="Emailz" src="/public/images/emailicon.jpg"/>
-                    	<a href="#" onclick="return openInvitationsWindow();">Email</a>
+                    	<a href="#" onclick="return sharePopup();">Email</a>
                     </div>
-                    
-                    *{
-                    <div class="sharicons"><img class="rpad" alt="Twitter" src="/public/images/twittericon.jpg"/><a href="#">Twitter</a></div>
-                    <div class="sharicons"><img class="rpad" alt="Members" src="/public/images/facebookicon.jpg"/><a href="#">Facebook</a></div>
-                    }*
+                    <div class="sharicons">
+                    	<img class="rpad" alt="Twitter" src="/public/images/twittericon.jpg"/>
+                    	<a href="#">Twitter</a>
+                    </div>
+                    <div class="sharicons">
+                    	<img class="rpad" alt="Members" src="/public/images/facebookicon.jpg"/>
+                    	<a href="#">Facebook</a>
+                    </div>
                   </div>
-                  <!--membersarea-->
+                 
+                  *{
+                  <iframe src="http://www.facebook.com/plugins/like.php?href=${currentURL}&amp;layout=standard&amp;show_faces=true&amp;width=240&amp;action=like&amp;colorscheme=light&amp;height=40" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:240px; height:40px;" allowTransparency="true"></iframe>
+                  }*
+                  
                   <div class="topicborder"></div>
                 </div>
                 
@@ -453,6 +467,8 @@
 	<div id="dialog" class="window"></div>
 	
 	#{ popups/flag /}
+	
+	#{ popups/shareEmail userName: talker?.userName, topicName: topic.title, topicURL: currentURL /}
 </div>
 <!-- Mask to cover the whole screen -->
 <div id="mask"></div>    
