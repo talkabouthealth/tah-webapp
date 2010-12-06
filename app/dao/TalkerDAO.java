@@ -61,7 +61,7 @@ public class TalkerDAO {
 				.add("newsletter", talker.isNewsletter())
 				.add("invites", talker.getInvitations())
 				
-				
+				.add("im_notify", talker.isImNotify())
 				.add("service_accounts", setToDB(talker.getServiceAccounts()))
 				
 				.add("act_type", talker.getAccountType())
@@ -113,6 +113,8 @@ public class TalkerDAO {
 			.add("insurance_accept", talker.getInsuranceAccepted())
 			
 			.add("im_accounts", setToDB(talker.getImAccounts()))
+			.add("im_notify", talker.isImNotify())
+			
 			.add("service_accounts", setToDB(talker.getServiceAccounts()))
 			.add("act_type", talker.getAccountType())
 			.add("act_name", talker.getAccountName())

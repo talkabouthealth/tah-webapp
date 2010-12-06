@@ -9,7 +9,7 @@
 		#{/if}
 	</td>
 	<td>
-		<a href="#" title="${_email.value}" class="makePrimaryLink">make primary</a>
+		<a href="@{Profile.makePrimaryEmail()}?newPrimaryEmail=${_email.value}" title="${_email.value}" >make primary</a>
 	</td>
 	<td><a href="#" title="${_email.value}" class="deleteEmailLink">delete</a></td>
 </tr>

@@ -74,6 +74,10 @@ public class ConversationLogic {
 		//insert new topic into database
 		ConversationDAO.save(convo);
 		
+		String convoChatURL = CommonUtil.generateAbsoluteURL("Talk.talkApp", "convoId", convo.getTid());
+		convo.setBitlyChat(BitlyUtil.shortLink(convoChatURL));
+		ConversationDAO.updateConvo(convo);
+		
 		ActionDAO.saveAction(new StartConvoAction(talker, convo, ActionType.START_CONVO));
 		
 		if (notifyTalkers) {

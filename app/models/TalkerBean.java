@@ -157,6 +157,7 @@ public class TalkerBean implements Serializable {
 
 	private String im;
 	private String imUsername;
+	private boolean imNotify;
 	private Set<IMAccountBean> imAccounts;
 	
 	//info from professional profiles
@@ -329,10 +330,10 @@ public class TalkerBean implements Serializable {
 		
 		setIm((String)talkerDBObject.get("im"));
 		setImUsername((String)talkerDBObject.get("im_uname"));
+		setImNotify(getBoolean(talkerDBObject.get("im_notify")));
 		setImAccounts(parseSet(IMAccountBean.class, talkerDBObject, "im_accounts"));
 		
 		setServiceAccounts(parseSet(ServiceAccountBean.class, talkerDBObject, "service_accounts"));
-		
 		
 		setFollowTAH(getBoolean(talkerDBObject.get("tw_follow")));
 		setShareTwitterToThoughts(getBoolean(talkerDBObject.get("tw_share")));
@@ -1067,6 +1068,11 @@ public class TalkerBean implements Serializable {
 	public void setServiceAccounts(Set<ServiceAccountBean> serviceAccounts) {
 		this.serviceAccounts = serviceAccounts;
 	}
-	
+	public boolean isImNotify() {
+		return imNotify;
+	}
+	public void setImNotify(boolean imNotify) {
+		this.imNotify = imNotify;
+	}
 	
 }	

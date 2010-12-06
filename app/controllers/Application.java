@@ -221,6 +221,8 @@ public class Application extends Controller {
      */
 	private static void prepareTalker(TalkerBean talker, Session session) {
 		talker.setInvitations(100);
+		//by default we notify user through IM
+		talker.setImNotify(true);
 		
 		//if user signed up through Twitter or Facebook
 		String accountType = session.get("accounttype");

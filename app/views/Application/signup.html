@@ -207,8 +207,8 @@
 							#{list items: additionalSettings.keySet(), as: 'key' }
 								<div class="generalcheck" style="padding-bottom:0px;">
 									<div class="preferencescheck">
-										<input type="checkbox" value="true" name="service_${key}" style="margin-bottom: 0px;"
-											#{if flash['service_'+key] } checked='checked' #{/if}
+										<input type="checkbox" value="true" name="${from}_${key}" style="margin-bottom: 0px;"
+											#{if flash[from+'_'+key] } checked='checked' #{/if}
 										/>
 										<span class="blacktext14">&nbsp;${additionalSettings.get(key)}</span>
 									</div>

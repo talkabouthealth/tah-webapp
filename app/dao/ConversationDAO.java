@@ -85,6 +85,7 @@ public class ConversationDAO {
 			.add("topics", convo.topicsToDB())
 			.add("details", convo.getDetails())
 			.add("bitly", convo.getBitly())
+			.add("bitly_chat", convo.getBitlyChat())
 			.add("opened", true)
 			.get();
 
@@ -127,6 +128,7 @@ public class ConversationDAO {
 			.add("details", convo.getDetails())
 			.add("opened", convo.isOpened())
 			.add("bitly", convo.getBitly())
+			.add("bitly_chat", convo.getBitlyChat())
 			
 			.add("topics", convo.topicsToDB())
 			.add("related_convos", convo.relatedConvosToDB())

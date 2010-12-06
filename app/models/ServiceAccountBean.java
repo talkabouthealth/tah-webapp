@@ -115,10 +115,10 @@ public class ServiceAccountBean implements DBModel {
 		}
 	}
 	
-	public static ServiceType parseServiceType(String from) {
+	public static ServiceType parseServiceType(String typeStr) {
 		ServiceType type = null;
 		try {
-			type = ServiceType.valueOf(from);
+			type = ServiceType.valueOf(typeStr);
 		}
 		catch (Exception e) { 
 			//nothing to do - default is null
@@ -129,8 +129,9 @@ public class ServiceAccountBean implements DBModel {
 	public void parseSettingsFromParams(Map<String, String> paramsMap) {
 		Map<String, String> settings = new HashMap<String, String>();
 		for (Entry<String, String> param : paramsMap.entrySet()) {
-			if (param.getKey().startsWith("service_")) {
-				settings.put(param.getKey().substring(8), param.getValue());
+			String typeStr = type.toString();
+			if (param.getKey().startsWith(typeStr+"_")) {
+				settings.put(param.getKey().substring(typeStr.length()+1), param.getValue());
 			}
 		}
 		setSettings(settings);

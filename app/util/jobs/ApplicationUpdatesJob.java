@@ -62,6 +62,9 @@ public class ApplicationUpdatesJob extends Job {
 		 	2. Move Twitter/Facebook to the new format?
 		 	
 		 	3. Update ConversationBean from the server code
+		 	
+		 	4. Add bit.ly links to the old topics/convos
+		 	
 		 */
 		
 		//Fields data for Profiles

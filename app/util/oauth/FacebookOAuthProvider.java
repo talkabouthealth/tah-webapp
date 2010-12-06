@@ -104,8 +104,10 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 				
 				TalkerBean talker = CommonUtil.loadCachedTalker(session);
 				if (talker.serviceAccountByType(ServiceType.FACEBOOK) == null) {
-					ServiceAccountBean twitterAccount = new ServiceAccountBean(accountId, userEmail, ServiceType.FACEBOOK);
-					twitterAccount.setToken(accessToken);
+					ServiceAccountBean fbAccount = new ServiceAccountBean(accountId, userEmail, ServiceType.FACEBOOK);
+					fbAccount.setToken(accessToken);
+					
+					talker.getServiceAccounts().add(fbAccount);
 					
 					CommonUtil.updateTalker(talker, session);
 				}

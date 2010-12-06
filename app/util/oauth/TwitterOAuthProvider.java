@@ -6,7 +6,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -133,6 +135,8 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 				ServiceAccountBean twitterAccount = new ServiceAccountBean(accountId, screenName, ServiceType.TWITTER);
 				twitterAccount.setToken(consumer.getToken());
 				twitterAccount.setTokenSecret(consumer.getTokenSecret());
+				
+				talker.getServiceAccounts().add(twitterAccount);
 				
 				CommonUtil.updateTalker(talker, session);
 			}

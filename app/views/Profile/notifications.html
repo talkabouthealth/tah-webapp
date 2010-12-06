@@ -46,6 +46,7 @@
 
 		addAjaxForm("#setNotifyFrequency");
 		addAjaxForm("#emailsettings");
+		addAjaxForm("#serviceSettingsForm");
 		
 		// ------------ Emails --------------
 		$("#newEmailBtn").click(function() {
@@ -65,13 +66,6 @@
 					}
 				}
 			);
-		});
-
-		$(".makePrimaryLink").live("click", function() {
-			var email = $(this).attr("title");
-			$("#newPrimaryEmail").val(email);
-
-			$("#changePrimaryForm").submit();
 		});
 
 		$(".deleteEmailLink").live("click", function() {
@@ -129,32 +123,6 @@
 				function(data) {}
 			);
 		});
-
-		//-----------Twitter
-		$(".deleteTwitterLink").click(function() {
-			var confirmDel = confirm("Are you sure want to delete your Twitter info?");
-   	   		if (confirmDel) {
-   	   	  		$.post("@{Profile.deleteTwitterAccount()}", 
-    				{},
-    				function(data) {
-    					window.location.reload();
-    				}
-    			);
-   	   		}
-   	   		
-   	   		return false;
-		});
-		$(".twitterSetting").click(function() {
-			var textElement = $(this).next();
-			var name = $(this).attr("name");
-			var value = $(this).attr("checked");
-			$.post("@{Profile.updateTwitterSetting()}", 
-   				{name: name, value: value},
-   				function(data) {
-   					//textElement.after("<span><img src='/public/images/right.jpg'/>&nbsp;Updated</span>");
-   				}
-   			);
-		});
 	});
 
 	function validatePasswordForm() {
@@ -189,6 +157,29 @@
 	    }
 	   return error;
 	}  
+
+	function addServiceAccount(serviceType) {
+		if (serviceType === "TWITTER") {
+			openTwitter();
+		}
+		else {
+			openFacebook();
+		}
+	}
+
+	function deleteServiceAccount(serviceType) {
+		var confirmDel = confirm("Are you sure want to delete this account?");
+   		if (confirmDel) {
+   	  		$.post("@{Profile.deleteServiceAccount()}", 
+				{type : serviceType},
+				function(data) {
+					window.location.reload();
+				}
+			);
+   		}
+   		
+   		return false;
+	}
 </script>
 
 </head>
@@ -197,43 +188,45 @@
 	#{include 'header.html' /}
 	<div id="innerbanner"></div>
 	<div id="innermain">
-	<form id="changePrimaryForm" action="@{Profile.makePrimaryEmail()}" method="POST">
-		<input type="hidden" id="newPrimaryEmail" name="newPrimaryEmail" />
 		<div class="blacktext2" id="innerheading">Login and Notification Accounts</div>
 		<div id="innermiddlearea">
 			<div class="notifactionboxtop"></div>
 			<div class="notifactionboxmid">
 				<div class="notibluearea">
 					<div class="signfields2">
-						<h1>Email</h1>
-						<table id="emailstable" border="0">
-							<tr>
-								<td>${talker.email}<br/>
-									#{if talker.verifyCode != null }
-										<a href="#" title="${talker.email}" 
-											onclick="return sendVerificationLink(this);"
-											class="red12">(email not verified - resend verification e-mail)</a>
-										<span id="verificationResendResult" class="blacktext12"></span>
-									#{/if}
-								</td>
-								<td>Primary</td>
-								<td>&nbsp;</td>
-							</tr>
-							#{list items: talker.emails, as: 'email' }
-								#{ profileNotificationEmail email: email /}
-							#{/list}
-						</table>
-						<a href="#"  style="font-size:14px;" 
-							onclick="$('#addEmailForm').toggle(); return false;">add another email address</a>
-						<div id="addEmailForm" style="display:none">
-							<br/>
-							<span class="error" id="emailError"></span><br/>
-							<input id="newEmail" name="newEmail" type="text" value="" size="40"/>
-							<br/>
-							<input id="newEmailBtn" type="button" value="Add email" />
-						</div>
+						
+							<h1>Email</h1>
+							<table id="emailstable" border="0">
+								<tr>
+									<td>${talker.email}<br/>
+										#{if talker.verifyCode != null }
+											<a href="#" title="${talker.email}" 
+												onclick="return sendVerificationLink(this);"
+												class="red12">(email not verified - resend verification e-mail)</a>
+											<span id="verificationResendResult" class="blacktext12"></span>
+										#{/if}
+									</td>
+									<td>Primary</td>
+									<td>&nbsp;</td>
+								</tr>
+								#{list items: talker.emails, as: 'email' }
+									#{ profileNotificationEmail email: email /}
+								#{/list}
+							</table>
+							<a href="#"  style="font-size:14px;" 
+								onclick="$('#addEmailForm').toggle(); return false;">add another email address</a>
+							<div id="addEmailForm" style="display:none">
+								<br/>
+								<span class="error" id="emailError"></span><br/>
+								<input id="newEmail" name="newEmail" type="text" value="" size="40"/>
+								<br/>
+								<input id="newEmailBtn" type="button" value="Add email" />
+							</div>
+						
 					</div>
 				</div>
+				<form id="serviceSettingsForm" name="serviceSettingsForm" 
+						action="@{Profile.serviceSettingsSave}" method="post"  >
 				<div class="notibluearea">
 					<div class="signfields2">
 						<h1>IM</h1>
@@ -262,10 +255,10 @@
 						</div>
 						<div class="generalcheck" style="padding-top: 15px; padding-bottom:0px;">
 							<div class="preferencescheck">
-								<input type="checkbox" value="" name="shareTwitterToThoughts" class="twitterSetting"
-									#{if talker.shareTwitterToThoughts} checked='checked' #{/if}
+								<input type="checkbox" value="" name="im_notify" class="twitterSetting"
+									#{if talker.imNotify} checked='checked' #{/if}
 								/>
-								<span class="blacktext14">&nbsp;Notify me of relevant questions and video chats via IM.</span>
+								<span class="blacktext14">&nbsp;Notify me of relevant questions and live chats via IM.</span>
 							</div>
 						</div>
 					</div>
@@ -280,7 +273,7 @@
 								#{if serviceAccount }
 									<br/><br/>
 									&nbsp;${ serviceAccount.userName ? serviceAccount.userName : talker.userName } 
-									&nbsp;&nbsp;&nbsp;<a href="#" class="deleteServiceAccountLink">delete</a>
+									&nbsp;&nbsp;&nbsp;<a href="#" onclick="return deleteServiceAccount('${serviceType.toString()}');">delete</a>
 									<br/>
 									<br/>
 									#{set settingsNames = models.ServiceAccountBean.settingsNamesByType(serviceType) /}
@@ -288,8 +281,8 @@
 										#{ifnot key.equals('follow') }
 											<div class="generalcheck" style="padding-bottom:0px;">
 												<div class="preferencescheck">
-													<input type="checkbox" value="true" name="service_${key}"
-														#{if serviceAccount?.settings[key]?.equals('true')} checked='checked' #{/if}
+													<input type="checkbox" value="true" name="${serviceType.toString()}_${key}"
+					#{if serviceAccount?.settings && serviceAccount?.settings[key]?.equals('true')} checked='checked' #{/if}
 													/>
 													<span class="blacktext14">&nbsp;${settingsNames.get(key)}</span>
 												</div>
@@ -305,10 +298,10 @@
 						</div>
 					#{/list}
 				</div>
+				</form>
 			</div>
 			<div class="notifactionboxbot"></div>
 		</div>
-	</form>
 		
 		#{ set currentPage = 'publicProfile' /}
 		#{ set currentTalker = talker /}

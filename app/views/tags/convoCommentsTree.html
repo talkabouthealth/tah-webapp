@@ -26,7 +26,7 @@
 	                    	<div class="replypics">
 	                    		#{talker/talkerImageLink size: 48, userName: comment.fromTalker.userName /}
 	                    	</div>
-	             			<div class="replytextarea">
+	             			<div class="replytextarea" style="width: 550px;">
 								<p>
 									<span class="stylzz">
 										#{talker/talkerLink userName: comment.fromTalker.userName /}
@@ -40,7 +40,7 @@
 					 						#{answerVotesInfo votes: comment.upVotes /}
 										</div>
 						 				
-										<div class='inline-edit' id="answerEdit${comment.id}" style="padding: 7px 0;">
+										<div class='inline-edit' id="answerEdit${comment.id}" style="padding: 7px 0; width: 100%;">
 											<div class="suggestxt inline_display">
 												<div class="inline_full inline_empty">
 													<span class="styles2 inline_view ${ _level == 1 ? 'styles2answers' : 'styles2replies'}"
@@ -54,8 +54,8 @@
 								            </div>
 								            <div style="margin-top:10px; margin-bottom:10px;"></div>
 											<div class='inline_form'>
-												<div style="float:left; width:auto; padding-bottom:5px;" >
-										        	<textarea id="titleinput" type="text" style="width:470px; height: 100px;"  
+												<div style="float:left; width: 100%; padding-bottom:5px;" >
+										        	<textarea id="titleinput" type="text" style="width:100%; height: 150px;"  
 										        		class="edititinputs inline_text">${comment.text}</textarea>
 										        </div>
 												<div style="float:right;margin-right:30px;">

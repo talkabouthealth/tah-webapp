@@ -31,7 +31,9 @@ import models.DiseaseBean.DiseaseQuestion;
 import models.EmailBean;
 import models.HealthItemBean;
 import models.IMAccountBean;
+import models.ServiceAccountBean;
 import models.TalkerBean;
+import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean.EmailSetting;
 import models.TalkerBean.ProfilePreference;
 import models.TalkerDiseaseBean;
@@ -431,8 +433,6 @@ public class Profile extends Controller {
 	}
 	
 	public static void emailSettingsSave(TalkerBean talker) {
-		flash.put("currentForm", "emailsettingsForm");
-		
 		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);
 
 		Map<String, String> paramsMap = params.allSimple();
@@ -456,9 +456,41 @@ public class Profile extends Controller {
 		
 		CommonUtil.updateTalker(sessionTalker, session);
 		renderText("ok");
-//		flash.success("ok");
-//		notifications();
 	}
+	
+	public static void serviceSettingsSave(String name, boolean value) {
+		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);
+
+		Set<ServiceAccountBean> serviceAccounts = sessionTalker.getServiceAccounts();
+		for (ServiceAccountBean serviceAccount : serviceAccounts) {
+			serviceAccount.parseSettingsFromParams(params.allSimple());
+		}
+		
+		boolean imNotify = false;
+		if (params.get("im_notify") != null) {
+			imNotify = true;
+		}
+		sessionTalker.setImNotify(imNotify);
+		
+		CommonUtil.updateTalker(sessionTalker, session);
+		renderText("ok");
+	}
+	
+	public static void deleteServiceAccount(String type) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		ServiceType serviceType = ServiceAccountBean.parseServiceType(type); 
+		if (serviceType != null) {
+			ServiceAccountBean serviceAccount = talker.serviceAccountByType(serviceType);
+			if (serviceAccount != null) {
+				talker.getServiceAccounts().remove(serviceAccount);
+				CommonUtil.updateTalker(talker, session);
+			}
+		}
+		
+		renderText("ok");
+	}
+	
 	
 	public static void makePrimaryEmail(String newPrimaryEmail) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
@@ -548,36 +580,6 @@ public class Profile extends Controller {
 		IMAccountBean imAccount = new IMAccountBean(imArray[0], imArray[1]);
 		talker.getImAccounts().remove(imAccount);
 		
-		CommonUtil.updateTalker(talker, session);
-		
-		renderText("Ok");
-	}
-	
-	//FIXME: refactor to array?? (if Twitter and Facebook together)
-	public static void deleteTwitterAccount() {
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
-		talker.setAccountId(null);
-		talker.setAccountName(null);
-		talker.setAccountType(null);
-		CommonUtil.updateTalker(talker, session);
-		
-		renderText("Ok");
-	}
-	
-	public static void updateTwitterSetting(String name, boolean value) {
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
-		//TODO: use enum!
-		if ("shareTwitterToThoughts".equals(name)) {
-			talker.setShareTwitterToThoughts(value);
-		}
-		else if ("shareThoughtsToTwitter".equals(name)) {
-			talker.setShareThoughtsToTwitter(value);
-		}
-		else if ("twitterPostOnAnswer".equals(name)) {
-			talker.setTwitterPostOnAnswer(value);
-		}
 		CommonUtil.updateTalker(talker, session);
 		
 		renderText("Ok");

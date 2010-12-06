@@ -98,6 +98,7 @@ public class NotificationUtils {
 	    			convoTitle = convoTitle.substring(0, 55)+"...";
 	    		}
 	    		message.append(convoTitle+"\" To answer: ");
+	    		message.append(convo.getBitly());
 			}
 			else {
 				//mnj5 started the talk: What items come in handy after a mastectomy... To join the talk: http://bit.ly/dfsqe
@@ -108,8 +109,8 @@ public class NotificationUtils {
 	    			convoTitle = convoTitle.substring(0, 50)+"...";
 	    		}
 	    		message.append(convoTitle+"\" To join the chat:");
+	    		message.append(convo.getBitlyChat());
 			}
-			message.append(convo.getBitly());
 	    	
 			for (String talkerId : talkersForNotification) {
 				//do not send notification to author of the event

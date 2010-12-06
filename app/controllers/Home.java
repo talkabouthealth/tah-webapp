@@ -49,6 +49,7 @@ public class Home extends Controller {
 		}
 		
 		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
+		//FIXME: not show if twitter account + notify option
 		if (talker.getAccountType() != null && talker.getAccountType().equals("twitter")) {
 			hasNoIMAccounts = false;
 		}
