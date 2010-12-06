@@ -14,35 +14,34 @@ import javax.servlet.http.HttpServletResponse;
 import play.mvc.Http.Request;
 import play.mvc.Scope.Session;
 
+import models.ServiceAccountBean.ServiceType;
+import models.ServiceAccountBean;
 import models.TalkerBean;
 import util.CommonUtil;
+import util.TwitterUtil;
 import dao.ApplicationDAO;
 import dao.TalkerDAO;
 
 
 public class FacebookOAuthProvider implements OAuthServiceProvider {
 	
-	private static final String APP_ID = "131545373528131";
-	private static final String APP_SECRET = "0620bead67e2ffa4e9e46f60b3376dec";
-	private static final String CALLBACK_URL =
-		"http://talkabouthealth.com/oauth/callback?type=facebook";
-	private static final String CALLBACK_URL2 =
-		"https://talkabouthealth.com/oauth/callback?type=facebook";
+//	private static final String APP_ID = "131545373528131";
+//	private static final String APP_SECRET = "0620bead67e2ffa4e9e46f60b3376dec";
+//	private static final String CALLBACK_URL =
+//		"http://talkabouthealth.com/oauth/callback?type=facebook";
 	
 // Test settings	
-//	private static final String APP_ID = "126479497379490";
-//	private static final String APP_SECRET = "cd4606efec03ea8c5bd9ffb9d49000ff";
-//	private static final String CALLBACK_URL =
-//		"http://kan.dev.com:9000/oauth/callback?type=facebook";
+	public static final String APP_ID = "126479497379490";
+	public static final String APP_SECRET = "cd4606efec03ea8c5bd9ffb9d49000ff";
+	public static final String CALLBACK_URL =
+		"http://kan.dev.com:9000/oauth/callback?type=facebook";
 	
 
 	public String getAuthURL(Session session) {
 		String authURL = null;
 		try {
-			//TODO: user offline_access permission?
 			authURL = "https://graph.facebook.com/oauth/authorize?" +
-				//"client_id="+APP_ID+"&redirect_uri="+URLEncoder.encode(CALLBACK_URL, "UTF-8")+
-				"client_id="+APP_ID+"&redirect_uri="+URLEncoder.encode(CALLBACK_URL2, "UTF-8")+
+				"client_id="+APP_ID+"&redirect_uri="+URLEncoder.encode(CALLBACK_URL, "UTF-8")+
 				"&scope=email,user_about_me,user_birthday,publish_stream";
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -57,7 +56,7 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			String url = "https://graph.facebook.com/oauth/access_token";
 			String urlParams = 
 			    "client_id="+APP_ID+
-			    "&redirect_uri="+URLEncoder.encode(CALLBACK_URL2, "UTF-8")+
+			    "&redirect_uri="+URLEncoder.encode(CALLBACK_URL, "UTF-8")+
 			    "&client_secret="+APP_SECRET+
 			    "&code="+URLEncoder.encode(code, "UTF-8");
 			List<String> lines = CommonUtil.makeGET(url, urlParams);
@@ -72,10 +71,10 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 				}
 			}
 			
-			System.out.println("TOKEN: "+accessToken);
-			session.put("fb_token", accessToken);
+			session.put("token", accessToken);
 			
 			//parse Facebook id and email from reply
+			//TODO: improve it? Use not email, but some username?
 			String accountId = null;
 			String userEmail = null;
 			lines = CommonUtil.makeGET("https://graph.facebook.com/me", 
@@ -97,34 +96,54 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 				}
 			}
 			
-			//login or signup
-	        TalkerBean talker = TalkerDAO.getByAccount("facebook", accountId);
-	        if (talker != null) {
-	        	if (talker.isSuspended()) {
-	        		return "/application/suspendedAccount";
-	        	}
-	        	
-	        	if (talker.isDeactivated()) {
-		    		talker.setDeactivated(false);
-		    		CommonUtil.updateTalker(talker, session);
-		    	}
-	        	
-	        	// insert login record into db
-				ApplicationDAO.saveLogin(talker.getId());
-
-				// add TalkerBean to session
-				session.put("username", talker.getUserName());
+			boolean isConnected = session.contains("username");
+			if (isConnected) {
+				//it's not login/signup - it's notifications page
 				
-				return "/home";
-	        }
-	        else {
-	        	System.out.println("ACT: "+accountId);
-	        	session.put("accounttype", "facebook");
-	        	session.put("accountname", userEmail);
-			    session.put("accountid", accountId);
-			    
-			    return "/signup?talker.email="+userEmail+"&from=facebook";
-	        }
+				//TODO: what for facebook?
+				
+				TalkerBean talker = CommonUtil.loadCachedTalker(session);
+				if (talker.serviceAccountByType(ServiceType.FACEBOOK) == null) {
+					ServiceAccountBean twitterAccount = new ServiceAccountBean(accountId, userEmail, ServiceType.FACEBOOK);
+					twitterAccount.setToken(accessToken);
+					
+					CommonUtil.updateTalker(talker, session);
+				}
+				else {
+					//TODO: probably some error?
+				}
+		        
+		        return "/profile/notificationsettings";
+			}
+			else {
+				//login or signup
+		        TalkerBean talker = TalkerDAO.getByAccount(ServiceType.FACEBOOK, accountId);
+		        if (talker != null) {
+		        	if (talker.isSuspended()) {
+		        		return "/application/suspendedAccount";
+		        	}
+		        	
+		        	if (talker.isDeactivated()) {
+			    		talker.setDeactivated(false);
+			    		CommonUtil.updateTalker(talker, session);
+			    	}
+		        	
+		        	// insert login record into db
+					ApplicationDAO.saveLogin(talker.getId());
+	
+					// add TalkerBean to session
+					session.put("username", talker.getUserName());
+					
+					return "/home";
+		        }
+		        else {
+		        	session.put("accounttype", ServiceType.FACEBOOK);
+		        	session.put("accountname", userEmail);
+				    session.put("accountid", accountId);
+				    
+				    return "/signup?talker.email="+userEmail+"&from="+ServiceType.FACEBOOK.toString();
+		        }
+			}
 		}
 		return null;
 	}

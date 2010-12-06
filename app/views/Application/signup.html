@@ -35,7 +35,7 @@
 				#{form @Application.register() , id:'signup' }
 					#{if flash.from }
 					    <h6 class="blacktext14">
-					    	Welcome! You've gotten started by connecting your <i>${flash.from.capFirst()}</i> account.
+					    	Welcome! You've gotten started by connecting your <i>${flash.from.toLowerCase().capFirst()}</i> account.
 					    	<br/>Your TalkAboutHealth account needs just a few more details. 
 					    	Please take a moment to provide them below
 					    </h6>
@@ -198,11 +198,24 @@
 						<div class="signupmain"></div>
 					</div>								
 					<div class="signdown">
-						#{if flash.from?.equals("twitter") }
+						#{if additionalSettings }
 						<div style="padding-left: 10px">
-							<div class="generalcheck" style="padding-top: 3px; padding-bottom:0px;">
+							<div class="generalcheck" style="padding-top: 3px; padding-bottom:3px;">
 								<span class="blacktext16"><b>Optional:</b></span>
 							</div>
+							
+							#{list items: additionalSettings.keySet(), as: 'key' }
+								<div class="generalcheck" style="padding-bottom:0px;">
+									<div class="preferencescheck">
+										<input type="checkbox" value="true" name="service_${key}" style="margin-bottom: 0px;"
+											#{if flash['service_'+key] } checked='checked' #{/if}
+										/>
+										<span class="blacktext14">&nbsp;${additionalSettings.get(key)}</span>
+									</div>
+								</div>
+							#{/list}
+							
+							*{
 							<div class="generalcheck" style="padding-top: 3px; padding-bottom:0px;">
 								<div class="preferencescheck">
 									<input type="checkbox" value="true" name="talker.twitterNotify" style="margin-bottom: 0px;"
@@ -252,6 +265,7 @@
 									<span class="blacktext14">&nbsp;Follow TalkAboutHealth on Twitter.</span>
 								</div>
 							</div>
+							}*
 						</div>
 						#{/if}
 						

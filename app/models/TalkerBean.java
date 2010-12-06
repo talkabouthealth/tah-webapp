@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 import models.CommentBean.Vote;
+import models.ServiceAccountBean.ServiceType;
 import models.actions.Action;
 
 import org.bson.types.ObjectId;
@@ -135,6 +136,9 @@ public class TalkerBean implements Serializable {
 	private String originalUserName;
 	private boolean deactivated;
 	private boolean suspended;
+	
+	//FB or Twitter accounts
+	private Set<ServiceAccountBean> serviceAccounts;
 	
 	//Twitter or Facebook account info
 	private String accountType;
@@ -326,6 +330,8 @@ public class TalkerBean implements Serializable {
 		setIm((String)talkerDBObject.get("im"));
 		setImUsername((String)talkerDBObject.get("im_uname"));
 		setImAccounts(parseSet(IMAccountBean.class, talkerDBObject, "im_accounts"));
+		
+		setServiceAccounts(parseSet(ServiceAccountBean.class, talkerDBObject, "service_accounts"));
 		
 		
 		setFollowTAH(getBoolean(talkerDBObject.get("tw_follow")));
@@ -601,6 +607,19 @@ public class TalkerBean implements Serializable {
 			}
 		}
 		return nonPrimaryEmail;
+	}
+	
+	public ServiceAccountBean serviceAccountByType(ServiceType serviceType) {
+		if (serviceAccounts == null) {
+			return null;
+		}
+		
+		for (ServiceAccountBean serviceAccount : serviceAccounts) {
+			if (serviceAccount.getType() == serviceType) {
+				return serviceAccount;
+			}
+		}
+		return null;
 	}
 	
 	
@@ -1042,4 +1061,12 @@ public class TalkerBean implements Serializable {
 	public void setTwitterPostOnStart(boolean twitterPostOnStart) {
 		this.twitterPostOnStart = twitterPostOnStart;
 	}
+	public Set<ServiceAccountBean> getServiceAccounts() {
+		return serviceAccounts;
+	}
+	public void setServiceAccounts(Set<ServiceAccountBean> serviceAccounts) {
+		this.serviceAccounts = serviceAccounts;
+	}
+	
+	
 }	

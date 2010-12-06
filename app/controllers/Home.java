@@ -33,6 +33,7 @@ import dao.ConversationDAO;
 @With( { Secure.class, LoggerController.class } )
 public class Home extends Controller {
 
+	//TODO: remove 'newTopic'
     public static void index(String newTopic) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));

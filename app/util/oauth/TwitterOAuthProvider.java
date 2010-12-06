@@ -11,6 +11,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import models.ServiceAccountBean;
+import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
@@ -30,16 +32,16 @@ import dao.TalkerDAO;
  */
 public class TwitterOAuthProvider implements OAuthServiceProvider {
 	
-	public static final String CONSUMER_KEY = "D9iFrN4G8ObpLCtGJ9w";
-	public static final String CONSUMER_SECRET = "Yy1srQbpldqjtqzzAXpJe3RzuWGxHFKPCF8FPsZKU";
-	private static final String CALLBACK_URL =
-		"http://talkabouthealth.com/oauth/callback?type=twitter";
-	
-//	Test values
-//	private static final String CONSUMER_KEY = "7VymbW3wmOOoQ892BqIsaA";
-//	private static final String CONSUMER_SECRET = "s8aexaIBgMxAm4ZqQNayv5SAr6Wd1SKFVETUEPv0cmM";
+//	public static final String CONSUMER_KEY = "D9iFrN4G8ObpLCtGJ9w";
+//	public static final String CONSUMER_SECRET = "Yy1srQbpldqjtqzzAXpJe3RzuWGxHFKPCF8FPsZKU";
 //	private static final String CALLBACK_URL =
-//		"http://kan.dev.com:9000/oauth/callback?type=twitter";
+//		"http://talkabouthealth.com/oauth/callback?type=twitter";
+	
+//	Test values FIXME: use production settings
+	public static final String CONSUMER_KEY = "7VymbW3wmOOoQ892BqIsaA";
+	public static final String CONSUMER_SECRET = "s8aexaIBgMxAm4ZqQNayv5SAr6Wd1SKFVETUEPv0cmM";
+	public static final String CALLBACK_URL =
+		"http://kan.dev.com:9000/oauth/callback?type=twitter";
 	
 	private OAuthConsumer consumer;
 	private OAuthProvider provider;
@@ -77,9 +79,8 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			consumer.setTokenWithSecret(token, tokenSecret);
 			provider.retrieveAccessToken(consumer, oauthVerifier);
 			
-			//FIXME: can we user this tokens from session to session?
-			session.put("twitter_token", consumer.getToken());
-			session.put("twitter_token_secret", consumer.getTokenSecret());
+			session.put("token", consumer.getToken());
+			session.put("token_secret", consumer.getTokenSecret());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -128,16 +129,23 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			}
 			
 			TalkerBean talker = CommonUtil.loadCachedTalker(session);
-			talker.setAccountType("twitter");
-			talker.setAccountName(screenName);
-			talker.setAccountId(accountId);
-    		CommonUtil.updateTalker(talker, session);
+			if (talker.serviceAccountByType(ServiceType.TWITTER) == null) {
+				ServiceAccountBean twitterAccount = new ServiceAccountBean(accountId, screenName, ServiceType.TWITTER);
+				twitterAccount.setToken(consumer.getToken());
+				twitterAccount.setTokenSecret(consumer.getTokenSecret());
+				
+				CommonUtil.updateTalker(talker, session);
+			}
+			else {
+				//TODO: probably some error?
+			}
+    		
 	        
 	        return "/profile/notificationsettings";
 		}
 		else {
 			//login or signup
-	        TalkerBean talker = TalkerDAO.getByAccount("twitter", accountId);
+	        TalkerBean talker = TalkerDAO.getByAccount(ServiceType.TWITTER, accountId);
 	        if (talker != null) {
 	        	if (talker.isSuspended()) {
 	        		return "/application/suspendedAccount";
@@ -148,11 +156,6 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 		    		CommonUtil.updateTalker(talker, session);
 		    	}
 	        	
-	        	if (talker.getAccountName() == null) {
-	        		talker.setAccountName(screenName);
-	        		CommonUtil.updateTalker(talker, session);
-	        	}
-	        		
 	        	//simple login
 	        	ApplicationDAO.saveLogin(talker.getId());
 
@@ -164,11 +167,11 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 	        	//redirect to signup
 	        	TwitterUtil.followUser(accountId);
 	        	
-	        	session.put("accounttype", "twitter");
+	        	session.put("accounttype", ServiceType.TWITTER);
 	        	session.put("accountname", screenName);
 			    session.put("accountid", accountId);
 			     
-			    return "/signup?talker.userName="+screenName+"&from=twitter";
+			    return "/signup?talker.userName="+screenName+"&from="+ServiceType.TWITTER.toString();
 	        }
 		}
 	}

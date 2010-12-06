@@ -219,6 +219,7 @@ public class Profile extends Controller {
 		
 		CommonUtil.updateTalker(oldTalker, session);
 		if (!oldUserName.equals(talker.getUserName())) {
+			session.put("username", talker.getUserName());
 			ApplicationDAO.createURLName(talker.getUserName());
 		}
 		

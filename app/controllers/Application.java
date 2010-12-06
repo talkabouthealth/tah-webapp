@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
@@ -19,6 +21,8 @@ import org.apache.log4j.PatternLayout;
 import org.apache.log4j.PropertyConfigurator;
 
 import models.IMAccountBean;
+import models.ServiceAccountBean;
+import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean;
 import models.TalkerBean.EmailSetting;
 import models.TalkerBean.ProfilePreference;
@@ -112,7 +116,17 @@ public class Application extends Controller {
     /* ------- Sign Up --------- */
     public static void signup() {
     	params.flash();
-    	render();
+    	
+    	//prepare additional settings for FB or Twitter
+    	String from = flash.get("from");
+    	Map<String, String> additionalSettings = null;
+    	if (from != null) {
+    		ServiceType type = ServiceAccountBean.parseServiceType(from);
+    		additionalSettings = ServiceAccountBean.settingsNamesByType(type);
+    	}
+    	
+    	
+    	render(additionalSettings);
     }
     
     public static void register(@Valid TalkerBean talker, String newTopic) {
@@ -209,10 +223,22 @@ public class Application extends Controller {
 		talker.setInvitations(100);
 		
 		//if user signed up through Twitter or Facebook
-		System.out.println("SES: "+session.get("accountid"));
-		talker.setAccountType(session.get("accounttype"));
-		talker.setAccountName(session.get("accountname"));
-		talker.setAccountId(session.get("accountid"));
+		String accountType = session.get("accounttype");
+		if (accountType != null) {
+			ServiceType serviceType = ServiceAccountBean.parseServiceType(accountType);
+			
+			ServiceAccountBean account = new ServiceAccountBean(session.get("accountid"), 
+					session.get("accountname"), serviceType);
+			account.setToken(session.get("token"));
+			account.setTokenSecret(session.get("token_secret"));
+			
+			//parse additional params
+			account.parseSettingsFromParams(params.allSimple());
+			
+			Set<ServiceAccountBean> serviceAccounts = new HashSet<ServiceAccountBean>();
+			serviceAccounts.add(account);
+			talker.setServiceAccounts(serviceAccounts);
+		}
 		
 //		String imService = talker.getIm();
 //        String imUsername = talker.getImUsername();

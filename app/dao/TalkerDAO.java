@@ -17,6 +17,7 @@ import java.util.Map;
 import models.CommentBean;
 import models.EmailBean;
 import models.IMAccountBean;
+import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean;
 import models.ThankYouBean;
 import models.ConversationBean;
@@ -60,9 +61,14 @@ public class TalkerDAO {
 				.add("newsletter", talker.isNewsletter())
 				.add("invites", talker.getInvitations())
 				
+				
+				.add("service_accounts", setToDB(talker.getServiceAccounts()))
+				
 				.add("act_type", talker.getAccountType())
 				.add("act_name", talker.getAccountName())
 				.add("act_id", talker.getAccountId())
+				
+				//TODO: remove later
 				.add("tw_follow", talker.isFollowTAH())
 				.add("tw_share", talker.isShareTwitterToThoughts())
 				.add("tw_sharethoughts", talker.isShareThoughtsToTwitter())
@@ -107,6 +113,7 @@ public class TalkerDAO {
 			.add("insurance_accept", talker.getInsuranceAccepted())
 			
 			.add("im_accounts", setToDB(talker.getImAccounts()))
+			.add("service_accounts", setToDB(talker.getServiceAccounts()))
 			.add("act_type", talker.getAccountType())
 			.add("act_name", talker.getAccountName())
 			.add("act_id", talker.getAccountId())
@@ -278,22 +285,24 @@ public class TalkerDAO {
 		return talker;
 	}
 	
-	public static TalkerBean getByAccount(String accountType, String accountId) {
+	public static TalkerBean getByAccount(ServiceType serviceType, String accountId) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
-		DBObject query = new BasicDBObject();
-		query.put("act_type", accountType);
-		query.put("act_id", accountId);
+//		DBObject query = new BasicDBObject();
+//		query.put("act_type", accountType);
+//		query.put("act_id", accountId);
+//		
+//		DBObject talkerDBObject = talkersColl.findOne(query);
+//		if (talkerDBObject == null) {
+//			return null;
+//		}
+//		else {
+//			TalkerBean talker = new TalkerBean();
+//			talker.parseFromDB(talkerDBObject);
+//			return talker;
+//		}
 		
-		DBObject talkerDBObject = talkersColl.findOne(query);
-		if (talkerDBObject == null) {
-			return null;
-		}
-		else {
-			TalkerBean talker = new TalkerBean();
-			talker.parseFromDB(talkerDBObject);
-			return talker;
-		}
+		return null;
 	}
 	
 	public static TalkerBean getByIMAccount(IMAccountBean imAccount) {

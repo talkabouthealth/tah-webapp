@@ -271,45 +271,39 @@
 					</div>
 				</div>
 				<div class="notibluearea">
-					<div class="signfields2">
-						<h1>Twitter</h1>
-						<div style="font-size: 14px;">
-							#{if talker.accountType?.equals("twitter")}
-								<br/><br/>
-								&nbsp;${ talker.accountName ? talker.accountName : talker.uname } 
-								&nbsp;&nbsp;&nbsp;<a href="#" class="deleteTwitterLink">delete</a>
-								<br/>
-								<div class="generalcheck" style="padding-top: 3px; padding-bottom:0px;">
-									<div class="preferencescheck">
-										<input type="checkbox" value="" name="shareTwitterToThoughts" class="twitterSetting"
-											#{if talker.shareTwitterToThoughts} checked='checked' #{/if}
-										/>
-										<span class="blacktext14">&nbsp;Share my Twitter posts in my TalkAboutHealth Thoughts Feed.</span>
-									</div>
-								</div>
-								<div class="generalcheck" style="padding-bottom: 0px;">
-									<div class="preferencescheck">
-										<input type="checkbox" value="" name="shareThoughtsToTwitter" class="twitterSetting"
-											#{if talker.shareThoughtsToTwitter } checked='checked' #{/if}
-										/>
-										<span class="blacktext14">&nbsp;Share my TalkAboutHealth Thoughts Feed posts with my Twitter feed.</span>
-									</div>
-								</div>
-								<div class="generalcheck" style="padding-bottom: 0px;">
-									<div class="preferencescheck">
-										<input type="checkbox" value="" name="twitterPostOnAnswer" class="twitterSetting"
-											#{if talker.twitterPostOnAnswer } checked='checked' #{/if}
-										/>
-										<span class="blacktext14">&nbsp;Post on Twitter when I answer a question.</span>
-									</div>
-								</div>
-							#{/if}
-							#{else}
-								<a href="#" style="font-size:14px;"
-									onclick="return openTwitter();">add your Twitter account</a>
-							#{/else}
+					#{list items:models.ServiceAccountBean.ServiceType.values(), as: 'serviceType'}
+						#{set serviceTypeName = serviceType.toString().toLowerCase().capFirst() /}
+						<div class="signfields2">
+							<h1>${serviceTypeName}</h1>
+							<div style="font-size: 14px;">
+								#{set serviceAccount = talker.serviceAccountByType(serviceType) /}
+								#{if serviceAccount }
+									<br/><br/>
+									&nbsp;${ serviceAccount.userName ? serviceAccount.userName : talker.userName } 
+									&nbsp;&nbsp;&nbsp;<a href="#" class="deleteServiceAccountLink">delete</a>
+									<br/>
+									<br/>
+									#{set settingsNames = models.ServiceAccountBean.settingsNamesByType(serviceType) /}
+									#{list items: settingsNames.keySet(), as: 'key' }
+										#{ifnot key.equals('follow') }
+											<div class="generalcheck" style="padding-bottom:0px;">
+												<div class="preferencescheck">
+													<input type="checkbox" value="true" name="service_${key}"
+														#{if serviceAccount?.settings[key]?.equals('true')} checked='checked' #{/if}
+													/>
+													<span class="blacktext14">&nbsp;${settingsNames.get(key)}</span>
+												</div>
+											</div>
+										#{/ifnot}
+									#{/list}
+								#{/if}
+								#{else}
+									<a href="#" style="font-size:14px;" 
+									onclick="return addServiceAccount('${serviceType.toString()}');">add your ${serviceTypeName} account</a>
+								#{/else}
+							</div>
 						</div>
-					</div>
+					#{/list}
 				</div>
 			</div>
 			<div class="notifactionboxbot"></div>
