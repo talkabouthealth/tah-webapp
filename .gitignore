@@ -2,6 +2,7 @@ tmp/*
 logs/*
 eclipse/*
 secure/*
+public/comm/CommApp.swf
 application.log
 .*
 *.class

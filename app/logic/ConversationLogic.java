@@ -25,6 +25,8 @@ import dao.TopicDAO;
 import models.CommentBean;
 import models.ConversationBean;
 import models.ConversationBean.ConvoType;
+import models.ServiceAccountBean;
+import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean;
 import models.TopicBean;
 import models.TalkerBean.EmailSetting;
@@ -83,6 +85,24 @@ public class ConversationLogic {
 		if (notifyTalkers) {
 			//send notifications if Automatic Notifications is On
 			NotificationUtils.sendAutomaticNotifications(convo.getId(), null);
+		}
+		
+		//send to Tw & Fb
+		for (ServiceAccountBean serviceAccount : talker.getServiceAccounts()) {
+//			Just asked a question on TalkAboutHealth: "What are the best hospitals in NYC for breast cancer ..." http://bit.ly/lksa
+//			Just started a live chat on TalkAboutHealth: "What are the best hospitals in NYC for breast cancer ..." http://bit.ly/lksa
+			if (serviceAccount.getType() == ServiceType.TWITTER && serviceAccount.isTrue("postOnConvo")) {
+				String twitText = null;
+				if (convo.getConvoType() == ConvoType.CONVERSATION) {
+					twitText = "Just started a live chat on TalkAboutHealth: \"<PARAM>\" "+convo.getBitlyChat();
+				}
+				else {
+					twitText = "Just asked a question on TalkAboutHealth: \"<PARAM>\" "+convo.getBitly();
+				}
+				twitText = TwitterUtil.prepareTwit(twitText, convo.getTopic());
+				
+	    		TwitterUtil.makeUserTwit(twitText, serviceAccount.getToken(), serviceAccount.getTokenSecret());
+			}
 		}
 		
 		//automatically follow started topic

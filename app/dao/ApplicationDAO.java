@@ -119,6 +119,10 @@ public class ApplicationDAO {
 	}
 	
 	public static boolean isURLNameExists(String name) {
+		if (name != null) {
+			name = name.toLowerCase();
+		}
+		
 		if (Application.RESERVED_WORDS.contains(name)) {
 			return true;
 		}

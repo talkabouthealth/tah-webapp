@@ -28,20 +28,23 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 //	private static final String APP_ID = "131545373528131";
 //	private static final String APP_SECRET = "0620bead67e2ffa4e9e46f60b3376dec";
 //	private static final String CALLBACK_URL =
-//		"http://talkabouthealth.com/oauth/callback?type=facebook";
+//		"talkabouthealth.com/oauth/callback?type=facebook";
 	
 // Test settings	
 	public static final String APP_ID = "126479497379490";
 	public static final String APP_SECRET = "cd4606efec03ea8c5bd9ffb9d49000ff";
 	public static final String CALLBACK_URL =
-		"http://kan.dev.com:9000/oauth/callback?type=facebook";
+		"kan.dev.com:9000/oauth/callback?type=facebook";
 	
 
-	public String getAuthURL(Session session) {
+	public String getAuthURL(Session session, boolean secureRequest) {
 		String authURL = null;
 		try {
+			String callbackURL = (secureRequest ? "https://" : "http://");
+			callbackURL = callbackURL+CALLBACK_URL;
+			
 			authURL = "https://graph.facebook.com/oauth/authorize?" +
-				"client_id="+APP_ID+"&redirect_uri="+URLEncoder.encode(CALLBACK_URL, "UTF-8")+
+				"client_id="+APP_ID+"&redirect_uri="+URLEncoder.encode(callbackURL, "UTF-8")+
 				"&scope=email,user_about_me,user_birthday,publish_stream";
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -56,7 +59,7 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			String url = "https://graph.facebook.com/oauth/access_token";
 			String urlParams = 
 			    "client_id="+APP_ID+
-			    "&redirect_uri="+URLEncoder.encode(CALLBACK_URL, "UTF-8")+
+//			    "&redirect_uri="+URLEncoder.encode(callbackURL, "UTF-8")+
 			    "&client_secret="+APP_SECRET+
 			    "&code="+URLEncoder.encode(code, "UTF-8");
 			List<String> lines = CommonUtil.makeGET(url, urlParams);

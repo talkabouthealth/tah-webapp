@@ -290,21 +290,19 @@ public class TalkerDAO {
 	public static TalkerBean getByAccount(ServiceType serviceType, String accountId) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
-//		DBObject query = new BasicDBObject();
-//		query.put("act_type", accountType);
-//		query.put("act_id", accountId);
-//		
-//		DBObject talkerDBObject = talkersColl.findOne(query);
-//		if (talkerDBObject == null) {
-//			return null;
-//		}
-//		else {
-//			TalkerBean talker = new TalkerBean();
-//			talker.parseFromDB(talkerDBObject);
-//			return talker;
-//		}
+		DBObject query = new BasicDBObject();
+		query.put("service_accounts.type", serviceType.toString());
+		query.put("service_accounts.id", accountId);
 		
-		return null;
+		DBObject talkerDBObject = talkersColl.findOne(query);
+		if (talkerDBObject == null) {
+			return null;
+		}
+		else {
+			TalkerBean talker = new TalkerBean();
+			talker.parseFromDB(talkerDBObject);
+			return talker;
+		}
 	}
 	
 	public static TalkerBean getByIMAccount(IMAccountBean imAccount) {

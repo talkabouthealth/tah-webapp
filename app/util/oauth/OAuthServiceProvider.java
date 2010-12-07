@@ -10,7 +10,7 @@ import play.mvc.Scope.Session;
 
 public interface OAuthServiceProvider {
 	
-	public String getAuthURL(Session session);
+	public String getAuthURL(Session session, boolean secureRequest);
 	
 	public String handleCallback(Session session, Map<String, String> params) throws Exception;
 

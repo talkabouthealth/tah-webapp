@@ -22,7 +22,7 @@ public class ServiceAccountBean implements DBModel {
 		TWITTER_SETTINGS_NAMES.put("shareToThoughts", "Share my Twitter posts in my TalkAboutHealth Thoughts Feed.");
 		TWITTER_SETTINGS_NAMES.put("shareFromThoughts", "Share my TalkAboutHealth Thoughts Feed posts in my Twitter feed.");
 		TWITTER_SETTINGS_NAMES.put("postOnAnswer", "Post on Twitter when I answer a question.");
-		TWITTER_SETTINGS_NAMES.put("postOnCovo", "Post on Twitter when I ask a question or start a live chat.");
+		TWITTER_SETTINGS_NAMES.put("postOnConvo", "Post on Twitter when I ask a question or start a live chat.");
 		TWITTER_SETTINGS_NAMES.put("follow", "Follow TalkAboutHealth on Twitter.");
 		
 		FACEBOOK_SETTINGS_NAMES = new LinkedHashMap<String, String>();
@@ -30,7 +30,7 @@ public class ServiceAccountBean implements DBModel {
 		FACEBOOK_SETTINGS_NAMES.put("shareToThoughts", "Share my Facebook posts in my TalkAboutHealth Thoughts Feed.");
 		FACEBOOK_SETTINGS_NAMES.put("shareFromThoughts", "Share my TalkAboutHealth Thoughts Feed posts in my Facebook feed.");
 		FACEBOOK_SETTINGS_NAMES.put("postOnAnswer", "Post on Facebook when I answer a question.");
-		FACEBOOK_SETTINGS_NAMES.put("postOnCovo", "Post on Facebook when I ask a question or start a live chat.");
+		FACEBOOK_SETTINGS_NAMES.put("postOnConvo", "Post on Facebook when I ask a question or start a live chat.");
 	}
 	
 	public enum ServiceType { TWITTER, FACEBOOK }
@@ -115,6 +115,18 @@ public class ServiceAccountBean implements DBModel {
 		}
 	}
 	
+	//TODO: user ENUM instead of strings
+	public boolean isTrue(String key) {
+		if (settings == null) {
+			return false;
+		}
+		String value = settings.get(key);
+		if (value != null && value.equals("true")) {
+			return true;
+		}
+		return false;
+	}
+	
 	public static ServiceType parseServiceType(String typeStr) {
 		ServiceType type = null;
 		try {
@@ -184,5 +196,7 @@ public class ServiceAccountBean implements DBModel {
 	public void setSettings(Map<String, String> settings) {
 		this.settings = settings;
 	}
+
+	
 
 }

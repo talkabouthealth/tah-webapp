@@ -245,10 +245,35 @@ public class TwitterUtil {
 			}
 		});
 	}
+
+	//Input: "Just started <PARAM> "
+	//Output: Param truncated according to Twitter limit
+	public static String prepareTwit(String twitText, String param) {
+		if (param == null) {
+			if (twitText.length() > 135) {
+				twitText = twitText.substring(0, 131)+" ...";
+			}
+			return twitText;
+		}
+		else {
+			//all text without param
+			int textLength = twitText.length() - 6;
+			//135 is better than 140
+			int forParam = 135 - textLength;
+			
+			if (param.length() > forParam) {
+				param = param.substring(0, forParam-5)+" ...";
+			}
+			return twitText.replace("<PARAM>", param);
+		}
+	}
 	
-//	public static void main(String[] args) {
-//		//"osezno" account id
+	public static void main(String[] args) {
+		//"osezno" account id
 //		followUser("23594406");
-//	}
+//		String res = prepareTwit("Hello suasdfsdf asld <PARAM> fjsaldkf jsasad;lfjasdl;kfj sadlfjs daflks adjf supersuperHello super", "COOOOO1000000002000000000300000000000400000000000000000005L");
+//		System.out.println(res.length());
+//		System.out.println(res);
+	}
 
 }

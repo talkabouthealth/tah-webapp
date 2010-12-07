@@ -228,6 +228,8 @@
    	   		var commentText = $("#replytext"+parentId).val();
    			$("#replytext"+parentId).val("");
 
+   			commentText = linkify(commentText);
+
    			$.post("@{Conversations.saveConvoComment()}", 
   				{ convoId: '${convo.id}', parentId: parentId, text: commentText},
   				function(html) {
