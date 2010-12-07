@@ -278,7 +278,7 @@
 									<br/>
 									#{set settingsNames = models.ServiceAccountBean.settingsNamesByType(serviceType) /}
 									#{list items: settingsNames.keySet(), as: 'key' }
-										#{ifnot key.equals('follow') }
+										#{ifnot key.equals('FOLLOW') }
 											<div class="generalcheck" style="padding-bottom:0px;">
 												<div class="preferencescheck">
 													<input type="checkbox" value="true" name="${serviceType.toString()}_${key}"

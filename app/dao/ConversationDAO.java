@@ -113,9 +113,11 @@ public class ConversationDAO {
 		
 		//TODO: move to convobean?
 		List<DBRef> sumContributorsDBList = new ArrayList<DBRef>();
-		for (TalkerBean talker : convo.getSumContributors()) {
-			DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talker.getId());
-			sumContributorsDBList.add(talkerRef);
+		if (convo.getSumContributors() != null) {
+			for (TalkerBean talker : convo.getSumContributors()) {
+				DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talker.getId());
+				sumContributorsDBList.add(talkerRef);
+			}
 		}
 		
 		DBObject convoObject = BasicDBObjectBuilder.start()

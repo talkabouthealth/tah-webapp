@@ -173,6 +173,9 @@ public class ConversationBean {
 	
 	public Set<DBRef> relatedConvosToDB() {
 		Set<DBRef> relatedDBList = new HashSet<DBRef>();
+		if (getRelatedConvos() == null) {
+			return relatedDBList;
+		}
 		for (ConversationBean convo : getRelatedConvos()) {
 			DBRef topicRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getId());
 			relatedDBList.add(topicRef);

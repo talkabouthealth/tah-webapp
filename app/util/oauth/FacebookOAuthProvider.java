@@ -59,7 +59,7 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			String url = "https://graph.facebook.com/oauth/access_token";
 			String urlParams = 
 			    "client_id="+APP_ID+
-//			    "&redirect_uri="+URLEncoder.encode(callbackURL, "UTF-8")+
+			    "&redirect_uri="+URLEncoder.encode("http://"+CALLBACK_URL, "UTF-8")+
 			    "&client_secret="+APP_SECRET+
 			    "&code="+URLEncoder.encode(code, "UTF-8");
 			List<String> lines = CommonUtil.makeGET(url, urlParams);
@@ -132,6 +132,10 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			    		talker.setDeactivated(false);
 			    		CommonUtil.updateTalker(talker, session);
 			    	}
+		        	
+		        	ServiceAccountBean fbAccount = talker.serviceAccountByType(ServiceType.FACEBOOK);
+					fbAccount.setToken(accessToken);
+					CommonUtil.updateTalker(talker, session);
 		        	
 		        	// insert login record into db
 					ApplicationDAO.saveLogin(talker.getId());

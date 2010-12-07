@@ -11,8 +11,10 @@ import org.apache.lucene.document.Field;
 
 import models.CommentBean;
 import models.IMAccountBean;
+import models.ServiceAccountBean;
 import models.TalkerBean;
 import models.ConversationBean;
+import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean.EmailSetting;
 import models.TalkerBean.ProfilePreference;
 import models.TopicBean;
@@ -52,18 +54,16 @@ public class ApplicationUpdatesJob extends Job {
 				remove 'Symptoms'
 				remove Doxil (doxorubicin)
 				
-		 		db.healthitems.find({ name : 'Vinorelbine (Navelbine)'})
-		 		db.healthitems.find({ _id : ObjectId("4cc944afb8682ba91ae9a5f2")})
-		 		db.healthitems.remove({ _id : ObjectId("4cc944afb8682ba948e9a5f2")})
+		 		db.healthitems.find({ name : 'Navelbine (vinorelbine)'})
+		 		db.healthitems.find({ _id : ObjectId("4cd7bb02c0f6b19baa7c415b")})
+		 		db.healthitems.remove({ _id : ObjectId("4cd7bb02c0f6b19baa7c415b")})
 		 		
 		 		db.healthitems.remove({ name : 'Symptoms'})
 		 		db.healthitems.remove({ name : 'Doxil (doxorubicin)'})
 		 		
 		 	2. Move Twitter/Facebook to the new format?
 		 	
-		 	3. Update ConversationBean from the server code
-		 	
-		 	4. Add bit.ly links to the old topics/convos
+		 	3. Add bit.ly links to the old topics/convos
 		 	
 		 */
 		
@@ -98,6 +98,27 @@ public class ApplicationUpdatesJob extends Job {
 		if (ApplicationDAO.isCollectionEmpty(ApplicationDAO.NAMES_COLLECTION)) {
 			for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
 				ApplicationDAO.createURLName(talker.getUserName());
+				
+				//TODO: remove it
+				//2. Move Twitter/Facebook to the new format?
+				
+				String type = talker.getAccountType();
+				if (type != null) {
+					ServiceType serviceType = null;
+					if (type.equalsIgnoreCase("twitter")) {
+						serviceType = ServiceType.TWITTER;
+					}
+					else {
+						serviceType = ServiceType.FACEBOOK;
+					}
+					
+					ServiceAccountBean twitterAccount = 
+						new ServiceAccountBean(talker.getAccountId(), talker.getAccountName(), serviceType);
+					talker.getServiceAccounts().add(twitterAccount);
+					
+					TalkerDAO.updateTalker(talker);
+				}
+				
 			}
 			
 			for (TopicBean topic : TopicDAO.loadAllTopics()) {

@@ -18,19 +18,19 @@ public class ServiceAccountBean implements DBModel {
 	
 	static {
 		TWITTER_SETTINGS_NAMES = new LinkedHashMap<String, String>();
-		TWITTER_SETTINGS_NAMES.put("notify", "Notify me of relevant questions and live chats via Twitter direct message.");
-		TWITTER_SETTINGS_NAMES.put("shareToThoughts", "Share my Twitter posts in my TalkAboutHealth Thoughts Feed.");
-		TWITTER_SETTINGS_NAMES.put("shareFromThoughts", "Share my TalkAboutHealth Thoughts Feed posts in my Twitter feed.");
-		TWITTER_SETTINGS_NAMES.put("postOnAnswer", "Post on Twitter when I answer a question.");
-		TWITTER_SETTINGS_NAMES.put("postOnConvo", "Post on Twitter when I ask a question or start a live chat.");
-		TWITTER_SETTINGS_NAMES.put("follow", "Follow TalkAboutHealth on Twitter.");
+		TWITTER_SETTINGS_NAMES.put("NOTIFY", "Notify me of relevant questions and live chats via Twitter direct message.");
+		TWITTER_SETTINGS_NAMES.put("SHARE_TO_THOUGHTS", "Share my Twitter posts in my TalkAboutHealth Thoughts Feed.");
+		TWITTER_SETTINGS_NAMES.put("SHARE_FROM_THOUGHTS", "Share my TalkAboutHealth Thoughts Feed posts in my Twitter feed.");
+		TWITTER_SETTINGS_NAMES.put("POST_ON_ANSWER", "Post on Twitter when I answer a question.");
+		TWITTER_SETTINGS_NAMES.put("POST_ON_CONVO", "Post on Twitter when I ask a question or start a live chat.");
+		TWITTER_SETTINGS_NAMES.put("FOLLOW", "Follow TalkAboutHealth on Twitter.");
 		
 		FACEBOOK_SETTINGS_NAMES = new LinkedHashMap<String, String>();
-		FACEBOOK_SETTINGS_NAMES.put("notify", "Notify me of relevant questions and live chats via Facebook chat.");
-		FACEBOOK_SETTINGS_NAMES.put("shareToThoughts", "Share my Facebook posts in my TalkAboutHealth Thoughts Feed.");
-		FACEBOOK_SETTINGS_NAMES.put("shareFromThoughts", "Share my TalkAboutHealth Thoughts Feed posts in my Facebook feed.");
-		FACEBOOK_SETTINGS_NAMES.put("postOnAnswer", "Post on Facebook when I answer a question.");
-		FACEBOOK_SETTINGS_NAMES.put("postOnConvo", "Post on Facebook when I ask a question or start a live chat.");
+		FACEBOOK_SETTINGS_NAMES.put("NOTIFY", "Notify me of relevant questions and live chats via Facebook chat.");
+		FACEBOOK_SETTINGS_NAMES.put("SHARE_TO_THOUGHTS", "Share my Facebook posts in my TalkAboutHealth Thoughts Feed.");
+		FACEBOOK_SETTINGS_NAMES.put("SHARE_FROM_THOUGHTS", "Share my TalkAboutHealth Thoughts Feed posts in my Facebook feed.");
+		FACEBOOK_SETTINGS_NAMES.put("POST_ON_ANSWER", "Post on Facebook when I answer a question.");
+		FACEBOOK_SETTINGS_NAMES.put("POST_ON_CONVO", "Post on Facebook when I ask a question or start a live chat.");
 	}
 	
 	public enum ServiceType { TWITTER, FACEBOOK }

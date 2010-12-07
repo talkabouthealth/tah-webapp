@@ -14,6 +14,7 @@ import com.tah.im.IMNotifier;
 
 import util.BitlyUtil;
 import util.CommonUtil;
+import util.FacebookUtil;
 import util.NotificationUtils;
 import util.TwitterUtil;
 import dao.ActionDAO;
@@ -89,19 +90,27 @@ public class ConversationLogic {
 		
 		//send to Tw & Fb
 		for (ServiceAccountBean serviceAccount : talker.getServiceAccounts()) {
+			if (!serviceAccount.isTrue("POST_ON_CONVO")) {
+				continue;
+			}
 //			Just asked a question on TalkAboutHealth: "What are the best hospitals in NYC for breast cancer ..." http://bit.ly/lksa
 //			Just started a live chat on TalkAboutHealth: "What are the best hospitals in NYC for breast cancer ..." http://bit.ly/lksa
-			if (serviceAccount.getType() == ServiceType.TWITTER && serviceAccount.isTrue("postOnConvo")) {
-				String twitText = null;
-				if (convo.getConvoType() == ConvoType.CONVERSATION) {
-					twitText = "Just started a live chat on TalkAboutHealth: \"<PARAM>\" "+convo.getBitlyChat();
-				}
-				else {
-					twitText = "Just asked a question on TalkAboutHealth: \"<PARAM>\" "+convo.getBitly();
-				}
-				twitText = TwitterUtil.prepareTwit(twitText, convo.getTopic());
-				
-	    		TwitterUtil.makeUserTwit(twitText, serviceAccount.getToken(), serviceAccount.getTokenSecret());
+			
+			String postText = null;
+			if (convo.getConvoType() == ConvoType.CONVERSATION) {
+				postText = "Just started a live chat on TalkAboutHealth: \"<PARAM>\" "+convo.getBitlyChat();
+			}
+			else {
+				postText = "Just asked a question on TalkAboutHealth: \"<PARAM>\" "+convo.getBitly();
+			}
+			
+			if (serviceAccount.getType() == ServiceType.TWITTER) {
+				postText = TwitterUtil.prepareTwit(postText, convo.getTopic());
+				TwitterUtil.makeUserTwit(postText, serviceAccount.getToken(), serviceAccount.getTokenSecret());
+			}
+			else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
+				postText = postText.replace("<PARAM>", convo.getTopic());
+				FacebookUtil.post(postText, serviceAccount.getToken());
 			}
 		}
 		
@@ -172,24 +181,24 @@ public class ConversationLogic {
     		}
     	}
     	
-    	if (comment.isAnswer() && talker.isTwitterPostOnAnswer()) {
-    		//Twitter notification
-    		//Just answered a question on TalkAboutHealth: "What are the ..." http://bit.ly/lksa
-    		StringBuilder twit = new StringBuilder();
-    		twit.append("Just answered a question on TalkAboutHealth: \"");
-    		
-    		//for title we have only 72 characters
-    		String convoTitle = convo.getTopic();
-    		if (convoTitle.length() > 65) {
-    			convoTitle = convoTitle.substring(0, 65)+"...";
+    	if (comment.isAnswer()) {
+    		for (ServiceAccountBean serviceAccount : talker.getServiceAccounts()) {
+    			if (!serviceAccount.isTrue("POST_ON_ANSWER")) {
+    				continue;
+    			}
+    			
+    			//Just answered a question on TalkAboutHealth: "What are the ..." http://bit.ly/lksa
+    			String postText = "Just answered a question on TalkAboutHealth: \"<PARAM>\" "+convo.getBitly();
+    			
+    			if (serviceAccount.getType() == ServiceType.TWITTER) {
+    				postText = TwitterUtil.prepareTwit(postText, convo.getTopic());
+    				TwitterUtil.makeUserTwit(postText, serviceAccount.getToken(), serviceAccount.getTokenSecret());
+    			}
+    			else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
+    				postText = postText.replace("<PARAM>", convo.getTopic());
+    				FacebookUtil.post(postText, serviceAccount.getToken());
+    			}
     		}
-    		twit.append(convoTitle+"\" ");
-    		twit.append(convo.getBitly());
-    		
-    		//TODO: better session parameter handling?
-    		Session session = Session.current();
-    		TwitterUtil.makeUserTwit(twit.toString(), 
-    				(String)session.get("twitter_token"), (String)session.get("twitter_token_secret"));
     	}
     	
 //    	The exception is users will receive IM notifications of answers 

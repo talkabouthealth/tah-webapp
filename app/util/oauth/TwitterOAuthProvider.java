@@ -163,6 +163,13 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 		    		CommonUtil.updateTalker(talker, session);
 		    	}
 	        	
+	        	System.out.println("CON: "+consumer.getToken());
+	        	System.out.println("SES: "+session.get("token"));
+	        	ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
+	        	twitterAccount.setToken(consumer.getToken());
+				twitterAccount.setTokenSecret(consumer.getTokenSecret());
+				CommonUtil.updateTalker(talker, session);
+	        	
 	        	//simple login
 	        	ApplicationDAO.saveLogin(talker.getId());
 
