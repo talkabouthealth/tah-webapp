@@ -94,31 +94,35 @@ public class ApplicationUpdatesJob extends Job {
 			HealthItemsImporter.importHealthItems("healthitems.dat");
 		}
 		
+		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
+			ApplicationDAO.createURLName(talker.getUserName());
+			
+			//TODO: remove it
+			//2. Move Twitter/Facebook to the new format?
+			
+			String type = talker.getAccountType();
+			if (type != null) {
+				ServiceType serviceType = null;
+				if (type.equalsIgnoreCase("twitter")) {
+					serviceType = ServiceType.TWITTER;
+				}
+				else {
+					serviceType = ServiceType.FACEBOOK;
+				}
+				
+				ServiceAccountBean twitterAccount = 
+					new ServiceAccountBean(talker.getAccountId(), talker.getAccountName(), serviceType);
+				talker.getServiceAccounts().add(twitterAccount);
+				
+				TalkerDAO.updateTalker(talker);
+			}
+			
+		}
+		
 		//Talkers/Topics/Convos should have different names, stored in 'names' collection
 		if (ApplicationDAO.isCollectionEmpty(ApplicationDAO.NAMES_COLLECTION)) {
 			for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
 				ApplicationDAO.createURLName(talker.getUserName());
-				
-				//TODO: remove it
-				//2. Move Twitter/Facebook to the new format?
-				
-				String type = talker.getAccountType();
-				if (type != null) {
-					ServiceType serviceType = null;
-					if (type.equalsIgnoreCase("twitter")) {
-						serviceType = ServiceType.TWITTER;
-					}
-					else {
-						serviceType = ServiceType.FACEBOOK;
-					}
-					
-					ServiceAccountBean twitterAccount = 
-						new ServiceAccountBean(talker.getAccountId(), talker.getAccountName(), serviceType);
-					talker.getServiceAccounts().add(twitterAccount);
-					
-					TalkerDAO.updateTalker(talker);
-				}
-				
 			}
 			
 			for (TopicBean topic : TopicDAO.loadAllTopics()) {
