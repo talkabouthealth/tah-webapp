@@ -52,7 +52,6 @@ public class Explore extends Controller {
     		TalkerLogic.calculateProfileCompletion(talker);
     	}
     	
-    	//FIXME
     	//TwitterUtil.importTweets((String)session.get("twitter_token"), (String)session.get("twitter_token_secret"));
     	//TwitterUtil.loadMentions();
     	//FacebookUtil.post("Test cool", (String)session.get("fb_token"));
