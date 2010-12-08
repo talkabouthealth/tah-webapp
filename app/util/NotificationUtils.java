@@ -15,7 +15,9 @@ import util.EmailUtil.EmailTemplate;
 
 import models.ConversationBean;
 import models.ConversationBean.ConvoType;
+import models.ServiceAccountBean;
 import models.TalkerBean;
+import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean.EmailSetting;
 
 import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry.Entry;
@@ -54,6 +56,8 @@ public class NotificationUtils {
 		//let's have support@talkabouthealth.com receive all notifications via IM
 		talkersForNotification.add(EmailUtil.SUPPORT_EMAIL);
 		
+//		talkersForNotification.add(TalkerDAO.getByUserName("osezno1").getId());
+		
 		for (UserInfo userInfo : onlineUsers.values()) {
 			//notifications for last 3 hours and day
 			Calendar threeHoursBeforeNow = Calendar.getInstance();
@@ -87,6 +91,7 @@ public class NotificationUtils {
 				restartTalker = convo.getTalker();
 			}
 			
+			//TODO: better impl?
 			StringBuilder message = new StringBuilder();
 			message.append(restartTalker.getUserName());
 			if (convo.getConvoType() == ConvoType.QUESTION) {
@@ -119,8 +124,9 @@ public class NotificationUtils {
 				}
 				
 				TalkerBean talker = TalkerDAO.getById(talkerId);
-				if (talker.getAccountId() != null) {
-					TwitterUtil.sendDirect(talker.getAccountId(), message.toString());
+				ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
+				if (twitterAccount != null && twitterAccount.isTrue("NOTIFY")) {
+					TwitterUtil.sendDirect(twitterAccount.getId(), message.toString());
 				}
 			}
 		}

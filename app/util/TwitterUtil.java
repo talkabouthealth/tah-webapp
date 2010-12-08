@@ -87,7 +87,7 @@ public class TwitterUtil {
 					consumer.sign(conn);
 					conn.connect();
 					
-					System.out.println("Twitter follow response: " + conn.getResponseCode() + " "
+					System.out.println("Twitter DM response: " + conn.getResponseCode() + " "
 			                + conn.getResponseMessage());
 				} catch (Exception e) {
 					e.printStackTrace();

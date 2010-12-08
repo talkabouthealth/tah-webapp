@@ -1,10 +1,17 @@
 package util.jobs;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Executors;
+
+import oauth.signpost.OAuthConsumer;
+import oauth.signpost.basic.DefaultOAuthConsumer;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -27,9 +34,11 @@ import dao.TalkerDAO;
 import dao.ConversationDAO;
 import dao.TopicDAO;
 
+import play.Logger;
 import play.Play;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
+import util.BitlyUtil;
 import util.CommonUtil;
 import util.DBUtil;
 import util.importers.DiseaseImporter;
@@ -38,6 +47,7 @@ import util.importers.HealthItems2Topics;
 import util.importers.HealthItemsImporter;
 import util.importers.HealthItemsUpdater;
 import util.importers.TopicsImporter;
+import util.oauth.TwitterOAuthProvider;
 
 /**
  * Job is used for different updates in db when deploying new features.
@@ -170,6 +180,48 @@ public class ApplicationUpdatesJob extends Job {
 			
 			TalkerDAO.save(admin);
 		}
+		
+		Executors.newSingleThreadExecutor().execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					//timeout between API requests
+					final int BITLY_TIMEOUT = 5000;
+					for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
+						if (convo.getBitly() == null) {
+							//String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
+							String convoURL = "http://talkabouthealth.com/"+convo.getMainURL();
+							convo.setBitly(BitlyUtil.shortLink(convoURL));
+							Thread.sleep(BITLY_TIMEOUT);
+							
+							ConversationDAO.updateConvo(convo);
+						}
+						if (convo.getBitlyChat() == null) {
+//							String convoChatURL = CommonUtil.generateAbsoluteURL("Talk.talkApp", "convoId", convo.getTid());
+							String convoChatURL = "http://talkabouthealth.com/chat/"+convo.getTid();
+							convo.setBitlyChat(BitlyUtil.shortLink(convoChatURL));
+							Thread.sleep(BITLY_TIMEOUT);
+							
+							ConversationDAO.updateConvo(convo);
+						}
+					}
+					
+					for (TopicBean topic : TopicDAO.loadAllTopics()) {
+						if (topic.getBitly() == null) {
+//							String topicURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", topic.getMainURL());
+							String topicURL = "http://talkabouthealth.com/"+topic.getMainURL();
+							topic.setBitly(BitlyUtil.shortLink(topicURL));
+							Thread.sleep(BITLY_TIMEOUT);
+							
+							TopicDAO.updateTopic(topic);
+						}
+					}
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		
 		//create indexes
 //		activities

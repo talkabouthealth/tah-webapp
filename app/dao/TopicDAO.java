@@ -38,6 +38,7 @@ public class TopicDAO {
 			.add("main_url", topic.getMainURL())
 			.add("cr_date", new Date())
 			.add("aliases", topic.getAliases())
+			.add("bitly", topic.getBitly())
 			
 			.add("children", topic.childrenToList())
 			.add("fixed", topic.isFixed())
@@ -56,6 +57,7 @@ public class TopicDAO {
 			.add("old_names", setToDB(topic.getOldNames()))
 			.add("aliases", topic.getAliases())
 			.add("fixed", topic.isFixed())
+			.add("bitly", topic.getBitly())
 			
 			.add("summary", topic.getSummary())
 			

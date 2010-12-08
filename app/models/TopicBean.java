@@ -33,6 +33,7 @@ public class TopicBean implements Comparable<TopicBean> {
 	private Set<String> aliases;
 	//top (fixed) topic?
 	private boolean fixed;
+	private String bitly;
 	
 	private String summary;
 	private Set<String> sumContributors;
@@ -108,6 +109,7 @@ public class TopicBean implements Comparable<TopicBean> {
 		setFixed(getBoolean(topicDBObject, "fixed"));
 		setDeleted(getBoolean(topicDBObject, "deleted"));
 		setMainURL((String)topicDBObject.get("main_url"));
+		setBitly((String)topicDBObject.get("bitly"));
 	}
 	
 	public void parseBasicFromDB(DBObject topicDBObject) {
@@ -309,5 +311,11 @@ public class TopicBean implements Comparable<TopicBean> {
 	}
 	public void setFixed(boolean fixed) {
 		this.fixed = fixed;
+	}
+	public String getBitly() {
+		return bitly;
+	}
+	public void setBitly(String bitly) {
+		this.bitly = bitly;
 	}
 }
