@@ -94,6 +94,7 @@ public class ApplicationUpdatesJob extends Job {
 			HealthItemsImporter.importHealthItems("healthitems.dat");
 		}
 		
+		//TODO: iptables
 		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
 			ApplicationDAO.createURLName(talker.getUserName());
 			

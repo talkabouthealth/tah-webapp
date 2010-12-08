@@ -13,8 +13,10 @@ import java.util.Set;
 import logic.FeedsLogic;
 import logic.TalkerLogic;
 import models.IMAccountBean;
+import models.ServiceAccountBean;
 import models.TalkerBean;
 import models.ConversationBean;
+import models.ServiceAccountBean.ServiceType;
 import models.actions.Action;
 import models.actions.Action.ActionType;
 import play.Logger;
@@ -24,6 +26,7 @@ import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
 import util.EmailUtil;
+import util.TwitterUtil;
 import util.EmailUtil.EmailTemplate;
 import util.ValidateData;
 import dao.ActionDAO;
@@ -49,8 +52,9 @@ public class Home extends Controller {
 		}
 		
 		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
-		//FIXME: not show if twitter account + notify option
-		if (talker.getAccountType() != null && talker.getAccountType().equals("twitter")) {
+		//not show if twitter account + notify option
+		ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
+		if (twitterAccount != null && twitterAccount.isTrue("NOTIFY")) {
 			hasNoIMAccounts = false;
 		}
 		boolean isAdmin = "admin".equals(Security.connected());

@@ -207,65 +207,13 @@
 							#{list items: additionalSettings.keySet(), as: 'key' }
 								<div class="generalcheck" style="padding-bottom:0px;">
 									<div class="preferencescheck">
-										<input type="checkbox" value="true" name="${from}_${key}" style="margin-bottom: 0px;"
-											#{if flash[from+'_'+key] } checked='checked' #{/if}
+										<input type="checkbox" value="true" name="${flash.from}_${key}" style="margin-bottom: 0px;"
+											#{if flash[flash.from+'_'+key] } checked='checked' #{/if}
 										/>
 										<span class="blacktext14">&nbsp;${additionalSettings.get(key)}</span>
 									</div>
 								</div>
 							#{/list}
-							
-							*{
-							<div class="generalcheck" style="padding-top: 3px; padding-bottom:0px;">
-								<div class="preferencescheck">
-									<input type="checkbox" value="true" name="talker.twitterNotify" style="margin-bottom: 0px;"
-										#{if flash['talker.twitterNotify'] } checked='checked' #{/if}
-									/>
-									<span class="blacktext14">&nbsp;Notify me of relevant questions and 
-										live chats via Twitter direct message.</span>
-								</div>
-							</div>
-							<div class="generalcheck" style="padding-bottom:0px;">
-								<div class="preferencescheck">
-									<input type="checkbox" value="true" name="talker.shareTwitterToThoughts" style="margin-bottom: 0px;"
-										#{if flash['talker.shareTwitterToThoughts'] } checked='checked' #{/if}
-									/>
-									<span class="blacktext14">&nbsp;Share my Twitter posts in my TalkAboutHealth Thoughts Feed.</span>
-								</div>
-							</div>
-							<div class="generalcheck" style="padding-bottom: 0px;">
-								<div class="preferencescheck">
-									<input type="checkbox" value="true" name="talker.shareThoughtsToTwitter" style="margin-bottom: 0px;"
-										#{if flash['talker.shareThoughtsToTwitter']} checked='checked' #{/if}
-									/>
-									<span class="blacktext14">&nbsp;Share my TalkAboutHealth Thoughts Feed posts with my Twitter feed.</span>
-								</div>
-							</div>
-							<div class="generalcheck" style="padding-bottom: 0px;">
-								<div class="preferencescheck">
-									<input type="checkbox" value="true" name="talker.twitterPostOnAnswer" style="margin-bottom: 0px;"
-										#{if flash['talker.twitterPostOnAnswer']} checked='checked' #{/if}
-									/>
-									<span class="blacktext14">&nbsp;Post on Twitter when I answer a question.</span>
-								</div>
-							</div>
-							<div class="generalcheck" style="padding-bottom: 0px;">
-								<div class="preferencescheck">
-									<input type="checkbox" value="true" name="talker.twitterPostOnStart" style="margin-bottom: 0px;"
-										#{if flash['talker.twitterPostOnStart']} checked='checked' #{/if}
-									/>
-									<span class="blacktext14">&nbsp;Post on Twitter when I ask a question or start a live chat.</span>
-								</div>
-							</div>
-							<div class="generalcheck" style="padding-top: 0px; padding-bottom:0px;">
-								<div class="preferencescheck">
-									<input type="checkbox" value="true" name="talker.followTAH" style="margin-bottom: 0px;"
-										#{if flash['talker.followTAH'] } checked='checked' #{/if}
-									/>
-									<span class="blacktext14">&nbsp;Follow TalkAboutHealth on Twitter.</span>
-								</div>
-							</div>
-							}*
 						</div>
 						#{/if}
 						

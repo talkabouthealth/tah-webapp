@@ -169,9 +169,10 @@ public class Application extends Controller {
 		vars.put("username", talker.getUserName());
 		EmailUtil.sendEmail(EmailTemplate.WELCOME, talker.getEmail(), vars, null, false);
 		
-		if (talker.isFollowTAH()) {
+		ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
+		if (twitterAccount != null && twitterAccount.isTrue("FOLLOW")) {
 			//follow TAH by this user
-			TwitterUtil.followTAH((String)session.get("twitter_token"), (String)session.get("twitter_token_secret"));
+			TwitterUtil.followTAH(twitterAccount.getToken(), twitterAccount.getTokenSecret());
 		}
 
 		//login
