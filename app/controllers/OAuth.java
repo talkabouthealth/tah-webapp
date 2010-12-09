@@ -9,6 +9,7 @@ public class OAuth extends Controller {
 	
 	public static void getAuth(String type) {
 		OAuthServiceProvider oauthProvider = getProvider(type);
+		System.out.println("SECURE: "+request.secure);
 		redirect(oauthProvider.getAuthURL(session, request.secure));
 	}
 	
