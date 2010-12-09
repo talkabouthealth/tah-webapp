@@ -9,10 +9,8 @@ import util.oauth.TwitterOAuthProvider;
 public class OAuth extends Controller {
 	
 	public static void getAuth(String type) {
-//		OAuthServiceProvider oauthProvider = getProvider(type);
-//		Logger.error("SECURE: "+request.secure);
-//		redirect(oauthProvider.getAuthURL(session, request.secure));
-		renderText("Please check again later...");
+		OAuthServiceProvider oauthProvider = getProvider(type);
+		redirect(oauthProvider.getAuthURL(session, request.secure));
 	}
 	
 	public static void callback(String type) {
