@@ -1,5 +1,6 @@
 package controllers;
 
+import play.Logger;
 import play.mvc.Controller;
 import util.oauth.FacebookOAuthProvider;
 import util.oauth.OAuthServiceProvider;
@@ -9,7 +10,7 @@ public class OAuth extends Controller {
 	
 	public static void getAuth(String type) {
 		OAuthServiceProvider oauthProvider = getProvider(type);
-		System.out.println("SECURE: "+request.secure);
+		Logger.error("SECURE: "+request.secure);
 		redirect(oauthProvider.getAuthURL(session, request.secure));
 	}
 	
