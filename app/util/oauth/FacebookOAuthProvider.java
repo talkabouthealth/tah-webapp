@@ -103,8 +103,13 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			if (isConnected) {
 				//it's not login/signup - it's notifications page
 				
-				//TODO: what for facebook?
+				TalkerBean anotherTalker = TalkerDAO.getByAccount(ServiceType.FACEBOOK, accountId);
+				if (anotherTalker != null) {
+					//this account is already connected by another user
+					return "/profile/notificationsettings?err=notunique";
+				}
 				
+				//TODO: what for facebook?
 				TalkerBean talker = CommonUtil.loadCachedTalker(session);
 				if (talker.serviceAccountByType(ServiceType.FACEBOOK) == null) {
 					ServiceAccountBean fbAccount = new ServiceAccountBean(accountId, userEmail, ServiceType.FACEBOOK);

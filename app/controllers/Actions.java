@@ -10,12 +10,16 @@ import play.mvc.Controller;
 import play.mvc.With;
 
 import util.CommonUtil;
+import util.FacebookUtil;
 import util.NotificationUtils;
 import util.TwitterUtil;
 
 import models.CommentBean;
 import models.TalkerBean;
+import models.ConversationBean.ConvoType;
+import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean.EmailSetting;
+import models.ServiceAccountBean;
 import models.TalkerTopicInfo;
 import models.ThankYouBean;
 import models.TopicBean;
@@ -148,9 +152,18 @@ public class Actions extends Controller {
 			
 			//post to personal Thoughts Feed?
 			if (talker.equals(profileTalker)) {
-				if (talker.isShareThoughtsToTwitter()) {
-					TwitterUtil.makeUserTwit(comment.getText(), 
-							(String)session.get("twitter_token"), (String)session.get("twitter_token_secret"));
+				for (ServiceAccountBean serviceAccount : talker.getServiceAccounts()) {
+					if (!serviceAccount.isTrue("SHARE_FROM_THOUGHTS")) {
+						continue;
+					}
+					
+					if (serviceAccount.getType() == ServiceType.TWITTER) {
+						TwitterUtil.makeUserTwit(comment.getText(), 
+								serviceAccount.getToken(), serviceAccount.getTokenSecret());
+					}
+					else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
+						FacebookUtil.post(comment.getText(), serviceAccount.getToken());
+					}
 				}
 			}
 		}

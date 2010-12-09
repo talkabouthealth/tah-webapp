@@ -46,7 +46,7 @@
 				//Cancel the link behavior
 				e.preventDefault();
 
-				var imService = $("#imDialog input[checked=true]").val();
+				var imService = $("#imDialog input:checked").val();
 				var imUserName = $("#imUserName").val();
 
 				if (imService.length == 0) {

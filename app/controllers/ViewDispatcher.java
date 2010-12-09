@@ -153,7 +153,7 @@ public class ViewDispatcher extends Controller {
 			if (!userActionTypes.contains(ActionType.UPDATE_PERSONAL)) {
 				notProvidedInfo = true;
 			}
-			if (talker.isProf() && !userActionTypes.contains(ActionType.UPDATE_HEALTH)) {
+			if (!talker.isProf() && !userActionTypes.contains(ActionType.UPDATE_HEALTH)) {
 				notProvidedInfo = true;
 			}
 			

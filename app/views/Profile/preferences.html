@@ -61,12 +61,14 @@
 						<div class="signupmain">
 							<div class="generalcheck">
 								#{list items:models.TalkerBean.ProfilePreference.values(), as:'preference' }
-									<div class="preferencescheck">
-										<input type="checkbox" value="" name="${preference}"
-										#{if profilePreferences.contains(preference) } checked='checked' #{/if}
-										/>
-										<span class="blacktext14">&nbsp;${preference.description}</span>
-									</div>
+									#{ifnot talker.isProf() && preference == models.TalkerBean.ProfilePreference.HEALTH_INFO} 
+										<div class="preferencescheck">
+											<input type="checkbox" value="" name="${preference}"
+											#{if profilePreferences.contains(preference) } checked='checked' #{/if}
+											/>
+											<span class="blacktext14">&nbsp;${preference.description}</span>
+										</div>
+									#{/ifnot}
 								#{/list}
 							</div>
 						</div>

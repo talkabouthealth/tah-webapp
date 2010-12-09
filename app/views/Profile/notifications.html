@@ -264,6 +264,14 @@
 					</div>
 				</div>
 				<div class="notibluearea">
+					#{if flash.err}
+						<div class="signfields2">
+							<div style="font-size: 14px; color: red;">
+								${flash.err}
+							</div>
+						</div>
+					#{/if}
+					
 					#{list items:models.ServiceAccountBean.ServiceType.values(), as: 'serviceType'}
 						#{set serviceTypeName = serviceType.toString().toLowerCase().capFirst() /}
 						<div class="signfields2">

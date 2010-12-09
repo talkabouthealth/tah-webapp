@@ -389,6 +389,11 @@ public class Profile extends Controller {
     	talker.setActivityList(ActionDAO.load(talker.getId()));
 		TalkerLogic.calculateProfileCompletion(talker);
 		
+		String error = params.get("err");
+		if (error != null) {
+			flash.put("err", "Sorry, this account is already connected.");
+		}
+		
 		render(talker);
 	}
 	

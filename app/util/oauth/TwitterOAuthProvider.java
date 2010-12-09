@@ -62,6 +62,8 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
         	String callbackURL = (secureRequest ? "https://" : "http://");
 			callbackURL = callbackURL+CALLBACK_URL;
 			
+			Logger.error("Twitter url: "+callbackURL);
+			
 			authURL = provider.retrieveRequestToken(consumer, callbackURL);
 			
 			//save token and token secret for next step of OAuth
@@ -122,9 +124,14 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
         }
         br.close();
         
-        //TODO: check uniqueness
         boolean isConnected = session.contains("username");
 		if (isConnected) {
+			TalkerBean anotherTalker = TalkerDAO.getByAccount(ServiceType.TWITTER, accountId);
+			if (anotherTalker != null) {
+				//this account is already connected by another user
+				return "/profile/notificationsettings?err=notunique";
+			}
+			
 			//it's not login/signup - it's adding of Twitter account for notifications!
 			try {
 		        TwitterUtil.followUser(accountId);
@@ -146,7 +153,6 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			else {
 				//TODO: probably some error?
 			}
-    		
 	        
 	        return "/profile/notificationsettings";
 		}

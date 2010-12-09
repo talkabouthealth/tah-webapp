@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import models.CommentBean;
 import models.EmailBean;
@@ -256,21 +257,29 @@ public class TalkerDAO {
 	public static TalkerBean getByLoginInfo(String usernameOrEmail, String password) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
+		Pattern usernameOrEmailRegex = Pattern.compile("^"+usernameOrEmail+"$", Pattern.CASE_INSENSITIVE);
+		
+		Object passwordRegex = password;
+		if (password == null) {
+			//every password would be ok - we search only by login
+			passwordRegex = Pattern.compile(".*");
+		}
+		
 		DBObject usernameQuery = BasicDBObjectBuilder.start()
-			.add("uname", usernameOrEmail)
-			.add("pass", password)
+			.add("uname", usernameOrEmailRegex)
+			.add("pass", passwordRegex)
 			.get();
 		DBObject emailQuery = BasicDBObjectBuilder.start()
-			.add("email", usernameOrEmail)
-			.add("pass", password)
+			.add("email", usernameOrEmailRegex)
+			.add("pass", passwordRegex)
 			.get();
 		DBObject notPrimaryEmailQuery = BasicDBObjectBuilder.start()
-			.add("emails.value", usernameOrEmail)
-			.add("pass", password)
+			.add("emails.value", usernameOrEmailRegex)
+			.add("pass", passwordRegex)
 			.get();
 		DBObject deactivatedUsernameQuery = BasicDBObjectBuilder.start()
-			.add("orig_uname", usernameOrEmail)
-			.add("pass", password)
+			.add("orig_uname", usernameOrEmailRegex)
+			.add("pass", passwordRegex)
 			.get();
 		
 		DBObject query = new BasicDBObject("$or", 

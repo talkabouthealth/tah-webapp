@@ -27,17 +27,9 @@ public class Security extends Secure.Security {
     static void onAuthenticated() {
     	//if user logged with email - change session "username" to username (not email)
     	String connectedUser = connected();
-    	if (connectedUser.contains("@")) {
-    		TalkerBean talker = TalkerDAO.getByEmail(connectedUser);
-    		session.put("username", talker.getUserName());
-    	}
     	
-    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	
-    	if (talker == null) {
-    		//user signed with old (original, before deactivation) username 
-    		talker = TalkerDAO.getByOriginalUsername(connectedUser);
-    	}
+    	TalkerBean talker = TalkerDAO.getByLoginInfo(connectedUser, null);
+    	session.put("username", talker.getUserName());
     	
     	if (talker.isSuspended()) {
     		session.clear();
