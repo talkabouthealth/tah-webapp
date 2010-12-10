@@ -28,22 +28,22 @@ public class OAuth extends Controller {
 		boolean isRequestSecure = false;
 		Header sslHeader = request.headers.get("x-forwarded-ssl");
 		if (sslHeader != null && sslHeader.value().equalsIgnoreCase("on")) {
-			isRequestSecure = true;
+			request.secure = true;
 		}
 		
-		redirect(oauthProvider.getAuthURL(session, isRequestSecure));
+		redirect(oauthProvider.getAuthURL(session, request.secure));
 	}
 	
 	public static void callback(String type) {
 		OAuthServiceProvider oauthProvider = getProvider(type);
 		
 		try {
-			String redirectURL = oauthProvider.handleCallback(session, params.allSimple());
-			
 			Header sslHeader = request.headers.get("x-forwarded-ssl");
 			if (sslHeader != null && sslHeader.value().equalsIgnoreCase("on")) {
 				request.secure = true;
 			}
+			
+			String redirectURL = oauthProvider.handleCallback(session, params.allSimple(), request.secure);
 			
 			Application.redirectPage(redirectURL);
 		} catch (Exception e) {

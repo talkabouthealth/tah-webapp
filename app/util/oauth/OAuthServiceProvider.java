@@ -12,7 +12,7 @@ public interface OAuthServiceProvider {
 	
 	public String getAuthURL(Session session, boolean secureRequest);
 	
-	public String handleCallback(Session session, Map<String, String> params) throws Exception;
+	public String handleCallback(Session session, Map<String, String> params, boolean secureRequest) throws Exception;
 
 }
 

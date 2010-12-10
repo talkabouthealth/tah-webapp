@@ -52,14 +52,17 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 		return authURL;
 	}
 
-	public String handleCallback(Session session, Map<String, String> params) throws Exception {
+	public String handleCallback(Session session, Map<String, String> params, boolean secureRequest) throws Exception {
 		String code = params.get("code");
 		if (code != null) {
+			String callbackURL = (secureRequest ? "https://" : "http://");
+			callbackURL = callbackURL+CALLBACK_URL;
+			
 			//user confirmed app - get access token
 			String url = "https://graph.facebook.com/oauth/access_token";
 			String urlParams = 
 			    "client_id="+APP_ID+
-			    "&redirect_uri="+URLEncoder.encode("http://"+CALLBACK_URL, "UTF-8")+
+			    "&redirect_uri="+URLEncoder.encode(callbackURL, "UTF-8")+
 			    "&client_secret="+APP_SECRET+
 			    "&code="+URLEncoder.encode(code, "UTF-8");
 			List<String> lines = CommonUtil.makeGET(url, urlParams);

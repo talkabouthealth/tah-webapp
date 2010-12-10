@@ -75,7 +75,7 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 		return authURL;
 	}
 
-	public String handleCallback(Session session, Map<String, String> params) throws Exception {
+	public String handleCallback(Session session, Map<String, String> params, boolean secureRequest) throws Exception {
 		String oauthVerifier = params.get("oauth_verifier");
 		String token = (String)session.get("twitter_token");
 		String tokenSecret = (String)session.get("twitter_token_secret");
