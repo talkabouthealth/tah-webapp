@@ -39,6 +39,12 @@ public class OAuth extends Controller {
 		
 		try {
 			String redirectURL = oauthProvider.handleCallback(session, params.allSimple());
+			
+			Header sslHeader = request.headers.get("x-forwarded-ssl");
+			if (sslHeader != null && sslHeader.value().equalsIgnoreCase("on")) {
+				request.secure = true;
+			}
+			
 			Application.redirectPage(redirectURL);
 		} catch (Exception e) {
 			e.printStackTrace();
