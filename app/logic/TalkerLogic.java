@@ -127,6 +127,7 @@ public class TalkerLogic {
 				}
 				break;
 			case JOIN_CONVO:
+			case RESTART_CONVO:
 				profileActions.add(ProfileCompletion.START_OR_JOIN_TALK);
 				break;
 			case ANSWER_CONVO:

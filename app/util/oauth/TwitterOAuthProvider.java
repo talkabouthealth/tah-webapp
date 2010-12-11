@@ -34,16 +34,16 @@ import dao.TalkerDAO;
  */
 public class TwitterOAuthProvider implements OAuthServiceProvider {
 	
-	public static final String CONSUMER_KEY = "D9iFrN4G8ObpLCtGJ9w";
-	public static final String CONSUMER_SECRET = "Yy1srQbpldqjtqzzAXpJe3RzuWGxHFKPCF8FPsZKU";
-	private static final String CALLBACK_URL =
-		"talkabouthealth.com/oauth/callback?type=twitter";
+//	public static final String CONSUMER_KEY = "D9iFrN4G8ObpLCtGJ9w";
+//	public static final String CONSUMER_SECRET = "Yy1srQbpldqjtqzzAXpJe3RzuWGxHFKPCF8FPsZKU";
+//	private static final String CALLBACK_URL =
+//		"talkabouthealth.com/oauth/callback?type=twitter";
 	
 //	Test values FIXME: use production settings
-//	public static final String CONSUMER_KEY = "7VymbW3wmOOoQ892BqIsaA";
-//	public static final String CONSUMER_SECRET = "s8aexaIBgMxAm4ZqQNayv5SAr6Wd1SKFVETUEPv0cmM";
-//	public static final String CALLBACK_URL =
-//		"kan.dev.com:9000/oauth/callback?type=twitter";
+	public static final String CONSUMER_KEY = "7VymbW3wmOOoQ892BqIsaA";
+	public static final String CONSUMER_SECRET = "s8aexaIBgMxAm4ZqQNayv5SAr6Wd1SKFVETUEPv0cmM";
+	public static final String CALLBACK_URL =
+		"kan.dev.com:9000/oauth/callback?type=twitter";
 	
 	private OAuthConsumer consumer;
 	private OAuthProvider provider;
@@ -129,7 +129,7 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			TalkerBean anotherTalker = TalkerDAO.getByAccount(ServiceType.TWITTER, accountId);
 			if (anotherTalker != null) {
 				//this account is already connected by another user
-				return "/profile/notificationsettings?err=notunique";
+				return "/profile/notificationsettings?err=notunique&from="+ServiceType.TWITTER.toString();
 			}
 			
 			//it's not login/signup - it's adding of Twitter account for notifications!

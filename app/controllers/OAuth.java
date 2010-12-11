@@ -25,7 +25,6 @@ public class OAuth extends Controller {
 		
 		//Play! 'request.secure' is always false, so we check manually
 		//x-forwarded-ssl : on
-		boolean isRequestSecure = false;
 		Header sslHeader = request.headers.get("x-forwarded-ssl");
 		if (sslHeader != null && sslHeader.value().equalsIgnoreCase("on")) {
 			request.secure = true;

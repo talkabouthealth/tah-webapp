@@ -25,16 +25,16 @@ import dao.TalkerDAO;
 
 public class FacebookOAuthProvider implements OAuthServiceProvider {
 	
-	private static final String APP_ID = "131545373528131";
-	private static final String APP_SECRET = "0620bead67e2ffa4e9e46f60b3376dec";
-	private static final String CALLBACK_URL =
-		"talkabouthealth.com/oauth/callback?type=facebook";
+//	private static final String APP_ID = "131545373528131";
+//	private static final String APP_SECRET = "0620bead67e2ffa4e9e46f60b3376dec";
+//	private static final String CALLBACK_URL =
+//		"talkabouthealth.com/oauth/callback?type=facebook";
 	
 // Test settings	
-//	public static final String APP_ID = "126479497379490";
-//	public static final String APP_SECRET = "cd4606efec03ea8c5bd9ffb9d49000ff";
-//	public static final String CALLBACK_URL =
-//		"kan.dev.com:9000/oauth/callback?type=facebook";
+	public static final String APP_ID = "126479497379490";
+	public static final String APP_SECRET = "cd4606efec03ea8c5bd9ffb9d49000ff";
+	public static final String CALLBACK_URL =
+		"kan.dev.com:9000/oauth/callback?type=facebook";
 	
 
 	public String getAuthURL(Session session, boolean secureRequest) {
@@ -109,7 +109,7 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 				TalkerBean anotherTalker = TalkerDAO.getByAccount(ServiceType.FACEBOOK, accountId);
 				if (anotherTalker != null) {
 					//this account is already connected by another user
-					return "/profile/notificationsettings?err=notunique";
+					return "/profile/notificationsettings?err=notunique&from="+ServiceType.FACEBOOK.toString();
 				}
 				
 				//TODO: what for facebook?

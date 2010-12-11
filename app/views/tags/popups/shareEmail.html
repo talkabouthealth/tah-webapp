@@ -1,47 +1,28 @@
 <div id="shareDialogs" class="window">
 	<div class="boxtopcenter">
-      <div id="shareEmailsForm" class="popboxWraper">
-        <div class="popbox2" style="height: 380px;">
-          <div class="closecover">
-            <div class="close"><img src="/public/images/close.jpg" alt="Close" /></div>
-          </div>
-          
-          <div class="selheading">Share Topic</div>
-          <div class="askheadingCover">
-            <div class="asktext2">To tell people about this topic, type their email addresses here (separated by commas):</div>
-          </div>
-          <div class="askheadingCoverz">
-            <div class="askinputCover">
-				<textarea id="shareEmails" class="askkinput" cols="4" rows="4" ></textarea>
-            </div>
-          </div>
-          <div class="askheadingCover">
-            <div class="askinputCover">
-            	From: <input id="shareUserName" type="text" value="${_userName}" />
-            </div>
-          </div>
-          <div class="askheadingCover">
-            <div class="asktext2">Add a personal note here:</div>
-          </div>
-          <div class="askheadingCover">
-            <div class="askinputCover">
-              <textarea id="shareNote" class="askinput2" cols="4" rows="3"
+		
+		<div id="shareEmailsForm" class="popup">
+		  <div class="popupheading">
+		    <div class="popuph1">Share Topic</div>
+		    <div class="close"><a href="#"><img src="images/close.jpg" alt="cloase" border="0" /></a></div>
+		  </div>
+		  <!--popupheading-->
+		  <div class="invitepeople">To tell people about this topic, type their email addresses here (separated by commas):</div>
+		  <textarea id="shareEmails" class="popupinut" rows="4" cols="3"></textarea>
+		  <div>
+		  	From: <input id="shareUserName" type="text" value="${_userName}" />
+		  </div>
+		  <div class="Addnote">Add a personal note here:</div>
+		  <textarea id="shareNote" class="popupinut" cols="4" rows="3"
               	>I thought you would be interested in the topic "${_topicName}" on TalkAboutHealth. - ${_topicURL}
               	
               	${_topicDetails}</textarea>
-            </div>
-          </div>
-          <div class="popsubmitcovar">
-            <div class="popsubmitbox1">
-              <div class="asktext2" style="display: none;">Topic successfully shared!</div>
-              <div class="popupsubmits"><a href="#" id="shareTopicBtn" onclick="return shareTopic();">Submit</a></div>
-            </div>
-          </div>
-          <!--popsubmitcover-->
-          <div class="cb"></div>
-        </div>
-        <!--popbox2-->
-      </div>
+		  <div class="sentbox">
+		    <div class="senttxt">Topic successfully shared!</div>
+		    <input type="submit" class="sendinvites" id="shareTopicBtn" 
+		    	onclick="return shareTopic();" value=" " src="images/sendinvites.jpg" />
+		  </div>
+      	</div>
       
       <div id="newQuestionConfirm" class="popboxWraper" style="display: none;">
         <div class="popbox3">
@@ -84,4 +65,4 @@
       <div class="cb"></div>
     </div>
     <!--boxtopcenter-->
-  </div> 
+</div> 

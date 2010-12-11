@@ -393,6 +393,7 @@ public class Profile extends Controller {
 		if (error != null) {
 			flash.put("err", "Sorry, this account is already connected.");
 		}
+		flash.put("from", params.get("from"));
 		
 		render(talker);
 	}

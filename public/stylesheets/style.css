@@ -5028,3 +5028,93 @@ border:0;
 }
 
 .iwant1 { font-size: 22px }
+
+
+/* New design for popups */
+.popup {
+	width:563px;
+	height:325px;
+	background:#f7fcff;
+	border:2px solid #a6c4d6;
+	margin-top:20px;
+	margin-left:20px;
+}
+.popupheading {
+	clear:both;
+	background:url(../images/popupheading.jpg);
+	background-repeat:no-repeat;
+	background-position:left bottom;
+	height:42px;
+}
+.popuph1 {
+	color:#444444;
+	float:left;
+	font-size:16px;
+	font-weight:bold;
+	padding-left:15px;
+	padding-top:15px;
+	width:auto;
+}
+.close {
+	width:20px;
+	height:21px;
+	float:right;
+	padding-right:15px;
+	padding-top:5px;
+}
+.invitepeople {
+	clear:both;
+	color:#313030;
+	font-size:13px;
+	padding-bottom:9px;
+	padding-left:15px;
+	padding-top:5px;
+}
+.popupinut {
+	background:url(../images/popupinut.jpg);
+	border:0;
+	height:82px;
+	margin-left:15px;
+	width:526px;
+}
+.Addnote {
+	clear:both;
+	color:#131313;
+	font-size:13px;
+	padding-bottom:9px;
+	padding-left:15px;
+	padding-top:5px;
+}
+.popupinut {
+	background:url(../images/popupinut.jpg);
+	border:0;
+	height:75px;
+	margin-left:15px;
+	padding-top:7px;
+	width:520px;
+	padding-left:5px;
+	font-weight:normal;
+	font-size:12px;
+	color:#303030;
+}
+.sentbox {
+	clear:both;
+	float:right;
+	padding-right:20px;
+	padding-top:13px;
+	width:auto;
+}
+.senttxt {
+	float:left;
+	padding-right:10px;
+	padding-top:8px;
+	width:auto;
+}
+.sendinvites {
+	background:url(../images/sendinvites.jpg);
+	border:0;
+	width:111px;
+	height:28px;
+	float:right;
+	cursor:pointer;
+}
