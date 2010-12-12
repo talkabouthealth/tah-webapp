@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.With;
 
@@ -153,9 +154,12 @@ public class Actions extends Controller {
 			//post to personal Thoughts Feed?
 			if (talker.equals(profileTalker)) {
 				for (ServiceAccountBean serviceAccount : talker.getServiceAccounts()) {
+					Logger.error("SHARE? "+serviceAccount.getType().toString()+" : "+serviceAccount.isTrue("SHARE_FROM_THOUGHTS"));
 					if (!serviceAccount.isTrue("SHARE_FROM_THOUGHTS")) {
 						continue;
 					}
+					
+					Logger.error(serviceAccount.getToken()+" : "+serviceAccount.getTokenSecret());
 					
 					if (serviceAccount.getType() == ServiceType.TWITTER) {
 						TwitterUtil.makeUserTwit(comment.getText(), 

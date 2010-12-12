@@ -59,6 +59,7 @@ public class Explore extends Controller {
     	//FacebookUtil.importPosts((String)session.get("fb_token"));
     	
     	List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
+    	
 		render(talker, liveTalks);
     }
     

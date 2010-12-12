@@ -186,9 +186,9 @@ public class ApplicationUpdatesJob extends Job {
 			public void run() {
 				try {
 					//timeout between API requests
-					final int BITLY_TIMEOUT = 5000;
+					final int BITLY_TIMEOUT = 60*1000;
 					for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
-						if (convo.getBitly() == null) {
+						if (convo.getBitly() == null || convo.getBitly().equals("RATE_LIMIT_EXCEEDE")) {
 							//String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
 							String convoURL = "http://talkabouthealth.com/"+convo.getMainURL();
 							convo.setBitly(BitlyUtil.shortLink(convoURL));
@@ -196,7 +196,7 @@ public class ApplicationUpdatesJob extends Job {
 							
 							ConversationDAO.updateConvo(convo);
 						}
-						if (convo.getBitlyChat() == null) {
+						if (convo.getBitlyChat() == null || convo.getBitlyChat().equals("RATE_LIMIT_EXCEEDE")) {
 //							String convoChatURL = CommonUtil.generateAbsoluteURL("Talk.talkApp", "convoId", convo.getTid());
 							String convoChatURL = "http://talkabouthealth.com/chat/"+convo.getTid();
 							convo.setBitlyChat(BitlyUtil.shortLink(convoChatURL));
@@ -207,7 +207,7 @@ public class ApplicationUpdatesJob extends Job {
 					}
 					
 					for (TopicBean topic : TopicDAO.loadAllTopics()) {
-						if (topic.getBitly() == null) {
+						if (topic.getBitly() == null || topic.getBitly().equals("RATE_LIMIT_EXCEEDE")) {
 //							String topicURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", topic.getMainURL());
 							String topicURL = "http://talkabouthealth.com/"+topic.getMainURL();
 							topic.setBitly(BitlyUtil.shortLink(topicURL));

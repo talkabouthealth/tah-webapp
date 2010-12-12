@@ -20,6 +20,10 @@ public class BitlyUtil {
 			result = result.substring(0, result.length()-1);
 		}
 		
+		if (result != null && result.equals("RATE_LIMIT_EXCEEDE")) {
+			result = null;
+		}
+		
 		return result;
 	}
 }

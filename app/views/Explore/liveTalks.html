@@ -42,7 +42,7 @@
 	  			return false;
 			});
 
-			$(".startLink").click(function(e) {
+			$(".startLink, .startLink2").click(function(e) {
 				$("#newConvoTypeConvo").attr("checked", "checked");
 				
 				$("#newConvoForm").show();
@@ -79,19 +79,18 @@
 	            	<div class="topipcWraper">
 	            #{/else}
 
-                  <div class="stylez2">Live Community Talks (${liveTalks.size()})</div>
+                  <div class="stylez2">Live Community Chats (${liveTalks.size()})</div>
                     <div class="topicborder"></div>
                     <!--mtinputbox-->
 
                     <div class="cb"></div>
-                    <div class="topic conversationsList">
-                    
+                    <div class="topic conversationsList" style="padding-top: 5px;">
 						#{list items: liveTalks, as: 'convo'}
 							#{liveTalk convo: convo, talker: talker /}
 						#{/list}
 						#{else}
 							#{if talker}
-				                <span class="blacktext14">Be the first to start a live chat.</span>
+				                <a href="#" class="startLink2" style="font-size: 14px;">Be the first to start a live chat.</a>
 				            #{/if}
 				            #{else}
 				            	<span class="blacktext14"><a href="@{Application.signup()}">Join now</a> to be the first to start a live chat.</span>

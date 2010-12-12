@@ -125,8 +125,8 @@ public class TwitterUtil {
 	
 	
 	public static void makeUserTwit(String fullText, final String token, final String tokenSecret) {
-		if (fullText.length() > 137) {
-			fullText = fullText.substring(0, 137)+"...";
+		if (fullText.length() > 135) {
+			fullText = fullText.substring(0, 135)+"...";
 		}
 		final String text = fullText;
 		Executors.newSingleThreadExecutor().execute(new Runnable() {
@@ -143,7 +143,7 @@ public class TwitterUtil {
 					consumer.sign(conn);
 					
 					conn.connect();
-					System.out.println("Twitter update response: " + conn.getResponseCode() + " "
+					Logger.error("Twitter update response: " + conn.getResponseCode() + " "
 			                + conn.getResponseMessage());
 				} catch (Exception e) {
 					Logger.error(e, "Wasn't able to follow Twitter user!");
