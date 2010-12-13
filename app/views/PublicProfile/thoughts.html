@@ -46,6 +46,9 @@
    	   	   		alert('Please input comment');
    	   	   		return;
    	   		}
+
+   	   		commentText = linkify(commentText);
+   	   	
    			$("#replytext"+parentId).val("");
 
    			$.post("@{Actions.saveProfileComment2()}", 

@@ -80,54 +80,60 @@ public class NotificationUtils {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	public static void sendTwitterNotifications(String convoId, String restartTalkerId) {
+		//TODO: 2 per day?
+		
+		ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+		TalkerBean restartTalker = null;
+		if (restartTalkerId != null) {
+			restartTalker = TalkerDAO.getById(restartTalkerId);
+		}
+		else {
+			restartTalker = convo.getTalker();
+		}
+		
+		//TODO: better impl?
+		StringBuilder message = new StringBuilder();
+		message.append(restartTalker.getUserName());
+		if (convo.getConvoType() == ConvoType.CONVERSATION || restartTalkerId != null) {
+			//mnj5 started the talk: What items come in handy after a mastectomy... To join the talk: http://bit.ly/dfsqe
+			message.append(" started the chat: \"");
+    		
+    		String convoTitle = convo.getTopic();
+    		if (convoTitle.length() > 50) {
+    			convoTitle = convoTitle.substring(0, 50)+"...";
+    		}
+    		message.append(convoTitle+"\" To join the chat:");
+    		message.append(convo.getBitlyChat());
+		}
+		else {
+    		//mnj5 asked the question: What items come in handy after a mastectomy... To answer: http://bit.ly/dfsqe
+			message.append(" asked the question: \"");
+    		
+    		String convoTitle = convo.getTopic();
+    		if (convoTitle.length() > 55) {
+    			convoTitle = convoTitle.substring(0, 55)+"...";
+    		}
+    		message.append(convoTitle+"\" To answer: ");
+    		message.append(convo.getBitly());
+		}
+    	
+		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
+			if (talker.isSuspended() || talker.isDeactivated()) {
+				continue;
+			}
 			
-			//Try twitter notifications
-			ConversationBean convo = ConversationDAO.getByConvoId(convoId);
-			TalkerBean restartTalker = null;
-			if (restartTalkerId != null) {
-				restartTalker = TalkerDAO.getById(restartTalkerId);
-			}
-			else {
-				restartTalker = convo.getTalker();
+			//do not send notification to author of the event
+			if (talker.equals(restartTalker)) {
+				continue;
 			}
 			
-			//TODO: better impl?
-			StringBuilder message = new StringBuilder();
-			message.append(restartTalker.getUserName());
-			if (convo.getConvoType() == ConvoType.QUESTION) {
-				//mnj5 asked the question: What items come in handy after a mastectomy... To answer: http://bit.ly/dfsqe
-				message.append(" asked the question: \"");
-	    		
-	    		String convoTitle = convo.getTopic();
-	    		if (convoTitle.length() > 55) {
-	    			convoTitle = convoTitle.substring(0, 55)+"...";
-	    		}
-	    		message.append(convoTitle+"\" To answer: ");
-	    		message.append(convo.getBitly());
-			}
-			else {
-				//mnj5 started the talk: What items come in handy after a mastectomy... To join the talk: http://bit.ly/dfsqe
-				message.append(" started the chat: \"");
-	    		
-	    		String convoTitle = convo.getTopic();
-	    		if (convoTitle.length() > 50) {
-	    			convoTitle = convoTitle.substring(0, 50)+"...";
-	    		}
-	    		message.append(convoTitle+"\" To join the chat:");
-	    		message.append(convo.getBitlyChat());
-			}
-	    	
-			for (String talkerId : talkersForNotification) {
-				//do not send notification to author of the event
-				if (talkerId.equals(restartTalker.getId()) || talkerId.equalsIgnoreCase(EmailUtil.SUPPORT_EMAIL)) {
-					continue;
-				}
-				
-				TalkerBean talker = TalkerDAO.getById(talkerId);
-				ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
-				if (twitterAccount != null && twitterAccount.isTrue("NOTIFY")) {
-					TwitterUtil.sendDirect(twitterAccount.getId(), message.toString());
-				}
+			ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
+			if (twitterAccount != null && twitterAccount.isTrue("NOTIFY")) {
+				TwitterUtil.sendDirect(twitterAccount.getId(), message.toString());
 			}
 		}
 	}

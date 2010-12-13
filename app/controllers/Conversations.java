@@ -119,6 +119,7 @@ public class Conversations extends Controller {
     	notFoundIfNull(convo);
     	
     	NotificationUtils.sendAutomaticNotifications(convo.getId(), null);
+    	NotificationUtils.sendTwitterNotifications(convo.getId(), null);
 	}
     
     public static void restart(String convoId) {
@@ -128,7 +129,9 @@ public class Conversations extends Controller {
     	
     	ActionDAO.saveAction(new StartConvoAction(talker, convo, ActionType.RESTART_CONVO));
     	
+    	//TODO: run notifications in separate thread?
     	NotificationUtils.sendAutomaticNotifications(convoId, talker.getId());
+    	NotificationUtils.sendTwitterNotifications(convoId, talker.getId());
     	
     	//prepare email params
     	Map<String, String> vars = new HashMap<String, String>();

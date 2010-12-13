@@ -167,8 +167,9 @@
 
                   <!--startsearchbox-->
                   <div class="topic">
+                  #{if liveConversations?.size() > 0}
                     <div class="newpage1">
-                    	<a href="@{Explore.liveTalks()}">Live Breast Cancer Community Talks (${liveConversations.size()})</a></div>
+                    	<a href="@{Explore.liveTalks()}">Live Breast Cancer Community Chats (${liveConversations.size()})</a></div>
                     <!-- <a href="#"><img src="/public/images/refreshicon.jpg" alt="refresh" 
                     	border="0" style="float:left; padding-left:4px; padding-top:22px"  /></a> -->
                     #{if liveConversations?.size() > 5}
@@ -185,8 +186,10 @@
 						#{else}
 							<a href="#" class="startLink2" style="font-size: 16px;">Be the first to start a live chat.</a>
 						#{/else}
-                      <!--joinbox-->
-                      
+					</div>
+				  #{/if}
+					
+                    <div class="newpageCover">  
                       <div class="topic">
                         <div class="newpage1"><a href="@{Home.conversationFeed()}">Your Conversation Feed</a></div>
                         <div class="topicborder"></div>
