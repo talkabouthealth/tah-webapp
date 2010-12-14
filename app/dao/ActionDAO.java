@@ -161,6 +161,10 @@ public class ActionDAO {
 								.add("uid", currentTalkerRef)
 								.get(),
 							BasicDBObjectBuilder.start()
+								.add("type", ActionType.PERSONAL_PROFILE_COMMENT.toString())
+								.add("uid", currentTalkerRef)
+								.get(),
+							BasicDBObjectBuilder.start()
 								.add("convoId", new BasicDBObject("$in", convosDBSet))
 								.add("uid", new BasicDBObject("$ne", currentTalkerRef))
 								.get(),

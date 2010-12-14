@@ -107,7 +107,8 @@
                   </div>
                   <!--combox-->
                   <div class="topipcWraper">
-                 #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) }
+                 *{ #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) } }*
+                 #{if true }
                     <div id="reply" class="comsearchbox">
                       <div class="comh1" style="font-size:18px">What are you thinking about or feeling? (To share with the community)<br /></div>
                       <div class="comsearch">
@@ -145,7 +146,7 @@
               </div>
             
             #{ set currentPage = 'thoughts' /}
-            #{ include 'right.html' /}
+            #{ include 'PublicProfile/profileRight.html' /}
             
             <!--mtright-->
             <div class="cb"></div>

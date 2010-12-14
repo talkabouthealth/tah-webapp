@@ -79,6 +79,8 @@
    </div>
    <!--topipsts-->
    <div class="cb"></div>
+   
+   *{
    <div class="topipsts">
      <div class="mtrighttxt">
      	<a class="${currentPage.equals('home') ? 'current' : ''}" 
@@ -108,6 +110,7 @@
      <div class="topicborder"></div>
      <div class="cb"></div>
    </div>
+   }*
     
     #{if session.username.equals(talker.userName) && talker.verifyCode != null }
 		<div class="topipsts">

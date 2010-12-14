@@ -124,6 +124,8 @@
 	            <div class="topnavCover1">
 	              <ul id="nav">
 	                <li class="home no-hov"><a href="@{Home.index()}">Home</a></li>
+	                <li class="profile"><a href="@{ViewDispatcher.view(currentUser)}">You</a></li>
+	                <!-- 
 	                <li class="profile"><a href="#" class="menu1">You</a>
 	                  <ul>
 	                    <li><a href="@{ViewDispatcher.view(currentUser)}">Your Profile</a></li>
@@ -138,9 +140,10 @@
 	                    <li><a href="@{PublicProfile.conversationsJoined(currentUser)}">Conversations You Joined</a></li>
 	                  </ul>
 	                </li>
+	                 -->
 	                <li class="explore"> <a href="#" class="menu2">Explore</a>
-	                  <ul>
-	                    <li><a href="@{Explore.liveTalks()}">Live Chats</a></li>
+	                  <ul style="width: 210px;">
+	                    <li><a href="@{Home.conversationFeed()}">Community Conversation Feed</a></li>
 	                    <li><a href="@{Explore.openQuestions()}">Open Questions</a></li>
 	                    <li class="gap"><a href="@{Community.browseMembers('active')}">Browse Members</a></li>
 	                    <li><a href="@{Community.browseMembers('search')}">Find Members</a></li>
@@ -148,6 +151,7 @@
 	                    <li><a href="@{Explore.searchConversations()}">Search Conversations</a></li>
 	                  </ul>
 	                </li>
+	                <li><a href="@{Explore.liveTalks()}">Chats</a></li>
 	                <!--  <li class="community"> <a class="menu3" href="$">Group</a>
 	                  <ul>
 	                    <li><a href="#">Your Contacts</a></li>

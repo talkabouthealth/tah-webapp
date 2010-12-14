@@ -209,8 +209,7 @@
 												<li><a href="#" class="navybluetext12">Request to chat right now</a></li>
 												-->
 											#{/ifnot}
-											#{if (talker.followingList.contains(currentTalker) || talker.userName.equals(currentTalker.userName))  
-												&& talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) }
+											#{if (talker.followingList.contains(currentTalker) || talker.userName.equals(currentTalker.userName)) }
 												<li>
 													<a href="#commentsSection" id="commentlink2"
 														class="navybluetext12">Leave a comment</a>
@@ -526,7 +525,8 @@
 							</div>
 						#{/if}
 						
-						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) }
+						*{ #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) } }*
+						#{if true }
 						<div id="commentsSection" class="prosubheading">
 							<div class="profileheading">
 								Comments (${talker.profileCommentsList?.size()})								

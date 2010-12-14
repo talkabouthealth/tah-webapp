@@ -16,7 +16,7 @@
 		#{ oauthJavaScripts /}
 
 		$(document).ready(function() {
-			makeAutocomplete("#convoText", "convo");
+			//makeAutocomplete("#convoText", "convo");
 			
 			$(".followConvoLink").live('click', function() {
 				var convoId = $(this).attr("rel");
@@ -83,7 +83,7 @@
 				}
 			});	
 
-			$(".startLink").click(function(e) {
+			$(".startLink, #postQuestionBtn").click(function(e) {
 				$("#newConvoTypeQuestion").attr("checked", "checked");
 				
 				$("#newConvoForm").show();
@@ -159,14 +159,38 @@
             <div id="mtleft">
               <div class="mtcontent">
                 <div id="targetedtherapy">
-                  <div class="comh1">Ask a question or start a chat</div>
-                  <div class="comborder"></div>
+                  <div class="comh1">Share a thought, post a question, or start a chat</div>
                 </div>
                 <div class="topipcWraper">
-                  #{startConvoInput /}
+                  <div class="startsearchbox" style="padding: 0px;">
+                  	<div class="inline-edit" id="replyAdd">
+						<div class="inline_display">
+							<div class="inline_full inline_empty">
+								<div style="clear:both; height:30px; margin-bottom:7px; position:relative;">
+									<a href="#" class="inline_editlink">
+					             		<textarea name="textarea" 
+								            class="edititinputx" rows="1"  cols="3" style="width:627px;height:30px" ></textarea>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class='inline_form'>
+							<div style="float:left;">
+								<textarea id="convoText" class="edititinputx inline_text" 
+									onKeyUp=" $('#textSize').html($(this).val().length);"
+									style="width:627px; height: 70px;" cols="4" rows="4" ></textarea>
+							</div>
+							<div style="float: right; padding-top: 5px;">
+								<span id="textSize" style="font-size: 16px;">0</span>
+								<input type="button" style="margin-left: 15px;" id="shareThoughtBtn" value="Share Thought" />
+								<input type="button" style="margin-left: 5px;" id="postQuestionBtn" value="Post Question" />								
+							</div>
+						</div>
+					</div>
+				  </div>
 
                   <!--startsearchbox-->
-                  <div class="topic">
+                  <div class="topic" style="padding-top: 10px;">
                   #{if liveConversations?.size() > 0}
                     <div class="newpage1">
                     	<a href="@{Explore.liveTalks()}">Live Breast Cancer Community Chats (${liveConversations.size()})</a></div>
