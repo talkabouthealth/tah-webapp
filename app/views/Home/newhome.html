@@ -143,6 +143,25 @@
   					}
   				}
   			);
+  			return false;
+   		}
+
+   		function saveThought() {
+   	   		var text = $("#convoText").val();
+   			$("#convoText").val("");
+   			$("#textSize").html("0");
+
+   			text = linkify(text);
+
+   			$.post("@{Actions.saveProfileComment2()}", 
+  				{ parentId: '', text: text, from: 'home'},
+  				function(html) {
+  					$(html).prependTo($("#convoFeedList"));
+  					
+  	  				//add inline edit for new comment
+  					$('.inline-edit').inlineEdit( { hover: ''} );
+  				}
+  			);
 
    			
   			return false;
@@ -182,8 +201,10 @@
 							</div>
 							<div style="float: right; padding-top: 5px;">
 								<span id="textSize" style="font-size: 16px;">0</span>
-								<input type="button" style="margin-left: 15px;" id="shareThoughtBtn" value="Share Thought" />
-								<input type="button" style="margin-left: 5px;" id="postQuestionBtn" value="Post Question" />								
+								<input type="button" style="margin-left: 15px;" onclick="return saveThought();" 
+									id="shareThoughtBtn" value="Share Thought" />
+								<input type="button" style="margin-left: 5px;" 
+									id="postQuestionBtn" value="Post Question" />								
 							</div>
 						</div>
 					</div>

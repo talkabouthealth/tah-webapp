@@ -1,0 +1,220 @@
+#{ extends 'main.html' /}
+
+	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
+	<script type="text/javascript"> 	 
+   		$(document).ready(function() {
+   			//Default Action
+   			var activeTab = "tab1";
+   			$(".tab_content").hide(); //Hide all content
+   			//activate initial tab
+   			$("ul.tabs li a[href='#"+activeTab+"']").parent().addClass("active").show(); 
+   			$("#"+activeTab).show();
+
+   			//On Click Event
+   			$("ul.tabs li ").click(function() {
+   				$("ul.tabs li ").removeClass("active"); //Remove any "active" class
+   				$(this).addClass("active"); //Add "active" class to selected tab
+   				$(".tab_content").hide(); //Hide all tab content
+   				var activeTab = $(this).find("a").attr("href"); //Find the rel attribute value to identify the active tab + content
+   				$(activeTab).fadeIn(); //Fade in the active content
+   				return false;
+   			});
+   		 
+   			$(".followTopicLink").live('click', function() {
+				var convoId = $(this).attr("rel");
+				if ($(this).html().indexOf("Unfollow") != -1) {
+					$(this).html("Follow");
+				}
+				else {
+					$(this).html("Unfollow");
+				}
+				$.post("@{Conversations.follow()}", 
+	  				{ convoId: convoId},
+	  				function(data) {
+	  					//...
+	  				}
+	  			);
+	  			return false;
+			});
+
+   			$(".restartTopicLink").click(function() {
+				var convoId = $(this).attr("rel");
+				var tid = $(this).attr("rel2");
+				openChat(tid);
+				$.post("@{Conversations.restart}", {convoId: convoId});
+			});
+   		});
+   	</script>
+	<style>
+		body {
+			background:url(/public/images/inner_bg.gif) repeat-x top;
+			font-family:arial;
+			font-size:11px;
+		}
+		
+		.areatop, .areamid, .areabot {
+			background: none;
+			background-color: #ffffff;
+		}
+		.arearight {
+			width: 507px; 
+		}
+		.area {
+			width: 600px;
+		}
+	</style>
+</head>
+<body>
+	#{include 'header.html' /}
+	<div id="innerbanner"></div>
+	<div id="innermain">
+		<div style="float: left; width: 630px;">
+		<div class="blacktext2" id="innerheading" style="width: 550px;">
+			<a href="@{ViewDispatcher.view(talker.userName)}" class="bluetext20">${talker.userName}'s</a> 
+			Conversations</div>
+		<div id="innermiddlearea" style="width: 600px;">
+			<div class="tabbed_box" id="tabbed_box_1" style="width: 600px;">
+    			<div class="tabbed_area">
+			        <ul class="tabs">
+			            <li><a href="#tab1"><span>Following</span></a></li>
+			            <li><a href="#tab2"><span>Started</span></a></li>
+			            <li><a href="#tab3"><span>Joined</span></a></li>
+			        </ul>
+			        <div class="tab_container">
+			        	*{ TODO: use tag }*
+			       		<div id="tab1" class="tab_content">
+				       		<div class="activitiestext">
+								#{list items: followingList.limit(20), as:'topic' }
+									<div class="area">
+										<div class="arealeft2">
+											<a href="@{ViewDispatcher.view(topic.talker.userName)}" class="bluetext11">
+												<img src="@{Image.show(topic.talker.userName)}" width="71" height="71" border="0" />
+												<br /><span class="bluetext11">${topic.talker.userName}</span>
+											</a>
+								  			<br/>
+								  			<span class="blacktext11">${topic.talker.levelOfRecognition}</span>
+								  		</div>
+										<div class="arearight">
+										    <div class="areatop"></div>
+										    <div class="areamid">
+										    	<div class="areamidleft">
+										    		<p>
+										    			<span class="blacktext14">
+										    				<a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.topic}</a><br />
+										    				<span class="blacktext12">${topic.messages.size()} comment(s)</span> | 
+								        					<span class="blacktext12">${topic.members.size()} people spoke</span> | 
+								        					<a href="@{ViewDispatcher.view(topic.mainURL)}#comments" class="bluetext12">Comment</a> | 
+								        					<a href="#" class="bluetext12 followTopicLink" rel="${topic.id}">
+															${ talker.followingConvosList?.contains(topic.id) ? 'Unfollow' : 'Follow'}
+															</a> | 
+															<a href="#" class="bluetext12 restartTopicLink" 
+																rel="${topic.id}" rel2="${topic.tid}">Re-start</a> | 
+								        					*{ TODO: joined/started/etc }*
+								        					<span class="blacktext12">${topic.creationDate.since()}</span>
+								        				</span>
+								        			</p>
+								        		</div>
+											</div>
+							  				<div class="areabot"></div>
+							 	 		</div>
+									</div>		
+								#{/list}
+							</div>
+    					</div>
+    					
+    					<div id="tab2" class="tab_content">
+				       		<div class="activitiestext">
+								#{list items: startedList.limit(20), as:'topic' }
+									<div class="area">
+										<div class="arealeft2">
+											<a href="@{ViewDispatcher.view(topic.talker.userName)}" class="bluetext11">
+												<img src="@{Image.show(topic.talker.userName)}" width="71" height="71" border="0" />
+												<br /><span class="bluetext11">${topic.talker.userName}</span>
+											</a>
+								  			<br/>
+								  			<span class="blacktext11">${topic.talker.levelOfRecognition}</span>
+								  		</div>
+										<div class="arearight">
+										    <div class="areatop"></div>
+										    <div class="areamid">
+										    	<div class="areamidleft">
+										    		<p>
+										    			<span class="blacktext14">
+										    				<a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.topic}</a><br />
+										    				<span class="blacktext12">${topic.messages.size()} comment(s)</span> | 
+								        					<span class="blacktext12">${topic.members.size()} people spoke</span> | 
+								        					<a href="@{ViewDispatcher.view(topic.mainURL)}#comments" class="bluetext12">Comment</a> | 
+								        					<a href="#" class="bluetext12 followTopicLink" rel="${topic.id}">
+															${ talker.followingConvosList?.contains(topic.id) ? 'Unfollow' : 'Follow'}
+															</a> | 
+															<a href="#" class="bluetext12 restartTopicLink" 
+																rel="${topic.id}" rel2="${topic.tid}">Re-start</a> | 
+								        					*{ TODO: joined/started/etc }*
+								        					<span class="blacktext12">${topic.creationDate.since()}</span>
+								        				</span>
+								        			</p>
+								        		</div>
+											</div>
+							  				<div class="areabot"></div>
+							 	 		</div>
+									</div>		
+								#{/list}
+							</div>
+    					</div>
+    					
+    					<div id="tab3" class="tab_content">
+				       		<div class="activitiestext">
+								#{list items: joinedList.limit(20), as:'topic' }
+									<div class="area">
+										<div class="arealeft2">
+											<a href="@{ViewDispatcher.view(topic.talker.userName)}" class="bluetext11">
+												<img src="@{Image.show(topic.talker.userName)}" width="71" height="71" border="0" />
+												<br /><span class="bluetext11">${topic.talker.userName}</span>
+											</a>
+								  			<br/>
+								  			<span class="blacktext11">${topic.talker.levelOfRecognition}</span>
+								  		</div>
+										<div class="arearight">
+										    <div class="areatop"></div>
+										    <div class="areamid">
+										    	<div class="areamidleft">
+										    		<p>
+										    			<span class="blacktext14">
+										    				<a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.topic}</a><br />
+										    				<span class="blacktext12">${topic.messages.size()} comment(s)</span> | 
+								        					<span class="blacktext12">${topic.members.size()} people spoke</span> | 
+								        					<a href="@{ViewDispatcher.view(topic.mainURL)}#comments" class="bluetext12">Comment</a> | 
+								        					<a href="#" class="bluetext12 followTopicLink" rel="${topic.id}">
+															${ talker.followingConvosList?.contains(topic.id) ? 'Unfollow' : 'Follow'}
+															</a> | 
+															<a href="#" class="bluetext12 restartTopicLink" 
+																rel="${topic.id}" rel2="${topic.tid}">Re-start</a> | 
+								        					*{ TODO: joined/started/etc }*
+								        					<span class="blacktext12">${topic.creationDate.since()}</span>
+								        				</span>
+								        			</p>
+								        		</div>
+											</div>
+							  				<div class="areabot"></div>
+							 	 		</div>
+									</div>		
+								#{/list}
+							</div>
+    					</div>
+    				</div>
+    			</div>
+			</div>
+		</div>
+		</div>
+		
+		#{ set currentPage = 'conversations' /}
+        #{ include 'PublicProfile/profileRight.html' /}
+	</div>
+
+<div id="boxes">
+	<div id="dialog" class="window"></div>
+	
+	#{ popups/thankyou2 /}
+	#{ popups/comment2 /}
+</div>
+<div id="mask"></div>

@@ -54,6 +54,9 @@ public class PublicProfile extends Controller {
 		notFoundIfNull(talker);
 		
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
+		talker.setActivityList(ActionDAO.load(talker.getId()));
+		TalkerLogic.calculateProfileCompletion(talker);
 		
 		render(talker, currentTalker, action, from);
 	}
@@ -123,6 +126,27 @@ public class PublicProfile extends Controller {
 		
     	renderText("ok");
     }
+	
+	public static void conversations(String userName) {
+		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		notFoundIfNull(talker);
+		
+		//TODO: check permissions?
+		//TODO: use sets?
+		List<ConversationBean> followingList = TalkerDAO.loadFollowingConversations(talker.getId());
+		List<ConversationBean> startedList = 
+			ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO);
+		List<ConversationBean> joinedList = 
+			ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO);
+		
+		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
+		talker.setActivityList(ActionDAO.load(talker.getId()));
+		TalkerLogic.calculateProfileCompletion(talker);
+		
+		render(talker, currentTalker, followingList, startedList, joinedList);
+	}
 	
 	
 	public static void conversationsFollowing(String userName) {

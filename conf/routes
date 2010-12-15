@@ -57,6 +57,7 @@ GET		/{userName}/followers					PublicProfile.userBasedActions(action:'followers'
 
 GET		/{name}/manage							Topics.manage
 
+GET		/{userName}/conversations				PublicProfile.conversations
 GET		/{userName}/conversationsfollowing		PublicProfile.conversationsFollowing
 GET		/{userName}/conversationsstarted		PublicProfile.conversationsStarted
 GET		/{userName}/conversationsjoined			PublicProfile.conversationsJoined

@@ -84,7 +84,8 @@
 			     		href="@{PublicProfile.thoughts(talker.userName)}">Thoughts</a>
 			      </div>
 			      <div class="mtrighttxt">
-                  	<a href="@{PublicProfile.userBasedActions(talker.userName, 'thankyous')}"
+			      	<a class="${currentPage.equals('thankyous') ? 'current' : ''}" 
+                  		href="@{PublicProfile.userBasedActions(talker.userName, 'thankyous')}"
                   	>Thank You's (${talker.thankYouList.size()})</a>
                   </div>
                   <!-- ANSWERS! -->
@@ -94,7 +95,8 @@
 			     		>Topics Following (${talker.followingTopicsList.size()})</a>
 			      </div>
 	              <div class="mtrighttxt">
-	              	<a href="@{PublicProfile.conversationsStarted(talker.userName)}">Conversations</a>
+	              	<a class="${currentPage.equals('conversations') ? 'current' : ''}" 
+	              		href="@{PublicProfile.conversations(talker.userName)}">Conversations</a>
 	              </div>
                   <div class="mtop"></div>
                   <div class="topicborder"></div>

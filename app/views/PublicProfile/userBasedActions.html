@@ -162,17 +162,22 @@
 		.profiletext2 {
 			width:250px;
 		}
+		
+		.headingarea, .thnksarea2, .thnksbottom {
+			width: 550px !important;
+		}
 	</style>
 </head>
 <body>
 	#{include 'header.html' /}
 	<div id="innerbanner"></div>
 	<div id="innermain">
-		<div class="blacktext2" id="innerheading">
+		<div style="float: left; width: 630px;">
+		<div class="blacktext2" id="innerheading" style="width: 550px;">
 			<a href="@{ViewDispatcher.view(talker.userName)}" class="bluetext20">${talker.userName}'s</a> 
 			Contacts and Thank you's</div>
-		<div id="innermiddlearea">
-			<div class="tabbed_box" id="tabbed_box_1">
+		<div id="innermiddlearea" style="width: 600px;">
+			<div class="tabbed_box" id="tabbed_box_1" style="width: 600px;">
     			<div class="tabbed_area">
 			        <ul class="tabs">
 			            <li><a href="#tab2"><span>Thank you's (${talker.thankYouList.size()})</span></a></li>
@@ -289,6 +294,10 @@
     			</div>
 			</div>
 		</div>
+		</div>
+		
+		#{ set currentPage = 'thankyous' /}
+        #{ include 'PublicProfile/profileRight.html' /}
 	</div>
 
 <div id="boxes">

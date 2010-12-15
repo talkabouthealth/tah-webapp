@@ -1,5 +1,6 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ import models.actions.Action.ActionType;
 import models.actions.FollowTalkerAction;
 import models.actions.GiveThanksAction;
 import models.actions.PersonalProfileCommentAction;
+import models.actions.StartConvoAction;
 import dao.ActionDAO;
 import dao.CommentsDAO;
 import dao.TalkerDAO;
@@ -113,15 +115,22 @@ public class Actions extends Controller {
 	 * @param parentId
 	 * @param text
 	 */
-	public static void saveProfileComment2(String profileTalkerId, String parentId, String text) {
+	public static void saveProfileComment2(String profileTalkerId, String parentId, String text, String from) {
 		CommentBean comment = saveProfileCommentInternal(profileTalkerId, parentId, text);
 		
-		//render html of new comment using tag
-		List<CommentBean> _commentsList = Arrays.asList(comment);
-		int _level = (comment.getParentId() == null ? 1 : 2);
-		boolean _showDelete = false;
-		boolean _isFeed = false;
-		render("tags/profileCommentsTree2.html", _commentsList, _level, _showDelete, _isFeed);
+		if (from != null && from.equals("home")) {
+    		TalkerBean _talker = comment.getFromTalker();
+    		Action _activity = new PersonalProfileCommentAction(_talker, _talker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT);
+    		render("tags/feedActivity.html", _talker, _activity);
+		}
+		else {
+			//render html of new comment using tag
+			List<CommentBean> _commentsList = Arrays.asList(comment);
+			int _level = (comment.getParentId() == null ? 1 : 2);
+			boolean _showDelete = false;
+			boolean _isFeed = false;
+			render("tags/profileCommentsTree2.html", _commentsList, _level, _showDelete, _isFeed);
+		}
 	}
 	
 	
@@ -135,7 +144,14 @@ public class Actions extends Controller {
 			}
 		}
 		
-		TalkerBean profileTalker = TalkerDAO.getById(profileTalkerId);
+		TalkerBean profileTalker = null;
+		if (profileTalkerId == null) {
+			profileTalker = talker;
+			profileTalkerId = profileTalker.getId();
+		}
+		else {
+			profileTalker = TalkerDAO.getById(profileTalkerId);
+		}
 		notFoundIfNull(profileTalker);
 		
 		CommentBean comment = new CommentBean();
