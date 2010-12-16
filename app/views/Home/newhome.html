@@ -4,6 +4,8 @@
 		
 		#innermiddlearea { padding-top: 10px }
 		.seeall { padding-top: 20px }
+		
+		.ui-menu { width: 350px }
 	</style>
 	
 	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
@@ -16,7 +18,7 @@
 		#{ oauthJavaScripts /}
 
 		$(document).ready(function() {
-			//makeAutocomplete("#convoText", "convo");
+			makeAutocomplete("#convoText", "convo");
 			
 			$(".followConvoLink").live('click', function() {
 				var convoId = $(this).attr("rel");

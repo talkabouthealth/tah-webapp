@@ -1,3 +1,6 @@
+#{set pageTitle = topic.title /}
+#{set pageDescription = (topic.summary?.length() > 0 ? topic.summary : topic.title) /}
+
 #{extends 'Topics/topicPage.html' /}
 #{set currentPage = 'viewTopic' /}
 

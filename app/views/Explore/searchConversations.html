@@ -8,6 +8,21 @@
 		$(document).ready(function() {
 			makeAutocomplete("#query", "convo");
 
+			$("#query")
+				.keydown(function(c) {
+					if (c.keyCode === 13) {
+						var query = $("#query").val();
+						if (query === '') {
+							alert("Please enter search query");
+							return false;
+						}
+						var url = "?query="+query;
+						document.location = url;
+						
+						return false;
+					}
+				});
+
 			$(".followConvoLink").live('click', function() {
 				var convoId = $(this).attr("rel");
 				if ($(this).html().indexOf("Unfollow") != -1) {
@@ -86,7 +101,7 @@
 				        				<p>
 				        					#{set topAnswer = _convo.comments.get(0) /}
 					        				<span class="blacktext14">Top Answer by: ${topAnswer.fromTalker.userName}</span><br/>
-					        				<span class="blacktext12">${topAnswer.text}</span>
+					        				<span class="blacktext12">${topAnswer.text?.raw()}</span>
 					        			</p>
 				        			#{/elseif}
 								</div>

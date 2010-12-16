@@ -1,3 +1,6 @@
+#{set pageTitle = convo.topic /}
+#{set pageDescription = (convo.details?.length() > 0 ? convo.details : convo.topic) /}
+
 #{extends 'main.html' /}
 	<style>
 		body {

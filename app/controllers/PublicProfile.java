@@ -134,6 +134,7 @@ public class PublicProfile extends Controller {
 		
 		//TODO: check permissions?
 		//TODO: use sets?
+		//TODO: not here - wildcards in related convos!
 		List<ConversationBean> followingList = TalkerDAO.loadFollowingConversations(talker.getId());
 		List<ConversationBean> startedList = 
 			ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO);
