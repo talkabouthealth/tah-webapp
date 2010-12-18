@@ -1002,7 +1002,7 @@ a.footerlink:hover {
 	clear:both;
 	color: #4b4b4b;
 	text-align:left;
-	font-size:12px;
+	font-size:15px;
 	font-weight:normal;
 	padding-top:3px;
 	padding-bottom:4px;
@@ -1032,6 +1032,7 @@ a.footerlink:hover {
 .jointextstop a {
 	color: #0286bc;
 	font-weight:bold;
+	font-size: 16px;
 	text-decoration:none;
 }
 .jointextstop a:hover {
@@ -1239,7 +1240,7 @@ a.footerlink:hover {
 	color:#FFFFFF;
 }
 .mtrighttxt1 {
-	font-size:17px;
+	font-size:16px;
 	color:#000000;
 	font-weight:bold;
 	padding-top:10px;
