@@ -114,10 +114,14 @@ public class Home extends Controller {
 			}
 		}
 		
+		//talk
+		List<TalkerBean> similarMembers = TalkerDAO.loadFollowers(talker.getId());
+		
+		
 		//TODO: number of answers for this user??!
 		render("@newhome", talker, newTopic, 
 				liveConversations, convoFeed, communityFeed, showIMPopup,
-				recommendedTopics);
+				recommendedTopics, similarMembers);
     }
     
     public static void conversationFeed() {

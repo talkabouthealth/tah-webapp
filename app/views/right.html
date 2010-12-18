@@ -206,32 +206,53 @@
 
    </div>
    
+   *{
    <div class="topipsts">
      <div class="mtrighttxt1">Similar Members</div>
-     <div class="topbox1">
-       <div class="topleftimg">
-       	<img src="/public/images/topanswer1.jpg" alt="topanser" />
-       </div>
-       <div class="topr">
-         <div class="trendingtext">
-           <div class="topictxtnew">
-           	<a href="#">Murray</a> 
-           	<span class="styles1">asked the Question</span> 
-           	<span class="vieztext1"><a href="#">What are some things you wish people had said or ...</a></span>
-           </div>
-         </div>
-         <div class="follow">
-           <input type="submit" class="followers" value=" " />
-         </div>
-       </div>
-       <div class="cb"></div>
-     </div>
+     
+     #{list items: similarMembers, as: 'member'}
+		<div class="topbox1">
+	       <div class="topleftimg">
+	       	#{talker/talkerImageLink size: 39, userName: member.userName /}
+	       </div>
+	       <div class="topr">
+	         <div class="trendingtext">
+	           	<a class="blue13" href="@{ViewDispatcher.view(member.userName)}">
+		     		<strong>${member.userName}</strong>
+		     	</a>
+		        <span class="blacktext12">
+					#{talker/talkerInfo talker: member /}
+				</span>
+	         </div>
+	         <div class="follow">
+	           <input type="submit" class="followers" value=" " />
+	         </div>
+	       </div>
+	       <div class="cb"></div>
+	   </div>
+	#{/list} 
    </div>
+   }*
    
    <div class="topipsts">
    		<div class="mtrighttxt1">Recommended Topics</div>
    		<div id="recommendedTopics">
-   			#{ recommendedTopicsList recommendedTopics: recommendedTopics, talker: talker /}
+   			#{list items: recommendedTopics, as: 'topic'}
+   				<div id="${topic.id}" class="topbox1">
+			       <div class="topr" style="width: 100%;">
+			         <div class="trendingtext">
+			           	<a style="color:#0286BC;" href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a>
+			         </div>
+			         <div id="topicFollowDiv${topic.id}" class="follow">
+			           <input type="submit" rel="${topic.id}" class="followers followTopicLink" value=" " />
+			         </div>
+			         <div id="topicUnfollowDiv${topic.id}" class="follow" style="display: none; text-align: right;">
+			           Followed!
+			         </div>
+			       </div>
+			       <div class="cb"></div>
+			   </div>
+			#{/list} 
    		</div>
 	</div>
    

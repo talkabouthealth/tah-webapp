@@ -1275,7 +1275,7 @@ a.footerlink:hover {
 .trendingtext {
 	float:left;
 	padding-left:5px;
-	width:190px;
+	width:110px;
 	font-size:12px;
 	font-family:Arial, Helvetica, sans-serif;
 	color:#0286bc;
@@ -3544,8 +3544,6 @@ a.popup_black10s:hover {
 }
 
 .follow {
-	clear:both;
-	padding-top:5px;
 	padding-bottom:5px;
 }
 

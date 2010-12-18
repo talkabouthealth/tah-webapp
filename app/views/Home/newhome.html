@@ -183,7 +183,25 @@
 				$("#shareThoughtTabContent").show();
 				$("#shareThoughtTabContent textarea").focus();
 			});					
-   			
+
+
+			$(".followTopicLink").live('click', function() {
+				var topicId = $(this).attr("rel");
+				$.post("@{Topics.follow()}", 
+	  				{ topicId: topicId},
+	  				function(nextAction) {
+	  					if (nextAction === "follow") {
+		  					$("#topicUnfollowDiv"+topicId).hide();
+		  					$("#topicFollowDiv"+topicId).show();
+	  					}
+	  					else {
+	  						$("#topicUnfollowDiv"+topicId).show();
+		  					$("#topicFollowDiv"+topicId).hide();
+	  					}
+	  				}
+	  			);
+	  			return false;
+			});
 		});
 
 		//for comments/replies in feed
