@@ -17,6 +17,8 @@ import models.IMAccountBean;
 import models.ServiceAccountBean;
 import models.TalkerBean;
 import models.ConversationBean;
+import models.TalkerDiseaseBean;
+import models.TopicBean;
 import models.ServiceAccountBean.ServiceType;
 import models.actions.Action;
 import models.actions.Action.ActionType;
@@ -33,6 +35,8 @@ import util.ValidateData;
 import dao.ActionDAO;
 import dao.TalkerDAO;
 import dao.ConversationDAO;
+import dao.TalkerDiseaseDAO;
+import dao.TopicDAO;
 
 @With( { Secure.class, LoggerController.class } )
 public class Home extends Controller {
@@ -45,12 +49,16 @@ public class Home extends Controller {
 		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
 		
 		Logger.error("Start Convo Feed");
+//		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
+//		Set<Action> communityFeed = null;
+////		Logger.error(convoFeed.size()+" :::::: "+FeedsLogic.FEEDS_PER_PAGE);
+//		if (convoFeed.size() < FeedsLogic.FEEDS_PER_PAGE) {
+//			communityFeed = FeedsLogic.getCommunityFeed(null);
+//		}
+		
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
-		Set<Action> communityFeed = null;
-//		Logger.error(convoFeed.size()+" :::::: "+FeedsLogic.FEEDS_PER_PAGE);
-		if (convoFeed.size() < FeedsLogic.FEEDS_PER_PAGE) {
-			communityFeed = FeedsLogic.getCommunityFeed(null);
-		}
+    	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null);
+    	
 		
 		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
 		//not show if twitter account + notify option
@@ -83,8 +91,33 @@ public class Home extends Controller {
 		talker.setActivityList(ActionDAO.load(talker.getId()));
 		TalkerLogic.calculateProfileCompletion(talker);
 		
+//		Yes, for HealthInfo, let's use all of the data. 
+//		For Profile info, we can use gender, age, marital status, number of children, and ages of children.
+		
+		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
+		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();
+		List<TopicBean> loadedTopics = new ArrayList<TopicBean>();
+		if (!talker.isProf() && talkerDisease != null) {
+			loadedTopics = TalkerLogic.getRecommendedTopics(talkerDisease);
+		}
+		if (recommendedTopics.isEmpty()) {
+			//display most popular Topics based on number of questions
+			loadedTopics = new ArrayList<TopicBean>(TopicDAO.loadAllTopics());
+		}
+		
+		for (TopicBean topic : loadedTopics) {
+			if (!talker.getFollowingTopicsList().contains(topic)) {
+				recommendedTopics.add(topic);
+			}
+			if (recommendedTopics.size() == 3) {
+				break;
+			}
+		}
+		
 		//TODO: number of answers for this user??!
-		render("@newhome", talker, newTopic, liveConversations, convoFeed, communityFeed, showIMPopup);
+		render("@newhome", talker, newTopic, 
+				liveConversations, convoFeed, communityFeed, showIMPopup,
+				recommendedTopics);
     }
     
     public static void conversationFeed() {

@@ -83,7 +83,8 @@ public class ActionDAO {
 			ActionType.START_CONVO,
 			ActionType.ANSWER_CONVO, 
 			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED,
-			ActionType.ANSWER_VOTED
+			ActionType.ANSWER_VOTED,
+			ActionType.PERSONAL_PROFILE_COMMENT
 		);
 	private static final EnumSet<ActionType> TOPIC_FEED_ACTIONS = COMMUNITY_CONVO_FEED_ACTIONS;
 	

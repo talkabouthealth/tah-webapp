@@ -156,7 +156,6 @@ public class Topics extends Controller {
     			alias+"' class='removeAliasLink style2'>remove</a></div>");
     }
     
-    //FIXME: check valid add/remove? (Topic can't be children and parent at the same time)
     public static void manageParents(String topicId, String todo, String parentId) {
     	TopicBean topic = TopicDAO.getById(topicId);
     	notFoundIfNull(topic);

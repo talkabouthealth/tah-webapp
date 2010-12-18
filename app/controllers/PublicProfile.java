@@ -227,7 +227,6 @@ public class PublicProfile extends Controller {
 	private static List<TopicBean> loadRecommendedTopics(TalkerBean talker, 
 			TalkerDiseaseBean talkerDisease, String afterId) {
 		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();
-		
 		List<TopicBean> loadedTopics = new ArrayList<TopicBean>();
 		if (!talker.isProf() && talkerDisease != null) {
 			loadedTopics = TalkerLogic.getRecommendedTopics(talkerDisease);

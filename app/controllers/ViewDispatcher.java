@@ -198,7 +198,6 @@ public class ViewDispatcher extends Controller {
 			profFields.put("zocdoc", "ZocDoc.com page");
 		}
 		
-		
 		Logger.error("Before rendering");
 		
 		render("PublicProfile/newview.html", talker, disease, talkerDisease, 

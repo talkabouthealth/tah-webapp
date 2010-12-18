@@ -131,7 +131,8 @@
 	     <div class="topicborder"></div>
 	   </div>
  	#{/if}
-   
+    
+    *{
     #{if session.username.equals(talker.userName) && talker.nextStepMessage }
 		<div class="topipsts">
            <div class="mtrighttxt1">Next Step</div>
@@ -149,6 +150,40 @@
 	     <div class="topicborder"></div>
 	   </div>
  	#{/if}
+ 	}*
+ 	
+ 	#{if talker.userName.equals(session.username) }
+              <div class="profilecompletion">
+                <div class="profilecompletionh1">Profile Completion</div>
+                <!-- 
+                <div class="completion" >
+                  <div class="completiotxt">${talker.profileCompletionValue} %</div>
+                </div>
+                 -->
+                <style type="text/css">
+			#profilebar {
+				width: 200px;
+				height: 20px;
+				border: 1px solid #CCCCCC;
+			}
+			#profileprogress {
+				background-color: #0386bc;
+				padding-left: 5px;
+				line-height: 20px;
+				width: ${2*talker.profileCompletionValue-5}px;
+				height: 100%;
+			}
+		</style>
+		<div id="profilebar">
+			<div id="profileprogress">
+				<span class="whitetext12">${talker.profileCompletionValue}%</span>
+			</div>
+		</div>
+                <div class="profilecompletiontxt">${talker.profileCompletionMessage?.raw()}</div>
+                <div class="topicborder"></div>
+                <div class="cb"></div>
+              </div>
+	#{/if}
 
 	
    <div class="topipsts">
@@ -170,67 +205,36 @@
      <div class="topicborder"></div>
 
    </div>
-   <!--topipsts-->
-   *{
+   
    <div class="topipsts">
-     <div class="mtrighttxt1">Trending Topics &amp; People</div>
+     <div class="mtrighttxt1">Similar Members</div>
      <div class="topbox1">
-       <div class="topleftimg"><img src="/public/images/topanswer1.jpg" alt="topanser" /></div>
-       <div class="topr">
-
-         <div class="trendingtext">
-           <div class="topictxtnew"><a href="#">Murray</a> <span class="styles1">asked the Question</span> <span class="vieztext1"><a href="#">What are some things you
-             wish people had said or ...</a></span></div>
-         </div>
-         <!--trendingtext-->
-         <div class="follow">
-           <input type="submit" class="followers" value=" " />
-
-         </div>
+       <div class="topleftimg">
+       	<img src="/public/images/topanswer1.jpg" alt="topanser" />
        </div>
-       <!--topr-->
-       <div class="cb"></div>
-     </div>
-     <!--topbox-->
-     <div class="topbox1">
-       <div class="topleftimg"><img src="/public/images/topanswer1.jpg" alt="topanser" /></div>
        <div class="topr">
-
          <div class="trendingtext">
-           <div class="topictxtnew"><a href="#">Situ</a> <span class="style2 styles1">asked the Question</span> <span class="vieztext1"><a href="#">What are some things you
-             wish people had said or ...</a></span></div>
+           <div class="topictxtnew">
+           	<a href="#">Murray</a> 
+           	<span class="styles1">asked the Question</span> 
+           	<span class="vieztext1"><a href="#">What are some things you wish people had said or ...</a></span>
+           </div>
          </div>
-         <!--trendingtext-->
-         <div class="follow">
-           <input type="submit" class="followers" value=" " />
-
-         </div>
-       </div>
-       <!--topr-->
-       <div class="cb"></div>
-     </div>
-     <!--topbox-->
-     <div class="topbox1">
-       <div class="topleftimg"><img src="/public/images/topanswer1.jpg" alt="topanser" /></div>
-       <div class="topr">
-
-         <div class="trendingtext">
-           <div class="topictxtnew"><a href="#">Maria</a> <span class="styles1">asked the Question</span><span class="vieztext1"><a href="#">What are some things you
-             wish people had said or ...</a></span></div>
-         </div>
-         <!--trendingtext-->
          <div class="follow">
            <input type="submit" class="followers" value=" " />
          </div>
-
        </div>
-       <!--topr-->
        <div class="cb"></div>
      </div>
-     <!--topbox-->
    </div>
-   <!--topipsts-->
-   }*
+   
+   <div class="topipsts">
+   		<div class="mtrighttxt1">Recommended Topics</div>
+   		<div id="recommendedTopics">
+   			#{ recommendedTopicsList recommendedTopics: recommendedTopics, talker: talker /}
+   		</div>
+	</div>
+   
    <div class="mtop"></div>
    <br />
 

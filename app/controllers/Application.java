@@ -257,7 +257,7 @@ public class Application extends Controller {
 //        }
         
         /*
-         	FIXME: save settings as enums in App and Strings in DB?
+         	TODO: save settings as enums in App and Strings in DB?
          	Default notification settings:
 			- 2 to 5 times per day
 			- whenever I am online

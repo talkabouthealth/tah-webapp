@@ -7,22 +7,17 @@
 			<div class="jointextstop">
 				<a href="@{ViewDispatcher.view(_activity.convo.mainURL)}">${_activity.convo.topic}</a>
 			</div>
-			<div class="joinztextlink">
-				#{if _activity.convo.comments.size() == 0}
-					<a href="@{ViewDispatcher.view(_activity.convo.mainURL)}#answers">Answer</a> | 
-				#{/if}
-				#{else}
-					<a href="@{ViewDispatcher.view(_activity.convo.mainURL)}#answers">${_activity.convo.comments.size()} 
-						Answer${_activity.convo.comments.pluralize()}</a> | 
-				#{/else}
-				#{if session.username}
-					<a href="#" class="followConvoLink" rel="${_activity.convo.id}">
-						${_talker?.followingConvosList?.contains(_activity.convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
-					<a href="#" onclick="restartConvo(${_activity.convo.tid}, '${_activity.convo.id}')">Re-start chat</a> | 
-				#{/if}
-				<span>${_activity.time.since()}</span>
-			</div>
 		#{/if}
+		
+		<div class="jointxtlink2 moretext">
+			#{if _activity.reply}
+				${_activity.reply.text}
+			#{/if}
+			#{elseif _activity.answer}
+				${_activity.answer.text.nl2br()}
+			#{/elseif}
+		</div>
+		
 		#{if _activity.profileComment}
 			#{if _activity.otherTalker.equals(_activity.talker)}
 				#{profileCommentsTree2 commentsList: [_activity.profileComment], level: 1, showDelete: false, isFeed: true /}
@@ -40,14 +35,23 @@
 			</div>
 		#{/else}
 		
-		<div class="jointxtlink2 moretext">
-			#{if _activity.reply}
-				${_activity.reply.text}
-			#{/if}
-			#{elseif _activity.answer}
-				${_activity.answer.text.nl2br()}
-			#{/elseif}
-		</div>
+		#{if _activity.convo}
+			<div class="joinztextlink">
+				#{if _activity.convo.comments.size() == 0}
+					<a href="@{ViewDispatcher.view(_activity.convo.mainURL)}#answers">Answer</a> | 
+				#{/if}
+				#{else}
+					<a href="@{ViewDispatcher.view(_activity.convo.mainURL)}#answers">${_activity.convo.comments.size()} 
+						Answer${_activity.convo.comments.pluralize()}</a> | 
+				#{/else}
+				#{if session.username}
+					<a href="#" class="followConvoLink" rel="${_activity.convo.id}">
+						${_talker?.followingConvosList?.contains(_activity.convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
+					<a href="#" onclick="restartConvo(${_activity.convo.tid}, '${_activity.convo.id}')">Re-start chat</a> | 
+				#{/if}
+				<span>${_activity.time.since()}</span>
+			</div>
+		#{/if}
 	</div>
 	<div class="cb"></div>
 	<div class="joinborder"></div>

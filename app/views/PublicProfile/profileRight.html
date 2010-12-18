@@ -10,7 +10,6 @@
    				$.post("@{Actions.follow()}", 
    		  				{ followingId: '${talker.id}'},
    		  				function(data) {
-   		  					//$("#followResult").html("Ok! ");
    		  					$("#followActionlink").html(data);
 
    		  					//$("#followActionImagelink img").attr("src", "/public/images/"+data.toLowerCase()+"_icon.gif");
@@ -25,8 +24,8 @@
 	   		  						$("#followingConfirm").show();
 	   		  					}
    		  					}
-   		  				}
-   		  			);
+   		  			}
+   		  		);
 	   		});
    		});
 
@@ -103,38 +102,6 @@
                   <div class="cb"></div>
                 </div>
                 <!--topipsts-->
-                #{if talker.userName.equals(currentTalker.userName) }
-	                <div class="profilecompletion">
-	                  <div class="profilecompletionh1">Profile Completion</div>
-	                  <!-- 
-	                  <div class="completion" >
-	                    <div class="completiotxt">${talker.profileCompletionValue} %</div>
-	                  </div>
-	                   -->
-	                  <style type="text/css">
-						#profilebar {
-							width: 200px;
-							height: 20px;
-							border: 1px solid #CCCCCC;
-						}
-						#profileprogress {
-							background-color: #0386bc;
-							padding-left: 5px;
-							line-height: 20px;
-							width: ${2*talker.profileCompletionValue-5}px;
-							height: 100%;
-						}
-					</style>
-					<div id="profilebar">
-						<div id="profileprogress">
-							<span class="whitetext12">${talker.profileCompletionValue}%</span>
-						</div>
-					</div>
-	                  <div class="profilecompletiontxt">${talker.profileCompletionMessage?.raw()}</div>
-	                  <div class="topicborder"></div>
-	                  <div class="cb"></div>
-	                </div>
-				#{/if}
                 
                 #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
                 	<div class="followingbox">
