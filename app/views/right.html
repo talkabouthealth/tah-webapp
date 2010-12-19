@@ -206,12 +206,11 @@
 
    </div>
    
-   *{
    <div class="topipsts">
      <div class="mtrighttxt1">Similar Members</div>
      
      #{list items: similarMembers, as: 'member'}
-		<div class="topbox1">
+		<div id="${member.id}" class="topbox1">
 	       <div class="topleftimg">
 	       	#{talker/talkerImageLink size: 39, userName: member.userName /}
 	       </div>
@@ -224,15 +223,46 @@
 					#{talker/talkerInfo talker: member /}
 				</span>
 	         </div>
-	         <div class="follow">
-	           <input type="submit" class="followers" value=" " />
+	         <div id="memberFollowDiv${member.id}" class="follow">
+	           <input type="submit" rel="${member.id}" class="followers followMemberLink" value=" " />
+	         </div>
+	         <div id="memberUnfollowDiv${member.id}" class="follow" style="display: none; text-align: right;">
+	           Followed!
 	         </div>
 	       </div>
 	       <div class="cb"></div>
 	   </div>
 	#{/list} 
    </div>
-   }*
+   
+   <div class="topipsts">
+     <div class="mtrighttxt1">Recommended Experts</div>
+     
+     #{list items: experts, as: 'member'}
+		<div id="${member.id}" class="topbox1">
+	       <div class="topleftimg">
+	       	#{talker/talkerImageLink size: 39, userName: member.userName /}
+	       </div>
+	       <div class="topr">
+	         <div class="trendingtext">
+	           	<a class="blue13" href="@{ViewDispatcher.view(member.userName)}">
+		     		<strong>${member.userName}</strong>
+		     	</a>
+		        <span class="blacktext12">
+					#{talker/talkerInfo talker: member /}
+				</span>
+	         </div>
+	         <div id="memberFollowDiv${member.id}" class="follow">
+	           <input type="submit" rel="${member.id}" class="followers followMemberLink" value=" " />
+	         </div>
+	         <div id="memberUnfollowDiv${member.id}" class="follow" style="display: none; text-align: right;">
+	           Followed!
+	         </div>
+	       </div>
+	       <div class="cb"></div>
+	   </div>
+	#{/list} 
+   </div>
    
    <div class="topipsts">
    		<div class="mtrighttxt1">Recommended Topics</div>
@@ -247,6 +277,28 @@
 			           <input type="submit" rel="${topic.id}" class="followers followTopicLink" value=" " />
 			         </div>
 			         <div id="topicUnfollowDiv${topic.id}" class="follow" style="display: none; text-align: right;">
+			           Followed!
+			         </div>
+			       </div>
+			       <div class="cb"></div>
+			   </div>
+			#{/list} 
+   		</div>
+	</div>
+	
+	<div class="topipsts">
+   		<div class="mtrighttxt1">Recommended Conversations</div>
+   		<div id="recommendedTopics">
+   			#{list items: recommendedConvos, as: 'convo'}
+   				<div id="${convo.id}" class="topbox1">
+			       <div class="topr" style="width: 100%;">
+			         <div class="trendingtext">
+			           	<a style="color:#0286BC;" href="@{ViewDispatcher.view(convo.mainURL)}">${convo.topic}</a>
+			         </div>
+			         <div id="convoFollowDiv${convo.id}" class="follow">
+			           <input type="submit" rel="${convo.id}" class="followers followConvoLink2" value=" " />
+			         </div>
+			         <div id="convoUnfollowDiv${convo.id}" class="follow" style="display: none; text-align: right;">
 			           Followed!
 			         </div>
 			       </div>

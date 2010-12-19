@@ -2,6 +2,7 @@ package controllers;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -115,13 +116,47 @@ public class Home extends Controller {
 		}
 		
 		//talk
-		List<TalkerBean> similarMembers = TalkerDAO.loadFollowers(talker.getId());
+		List<TalkerBean> similarMembers = new ArrayList<TalkerBean>();
+		List<TalkerBean> experts = new ArrayList<TalkerBean>();
 		
+		List<TalkerBean> allMembers = TalkerDAO.loadAllTalkers();
+		for (TalkerBean member : allMembers) {
+			  if (member.isSuspended() || member.isAdmin()) {
+				  continue;
+			  }
+			  
+			  if (talker.equals(member) || talker.getFollowingList().contains(member)) {
+				  continue;
+			  }
+			  
+			  if (member.isProf()) {
+				  if (experts.size() < 3) {
+					  experts.add(member);
+				  }
+			  }
+			  else {
+				  if (similarMembers.size() < 3) {
+					  similarMembers.add(member);
+				  }
+			  }
+		}
+		
+		List<ConversationBean> recommendedConvos = new ArrayList<ConversationBean>();
+		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations();	
+		for (ConversationBean convo : popularConvos) {
+			if (talker.getFollowingConvosList().contains(convo.getId())) {
+				continue;
+			}
+			recommendedConvos.add(convo);
+			if (recommendedConvos.size() == 3) {
+				break;
+			}
+		}
 		
 		//TODO: number of answers for this user??!
 		render("@newhome", talker, newTopic, 
 				liveConversations, convoFeed, communityFeed, showIMPopup,
-				recommendedTopics, similarMembers);
+				recommendedTopics, similarMembers, experts, recommendedConvos);
     }
     
     public static void conversationFeed() {

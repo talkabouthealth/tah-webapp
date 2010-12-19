@@ -207,6 +207,36 @@
 	  			);
 	  			return false;
 			});
+
+			$(".followConvoLink2").live('click', function() {
+				var convoId = $(this).attr("rel");
+				$.post("@{Conversations.follow()}", 
+	  				{convoId : convoId},
+	  				function(nextAction) {
+  						$("#convoUnfollowDiv"+convoId).show();
+	  					$("#convoFollowDiv"+convoId).hide();
+	  				}
+	  			);
+	  			return false;
+			});
+
+			$(".followMemberLink").live('click', function() {
+				var memberId = $(this).attr("rel");
+				$.post("@{Actions.follow()}", 
+					{followingId: memberId},
+	  				function(nextAction) {
+	  					if (nextAction === "Follow") {
+		  					$("#memberUnfollowDiv"+memberId).hide();
+		  					$("#memberFollowDiv"+memberId).show();
+	  					}
+	  					else {
+	  						$("#memberUnfollowDiv"+memberId).show();
+		  					$("#memberFollowDiv"+memberId).hide();
+	  					}
+	  				}
+	  			);
+	  			return false;
+			});
 		});
 
 		//for comments/replies in feed
