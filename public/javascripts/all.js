@@ -12,7 +12,7 @@ var flagAnswerId = "";
 var titleLimit = 150;
 
 function openChat(convoId){
-	window.open("/chat/"+convoId, "Chat", "resizable=1, scrollbars=false, width=760,height=580");
+	window.open("/chat/"+convoId, "Chat", "resizable=1, scrollbars=false, width=810,height=610");
 }
 
 function openInvitationsWindow() {
