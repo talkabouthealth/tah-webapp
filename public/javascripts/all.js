@@ -504,3 +504,16 @@ function shareTopic() {
 
 	return false;
 }
+
+
+//for comments/replies in feed
+function showReplyForm(commentId) {
+	$("#reply"+commentId+" .inline_display").hide();
+	$("#reply"+commentId+" .inline_form").show();
+	$("#reply"+commentId).show();
+	return false;
+}
+function showAllReplies(commentId) {
+	$("#comment"+commentId+" .comreply").fadeIn();
+	return false;
+}

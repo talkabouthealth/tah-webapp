@@ -50,6 +50,7 @@
 		
 		.greyarea {
 			font-weight: normal;
+			font-size: 15px;
 			color: #777777;
 		}
 	</style>
@@ -239,14 +240,6 @@
 			});
 		});
 
-		//for comments/replies in feed
-		function showReplyForm(commentId) {
-			$("#reply"+commentId+" .inline_display").hide();
-			$("#reply"+commentId+" .inline_form").show();
-			$("#reply"+commentId).show();
-			return false;
-		}
-
 		//saveProfileComment(String profileTalkerId, String parentId, String text)
    		function saveProfileComment(parentId) {
    	   		var commentText = $("#replytext"+parentId).val();
@@ -415,13 +408,18 @@
 					
                     <div class="newpageCover">  
 						<div style="padding-top: 10px; height: 30px;" class="lacover">
-						  <div class="latestactivity"><a href="#" id="latestActivity" class="tabLink">Your Conversation Feed</a></div>
-						  <div class="latestactivity1"><a href="#" id="openQuestions" class="tabLink">Breast Cancer Community Feed</a></div>
+						  <div class="${convoFeed.size() < 20 ? 'latestactivity1' : 'latestactivity'}">
+						  	<a href="#" id="latestActivity" class="tabLink">Your Conversation Feed</a>
+						  </div>
+						  <div class="${convoFeed.size() < 20 ? 'latestactivity' : 'latestactivity1'}">
+						  	<a href="#" id="openQuestions" class="tabLink">Breast Cancer Community Feed</a>
+						  </div>
 						  <div class="laborder"></div>
 						</div>
 						<div class="cb"></div>
 						<div>
-							<div id="latestActivityContent" class="tabContent">	
+							<div id="latestActivityContent" class="tabContent" 
+									style="display: ${convoFeed.size() < 20 ? 'none' : 'block'};">	
 								<div class="topic">
 			                      <div class="cb"></div>
 			                      <div class="topic">
@@ -446,7 +444,8 @@
 			                      <div class="cb"></div>
 			                    </div> 
 							</div>
-							<div id="openQuestionsContent" class="tabContent" style="display: none;">
+							<div id="openQuestionsContent" class="tabContent" 
+									style="display: ${convoFeed.size() < 20 ? 'block' : 'none'};">	
 								<div class="topic">
 			                      <div class="cb"></div>
 			                      <div class="topic">

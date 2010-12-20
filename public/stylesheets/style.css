@@ -1000,7 +1000,7 @@ a.footerlink:hover {
 --------------*/
 .jointxtlink2 {
 	clear:both;
-	color: #4b4b4b;
+	color: #000000;
 	text-align:left;
 	font-size:15px;
 	font-weight:normal;
@@ -1042,15 +1042,15 @@ a.footerlink:hover {
 }
 .joinztextlink {
 	clear:both;
-	color: #797979;
+	color: #565656;
 	text-align:left;
-	font-size:12px;
+	font-size:11px;
 	font-weight:normal;
 	padding-top:3px;
 	padding-bottom:4px;
 }
 .joinztextlink a {
-	color: #797979;
+	color: #565656;
 	text-decoration:none;
 }
 .joinztextlink a:hover {
@@ -1060,7 +1060,7 @@ a.footerlink:hover {
 
 .jointxtlink1 {
 	clear:both;
-	color: #797979;
+	color: #565656;
 	text-align:left;
 	font-size:12px;
 }

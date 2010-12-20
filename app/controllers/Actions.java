@@ -164,11 +164,11 @@ public class Actions extends Controller {
 		CommentsDAO.saveProfileComment(comment);
 		
 		if (comment.getParentId() == null) {
-			ActionDAO.saveAction(new PersonalProfileCommentAction(
-					talker, profileTalker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT));
-			
 			//post to personal Thoughts Feed?
 			if (talker.equals(profileTalker)) {
+				ActionDAO.saveAction(new PersonalProfileCommentAction(
+						talker, profileTalker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT));
+				
 				for (ServiceAccountBean serviceAccount : talker.getServiceAccounts()) {
 					Logger.error("SHARE? "+serviceAccount.getType().toString()+" : "+serviceAccount.isTrue("SHARE_FROM_THOUGHTS"));
 					if (!serviceAccount.isTrue("SHARE_FROM_THOUGHTS")) {

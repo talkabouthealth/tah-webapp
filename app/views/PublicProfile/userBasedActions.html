@@ -35,7 +35,7 @@
    		 
    			//--- Comments ---
    			$(".commentreply").each(function() {
-				$(this).val("Reply to comment..").css("color", "#777777");
+				$(this).val("Reply to thought ...").css("color", "#777777");
 			});
    			$("#replytext")
 	   			.click(function() {
@@ -80,7 +80,7 @@
 
    		function updateReplyState(replyTextArea, newState) {
    	   		if (newState == 'Initial') {
-   	   			replyTextArea.val("Reply to comment..").css("color", "#777777");
+   	   			replyTextArea.val("Reply to thought ...").css("color", "#777777");
    	   			replyTextArea.parent().next().hide();
    	   		}
    	   		else if (newState == 'Extended') {

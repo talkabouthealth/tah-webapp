@@ -32,13 +32,6 @@
 			}
 		}
 
-		function showReplyForm(commentId) {
-			$("#reply"+commentId+" .inline_display").hide();
-			$("#reply"+commentId+" .inline_form").show();
-			$("#reply"+commentId).show();
-			return false;
-		}
-
 		//saveProfileComment(String profileTalkerId, String parentId, String text)
    		function saveProfileComment(parentId) {
    	   		var commentText = $("#replytext"+parentId).val();
@@ -100,17 +93,19 @@
             <div id="mtcover">
               <div id="comleft">
                 <div class="comcontent">
-                  <div id="combox">
-                    <div class="comh1"><a href="@{ViewDispatcher.view(talker.userName)}" 
-                    	class="bluetext20">${talker.userName}'s</a> Thoughts for the Community</div>
-                    <div class="comborder" style="width:620px;"></div>
-                  </div>
-                  <!--combox-->
                   <div class="topipcWraper">
                  *{ #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) } }*
                  #{if true }
                     <div id="reply" class="comsearchbox">
-                      <div class="comh1" style="font-size:18px">What are you thinking about or feeling? (To share with the community)<br /></div>
+                      <div class="comh1" style="font-size:18px">
+                        #{if talker.equals(currentTalker) }
+                        	What are you thinking about or feeling? (To share with the community)
+                        #{/if}
+                        #{else}
+                        	Post a thought for ${talker.userName}. (To share with the community)
+                        #{/else}
+                      	<br />
+                      </div>
                       <div class="comsearch">
                         <textarea id="replytext" class="edititinputx" style="width:490px" cols="4" rows="3" ></textarea>
                       </div>

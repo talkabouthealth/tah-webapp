@@ -145,7 +145,11 @@ public class FeedsLogic {
 			else {
 				if (canAdd) {
 					PreloadAction preAction = (PreloadAction)action;
-					feed.add(preAction.getFullAction());
+					Action fullAction = preAction.getFullAction();
+					if (!(fullAction.getType() == ActionType.PERSONAL_PROFILE_COMMENT
+							&& fullAction.getTalker().isSuspended())) {
+						feed.add(fullAction);
+					}
 				}
 			}
 

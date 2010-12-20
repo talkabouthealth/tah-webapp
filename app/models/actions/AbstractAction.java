@@ -74,9 +74,10 @@ public abstract class AbstractAction implements Action {
 		DBObject talkerDBObject = ((DBRef)dbObject.get("uid")).fetch();
 		String talkerId = talkerDBObject.get("_id").toString();
 		String talkerName = (String)talkerDBObject.get("uname");
+		boolean suspended = getBoolean(talkerDBObject, "suspended");
 		String connection = (String)talkerDBObject.get("connection");
 		boolean connectionVerified = DBUtil.getBoolean(talkerDBObject, "connection_verified"); 
-		setTalker(new TalkerBean(talkerId, talkerName, connection, connectionVerified));
+		setTalker(new TalkerBean(talkerId, talkerName, connection, connectionVerified, suspended));
 		
 		setTime((Date)dbObject.get("time"));
 		setType(ActionType.valueOf((String)dbObject.get("type")));
@@ -202,7 +203,7 @@ public abstract class AbstractAction implements Action {
 			String connection = (String)talkerDBObject.get("connection");
 			boolean connectionVerified = DBUtil.getBoolean(talkerDBObject, "connection_verified"); 
 	    	
-	    	return new TalkerBean(talkerId, talkerName, connection, connectionVerified);
+	    	return new TalkerBean(talkerId, talkerName, connection, connectionVerified, false);
 		}
 		return null;
 	}

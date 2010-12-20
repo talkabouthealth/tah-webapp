@@ -50,14 +50,6 @@
 			$('.inline-edit').inlineEdit( { hover: ''} );
 		});
 
-		//for comments/replies in feed
-		function showReplyForm(commentId) {
-			$("#reply"+commentId+" .inline_display").hide();
-			$("#reply"+commentId+" .inline_form").show();
-			$("#reply"+commentId).show();
-			return false;
-		}
-
 		//saveProfileComment(String profileTalkerId, String parentId, String text)
    		function saveProfileComment(parentId) {
    	   		var commentText = $("#replytext"+parentId).val();

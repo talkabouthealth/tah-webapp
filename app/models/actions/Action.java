@@ -3,6 +3,7 @@ package models.actions;
 import java.util.Date;
 
 import models.ConversationBean;
+import models.TalkerBean;
 
 import com.mongodb.DBObject;
 
@@ -75,6 +76,8 @@ public interface Action {
 	public ActionType getType();
 	
 	public ConversationBean getConvo();
+	
+	public TalkerBean getTalker();
 	
 	public String getId();
 

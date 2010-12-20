@@ -1,6 +1,13 @@
+#{set numberOfReplies = _commentsList?.size() /} 
+
 #{list items: _commentsList, as: 'comment' }
 #{ifnot comment.deleted}
-<div id="comment${comment.id}" class="${_level == 1 ? 'comments' : 'comreply'}">
+<div id="comment${comment.id}" class="${_level == 1 ? 'comments' : 'comreply'}"
+		#{if _level != 1}
+			*{ TODO: handle deleted? }*
+			style="display: ${comment_index > (numberOfReplies-2) ? 'block' : 'none'};"
+		#{/if}
+		>
 	<div class="commentstop">
 		#{if _level == 1 && !_isFeed}
 			<div class="compic">
@@ -55,8 +62,11 @@
 					#{elseif comment.children?.size() == 1}
 						1 Reply
 					#{/elseif}
+					#{elseif comment.children?.size() == 2}
+						2 Replies
+					#{/elseif}
 					#{else}
-						${comment.children?.size()} Replies
+						<a href="#" onclick="return showAllReplies('${comment.id}');">View all ${comment.children?.size()} replies</a>
 					#{/else}
 				#{/if}
 				#{if _showDelete }
@@ -88,13 +98,13 @@
 								<div style="clear:both; height:30px; margin-bottom:7px; position:relative;">
 									<a href="#" class="inline_editlink">
 					             		<textarea class="edititanputx" rows="1" cols="4" 
-					             			style="width:444px; height:20px;">Reply to comment</textarea>
+					             			style="width:444px; height:20px;">Reply to thought ...</textarea>
 									</a>
 								</div>
 							</div>
 						</div>
 						<div class='inline_form'>
-							<div class="addnewansar" style="text-align:left">Reply to comment</div>
+							<div class="addnewansar" style="text-align:left">Reply to thought</div>
 							<div style="float:left;">
 								<textarea id="replytext${comment.id}" class="edititinputx inline_text" 
 									style="width:444px" cols="4" rows="3" ></textarea>

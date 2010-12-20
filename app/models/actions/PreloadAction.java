@@ -3,6 +3,7 @@ package models.actions;
 import java.util.Date;
 
 import models.ConversationBean;
+import models.TalkerBean;
 
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
@@ -52,6 +53,11 @@ public class PreloadAction implements Action {
 	@Override
 	public ConversationBean getConvo() {
 		return convo;
+	}
+	
+	@Override
+	public TalkerBean getTalker() {
+		return null;
 	}
 
 	@Override

@@ -250,11 +250,12 @@ public class TalkerBean implements Serializable {
 		this.userName = userName;
 	}
 
-	public TalkerBean(String id, String userName, String connection, boolean connectionVerified) {
+	public TalkerBean(String id, String userName, String connection, boolean connectionVerified, boolean suspended) {
 		this.id = id;
 		this.userName = userName;
 		this.connection = connection;
 		this.connectionVerified = connectionVerified;
+		this.suspended = suspended;
 	}
 	
 	//TODO: verify equals & hashCode ?

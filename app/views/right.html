@@ -206,6 +206,7 @@
 
    </div>
    
+   #{if similarMembers}
    <div class="topipsts">
      <div class="mtrighttxt1">Similar Members</div>
      
@@ -215,8 +216,8 @@
 	       	#{talker/talkerImageLink size: 39, userName: member.userName /}
 	       </div>
 	       <div class="topr">
-	         <div class="trendingtext">
-	           	<a class="blue13" href="@{ViewDispatcher.view(member.userName)}">
+	         <div class="trendingtext comname">
+	           	<a href="@{ViewDispatcher.view(member.userName)}">
 		     		<strong>${member.userName}</strong>
 		     	</a>
 		        <span class="blacktext12">
@@ -233,8 +234,11 @@
 	       <div class="cb"></div>
 	   </div>
 	#{/list} 
+	<div class="topicborder"></div>
    </div>
+   #{/if}
    
+   #{if experts}
    <div class="topipsts">
      <div class="mtrighttxt1">Recommended Experts</div>
      
@@ -244,8 +248,8 @@
 	       	#{talker/talkerImageLink size: 39, userName: member.userName /}
 	       </div>
 	       <div class="topr">
-	         <div class="trendingtext">
-	           	<a class="blue13" href="@{ViewDispatcher.view(member.userName)}">
+	         <div class="trendingtext comname">
+	           	<a href="@{ViewDispatcher.view(member.userName)}">
 		     		<strong>${member.userName}</strong>
 		     	</a>
 		        <span class="blacktext12">
@@ -262,8 +266,11 @@
 	       <div class="cb"></div>
 	   </div>
 	#{/list} 
+	<div class="topicborder"></div>
    </div>
+   #{/if}
    
+   #{if recommendedTopics}
    <div class="topipsts">
    		<div class="mtrighttxt1">Recommended Topics</div>
    		<div id="recommendedTopics">
@@ -284,8 +291,11 @@
 			   </div>
 			#{/list} 
    		</div>
+   		<div class="topicborder"></div>
 	</div>
+	#{/if}
 	
+	#{if recommendedConvos}
 	<div class="topipsts">
    		<div class="mtrighttxt1">Recommended Conversations</div>
    		<div id="recommendedTopics">
@@ -307,6 +317,7 @@
 			#{/list} 
    		</div>
 	</div>
+	#{/if}
    
    <div class="mtop"></div>
    <br />
