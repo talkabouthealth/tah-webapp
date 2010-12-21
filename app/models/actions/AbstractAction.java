@@ -271,7 +271,9 @@ public abstract class AbstractAction implements Action {
 				child.setTime((Date)answerDBObject.get("time"));
 				child.setFromTalker(parseTalker(answerDBObject, "from"));
 				child.setDeleted(getBoolean(answerDBObject, "deleted"));
-				childrenList.add(child);
+				if (!child.isDeleted()) {
+					childrenList.add(child);
+				}
 			}
 			comment.setChildren(childrenList);
 		}

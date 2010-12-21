@@ -6,9 +6,16 @@
 		.seeall { padding-top: 20px }
 		
 		#mask { background-color:#e6e6e6; }
+		
+		/* Hide images in talker's feed */
+		.joinpic { display: none; }
 	</style>
 	
+	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
+	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
+		var feedsPerPage = ${logic.FeedsLogic.TALKERFEEDS_PER_PAGE};
+	
 		$(document).ready(function() {
 			//if close button is clicked
 			$('.window .close, .window .cancelLink').click(function (e) {
@@ -20,6 +27,26 @@
 			$("#followActionImagelink").click(function() {
    				follow();
 	   		});
+
+			$(".followConvoLink").live('click', function() {
+				var convoId = $(this).attr("rel");
+				if ($(this).html().indexOf("Unfollow") != -1) {
+					$(this).html("Follow");
+				}
+				else {
+					$(this).html("Unfollow");
+				}
+				$.post("@{Conversations.follow()}", 
+	  				{ convoId: convoId},
+	  				function(data) {
+	  					//...
+	  				}
+	  			);
+	  			return false;
+			});
+
+			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
+			$('.inline-edit').inlineEdit( { hover: ''} );
 		});
 
 		//follow(String followingId)
@@ -41,6 +68,34 @@
   					}
   				}
   			);
+   		}
+
+   		//saveProfileComment(String profileTalkerId, String parentId, String text)
+   		function saveProfileComment(parentId) {
+   	   		var commentText = $("#replytext"+parentId).val();
+   			$("#replytext"+parentId).val("");
+
+   			$.post("@{Actions.saveProfileComment2()}", 
+  				{ parentId: parentId, text: commentText},
+  				function(html) {
+  	  				$("#firstcommentmessage").hide();
+  					//put comment in the tree
+  					if (parentId == '') {
+  	  					//add as first element in the top
+  						$(html).prependTo($(".commentsarea"));
+
+  	  					//add inline edit for new comment
+  						$('.inline-edit').inlineEdit( { hover: ''} );
+  					}
+  					else {
+  						//add as last element in subtree
+  						$("#reply"+parentId).before($(html));
+  					}
+  				}
+  			);
+
+   			
+  			return false;
    		}
 	</script>
 		
@@ -438,91 +493,24 @@
 								</ul>
 							</div>
 					#{/if}
-                    
-*{                   
-                    <div class="profiletxtCantant">
-                      <div class="profileCantanttxt1"><strong>Disease Type:</strong> <span class="Profilepersonsub">Type 1</span></div>
-                      <div class="profileCantanttxt2"><strong>Disease Syptoms </strong></div>
-                    </div>
-                    <!--profiletxtCantant-->
-                    <div class="profiletxtCantant">
-                      <div class="profileCantanttxt1"><strong>Stage of Disease:</strong> <span class="Profilepersonsub">Stage 1</span></div>
-                      <div class="profileCantanttxt2"><span class="Profilepersonsub1">Discoloration of Moles - Mild</span></div>
-                    </div>
-                    <!--profiletxtCantant-->
-                    <div class="profiletxtCantant">
-                      <div class="profileCantanttxt1"><strong>Date of First Symptom:</strong> <span class="Profilepersonsub">10/23/2007</span></div>
-                      <div class="profileCantanttxt2"><span class="Profilepersonsub1">Vomiting - Mild</span></div>
-                    </div>
-                    <!--profiletxtCantant-->
-                    <div class="profiletxtCantant">
-                      <div class="profileCantanttxt1"><strong>Date of Diagnosis:</strong> <span class="Profilepersonsub">10/23/2008</span></div>
-                      <div class="profileCantanttxt2"><span class="Profilepersonsub1">Vomiting - Mild</span></div>
-                    </div>
-                    <!--profiletxtCantant-->
-                    <div class="profiletxtCantant">
-                      <div class="profileCantanttxt1"><strong>Re Current:</strong> <span class="Profilepersonsub">No</span></div>
-                      <div class="profileCantanttxt2"><span class="Profilepersonsub1">Vomiting - Mild</span></div>
-                    </div>
-                    <!--profiletxtCantant-->
-                    <div class="profiletxtCantant">
-                      <div class="profileCantanttxt1"><strong>Initial Symptoms:</strong></div>
-                      <div class="profileCantanttxt2"><span class="Profilepersonsub1">Vomiting - Mild</span></div>
-                    </div>
-                    <!--profiletxtCantant-->
-                    <div class="profiletxtCantant">
-                      <div class="profileCantanttxt1"><span class="Profilepersonsub1">Lump in brest</span></div>
-                      <div class="profileCantanttxt2"><strong>Medication And Treatments </strong></div>
-                    </div>
-                    <!--profiletxtCantant-->
-                    <div class="profiletxtCantant">
-                      <div class="profileCantanttxt1"><strong>Tests</strong></div>
-                      <div class="profileCantanttxt2"><span class="Profilepersonsub1">Chemotherapy</span></div>
-                    </div>
-                    <!--profiletxtCantant-->
-                    <div class="profiletxtCantant">
-                      <div class="profileCantanttxt1"><span class="Profilepersonsub1">Mammogram</span></div>
-                      <div class="profileCantanttxt2"><span class="Profilepersonsub1">hercetion</span></div>
-                    </div>
-                    <!--profiletxtCantant-->
-                    <div class="profiletxtCantant">
-                      <div class="profileCantanttxt1"><span class="Profilepersonsub1">Brest Biopsy</span></div>
-                      <div class="profileCantanttxt2"><span class="Profilepersonsub1">Side Efects from Medication/Treatments </span></div>
-                    </div>
-                    <!--profiletxtCantant-->
-                    <div class="profiletxtCantant">
-                      <div class="profileCantanttxt1"><strong>Procedures/ Surgeries</strong></div>
-                      <div class="profileCantanttxt2"><span class="Profilepersonsub1"> Depression - Severe</span></div>
-                    </div>
-                    <!--profiletxtCantant-->
-                    <div class="profiletxtCantant">
-                      <div class="profileCantanttxt1"><span class="Profilepersonsub1">Mastectomy</span></div>
-                      <div class="profileCantanttxt2"><span class="Profilepersonsub1"> Vomiting - Severe</span></div>
-                    </div>
-                    <!--profiletxtCantant-->
-                    <div class="profiletxtCantant">
-                      <div class="profileCantanttxt1"><span class="Profilepersonsub1">Lumpectomy</span></div>
-                      <div class="profileCantanttxt2"><strong>Medication/Treatments For Side - Effects</strong></div>
-                    </div>
-                    <!--profiletxtCantant-->
-                    <div class="profiletxtCantant">
-                      <div class="profileCantanttxt1"> </div>
-                      <div class="profileCantanttxt2"><span class="Profilepersonsub1">Aspirin</span></div>
-                    </div>
- }*
-                    
+                                        
                     #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.ACTIVITY_STREAM) 
 							&& talker.activityList}
-						<div class="Profilemurray">${talker.userName} Activities (${talker.activityList.size()})</div>
+						<div class="Profilemurray">${talker.userName} Activities</div>
 	                    <div class="topicborder"></div>
-	                    <div class="profilema">
-	                    	#{list items:talker.activityList.limit(6), as:'activity' }
-	                    	<div class="topic">
-	                      		<div class="profilemah1">${activity.toHTML(session.username != null).raw()}</div>
-	                      		<div class="profilehour">${activity.time.since()}</div>
-	                      	</div>
-	                      	#{/list}
-	                    	<input type="submit" style="display: none;" value=" " src="/public/images/profilemore.jpg" class="profilemore"/>
+	                    <div>
+	                        <div id="talkerFeedList">
+		                    	#{list items: talkerFeed, as: 'activity'}
+									#{feedActivity activity: activity, talker: talker /}
+								#{/list}
+							</div>
+							#{if talkerFeed.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
+								<div class="replytommentbox" id="talkerFeedBtn">
+		                          <input type="submit" src="images/seemore.jpg" 
+		                          	onclick="return loadMoreFeed('talkerFeed');" value=" " class="seemorecom" />
+		                        </div>
+							#{/if}
+								
                       		<div class="cb"></div>
                     	</div>
 					#{/if}

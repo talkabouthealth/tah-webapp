@@ -20,9 +20,9 @@ public class FollowTalkerAction extends AbstractAction {
 
 	public String toHTML(boolean authenticated) {
 		StringBuilder result = new StringBuilder();
-		result.append(userName());
+		result.append(fullUserName(talker, authenticated));
 		result.append(" began following ");
-		result.append(otherTalker.getUserName());
+		result.append(fullUserName(otherTalker, authenticated));
 		
 		return result.toString();
 	}

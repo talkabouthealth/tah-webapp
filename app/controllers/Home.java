@@ -180,9 +180,13 @@ public class Home extends Controller {
     	if ("convoFeed".equalsIgnoreCase(feedType)) {
     		_convoFeed = FeedsLogic.getConvoFeed(_talker, afterActionId);
     	}
-    	else {
+    	else if ("communityFeed".equalsIgnoreCase(feedType)) {
     		_convoFeed = FeedsLogic.getCommunityFeed(afterActionId);
     	}
+    	else {
+    		_convoFeed = FeedsLogic.getTalkerFeed(_talker, afterActionId);
+    	}
+    	
     	render("tags/convoFeedList.html", _convoFeed, _talker);
     }
     

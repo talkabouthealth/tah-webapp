@@ -198,10 +198,13 @@ public class ViewDispatcher extends Controller {
 			profFields.put("zocdoc", "ZocDoc.com page");
 		}
 		
+		Set<Action> talkerFeed = FeedsLogic.getTalkerFeed(talker, null);
+		
 		Logger.error("Before rendering");
 		
-		render("PublicProfile/newview.html", talker, disease, talkerDisease, 
-				healthItemsMap, currentTalker, notProvidedInfo, notViewableInfo, profFields);
+		render("PublicProfile/newview.html", talker, disease, talkerDisease, healthItemsMap, 
+				currentTalker, talkerFeed,
+				notProvidedInfo, notViewableInfo, profFields);
 	}
 	
 	private static void showConvo(ConversationBean convo) {

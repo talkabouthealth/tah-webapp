@@ -19,7 +19,7 @@
 		var feedsPerPage = ${logic.FeedsLogic.FEEDS_PER_PAGE};
 	
 		$(document).ready(function() {
-			$(".followTopicLink").live('click', function() {
+			$(".followConvoLink").live('click', function() {
 				var convoId = $(this).attr("rel");
 				if ($(this).html().indexOf("Unfollow") != -1) {
 					$(this).html("Follow");

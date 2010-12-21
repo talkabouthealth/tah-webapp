@@ -19,6 +19,7 @@ import models.actions.PreloadAction;
 
 public class FeedsLogic {
 	
+	public static final int TALKERFEEDS_PER_PAGE = 20;
 	public static final int FEEDS_PER_PAGE = 40;
 	public static final int ACTIONS_PRELOAD = 500;
 	
@@ -42,7 +43,7 @@ public class FeedsLogic {
 			}
 			
 			canAdd = filter2(convoFeed, convoFeedActions, 
-					addedConvos, afterActionId, canAdd);
+					addedConvos, afterActionId, canAdd, FEEDS_PER_PAGE);
 			
 			Logger.error("FILTER: "+convoFeed.size());
 			
@@ -76,7 +77,7 @@ public class FeedsLogic {
 			}
 			
 			canAdd = filter2(communityFeed, communityFeedActions, 
-					addedConvos, afterActionId, canAdd);
+					addedConvos, afterActionId, canAdd, FEEDS_PER_PAGE);
 			
 			if (exit || communityFeed.size() >= FEEDS_PER_PAGE) {
 				break;
@@ -88,6 +89,38 @@ public class FeedsLogic {
 		}
 		
 		return communityFeed;
+	}
+	
+	public static Set<Action> getTalkerFeed(TalkerBean talker, String afterActionId) {
+		Set<Action> talkerFeed = new LinkedHashSet<Action>();
+		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();
+		
+		boolean exit = false;
+		String nextActionId = null;
+		boolean canAdd = (afterActionId == null);
+		while (true) {
+			List<Action> talkerFeedActions = ActionDAO.loadTalkerFeed(talker.getId(), nextActionId);
+			if (talkerFeedActions.size() == 0) {
+				//no more feeds
+				break;
+			}
+			if (talkerFeedActions.size() < ACTIONS_PRELOAD ) {
+				exit = true;
+			}
+			
+			canAdd = filter2(talkerFeed, talkerFeedActions, 
+					addedConvos, afterActionId, canAdd, TALKERFEEDS_PER_PAGE);
+			
+			if (exit || talkerFeed.size() >= TALKERFEEDS_PER_PAGE) {
+				break;
+			}
+			
+			//id for next pre-load from db
+			int s = talkerFeedActions.size();
+			nextActionId = talkerFeedActions.get(s-1).getId();
+		}
+		
+		return talkerFeed;
 	}
 	
 	public static Set<Action> getTopicFeed(TopicBean topic, String afterActionId) {
@@ -113,7 +146,7 @@ public class FeedsLogic {
 			}
 			
 			canAdd = filter2(topicFeed, topicFeedActions, 
-					addedConvos, afterActionId, canAdd);
+					addedConvos, afterActionId, canAdd, FEEDS_PER_PAGE);
 			
 			if (exit || topicFeed.size() >= FEEDS_PER_PAGE) {
 				break;
@@ -128,7 +161,8 @@ public class FeedsLogic {
 	}
 	
 	private static boolean filter2(Set<Action> feed, 
-			List<Action> feedActions, Set<ConversationBean> addedConvos, String afterActionId, boolean canAdd) {
+			List<Action> feedActions, Set<ConversationBean> addedConvos, 
+			String afterActionId, boolean canAdd, int feedSize) {
 		for (Action action : feedActions) {
 			ConversationBean actionConvo = action.getConvo();
 			//check repeated conversations
@@ -153,7 +187,7 @@ public class FeedsLogic {
 				}
 			}
 
-			if (feed.size() >= FEEDS_PER_PAGE) {
+			if (feed.size() >= feedSize) {
 				break;
 			}
 			

@@ -16,7 +16,7 @@ public class UpdateProfileAction extends AbstractAction {
 	
 	public String toHTML(boolean authenticated) {
 		StringBuilder result = new StringBuilder();
-		result.append(userName());
+		result.append(fullUserName(talker, authenticated));
 		result.append(" updated ");
 		if (type == ActionType.UPDATE_BIO) {
 			result.append("Bio");

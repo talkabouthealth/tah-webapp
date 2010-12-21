@@ -5003,7 +5003,7 @@ border:0;
 #savedHelpError { margin-top: 15px; font-size: 18px; color: red; }
 
 #feedbackImage {
-	background-color:#0087CC;
+	background-color:#dddddd;
 	background-image:url(/public/images/feedbackImage.png);
 	background-position:2px 50%;
 	background-repeat:no-repeat;
@@ -5020,9 +5020,9 @@ border:0;
 	
 	text-indent:-4000px;
 	z-index:99999;
-	border-color:#0087CC -moz-use-text-color #0087CC #0087CC;
-	border-style:outset none outset outset;
-	border-width:1px medium 1px 1px;
+	border-color:#bbbbbb #aaaaaa #bbbbbb #bbbbbb;
+	/* border-style:outset none outset outset; */
+	border-width:2px medium 2px 2px;
 }
 
 .iwant1 { font-size: 22px }
@@ -5115,4 +5115,20 @@ border:0;
 	height:28px;
 	float:right;
 	cursor:pointer;
+}
+
+/* New Home page buttons */
+#shareThoughtBtn, #postQuestionBtn, #startChatBtn {
+	margin-left: 15px;
+	border: 0 none;
+	cursor: pointer;
+	width: 125px;
+	height: 31px; 
+}
+#shareThoughtBtn { background: url(../images/shareThoughtBtn.jpg); }
+#postQuestionBtn { background: url(../images/postQuestionBtn.jpg); }
+#startChatBtn { 
+	background: url(../images/startChatBtn.jpg); 
+	width: 117px;
+	height: 34px;
 }

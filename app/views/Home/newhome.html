@@ -271,6 +271,12 @@
    			$("#shareThoughtText").val("");
    			$("#shareThoughtTextSize").html("0");
 
+   			if (text === "" ||
+   		   			text === "What are you thinking about or feeling? (To share with the community)") {
+   	   			alert("Please enter thought");
+   	   			return;
+   			}
+
    			text = linkify(text);
 
    			$.post("@{Actions.saveProfileComment2()}", 
@@ -298,7 +304,11 @@
 			$("#newConvoForm").show();
 			$("#newQuestionConfirm").hide();
 			$("#newTalkConfirm").hide();
-			if ($("#"+type+"Text").val() !== "") {
+
+			var convoTitle = $("#"+type+"Text").val();
+			if (convoTitle !== "" 
+					&& convoTitle !== "Post a question and receive an answer within a couple of minutes."
+					&& convoTitle !== "Request live support from peers by typing the topic you would like to chat about. Your peers will join with minutes." ) {
 				$("#newConvoTitle").val($("#"+type+"Text").val());
 			}
 			showPopup("#startDialog", 350);
@@ -348,8 +358,8 @@
 						</div>
 						<div style="float: right; padding-top: 5px;">
 							<span id="shareThoughtTextSize" style="font-size: 16px;">0</span>
-							<input type="button" style="margin-left: 15px;" onclick="return saveThought();" 
-								id="shareThoughtBtn" value="Share Thought" />
+							<input type="button" onclick="return saveThought();" 
+								id="shareThoughtBtn" value="" />
 						</div>
                   	</div>
                   	<div id="postQuestionTabContent" class="topTabContent">	
@@ -362,8 +372,8 @@
 						</div>
 						<div style="float: right; padding-top: 5px;">
 							<span id="postQuestionTextSize" style="font-size: 16px;">0</span>
-							<input type="button" style="margin-left: 15px;" onclick="return showSaveDialog('postQuestion');" 
-								id="postQuestionBtn" value="Post Question" />
+							<input type="button" onclick="return showSaveDialog('postQuestion');" 
+								id="postQuestionBtn" value="" />
 						</div>
                   	</div>
                   	<div id="startChatTabContent" class="topTabContent">	
@@ -376,8 +386,8 @@
 						</div>
 						<div style="float: right; padding-top: 5px;">
 							<span id="startChatTextSize" style="font-size: 16px;">0</span>
-							<input type="button" style="margin-left: 15px;" onclick="return showSaveDialog('startChat');" 
-								id="startChatBtn" value="Start Chat" />
+							<input type="button" onclick="return showSaveDialog('startChat');" 
+								id="startChatBtn" value="" />
 						</div>
                   	</div>
 				  </div>

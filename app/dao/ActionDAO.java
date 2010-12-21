@@ -240,6 +240,33 @@ public class ActionDAO {
 		return activitiesSet;
 	}
 	
+	public static List<Action> loadTalkerFeed(String talkerId, String nextActionId) {
+		Date firstActionTime = null;
+		if (nextActionId != null) {
+			firstActionTime = getActionTime(nextActionId);
+		}
+		
+		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
+		
+		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
+		BasicDBObjectBuilder queryBuilder = 
+			BasicDBObjectBuilder.start().add("uid", talkerRef);
+		if (firstActionTime != null) {
+			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
+		}
+		DBObject query = queryBuilder.get();
+			
+		List<DBObject> activitiesDBList = 
+			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(FeedsLogic.ACTIONS_PRELOAD).toArray();
+		
+		List<Action> activitiesSet = new ArrayList<Action>();
+		for (DBObject actionDBObject : activitiesDBList) {
+			Action action = new PreloadAction(actionDBObject);
+			activitiesSet.add(action);
+		}
+		return activitiesSet;
+	}
+	
 	public static List<Action> loadLatestByTopic(TopicBean topic, String nextActionId) {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		

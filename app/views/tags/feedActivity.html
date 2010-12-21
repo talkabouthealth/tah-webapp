@@ -47,7 +47,7 @@
 				#{if session.username}
 					<a href="#" class="followConvoLink" rel="${_activity.convo.id}">
 						${_talker?.followingConvosList?.contains(_activity.convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
-					<a href="#" onclick="restartConvo(${_activity.convo.tid}, '${_activity.convo.id}')">Re-start chat</a> | 
+					<a href="#" onclick="return restartConvo(${_activity.convo.tid}, '${_activity.convo.id}')">Re-start chat</a> | 
 				#{/if}
 				<span>${_activity.time.since()}</span>
 			</div>
