@@ -24,10 +24,6 @@
 				hideAll();
 			});		
 
-			$("#followActionImagelink").click(function() {
-   				follow();
-	   		});
-
 			$(".followConvoLink").live('click', function() {
 				var convoId = $(this).attr("rel");
 				if ($(this).html().indexOf("Unfollow") != -1) {
@@ -48,27 +44,6 @@
 			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
 			$('.inline-edit').inlineEdit( { hover: ''} );
 		});
-
-		//follow(String followingId)
-   		function follow() {
-   			$("#followingConfirm").hide();
-   			$.post("@{Actions.follow()}", 
-  				{ followingId: '${talker.id}'},
-  				function(data) {
-  					$("#followResult").html("Ok! ");
-  					$("#followActionlink").html(data);
-
-  					//$("#followActionImagelink img").attr("src", "/public/images/"+data.toLowerCase()+"_icon.gif");
-  					if (data == 'Follow') {
-  						$("#followActionImagelink").html('<img src="/public/images/follow_icon.gif" width="52" height="19" border="0"/>');
-  					}
-  					else {
-  						$("#followActionImagelink").html('Unfollow');
-  						$("#followingConfirm").show();
-  					}
-  				}
-  			);
-   		}
 
    		//saveProfileComment(String profileTalkerId, String parentId, String text)
    		function saveProfileComment(parentId) {
@@ -198,22 +173,6 @@
 								(${talker.levelOfRecognition})
 							#{/else}
                       </div>
-                      #{ifnot talker.userName.equals(currentTalker.userName) }
-                      	<div>
-							<a id="followActionImagelink" href="#" class="navybluetext12" style="margin-left:15px; float: left;">
-								#{if currentTalker.followingList.contains(talker)}
-									Unfollow
-								#{/if}
-								#{else}
-									<img src="/public/images/follow_icon.gif" width="52" height="19" border="0"/>
-								#{/else}
-							</a>
-							<div id="followingConfirm" style="float: left; margin-left: 10px; display: none;">
-								<img class="topicfolright" alt="right" src="/public/images/right.jpg"/>
-								<span class="topicfoltxtsub1"><b>Following</b></span>
-							</div>
-                      	</div>
-                      #{/ifnot}
                     </div>
                     <!--pph1Cover-->
                     <div class="profiletxtCantant">

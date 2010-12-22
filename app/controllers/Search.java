@@ -33,6 +33,12 @@ public class Search extends Controller {
 		render();
 	}
 	
+	public static void allSearch(String query) throws Exception {
+		//renderJSON(results);
+		
+		render();
+	}
+	
 	public static void ajaxSearch(String term) throws Exception {
 		List<String> allowedTypes = Arrays.asList("User", "Conversation", "Question", "Topic");
 		List<Map<String, String>> results = makeSearch(term, allowedTypes, null);

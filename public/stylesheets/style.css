@@ -5132,3 +5132,27 @@ border:0;
 	width: 117px;
 	height: 34px;
 }
+
+/* New following buttons */
+.followMemberBtn, .followingMemberBtn, .restartChatBtn, 
+.followConvoBtn, .followingConvoBtn, .followTopicBtn, .followingTopicBtn {	
+	border: 0 none;
+	cursor: pointer;
+	width: 170px;
+	height: 34px; 
+	margin-left: 35px;
+	display: block;
+}
+.followMemberBtn { background: url(../images/followMemberBtn.jpg); }
+.followingMemberBtn { background: url(../images/followingBtn.jpg); }
+.followingMemberBtn:hover { background: url(../images/unfollowMemberBtn.jpg); }
+
+.followConvoBtn { background: url(../images/followConvoBtn.jpg); }
+.followingConvoBtn { background: url(../images/followingBtn.jpg); }
+.followingConvoBtn:hover { background: url(../images/unfollowConvoBtn.jpg); }
+
+.followTopicBtn { background: url(../images/followTopicBtn.jpg); }
+.followingTopicBtn { background: url(../images/followingBtn.jpg); }
+.followingTopicBtn:hover { background: url(../images/unfollowTopicBtn.jpg); }
+
+.restartChatBtn { background: url(../images/restartChatBtn.jpg); margin-top: 5px; }

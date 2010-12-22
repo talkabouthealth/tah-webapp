@@ -5,33 +5,30 @@
    		$(document).ready(function() {
    			$("#thankYouUser").html('${talker.userName}');
    			$("#commentUser").html('${talker.userName}');
-   			
-   			$("#followActionlink").click(function() {
-   				$.post("@{Actions.follow()}", 
-   		  				{ followingId: '${talker.id}'},
-   		  				function(data) {
-   		  					$("#followActionlink").html(data);
 
-   		  					//$("#followActionImagelink img").attr("src", "/public/images/"+data.toLowerCase()+"_icon.gif");
-   		  					if ($("#followActionImagelink")) {
-   		  						$("#followingConfirm").hide();
-	   		  					if (data == 'Follow') {
-	   		  						$("#followActionImagelink").html(
-	   		   		  						'<img src="/public/images/follow_icon.gif" width="52" height="19" border="0"/>');
-	   		  					}
-	   		  					else {
-	   		  						$("#followActionImagelink").html('Unfollow');
-	   		  						$("#followingConfirm").show();
-	   		  					}
-   		  					}
-   		  			}
-   		  		);
+   			$("#followActionImageBtn, #followActionlink").click(function() {
+   	   			$.post("@{Actions.follow()}", 
+   	  				{ followingId: '${talker.id}'},
+   	  				function(data) {
+   	  					$("#followActionlink").html(data);
+
+   	  					if (data == 'Follow') {
+   	  						$("#followActionImageBtn").removeClass("followingMemberBtn").addClass("followMemberBtn");
+   	  					}
+   	  					else {
+   	  						$("#followActionImageBtn").removeClass("followMemberBtn").addClass("followingMemberBtn");
+   	  					}
+   	  				}
+   	  			);
 	   		});
    		});
-
 </script>
-<div style="padding-left: 30px; font-size: 12px;" id="mtright"> <br/>
-				<div style="padding-left: 10px;">
+<div style="padding-left: 30px; font-size: 12px;" id="mtright">
+				#{if currentPage.equals('publicProfile') && !talker.userName.equals(currentTalker.userName) }
+					<input type="button" id="followActionImageBtn" value=""
+						class="${ currentTalker.followingList.contains(talker) ? 'followingMemberBtn' : 'followMemberBtn'}"  />
+	            #{/if}
+				<div style="padding-left: 10px; padding-top: 10px;">
 					#{if session.username.equals(talker.userName) }
 		         		Welcome 
 		               	<a href="@{ViewDispatcher.view(talker.userName)}"><strong>${talker.userName}</strong></a>!
@@ -87,7 +84,10 @@
                   		href="@{PublicProfile.userBasedActions(talker.userName, 'thankyous')}"
                   	>Thank You's (${talker.thankYouList.size()})</a>
                   </div>
-                  <!-- ANSWERS! -->
+                  <div class="mtrighttxt">
+                  	<a class="${currentPage.equals('answers') ? 'current' : ''}" 
+			     		href="@{PublicProfile.answers(talker.userName)}">Answers</a>
+			      </div>
                   <div class="mtrighttxt">
 			     	<a class="${currentPage.equals('topicsFollowing') ? 'current' : ''}" 
 			     		href="@{PublicProfile.topicsFollowing(talker.userName)}"

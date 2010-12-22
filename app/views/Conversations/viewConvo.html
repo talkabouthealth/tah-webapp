@@ -68,18 +68,14 @@
 		
 		$(document).ready(function() {
 			$("#followConvoLink").click(function() {
-				$("#followingConfirm").hide();
 				$.post("@{Conversations.follow()}", 
 	  				{ convoId: '${convo.id}'},
 	  				function(nextAction) {
-	  					var linkDiv = $("#followConvoLink").children().first();
-	  					linkDiv.removeClass();
 		  				if (nextAction === "follow") {
-		  					linkDiv.addClass("followcn");
+		  					$("#followConvoLink").removeClass().addClass("followConvoBtn");
 		  				}
 		  				else {
-		  					linkDiv.addClass("followcnzz");
-		  					$("#followingConfirm").show();
+		  					$("#followConvoLink").removeClass().addClass("followingConvoBtn");
 		  				}
 	  				}
 	  			);
@@ -683,16 +679,12 @@
 				<div id="mtright1" style="padding-top: 10px">
 					#{if talker }
 						#{if talker.followingConvosList?.contains(convo.id) }
-							<a href="#" id="followConvoLink"><div class="followcnzz"></div></a>
+							<a href="#" id="followConvoLink" class="followingConvoBtn"></a>
 						#{/if}
 						#{else}
-							<a href="#" id="followConvoLink"><div class="followcn"></div></a>
+							<a href="#" id="followConvoLink" class="followConvoBtn"></a>
 						#{/else}
-						<div id="followingConfirm" style="clear: left; padding-top: 3px; margin-left: 45px; display: none;">
-							<img class="topicfolright" alt="right" src="/public/images/right.jpg"/>
-							<div class="topicfoltxtsub1"><b>Following</b></div>
-						</div>
-						<input type="button" class="restartConvoLink bigRestartBtn" value="Re-start Chat" />
+						<input type="button" class="restartConvoLink restartChatBtn" value="" />
 					#{/if}
 				    <!-- <input type="submit" class="followcn"  src="../TalkAboutHealth//public/images/followcn.jpg" value=" "  /> -->
 				    <div class="cb"></div>

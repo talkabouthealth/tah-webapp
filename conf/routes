@@ -24,6 +24,8 @@ GET		/verify/{verifyCode}					Profile.verifyEmail
 GET		/explore/members						Community.browseMembers(action:'active')
 *		/search/members							Community.browseMembers(action:'search')
 
+*		/search									Search.allSearch
+
 GET		/community/breast-cancer				Community.viewCommunity
 *		/search/conversations					Explore.searchConversations
 GET		/openquestions/?						Explore.openQuestions
@@ -47,6 +49,7 @@ GET     /public/                                staticDir:public
 GET		/{name}/?								ViewDispatcher.view
 
 GET		/{userName}/thoughts					PublicProfile.thoughts
+GET		/{userName}/answers						PublicProfile.answers
 
 GET		/{userName}/thankyous/{from}			PublicProfile.userBasedActions(action:'thankyous', from)
 GET		/{userName}/following/{from}			PublicProfile.userBasedActions(action:'following', from)

@@ -127,6 +127,18 @@ public class PublicProfile extends Controller {
     	renderText("ok");
     }
 	
+	public static void answers(String userName) {
+		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		notFoundIfNull(talker);
+		
+		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+		talker.setActivityList(ActionDAO.load(talker.getId()));
+		TalkerLogic.calculateProfileCompletion(talker);
+		
+		render(talker, currentTalker);
+	}
+	
 	public static void conversations(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
