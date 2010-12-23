@@ -351,10 +351,12 @@ function saveConvo(page) {
 	  					$.post("/conversations/start}", {convoId: data.id});
 	  					hideAll();
 					});
+					$("#startChatText").val("");
 					$("#newTalkConfirm").show();
 				}
 				else {
 					$("#questionLink").attr("href", data.url).html(data.url);
+					$("#postQuestionText").val("");
 					$("#newQuestionConfirm").show();
 				}
 				$("#newConvoForm").hide();
