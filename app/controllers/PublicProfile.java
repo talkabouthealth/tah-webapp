@@ -19,6 +19,7 @@ import models.TalkerTopicInfo;
 import models.TopicBean;
 import models.CommentBean.Vote;
 import models.actions.Action;
+import models.actions.AnswerConvoAction;
 import models.actions.FollowConvoAction;
 import models.actions.FollowTalkerAction;
 import models.actions.GiveThanksAction;
@@ -136,7 +137,24 @@ public class PublicProfile extends Controller {
 		talker.setActivityList(ActionDAO.load(talker.getId()));
 		TalkerLogic.calculateProfileCompletion(talker);
 		
-		render(talker, currentTalker);
+		List<CommentBean> allAnswers = CommentsDAO.getTalkerAnswers(talker.getId(), null);
+		
+		List<Action> answersFeed = new ArrayList<Action>();
+		int numOfTopAnswers = 0;
+		for (CommentBean answer : allAnswers) {
+			ConversationBean convo = ConversationDAO.getByConvoId(answer.getConvoId());
+			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
+			
+			if (!convo.getComments().isEmpty() && convo.getComments().get(0).equals(answer)) {
+				numOfTopAnswers++;
+			}
+			
+//			Action answerAction = new StartConvoAction(convo.getTalker(), convo, ActionType.START_CONVO);
+			Action answerAction = new AnswerConvoAction(talker, convo, answer, null, ActionType.ANSWER_CONVO);
+			answersFeed.add(answerAction);
+		}
+		
+		render(talker, currentTalker, answersFeed, numOfTopAnswers);
 	}
 	
 	public static void conversations(String userName) {

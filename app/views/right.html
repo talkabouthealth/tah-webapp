@@ -56,7 +56,11 @@
        <div class="thanktxt">
          <div class="thanktxtl">
            <div class="thanktxtblack">Answers:&nbsp;&nbsp;</div>
-           <div class="thanktxtblue">0</div>
+           <div class="thanktxtblue">
+           	<a style="text-decoration: none;" href="@{PublicProfile.answers(talker.userName)}">
+				${talker.answerList.size()}
+			</a>
+           </div>
          </div>
          <!--thanktxtl-->
          <div class="thanktxtr">
@@ -65,8 +69,8 @@
            	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.userName, 'followers')}">
 				${talker.followerList.size()}
 			</a>
-             </div>
            </div>
+         </div>
            <!--thanktxtr-->
          <div class="cb"></div>
        </div>

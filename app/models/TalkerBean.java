@@ -31,6 +31,7 @@ import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
+import dao.CommentsDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
 
@@ -216,6 +217,7 @@ public class TalkerBean implements Serializable {
 	private List<TalkerBean> followerList;
 	private List<Action> activityList;
 	private List<CommentBean> profileCommentsList;
+	private List<CommentBean> answerList;
 	
 	//TODO: what's the best solution for partial load?
 	private List<String> followingConvosList;
@@ -381,6 +383,8 @@ public class TalkerBean implements Serializable {
 		parseTopicsInfo((Collection<DBObject>)talkerDBObject.get("topics_info"));
 		
 		parseProfInfo((DBObject)talkerDBObject.get("prof_info"));
+		
+		setAnswerList(CommentsDAO.getTalkerAnswers(getId(), null));
 	}
 	
 	public void parseThankYous(Collection<DBObject> thankYouDBList) {
@@ -1075,5 +1079,10 @@ public class TalkerBean implements Serializable {
 	public void setImNotify(boolean imNotify) {
 		this.imNotify = imNotify;
 	}
-	
+	public List<CommentBean> getAnswerList() {
+		return answerList;
+	}
+	public void setAnswerList(List<CommentBean> answerList) {
+		this.answerList = answerList;
+	}
 }	

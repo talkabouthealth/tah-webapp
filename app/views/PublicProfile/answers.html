@@ -5,82 +5,14 @@
 		
 		#mask { background-color:#e6e6e6; }
 		
-		.commentsreply { padding-left:50px; }
-		.comreply { margin-bottom: 2px }
-		.comtext { font-size: 14px }
-		.comreplytxt { font-size: 14px }
+		.topicfolth1 { font-size: 22px; }
 	</style>
 	
-	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
+	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('.inline-edit').inlineEdit(
-		  		{ hover: '', saveFunction: saveData}
-		  	);
+			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
 		});
-
-		function saveData(dataType, newValue) {
-			if (dataType.indexOf('commentEdit') == 0) {
-				var commentId = dataType.substring(11);
-				
-	   	   		$.post("@{PublicProfile.updateComment()}", 
-	  				{ commentId: commentId, newText: newValue},
-	  				function(html) {
-	  	  				//...
-	  				}
-	  			);
-			}
-		}
-
-		//saveProfileComment(String profileTalkerId, String parentId, String text)
-   		function saveProfileComment(parentId) {
-   	   		var commentText = $("#replytext"+parentId).val();
-   	   		if (commentText === '') {
-   	   	   		alert('Please input comment');
-   	   	   		return;
-   	   		}
-
-   	   		commentText = linkify(commentText);
-   	   	
-   			$("#replytext"+parentId).val("");
-
-   			$.post("@{Actions.saveProfileComment2()}", 
-  				{ profileTalkerId: '${talker.id}', parentId: parentId, text: commentText},
-  				function(html) {
-  	  				$("#firstcommentmessage").hide();
-  					//put comment in the tree
-  					if (parentId == '') {
-  	  					//add as first element in the top
-  						$(html).prependTo($(".commentsarea"));
-
-  	  					//add inline edit for new comment
-  						$('.inline-edit').inlineEdit( { hover: ''} );
-  					}
-  					else {
-  						//add as last element in subtree
-  						$("#reply"+parentId).before($(html));
-  					}
-  				}
-  			);
-
-   			
-  			return false;
-   		}
-
-   		function deleteComment(commentId) {
-   	   		var confirmDel = confirm("Are you sure want to delete this comment?");
-   	   		if (confirmDel) {
-   	   	   		$("#comment"+commentId).remove();
-
-   	   	  		$.post("@{PublicProfile.deleteComment()}", 
-    				{ commentId : commentId},
-    				function(html) {
-    	  				//...
-    				}
-    			);
-   	   		}
-   	   		return false;
-   		}
 	</script>
 		
 <div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
@@ -94,45 +26,19 @@
               <div id="comleft">
                 <div class="comcontent">
                   <div class="topipcWraper">
-                 *{ #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) } }*
-                 #{if true }
-                    <div id="reply" class="comsearchbox">
-                      <div class="comh1" style="font-size:18px">
-                        #{if talker.equals(currentTalker) }
-                        	What are you thinking about or feeling? (To share with the community)
-                        #{/if}
-                        #{else}
-                        	Post a thought for ${talker.userName}. (To share with the community)
-                        #{/else}
-                      	<br />
-                      </div>
-                      <div class="comsearch">
-                        <textarea id="replytext" class="edititinputx" style="width:490px" cols="4" rows="3" ></textarea>
-                      </div>
-                      <input type="submit" src="/public/images/postcomments.jpg" value=" " class="postcomments" 
-                      	onclick="return saveProfileComment('');"/>
-                      #{if firstTimeComment}
-                      	<div class="comh1" style="font-size:14px; clear: both; margin-top: 5px; width: 100%;">
-                      		Your journal is a place for you to share your thoughts and feelings with the TalkAboutHealth community.
-                      	</div>
-                      #{/if}
-                    </div>
-                    <!--comsearchbox-->
-                    <div class="commentsarea" style="clear: both;">
-						#{if talker?.profileCommentsList?.isEmpty() && !talker.equals(currentTalker)}
-							<span id="firstcommentmessage" class="blacktext14">
-								${talker.userName} does not have any Comments, be the first to welcome ${talker.userName}.
-							</span>
-						#{/if}
-						#{profileCommentsTree2 commentsList: talker.profileCommentsList, level: 1, showDelete: talker.equals(currentTalker), isFeed: false /}
-					</div>
-                    <div class="cb"></div>
-                  </div>
-                  	#{/if}
-					#{else}
-						<span class="blacktext14">This information has been made private.</span>
+                  	<div class="topicfolth1">
+	                  	<a href="@{ViewDispatcher.view(talker.userName)}" 
+	                    	class="bluetext20">${talker.userName}'s</a> Answers (${answersFeed.size()}) - Top Answers: ${numOfTopAnswers}
+	                </div>
+                  	#{list items: answersFeed, as: 'answerActivity'}
+                  		#{feedActivity activity: answerActivity, talker: talker /}
+                  	#{/list}
+                  	#{else}
+						<span class="blacktext14">No answers yet, 
+							but we are looking forward to you sharing your experiences and knowledge.</span>
 					#{/else}
-                  <!--topipcWraper-->
+                  	
+                  </div>
                   <div class="cb"></div>
                 </div>
                 <!--comcontent-->
@@ -143,7 +49,6 @@
             #{ set currentPage = 'answers' /}
             #{ include 'PublicProfile/profileRight.html' /}
             
-            <!--mtright-->
             <div class="cb"></div>
           </div>
           <!--mtcover-->
