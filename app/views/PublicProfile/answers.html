@@ -12,6 +12,23 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
+
+			$(".followConvoLink").live('click', function() {
+				var convoId = $(this).attr("rel");
+				if ($(this).html().indexOf("Unfollow") != -1) {
+					$(this).html("Follow");
+				}
+				else {
+					$(this).html("Unfollow");
+				}
+				$.post("@{Conversations.follow()}", 
+	  				{ convoId: convoId},
+	  				function(data) {
+	  					//...
+	  				}
+	  			);
+	  			return false;
+			});
 		});
 	</script>
 		

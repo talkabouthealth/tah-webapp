@@ -150,7 +150,9 @@ public class PublicProfile extends Controller {
 			}
 			
 //			Action answerAction = new StartConvoAction(convo.getTalker(), convo, ActionType.START_CONVO);
-			Action answerAction = new AnswerConvoAction(talker, convo, answer, null, ActionType.ANSWER_CONVO);
+			AnswerConvoAction answerAction = new AnswerConvoAction(talker, convo, answer, null, ActionType.ANSWER_CONVO);
+			answerAction.setTime(answer.getTime());
+			
 			answersFeed.add(answerAction);
 		}
 		
