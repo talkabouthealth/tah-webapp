@@ -272,7 +272,7 @@
    			$("#shareThoughtTextSize").html("0");
 
    			if (text === "" ||
-   		   			text === "What are you thinking about or feeling? (To share with the community)") {
+   		   			text === "What are you thinking or feeling?") {
    	   			alert("Please enter thought");
    	   			return;
    			}
@@ -308,7 +308,7 @@
 			var convoTitle = $("#"+type+"Text").val();
 			if (convoTitle !== "" 
 					&& convoTitle !== "Post a question and receive an answer within a couple of minutes."
-					&& convoTitle !== "Request live support from peers by typing the topic you would like to chat about. Your peers will join with minutes." ) {
+					&& convoTitle !== "Start a live chat by sharing the topic you would like to discuss. Your peers will join within minutes." ) {
 				$("#newConvoTitle").val($("#"+type+"Text").val());
 			}
 			showPopup("#startDialog", 350);
@@ -345,16 +345,16 @@
 						<a href="#">
 		             		<textarea name="textarea" 
 					            class="edititinputx greyarea" rows="1" cols="3" style="width:627px;height:30px; margin: 0px; padding-top: 5px;" 
-					            >What are you thinking about or feeling? (To share with the community)</textarea>
+					            >What are you thinking or feeling?</textarea>
 						</a>
 					</div>
                   	<div id="shareThoughtTabContent" class="topTabContent">	
                   		<div style="float:left;">
 							<textarea id="shareThoughtText" class="edititinputx inline_text greyarea" 
 								onKeyUp=" $('#shareThoughtTextSize').html($(this).val().length);"
-								onfocus="clearTextArea('shareThoughtText', 'What are you thinking about or feeling? (To share with the community)');"
+								onfocus="clearTextArea('shareThoughtText', 'What are you thinking or feeling?');"
 								style="width:627px; height: 70px; margin: 0px; padding: 3px;" cols="4" rows="4" 
-								>What are you thinking about or feeling? (To share with the community)</textarea>
+								>What are you thinking feeling?</textarea>
 						</div>
 						<div style="float: right; padding-top: 5px;">
 							<span id="shareThoughtTextSize" style="font-size: 16px;">0</span>
@@ -380,9 +380,9 @@
                   		<div style="float:left;">
 							<textarea id="startChatText" class="edititinputx inline_text greyarea" 
 								onKeyUp=" $('#startChatTextSize').html($(this).val().length);"
-								onfocus="clearTextArea('startChatText', 'Request live support from peers by typing the topic you would like to chat about. Your peers will join with minutes.');"
+								onfocus="clearTextArea('startChatText', 'Start a live chat by sharing the topic you would like to discuss. Your peers will join within minutes.');"
 								style="width:627px; height: 70px; margin: 0px; padding: 3px;" cols="4" rows="4" 
-								>Request live support from peers by typing the topic you would like to chat about. Your peers will join with minutes.</textarea>
+								>Start a live chat by sharing the topic you would like to discuss. Your peers will join within minutes.</textarea>
 						</div>
 						<div style="float: right; padding-top: 5px;">
 							<span id="startChatTextSize" style="font-size: 16px;">0</span>

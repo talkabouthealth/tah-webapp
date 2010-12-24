@@ -149,34 +149,21 @@
           </div>
           <div class="note">
           	#{if talker.isProf()}
-          		<strong>Why provide profile information?</strong><br/>
-				- We can personalize your experience and recommend topics and conversations most relevant to you.<br/>
-				- Enables community members to find you based on location, health concerns, specialty, etc.<br/>
-				- The more information everyone in the community shares, the more we help each other.<br/>
+          		<strong>Provide profile information so we can personalize your experience:</strong><br/>
+				- Notify you of questions, chats, and information relevant to you.<br/>
+				- Enables others to find you based on location, health concern, specialty, etc.<br/>
 				<br/>
-				<strong>Username visibility.</strong><br/>
-				Your username will be visible to other members. 
-				If you want to remain anonymous, please make your username different than your real name.<br/>
-				<br/>
-				<strong>Is the other profile information I provide private?</strong><br/>
-				Yes. By default, the information you provide is private, including your photo. 
-				You may make your profile viewable to the community by changing you <a href="@{Profile.preferences()}">Privacy Settings</a>.
+				<strong>Your profile info is private by default.</strong><br/>
+				- Update your <a href="@{Profile.preferences()}">privacy settings</a> to share your profile information with the community.<br/>
           	#{/if}
           	#{else}
-          		<strong>Why provide profile information?</strong><br/>
-			  	- We can match you for questions and talks most relevant to you.<br/>
-			  	- Enables other members with similar concerns to find and connect with you.<br/>
-			  	- The more information everyone in the community shares, the more we help each other.<br/>
+          		<strong>Provide profile information so we can personalize your experience:</strong><br/>
+			        - Recommend similar members for you to meet.<br/>	
+                                - Notify you of questions, chats, and information relevant to you.<br/>
 			  	<br/>
-			  	<strong>Username visibility.</strong><br/>
-			  	Your username will be visible to other members. 
-			  	If you want to remain anonymous, please make your username different than your real name.<br/>
-			  	<br/>
-			  	<strong>Is the other profile information I provide private?</strong><br/>
-			  	Yes. By default, the information you provide is private.
-			  	You may make your profile viewable by the community by changing your <a href="@{Profile.preferences()}">Privacy Settings</a>.
+			  	<strong>Your profile is private by default.</strong><br/>
+			  	- Update your <a href="@{Profile.preferences()}">privacy settings</a> to share your profile information with the community.<br/>
           	#{/else}
-		  	<br/>
 		  	<br/>
           </div>
           <div class="cb"></div>
