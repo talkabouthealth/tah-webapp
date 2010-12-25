@@ -108,7 +108,9 @@ public class Explore extends Controller {
 	}
 
 	public static void conversations(String action) {
-		Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null);
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		boolean loggedIn = (talker != null);
+		Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, loggedIn);
 		
 		//- "Popular Conversations" - ordered by page views
 		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations();
@@ -121,7 +123,7 @@ public class Explore extends Controller {
 		});
 		
 		if (action == null) {
-			action = "active";
+			action = "feed";
 		}
 		render(action, communityFeed, popularConvos);
 	}

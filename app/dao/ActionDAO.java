@@ -88,6 +88,11 @@ public class ActionDAO {
 		);
 	private static final EnumSet<ActionType> TOPIC_FEED_ACTIONS = COMMUNITY_CONVO_FEED_ACTIONS;
 	
+	//Talker feed doesn't contain this elements
+	private static final EnumSet<ActionType> TALKER_FEED_ACTIONS = EnumSet.complementOf(
+			EnumSet.of(ActionType.UPDATE_BIO, ActionType.UPDATE_HEALTH, ActionType.UPDATE_PERSONAL)
+		);
+	
 	public static final String ACTIVITIES_COLLECTION = "activities";
 	
 	public static List<Action> load(String talkerId) {
@@ -204,11 +209,15 @@ public class ActionDAO {
 		return activitiesSet;
 	}
 	
-	public static List<Action> loadCommunityFeed(String nextActionId) {
+	public static List<Action> loadCommunityFeed(String nextActionId, boolean loggedIn) {
 		//list of needed actions for this Feed
 		Set<String> actionTypes = new HashSet<String>();
 		for (ActionType actionType : COMMUNITY_CONVO_FEED_ACTIONS) {
 			actionTypes.add(actionType.toString());
+		}
+		if (!loggedIn) {
+			//not logged in users can't see Thoughts
+			actionTypes.remove(ActionType.PERSONAL_PROFILE_COMMENT.toString());
 		}
 		
 		Date firstActionTime = null;
@@ -247,11 +256,18 @@ public class ActionDAO {
 			firstActionTime = getActionTime(nextActionId);
 		}
 		
+		Set<String> actionTypes = new HashSet<String>();
+		for (ActionType actionType : TALKER_FEED_ACTIONS) {
+			actionTypes.add(actionType.toString());
+		}
+		
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		BasicDBObjectBuilder queryBuilder = 
-			BasicDBObjectBuilder.start().add("uid", talkerRef);
+			BasicDBObjectBuilder.start()
+				.add("uid", talkerRef)
+				.add("type", new BasicDBObject("$in", actionTypes));
 		if (firstActionTime != null) {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
 		}

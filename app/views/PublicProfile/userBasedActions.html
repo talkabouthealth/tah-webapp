@@ -14,6 +14,7 @@
 		   		"following" : "tab3",
 		   		"followers" : "tab4" 
 			}
+		var perPage = 16;
 		
    		$(document).ready(function() {
    			//Default Action
@@ -56,7 +57,6 @@
 		   			}
 	   			});
 
-			
 			//--- Thanks you's ---
 			$("#displayThankYouText").click(function() {
    				$('#leavethankyouText').toggle(); 
@@ -64,8 +64,40 @@
    				return false;
 	   		});
 
+			prepareList("thankyous");
+			prepareList("following");
+			prepareList("follower");
+
 			$('.moretext').truncatable({ limit: 80, more: '... more', less: true, hideText: '' }); 
    		});
+
+   		function prepareList(type) {
+   	   		$("#"+type+"List").children().each(
+   	    	   		function(i, item) {
+   	   	    	   		if (perPage <= i) {
+   	   	   	    	   		$(item).css("display", "none");
+   	   	    	   		}
+   	   	    	   		//if needed - show More button
+   	   	    	   		if (i == perPage) {
+   	   	   	    	   		$("#"+type+"MoreBtn").show();
+   	   	    	   		}
+   	    	   		}
+   	    	   	);
+   		}
+
+   		function showMore(type) {
+   			$("#"+type+"List").children(":hidden").each(
+   	    	   		function(i, item) {
+   	   	    	   		if (perPage > i) {
+   	   	   	    	   		$(item).css("display", "block");
+   	   	    	   		}
+   	    	   		}
+   	    	   	);
+	    	if ($("#"+type+"List").children(":hidden").size() == 0) {
+	    		$("#"+type+"MoreBtn").hide();
+	    	}
+	    	return false;
+   		}
 
    		function updateCommentState(newState) {
    	   		if (newState == 'Initial') {
@@ -163,8 +195,8 @@
 			width:250px;
 		}
 		
-		.headingarea, .thnksarea2, .thnksbottom {
-			width: 550px !important;
+		.headingarea, .thnksarea2, .thnksarea, .thnksbottom {
+			width: 610px !important;
 		}
 	</style>
 </head>
@@ -197,9 +229,6 @@
 											class="bluetext14">Give ${talker.userName} a "Thank you"</a>
 									#{/if}
 					      		</div>
-					      		#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
-#{ publicprofile/paging totalSize: talker.thankYouList.size(), from: thankyousFrom, perPage: perPage, action: 'thankyous', talker: talker /}
-						        #{/if}
 						    </div>
 				            <div id="leavethankyouText" style="display:none">
 								<ul>
@@ -217,9 +246,9 @@
 									</li> 
 								</ul>
 							</div>
-				            <div class="thnksarea2">
+				            <div id="thankyousList" class="thnksarea2">
 				            	#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
-									#{list items:talker.thankYouList.limit(thankyousFrom, perPage), as:'thankYou'}
+									#{list items:talker.thankYouList, as:'thankYou'}
 										#{ thanksThankYou thankYou: thankYou /}
 									#{/list}
 								#{/if}
@@ -227,11 +256,17 @@
 									<span class="blacktext14" style="margin: 30px 0; float: left">This information has been made private.</span>
 								#{/else}
 				            </div>
+				            
+	                        <input id="thankyousMoreBtn" type="submit" value="" class="seemorecom" 
+	                        	style="margin-left: 50px; display: none;" onclick="return showMore('thankyous');"  />
+								
+							*{
 				            <div class="thnksbottom">
 				            	#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
 #{ publicprofile/paging totalSize: talker.thankYouList.size(), from: thankyousFrom, perPage: perPage, action: 'thankyous', talker: talker /}				      			
 					        	#{/if}
 				            </div>
+				            }*
 			        	</div>
 			        	</div>
 			        
@@ -241,13 +276,10 @@
 					            <div class="tabheading">
 					            	<span class="blacktext25">Following <strong>(${talker.followingList.size()})</strong></span> 
 					            </div>
-					            #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
-#{ publicprofile/paging totalSize: talker.followingList.size(), from: followingFrom, perPage: perPage, action: 'following', talker: talker /}
-						        #{/if}
 				            </div>
-				            <div class="thnksarea">
+				            <div id="followingList" class="thnksarea">
 				            	#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
-									#{list items:talker.followingList.limit(followingFrom, perPage), as:'following' }
+									#{list items:talker.followingList, as:'following' }
 										#{talkerInList talker: following, currentTalker: currentTalker /}
 									#{/list}
 								#{/if}
@@ -255,11 +287,17 @@
 									<span class="blacktext14">This information has been made private.</span>
 								#{/else}
 				            </div>
+				            
+				            <input id="followingMoreBtn" type="submit" value="" class="seemorecom" 
+	                        	style="margin-left: 50px; display: none;" onclick="return showMore('following');"  />
+	                        	
+				            *{
 				            <div class="thnksbottom">
 				            	#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
 #{ publicprofile/paging totalSize: talker.followingList.size(), from: followingFrom, perPage: perPage, action: 'following', talker: talker /}
 						        #{/if}
 				            </div>
+				            }*
 			        	</div>
 				        </div>
 				        
@@ -269,13 +307,10 @@
 					            <div class="tabheading">
 					            	<span class="blacktext25">Followers <strong>(${talker.followerList.size()})</strong></span> 
 					            </div>
-					            #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWERS) }
-#{ publicprofile/paging totalSize: talker.followerList.size(), from: followersFrom, perPage: perPage, action: 'followers', talker: talker /}
-						        #{/if}
 				            </div>
-				            <div class="thnksarea">
+				            <div id="followerList" class="thnksarea">
 				            	#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWERS) }
-									#{list items:talker.followerList.limit(followersFrom, perPage), as:'follower' }
+									#{list items:talker.followerList, as:'follower' }
 										#{talkerInList talker: follower, currentTalker: currentTalker /}
 									#{/list}
 								#{/if}
@@ -283,11 +318,17 @@
 									<span class="blacktext14">This information has been made private.</span>
 								#{/else}
 			        		</div>
+			        		
+			        		<input id="followerMoreBtn" type="submit" value="" class="seemorecom" 
+	                        	style="margin-left: 50px; display: none;" onclick="return showMore('follower');"  />
+			        		
+			        		*{
 		            		<div class="thnksbottom">
 		            			#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWERS) }
 #{ publicprofile/paging totalSize: talker.followerList.size(), from: followersFrom, perPage: perPage, action: 'followers', talker: talker /}
 						        #{/if}
 		            		</div>
+		            		}*
 			        	</div>
     					</div>
     				</div>

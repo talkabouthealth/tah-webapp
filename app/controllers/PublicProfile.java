@@ -18,8 +18,10 @@ import models.ConversationBean;
 import models.TalkerTopicInfo;
 import models.TopicBean;
 import models.CommentBean.Vote;
+import models.TalkerBean.ProfilePreference;
 import models.actions.Action;
 import models.actions.AnswerConvoAction;
+import models.actions.AnswerDisplayAction;
 import models.actions.FollowConvoAction;
 import models.actions.FollowTalkerAction;
 import models.actions.GiveThanksAction;
@@ -131,10 +133,9 @@ public class PublicProfile extends Controller {
 		
 		TalkerLogic.preloadTalkerInfo(talker);
 		
-		List<CommentBean> allAnswers = CommentsDAO.getTalkerAnswers(talker.getId(), null);
-		
 		List<Action> answersFeed = new ArrayList<Action>();
 		int numOfTopAnswers = 0;
+		List<CommentBean> allAnswers = CommentsDAO.getTalkerAnswers(talker.getId(), null);
 		for (CommentBean answer : allAnswers) {
 			ConversationBean convo = ConversationDAO.getByConvoId(answer.getConvoId());
 			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
@@ -143,14 +144,25 @@ public class PublicProfile extends Controller {
 				numOfTopAnswers++;
 			}
 			
-//			Action answerAction = new StartConvoAction(convo.getTalker(), convo, ActionType.START_CONVO);
-			AnswerConvoAction answerAction = new AnswerConvoAction(talker, convo, answer, null, ActionType.ANSWER_CONVO);
+			AnswerDisplayAction answerAction = new AnswerDisplayAction(convo.getTalker(), convo, answer, ActionType.ANSWER_CONVO);
 			answerAction.setTime(answer.getTime());
 			
 			answersFeed.add(answerAction);
 		}
 		
-		render(talker, currentTalker, answersFeed, numOfTopAnswers);
+//		If user has not filled out their Health Info, also display the message
+		boolean noHealthInfo = false;
+		if (currentTalker.equals(talker)) {
+			EnumSet<ActionType> userActionTypes = EnumSet.noneOf(ActionType.class);
+			for (Action action : talker.getActivityList()) {
+				userActionTypes.add(action.getType());
+			}
+			if (!talker.isProf() && !userActionTypes.contains(ActionType.UPDATE_HEALTH)) {
+				noHealthInfo = true;
+			}
+		}
+		
+		render(talker, currentTalker, answersFeed, numOfTopAnswers, noHealthInfo);
 	}
 	
 	public static void conversations(String userName) {

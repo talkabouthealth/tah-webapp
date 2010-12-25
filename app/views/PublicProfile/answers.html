@@ -41,19 +41,29 @@
           <div id="innerpersonalareaz">
             <div id="mtcover">
               <div id="comleft">
-                <div class="comcontent">
+                <div class="comcontent" style="width: 650px;">
                   <div class="topipcWraper">
                   	<div class="topicfolth1">
 	                  	<a href="@{ViewDispatcher.view(talker.userName)}" 
-	                    	class="bluetext20">${talker.userName}'s</a> Answers (${answersFeed.size()}) - Top Answers: ${numOfTopAnswers}
+	                    	class="bluetext20">${talker.userName}'s</a> Answers (${answersFeed.size()}) 
+	                    #{if answersFeed.size() > 0}
+	                    	- Top Answers: ${numOfTopAnswers}
+	                    #{/if} 
 	                </div>
+	                
+	                #{if answersFeed.size() == 0 && talker.equals(currentTalker) }
+						<span class="blacktext14">No answers yet, 
+							but we are looking forward to you sharing your experiences and knowledge.</span>
+						<br/><br/>
+					#{/if}
+	                #{if noHealthInfo}
+	                	<span class="blacktext14">Please fill out your Health Information 
+	                		so that we can recommend conversations to answer.</span>
+                  	#{/if}
+                  	
                   	#{list items: answersFeed, as: 'answerActivity'}
                   		#{feedActivity activity: answerActivity, talker: talker /}
                   	#{/list}
-                  	#{else}
-						<span class="blacktext14">No answers yet, 
-							but we are looking forward to you sharing your experiences and knowledge.</span>
-					#{/else}
                   	
                   </div>
                   <div class="cb"></div>

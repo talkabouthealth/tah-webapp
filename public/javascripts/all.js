@@ -108,6 +108,8 @@ $(document).ready(function() {
  					followLink.html(data);
  				}
  			);
+  			
+  			return false;
 		});
 	
 	//if close button is clicked

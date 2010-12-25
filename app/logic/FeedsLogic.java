@@ -59,7 +59,7 @@ public class FeedsLogic {
 		return convoFeed;
 	}
 	
-	public static Set<Action> getCommunityFeed(String afterActionId) {
+	public static Set<Action> getCommunityFeed(String afterActionId, boolean loggedIn) {
 		Set<Action> communityFeed = new LinkedHashSet<Action>();
 		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();
 		
@@ -67,7 +67,7 @@ public class FeedsLogic {
 		String nextActionId = null;
 		boolean canAdd = (afterActionId == null);
 		while (true) {
-			List<Action> communityFeedActions = ActionDAO.loadCommunityFeed(nextActionId);
+			List<Action> communityFeedActions = ActionDAO.loadCommunityFeed(nextActionId, loggedIn);
 			if (communityFeedActions.size() == 0) {
 				//no more feeds
 				break;

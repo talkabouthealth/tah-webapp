@@ -57,7 +57,7 @@ public class Home extends Controller {
 //		}
 		
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
-    	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null);
+    	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
     	
 		
 		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
@@ -161,7 +161,7 @@ public class Home extends Controller {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
     	Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
-    	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null);
+    	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
     	
 		TalkerLogic.preloadTalkerInfo(talker);
 		
@@ -170,13 +170,14 @@ public class Home extends Controller {
     
     public static void feedAjaxLoad(String feedType, String afterActionId) {
     	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
+    	boolean loggedIn = (_talker != null);
     	
     	Set<Action> _convoFeed = null;
     	if ("convoFeed".equalsIgnoreCase(feedType)) {
     		_convoFeed = FeedsLogic.getConvoFeed(_talker, afterActionId);
     	}
     	else if ("communityFeed".equalsIgnoreCase(feedType)) {
-    		_convoFeed = FeedsLogic.getCommunityFeed(afterActionId);
+    		_convoFeed = FeedsLogic.getCommunityFeed(afterActionId, loggedIn);
     	}
     	else {
     		_convoFeed = FeedsLogic.getTalkerFeed(_talker, afterActionId);
