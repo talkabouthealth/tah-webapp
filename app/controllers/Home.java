@@ -45,7 +45,6 @@ public class Home extends Controller {
 	//TODO: remove 'newTopic'
     public static void index(String newTopic) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		
 		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
 		
@@ -89,8 +88,7 @@ public class Home extends Controller {
 		}
 		session.remove("justregistered");
 		
-		talker.setActivityList(ActionDAO.load(talker.getId()));
-		TalkerLogic.calculateProfileCompletion(talker);
+		TalkerLogic.preloadTalkerInfo(talker);
 		
 //		Yes, for HealthInfo, let's use all of the data. 
 //		For Profile info, we can use gender, age, marital status, number of children, and ages of children.
@@ -161,14 +159,11 @@ public class Home extends Controller {
     
     public static void conversationFeed() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		
     	Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null);
     	
-    	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-		talker.setActivityList(ActionDAO.load(talker.getId()));
-		TalkerLogic.calculateProfileCompletion(talker);
+		TalkerLogic.preloadTalkerInfo(talker);
 		
 		render(talker, convoFeed, communityFeed);
     }

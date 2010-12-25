@@ -96,11 +96,12 @@ public class ActionDAO {
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		DBObject query = new BasicDBObject("uid", talkerRef);
 		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(34).toArray();
+			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
 		List<Action> activitiesList = new ArrayList<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {
-			Action action = actionFromDB(actionDBObject);
+			//we need only type & conversation
+			Action action = new PreloadAction(actionDBObject);
 			activitiesList.add(action);
 		}
 		return activitiesList;

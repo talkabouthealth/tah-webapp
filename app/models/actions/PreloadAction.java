@@ -4,6 +4,7 @@ import java.util.Date;
 
 import models.ConversationBean;
 import models.TalkerBean;
+import models.actions.Action.ActionType;
 
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
@@ -20,12 +21,14 @@ public class PreloadAction implements Action {
 	
 	protected String id;
 	protected ConversationBean convo;
+	protected ActionType type;
 	protected DBObject dbObject;
 
 	public PreloadAction(DBObject dbObject) {
 		this.dbObject = dbObject;
 		
 		setId(dbObject.get("_id").toString());
+		setType(ActionType.valueOf((String)dbObject.get("type")));
 		
 		DBRef convoRef = (DBRef)dbObject.get("convoId");
 		if (convoRef != null) {
@@ -47,7 +50,7 @@ public class PreloadAction implements Action {
 
 	@Override
 	public ActionType getType() {
-		return null;
+		return type;
 	}
 
 	@Override
@@ -71,6 +74,10 @@ public class PreloadAction implements Action {
 
 	public void setConvo(ConversationBean convo) {
 		this.convo = convo;
+	}
+	
+	public void setType(ActionType type) {
+		this.type = type;
 	}
 
 	public Action getFullAction() {

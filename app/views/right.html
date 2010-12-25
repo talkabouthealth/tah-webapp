@@ -156,7 +156,7 @@
  	#{/if}
  	}*
  	
- 	#{if talker.userName.equals(session.username) }
+ 	#{if talker.userName.equals(session.username) && talker.profileCompletionValue != 100 }
               <div class="profilecompletion">
                 <div class="mtrighttxt1">Profile Completion</div>
                 <!-- 

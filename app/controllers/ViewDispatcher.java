@@ -127,11 +127,6 @@ public class ViewDispatcher extends Controller {
 		
 		Logger.error("After health");
 		
-		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-		Logger.error("After 1");
-		talker.setActivityList(ActionDAO.load(talker.getId()));
-		Logger.error("After 2");
-		
 //		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
 //		talker.setFollowingConvosFullList(TalkerDAO.loadFollowingConversations(talker.getId()));
 		
@@ -140,7 +135,7 @@ public class ViewDispatcher extends Controller {
 		
 		Logger.error("After lists");
 		
-		TalkerLogic.calculateProfileCompletion(talker);
+		TalkerLogic.preloadTalkerInfo(talker);
 		
 		boolean notProvidedInfo = false;
 		boolean notViewableInfo = false;

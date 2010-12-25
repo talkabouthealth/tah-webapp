@@ -54,10 +54,8 @@ public class PublicProfile extends Controller {
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
 		notFoundIfNull(talker);
 		
-		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
-		talker.setActivityList(ActionDAO.load(talker.getId()));
-		TalkerLogic.calculateProfileCompletion(talker);
+		TalkerLogic.preloadTalkerInfo(talker);
 		
 		render(talker, currentTalker, action, from);
 	}
@@ -67,10 +65,8 @@ public class PublicProfile extends Controller {
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
 		notFoundIfNull(talker);
 		
-		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
-		talker.setActivityList(ActionDAO.load(talker.getId()));
-		TalkerLogic.calculateProfileCompletion(talker);
+		TalkerLogic.preloadTalkerInfo(talker);
 		
 		//If the user views his own thoughts he should see the following text under the text box 
 		//until the user posts for the first time (even if another user posts first, this should still appear):
@@ -133,9 +129,7 @@ public class PublicProfile extends Controller {
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
 		notFoundIfNull(talker);
 		
-		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-		talker.setActivityList(ActionDAO.load(talker.getId()));
-		TalkerLogic.calculateProfileCompletion(talker);
+		TalkerLogic.preloadTalkerInfo(talker);
 		
 		List<CommentBean> allAnswers = CommentsDAO.getTalkerAnswers(talker.getId(), null);
 		
@@ -173,10 +167,8 @@ public class PublicProfile extends Controller {
 		List<ConversationBean> joinedList = 
 			ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO);
 		
-		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
-		talker.setActivityList(ActionDAO.load(talker.getId()));
-		TalkerLogic.calculateProfileCompletion(talker);
+		TalkerLogic.preloadTalkerInfo(talker);
 		
 		render(talker, currentTalker, followingList, startedList, joinedList);
 	}
@@ -234,10 +226,7 @@ public class PublicProfile extends Controller {
 			talkerTopicInfo.setNumOfAnswers(answers.size());
 		}
 		
-		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-		//TODO: we need it only for Profile Completion calculation?
-		talker.setActivityList(ActionDAO.load(talker.getId()));
-		TalkerLogic.calculateProfileCompletion(talker);
+		TalkerLogic.preloadTalkerInfo(talker);
 		
 		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
 		

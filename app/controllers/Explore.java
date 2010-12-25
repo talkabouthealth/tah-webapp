@@ -35,9 +35,7 @@ public class Explore extends Controller {
 	public static void openQuestions() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	if (talker != null) {
-    		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-    		talker.setActivityList(ActionDAO.load(talker.getId()));
-    		TalkerLogic.calculateProfileCompletion(talker);
+    		TalkerLogic.preloadTalkerInfo(talker);
     	}
 		
 		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions();
@@ -47,9 +45,7 @@ public class Explore extends Controller {
     public static void liveTalks() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	if (talker != null) {
-    		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-    		talker.setActivityList(ActionDAO.load(talker.getId()));
-    		TalkerLogic.calculateProfileCompletion(talker);
+    		TalkerLogic.preloadTalkerInfo(talker);
     	}
     	
     	//TwitterUtil.importTweets((String)session.get("twitter_token"), (String)session.get("twitter_token_secret"));

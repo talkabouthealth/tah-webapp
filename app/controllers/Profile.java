@@ -74,10 +74,7 @@ public class Profile extends Controller {
     public static void edit(boolean verifiedEmail) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
-    	//TODO move to one logic method - info is the same
-    	talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-    	talker.setActivityList(ActionDAO.load(talker.getId()));
-		TalkerLogic.calculateProfileCompletion(talker);
+		TalkerLogic.preloadTalkerInfo(talker);
 		
     	render(talker, verifiedEmail);
     }
@@ -124,9 +121,7 @@ public class Profile extends Controller {
 			talker.setFollowingTopicsList(oldTalker.getFollowingTopicsList());
 			talker.setThankYouList(oldTalker.getThankYouList());
 			talker.setFollowingList(oldTalker.getFollowingList());
-			talker.setFollowerList(TalkerDAO.loadFollowers(oldTalker.getId()));
-	    	talker.setActivityList(ActionDAO.load(oldTalker.getId()));
-			TalkerLogic.calculateProfileCompletion(talker);
+			TalkerLogic.preloadTalkerInfo(talker);
 			
 			//flash.success("");
 			//render("@edit", talker);
@@ -230,14 +225,6 @@ public class Profile extends Controller {
 //			oldTalker.setConnectionVerified(false);
 //		}
 		
-		
-		
-//		flash.success("ok");
-//		talker = oldTalker;
-//		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-//    	talker.setActivityList(ActionDAO.load(talker.getId()));
-//		TalkerLogic.calculateProfileCompletion(talker);
-//		render("@edit", talker);
 		renderText("ok");
 	}
 	
@@ -352,9 +339,7 @@ public class Profile extends Controller {
 			CommonUtil.updateTalker(talker, session);
 		}
 		
-		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-    	talker.setActivityList(ActionDAO.load(talker.getId()));
-		TalkerLogic.calculateProfileCompletion(talker);
+		TalkerLogic.preloadTalkerInfo(talker);
 		
 		render(talker, profilePreferences);
 	}
@@ -385,9 +370,7 @@ public class Profile extends Controller {
 	public static void notifications() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-    	talker.setActivityList(ActionDAO.load(talker.getId()));
-		TalkerLogic.calculateProfileCompletion(talker);
+		TalkerLogic.preloadTalkerInfo(talker);
 		
 		String error = params.get("err");
 		if (error != null) {
@@ -609,9 +592,7 @@ public class Profile extends Controller {
 			healthItemsMap.put(itemName, healthItem);
 		}
 		
-		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-    	talker.setActivityList(ActionDAO.load(talker.getId()));
-		TalkerLogic.calculateProfileCompletion(talker);
+		TalkerLogic.preloadTalkerInfo(talker);
 		
 		render(talker, talkerDisease, disease, healthItemsMap);
 	}
@@ -635,19 +616,12 @@ public class Profile extends Controller {
 		talkerDisease.setDiagnoseDate(diagnoseDate);
 		
 		//Automatically follow topics based on HealthInfo
-		//Let's only have this happen the first session the user updates their Health Info
-		if (TalkerDiseaseDAO.getByTalkerId(talker.getId()) == null) {
-			session.put("firstHealthInfo", true);
-		}
-		
-		if (session.contains("firstHealthInfo")) {
-			List<TopicBean> recommendedTopics = TalkerLogic.getRecommendedTopics(talkerDisease);
-			if (!recommendedTopics.isEmpty()) {
-				for (TopicBean topic : recommendedTopics) {
-					talker.getFollowingTopicsList().add(topic);
-				}
-				CommonUtil.updateTalker(talker, session);
+		List<TopicBean> recommendedTopics = TalkerLogic.getRecommendedTopics(talkerDisease);
+		if (!recommendedTopics.isEmpty()) {
+			for (TopicBean topic : recommendedTopics) {
+				talker.getFollowingTopicsList().add(topic);
 			}
+			CommonUtil.updateTalker(talker, session);
 		}
 		
 		//Save or update

@@ -8,7 +8,9 @@ import java.util.Map;
 import java.util.Set;
 
 import play.templates.JavaExtensions;
+import dao.ActionDAO;
 import dao.HealthItemDAO;
+import dao.TalkerDAO;
 import dao.TopicDAO;
 
 import util.CommonUtil;
@@ -107,6 +109,14 @@ public class TalkerLogic {
 		}
 	}
 	
+	//TODO: move to parse? & update name?
+	public static void preloadTalkerInfo(TalkerBean talker) {
+		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+		talker.setActivityList(ActionDAO.load(talker.getId()));
+		
+		calculateProfileCompletion(talker);
+	}
+	
 	public static void calculateProfileCompletion(TalkerBean talker) {
 		//check what items are completed
 		EnumSet<ProfileCompletion> profileActions = EnumSet.of(ProfileCompletion.BASIC);
@@ -119,12 +129,16 @@ public class TalkerLogic {
 			ActionType type = action.getType();
 			switch (type) {
 			case START_CONVO:
-				if (action.getConvo().getConvoType() == ConvoType.CONVERSATION) {
-					profileActions.add(ProfileCompletion.START_OR_JOIN_TALK);
-				}
-				else {
-					profileActions.add(ProfileCompletion.ASK_QUESTION);
-				}
+				//TODO: different actions?
+				profileActions.add(ProfileCompletion.START_OR_JOIN_TALK);
+				profileActions.add(ProfileCompletion.ASK_QUESTION);
+				
+//				if (action.getConvo().getConvoType() == ConvoType.CONVERSATION) {
+//					profileActions.add(ProfileCompletion.START_OR_JOIN_TALK);
+//				}
+//				else {
+//					profileActions.add(ProfileCompletion.ASK_QUESTION);
+//				}
 				break;
 			case JOIN_CONVO:
 			case RESTART_CONVO:

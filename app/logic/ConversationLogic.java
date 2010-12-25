@@ -38,7 +38,7 @@ import models.actions.Action.ActionType;
 
 public class ConversationLogic {
 	
-	public static final String DEFAULT_TALK_TOPIC = "Talks";
+	public static final String DEFAULT_TALK_TOPIC = "Chats";
 	public static final String DEFAULT_QUESTION_TOPIC = "Unorganized";
 	
 	public static ConversationBean createConvo(ConvoType type, String title, 
