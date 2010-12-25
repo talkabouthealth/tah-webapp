@@ -466,7 +466,7 @@
 							#{if talkerFeed.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
 								<div class="replytommentbox" id="talkerFeedBtn">
 		                          <input type="submit" src="images/seemore.jpg" 
-		                          	onclick="return loadMoreFeed('talkerFeed');" value=" " class="seemorecom" />
+		                          	onclick="return loadMoreFeed('talkerFeed', '${talker.userName}');" value=" " class="seemorecom" />
 		                        </div>
 							#{/if}
 								

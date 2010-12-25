@@ -287,11 +287,11 @@ function extractLast( term ) {
 
 
 
-function loadMoreFeed(type) {
+function loadMoreFeed(type, talkerName) {
 	var lastActionId = $("#"+type+"List").children().last().attr("id");
 
 	//public static void conversationFeedAjax(String afterActionId) {
-	$.get("/home/feedAjaxLoad", {afterActionId: lastActionId, feedType: type},
+	$.get("/home/feedAjaxLoad", {afterActionId: lastActionId, feedType: type, talkerName: talkerName},
 			function(data) {
 				var feedSize = $(data).find(".joinpic").size();
 				if (feedSize < feedsPerPage) {

@@ -168,7 +168,7 @@ public class Home extends Controller {
 		render(talker, convoFeed, communityFeed);
     }
     
-    public static void feedAjaxLoad(String feedType, String afterActionId) {
+    public static void feedAjaxLoad(String feedType, String afterActionId, String talkerName) {
     	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
     	boolean loggedIn = (_talker != null);
     	
@@ -180,7 +180,10 @@ public class Home extends Controller {
     		_convoFeed = FeedsLogic.getCommunityFeed(afterActionId, loggedIn);
     	}
     	else {
-    		_convoFeed = FeedsLogic.getTalkerFeed(_talker, afterActionId);
+    		TalkerBean profileTalker = TalkerDAO.getByUserName(talkerName);
+    		if (profileTalker != null) {
+    			_convoFeed = FeedsLogic.getTalkerFeed(profileTalker, afterActionId);
+    		}
     	}
     	
     	render("tags/convoFeedList.html", _convoFeed, _talker);
