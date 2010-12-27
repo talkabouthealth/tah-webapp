@@ -306,7 +306,6 @@ public class CommonUtil {
 		String anonymName = namesMap.get(userName);
 		if (anonymName == null) {
 			anonymName = generateDeactivatedUserName(true);
-			//TODO: check if this anonynName is unique on the current page?
 			namesMap.put(userName, anonymName);
 		}
 		

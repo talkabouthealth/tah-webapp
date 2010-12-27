@@ -13,7 +13,6 @@ import dao.ActionDAO;
 import dao.CommentsDAO;
 
 /**
- * TODO: make better description?
  * Used for pre-loading actions before filtering
  *
  */

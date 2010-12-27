@@ -97,7 +97,6 @@ public class Profile extends Controller {
 			talker.setChildrenNum(childrenNum);
 		}
 		
-		//FIXME: validate for empty name
 		String oldUserName = oldTalker.getUserName();
 		if (!oldUserName.equals(talker.getUserName())) {
 			boolean nameNotExists = !ApplicationDAO.isURLNameExists(talker.getUserName());
@@ -114,7 +113,7 @@ public class Profile extends Controller {
 		
 		if(validation.hasErrors()) {
 			//prepare info for displaying page
-			//TODO: it's not good?
+			talker.setId(oldTalker.getId());
 			talker.setProfInfo(oldTalker.getProfInfo());
 			talker.setHiddenHelps(oldTalker.getHiddenHelps());
 			talker.saveProfilePreferences(oldTalker.loadProfilePreferences());
@@ -136,7 +135,6 @@ public class Profile extends Controller {
 		}
 		
 		if (oldTalker.isProf()) {
-			//TODO: check all notifications/
 			oldTalker.setUserName(talker.getUserName());
 			oldTalker.setDob(dateOfBirth);
 			oldTalker.setGender(talker.getGender());
@@ -740,7 +738,6 @@ public class Profile extends Controller {
 		notFoundIfNull(verifyCode);
 		
 		TalkerBean talker = TalkerDAO.getByVerifyCode(verifyCode);
-		//TODO: better error reply?
 		notFoundIfNull(talker);
 		
 		if (verifyCode.equals(talker.getVerifyCode())) {

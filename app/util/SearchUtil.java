@@ -50,7 +50,6 @@ public class SearchUtil {
 //			System.out.println(hits.score(i));
 //			System.out.println(doc.get("uname")+" : "+doc.get("id"));
 			
-			//TODO hide bio and health details
 //			String result = doc.get("uname");
 //			String bio = doc.get("bio");
 //			if (bio != null) {
@@ -135,7 +134,6 @@ public class SearchUtil {
 
 	
 	//TODO: update Lucene and queries to most recent version
-	//TODO: check MoreLikeThis again
 	public static List<ConversationBean> getRelatedConvos(ConversationBean searchedConvo) throws Exception {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"conversations");
 //		MoreLikeThis mlt = new MoreLikeThis(is.getIndexReader());

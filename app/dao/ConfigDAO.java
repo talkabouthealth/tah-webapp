@@ -35,8 +35,7 @@ public class ConfigDAO {
 		DBObject query = new BasicDBObject("name", name);
 		DBObject configDBObject = configsColl.findOne(query);
 		if (configDBObject == null) {
-			//TODO: if config not found? return false ?
-			return false;
+			throw new IllegalArgumentException("Config with name '"+name+"' wasn't found.");
 		}
 		else {
 			return (Boolean)configDBObject.get("value");

@@ -73,7 +73,7 @@ public class DiseaseDAO {
 		return disease;
 	}
 	
-	//TODO: later we need select by Id of disease, not by name
+	//NOTE: later we need select by Id of disease, not by name
 	public static List<String> getValuesByDisease(String type, String diseaseName) {
 		DBCollection diseasesColl = getCollection(DISEASES_COLLECTION);
 		

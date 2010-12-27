@@ -170,9 +170,8 @@ public class PublicProfile extends Controller {
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
 		notFoundIfNull(talker);
 		
-		//TODO: check permissions?
-		//TODO: use sets?
-		//TODO: not here - wildcards in related convos!
+		//TODO: check permissions and use sets?
+		//TODO: not here - wildcards in related convos! - error
 		List<ConversationBean> followingList = TalkerDAO.loadFollowingConversations(talker.getId());
 		List<ConversationBean> startedList = 
 			ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO);
@@ -248,7 +247,7 @@ public class PublicProfile extends Controller {
 	}
 	
 	public static void recommendedTopicsAjaxLoad(String afterId) {
-		//FIXME: improve speed?
+		//TODO: improve speed?
     	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
     	TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(_talker.getId());
     	

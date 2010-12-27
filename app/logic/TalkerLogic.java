@@ -121,10 +121,6 @@ public class TalkerLogic {
 		//check what items are completed
 		EnumSet<ProfileCompletion> profileActions = EnumSet.of(ProfileCompletion.BASIC);
 		
-		//TODO: if user deletes info after entering?
-//		COMPLETE_PERSONAL(15, "Complete your Personal Info to get to "),
-//		COMPLETE_HEALTH(10, "Complete your Health Details to get to "),
-		
 		for (Action action : talker.getActivityList()) {
 			ActionType type = action.getType();
 			switch (type) {

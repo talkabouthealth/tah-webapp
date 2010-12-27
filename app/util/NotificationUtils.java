@@ -84,7 +84,7 @@ public class NotificationUtils {
 	}
 	
 	public static void sendTwitterNotifications(String convoId, String restartTalkerId) {
-		//TODO: 2 per day?
+		//TODO: we must send only 2 notifications per day?
 		
 		ConversationBean convo = ConversationDAO.getByConvoId(convoId);
 		TalkerBean restartTalker = null;
@@ -140,7 +140,6 @@ public class NotificationUtils {
 	
 	public static void sendEmailNotification(EmailSetting emailSetting, 
 			TalkerBean talker, Map<String, String> vars) {
-		//TODO: make "StopFollowing" page for conversation emails?
 		if (talker.loadEmailSettings().contains(emailSetting)) {
 			vars.put("username", talker.getUserName());
 			

@@ -145,7 +145,6 @@ public class ConversationDAO {
 	
 	
 	//----------------------- Query methods ------------------------
-	//FIXME: handle deleted in this methods?
 	public static ConversationBean getByConvoId(String convoId) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
@@ -419,8 +418,7 @@ public class ConversationDAO {
 			return convosDBSet;
 		}
 		
-//		Logger.error("After 11:");
-		//FIXME: restructure topics to make it more effective?
+		//TODO: restructure topics to make it more effective?
 		//http://www.mongodb.org/display/DOCS/Trees+in+MongoDB#TreesinMongoDB-ArrayofAncestors
 		List<DBRef> allTopics = new ArrayList<DBRef>();
 		for (TopicBean topic : topics) {

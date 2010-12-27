@@ -8,6 +8,7 @@ validation.match = %s contains illegal characters. Only letters, numbers, unders
 validation.object=
 validation.invalid=Incorrect date format
 
+username.empty = Please enter correct username.
 username.exists = Username is already taken. Please enter a different username.
 username.reserved = Username is reserved. Please enter a different username.
 

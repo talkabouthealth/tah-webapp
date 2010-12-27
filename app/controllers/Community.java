@@ -90,7 +90,6 @@ public class Community extends Controller {
 				results = SearchUtil.searchTalker(query);
 			}
 			catch (Exception e) {
-				//TODO: logging?
 				e.printStackTrace();
 			}
 		}

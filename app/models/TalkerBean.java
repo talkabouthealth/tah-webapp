@@ -582,7 +582,6 @@ public class TalkerBean implements Serializable {
 	public List<String> parseStringList(Object fieldValue) {
 		Collection<String> fieldCollection = (Collection<String>)fieldValue;
 		if (fieldCollection == null) {
-			//TODO: empty list or null?
 			return new ArrayList<String>();
 		}
 		else {
@@ -898,7 +897,6 @@ public class TalkerBean implements Serializable {
 	public List<CommentBean> getProfileCommentsList() { return profileCommentsList; }
 	public void setProfileCommentsList(List<CommentBean> profileCommentsList) { this.profileCommentsList = profileCommentsList; }
 
-	//FIXME: fix limit number of activities?
 	public List<Action> getActivityList() { return activityList; }
 	public void setActivityList(List<Action> activityList) { this.activityList = activityList; }
 
