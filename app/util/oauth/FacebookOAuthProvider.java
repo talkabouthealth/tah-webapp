@@ -116,7 +116,6 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 				Logger.error("Adding new Facebook account: "+userEmail);
 				Logger.error(accessToken);
 				
-				//TODO: what for facebook?
 				TalkerBean talker = CommonUtil.loadCachedTalker(session);
 				if (talker.serviceAccountByType(ServiceType.FACEBOOK) == null) {
 					ServiceAccountBean fbAccount = new ServiceAccountBean(accountId, userEmail, ServiceType.FACEBOOK);

@@ -79,7 +79,6 @@ public class Conversations extends Controller {
     	
     	String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
     	
-    	//TODO: move to separate?
     	String templateName = "";
     	Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
         templateBinding.put("session", Scope.Session.current());
@@ -118,8 +117,7 @@ public class Conversations extends Controller {
     	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
     	notFoundIfNull(convo);
     	
-    	NotificationUtils.sendAutomaticNotifications(convo.getId(), null);
-    	NotificationUtils.sendTwitterNotifications(convo.getId(), null);
+    	NotificationUtils.sendAllNotifications(convo.getId(), null);
 	}
     
     public static void restart(String convoId) {
@@ -129,9 +127,7 @@ public class Conversations extends Controller {
     	
     	ActionDAO.saveAction(new StartConvoAction(talker, convo, ActionType.RESTART_CONVO));
     	
-    	//TODO: run notifications in separate thread?
-    	NotificationUtils.sendAutomaticNotifications(convoId, talker.getId());
-    	NotificationUtils.sendTwitterNotifications(convoId, talker.getId());
+    	NotificationUtils.sendAllNotifications(convoId, talker.getId());
     	
     	//prepare email params
     	Map<String, String> vars = new HashMap<String, String>();
@@ -165,14 +161,7 @@ public class Conversations extends Controller {
     	
     	notFoundIfNull(convo);
     	
-    	Map<String, String> vars = new HashMap<String, String>();
-    	vars.put("content_type", "Conversation/Question");
-    	vars.put("content_link", CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL()));
-    	vars.put("reason", reason);
-		vars.put("content", convo.getTopic());
-		vars.put("name", talker.getUserName());
-		vars.put("email", talker.getEmail());
-		EmailUtil.sendEmail(EmailTemplate.FLAGGED, EmailUtil.SUPPORT_EMAIL, vars, null, false);
+		CommonUtil.flagContent("Conversation/Question", convo, reason, convo.getTopic(), talker);
     }
     
     //flag answer or reply
@@ -182,14 +171,7 @@ public class Conversations extends Controller {
     	notFoundIfNull(answer);
     	ConversationBean convo = ConversationDAO.getByConvoId(answer.getConvoId());
     	
-    	Map<String, String> vars = new HashMap<String, String>();
-    	vars.put("content_type", "Answer/Reply");
-    	vars.put("content_link", CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL()));
-    	vars.put("reason", reason);
-		vars.put("content", answer.getText());
-		vars.put("name", talker.getUserName());
-		vars.put("email", talker.getEmail());
-		EmailUtil.sendEmail(EmailTemplate.FLAGGED, EmailUtil.SUPPORT_EMAIL, vars, null, false);
+		CommonUtil.flagContent("Answer/Reply", convo, reason, answer.getText(), talker);
     }
     
     public static void vote(String answerId, boolean up) {
@@ -229,16 +211,7 @@ public class Conversations extends Controller {
     		//But also send an email to "support@talkabouthealth.com" add a comment
     		if (answer.isNotHelpful()) {
     			answer.setNotHelpful(false);
-    			
-        		//TODO: make one method for flagging?
-        		Map<String, String> vars = new HashMap<String, String>();
-            	vars.put("content_type", "Answer");
-            	vars.put("content_link", CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL()));
-            	vars.put("reason", "User voted up for this 'Not Helpful' answer");
-        		vars.put("content", answer.getText());
-        		vars.put("name", talker.getUserName());
-        		vars.put("email", talker.getEmail());
-        		EmailUtil.sendEmail(EmailTemplate.FLAGGED, EmailUtil.SUPPORT_EMAIL, vars, null, false);
+        		CommonUtil.flagContent("Answer", convo, "User voted up for this 'Not Helpful' answer", answer.getText(), talker);
     		}
     	}
     	
@@ -421,7 +394,7 @@ public class Conversations extends Controller {
     	
     	if (todo.equalsIgnoreCase("update") || todo.equalsIgnoreCase("delete")) {
     		//TODO: move to util permission check?
-    		if (!answer.getFromTalker().equals(talker) && !talker.getUserName().equals("admin")) {
+    		if (!answer.getFromTalker().equals(talker) && !talker.isAdmin()) {
         		forbidden();
         		return;
         	}

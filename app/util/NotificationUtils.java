@@ -2,6 +2,9 @@ package util;
 
 import improject.IMSession.IMService;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -9,6 +12,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executors;
+
+import oauth.signpost.OAuthConsumer;
+import oauth.signpost.basic.DefaultOAuthConsumer;
 
 import play.Logger;
 import util.EmailUtil.EmailTemplate;
@@ -33,6 +40,17 @@ import dao.TalkerDAO;
 public class NotificationUtils {
 	
 	public static final String AUTOMATIC_NOTIFICATIONS_CONFIG = "AutomaticNotifications";
+	
+	//Send IM and Twitter notifications in separate thread
+	public static void sendAllNotifications(final String convoId, final String restartTalkerId) {
+		Executors.newSingleThreadExecutor().execute(new Runnable() {
+			@Override
+			public void run() {
+				NotificationUtils.sendAutomaticNotifications(convoId, restartTalkerId);
+				NotificationUtils.sendTwitterNotifications(convoId, restartTalkerId);
+			}
+		});
+	}
 	
 	/**
 	 * Rules are:

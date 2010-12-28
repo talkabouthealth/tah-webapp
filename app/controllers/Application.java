@@ -47,7 +47,6 @@ public class Application extends Controller {
 	//As we have profile link as "http://talkabouthealth.com/{userName}" 
 	//we need to disallow usernames equal to application routes - controllers, static files, etc
 	//TODO: maybe we can user Play! configuration for this?
-	//TODO: update this
 	public static final List<String> RESERVED_WORDS = Arrays.asList(new String[]{
 		"login", "logout", "signup", "register", "forgotpassword", "sendnewpassword", 
 		"contactus", "updatesemail", "verify",
@@ -102,7 +101,6 @@ public class Application extends Controller {
 		validation.isTrue(result).message("Not verified email or unknown error. " +
 				"Please contact support at <a href=\"mailto:"+EmailUtil.SUPPORT_EMAIL+"\">"+EmailUtil.SUPPORT_EMAIL+"</a>");
 		if(validation.hasErrors()) {
-			//TODO: test flash() & keep()
             params.flash();
             validation.keep();
             forgotPassword();
@@ -265,8 +263,7 @@ public class Application extends Controller {
         */
         talker.setNfreq(3);
         talker.setNtime(1);
-        talker.setCtype(new String[] {
-        		"Informational", "Advice and opinions", "Meet new people", "Emotional support"});
+        talker.setCtype(TalkerBean.CONVERSATIONS_TYPES_ARRAY);
         
         /*
          	By default all sections should be checked:

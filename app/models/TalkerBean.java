@@ -48,7 +48,9 @@ public class TalkerBean implements Serializable {
 		"New born", "1-2 years old", "2-6 years old", 
 		"6-12 years old", "12-18 years old", "Over 18 years old"
 	};
-	
+	public static final String[] CONVERSATIONS_TYPES_ARRAY = new String[] {
+		"Informational", "Advice and opinions", "Meet new people", "Emotional support"
+	};
 	public static final String[] CONNECTIONS_ARRAY = new String[] {
 		"Patient", "Former Patient", "Parent", "Caregiver", "Family member", "Friend", 
 		//"professionals"
@@ -726,15 +728,8 @@ public class TalkerBean implements Serializable {
 		}
 		
 		//get only non-standard (other) ctypes
-		List<String> cTypesList = new ArrayList<String>();
-		//TODO: make constant list?
-		List<String> standardTypes = 
-			Arrays.asList("Informational", "Advice and opinions", "Meet new people", "Emotional support");
-		for (String ctypeEntry : ctype) {
-			if (!standardTypes.contains(ctypeEntry)) {
-				cTypesList.add(ctypeEntry);
-			}
-		}
+		List<String> cTypesList = new ArrayList<String>(Arrays.asList(ctype));
+		cTypesList.removeAll(Arrays.asList(CONVERSATIONS_TYPES_ARRAY));
 		
 		if (cTypesList.size() == 0) {
 			return defaultMessage;

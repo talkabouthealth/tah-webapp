@@ -77,15 +77,7 @@ public class TalkerDiseaseDAO {
 //		talkerDisease.setStage((String)diseaseDBObject.get("stage"));
 //		talkerDisease.setType((String)diseaseDBObject.get("type"));
 		
-		//TODO: remove befor db clean
-		Object recurObj = diseaseDBObject.get("recur");
-		if (recurObj instanceof Boolean) {
-			talkerDisease.setRecurrent(((Boolean)recurObj).toString());
-		}
-		else {
-			talkerDisease.setRecurrent((String)diseaseDBObject.get("recur"));
-		}
-		
+		talkerDisease.setRecurrent((String)diseaseDBObject.get("recur"));
 		talkerDisease.setSymptomDate((Date)diseaseDBObject.get("symp_date"));
 		talkerDisease.setDiagnoseDate((Date)diseaseDBObject.get("diag_date"));
 		talkerDisease.setHealthBio((String)diseaseDBObject.get("health_bio"));
@@ -97,7 +89,6 @@ public class TalkerDiseaseDAO {
 		
 		talkerDisease.setHealthItems(getStringSet(diseaseDBObject, "healthitems"));
 		
-		//TODO: template getList method in DBUtil?
 		Collection<DBObject> otherItemsList = (Collection<DBObject>)diseaseDBObject.get("other_healthitems");
 		if (otherItemsList != null) {
 			Map<String, List<String>> otherHealthItems = new HashMap<String, List<String>>();

@@ -256,7 +256,7 @@ public class ViewDispatcher extends Controller {
 		
 		//- "Trending Conversations" - ordered by page views in the last two weeks, 
 		//cannot contain conversations in the top 10 of "Popular Conversations" tab
-		//TODO: make trending convos
+		//TODO: later - make trending convos
 		List<ConversationBean> trendingConvos = new ArrayList<ConversationBean>();
 		
 		Logger.error("After convolists");

@@ -65,7 +65,6 @@ public class ActionDAO {
 	 */
 	
 	private static final EnumSet<ActionType> CONVO_FEED_ACTIONS = EnumSet.of(
-			//TODO: join convo for following convo?
 			ActionType.START_CONVO, ActionType.RESTART_CONVO, ActionType.JOIN_CONVO,
 			ActionType.ANSWER_CONVO,
 			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED,

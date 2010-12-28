@@ -54,10 +54,9 @@ public class ApplicationDAO {
 		DBCollection loginsColl = getCollection(LOGIN_HISTORY_COLLECTION);
 		
 		if (afterTime == null) {
-			//TODO: possibly long time?
-			Calendar oneDayBeforeNow = Calendar.getInstance();
-			oneDayBeforeNow.add(Calendar.DAY_OF_MONTH, -30);
-			afterTime = oneDayBeforeNow.getTime();
+			Calendar monthBeforeNow = Calendar.getInstance();
+			monthBeforeNow.add(Calendar.DAY_OF_MONTH, -30);
+			afterTime = monthBeforeNow.getTime();
 		}
 		
 		DBObject query = BasicDBObjectBuilder.start()

@@ -151,7 +151,6 @@ public class Home extends Controller {
 			}
 		}
 		
-		//TODO: number of answers for this user??!
 		render("@newhome", talker, newTopic, 
 				liveConversations, convoFeed, communityFeed, showIMPopup,
 				recommendedTopics, similarMembers, experts, recommendedConvos);

@@ -142,9 +142,13 @@ public class SearchUtil {
 //		Query searchQuery = mlt.like(new StringReader(searchedConvo.getTopic()));
 //		Hits hits = is.search(searchQuery);
 		
+		//remove bad characters (special for search)
+		String queryText = searchedConvo.getTopic();
+		queryText = queryText.replaceAll("[\\W_]", " ");
+		
 		Analyzer analyzer = new StandardAnalyzer();
 		QueryParser parser = new MultiFieldQueryParser(new String[] {"title"}, analyzer);
-		Query searchQuery = parser.parse(searchedConvo.getTopic());
+		Query searchQuery = parser.parse(queryText);
 		Hits hits = is.search(searchQuery);
 
 //		System.out.println("SEARCH FOR: "+searchedConvo.getTopic()+", "+hits.length());

@@ -105,30 +105,6 @@ public class ApplicationUpdatesJob extends Job {
 		}
 		
 		//TODO: iptables
-//		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
-//			ApplicationDAO.createURLName(talker.getUserName());
-//			
-//			//TODO: remove it
-//			//2. Move Twitter/Facebook to the new format?
-//			
-//			String type = talker.getAccountType();
-//			if (type != null) {
-//				ServiceType serviceType = null;
-//				if (type.equalsIgnoreCase("twitter")) {
-//					serviceType = ServiceType.TWITTER;
-//				}
-//				else {
-//					serviceType = ServiceType.FACEBOOK;
-//				}
-//				
-//				ServiceAccountBean twitterAccount = 
-//					new ServiceAccountBean(talker.getAccountId(), talker.getAccountName(), serviceType);
-//				talker.getServiceAccounts().add(twitterAccount);
-//				
-//				TalkerDAO.updateTalker(talker);
-//			}
-//			
-//		}
 		
 		//Talkers/Topics/Convos should have different names, stored in 'names' collection
 		if (ApplicationDAO.isCollectionEmpty(ApplicationDAO.NAMES_COLLECTION)) {
@@ -181,47 +157,47 @@ public class ApplicationUpdatesJob extends Job {
 			TalkerDAO.save(admin);
 		}
 		
-		Executors.newSingleThreadExecutor().execute(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					//timeout between API requests
-					final int BITLY_TIMEOUT = 60*1000;
-					for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
-						if (convo.getBitly() == null || convo.getBitly().equals("RATE_LIMIT_EXCEEDE")) {
-							//String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
-							String convoURL = "http://talkabouthealth.com/"+convo.getMainURL();
-							convo.setBitly(BitlyUtil.shortLink(convoURL));
-							Thread.sleep(BITLY_TIMEOUT);
-							
-							ConversationDAO.updateConvo(convo);
-						}
-						if (convo.getBitlyChat() == null || convo.getBitlyChat().equals("RATE_LIMIT_EXCEEDE")) {
-//							String convoChatURL = CommonUtil.generateAbsoluteURL("Talk.talkApp", "convoId", convo.getTid());
-							String convoChatURL = "http://talkabouthealth.com/chat/"+convo.getTid();
-							convo.setBitlyChat(BitlyUtil.shortLink(convoChatURL));
-							Thread.sleep(BITLY_TIMEOUT);
-							
-							ConversationDAO.updateConvo(convo);
-						}
-					}
-					
-					for (TopicBean topic : TopicDAO.loadAllTopics()) {
-						if (topic.getBitly() == null || topic.getBitly().equals("RATE_LIMIT_EXCEEDE")) {
-//							String topicURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", topic.getMainURL());
-							String topicURL = "http://talkabouthealth.com/"+topic.getMainURL();
-							topic.setBitly(BitlyUtil.shortLink(topicURL));
-							Thread.sleep(BITLY_TIMEOUT);
-							
-							TopicDAO.updateTopic(topic);
-						}
-					}
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+//		Executors.newSingleThreadExecutor().execute(new Runnable() {
+//			@Override
+//			public void run() {
+//				try {
+//					//timeout between API requests
+//					final int BITLY_TIMEOUT = 60*1000;
+//					for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
+//						if (convo.getBitly() == null || convo.getBitly().equals("RATE_LIMIT_EXCEEDE")) {
+//							//String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
+//							String convoURL = "http://talkabouthealth.com/"+convo.getMainURL();
+//							convo.setBitly(BitlyUtil.shortLink(convoURL));
+//							Thread.sleep(BITLY_TIMEOUT);
+//							
+//							ConversationDAO.updateConvo(convo);
+//						}
+//						if (convo.getBitlyChat() == null || convo.getBitlyChat().equals("RATE_LIMIT_EXCEEDE")) {
+////							String convoChatURL = CommonUtil.generateAbsoluteURL("Talk.talkApp", "convoId", convo.getTid());
+//							String convoChatURL = "http://talkabouthealth.com/chat/"+convo.getTid();
+//							convo.setBitlyChat(BitlyUtil.shortLink(convoChatURL));
+//							Thread.sleep(BITLY_TIMEOUT);
+//							
+//							ConversationDAO.updateConvo(convo);
+//						}
+//					}
+//					
+//					for (TopicBean topic : TopicDAO.loadAllTopics()) {
+//						if (topic.getBitly() == null || topic.getBitly().equals("RATE_LIMIT_EXCEEDE")) {
+////							String topicURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", topic.getMainURL());
+//							String topicURL = "http://talkabouthealth.com/"+topic.getMainURL();
+//							topic.setBitly(BitlyUtil.shortLink(topicURL));
+//							Thread.sleep(BITLY_TIMEOUT);
+//							
+//							TopicDAO.updateTopic(topic);
+//						}
+//					}
+//				}
+//				catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
 		
 		//create indexes
 //		activities

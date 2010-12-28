@@ -143,8 +143,6 @@ public class CommentsDAO {
 		List<CommentBean> answersList = new ArrayList<CommentBean>();
 		for (DBObject answerDBObject : commentsList) {
 			CommentBean answer = new CommentBean();
-			//TODO: only count is important?
-//			answer.parseBasicFromDB(answerDBObject);
 			answer.setId(answerDBObject.get("_id").toString());
 			answersList.add(answer);
 		}

@@ -25,7 +25,7 @@ import dao.ConversationDAO;
 public class Dashboard extends Controller {
 	
 	public static void index() {
-		//TODO: use normal beans (not maps)
+		//TODO: later - use normal beans (not maps)
 		List<Map<String, String>> topicsList = ConversationDAO.loadConvosForDashboard(false);
 		List<Map<String, String>> topicsWithNotificationsList = ConversationDAO.loadConvosForDashboard(true);
 		List<TalkerBean> talkersList = TalkerDAO.loadTalkersForDashboard();

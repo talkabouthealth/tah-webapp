@@ -42,7 +42,6 @@ public class DBUtil {
 	
 	public static DB getDB() {
 		//boolean auth = db.authenticate(myUserName, myPassword);
-		//TODO: load name from app configuration? handle non-Play runs!
 		return mongo.getDB("tahdb");
 	}
 

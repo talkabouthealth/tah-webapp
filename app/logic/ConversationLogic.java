@@ -85,8 +85,7 @@ public class ConversationLogic {
 		
 		if (notifyTalkers) {
 			//send notifications if Automatic Notifications is On
-			NotificationUtils.sendAutomaticNotifications(convo.getId(), null);
-			NotificationUtils.sendTwitterNotifications(convo.getId(), null);
+			NotificationUtils.sendAllNotifications(convo.getId(), null);
 		}
 		
 		//send to Tw & Fb

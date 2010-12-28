@@ -777,7 +777,6 @@ public class Profile extends Controller {
 	public static void deactivateAccount() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-		//TODO: on registration check 'member' uniqueness?
 		String newUserName = CommonUtil.generateDeactivatedUserName(true);
 		talker.setOriginalUserName(talker.getUserName());
 		talker.setUserName(newUserName);

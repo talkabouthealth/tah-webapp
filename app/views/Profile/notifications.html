@@ -355,7 +355,7 @@
 						<div class="notiblueareamid">
 							<h1>What types of conversations interest you the most?</h1>
 							<ul>	
-						#{list items:["Informational", "Advice and opinions", "Meet new people", "Emotional support"], as:'cType'}
+						#{list items:models.TalkerBean.CONVERSATIONS_TYPES_ARRAY, as:'cType'}
 							<li><input name='talker.ctype' type='checkbox' value='${cType}' 
 							#{if talker.ctype?.contains(cType) } checked="checked" #{/if}
 							/>&nbsp;<span class='blacktext' >${cType}</span></li>

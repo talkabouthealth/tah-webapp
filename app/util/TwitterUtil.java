@@ -31,7 +31,7 @@ import oauth.signpost.http.HttpRequest;
 import play.Logger;
 import util.oauth.TwitterOAuthProvider;
 
-//TODO: rewrite it with new Play OAuth API
+//TODO: later - rewrite it with new Play OAuth API
 public class TwitterUtil {
 	/* Account @talkforhealth */
 	private static final String CONSUMER_KEY = "dntMSxZl859YGyAeKcTFcg";
