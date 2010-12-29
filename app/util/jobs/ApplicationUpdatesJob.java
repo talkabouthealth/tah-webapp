@@ -104,7 +104,7 @@ public class ApplicationUpdatesJob extends Job {
 			HealthItemsImporter.importHealthItems("healthitems.dat");
 		}
 		
-		//TODO: iptables
+		//TODO: iptables + other admin stuff
 		
 		//Talkers/Topics/Convos should have different names, stored in 'names' collection
 		if (ApplicationDAO.isCollectionEmpty(ApplicationDAO.NAMES_COLLECTION)) {
@@ -148,11 +148,11 @@ public class ApplicationUpdatesJob extends Job {
 	    				ProfilePreference.HEALTH_INFO
 	        		)
 	        	);
-			admin.saveProfilePreferences(defaultPreferences);
+			admin.setProfilePreferences(defaultPreferences);
 	        
 	        //By default all email notifications are checked
 	        EnumSet<EmailSetting> emailSettings = EnumSet.allOf(EmailSetting.class);
-	        admin.saveEmailSettings(emailSettings);
+	        admin.setEmailSettings(emailSettings);
 			
 			TalkerDAO.save(admin);
 		}

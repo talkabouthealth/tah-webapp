@@ -64,7 +64,7 @@ public class Conversations extends Controller {
     	String[] topicsArr = topics.split(",");
     	for (String topicTitle : topicsArr) {
     		if (topicTitle.trim().length() != 0) {
-    			TopicBean topic = TopicDAO.getByTitle(topicTitle.trim());
+    			TopicBean topic = TopicDAO.getOrRestoreByTitle(topicTitle.trim());
         		if (topic != null) {
         			topicsSet.add(topic);
         		}
@@ -316,7 +316,7 @@ public class Conversations extends Controller {
     					continue;
     				}
     				topicName = JavaExtensions.capitalizeWords(topicName);
-    				TopicBean topic = TopicDAO.getByTitle(topicName);
+    				TopicBean topic = TopicDAO.getOrRestoreByTitle(topicName);
         			if (topic == null) {
         				//create new topic with this name
             	    	topic = new TopicBean();
@@ -393,7 +393,6 @@ public class Conversations extends Controller {
     	notFoundIfNull(answer);
     	
     	if (todo.equalsIgnoreCase("update") || todo.equalsIgnoreCase("delete")) {
-    		//TODO: move to util permission check?
     		if (!answer.getFromTalker().equals(talker) && !talker.isAdmin()) {
         		forbidden();
         		return;

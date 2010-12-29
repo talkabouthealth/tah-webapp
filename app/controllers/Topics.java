@@ -40,7 +40,6 @@ import dao.ConversationDAO;
 import dao.TopicDAO;
 
 @With(Secure.class)
-//TODO: refactor manage topic methods
 public class Topics extends Controller {
 	
 	//follow or unfollow topic
@@ -168,7 +167,7 @@ public class Topics extends Controller {
     	if (todo.equalsIgnoreCase("add")) {
     		parentId = JavaExtensions.capitalizeWords(parentId);
     		//in order to be a Parent topic, the topic must exist.
-    		parentTopic = TopicDAO.getByTitle(parentId);
+    		parentTopic = TopicDAO.getOrRestoreByTitle(parentId);
     		if (parentTopic == null || parentTopic.equals(topic)) {
     			forbidden();
         		return;
@@ -205,7 +204,7 @@ public class Topics extends Controller {
     	TopicBean childTopic = null;
     	if (todo.equalsIgnoreCase("add")) {
     		childId = JavaExtensions.capitalizeWords(childId);
-    		childTopic = TopicDAO.getByTitle(childId);
+    		childTopic = TopicDAO.getOrRestoreByTitle(childId);
     		if (childTopic == null || childTopic.equals(topic)) {
     			forbidden();
         		return;

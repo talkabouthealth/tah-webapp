@@ -48,10 +48,10 @@ public class ConversationLogic {
 		//When a "Live Talk" is started, tag it with the topic "Talks" instead of "Unorganized"
 		TopicBean topic = null;
 		if (type == ConvoType.QUESTION) {
-			topic = TopicDAO.getByTitle(DEFAULT_QUESTION_TOPIC);
+			topic = TopicDAO.getOrRestoreByTitle(DEFAULT_QUESTION_TOPIC);
 		}
 		else {
-			topic = TopicDAO.getByTitle(DEFAULT_TALK_TOPIC);
+			topic = TopicDAO.getOrRestoreByTitle(DEFAULT_TALK_TOPIC);
 		}
 		if (topic != null) {
 			topicsSet.add(topic);

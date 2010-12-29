@@ -114,7 +114,6 @@ public class Explore extends Controller {
 		
 		//- "Popular Conversations" - ordered by page views
 		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations();
-		//TODO: move to comparator?
 		Collections.sort(popularConvos, new Comparator<ConversationBean>() {
 			@Override
 			public int compare(ConversationBean o1, ConversationBean o2) {

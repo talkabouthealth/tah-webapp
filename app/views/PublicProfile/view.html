@@ -199,7 +199,7 @@
 													${ currentTalker.followingList.contains(talker) ? 'Unfollow' : 'Follow'}
 													</a>
 												</li>
-												#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
+												#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
 													<li><a href="#thankyouSection" id="thankyoulink2" 
 															class="navybluetext12">Give a 'Thank you'</a></li>
 												#{/if}
@@ -258,7 +258,7 @@
 							</div>
 							#{/if}
 							
-							#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
+							#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
 							<div class="proleftwhite">
 								<div class="proleftwhitetop"></div>
 								<div class="proleftwhitemid">
@@ -284,7 +284,7 @@
 								<div class="proleftwhitebot"></div>
 							</div>
 							#{/if}
-							#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWERS) }
+							#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.FOLLOWERS) }
 							<div class="proleftwhite">
 								<div class="proleftwhitetop"></div>
 								<div class="proleftwhitemid">
@@ -328,7 +328,7 @@
 								<div class="proleftwhitebot"></div>
 							</div>
 							-->
-							#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.PERSONAL_INFO) }
+							#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.PERSONAL_INFO) }
 							<div class="proleftwhite">
 								<div class="proleftwhitetop"></div>
 								<div class="proleftwhitemid">
@@ -385,7 +385,7 @@
 								</a>
 							#{/ifnot}
 						</div>
-						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.BASIC_INFO) }
+						#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.BASIC_INFO) }
 							<div class="profiletext2">
 								<ul>
 									<li class="blacktext12"><strong>Community:</strong> Skin Cancer</li>
@@ -406,7 +406,7 @@
 								</ul>
 							</div>
 						#{/if}
-						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.PERSONAL) && talker.bio}
+						#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.PERSONAL) && talker.bio}
 							<div class="prosubheading">
 								<div class="profileheading">Bio</div>
 							</div>
@@ -414,7 +414,7 @@
 								${talker.bio}
 							</div>
 						#{/if}
-						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.HEALTH_INFO) && talkerDisease }
+						#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.HEALTH_INFO) && talkerDisease }
 							<div class="prosubheading">
 								<div class="profileheading">Health Info</div>
 							</div>
@@ -483,7 +483,7 @@
 							</div>
 						#{/if}
 						
-						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
+						#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
 							<div id="thankyouSection" class="prosubheading">
 								<div class="profileheading">
 									Thank You's (${talker.thankYouList.size()})
@@ -525,7 +525,7 @@
 							</div>
 						#{/if}
 						
-						*{ #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) } }*
+						*{ #{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.COMMENTS) } }*
 						#{if true }
 						<div id="commentsSection" class="prosubheading">
 							<div class="profileheading">
@@ -561,7 +561,7 @@
 						</div>
 						#{/if}
 						
-						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.ACTIVITY_STREAM) 
+						#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.ACTIVITY_STREAM) 
 								&& talker.activityList}
 							<div class="prosubheading">
 								<div class="profileheading">${talker.userName} Activities (${talker.activityList.size()})</div>
@@ -575,7 +575,7 @@
 							</div>
 						#{/if}
 						
-						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.CONVERSATIONS)}
+						#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.CONVERSATIONS)}
 							#{if talker.startedTopicsList }
 								<div class="prosubheading">
 									<div class="profileheading">Conversation Started (${talker.startedTopicsList.size()})</div>
@@ -648,7 +648,7 @@
 							#{/if}
 						#{/if}
 						
-						#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.CONVERSATIONS_FOLLOWED) 
+						#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.CONVERSATIONS_FOLLOWED) 
 								&& talker.followingConvosFullList}
 							<div class="prosubheading">
 								<div class="profileheading">Conversations Following (${talker.followingConvosFullList.size()})</div>

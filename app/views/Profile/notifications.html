@@ -393,7 +393,7 @@
 									#{/if}
 									<div class="preferencescheck">
 										<input type="checkbox" value="" name="${setting}"
-											#{if talker.loadEmailSettings().contains(setting) } checked='checked' #{/if}
+											#{if talker.emailSettings?.contains(setting) } checked='checked' #{/if}
 										/>
 										<span class="blacktext14">&nbsp;${setting.description}</span>
 									</div>

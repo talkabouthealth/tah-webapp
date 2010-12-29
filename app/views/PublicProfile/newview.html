@@ -195,7 +195,7 @@
                       <div class="profileCantanttxt2"><strong>Answers:&nbsp;</strong>0</div>
                     </div>
                     <!--profiletxtCantant-->
-					#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.PERSONAL_INFO) }
+					#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.PERSONAL_INFO) }
 							#{if talker.isProf()}
 								#{if talker.profStatement}
 									<div class="profilebio">Professional Statement</div>
@@ -378,7 +378,7 @@
 							#{/else}
 					#{/if}
 					
-					#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.HEALTH_INFO) && talkerDisease && !talker.isProf() }
+					#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.HEALTH_INFO) && talkerDisease && !talker.isProf() }
 							#{if talkerDisease.healthBio }
 								<div class="profilebio">Health Bio</div>
 		                    	<div class="topicborder"></div>
@@ -453,7 +453,7 @@
 							</div>
 					#{/if}
                                         
-                    #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.ACTIVITY_STREAM) 
+                    #{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.ACTIVITY_STREAM) 
 							&& talkerFeed}
 						<div class="Profilemurray">${talker.userName} Activities</div>
 	                    <div class="topicborder"></div>

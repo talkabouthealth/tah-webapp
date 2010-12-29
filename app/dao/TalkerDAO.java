@@ -69,14 +69,6 @@ public class TalkerDAO {
 				.add("act_name", talker.getAccountName())
 				.add("act_id", talker.getAccountId())
 				
-				//TODO: remove later
-				.add("tw_follow", talker.isFollowTAH())
-				.add("tw_share", talker.isShareTwitterToThoughts())
-				.add("tw_sharethoughts", talker.isShareThoughtsToTwitter())
-				.add("tw_post_answer", talker.isTwitterPostOnAnswer())
-				.add("tw_post_start", talker.isTwitterPostOnStart())
-				
-				
 				.add("prefs", talker.profilePreferencesToInt())
 				.add("email_settings", talker.emailSettingsToList())
 				
@@ -120,14 +112,8 @@ public class TalkerDAO {
 			.add("act_type", talker.getAccountType())
 			.add("act_name", talker.getAccountName())
 			.add("act_id", talker.getAccountId())
-			.add("tw_follow", talker.isFollowTAH())
-			.add("tw_share", talker.isShareTwitterToThoughts())
-			.add("tw_sharethoughts", talker.isShareThoughtsToTwitter())
-			.add("tw_post_answer", talker.isTwitterPostOnAnswer())
-			.add("tw_post_start", talker.isTwitterPostOnStart())
 			
 			.add("hidden_helps", talker.getHiddenHelps())
-			
 			.add("dob", talker.getDob())
 			.add("gender", talker.getGender())
 			.add("mar_status", talker.getMaritalStatus())
@@ -375,7 +361,6 @@ public class TalkerDAO {
 	public static List<TalkerBean> loadTalkersForDashboard() {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
-		//TODO: sort by last notification!
 		List<DBObject> talkersDBList = talkersColl.find().toArray();
 		
 		List<TalkerBean> talkersList = new ArrayList<TalkerBean>();
@@ -472,8 +457,8 @@ public class TalkerDAO {
 		for (DBObject followerDBObject : followerDBList) {
 			TalkerBean followerTalker = new TalkerBean();
 			
-			boolean isDeactivated = followerTalker.getBoolean(followerDBObject.get("deactivated"));
-			boolean isSuspended = followerTalker.getBoolean(followerDBObject.get("suspended"));
+			boolean isDeactivated = getBoolean(followerDBObject, "deactivated");
+			boolean isSuspended = getBoolean(followerDBObject, "suspended");
 			if (isDeactivated || isSuspended) {
 				continue;
 			}

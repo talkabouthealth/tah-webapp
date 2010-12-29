@@ -1,4 +1,4 @@
-#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
+#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
 	#{list items:followList.limit(start, 3*10), as:'following' }
 		<div class="thnksfollowing">
            	<div class="thnksfollowingimg">
@@ -12,7 +12,7 @@
           			</a>
            		<span class="blue13"> | </span> 
            		<span class="blkq13">${following.levelOfRecognition}</span><br/>
-           		#{if following.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.PERSONAL) }
+           		#{if following.profilePreferences?.contains(models.TalkerBean.ProfilePreference.PERSONAL) }
              			<span class="greytext12">${following.bio?.nl2br()}</span><br/>
              		#{/if}
              		<span class="bluetext12">

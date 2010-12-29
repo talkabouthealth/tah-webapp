@@ -42,8 +42,7 @@ import dao.TopicDAO;
 @With( { Secure.class, LoggerController.class } )
 public class Home extends Controller {
 
-	//TODO: remove 'newTopic'
-    public static void index(String newTopic) {
+    public static void index() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
@@ -151,7 +150,7 @@ public class Home extends Controller {
 			}
 		}
 		
-		render("@newhome", talker, newTopic, 
+		render("@newhome", talker, 
 				liveConversations, convoFeed, communityFeed, showIMPopup,
 				recommendedTopics, similarMembers, experts, recommendedConvos);
     }

@@ -174,7 +174,7 @@ public class SearchUtil {
 		return results;
 	}
 	
-	//TODO: recommended to use only one searcher? Open after reindex?
+	//TODO: later - recommended to use only one searcher? Open after reindex?
 	private static Query getHits(IndexSearcher is, String[] fields, String query) 
 			throws CorruptIndexException, IOException, ParseException {
 		Analyzer analyzer = new StandardAnalyzer();

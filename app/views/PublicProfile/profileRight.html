@@ -103,7 +103,7 @@
                 </div>
                 <!--topipsts-->
                 
-                #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
+                #{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
                 	<div class="followingbox">
 	                  <div class="followingtoptxt">
 	                    <div class="followingh1">
@@ -135,7 +135,7 @@
 	                <div class="topicborder"></div>
 				#{/if}
 				
-				#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.FOLLOWERS) }
+				#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.FOLLOWERS) }
                 	<div class="followingbox">
 	                  <div class="followingtoptxt">
 	                    <div class="followingh1">

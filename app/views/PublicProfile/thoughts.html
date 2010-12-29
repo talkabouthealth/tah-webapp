@@ -94,7 +94,7 @@
               <div id="comleft">
                 <div class="comcontent">
                   <div class="topipcWraper">
-                 *{ #{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.COMMENTS) } }*
+                 *{ #{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.COMMENTS) } }*
                  #{if true }
                     <div id="reply" class="comsearchbox">
                       <div class="comh1" style="font-size:18px">

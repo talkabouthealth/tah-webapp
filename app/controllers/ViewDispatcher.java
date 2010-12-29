@@ -153,8 +153,8 @@ public class ViewDispatcher extends Controller {
 			}
 			
 			//if user has not made the information viewable to the Community
-			if (!talker.loadProfilePreferences().contains(ProfilePreference.PERSONAL_INFO)
-					|| !talker.loadProfilePreferences().contains(ProfilePreference.HEALTH_INFO)) {
+			if (!talker.getProfilePreferences().contains(ProfilePreference.PERSONAL_INFO)
+					|| !talker.getProfilePreferences().contains(ProfilePreference.HEALTH_INFO)) {
 				notViewableInfo = true;
 			}
 		}

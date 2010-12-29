@@ -1,4 +1,4 @@
-#{if talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
+#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
 	#{list items:talker.thankYouList.limit(start, 3*10), as:'thankYou'}
 		#{ thanksThankYou thankYou: thankYou /}
 	#{/list}

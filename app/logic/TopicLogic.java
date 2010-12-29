@@ -15,7 +15,7 @@ public class TopicLogic {
 	public static final String DEFAULT_TOPIC = "Unorganized";
 	
 	public static void addToDefaultParent(TopicBean topic) {
-		TopicBean defaultTopic = TopicDAO.getByTitle(DEFAULT_TOPIC);
+		TopicBean defaultTopic = TopicDAO.getOrRestoreByTitle(DEFAULT_TOPIC);
 		if (defaultTopic != null) {
 			defaultTopic.getChildren().add(topic);
 			TopicDAO.updateTopic(defaultTopic);

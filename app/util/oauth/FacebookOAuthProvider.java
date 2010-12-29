@@ -81,7 +81,6 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			session.put("token", accessToken);
 			
 			//parse Facebook id and email from reply
-			//TODO: improve it? Use not email, but some username?
 			String accountId = null;
 			String userEmail = null;
 			lines = CommonUtil.makeGET("https://graph.facebook.com/me", 

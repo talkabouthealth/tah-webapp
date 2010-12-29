@@ -2,6 +2,7 @@ package models;
 
 import java.util.Date;
 
+//TODO: use DBModel?
 public class ThankYouBean implements Comparable<ThankYouBean> {
 	
 	private Date time;

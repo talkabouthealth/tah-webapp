@@ -92,7 +92,6 @@ public class SearchIndexerJob extends Job {
 				doc.add(new Field("id", convo.getId(), Field.Store.YES, Field.Index.NO));
 				doc.add(new Field("title", convo.getTopic(), Field.Store.YES, Field.Index.TOKENIZED));
 				
-				//TODO: should check all tree? (not only top answers)
 				//add an answer, reply, or live conversation text ?
 				StringBuilder answersString = new StringBuilder();
 				for (CommentBean answer : answersList) {

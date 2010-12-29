@@ -66,7 +66,7 @@ public class NotificationUtils {
 		}
 		
 		OnlineUsersSingleton onlineUsersSingleton = OnlineUsersSingleton.getInstance();
-		//TODO: find 10 latest people who came online?
+		//TODO: later - find 10 latest people who came online?
 		Map<String, UserInfo> onlineUsers = onlineUsersSingleton.getOnlineUserMap();
 		
 		Set<String> talkersForNotification = new HashSet<String>();
@@ -113,7 +113,6 @@ public class NotificationUtils {
 			restartTalker = convo.getTalker();
 		}
 		
-		//TODO: better impl?
 		StringBuilder message = new StringBuilder();
 		message.append(restartTalker.getUserName());
 		if (convo.getConvoType() == ConvoType.CONVERSATION || restartTalkerId != null) {
@@ -158,7 +157,7 @@ public class NotificationUtils {
 	
 	public static void sendEmailNotification(EmailSetting emailSetting, 
 			TalkerBean talker, Map<String, String> vars) {
-		if (talker.loadEmailSettings().contains(emailSetting)) {
+		if (talker.getEmailSettings().contains(emailSetting)) {
 			vars.put("username", talker.getUserName());
 			
 			if (emailSetting == EmailSetting.CONVO_COMMENT && vars.get("reply_text") != null) {

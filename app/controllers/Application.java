@@ -46,7 +46,6 @@ public class Application extends Controller {
 	
 	//As we have profile link as "http://talkabouthealth.com/{userName}" 
 	//we need to disallow usernames equal to application routes - controllers, static files, etc
-	//TODO: maybe we can user Play! configuration for this?
 	public static final List<String> RESERVED_WORDS = Arrays.asList(new String[]{
 		"login", "logout", "signup", "register", "forgotpassword", "sendnewpassword", 
 		"contactus", "updatesemail", "verify",
@@ -56,9 +55,9 @@ public class Application extends Controller {
 		"explore", "search", "community", "openquestions", "livetalks", "conversationfeed"
 	});
 
-    public static void index(String newTopic) {
+    public static void index() {
     	if (Security.isConnected()) {
-    		Home.index(newTopic);
+    		Home.index();
     	}
     	else {
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
@@ -127,7 +126,7 @@ public class Application extends Controller {
     	render(additionalSettings);
     }
     
-    public static void register(@Valid TalkerBean talker, String newTopic) {
+    public static void register(@Valid TalkerBean talker) {
     	String privacyAgreeString = params.get("privacyagree");
     	validation.isTrue("on".equalsIgnoreCase(privacyAgreeString))
     		.message("Please agree to the TalkAboutHealth Terms of Service and Privacy Policy.");
@@ -181,7 +180,7 @@ public class Application extends Controller {
     	}
 
 		session.put("justregistered", true);
-        index(newTopic);
+        index();
     }
     
     private static void validateTalker(TalkerBean talker) {
@@ -255,7 +254,7 @@ public class Application extends Controller {
 //        }
         
         /*
-         	TODO: save settings as enums in App and Strings in DB?
+         	TODO: later - better to use Enums (these settings are from the first prototype version)
          	Default notification settings:
 			- 2 to 5 times per day
 			- whenever I am online
@@ -276,11 +275,11 @@ public class Application extends Controller {
     				ProfilePreference.HEALTH_INFO
         		)
         	);
-        talker.saveProfilePreferences(defaultPreferences);
+        talker.setProfilePreferences(defaultPreferences);
         
         //By default all email notifications are checked
         EnumSet<EmailSetting> emailSettings = EnumSet.allOf(EmailSetting.class);
-        talker.saveEmailSettings(emailSettings);
+        talker.setEmailSettings(emailSettings);
         
         String hashedPassword = CommonUtil.hashPassword(talker.getPassword());
         talker.setPassword(hashedPassword);

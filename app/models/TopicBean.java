@@ -159,7 +159,6 @@ public class TopicBean implements Comparable<TopicBean> {
 		setConversations(ConversationDAO.loadConversationsByTopic(getId()));
 		
 		//followers of this topic
-		//TODO: similar to convos?
     	DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
     	DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, getId());
     	DBObject query = new BasicDBObject("following_topics", topicRef);

@@ -58,7 +58,7 @@ public class ConversationDAO {
 	}
 	
 	/**
-	 * TODO: better implementation of synchro saving?
+	 * TODO: later - better implementation of synchro saving? Maybe use some internal Mongo functionality?
 	 * Tries to insert convo 'count' times (in case of duplicate key error on 'tid' field)
 	 * Returns -1 in case of failure
 	 */
@@ -111,7 +111,6 @@ public class ConversationDAO {
 	public static void updateConvo(ConversationBean convo) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
-		//TODO: move to convobean?
 		List<DBRef> sumContributorsDBList = new ArrayList<DBRef>();
 		if (convo.getSumContributors() != null) {
 			for (TalkerBean talker : convo.getSumContributors()) {
@@ -470,8 +469,7 @@ public class ConversationDAO {
 		}
 	}
 	
-	//TODO: similar methods?
-	//TODO: load topics tree with one method?
+	//TODO: load topics tree with one method? similar methods?
 	/**
 	 * Includes conversations in children topics also.
 	 * @param topic

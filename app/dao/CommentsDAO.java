@@ -27,7 +27,6 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
 /*
-	//TODO: check methods' usage and update names?
  	We store profile comments in separate collection, as "child lists" tree.
  	Example "child lists" structure:
 		{"_id": "A", "children": ["B", "C"]}

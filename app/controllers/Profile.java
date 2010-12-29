@@ -116,7 +116,7 @@ public class Profile extends Controller {
 			talker.setId(oldTalker.getId());
 			talker.setProfInfo(oldTalker.getProfInfo());
 			talker.setHiddenHelps(oldTalker.getHiddenHelps());
-			talker.saveProfilePreferences(oldTalker.loadProfilePreferences());
+			talker.setProfilePreferences(oldTalker.getProfilePreferences());
 			talker.setFollowingTopicsList(oldTalker.getFollowingTopicsList());
 			talker.setThankYouList(oldTalker.getThankYouList());
 			talker.setFollowingList(oldTalker.getFollowingList());
@@ -328,7 +328,7 @@ public class Profile extends Controller {
 	/* -------------- Preferences ------------------------ */
 	public static void preferences() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		EnumSet<ProfilePreference> profilePreferences = talker.loadProfilePreferences();
+		Set<ProfilePreference> profilePreferences = talker.getProfilePreferences();
 		
 		//user just needs to view their Privacy Settings page for ProfileCompletion
 		//TODO: rename 'hiddenHelps' to some common name - we can put there all actions
@@ -356,7 +356,7 @@ public class Profile extends Controller {
 			catch (IllegalArgumentException iae) {}
 		}
 		
-		talker.saveProfilePreferences(preferencesSet);
+		talker.setProfilePreferences(preferencesSet);
 		TalkerDAO.updateTalker(talker);
 		
 		renderText("ok");
@@ -432,7 +432,7 @@ public class Profile extends Controller {
 			}
 			catch (IllegalArgumentException iae) {}
 		}
-		sessionTalker.saveEmailSettings(emailSettings);
+		sessionTalker.setEmailSettings(emailSettings);
 		
 		if (talker == null) {
 			sessionTalker.setNewsletter(false);

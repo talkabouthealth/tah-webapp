@@ -108,8 +108,7 @@ public class TopicDAO {
 	}
 	
 	//Also recreates topic if it was deleted
-	//TODO: additional functionality - is it good?
-	public static TopicBean getByTitle(String title) {
+	public static TopicBean getOrRestoreByTitle(String title) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("title", title);

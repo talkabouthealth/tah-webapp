@@ -258,7 +258,7 @@ public class TalkerLogic {
 //		System.out.println("REC1:"+topicNames);
 		
 		for (String possibleTopic : topicNames) {
-			TopicBean topic = TopicDAO.getByTitle(possibleTopic);
+			TopicBean topic = TopicDAO.getOrRestoreByTitle(possibleTopic);
 			if (topic != null) {
 				recommendedTopics.add(topic);
 			}

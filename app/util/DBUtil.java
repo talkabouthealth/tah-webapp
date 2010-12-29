@@ -95,8 +95,7 @@ public class DBUtil {
 		return value.booleanValue();
 	}
 	
-	//move to generic!
-
+	//generic?
 	public static List<String> getStringList(DBObject dbObject, String name) {
 		Object value = dbObject.get(name);
 		if (value == null) {

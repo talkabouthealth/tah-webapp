@@ -27,7 +27,7 @@ import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.TalkerDAO;
 
-//TODO: different html/js todos 
+//TODO: all code & html/js todos 
 public class Community extends Controller {
 	
 	public static void viewCommunity() {
@@ -56,7 +56,6 @@ public class Community extends Controller {
 		render(talker, liveTalks, communityConvoFeed, communityMembers);
 	}
 	
-	//TODO: move it to Explore?
 //	For the 4 tabs:
 //		Active Users - Latest users to log in
 //		New Users - Latest users to sign up

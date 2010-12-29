@@ -37,7 +37,6 @@ import dao.TopicDAO;
 
 import static util.DBUtil.*;
 
-//TODO: check serialization (this bean is stored in a cache)
 /**
  * @author Osezno
  *
@@ -66,8 +65,6 @@ public class TalkerBean implements Serializable {
 	/**
 	 * An order of elements is important - displayed on Profile Preference page.
 	 * 
-	 * TODO: save as array in db?
-	 * TODO: user should be able to view own hidden info
 	 * Value is needed for conversion EnumSet to integer value (to save in DB).
 	 */
 	public enum ProfilePreference {
@@ -148,16 +145,6 @@ public class TalkerBean implements Serializable {
 	private String accountName;
 	private String accountId;
 	
-	//Twitter settings
-	private boolean followTAH;
-	//Share my Twitter posts in my TalkAboutHealth Thoughts Feed.
-	private boolean shareTwitterToThoughts;
-	//Share my TalkAboutHealth Thoughts Feed posts with my Twitter feed.
-	private boolean shareThoughtsToTwitter;
-	//Post on Twitter when I answer a question.
-	private boolean twitterPostOnAnswer;
-	private boolean twitterPostOnStart;
-
 	private String im;
 	private String imUsername;
 	private boolean imNotify;
@@ -211,7 +198,6 @@ public class TalkerBean implements Serializable {
 	private int nfreq;
 	private int ntime;
 	
-	//TODO: List or (s) ?
 	private List<ThankYouBean> thankYouList;
 	private int numOfThankYous;
 	
@@ -228,8 +214,8 @@ public class TalkerBean implements Serializable {
 	private List<ConversationBean> startedTopicsList;
 	private List<ConversationBean> joinedTopicsList;
 	
-	private EnumSet<ProfilePreference> profilePreferences;
-	private EnumSet<EmailSetting> emailSettings;
+	private Set<ProfilePreference> profilePreferences;
+	private Set<EmailSetting> emailSettings;
 	
 	//additional
 	private int numOfConvoAnswers;
@@ -262,7 +248,7 @@ public class TalkerBean implements Serializable {
 		this.suspended = suspended;
 	}
 	
-	//TODO: verify equals & hashCode ?
+	//TODO: verify equals & hashCode ? move to abstract DBModel class?
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof TalkerBean)) {
@@ -281,20 +267,16 @@ public class TalkerBean implements Serializable {
 		return id.hashCode();
 	}
 	
-	
-	//TODO: we don't have binder for EnumSet now, so we can't use get&set methods
-	// here is workaround
-	public EnumSet<ProfilePreference> loadProfilePreferences() {
+	public Set<ProfilePreference> getProfilePreferences() {
 		return profilePreferences;
 	}
-	public void saveProfilePreferences(EnumSet<ProfilePreference> profilePreferences) {
+	public void setProfilePreferences(Set<ProfilePreference> profilePreferences) {
 		this.profilePreferences = profilePreferences;
 	}
-	
-	public EnumSet<EmailSetting> loadEmailSettings() {
+	public Set<EmailSetting> getEmailSettings() {
 		return emailSettings;
 	}
-	public void saveEmailSettings(EnumSet<EmailSetting> emailSettings) {
+	public void setEmailSettings(Set<EmailSetting> emailSettings) {
 		this.emailSettings = emailSettings;
 	}
 	
@@ -309,8 +291,8 @@ public class TalkerBean implements Serializable {
 		setVerifyCode((String)talkerDBObject.get("verify_code"));
 		
 		setOriginalUserName((String)talkerDBObject.get("orig_uname"));
-		setDeactivated(getBoolean(talkerDBObject.get("deactivated"))); 
-		setSuspended(getBoolean(talkerDBObject.get("suspended")));
+		setDeactivated(getBoolean(talkerDBObject, "deactivated")); 
+		setSuspended(getBoolean(talkerDBObject, "suspended"));
 		
 		setAccountType((String)talkerDBObject.get("act_type"));
 		setAccountName((String)talkerDBObject.get("act_name"));
@@ -319,10 +301,10 @@ public class TalkerBean implements Serializable {
 		setBio((String)talkerDBObject.get("bio"));
 		setProfStatement((String)talkerDBObject.get("prof_statement"));
 		setConnection((String)talkerDBObject.get("connection"));
-		setConnectionVerified(getBoolean(talkerDBObject.get("connection_verified"))); 
+		setConnectionVerified(getBoolean(talkerDBObject, "connection_verified")); 
 		
-		parseEmailSettings(parseStringList(talkerDBObject.get("email_settings")));
-		parseProfilePreferences(parseInt(talkerDBObject.get("prefs")));
+		parseEmailSettings(getStringList(talkerDBObject, "email_settings"));
+		parseProfilePreferences(getInt(talkerDBObject, "prefs"));
 		
 		Collection<DBObject> thankYousCollection = (Collection<DBObject>)talkerDBObject.get("thankyous");
 		setNumOfThankYous(thankYousCollection == null ? 0 : thankYousCollection.size());
@@ -335,34 +317,28 @@ public class TalkerBean implements Serializable {
 		
 		setIm((String)talkerDBObject.get("im"));
 		setImUsername((String)talkerDBObject.get("im_uname"));
-		setImNotify(getBoolean(talkerDBObject.get("im_notify")));
+		setImNotify(getBoolean(talkerDBObject, "im_notify"));
 		setImAccounts(parseSet(IMAccountBean.class, talkerDBObject, "im_accounts"));
 		
 		setServiceAccounts(parseSet(ServiceAccountBean.class, talkerDBObject, "service_accounts"));
 		
-		setFollowTAH(getBoolean(talkerDBObject.get("tw_follow")));
-		setShareTwitterToThoughts(getBoolean(talkerDBObject.get("tw_share")));
-		setShareThoughtsToTwitter(getBoolean(talkerDBObject.get("tw_sharethoughts")));
-		setTwitterPostOnAnswer(getBoolean(talkerDBObject.get("tw_post_answer")));
-		setTwitterPostOnStart(getBoolean(talkerDBObject.get("tw_post_start")));
-		
-		setNewsletter(getBoolean(talkerDBObject.get("newsletter")));
+		setNewsletter(getBoolean(talkerDBObject, "newsletter"));
 		setGender((String)talkerDBObject.get("gender"));
 		setDob((Date)talkerDBObject.get("dob"));
-		setInvitations(parseInt(talkerDBObject.get("invites")));
+		setInvitations(getInt(talkerDBObject, "invites"));
 		
 		setCity((String)talkerDBObject.get("city"));
 		setState((String)talkerDBObject.get("state"));
 		setCountry((String)talkerDBObject.get("country"));
 		
-		setNfreq(parseInt(talkerDBObject.get("nfreq")));
-		setNtime(parseInt(talkerDBObject.get("ntime")));
+		setNfreq(getInt(talkerDBObject, "nfreq"));
+		setNtime(getInt(talkerDBObject, "ntime"));
 		Collection<String> ctype = (Collection<String>)talkerDBObject.get("ctype");
 		if (ctype != null) {
 			setCtype(ctype.toArray(new String[]{}));
 		}
 		
-		setChildrenNum(parseInt(talkerDBObject.get("ch_num")));
+		setChildrenNum(getInt(talkerDBObject, "ch_num"));
 		setMaritalStatus((String)talkerDBObject.get("mar_status"));
 		setCategory((String)talkerDBObject.get("category"));
 		setRegDate((Date)talkerDBObject.get("timestamp"));
@@ -371,15 +347,15 @@ public class TalkerBean implements Serializable {
 		setLastName((String)talkerDBObject.get("lastname"));
 		setZip((String)talkerDBObject.get("zip"));
 		setWebpage((String)talkerDBObject.get("webpage"));
-		setChildrenAges(parseStringList(talkerDBObject.get("ch_ages")));
-		setKeywords(parseStringList(talkerDBObject.get("keywords")));
+		setChildrenAges(getStringList(talkerDBObject, "ch_ages"));
+		setKeywords(getStringList(talkerDBObject, "keywords"));
 		
-		setInsuranceAccepted(parseStringList(talkerDBObject.get("insurance_accept")));
+		setInsuranceAccepted(getStringList(talkerDBObject, "insurance_accept"));
 		
 		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
 		
 		parseFollowing((Collection<DBRef>)talkerDBObject.get("following"));
-		setFollowingConvosList(parseStringList(talkerDBObject.get("following_convos")));
+		setFollowingConvosList(getStringList(talkerDBObject, "following_convos"));
 		
 		parseFollowingTopics((Collection<DBRef>)talkerDBObject.get("following_topics"));
 		parseTopicsInfo((Collection<DBObject>)talkerDBObject.get("topics_info"));
@@ -401,7 +377,7 @@ public class TalkerBean implements Serializable {
 				TalkerBean fromTalker = new TalkerBean();
 				fromTalker.setUserName((String)fromTalkerDBObject.get("uname"));
 				fromTalker.setConnection((String)fromTalkerDBObject.get("connection"));
-				fromTalker.setConnectionVerified(getBoolean(fromTalkerDBObject.get("connection_verified"))); 
+				fromTalker.setConnectionVerified(getBoolean(fromTalkerDBObject, "connection_verified")); 
 				
 				Collection<DBObject> thankYousCollection = (Collection<DBObject>)fromTalkerDBObject.get("thankyous");
 				fromTalker.setNumOfThankYous(thankYousCollection == null ? 0 : thankYousCollection.size());
@@ -423,8 +399,8 @@ public class TalkerBean implements Serializable {
 			for (DBRef followingDBRef : followingDBList) {
 				DBObject followingDBOBject = followingDBRef.fetch();
 				
-				boolean isDeactivated = getBoolean(followingDBOBject.get("deactivated"));
-				boolean isSuspended = getBoolean(followingDBOBject.get("suspended"));
+				boolean isDeactivated = getBoolean(followingDBOBject, "deactivated");
+				boolean isSuspended = getBoolean(followingDBOBject, "suspended");
 				if (isDeactivated || isSuspended) {
 					continue;
 				}
@@ -568,36 +544,6 @@ public class TalkerBean implements Serializable {
 		}
 		
 		return dbRefList;
-	}
-	
-	
-	//TODO: make private and unify with all other getters
-	public boolean getBoolean(Object object) {
-		if (object == null) {
-			return false;
-		}
-		else {
-			return ((Boolean)object).booleanValue();
-		}
-	}
-
-	public List<String> parseStringList(Object fieldValue) {
-		Collection<String> fieldCollection = (Collection<String>)fieldValue;
-		if (fieldCollection == null) {
-			return new ArrayList<String>();
-		}
-		else {
-			return new ArrayList<String>(fieldCollection);
-		}
-	}
-
-	public int parseInt(Object value) {
-		if (value == null) {
-			return 0;
-		}
-		else {
-			return (Integer)value;
-		}
 	}
 	
 	public EmailBean findNonPrimaryEmail(String newPrimaryEmail, String verifyCode) {
@@ -1024,41 +970,11 @@ public class TalkerBean implements Serializable {
 	public void setAccountName(String accountName) {
 		this.accountName = accountName;
 	}
-	public boolean isShareTwitterToThoughts() {
-		return shareTwitterToThoughts;
-	}
-	public void setShareTwitterToThoughts(boolean shareTwitterToThoughts) {
-		this.shareTwitterToThoughts = shareTwitterToThoughts;
-	}
-	public boolean isShareThoughtsToTwitter() {
-		return shareThoughtsToTwitter;
-	}
-	public void setShareThoughtsToTwitter(boolean shareThoughtsToTwitter) {
-		this.shareThoughtsToTwitter = shareThoughtsToTwitter;
-	}
-	public boolean isFollowTAH() {
-		return followTAH;
-	}
-	public void setFollowTAH(boolean followTAH) {
-		this.followTAH = followTAH;
-	}
 	public List<String> getInsuranceAccepted() {
 		return insuranceAccepted;
 	}
 	public void setInsuranceAccepted(List<String> insuranceAccepted) {
 		this.insuranceAccepted = insuranceAccepted;
-	}
-	public boolean isTwitterPostOnAnswer() {
-		return twitterPostOnAnswer;
-	}
-	public void setTwitterPostOnAnswer(boolean twitterPostOnAnswer) {
-		this.twitterPostOnAnswer = twitterPostOnAnswer;
-	}
-	public boolean isTwitterPostOnStart() {
-		return twitterPostOnStart;
-	}
-	public void setTwitterPostOnStart(boolean twitterPostOnStart) {
-		this.twitterPostOnStart = twitterPostOnStart;
 	}
 	public Set<ServiceAccountBean> getServiceAccounts() {
 		return serviceAccounts;

@@ -59,7 +59,6 @@ public class HealthItemDAO {
 	}
 	
 	//For now we don't use "diseaseId" because we have one disease
-	//TODO: make it more efficient? - read Mongo articles
 	//FIXME: add indexes!!
 	public static HealthItemBean getHealthItemByName(String name, String diseaseId) {
 		DBCollection healthItemsColl = getCollection(HEALTH_ITEMS_COLLECTION);

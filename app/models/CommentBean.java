@@ -17,7 +17,6 @@ import dao.TalkerDAO;
 
 public class CommentBean extends MessageBean {
 	
-	//TODO: make similar other such classes (e.g. ConvoName)
 	public static class Vote implements DBModel {
 		
 		private TalkerBean talker;

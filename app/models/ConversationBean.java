@@ -59,7 +59,6 @@ public class ConversationBean {
 	private String uid;
 	private TalkerBean talker;
 	
-	//TODO: Set or List?
 	private String details;
 	private int views;
 	
@@ -150,7 +149,6 @@ public class ConversationBean {
 		}
 	}
 	
-	//TODO: make one methods for all DBRefs!!
 	private void parseRelatedConvos(Collection<DBRef> relatedDBList) {
 		relatedConvos = new HashSet<ConversationBean>();
 		if (relatedDBList != null) {
@@ -252,7 +250,6 @@ public class ConversationBean {
 		return null;
 	}
 	
-	//TODO: MOVE TO ABSTRACT DBModel class?
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof ConversationBean)) {

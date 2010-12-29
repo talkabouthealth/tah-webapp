@@ -9,7 +9,7 @@
         <span class="blacktext12">
 			#{talker/talkerInfo talker: _talker /}
 		</span><br/>
-        #{if _talker.loadProfilePreferences().contains(models.TalkerBean.ProfilePreference.PERSONAL_INFO) }
+        #{if _talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.PERSONAL_INFO) }
         	<span class="greytext12">
 				${_talker.bio?.limitSize(80)?.nl2br()}
 				#{if _talker.bio?.size() > 80 }

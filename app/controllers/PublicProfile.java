@@ -246,7 +246,6 @@ public class PublicProfile extends Controller {
 	}
 	
 	public static void recommendedTopicsAjaxLoad(String afterId) {
-		//TODO: improve speed?
     	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
     	TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(_talker.getId());
     	
