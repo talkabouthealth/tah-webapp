@@ -151,6 +151,12 @@
 										#{/else}
 									</div>
 								#{/if}
+								#{elseif flash.query}
+									<div style="font-size: 14px; clear: left; padding-top: 10px">
+										Sorry. No results match the query.
+									</div>
+									<br/><br/><br/>
+								#{/elseif}
 				            </div>
 			        	</div>
     					</div>

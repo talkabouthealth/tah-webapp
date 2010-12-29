@@ -187,12 +187,20 @@
                     <!--profiletxtCantant-->
                     <div class="profiletxtCantant">
                       <div class="profileCantanttxt1"><strong>Member Since:&nbsp;</strong>${talker.regDate.format('MMM. yyyy')}</div>
-                      <div class="profileCantanttxt2"><strong>Top Answers:&nbsp;</strong>0</div>
+                      <div class="profileCantanttxt2">
+                      	<strong>Top Answers:&nbsp;</strong>
+                      	<a style="text-decoration: none" 
+                      		href="@{PublicProfile.answers(talker.userName)}">${numOfTopAnswers}</a>
+                      </div>
                     </div>
                     <!--profiletxtCantant-->
                     <div class="profiletxtCantant">
                       <div class="profileCantanttxt1"><strong>Conversations:&nbsp;</strong>${talker.startedTopicsList?.size()}</div>
-                      <div class="profileCantanttxt2"><strong>Answers:&nbsp;</strong>0</div>
+                      <div class="profileCantanttxt2">
+                      	<strong>Answers:&nbsp;</strong>
+                      	<a style="text-decoration: none" 
+                      		href="@{PublicProfile.answers(talker.userName)}">${numOfAnswers}</a>
+                      </div>
                     </div>
                     <!--profiletxtCantant-->
 					#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.PERSONAL_INFO) }

@@ -195,11 +195,16 @@ public class ViewDispatcher extends Controller {
 		
 		Set<Action> talkerFeed = FeedsLogic.getTalkerFeed(talker, null);
 		
+		List<Action> answersFeed = new ArrayList<Action>();
+		int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeed);
+		int numOfAnswers = answersFeed.size();
+		
 		Logger.error("Before rendering");
 		
 		render("PublicProfile/newview.html", talker, disease, talkerDisease, healthItemsMap, 
 				currentTalker, talkerFeed,
-				notProvidedInfo, notViewableInfo, profFields);
+				notProvidedInfo, notViewableInfo, profFields,
+				numOfAnswers, numOfTopAnswers);
 	}
 	
 	private static void showConvo(ConversationBean convo) {

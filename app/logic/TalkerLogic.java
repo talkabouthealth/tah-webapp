@@ -9,18 +9,23 @@ import java.util.Set;
 
 import play.templates.JavaExtensions;
 import dao.ActionDAO;
+import dao.CommentsDAO;
+import dao.ConversationDAO;
 import dao.HealthItemDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
 
 import util.CommonUtil;
 
+import models.CommentBean;
+import models.ConversationBean;
 import models.HealthItemBean;
 import models.TalkerBean;
 import models.TalkerDiseaseBean;
 import models.TopicBean;
 import models.ConversationBean.ConvoType;
 import models.actions.Action;
+import models.actions.AnswerDisplayAction;
 import models.actions.Action.ActionType;
 
 public class TalkerLogic {
@@ -265,6 +270,24 @@ public class TalkerLogic {
 		}
 		
 		return recommendedTopics;
+	}
+	public static int prepareTalkerAnswers(String talkerId, List<Action> answersFeed) {
+		int numOfTopAnswers = 0;
+		List<CommentBean> allAnswers = CommentsDAO.getTalkerAnswers(talkerId, null);
+		for (CommentBean answer : allAnswers) {
+			ConversationBean convo = ConversationDAO.getByConvoId(answer.getConvoId());
+			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
+			
+			if (!convo.getComments().isEmpty() && convo.getComments().get(0).equals(answer)) {
+				numOfTopAnswers++;
+			}
+			
+			AnswerDisplayAction answerAction = new AnswerDisplayAction(convo.getTalker(), convo, answer, ActionType.ANSWER_CONVO);
+			answerAction.setTime(answer.getTime());
+			
+			answersFeed.add(answerAction);
+		}
+		return numOfTopAnswers;
 	}
 
 }

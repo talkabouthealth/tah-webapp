@@ -92,7 +92,7 @@ public class PublicProfile extends Controller {
     	CommentBean comment = CommentsDAO.getProfileCommentById(commentId);
     	notFoundIfNull(comment);
     	
-    	if (!talker.getId().equals(comment.getProfileTalkerId())) {
+    	if ( !(talker.getId().equals(comment.getProfileTalkerId()) || talker.isAdmin()) ) {
     		forbidden();
     		return;
     	}
@@ -134,21 +134,7 @@ public class PublicProfile extends Controller {
 		TalkerLogic.preloadTalkerInfo(talker);
 		
 		List<Action> answersFeed = new ArrayList<Action>();
-		int numOfTopAnswers = 0;
-		List<CommentBean> allAnswers = CommentsDAO.getTalkerAnswers(talker.getId(), null);
-		for (CommentBean answer : allAnswers) {
-			ConversationBean convo = ConversationDAO.getByConvoId(answer.getConvoId());
-			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
-			
-			if (!convo.getComments().isEmpty() && convo.getComments().get(0).equals(answer)) {
-				numOfTopAnswers++;
-			}
-			
-			AnswerDisplayAction answerAction = new AnswerDisplayAction(convo.getTalker(), convo, answer, ActionType.ANSWER_CONVO);
-			answerAction.setTime(answer.getTime());
-			
-			answersFeed.add(answerAction);
-		}
+		int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeed);
 		
 //		If user has not filled out their Health Info, also display the message
 		boolean noHealthInfo = false;

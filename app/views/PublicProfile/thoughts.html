@@ -68,7 +68,7 @@
    		}
 
    		function deleteComment(commentId) {
-   	   		var confirmDel = confirm("Are you sure want to delete this comment?");
+   	   		var confirmDel = confirm("Are you sure want to delete this thought/reply?");
    	   		if (confirmDel) {
    	   	   		$("#comment"+commentId).remove();
 
@@ -124,7 +124,7 @@
 								${talker.userName} does not have any Comments, be the first to welcome ${talker.userName}.
 							</span>
 						#{/if}
-						#{profileCommentsTree2 commentsList: talker.profileCommentsList, level: 1, showDelete: talker.equals(currentTalker), isFeed: false /}
+						#{profileCommentsTree2 commentsList: talker.profileCommentsList, level: 1, showDelete: (talker.equals(currentTalker) || currentTalker.isAdmin()), isFeed: false /}
 					</div>
                     <div class="cb"></div>
                   </div>
