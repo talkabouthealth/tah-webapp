@@ -5169,3 +5169,9 @@ border:0;
 .followingTopicBtn:hover { background: url(../images/unfollowTopicBtn.jpg); }
 
 .restartChatBtn { background: url(../images/restartChatBtn.jpg); margin-top: 5px; }
+
+#saveBtn { padding: 5px 25px; }
+#saveBtnText {
+	margin-left: 10px;
+	font-size: 14px; 
+}

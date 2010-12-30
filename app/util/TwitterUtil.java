@@ -251,7 +251,7 @@ public class TwitterUtil {
 	public static String prepareTwit(String twitText, String param) {
 		if (param == null) {
 			if (twitText.length() > 135) {
-				twitText = twitText.substring(0, 131)+" ...";
+				twitText = twitText.substring(0, 133)+" ...";
 			}
 			return twitText;
 		}

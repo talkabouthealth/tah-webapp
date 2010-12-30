@@ -470,7 +470,7 @@ function addAjaxForm(formId) {
 		if (closeInterval) {
 			window.clearInterval(closeInterval);
 		}
-		$("#savedHelpText").html("Saving...");
+		$("#savedHelpText, #saveBtnText").html("Saving...");
 		$("#savedHelpError").html("");
 		$("#savedHelp").fadeIn(300);
 		
@@ -483,11 +483,11 @@ function showResponse(responseText, statusText, xhr, $form)  {
 	if (responseText.indexOf("Error:") === 0) {
 		var errorText = responseText.replace("Error:", "");
 		$("#savedHelpText").html(""); 
-		$("#savedHelpError").html(errorText); 
+		$("#savedHelpError, #saveBtnText").html(errorText); 
 		closeInterval = setInterval(function() { $("#savedHelp").fadeOut(200) }, 4000);
 	}
 	else {
-		$("#savedHelpText").html("Saved!"); 
+		$("#savedHelpText, #saveBtnText").html("Saved!"); 
 		closeInterval = setInterval(function() { $("#savedHelp").fadeOut(200) }, 2500);
 	}
 } 

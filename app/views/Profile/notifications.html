@@ -435,6 +435,11 @@
 			</div>
 		</form>
 		
+		<div style="float: left; clear: both;">
+			<input id="saveBtn" disabled="disabled" type="submit" value="Save" />
+			<span id="saveBtnText"></span>
+		</div>
+		
 		#{if talker.nextStepMessage }
 		 	<div class="generalsubhead">
 			 	Next Step: ${talker.nextStepMessage?.raw()}.

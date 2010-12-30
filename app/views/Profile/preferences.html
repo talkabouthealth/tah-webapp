@@ -68,6 +68,10 @@
 								#{/list}
 							</div>
 						</div>
+						
+						<input id="saveBtn" disabled="disabled" type="submit" value="Save" />
+						<span id="saveBtnText"></span>
+						
 						#{if talker.nextStepMessage }
 						 	<div class="generalsubhead">
 							 	Next Step: ${talker.nextStepMessage?.raw()}.
@@ -88,7 +92,7 @@
 							</span><br/><br/><br/><br/><br/>
 							<form action="@{Profile.deactivateAccount()}" method="POST" 
 									onsubmit="if (!confirm('Are you sure want to deactivate your account?')) return false;">
-								<input type="submit" style="padding: 10px" 
+								<input type="submit" style="padding: 5px" 
 									value="Deactivate Account" />
 							</form>
 						</div>

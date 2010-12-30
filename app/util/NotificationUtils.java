@@ -113,30 +113,30 @@ public class NotificationUtils {
 			restartTalker = convo.getTalker();
 		}
 		
+//		if (serviceAccount.getType() == ServiceType.TWITTER) {
+//			postText = postText + bitlyLinkText;
+//			postText = TwitterUtil.prepareTwit(postText, convo.getTopic());
+//			TwitterUtil.makeUserTwit(postText, serviceAccount.getToken(), serviceAccount.getTokenSecret());
+//		}
+//		else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
+//			postText = postText + fullLinkText;
+//			postText = postText.replace("<PARAM>", convo.getTopic());
+//			FacebookUtil.post(postText, serviceAccount.getToken());
+//		}
+		
 		StringBuilder message = new StringBuilder();
 		message.append(restartTalker.getUserName());
 		if (convo.getConvoType() == ConvoType.CONVERSATION || restartTalkerId != null) {
 			//mnj5 started the talk: What items come in handy after a mastectomy... To join the talk: http://bit.ly/dfsqe
-			message.append(" started the chat: \"");
-    		
-    		String convoTitle = convo.getTopic();
-    		if (convoTitle.length() > 50) {
-    			convoTitle = convoTitle.substring(0, 50)+"...";
-    		}
-    		message.append(convoTitle+"\" To join the chat:");
+			message.append(" started the chat: \"<PARAM>\" To join: ");
     		message.append(convo.getBitlyChat());
 		}
 		else {
     		//mnj5 asked the question: What items come in handy after a mastectomy... To answer: http://bit.ly/dfsqe
-			message.append(" asked the question: \"");
-    		
-    		String convoTitle = convo.getTopic();
-    		if (convoTitle.length() > 55) {
-    			convoTitle = convoTitle.substring(0, 55)+"...";
-    		}
-    		message.append(convoTitle+"\" To answer: ");
+			message.append(" asked the question: \"<PARAM>\" To answer: ");
     		message.append(convo.getBitly());
 		}
+		String messageText = TwitterUtil.prepareTwit(message.toString(), convo.getTopic());
     	
 		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
 			if (talker.isSuspended() || talker.isDeactivated()) {
@@ -150,7 +150,7 @@ public class NotificationUtils {
 			
 			ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
 			if (twitterAccount != null && twitterAccount.isTrue("NOTIFY")) {
-				TwitterUtil.sendDirect(twitterAccount.getId(), message.toString());
+				TwitterUtil.sendDirect(twitterAccount.getId(), messageText);
 			}
 		}
 	}
