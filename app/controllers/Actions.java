@@ -170,7 +170,7 @@ public class Actions extends Controller {
 						talker, profileTalker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT));
 				
 				for (ServiceAccountBean serviceAccount : talker.getServiceAccounts()) {
-					Logger.error("SHARE? "+serviceAccount.getType().toString()+" : "+serviceAccount.isTrue("SHARE_FROM_THOUGHTS"));
+//					Logger.error("SHARE? "+serviceAccount.getType().toString()+" : "+serviceAccount.isTrue("SHARE_FROM_THOUGHTS"));
 					if (!serviceAccount.isTrue("SHARE_FROM_THOUGHTS")) {
 						continue;
 					}
@@ -190,6 +190,16 @@ public class Actions extends Controller {
 		else {
 			//for replies we update action for parent comment
 			ActionDAO.updateProfileCommentAction(comment.getParentId());
+			
+			CommentBean thought = CommentsDAO.getProfileCommentById(comment.getParentId());
+			if (!talker.equals(thought.getFromTalker())) {
+				//send to user who started the thread
+				Map<String, String> vars = new HashMap<String, String>();
+				vars.put("other_talker", talker.getUserName());
+				vars.put("comment_text", comment.getText());
+				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
+						thought.getFromTalker(), vars);
+			}
 		}
 		
 		if (!talker.equals(profileTalker)) {

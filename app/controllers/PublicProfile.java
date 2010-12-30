@@ -156,17 +156,16 @@ public class PublicProfile extends Controller {
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
 		notFoundIfNull(talker);
 		
-		//TODO: check permissions and use sets?
-		List<ConversationBean> followingList = TalkerDAO.loadFollowingConversations(talker.getId());
-		List<ConversationBean> startedList = 
-			ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO);
-		List<ConversationBean> joinedList = 
-			ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO);
+		List<Action> startedConvosFeed = 
+			TalkerLogic.prepareTalkerConvos(ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO));
+		List<Action> joinedConvosFeed = 
+			TalkerLogic.prepareTalkerConvos(ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO));
+		List<Action> followingConvosFeed = TalkerLogic.prepareTalkerConvos(TalkerDAO.loadFollowingConversations(talker.getId()));
 		
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
 		TalkerLogic.preloadTalkerInfo(talker);
 		
-		render(talker, currentTalker, followingList, startedList, joinedList);
+		render(talker, currentTalker, startedConvosFeed, joinedConvosFeed, followingConvosFeed);
 	}
 	
 	

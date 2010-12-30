@@ -3,7 +3,7 @@
 <style>
 	body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
 	#innerpersonalarea { padding-top: 10px; padding-bottom: 10px;}
-	#innermiddlearea { width: 655px }
+	#innermiddlearea { width: 655px; padding-top: 5px; }
 	#innerheading { width:500px; }
 	
 	#mtright { float: right; margin-top:-50px; }
@@ -34,8 +34,27 @@
 		background: none;
 		border: none;
 	}
+	.notibluearea { padding-bottom: 0px; }
 	
 	.twitterSetting { margin-bottom: 0px; }
+	
+	.signfields2 h1, .notiblueareamid h1 {
+		color:#000000;
+	}
+	
+	.settingsDiv {
+		padding-top: 15px;
+		padding-left: 20px;
+	}
+	.settingsDiv .settingsItems {
+		padding-top: 5px;
+		padding-left: 30px;
+		display: none;
+	}
+	.showSettingsLink { 
+		font-size: 15px;
+	}
+	h4 { color: #000000 }
 </style>
 
 <script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
@@ -123,6 +142,11 @@
 				function(data) {}
 			);
 		});
+
+		$(".showSettingsLink").click(function() {
+			$(this).next().toggle();
+			return false;
+		});
 	});
 
 	function validatePasswordForm() {
@@ -188,31 +212,29 @@
 	#{include 'header.html' /}
 	<div id="innerbanner"></div>
 	<div id="innermain">
-		<div class="blacktext2" id="innerheading">Login and Notification Accounts</div>
+		<div class="blacktext2" id="innerheading" style="width: 550px;">Notifications Settings and Password</div>
 		<div id="innermiddlearea">
-			<div class="notifactionboxtop"></div>
-			<div class="notifactionboxmid">
 				<div class="notibluearea">
 					<div class="signfields2">
-						
-							<h1>Email</h1>
-							<table id="emailstable" border="0">
-								<tr>
-									<td>${talker.email}<br/>
-										#{if talker.verifyCode != null }
-											<a href="#" title="${talker.email}" 
-												onclick="return sendVerificationLink(this);"
-												class="red12">(email not verified - resend verification e-mail)</a>
-											<span id="verificationResendResult" class="blacktext12"></span>
-										#{/if}
-									</td>
-									<td>Primary</td>
-									<td>&nbsp;</td>
-								</tr>
-								#{list items: talker.emails, as: 'email' }
-									#{ profileNotificationEmail email: email /}
-								#{/list}
-							</table>
+						<h1>Email</h1>
+						<table id="emailstable" border="0" style="margin-left: 10px;">
+							<tr>
+								<td>${talker.email}<br/>
+									#{if talker.verifyCode != null }
+										<a href="#" title="${talker.email}" 
+											onclick="return sendVerificationLink(this);"
+											class="red12">(email not verified - resend verification e-mail)</a>
+										<span id="verificationResendResult" class="blacktext12"></span>
+									#{/if}
+								</td>
+								<td>Primary</td>
+								<td>&nbsp;</td>
+							</tr>
+							#{list items: talker.emails, as: 'email' }
+								#{ profileNotificationEmail email: email /}
+							#{/list}
+						</table>
+						<div style="margin-left: 20px;">
 							<a href="#"  style="font-size:14px;" 
 								onclick="$('#addEmailForm').toggle(); return false;">add another email address</a>
 							<div id="addEmailForm" style="display:none">
@@ -222,7 +244,38 @@
 								<br/>
 								<input id="newEmailBtn" type="button" value="Add email" />
 							</div>
-						
+						</div>
+						<div class="settingsDiv">
+							<a href="#" class="showSettingsLink">+ Email Settings</a>
+							<div class="settingsItems">
+								<form id="emailsettings" name="emailsettings" action="@{Profile.emailSettingsSave()}#emailsettingsform" method="post">
+								<div class="generalcheck">
+									<h4>User Related</h4>
+									#{set showConvoTitle = true /}
+									#{list items:models.TalkerBean.EmailSetting.values(), as:'setting' }
+										#{if setting.toString().startsWith('CONVO') && showConvoTitle}
+											<h4>Conversation Related</h4>
+											#{set showConvoTitle = false /}
+										#{/if}
+										<div class="preferencescheck">
+											<input type="checkbox" value="" name="${setting}"
+												#{if talker.emailSettings?.contains(setting) } checked='checked' #{/if}
+											/>
+											<span class="blacktext14">&nbsp;${setting.description}</span>
+										</div>
+									#{/list}
+								</div>
+								<h4>Newsletter</h4>
+								<div class="generalcheck">
+									<div class="preferencescheck">
+										<input id="talker.newsletter" name="talker.newsletter" 
+											type="checkbox" #{if talker.newsletter} checked #{/if} /> 
+										<span class="blacktext14">&nbsp;Send me the TalkAboutHealth newsletter.</span>
+									</div>
+								</div>
+								</form>
+							</div>
+						</div>
 					</div>
 				</div>
 				<form id="serviceSettingsForm" name="serviceSettingsForm" 
@@ -230,35 +283,42 @@
 				<div class="notibluearea">
 					<div class="signfields2">
 						<h1>IM</h1>
-						<table id="imstable" border="0">
+						<table id="imstable" border="0" style="margin-left: 10px;">
 							#{list items: talker.imAccounts, as: 'imAccount' }
 								#{ profileNotificationIM imAccount: imAccount /}
 							#{/list}
 						</table>
-						<a href="#" style="font-size:14px;"
-							onclick="$('#addIMForm').toggle(); return false;">add another IM account</a>
-						<div id="addIMForm" style="display:none">
-							<br/>
-							<span class="error" id="imError"></span><br/>
-							<select id="imService" name="imService" class="personalfields">
-						  		<option selected value=''>Select an IM service</option>
-								#{list items: models.IMAccountBean.IM_SERVICES_MAP.keySet(), as:'imService'}
-								    <option value="${imService}" 
-								    #{if flash['talker.im'].equals(imService) } selected #{/if} 
-								    >${models.IMAccountBean.IM_SERVICES_MAP.get(imService)}</option>
-								#{/list}
-							</select>
-							<br/>
-							<input id="imUserName" name="imUserName" type="text" value="" size="40"/>
-							<br/>
-							<input id="newIMBtn" type="button" value="Add IM account" />
+						<div style="margin-left: 20px;">
+							<a href="#" style="font-size:14px;"
+								onclick="$('#addIMForm').toggle(); return false;">add another IM account</a>
+							<div id="addIMForm" style="display:none">
+								<br/>
+								<span class="error" id="imError"></span><br/>
+								<select id="imService" name="imService" class="personalfields">
+							  		<option selected value=''>Select an IM service</option>
+									#{list items: models.IMAccountBean.IM_SERVICES_MAP.keySet(), as:'imService'}
+									    <option value="${imService}" 
+									    #{if flash['talker.im'].equals(imService) } selected #{/if} 
+									    >${models.IMAccountBean.IM_SERVICES_MAP.get(imService)}</option>
+									#{/list}
+								</select>
+								<br/>
+								<input id="imUserName" name="imUserName" type="text" value="" size="40"/>
+								<br/>
+								<input id="newIMBtn" type="button" value="Add IM account" />
+							</div>
 						</div>
-						<div class="generalcheck" style="padding-top: 15px; padding-bottom:0px;">
-							<div class="preferencescheck">
-								<input type="checkbox" value="" name="im_notify" class="twitterSetting"
-									#{if talker.imNotify} checked='checked' #{/if}
-								/>
-								<span class="blacktext14">&nbsp;Notify me of relevant questions and live chats via IM.</span>
+						<div class="settingsDiv">
+							<a href="#" class="showSettingsLink">+ IM Settings</a>
+							<div class="settingsItems">
+								<div class="generalcheck" style="padding-top: 0px; padding-bottom:0px;">
+									<div class="preferencescheck">
+										<input type="checkbox" value="" name="im_notify" class="twitterSetting"
+											#{if talker.imNotify} checked='checked' #{/if}
+										/>
+										<span class="blacktext14">&nbsp;Notify me of relevant questions and live chats via IM.</span>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -268,27 +328,38 @@
 						#{set serviceTypeName = serviceType.toString().toLowerCase().capFirst() /}
 						<div class="signfields2">
 							<h1>${serviceTypeName}</h1>
-							<div style="font-size: 14px;">
+							<div style="font-size: 14px; padding-left: 20px;">
 								#{set serviceAccount = talker.serviceAccountByType(serviceType) /}
 								#{if serviceAccount }
 									<br/><br/>
 									&nbsp;${ serviceAccount.userName ? serviceAccount.userName : talker.userName } 
 									&nbsp;&nbsp;&nbsp;<a href="#" onclick="return deleteServiceAccount('${serviceType.toString()}');">delete</a>
-									<br/>
-									<br/>
-									#{set settingsNames = models.ServiceAccountBean.settingsNamesByType(serviceType) /}
-									#{list items: settingsNames.keySet(), as: 'key' }
-										#{ifnot key.equals('FOLLOW') }
-											<div class="generalcheck" style="padding-bottom:0px;">
-												<div class="preferencescheck">
-													<input type="checkbox" value="true" name="${serviceType.toString()}_${key}"
-					#{if serviceAccount?.settings && serviceAccount?.settings[key]?.equals('true')} checked='checked' #{/if}
-													/>
-													<span class="blacktext14">&nbsp;${settingsNames.get(key)}</span>
-												</div>
+									<div class="settingsDiv" style="padding-left: 0px;">
+										<a href="#" class="showSettingsLink">+ ${serviceTypeName} Settings</a>
+										<div class="settingsItems">
+											<div class="generalcheck">
+												<h4>Notifications</h4>
+												#{set settingsNames = models.ServiceAccountBean.settingsNamesByType(serviceType) /}
+												#{set showPostsTitle = true /}
+												#{list items: settingsNames.keySet(), as: 'key' }
+													#{ifnot key.equals('FOLLOW') }
+														#{if key.contains('SHARE') && showPostsTitle}
+															<h4>Posts</h4>
+															#{set showPostsTitle = false /}
+														#{/if}
+														<div class="generalcheck" style="padding-bottom:0px;">
+															<div class="preferencescheck">
+																<input type="checkbox" value="true" name="${serviceType.toString()}_${key}"
+								#{if serviceAccount?.settings && serviceAccount?.settings[key]?.equals('true')} checked='checked' #{/if}
+																/>
+																<span class="blacktext14">&nbsp;${settingsNames.get(key)}</span>
+															</div>
+														</div>
+													#{/ifnot}
+												#{/list}
 											</div>
-										#{/ifnot}
-									#{/list}
+										</div>
+									</div>
 								#{/if}
 								#{else}
 									<a href="#" style="font-size:14px;" 
@@ -304,8 +375,6 @@
 					#{/list}
 				</div>
 				</form>
-			</div>
-			<div class="notifactionboxbot"></div>
 		</div>
 		
 		#{ set currentPage = 'publicProfile' /}
@@ -314,12 +383,7 @@
             	
 	
 	<form id="setNotifyFrequency" name="setNotifyFrequency" action="@{Profile.notificationsSave()}#notificationsform" method="post"  >
-		<div class="blacktext2" id="innerheading">
-			IM and Twitter Notification Settings
-		</div>
 		<div id="innermiddlearea">
-			<div class="notifactionboxtop"></div>
-				<div class="notifactionboxmid">
 					<div class="notibluearea">
 						<div class="notiblueareamid">
 							<h1>How often do you want to be notified?</h1>
@@ -368,66 +432,21 @@
 							</ul>
 						</div>
 					</div>
-				</div>
-				<div class="notifactionboxbot"></div>
 			</div>
 		</form>
 		
-	<form id="emailsettings" name="emailsettings" action="@{Profile.emailSettingsSave()}#emailsettingsform" method="post">
-		<div class="blacktext2" id="innerheading">
-			<a name="emailsettingsform"></a>
-			Email Settings
-		</div>
-		<div id="innermiddlearea">
-			<div class="notifactionboxtop"></div>
-			<div class="notifactionboxmid">
-					<div class="notibluearea">
-						<div class="signfields2">
-							<div class="generalcheck">
-								<h1>User Related</h1>
-								#{set showConvoTitle = true /}
-								#{list items:models.TalkerBean.EmailSetting.values(), as:'setting' }
-									#{if setting.toString().startsWith('CONVO') && showConvoTitle}
-										<h1>Conversation Related</h1>
-										#{set showConvoTitle = false /}
-									#{/if}
-									<div class="preferencescheck">
-										<input type="checkbox" value="" name="${setting}"
-											#{if talker.emailSettings?.contains(setting) } checked='checked' #{/if}
-										/>
-										<span class="blacktext14">&nbsp;${setting.description}</span>
-									</div>
-								#{/list}
-							</div>
-							
-							
-							<h1>Newsletter</h1>
-							<div class="generalcheck">
-								<div class="preferencescheck">
-									<input id="talker.newsletter" name="talker.newsletter" 
-										type="checkbox" #{if talker.newsletter} checked #{/if} /> 
-									<span class="blacktext14">&nbsp;Send me the TalkAboutHealth newsletter.</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="notifactionboxbot"></div>
+		#{if talker.nextStepMessage }
+		 	<div class="generalsubhead">
+			 	Next Step: ${talker.nextStepMessage?.raw()}.
+			 	Or go to the <a href="@{Home.index()}">Home</a> page.
 			</div>
-			
-			#{if talker.nextStepMessage }
-			 	<div class="generalsubhead">
-				 	Next Step: ${talker.nextStepMessage?.raw()}.
-				 	Or go to the <a href="@{Home.index()}">Home</a> page.
-				</div>
-		 	#{/if}
-	</form>	
-		
+	 	#{/if}
 	</div>		
 	
 	
 <div id="personalarea" style="margin-top: 25px;">
 	<div id="personalinner">
+		<div class="blacktext2">Password</div>
 		<div id="personalleft1">
 		<a name="passwordform"></a>
 		<form id="changePasswordForm" name="changePasswordForm" action="@{Profile.changePassword()}#changePasswordForm" method="post">

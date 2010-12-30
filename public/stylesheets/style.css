@@ -4614,6 +4614,7 @@ a.product, a.cat_close, a.cat_open {
 	text-align:center;
 }
 .followingpictxt a {
+	font-size: 11px;
 	text-decoration:none;
 	color:#0286bc;
 }

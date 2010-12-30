@@ -282,12 +282,35 @@ public class TalkerLogic {
 				numOfTopAnswers++;
 			}
 			
-			AnswerDisplayAction answerAction = new AnswerDisplayAction(convo.getTalker(), convo, answer, ActionType.ANSWER_CONVO);
+			AnswerDisplayAction answerAction = new AnswerDisplayAction(convo.getTalker(), convo, answer, ActionType.ANSWER_CONVO, false);
 			answerAction.setTime(answer.getTime());
 			
 			answersFeed.add(answerAction);
 		}
 		return numOfTopAnswers;
+	}
+	
+	public static List<Action> prepareTalkerConvos(List<ConversationBean> loadFollowingConversations) {
+		List<Action> convosFeed = new ArrayList<Action>();
+		for (ConversationBean convo : loadFollowingConversations) {
+			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
+			
+			TalkerBean activityTalker = convo.getTalker();
+			//show top answer or simple convo
+			CommentBean topAnswer = null;
+			if (!convo.getComments().isEmpty()) {
+				topAnswer = convo.getComments().get(0);
+				topAnswer = CommentsDAO.getConvoAnswerById(topAnswer.getId());
+				activityTalker = topAnswer.getFromTalker();
+			}
+			
+			AnswerDisplayAction convoAction =
+				new AnswerDisplayAction(activityTalker, convo, topAnswer, ActionType.ANSWER_CONVO, topAnswer != null);
+			convoAction.setTime(convo.getCreationDate());
+			
+			convosFeed.add(convoAction);
+		}
+		return convosFeed;
 	}
 
 }

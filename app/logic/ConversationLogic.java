@@ -97,18 +97,26 @@ public class ConversationLogic {
 //			Just started a live chat on TalkAboutHealth: "What are the best hospitals in NYC for breast cancer ..." http://bit.ly/lksa
 			
 			String postText = null;
+			String bitlyLinkText = null;
+			String fullLinkText = null;
 			if (convo.getConvoType() == ConvoType.CONVERSATION) {
-				postText = "Just started a live chat on TalkAboutHealth: \"<PARAM>\" "+convo.getBitlyChat();
+				postText = "Just started a live chat on TalkAboutHealth: \"<PARAM>\" ";
+				bitlyLinkText = convo.getBitlyChat();
+				fullLinkText = convoChatURL;
 			}
 			else {
-				postText = "Just asked a question on TalkAboutHealth: \"<PARAM>\" "+convo.getBitly();
+				postText = "Just asked a question on TalkAboutHealth: \"<PARAM>\" ";
+				bitlyLinkText = convo.getBitlyChat();
+				fullLinkText = convoURL;
 			}
 			
 			if (serviceAccount.getType() == ServiceType.TWITTER) {
+				postText = postText + bitlyLinkText;
 				postText = TwitterUtil.prepareTwit(postText, convo.getTopic());
 				TwitterUtil.makeUserTwit(postText, serviceAccount.getToken(), serviceAccount.getTokenSecret());
 			}
 			else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
+				postText = postText + fullLinkText;
 				postText = postText.replace("<PARAM>", convo.getTopic());
 				FacebookUtil.post(postText, serviceAccount.getToken());
 			}
@@ -188,13 +196,15 @@ public class ConversationLogic {
     			}
     			
     			//Just answered a question on TalkAboutHealth: "What are the ..." http://bit.ly/lksa
-    			String postText = "Just answered a question on TalkAboutHealth: \"<PARAM>\" "+convo.getBitly();
+    			String postText = "Just answered a question on TalkAboutHealth: \"<PARAM>\" ";
     			
     			if (serviceAccount.getType() == ServiceType.TWITTER) {
+    				postText = postText + convo.getBitly();
     				postText = TwitterUtil.prepareTwit(postText, convo.getTopic());
     				TwitterUtil.makeUserTwit(postText, serviceAccount.getToken(), serviceAccount.getTokenSecret());
     			}
     			else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
+    				postText = postText + convoURL;
     				postText = postText.replace("<PARAM>", convo.getTopic());
     				FacebookUtil.post(postText, serviceAccount.getToken());
     			}
