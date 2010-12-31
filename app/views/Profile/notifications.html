@@ -144,6 +144,13 @@
 		});
 
 		$(".showSettingsLink").click(function() {
+			var currentText = $(this).html();
+			if (currentText.indexOf("+") > -1) {
+				$(this).html("-"+currentText.substring(1));
+			}
+			else {
+				$(this).html("+"+currentText.substring(1));
+			}
 			$(this).next().toggle();
 			return false;
 		});
@@ -441,7 +448,7 @@
 		</div>
 		
 		#{if talker.nextStepMessage }
-		 	<div class="generalsubhead">
+		 	<div class="generalsubhead" style="clear: both;">
 			 	Next Step: ${talker.nextStepMessage?.raw()}.
 			 	Or go to the <a href="@{Home.index()}">Home</a> page.
 			</div>

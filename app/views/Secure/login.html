@@ -34,7 +34,13 @@
 		</div>
 		<div id="innerbanner"></div>
 		<div id="innermain">
-			<div class="blacktext2" id="innerheading">Login to your Account</div>
+			#{if flash.verifiedEmail}
+				<div class="blacktext2" id="innerheading" style="font-weight: normal;">Congratulations! Email verified.</div>
+				<div style="font-size: 18px;">Sign in below to be matched with others and get immediate answers and support.</div>
+			#{/if}
+			#{else}
+				<div class="blacktext2" id="innerheading">Login to your Account</div>
+			#{/else}
 			<div id="innermiddlearea">
 				<div id="loginarea">
 				#{form @authenticate() , id: 'loginform'} 

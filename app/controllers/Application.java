@@ -20,6 +20,7 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.PropertyConfigurator;
 
+import models.EmailBean;
 import models.IMAccountBean;
 import models.ServiceAccountBean;
 import models.ServiceAccountBean.ServiceType;
@@ -357,4 +358,30 @@ public class Application extends Controller {
     public static void suspendedAccount() {
     	render();
     }
+    
+    public static void verifyEmail(String verifyCode) throws Throwable {
+		notFoundIfNull(verifyCode);
+		
+		TalkerBean talker = TalkerDAO.getByVerifyCode(verifyCode);
+		notFoundIfNull(talker);
+		
+		if (verifyCode.equals(talker.getVerifyCode())) {
+			//primary email
+			talker.setVerifyCode(null);
+		}
+		else {
+			//clear verify code for non-primary email
+			EmailBean emailBean = talker.findNonPrimaryEmail(null, verifyCode);
+			emailBean.setVerifyCode(null);
+		}
+		
+		if (Security.isConnected()) {
+			CommonUtil.updateTalker(talker, session);
+			Profile.edit(true);
+		}
+		else {
+			flash.put("verifiedEmail", true);
+			Secure.login();
+		}
+	}
 }

@@ -283,6 +283,7 @@
   				{ parentId: '', text: text, from: 'home'},
   				function(html) {
   					$(html).prependTo($("#convoFeedList"));
+  					$(html).prependTo($("#communityFeedList"));
   					
   	  				//add inline edit for new comment
   					$('.inline-edit').inlineEdit( { hover: ''} );

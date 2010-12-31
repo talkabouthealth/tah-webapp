@@ -734,26 +734,6 @@ public class Profile extends Controller {
 		talkerDisease.setOtherHealthItems(otherHealthItems);
 	}
 	
-	public static void verifyEmail(String verifyCode) {
-		notFoundIfNull(verifyCode);
-		
-		TalkerBean talker = TalkerDAO.getByVerifyCode(verifyCode);
-		notFoundIfNull(talker);
-		
-		if (verifyCode.equals(talker.getVerifyCode())) {
-			//primary email
-			talker.setVerifyCode(null);
-		}
-		else {
-			//clear verify code for non-primary email
-			EmailBean emailBean = talker.findNonPrimaryEmail(null, verifyCode);
-			emailBean.setVerifyCode(null);
-		}
-		CommonUtil.updateTalker(talker, session);
-		
-		edit(true);
-	}
-	
 	public static void resendVerificationEmail(String email) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
