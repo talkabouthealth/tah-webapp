@@ -5,13 +5,10 @@
 		#innermiddlearea { padding-top: 10px }
 		.seeall { padding-top: 20px }
 		
-		#mask { background-color:#e6e6e6; }
-		
 		/* Hide images in talker's feed */
 		.joinpic { display: none; }
 	</style>
 	
-	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
 		var feedsPerPage = ${logic.FeedsLogic.TALKERFEEDS_PER_PAGE};
@@ -24,54 +21,8 @@
 				hideAll();
 			});		
 
-			$(".followConvoLink").live('click', function() {
-				var convoId = $(this).attr("rel");
-				if ($(this).html().indexOf("Unfollow") != -1) {
-					$(this).html("Follow");
-				}
-				else {
-					$(this).html("Unfollow");
-				}
-				$.post("@{Conversations.follow()}", 
-	  				{ convoId: convoId},
-	  				function(data) {
-	  					//...
-	  				}
-	  			);
-	  			return false;
-			});
-
-			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
 			$('.inline-edit').inlineEdit( { hover: ''} );
 		});
-
-   		//saveProfileComment(String profileTalkerId, String parentId, String text)
-   		function saveProfileComment(parentId) {
-   	   		var commentText = $("#replytext"+parentId).val();
-   			$("#replytext"+parentId).val("");
-
-   			$.post("@{Actions.saveProfileComment2()}", 
-  				{ parentId: parentId, text: commentText},
-  				function(html) {
-  	  				$("#firstcommentmessage").hide();
-  					//put comment in the tree
-  					if (parentId == '') {
-  	  					//add as first element in the top
-  						$(html).prependTo($(".commentsarea"));
-
-  	  					//add inline edit for new comment
-  						$('.inline-edit').inlineEdit( { hover: ''} );
-  					}
-  					else {
-  						//add as last element in subtree
-  						$("#reply"+parentId).before($(html));
-  					}
-  				}
-  			);
-
-   			
-  			return false;
-   		}
 	</script>
 		
 <div id="managtopic1">

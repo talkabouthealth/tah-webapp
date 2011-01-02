@@ -4,59 +4,19 @@
 		
 		#innermiddlearea { padding-top: 10px }
 		.seeall { padding-top: 20px }
-		
-		#mask { background-color:#e6e6e6; }
-		
-		.stylez2 {
-			font-size:22px;
-			color:#000000;
-			clear:both;
-			padding-top:5px;
-			text-align:left;
-			padding-bottom:4px;
-		}
-		.style2 {
-			color: #000000
-		}
 	</style>
 	
-	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			makeAutocomplete("#convoText", "convo");
-			
-			$(".followConvoLink").live('click', function() {
-				var convoId = $(this).attr("rel");
-				if ($(this).html().indexOf("Unfollow") != -1) {
-					$(this).html("Follow");
-				}
-				else {
-					$(this).html("Unfollow");
-				}
-				$.post("@{Conversations.follow()}", 
-	  				{ convoId: convoId},
-	  				function(data) {
-	  					//...
-	  				}
-	  			);
-	  			return false;
-			});
 
-			$(".startLink").click(function(e) {
-				$("#newConvoForm").show();
-				$("#newQuestionConfirm").hide();
-				$("#newTalkConfirm").hide();
-				if ($("#convoText").val() !== "") {
-					$("#newConvoTitle").val($("#convoText").val());
-				}
-				showPopup("#startDialog", 350);
+			$(".startLink").click(function() {
+				return showStartConvoDialog("question");
 			});
-
-			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
 		});
 	</script>
 		
-<div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
+<div id="managtopic1">
   <div id="managtopic">
   	#{include 'header.html' /}
   	<div id="bottom_container">
@@ -76,32 +36,26 @@
 	            #{else}
 	            	<div class="topipcWraper">
 	            #{/else}
-                   <div class="stylez2">Open Questions (${openQuestions.size()})</div>
-                    <div class="topicborder"></div>
-                    <!--mtinputbox-->
-
-                    <div class="cb"></div>
-                    <div class="topic conversationsList">
+                   		<div class="convoPagesTitle">Open Questions (${openQuestions.size()})</div>
+	                    <div class="topicborder"></div>
+	                    <div class="cb"></div>
+	                    
+	                    <div class="topic conversationsList">
+							#{list items: openQuestions, as: 'convo'}
+								#{openQuestion convo: convo, talker: talker /}
+							#{/list}                    
+							
+	                      	<div class="replytommentbox1" style="display: none;">
+	                        	<input type="submit" src="images/seemore.jpg" value=" " class="seemorecom" />
+	                      	</div>
+	                      	<div class="cb"></div>
+	                    </div>
                     
-#{list items: openQuestions, as: 'convo'}
-	#{openQuestion convo: convo, talker: talker /}
-#{/list}                    
-						
-                      <div class="replytommentbox1" style="display: none;">
-                        <input type="submit" src="images/seemore.jpg" value=" " class="seemorecom" />
-                      </div>
+						#{ notLoggedNotice /}                   
 
-                      <div class="cb"></div>
-                    </div>
-                    <!--topic-->
-                    
-					#{ notLoggedNotice /}                   
-
-                  <!--topic-->
-                  <div class="cb"></div>
-                </div>
-                <!--topipcWraper-->
-                <div class="cb"></div>
+                  		<div class="cb"></div>
+                	</div>
+                	<div class="cb"></div>
               </div>
               <!--mtcontent-->
               <div class="cb"></div>

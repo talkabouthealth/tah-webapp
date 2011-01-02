@@ -1,9 +1,5 @@
 #{ extends 'main.html' /}
 
-<link rel="stylesheet" href="/public/plugins/ui-lightness/jquery-ui-1.8.4.custom.css" type="text/css" media="screen" />
-<script type="text/javascript" 
-	src="/public/javascripts/jquery-ui-1.8.4.custom.min.js" ></script>
-	
 	<script type="text/javascript"> 	 
 		$(document).ready(function() {
 			makeAutocomplete("#query", "convo");
@@ -22,23 +18,6 @@
 						return false;
 					}
 				});
-
-			$(".followConvoLink").live('click', function() {
-				var convoId = $(this).attr("rel");
-				if ($(this).html().indexOf("Unfollow") != -1) {
-					$(this).html("Follow");
-				}
-				else {
-					$(this).html("Unfollow");
-				}
-				$.post("@{Conversations.follow()}", 
-	  				{ convoId: convoId},
-	  				function(data) {
-	  					//...
-	  				}
-	  			);
-	  			return false;
-			});
 		});
    	</script>
 	<style>
@@ -48,9 +27,7 @@
 			font-size:11px;
 		}
 		
-		.activitiestext span {
-			font-size: 12px;
-		}
+		.activitiestext span { font-size: 12px; }
 	</style>
 </head>
 <body>

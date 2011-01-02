@@ -5,88 +5,20 @@
 		#innermiddlearea { padding-top: 10px }
 		.seeall { padding-top: 20px }
 		
-		.latestactivity, .latestactivity1 { width: auto }
-		.latestactivity a, .latestactivity1 a { width: auto; padding-left: 8px; padding-right: 8px }
-		.latestactivity a:hover, .latestactivity1 a:hover { width: auto; padding-left: 8px; padding-right: 8px }
-		
+		/* Width for autocomplete */
 		.ui-menu { width: 350px }
-		
-		.topTab, .activeTopTab {
-			border: 1px solid #000000;
-			border-bottom: none;
-			margin-right: 10px;
-			
-			width: auto;
-			height: 38px;
-			float:left;
-		}
-		.topTab a, .activeTopTab a {
-			display:block;
-			text-align:center;
-			padding-top:8px;
-			font-size: 14pt;
-			font-weight:normal;
-			color:#000000;
-			text-decoration:none;
-			
-			width: auto; 
-			height: 30px;
-			padding-left: 8px; 
-			padding-right: 8px;
-		}
-		.activeTopTab a, .activeTopTab a:hover, .topTab a:hover {
-			display:block;
-			text-align:center;
-			padding-top:8px;
-			color:#FFFFFF;
-			text-decoration:none;
-			background:url(../images/latestactivity.jpg);
-			background-repeat: no-repeat;
-			background-position: center center;
-			background-color: #0b95d6;
-		}
-		
-		.topTabContent { display : none }
-		
-		.greyarea {
-			font-weight: normal;
-			font-size: 15px;
-			color: #777777;
-		}
 	</style>
 	
-	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
 		var username = "${talker.userName}";
-
 		var feedsPerPage = ${logic.FeedsLogic.FEEDS_PER_PAGE};
-
 		#{ oauthJavaScripts /}
 
 		$(document).ready(function() {
-			makeAutocomplete("#postQuestionText", "convo");
-			makeAutocomplete("#startChatText", "convo");
+			initNewTabs();
 			
-			$(".followConvoLink").live('click', function() {
-				var convoId = $(this).attr("rel");
-				if ($(this).html().indexOf("Unfollow") != -1) {
-					$(this).html("Follow");
-				}
-				else {
-					$(this).html("Unfollow");
-				}
-				$.post("@{Conversations.follow()}", 
-	  				{ convoId: convoId},
-	  				function(data) {
-	  					//...
-	  				}
-	  			);
-	  			return false;
-			});
-
 			var showIMPopup = ${showIMPopup};
-			//showIMPopup = true;
 			if (showIMPopup) {
 				var id = "#imDialog";
 				showPopup(id, 350);
@@ -133,43 +65,6 @@
 				}
 			});	
 
-			$(".startLink, #postQuestionBtn").click(function(e) {
-				$("#newConvoTypeQuestion").attr("checked", "checked");
-				
-				$("#newConvoForm").show();
-				$("#newQuestionConfirm").hide();
-				$("#newTalkConfirm").hide();
-				if ($("#convoText").val() !== "") {
-					$("#newConvoTitle").val($("#convoText").val());
-				}
-				showPopup("#startDialog", 350);
-			});
-
-			//TODO: move everything to one .js function
-			$(".startLink2").click(function(e) {
-				$("#newConvoTypeConvo").attr("checked", "checked");
-				
-				$("#newConvoForm").show();
-				$("#newQuestionConfirm").hide();
-				$("#newTalkConfirm").hide();
-				if ($("#convoText").val() !== "") {
-					$("#newConvoTitle").val($("#convoText").val());
-				}
-				showPopup("#startDialog", 350);
-			});
-
-			$('.inline-edit').inlineEdit( { hover: ''} );
-			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
-
-			$(".tabLink").click(function() {
-   				$(".latestactivity").removeClass("latestactivity").addClass("latestactivity1"); //Remove any "active" class
-   				$(this).parent().removeClass("latestactivity1").addClass("latestactivity"); //Add "active" class to selected tab
-   				var id = $(this).attr("id");
-   				$(".tabContent").hide(); //Hide all tab content
-   				$("#"+id+"Content").fadeIn(); //Fade in the active content
-   				return false;
-   			});
-
 			//start convo tabs
 			$(".topTabLink").click(function() {
    				$(".activeTopTab").removeClass("activeTopTab").addClass("topTab"); //Remove any "active" class
@@ -181,7 +76,6 @@
    				$("#"+id+"Content").show(); //Fade in the active content
    				return false;
    			});
-
 			$("#startConvoSmall a").click(function() {
 				$("#shareThoughtTab").parent().addClass("activeTopTab");
 				
@@ -190,7 +84,7 @@
 				$("#shareThoughtTabContent textarea").focus();
 			});					
 
-
+			/* ------- Follow methods for Recommended sections ---------- */
 			$(".followTopicLink").live('click', function() {
 				var topicId = $(this).attr("rel");
 				$.post("@{Topics.follow()}", 
@@ -208,7 +102,6 @@
 	  			);
 	  			return false;
 			});
-
 			$(".followConvoLink2").live('click', function() {
 				var convoId = $(this).attr("rel");
 				$.post("@{Conversations.follow()}", 
@@ -220,7 +113,6 @@
 	  			);
 	  			return false;
 			});
-
 			$(".followMemberLink").live('click', function() {
 				var memberId = $(this).attr("rel");
 				$.post("@{Actions.follow()}", 
@@ -238,45 +130,21 @@
 	  			);
 	  			return false;
 			});
+
+			makeAutocomplete("#postQuestionText", "convo");
+			makeAutocomplete("#startChatText", "convo");
+			$('.inline-edit').inlineEdit( { hover: ''} );
 		});
-
-		//saveProfileComment(String profileTalkerId, String parentId, String text)
-   		function saveProfileComment(parentId) {
-   	   		var commentText = $("#replytext"+parentId).val();
-   			$("#replytext"+parentId).val("");
-
-   			$.post("@{Actions.saveProfileComment2()}", 
-  				{ parentId: parentId, text: commentText},
-  				function(html) {
-  	  				$("#firstcommentmessage").hide();
-  					//put comment in the tree
-  					if (parentId == '') {
-  	  					//add as first element in the top
-  						$(html).prependTo($(".commentsarea"));
-
-  	  					//add inline edit for new comment
-  						$('.inline-edit').inlineEdit( { hover: ''} );
-  					}
-  					else {
-  						//add as last element in subtree
-  						$("#reply"+parentId).before($(html));
-  					}
-  				}
-  			);
-  			return false;
-   		}
 
    		function saveThought() {
    	   		var text = $("#shareThoughtText").val();
    			$("#shareThoughtText").val("");
    			$("#shareThoughtTextSize").html("0");
 
-   			if (text === "" ||
-   		   			text === "What are you thinking or feeling?") {
+   			if (text === "" || text === "What are you thinking or feeling?") {
    	   			alert("Please enter thought");
    	   			return;
    			}
-
    			text = linkify(text);
 
    			$.post("@{Actions.saveProfileComment2()}", 
@@ -285,12 +153,9 @@
   					$(html).prependTo($("#convoFeedList"));
   					$(html).prependTo($("#communityFeedList"));
   					
-  	  				//add inline edit for new comment
   					$('.inline-edit').inlineEdit( { hover: ''} );
   				}
   			);
-
-   			
   			return false;
    		}
 
@@ -324,7 +189,7 @@
    		}
 	</script>
 		
-<div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
+<div id="managtopic1">
   <div id="managtopic">
   	#{include 'header.html' /}
   	<div id="bottom_container">
@@ -333,7 +198,7 @@
           <div id="mtcover">
             <div id="mtleft">
               <div class="mtcontent">
-                <div style="padding-top: 10px; height: 30px;" class="lacover">
+                <div style="padding-top: 10px; height: 30px;">
 				  <div class="topTab"><a href="#" id="postQuestionTab" class="topTabLink">Post Question</a></div>
 				  <div class="topTab"><a href="#" id="startChatTab" class="topTabLink">Start Chat</a></div>
 				  <div class="topTab"><a href="#" id="shareThoughtTab" class="topTabLink">Share Thought</a></div>
@@ -393,144 +258,94 @@
                   	</div>
 				  </div>
 
-                  <!--startsearchbox-->
                   <div class="topic" style="padding-top: 10px;">
-                  #{if liveConversations?.size() > 0}
-                    <div class="newpage1">
-                    	<a href="@{Explore.liveTalks()}">Live Breast Cancer Community Chats (${liveConversations.size()})</a></div>
-                    <!-- <a href="#"><img src="/public/images/refreshicon.jpg" alt="refresh" 
-                    	border="0" style="float:left; padding-left:4px; padding-top:22px"  /></a> -->
-                    #{if liveConversations?.size() > 5}
-                    	<div class="seeall"><a href="#">See All</a></div>
-                    #{/if}
-                    <div class="topicborder"></div>
-                    <!--mtinputbox-->
-                    <div class="cb"></div>
-
-                    <div class="newpageCover">
-                   		#{list items: liveConversations, as: 'convo'}
-							#{liveTalk convo: convo, talker: talker /}		                      
-						#{/list}
-						#{else}
-							<a href="#" class="startLink2" style="font-size: 16px;">Be the first to start a live chat.</a>
-						#{/else}
-					</div>
-				  #{/if}
-					
-                    <div class="newpageCover">  
-						<div style="padding-top: 10px; height: 30px;" class="lacover">
-						  <div class="${convoFeed.size() < 20 ? 'latestactivity1' : 'latestactivity'}">
-						  	<a href="#" id="latestActivity" class="tabLink">Your Conversation Feed</a>
-						  </div>
-						  <div class="${convoFeed.size() < 20 ? 'latestactivity' : 'latestactivity1'}">
-						  	<a href="#" id="openQuestions" class="tabLink">Breast Cancer Community Feed</a>
-						  </div>
-						  <div class="laborder"></div>
-						</div>
-						<div class="cb"></div>
-						<div>
-							<div id="latestActivityContent" class="tabContent" 
-									style="display: ${convoFeed.size() < 20 ? 'none' : 'block'};">	
-								<div class="topic">
-			                      <div class="cb"></div>
-			                      <div class="topic">
-			                        <div id="convoFeedList" class="conversationsList">
-				                    	#{list items: convoFeed, as: 'activity'}
-											#{feedActivity activity: activity, talker: talker /}
-										#{/list}
-										#{else}
-											<br /><span class="blacktext16">Follow topics, conversations, and
-												other members to get the latest updates.</span>
-										#{/else}
-									</div>
-									#{if convoFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
-										<div class="replytommentbox" id="convoFeedBtn">
-				                          <input type="submit" src="images/seemore.jpg" 
-				                          	onclick="return loadMoreFeed('convoFeed');" value=" " class="seemorecom" />
-				                        </div>
-									#{/if}
-			                        <div class="cb"></div>
-			                      </div>
-			                      <!--newpageCover-->
-			                      <div class="cb"></div>
-			                    </div> 
-							</div>
-							<div id="openQuestionsContent" class="tabContent" 
-									style="display: ${convoFeed.size() < 20 ? 'block' : 'none'};">	
-								<div class="topic">
-			                      <div class="cb"></div>
-			                      <div class="topic">
-			                        <div id="communityFeedList">
-				                    	#{list items: communityFeed, as: 'activity'}
-											#{feedActivity activity: activity, talker: talker /}
-										#{/list}
-									</div>
-									#{if communityFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
-										<div class="replytommentbox" id="communityFeedBtn">
-				                          <input type="submit" src="images/seemore.jpg" 
-				                          	onclick="return loadMoreFeed('communityFeed');" value=" " class="seemorecom" />
-				                        </div>
-									#{/if}
-			                        <div class="cb"></div>
-			                      </div>
-			                      <!--newpageCover-->
-			                      <div class="cb"></div>
-			                    </div> 
-							</div>    
-						</div>               
-                    
-*{
-                      <div class="topic">
-                        <div class="newpage1"><a href="@{Home.conversationFeed()}">Your Conversation Feed</a></div>
-                        <div class="topicborder"></div>
-                        <div class="cb"></div>
-                      </div>
-                      <div class="topic">
-                        <div id="convoFeedList" class="conversationsList">
-	                    	#{list items: convoFeed, as: 'activity'}
-								#{feedActivity activity: activity, talker: talker /}
+	                  #{if liveConversations?.size() > 0}
+	                    <div class="newpage1">
+	                    	<a href="@{Explore.liveTalks()}">Live Breast Cancer Community Chats (${liveConversations.size()})</a>
+	                    </div>
+	                    <!-- <a href="#"><img src="/public/images/refreshicon.jpg" alt="refresh" 
+	                    	border="0" style="float:left; padding-left:4px; padding-top:22px"  /></a> -->
+	                    #{if liveConversations?.size() > 5}
+	                    	<div class="seeall"><a href="#">See All</a></div>
+	                    #{/if}
+	                    <div class="topicborder"></div>
+	                    <div class="cb"></div>
+	
+	                    <div class="newpageCover">
+	                   		#{list items: liveConversations, as: 'convo'}
+								#{liveTalk convo: convo, talker: talker /}		                      
 							#{/list}
 							#{else}
-								<span class="blacktext16">When you Follow Topics, Conversations, and
-									other members, your Conversation Feed will be filled with their updates.</span>
+								<a href="#" onclick="return showStartConvoDialog('chat')" 
+									style="font-size: 16px;">Be the first to start a live chat.</a>
 							#{/else}
 						</div>
-						#{if convoFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
-							<div class="replytommentbox" id="convoFeedBtn">
-	                          <input type="submit" src="images/seemore.jpg" 
-	                          	onclick="return loadMoreFeed('convoFeed');" value=" " class="seemorecom" />
-	                        </div>
-						#{/if}
-                        <div class="cb"></div>
-                      </div>
-                      
-                      #{if communityFeed}
-                      	<div class="topic">
-	                        <div class="newpage1"><a href="@{Home.conversationFeed()}">Breast Cancer Community Feed</a></div>
-	                        <div class="topicborder"></div>
-	                        <div class="cb"></div>
-	                      </div>
-	                      <div class="topic">
-	                        <div id="communityFeedList">
-		                    	#{list items: communityFeed, as: 'activity'}
-									#{feedActivity activity: activity, talker: talker /}
-								#{/list}
+					  #{/if}
+					
+	                    <div class="newpageCover">  
+							<div class="newTabCover">
+							  <div class="${convoFeed.size() < 20 ? 'newTab' : 'newActiveTab'}">
+							  	<a href="#" id="convoFeed" class="tabLink">Your Conversation Feed</a>
+							  </div>
+							  <div class="${convoFeed.size() < 20 ? 'newActiveTab' : 'newTab'}">
+							  	<a href="#" id="communityFeed" class="tabLink">Breast Cancer Community Feed</a>
+							  </div>
+							  <div class="laborder"></div>
 							</div>
-							#{if communityFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
-								<div class="replytommentbox" id="communityFeedBtn">
-		                          <input type="submit" src="images/seemore.jpg" 
-		                          	onclick="return loadMoreFeed('communityFeed');" value=" " class="seemorecom" />
-		                        </div>
-							#{/if}
-	                        <div class="cb"></div>
-	                      </div>
-                      #{/if}
-}*                     
-                      
-                      <div class="cb"></div>
-                    </div>
-                    <!--newpageCover-->
-                    <div class="cb"></div>
+							<div class="cb"></div>
+							<div>
+								<div id="convoFeedContent" class="tabContent" 
+										style="display: ${convoFeed.size() < 20 ? 'none' : 'block'};">	
+									<div class="topic">
+				                      <div class="cb"></div>
+				                      <div class="topic">
+				                        <div id="convoFeedList" class="conversationsList">
+					                    	#{list items: convoFeed, as: 'activity'}
+												#{feedActivity activity: activity, talker: talker /}
+											#{/list}
+											#{else}
+												<br /><span class="blacktext16">Follow topics, conversations, and
+													other members to get the latest updates.</span>
+											#{/else}
+										</div>
+										#{if convoFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+											<div class="replytommentbox" id="convoFeedBtn">
+					                          <input type="submit" src="images/seemore.jpg" 
+					                          	onclick="return loadMoreFeed('convoFeed');" value=" " class="seemorecom" />
+					                        </div>
+										#{/if}
+				                        <div class="cb"></div>
+				                      </div>
+				                      <div class="cb"></div>
+				                    </div> 
+								</div>
+								<div id="communityFeedContent" class="tabContent" 
+										style="display: ${convoFeed.size() < 20 ? 'block' : 'none'};">	
+									<div class="topic">
+				                      <div class="cb"></div>
+				                      <div class="topic">
+				                        <div id="communityFeedList">
+					                    	#{list items: communityFeed, as: 'activity'}
+												#{feedActivity activity: activity, talker: talker /}
+											#{/list}
+										</div>
+										#{if communityFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+											<div class="replytommentbox" id="communityFeedBtn">
+					                          <input type="submit" src="images/seemore.jpg" 
+					                          	onclick="return loadMoreFeed('communityFeed');" value=" " class="seemorecom" />
+					                        </div>
+										#{/if}
+				                        <div class="cb"></div>
+				                      </div>
+				                      <!--newpageCover-->
+				                      <div class="cb"></div>
+				                    </div> 
+								</div>    
+							</div>               
+	                      <div class="cb"></div>
+	                    </div>
+	                    <!--newpageCover-->
+	                    <div class="cb"></div>
                   </div>
                   <!--topic-->
                   <div class="cb"></div>
@@ -557,6 +372,6 @@
       </div>
     </div>
   </div>
-  
-<!-- Left Feedback image -->
+
+<!-- Right button -->
 <a href="/feedback-for-talkabouthealth" id="feedbackImage">Feedback</a>

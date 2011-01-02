@@ -1,43 +1,10 @@
 #{ extends 'main.html' /}
 
-	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 	<script type="text/javascript"> 	 
    		$(document).ready(function() {
-   			//Default Action
-   			var activeTab = "tab1";
-   			$(".tab_content").hide(); //Hide all content
-   			//activate initial tab
-   			$("ul.tabs li a[href='#"+activeTab+"']").parent().addClass("active").show(); 
-   			$("#"+activeTab).show();
-
-   			//On Click Event
-   			$("ul.tabs li ").click(function() {
-   				$("ul.tabs li ").removeClass("active"); //Remove any "active" class
-   				$(this).addClass("active"); //Add "active" class to selected tab
-   				$(".tab_content").hide(); //Hide all tab content
-   				var activeTab = $(this).find("a").attr("href"); //Find the rel attribute value to identify the active tab + content
-   				$(activeTab).fadeIn(); //Fade in the active content
-   				return false;
-   			});
-   		 
-   			$('.moretext').truncatable({ limit: 140, more: '... more', less: true, hideText: '' });
-
-			$(".followConvoLink").live('click', function() {
-				var convoId = $(this).attr("rel");
-				if ($(this).html().indexOf("Unfollow") != -1) {
-					$(this).html("Follow");
-				}
-				else {
-					$(this).html("Unfollow");
-				}
-				$.post("@{Conversations.follow()}", 
-	  				{ convoId: convoId},
-	  				function(data) {
-	  					//...
-	  				}
-	  			);
-	  			return false;
-			});
+   			//default action
+			var activeTab = "tab1";
+			initOldTabs(activeTab);			
    		});
    	</script>
 	<style>

@@ -66,7 +66,7 @@ public class TalkerLogic {
 		VIEW_PRIVACY(10,
 			"Update your <a href='"+CommonUtil.generateAbsoluteURL("Profile.preferences")+"'>Privacy Settings</a>",
 			"So other member similar to you can find and reach out to you if you choose."),
-		ASK_QUESTION(10, "Ask a <a href='#' onclick='return showQuestionDialog();'>Question</a>"),
+		ASK_QUESTION(10, "Ask a <a href='#' onclick='return showStartConvoDialog(\"question\");'>Question</a>"),
 		COMMENT_CONVO(10, "Answer a <a href='"+CommonUtil.generateAbsoluteURL("Explore.openQuestions")+"'>Question</a>"),
 		GIVE_THANKYOU(10, "Give a Thank you"),
 		COMMENT_THOUGHTS(5, "Comment in your <a href='"+

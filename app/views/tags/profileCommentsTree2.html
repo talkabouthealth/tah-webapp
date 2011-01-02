@@ -82,13 +82,7 @@
 		<div class="commentsreply">
 			#{profileCommentsTree2 commentsList: comment.children, level: (_level+1), showDelete: _showDelete, isFeed: _isFeed /}
 			
-			<div id="reply${comment.id}" class="replytommentbax"
-					*{ 
-					#{if comment.children == null || comment.children?.size() == 0}
-						style="display: none;"
-					#{/if}
-					}*
-				>
+			<div id="reply${comment.id}" class="replytommentbax">
 				<div class="cb"></div>
 				<div>
 					<div class="cb"></div>

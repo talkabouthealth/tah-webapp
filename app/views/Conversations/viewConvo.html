@@ -9,53 +9,18 @@
 		}
 		#innermiddlearea { padding-top: 10px }
 		
-		a {color:#1a6a96; text-decoration:none}
-		a:hover {color:#ccc; text-decoration:none}
-		.style2 {color: #000000}
-		.display {
-			background:#FFF;
-			width:1px;
-			height:1px;
-			margin-left:3px;
-		}
-		li { list-style:none; }
-		caption, th { text-align:left; }
-		
-		/* Different fixes */
-		.answerCover { padding-top: 0px }
-		.targetenew a { color:#0D94D6; }
-		.inline_form {
-			display:none;
-		}
-		.inline-edit .editdiv {
-			float:left;
-			width:45px;
-			margin-left: 3px;
-		}
-		
-		#relatedConvosList .deleteConvoLink {
-			display: none;
-		}
+		#relatedConvosList .deleteConvoLink { display: none; }
 		.topicTitle { margin-left: 10px; }
 		.deleteTopicLink { margin-right: 10px }
 		#topicsList, #topicsEditList { float: left }
-		#topicsList .deleteTopicLink {
-			display: none;
-		}
+		#topicsList .deleteTopicLink { display: none; }
 		
-		.rcpadtop { width:260px; }
-		
+		/* Convo title */
 		h1 {
 			color:#000000;
 			font-family:arial;
 			font-size:20px;
 			text-decoration:none;
-		}
-		
-		.bigRestartBtn {
-			height:30px;
-			margin-top:5px;
-			width:171px;
 		}
 		
 		/* for popups */
@@ -67,15 +32,15 @@
 		var tid = '${convo.tid}';
 		
 		$(document).ready(function() {
-			$("#followConvoLink").click(function() {
+			$("#followConvoBtn").click(function() {
 				$.post("@{Conversations.follow()}", 
 	  				{ convoId: '${convo.id}'},
 	  				function(nextAction) {
 		  				if (nextAction === "follow") {
-		  					$("#followConvoLink").removeClass().addClass("followConvoBtn");
+		  					$("#followConvoBtn").removeClass().addClass("followConvoBtn");
 		  				}
 		  				else {
-		  					$("#followConvoLink").removeClass().addClass("followingConvoBtn");
+		  					$("#followConvoBtn").removeClass().addClass("followingConvoBtn");
 		  				}
 	  				}
 	  			);
@@ -92,30 +57,30 @@
 				showPopup("#flagPopup", 200);
 			});
 
-			//----- Comments ------
+			//----- Answers ------
 			$(".votebtnup, .votebtndown").live("click", function() {
-	   				var value = $(this).hasClass("votebtnup") ? true : false;
-	   				var answerId = $(this).attr("rel");
+   				var value = $(this).hasClass("votebtnup") ? true : false;
+   				var answerId = $(this).attr("rel");
 
-	   				$.post("@{Conversations.vote}", 
-	   		   				{ answerId : answerId, up : value },
-	   		   				function(data) {
-		   		   				if (data !== "Error") {
-			   		   				if (value) {
-			   			   				$("#vote"+answerId+" .votebtnup").addClass("selected");
-			   			   				$("#vote"+answerId+" .votebtndown").removeClass("selected");
-			   		   				}
-			   		   				else {
-			   		   					$("#vote"+answerId+" .votebtnup").removeClass("selected");
-			   			   				$("#vote"+answerId+" .votebtndown").addClass("selected");
-			   		   				}
-			   		   				$("#comment"+answerId+" .votestxt3").html(data);
+   				$.post("@{Conversations.vote}", 
+   		   				{ answerId : answerId, up : value },
+   		   				function(data) {
+	   		   				if (data !== "Error") {
+		   		   				if (value) {
+		   			   				$("#vote"+answerId+" .votebtnup").addClass("selected");
+		   			   				$("#vote"+answerId+" .votebtndown").removeClass("selected");
 		   		   				}
+		   		   				else {
+		   		   					$("#vote"+answerId+" .votebtnup").removeClass("selected");
+		   			   				$("#vote"+answerId+" .votebtndown").addClass("selected");
+		   		   				}
+		   		   				$("#comment"+answerId+" .votestxt3").html(data);
 	   		   				}
-		   				);
+   		   				}
+	   				);
 
-	   				return false;
-	   			});
+   				return false;
+   			});
    			
 			$(".flagAnswerLink").live("click", function() {
 				flagType = "answer";
@@ -164,25 +129,19 @@
 			if (dataType === 'titleEdit') {
 				$.post("@{Conversations.updateField()}", 
    					{ convoId : '${convo.id}', name: 'title', value: newValue},
-   					function() {
-   	   					//good save!!
-   					}
+   					function() {}
    				);
 			}
 			else if (dataType === 'detailsEdit') {
 				$.post("@{Conversations.updateField()}", 
    					{ convoId : '${convo.id}', name: 'details', value: newValue},
-   					function() {
-   	   					//good save!!
-   					}
+   					function() {}
    				);
 			}
 			else if (dataType === 'summaryEdit') {
 				$.post("@{Conversations.updateField()}", 
    					{ convoId : '${convo.id}', name: 'summary', value: newValue},
-   					function() {
-   	   					//good save!!
-   					}
+   					function() {}
    				);
 			}
 			else if (dataType.indexOf('answerEdit') == 0) {
@@ -190,9 +149,7 @@
 				
 	   	   		$.post("@{Conversations.updateAnswer()}", 
 	  				{ answerId: answerId, todo: 'update', newText: newValue},
-	  				function(html) {
-	  	  				//...
-	  				}
+	  				function(html) {}
 	  			);
 			}
 		}
@@ -221,15 +178,13 @@
 			}
 		}
 
-   		//public static void saveTopicComment(String topicId, String parentId, String text) {
-   		//TODO: what's correct name for this?
-   		function saveProfileComment(parentId) {
+   		//public static void saveAnswerOrReply(String topicId, String parentId, String text) {
+   		function saveAnswerOrReply(parentId) {
    	   		var commentText = $("#replytext"+parentId).val();
    			$("#replytext"+parentId).val("");
-
    			commentText = linkify(commentText);
 
-   			$.post("@{Conversations.saveConvoComment()}", 
+   			$.post("@{Conversations.saveAnswerOrReply()}", 
   				{ convoId: '${convo.id}', parentId: parentId, text: commentText},
   				function(html) {
   	  				$("#firstcommentmessage").hide();
@@ -246,7 +201,6 @@
 				  	);
   				}
   			);
-
   			return false;
    		}
 
@@ -255,7 +209,7 @@
    	   		if (confirmDel) {
    	   	   		$("#comment"+answerId).remove();
 
-   	   	  	$.post("@{Conversations.updateAnswer()}", 
+   	   	  		$.post("@{Conversations.updateAnswer()}", 
     				{ answerId: answerId, todo: 'delete', newText: ''},
     				function(html) {
     	  				//...
@@ -268,8 +222,6 @@
    		function markNotHelpful(answerId) {
    	   		var confirmDel = confirm("Are you sure you want to mark this answer as 'Not Helpful?'");
    	   		if (confirmDel) {
-   	   	   		//$("#comment"+answerId).hide();
-
    	   	  		$.post("@{Conversations.updateAnswer()}", 
     				{ answerId: answerId, todo: 'setNotHelpful', newText: ''},
     				function(html) {
@@ -314,7 +266,7 @@
 </head>
 
 <body>
-<div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
+<div id="managtopic1">
 <div id="managtopic">
 
 	#{include 'header.html' /}
@@ -336,13 +288,12 @@
             <div class="close" onclick="return hideHelpInfo('convo', true);"><img src="/public/images/close.jpg" alt="Close" /></div>
           </div>
           <div class="note">
-		  	<strong>Help: <a href="@{ViewDispatcher.view('what-can-i-do-on-the-conversation-summary-page')}">What can I do on the Conversation Summary page?</a></strong>
+		  	<strong>Help: <a href="@{ViewDispatcher.view('what-can-i-do-on-the-conversation-summary-page')}"
+		  		>What can I do on the Conversation Summary page?</a></strong>
 		  	<br/><br/>
           </div>
           <div class="cb"></div>
         </div>
-        <!--popbox2-->
-
       </div>
       <div class="cb"></div>
 </div> 
@@ -617,7 +568,7 @@
 										<div class="answerh1">Add Answer</div>
 										<textarea name="textarea" id="replytext" class="answerinput" style="width: 617px; height: 150px;"
 											onclick="if (this.value === 'Add New Answer') this.value='';">Add New Answer</textarea><br />
-										<input type="submit" onclick="return saveProfileComment('');" 
+										<input type="submit" onclick="return saveAnswerOrReply('');" 
 											src="/public/images/addcomments.jpg" class="addcomments" value=" " />
 									</div>
 									<div id="noAnswerText" style="display: ${!userHasAnswer ? 'none' : 'block'};">
@@ -664,12 +615,12 @@
 							    <div class="cb"></div>
 							</div>
 
-			#{ notLoggedNotice /}
-			<span style="color: red; font-weight: bold;">
-				<br/><br/>
-				Note: All content on this site is informational and not a substitute for professional medical advice. 
-				Always seek the advice of your physician or other qualified health provider with questions regarding your health.
-			</span>
+							#{ notLoggedNotice /}
+							<span style="color: red; font-weight: bold;">
+								<br/><br/>
+								Note: All content on this site is informational and not a substitute for professional medical advice. 
+								Always seek the advice of your physician or other qualified health provider with questions regarding your health.
+							</span>
 			
 							<div class="cb"></div>
 						</div>
@@ -679,14 +630,13 @@
 				<div id="mtright1" style="padding-top: 10px">
 					#{if talker }
 						#{if talker.followingConvosList?.contains(convo.id) }
-							<a href="#" id="followConvoLink" class="followingConvoBtn"></a>
+							<a href="#" id="followConvoBtn" class="followingConvoBtn"></a>
 						#{/if}
 						#{else}
-							<a href="#" id="followConvoLink" class="followConvoBtn"></a>
+							<a href="#" id="followConvoBtn" class="followConvoBtn"></a>
 						#{/else}
 						<input type="button" class="restartConvoLink restartChatBtn" value="" />
 					#{/if}
-				    <!-- <input type="submit" class="followcn"  src="../TalkAboutHealth//public/images/followcn.jpg" value=" "  /> -->
 				    <div class="cb"></div>
 				    <div class="topicborder" style="margin-top: 10px;"></div>
 					<div class="topipsts">

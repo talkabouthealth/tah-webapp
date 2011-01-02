@@ -3,8 +3,6 @@
 		body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
 		#innermiddlearea { padding-top: 10px }
 		.seeall { padding-top: 20px }
-		
-		#mask { background-color:#e6e6e6; }
 	</style>
 	
 	<script type="text/javascript">
@@ -35,11 +33,10 @@
 
 				return false;
 			});
-				
 		});
 	</script>
 		
-<div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
+<div id="managtopic1">
   <div id="managtopic">
   	#{include 'header.html' /}
   	<div id="bottom_container">
@@ -49,62 +46,47 @@
             <div id="mtcover">
             	<div id="comleft">
             	
-<div class="BrowseCover">
-  <div class="browse"><a href="#">Browse Topics</a></div>
-  <!-- <div class="SearchConversation"><a href="#">Browse Topics</a></div>  -->
-  <div class="laborder"></div>
-  <div class="cb"></div>
-</div>
-<!--BrowseCover-->
-<div class="catbox">
-<div class="catbox1">
-  <!-- 
-	  <div class="cattxtCover">
-	    <div class="cath1">Categories</div>
-	    <div class="cath2"><a href="#">Featured</a></div>
-	    <div class="cath2"><a href="#">Recent</a></div>
-	    <div class="cath2"><a href="#">Trending</a></div>
-	    <div class="cath2"><a href="#">Popular</a></div>
-	    <div class="cath2"><a href="#">suggested For You</a></div>
-	    <div class="cb"></div>
-	  </div>
-   -->
-  <!--cattxtCover-->
-<div class="cattxtCover">
-	#{list items: topicsTree, as: 'topic' }
-		<div class="cath3">
-			<a href="#" class="categoryLink ${topic_index == 1 ? 'currentcat' : ''}" 
-					rel="${topic.id}">${topic.title.limitSize(25)} (${topic.children?.size()})<br/>
-      			<span class="catsubtxt">${topic.childrenInfo.limitSize(25)}</span>
-      		</a>
-      	</div>
-	#{/list}
-    <div class="cb"></div>
-  </div>
-  <!--cattxtCover-->
-  <div class="cb"></div>
-</div>
-<!--catbox1-->
-#{list items: topicsTree, as: 'topic' }
-<div id="children${topic.id}" class="catbox2" style="display: ${topic_index == 1 ? 'block' : 'none'};">
-	<div class="cath11">
-		<a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a>
-	</div>
-	<div class="contentz">
-		<ul class="menuz root">
-			#{topicsTree topic: topic /}
-		</ul>
-	</div>
-</div>
-#{/list}
-<div class="cb"></div>
-</div>
-<!--catbox-->
-<div class="cb"></div>
-</div>
-
+					<div class="BrowseCover">
+					  <div class="browse"><a href="#">Browse Topics</a></div>
+					  <div class="laborder"></div>
+					  <div class="cb"></div>
+					</div>
+					
+					<div class="catbox">
+						<div class="catbox1">
+							<div class="cattxtCover">
+								#{list items: topicsTree, as: 'topic' }
+									<div class="cath3">
+										<a href="#" class="categoryLink ${topic_index == 1 ? 'currentcat' : ''}" 
+												rel="${topic.id}">${topic.title.limitSize(25)} (${topic.children?.size()})<br/>
+							      			<span class="catsubtxt">${topic.childrenInfo.limitSize(25)}</span>
+							      		</a>
+							      	</div>
+								#{/list}
+							    <div class="cb"></div>
+							</div>
+						  	<div class="cb"></div>
+						</div>
+						
+						#{list items: topicsTree, as: 'topic' }
+							<div id="children${topic.id}" class="catbox2" 
+									style="display: ${topic_index == 1 ? 'block' : 'none'};">
+								<div class="cath11">
+									<a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a>
+								</div>
+								<div class="contentz">
+									<ul class="menuz root">
+										#{topicsTree topic: topic /}
+									</ul>
+								</div>
+							</div>
+						#{/list}
+						<div class="cb"></div>
+					</div>
+					
+					<div class="cb"></div>
+				</div>
             </div>
           </div>
         </div>
     </div>
-

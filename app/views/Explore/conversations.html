@@ -2,29 +2,14 @@
 	<style type="text/css">
 		body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
 		#innermiddlearea { padding-top: 10px }
-		#mask { background-color:#e6e6e6; }
-		
-		.latestactivity, .latestactivity1 { width: auto }
-		.latestactivity a, .latestactivity1 a { width: auto; padding-left: 8px; padding-right: 8px }
-		.latestactivity a:hover, .latestactivity1 a:hover { width: auto; padding-left: 8px; padding-right: 8px }
 	</style>
 	
-	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 	<script type="text/javascript">
 		var feedsPerPage = ${logic.FeedsLogic.FEEDS_PER_PAGE};
 		var action = '${action}';
 	
 		$(document).ready(function() {
-			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
-
-			$(".tabLink").click(function() {
-   				$(".latestactivity").removeClass("latestactivity").addClass("latestactivity1"); //Remove any "active" class
-   				$(this).parent().removeClass("latestactivity1").addClass("latestactivity"); //Add "active" class to selected tab
-   				var id = $(this).attr("id");
-   				$(".tabContent").hide(); //Hide all tab content
-   				$("#"+id+"Content").fadeIn(); //Fade in the active content
-   				return false;
-   			});
+			initNewTabs();
 
    			if (action === 'popular') {
    	   			$("#popularConvos").click();
@@ -38,7 +23,7 @@
 		});
 	</script>
 		
-<div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
+<div id="managtopic1">
   <div id="managtopic">
   	#{include 'header.html' /}
   	<div id="bottom_container">
@@ -50,9 +35,9 @@
               <div id="mtleft">
                 <div class="mtcontent">
                   <div class="topipcWraper">
-                  	<div style="padding-top: 10px; height: 30px;" class="lacover">
-					  <div class="latestactivity"><a href="#" id="convoFeed" class="tabLink">Community Conversation Feed</a></div>
-					  <div class="latestactivity1"><a href="#" id="popularConvos" class="tabLink">Popular Conversations</a></div>
+                  	<div class="newTabCover">
+					  <div class="newActiveTab"><a href="#" id="convoFeed" class="tabLink">Community Conversation Feed</a></div>
+					  <div class="newTab"><a href="#" id="popularConvos" class="tabLink">Popular Conversations</a></div>
 					  <div class="laborder"></div>
 					</div>
 					<div class="cb"></div>
@@ -63,7 +48,6 @@
 		
 		                      <div class="cb"></div>
 		                      <div class="joinborder"></div>
-		                      <!--mtinputbox-->
 		                      <div class="cb"></div>
 		                      <div class="topic">
 		                        <div id="communityFeedList">

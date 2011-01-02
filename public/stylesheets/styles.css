@@ -226,11 +226,6 @@ float:left;
 width:37px;
 height:20px;
 }
-.rcpadtop
-{
-padding-top:10px;
-clear:both;
-}
 .canclelz{ color:#0286BC; padding-top:5px;  }
 .canclelz a { color:#0286BC; text-decoration:none;  }
 .canclelz a:hover{ color:#0286BC; text-decoration:underline;  }

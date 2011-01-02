@@ -4,49 +4,9 @@
 		
 		#innermiddlearea { padding-top: 10px }
 		.seeall { padding-top: 20px }
-		
-		#mask { background-color:#e6e6e6; }
-		
-		.stylez2 {
-			font-size:22px;
-			color:#000000;
-			clear:both;
-			padding-top:5px;
-			text-align:left;
-			padding-bottom:4px;
-		}
-		.style2 {
-			color: #000000
-		}
 	</style>
-	
-	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-
-			//TODO: convo following - move to one function
-			$(".followConvoLink").live('click', function() {
-				var convoId = $(this).attr("rel");
-				if ($(this).html().indexOf("Unfollow") != -1) {
-					$(this).html("Follow");
-				}
-				else {
-					$(this).html("Unfollow");
-				}
-				$.post("@{Conversations.follow()}", 
-	  				{ convoId: convoId},
-	  				function(data) {
-	  					//...
-	  				}
-	  			);
-	  			return false;
-			});
-
-			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
-		});
-	</script>
 		
-<div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
+<div id="managtopic1">
   <div id="managtopic">
   	#{include 'header.html' /}
   	<div id="bottom_container">
@@ -65,11 +25,9 @@
                 <div class="topipcWraper">
                   <div class="newpage1">Live Community Talks (${liveTalks.size()})</div>
                     <div class="topicborder"></div>
-                    <!--mtinputbox-->
-
                     <div class="cb"></div>
-                    <div class="topic">
                     
+                    <div class="topic">
 						#{list items: liveTalks, as: 'convo'}
 		                      #{liveTalk convo: convo, talker: talker /}
 						#{/list}
@@ -80,7 +38,6 @@
                       <div class="replytommentbox1" style="display: none;">
                         <input type="submit" src="images/seemore.jpg" value=" " class="seemorecom" />
                       </div>
-
 					  <span>
 						<br/>
 						<b>Note:</b> You must be a member of the community to join a live chat.
@@ -116,38 +73,37 @@
             </div>
             <!--mtleft-->
             
-		<div id="comright" style="padding-left:30px;">
-			#{if talker}
-                <div class="topipsts">
-                  <div class="mtrighttxt1">Community Members</div>
-                  #{list items: communityMembers, as: 'member'}
-                  	<div class="topbox">
-	                    <div class="topleftimg" style="float: left;">
-							#{talker/talkerImageLink size: 39, userName: member.userName /}
-	                    </div>
-	                    <div class="topr">
-	                      <div class="toprighttext">
-	                        <div class="latextleft">
-	                        	<a href="@{ViewDispatcher.view(member.userName)}">
-									<strong>${member.userName}</strong>
-								</a>
-							</div>
-	                        <div class="latextrigtz">&nbsp;#{talker/talkerInfo talker: member /}</div>
-	                      </div>
-	                      <div class="toprighttext">
-	                        <div class="topiptextl" style="color: #000;">${member.numOfConvoAnswers} Answers</div>
-	                      </div>
-	                    </div>
-	                    <!--topr-->
-	                    <div class="cb"></div>
+			<div id="comright" style="padding-left:30px;">
+				#{if talker}
+	                <div class="topipsts">
+	                  <div class="mtrighttxt1">Community Members</div>
+	                  #{list items: communityMembers, as: 'member'}
+	                  	<div class="topbox">
+		                    <div class="topleftimg" style="float: left;">
+								#{talker/talkerImageLink size: 39, userName: member.userName /}
+		                    </div>
+		                    <div class="topr">
+		                      <div class="toprighttext">
+		                        <div class="latextleft">
+		                        	<a href="@{ViewDispatcher.view(member.userName)}">
+										<strong>${member.userName}</strong>
+									</a>
+								</div>
+		                        <div class="latextrigtz">&nbsp;#{talker/talkerInfo talker: member /}</div>
+		                      </div>
+		                      <div class="toprighttext">
+		                        <div class="topiptextl" style="color: #000;">${member.numOfConvoAnswers} Answers</div>
+		                      </div>
+		                    </div>
+		                    <div class="cb"></div>
+		                </div>
+	                  #{/list}
 	                </div>
-                  #{/list}
-                </div>
-                <!--topipsts-->
-                <div class="cb"></div>
-			#{/if}              
-		</div>            
+	                <div class="cb"></div>
+				#{/if}              
+			</div>            
             <!--mtright-->
+            
             <div class="cb"></div>
           </div>
           <!--mtcover-->

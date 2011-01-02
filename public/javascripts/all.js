@@ -77,18 +77,9 @@ function sendThankYou() {
 	);
 }
 
-//saveProfileComment(String profileTalkerId, String parentId, String text)
-function sendProfileComment() {
-	var commentText = $("#commentText").val();
-	$.fancybox.close();
-	$("#commentText").val("");
-
-	$.post("/actions/saveProfileComment", 
-		{ profileTalkerId: selectedTalkerId, parentId: '', text: commentText}
-	);
-}
-
 $(document).ready(function() {
+	
+	$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
 	
 	//links to show more content (e.g. full bio)
 	$(".more11").live("click", 
@@ -111,6 +102,25 @@ $(document).ready(function() {
   			
   			return false;
 		});
+	
+	$(".followConvoLink").live('click', function() {
+		var convoId = $(this).attr("rel");
+		if ($(this).html().indexOf("Unfollow") != -1) {
+			$(this).html("Follow");
+		}
+		else {
+			$(this).html("Unfollow");
+		}
+		$.post("@{Conversations.follow()}", 
+				{ convoId: convoId },
+				function(data) {
+					//...
+				}
+			);
+		return false;
+	});
+	
+	
 	
 	//if close button is clicked
 	$('.window .close, .window .cancelLink').click(function (e) {
@@ -309,8 +319,13 @@ function loadMoreFeed(type, talkerName) {
 	return false;
 }
 
-function showQuestionDialog() {
-	$("#newConvoTypeQuestion").attr("checked", "checked");
+function showStartConvoDialog(type) {
+	if (type === "question") {
+		$("#newConvoTypeQuestion").attr("checked", "checked");
+	}
+	else if (type === "chat"){
+		$("#newConvoTypeConvo").attr("checked", "checked");
+	}
 	
 	$("#newConvoForm").show();
 	$("#newQuestionConfirm").hide();
@@ -519,5 +534,65 @@ function showReplyForm(commentId) {
 }
 function showAllReplies(commentId) {
 	$("#comment"+commentId+" .comreply").fadeIn();
+	return false;
+}
+
+function initOldTabs(activeTabName) {
+	$(".tab_content").hide();
+	//activate initial tab
+	$("ul.tabs li a[href='#"+activeTabName+"']").parent().addClass("active").show(); 
+	$("#"+activeTabName).show();
+
+	$("ul.tabs li ").click(function() {
+		$("ul.tabs li ").removeClass("active");
+		//add "active" class to selected tab
+		$(this).addClass("active"); 
+		$(".tab_content").hide();
+		
+		//find the rel attribute value to identify the active tab + content
+		var activeTab = $(this).find("a").attr("href"); 
+		$(activeTab).fadeIn();
+		return false;
+	});
+}
+function initNewTabs() {
+	$(".tabLink").click(function() {
+		$(".newActiveTab").removeClass("newActiveTab").addClass("newTab");
+		$(this).parent().removeClass("newTab").addClass("newActiveTab");
+		
+		var id = $(this).attr("id");
+		$(".tabContent").hide();
+		$("#"+id+"Content").fadeIn();
+		return false;
+	});
+	
+}
+
+
+//saveProfileComment(String profileTalkerId, String parentId, String text)
+function saveProfileComment(parentId) {
+	var commentText = $("#replytext"+parentId).val();
+	$("#replytext"+parentId).val("");
+
+	$.post("/actions/saveProfileComment2", 
+		{ parentId: parentId, text: commentText},
+		function(html) {
+			$("#firstcommentmessage").hide();
+			//put comment in the tree
+			if (parentId == '') {
+				//add as first element in the top
+				$(html).prependTo($(".commentsarea"));
+
+				//add inline edit for new comment
+				$('.inline-edit').inlineEdit( { hover: ''} );
+			}
+			else {
+				//add as last element in subtree
+				$("#reply"+parentId).before($(html));
+			}
+		}
+	);
+
+	
 	return false;
 }

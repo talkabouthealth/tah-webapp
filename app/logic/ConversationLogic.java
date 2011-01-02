@@ -129,7 +129,7 @@ public class ConversationLogic {
 		return convo;
 	}
 	
-	public static CommentBean createAnswer(ConversationBean convo, TalkerBean talker, String parentId, String text) {
+	public static CommentBean createAnswerOrReply(ConversationBean convo, TalkerBean talker, String parentId, String text) {
 		//Follow convo automatically on answer?
 //		if (!talker.getFollowingConvosList().contains(convo.getId())) {
 //			talker.getFollowingConvosList().add(convo.getId());

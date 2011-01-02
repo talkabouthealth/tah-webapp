@@ -55,7 +55,7 @@ public class API extends Controller {
 		}
 		notFoundIfNull(convo);
 		
-		CommentBean comment = ConversationLogic.createAnswer(convo, authorTalker, parentId, text);
+		CommentBean comment = ConversationLogic.createAnswerOrReply(convo, authorTalker, parentId, text);
 		renderText(comment.getId());
 	}
 	

@@ -133,7 +133,7 @@
 					                    <div class="repcommbox22">
 						                    <textarea id="replytext${comment.id}" type="text" class="repcominput" ></textarea>
 						                    <div class="repcommstextbox">
-						                    	<input type="submit" class="repcomsubmits" onclick="return saveProfileComment('${comment.id}');"
+						                    	<input type="submit" class="repcomsubmits" onclick="return saveAnswerOrReply('${comment.id}');"
 						                    		src="/public/images/repcomsubmits.jpg" value=" " />
 						                     	<span class="canclelz">
 						                     		<a href="#" onclick="$('#replies${comment.id}').hide(); return false;">Cancel</a>

@@ -3,8 +3,6 @@
 		body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
 		#innermiddlearea { padding-top: 10px }
 		
-		#mask { background-color:#e6e6e6; }
-		
 		.commentsreply { padding-left:50px; }
 		.comreply { margin-bottom: 2px }
 		.comtext { font-size: 14px }
@@ -33,6 +31,7 @@
 		}
 
 		//saveProfileComment(String profileTalkerId, String parentId, String text)
+		*{ TODO: there is similar method }*
    		function saveProfileComment(parentId) {
    	   		var commentText = $("#replytext"+parentId).val();
    	   		if (commentText === '') {
@@ -62,7 +61,6 @@
   					}
   				}
   			);
-
    			
   			return false;
    		}

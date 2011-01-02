@@ -9,25 +9,9 @@
 		}
 
 		$(document).ready(function() {
-			//Default Action
+			//default action
 			var activeTab = tabs["${action}"];
-
-			//TODO: we can move tabs code to separate js
-			
-			$(".tab_content").hide(); //Hide all content
-			//activate initial tab
-			$("ul.tabs li a[href='#"+activeTab+"']").parent().addClass("active").show(); 
-			$("#"+activeTab).show();
-
-			//On Click Event
-			$("ul.tabs li ").click(function() {
-				$("ul.tabs li ").removeClass("active"); //Remove any "active" class
-				$(this).addClass("active"); //Add "active" class to selected tab
-				$(".tab_content").hide(); //Hide all tab content
-				var activeTab = $(this).find("a").attr("href"); //Find the rel attribute value to identify the active tab + content
-				$(activeTab).fadeIn(); //Fade in the active content
-				return false;
-			});
+			initOldTabs(activeTab);
 		});
    	</script>
 	<style>
@@ -36,8 +20,6 @@
 			font-family:arial;
 			font-size:11px;
 		}
-		
-		ul.tabs li a { padding: 0 10px; }
 	</style>
 </head>
 <body>
@@ -146,9 +128,6 @@
 										#{list items:results, as: 'talker'}
 											#{talkerInList talker: talker, currentTalker: currentTalker /}
 										#{/list}
-										#{else}
-											No results.
-										#{/else}
 									</div>
 								#{/if}
 								#{elseif flash.query}

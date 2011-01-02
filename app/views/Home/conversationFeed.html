@@ -1,85 +1,21 @@
 #{extends 'main.html' /}
 	<style type="text/css">
 		body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
-		
 		#innermiddlearea { padding-top: 10px }
-		
-		#mask { background-color:#e6e6e6; }
-		
-		.latestactivity, .latestactivity1 { width: auto }
-		.latestactivity a, .latestactivity1 a { width: auto; padding-left: 8px; padding-right: 8px }
-		.latestactivity a:hover, .latestactivity1 a:hover { width: auto; padding-left: 8px; padding-right: 8px }
-		
-		.inline_form { display:none; }
 	</style>
 	
-	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
 		var feedsPerPage = ${logic.FeedsLogic.FEEDS_PER_PAGE};
 	
 		$(document).ready(function() {
-			$(".followConvoLink").live('click', function() {
-				var convoId = $(this).attr("rel");
-				if ($(this).html().indexOf("Unfollow") != -1) {
-					$(this).html("Follow");
-				}
-				else {
-					$(this).html("Unfollow");
-				}
-				$.post("@{Conversations.follow()}", 
-	  				{ convoId: convoId},
-	  				function(data) {
-	  					//...
-	  				}
-	  			);
-	  			return false;
-			});
-
-			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
-
-			$(".tabLink").click(function() {
-   				$(".latestactivity").removeClass("latestactivity").addClass("latestactivity1"); //Remove any "active" class
-   				$(this).parent().removeClass("latestactivity1").addClass("latestactivity"); //Add "active" class to selected tab
-   				var id = $(this).attr("id");
-   				$(".tabContent").hide(); //Hide all tab content
-   				$("#"+id+"Content").fadeIn(); //Fade in the active content
-   				return false;
-   			});
-
+			initNewTabs();
+			
 			$('.inline-edit').inlineEdit( { hover: ''} );
 		});
-
-		//saveProfileComment(String profileTalkerId, String parentId, String text)
-   		function saveProfileComment(parentId) {
-   	   		var commentText = $("#replytext"+parentId).val();
-   			$("#replytext"+parentId).val("");
-
-   			$.post("@{Actions.saveProfileComment2()}", 
-  				{ parentId: parentId, text: commentText},
-  				function(html) {
-  	  				$("#firstcommentmessage").hide();
-  					//put comment in the tree
-  					if (parentId == '') {
-  	  					//add as first element in the top
-  						$(html).prependTo($(".commentsarea"));
-
-  	  					//add inline edit for new comment
-  						$('.inline-edit').inlineEdit( { hover: ''} );
-  					}
-  					else {
-  						//add as last element in subtree
-  						$("#reply"+parentId).before($(html));
-  					}
-  				}
-  			);
-
-   			
-  			return false;
-   		}
 	</script>
 		
-<div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
+<div id="managtopic1">
   <div id="managtopic">
   	#{include 'header.html' /}
   	<div id="bottom_container">
@@ -91,20 +27,19 @@
               <div id="mtleft">
                 <div class="mtcontent">
                   <div class="topipcWraper">
-                  	<div style="padding-top: 10px; height: 30px;" class="lacover">
-					  <div class="latestactivity"><a href="#" id="latestActivity" class="tabLink">Your Conversation Feed</a></div>
-					  <div class="latestactivity1"><a href="#" id="openQuestions" class="tabLink">Breast Cancer Community Feed</a></div>
+                  	<div class="newTabCover">
+					  <div class="newActiveTab"><a href="#" id="convoFeed" class="tabLink">Your Conversation Feed</a></div>
+					  <div class="newTab"><a href="#" id="communityFeed" class="tabLink">Breast Cancer Community Feed</a></div>
 					  <div class="laborder"></div>
 					</div>
 					<div class="cb"></div>
 					<div>
-						<div id="latestActivityContent" class="tabContent">	
+						<div id="convoFeedContent" class="tabContent">	
 							<div class="topic">
 		                      <div class="newpage1">Your Conversation Feed</div>
 		
 		                      <div class="cb"></div>
 		                      <div class="joinborder"></div>
-		                      <!--mtinputbox-->
 		                      <div class="cb"></div>
 		                      <div class="topic">
 		                        <div id="convoFeedList">
@@ -128,7 +63,7 @@
 		                      <div class="cb"></div>
 		                    </div> 
 						</div>
-						<div id="openQuestionsContent" class="tabContent" style="display: none;">
+						<div id="communityFeedContent" class="tabContent" style="display: none;">
 							<div class="topic">
 		                      <div class="newpage1">Breast Cancer Community Feed</div>
 		

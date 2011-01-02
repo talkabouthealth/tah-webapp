@@ -4,61 +4,19 @@
 		
 		#innermiddlearea { padding-top: 10px }
 		.seeall { padding-top: 20px }
-		
-		#mask { background-color:#e6e6e6; }
-		
-		.stylez2 {
-			font-size:22px;
-			color:#000000;
-			clear:both;
-			padding-top:5px;
-			text-align:left;
-			padding-bottom:4px;
-		}
-		.style2 {
-			color: #000000
-		}
 	</style>
 	
-	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			makeAutocomplete("#convoText", "convo");
 			
-			$(".followConvoLink").live('click', function() {
-				var convoId = $(this).attr("rel");
-				if ($(this).html().indexOf("Unfollow") != -1) {
-					$(this).html("Follow");
-				}
-				else {
-					$(this).html("Unfollow");
-				}
-				$.post("@{Conversations.follow()}", 
-	  				{ convoId: convoId},
-	  				function(data) {
-	  					//...
-	  				}
-	  			);
-	  			return false;
+			$(".startLink").click(function() {
+				return showStartConvoDialog("chat");
 			});
-
-			$(".startLink, .startLink2").click(function(e) {
-				$("#newConvoTypeConvo").attr("checked", "checked");
-				
-				$("#newConvoForm").show();
-				$("#newQuestionConfirm").hide();
-				$("#newTalkConfirm").hide();
-				if ($("#convoText").val() !== "") {
-					$("#newConvoTitle").val($("#convoText").val());
-				}
-				showPopup("#startDialog", 350);
-			});
-
-			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
 		});
 	</script>
 		
-<div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
+<div id="managtopic1">
   <div id="managtopic">
   	#{include 'header.html' /}
   	<div id="bottom_container">
@@ -79,21 +37,22 @@
 	            	<div class="topipcWraper">
 	            #{/else}
 
-                  <div class="stylez2">Live Community Chats (${liveTalks.size()})</div>
+                  <div class="convoPagesTitle">Live Community Chats (${liveTalks.size()})</div>
                     <div class="topicborder"></div>
-                    <!--mtinputbox-->
-
                     <div class="cb"></div>
+                    
                     <div class="topic conversationsList" style="padding-top: 5px;">
 						#{list items: liveTalks, as: 'convo'}
 							#{liveTalk convo: convo, talker: talker /}
 						#{/list}
 						#{else}
 							#{if talker}
-				                <a href="#" class="startLink2" style="font-size: 14px;">Be the first to start a live chat.</a>
+				                <a href="#" onclick="return showStartConvoDialog('chat')" 
+				                	style="font-size: 14px;">Be the first to start a live chat.</a>
 				            #{/if}
 				            #{else}
-				            	<span class="blacktext14"><a href="@{Application.signup()}">Join now</a> to be the first to start a live chat.</span>
+				            	<span class="blacktext14"><a href="@{Application.signup()}">Join now</a> 
+				            		to be the first to start a live chat.</span>
 				            #{/else}
 						#{/else}
 						
@@ -111,7 +70,6 @@
 					</span>
 					#{ notLoggedNotice /}
 
-                  <!--topic-->
                   <div class="cb"></div>
                 </div>
                 <!--topipcWraper-->

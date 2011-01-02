@@ -5,9 +5,8 @@ ul.tabs {
 	list-style: none;
 	height: 34px;
 	padding-left:10px;
-		border-bottom: 1px solid #d3d3d3;
-		color:#000000;
-	
+	border-bottom: 1px solid #d3d3d3;
+	color:#000000;
 	width: 100%;
 }
 ul.tabs li {
@@ -17,7 +16,7 @@ ul.tabs li {
 	height: 34px;
 	line-height: 34px;
 	margin-left:5px;
-		color:#000000;
+	color:#000000;
 	border-left: none;
 	margin-bottom: -1px;
 	background: #f5f5f5;
@@ -25,25 +24,25 @@ ul.tabs li {
 	position: relative;
 }
 ul.tabs li a {
-float: left;
+	float: left;
 	text-decoration: none;	
 	display: block;	
-	padding: 0 20px;
+	padding: 0 7px;
 	font-size:14px;
 	font-family:Arial;
 	font-weight:bold;
 	color:#1550a4;
 	height:34px;
-border: 1px solid #d3d3d3;
+	border: 1px solid #d3d3d3;
 	outline: none;
 }
 ul.tabs li a:hover {
-float: left;
+	float: left;
 	background: #f5f5f5;
 	color:#000;
 }	
 ul.tabs li.active, ul.tabs li.active span {
-float: left;
+	float: left;
 	background: #fff;
 	color:#000000;
 	font-size:14px;
@@ -54,7 +53,7 @@ float: left;
 	
 }
 ul.tabs li.active, ul.tabs li.active span: {
-float: left;
+	float: left;
 	background: #fff;
 	color:#000000;
 	font-size:14px;
@@ -64,9 +63,7 @@ float: left;
 	border-bottom: 1px solid #ffffff;
 	
 }
-
 .tab_container {
-
 	border-top: none;
 	clear: both;
 	float: left; 
@@ -74,6 +71,6 @@ float: left;
 }
 .tab_content {
 	float:left;
-padding-top:20px;
+	padding-top:20px;
 }
 

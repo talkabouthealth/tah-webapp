@@ -3,9 +3,6 @@
 		body { background:transparent url(/public/images/inner_bgmt.gif) repeat-x scroll center top; }
 		#innermiddlearea { padding-top: 10px }
 		
-		.inline_form { display:none; }
-		.inline-edit .editdiv { float:left; width:45px; margin-left: 3px; }
-		
 		h1 {
 			color:#000000;
 			font-family:arial;
@@ -33,7 +30,6 @@
 		.tabContent { padding-top: 10px }
 	</style>
 	
-	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -51,23 +47,6 @@
 	  			);
 			});
 
-			$(".followConvoLink").live('click', function() {
-				var topicId = $(this).attr("rel");
-				if ($(this).html().indexOf("Unfollow") != -1) {
-					$(this).html("Follow");
-				}
-				else {
-					$(this).html("Unfollow");
-				}
-				$.post("@{Conversations.follow()}", 
-	  				{ topicId: topicId},
-	  				function(data) {
-	  					//...
-	  				}
-	  			);
-	  			return false;
-			});
-
 			$(".flagConvoLink").click(function() {
 				flagType = "convo";
 				flagConvoId = $(this).attr("rel");
@@ -78,17 +57,8 @@
 			$('.inline-edit').inlineEdit(
 		  		{ hover: '', saveFunction: saveData}
 		  	);
-			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
 
-		  	//tabs?
-			$(".tabLink").click(function() {
-   				$(".latestactivity").removeClass("latestactivity").addClass("latestactivity1"); //Remove any "active" class
-   				$(this).parent().removeClass("latestactivity1").addClass("latestactivity"); //Add "active" class to selected tab
-   				var id = $(this).attr("id");
-   				$(".tabContent").hide(); //Hide all tab content
-   				$("#"+id+"Content").fadeIn(); //Fade in the active content
-   				return false;
-   			});
+			initNewTabs();
 		});
 
 		function saveData(dataType, newValue) {
