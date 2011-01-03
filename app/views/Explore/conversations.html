@@ -52,7 +52,7 @@
 		                      <div class="topic">
 		                        <div id="communityFeedList">
 			                    	#{list items: communityFeed, as: 'activity'}
-										#{feedActivity activity: activity, talker: talker /}
+										#{feed/feedActivity activity: activity, talker: talker /}
 									#{/list}
 								</div>
 								*{
@@ -80,7 +80,7 @@
 		                      <div class="cb"></div>
 		                      <div class="topic">
 		                        #{list items: popularConvos, as: 'convo' }
-									#{listConvo convo: convo, talker: talker /}
+									#{convo/convoListItem convo: convo, talker: talker /}
 								#{/list}
 		                        <div class="cb"></div>
 		                      </div>

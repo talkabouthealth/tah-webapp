@@ -1,6 +1,6 @@
 #{list items: _healthItem.children, as: 'item' }
 	#{if item.children?.size() > 0 }
-		#{ healthItemsList healthItem: item, talkerDisease: _talkerDisease /}
+		#{ profile/healthItemsList healthItem: item, talkerDisease: _talkerDisease /}
 	#{/if}
 	#{else}
 		#{if _talkerDisease?.healthItems?.contains(item.id) }

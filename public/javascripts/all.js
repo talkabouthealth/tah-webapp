@@ -19,6 +19,24 @@ function openInvitationsWindow() {
 	window.open("/home/invitations", "TalkAboutHealthInvitations", "width=600,height=350");
 }
 
+function openTwitter() {
+	var popupWindow = window.open("@{OAuth.getAuth()}?type=twitter", 
+		"TwitterLogin", "width=800,height=430,toolbar=no,location=no,menubar=no");
+	
+	//TODO: center pop-up on the screen and make one function for all pages
+	//for prototype library
+	//var offsets = document.viewport.getScrollOffsets();
+	//var x = Math.ceil((document.viewport.getWidth()/2)-425);
+	//var y = Math.ceil(200);
+	//popupWindow.moveTo(x,y);
+	return false;
+}
+
+function openFacebook() {
+	var popupWindow = window.open("@{OAuth.getAuth()}?type=facebook", 
+		"FacebookLogin", "width=1000,height=550,toolbar=no,location=no,menubar=no");
+}
+
 function restartConvo(tid, convoId) {
 	openChat(tid);
 	$.post("/conversations/restart", {convoId: convoId});
@@ -423,7 +441,7 @@ function sendProfileComment() {
 	hideAll();
 	$("#commentText").val("");
 
-	$.post("/actions/saveProfileComment", 
+	$.post("/actions/saveProfileComment2", 
 		{ profileTalkerId: selectedTalkerId, parentId: '', text: commentText}
 	);
 }

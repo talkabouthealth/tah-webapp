@@ -53,7 +53,7 @@ public class Application extends Controller {
 		"home", "dashboard", "talk", "profile", "public", "image", 
 		"actions", "application", "oauth", "security", "static", "topics",
 		"errors", 
-		"explore", "search", "community", "openquestions", "livetalks", "conversationfeed"
+		"explore", "search", "community", "openquestions", "livechats", "conversationfeed"
 	});
 
     public static void index() {

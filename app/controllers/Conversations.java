@@ -86,19 +86,19 @@ public class Conversations extends Controller {
         templateBinding.put("_talker", talker);
     	if (fromPage.equalsIgnoreCase("home")) {
     		//#{feedActivity activity: activity, talker: talker /}
-    		templateName = "tags/feedActivity.html";
+    		templateName = "tags/feed/feedActivity.html";
     		Action activity = new StartConvoAction(talker, convo, ActionType.START_CONVO);
     		activity.getConvo().setComments(new ArrayList<CommentBean>());
     		templateBinding.put("_activity", activity);
     	}
     	else if (fromPage.equalsIgnoreCase("liveTalks")) {
-    		//#{liveTalk convo: convo, talker: talker /}
-    		templateName = "tags/liveTalk.html";
+    		//#{convo/liveChat convo: convo, talker: talker /}
+    		templateName = "tags/convo/liveChat.html";
     		templateBinding.put("_convo", convo);
     	}
     	else {
-    		//#{openQuestion convo: convo, talker: talker /}
-    		templateName = "tags/openQuestion.html";
+    		//#{convo/openQuestion convo: convo, talker: talker /}
+    		templateName = "tags/convo/openQuestion.html";
     		templateBinding.put("_convo", convo);
     	}
         Template template = TemplateLoader.load(templateName);
@@ -220,7 +220,7 @@ public class Conversations extends Controller {
     	CommentsDAO.updateConvoAnswer(answer);
     	
     	Set<Vote> _votes = answer.getUpVotes();
-    	render("tags/answerVotesInfo.html", _votes);
+    	render("tags/convo/answerVotesInfo.html", _votes);
     }
     
     //for Dashboard
@@ -451,7 +451,7 @@ public class Conversations extends Controller {
 		//render html of new comment using tag
 		List<CommentBean> _commentsList = Arrays.asList(comment);
 		int _level = (comment.getParentId() == null ? 1 : 2);
-		render("tags/convoCommentsTree.html", _commentsList, _level, _talker);
+		render("tags/convo/convoCommentsTree.html", _commentsList, _level, _talker);
 	}
     
     public static void deleteChatMessage(String convoId, int index) {

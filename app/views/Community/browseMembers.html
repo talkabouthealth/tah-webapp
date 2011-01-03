@@ -48,7 +48,7 @@
 				            </div>
 				            <div class="thnksarea">
 				            	#{list items: activeTalkers, as: 'talker' }
-				            		#{talkerInList talker: talker, currentTalker: currentTalker /}
+				            		#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
 				            	#{/list}
 				            </div>
 				            <div class="thnksbottom" style="display: none">
@@ -70,7 +70,7 @@
 				            </div>
 				            <div class="thnksarea">
 				            	#{list items: newTalkers, as: 'talker' }
-				            		#{talkerInList talker: talker, currentTalker: currentTalker /}
+				            		#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
 				            	#{/list}
 				            </div>
 				            <div class="thnksbottom" style="display: none">
@@ -126,7 +126,7 @@
 								#{if results }
 									<div style="font-size: 14px; clear: left; padding-top: 10px">	
 										#{list items:results, as: 'talker'}
-											#{talkerInList talker: talker, currentTalker: currentTalker /}
+											#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
 										#{/list}
 									</div>
 								#{/if}
@@ -150,7 +150,7 @@
 						            </div>
 						            <div class="thnksarea">
 						            	#{list items: members.get(memberType), as: 'talker' }
-						            		#{talkerInList talker: talker, currentTalker: currentTalker /}
+						            		#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
 						            	#{/list}
 						            </div>
 						            <div class="thnksbottom" style="display: none">
@@ -172,7 +172,7 @@
 <div id="boxes">
 	<div id="dialog" class="window"></div>
 	
-	#{ popups/thankyou2 /}
-	#{ popups/comment2 /}
+	#{ popups/thankyou /}
+	#{ popups/thoughtComment /}
 </div>
 <div id="mask"></div>

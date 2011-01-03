@@ -62,7 +62,7 @@
    			$("#thankYouNote").val("");
 
    			$.post("@{Actions.createThankYou()}", 
-  				{ toTalker: '${talker.id}', note: noteText, tagFile: 'thanksThankYou'},
+  				{ toTalker: '${talker.id}', note: noteText, tagFile: 'publicprofile/thanksThankYou'},
   				function(html) {
   					//put new thank you item in the list
   					$(html).prependTo($(".thnksarea2"));
@@ -132,7 +132,7 @@
 				            <div id="thankyousList" class="thnksarea2">
 				            	#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
 									#{list items:talker.thankYouList, as:'thankYou'}
-										#{ thanksThankYou thankYou: thankYou /}
+										#{ publicprofile/thanksThankYou thankYou: thankYou /}
 									#{/list}
 								#{/if}
 								#{else}
@@ -164,7 +164,7 @@
 				            <div id="followingList" class="thnksarea">
 				            	#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
 									#{list items:talker.followingList, as:'following' }
-										#{talkerInList talker: following, currentTalker: currentTalker /}
+										#{talker/talkerInList talker: following, currentTalker: currentTalker /}
 									#{/list}
 								#{/if}
 								#{else}
@@ -195,7 +195,7 @@
 				            <div id="followerList" class="thnksarea">
 				            	#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.FOLLOWERS) }
 									#{list items:talker.followerList, as:'follower' }
-										#{talkerInList talker: follower, currentTalker: currentTalker /}
+										#{talker/talkerInList talker: follower, currentTalker: currentTalker /}
 									#{/list}
 								#{/if}
 								#{else}
@@ -228,7 +228,7 @@
 <div id="boxes">
 	<div id="dialog" class="window"></div>
 	
-	#{ popups/thankyou2 /}
-	#{ popups/comment2 /}
+	#{ popups/thankyou /}
+	#{ popups/thoughtComment /}
 </div>
 <div id="mask"></div>

@@ -31,7 +31,7 @@
 	                  <div class="comborder"></div>
 	                </div>
 	                <div class="topipcWraper">
-	                  #{startConvoInput /}
+	                  #{convo/startConvoInput /}
 	            #{/if}
 	            #{else}
 	            	<div class="topipcWraper">
@@ -43,7 +43,7 @@
                     
                     <div class="topic conversationsList" style="padding-top: 5px;">
 						#{list items: liveTalks, as: 'convo'}
-							#{liveTalk convo: convo, talker: talker /}
+							#{convo/liveChat convo: convo, talker: talker /}
 						#{/list}
 						#{else}
 							#{if talker}

@@ -37,7 +37,7 @@
 	               				<p>   
 						 			<div class="styles1">
 					 					<div class="votestxt3">
-					 						#{answerVotesInfo votes: comment.upVotes /}
+					 						#{convo/answerVotesInfo votes: comment.upVotes /}
 										</div>
 						 				
 										<div class='inline-edit' id="answerEdit${comment.id}" style="padding: 7px 0; width: 100%;">
@@ -127,7 +127,7 @@
 				     #{if _level == 1}
 				     	<div id="replies${comment.id}" class="replysub" style="display: none">
 			            	<div style="clear:both" id="foo">
-								#{convoCommentsTree commentsList: comment.children, level: (_level+1), talker: _talker /}
+								#{convo/convoCommentsTree commentsList: comment.children, level: (_level+1), talker: _talker /}
 								#{if session.username }
 									<div id="replyform${comment.id}" style="clear:both">
 					                    <div class="repcommbox22">

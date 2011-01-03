@@ -366,13 +366,13 @@
 									
 									<li class="blacktext12 healthitemtitle" style="padding-top:10px;"><strong>Initial Symptoms</strong></li>
 									<!-- We need span to hide health items titles without children using jQuery -->
-									#{ healthItemsList healthItem: healthItemsMap.symptoms, talkerDisease: talkerDisease /}
+									#{ profile/healthItemsList healthItem: healthItemsMap.symptoms, talkerDisease: talkerDisease /}
 									#{list items: talkerDisease.otherHealthItems?.symptoms, as: 'item' }
 										<li class="blacktext12">${item}</li>
 									#{/list}
 									
 									<li class="blacktext12 healthitemtitle" style="padding-top:10px;"><strong>Tests</strong></li>
-									#{ healthItemsList healthItem:healthItemsMap.tests, talkerDisease: talkerDisease /}
+									#{ profile/healthItemsList healthItem:healthItemsMap.tests, talkerDisease: talkerDisease /}
 									#{list items: talkerDisease.otherHealthItems?.tests, as: 'item' }
 										<li class="blacktext12">${item}</li>
 									#{/list}
@@ -381,7 +381,7 @@
 							<div class="profiletext2">
 								<ul>
 									<li class="blacktext12 healthitemtitle"><strong>Procedures/Surgeries</strong></li>
-										#{ healthItemsList healthItem:healthItemsMap["procedures"], talkerDisease: talkerDisease /}
+										#{ profile/healthItemsList healthItem:healthItemsMap["procedures"], talkerDisease: talkerDisease /}
 										#{list items: talkerDisease.otherHealthItems?.procedures, as: 'item' }
 											<li class="blacktext12">${item}</li>
 										#{/list}
@@ -389,7 +389,7 @@
 									<li class="blacktext12 healthitemtitle" style="padding-top:10px;">
 										<strong>Medications and Treatments</strong>
 									</li>
-										#{ healthItemsList healthItem:healthItemsMap["treatments"], talkerDisease: talkerDisease /}
+										#{ profile/healthItemsList healthItem:healthItemsMap["treatments"], talkerDisease: talkerDisease /}
 										#{list items: talkerDisease.otherHealthItems?.treatments, as: 'item' }
 											<li class="blacktext12">${item}</li>
 										#{/list}
@@ -397,7 +397,7 @@
 									<li class="blacktext12 healthitemtitle" style="padding-top:10px;">
 										<strong>Side effects from medications/treatments</strong>
 									</li>
-										#{ healthItemsList healthItem:healthItemsMap["sideeffects"], talkerDisease: talkerDisease /}
+										#{ profile/healthItemsList healthItem:healthItemsMap["sideeffects"], talkerDisease: talkerDisease /}
 										#{list items: talkerDisease.otherHealthItems?.sideeffects, as: 'item' }
 											<li class="blacktext12">${item}</li>
 										#{/list}
@@ -412,7 +412,7 @@
 	                    <div>
 	                        <div id="talkerFeedList">
 		                    	#{list items: talkerFeed, as: 'activity'}
-									#{feedActivity activity: activity, talker: talker /}
+									#{feed/feedActivity activity: activity, talker: talker /}
 								#{/list}
 							</div>
 							#{if talkerFeed.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }

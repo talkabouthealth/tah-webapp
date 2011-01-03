@@ -59,7 +59,7 @@
 											<br/><br/>
 										#{/if}
 					                  	#{list items: startedConvosFeed, as: 'convoActivity'}
-					                  		#{feedActivity activity: convoActivity, talker: talker /}
+					                  		#{feed/feedActivity activity: convoActivity, talker: talker /}
 					                  	#{/list}
 									</div>
 		    					</div>
@@ -78,7 +78,7 @@
 											<br/><br/>
 										#{/if}
 					                  	#{list items: joinedConvosFeed, as: 'convoActivity'}
-					                  		#{feedActivity activity: convoActivity, talker: talker /}
+					                  		#{feed/feedActivity activity: convoActivity, talker: talker /}
 					                  	#{/list}
 									</div>
 		    					</div>
@@ -97,7 +97,7 @@
 											<br/><br/>
 										#{/if}
 					                  	#{list items: followingConvosFeed, as: 'convoActivity'}
-					                  		#{feedActivity activity: convoActivity, talker: talker /}
+					                  		#{feed/feedActivity activity: convoActivity, talker: talker /}
 					                  	#{/list}
 									</div>
 		    					</div>

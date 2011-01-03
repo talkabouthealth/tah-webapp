@@ -38,8 +38,6 @@
 
 <script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
 <script type="text/javascript" charset="utf-8">
-	#{ oauthJavaScripts /}
-
 	$(document).ready(function() {
 
 		addAjaxForm("#setNotifyFrequency");
@@ -217,7 +215,7 @@
 								<td>&nbsp;</td>
 							</tr>
 							#{list items: talker.emails, as: 'email' }
-								#{ profileNotificationEmail email: email /}
+								#{ profile/profileNotificationEmail email: email /}
 							#{/list}
 						</table>
 						<div style="margin-left: 20px;">
@@ -271,7 +269,7 @@
 						<h1>IM</h1>
 						<table id="imstable" border="0" style="margin-left: 10px;">
 							#{list items: talker.imAccounts, as: 'imAccount' }
-								#{ profileNotificationIM imAccount: imAccount /}
+								#{ profile/profileNotificationIM imAccount: imAccount /}
 							#{/list}
 						</table>
 						<div style="margin-left: 20px;">

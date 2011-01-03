@@ -170,21 +170,21 @@ public class Home extends Controller {
     	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
     	boolean loggedIn = (_talker != null);
     	
-    	Set<Action> _convoFeed = null;
+    	Set<Action> _feedItems = null;
     	if ("convoFeed".equalsIgnoreCase(feedType)) {
-    		_convoFeed = FeedsLogic.getConvoFeed(_talker, afterActionId);
+    		_feedItems = FeedsLogic.getConvoFeed(_talker, afterActionId);
     	}
     	else if ("communityFeed".equalsIgnoreCase(feedType)) {
-    		_convoFeed = FeedsLogic.getCommunityFeed(afterActionId, loggedIn);
+    		_feedItems = FeedsLogic.getCommunityFeed(afterActionId, loggedIn);
     	}
     	else {
     		TalkerBean profileTalker = TalkerDAO.getByUserName(talkerName);
     		if (profileTalker != null) {
-    			_convoFeed = FeedsLogic.getTalkerFeed(profileTalker, afterActionId);
+    			_feedItems = FeedsLogic.getTalkerFeed(profileTalker, afterActionId);
     		}
     	}
     	
-    	render("tags/convoFeedList.html", _convoFeed, _talker);
+    	render("tags/feed/feedList.html", _feedItems, _talker);
     }
     
     /* ---------------- Invitations ----------------- */

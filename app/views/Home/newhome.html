@@ -13,7 +13,6 @@
 	<script type="text/javascript">
 		var username = "${talker.userName}";
 		var feedsPerPage = ${logic.FeedsLogic.FEEDS_PER_PAGE};
-		#{ oauthJavaScripts /}
 
 		$(document).ready(function() {
 			initNewTabs();
@@ -273,7 +272,7 @@
 	
 	                    <div class="newpageCover">
 	                   		#{list items: liveConversations, as: 'convo'}
-								#{liveTalk convo: convo, talker: talker /}		                      
+								#{convo/liveChat convo: convo, talker: talker /}		                      
 							#{/list}
 							#{else}
 								<a href="#" onclick="return showStartConvoDialog('chat')" 
@@ -301,7 +300,7 @@
 				                      <div class="topic">
 				                        <div id="convoFeedList" class="conversationsList">
 					                    	#{list items: convoFeed, as: 'activity'}
-												#{feedActivity activity: activity, talker: talker /}
+												#{feed/feedActivity activity: activity, talker: talker /}
 											#{/list}
 											#{else}
 												<br /><span class="blacktext16">Follow topics, conversations, and
@@ -326,7 +325,7 @@
 				                      <div class="topic">
 				                        <div id="communityFeedList">
 					                    	#{list items: communityFeed, as: 'activity'}
-												#{feedActivity activity: activity, talker: talker /}
+												#{feed/feedActivity activity: activity, talker: talker /}
 											#{/list}
 										</div>
 										#{if communityFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }

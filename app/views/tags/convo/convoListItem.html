@@ -41,24 +41,3 @@
 	<div class="cb"></div>
 	<div class="joinborder"></div>
 </div>
-
-*{
-<a href="@{ViewDispatcher.view(convo.mainURL)}"><b>${convo.topic}</b></a><br/>
-			#{if talker }
-				${convo.comments.size()} Answer(s)&nbsp;|&nbsp;
-				${convo.members.size()} member(s) spoke&nbsp;|&nbsp;
-				<a href="#" class="bluetext12 followTopicLink" rel="${convo.id}">
-				${ talker.followingConvosList?.contains(convo.id) ? 'Unfollow' : 'Follow'}
-				</a>&nbsp;|&nbsp;
-				<a href="#" onclick="return restartConvo(${convo.tid}, '${convo.id}');" 
-					class="restartConvoLink">Re-start</a>&nbsp;|&nbsp;
-				${convo.creationDate?.since()}
-			#{/if}
-			#{if convo.comments.size() > 0}
-				<div style="padding-left: 10px">
-					#{set answer = convo.comments.get(0) /}
-					Top Answer by: ${answer.fromTalker.userName}<br/>
-					${answer.text}
-				</div>
-			#{/if}
-*}

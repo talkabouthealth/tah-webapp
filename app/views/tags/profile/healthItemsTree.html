@@ -9,7 +9,7 @@
 		#{ifnot item.name.equals("Empty") }
 			<div class="healthitemCol${currentNum}"><span class="blacktext14"><strong>${item.name}</strong></span></div>
 		#{/ifnot}
-		#{ healthItemsTree healthItem: item, checkedItems: _checkedItems /}
+		#{ profile/healthItemsTree healthItem: item, checkedItems: _checkedItems /}
 	#{/if}
 	#{else}
 		<div class="healthitemCol${currentNum}">

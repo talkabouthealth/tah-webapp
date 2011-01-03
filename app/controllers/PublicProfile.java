@@ -201,7 +201,7 @@ public class PublicProfile extends Controller {
     	
     	List<TopicBean> _recommendedTopics = loadRecommendedTopics(_talker, talkerDisease, afterId);
     	
-    	render("tags/recommendedTopicsList.html", _recommendedTopics, _talker);
+    	render("tags/publicprofile/recommendedTopicsList.html", _recommendedTopics, _talker);
     }
 	
 	private static List<TopicBean> loadRecommendedTopics(TalkerBean talker, 

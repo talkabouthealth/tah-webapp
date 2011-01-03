@@ -182,11 +182,11 @@
  								<span class="blacktext16"><strong>What were the initial symptoms you experienced?</strong></span>
  							</div>
 							<div class="generalcheck">
-								#{ healthItemsTree healthItem:healthItemsMap["symptoms"], checkedItems: talkerDisease?.healthItems /}
+								#{ profile/healthItemsTree healthItem:healthItemsMap["symptoms"], checkedItems: talkerDisease?.healthItems /}
 							</div>
 							<div class="signupmain">
 								<div class="personaltextfield">
-								  	#{ otherField name:'symptoms', values: talkerDisease?.otherHealthItems /}
+								  	#{ profile/otherField name:'symptoms', values: talkerDisease?.otherHealthItems /}
 								</div>
 							</div>
 						</div>
@@ -232,20 +232,20 @@
 				<div class="signupleftarea2">
 					<div class="generalsubhead">Which of the following tests have you had?</div>
 					<div class="generalcheck">
-						#{ healthItemsTree healthItem:healthItemsMap["tests"], checkedItems: talkerDisease?.healthItems /}
+						#{ profile/healthItemsTree healthItem:healthItemsMap["tests"], checkedItems: talkerDisease?.healthItems /}
 					</div>
 					<div class="personaltextfield">
-						#{ otherField name:'tests', values: talkerDisease?.otherHealthItems /}
+						#{ profile/otherField name:'tests', values: talkerDisease?.otherHealthItems /}
 					</div>
 					<div class="generalsubhead">
 						<a name="procedures"></a>
 						What procedures/surgeries have you had?
 					</div>
 					<div class="generalcheck">
-						#{ healthItemsTree healthItem:healthItemsMap["procedures"], checkedItems: talkerDisease?.healthItems /}
+						#{ profile/healthItemsTree healthItem:healthItemsMap["procedures"], checkedItems: talkerDisease?.healthItems /}
 					</div>
 					<div class="personaltextfield">
-						#{ otherField name:'procedures', values: talkerDisease?.otherHealthItems /}
+						#{ profile/otherField name:'procedures', values: talkerDisease?.otherHealthItems /}
 					</div>
 					<div class="signupmain"></div>
 				</div>
@@ -261,10 +261,10 @@
 					</div>
 					<div class="generalcheck">
 						<a name="treatments"></a>
-						#{ healthItemsTree healthItem:healthItemsMap["treatments"], checkedItems: talkerDisease?.healthItems /}
+						#{ profile/healthItemsTree healthItem:healthItemsMap["treatments"], checkedItems: talkerDisease?.healthItems /}
 					</div>
 					<div class="personaltextfield">
-						#{ otherField name:'treatments', values: talkerDisease?.otherHealthItems /}
+						#{ profile/otherField name:'treatments', values: talkerDisease?.otherHealthItems /}
 					</div>
 					<div class="signupmain"></div>
 				</div>
@@ -277,11 +277,11 @@
 				<div class="signupleftarea2">
 					<div class="generalsubhead">What Treatment/Medication Side Effects have you experienced?</div>
 					<div class="generalcheck">
-						#{ healthItemsTree healthItem:healthItemsMap["sideeffects"], checkedItems: talkerDisease?.healthItems /}
+						#{ profile/healthItemsTree healthItem:healthItemsMap["sideeffects"], checkedItems: talkerDisease?.healthItems /}
 					</div>
 					<div class="personaltextfield">
 						<a name="sideeffects"></a>
-						#{ otherField name:'sideeffects', values: talkerDisease?.otherHealthItems /}
+						#{ profile/otherField name:'sideeffects', values: talkerDisease?.otherHealthItems /}
 					</div>
 					#{if talker.nextStepMessage }
 					 	<div class="generalsubhead">

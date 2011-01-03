@@ -549,14 +549,14 @@
                       			<div class="topicborder"></div>
                       		</div>
                       		
-                      		#{convoCommentsTree commentsList: convo.helpfulAnswers, level: 1, talker: talker /}
+                      		#{convo/convoCommentsTree commentsList: convo.helpfulAnswers, level: 1, talker: talker /}
                       		
                       		#{set notHelpfulAnswers = convo.notHelpfulAnswers /}
                       		#{if notHelpfulAnswers.size() != 0 }
                       			<a href="#" onclick="$('#notHelpfulAnswers').show(); return false;"
                       				>View ${notHelpfulAnswers.size()} Answer(s) Marked Not Helpful</a>
 	                      		<div id="notHelpfulAnswers" style="display: none; margin-top: 3px;">
-	                      			#{convoCommentsTree commentsList: notHelpfulAnswers, level: 1, talker: talker /}
+	                      			#{convo/convoCommentsTree commentsList: notHelpfulAnswers, level: 1, talker: talker /}
 	                      		</div>	
                       		#{/if}
                       		
@@ -736,6 +736,6 @@
 	<div id="dialog" class="window"></div>
 	
 	#{ popups/flag /}
-	#{ popups/thankyou2 /}
+	#{ popups/thankyou /}
 </div>
 <div id="mask"></div>

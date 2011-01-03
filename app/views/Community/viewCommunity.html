@@ -29,7 +29,7 @@
                     
                     <div class="topic">
 						#{list items: liveTalks, as: 'convo'}
-		                      #{liveTalk convo: convo, talker: talker /}
+		                      #{convo/liveChat convo: convo, talker: talker /}
 						#{/list}
 						#{else}
 							<span class="blacktext14">Be the first to start a live chat.</span>
@@ -56,7 +56,7 @@
                       <!--topic-->
                       <div class="topic">
                         <div id="convoFeedList">
-	                        #{convoFeedList convoFeed: communityConvoFeed, talker: talker /}
+	                        #{feed/feedList feedItems: communityConvoFeed, talker: talker /}
 						</div>
 						<div class="replytommentbox" style="display: none;">
                           <input type="submit" src="images/seemore.jpg" onclick="return loadMoreConvoFeed();"value=" " class="seemorecom" />

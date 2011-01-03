@@ -65,7 +65,7 @@ public class Actions extends Controller {
 		//render html of new comment using tag - different for PublicProfile and ThankYous page
 		ThankYouBean _thankYou = thankYouBean;
 		if (tagFile == null) {
-			tagFile = "profileThankYou";
+			tagFile = "publicprofile/profileThankYou";
 		}
 		render("tags/"+tagFile+".html", _thankYou);
 	}
@@ -100,15 +100,6 @@ public class Actions extends Controller {
 		}
 	}
 	
-	public static void saveProfileComment(String profileTalkerId, String parentId, String text) {
-		CommentBean comment = saveProfileCommentInternal(profileTalkerId, parentId, text);
-		
-		//render html of new comment using tag
-		List<CommentBean> _commentsList = Arrays.asList(comment);
-		int _level = (comment.getParentId() == null ? 1 : 2);
-		render("tags/profileCommentsTree.html", _commentsList, _level);
-	}
-	
 	/**
 	 * Version for new design - returns other html to caller
 	 * @param profileTalkerId
@@ -121,7 +112,7 @@ public class Actions extends Controller {
 		if (from != null && from.equals("home")) {
     		TalkerBean _talker = comment.getFromTalker();
     		Action _activity = new PersonalProfileCommentAction(_talker, _talker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT);
-    		render("tags/feedActivity.html", _talker, _activity);
+    		render("tags/feed/feedActivity.html", _talker, _activity);
 		}
 		else {
 			//render html of new comment using tag
@@ -129,7 +120,7 @@ public class Actions extends Controller {
 			int _level = (comment.getParentId() == null ? 1 : 2);
 			boolean _showDelete = false;
 			boolean _isFeed = false;
-			render("tags/profileCommentsTree2.html", _commentsList, _level, _showDelete, _isFeed);
+			render("tags/publicprofile/profileCommentsTree2.html", _commentsList, _level, _showDelete, _isFeed);
 		}
 	}
 	

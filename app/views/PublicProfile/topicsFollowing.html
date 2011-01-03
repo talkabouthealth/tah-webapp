@@ -180,7 +180,7 @@
 	#{/if}
 	
 	<div id="recommendedTopics">
-		#{ recommendedTopicsList recommendedTopics: recommendedTopics, talker: currentTalker /}
+		#{ publicprofile/recommendedTopicsList recommendedTopics: recommendedTopics, talker: currentTalker /}
 	</div>
 	#{if recommendedTopics.size() == 10 }
 		<input id="recommendedTopicsBtn" type="submit" style="margin-top: 25px;" 

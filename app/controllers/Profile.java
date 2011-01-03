@@ -525,7 +525,7 @@ public class Profile extends Controller {
 		
 		
 		EmailBean _email = email;
-		render("tags/profileNotificationEmail.html", _email);
+		render("tags/profile/profileNotificationEmail.html", _email);
 	}
 	
 	public static void deleteEmail(String email) {
@@ -554,7 +554,7 @@ public class Profile extends Controller {
 		CommonUtil.sendIMInvitation(imAccount);
 		
 		IMAccountBean _imAccount = imAccount;
-		render("tags/profileNotificationIM.html", _imAccount);
+		render("tags/profile/profileNotificationIM.html", _imAccount);
 	}
 	
 	/**
