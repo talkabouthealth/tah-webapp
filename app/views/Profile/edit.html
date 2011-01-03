@@ -9,8 +9,7 @@
 </style>
 
 <script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
-<script type="text/javascript" charset="utf-8">
-
+<script type="text/javascript">
 	$(document).ready(function() {
 		makeTopicsAutocomplete("#talkerkeywords");
 
@@ -29,151 +28,77 @@
 		
 		return false;
 	}
-	
-	function validateProfileForm() {
-	  var reason = "";
-	  var updateprofileForm = document.getElementById("updateprofile");
-		
-	  reason += validateUsername(document.getElementById("talker.userName"));
-	  //reason += validateEmail(document.getElementById("talker.email"));
-	  //reason += validateEmpty(document.getElementById("talker.dobString"));
-	    
-	  if (reason != "") {
-	    alert("Some fields need correction:\n" + reason);
-	    return false;
-	  }
-		
-	  updateprofileForm.submit();
-	}
-	function validateEmpty(fld) {
-	    var error = "";
-	 
-	    if (fld.value.length == 0) {
-	        fld.style.background = 'Yellow'; 
-	        error = "The required field has not been filled in.\n"
-	    } else {
-	        fld.style.background = 'White';
-	    }
-	    return error;  
-	}
-	function validateUsername(fld) {
-	    var error = "";
-	    var illegalChars = /\W/; // allow letters, numbers, and underscores
-	 
-	    if (fld.value == "") {
-	        fld.style.background = 'Yellow'; 
-	        error = "You didn't enter a username.\n";
-	    } else if ((fld.value.length < 1) || (fld.value.length > 15)) {
-	        fld.style.background = 'Yellow'; 
-	        error = "The username is the wrong length.\n";
-	    } else if (illegalChars.test(fld.value)) {
-	        fld.style.background = 'Yellow'; 
-	        error = "The username contains illegal characters.\n";
-	    } else {
-	        fld.style.background = 'White';
-	    }
-	    return error;
-	}
-	function trim(s)
-	{
-	  return s.replace(/^\s+|\s+$/, '');
-	}
-	function validateEmail(fld){
-	    var error="";
-	    var tfld = trim(fld.value);                        // value of field with whitespace trimmed off
-	    var emailFilter = /^[^@]+@[^@.]+\.[^@]*\w\w$/ ;
-	    var illegalChars= /[\(\)\<\>\,\;\:\\\"\[\]]/ ;
-	   
-	    if (fld.value == "") {
-	        fld.style.background = 'Yellow';
-	        error = "You didn't enter an email address.\n";
-	    } else if (!emailFilter.test(tfld)) {              //test email for illegal characters
-	        fld.style.background = 'Yellow';
-	        error = "Please enter a valid email address.\n";
-	    } else if (fld.value.match(illegalChars)) {
-	        fld.style.background = 'Yellow';
-	        error = "The email address contains illegal characters.\n";
-	    } else {
-	        fld.style.background = 'White';
-	    }
-	    return error;
-	}
-
 </script>
 </head>
 <body>
-#{include 'header.html' /}
+	#{include 'header.html' /}
 	<div id="innerbanner"></div>
 	<div id="innermain">
 		<div class="blacktext2" id="innerheading">Edit Your Profile Information</div>
 		<div id="innerpersonalarea">
 			<div id="signupleft">
-#{if verifiedEmail}
-<div id="verifiedEmailHelp" class="helpInfo">
-      <div class="popboxWraper">
-        <div class="popbox2">
-          <div class="closecover" style="clear: none; float: right;">
-            <div class="close" onclick="return hideHelpInfo('verifiedEmail', false);">
-            	<img src="/public/images/close.jpg" alt="Close" /></div>
-          </div>
-          <div class="note">
-          	#{if talker.isProf()}
-          		<strong>Email verified successfully.  Thank you.</strong><br/><br/>
-				Please tell us more about you so that we can personalize your experience and recommend topics and conversations. 
-				As well, this enables community members to find you and follow your answers and comments if you choose.  
-				Providing profile information is optional.
-          	#{/if}
-          	#{else}
-          		<strong>Email verified successfully. Thank you.</strong><br/><br/>
-			  	Please tell us more about you so that we can match you for conversations most relevant to you.
-			  	Also, other community members with similar concerns can find and connect with you.
-          	#{/else}
-		  	<br/>
-		  	<br/>
-          </div>
-          <div class="cb"></div>
-        </div>
-        <!--popbox2-->
-
-      </div>
-      <div class="cb"></div>
-</div> 	
-#{/if}			
-#{ifnot talker?.hiddenHelps.contains('profile') }
-<div id="profileHelp" class="helpInfo">
-      <div class="popboxWraper">
-        <div class="popbox2">
-          <div class="closecover" style="clear: none; float: right;">
-            <div class="close" onclick="return hideHelpInfo('profile', true);">
-            	<img src="/public/images/close.jpg" alt="Close" /></div>
-          </div>
-          <div class="note">
-          	#{if talker.isProf()}
-          		<strong>Provide profile information so we can personalize your experience:</strong><br/>
-				- Notify you of questions, chats, and information relevant to you.<br/>
-				- Enables others to find you based on location, health concern, specialty, etc.<br/>
-				<br/>
-				<strong>Your profile info is private by default.</strong><br/>
-				- Update your <a href="@{Profile.preferences()}">privacy settings</a> to share your profile information with the community.<br/>
-          	#{/if}
-          	#{else}
-          		<strong>Provide profile information so we can personalize your experience:</strong><br/>
-			        - Recommend similar members for you to meet.<br/>	
-                                - Notify you of questions, chats, and information relevant to you.<br/>
-			  	<br/>
-			  	<strong>Your profile is private by default.</strong><br/>
-			  	- Update your <a href="@{Profile.preferences()}">privacy settings</a> to share your profile information with the community.<br/>
-          	#{/else}
-		  	<br/>
-          </div>
-          <div class="cb"></div>
-        </div>
-        <!--popbox2-->
-
-      </div>
-      <div class="cb"></div>
-</div> 
-#{/ifnot}
+				#{if verifiedEmail}
+					<div id="verifiedEmailHelp" class="helpInfo">
+					      <div class="popboxWraper">
+					        <div class="popbox2">
+					          <div class="closecover" style="clear: none; float: right;">
+					            <div class="close" onclick="return hideHelpInfo('verifiedEmail', false);">
+					            	<img src="/public/images/close.jpg" alt="Close" /></div>
+					          </div>
+					          <div class="note">
+					          	#{if talker.isProf()}
+					          		<strong>Email verified successfully.  Thank you.</strong><br/><br/>
+									Please tell us more about you so that we can personalize your experience and recommend topics and conversations. 
+									As well, this enables community members to find you and follow your answers and comments if you choose.  
+									Providing profile information is optional.
+					          	#{/if}
+					          	#{else}
+					          		<strong>Email verified successfully. Thank you.</strong><br/><br/>
+								  	Please tell us more about you so that we can match you for conversations most relevant to you.
+								  	Also, other community members with similar concerns can find and connect with you.
+					          	#{/else}
+							  	<br/>
+							  	<br/>
+					          </div>
+					          <div class="cb"></div>
+					        </div>
+					      </div>
+					      <div class="cb"></div>
+					</div> 	
+				#{/if}			
+				#{ifnot talker?.hiddenHelps.contains('profile') }
+					<div id="profileHelp" class="helpInfo">
+					      <div class="popboxWraper">
+					        <div class="popbox2">
+					          <div class="closecover" style="clear: none; float: right;">
+					            <div class="close" onclick="return hideHelpInfo('profile', true);">
+					            	<img src="/public/images/close.jpg" alt="Close" /></div>
+					          </div>
+					          <div class="note">
+					          	#{if talker.isProf()}
+					          		<strong>Provide profile information so we can personalize your experience:</strong><br/>
+									- Notify you of questions, chats, and information relevant to you.<br/>
+									- Enables others to find you based on location, health concern, specialty, etc.<br/>
+									<br/>
+									<strong>Your profile info is private by default.</strong><br/>
+									- Update your <a href="@{Profile.preferences()}">privacy settings</a> to share your profile information with the community.<br/>
+					          	#{/if}
+					          	#{else}
+					          		<strong>Provide profile information so we can personalize your experience:</strong><br/>
+								        - Recommend similar members for you to meet.<br/>	
+					                                - Notify you of questions, chats, and information relevant to you.<br/>
+								  	<br/>
+								  	<strong>Your profile is private by default.</strong><br/>
+								  	- Update your <a href="@{Profile.preferences()}">privacy settings</a> to share your profile information with the community.<br/>
+					          	#{/else}
+							  	<br/>
+					          </div>
+					          <div class="cb"></div>
+					        </div>
+					      </div>
+					      <div class="cb"></div>
+					</div> 
+				#{/ifnot}
 			#{form @Profile.save() , id:'updateprofile' }
 				<!-- We need this field to pass TalkerBean validation -->
 				<input type="hidden" id="talker.password" name="talker.password" value="pass" />

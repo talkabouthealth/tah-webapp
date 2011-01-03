@@ -30,8 +30,7 @@
 			}
 		}
 
-		//saveProfileComment(String profileTalkerId, String parentId, String text)
-		*{ TODO: there is similar method }*
+		*{ TODO: Similar method? }*
    		function saveProfileComment(parentId) {
    	   		var commentText = $("#replytext"+parentId).val();
    	   		if (commentText === '') {
@@ -81,7 +80,7 @@
    		}
 	</script>
 		
-<div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
+<div id="managtopic1">
   <div id="managtopic">
   	#{include 'header.html' /}
   	<div id="bottom_container">
@@ -92,8 +91,6 @@
               <div id="comleft">
                 <div class="comcontent">
                   <div class="topipcWraper">
-                 *{ #{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.COMMENTS) } }*
-                 #{if true }
                     <div id="reply" class="comsearchbox">
                       <div class="comh1" style="font-size:18px">
                         #{if talker.equals(currentTalker) }
@@ -126,10 +123,6 @@
 					</div>
                     <div class="cb"></div>
                   </div>
-                  	#{/if}
-					#{else}
-						<span class="blacktext14">This information has been made private.</span>
-					#{/else}
                   <!--topipcWraper-->
                   <div class="cb"></div>
                 </div>

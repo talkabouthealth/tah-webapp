@@ -1,15 +1,15 @@
 <div id="comright" style="padding-left:30px;">
 #{if session.username }
-         <div class="topipsts"> <br />
-         	#{if session.username.equals(talker.userName) }
-         		Welcome 
-               	<a href="@{ViewDispatcher.view(talker.userName)}"><strong>${talker.userName}</strong></a>!
-         	#{/if}
-         	#{else}
-         		<a href="@{ViewDispatcher.view(talker.userName)}"><strong>${talker.userName}'s</strong></a> Profile
-         	#{/else}
-         	
-           <div class="comtopbox">
+	<div class="topipsts"> <br />
+       	#{if session.username.equals(talker.userName) }
+       		Welcome 
+             	<a href="@{ViewDispatcher.view(talker.userName)}"><strong>${talker.userName}</strong></a>!
+       	#{/if}
+       	#{else}
+       		<a href="@{ViewDispatcher.view(talker.userName)}"><strong>${talker.userName}'s</strong></a> Profile
+       	#{/else}
+       	
+         <div class="comtopbox">
              <div class="comrightimg">
 				#{talker/talkerImageLink size: 58, userName: talker.userName /}
              </div>
@@ -21,11 +21,9 @@
                  #{/if}
                  <div class="topiptext2">${talker.levelOfRecognition}</div>
                </div>
-               <!--comrighttext-->
-       </div>
-       <!--topr-->
-       <div class="cb"></div>
-     </div>
+       		 </div>
+       		<div class="cb"></div>
+		</div>
 
      <!--comtopbox-->
      <div class="tpcover">

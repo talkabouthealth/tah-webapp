@@ -24,144 +24,136 @@
    		});
 </script>
 <div style="padding-left: 30px; font-size: 12px;" id="mtright">
-				#{if currentPage.equals('publicProfile') && !talker.userName.equals(currentTalker.userName) }
-					<input type="button" id="followActionImageBtn" value=""
-						class="${ currentTalker.followingList.contains(talker) ? 'followingMemberBtn' : 'followMemberBtn'}"  />
-	            #{/if}
-				<div style="padding-left: 10px; padding-top: 10px;">
-					#{if session.username.equals(talker.userName) }
-		         		Welcome 
-		               	<a href="@{ViewDispatcher.view(talker.userName)}"><strong>${talker.userName}</strong></a>!
-		         	#{/if}
-		         	#{else}
-		         		<a href="@{ViewDispatcher.view(talker.userName)}"><strong>${talker.userName}'s</strong></a> Profile
-		         	#{/else}
-		        </div>
-                <div class="followpicbox" style="padding-top: 3px;">
-                  <div class="followpic" style="width: 110px; height: 110px;">
-                  	<img src="@{Image.show(talker.userName)}" width="110" height="110"/>
-                  </div>
-                  <div class="foloowpictext" style="width: 110px;">
-                    #{ifnot talker.userName.equals(currentTalker.userName) }
-						<a id="followActionlink" href="#">
-						${ currentTalker.followingList.contains(talker) ? 'Unfollow' : 'Follow'}
-						</a>
-						<br/>
-					#{/ifnot}
-                    <a href="#" onclick="return showPopup('#commentPopup', 200);">Post Thought</a><br/>
-                    #{ifnot talker.userName.equals(currentTalker.userName) }
-                    	<a href="#" onclick="return showPopup('#thankYouPopup', 200);">Give a Thank You</a><br/>
-                    #{/ifnot}
-                    #{else}
-                    	#{if currentPage.equals('publicProfile') }
-                    		<a href="@{Profile.edit()}">Edit Profile</a><br />
-                    		#{ifnot talker.isProf()}
-                    			<a href="@{Profile.healthDetails()}">Edit Health Info</a><br />
-                    		#{/ifnot}
-							<a href="@{Profile.preferences()}">Privacy Settings</a>
-                    	#{/if}
-                    #{/else}
-                    <!-- <a href="#">Private Message</a><br/>  -->
-                  </div>
-                  <!--foloowpictext-->
-                  <div class="mtop"></div>
-                  <div class="topicborder"></div>
-                  <br/>
-                  <div class="cb"></div>
-                </div>
-                <!--followpicbox-->
-                <div class="topipsts">
-                  <div class="mtrighttxt">
-			     	<a class="${currentPage.equals('publicProfile') ? 'current' : ''}" 
-			     		href="@{ViewDispatcher.view(talker.userName)}">Profile</a>
-			      </div>
-                  <div class="mtrighttxt">
-                  	<a class="${currentPage.equals('thoughts') ? 'current' : ''}" 
-			     		href="@{PublicProfile.thoughts(talker.userName)}">Thoughts</a>
-			      </div>
-			      <div class="mtrighttxt">
-			      	<a class="${currentPage.equals('thankyous') ? 'current' : ''}" 
-                  		href="@{PublicProfile.userBasedActions(talker.userName, 'thankyous')}"
-                  	>Thank You's (${talker.thankYouList.size()})</a>
-                  </div>
-                  <div class="mtrighttxt">
-                  	<a class="${currentPage.equals('answers') ? 'current' : ''}" 
-			     		href="@{PublicProfile.answers(talker.userName)}">Answers</a>
-			      </div>
-                  <div class="mtrighttxt">
-			     	<a class="${currentPage.equals('topicsFollowing') ? 'current' : ''}" 
-			     		href="@{PublicProfile.topicsFollowing(talker.userName)}"
-			     		>Topics Following (${talker.followingTopicsList.size()})</a>
-			      </div>
-	              <div class="mtrighttxt">
-	              	<a class="${currentPage.equals('conversations') ? 'current' : ''}" 
-	              		href="@{PublicProfile.conversations(talker.userName)}">Conversations</a>
-	              </div>
-                  <div class="mtop"></div>
-                  <div class="topicborder"></div>
-                  <div class="cb"></div>
-                </div>
-                <!--topipsts-->
-                
-                #{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
-                	<div class="followingbox">
-	                  <div class="followingtoptxt">
-	                    <div class="followingh1">
-	                    	<a href="@{PublicProfile.userBasedActions(talker.userName, 'following')}">
-	                    		Following (${talker.followingList.size()})</a>
-	                    </div>
-	                  </div>
-	                  <!--followingtoptxt-->
-	                  <div class="cb"></div>
-	                </div>
-	                
-	                <div class="followingpicbox">
-	                  #{list items:talker.followingList.limit(8), as:'following' }
-							<div class="followingtxtpic">
-			                    <div class="followingpic">
-									#{talker/talkerImageLink size: 48, userName: following.userName /}
-			                    </div>
-			                    <div class="followingpictxt">
-			                    	<a href="@{ViewDispatcher.view(following.userName)}">${following.userName.limitSize(8)}</a>
-			                    </div>
-			                    <div class="cb"></div>
-			                  </div>
-						#{/list}
-	                </div>
-	                
-	                <!--followingpicbox-->
-	                <div class="cb"></div>
-	                <br/>
-	                <div class="topicborder"></div>
-				#{/if}
-				
-				#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.FOLLOWERS) }
-                	<div class="followingbox">
-	                  <div class="followingtoptxt">
-	                    <div class="followingh1">
-	                    	<a href="@{PublicProfile.userBasedActions(talker.userName, 'followers')}">
-	                    		Followers (${talker.followerList.size()})</a>
-	                    </div>
-	                  </div>
-	                  <!--followingtoptxt-->
-	                  <div class="cb"></div>
-	                </div>
-	                
-	                <div class="followingpicbox">
-	                  #{list items:talker.followerList.limit(8), as:'following' }
-							<div class="followingtxtpic">
-			                    <div class="followingpic">
-			                    	#{talker/talkerImageLink size: 48, userName: following.userName /}
-			                    </div>
-			                    <div class="followingpictxt">
-			                    	<a href="@{ViewDispatcher.view(following.userName)}">${following.userName.limitSize(8)}</a>
-			                    </div>
-			                    <div class="cb"></div>
-			                  </div>
-						#{/list}
-	                </div>
-	                <div class="cb"></div>
-				#{/if}
+	#{if currentPage.equals('publicProfile') && !talker.userName.equals(currentTalker.userName) }
+		<input type="button" id="followActionImageBtn" value=""
+			class="${ currentTalker.followingList.contains(talker) ? 'followingMemberBtn' : 'followMemberBtn'}"  />
+    #{/if}
+	<div style="padding-left: 10px; padding-top: 10px;">
+		#{if session.username.equals(talker.userName) }
+     		Welcome 
+           	<a href="@{ViewDispatcher.view(talker.userName)}"><strong>${talker.userName}</strong></a>!
+     	#{/if}
+     	#{else}
+     		<a href="@{ViewDispatcher.view(talker.userName)}"><strong>${talker.userName}'s</strong></a> Profile
+     	#{/else}
+    </div>
+	<div class="followpicbox" style="padding-top: 3px;">
+		<div class="followpic" style="width: 110px; height: 110px;">
+			<img src="@{Image.show(talker.userName)}" width="110" height="110"/>
+		</div>
+		<div class="foloowpictext" style="width: 110px;">
+			#{ifnot talker.userName.equals(currentTalker.userName) }
+				<a id="followActionlink" href="#">
+				${ currentTalker.followingList.contains(talker) ? 'Unfollow' : 'Follow'}
+				</a>
+				<br/>
+			#{/ifnot}
+            <a href="#" onclick="return showPopup('#commentPopup', 200);">Post Thought</a><br/>
+            #{ifnot talker.userName.equals(currentTalker.userName) }
+           		<a href="#" onclick="return showPopup('#thankYouPopup', 200);">Give a Thank You</a><br/>
+            #{/ifnot}
+            #{else}
+            	#{if currentPage.equals('publicProfile') }
+            		<a href="@{Profile.edit()}">Edit Profile</a><br />
+            		#{ifnot talker.isProf()}
+            			<a href="@{Profile.healthDetails()}">Edit Health Info</a><br />
+            		#{/ifnot}
+				<a href="@{Profile.preferences()}">Privacy Settings</a>
+            	#{/if}
+            #{/else}
+                 <!-- <a href="#">Private Message</a><br/>  -->
+		</div>
+        <div class="mtop"></div>
+        <div class="topicborder"></div>
+        <br/>
+        <div class="cb"></div>
+	</div>
+	<div class="topipsts">
+		<div class="mtrighttxt">
+	     	<a class="${currentPage.equals('publicProfile') ? 'current' : ''}" 
+	     		href="@{ViewDispatcher.view(talker.userName)}">Profile</a>
+		</div>
+		<div class="mtrighttxt">
+			<a class="${currentPage.equals('thoughts') ? 'current' : ''}" 
+     			href="@{PublicProfile.thoughts(talker.userName)}">Thoughts</a>
+      	</div>
+		<div class="mtrighttxt">
+			<a class="${currentPage.equals('thankyous') ? 'current' : ''}" 
+               		href="@{PublicProfile.userBasedActions(talker.userName, 'thankyous')}"
+               	>Thank You's (${talker.thankYouList.size()})</a>
+		</div>
+		<div class="mtrighttxt">
+               	<a class="${currentPage.equals('answers') ? 'current' : ''}" 
+     		href="@{PublicProfile.answers(talker.userName)}">Answers</a>
+		</div>
+		<div class="mtrighttxt">
+	     	<a class="${currentPage.equals('topicsFollowing') ? 'current' : ''}" 
+	     		href="@{PublicProfile.topicsFollowing(talker.userName)}"
+	     		>Topics Following (${talker.followingTopicsList.size()})</a>
+		</div>
+		<div class="mtrighttxt">
+           	<a class="${currentPage.equals('conversations') ? 'current' : ''}" 
+           		href="@{PublicProfile.conversations(talker.userName)}">Conversations</a>
+		</div>
+        <div class="mtop"></div>
+        <div class="topicborder"></div>
+        <div class="cb"></div>
+	</div>
+             
+	#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
+		<div class="followingbox">
+			<div class="followingtoptxt">
+				<div class="followingh1">
+                  	<a href="@{PublicProfile.userBasedActions(talker.userName, 'following')}">
+                  		Following (${talker.followingList.size()})</a>
+				</div>
+			</div>
+			<div class="cb"></div>
+		</div>
+              
+		<div class="followingpicbox">
+			#{list items:talker.followingList.limit(8), as:'following' }
+				<div class="followingtxtpic">
+                    <div class="followingpic">
+						#{talker/talkerImageLink size: 48, userName: following.userName /}
+                    </div>
+                    <div class="followingpictxt">
+                    	<a href="@{ViewDispatcher.view(following.userName)}">${following.userName.limitSize(8)}</a>
+                    </div>
+                    <div class="cb"></div>
+				</div>
+			#{/list}
+		</div>
+        <div class="cb"></div>
+        <br/>
+        <div class="topicborder"></div>
+	#{/if}
+	
+	#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.FOLLOWERS) }
+		<div class="followingbox">
+			<div class="followingtoptxt">
+				<div class="followingh1">
+                  	<a href="@{PublicProfile.userBasedActions(talker.userName, 'followers')}">
+                  		Followers (${talker.followerList.size()})</a>
+				</div>
+			</div>
+			<div class="cb"></div>
+		</div>
+		<div class="followingpicbox">
+			#{list items:talker.followerList.limit(8), as:'following' }
+				<div class="followingtxtpic">
+                    <div class="followingpic">
+                    	#{talker/talkerImageLink size: 48, userName: following.userName /}
+                    </div>
+                    <div class="followingpictxt">
+                    	<a href="@{ViewDispatcher.view(following.userName)}">${following.userName.limitSize(8)}</a>
+                    </div>
+                    <div class="cb"></div>
+				</div>
+			#{/list}
+		</div>
+		<div class="cb"></div>
+	#{/if}
 </div>
 
 <div id="boxes">

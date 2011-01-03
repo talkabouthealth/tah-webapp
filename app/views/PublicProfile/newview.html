@@ -14,13 +14,6 @@
 		var feedsPerPage = ${logic.FeedsLogic.TALKERFEEDS_PER_PAGE};
 	
 		$(document).ready(function() {
-			//if close button is clicked
-			$('.window .close, .window .cancelLink').click(function (e) {
-				//Cancel the link behavior
-				e.preventDefault();
-				hideAll();
-			});		
-
 			$('.inline-edit').inlineEdit( { hover: ''} );
 		});
 	</script>

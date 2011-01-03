@@ -1,8 +1,0 @@
-#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
-	#{list items:talker.thankYouList.limit(start, 3*10), as:'thankYou'}
-		#{ thanksThankYou thankYou: thankYou /}
-	#{/list}
-#{/if}
-#{else}
-	<span class="blacktext14" style="margin: 30px 0; float: left">This information has been made private.</span>
-#{/else}

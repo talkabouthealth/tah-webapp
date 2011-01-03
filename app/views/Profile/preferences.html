@@ -11,18 +11,11 @@
 		
 		#mtright { margin-top:-50px; }
 		#signupright { margin-right:40px; }
-		
-		.button { position: relative; width: 600px; }
-		.savednote {
-			left:210px;
-			position:absolute;
-			top:14px;
-		}
 	</style>
 </head>
 <body>
 
-#{include 'header.html' /}
+	#{include 'header.html' /}
 		<div id="innerbanner"></div>
 		<div id="innermain">
 			<div class="blacktext2" id="innerheading">Your Privacy Settings</div>
@@ -30,55 +23,58 @@
 				<div id="signupleft">
 					<form id="profilepreferencesform" name="profilepreferencesform" 
 						action="@{Profile.preferencesSave()}" method="POST" >
-#{ifnot talker?.hiddenHelps.contains('privacy') }
-<div id="privacyHelp" class="helpInfo">
-      <div class="popboxWraper">
-        <div class="popbox2">
-          <div class="closecover" style="clear: none; float: right;">
-            <div class="close" onclick="return hideHelpInfo('privacy', true);"><img src="/public/images/close.jpg" alt="Close" /></div>
-          </div>
-          <div class="note">
-		  	<strong>Privacy Settings control who may view your information.</strong><br/>
-		  	- You may make your information private or viewable by the community.<br/>
-		  	- Your information will never be viewable by the public.
-		  	<br/><br/>
-		  	<strong>All information you provide is private by default.</strong><br/>
-		  	<br/>
-          </div>
-          <div class="cb"></div>
-        </div>
-        <!--popbox2-->
-
-      </div>
-      <div class="cb"></div>
-</div> 
-#{/ifnot}					
-					<div id="signupleftarea">
-						<div class="signupmain">
-							<div class="generalcheck">
-								#{list items:models.TalkerBean.ProfilePreference.values(), as:'preference' }
-									#{ifnot talker.isProf() && preference == models.TalkerBean.ProfilePreference.HEALTH_INFO} 
-										<div class="preferencescheck">
-											<input type="checkbox" value="" name="${preference}"
-											#{if profilePreferences.contains(preference) } checked='checked' #{/if}
-											/>
-											<span class="blacktext14">&nbsp;${preference.description}</span>
-										</div>
-									#{/ifnot}
-								#{/list}
+						
+						*{ TODO: make tag for this }*
+						#{ifnot talker?.hiddenHelps.contains('privacy') }
+						<div id="privacyHelp" class="helpInfo">
+						      <div class="popboxWraper">
+						        <div class="popbox2">
+						          <div class="closecover" style="clear: none; float: right;">
+						            <div class="close" onclick="return hideHelpInfo('privacy', true);"><img src="/public/images/close.jpg" alt="Close" /></div>
+						          </div>
+						          <div class="note">
+								  	<strong>Privacy Settings control who may view your information.</strong><br/>
+								  	- You may make your information private or viewable by the community.<br/>
+								  	- Your information will never be viewable by the public.
+								  	<br/><br/>
+								  	<strong>All information you provide is private by default.</strong><br/>
+								  	<br/>
+						          </div>
+						          <div class="cb"></div>
+						        </div>
+						        <!--popbox2-->
+						
+						      </div>
+						      <div class="cb"></div>
+						</div> 
+						#{/ifnot}					
+						
+						<div id="signupleftarea">
+							<div class="signupmain">
+								<div class="generalcheck">
+									#{list items:models.TalkerBean.ProfilePreference.values(), as:'preference' }
+										#{ifnot talker.isProf() && preference == models.TalkerBean.ProfilePreference.HEALTH_INFO} 
+											<div class="preferencescheck">
+												<input type="checkbox" value="" name="${preference}"
+												#{if profilePreferences.contains(preference) } checked='checked' #{/if}
+												/>
+												<span class="blacktext14">&nbsp;${preference.description}</span>
+											</div>
+										#{/ifnot}
+									#{/list}
+								</div>
 							</div>
+							
+							<input id="saveBtn" disabled="disabled" type="submit" value="Save" />
+							<span id="saveBtnText"></span>
+							
+							#{if talker.nextStepMessage }
+							 	<div class="generalsubhead">
+								 	Next Step: ${talker.nextStepMessage?.raw()}.
+								 	Or go to the <a href="@{Home.index()}">Home</a> page.
+								</div>
+						 	#{/if}
 						</div>
-						
-						<input id="saveBtn" disabled="disabled" type="submit" value="Save" />
-						<span id="saveBtnText"></span>
-						
-						#{if talker.nextStepMessage }
-						 	<div class="generalsubhead">
-							 	Next Step: ${talker.nextStepMessage?.raw()}.
-							 	Or go to the <a href="@{Home.index()}">Home</a> page.
-							</div>
-					 	#{/if}
-					</div>
 					</form>
 					
 					<div class="blacktext2" id="innerheading" style="margin-top: 30px;">Account Deactivation</div>

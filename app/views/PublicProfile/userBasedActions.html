@@ -1,48 +1,19 @@
 #{ extends 'main.html' /}
 
-#{set perPage = 6 /}
-#{set thankyousFrom = (action.equals('thankyous') ? from : 0) /}
-#{set followingFrom = (action.equals('following') ? from : 0) /}
-#{set followersFrom = (action.equals('followers') ? from : 0) /}
-
 	<script type="text/javascript"> 	 
 		//maps actions to tabs
+		var perPage = 16;
 		var tabs = {
-		   		"comments" : "tab1",
 		   		"thankyous" : "tab2",
 		   		"following" : "tab3",
 		   		"followers" : "tab4" 
 			}
-		var perPage = 16;
 		
    		$(document).ready(function() {
    			//default action
 			var activeTab = tabs["${action}"];
 			initOldTabs(activeTab);
 			
-   			//--- Comments ---
-   			$(".commentreply").each(function() {
-				$(this).val("Reply to thought ...").css("color", "#777777");
-			});
-   			$("#replytext")
-	   			.click(function() {
-		   			updateCommentState('Extended');
-	   			})
-	   			.blur(function() {
-		   			if ($(this).val() == "") {
-		   				updateCommentState('Initial');
-		   			}
-	   			});
-	   		$(".commentreply")
-	   			.click(function() {
-	   				updateReplyState($(this), 'Extended');
-	   			})
-	   			.blur(function() {
-		   			if ($(this).val() == "") {
-		   				updateReplyState($(this), 'Initial');
-		   			}
-	   			});
-
 			//--- Thanks you's ---
 			$("#displayThankYouText").click(function() {
    				$('#leavethankyouText').toggle(); 
@@ -85,58 +56,6 @@
 	    	return false;
    		}
 
-   		function updateCommentState(newState) {
-   	   		if (newState == 'Initial') {
-   	   			$("#replytext").val("What are you thinking?").css("color", "#777777");
-				$("#commentBtn").hide();
-   	   		}
-   	   		else if (newState == 'Extended') {
-	   	   		$("#replytext").val("").css("color", "#000000");
-	   			$("#commentBtn").show();
-   	   		}
-   		}
-
-   		function updateReplyState(replyTextArea, newState) {
-   	   		if (newState == 'Initial') {
-   	   			replyTextArea.val("Reply to thought ...").css("color", "#777777");
-   	   			replyTextArea.parent().next().hide();
-   	   		}
-   	   		else if (newState == 'Extended') {
-   	   			replyTextArea.val("").css("color", "#000000");
-	   			replyTextArea.parent().next().show();
-   	   		}
-   		}
-
-   		//saveProfileComment(String profileTalkerId, String parentId, String text)
-   		function saveProfileComment(parentId) {
-   	   		var commentText = $("#replytext"+parentId).val();
-   			$("#replytext"+parentId).val("");
-
-   			$.post("@{Actions.saveProfileComment()}", 
-  				{ profileTalkerId: '${talker.id}', parentId: parentId, text: commentText},
-  				function(html) {
-  	  				$("#firstcommentmessage").hide();
-  					//put comment in the tree
-  					if (parentId == '') {
-  	  					//add as first element in the top
-  						$(html).prependTo($(".commentsarea"));
-  					}
-  					else {
-  						//add as last element in subtree
-  						$("#reply"+parentId).before($(html));
-  					}
-  				}
-  			);
-
-   			if (parentId == '') {
-   				updateCommentState('Initial');
-			}
-			else {
-				updateReplyState($("#replytext"+parentId), 'Initial');
-			}
-  			return false;
-   		}
-
    		//createThankYou(String toTalker, String note)
    		function saveThankYouNote() {
    	   		var noteText = $("#thankYouNote").val();
@@ -159,31 +78,9 @@
 			font-family:arial;
 			font-size:11px;
 		}
-		#reply {
-			padding: 10px 0 0 0;
-		}
-		.commentsarea {
-			padding-top: 0px;
-			clear: left;
-		}
-		#replytext {
-			height: 20px;
-			color: #777777;
-		}
-		.commentreply {
-			height: 20px;
-			color: #777777;
-		}
-		#signupleftarea, #thankyoulist {
-			width: auto;
-		} 
-		.profiletext2 {
-			width:250px;
-		}
-		
-		.headingarea, .thnksarea2, .thnksarea, .thnksbottom {
-			width: 610px !important;
-		}
+		#signupleftarea, #thankyoulist { width: auto; } 
+		.profiletext2 { width:250px; }
+		.headingarea, .thnksarea2, .thnksarea, .thnksbottom { width: 610px !important; }
 	</style>
 </head>
 <body>
@@ -247,6 +144,7 @@
 	                        	style="margin-left: 50px; display: none;" onclick="return showMore('thankyous');"  />
 								
 							*{
+							Old Paging
 				            <div class="thnksbottom">
 				            	#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.THANKYOUS) }
 #{ publicprofile/paging totalSize: talker.thankYouList.size(), from: thankyousFrom, perPage: perPage, action: 'thankyous', talker: talker /}				      			

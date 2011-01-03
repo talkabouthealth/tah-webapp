@@ -13,20 +13,17 @@
 			font-family:arial;
 			font-size:11px;
 		}
-		
 		#innerheading {
 			height:36px;
 			line-height:36px;
+			font-size: 25px;
 		}
 		
-		ul.tabs li a { padding: 0 7px }
 		.tab_content { padding-top: 10px }
 	</style>
 </header>
 <body>
-</header>
-<body>
-<div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
+<div id="managtopic1">
   <div id="managtopic">
   	#{include 'header.html' /}
   	<div id="bottom_container">
@@ -35,79 +32,79 @@
           <div id="innerpersonalareaz">
             <div id="mtcover">
               <div id="comleft">
-		<div class="blacktext2" id="innerheading" style="font-size: 25px;">
-			<a href="@{ViewDispatcher.view(talker.userName)}" class="bluetext20" >${talker.userName}'s</a> 
-				Questions and Chats</div>
-		<div id="innermiddlearea" style="width: 600px;">
-			<div class="tabbed_box" id="tabbed_box_1" style="width: 600px;">
-    			<div class="tabbed_area">
-			        <ul class="tabs" style="padding-left: 0px;">
-			            <li><a href="#tab1"><span>Conversations Started (${startedConvosFeed.size()})</span></a></li>
-			            <li><a href="#tab2"><span>Chats Joined (${joinedConvosFeed.size()})</span></a></li>
-			            <li><a href="#tab3"><span>Conversations Following (${followingConvosFeed.size()})</span></a></li>
-			        </ul>
-			        <div class="tab_container">
-			       		<div id="tab1" class="tab_content">
-			       			<h3>Conversations Started (${startedConvosFeed.size()})</h3>
-				       		<div class="activitiestext">
-				       			#{if startedConvosFeed.size() == 0}
-									<span class="blacktext14">
-										#{if talker.equals(currentTalker)}
-											You have yet to start any conversations.
+				<div class="blacktext2" id="innerheading" >
+					<a href="@{ViewDispatcher.view(talker.userName)}" class="bluetext20" >${talker.userName}'s</a> 
+						Questions and Chats</div>
+				<div id="innermiddlearea" style="width: 600px;">
+					<div class="tabbed_box" id="tabbed_box_1" style="width: 600px;">
+		    			<div class="tabbed_area">
+					        <ul class="tabs" style="padding-left: 0px;">
+					            <li><a href="#tab1"><span>Conversations Started (${startedConvosFeed.size()})</span></a></li>
+					            <li><a href="#tab2"><span>Chats Joined (${joinedConvosFeed.size()})</span></a></li>
+					            <li><a href="#tab3"><span>Conversations Following (${followingConvosFeed.size()})</span></a></li>
+					        </ul>
+					        <div class="tab_container">
+					       		<div id="tab1" class="tab_content">
+					       			<h3>Conversations Started (${startedConvosFeed.size()})</h3>
+						       		<div class="activitiestext">
+						       			#{if startedConvosFeed.size() == 0}
+											<span class="blacktext14">
+												#{if talker.equals(currentTalker)}
+													You have yet to start any conversations.
+												#{/if}
+												#{else}
+													This user has not started any conversations yet.
+												#{/else}
+											</span>
+											<br/><br/>
 										#{/if}
-										#{else}
-											This user has not started any conversations yet.
-										#{/else}
-									</span>
-									<br/><br/>
-								#{/if}
-			                  	#{list items: startedConvosFeed, as: 'convoActivity'}
-			                  		#{feedActivity activity: convoActivity, talker: talker /}
-			                  	#{/list}
-							</div>
-    					</div>
-    					<div id="tab2" class="tab_content">
-				       		<h3>Chats Joined (${joinedConvosFeed.size()})</h3>
-				       		<div class="activitiestext">
-				       			#{if joinedConvosFeed.size() == 0}
-									<span class="blacktext14">
-										#{if talker.equals(currentTalker)}
-											You have not joined any live chats yet.
+					                  	#{list items: startedConvosFeed, as: 'convoActivity'}
+					                  		#{feedActivity activity: convoActivity, talker: talker /}
+					                  	#{/list}
+									</div>
+		    					</div>
+		    					<div id="tab2" class="tab_content">
+						       		<h3>Chats Joined (${joinedConvosFeed.size()})</h3>
+						       		<div class="activitiestext">
+						       			#{if joinedConvosFeed.size() == 0}
+											<span class="blacktext14">
+												#{if talker.equals(currentTalker)}
+													You have not joined any live chats yet.
+												#{/if}
+												#{else}
+													This user has not joined any chats yet.
+												#{/else}
+											</span>
+											<br/><br/>
 										#{/if}
-										#{else}
-											This user has not joined any chats yet.
-										#{/else}
-									</span>
-									<br/><br/>
-								#{/if}
-			                  	#{list items: joinedConvosFeed, as: 'convoActivity'}
-			                  		#{feedActivity activity: convoActivity, talker: talker /}
-			                  	#{/list}
-							</div>
-    					</div>
-    					<div id="tab3" class="tab_content">
-				       		<h3>Conversations Following (${followingConvosFeed.size()})</h3>
-				       		<div class="activitiestext">
-				       			#{if followingConvosFeed.size() == 0}
-									<span class="blacktext14">
-										#{if talker.equals(currentTalker)}
-											Currently you are not following any conversations.
+					                  	#{list items: joinedConvosFeed, as: 'convoActivity'}
+					                  		#{feedActivity activity: convoActivity, talker: talker /}
+					                  	#{/list}
+									</div>
+		    					</div>
+		    					<div id="tab3" class="tab_content">
+						       		<h3>Conversations Following (${followingConvosFeed.size()})</h3>
+						       		<div class="activitiestext">
+						       			#{if followingConvosFeed.size() == 0}
+											<span class="blacktext14">
+												#{if talker.equals(currentTalker)}
+													Currently you are not following any conversations.
+												#{/if}
+												#{else}
+													This user is not following any conversations yet.
+												#{/else}
+											</span>
+											<br/><br/>
 										#{/if}
-										#{else}
-											This user is not following any conversations yet.
-										#{/else}
-									</span>
-									<br/><br/>
-								#{/if}
-			                  	#{list items: followingConvosFeed, as: 'convoActivity'}
-			                  		#{feedActivity activity: convoActivity, talker: talker /}
-			                  	#{/list}
-							</div>
-    					</div>
-    				</div>
-    			</div>
-			</div>
-		</div>
+					                  	#{list items: followingConvosFeed, as: 'convoActivity'}
+					                  		#{feedActivity activity: convoActivity, talker: talker /}
+					                  	#{/list}
+									</div>
+		    					</div>
+		    				</div>
+		    			</div>
+					</div>
+				</div>
 		
 				<div class="cb"></div>
               </div>

@@ -1,33 +1,36 @@
 					*{
-					<div class="personalmain">
-						<div class="personaltextarea">
-							<span class="blacktext14">Email</span>
+						Currently hidden fields
+						
+						<div class="personalmain">
+							<div class="personaltextarea">
+								<span class="blacktext14">Email</span>
+							</div>
+							<div class="personaltextfield" style="height: auto">
+							  	<input name="talker.email" type="text" class="personalfields" id="talker.email" 
+										value="${talker.email}" /><br/>
+								#{if talker.verifyCode != null }
+									<a href="#" id="verificationResendLink" 
+										class="red12">(email not verified - resend verification e-mail)</a>
+									<span id="verificationResendResult" class="blacktext12"></span>
+								#{/if}
+							</div>
 						</div>
-						<div class="personaltextfield" style="height: auto">
-						  	<input name="talker.email" type="text" class="personalfields" id="talker.email" 
-									value="${talker.email}" /><br/>
-							#{if talker.verifyCode != null }
-								<a href="#" id="verificationResendLink" 
-									class="red12">(email not verified - resend verification e-mail)</a>
-								<span id="verificationResendResult" class="blacktext12"></span>
-							#{/if}
+						<div class="personalmain">
+							<div class="personaltextarea"><span class="blacktext14">First Name</span></div>
+							<div class="personaltextfield">
+							  	<input name="talker.firstName" type="text" class="personalfields"
+										value="${talker.firstName}" />
+							</div>
 						</div>
-					</div>
-					<div class="personalmain">
-						<div class="personaltextarea"><span class="blacktext14">First Name</span></div>
-						<div class="personaltextfield">
-						  	<input name="talker.firstName" type="text" class="personalfields"
-									value="${talker.firstName}" />
+						<div class="personalmain">
+							<div class="personaltextarea"><span class="blacktext14">Last Name</span></div>
+							<div class="personaltextfield">
+								<input name="talker.lastName" type="text" class="personalfields"
+										value="${talker.lastName}" />
+							</div>
 						</div>
-					</div>
-					<div class="personalmain">
-						<div class="personaltextarea"><span class="blacktext14">Last Name</span></div>
-						<div class="personaltextfield">
-							<input name="talker.lastName" type="text" class="personalfields"
-									value="${talker.lastName}" />
-						</div>
-					</div>
 					}*
+					
 					<div class="personalmain">
 						<div class="personaltextarea"><span class="blacktext14">Birth Date</span></div>
 						<div class="personaltextfield">

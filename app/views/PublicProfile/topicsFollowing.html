@@ -27,13 +27,6 @@
 	  			return false;
 			});
 
-			//if close button is clicked
-			$('.window .close, .window .cancelLink').click(function (e) {
-				//Cancel the link behavior
-				e.preventDefault();
-				hideAll();
-			});		
-
 			$('.inline-edit').inlineEdit(
 		  		{ hover: '', saveFunction: updateData}
 		  	);
@@ -79,7 +72,7 @@
 		}
 	</script>
 		
-<div id="managtopic1" style="background:url(/public/images/inner_bgmt.gif); background-repeat:repeat-x;">
+<div id="managtopic1">
   <div id="managtopic">
   	#{include 'header.html' /}
   	<div id="bottom_container">
@@ -170,8 +163,7 @@
 		</div>
 	#{/list} 
 		
-		<input type="submit" style="margin-top: 10px; display: none;" class="seemorecom" value=" " src="images/seemore.jpg"/>
-
+	<input type="submit" style="margin-top: 10px; display: none;" class="seemorecom" value=" " src="images/seemore.jpg"/>
 #{/if}
 #{else}
 	<span class="blacktext14">This information has been made private.</span>
@@ -187,7 +179,6 @@
 		Please fill out your <a href="@{Profile.healthDetails()}">Health Information</a> so that we can recommend Topics most relevant to you.
 	#{/if}
 	
-	
 	<div id="recommendedTopics">
 		#{ recommendedTopicsList recommendedTopics: recommendedTopics, talker: currentTalker /}
 	</div>
@@ -196,8 +187,6 @@
 			onclick="return loadMoreTopics();"
 			class="seemorecom" value=" " src="images/seemore.jpg"/>
 	#{/if}
-	
-	
 #{/if}
 				
 			</div>     

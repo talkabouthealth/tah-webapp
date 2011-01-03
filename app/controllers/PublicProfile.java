@@ -169,41 +169,6 @@ public class PublicProfile extends Controller {
 	}
 	
 	
-	public static void conversationsFollowing(String userName) {
-		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
-		TalkerBean talker = TalkerDAO.getByUserName(userName);
-		notFoundIfNull(talker);
-		
-		String topicsType = "Following";
-		List<ConversationBean> topicsList = TalkerDAO.loadFollowingConversations(talker.getId());
-		
-		render("@conversationsList", talker, currentTalker, topicsType, topicsList);
-	}
-	
-	public static void conversationsStarted(String userName) {
-		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
-		TalkerBean talker = TalkerDAO.getByUserName(userName);
-		notFoundIfNull(talker);
-		
-		String topicsType = "Started";
-		List<ConversationBean> topicsList = 
-			ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO);
-		
-		render("@conversationsList", talker, currentTalker, topicsType, topicsList);
-	}
-	
-	public static void conversationsJoined(String userName) {
-		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
-		TalkerBean talker = TalkerDAO.getByUserName(userName);
-		notFoundIfNull(talker);
-		
-		String topicsType = "Joined";
-		List<ConversationBean> topicsList = 
-			ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO);
-		
-		render("@conversationsList", talker, currentTalker, topicsType, topicsList);
-	}
-	
 	public static void topicsFollowing(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByUserName(userName);

@@ -20,12 +20,6 @@
 			font-style: italic;
 			color: #404040;
 		}
-		.topictxt1 a {
-			color:#0167A0;
-			text-decoration:none;
-		}
-		
-		.cfollowtopic, .cunfollow { margin-left:60px; } 
 		
 		.tabContent { padding-top: 10px }
 	</style>
@@ -53,11 +47,9 @@
 				showPopup("#flagPopup", 200);
 			});
 
-
 			$('.inline-edit').inlineEdit(
 		  		{ hover: '', saveFunction: saveData}
 		  	);
-
 			initNewTabs();
 		});
 
@@ -98,42 +90,42 @@
             <div id="comcover">
               <div id="comleft">
                 <div class="comcontent">
-#{if currentPage.equals('manageTopic') && !talker?.hiddenHelps.contains('topicManage')}
-<div id="topicManageHelp" class="helpInfo">
-      <div class="popboxWraper">
-        <div class="popbox2" style="width: 600px;">
-          <div class="closecover" style="clear: none; float: right;">
-            <div class="close" onclick="return hideHelpInfo('topicManage', true);"><img src="/public/images/close.jpg" alt="Close" /></div>
-          </div>
-          <div class="note">
-		  	<strong>Help: <a href="@{ViewDispatcher.view('what-can-i-do-on-the-manage-topic-page')}">What can I do on the Manage Topic page?</a></strong><br/><br/>
-          </div>
-          <div class="cb"></div>
-        </div>
-        <!--popbox2-->
-
-      </div>
-      <div class="cb"></div>
-</div> 
-#{/if}
-#{if currentPage.equals('viewTopic') && talker && !talker?.hiddenHelps?.contains('topic')}
-<div id="topicHelp" class="helpInfo">
-      <div class="popboxWraper">
-        <div class="popbox2" style="width: 600px;">
-          <div class="closecover" style="clear: none; float: right;">
-            <div class="close" onclick="return hideHelpInfo('topic', true);"><img src="/public/images/close.jpg" alt="Close" /></div>
-          </div>
-          <div class="note">
-		  	<strong>Help: <a href="http://talkabouthealth.com/what-can-i-do-on-the-topic-page">What can I do on the Topic page?</a></strong><br/><br/>
-          </div>
-          <div class="cb"></div>
-        </div>
-        <!--popbox2-->
-
-      </div>
-      <div class="cb"></div>
-</div> 
-#{/if}
+					#{if currentPage.equals('manageTopic') && !talker?.hiddenHelps.contains('topicManage')}
+					<div id="topicManageHelp" class="helpInfo">
+					      <div class="popboxWraper">
+					        <div class="popbox2" style="width: 600px;">
+					          <div class="closecover" style="clear: none; float: right;">
+					            <div class="close" onclick="return hideHelpInfo('topicManage', true);"><img src="/public/images/close.jpg" alt="Close" /></div>
+					          </div>
+					          <div class="note">
+							  	<strong>Help: <a href="@{ViewDispatcher.view('what-can-i-do-on-the-manage-topic-page')}">What can I do on the Manage Topic page?</a></strong><br/><br/>
+					          </div>
+					          <div class="cb"></div>
+					        </div>
+					        <!--popbox2-->
+					
+					      </div>
+					      <div class="cb"></div>
+					</div> 
+					#{/if}
+					#{if currentPage.equals('viewTopic') && talker && !talker?.hiddenHelps?.contains('topic')}
+					<div id="topicHelp" class="helpInfo">
+					      <div class="popboxWraper">
+					        <div class="popbox2" style="width: 600px;">
+					          <div class="closecover" style="clear: none; float: right;">
+					            <div class="close" onclick="return hideHelpInfo('topic', true);"><img src="/public/images/close.jpg" alt="Close" /></div>
+					          </div>
+					          <div class="note">
+							  	<strong>Help: <a href="http://talkabouthealth.com/what-can-i-do-on-the-topic-page">What can I do on the Topic page?</a></strong><br/><br/>
+					          </div>
+					          <div class="cb"></div>
+					        </div>
+					        <!--popbox2-->
+					
+					      </div>
+					      <div class="cb"></div>
+					</div> 
+					#{/if}
                   <div id="targestedtherapy">
                     <div class="editsWraper">
 						<div class="inline-edit" id="titleEdit">
@@ -167,12 +159,8 @@
                     <!--editsWraper-->
                     <div class="cb"></div>
                     <br/>
-                    <!--<div class="topicborder"></div>-->
                   </div>
-                  <!--targetedtherapy-->
                   <div class="topipcWraper">
-                    <!--comsearchbox-->
-                    <!--comments-->
                     <div style="width: 600px; margin-top: -10px;" class="comments">
 						<div class='inline-edit' id="summaryEdit" style="width: 600px;">
 							<div class="suggestxt inline_display" style="width: 600px">
@@ -359,41 +347,6 @@
                     <!--topr-->
                     <div class="cb"></div>
                   </div>
-                  <!--topbox-->
-                  <div class="topbox">
-                    <div class="topleftimg"><img alt="topanser" src="/public/images/topanswer2.jpg"/></div>
-                    <div class="topr">
-                      <div class="toprighttext">
-                        <div class="latextleft"><strong><strong><a href="#">Ali</a></strong></strong></div>
-                        <div class="latextrigtz">  (Physician, Advocate)</div>
-                      </div>
-                      <!--toprighttext-->
-                      <div class="toprighttext">
-                        <div class="topiptextl"><a href="#">101 Answers</a></div>
-                      </div>
-                      <!--toprighttext-->
-                    </div>
-                    <!--topr-->
-                    <div class="cb"></div>
-                  </div>
-                  <!--topbox-->
-                  <div class="topbox">
-                    <div class="topleftimg"><img alt="topanser" src="/public/images/topanswer3.jpg"/></div>
-                    <div class="topr">
-                      <div class="toprighttext">
-                        <div class="latextleft"><strong><a href="#">Nasir</a></strong></div>
-                        <div class="latextrigtz">  (Physician, Advocate)</div>
-                      </div>
-                      <!--toprighttext-->
-                      <div class="toprighttext">
-                        <div class="topiptextl"><a href="#">101 Answers</a></div>
-                      </div>
-                      <!--toprighttext-->
-                    </div>
-                    <!--topr-->
-                    <div class="cb"></div>
-                  </div>
-                  <!--topbox-->
                 </div>
                 }*
                 
