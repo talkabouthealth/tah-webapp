@@ -380,6 +380,8 @@ public class Application extends Controller {
 			Profile.edit(true);
 		}
 		else {
+			TalkerDAO.updateTalker(talker);
+			
 			flash.put("verifiedEmail", true);
 			Secure.login();
 		}

@@ -116,13 +116,16 @@ public class TalkerLogic {
 	
 	//TODO: move to parse? & update name?
 	public static void preloadTalkerInfo(TalkerBean talker) {
+		preloadTalkerInfo(talker, null);
+	}
+	public static void preloadTalkerInfo(TalkerBean talker, String page) {
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		talker.setActivityList(ActionDAO.load(talker.getId()));
 		
-		calculateProfileCompletion(talker);
+		calculateProfileCompletion(talker, page);
 	}
 	
-	public static void calculateProfileCompletion(TalkerBean talker) {
+	public static void calculateProfileCompletion(TalkerBean talker, String page) {
 		//check what items are completed
 		EnumSet<ProfileCompletion> profileActions = EnumSet.of(ProfileCompletion.BASIC);
 		
@@ -176,6 +179,19 @@ public class TalkerLogic {
 			//Profs can skip these steps and automatically receive the percentage.
 			profileActions.add(ProfileCompletion.UPDATE_HEALTH);
 			profileActions.add(ProfileCompletion.START_OR_JOIN_TALK);
+		}
+		
+		if (page != null) {
+			//depending on page
+			if (page.equals("profile")) {
+				profileActions.add(ProfileCompletion.UPDATE_PERSONAL);
+			}
+			else if (page.equals("health")) {
+				profileActions.add(ProfileCompletion.UPDATE_HEALTH);
+			}
+			else if (page.equals("privacy")) {
+				profileActions.add(ProfileCompletion.VIEW_PRIVACY);
+			}
 		}
 		
 		//calculate current sum and next item to complete

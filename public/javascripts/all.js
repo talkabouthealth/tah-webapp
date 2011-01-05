@@ -400,6 +400,9 @@ function saveConvo(page) {
 					if ($(".conversationsList")) {
 						$(data.html).prependTo($(".conversationsList"));
 					}
+					if ($("#communityFeedList")) {
+						$(data.html).prependTo($("#communityFeedList"));
+					}
 				}
 
 				$("#convoText").val("");

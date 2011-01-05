@@ -60,9 +60,13 @@ public class Home extends Controller {
     	
 		
 		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
-		//not show if twitter account + notify option
+		//not show if twitter account or fb account has 'notify' option
 		ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
 		if (twitterAccount != null && twitterAccount.isTrue("NOTIFY")) {
+			hasNoIMAccounts = false;
+		}
+		ServiceAccountBean fbAccount = talker.serviceAccountByType(ServiceType.FACEBOOK);
+		if (fbAccount != null && fbAccount.isTrue("NOTIFY")) {
 			hasNoIMAccounts = false;
 		}
 		boolean isAdmin = "admin".equals(Security.connected());
