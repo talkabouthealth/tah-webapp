@@ -98,16 +98,7 @@ padding:0;
 padding-bottom:4px;
 width:490px;
 }
-.edititinputx
-{
-border:1px solid #000000;
-float:left;
-font-family:arial;
-font-size:1.4em;
-font-weight:bold;
-height:50px;
-width:490px;
-}
+
 .updatebtns { float:left;
 border:0;
 background:url(../images/update.jpg);

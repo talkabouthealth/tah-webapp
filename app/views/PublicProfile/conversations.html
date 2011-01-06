@@ -1,10 +1,33 @@
 #{ extends 'main.html' /}
 
-	<script type="text/javascript"> 	 
+	<script type="text/javascript"> 
+		var perPage = 5;	 
    		$(document).ready(function() {
    			//default action
 			var activeTab = "tab1";
-			initOldTabs(activeTab);			
+			initOldTabs(activeTab);	
+
+			prepareList("questionsAsked");
+			prepareList("chatsJoined");
+			prepareList("questionsFollowing");
+
+			$(".followConvoLink2, .unfollowConvoLink2").live('click', function() {
+				var convoId = $(this).attr("rel");
+				$.post("@{Conversations.follow()}", 
+	  				{ convoId: convoId},
+	  				function(nextAction) {
+	  					if (nextAction === "follow") {
+		  					$("#convoUnfollowDiv"+convoId).hide();
+		  					$("#convoFollowDiv"+convoId).show();
+	  					}
+	  					else {
+	  						$("#convoUnfollowDiv"+convoId).show();
+		  					$("#convoFollowDiv"+convoId).hide();
+	  					}
+	  				}
+	  			);
+	  			return false;
+			});
    		});
    	</script>
 	<style>
@@ -39,21 +62,21 @@
 					<div class="tabbed_box" id="tabbed_box_1" style="width: 600px;">
 		    			<div class="tabbed_area">
 					        <ul class="tabs" style="padding-left: 0px;">
-					            <li><a href="#tab1"><span>Conversations Started (${startedConvosFeed.size()})</span></a></li>
+					            <li><a href="#tab1"><span>Questions Asked (${startedConvosFeed.size()})</span></a></li>
 					            <li><a href="#tab2"><span>Chats Joined (${joinedConvosFeed.size()})</span></a></li>
-					            <li><a href="#tab3"><span>Conversations Following (${followingConvosFeed.size()})</span></a></li>
+					            <li><a href="#tab3"><span>Questions Following (${followingConvosFeed.size()})</span></a></li>
 					        </ul>
 					        <div class="tab_container">
 					       		<div id="tab1" class="tab_content">
-					       			<h3>Conversations Started (${startedConvosFeed.size()})</h3>
-						       		<div class="activitiestext">
+					       			<h3>Questions Asked (${startedConvosFeed.size()})</h3>
+						       		<div id="questionsAskedList" class="activitiestext">
 						       			#{if startedConvosFeed.size() == 0}
 											<span class="blacktext14">
 												#{if talker.equals(currentTalker)}
-													You have yet to start any conversations.
+													You have yet to ask any questions.
 												#{/if}
 												#{else}
-													This user has not started any conversations yet.
+													This user has not asked any questions yet.
 												#{/else}
 											</span>
 											<br/><br/>
@@ -62,10 +85,13 @@
 					                  		#{feed/feedActivity activity: convoActivity, talker: talker /}
 					                  	#{/list}
 									</div>
+									<input id="questionsAskedMoreBtn" type="submit" value="" class="seemorecom" 
+	                        			style="margin-left: 25px; margin-top: 15px; display: none;" 
+	                        			onclick="return showMore('questionsAsked');"  />
 		    					</div>
 		    					<div id="tab2" class="tab_content">
 						       		<h3>Chats Joined (${joinedConvosFeed.size()})</h3>
-						       		<div class="activitiestext">
+						       		<div id="chatsJoinedList" class="activitiestext">
 						       			#{if joinedConvosFeed.size() == 0}
 											<span class="blacktext14">
 												#{if talker.equals(currentTalker)}
@@ -81,17 +107,20 @@
 					                  		#{feed/feedActivity activity: convoActivity, talker: talker /}
 					                  	#{/list}
 									</div>
+									<input id="chatsJoinedMoreBtn" type="submit" value="" class="seemorecom" 
+	                        			style="margin-left: 25px; margin-top: 15px; display: none;" 
+	                        			onclick="return showMore('chatsJoined');"  />
 		    					</div>
 		    					<div id="tab3" class="tab_content">
-						       		<h3>Conversations Following (${followingConvosFeed.size()})</h3>
-						       		<div class="activitiestext">
+						       		<h3>Questions Following (${followingConvosFeed.size()})</h3>
+						       		<div id="questionsFollowingList" class="activitiestext">
 						       			#{if followingConvosFeed.size() == 0}
 											<span class="blacktext14">
 												#{if talker.equals(currentTalker)}
-													Currently you are not following any conversations.
+													Currently you are not following any questions.
 												#{/if}
 												#{else}
-													This user is not following any conversations yet.
+													This user is not following any questions yet.
 												#{/else}
 											</span>
 											<br/><br/>
@@ -100,11 +129,51 @@
 					                  		#{feed/feedActivity activity: convoActivity, talker: talker /}
 					                  	#{/list}
 									</div>
+									<input id="questionsFollowingMoreBtn" type="submit" value="" class="seemorecom" 
+	                        			style="margin-left: 25px; margin-top: 15px; display: none;" 
+	                        			onclick="return showMore('questionsFollowing');"  />
 		    					</div>
 		    				</div>
 		    			</div>
 					</div>
 				</div>
+				
+				#{if talker.equals(currentTalker)}
+					<div class="topicfolth1">
+	                  	Recommended Questions for you
+	                </div>
+	                <div class="topicborder"></div>
+	                <div class="topicborder" style="margin-bottom: 10px;"></div>
+	                
+	                <div style="padding-bottom: 30px;">
+	                	#{if noHealthInfo}
+	                		<span class="blacktext14">Please fill out your 
+		                		<a href="@{Profile.healthDetails()}">Health Information</a>
+		                		so that we can recommend Questions most relevant to you.</span>
+                  		#{/if}
+                  		
+                  		#{list items: recommendedConvos, as: 'convo'}
+							<div id="${convo.id}" class="topicfoltxtCover">
+								<div class="topicfoltxt1">
+									<a href="@{ViewDispatcher.view(convo.mainURL)}">${convo.topic}</a>
+								</div>
+								<div class="topicfoltxt2" style="margin-right: 250px;">
+									<div id="convoUnfollowDiv${convo.id}" style="display : none;">
+										<img class="topicfolright" alt="right" src="/public/images/right.jpg"/>
+										<div class="topicfoltxtsub1">Following</div>
+										<input type="submit" rel="${convo.id}" value=" " 
+											class="unfollowz unfollowConvoLink2" src="/public/images/unfollowz.jpg"/>
+									</div>
+									<div id="convoFollowDiv${convo.id}" style="display : block;">
+										<input type="submit" rel="${convo.id}" value=" " 
+											class="topiczfollow followConvoLink2" src="/public/images/ppfollow.jpg" />
+									</div>
+								</div>
+								<div class="cb"></div>
+							</div>
+						#{/list} 
+	                </div>
+				#{/if}
 		
 				<div class="cb"></div>
               </div>

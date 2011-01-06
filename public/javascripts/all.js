@@ -129,7 +129,7 @@ $(document).ready(function() {
 		else {
 			$(this).html("Unfollow");
 		}
-		$.post("@{Conversations.follow()}", 
+		$.post("/conversations/follow}", 
 				{ convoId: convoId },
 				function(data) {
 					//...
@@ -615,5 +615,37 @@ function saveProfileComment(parentId) {
 	);
 
 	
+	return false;
+}
+
+
+
+
+//for javascript pagination
+function prepareList(type) {
+	$("#"+type+"List").children().each(
+   		function(i, item) {
+    	   		if (perPage <= i) {
+   	    	   		$(item).css("display", "none");
+    	   		}
+    	   		//if needed - show More button
+    	   		if (i == perPage) {
+   	    	   		$("#"+type+"MoreBtn").show();
+    	   		}
+   		}
+   	);
+}
+
+function showMore(type) {
+	$("#"+type+"List").children(":hidden").each(
+   		function(i, item) {
+    	   		if (perPage > i) {
+   	    	   		$(item).css("display", "block");
+    	   		}
+   		}
+	);
+	if ($("#"+type+"List").children(":hidden").size() == 0) {
+		$("#"+type+"MoreBtn").hide();
+	}
 	return false;
 }

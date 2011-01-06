@@ -77,14 +77,9 @@
 			<a class="${currentPage.equals('thoughts') ? 'current' : ''}" 
      			href="@{PublicProfile.thoughts(talker.userName)}">Thoughts</a>
       	</div>
-		<div class="mtrighttxt">
-			<a class="${currentPage.equals('thankyous') ? 'current' : ''}" 
-               		href="@{PublicProfile.userBasedActions(talker.userName, 'thankyous')}"
-               	>Thank You's (${talker.thankYouList.size()})</a>
-		</div>
-		<div class="mtrighttxt">
-               	<a class="${currentPage.equals('answers') ? 'current' : ''}" 
-     		href="@{PublicProfile.answers(talker.userName)}">Answers</a>
+      	<div class="mtrighttxt">
+           	<a class="${currentPage.equals('conversations') ? 'current' : ''}" 
+           		href="@{PublicProfile.conversations(talker.userName)}">Questions</a>
 		</div>
 		<div class="mtrighttxt">
 	     	<a class="${currentPage.equals('topicsFollowing') ? 'current' : ''}" 
@@ -92,8 +87,13 @@
 	     		>Topics Following (${talker.followingTopicsList.size()})</a>
 		</div>
 		<div class="mtrighttxt">
-           	<a class="${currentPage.equals('conversations') ? 'current' : ''}" 
-           		href="@{PublicProfile.conversations(talker.userName)}">Conversations</a>
+               	<a class="${currentPage.equals('answers') ? 'current' : ''}" 
+     		href="@{PublicProfile.answers(talker.userName)}">Answers</a>
+		</div>
+		<div class="mtrighttxt">
+			<a class="${currentPage.equals('thankyous') ? 'current' : ''}" 
+               		href="@{PublicProfile.userBasedActions(talker.userName, 'thankyous')}"
+               	>Thank You's (${talker.thankYouList.size()})</a>
 		</div>
         <div class="mtop"></div>
         <div class="topicborder"></div>

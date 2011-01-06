@@ -220,8 +220,12 @@
 							<input id="privacyagree" name="privacyagree" 
 								type="checkbox" #{if flash['privacyagree']} checked #{/if} /> 
 							By signing up I agree to the TalkAboutHealth 
-							<a href="@{Static.tos()}" target="_blank" class="bluetext14">Terms Of Service</a> and 
-							<a href="@{Static.privacy()}" target="_blank" class="bluetext14">Privacy Policy</a>.
+							<a href="#" 
+								onclick="window.open('@{Static.tos()}', 'TermsOfService','width=1000,height=550,resizable=1,scrollbars=1');" 
+								class="bluetext14">Terms Of Service</a> and 
+							<a href="#" 
+								onclick="window.open('@{Static.privacy()}', 'PrivacyPolicy','width=1000,height=550,resizable=1,scrollbars=1');" 
+								class="bluetext14">Privacy Policy</a>.
 							<br />
 	   						<strong>Note:</strong>
 	   						<span style="font-weight: normal;">Your information will remain safe and private.</span>

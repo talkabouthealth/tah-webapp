@@ -31,8 +31,7 @@
 			closetimer = null;}
 		}
 	
-	$(document).ready(function()
-	{
+	$(document).ready(function() {
 		$('#jsddm > li').bind('mouseover', jsddm_open);
 		$('#jsddm > li').bind('mouseout',  jsddm_timer);
 
@@ -49,6 +48,12 @@
 					return false;
 				}
 			});
+
+		$("#topSearchHelp")
+			.focus(function() {
+				$(this).hide();
+				$("#topSearchBox").show().focus();
+			})
 		
 		makeAutocomplete("#topSearchBox", "all");
 	});
@@ -126,23 +131,20 @@
 	            <div class="topnavCover1">
 	              <ul id="nav">
 	                <li class="home no-hov"><a href="@{Home.index()}">Home</a></li>
-	                <li class="profile"><a href="@{ViewDispatcher.view(currentUser)}">You</a></li>
 	                <!-- 
+	                <li class="profile"><a href="@{ViewDispatcher.view(currentUser)}">You</a></li>
+	                -->
 	                <li class="profile"><a href="#" class="menu1">You</a>
 	                  <ul>
 	                    <li><a href="@{ViewDispatcher.view(currentUser)}">Your Profile</a></li>
-	                    <li><a href="@{PublicProfile.thoughts(currentUser)}">Your Thoughts Feed</a></li>
-	                    <li><a href="@{Home.conversationFeed()}">Your Conversation Feed</a></li>
-	                    <li class="gap"><a href="@{PublicProfile.userBasedActions(currentUser, 'thankyous')}">Your Thank you's</a></li>
-	                    <li><a href="@{PublicProfile.userBasedActions(currentUser, 'following')}">Members You Follow</a></li>
-	                    <li><a href="@{PublicProfile.userBasedActions(currentUser, 'followers')}">Your Followers</a></li>
-	                    <li class="gap"><a href="@{PublicProfile.topicsFollowing(currentUser)}">Topics You Follow</a></li>
-	                    <li><a href="#">Conversations You Follow</a></li>
-	                    <li><a href="#">Conversations You Started</a></li>
-	                    <li><a href="#">Conversations You Joined</a></li>
+	                    <li><a href="@{PublicProfile.thoughts(currentUser)}">Your Thoughts</a></li>
+	                    <li class="gap"><a href="@{PublicProfile.conversations(currentUser)}">Your Conversations</a></li>
+	                    <li><a href="@{PublicProfile.topicsFollowing(currentUser)}">Your Topics Following</a></li>
+	                    <li class="gap"><a href="@{PublicProfile.answers(currentUser)}">Your Answers</a></li>
+	                    <li><a href="@{PublicProfile.userBasedActions(currentUser, 'thankyous')}">Your Thank you's</a></li>
 	                  </ul>
 	                </li>
-	                 -->
+	                 
 	                <li class="explore"> <a href="#" class="menu2">Explore</a>
 	                  <ul>
 	                    <!-- <li><a href="@{Home.conversationFeed()}">Community Conversation Feed</a></li>  -->
@@ -172,11 +174,13 @@
 	              <div class="topnavCover2">
 	                <div style="padding-left: 25px;" class="topsearchCover">
 	                  <div class="topsearchinput">
-	                    <input id="topSearchBox" type="text" class="topserchz iebox"/>
+	                    <input id="topSearchHelp" type="text" class="topserchz iebox"
+	                    	style="color: #aaaaaa;" value="Search answers and topics"
+	                    	/>
+	                    <input id="topSearchBox" type="text" class="topserchz iebox" style="display: none;"/>
 	                  </div>
-	                  <!--topsearchinput-->
 	                  <div class="topsubmitsz">
-	                    <input type="submit" onclick="return makeFullSearch();" 
+	                    <input id="topSearchText" type="submit" onclick="return makeFullSearch();" 
 	                    	style="cursor: pointer;" value=" " src="images/topsubmitbtn.png" class="topsubmit"/>
 	                  </div>
 	                </div>
@@ -219,7 +223,10 @@
 	              <div class="topnavCover2">
 	                <div style="padding-left: 25px;" class="topsearchCover">
 	                  <div class="topsearchinput">
-	                    <input id="topSearchBox" type="text" class="topserchz iebox"/>
+	                  	<input id="topSearchHelp" type="text" class="topserchz iebox"
+	                    	style="color: #aaaaaa;" value="Search answers and topics"
+	                    	/>
+	                    <input id="topSearchBox" type="text" class="topserchz iebox" style="display: none;"/>
 	                  </div>
 	                  <!--topsearchinput-->
 	                  <div class="topsubmitsz">

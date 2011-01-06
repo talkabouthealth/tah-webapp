@@ -3,6 +3,8 @@ package controllers;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -165,7 +167,44 @@ public class PublicProfile extends Controller {
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
 		TalkerLogic.preloadTalkerInfo(talker);
 		
-		render(talker, currentTalker, startedConvosFeed, joinedConvosFeed, followingConvosFeed);
+//		If user has not filled out their Health Info, also display the message
+		//TODO: same code? use talkerDisease == null && !talker.isProf() ?
+		boolean noHealthInfo = false;
+		if (currentTalker.equals(talker)) {
+			EnumSet<ActionType> userActionTypes = EnumSet.noneOf(ActionType.class);
+			for (Action action : talker.getActivityList()) {
+				userActionTypes.add(action.getType());
+			}
+			if (!talker.isProf() && !userActionTypes.contains(ActionType.UPDATE_HEALTH)) {
+				noHealthInfo = true;
+			}
+		}
+		
+		/* 
+		 	Ideas for recommended conversations :
+				1) match member following topics with convo topics
+				2) match member info with full convo info
+				3) what conversations are being followed by other members the user follows. 
+		*/
+		Set<ConversationBean> allConvos = new LinkedHashSet<ConversationBean>();
+		for (TopicBean topic : talker.getFollowingTopicsList()) {
+			allConvos.addAll(ConversationDAO.loadConversationsByTopic(topic.getId()));
+		}
+		allConvos.addAll(ConversationDAO.loadPopularConversations());
+		
+		List<ConversationBean> recommendedConvos = new ArrayList<ConversationBean>();
+		for (ConversationBean convo : allConvos) {
+			if (talker.getFollowingConvosList().contains(convo.getId())) {
+				continue;
+			}
+			recommendedConvos.add(convo);
+			if (recommendedConvos.size() == 3) {
+				break;
+			}
+		}
+		
+		render(talker, currentTalker, startedConvosFeed, joinedConvosFeed, followingConvosFeed, 
+				noHealthInfo, recommendedConvos);
 	}
 	
 	
