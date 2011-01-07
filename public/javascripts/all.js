@@ -20,7 +20,7 @@ function openInvitationsWindow() {
 }
 
 function openTwitter() {
-	var popupWindow = window.open("@{OAuth.getAuth()}?type=twitter", 
+	var popupWindow = window.open("/oauth/getauth?type=twitter", 
 		"TwitterLogin", "width=800,height=430,toolbar=no,location=no,menubar=no");
 	
 	//TODO: center pop-up on the screen and make one function for all pages
@@ -33,7 +33,7 @@ function openTwitter() {
 }
 
 function openFacebook() {
-	var popupWindow = window.open("@{OAuth.getAuth()}?type=facebook", 
+	var popupWindow = window.open("/oauth/getauth?type=facebook", 
 		"FacebookLogin", "width=1000,height=550,toolbar=no,location=no,menubar=no");
 }
 
@@ -530,22 +530,6 @@ function showResponse(responseText, statusText, xhr, $form)  {
 
 
 
-function shareTopic() {
-	var emails = $("#shareEmails").val();
-	var userName = $("#shareUserName").val();
-	var note = $("#shareNote").val();
-
-	$.post("/home/share", 
-		{ emails: emails, from: userName, note: note },
-		function(data) {
-			//set status message
-		}
-	);
-
-	return false;
-}
-
-
 //for comments/replies in feed
 function showReplyForm(commentId) {
 	$("#reply"+commentId+" .inline_display").hide();
@@ -647,5 +631,32 @@ function showMore(type) {
 	if ($("#"+type+"List").children(":hidden").size() == 0) {
 		$("#"+type+"MoreBtn").hide();
 	}
+	return false;
+}
+
+
+
+function shareTopic() {
+	var emails = $("#shareEmails").val();
+	var userName = $("#shareUserName").val();
+	var note = $("#shareNote").val();
+	
+	$("#shareResultError").html("");
+	$("#shareResultText").html("");
+
+	$.post("/home/share", 
+		{ emails: emails, from: userName, note: note },
+		function(data) {
+			if (data.indexOf("Error") != -1) {
+				$("#shareResultError").html(data);
+			}
+			else {
+				//set status message
+				$("#shareResultText").html("Topic successfully shared!");
+				$("#shareEmails").val("");
+			}
+		}
+	);
+
 	return false;
 }

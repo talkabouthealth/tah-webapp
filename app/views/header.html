@@ -6,6 +6,16 @@
 <style type="text/css">
 	/* Font size for autocomplete items */
 	.ui-menu .ui-menu-item a { font-size: 16px }
+	
+	#ajaxLoading {
+		display: none;
+		background-image: url(/public/images/ajax-loader.gif);
+		width: 15px;
+		height: 15px;
+		position: fixed;
+		top: 30px;
+		left: 30px;
+	}
 </style>
 	
 <script type="text/javascript">
@@ -56,6 +66,12 @@
 			})
 		
 		makeAutocomplete("#topSearchBox", "all");
+
+		$("#ajaxLoading").bind("ajaxSend", function(){
+			   $(this).show();
+			 }).bind("ajaxComplete", function(){
+			   $(this).hide();
+			 });
 	});
 
 	function makeFullSearch() {
@@ -255,3 +271,5 @@
 	<div id="savedHelpText">Saving...</div>
 	<div id="savedHelpError"></div>
 </div>      
+
+<div id="ajaxLoading"></div>

@@ -1,66 +1,35 @@
-<div id="shareDialogs" class="window">
+<style type="text/css">
+	#shareEmailsForm {
+		height: 357px;
+	}
+</style>
+
+<div id="shareEmailDialog" class="window">
 	<div class="boxtopcenter">
 		
 		<div id="shareEmailsForm" class="popup">
 		  <div class="popupheading">
 		    <div class="popuph1">Share Topic</div>
-		    <div class="close"><a href="#"><img src="images/close.jpg" alt="cloase" border="0" /></a></div>
+		    <div class="close"><a href="#"><img src="/public/images/close.jpg" alt="close" border="0" /></a></div>
 		  </div>
 		  <!--popupheading-->
 		  <div class="invitepeople">To tell people about this topic, type their email addresses here (separated by commas):</div>
 		  <textarea id="shareEmails" class="popupinut" rows="4" cols="3"></textarea>
-		  <div>
-		  	From: <input id="shareUserName" type="text" value="${_userName}" />
+		  <div class="invitepeople">
+		  	From: <input id="shareUserName" type="text" value="${_userName}" style="background-color:#F5F5F5;"/>
 		  </div>
 		  <div class="Addnote">Add a personal note here:</div>
-		  <textarea id="shareNote" class="popupinut" cols="4" rows="3"
-              	>I thought you would be interested in the topic "${_topicName}" on TalkAboutHealth. - ${_topicURL}
-              	
-              	${_topicDetails}</textarea>
+		  <textarea id="shareNote" class="popupinut" cols="4" rows="3" autocomplete="off"
+		  	>I thought you would be interested in the topic "${_topicName}" on TalkAboutHealth. - ${_topicURL}
+		  	
+${_topicDetails}</textarea>
 		  <div class="sentbox">
-		    <div class="senttxt">Topic successfully shared!</div>
+		    <div id="shareResultText" class="senttxt"></div>
+		    <div id="shareResultError" class="senttxt" style="color: red;"></div>
 		    <input type="submit" class="sendinvites" id="shareTopicBtn" 
 		    	onclick="return shareTopic();" value=" " src="images/sendinvites.jpg" />
 		  </div>
       	</div>
-      
-      <div id="newQuestionConfirm" class="popboxWraper" style="display: none;">
-        <div class="popbox3">
-          <div class="closecover">
-            <div class="close"><img src="/public/images/close.jpg" alt="Close" /></div>
-          </div>
-          <div class="iwant1">Thank you for sharing your question</div>
-
-          <div class="popusertxt3">We will notify other members of your question. 
-          Responses will be sent to your email account as well as viewable at the
-            following link: <a id="questionLink" href="#"></a></div>
-          <div class="popsubmitcover1">
-            <div class="popnothanks3"><a class="cancelLink" href="#">Close</a></div>
-          </div>
-          <!--popsubmitcover-->
-          <div class="cb"></div>
-        </div>
-
-        <!--popbox2-->
-      </div>
-      
-      <div id="newTalkConfirm" class="popboxWraper" style="display: none;">
-        <div class="popbox3">
-          <div class="closecover">
-            <div class="close"><img src="/public/images/close.jpg" alt="Close" /></div>
-          </div>
-          <div class="iwant1">We are finding other members now to join the chat.</div>
-
-          <div class="popusertxt3">
-          	Click here to start the chat.<br/><br/>
-          	<input id="startTalkBtn" type="submit" 
-          		src="/public/images/startsubmit.jpg" value=" " class="startsubmit" />
-          </div>
-          <div class="cb"></div>
-        </div>
-
-        <!--popbox2-->
-      </div>
       
       <div class="cb"></div>
     </div>

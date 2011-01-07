@@ -1,0 +1,30 @@
+<style type="text/css">
+	#shareTwitterForm {
+		height: 200px;
+	}
+</style>
+
+<div id="shareTwitterDialog" class="window">
+	<div class="boxtopcenter">
+		<div id="shareTwitterForm" class="popup">
+		  <div class="popupheading">
+		    <div class="popuph1">Tweet Topic</div>
+		    <div class="close"><a href="#"><img src="/public/images/close.jpg" alt="close" border="0" /></a></div>
+		  </div>
+		  <!--popupheading-->
+		  <div class="invitepeople">Tweet as @twittername</div>
+		  <textarea id="shareTwitterNote" class="popupinut" rows="3" cols="3"
+		  	>TalkAboutHealth topic: ${_topicName} - ${_topicDetails}
+${_topicURL}</textarea>
+		  <div class="sentbox">
+		    <div id="shareResultText" class="senttxt"></div>
+		    <div id="shareResultError" class="senttxt" style="color: red;"></div>
+		    <input type="submit" id="shareTopicBtn" 
+		    	onclick="return shareTopic();" value="Tweet" />
+		  </div>
+      	</div>
+      
+      <div class="cb"></div>
+    </div>
+    <!--boxtopcenter-->
+</div> 

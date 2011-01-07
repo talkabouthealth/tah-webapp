@@ -25,6 +25,7 @@ import models.actions.Action;
 import models.actions.Action.ActionType;
 import play.Logger;
 import play.cache.Cache;
+import play.data.validation.Validation.ValidationResult;
 import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -244,7 +245,7 @@ public class Home extends Controller {
     public static void share(String emails, String from, String note) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
-    	System.out.println(emails+" : "+from+" : "+note);
+//    	System.out.println(emails+" : "+from+" : "+note);
 		
 		//parse and validate emails
 		Set<String> emailsToSend = new HashSet<String>();
@@ -257,19 +258,21 @@ public class Home extends Controller {
 		}
 		
 		validation.isTrue(!emailsToSend.isEmpty()).message("emails.incorrect");
-//		validation.isTrue(emailsToSend.size() <= talker.getInvitations()).message("emails.noinvites");
 		
 		if(validation.hasErrors()) {
-			renderText("Error");
+			renderText("Error: Please input correct emails");
             return;
         }
 		
-//		Map<String, String> vars = new HashMap<String, String>();
-//		vars.put("username", talker.getUserName());
-//		vars.put("invitation_note", note);
-//		for (String email : emailsToSend) {
-//			EmailUtil.sendEmail(EmailTemplate.INVITATION, email, vars, null, false);
-//		}
+		Map<String, String> vars = new HashMap<String, String>();
+		//FIXME: finish subject?
+		String subject = from+" thought you would be interested in the topic";
+		vars.put("title", subject);
+		note = note.replaceAll("\n", "<br/>");
+		vars.put("note", note);
+		for (String email : emailsToSend) {
+			EmailUtil.sendEmail(EmailTemplate.SHARE, email, vars, null, false);
+		}
 		
 		renderText("Ok");
     }
