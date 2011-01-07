@@ -62,8 +62,6 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
         	String callbackURL = (secureRequest ? "https://" : "http://");
 			callbackURL = callbackURL+CALLBACK_URL;
 			
-			Logger.error("Twitter url: "+callbackURL);
-			
 			authURL = provider.retrieveRequestToken(consumer, callbackURL);
 			
 			//save token and token secret for next step of OAuth
@@ -156,8 +154,15 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			else {
 				//TODO: probably some error?
 			}
-	        
-	        return "/profile/notificationsettings";
+			
+			//to sharing or notification settings?
+			String redirectURL = session.get("oauth_redirect_url");
+			if (redirectURL != null) {
+				return redirectURL;
+			}
+			else {
+				return "/profile/notificationsettings";
+			}
 		}
 		else {
 			//login or signup

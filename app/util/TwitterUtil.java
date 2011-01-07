@@ -145,6 +145,8 @@ public class TwitterUtil {
 					conn.connect();
 					Logger.error("Twitter update response: " + conn.getResponseCode() + " "
 			                + conn.getResponseMessage());
+					System.out.println("Twitter update response: " + conn.getResponseCode() + " "
+			                + conn.getResponseMessage());
 				} catch (Exception e) {
 					Logger.error(e, "Wasn't able to follow Twitter user!");
 				}

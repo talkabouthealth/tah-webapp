@@ -19,8 +19,11 @@ function openInvitationsWindow() {
 	window.open("/home/invitations", "TalkAboutHealthInvitations", "width=600,height=350");
 }
 
-function openTwitter() {
-	var popupWindow = window.open("/oauth/getauth?type=twitter", 
+function openTwitter(redirectURL) {
+	if (!redirectURL) {
+		redirectURL = "";
+	}
+	var popupWindow = window.open("/oauth/getauth?type=twitter&redirectURL="+redirectURL, 
 		"TwitterLogin", "width=800,height=430,toolbar=no,location=no,menubar=no");
 	
 	//TODO: center pop-up on the screen and make one function for all pages
@@ -32,8 +35,11 @@ function openTwitter() {
 	return false;
 }
 
-function openFacebook() {
-	var popupWindow = window.open("/oauth/getauth?type=facebook", 
+function openFacebook(redirectURL) {
+	if (!redirectURL) {
+		redirectURL = "";
+	}
+	var popupWindow = window.open("/oauth/getauth?type=facebook&redirectURL="+redirectURL,  
 		"FacebookLogin", "width=1000,height=550,toolbar=no,location=no,menubar=no");
 }
 
@@ -634,26 +640,45 @@ function showMore(type) {
 	return false;
 }
 
-
-
-function shareTopic() {
+function shareTopic(type, itemName) {
 	var emails = $("#shareEmails").val();
 	var userName = $("#shareUserName").val();
-	var note = $("#shareNote").val();
+	var note = $("#share"+type+"Note").val();
 	
 	$("#shareResultError").html("");
 	$("#shareResultText").html("");
 
 	$.post("/home/share", 
-		{ emails: emails, from: userName, note: note },
+		{ emails: emails, from: userName, note: note, type: type, item: itemName },
 		function(data) {
 			if (data.indexOf("Error") != -1) {
 				$("#shareResultError").html(data);
 			}
 			else {
-				//set status message
-				$("#shareResultText").html("Topic successfully shared!");
+				/* 
+When a user successfully shares a Topic or Conversation, 
+let's close the popup and have a notification at the top of the screen that says 
+"Successfully posted to Facebook." "Successfully posted to Twitter." or "Email sent successfully."				 
+				 */ 
+				hideAll();
 				$("#shareEmails").val("");
+				
+				var resultText = "Email sent successfully.";
+				if (type === "twitter") {
+					resultText = "Successfully posted to Twitter.";
+				}
+				else if (type === "facebook") {
+					resultText = "Successfully posted to Facebook.";
+				}
+				
+				//TODO: similar code?
+				if (closeInterval) {
+					window.clearInterval(closeInterval);
+				}
+				$("#savedHelpText").html(resultText);
+				$("#savedHelpError").html("");
+				$("#savedHelp").fadeIn(300);
+				closeInterval = setInterval(function() { $("#savedHelp").fadeOut(200) }, 2500);
 			}
 		}
 	);

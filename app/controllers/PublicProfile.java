@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import logic.ConversationLogic;
 import logic.FeedsLogic;
 import logic.TalkerLogic;
 import models.CommentBean;
@@ -259,7 +260,10 @@ public class PublicProfile extends Controller {
 		boolean canAdd = (afterId == null);
 		for (TopicBean topic : loadedTopics) {
 			if (canAdd && !talker.getFollowingTopicsList().contains(topic)) {
-				recommendedTopics.add(topic);
+				if (! (topic.getTitle().equals(ConversationLogic.DEFAULT_QUESTION_TOPIC) 
+						|| topic.getTitle().equals(ConversationLogic.DEFAULT_TALK_TOPIC)) ) {
+					recommendedTopics.add(topic);
+				}
 			}
 			
 			if (topic.getId().equals(afterId)) {

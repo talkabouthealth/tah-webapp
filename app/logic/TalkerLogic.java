@@ -281,7 +281,11 @@ public class TalkerLogic {
 		for (String possibleTopic : topicNames) {
 			TopicBean topic = TopicDAO.getOrRestoreByTitle(possibleTopic);
 			if (topic != null) {
-				recommendedTopics.add(topic);
+				//Do not ever recommend "Unorganized" or "Chats" as topics to follow
+				if (! (topic.getTitle().equals(ConversationLogic.DEFAULT_QUESTION_TOPIC) 
+						|| topic.getTitle().equals(ConversationLogic.DEFAULT_TALK_TOPIC)) ) {
+					recommendedTopics.add(topic);
+				}
 			}
 		}
 		

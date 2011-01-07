@@ -19,7 +19,7 @@
 		  	From: <input id="shareUserName" type="text" value="${_userName}" style="background-color:#F5F5F5;"/>
 		  </div>
 		  <div class="Addnote">Add a personal note here:</div>
-		  <textarea id="shareNote" class="popupinut" cols="4" rows="3" autocomplete="off"
+		  <textarea id="shareemailNote" class="popupinut" cols="4" rows="3" autocomplete="off"
 		  	>I thought you would be interested in the topic "${_topicName}" on TalkAboutHealth. - ${_topicURL}
 		  	
 ${_topicDetails}</textarea>
@@ -27,7 +27,7 @@ ${_topicDetails}</textarea>
 		    <div id="shareResultText" class="senttxt"></div>
 		    <div id="shareResultError" class="senttxt" style="color: red;"></div>
 		    <input type="submit" class="sendinvites" id="shareTopicBtn" 
-		    	onclick="return shareTopic();" value=" " src="images/sendinvites.jpg" />
+		    	onclick="return shareTopic('email', '${_topicName}');" value=" " src="images/sendinvites.jpg" />
 		  </div>
       	</div>
       

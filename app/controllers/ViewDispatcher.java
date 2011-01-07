@@ -268,7 +268,7 @@ public class ViewDispatcher extends Controller {
 		
 		//for FB like button
 		//TODO: possibly handle SSL urls also?
-		String currentURL = "http://"+request.host+request.url;
+		String currentURL = "http://"+request.host+request.path;
 		System.out.println(currentURL);
 		
 		render("Topics/viewTopic.html", talker, topic, activities, popularConvos, trendingConvos, currentURL);

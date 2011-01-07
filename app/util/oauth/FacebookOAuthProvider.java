@@ -128,7 +128,14 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 					//TODO: probably some error?
 				}
 		        
-		        return "/profile/notificationsettings";
+				//to sharing or notification settings?
+				String redirectURL = session.get("oauth_redirect_url");
+				if (redirectURL != null) {
+					return redirectURL;
+				}
+				else {
+					return "/profile/notificationsettings";
+				}
 			}
 			else {
 				//login or signup

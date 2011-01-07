@@ -1,25 +1,23 @@
 <style type="text/css">
-	#shareTwitterForm {
-		height: 200px;
+	#shareFBForm {
+		height: 170px;
 	}
 </style>
 
-<div id="shareTwitterDialog" class="window">
+<div id="shareFBDialog" class="window">
 	<div class="boxtopcenter">
-		<div id="shareTwitterForm" class="popup">
-		  <div class="popupheading">
-		    <div class="popuph1">Tweet Topic</div>
+		<div id="shareFBForm" class="popup">
+		  <div class="popupheading" style="background: none;">
+		    <div class="popuph1">Share Topic on Facebook</div>
 		    <div class="close"><a href="#"><img src="/public/images/close.jpg" alt="close" border="0" /></a></div>
 		  </div>
-		  <!--popupheading-->
-		  <div class="invitepeople">Tweet as @${_userName}</div>
-		  <textarea id="sharetwitterNote" class="popupinut" rows="3" cols="3"
+		  <textarea id="sharefacebookNote" class="popupinut" rows="3" cols="3"
 		  	>Learning about ${_topicName} on TalkAboutHealth - ${_topicURL}</textarea>
 		  <div class="sentbox">
 		    <div id="shareResultText" class="senttxt"></div>
 		    <div id="shareResultError" class="senttxt" style="color: red;"></div>
 		    <input type="submit" id="shareTopicBtn" 
-		    	onclick="return shareTopic('twitter');" value="Tweet" />
+		    	onclick="return shareTopic('facebook');" value="Post" />
 		  </div>
       	</div>
       

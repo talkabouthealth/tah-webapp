@@ -51,6 +51,14 @@
 		  		{ hover: '', saveFunction: saveData}
 		  	);
 			initNewTabs();
+
+			var share = "${params.share}";
+			if (share === "twitter") {
+				showPopup("#shareTwitterDialog", 350);
+			}
+			else if (share === "facebook") {
+				showPopup("#shareFBDialog", 450);
+			}
 		});
 
 		function saveData(dataType, newValue) {
@@ -80,7 +88,8 @@
 		}
 
 		#{if talker}
-			var hasTwitter = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) != null };		
+			var hasTwitter = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) != null };
+			var hasFB = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.FACEBOOK) != null };		
 		#{/if}
 
 		function shareTwitterPopup() {
@@ -89,7 +98,16 @@
 			}
 			else {
 				//show Twitter login
-				openTwitter();
+				openTwitter('${currentURL}?share=twitter');
+			}
+		}
+		function shareFBPopup() {
+			if (hasFB) {
+				showPopup("#shareFBDialog", 450);
+			}
+			else {
+				//show FB login
+				openFacebook('${currentURL}?share=facebook');
 			}
 		}
 	</script>
@@ -332,7 +350,7 @@
 	                    </div>
 	                    <div class="sharicons">
 	                    	<img class="rpad" alt="Members" src="/public/images/facebookicon.jpg"/>
-	                    	<a href="#">Facebook</a>
+	                    	<a href="#" onclick="return shareFBPopup();">Facebook</a>
 	                    </div>
                   	#{/if}
                   	#{else}
@@ -350,9 +368,7 @@
                     
                   </div>
                  
-                  *{
-                  <iframe src="http://www.facebook.com/plugins/like.php?href=${currentURL}&amp;layout=standard&amp;show_faces=true&amp;width=240&amp;action=like&amp;colorscheme=light&amp;height=40" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:240px; height:40px;" allowTransparency="true"></iframe>
-                  }*
+                  <iframe src="http://www.facebook.com/plugins/like.php?href=${currentURL}&amp;layout=standard&amp;show_faces=true&amp;width=240&amp;action=like&amp;colorscheme=light&amp;height=70" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:240px; height:70px;" allowTransparency="true"></iframe>
                   
                   <div class="topicborder"></div>
                 </div>
@@ -396,8 +412,13 @@
 	
 	#{ popups/flag /}
 	
-	#{ popups/shareEmail userName: talker?.userName, topicName: topic.title, topicDetails: topic.summary, topicURL: currentURL /}
-	#{ popups/shareTwitter userName: talker?.userName, topicName: topic.title, topicDetails: topic.summary, topicURL: topic.bitly /}
+	#{if talker}
+			#{set twitterAccount = talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
+			
+			#{ popups/shareEmail userName: talker?.userName, topicName: topic.title, topicDetails: topic.summary, topicURL: currentURL /}	
+			#{ popups/shareTwitter userName: twitterAccount?.userName, topicName: topic.title, topicURL: topic.bitly /}
+			#{ popups/shareFacebook topicName: topic.title, topicURL: currentURL /}
+	#{/if}
 </div>
 <!-- Mask to cover the whole screen -->
 <div id="mask"></div>    

@@ -11,7 +11,14 @@ import util.oauth.TwitterOAuthProvider;
 
 public class OAuth extends Controller {
 	
-	public static void getAuth(String type) {
+	public static void getAuth(String type, String redirectURL) {
+		if (redirectURL != null && !redirectURL.isEmpty()) {
+    		session.put("oauth_redirect_url", redirectURL);
+    	}
+    	else {
+    		session.remove("oauth_redirect_url");
+    	}
+		
 		OAuthServiceProvider oauthProvider = getProvider(type);
 		
 //		Logger.error("----------------------------");

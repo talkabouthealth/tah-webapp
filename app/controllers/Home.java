@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import logic.ConversationLogic;
 import logic.FeedsLogic;
 import logic.TalkerLogic;
 import models.IMAccountBean;
@@ -31,6 +32,7 @@ import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
 import util.EmailUtil;
+import util.FacebookUtil;
 import util.TwitterUtil;
 import util.EmailUtil.EmailTemplate;
 import util.ValidateData;
@@ -110,7 +112,10 @@ public class Home extends Controller {
 		
 		for (TopicBean topic : loadedTopics) {
 			if (!talker.getFollowingTopicsList().contains(topic)) {
-				recommendedTopics.add(topic);
+				if (! (topic.getTitle().equals(ConversationLogic.DEFAULT_QUESTION_TOPIC) 
+						|| topic.getTitle().equals(ConversationLogic.DEFAULT_TALK_TOPIC)) ) {
+					recommendedTopics.add(topic);
+				}
 			}
 			if (recommendedTopics.size() == 3) {
 				break;
@@ -242,37 +247,51 @@ public class Home extends Controller {
     }
     
     
-    public static void share(String emails, String from, String note) {
+    public static void share(String type, String emails, String from, String note, String item) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
-//    	System.out.println(emails+" : "+from+" : "+note);
-		
-		//parse and validate emails
-		Set<String> emailsToSend = new HashSet<String>();
-		String[] emailsArr = emails.split(",");	
-		for (String email : emailsArr) {
-			email = email.trim();
-			if (ValidateData.validateEmail(email)) {
-				emailsToSend.add(email);
-			}
-		}
-		
-		validation.isTrue(!emailsToSend.isEmpty()).message("emails.incorrect");
-		
-		if(validation.hasErrors()) {
-			renderText("Error: Please input correct emails");
-            return;
-        }
-		
-		Map<String, String> vars = new HashMap<String, String>();
-		//FIXME: finish subject?
-		String subject = from+" thought you would be interested in the topic";
-		vars.put("title", subject);
-		note = note.replaceAll("\n", "<br/>");
-		vars.put("note", note);
-		for (String email : emailsToSend) {
-			EmailUtil.sendEmail(EmailTemplate.SHARE, email, vars, null, false);
-		}
+    	if (type != null) {
+    		if (type.equalsIgnoreCase("email")) {
+    			//parse and validate emails
+    			Set<String> emailsToSend = new HashSet<String>();
+    			String[] emailsArr = emails.split(",");	
+    			for (String email : emailsArr) {
+    				email = email.trim();
+    				if (ValidateData.validateEmail(email)) {
+    					emailsToSend.add(email);
+    				}
+    			}
+    			
+    			validation.isTrue(!emailsToSend.isEmpty()).message("emails.incorrect");
+    			
+    			if(validation.hasErrors()) {
+    				renderText("Error: Please input correct emails");
+    	            return;
+    	        }
+    			
+    			Map<String, String> vars = new HashMap<String, String>();
+    			String subject = from+" thought you would be interested in the topic \""+item+"\" on TalkAboutHealth";
+    			vars.put("title", subject);
+    			note = note.replaceAll("\n", "<br/>");
+    			vars.put("note", note);
+    			for (String email : emailsToSend) {
+    				EmailUtil.sendEmail(EmailTemplate.SHARE, email, vars, null, false);
+    			}
+    		}
+    		else if (type.equalsIgnoreCase("twitter")) {
+    			ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
+    			if (twitterAccount != null) {
+    				TwitterUtil.makeUserTwit(note, 
+        					twitterAccount.getToken(), twitterAccount.getTokenSecret());
+    			}
+    		}
+    		else if (type.equalsIgnoreCase("facebook")) {
+    			ServiceAccountBean fbAccount = talker.serviceAccountByType(ServiceType.FACEBOOK);
+    			if (fbAccount != null) {
+    				FacebookUtil.post(note, fbAccount.getToken());
+    			}
+    		}
+    	}
 		
 		renderText("Ok");
     }
