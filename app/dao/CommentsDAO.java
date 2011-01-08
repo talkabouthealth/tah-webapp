@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 import static util.DBUtil.*;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -182,7 +184,8 @@ public class CommentsDAO {
 			.add("deleted", new BasicDBObject("$ne", true))
 			.add("answer", true);
 		if (topic != null) {
-			Set<DBRef> convosDBSet = ConversationDAO.getConversationsByTopic(topic);
+			Set<DBRef> convosDBSet = 
+				ConversationDAO.getConversationsByTopics(new HashSet<TopicBean>(Arrays.asList(topic)));
 			queryBuilder.add("convo", new BasicDBObject("$in", convosDBSet));
 		}
 		

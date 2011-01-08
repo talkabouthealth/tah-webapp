@@ -78,7 +78,6 @@ public class HealthItemDAO {
 	
 	public static List<HealthItemBean> getAllHealthItems(String diseaseId) {
 		DBCollection healthItemsColl = getCollection(HEALTH_ITEMS_COLLECTION);
-		
 		List<DBObject> healthItemsDBList = healthItemsColl.find().toArray();
 		
 		List<HealthItemBean> healthItems = new ArrayList<HealthItemBean>();

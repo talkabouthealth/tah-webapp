@@ -1,5 +1,6 @@
 package logic;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -19,155 +20,76 @@ import models.actions.PreloadAction;
 
 public class FeedsLogic {
 	
+	enum FeedType {
+		CONVERSATION, COMMUNITY, TALKER, TOPIC
+	}
+	
 	public static final int TALKERFEEDS_PER_PAGE = 20;
 	public static final int FEEDS_PER_PAGE = 40;
 	public static final int ACTIONS_PRELOAD = 500;
 	
 	public static Set<Action> getConvoFeed(TalkerBean talker, String afterActionId) {
-		Set<Action> convoFeed = new LinkedHashSet<Action>();
-		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();
-		
-		boolean exit = false;
-		String nextActionId = null;
-		boolean canAdd = (afterActionId == null);
-		while (true) {
-			Logger.error("TRYING: "+nextActionId);
-			List<Action> convoFeedActions = ActionDAO.loadConvoFeed(talker, nextActionId);
-			Logger.error("RESULT: "+convoFeedActions.size());
-			if (convoFeedActions.size() == 0) {
-				//no more feeds
-				break;
-			}
-			if (convoFeedActions.size() < ACTIONS_PRELOAD ) {
-				exit = true;
-			}
-			
-			canAdd = filter2(convoFeed, convoFeedActions, 
-					addedConvos, afterActionId, canAdd, FEEDS_PER_PAGE);
-			
-			Logger.error("FILTER: "+convoFeed.size());
-			
-			if (exit || convoFeed.size() >= FEEDS_PER_PAGE) {
-				break;
-			}
-			
-			//id for next pre-load from db
-			int s = convoFeedActions.size();
-			nextActionId = convoFeedActions.get(s-1).getId();
-		}
-		
-		return convoFeed;
+		return loadFeed(FeedType.CONVERSATION, afterActionId, talker, null, true, FEEDS_PER_PAGE);
 	}
 	
 	public static Set<Action> getCommunityFeed(String afterActionId, boolean loggedIn) {
-		Set<Action> communityFeed = new LinkedHashSet<Action>();
-		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();
-		
-		boolean exit = false;
-		String nextActionId = null;
-		boolean canAdd = (afterActionId == null);
-		while (true) {
-			List<Action> communityFeedActions = ActionDAO.loadCommunityFeed(nextActionId, loggedIn);
-			if (communityFeedActions.size() == 0) {
-				//no more feeds
-				break;
-			}
-			if (communityFeedActions.size() < ACTIONS_PRELOAD ) {
-				exit = true;
-			}
-			
-			canAdd = filter2(communityFeed, communityFeedActions, 
-					addedConvos, afterActionId, canAdd, FEEDS_PER_PAGE);
-			
-			if (exit || communityFeed.size() >= FEEDS_PER_PAGE) {
-				break;
-			}
-			
-			//id for next pre-load from db
-			int s = communityFeedActions.size();
-			nextActionId = communityFeedActions.get(s-1).getId();
-		}
-		
-		return communityFeed;
+		return loadFeed(FeedType.COMMUNITY, afterActionId, null, null, loggedIn, FEEDS_PER_PAGE);
 	}
 	
 	public static Set<Action> getTalkerFeed(TalkerBean talker, String afterActionId) {
-		Set<Action> talkerFeed = new LinkedHashSet<Action>();
-		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();
-		
-		boolean exit = false;
-		String nextActionId = null;
-		boolean canAdd = (afterActionId == null);
-		while (true) {
-			List<Action> talkerFeedActions = ActionDAO.loadTalkerFeed(talker.getId(), nextActionId);
-			if (talkerFeedActions.size() == 0) {
-				//no more feeds
-				break;
-			}
-			if (talkerFeedActions.size() < ACTIONS_PRELOAD ) {
-				exit = true;
-			}
-			
-			canAdd = filter2(talkerFeed, talkerFeedActions, 
-					addedConvos, afterActionId, canAdd, TALKERFEEDS_PER_PAGE);
-			
-			if (exit || talkerFeed.size() >= TALKERFEEDS_PER_PAGE) {
-				break;
-			}
-			
-			//id for next pre-load from db
-			int s = talkerFeedActions.size();
-			nextActionId = talkerFeedActions.get(s-1).getId();
-		}
-		
-		return talkerFeed;
+		return loadFeed(FeedType.TALKER, afterActionId, talker, null, true, TALKERFEEDS_PER_PAGE);
 	}
 	
 	public static Set<Action> getTopicFeed(TopicBean topic, String afterActionId) {
-//		Set<Action> topicFeedActions = ActionDAO.loadLatestByTopic(topic);
-//		
-//		Set<Action> topicFeed = filter(topicFeedActions, afterActionId);
-//		return topicFeed;
-		
-		Set<Action> topicFeed = new LinkedHashSet<Action>();
+		return loadFeed(FeedType.TOPIC, afterActionId, null, topic, true, FEEDS_PER_PAGE);
+	}
+	
+	private static Set<Action> loadFeed(FeedType feedType, String afterActionId,
+			TalkerBean talker, TopicBean topic, boolean loggedIn, int feedsPerPage) {
+		Set<Action> feed = new LinkedHashSet<Action>();
 		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();
 		
-		boolean exit = false;
 		String nextActionId = null;
 		boolean canAdd = (afterActionId == null);
 		while (true) {
-			List<Action> topicFeedActions = ActionDAO.loadLatestByTopic(topic, nextActionId);
-			if (topicFeedActions.size() == 0) {
-				//no more feeds
+			List<Action> feedActions = new ArrayList<Action>();
+			switch (feedType) {
+				case CONVERSATION: 
+					feedActions = ActionDAO.loadConvoFeed(talker, nextActionId);
+					break;
+				case COMMUNITY: 
+					feedActions = ActionDAO.loadCommunityFeed(nextActionId, loggedIn);
+					break;
+				case TALKER: 
+					feedActions = ActionDAO.loadTalkerFeed(talker.getId(), nextActionId);
+					break;
+				case TOPIC: 
+					feedActions = ActionDAO.loadLatestByTopic(topic, nextActionId);
+					break;
+			}
+			
+			canAdd = filter(feed, feedActions, 
+					addedConvos, afterActionId, canAdd, feedsPerPage);
+			
+			//exit if no more actions to preload or feed is big enough for this page
+			if (feedActions.size() < ACTIONS_PRELOAD || feed.size() >= feedsPerPage) {
 				break;
 			}
-			if (topicFeedActions.size() < ACTIONS_PRELOAD ) {
-				exit = true;
-			}
 			
-			canAdd = filter2(topicFeed, topicFeedActions, 
-					addedConvos, afterActionId, canAdd, FEEDS_PER_PAGE);
-			
-			if (exit || topicFeed.size() >= FEEDS_PER_PAGE) {
-				break;
-			}
-			
-			//id for next pre-load from db
-			int s = topicFeedActions.size();
-			nextActionId = topicFeedActions.get(s-1).getId();
+			//id for next preload from db
+			nextActionId = feedActions.get(feedActions.size()-1).getId();
 		}
 		
-		return topicFeed;
+		return feed;
 	}
 	
-	private static boolean filter2(Set<Action> feed, 
+	private static boolean filter(Set<Action> feed, 
 			List<Action> feedActions, Set<ConversationBean> addedConvos, 
 			String afterActionId, boolean canAdd, int feedSize) {
 		for (Action action : feedActions) {
 			ConversationBean actionConvo = action.getConvo();
 			//check repeated conversations
 			if (actionConvo != null) {
-//				System.out.println("T: "+actionConvo.getTopic()+", add: "+canAdd);
 				if (!addedConvos.contains(actionConvo)) {
 					if (canAdd) {
 						PreloadAction preAction = (PreloadAction)action;
@@ -190,9 +112,6 @@ public class FeedsLogic {
 			if (feed.size() >= feedSize) {
 				break;
 			}
-			
-//			System.out.println(action.getId());
-//			System.out.println(afterActionId);
 			if (action.getId().equals(afterActionId)) {
 				canAdd = true;
 			}
@@ -201,47 +120,4 @@ public class FeedsLogic {
 		return canAdd;
 	}
 	
-	private static Set<Action> filter(Set<Action> feedActions, String afterActionId) {
-		//!!! Conversations should not appear more than once in the feeds
-		//except for Answers, Replies, and Add and Edit Summaries. 
-		EnumSet<ActionType> okActions = EnumSet.noneOf(ActionType.class);
-//			ActionType.ANSWER_CONVO, ActionType.REPLY_CONVO, 
-//			ActionType.SUMMARY_ADDED, ActionType.SUMMARY_EDITED
-//		);
-		
-		Set<Action> feed = new LinkedHashSet<Action>();
-		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();
-		//we can add items only after given action (for paging)
-		boolean canAdd = (afterActionId == null);
-		for (Action action : feedActions) {
-//			if (action.getType() == ActionType.PERSONAL_PROFILE_COMMENT)
-			
-			ConversationBean actionConvo = action.getConvo();
-			//check repeated conversations
-			if (actionConvo != null && !okActions.contains(action.getType())) {
-				if (!addedConvos.contains(actionConvo)) {
-					if (canAdd) {
-						feed.add(action);
-						addedConvos.add(actionConvo);
-					}
-				}
-			}
-			else {
-				if (canAdd) {
-					feed.add(action);
-				}
-			}
-			
-			if (feed.size() >= FEEDS_PER_PAGE) {
-				break;
-			}
-			
-			if (action.getId().equals(afterActionId)) {
-				canAdd = true;
-			}
-		}
-		
-		return feed;
-	}
-
 }

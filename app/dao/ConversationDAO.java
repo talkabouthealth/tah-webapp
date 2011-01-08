@@ -52,7 +52,7 @@ public class ConversationDAO {
 		if (tid != -1) {
 			convo.setTid(tid);
 		} else {
-			new Exception("DB Problem - Conversations not inserted into DB").printStackTrace();
+			Logger.error("Couldn't save Conversation");
 			return;
 		}
 	}
@@ -89,7 +89,7 @@ public class ConversationDAO {
 			.add("opened", true)
 			.get();
 
-		//Only with STRICT WriteConcern we receive exception on duplicate key
+		//Only with SAFE WriteConcern we receive exception on duplicate key
 		try {
 			convosColl.save(convoObject, WriteConcern.SAFE);
 		}
@@ -144,7 +144,7 @@ public class ConversationDAO {
 	
 	
 	//----------------------- Query methods ------------------------
-	public static ConversationBean getByConvoId(String convoId) {
+	public static ConversationBean getById(String convoId) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("_id", new ObjectId(convoId));
@@ -153,7 +153,6 @@ public class ConversationDAO {
 		if (convoDBObject == null) {
 			return null;
 		}
-		
 		ConversationBean convo = new ConversationBean();
 		convo.parseFromDB(convoDBObject);
 		return convo;
@@ -168,7 +167,6 @@ public class ConversationDAO {
 		if (convoDBObject == null) {
 			return null;
 		}
-		
 		ConversationBean convo = new ConversationBean();
 		convo.parseFromDB(convoDBObject);
 		return convo;
@@ -183,7 +181,6 @@ public class ConversationDAO {
 		if (convoDBObject == null) {
 			return null;
 		}
-		
 		ConversationBean convo = new ConversationBean();
 		convo.parseBasicFromDB(convoDBObject);
 		return convo;
@@ -195,7 +192,7 @@ public class ConversationDAO {
 	 * @return
 	 */
 	public static ConversationBean getByURL(String url) {
-		DBCollection convosColl = getDB().getCollection(CONVERSATIONS_COLLECTION);
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("$or", 
@@ -211,7 +208,6 @@ public class ConversationDAO {
 		if (convoDBObject == null) {
 			return null;
 		}
-		
 		ConversationBean convo = new ConversationBean();
 		convo.parseFromDB(convoDBObject);
 		return convo;
@@ -275,12 +271,11 @@ public class ConversationDAO {
 			convo.parseFromDB(convoDBObject);
 	    	convosList.add(convo);
 		}
-		
 		return convosList;
 	}
 	
 	/*
-	 	Used by admin to close an old LiveTalk (which wasn't closed automatically).
+	 	Used by admin to close an old LiveChat (which wasn't closed automatically).
 	 */
 	public static void closeLiveChat(String convoId) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
@@ -295,7 +290,6 @@ public class ConversationDAO {
 	
 	/**
 	 * No one answered for question/conversation
-	 * @return
 	 */
 	public static List<ConversationBean> getOpenQuestions() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
@@ -318,7 +312,6 @@ public class ConversationDAO {
 	}
 	
 	//------------------- Other ----------------------
-	
 	public static String getLastConvoId() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
@@ -385,7 +378,7 @@ public class ConversationDAO {
 				new BasicDBObject("$inc", new BasicDBObject("views", 1)));
 	}
 	
-	//Load convos for given activity type
+	//Load convos for given activity type - started, joined, etc.
 	public static List<ConversationBean> loadConversations(String talkerId, ActionType type) {
 		DBCollection activitiesColl = getCollection(ActionDAO.ACTIVITIES_COLLECTION);
 		
@@ -423,19 +416,14 @@ public class ConversationDAO {
 		for (TopicBean topic : topics) {
 			getAllTopics(allTopics, topic);
 		}
-		Logger.error("After 22:");
 		
-		//find 
 		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
-		
-		DBObject query = new BasicDBObject("topics", 
-				new BasicDBObject("$in", allTopics));
+		DBObject query = new BasicDBObject("topics", new BasicDBObject("$in", allTopics));
 		List<DBObject> convosDBList = convosColl.find(query).toArray();
 		
 		for (DBObject convoDBObject : convosDBList) {
 			convosDBSet.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, getString(convoDBObject, "_id")));
 		}
-//		Logger.error("After 33:");
 		
 		return convosDBSet;
 	}
@@ -446,8 +434,6 @@ public class ConversationDAO {
 			allTopics.add(topicRef);
 			
 			for (TopicBean child : topic.getChildren()) {
-//				TopicBean fullChild = TopicDAO.getById(child.getId());
-				
 				DBCollection topicsColl = getCollection(TopicDAO.TOPICS_COLLECTION);
 				DBObject query = new BasicDBObject("_id", new ObjectId(child.getId()));
 				DBObject topicDBObject = topicsColl.findOne(query);
@@ -469,28 +455,6 @@ public class ConversationDAO {
 		}
 	}
 	
-	//TODO: load topics tree with one method? similar methods?
-	/**
-	 * Includes conversations in children topics also.
-	 * @param topic
-	 * @return
-	 */
-	public static Set<DBRef> getConversationsByTopic(TopicBean topic) {
-		Set<DBRef> convosDBSet = new HashSet<DBRef>();
-		if (topic == null) {
-			return convosDBSet;
-		}
-		
-		for (String convoId : ConversationDAO.loadConversationsIdsByTopic(topic.getId())) {
-			convosDBSet.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId));
-		}
-		for (TopicBean child : topic.getChildren()) {
-			TopicBean fullChild = TopicDAO.getById(child.getId());
-			convosDBSet.addAll(getConversationsByTopic(fullChild));
-		}
-		return convosDBSet;
-	}
-	
 	public static List<ConversationBean> loadConversationsByTopic(String topicId) {
 		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
 		
@@ -510,30 +474,14 @@ public class ConversationDAO {
 		return convosList;
 	}
 	
-	public static List<String> loadConversationsIdsByTopic(String topicId) {
-		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
-		
-		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topicId);
-		DBObject query = new BasicDBObject("topics", topicRef);
-		List<DBObject> convosDBList = convosColl.find(query).toArray();
-		
-		List<String> convosList = new ArrayList<String>();
-		for (DBObject convoDBObject : convosDBList) {
-			convosList.add(getString(convoDBObject, "_id"));
-		}
-		return convosList;
-	}
-	
 	public static void deleteChatMessage(String conversationId, int index) {
-		//t.update( {'comments.by':'joe'}, {$inc:{'comments.$.votes':1}}, false, true )
-		
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
+		//delete 'index' message
 		DBObject messageObj = new BasicDBObject("messages."+index+".deleted", true);
 		DBObject convoId = new BasicDBObject("_id", new ObjectId(conversationId));
 		convosColl.update(convoId, new BasicDBObject("$set", messageObj));
 	}
-	
 	
 	public static void main(String[] args) {
 		deleteChatMessage("4cc94ac5b8682ba9efeba5f2", 0);
@@ -554,24 +502,24 @@ public class ConversationDAO {
 	}
 	
 	//used for testing
-	private static void updateLiveTalkers(int tid, String talkerId, 
-			String talkerName, boolean connected) {
-		DBCollection convosColl = getDB().getCollection(CONVERSATIONS_COLLECTION);
-		
-		DBRef talkerRef = new DBRef(getDB(), "talkers", new ObjectId(talkerId));
-		DBObject talkerDBObject = BasicDBObjectBuilder.start()
-			.add("uid", talkerRef)
-			.add("uname", talkerName)
-			.get();
-		
-		DBObject tidDBObject = new BasicDBObject("tid", tid);
-		String operation = "$pull"; //for disconnected
-		if (connected) {
-			operation = "$push";
-		}
-		convosColl.update(tidDBObject, 
-				new BasicDBObject(operation, new BasicDBObject("talkers", talkerDBObject)));
-	}
+//	private static void updateLiveTalkers(int tid, String talkerId, 
+//			String talkerName, boolean connected) {
+//		DBCollection convosColl = getDB().getCollection(CONVERSATIONS_COLLECTION);
+//		
+//		DBRef talkerRef = new DBRef(getDB(), "talkers", new ObjectId(talkerId));
+//		DBObject talkerDBObject = BasicDBObjectBuilder.start()
+//			.add("uid", talkerRef)
+//			.add("uname", talkerName)
+//			.get();
+//		
+//		DBObject tidDBObject = new BasicDBObject("tid", tid);
+//		String operation = "$pull"; //for disconnected
+//		if (connected) {
+//			operation = "$push";
+//		}
+//		convosColl.update(tidDBObject, 
+//				new BasicDBObject(operation, new BasicDBObject("talkers", talkerDBObject)));
+//	}
 
 }
 

@@ -43,7 +43,6 @@ public class TalkerDAO {
 	public static final String TALKERS_COLLECTION = "talkers";
 	
 	// --------------------- Save/Update ---------------------------
-	
 	public static boolean save(TalkerBean talker) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
@@ -222,7 +221,7 @@ public class TalkerDAO {
 	}
 	
 	/*
-	 * Loads talker bean by custom field
+	 * Loads talker bean by particular field
 	 */
 	private static TalkerBean getByField(String fieldName, Object fieldValue) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
@@ -412,7 +411,6 @@ public class TalkerDAO {
 	}
 	
 	
-	/* --------------------- "Thank you" feature ----------------------------- */
 	public static void saveThankYou(ThankYouBean thankYouBean) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
@@ -428,7 +426,6 @@ public class TalkerDAO {
 		talkersColl.update(talkerId, new BasicDBObject("$push", new BasicDBObject("thankyous", thankYouObject)));
 	}
 	
-	/* ---------------------- Following/Followers feature --------------------------- */
 	/**
 	 * Follows or unfollows depending on third parameter
 	 */
@@ -470,9 +467,7 @@ public class TalkerDAO {
 		return followerList;
 	}
 	
-	public static List<ConversationBean> loadFollowingConversations(String talkerId) {
-		TalkerBean talker = getById(talkerId);
-		
+	public static List<ConversationBean> loadFollowingConversations(TalkerBean talker) {
 		if (talker == null) {
 			return new ArrayList<ConversationBean>();
 		}
@@ -480,7 +475,7 @@ public class TalkerDAO {
 		//TODO: use DBRef for convos?
 		List<ConversationBean> followingConvoList = new ArrayList<ConversationBean>();
 		for (String convoId : talker.getFollowingConvosList()) {
-			ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+			ConversationBean convo = ConversationDAO.getById(convoId);
 			followingConvoList.add(convo);
 		}
 		

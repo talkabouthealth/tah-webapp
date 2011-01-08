@@ -121,7 +121,7 @@ public class Conversations extends Controller {
 	
 	//start Talk after creating it
 	public static void start(String convoId) {
-    	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+    	ConversationBean convo = ConversationDAO.getById(convoId);
     	notFoundIfNull(convo);
     	
     	NotificationUtils.sendAllNotifications(convo.getId(), null);
@@ -129,7 +129,7 @@ public class Conversations extends Controller {
     
     public static void restart(String convoId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+    	ConversationBean convo = ConversationDAO.getById(convoId);
     	notFoundIfNull(convo);
     	
     	ActionDAO.saveAction(new StartConvoAction(talker, convo, ActionType.RESTART_CONVO));
@@ -164,7 +164,7 @@ public class Conversations extends Controller {
     
     public static void delete(String convoId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+    	ConversationBean convo = ConversationDAO.getById(convoId);
     	notFoundIfNull(convo);
     	
     	if ( !(talker.isAdmin() || convo.getTalker().equals(talker)) ) {
@@ -183,7 +183,7 @@ public class Conversations extends Controller {
     
     public static void flag(String convoId, String reason) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+    	ConversationBean convo = ConversationDAO.getById(convoId);
     	notFoundIfNull(convo);
     	
 		CommonUtil.flagContent("Conversation/Question", convo, reason, convo.getTopic(), talker);
@@ -214,7 +214,7 @@ public class Conversations extends Controller {
     /* ---------------- Conversation Summary page actions ------------------ */
     public static void updateField(String convoId, String name, String value) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+    	ConversationBean convo = ConversationDAO.getById(convoId);
     	notFoundIfNull(convo);
     	
     	if (name.equalsIgnoreCase("title")) {
@@ -337,7 +337,7 @@ public class Conversations extends Controller {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
     	notFoundIfNull(answer);
-    	ConversationBean convo = ConversationDAO.getByConvoId(answer.getConvoId());
+    	ConversationBean convo = ConversationDAO.getById(answer.getConvoId());
     	
 		CommonUtil.flagContent("Answer/Reply", convo, reason, answer.getText(), talker);
     }
@@ -375,7 +375,7 @@ public class Conversations extends Controller {
     	}
     	
     	if (newVote.isUp()) {
-    		ConversationBean convo = ConversationDAO.getByConvoId(answer.getConvoId());
+    		ConversationBean convo = ConversationDAO.getById(answer.getConvoId());
     		ActionDAO.saveAction(new AnswerVotedAction(talker, convo, answer));
     		
     		//If a "Not Helpful" answer receives a vote, let's make it visible again. 
@@ -451,7 +451,7 @@ public class Conversations extends Controller {
     public static void saveAnswerOrReply(String convoId, String parentId, String text) {
 		TalkerBean _talker = CommonUtil.loadCachedTalker(session);
 		
-		ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+		ConversationBean convo = ConversationDAO.getById(convoId);
 		notFoundIfNull(convo);
 		
 		CommentBean comment = ConversationLogic.createAnswerOrReply(convo, _talker, parentId, text);
@@ -465,7 +465,7 @@ public class Conversations extends Controller {
     
     public static void deleteChatMessage(String convoId, int index) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+    	ConversationBean convo = ConversationDAO.getById(convoId);
     	notFoundIfNull(convo);
     	
     	if (!talker.isAdmin()) {

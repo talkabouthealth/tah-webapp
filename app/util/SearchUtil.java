@@ -83,7 +83,7 @@ public class SearchUtil {
 			Document doc = hits.doc(i);
 			
 			String convoId = doc.get("id");
-			ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+			ConversationBean convo = ConversationDAO.getById(convoId);
 			if (convo == null || convo.isDeleted()) {
 				continue;
 			}
@@ -161,7 +161,7 @@ public class SearchUtil {
 			if (searchedConvo.getId().equals(convoId)) {
 				continue;
 			}
-			ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+			ConversationBean convo = ConversationDAO.getById(convoId);
 //			convo.setComments(CommentsDAO.loadConvoAnswers(convoId));
 			results.add(convo);
 			

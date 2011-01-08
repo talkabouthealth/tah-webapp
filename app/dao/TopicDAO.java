@@ -113,7 +113,6 @@ public class TopicDAO {
 		
 		DBObject query = new BasicDBObject("title", title);
 		DBObject topicDBObject = topicsColl.findOne(query);
-		
 		if (topicDBObject == null) {
 			return null;
 		}
@@ -126,7 +125,6 @@ public class TopicDAO {
 			TopicLogic.addToDefaultParent(topicBean);
 			updateTopic(topicBean);
 		}
-		
 		return topicBean;
 	}
 	
@@ -142,7 +140,6 @@ public class TopicDAO {
 			topic.parseBasicFromDB(topicDBObject);
 			topicsSet.add(topic);
 		}
-		
 		return topicsSet;
 	}
 	
@@ -173,11 +170,4 @@ public class TopicDAO {
 				new BasicDBObject("$inc", new BasicDBObject("views", 1)));
 	}
 	
-//	public static void main(String[] args) {
-//    	String newTag = "thirdtopic";
-//    	TopicBean topic = new TopicBean();
-//    	topic.setTitle(newTag);
-//    	topic.setMainURL(ApplicationDAO.createURLName(newTag));
-//    	TopicDAO.save(topic);
-//	}
 }

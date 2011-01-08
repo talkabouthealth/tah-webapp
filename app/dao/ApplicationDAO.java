@@ -121,13 +121,11 @@ public class ApplicationDAO {
 		if (name != null) {
 			name = name.toLowerCase();
 		}
-		
 		if (Application.RESERVED_WORDS.contains(name)) {
 			return true;
 		}
 		
 		DBCollection namesColl = getCollection(NAMES_COLLECTION);
-		
 		DBObject query = new BasicDBObject("name", name);
 		return namesColl.findOne(query) != null;
 	}

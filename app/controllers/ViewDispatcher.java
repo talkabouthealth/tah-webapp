@@ -200,12 +200,7 @@ public class ViewDispatcher extends Controller {
 		}
 		
 		ConversationDAO.incrementConvoViews(convo.getId());
-		
-		List<Action> activities = ActionDAO.loadLatestByConversation(convo);
-		Date latestActivityTime = null;
-		if (activities.size() > 0) {
-			latestActivityTime = activities.get(0).getTime();
-		}
+		Date latestActivityTime = ActionDAO.getConvoLatestActivity(convo);
 		
 		convo.setComments(CommentsDAO.loadConvoAnswersTree(convo.getId()));
 		boolean userHasAnswer = convo.hasUserAnswer(talker);

@@ -74,9 +74,6 @@ public class TalkerDiseaseDAO {
 		
 		TalkerDiseaseBean talkerDisease = new TalkerDiseaseBean();
 		talkerDisease.setUid(talkerId);
-//		talkerDisease.setStage((String)diseaseDBObject.get("stage"));
-//		talkerDisease.setType((String)diseaseDBObject.get("type"));
-		
 		talkerDisease.setRecurrent((String)diseaseDBObject.get("recur"));
 		talkerDisease.setSymptomDate((Date)diseaseDBObject.get("symp_date"));
 		talkerDisease.setDiagnoseDate((Date)diseaseDBObject.get("diag_date"));

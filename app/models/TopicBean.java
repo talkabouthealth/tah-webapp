@@ -48,7 +48,6 @@ public class TopicBean implements Comparable<TopicBean> {
 	private List<TalkerBean> followers;
 	
 	private List<ConversationBean> conversations;
-	private List<String> conversationsIds;
 	
 	public TopicBean() {
 		super();
@@ -129,9 +128,6 @@ public class TopicBean implements Comparable<TopicBean> {
 		setCreationDate((Date)topicDBObject.get("cr_date"));
 		
 		parseRelatives(topicDBObject);
-		
-		//TODO: load ids and full convos - how to do it better?
-		setConversationsIds(ConversationDAO.loadConversationsIdsByTopic(getId()));
 	}
 	
 	private void parseRelatives(DBObject topicDBObject) {
@@ -286,12 +282,6 @@ public class TopicBean implements Comparable<TopicBean> {
 	}
 	public void setChildren(Set<TopicBean> children) {
 		this.children = children;
-	}
-	public List<String> getConversationsIds() {
-		return conversationsIds;
-	}
-	public void setConversationsIds(List<String> conversationsIds) {
-		this.conversationsIds = conversationsIds;
 	}
 	public boolean isDeleted() {
 		return deleted;

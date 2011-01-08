@@ -104,7 +104,7 @@ public class NotificationUtils {
 	public static void sendTwitterNotifications(String convoId, String restartTalkerId) {
 		//TODO: we must send only 2 notifications per day?
 		
-		ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+		ConversationBean convo = ConversationDAO.getById(convoId);
 		TalkerBean restartTalker = null;
 		if (restartTalkerId != null) {
 			restartTalker = TalkerDAO.getById(restartTalkerId);

@@ -48,22 +48,24 @@ import static util.DBUtil.*;
 
 public class ActionDAO {
 	
-	/*
-- Conversation actions that trigger feeds:
-- Talk/Question started or restarted in a Topic or Conversation that is being followed
-- New answer in a Topic or Conversation that is being followed
-- Summary created or edited in Conversation or Topic that is being followed.
-- Conversation added to a Topic being followed
-
-- Member actions that trigger feeds:
-- Member followed starts/restarts a Talk or asks a Question
-- Member followed joins Conversation
-- Member followed Answers a question
-- Member followed edits or adds a Summary
-- Member followed leaves Comment in their own Journal or another member leaves a comment in their journal
-- Member followed voted for an answer 
-	 */
+	public static final String ACTIVITIES_COLLECTION = "activities";
 	
+	/*
+	 	Personal Conversation Feed:
+		- Conversation actions that trigger feeds:
+		- Talk/Question started or restarted in a Topic or Conversation that is being followed
+		- New answer in a Topic or Conversation that is being followed
+		- Summary created or edited in Conversation or Topic that is being followed.
+		- Conversation added to a Topic being followed
+		
+		- Member actions that trigger feeds:
+		- Member followed starts/restarts a Talk or asks a Question
+		- Member followed joins Conversation
+		- Member followed Answers a question
+		- Member followed edits or adds a Summary
+		- Member followed leaves Comment in their own Journal or another member leaves a comment in their journal
+		- Member followed voted for an answer 
+	 */
 	private static final EnumSet<ActionType> CONVO_FEED_ACTIONS = EnumSet.of(
 			ActionType.START_CONVO, ActionType.RESTART_CONVO, ActionType.JOIN_CONVO,
 			ActionType.ANSWER_CONVO,
@@ -73,11 +75,13 @@ public class ActionDAO {
 			ActionType.PERSONAL_PROFILE_COMMENT, ActionType.PERSONAL_PROFILE_REPLY
 		);
 	
-//	Community Conversation Feed:
-//		- Talk started or Question asked
-//		- Question answered
-//		- Summary added or edited
-//		- Answer received vote
+	/*
+		Community Conversation Feed:
+		- Talk started or Question asked
+		- Question answered
+		- Summary added or edited
+		- Answer received vote
+	*/
 	private static final EnumSet<ActionType> COMMUNITY_CONVO_FEED_ACTIONS = EnumSet.of(
 			ActionType.START_CONVO,
 			ActionType.ANSWER_CONVO, 
@@ -92,9 +96,7 @@ public class ActionDAO {
 			EnumSet.of(ActionType.UPDATE_BIO, ActionType.UPDATE_HEALTH, ActionType.UPDATE_PERSONAL)
 		);
 	
-	public static final String ACTIVITIES_COLLECTION = "activities";
-	
-	public static List<Action> load(String talkerId) {
+	public static List<Action> loadTalkerActions(String talkerId) {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
@@ -112,39 +114,22 @@ public class ActionDAO {
 	}
 	
 	//------------------ Feeds --------------------
-	//FIXME: check again feeds and clear code after updates
-	
-	//It contains items based on actions from topics, questions, 
-	//and other users (including comments) that are followed.
+
 	public static List<Action> loadConvoFeed(TalkerBean talker, String nextActionId) {
 		DBRef currentTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talker.getId());
 		
+		//determine time limit (for paging)
 		Date firstActionTime = null;
 		if (nextActionId != null) {
 			firstActionTime = getActionTime(nextActionId);
 		}
 		
-//		Logger.error("After 1:");
-		
-		//prepare list of followed convos/topics
+		//prepare list of needed convos
 		Set<DBRef> convosDBSet = new HashSet<DBRef>();
 		for (String convoId : talker.getFollowingConvosList()) {
 			convosDBSet.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId));
 		}
-		
-//		Logger.error("After 2:");
-		
-//		for (TopicBean topic : talker.getFollowingTopicsList()) {	
-//			convosDBSet.addAll(ConversationDAO.getConversationsByTopic(topic));
-//		}
 		convosDBSet.addAll(ConversationDAO.getConversationsByTopics(talker.getFollowingTopicsList()));
-//		System.out.println("2S"+convosDBSet.size());
-//		for (DBRef r : convosDBSet) {
-//			System.out.println(r);
-//		}
-		
-		
-//		Logger.error("After preparing data111:");
 		
 		//prepare list of followed talkers
 		Set<DBRef> talkersDBSet = new HashSet<DBRef>();
@@ -159,9 +144,9 @@ public class ActionDAO {
 		}
 		
 		//load actions for this criterias
-		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start()
 			.add("$or", Arrays.asList(
+							//talker should see personal StartConvo and Thoughts actions
 							BasicDBObjectBuilder.start()
 								.add("type", ActionType.START_CONVO.toString())
 								.add("uid", currentTalkerRef)
@@ -190,22 +175,8 @@ public class ActionDAO {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
 		}
 		DBObject query = queryBuilder.get();
-
-		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(FeedsLogic.ACTIONS_PRELOAD).toArray();
 		
-		Logger.error("After request111:");
-		
-		List<Action> activitiesSet = new ArrayList<Action>();
-		for (DBObject actionDBObject : activitiesDBList) {
-//			Action action = actionFromDB(actionDBObject);
-			Action action = new PreloadAction(actionDBObject);
-			activitiesSet.add(action);
-		}
-		
-		Logger.error("After request222:");
-		
-		return activitiesSet;
+		return loadPreloadActions(query);
 	}
 	
 	public static List<Action> loadCommunityFeed(String nextActionId, boolean loggedIn) {
@@ -219,14 +190,13 @@ public class ActionDAO {
 			actionTypes.remove(ActionType.PERSONAL_PROFILE_COMMENT.toString());
 		}
 		
+		//for paging
 		Date firstActionTime = null;
 		if (nextActionId != null) {
 			firstActionTime = getActionTime(nextActionId);
 		}
 		
 		//load actions for this criterias
-		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
-		
 		BasicDBObjectBuilder queryBuilder = 
 			BasicDBObjectBuilder.start()
 				.add("type", new BasicDBObject("$in", actionTypes));
@@ -234,19 +204,8 @@ public class ActionDAO {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
 		}
 		DBObject query = queryBuilder.get();
-			
-//		System.out.println("SSS2"+FeedsLogic.ACTIONS_PRELOAD);
-		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(FeedsLogic.ACTIONS_PRELOAD).toArray();
 		
-		List<Action> activitiesSet = new ArrayList<Action>();
-		for (DBObject actionDBObject : activitiesDBList) {
-//			Action action = actionFromDB(actionDBObject);
-			Action action = new PreloadAction(actionDBObject);
-			activitiesSet.add(action);
-		}
-//		System.out.println("RES: "+nextActionId+", "+activitiesSet.size());
-		return activitiesSet;
+		return loadPreloadActions(query);
 	}
 	
 	public static List<Action> loadTalkerFeed(String talkerId, String nextActionId) {
@@ -260,8 +219,6 @@ public class ActionDAO {
 			actionTypes.add(actionType.toString());
 		}
 		
-		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
-		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		BasicDBObjectBuilder queryBuilder = 
 			BasicDBObjectBuilder.start()
@@ -271,21 +228,11 @@ public class ActionDAO {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
 		}
 		DBObject query = queryBuilder.get();
-			
-		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(FeedsLogic.ACTIONS_PRELOAD).toArray();
 		
-		List<Action> activitiesSet = new ArrayList<Action>();
-		for (DBObject actionDBObject : activitiesDBList) {
-			Action action = new PreloadAction(actionDBObject);
-			activitiesSet.add(action);
-		}
-		return activitiesSet;
+		return loadPreloadActions(query);
 	}
 	
 	public static List<Action> loadLatestByTopic(TopicBean topic, String nextActionId) {
-		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
-		
 		Date firstActionTime = null;
 		if (nextActionId != null) {
 			firstActionTime = getActionTime(nextActionId);
@@ -307,19 +254,26 @@ public class ActionDAO {
 		}
 		DBObject query = queryBuilder.get();
 		
+		return loadPreloadActions(query);
+	}
+	
+	private static List<Action> loadPreloadActions(DBObject query) {
+		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
+		
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(FeedsLogic.ACTIONS_PRELOAD).toArray();
 		
-		List<Action> activitiesSet = new ArrayList<Action>();
+		List<Action> activitiesList = new ArrayList<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {
-//			Action action = actionFromDB(actionDBObject);
 			Action action = new PreloadAction(actionDBObject);
-			activitiesSet.add(action);
+			activitiesList.add(action);
 		}
-		return activitiesSet;
+		return activitiesList;
 	}
 	
-	public static List<Action> loadLatestByConversation(ConversationBean convo) {
+	
+	
+	public static Date getConvoLatestActivity(ConversationBean convo) {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
 		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getId());
@@ -327,14 +281,13 @@ public class ActionDAO {
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
-		List<Action> activitiesList = new ArrayList<Action>();
-		for (DBObject actionDBObject : activitiesDBList) {
-			Action action = actionFromDB(actionDBObject);
-			if (action != null) {
-				activitiesList.add(action);
-			}
+		if (activitiesDBList.size() > 0) {
+			Date latestActivityTime = (Date)activitiesDBList.get(0).get("time");
+			return latestActivityTime;
 		}
-		return activitiesList;
+		else {
+			return null;
+		}
 	}
 	
 	public static Action actionFromDB(DBObject dbObject) {
@@ -351,21 +304,16 @@ public class ActionDAO {
 				return new StartConvoAction(dbObject);
 			case JOIN_CONVO:
 				return new JoinConvoAction(dbObject);
-				
 			case ANSWER_CONVO:
 			case REPLY_CONVO:
 				return new AnswerConvoAction(dbObject);
-				
 			case ANSWER_VOTED:
 				return new AnswerVotedAction(dbObject);
-				
 			case SUMMARY_ADDED:
 			case SUMMARY_EDITED:
 				return new SummaryConvoAction(dbObject);
-				
 			case TOPIC_ADDED:
 				return new TopicAddedAction(dbObject);
-				
 			case GIVE_THANKS:
 				return new GiveThanksAction(dbObject);
 			case FOLLOW_CONVO:
@@ -375,7 +323,6 @@ public class ActionDAO {
 			case PERSONAL_PROFILE_COMMENT:
 			case PERSONAL_PROFILE_REPLY:
 				return new PersonalProfileCommentAction(dbObject);
-				
 			case UPDATE_BIO:
 			case UPDATE_HEALTH:
 			case UPDATE_PERSONAL:

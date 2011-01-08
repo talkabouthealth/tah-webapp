@@ -62,11 +62,9 @@ public class ConversationLogic {
 		convo.setTopic(title);
 		convo.setUid(talker.getId());
 		convo.setTalker(talker);
-		Date currentDate = Calendar.getInstance().getTime();
-		convo.setCreationDate(currentDate);
+		convo.setCreationDate(Calendar.getInstance().getTime());
 		convo.setDetails(details);
 		convo.setTopics(topicsSet);
-
 		String topicURL = ApplicationDAO.createURLName(title);
 		convo.setMainURL(topicURL);
 
@@ -74,7 +72,6 @@ public class ConversationLogic {
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
 		convo.setBitly(BitlyUtil.shortLink(convoURL));
 		
-		//insert new topic into database
 		ConversationDAO.save(convo);
 		
 		String convoChatURL = CommonUtil.generateAbsoluteURL("Talk.talkApp", "convoId", convo.getTid());
@@ -130,14 +127,6 @@ public class ConversationLogic {
 	}
 	
 	public static CommentBean createAnswerOrReply(ConversationBean convo, TalkerBean talker, String parentId, String text) {
-		//Follow convo automatically on answer?
-//		if (!talker.getFollowingConvosList().contains(convo.getId())) {
-//			talker.getFollowingConvosList().add(convo.getId());
-//			TalkerDAO.updateTalker(talker);
-//			ActionDAO.saveAction(new FollowConvoAction(talker, convo));
-//			convo.getFollowers().add(talker);
-//		}
-		
 		CommentBean comment = new CommentBean();
 		parentId = parentId.trim().length() == 0 ? null : parentId;
 		comment.setParentId(parentId);
@@ -197,7 +186,6 @@ public class ConversationLogic {
     			
     			//Just answered a question on TalkAboutHealth: "What are the ..." http://bit.ly/lksa
     			String postText = "Just answered a question on TalkAboutHealth: \"<PARAM>\" ";
-    			
     			if (serviceAccount.getType() == ServiceType.TWITTER) {
     				postText = postText + convo.getBitly();
     				postText = TwitterUtil.prepareTwit(postText, convo.getTopic());

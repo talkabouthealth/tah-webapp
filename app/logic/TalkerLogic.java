@@ -42,7 +42,7 @@ public class TalkerLogic {
 		TalkerLogic.healthItems2TopicsMap = healthItems2TopicsMap;
 	}
 
-
+	//load data for combo boxes on EditProfile page
 	public static List<String> getFieldsData(String fieldName, String talkerType) {
 		String key = fieldName+"|"+talkerType;
 		if (fieldsDataMap.containsKey(key)) {
@@ -114,18 +114,17 @@ public class TalkerLogic {
 		}
 	}
 	
-	//TODO: move to parse? & update name?
 	public static void preloadTalkerInfo(TalkerBean talker) {
 		preloadTalkerInfo(talker, null);
 	}
 	public static void preloadTalkerInfo(TalkerBean talker, String page) {
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-		talker.setActivityList(ActionDAO.load(talker.getId()));
+		talker.setActivityList(ActionDAO.loadTalkerActions(talker.getId()));
 		
 		calculateProfileCompletion(talker, page);
 	}
 	
-	public static void calculateProfileCompletion(TalkerBean talker, String page) {
+	private static void calculateProfileCompletion(TalkerBean talker, String page) {
 		//check what items are completed
 		EnumSet<ProfileCompletion> profileActions = EnumSet.of(ProfileCompletion.BASIC);
 		
@@ -165,7 +164,6 @@ public class TalkerLogic {
 				break;
 			}
 		}
-		
 		if (!talker.getFollowingList().isEmpty()) {
 			profileActions.add(ProfileCompletion.FOLLOW);
 		}
@@ -182,7 +180,7 @@ public class TalkerLogic {
 		}
 		
 		if (page != null) {
-			//depending on page
+			//depending on page we complete some items
 			if (page.equals("profile")) {
 				profileActions.add(ProfileCompletion.UPDATE_PERSONAL);
 			}
@@ -226,7 +224,6 @@ public class TalkerLogic {
 		
 		//No topics should be followed for "What part of the breast did the cancer begin?"
 		//Tumor grade, Level of lymph node involvement,
-		//When did first symptom appear?, When were you first diagnosed?
 		List<String> skipHealthItems = Arrays.asList("beginpart", "tumorgrade", "lymphnodes");
 		
 		List<String> topicNames = new ArrayList<String>();
@@ -276,8 +273,6 @@ public class TalkerLogic {
 			}
 		}
 		
-//		System.out.println("REC1:"+topicNames);
-		
 		for (String possibleTopic : topicNames) {
 			TopicBean topic = TopicDAO.getOrRestoreByTitle(possibleTopic);
 			if (topic != null) {
@@ -291,11 +286,12 @@ public class TalkerLogic {
 		
 		return recommendedTopics;
 	}
+	
 	public static int prepareTalkerAnswers(String talkerId, List<Action> answersFeed) {
 		int numOfTopAnswers = 0;
 		List<CommentBean> allAnswers = CommentsDAO.getTalkerAnswers(talkerId, null);
 		for (CommentBean answer : allAnswers) {
-			ConversationBean convo = ConversationDAO.getByConvoId(answer.getConvoId());
+			ConversationBean convo = ConversationDAO.getById(answer.getConvoId());
 			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
 			
 			if (!convo.getComments().isEmpty() && convo.getComments().get(0).equals(answer)) {
