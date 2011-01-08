@@ -26,6 +26,7 @@ import play.mvc.Controller;
 import play.mvc.With;
 import util.SearchUtil;
 
+//TODO: check search
 public class Search extends Controller {
 	
 	public static void search() throws Exception {
@@ -66,7 +67,7 @@ public class Search extends Controller {
 		List<String> filterIds = null;
 		if (parent != null) {
 			TopicBean parentTopic = TopicDAO.getOrRestoreByTitle(parent);
-			filterIds = TopicLogic.getTopicsTree(parentTopic);
+			filterIds = TopicLogic.getSubTopics(parentTopic);
 		}
 		List<Map<String, String>> results = makeSearch(term, allowedTypes, filterIds);
 		

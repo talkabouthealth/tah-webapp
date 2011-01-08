@@ -28,13 +28,13 @@
 			$('.moreThankYouText').truncatable({ limit: 80, more: '... more', less: true, hideText: '' }); 
    		});
 
-   		//createThankYou(String toTalker, String note)
+		//void createThankYou(String toTalkerId, String note, String tagFile) {
    		function saveThankYouNote() {
    	   		var noteText = $("#thankYouNote").val();
    			$("#thankYouNote").val("");
 
    			$.post("@{Actions.createThankYou()}", 
-  				{ toTalker: '${talker.id}', note: noteText, tagFile: 'publicprofile/thanksThankYou'},
+  				{ toTalkerId: '${talker.id}', note: noteText, tagFile: 'publicprofile/thanksThankYou'},
   				function(html) {
   					//put new thank you item in the list
   					$(html).prependTo($(".thnksarea2"));

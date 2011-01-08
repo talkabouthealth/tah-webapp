@@ -10,11 +10,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.With;
 
 import logic.FeedsLogic;
 import logic.TalkerLogic;
+import logic.TopicLogic;
 import models.ConversationBean;
 import models.TalkerBean;
 import models.TopicBean;
@@ -48,46 +50,15 @@ public class Explore extends Controller {
     		TalkerLogic.preloadTalkerInfo(talker);
     	}
     	
-    	//TwitterUtil.importTweets((String)session.get("twitter_token"), (String)session.get("twitter_token_secret"));
-    	//TwitterUtil.loadMentions();
-    	//FacebookUtil.post("Test cool", (String)session.get("fb_token"));
-    	//FacebookUtil.likeTAH((String)session.get("fb_token"));
-    	//FacebookUtil.importPosts((String)session.get("fb_token"));
-    	
     	List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
-    	
 		render(talker, liveTalks);
     }
     
-    
     public static void browseTopics() {
-    	Set<TopicBean> topics = TopicDAO.loadAllTopics();
-    	Map<String, TopicBean> topicsMap = new HashMap<String, TopicBean>();
-    	for (TopicBean topic : topics) {
-    		topicsMap.put(topic.getId(), topic);
-    	}
-    	
-    	Set<TopicBean> topicsTree = new TreeSet<TopicBean>();
-    	for (TopicBean topic : topics) {
-    		if (topic.getParents() == null || topic.getParents().size() == 0) {
-    			topicsTree.add(topic);
-    			topic.setChildren(buildTree(topic, topicsMap));
-    		}
-    	}
-    	
+    	Set<TopicBean> topicsTree = TopicLogic.getAllTopicsTree();
     	render(topicsTree);
     }
 
-	private static Set<TopicBean> buildTree(TopicBean topic, Map<String, TopicBean> topicsMap) {
-		Set<TopicBean> newChildren = new TreeSet<TopicBean>();
-		for (TopicBean child : topic.getChildren()) {
-			TopicBean newChild = topicsMap.get(child.getId());
-			newChildren.add(newChild);
-			newChild.setChildren(buildTree(newChild, topicsMap));
-		}
-		return newChildren;
-	}
-	
 	public static void searchConversations() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
@@ -100,19 +71,20 @@ public class Explore extends Controller {
 				results = SearchUtil.searchConvo(query);
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				Logger.error(e, "Search Conversations error");
 			}
 		}
 		
 		render(talker, results);
 	}
 
+	// Conversations Feed and popular conversations
 	public static void conversations(String action) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		boolean loggedIn = (talker != null);
 		Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, loggedIn);
 		
-		//- "Popular Conversations" - ordered by page views
+		//"Popular Conversations" - ordered by page views
 		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations();
 		Collections.sort(popularConvos, new Comparator<ConversationBean>() {
 			@Override

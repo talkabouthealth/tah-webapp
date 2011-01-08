@@ -26,6 +26,10 @@ import play.mvc.Controller;
 import util.CommonUtil;
 import util.NotificationUtils;
 
+/**
+ * API for IM bot
+ *
+ */
 public class API extends Controller {
 	
 	private static final String API_PASS = "b6-$2NNs7dq1!p";

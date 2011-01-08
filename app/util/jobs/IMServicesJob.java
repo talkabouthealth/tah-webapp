@@ -4,6 +4,7 @@ import com.tah.im.IMNotifier;
 
 import improject.LoginInfo;
 import improject.IMSession.IMService;
+import play.Logger;
 import play.Play;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
@@ -32,7 +33,12 @@ public class IMServicesJob extends Job {
     		IMNotifier.init(PROD_LOGIN_ARRAY);
     	}
     	else {
-    		IMNotifier.init(DEV_LOGIN_ARRAY);
+    		try {
+    			IMNotifier.init(DEV_LOGIN_ARRAY);
+    		}
+    		catch (Exception e) {
+    			Logger.error(e, "IM initialization in DEV environment.");
+    		}
     	}
     }
  

@@ -54,6 +54,13 @@ import util.EmailUtil.EmailTemplate;
 @With(Secure.class)
 public class Conversations extends Controller {
 	
+	/* ---------- Conversation management actions --------------- */
+	
+	/**
+	 * Create conversation
+	 * @param type QUESTION or CONVERSATION (Chat)
+	 * @param fromPage page where request was made
+	 */
 	public static void create(String type, String title, String details, String topics, String fromPage) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
@@ -71,14 +78,13 @@ public class Conversations extends Controller {
     		}
     	}
     	
-    	//in this case we notify only after new question
+    	//in this case we notify only after new question (for chats - after chat start)
     	boolean notifyTalkers = (convoType == ConvoType.QUESTION);
     	ConversationBean convo = 
     		ConversationLogic.createConvo(convoType, title, talker, details, topicsSet, notifyTalkers);
     	CommonUtil.updateTalker(talker, session);
     	
-    	String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
-    	
+    	//Render needed template to "html" string.
     	String templateName = "";
     	Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
         templateBinding.put("session", Scope.Session.current());
@@ -107,6 +113,7 @@ public class Conversations extends Controller {
     	Map<String, String> jsonData = new HashMap<String, String>();
     	jsonData.put("id", convo.getId());
     	jsonData.put("tid", ""+convo.getTid());
+    	String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
     	jsonData.put("url", convoURL);
     	jsonData.put("html", html);
     	renderJSON(jsonData);
@@ -144,92 +151,45 @@ public class Conversations extends Controller {
     	ConversationDAO.updateConvo(convo);
     }
     
-    //Close LiveTalk
+    //close Live Chat - used by admin
     public static void close(String convoId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	if (!talker.getUserName().equalsIgnoreCase("admin")) {
+    	if (!talker.isAdmin()) {
     		forbidden();
     		return;
     	}
     	
-    	ConversationDAO.closeLiveTalk(convoId);
+    	ConversationDAO.closeLiveChat(convoId);
 	}
+    
+    public static void delete(String convoId) {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
+    	notFoundIfNull(convo);
+    	
+    	if ( !(talker.isAdmin() || convo.getTalker().equals(talker)) ) {
+    		forbidden();
+    		return;
+    	}
+
+    	convo.setDeleted(true);
+    	ConversationDAO.updateConvo(convo);
+    	
+    	//remove related actions
+    	ActionDAO.deleteActionsByConvo(convo);
+    	
+    	renderText("ok");
+    }
     
     public static void flag(String convoId, String reason) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
-    	
     	notFoundIfNull(convo);
     	
 		CommonUtil.flagContent("Conversation/Question", convo, reason, convo.getTopic(), talker);
     }
     
-    //flag answer or reply
-    public static void flagAnswer(String answerId, String reason) {
-    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
-    	notFoundIfNull(answer);
-    	ConversationBean convo = ConversationDAO.getByConvoId(answer.getConvoId());
-    	
-		CommonUtil.flagContent("Answer/Reply", convo, reason, answer.getText(), talker);
-    }
-    
-    public static void vote(String answerId, boolean up) {
-    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
-    	notFoundIfNull(answer);
-    	
-    	//talker cannot vote for his/her answer/reply
-    	if (talker.equals(answer.getFromTalker())) {
-    		forbidden();
-    		return;
-    	}
-    	
-    	Vote newVote = new Vote(talker, up);
-    	int voteScore = answer.getVoteScore();
-    	voteScore = voteScore + (up ? 1 : -1);
-    	
-    	Vote oldVote = answer.getVoteByTalker(talker, answer.getVotes());
-    	if (oldVote != null) {
-    		if (up == oldVote.isUp()) {
-    			//try the same vote - already voted!
-    			renderText("Error");
-    			return;
-    		}
-    		else {
-    			//remove previous vote from score
-    			voteScore = voteScore + (oldVote.isUp() ? -1 : 1);
-    		}
-    		answer.getVotes().remove(oldVote);
-    	}
-    	
-    	if (newVote.isUp()) {
-    		ConversationBean convo = ConversationDAO.getByConvoId(answer.getConvoId());
-    		ActionDAO.saveAction(new AnswerVotedAction(talker, convo, answer));
-    		
-    		//If a "Not Helpful" answer receives a vote, let's make it visible again. 
-    		//But also send an email to "support@talkabouthealth.com" add a comment
-    		if (answer.isNotHelpful()) {
-    			answer.setNotHelpful(false);
-        		CommonUtil.flagContent("Answer", convo, "User voted up for this 'Not Helpful' answer", answer.getText(), talker);
-    		}
-    	}
-    	
-    	answer.getVotes().add(newVote);
-    	answer.setVoteScore(voteScore);
-    	CommentsDAO.updateConvoAnswer(answer);
-    	
-    	Set<Vote> _votes = answer.getUpVotes();
-    	render("tags/convo/answerVotesInfo.html", _votes);
-    }
-    
-    //for Dashboard
-    public static void lastTopicId() {
-    	String lastConvoId = ConversationDAO.getLastConvoId();
-    	renderText(lastConvoId);
-    }
-    
-    //follow or unfollow convo
+	//follow or unfollow convo
     public static void follow(String convoId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
@@ -249,6 +209,9 @@ public class Conversations extends Controller {
     	renderText(nextAction);
     }
     
+    
+    
+    /* ---------------- Conversation Summary page actions ------------------ */
     public static void updateField(String convoId, String name, String value) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
@@ -308,7 +271,6 @@ public class Conversations extends Controller {
     		if (todo.equalsIgnoreCase("add")) {
     			//possible comma-separated list of topics
     			String[] valueArr = value.split(",\\s*");
-    			System.out.println(value+" : "+Arrays.toString(valueArr));
     			
     			StringBuilder htmlToRender = new StringBuilder();
     			for (String topicName : valueArr) {
@@ -367,23 +329,69 @@ public class Conversations extends Controller {
     	}
     }
     
-    public static void delete(String convoId) {
+    
+    /* ---------------------- Answer related actions --------------------- */
+    
+  //flag answer or reply
+    public static void flagAnswer(String answerId, String reason) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
-    	notFoundIfNull(convo);
+    	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
+    	notFoundIfNull(answer);
+    	ConversationBean convo = ConversationDAO.getByConvoId(answer.getConvoId());
     	
-    	if ( !("admin".equalsIgnoreCase(talker.getUserName()) || convo.getTalker().equals(talker))) {
+		CommonUtil.flagContent("Answer/Reply", convo, reason, answer.getText(), talker);
+    }
+    
+    /**
+     * Vote up or down for the anwer
+     */
+    public static void vote(String answerId, boolean up) {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
+    	notFoundIfNull(answer);
+    	
+    	//talker cannot vote for his/her answer/reply
+    	if (talker.equals(answer.getFromTalker())) {
     		forbidden();
     		return;
     	}
-
-    	convo.setDeleted(true);
-    	ConversationDAO.updateConvo(convo);
     	
-    	//remove related actions
-    	ActionDAO.deleteActionsByConvo(convo);
+    	Vote newVote = new Vote(talker, up);
+    	int voteScore = answer.getVoteScore();
+    	voteScore = voteScore + (up ? 1 : -1);
     	
-    	renderText("ok");
+    	Vote oldVote = answer.getVoteByTalker(talker, answer.getVotes());
+    	if (oldVote != null) {
+    		if (up == oldVote.isUp()) {
+    			//try the same vote - already voted!
+    			renderText("Error");
+    			return;
+    		}
+    		else {
+    			//remove previous vote from score
+    			voteScore = voteScore + (oldVote.isUp() ? -1 : 1);
+    		}
+    		answer.getVotes().remove(oldVote);
+    	}
+    	
+    	if (newVote.isUp()) {
+    		ConversationBean convo = ConversationDAO.getByConvoId(answer.getConvoId());
+    		ActionDAO.saveAction(new AnswerVotedAction(talker, convo, answer));
+    		
+    		//If a "Not Helpful" answer receives a vote, let's make it visible again. 
+    		//But also send an email to "support@talkabouthealth.com" add a comment
+    		if (answer.isNotHelpful()) {
+    			answer.setNotHelpful(false);
+        		CommonUtil.flagContent("Answer", convo, "User voted up for this 'Not Helpful' answer", answer.getText(), talker);
+    		}
+    	}
+    	
+    	answer.getVotes().add(newVote);
+    	answer.setVoteScore(voteScore);
+    	CommentsDAO.updateConvoAnswer(answer);
+    	
+    	Set<Vote> _votes = answer.getUpVotes();
+    	render("tags/convo/answerVotesInfo.html", _votes);
     }
     
     public static void updateAnswer(String answerId, String todo, String newText) {
@@ -454,6 +462,7 @@ public class Conversations extends Controller {
 		render("tags/convo/convoCommentsTree.html", _commentsList, _level, _talker);
 	}
     
+    
     public static void deleteChatMessage(String convoId, int index) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	ConversationBean convo = ConversationDAO.getByConvoId(convoId);
@@ -466,6 +475,12 @@ public class Conversations extends Controller {
 
     	ConversationDAO.deleteChatMessage(convo.getId(), index);
     	renderText("ok");
+    }
+    
+	//for Dashboard
+    public static void lastTopicId() {
+    	String lastConvoId = ConversationDAO.getLastConvoId();
+    	renderText(lastConvoId);
     }
     
 }

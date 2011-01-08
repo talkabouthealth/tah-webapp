@@ -282,7 +282,7 @@ public class ConversationDAO {
 	/*
 	 	Used by admin to close an old LiveTalk (which wasn't closed automatically).
 	 */
-	public static void closeLiveTalk(String convoId) {
+	public static void closeLiveChat(String convoId) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
 		DBObject convoObject = BasicDBObjectBuilder.start()

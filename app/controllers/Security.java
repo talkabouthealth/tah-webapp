@@ -18,7 +18,7 @@ public class Security extends Secure.Security {
     
     static boolean check(String profile) {
         if("admin".equals(profile)) {
-        	//Talker with userName "admin" is administrator
+        	//talker with userName "admin" is administrator
             return connected().equals("admin");
         }
         return false;
@@ -50,6 +50,7 @@ public class Security extends Secure.Security {
     	}
     	
     	if (talker.isProf()) {
+    		//used for displaying menu (different for patients/profs)
     		session.put("prof", "true");
     	}
     	

@@ -47,8 +47,6 @@ import util.SearchUtil;
 public class ViewDispatcher extends Controller {
 	
 	public static void view(String name) throws Throwable {
-		Logger.error("Before talker");
-		
 		//first try user
 		TalkerBean talker = TalkerDAO.getByUserName(name);
 		if (talker != null) {
@@ -68,7 +66,6 @@ public class ViewDispatcher extends Controller {
 			return;
 		}
 		
-		Logger.error("Before topic");
 		//last - topic
 		TopicBean topic = TopicDAO.getByURL(name);
 		if (topic != null) {
@@ -99,7 +96,6 @@ public class ViewDispatcher extends Controller {
 	private static void showTalker(TalkerBean talker) throws Throwable {
 		//user should be logged to view Public Profile
 		Secure.checkAccess();
-		
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		
 		if (talker.isSuspended()) {
@@ -125,16 +121,7 @@ public class ViewDispatcher extends Controller {
 			healthItemsMap.put(itemName, healthItem);
 		}
 		
-		Logger.error("After health");
-		
-//		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
-//		talker.setFollowingConvosFullList(TalkerDAO.loadFollowingConversations(talker.getId()));
-		
 		talker.setStartedTopicsList(ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO));
-//		talker.setJoinedTopicsList(ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO));
-		
-		Logger.error("After lists");
-		
 		TalkerLogic.preloadTalkerInfo(talker);
 		
 		boolean notProvidedInfo = false;
@@ -160,6 +147,7 @@ public class ViewDispatcher extends Controller {
 		}
 		
 		//prepare map for Prof Profile
+		//TODO: move to static
 		Map<String, String> profFields = new LinkedHashMap<String, String>();
 		if (talker.isProf()) {
 			profFields.put("credentials", "Credential");
@@ -199,8 +187,6 @@ public class ViewDispatcher extends Controller {
 		int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeed);
 		int numOfAnswers = answersFeed.size();
 		
-		Logger.error("Before rendering");
-		
 		render("PublicProfile/newview.html", talker, disease, talkerDisease, healthItemsMap, 
 				currentTalker, talkerFeed,
 				notProvidedInfo, notViewableInfo, profFields,
@@ -221,8 +207,6 @@ public class ViewDispatcher extends Controller {
 			latestActivityTime = activities.get(0).getTime();
 		}
 		
-//		List<TopicBean> topicsList = TopicDAO.getTopics();
-		
 		convo.setComments(CommentsDAO.loadConvoAnswersTree(convo.getId()));
 		boolean userHasAnswer = convo.hasUserAnswer(talker);
 		
@@ -242,12 +226,10 @@ public class ViewDispatcher extends Controller {
 			talker = CommonUtil.loadCachedTalker(session);
 		}
 		
-		//load latest activities for convos with this topic
-		Logger.error("Bef feed");
-		Set<Action> activities = FeedsLogic.getTopicFeed(topic, null);
-		Logger.error("After feed");
-		
 		TopicDAO.incrementTopicViews(topic.getId());
+		
+		//load latest activities for convos with this topic
+		Set<Action> activities = FeedsLogic.getTopicFeed(topic, null);
 		
 		//- "Popular Conversations" - ordered by page views
 		List<ConversationBean> popularConvos = 
@@ -261,15 +243,11 @@ public class ViewDispatcher extends Controller {
 		
 		//- "Trending Conversations" - ordered by page views in the last two weeks, 
 		//cannot contain conversations in the top 10 of "Popular Conversations" tab
-		//TODO: later - make trending convos
 		List<ConversationBean> trendingConvos = new ArrayList<ConversationBean>();
-		
-		Logger.error("After convolists");
 		
 		//for FB like button
 		//TODO: possibly handle SSL urls also?
 		String currentURL = "http://"+request.host+request.path;
-		System.out.println(currentURL);
 		
 		render("Topics/viewTopic.html", talker, topic, activities, popularConvos, trendingConvos, currentURL);
 	}

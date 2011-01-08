@@ -7,7 +7,7 @@
    			$("#commentUser").html('${talker.userName}');
 
    			$("#followActionImageBtn, #followActionlink").click(function() {
-   	   			$.post("@{Actions.follow()}", 
+   	   			$.post("@{Actions.followTalker()}", 
    	  				{ followingId: '${talker.id}'},
    	  				function(data) {
    	  					$("#followActionlink").html(data);

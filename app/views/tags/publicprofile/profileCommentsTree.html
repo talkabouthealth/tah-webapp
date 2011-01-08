@@ -80,7 +80,7 @@
 	<div class="cb"></div>
 	#{if _level == 1}
 		<div class="commentsreply">
-			#{publicprofile/profileCommentsTree2 commentsList: comment.children, level: (_level+1), showDelete: _showDelete, isFeed: _isFeed /}
+			#{publicprofile/profileCommentsTree commentsList: comment.children, level: (_level+1), showDelete: _showDelete, isFeed: _isFeed /}
 			
 			<div id="reply${comment.id}" class="replytommentbax">
 				<div class="cb"></div>

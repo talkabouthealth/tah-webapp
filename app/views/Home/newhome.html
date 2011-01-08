@@ -114,7 +114,7 @@
 			});
 			$(".followMemberLink").live('click', function() {
 				var memberId = $(this).attr("rel");
-				$.post("@{Actions.follow()}", 
+				$.post("@{Actions.followTalker()}", 
 					{followingId: memberId},
 	  				function(nextAction) {
 	  					if (nextAction === "Follow") {
@@ -146,7 +146,7 @@
    			}
    			text = linkify(text);
 
-   			$.post("@{Actions.saveProfileComment2()}", 
+   			$.post("@{Actions.saveProfileComment()}", 
   				{ parentId: '', text: text, from: 'home'},
   				function(html) {
   					$(html).prependTo($("#convoFeedList"));

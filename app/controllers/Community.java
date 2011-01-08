@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import logic.FeedsLogic;
@@ -17,6 +18,7 @@ import models.CommentBean;
 import models.ConversationBean;
 import models.TalkerBean;
 import models.actions.Action;
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
@@ -42,8 +44,8 @@ public class Community extends Controller {
 		//get only Top 3 by answers
 		Collections.sort(communityMembers, new Comparator<TalkerBean>() {
 			@Override
-			public int compare(TalkerBean o1, TalkerBean o2) {
-				return o2.getNumOfConvoAnswers()-o1.getNumOfConvoAnswers();
+			public int compare(TalkerBean talker1, TalkerBean talker2) {
+				return talker2.getNumOfConvoAnswers()-talker1.getNumOfConvoAnswers();
 			}
 		});
 		if (communityMembers.size() > 3) {
@@ -56,12 +58,7 @@ public class Community extends Controller {
 		render(talker, liveTalks, communityConvoFeed, communityMembers);
 	}
 	
-//	For the 4 tabs:
-//		Active Users - Latest users to log in
-//		New Users - Latest users to sign up
-//		Like You - we will implement logic later, I think we can use Lucene or Sphinx
-//		Search - implement later with Lucene or Sphinx
-	
+//	Tabs:
 //	1) Active
 //	2) New
 //	3) Search
@@ -80,6 +77,7 @@ public class Community extends Controller {
 		Set<TalkerBean> activeTalkers = ApplicationDAO.getActiveTalkers(oneDayBeforeNow.getTime());
 		Set<TalkerBean> newTalkers = ApplicationDAO.getNewTalkers();
 		
+		//check if search is performed now
 		String query = params.get("query");
 		List<TalkerBean> results = null;
 		if (query != null) {
@@ -89,10 +87,11 @@ public class Community extends Controller {
 				results = SearchUtil.searchTalker(query);
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				Logger.error(e, "Talker search on Browser Members page.");
 			}
 		}
 		
+		//Move members to particular tabs based on member's connection
 		Map<String, Set<TalkerBean>> members = new LinkedHashMap<String, Set<TalkerBean>>();
 		members.put("Experts", new LinkedHashSet<TalkerBean>());
 		members.put("Patients", new LinkedHashSet<TalkerBean>());
@@ -111,9 +110,9 @@ public class Community extends Controller {
 		
 		Set<TalkerBean> allActiveTalkers = ApplicationDAO.getActiveTalkers(null);
 		for (TalkerBean talker : allActiveTalkers) {
-			for (String memberType : memberTypes.keySet()) {
-				if (memberTypes.get(memberType).contains(talker.getConnection())) {
-					members.get(memberType).add(talker);
+			for (Entry<String, List<String>> memberTypeEntry : memberTypes.entrySet()) {
+				if (memberTypeEntry.getValue().contains(talker.getConnection())) {
+					members.get(memberTypeEntry.getKey()).add(talker);
 				}
 			}
 		}

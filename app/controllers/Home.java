@@ -29,6 +29,7 @@ import play.cache.Cache;
 import play.data.validation.Validation.ValidationResult;
 import play.i18n.Messages;
 import play.mvc.Controller;
+import play.mvc.Scope.Session;
 import play.mvc.With;
 import util.CommonUtil;
 import util.EmailUtil;
@@ -49,50 +50,10 @@ public class Home extends Controller {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
-		
-		Logger.error("Start Convo Feed");
-//		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
-//		Set<Action> communityFeed = null;
-////		Logger.error(convoFeed.size()+" :::::: "+FeedsLogic.FEEDS_PER_PAGE);
-//		if (convoFeed.size() < FeedsLogic.FEEDS_PER_PAGE) {
-//			communityFeed = FeedsLogic.getCommunityFeed(null);
-//		}
-		
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
     	
-		
-		boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
-		//not show if twitter account or fb account has 'notify' option
-		ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
-		if (twitterAccount != null && twitterAccount.isTrue("NOTIFY")) {
-			hasNoIMAccounts = false;
-		}
-		ServiceAccountBean fbAccount = talker.serviceAccountByType(ServiceType.FACEBOOK);
-		if (fbAccount != null && fbAccount.isTrue("NOTIFY")) {
-			hasNoIMAccounts = false;
-		}
-		boolean isAdmin = "admin".equals(Security.connected());
-		boolean showIMPopup = (session.get("justregistered") != null && hasNoIMAccounts && !isAdmin);
-		if (showIMPopup) {
-			//pre-populate the fields based on user entries
-			
-			//If user signs up via twitter, populate the Username field with the twitter username 
-			//and automatically have the Twitter option checked
-			System.out.println(talker.getAccountType());
-			if (talker.getAccountType() != null && talker.getAccountType().equalsIgnoreCase("twitter")) {
-				talker.setIm("Twitter");
-				talker.setImUsername(talker.getAccountName());
-			}
-			else {
-				//if user provides an email from gmail, windows live, or yahoo - 
-				//automatically populate the username with that item and check the option for what they provided
-				IMAccountBean imInfo = CommonUtil.parseIMAccount(talker.getEmail());
-				talker.setIm(imInfo.getService());
-				talker.setImUsername(imInfo.getUserName());
-			}
-		}
-		session.remove("justregistered");
+    	boolean showIMPopup = prepareIMPopup(session, talker);
 		
 		TalkerLogic.preloadTalkerInfo(talker);
 		
@@ -165,17 +126,53 @@ public class Home extends Controller {
 				recommendedTopics, similarMembers, experts, recommendedConvos);
     }
     
-    public static void conversationFeed() {
+    private static boolean prepareIMPopup(Session session, TalkerBean talker) {
+    	boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
+		//not show if twitter account or fb account has 'notify' option
+		ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
+		if (twitterAccount != null && twitterAccount.isTrue("NOTIFY")) {
+			hasNoIMAccounts = false;
+		}
+		ServiceAccountBean fbAccount = talker.serviceAccountByType(ServiceType.FACEBOOK);
+		if (fbAccount != null && fbAccount.isTrue("NOTIFY")) {
+			hasNoIMAccounts = false;
+		}
+		
+		boolean showIMPopup = (session.get("justregistered") != null && hasNoIMAccounts && !talker.isAdmin());
+		if (showIMPopup) {
+			//If user signs up via twitter, populate the Username field with the twitter username 
+			//and automatically have the Twitter option checked
+			if (talker.getAccountType() != null && talker.getAccountType().equalsIgnoreCase("twitter")) {
+				talker.setIm("Twitter");
+				talker.setImUsername(talker.getAccountName());
+			}
+			else {
+				//if user provides an email from gmail, windows live, or yahoo - 
+				//automatically populate the username with that item and check the option for what they provided
+				IMAccountBean imInfo = CommonUtil.parseIMAccount(talker.getEmail());
+				talker.setIm(imInfo.getService());
+				talker.setImUsername(imInfo.getUserName());
+			}
+		}
+		session.remove("justregistered");
+		
+		return showIMPopup;
+	}
+
+	public static void conversationFeed() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
     	Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
-    	
 		TalkerLogic.preloadTalkerInfo(talker);
 		
 		render(talker, convoFeed, communityFeed);
     }
-    
+
+	/**
+	 * Used by "More" button in different feeds.
+	 * @param afterActionId load actions after given action
+	 */
     public static void feedAjaxLoad(String feedType, String afterActionId, String talkerName) {
     	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
     	boolean loggedIn = (_talker != null);

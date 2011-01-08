@@ -90,17 +90,6 @@ function sendVerificationLink(link) {
 	return false;
 }
 
-//createThankYou(String toTalker, String note)
-function sendThankYou() {
-	var noteText = $("#thankYouListNote").val();
-	$.fancybox.close();
-	$("#thankYouListNote").val("");
-
-	$.post("/actions/createThankYou", 
-		{ toTalker: selectedTalkerId, note: noteText}
-	);
-}
-
 $(document).ready(function() {
 	
 	$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
@@ -117,7 +106,7 @@ $(document).ready(function() {
 		function() {
 			var followingId = $(this).attr("rel");
 			var followLink = $(this);
-  			$.post("/actions/follow", 
+  			$.post("/actions/followTalker", 
  				{ followingId: followingId },
  				function(data) {
  					followLink.html(data);
@@ -434,13 +423,14 @@ function showPopupForm (type, talkerId, userName) {
 	return false;
 }
 
+//void createThankYou(String toTalkerId, String note, String tagFile) {
 function saveThankYou() {
 	var noteText = $("#thankYouListNote").val();
 	hideAll();
 	$("#thankYouListNote").val("");
 
 	$.post("/actions/createThankYou", 
-		{ toTalker: selectedTalkerId, note: noteText}
+		{ toTalkerId: selectedTalkerId, note: noteText}
 	);
 	return false;
 }
@@ -450,7 +440,7 @@ function sendProfileComment() {
 	hideAll();
 	$("#commentText").val("");
 
-	$.post("/actions/saveProfileComment2", 
+	$.post("/actions/saveProfileComment", 
 		{ profileTalkerId: selectedTalkerId, parentId: '', text: commentText}
 	);
 }
@@ -585,7 +575,7 @@ function saveProfileComment(parentId) {
 	var commentText = $("#replytext"+parentId).val();
 	$("#replytext"+parentId).val("");
 
-	$.post("/actions/saveProfileComment2", 
+	$.post("/actions/saveProfileComment", 
 		{ parentId: parentId, text: commentText},
 		function(html) {
 			$("#firstcommentmessage").hide();

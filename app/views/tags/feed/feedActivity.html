@@ -20,13 +20,13 @@
 		
 		#{if _activity.profileComment}
 			#{if _activity.otherTalker.equals(_activity.talker)}
-				#{publicprofile/profileCommentsTree2 commentsList: [_activity.profileComment], level: 1, showDelete: false, isFeed: true /}
+				#{publicprofile/profileCommentsTree commentsList: [_activity.profileComment], level: 1, showDelete: false, isFeed: true /}
 			#{/if}
 			#{else}
 				<div class="jointxtlink1">
 					${_activity.toHTML(session.username != null).raw()}
 				</div>
-				#{publicprofile/profileCommentsTree2 commentsList: [_activity.profileComment], level: 1, showDelete: false, isFeed: true /}
+				#{publicprofile/profileCommentsTree commentsList: [_activity.profileComment], level: 1, showDelete: false, isFeed: true /}
 			#{/else}
 		#{/if}
 		#{else}

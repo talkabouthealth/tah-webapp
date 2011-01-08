@@ -42,6 +42,21 @@ import dao.TopicDAO;
 @With(Secure.class)
 public class Topics extends Controller {
 	
+	//----------- Manage topic page
+	public static void manage(String name) {
+    	TopicBean topic = TopicDAO.getByURL(name);
+    	if (topic != null) {
+			if (!topic.getMainURL().equals(name)) {
+				//we come here by old url - redirect to main
+				redirect("/"+topic.getMainURL()+"/manage");
+			}
+    	}
+    	notFoundIfNull(topic);
+
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		render(talker, topic);
+    }
+	
 	//follow or unfollow topic
     public static void follow(String topicId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
@@ -60,22 +75,6 @@ public class Topics extends Controller {
     	
     	CommonUtil.updateTalker(talker, session);
     	renderText(nextAction);
-    }
-    
-    public static void manage(String name) {
-    	TopicBean topic = TopicDAO.getByURL(name);
-    	if (topic != null) {
-			if (!topic.getMainURL().equals(name)) {
-				//we come here by old url - redirect to main
-				redirect("/"+topic.getMainURL()+"/manage");
-			}
-    	}
-    	notFoundIfNull(topic);
-
-    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	System.out.println(talker.getHiddenHelps());
-    	
-		render(talker, topic);
     }
     
     public static void updateField(String topicId, String name, String value) {
@@ -189,7 +188,6 @@ public class Topics extends Controller {
         	
     		parentTopic.getChildren().remove(topic);
     		TopicDAO.updateTopic(parentTopic);
-    		
     		TopicLogic.addToDefaultParent(topic);
     	}
     	
@@ -281,7 +279,6 @@ public class Topics extends Controller {
 			notFound();
 			return;
 		}
-		
 		if (talker.equals(toTalkerBean)) {
 			forbidden();
 			return;

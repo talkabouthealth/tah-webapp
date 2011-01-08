@@ -79,7 +79,7 @@ public class Application extends Controller {
     	}
     	
     	if(validation.hasErrors()) {
-            params.flash(); // add http parameters to the flash scope
+            params.flash();
             validation.keep();
             forgotPassword();
             return;
@@ -89,7 +89,6 @@ public class Application extends Controller {
 		SecureRandom random = new SecureRandom();
 	    String newPassword = new BigInteger(60, random).toString(32);
 	    
-	    //change password for this user
 	    user.setPassword(CommonUtil.hashPassword(newPassword));
 	    TalkerDAO.updateTalker(user);
 		
@@ -123,7 +122,6 @@ public class Application extends Controller {
     		additionalSettings = ServiceAccountBean.settingsNamesByType(type);
     	}
     	
-    	
     	render(additionalSettings);
     }
     
@@ -134,8 +132,6 @@ public class Application extends Controller {
     	
 		validateTalker(talker);
 		
-//		System.out.println(validation.errorsMap());
-				
         if(validation.hasErrors()) {
             params.flash(); // add http parameters to the flash scope
             validation.keep(); // keep the errors for the next request
@@ -146,10 +142,11 @@ public class Application extends Controller {
         prepareTalker(talker, session);
         
         if (!TalkerDAO.save(talker)) {
-        	params.flash(); // add http parameters to the flash scope
-            validation.keep(); // keep the errors for the next request
-        	flash.error("Sorry, unknown error.");
-        	System.err.println("Error while saving talker info in DB");
+        	params.flash();
+            validation.keep();
+        	flash.error("Sorry, unknown error. Please contact support.");
+        	Logger.error("Error during signup. User: "+talker.getEmail());
+        	
         	signup();
         	return;
 		}
@@ -185,6 +182,16 @@ public class Application extends Controller {
     }
     
     private static void validateTalker(TalkerBean talker) {
+		if (!validation.hasError("talker.userName")) {
+			boolean nameNotExists = !ApplicationDAO.isURLNameExists(talker.getUserName());
+			validation.isTrue(nameNotExists).message("username.exists");
+		}
+		if (!validation.hasError("talker.email")) {
+			TalkerBean otherTalker = TalkerDAO.getByEmail(talker.getEmail());
+			validation.isTrue(otherTalker == null).message("email.exists");
+		}
+		
+		// Validation for old fields (used earlier) - might be useful later
 //		Date dateOfBirth = CommonUtil.parseDate(talker.getDobMonth(), talker.getDobDay(), talker.getDobYear());
 //		if (dateOfBirth != null) {
 //			validation.past(dateOfBirth);
@@ -194,14 +201,6 @@ public class Application extends Controller {
 //			validation.required(dateOfBirth).message("Date of Birth is incorrect");
 //		}
 		
-		if (!validation.hasError("talker.userName")) {
-			boolean nameNotExists = !ApplicationDAO.isURLNameExists(talker.getUserName());
-			validation.isTrue(nameNotExists).message("username.exists");
-		}
-		if (!validation.hasError("talker.email")) {
-			TalkerBean otherTalker = TalkerDAO.getByEmail(talker.getEmail());
-			validation.isTrue(otherTalker == null).message("email.exists");
-		}
 //		if (!validation.hasError("talker.password")) {
 //			validation.isTrue(talker.getPassword().equals(talker.getConfirmPassword())).message("password.different");
 //		}
@@ -255,7 +254,7 @@ public class Application extends Controller {
 //        }
         
         /*
-         	TODO: later - better to use Enums (these settings are from the first prototype version)
+         	TODO: later - better to use Enum (these settings are from the first prototype version)
          	Default notification settings:
 			- 2 to 5 times per day
 			- whenever I am online
@@ -265,11 +264,7 @@ public class Application extends Controller {
         talker.setNtime(1);
         talker.setCtype(TalkerBean.CONVERSATIONS_TYPES_ARRAY);
         
-        /*
-         	By default all sections should be checked:
-        */
         EnumSet<ProfilePreference> defaultPreferences = 
-//        	EnumSet.allOf(ProfilePreference.class);
         	EnumSet.complementOf(
         		EnumSet.of(
     				ProfilePreference.PERSONAL_INFO,
@@ -288,7 +283,7 @@ public class Application extends Controller {
         //code for email validation
         talker.setVerifyCode(CommonUtil.generateVerifyCode());
         
-        //professional connections are unverified
+        //professional connections are unverified by default
         if (TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.getConnection())) {
         	talker.setConnectionVerified(false);
         }
@@ -296,16 +291,6 @@ public class Application extends Controller {
         	talker.setConnectionVerified(true);
         }
 	}
-	
-	/**
-	 * Redirects top panel to given url,
-	 * is used during OAuth 
-	 * @param url
-	 */
-	public static void redirectPage(String url) {
-		render(url);
-	}
-
 	
 	/* ----------------- Contact Us ------------------------- */
 	public static void contactus() {
@@ -336,7 +321,7 @@ public class Application extends Controller {
     }
     
     
-    /* -------------------- Email signup (for notifications & updates) ------------------- */
+    /* -------------------- Email saving/signup (for notifications & updates) ------------------- */
     public static void updatesEmail() {
     	render();
     }
@@ -347,7 +332,6 @@ public class Application extends Controller {
     		updatesEmail();
             return;
         }
-    	
     	ApplicationDAO.saveEmail(email);
     	
     	flash.success("ok");
@@ -355,13 +339,22 @@ public class Application extends Controller {
     }
     
     
+    /* ---------- Other useful methods ------------- */
+    
+    /**
+	 * Redirects parent page to given url, is used during OAuth 
+	 * @param url
+	 */
+	public static void redirectPage(String url) {
+		render(url);
+	}
+    
     public static void suspendedAccount() {
     	render();
     }
     
     public static void verifyEmail(String verifyCode) throws Throwable {
 		notFoundIfNull(verifyCode);
-		
 		TalkerBean talker = TalkerDAO.getByVerifyCode(verifyCode);
 		notFoundIfNull(talker);
 		
@@ -380,6 +373,7 @@ public class Application extends Controller {
 			Profile.edit(true);
 		}
 		else {
+			//not-authenticated users we redirect to special login page
 			TalkerDAO.updateTalker(talker);
 			
 			flash.put("verifiedEmail", true);

@@ -36,13 +36,19 @@ import dao.CommentsDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
 
+/**
+ * Different back-end for Ajax methods 
+ */
 @With(Secure.class)
 public class Actions extends Controller {
 	
-	public static void createThankYou(String toTalker, String note, String tagFile) {
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		TalkerBean toTalkerBean = TalkerDAO.getById(toTalker);
-		if (talker.equals(toTalkerBean)) {
+	/**
+	 * @param tagFile tag template file that is used for response
+	 */
+	public static void createThankYou(String toTalkerId, String note, String tagFile) {
+		TalkerBean fromTalker = CommonUtil.loadCachedTalker(session);
+		TalkerBean toTalker = TalkerDAO.getById(toTalkerId);
+		if (fromTalker.equals(toTalker)) {
 			forbidden();
 			return;
 		}
@@ -50,17 +56,17 @@ public class Actions extends Controller {
 		ThankYouBean thankYouBean = new ThankYouBean();
 		thankYouBean.setTime(new Date());
 		thankYouBean.setNote(note);
-		thankYouBean.setFromTalker(talker);
-		thankYouBean.setTo(toTalker);
+		thankYouBean.setFromTalker(fromTalker);
+		thankYouBean.setTo(toTalkerId);
 		TalkerDAO.saveThankYou(thankYouBean);
 		
-		ActionDAO.saveAction(new GiveThanksAction(talker, toTalkerBean));
+		ActionDAO.saveAction(new GiveThanksAction(fromTalker, toTalker));
 		
 		Map<String, String> vars = new HashMap<String, String>();
-		vars.put("other_talker", talker.getUserName());
+		vars.put("other_talker", fromTalker.getUserName());
 		vars.put("thankyou_text", thankYouBean.getNote());
 		NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_THANKYOU, 
-				toTalkerBean, vars);
+				toTalker, vars);
 		
 		//render html of new comment using tag - different for PublicProfile and ThankYous page
 		ThankYouBean _thankYou = thankYouBean;
@@ -70,7 +76,10 @@ public class Actions extends Controller {
 		render("tags/"+tagFile+".html", _thankYou);
 	}
 	
-	public static void follow(String followingId) {
+	/**
+	 * Follow or unfollow given talker
+	 */
+	public static void followTalker(String followingId) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		TalkerBean followingTalker = TalkerDAO.getById(followingId);
 		
@@ -85,7 +94,7 @@ public class Actions extends Controller {
 		
 		//Text for the follow link after this action
 		if (follow) {
-			//Follow notifications
+			//follow notifications
 			ActionDAO.saveAction(new FollowTalkerAction(talker, followingTalker));
 			
 			Map<String, String> vars = new HashMap<String, String>();
@@ -101,12 +110,13 @@ public class Actions extends Controller {
 	}
 	
 	/**
-	 * Version for new design - returns other html to caller
+	 * Save thought/reply in given profile
 	 * @param profileTalkerId
-	 * @param parentId
+	 * @param parentId Id of the parent thought (for replies) or null
 	 * @param text
+	 * @param from page where request was made
 	 */
-	public static void saveProfileComment2(String profileTalkerId, String parentId, String text, String from) {
+	public static void saveProfileComment(String profileTalkerId, String parentId, String text, String from) {
 		CommentBean comment = saveProfileCommentInternal(profileTalkerId, parentId, text);
 		
 		if (from != null && from.equals("home")) {
@@ -115,26 +125,25 @@ public class Actions extends Controller {
     		render("tags/feed/feedActivity.html", _talker, _activity);
 		}
 		else {
-			//render html of new comment using tag
 			List<CommentBean> _commentsList = Arrays.asList(comment);
 			int _level = (comment.getParentId() == null ? 1 : 2);
 			boolean _showDelete = false;
 			boolean _isFeed = false;
-			render("tags/publicprofile/profileCommentsTree2.html", _commentsList, _level, _showDelete, _isFeed);
+			render("tags/publicprofile/profileCommentsTree.html", _commentsList, _level, _showDelete, _isFeed);
 		}
 	}
 	
-	
+	//TODO: move to logic?
 	private static CommentBean saveProfileCommentInternal(String profileTalkerId, String parentId, String text) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
+		//find profile talker by parent thought or given talker id
 		if (parentId != null && parentId.length() != 0) {
 			CommentBean parentAnswer = CommentsDAO.getProfileCommentById(parentId);
 			if (parentAnswer != null) {
 				profileTalkerId = parentAnswer.getProfileTalkerId();
 			}
 		}
-		
 		TalkerBean profileTalker = null;
 		if (profileTalkerId == null) {
 			profileTalker = talker;
@@ -146,27 +155,31 @@ public class Actions extends Controller {
 		notFoundIfNull(profileTalker);
 		
 		CommentBean comment = new CommentBean();
-		comment.setParentId(parentId.trim().length() == 0 ? null : parentId);
+		if (parentId == null || parentId.trim().length() == 0) {
+			comment.setParentId(null);
+		}
+		else {
+			comment.setParentId(parentId);
+		}
 		comment.setProfileTalkerId(profileTalkerId);
 		comment.setFromTalker(talker);
 		comment.setText(text);
 		comment.setTime(new Date());
-		
 		CommentsDAO.saveProfileComment(comment);
 		
 		if (comment.getParentId() == null) {
-			//post to personal Thoughts Feed?
+			//post to personal Thoughts?
 			if (talker.equals(profileTalker)) {
 				ActionDAO.saveAction(new PersonalProfileCommentAction(
 						talker, profileTalker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT));
 				
 				for (ServiceAccountBean serviceAccount : talker.getServiceAccounts()) {
-//					Logger.error("SHARE? "+serviceAccount.getType().toString()+" : "+serviceAccount.isTrue("SHARE_FROM_THOUGHTS"));
 					if (!serviceAccount.isTrue("SHARE_FROM_THOUGHTS")) {
 						continue;
 					}
 					
-					Logger.error(serviceAccount.getToken()+" : "+serviceAccount.getTokenSecret());
+					Logger.debug(serviceAccount.getType().toString()+", Share from Thoughts, Info: "+
+							serviceAccount.getToken()+" : "+serviceAccount.getTokenSecret());
 					
 					if (serviceAccount.getType() == ServiceType.TWITTER) {
 						TwitterUtil.makeUserTwit(comment.getText(), 

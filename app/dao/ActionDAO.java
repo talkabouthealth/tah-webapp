@@ -404,7 +404,7 @@ public class ActionDAO {
 		return null;
 	}
 	
-	public static void deleteActionByProfileComment(CommentBean comment) {
+	public static void deleteActionsByProfileComment(CommentBean comment) {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 
 		DBRef commentRef = createRef(CommentsDAO.PROFILE_COMMENTS_COLLECTION, comment.getId());

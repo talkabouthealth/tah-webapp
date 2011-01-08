@@ -49,7 +49,7 @@ import util.CommonUtil;
 public class PublicProfile extends Controller {
 	
 	/**
-	 * 
+	 * ThankYous, Following/Followers
 	 * @param userName
 	 * @param action
 	 * @param from item to start from (used for paging)
@@ -90,6 +90,7 @@ public class PublicProfile extends Controller {
 		render(talker, currentTalker, firstTimeComment);
 	}
 	
+	//TODO: move this to some "ajax" controller?
 	public static void deleteComment(String commentId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	CommentBean comment = CommentsDAO.getProfileCommentById(commentId);
@@ -104,8 +105,7 @@ public class PublicProfile extends Controller {
 		CommentsDAO.updateProfileComment(comment);
 		
 		//remove all actions connected with this comment
-		ActionDAO.deleteActionByProfileComment(comment);
-
+		ActionDAO.deleteActionsByProfileComment(comment);
     	renderText("ok");
     }
 	
@@ -135,21 +135,10 @@ public class PublicProfile extends Controller {
 		notFoundIfNull(talker);
 		
 		TalkerLogic.preloadTalkerInfo(talker);
+		boolean noHealthInfo = TalkerLogic.talkerHasNoHealthInfo(talker);
 		
 		List<Action> answersFeed = new ArrayList<Action>();
 		int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeed);
-		
-//		If user has not filled out their Health Info, also display the message
-		boolean noHealthInfo = false;
-		if (currentTalker.equals(talker)) {
-			EnumSet<ActionType> userActionTypes = EnumSet.noneOf(ActionType.class);
-			for (Action action : talker.getActivityList()) {
-				userActionTypes.add(action.getType());
-			}
-			if (!talker.isProf() && !userActionTypes.contains(ActionType.UPDATE_HEALTH)) {
-				noHealthInfo = true;
-			}
-		}
 		
 		render(talker, currentTalker, answersFeed, numOfTopAnswers, noHealthInfo);
 	}
@@ -167,19 +156,7 @@ public class PublicProfile extends Controller {
 		
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
 		TalkerLogic.preloadTalkerInfo(talker);
-		
-//		If user has not filled out their Health Info, also display the message
-		//TODO: same code? use talkerDisease == null && !talker.isProf() ?
-		boolean noHealthInfo = false;
-		if (currentTalker.equals(talker)) {
-			EnumSet<ActionType> userActionTypes = EnumSet.noneOf(ActionType.class);
-			for (Action action : talker.getActivityList()) {
-				userActionTypes.add(action.getType());
-			}
-			if (!talker.isProf() && !userActionTypes.contains(ActionType.UPDATE_HEALTH)) {
-				noHealthInfo = true;
-			}
-		}
+		boolean noHealthInfo = TalkerLogic.talkerHasNoHealthInfo(talker);
 		
 		/* 
 		 	Ideas for recommended conversations :
@@ -227,9 +204,7 @@ public class PublicProfile extends Controller {
 		}
 		
 		TalkerLogic.preloadTalkerInfo(talker);
-		
 		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
-		
 		List<TopicBean> recommendedTopics = loadRecommendedTopics(talker, talkerDisease, null);
 		
 		render(talker, currentTalker, talkerDisease, recommendedTopics);
@@ -240,7 +215,6 @@ public class PublicProfile extends Controller {
     	TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(_talker.getId());
     	
     	List<TopicBean> _recommendedTopics = loadRecommendedTopics(_talker, talkerDisease, afterId);
-    	
     	render("tags/publicprofile/recommendedTopicsList.html", _recommendedTopics, _talker);
     }
 	
@@ -265,11 +239,9 @@ public class PublicProfile extends Controller {
 					recommendedTopics.add(topic);
 				}
 			}
-			
 			if (topic.getId().equals(afterId)) {
 				canAdd = true;
 			}
-			
 			if (recommendedTopics.size() == numberOfPages) {
 				break;
 			}

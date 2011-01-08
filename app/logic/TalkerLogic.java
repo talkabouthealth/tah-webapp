@@ -13,6 +13,7 @@ import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.HealthItemDAO;
 import dao.TalkerDAO;
+import dao.TalkerDiseaseDAO;
 import dao.TopicDAO;
 
 import util.CommonUtil;
@@ -40,7 +41,6 @@ public class TalkerLogic {
 			Map<String, List<String>> healthItems2TopicsMap) {
 		TalkerLogic.healthItems2TopicsMap = healthItems2TopicsMap;
 	}
-
 
 
 	public static List<String> getFieldsData(String fieldName, String talkerType) {
@@ -333,4 +333,8 @@ public class TalkerLogic {
 		return convosFeed;
 	}
 
+	public static boolean talkerHasNoHealthInfo(TalkerBean talker) {
+		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
+		return (talkerDisease == null && !talker.isProf());
+	}
 }

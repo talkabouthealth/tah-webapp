@@ -56,11 +56,11 @@ import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.Router.ActionDefinition;
 import play.mvc.With;
-import play.ns.nl.captcha.util.ImageUtil;
 import play.templates.JavaExtensions;
 import util.CommonUtil;
 import util.EmailUtil;
 import util.EmailUtil.EmailTemplate;
+import util.ImageUtil;
 import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.DiseaseDAO;
@@ -70,88 +70,71 @@ import dao.TalkerDiseaseDAO;
 import dao.ConversationDAO;
 import dao.TopicDAO;
 
+/**
+ * Different profile actions - profile info, health, notifications, privacy
+ *
+ */
 @With(Secure.class)
 public class Profile extends Controller {
 
     public static void edit(boolean verifiedEmail) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	
 		TalkerLogic.preloadTalkerInfo(talker, "profile");
 		
     	render(talker, verifiedEmail);
     }
 	
 	public static void save(@Valid TalkerBean talker) {
-		flash.put("currentForm", "editForm");
 		TalkerBean oldTalker = CommonUtil.loadCachedTalker(session);
 		
-		//to have default value we use string param
-		String childrenNumStr = talker.getChildrenNumStr();
-		if (childrenNumStr == null || childrenNumStr.trim().length() == 0) {
-			//default value
-			talker.setChildrenNum(-1);
-		}
-		else {
-			int childrenNum = -1;
-			try {
-				childrenNum = Integer.parseInt(childrenNumStr);
-			} catch (NumberFormatException nfe) {}
-			talker.setChildrenNum(childrenNum);
-		}
-		
+		//------- validate
 		String oldUserName = oldTalker.getUserName();
 		if (!oldUserName.equals(talker.getUserName())) {
 			boolean nameNotExists = !ApplicationDAO.isURLNameExists(talker.getUserName());
 			validation.isTrue(nameNotExists).message("username.exists");
 		}
-		
-		if (talker.getKeywords() != null) {
-			talker.setKeywords(CommonUtil.parseCommaSerapatedList(talker.getKeywords().get(0), "Keywords (please separate by commas)"));
-		}
-		
-		Date dateOfBirth = CommonUtil.parseDate(talker.getDobMonth(), talker.getDobDay(), talker.getDobYear());
-		talker.setDob(dateOfBirth);
-//		validation.required(dateOfBirth).message("Please input correct Birth Date");
-		
-		if(validation.hasErrors()) {
-			//prepare info for displaying page
-			talker.setId(oldTalker.getId());
-			talker.setProfInfo(oldTalker.getProfInfo());
-			talker.setHiddenHelps(oldTalker.getHiddenHelps());
-			talker.setProfilePreferences(oldTalker.getProfilePreferences());
-			talker.setFollowingTopicsList(oldTalker.getFollowingTopicsList());
-			talker.setThankYouList(oldTalker.getThankYouList());
-			talker.setFollowingList(oldTalker.getFollowingList());
-			TalkerLogic.preloadTalkerInfo(talker);
-			
-			//flash.success("");
-			//render("@edit", talker);
-			
+		if (validation.hasErrors()) {
 			Error error = validation.errors().get(0);
 			renderText("Error:"+error.message());
             return;
         }
 		
+		//------- parse all info
+		if (talker.getKeywords() != null) {
+			talker.setKeywords(CommonUtil.parseCommaSerapatedList(talker.getKeywords().get(0), "Keywords (please separate by commas)"));
+		}
+		//Default '-1' (because 0 is possible value)
+		int childrenNum = -1;
+		try {
+			childrenNum = Integer.parseInt(talker.getChildrenNumStr());
+		} catch (Exception e) {}
+		talker.setChildrenNum(childrenNum);
+		
+		Date dateOfBirth = CommonUtil.parseDate(talker.getDobMonth(), talker.getDobDay(), talker.getDobYear());
+		talker.setDob(dateOfBirth);
+		
+		//------- save actions
 		if (!StringUtils.equals(oldTalker.getBio(), talker.getBio())) {
 			ActionDAO.saveAction(new UpdateProfileAction(oldTalker, ActionType.UPDATE_BIO));
 		}
+		ActionDAO.saveAction(new UpdateProfileAction(oldTalker, ActionType.UPDATE_PERSONAL));
 		
+		
+		//------- save updated info to the talker
+		oldTalker.setUserName(talker.getUserName());
+		oldTalker.setDob(dateOfBirth);
+		oldTalker.setGender(talker.getGender());
+		oldTalker.setWebpage(talker.getWebpage());
+		oldTalker.setBio(talker.getBio());
+		oldTalker.setCity(talker.getCity());
+		oldTalker.setState(talker.getState());
+		oldTalker.setCountry(talker.getCountry());
+		oldTalker.setZip(talker.getZip());
 		if (oldTalker.isProf()) {
-			oldTalker.setUserName(talker.getUserName());
-			oldTalker.setDob(dateOfBirth);
-			oldTalker.setGender(talker.getGender());
 			oldTalker.setProfStatement(talker.getProfStatement());
-			oldTalker.setWebpage(talker.getWebpage());
-			oldTalker.setBio(talker.getBio());
-			
-			oldTalker.setCity(talker.getCity());
-			oldTalker.setState(talker.getState());
-			oldTalker.setCountry(talker.getCountry());
-			oldTalker.setZip(talker.getZip());
 			
 			Map<String, String> profInfo = new HashMap<String, String>();
-			
-			//parse "pr_"
+			//parse "pr_" fields - proffesional fields
 			Map<String, String> paramsMap = params.allSimple();
 			for (Entry<String, String> param : paramsMap.entrySet()) {
 				if (param.getKey().startsWith("pr_")) {
@@ -165,53 +148,12 @@ public class Profile extends Controller {
 				}
 			}
 			oldTalker.setProfInfo(profInfo);
-			
-			ActionDAO.saveAction(new UpdateProfileAction(oldTalker, ActionType.UPDATE_PERSONAL));
 		}
 		else {
-			
-			//check if any fields were changed
-			if ( !(
-					StringUtils.equals(oldTalker.getGender(), talker.getGender()) &&
-					StringUtils.equals(oldTalker.getCountry(), talker.getCountry()) &&
-					StringUtils.equals(oldTalker.getState(), talker.getState()) &&
-					StringUtils.equals(oldTalker.getCity(), talker.getCity()) &&
-					StringUtils.equals(oldTalker.getMaritalStatus(), talker.getMaritalStatus()) &&
-					oldTalker.getChildrenNum() == oldTalker.getChildrenNum() &&
-					oldTalker.getChildrenAges().equals(talker.getChildrenAges()) &&
-					StringUtils.equals(oldTalker.getWebpage(), talker.getWebpage()) &&
-					oldTalker.getKeywords().equals(talker.getKeywords())
-						)) {
-				ActionDAO.saveAction(new UpdateProfileAction(oldTalker, ActionType.UPDATE_PERSONAL));
-			}
-			
-			oldTalker.setUserName(talker.getUserName());
-//			oldTalker.setEmail(talker.getEmail());
-//			oldTalker.setFirstName(talker.getFirstName());
-//			oldTalker.setLastName(talker.getLastName());
-			oldTalker.setDob(dateOfBirth);
-			oldTalker.setGender(talker.getGender());
 			oldTalker.setMaritalStatus(talker.getMaritalStatus());
-			oldTalker.setConnection(talker.getConnection());
-			oldTalker.setCity(talker.getCity());
-			oldTalker.setState(talker.getState());
-			oldTalker.setCountry(talker.getCountry());
 			oldTalker.setChildrenNum(talker.getChildrenNum());
-			oldTalker.setZip(talker.getZip());
-			oldTalker.setWebpage(talker.getWebpage());
-			oldTalker.setBio(talker.getBio());
 			oldTalker.setChildrenAges(talker.getChildrenAges());
-			oldTalker.setKeywords(talker.getKeywords());
-			
-//			if (!oldEmail.equals(talker.getEmail())) {
-//				//send verification email
-//				oldTalker.setVerifyCode(CommonUtil.generateVerifyCode());
-//				
-//				Map<String, String> vars = new HashMap<String, String>();
-//				vars.put("username", oldTalker.getUserName());
-//				vars.put("verify_code", oldTalker.getVerifyCode());
-//				EmailUtil.sendEmail(EmailTemplate.VERIFICATION, oldTalker.getEmail(), vars, null, false);
-//			}
+			oldTalker.setKeywords(talker.getKeywords());			
 		}
 		
 		CommonUtil.updateTalker(oldTalker, session);
@@ -219,11 +161,6 @@ public class Profile extends Controller {
 			session.put("username", talker.getUserName());
 			ApplicationDAO.createURLName(talker.getUserName());
 		}
-		
-//		if (!StringUtils.equals(oldTalker.getConnection(), talker.getConnection())) {
-//			//check if new connection is professional and unverify it
-//			oldTalker.setConnectionVerified(false);
-//		}
 		
 		renderText("ok");
 	}
@@ -241,7 +178,6 @@ public class Profile extends Controller {
 		else {
 			session.remove("prof");
 		}
-		
 		renderText("ok");
 	}
 	
@@ -253,31 +189,6 @@ public class Profile extends Controller {
 		CommonUtil.updateTalker(talker, session);
 		
 		renderText("ok");
-//		flash.success("ok");
-//		render("@edit", talker);
-	}
-	
-	public static void changePassword(String curPassword, String newPassword, String confirmPassword) {
-		flash.put("currentForm", "changePasswordForm");
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
-		String hashedPassword = CommonUtil.hashPassword(curPassword);
-		
-		validation.isTrue(talker.getPassword().equals(hashedPassword)).message("password.currentbad");
-		validation.isTrue(newPassword != null && newPassword.equals(confirmPassword)).message("password.different");
-		
-		if(validation.hasErrors()) {
-			flash.success("");
-			validation.keep();
-			notifications();
-            return;
-        }
-		
-		talker.setPassword(CommonUtil.hashPassword(newPassword));
-		TalkerDAO.updateTalker(talker);
-		
-		flash.success("ok");
-		notifications();
 	}
 	
 	/* -------------- Image ------------------------ */
@@ -319,8 +230,8 @@ public class Profile extends Controller {
 						scaleToHeight = height;
 					}
 					
-					BufferedImage bdest = getScaledInstance(bsrc, scaleToWidth, scaleToHeight, RenderingHints.VALUE_INTERPOLATION_BICUBIC, true);
-					
+					BufferedImage bdest = ImageUtil.getScaledInstance(bsrc, scaleToWidth, scaleToHeight, 
+							RenderingHints.VALUE_INTERPOLATION_BICUBIC, true);
 					bdest = bdest.getSubimage(0, 0, width, height);
 					
 					ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -336,89 +247,11 @@ public class Profile extends Controller {
         return;
 	}
 	
-	 /**
-	  * 
-	  * Example from article:
-	  * http://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html
-	  * 
-	  * 
-	  * 
-     * Convenience method that returns a scaled instance of the
-     * provided {@code BufferedImage}.
-     *
-     * @param img the original image to be scaled
-     * @param targetWidth the desired width of the scaled instance,
-     *    in pixels
-     * @param targetHeight the desired height of the scaled instance,
-     *    in pixels
-     * @param hint one of the rendering hints that corresponds to
-     *    {@code RenderingHints.KEY_INTERPOLATION} (e.g.
-     *    {@code RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR},
-     *    {@code RenderingHints.VALUE_INTERPOLATION_BILINEAR},
-     *    {@code RenderingHints.VALUE_INTERPOLATION_BICUBIC})
-     * @param higherQuality if true, this method will use a multi-step
-     *    scaling technique that provides higher quality than the usual
-     *    one-step technique (only useful in downscaling cases, where
-     *    {@code targetWidth} or {@code targetHeight} is
-     *    smaller than the original dimensions, and generally only when
-     *    the {@code BILINEAR} hint is specified)
-     * @return a scaled version of the original {@code BufferedImage}
-     */
-    public static BufferedImage getScaledInstance(BufferedImage img,
-                                           int targetWidth,
-                                           int targetHeight,
-                                           Object hint,
-                                           boolean higherQuality)
-    {
-        int type = (img.getTransparency() == Transparency.OPAQUE) ?
-            BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
-        BufferedImage ret = (BufferedImage)img;
-        int w, h;
-        if (higherQuality) {
-            // Use multi-step technique: start with original size, then
-            // scale down in multiple passes with drawImage()
-            // until the target size is reached
-            w = img.getWidth();
-            h = img.getHeight();
-        } else {
-            // Use one-step technique: scale directly from original
-            // size to target size with a single drawImage() call
-            w = targetWidth;
-            h = targetHeight;
-        }
-        
-        do {
-            if (higherQuality && w > targetWidth) {
-                w /= 2;
-                if (w < targetWidth) {
-                    w = targetWidth;
-                }
-            }
-
-            if (higherQuality && h > targetHeight) {
-                h /= 2;
-                if (h < targetHeight) {
-                    h = targetHeight;
-                }
-            }
-
-            BufferedImage tmp = new BufferedImage(w, h, type);
-            Graphics2D g2 = tmp.createGraphics();
-            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, hint);
-            g2.drawImage(ret, 0, 0, w, h, null);
-            g2.dispose();
-
-            ret = tmp;
-        } while (w != targetWidth || h != targetHeight);
-
-        return ret;
-    }
-
-	
-	/* -------------- Preferences ------------------------ */
+	/* -------------- Preferences (Privacy)  ------------------------ */
 	public static void preferences() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		Set<ProfilePreference> profilePreferences = talker.getProfilePreferences();
+		TalkerLogic.preloadTalkerInfo(talker, "privacy");
 		
 		//user just needs to view their Privacy Settings page for ProfileCompletion
 		//TODO: rename 'hiddenHelps' to some common name - we can put there all actions
@@ -427,11 +260,10 @@ public class Profile extends Controller {
 			CommonUtil.updateTalker(talker, session);
 		}
 		
-		TalkerLogic.preloadTalkerInfo(talker, "privacy");
-		
 		render(talker, profilePreferences);
 	}
 	
+	//TODO: https: preferencesSave vs savePreferences ?
 	public static void preferencesSave() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
@@ -450,14 +282,11 @@ public class Profile extends Controller {
 		TalkerDAO.updateTalker(talker);
 		
 		renderText("ok");
-//		flash.success("ok");
-//		preferences();
 	}
 	
-	/* -------------- Notifications ------------------------ */
+	/* -------------- IM Notifications ------------------------ */
 	public static void notifications() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
 		TalkerLogic.preloadTalkerInfo(talker);
 		
 		String error = params.get("err");
@@ -470,14 +299,12 @@ public class Profile extends Controller {
 	}
 	
 	public static void notificationsSave(TalkerBean talker, String otherCTypes) {
-		flash.put("currentForm", "notificationsForm");
 		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);
 		
 		if (talker == null) {
 			//save defaults
 			talker = new TalkerBean();
 		}
-		
 		sessionTalker.setNfreq(talker.getNfreq());
 		sessionTalker.setNtime(talker.getNtime());
 		sessionTalker.setCtype(talker.getCtype());
@@ -505,10 +332,42 @@ public class Profile extends Controller {
 		
 		TalkerDAO.updateTalker(sessionTalker);
 		renderText("ok");
-//		flash.success("ok");
-//		notifications();
 	}
 	
+	public static void addIMAccount(String imUserName, String imService) {
+    	IMAccountBean imAccount = new IMAccountBean(imUserName, imService);
+    	//check if such IM account exists
+    	TalkerBean otherTalker = TalkerDAO.getByIMAccount(imAccount);
+    	if (otherTalker != null) {
+			renderText(Messages.get("imaccount.exists"));
+			return;
+		}
+        
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		talker.getImAccounts().add(imAccount);
+		CommonUtil.updateTalker(talker, session);
+		
+		CommonUtil.sendIMInvitation(imAccount);
+		
+		IMAccountBean _imAccount = imAccount;
+		render("tags/profile/profileNotificationIM.html", _imAccount);
+	}
+	
+	/**
+	 * @param imId - imUsername and imService separated by "|"
+	 */
+	public static void deleteIMAccount(String imId) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		String[] imArray = imId.split("\\|");
+		IMAccountBean imAccount = new IMAccountBean(imArray[0], imArray[1]);
+		talker.getImAccounts().remove(imAccount);
+		CommonUtil.updateTalker(talker, session);
+		
+		renderText("Ok");
+	}
+	
+	/* ------------------ Email notifications ------------------ */
 	public static void emailSettingsSave(TalkerBean talker) {
 		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);
 
@@ -535,6 +394,60 @@ public class Profile extends Controller {
 		renderText("ok");
 	}
 	
+	public static void makePrimaryEmail(String newPrimaryEmail) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		EmailBean newPrimaryEmailBean = talker.findNonPrimaryEmail(newPrimaryEmail, null);
+		notFoundIfNull(newPrimaryEmailBean);
+		
+		//delete this email from non-primary
+		talker.getEmails().remove(newPrimaryEmailBean);
+		//make old primary non-primary
+		talker.getEmails().add(new EmailBean(talker.getEmail(), talker.getVerifyCode()));
+		//set new primary
+		talker.setEmail(newPrimaryEmailBean.getValue());
+		talker.setVerifyCode(newPrimaryEmailBean.getVerifyCode());
+		
+		CommonUtil.updateTalker(talker, session);
+		notifications();
+	}
+	
+	public static void addEmail(String newEmail) {
+		validation.email(newEmail);
+		if (validation.hasError("newEmail")) {
+			renderText(validation.error("newEmail").message());
+			return;
+		}
+		
+		TalkerBean otherTalker = TalkerDAO.getByEmail(newEmail);
+		if (otherTalker != null) {
+			renderText(Messages.get("email.exists"));
+			return;
+		}
+		
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		EmailBean email = new EmailBean(newEmail, CommonUtil.generateVerifyCode());
+		talker.getEmails().add(email);
+		CommonUtil.updateTalker(talker, session);
+		
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("username", talker.getUserName());
+		vars.put("verify_code", email.getVerifyCode());
+		EmailUtil.sendEmail(EmailTemplate.VERIFICATION, email.getValue(), vars, null, false);
+		
+		EmailBean _email = email;
+		render("tags/profile/profileNotificationEmail.html", _email);
+	}
+	
+	public static void deleteEmail(String email) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		talker.getEmails().remove(new EmailBean(email, null));
+		CommonUtil.updateTalker(talker, session);
+		
+		renderJSON("{\"result\" : \"ok\"}");
+	}
+	
+	/* ------------- Twitter/FB notifications ----------------*/
 	public static void serviceSettingsSave(String name, boolean value) {
 		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);
 
@@ -568,108 +481,37 @@ public class Profile extends Controller {
 		renderText("ok");
 	}
 	
-	
-	public static void makePrimaryEmail(String newPrimaryEmail) {
+	public static void changePassword(String curPassword, String newPassword, String confirmPassword) {
+		flash.put("currentForm", "changePasswordForm");
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-		EmailBean newPrimaryEmailBean = talker.findNonPrimaryEmail(newPrimaryEmail, null);
-		notFoundIfNull(newPrimaryEmailBean);
+		String hashedPassword = CommonUtil.hashPassword(curPassword);
 		
-		//delete this email from non-primary
-		talker.getEmails().remove(newPrimaryEmailBean);
-		//make old primary non-primary
-		talker.getEmails().add(new EmailBean(talker.getEmail(), talker.getVerifyCode()));
-		//set new primary
-		talker.setEmail(newPrimaryEmailBean.getValue());
-		talker.setVerifyCode(newPrimaryEmailBean.getVerifyCode());
+		validation.isTrue(talker.getPassword().equals(hashedPassword)).message("password.currentbad");
+		validation.isTrue(newPassword != null && newPassword.equals(confirmPassword)).message("password.different");
 		
-		CommonUtil.updateTalker(talker, session);
+		if(validation.hasErrors()) {
+			flash.success("");
+			validation.keep();
+			notifications();
+            return;
+        }
+		
+		talker.setPassword(CommonUtil.hashPassword(newPassword));
+		TalkerDAO.updateTalker(talker);
+		
+		flash.success("ok");
 		notifications();
-	}
-	
-	//ajax methods
-	public static void addEmail(String newEmail) {
-		validation.email(newEmail);
-		if (validation.hasError("newEmail")) {
-			renderText(validation.error("newEmail").message());
-			return;
-		}
-		
-		TalkerBean otherTalker = TalkerDAO.getByEmail(newEmail);
-		if (otherTalker != null) {
-			renderText(Messages.get("email.exists"));
-			return;
-		}
-		
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		 
-		EmailBean email = new EmailBean(newEmail, CommonUtil.generateVerifyCode());
-		talker.getEmails().add(email);
-		
-		CommonUtil.updateTalker(talker, session);
-		
-		Map<String, String> vars = new HashMap<String, String>();
-		vars.put("username", talker.getUserName());
-		vars.put("verify_code", email.getVerifyCode());
-		EmailUtil.sendEmail(EmailTemplate.VERIFICATION, email.getValue(), vars, null, false);
-		
-		
-		EmailBean _email = email;
-		render("tags/profile/profileNotificationEmail.html", _email);
-	}
-	
-	public static void deleteEmail(String email) {
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		talker.getEmails().remove(new EmailBean(email, null));
-		
-		CommonUtil.updateTalker(talker, session);
-		
-		renderJSON("{\"result\" : \"ok\"}");
-	}
-	
-	public static void addIMAccount(String imUserName, String imService) {
-    	IMAccountBean imAccount = new IMAccountBean(imUserName, imService);
-    	//check if such IM account exists
-    	TalkerBean otherTalker = TalkerDAO.getByIMAccount(imAccount);
-    	if (otherTalker != null) {
-			renderText(Messages.get("imaccount.exists"));
-			return;
-		}
-        
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		talker.getImAccounts().add(imAccount);
-		
-		CommonUtil.updateTalker(talker, session);
-		
-		CommonUtil.sendIMInvitation(imAccount);
-		
-		IMAccountBean _imAccount = imAccount;
-		render("tags/profile/profileNotificationIM.html", _imAccount);
-	}
-	
-	/**
-	 * @param imId - imUsername and imService separated by "|"
-	 */
-	public static void deleteIMAccount(String imId) {
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
-		String[] imArray = imId.split("\\|");
-		IMAccountBean imAccount = new IMAccountBean(imArray[0], imArray[1]);
-		talker.getImAccounts().remove(imAccount);
-		
-		CommonUtil.updateTalker(talker, session);
-		
-		renderText("Ok");
 	}
 	
 	/* ------------- Health Info -------------------------- */
 	public static void healthDetails() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		TalkerLogic.preloadTalkerInfo(talker, "health");
 		
 		//For now we have only one disease - Breast Cancer
 		final String diseaseName = "Breast Cancer";
 		DiseaseBean disease = DiseaseDAO.getByName(diseaseName);
-
 		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
 		
 		//Load all healthItems for this disease
@@ -680,17 +522,12 @@ public class Profile extends Controller {
 			healthItemsMap.put(itemName, healthItem);
 		}
 		
-		TalkerLogic.preloadTalkerInfo(talker, "health");
-		
 		render(talker, talkerDisease, disease, healthItemsMap);
 	}
 
 	public static void saveHealthDetails(TalkerDiseaseBean talkerDisease, String section) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-//		for (String key : params.all().keySet()) {
-//			System.out.println(key+" : "+Arrays.toString(params.all().get(key)));
-//		}
 		final String diseaseName = "Breast Cancer";
 		DiseaseBean disease = DiseaseDAO.getByName(diseaseName);
 		
@@ -716,71 +553,7 @@ public class Profile extends Controller {
 		TalkerDiseaseDAO.saveTalkerDisease(talkerDisease);
 		
 		ActionDAO.saveAction(new UpdateProfileAction(talker, ActionType.UPDATE_HEALTH));
-		
 		renderText("ok");
-	}
-	
-	public static void saveHealthDetails2(TalkerDiseaseBean talkerDisease, String section) {
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
-//		for (String key : params.all().keySet()) {
-//			System.out.println(key+" : "+Arrays.toString(params.all().get(key)));
-//		}
-		final String diseaseName = "Breast Cancer";
-		DiseaseBean disease = DiseaseDAO.getByName(diseaseName);
-		
-		parseHealthQuestions(disease, talkerDisease);
-		parseHealthItems(talkerDisease);
-		talkerDisease.setUid(talker.getId());
-		
-		Date symptomDate = CommonUtil.parseDate(talkerDisease.getSymptomMonth(), 1, talkerDisease.getSymptomYear());
-		talkerDisease.setSymptomDate(symptomDate);
-		Date diagnoseDate = CommonUtil.parseDate(talkerDisease.getDiagnoseMonth(), 1, talkerDisease.getDiagnoseYear());
-		talkerDisease.setDiagnoseDate(diagnoseDate);
-		
-		//Automatically follow topics based on HealthInfo
-		//Let's only have this happen the first session the user updates their Health Info
-		if (TalkerDiseaseDAO.getByTalkerId(talker.getId()) == null) {
-			session.put("firstHealthInfo", true);
-		}
-		
-		if (session.contains("firstHealthInfo")) {
-			List<TopicBean> recommendedTopics = TalkerLogic.getRecommendedTopics(talkerDisease);
-			if (!recommendedTopics.isEmpty()) {
-				for (TopicBean topic : recommendedTopics) {
-					talker.getFollowingTopicsList().add(topic);
-				}
-				CommonUtil.updateTalker(talker, session);
-			}
-		}
-		
-		//Save or update
-		TalkerDiseaseDAO.saveTalkerDisease(talkerDisease);
-		
-		ActionDAO.saveAction(new UpdateProfileAction(talker, ActionType.UPDATE_HEALTH));
-		
-		flash.success("ok");
-		
-		//Strange fix for redirect with "#reference". Discussed here:
-		//http://groups.google.com/group/play-framework/browse_thread/thread/93c2ec3e34c20f4e/bf94f63fcb2e529d?lnk=gst&q=addRef#bf94f63fcb2e529d
-//		ActionDefinition action = reverse(); {
-//			//render("@edit", talker);
-//			edit();
-//        }
-//		redirect(action.addRef("changePasswordForm").toString());
-		
-		ActionDefinition action = reverse(); 
-		{
-			healthDetails();
-        }
-		if (section == null) {
-			redirect(action.toString()); 
-		}
-		else {
-			flash.put(section, "Changes saved!");
-			
-			redirect(action.addRef(section).toString()); 
-		}
 	}
 	
 	private static void parseHealthQuestions(DiseaseBean disease, TalkerDiseaseBean talkerDisease) {
