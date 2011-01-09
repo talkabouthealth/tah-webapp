@@ -8,7 +8,6 @@ public class MessageBean {
 	private TalkerBean fromTalker;
 	private String text;
 	private Date time;
-	
 	//index in the 'messages' array, used for updating
 	private int index;
 	

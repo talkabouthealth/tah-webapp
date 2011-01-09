@@ -64,10 +64,6 @@ public class TalkerDAO {
 				.add("im_notify", talker.isImNotify())
 				.add("service_accounts", setToDB(talker.getServiceAccounts()))
 				
-				.add("act_type", talker.getAccountType())
-				.add("act_name", talker.getAccountName())
-				.add("act_id", talker.getAccountId())
-				
 				.add("prefs", talker.profilePreferencesToInt())
 				.add("email_settings", talker.emailSettingsToList())
 				
@@ -108,9 +104,6 @@ public class TalkerDAO {
 			.add("im_notify", talker.isImNotify())
 			
 			.add("service_accounts", setToDB(talker.getServiceAccounts()))
-			.add("act_type", talker.getAccountType())
-			.add("act_name", talker.getAccountName())
-			.add("act_id", talker.getAccountId())
 			
 			.add("hidden_helps", talker.getHiddenHelps())
 			.add("dob", talker.getDob())

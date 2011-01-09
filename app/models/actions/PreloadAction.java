@@ -13,8 +13,7 @@ import dao.ActionDAO;
 import dao.CommentsDAO;
 
 /**
- * Used for pre-loading actions before filtering
- *
+ * Used for pre-loading actions before filtering - saves memory resources and loading time
  */
 public class PreloadAction implements Action {
 	

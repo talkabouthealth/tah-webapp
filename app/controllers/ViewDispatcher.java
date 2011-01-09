@@ -121,7 +121,8 @@ public class ViewDispatcher extends Controller {
 			healthItemsMap.put(itemName, healthItem);
 		}
 		
-		talker.setStartedTopicsList(ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO));
+		int numOfStartedConvos = 
+			ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO).size();
 		TalkerLogic.preloadTalkerInfo(talker);
 		
 		boolean notProvidedInfo = false;
@@ -190,7 +191,7 @@ public class ViewDispatcher extends Controller {
 		render("PublicProfile/newview.html", talker, disease, talkerDisease, healthItemsMap, 
 				currentTalker, talkerFeed,
 				notProvidedInfo, notViewableInfo, profFields,
-				numOfAnswers, numOfTopAnswers);
+				numOfAnswers, numOfTopAnswers, numOfStartedConvos);
 	}
 	
 	private static void showConvo(ConversationBean convo) {

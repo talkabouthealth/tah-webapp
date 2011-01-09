@@ -46,7 +46,6 @@ public class TopicBean implements Comparable<TopicBean> {
 	private boolean deleted;
 	
 	private List<TalkerBean> followers;
-	
 	private List<ConversationBean> conversations;
 	
 	public TopicBean() {
@@ -77,11 +76,6 @@ public class TopicBean implements Comparable<TopicBean> {
 		}
 		
 		TopicBean other = (TopicBean)obj;
-//		if (id == null) {
-//			Exception e = new RuntimeException();
-//			e.printStackTrace(System.out);
-//			throw new RuntimeException("excepppppppp");
-//		}
 		return id.equals(other.id);
 	}
 	
@@ -115,15 +109,11 @@ public class TopicBean implements Comparable<TopicBean> {
 		if (topicDBObject == null) {
 			return;
 		}
-		
 		parseSuperBasicFromDB(topicDBObject);
-
 		
 		setSummary((String)topicDBObject.get("summary"));
 		setAliases(getStringSet(topicDBObject, "aliases"));
-		
 		setOldNames(parseSet(URLName.class, topicDBObject, "old_names"));
-    	
 		setViews(DBUtil.getInt(topicDBObject, "views"));
 		setCreationDate((Date)topicDBObject.get("cr_date"));
 		
@@ -158,13 +148,8 @@ public class TopicBean implements Comparable<TopicBean> {
     	DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
     	DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, getId());
     	DBObject query = new BasicDBObject("following_topics", topicRef);
-    	DBObject fields = BasicDBObjectBuilder.start()
-    		.add("uname", 1)
-    		.add("email", 1)
-    		.add("bio", 1)
-    		.add("email_settings", 1)
-    		.get();
-    	List<DBObject> followersDBList = talkersColl.find(query, fields).toArray();
+    	List<DBObject> followersDBList = talkersColl.find(query).toArray();
+    	
     	List<TalkerBean> followers = new ArrayList<TalkerBean>();
     	for (DBObject followerDBObject : followersDBList) {
     		TalkerBean followerTalker = new TalkerBean();
@@ -208,7 +193,6 @@ public class TopicBean implements Comparable<TopicBean> {
 		
 		return sb.toString();
 	}
-	
 	
 	
 	public String getId() {

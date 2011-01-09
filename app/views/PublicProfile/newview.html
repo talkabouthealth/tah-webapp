@@ -139,7 +139,11 @@
                     </div>
                     <!--profiletxtCantant-->
                     <div class="profiletxtCantant">
-                      <div class="profileCantanttxt1"><strong>Conversations:&nbsp;</strong>${talker.startedTopicsList?.size()}</div>
+                      <div class="profileCantanttxt1">
+                      	<strong>Conversations:&nbsp;</strong>
+                      	<a style="text-decoration: none" 
+                      		href="@{PublicProfile.conversations(talker.userName)}">${numOfStartedConvos}</a>
+                      </div>
                       <div class="profileCantanttxt2">
                       	<strong>Answers:&nbsp;</strong>
                       	<a style="text-decoration: none" 

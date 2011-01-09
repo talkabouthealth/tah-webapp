@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import play.Logger;
+import play.libs.WS;
+import play.libs.WS.HttpResponse;
 import play.mvc.Http.Request;
 import play.mvc.Scope.Session;
 
@@ -66,6 +68,9 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			    "&redirect_uri="+URLEncoder.encode(callbackURL, "UTF-8")+
 			    "&client_secret="+APP_SECRET+
 			    "&code="+URLEncoder.encode(code, "UTF-8");
+			//TODO: replace it
+//			HttpResponse res = WS.url(
+//					"https://graph.facebook.com/me/feed?access_token=%s&message=%s", token, text).post();
 			List<String> lines = CommonUtil.makeGET(url, urlParams);
 			
 			//returned string is:

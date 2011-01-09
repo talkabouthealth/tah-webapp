@@ -142,9 +142,9 @@ public class Home extends Controller {
 		if (showIMPopup) {
 			//If user signs up via twitter, populate the Username field with the twitter username 
 			//and automatically have the Twitter option checked
-			if (talker.getAccountType() != null && talker.getAccountType().equalsIgnoreCase("twitter")) {
+			if (twitterAccount != null) {
 				talker.setIm("Twitter");
-				talker.setImUsername(talker.getAccountName());
+				talker.setImUsername(twitterAccount.getUserName());
 			}
 			else {
 				//if user provides an email from gmail, windows live, or yahoo - 

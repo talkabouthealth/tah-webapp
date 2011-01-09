@@ -3,6 +3,7 @@ package util;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import play.Logger;
 import play.libs.WS;
 import play.libs.WS.WSRequest;
 
@@ -14,14 +15,15 @@ public class BitlyUtil {
 	public static String shortLink(String longURL) {
 		String result = WS.url("http://api.bit.ly/v3/shorten?login=%s&apiKey=%s&longUrl=%s&format=txt",
 				BITLY_LOGIN, BITLY_APIKEY, longURL).get().getString();
+
+		if (result != null && result.equals("RATE_LIMIT_EXCEEDED")) {
+			result = null;
+			Logger.error("Error creating BitLy link for: "+longURL);
+		}
 		
 		if (result != null && result.length() > 5) {
 			//remove carriage return at the end
 			result = result.substring(0, result.length()-1);
-		}
-		
-		if (result != null && result.equals("RATE_LIMIT_EXCEEDE")) {
-			result = null;
 		}
 		
 		return result;

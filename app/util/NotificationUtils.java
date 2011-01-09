@@ -113,17 +113,6 @@ public class NotificationUtils {
 			restartTalker = convo.getTalker();
 		}
 		
-//		if (serviceAccount.getType() == ServiceType.TWITTER) {
-//			postText = postText + bitlyLinkText;
-//			postText = TwitterUtil.prepareTwit(postText, convo.getTopic());
-//			TwitterUtil.makeUserTwit(postText, serviceAccount.getToken(), serviceAccount.getTokenSecret());
-//		}
-//		else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
-//			postText = postText + fullLinkText;
-//			postText = postText.replace("<PARAM>", convo.getTopic());
-//			FacebookUtil.post(postText, serviceAccount.getToken());
-//		}
-		
 		StringBuilder message = new StringBuilder();
 		message.append(restartTalker.getUserName());
 		if (convo.getConvoType() == ConvoType.CONVERSATION || restartTalkerId != null) {

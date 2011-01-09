@@ -34,6 +34,7 @@ import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.TalkerDAO;
 
+//TODO: check FB, Twitter, Search utils
 public class SearchUtil {
 	
 	public static final String SEARCH_INDEX_PATH = Play.configuration.getProperty("search.index");

@@ -50,9 +50,8 @@ import com.tah.im.model.IMAccount;
 
 import dao.TalkerDAO;
 
+//TODO: check this again
 public class CommonUtil {
-	
-	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
 	
 	private static final MessageDigest MD5_MESSAGE_DIGEST;
 	static {
@@ -73,7 +72,9 @@ public class CommonUtil {
 			}
 			MD5_MESSAGE_DIGEST.reset();
 		}
-		
+		if (md5hash == null) {
+			return null;
+		}
 		BigInteger bigInt = new BigInteger(1, md5hash);
 		String hashText = bigInt.toString(16);
 		//integer can remove leading zeroes - add them back
@@ -155,7 +156,8 @@ public class CommonUtil {
 	
 	public static Date parseDate(String dateString) {
 		try {
-			Date date = DATE_FORMAT.parse(dateString);
+			DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+			Date date = dateFormat.parse(dateString);
 			return date;
 		} catch (ParseException e) {}
 		

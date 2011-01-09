@@ -38,7 +38,6 @@ import dao.TopicDAO;
 import static util.DBUtil.*;
 
 /**
- * @author Osezno
  *
  */
 public class TalkerBean implements Serializable {
@@ -64,7 +63,6 @@ public class TalkerBean implements Serializable {
 	
 	/**
 	 * An order of elements is important - displayed on Profile Preference page.
-	 * 
 	 * Value is needed for conversion EnumSet to integer value (to save in DB).
 	 */
 	public enum ProfilePreference {
@@ -129,29 +127,24 @@ public class TalkerBean implements Serializable {
 	@Required private String password;
 	private String confirmPassword;
 	@Required @Email private String email;
-	private String verifyCode;	//code for email verification
+	//code for email verification
+	private String verifyCode;	
+	//not-primary emails
 	private Set<EmailBean> emails;
 	
+	private String firstName;
+	private String lastName;
 	//used to store original userName when account is deactivated
 	private String originalUserName;
 	private boolean deactivated;
 	private boolean suspended;
 	
-	//FB or Twitter accounts
+	// FB/Twitter/IM accounts
 	private Set<ServiceAccountBean> serviceAccounts;
-	
-	//Twitter or Facebook account info
-	private String accountType;
-	private String accountName;
-	private String accountId;
-	
+	private Set<IMAccountBean> imAccounts;
 	private String im;
 	private String imUsername;
 	private boolean imNotify;
-	private Set<IMAccountBean> imAccounts;
-	
-	//info from professional profiles
-	private Map<String, String> profInfo;
 	
 	private Date dob;
 	private int dobMonth;
@@ -162,12 +155,10 @@ public class TalkerBean implements Serializable {
 	//Patient/Caregiver/etc.
 	private String connection;
 	private boolean connectionVerified;
-	
-	//For Physician
+	//info from professional profiles
+	private Map<String, String> profInfo;
+	//for Physician
 	private List<String> insuranceAccepted;
-	
-	private String firstName;
-	private String lastName;
 	
 	private int childrenNum;
 	//for editing (we can't show/save default value with int)
@@ -177,7 +168,6 @@ public class TalkerBean implements Serializable {
 	private List<String> keywords;
 	private String bio;
 	private String profStatement;
-	
 	private boolean newsletter;
 	private String gender;
 	private int invitations;
@@ -188,39 +178,32 @@ public class TalkerBean implements Serializable {
 	private String state;
 	private String country;
 	private String zip;
-	private int numberOfTopics;
-	
 	//a set of hidden help popups for this user
 	private Set<String> hiddenHelps;
 	
-	//Notifications settings
+	//notifications settings
 	private String[] ctype;
 	private int nfreq;
 	private int ntime;
 	
 	private List<ThankYouBean> thankYouList;
-	private int numOfThankYous;
-	
 	private List<TalkerBean> followingList;
 	private List<TalkerBean> followerList;
 	private List<Action> activityList;
+	//thoughts
 	private List<CommentBean> profileCommentsList;
 	private List<CommentBean> answerList;
-	
-	//TODO: what's the best solution for partial load?
 	private List<String> followingConvosList;
-	private List<ConversationBean> followingConvosFullList;
 	private Set<TopicBean> followingTopicsList;
-	private List<ConversationBean> startedTopicsList;
-	private List<ConversationBean> joinedTopicsList;
+	private Map<TopicBean, TalkerTopicInfo> topicsInfoMap;
 	
+	//Privacy and Email settings
 	private Set<ProfilePreference> profilePreferences;
 	private Set<EmailSetting> emailSettings;
 	
-	//additional
+	//additional variables for displaying
+	private int numOfThankYous;
 	private int numOfConvoAnswers;
-	
-	//variable for displaying
 	private String profileCompletionMessage;
 	private int profileCompletionValue;
 	private String nextStepMessage;
@@ -228,8 +211,6 @@ public class TalkerBean implements Serializable {
 	
 	private Date latestNotification;
 	private long numOfNotifications;
-	
-	private Map<TopicBean, TalkerTopicInfo> topicsInfoMap;
 	
 	public TalkerBean(){}
 	public TalkerBean(String id) {
@@ -267,25 +248,11 @@ public class TalkerBean implements Serializable {
 		return id.hashCode();
 	}
 	
-	public Set<ProfilePreference> getProfilePreferences() {
-		return profilePreferences;
-	}
-	public void setProfilePreferences(Set<ProfilePreference> profilePreferences) {
-		this.profilePreferences = profilePreferences;
-	}
-	public Set<EmailSetting> getEmailSettings() {
-		return emailSettings;
-	}
-	public void setEmailSettings(Set<EmailSetting> emailSettings) {
-		this.emailSettings = emailSettings;
-	}
-	
 	// ----=================== Parse/Save information from/to DB =================----
 	public void parseBasicFromDB(DBObject talkerDBObject) {
 		setId(talkerDBObject.get("_id").toString());
 		setUserName((String)talkerDBObject.get("uname"));
 		setPassword((String)talkerDBObject.get("pass"));
-		
 		setEmail((String)talkerDBObject.get("email"));
 		setEmails(parseSet(EmailBean.class, talkerDBObject, "emails"));
 		setVerifyCode((String)talkerDBObject.get("verify_code"));
@@ -294,10 +261,6 @@ public class TalkerBean implements Serializable {
 		setDeactivated(getBoolean(talkerDBObject, "deactivated")); 
 		setSuspended(getBoolean(talkerDBObject, "suspended"));
 		
-		setAccountType((String)talkerDBObject.get("act_type"));
-		setAccountName((String)talkerDBObject.get("act_name"));
-		setAccountId((String)talkerDBObject.get("act_id"));
-		
 		setBio((String)talkerDBObject.get("bio"));
 		setProfStatement((String)talkerDBObject.get("prof_statement"));
 		setConnection((String)talkerDBObject.get("connection"));
@@ -305,7 +268,6 @@ public class TalkerBean implements Serializable {
 		
 		parseEmailSettings(getStringList(talkerDBObject, "email_settings"));
 		parseProfilePreferences(getInt(talkerDBObject, "prefs"));
-		
 		Collection<DBObject> thankYousCollection = (Collection<DBObject>)talkerDBObject.get("thankyous");
 		setNumOfThankYous(thankYousCollection == null ? 0 : thankYousCollection.size());
 	}
@@ -319,17 +281,7 @@ public class TalkerBean implements Serializable {
 		setImUsername((String)talkerDBObject.get("im_uname"));
 		setImNotify(getBoolean(talkerDBObject, "im_notify"));
 		setImAccounts(parseSet(IMAccountBean.class, talkerDBObject, "im_accounts"));
-		
 		setServiceAccounts(parseSet(ServiceAccountBean.class, talkerDBObject, "service_accounts"));
-		
-		setNewsletter(getBoolean(talkerDBObject, "newsletter"));
-		setGender((String)talkerDBObject.get("gender"));
-		setDob((Date)talkerDBObject.get("dob"));
-		setInvitations(getInt(talkerDBObject, "invites"));
-		
-		setCity((String)talkerDBObject.get("city"));
-		setState((String)talkerDBObject.get("state"));
-		setCountry((String)talkerDBObject.get("country"));
 		
 		setNfreq(getInt(talkerDBObject, "nfreq"));
 		setNtime(getInt(talkerDBObject, "ntime"));
@@ -338,11 +290,17 @@ public class TalkerBean implements Serializable {
 			setCtype(ctype.toArray(new String[]{}));
 		}
 		
+		setNewsletter(getBoolean(talkerDBObject, "newsletter"));
+		setGender((String)talkerDBObject.get("gender"));
+		setDob((Date)talkerDBObject.get("dob"));
+		setInvitations(getInt(talkerDBObject, "invites"));
+		setCity((String)talkerDBObject.get("city"));
+		setState((String)talkerDBObject.get("state"));
+		setCountry((String)talkerDBObject.get("country"));
 		setChildrenNum(getInt(talkerDBObject, "ch_num"));
 		setMaritalStatus((String)talkerDBObject.get("mar_status"));
 		setCategory((String)talkerDBObject.get("category"));
 		setRegDate((Date)talkerDBObject.get("timestamp"));
-		
 		setFirstName((String)talkerDBObject.get("firstname"));
 		setLastName((String)talkerDBObject.get("lastname"));
 		setZip((String)talkerDBObject.get("zip"));
@@ -353,15 +311,11 @@ public class TalkerBean implements Serializable {
 		setInsuranceAccepted(getStringList(talkerDBObject, "insurance_accept"));
 		
 		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
-		
 		parseFollowing((Collection<DBRef>)talkerDBObject.get("following"));
 		setFollowingConvosList(getStringList(talkerDBObject, "following_convos"));
-		
 		parseFollowingTopics((Collection<DBRef>)talkerDBObject.get("following_topics"));
 		parseTopicsInfo((Collection<DBObject>)talkerDBObject.get("topics_info"));
-		
 		parseProfInfo((DBObject)talkerDBObject.get("prof_info"));
-		
 		setAnswerList(CommentsDAO.getTalkerAnswers(getId(), null));
 	}
 	
@@ -736,6 +690,19 @@ public class TalkerBean implements Serializable {
 		return country;
 	}
 	public void setCountry(String country) { this.country = country; }
+	
+	public Set<ProfilePreference> getProfilePreferences() {
+		return profilePreferences;
+	}
+	public void setProfilePreferences(Set<ProfilePreference> profilePreferences) {
+		this.profilePreferences = profilePreferences;
+	}
+	public Set<EmailSetting> getEmailSettings() {
+		return emailSettings;
+	}
+	public void setEmailSettings(Set<EmailSetting> emailSettings) {
+		this.emailSettings = emailSettings;
+	}
 
 	public int getNfreq() { return nfreq; }
 	public void setNfreq(int nfreq) { this.nfreq = nfreq; }
@@ -758,18 +725,9 @@ public class TalkerBean implements Serializable {
 	public boolean isNewsletter() { return newsletter; }
 	public void setNewsletter(boolean newsletter) { this.newsletter = newsletter; }
 
-	public String getAccountType() { return accountType; }
-	public void setAccountType(String accountType) { this.accountType = accountType; }
-
-	public String getAccountId() { return accountId; }
-	public void setAccountId(String accountId) { this.accountId = accountId; }
-	
 	public String getIm() { return im; }
 	public void setIm(String im) { this.im = im; }
 	
-	public int getNumberOfTopics() { return numberOfTopics; }
-	public void setNumberOfTopics(int numberOfTopics) { this.numberOfTopics = numberOfTopics; }
-
 	public int getDobMonth() { return dobMonth; }
 	public void setDobMonth(int dobMonth) { this.dobMonth = dobMonth; }
 
@@ -807,22 +765,9 @@ public class TalkerBean implements Serializable {
 		this.followingConvosList = followingConvosList;
 	}
 	
-	public List<ConversationBean> getFollowingConvosFullList() {
-		return followingConvosFullList;
-	}
-	public void setFollowingConvosFullList(
-			List<ConversationBean> followingConvosFullList) {
-		this.followingConvosFullList = followingConvosFullList;
-	}
 	public boolean isDeactivated() { return deactivated; }
 	public void setDeactivated(boolean deactivated) { this.deactivated = deactivated; }
 
-	public List<ConversationBean> getStartedTopicsList() { return startedTopicsList; }
-	public void setStartedTopicsList(List<ConversationBean> startedTopicsList) { this.startedTopicsList = startedTopicsList; }
-
-	public List<ConversationBean> getJoinedTopicsList() { return joinedTopicsList; }
-	public void setJoinedTopicsList(List<ConversationBean> joinedTopicsList) { this.joinedTopicsList = joinedTopicsList; }
-	
 	public boolean isConnectionVerified() { return connectionVerified; }
 	public void setConnectionVerified(boolean connectionVerified) { this.connectionVerified = connectionVerified; }
 
@@ -963,12 +908,6 @@ public class TalkerBean implements Serializable {
 	}
 	public void setProfStatement(String profStatement) {
 		this.profStatement = profStatement;
-	}
-	public String getAccountName() {
-		return accountName;
-	}
-	public void setAccountName(String accountName) {
-		this.accountName = accountName;
 	}
 	public List<String> getInsuranceAccepted() {
 		return insuranceAccepted;

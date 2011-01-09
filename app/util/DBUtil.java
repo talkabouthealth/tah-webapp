@@ -97,21 +97,12 @@ public class DBUtil {
 	
 	//generic?
 	public static List<String> getStringList(DBObject dbObject, String name) {
-		Object value = dbObject.get(name);
-		if (value == null) {
-			return new ArrayList<String>();
-		}
-		List<String> list = new ArrayList<String>((Collection<String>)value);
-		return list;
+		Set<String> stringSet = getSet(dbObject, name);
+		return new ArrayList<String>(stringSet);
 	}
 	
 	public static Set<String> getStringSet(DBObject dbObject, String name) {
-		Object value = dbObject.get(name);
-		if (value == null) {
-			return new HashSet<String>();
-		}
-		Set<String> set = new LinkedHashSet<String>((Collection<String>)value);
-		return set;
+		return getSet(dbObject, name);
 	}
 	
 	public static <T> Set<T> getSet(DBObject dbObject, String name) {
@@ -149,9 +140,10 @@ public class DBUtil {
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			}
-			
-			t.parseDBObject(valueDBObject);
-			valueSet.add(t);
+			if (t != null) {
+				t.parseDBObject(valueDBObject);
+				valueSet.add(t);
+			}
 		}
 		return valueSet;
 	}

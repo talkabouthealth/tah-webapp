@@ -15,10 +15,14 @@ import com.mongodb.DBRef;
 
 import dao.TalkerDAO;
 
+/**
+ * Represent Conversation answer/replies and Profile thoughts/replies.
+ *
+ */
+//TODO: update getters/setters
 public class CommentBean extends MessageBean {
 	
 	public static class Vote implements DBModel {
-		
 		private TalkerBean talker;
 		private boolean up;
 		
@@ -42,10 +46,8 @@ public class CommentBean extends MessageBean {
 			TalkerBean talker = new TalkerBean();
 			talker.parseBasicFromDB(((DBRef)dbObject.get("talker")).fetch());
 			setTalker(talker);
-			
 			setUp(getBoolean(dbObject, "up"));
 		}
-		
 		
 		@Override
 		public boolean equals(Object obj) {
@@ -93,10 +95,8 @@ public class CommentBean extends MessageBean {
 	
 	private int voteScore;
 	private Set<Vote> votes;
-	
 	private boolean notHelpful;
 	private Set<Vote> notHelpfulVotes;
-	
 	
 	public CommentBean() {}
 
@@ -142,11 +142,9 @@ public class CommentBean extends MessageBean {
 		
 		setVoteScore(getInt(commentDBObject, "vote_score"));
 		setVotes(parseSet(Vote.class, commentDBObject, "votes"));
-		
 		setNotHelpfulVotes(parseSet(Vote.class, commentDBObject, "not_helpful_votes"));
 		
 		setFromTalker(parseTalker(commentDBObject, "from"));
-		
 		DBRef profileTalkeRef = (DBRef)commentDBObject.get("profile");
 		if (profileTalkeRef != null) {
 			setProfileTalkerId(profileTalkeRef.getId().toString());

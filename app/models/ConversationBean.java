@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import play.Logger;
+
 import util.CommonUtil;
 
 import com.mongodb.BasicDBObject;
@@ -22,9 +24,6 @@ import dao.ConversationDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
 
-/**
- *
- */
 public class ConversationBean {
 	
 	public enum ConvoType {
@@ -41,6 +40,7 @@ public class ConversationBean {
 	private ConvoType convoType = ConvoType.CONVERSATION;
 	private boolean deleted;
 	
+	//title (name) of this conversation
 	private String topic;
 	private String mainURL;
 	//includes old titles and urls
@@ -51,7 +51,6 @@ public class ConversationBean {
 	private String bitlyChat;
 	
 	private Date creationDate;
-	
 	//Convo with no answers is opened
 	private boolean opened;
 	
@@ -61,7 +60,6 @@ public class ConversationBean {
 	
 	private String details;
 	private int views;
-	
 	private String summary;
 	private Set<TalkerBean> sumContributors;
 	
@@ -70,7 +68,6 @@ public class ConversationBean {
 	private List<CommentBean> comments;
 	private List<MessageBean> messages;
 	private List<TalkerBean> followers;
-	
 	private Set<TopicBean> topics;
 	
 	//used for search display
@@ -91,13 +88,12 @@ public class ConversationBean {
     	setBitly((String)convoDBObject.get("bitly"));
     	setBitlyChat((String)convoDBObject.get("bitly_chat"));
     	setDeleted(getBoolean(convoDBObject, "deleted"));
+    	setMainURL((String)convoDBObject.get("main_url"));
     	
     	String type = (String)convoDBObject.get("type");
     	if (type != null) {
     		convoType = ConvoType.valueOf(type);
     	}
-    	
-    	setMainURL((String)convoDBObject.get("main_url"));
     	
     	//topics(tags)
     	parseTopics((Collection<DBRef>)convoDBObject.get("topics"));  
@@ -107,20 +103,76 @@ public class ConversationBean {
 		parseSuperBasicFromDB(convoDBObject);
     	
     	setOpened(getBoolean(convoDBObject, "opened"));
+    	setOldNames(parseSet(URLName.class, convoDBObject, "old_names"));
+    	setViews(getInt(convoDBObject, "views"));
     	
     	setSummary((String)convoDBObject.get("summary"));
     	parseSumContributors((Collection<DBRef>)convoDBObject.get("sum_authors"));
-    	
-    	setOldNames(parseSet(URLName.class, convoDBObject, "old_names"));
-    	
-    	setViews(getInt(convoDBObject, "views"));
-    	
-    	  	
     	
     	//author
     	setTalker(parseTalker(convoDBObject, "uid"));
 	}
 	
+	public void parseFromDB(DBObject convoDBObject) {
+		parseBasicFromDB(convoDBObject);
+		
+		parseRelatedConvos((Collection<DBRef>)convoDBObject.get("related_convos"));
+
+    	//messages from Talk Window
+    	List<MessageBean> messages = new ArrayList<MessageBean>();
+    	Set<String> members = new HashSet<String>();
+    	Collection<DBObject> messagesDBList = (Collection<DBObject>)convoDBObject.get("messages");
+    	if (messagesDBList != null) {
+    		int cnt = -1;
+    		for (DBObject messageDBObject : messagesDBList) {
+    			cnt++;
+    			
+    			boolean isDeleted = getBoolean(messageDBObject, "deleted");
+    			if (isDeleted) {
+    				continue;
+    			}
+    			
+    			MessageBean message = new MessageBean();
+    			message.setText((String)messageDBObject.get("text"));
+    			message.setIndex(cnt);
+    			
+    			DBObject fromTalkerDBObject = ((DBRef)messageDBObject.get("uid")).fetch();
+    			if (fromTalkerDBObject != null) {
+    				TalkerBean fromTalker = 
+        				new TalkerBean(fromTalkerDBObject.get("_id").toString(), (String)fromTalkerDBObject.get("uname"));
+        			message.setFromTalker(fromTalker);
+        			members.add(fromTalker.getUserName());
+        			
+        			messages.add(message);
+    			}
+    			else {
+    				Logger.error("NULL talker in conversation message: "+getId()+", index: "+message.getIndex());
+    			}
+    		}
+    	}
+    	setMembers(members);
+    	setMessages(messages);
+    	
+    	//followers of this convo
+    	DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
+    	DBObject query = new BasicDBObject("following_convos", getId());
+    	DBObject fields = BasicDBObjectBuilder.start()
+    		.add("uname", 1)
+    		.add("email", 1)
+    		.add("bio", 1)
+    		.add("email_settings", 1)
+    		.get();
+    	List<DBObject> followersDBList = talkersColl.find(query, fields).toArray();
+    	List<TalkerBean> followers = new ArrayList<TalkerBean>();
+    	for (DBObject followerDBObject : followersDBList) {
+    		TalkerBean followerTalker = new TalkerBean();
+    		followerTalker.parseBasicFromDB(followerDBObject);
+			followers.add(followerTalker);
+    	}
+    	setFollowers(followers);
+	}
+	
+	//TODO: 3 same methods: Col<DBRef> -> Set<Object>
 	private void parseSumContributors(Collection<DBRef> contributorsDBList) {
 		sumContributors = new HashSet<TalkerBean>();
 		if (contributorsDBList != null) {
@@ -179,65 +231,6 @@ public class ConversationBean {
 			relatedDBList.add(topicRef);
 		}
 		return relatedDBList;
-	}
-
-	public void parseFromDB(DBObject convoDBObject) {
-		parseBasicFromDB(convoDBObject);
-		
-		parseRelatedConvos((Collection<DBRef>)convoDBObject.get("related_convos"));
-
-    	//messages from Talk Window
-    	List<MessageBean> messages = new ArrayList<MessageBean>();
-    	Set<String> members = new HashSet<String>();
-    	Collection<DBObject> messagesDBList = (Collection<DBObject>)convoDBObject.get("messages");
-    	if (messagesDBList != null) {
-    		int cnt = -1;
-    		for (DBObject messageDBObject : messagesDBList) {
-    			cnt++;
-    			
-    			boolean isDeleted = getBoolean(messageDBObject, "deleted");
-    			if (isDeleted) {
-    				continue;
-    			}
-    			
-    			MessageBean message = new MessageBean();
-    			message.setText((String)messageDBObject.get("text"));
-    			message.setIndex(cnt);
-    			
-    			DBObject fromTalkerDBObject = ((DBRef)messageDBObject.get("uid")).fetch();
-    			if (fromTalkerDBObject != null) {
-    				TalkerBean fromTalker = 
-        				new TalkerBean(fromTalkerDBObject.get("_id").toString(), (String)fromTalkerDBObject.get("uname"));
-        			message.setFromTalker(fromTalker);
-        			members.add(fromTalker.getUserName());
-        			
-        			messages.add(message);
-    			}
-    			else {
-    				//TODO: log message and in all other project also.
-    			}
-    		}
-    	}
-    	setMembers(members);
-    	setMessages(messages);
-    	
-    	//followers of this convo
-    	DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
-    	DBObject query = new BasicDBObject("following_convos", getId());
-    	DBObject fields = BasicDBObjectBuilder.start()
-    		.add("uname", 1)
-    		.add("email", 1)
-    		.add("bio", 1)
-    		.add("email_settings", 1)
-    		.get();
-    	List<DBObject> followersDBList = talkersColl.find(query, fields).toArray();
-    	List<TalkerBean> followers = new ArrayList<TalkerBean>();
-    	for (DBObject followerDBObject : followersDBList) {
-    		TalkerBean followerTalker = new TalkerBean();
-    		followerTalker.parseBasicFromDB(followerDBObject);
-			followers.add(followerTalker);
-    	}
-    	setFollowers(followers);
 	}
 	
 	

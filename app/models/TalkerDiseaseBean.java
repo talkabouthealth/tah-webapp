@@ -19,7 +19,6 @@ public class TalkerDiseaseBean {
 	private Date symptomDate;
 	private int symptomMonth;
 	private int symptomYear;
-	
 	private Date diagnoseDate;
 	private int diagnoseMonth;
 	private int diagnoseYear;

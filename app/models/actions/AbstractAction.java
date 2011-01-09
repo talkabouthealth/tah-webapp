@@ -32,7 +32,6 @@ public abstract class AbstractAction implements Action {
 	protected String id;
 	protected TalkerBean talker;
 	protected Date time;
-	
 	protected ActionType type;
 	
 	//other possible data
@@ -169,7 +168,6 @@ public abstract class AbstractAction implements Action {
 		dbObject.put("convoId", topicRef);
 	}
 	
-	// Convo connected actions
 	protected ConversationBean parseConvo(DBObject dbObject) {
 		DBObject convoDBObject = ((DBRef)dbObject.get("convoId")).fetch();
 		
@@ -225,9 +223,7 @@ public abstract class AbstractAction implements Action {
 		answer.setId(getString(answerDBObject, "_id"));
 		answer.setText((String)answerDBObject.get("text"));
 		answer.setTime((Date)answerDBObject.get("time"));
-		
 		answer.setFromTalker(parseTalker(answerDBObject, "from"));
-		
     	return answer;
 	}
 	
@@ -257,9 +253,6 @@ public abstract class AbstractAction implements Action {
 			List<CommentBean> childrenList = new ArrayList<CommentBean>();
 			List<String> childrenIdsList = getStringList(commentDBObject, "children");
 			for (String childId : childrenIdsList) {
-//				CommentBean child = CommentsDAO.getProfileCommentById(childId);
-//				childrenList.add(child);
-				
 				DBCollection commentsColl = getCollection(CommentsDAO.PROFILE_COMMENTS_COLLECTION);
 				
 				DBObject query = new BasicDBObject("_id", new ObjectId(childId));
