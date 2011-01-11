@@ -146,7 +146,9 @@ public class ConversationBean {
         			messages.add(message);
     			}
     			else {
-    				Logger.error("NULL talker in conversation message: "+getId()+", index: "+message.getIndex());
+    				//TODO: remove bad conversation 
+    				//{ "_id" : ObjectId("4cd828541a98b19b4ec451e2"), "main_url" : "best-tips-on-handling-kids-with-adhd" }
+    				//Logger.error("NULL talker in conversation message: "+getId()+", index: "+message.getIndex());
     			}
     		}
     	}

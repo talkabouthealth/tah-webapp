@@ -70,6 +70,7 @@ public class Home extends Controller {
 		if (!talker.isProf() && talkerDisease != null) {
 			loadedTopics = TalkerLogic.getRecommendedTopics(talkerDisease);
 		}
+		Logger.error("Home 4 1");
 		if (recommendedTopics.isEmpty()) {
 			//display most popular Topics based on number of questions
 			loadedTopics = new ArrayList<TopicBean>(TopicDAO.loadAllTopics());
@@ -86,6 +87,8 @@ public class Home extends Controller {
 				break;
 			}
 		}
+		
+		Logger.error("Home 4 2");
 		
 		//talk
 		List<TalkerBean> similarMembers = new ArrayList<TalkerBean>();
@@ -112,6 +115,7 @@ public class Home extends Controller {
 				  }
 			  }
 		}
+		Logger.error("Home 4 3");
 		
 		List<ConversationBean> recommendedConvos = new ArrayList<ConversationBean>();
 		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations();	
