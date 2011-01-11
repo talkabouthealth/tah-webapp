@@ -73,7 +73,7 @@ public class Home extends Controller {
 		Logger.error("Home 4 1");
 		if (recommendedTopics.isEmpty()) {
 			//display most popular Topics based on number of questions
-			loadedTopics = new ArrayList<TopicBean>(TopicDAO.loadAllTopics());
+			loadedTopics = new ArrayList<TopicBean>(TopicDAO.loadAllLightTopics());
 		}
 		
 		for (TopicBean topic : loadedTopics) {
@@ -94,12 +94,11 @@ public class Home extends Controller {
 		List<TalkerBean> similarMembers = new ArrayList<TalkerBean>();
 		List<TalkerBean> experts = new ArrayList<TalkerBean>();
 		
-		List<TalkerBean> allMembers = TalkerDAO.loadAllTalkers();
+		List<TalkerBean> allMembers = TalkerDAO.loadAllLightTalkers();
 		for (TalkerBean member : allMembers) {
 			  if (member.isSuspended() || member.isAdmin()) {
 				  continue;
 			  }
-			  
 			  if (talker.equals(member) || talker.getFollowingList().contains(member)) {
 				  continue;
 			  }

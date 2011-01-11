@@ -142,6 +142,22 @@ public class TopicDAO {
 		}
 		return topicsSet;
 	}
+
+	//TODO: check it?
+	public static Set<TopicBean> loadAllLightTopics() {
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
+		
+		DBObject query = new BasicDBObject("deleted", new BasicDBObject("$ne", true));
+		List<DBObject> topicsDBList = topicsColl.find(query).sort(new BasicDBObject("views", -1)).toArray();
+		
+		Set<TopicBean> topicsSet = new LinkedHashSet<TopicBean>();
+		for (DBObject topicDBObject : topicsDBList) {
+			TopicBean topic = new TopicBean();
+			topic.parseSuperBasicFromDB(topicDBObject);
+			topicsSet.add(topic);
+		}
+		return topicsSet;
+	}
 	
 	public static Set<TopicBean> getParentTopics(String topicId) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);

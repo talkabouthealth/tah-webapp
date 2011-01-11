@@ -347,6 +347,22 @@ public class TalkerDAO {
 		return talkerList;
 	}
 	
+	public static List<TalkerBean> loadAllLightTalkers() {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		
+		List<DBObject> talkersDBObjectList = 
+			talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
+		
+		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
+		for (DBObject talkerDBObject : talkersDBObjectList) {
+			TalkerBean talker = new TalkerBean();
+			talker.parseBasicFromDB(talkerDBObject);
+			talkerList.add(talker);
+		}
+		
+		return talkerList;
+	}
+	
 	
 	// --------------------- Other ---------------------------
 	
