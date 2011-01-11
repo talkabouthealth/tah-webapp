@@ -1,5 +1,6 @@
-//Signup validation
-
+/*
+ 	SignUp validation. Most methods aren't used - left for possible future use.
+ */
 function validateFormOnSubmit(signup) {
 	var reason = "";
 		

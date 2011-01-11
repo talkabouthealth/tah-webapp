@@ -169,7 +169,6 @@
 							  		<option value='0'>Year</option>
 							  		#{list items:2010..1950, as:'i'}
 									    <option value="${i}"
-									    *{ TODO: use of deprecated getYear() ? }*
 									    #{if talkerDisease?.diagnoseDate?.year == i - 1900 } selected #{/if} 
 									    >${i}</option>
 									#{/list}

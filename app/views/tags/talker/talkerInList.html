@@ -10,18 +10,14 @@
 			#{talker/talkerInfo talker: _talker /}
 		</span><br/>
         #{if _talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.PERSONAL_INFO) }
-        	<span class="greytext12">
-				${_talker.bio?.limitSize(80)?.nl2br()}
-				#{if _talker.bio?.size() > 80 }
-					&nbsp;<a href="#" class="more11">more</a>
-				#{/if}
+        	<span class="greytext12 moretext">
+				${_talker.bio?.nl2br()}
 			</span>
-			<span class="greytext12 fulltext">${_talker.bio?.nl2br()}</span>
 			<br/>
         #{/if}
         <span class="bluetext12">
         	#{ifnot _currentTalker?.equals(_talker) }
-			 	<a class="bluetext12 followActionLink" rel="${_talker.id}" href="#">
+			 	<a class="bluetext12" href="#" onclick="return followTalker(this, '${_talker.id}');">
 				${ _currentTalker.followingList.contains(_talker) ? 'Unfollow' : 'Follow'}
 				</a> | 
 			#{/ifnot}

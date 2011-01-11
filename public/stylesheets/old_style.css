@@ -554,8 +554,6 @@ a.greytext25:hover {text-decoration: none; color: #818181;}
 .started { float:left;width:420px; padding:0px 20px 15px 21px;}
 .started  p{ float:left;width:420px; padding-top:8px;}
 .convquetext p { float:left;width:344px; padding-top:8px;}
-.more11 {font-family: arial; font-size: 11px; font-weight: normal; text-decoration: none; color: #1550a4;}
-a.more11:hover {text-decoration:underline; color: #1550a4; font-weight: normal;}
 .paging { float:right; text-align:right; width:325px; height:33px; line-height:33px;}
 .nextprebutton { float:left; height:24px; width:79px; padding-top:5px;}
 .pagenumb { float:left; width:150px; padding-left:2px; padding-right:10px; height:33px; line-height:33px; font-family: arial; font-size: 11px;text-decoration: none; color: #1550a4;}

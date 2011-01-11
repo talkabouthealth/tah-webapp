@@ -53,7 +53,7 @@
 
 			$(".flagConvoLink").click(function() {
 				flagType = "convo";
-				flagConvoId = '${convo.id}';
+				flagId = '${convo.id}';
 				showPopup("#flagPopup", 200);
 			});
 
@@ -84,7 +84,7 @@
    			
 			$(".flagAnswerLink").live("click", function() {
 				flagType = "answer";
-				flagAnswerId = $(this).attr("rel");
+				flagId = $(this).attr("rel");
 				showPopup("#flagPopup", 200);
 			});
 

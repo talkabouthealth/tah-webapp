@@ -21,13 +21,12 @@ GET		/verify/{verifyCode}					Application.verifyEmail
 *		/profile/notificationsettings			Profile.notifications
 *		/profile/privacysettings				Profile.preferences
 
-
 GET		/explore/members						Community.browseMembers(action:'active')
 *		/search/members							Community.browseMembers(action:'search')
+GET		/community/breast-cancer				Community.viewCommunity
 
 *		/search									Search.allSearch
 
-GET		/community/breast-cancer				Community.viewCommunity
 *		/search/conversations					Explore.searchConversations
 GET		/openquestions/?						Explore.openQuestions
 GET		/livechats/?							Explore.liveTalks
@@ -38,29 +37,21 @@ GET		/explore/popular/?						Explore.conversations(action:'popular')
 GET		/home/?									Home.index
 GET		/conversationfeed/?						Home.conversationFeed
 GET		/dashboard/?							Dashboard.index
-
 GET		/chat/{convoId}							Talk.talkApp
 GET		/chat/?									Talk.talkApp
-
 GET		/image/{userName}						Image.show
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
 
 GET		/{name}/?								ViewDispatcher.view
+GET		/{name}/manage							Topics.manage
 
 GET		/{userName}/thoughts					PublicProfile.thoughts
 GET		/{userName}/answers						PublicProfile.answers
-
-GET		/{userName}/thankyous/{from}			PublicProfile.userBasedActions(action:'thankyous', from)
-GET		/{userName}/following/{from}			PublicProfile.userBasedActions(action:'following', from)
-GET		/{userName}/followers/{from}			PublicProfile.userBasedActions(action:'followers', from)
 GET		/{userName}/thankyous					PublicProfile.userBasedActions(action:'thankyous')
 GET		/{userName}/following					PublicProfile.userBasedActions(action:'following')
 GET		/{userName}/followers					PublicProfile.userBasedActions(action:'followers')
-
-GET		/{name}/manage							Topics.manage
-
 GET		/{userName}/conversations				PublicProfile.conversations
 GET		/{userName}/topics						PublicProfile.topicsFollowing
 

@@ -1,121 +1,20 @@
 /*
- * TODO: structure this JavaScript file
+ * Common JS for all pages.
  */
 
-/* Scripts for all pages */
-var selectedTalkerId = '';
-
+//used in 'thankYou' or 'comment' popups
+var selectedTalkerId = "";
+//used in 'flag' popups
 var flagType = "";
-var flagConvoId = "";
-var flagAnswerId = "";
+var flagId = "";
 
+//number of symbols for question/chat title
 var titleLimit = 150;
 
-function openChat(convoId){
-	window.open("/chat/"+convoId, "Chat", "resizable=1, scrollbars=false, width=810,height=610");
-}
-
-function openInvitationsWindow() {
-	window.open("/home/invitations", "TalkAboutHealthInvitations", "width=600,height=350");
-}
-
-function openTwitter(redirectURL) {
-	if (!redirectURL) {
-		redirectURL = "";
-	}
-	var popupWindow = window.open("/oauth/getauth?type=twitter&redirectURL="+redirectURL, 
-		"TwitterLogin", "width=800,height=430,toolbar=no,location=no,menubar=no");
-	
-	//TODO: center pop-up on the screen and make one function for all pages
-	//for prototype library
-	//var offsets = document.viewport.getScrollOffsets();
-	//var x = Math.ceil((document.viewport.getWidth()/2)-425);
-	//var y = Math.ceil(200);
-	//popupWindow.moveTo(x,y);
-	return false;
-}
-
-function openFacebook(redirectURL) {
-	if (!redirectURL) {
-		redirectURL = "";
-	}
-	var popupWindow = window.open("/oauth/getauth?type=facebook&redirectURL="+redirectURL,  
-		"FacebookLogin", "width=1000,height=550,toolbar=no,location=no,menubar=no");
-}
-
-function restartConvo(tid, convoId) {
-	openChat(tid);
-	$.post("/conversations/restart", {convoId: convoId});
-	return false;
-}
-
-function closeLiveTalk(convoId) {
-	$.post("/conversations/close", {convoId: convoId});
-	
-	$("#liveTalk"+convoId).remove();
-	return false;
-}
-
-function flag() {
-	var reason = $("#flagReason").val();
-	$("#flagReason").val("");
-	if (flagType === "convo") {
-		$.post("/conversations/flag", 
-				{reason: reason, convoId: flagConvoId}
-		);
-	}
-	else if (flagType === "answer") {
-		$.post("/conversations/flaganswer", 
-			{reason: reason, answerId: flagAnswerId}
-		);
-	}
-
-	hideAll();
-	showPopup("#flagConfirm", 200);
-	return false;
-}
-
-function sendVerificationLink(link) {
-	$(link).html("Sending...");
-	var email = $(link).attr("title");
-	var verificationLink = $(link);
-	var verificationResult = $(link).next("span");
-	$.post("/profile/resendVerificationEmail", 
-		{email: email},
-		function(data) {
-			verificationLink.hide();
-			verificationResult.html(data).show();
-		}
-	);
-	return false;
-}
 
 $(document).ready(function() {
-	
-	$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
-	
-	//links to show more content (e.g. full bio)
-	$(".more11").live("click", 
-		function() {
-			$(this)
-				.parent().hide()
-				.next(".fulltext").show();
-		});
-	
-	$(".followActionLink").live('click', 
-		function() {
-			var followingId = $(this).attr("rel");
-			var followLink = $(this);
-  			$.post("/actions/followTalker", 
- 				{ followingId: followingId },
- 				function(data) {
- 					followLink.html(data);
- 				}
- 			);
-  			
-  			return false;
-		});
-	
+
+	//TODO: move this to function
 	$(".followConvoLink").live('click', function() {
 		var convoId = $(this).attr("rel");
 		if ($(this).html().indexOf("Unfollow") != -1) {
@@ -132,56 +31,232 @@ $(document).ready(function() {
 			);
 		return false;
 	});
-	
-	
-	
-	//if close button is clicked
-	$('.window .close, .window .cancelLink').click(function (e) {
-		//Cancel the link behavior
-		e.preventDefault();
-		hideAll();
-	});
 });
 
-function showPopup(id, popupWidth) {
-	//Get the screen height and width
-	var maskHeight = $(document).height();
-	var maskWidth = $(window).width();
-
-	//Set heigth and width to mask to fill up the whole screen
-	$('#mask').css({'width':maskWidth,'height':maskHeight});
+/* ---------------- OAuth and other popup windows ----------------- */
+function openChat(convoId){
+	window.open("/chat/"+convoId, "Chat", "resizable=1, scrollbars=false, width=810,height=610");
+	return false;
+}
+function openInvitationsWindow() {
+	window.open("/home/invitations", "TalkAboutHealthInvitations", "width=600,height=350");
+	return false;
+}
+function openTwitter(redirectURL) {
+	if (!redirectURL) {
+		//prevents 'undefined' text
+		redirectURL = "";
+	}
+	var popupWindow = window.open("/oauth/getauth?type=twitter&redirectURL="+redirectURL, 
+		"TwitterLogin", "width=800,height=430,toolbar=no,location=no,menubar=no");
 	
-	//transition effect		
-	$('#mask').fadeIn(500);	
-	$('#mask').fadeTo("slow",0.6);	
+	return false;
+}
+function openFacebook(redirectURL) {
+	if (!redirectURL) {
+		//prevents 'undefined' text
+		redirectURL = "";
+	}
+	var popupWindow = window.open("/oauth/getauth?type=facebook&redirectURL="+redirectURL,  
+		"FacebookLogin", "width=1000,height=550,toolbar=no,location=no,menubar=no");
+	return false;
+}
 
-	//Get the window height and width
-	var winH = $(window).height();
-	var winW = $(window).width();
-          
-	//Set the popup window to center
-	$(id).css('top', 50);
-	$(id).css('left', winW/2-popupWidth);
 
-	//transition effect
-	$(id).fadeIn(200); 
+
+
+/* ---------------- Conversations/Chats related ----------------- */
+function showStartConvoDialog(type) {
+	//select correct radio button
+	if (type === "question") {
+		$("#newConvoTypeQuestion").attr("checked", "checked");
+	}
+	else if (type === "chat"){
+		$("#newConvoTypeConvo").attr("checked", "checked");
+	}
+	
+	$("#newConvoForm").show();
+	$("#newQuestionConfirm").hide();
+	$("#newTalkConfirm").hide();
+	if ($("#convoText") && $("#convoText").val() !== "") {
+		$("#newConvoTitle").val($("#convoText").val());
+	}
+	showPopup("#startDialog", 350);
+	
+	return true;
+}
+
+//Save convo after entering data in StartConvo dialog
+function saveConvo(page) {
+	var type = "QUESTION";
+	if ($("#newConvoTypeConvo").attr("checked")) {
+		type = "CONVERSATION";
+	}
+	var title = $("#newConvoTitle").val();
+	if (title === 'Enter your question or request here.') {
+		title = '';
+	}
+	var details = $("#newConvoDetails").val();
+	if (details === 'For example. Will the stage of disease, current medications, or patient history help to answer the question?') {
+		details = '';
+	}
+	//var topics = $("#newConvoTopics").val();
+	var topics = '';
+
+	if (title === "") {
+		alert("Please input headline.");
+		return false;
+	}
+
+	$.post("/conversations/create", 
+			{ type: type, title: title, details: details, topics: topics, fromPage: page},
+			function(data) {
+				if (type === "CONVERSATION") {
+					$("#startTalkBtn").click(function() {
+	  					openChat(data.tid);
+	  					$.post("/conversations/start}", {convoId: data.id});
+	  					hideAll();
+					});
+					$("#startChatText").val("");
+					$("#newTalkConfirm").show();
+				}
+				else {
+					$("#questionLink").attr("href", data.url).html(data.url);
+					$("#postQuestionText").val("");
+					$("#newQuestionConfirm").show();
+				}
+				$("#newConvoForm").hide();
+				
+				//add new item to the feeds
+				//exception: question items on LiveChats page
+				if (!(type === "QUESTION" && page === "liveTalks")) {
+					if ($(".conversationsList")) {
+						$(data.html).prependTo($(".conversationsList"));
+					}
+					if ($("#communityFeedList")) {
+						$(data.html).prependTo($("#communityFeedList"));
+					}
+				}
+
+				$("#convoText").val("");
+				$("#newConvoTitle").val("");
+				$("#newConvoDetails").val("For example. Will the stage of disease, current medications, or patient history help to answer the question?");
+				//$("#newConvoTopics").val("");
+			}
+		);
+
+	return false;
+}
+
+function restartConvo(tid, convoId) {
+	openChat(tid);
+	$.post("/conversations/restart", {convoId: convoId});
+	return false;
+}
+
+function closeLiveTalk(convoId) {
+	$.post("/conversations/close", {convoId: convoId});
+	
+	$("#liveTalk"+convoId).remove();
+	return false;
+}
+
+//flag conversation or answer
+function flag() {
+	var reason = $("#flagReason").val();
+	$("#flagReason").val("");
+	if (flagType === "convo") {
+		$.post("/conversations/flag", 
+				{reason: reason, convoId: flagId}
+		);
+	}
+	else if (flagType === "answer") {
+		$.post("/conversations/flaganswer", 
+			{reason: reason, answerId: flagId}
+		);
+	}
+
+	hideAll();
+	showPopup("#flagConfirm", 200);
+	return false;
+}
+
+
+
+/* ---------------- Talker related ----------------- */
+function followTalker(followLink, followingId) {
+	$.post("/actions/followTalker", 
+		{ followingId: followingId },
+		function(data) {
+			$(followLink).html(data);
+		}
+	);
 	
 	return false;
 }
 
-function hideAll() {
-	$('#mask').hide();
-	$('.window').hide();
-	
+//shows popup form for ThankYous/Comments/Flag
+function showPopupForm (type, talkerId, userName) {
+	$("#"+type+"User").html(userName);
+	selectedTalkerId = talkerId;
+
+	showPopup("#"+type+"Popup", 200);
 	return false;
 }
 
-function limitText(limitField, limitNum) {
-    if (limitField.value.length > limitNum) {
-        limitField.value = limitField.value.substring(0, limitNum);
-    } 
+//void createThankYou(String toTalkerId, String note, String tagFile) {
+function saveThankYou() {
+	var noteText = $("#thankYouListNote").val();
+	hideAll();
+	$("#thankYouListNote").val("");
+
+	$.post("/actions/createThankYou", 
+		{ toTalkerId: selectedTalkerId, note: noteText}
+	);
+	return false;
 }
 
+function sendProfileComment() {
+	var commentText = $("#commentText").val();
+	hideAll();
+	$("#commentText").val("");
+
+	$.post("/actions/saveProfileComment", 
+		{ profileTalkerId: selectedTalkerId, parentId: '', text: commentText}
+	);
+}
+
+//saveProfileComment(String profileTalkerId, String parentId, String text)
+function saveProfileComment(parentId) {
+	var commentText = $("#replytext"+parentId).val();
+	$("#replytext"+parentId).val("");
+
+	$.post("/actions/saveProfileComment", 
+		{ parentId: parentId, text: commentText},
+		function(html) {
+			$("#firstcommentmessage").hide();
+			//put comment in the tree
+			if (parentId == '') {
+				//add as first element in the top
+				$(html).prependTo($(".commentsarea"));
+
+				//add inline edit for new comment
+				$('.inline-edit').inlineEdit( { hover: ''} );
+			}
+			else {
+				//add as last element in subtree
+				$("#reply"+parentId).before($(html));
+			}
+		}
+	);
+	return false;
+}
+
+
+
+
+/* --------------- Autocompletes ---------------- */
+//Uses jQuery Autocomplete plugin
 function makeAutocomplete(id, type) {
 	if ($(id).size() === 0) {
 		return;
@@ -204,6 +279,7 @@ function makeAutocomplete(id, type) {
 	$(id).autocomplete({
 		minLength: 1,
 		source: function(request, response) {
+			//get list of items from cache or from Ajax request
 			if ( request.term in cache ) {
 				response( cache[ request.term ] );
 				return;
@@ -243,7 +319,7 @@ function makeAutocomplete(id, type) {
 	};
 }
 
-/* Autocompete for topis - allows adding multiply topics (separated by space) */
+//Autocompete for topics - allows adding multiply topics (separated by space)
 function makeTopicsAutocomplete(id, parent) {
 	if ($(id).size() === 0) {
 		return;
@@ -310,6 +386,57 @@ function extractLast( term ) {
 
 
 
+
+/*------------------- Ajax forms ------------------ */
+//timeout for result popup
+var closeTimeout;
+var options = { 
+      //target:        '#output2',   // target element(s) to be updated with server response 
+      //beforeSubmit:  showRequest,  // pre-submit callback 
+      success:       showResponse  // post-submit callback 
+
+      // other available options: 
+      //clearForm: true        // clear all form fields after successful submit 
+      //resetForm: true        // reset the form after successful submit 
+
+      // $.ajax options can be used here too, for example: 
+      //timeout:   3000 
+  }; 
+
+function addAjaxForm(formId) {
+	//add change event hanlder to every input in a form
+	$(formId+" input, "+formId+" select, "+formId+" textarea").change(function() {
+		if (closeTimeout) {
+			window.clearTimeout(closeTimeout);
+		}
+		$("#savedHelpText, #saveBtnText").html("Saving...");
+		$("#savedHelpError").html("");
+		$("#savedHelp").fadeIn(300);
+		
+		//submit all data of the form
+		$(formId).ajaxSubmit(options); 
+		return false;
+	});
+}
+
+//Show save result in the top popup
+function showResponse(responseText, statusText, xhr, $form)  {
+	if (responseText.indexOf("Error:") === 0) {
+		var errorText = responseText.replace("Error:", "");
+		$("#savedHelpText").html(""); 
+		$("#savedHelpError, #saveBtnText").html(errorText); 
+		closeTimeout = setTimeout(function() { $("#savedHelp").fadeOut(200) }, 4000);
+	}
+	else {
+		$("#savedHelpText, #saveBtnText").html("Saved!"); 
+		closeTimeout = setTimeout(function() { $("#savedHelp").fadeOut(200) }, 2500);
+	}
+} 
+
+
+
+/* --------------- Feeds ---------------- */
+//used for paging in different feeds
 function loadMoreFeed(type, talkerName) {
 	var lastActionId = $("#"+type+"List").children().last().attr("id");
 
@@ -324,6 +451,7 @@ function loadMoreFeed(type, talkerName) {
 				
 				$(data).appendTo($("#"+type+"List"));
 				
+				//for new items
 				$('.inline-edit').inlineEdit( { hover: ''} );
 				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
 			}
@@ -332,120 +460,24 @@ function loadMoreFeed(type, talkerName) {
 	return false;
 }
 
-function showStartConvoDialog(type) {
-	if (type === "question") {
-		$("#newConvoTypeQuestion").attr("checked", "checked");
-	}
-	else if (type === "chat"){
-		$("#newConvoTypeConvo").attr("checked", "checked");
-	}
-	
-	$("#newConvoForm").show();
-	$("#newQuestionConfirm").hide();
-	$("#newTalkConfirm").hide();
-	if ($("#convoText") && $("#convoText").val() !== "") {
-		$("#newConvoTitle").val($("#convoText").val());
-	}
-	showPopup("#startDialog", 350);
-	
-	return true;
+//for comments/replies in feed
+function showReplyForm(commentId) {
+	$("#reply"+commentId+" .inline_display").hide();
+	$("#reply"+commentId+" .inline_form").show();
+	$("#reply"+commentId).show();
+	return false;
 }
-
-function saveConvo(page) {
-	var type = "QUESTION";
-	if ($("#newConvoTypeConvo").attr("checked")) {
-		type = "CONVERSATION";
-	}
-	var title = $("#newConvoTitle").val();
-	if (title === 'Enter your question or request here.') {
-		title = '';
-	}
-	var details = $("#newConvoDetails").val();
-	if (details === 'For example. Will the stage of disease, current medications, or patient history help to answer the question?') {
-		details = '';
-	}
-	//var topics = $("#newConvoTopics").val();
-	var topics = '';
-
-	if (title === "") {
-		alert("Please input headline.");
-		return false;
-	}
-
-	$.post("/conversations/create", 
-			{ type: type, title: title, details: details, topics: topics, fromPage: page},
-			function(data) {
-				if (type === "CONVERSATION") {
-					$("#startTalkBtn").click(function() {
-	  					openChat(data.tid);
-	  					$.post("/conversations/start}", {convoId: data.id});
-	  					hideAll();
-					});
-					$("#startChatText").val("");
-					$("#newTalkConfirm").show();
-				}
-				else {
-					$("#questionLink").attr("href", data.url).html(data.url);
-					$("#postQuestionText").val("");
-					$("#newQuestionConfirm").show();
-				}
-				$("#newConvoForm").hide();
-				
-				if (!(type === "QUESTION" && page === "liveTalks")) {
-					if ($(".conversationsList")) {
-						$(data.html).prependTo($(".conversationsList"));
-					}
-					if ($("#communityFeedList")) {
-						$(data.html).prependTo($("#communityFeedList"));
-					}
-				}
-
-				$("#convoText").val("");
-				$("#newConvoTitle").val("");
-				$("#newConvoDetails").val("For example. Will the stage of disease, current medications, or patient history help to answer the question?");
-				//$("#newConvoTopics").val("");
-			}
-		);
-
+function showAllReplies(commentId) {
+	$("#comment"+commentId+" .comreply").fadeIn();
 	return false;
 }
 
 
 
-//'thankYou' or 'comment' popups
-var selectedTalkerId = '';
 
-function showPopupForm (type, talkerId, userName) {
-	$("#"+type+"User").html(userName);
-	selectedTalkerId = talkerId;
+/* ---------------- Other common functions ----------------- */
 
-	showPopup("#"+type+"Popup", 200);
-	return false;
-}
-
-//void createThankYou(String toTalkerId, String note, String tagFile) {
-function saveThankYou() {
-	var noteText = $("#thankYouListNote").val();
-	hideAll();
-	$("#thankYouListNote").val("");
-
-	$.post("/actions/createThankYou", 
-		{ toTalkerId: selectedTalkerId, note: noteText}
-	);
-	return false;
-}
-
-function sendProfileComment() {
-	var commentText = $("#commentText").val();
-	hideAll();
-	$("#commentText").val("");
-
-	$.post("/actions/saveProfileComment", 
-		{ profileTalkerId: selectedTalkerId, parentId: '', text: commentText}
-	);
-}
-
-
+//hide panel with help info (is showed on some pages)
 function hideHelpInfo(type, saveFlag) {
 	$("#"+type+"Help").hide();
 	
@@ -456,7 +488,9 @@ function hideHelpInfo(type, saveFlag) {
 }
 
 /*
+ * Makes a link instead of plain text url.
  * Code's discussed here: http://stackoverflow.com/questions/37684/replace-url-with-html-links-javascript
+ * 
  */
 function linkify(inputText) {
 	var replaceText, replacePattern1, replacePattern2, replacePattern3;
@@ -476,66 +510,59 @@ function linkify(inputText) {
 	return replacedText;
 }
 
-
-/* Ajax form saves */
-//TODO: maybe timeout would be better?
-var closeInterval;
-var options = { 
-        //target:        '#output2',   // target element(s) to be updated with server response 
-        //beforeSubmit:  showRequest,  // pre-submit callback 
-        success:       showResponse  // post-submit callback 
- 
-        // other available options: 
-        //url:       url         // override for form's 'action' attribute 
-        //type:      type        // 'get' or 'post', override for form's 'method' attribute 
-        //dataType:  null        // 'xml', 'script', or 'json' (expected server response type) 
-        //clearForm: true        // clear all form fields after successful submit 
-        //resetForm: true        // reset the form after successful submit 
- 
-        // $.ajax options can be used here too, for example: 
-        //timeout:   3000 
-    }; 
-
-
-function addAjaxForm(formId) {
-	$(formId+" input, "+formId+" select, "+formId+" textarea").change(function() {
-		if (closeInterval) {
-			window.clearInterval(closeInterval);
+//send verification link for email
+function sendVerificationLink(link) {
+	$(link).html("Sending...");
+	var email = $(link).attr("title");
+	var verificationLink = $(link);
+	var verificationResult = $(link).next("span");
+	$.post("/profile/resendVerificationEmail", 
+		{email: email},
+		function(data) {
+			verificationLink.hide();
+			verificationResult.html(data).show();
 		}
-		$("#savedHelpText, #saveBtnText").html("Saving...");
-		$("#savedHelpError").html("");
-		$("#savedHelp").fadeIn(300);
-		
-		$(formId).ajaxSubmit(options); 
-		return false;
-	});
-}
-
-function showResponse(responseText, statusText, xhr, $form)  {
-	if (responseText.indexOf("Error:") === 0) {
-		var errorText = responseText.replace("Error:", "");
-		$("#savedHelpText").html(""); 
-		$("#savedHelpError, #saveBtnText").html(errorText); 
-		closeInterval = setInterval(function() { $("#savedHelp").fadeOut(200) }, 4000);
-	}
-	else {
-		$("#savedHelpText, #saveBtnText").html("Saved!"); 
-		closeInterval = setInterval(function() { $("#savedHelp").fadeOut(200) }, 2500);
-	}
-} 
-
-
-
-//for comments/replies in feed
-function showReplyForm(commentId) {
-	$("#reply"+commentId+" .inline_display").hide();
-	$("#reply"+commentId+" .inline_form").show();
-	$("#reply"+commentId).show();
+	);
 	return false;
 }
-function showAllReplies(commentId) {
-	$("#comment"+commentId+" .comreply").fadeIn();
+
+//Shows popup window with mask background
+function showPopup(id, popupWidth) {
+	//Get the screen height and width
+	var maskHeight = $(document).height();
+	var maskWidth = $(window).width();
+
+	//Set heigth and width to mask to fill up the whole screen
+	$('#mask').css({'width':maskWidth,'height':maskHeight});
+	
+	//show background	
+	$('#mask').fadeIn(500);	
+	$('#mask').fadeTo("slow",0.6);	
+
+	//Get the window height and width
+	var winH = $(window).height();
+	var winW = $(window).width();
+          
+	//Set the popup window to center and show
+	$(id).css('top', 50);
+	$(id).css('left', winW/2-popupWidth);
+	$(id).fadeIn(200); 
+	
 	return false;
+}
+
+//hides background and popup
+function hideAll() {
+	$('#mask').hide();
+	$('.window').hide();
+	return false;
+}
+
+//limits number of symbols in a field
+function limitText(limitField, limitNum) {
+    if (limitField.value.length > limitNum) {
+        limitField.value = limitField.value.substring(0, limitNum);
+    } 
 }
 
 function initOldTabs(activeTabName) {
@@ -568,38 +595,6 @@ function initNewTabs() {
 	});
 	
 }
-
-
-//saveProfileComment(String profileTalkerId, String parentId, String text)
-function saveProfileComment(parentId) {
-	var commentText = $("#replytext"+parentId).val();
-	$("#replytext"+parentId).val("");
-
-	$.post("/actions/saveProfileComment", 
-		{ parentId: parentId, text: commentText},
-		function(html) {
-			$("#firstcommentmessage").hide();
-			//put comment in the tree
-			if (parentId == '') {
-				//add as first element in the top
-				$(html).prependTo($(".commentsarea"));
-
-				//add inline edit for new comment
-				$('.inline-edit').inlineEdit( { hover: ''} );
-			}
-			else {
-				//add as last element in subtree
-				$("#reply"+parentId).before($(html));
-			}
-		}
-	);
-
-	
-	return false;
-}
-
-
-
 
 //for javascript pagination
 function prepareList(type) {
@@ -662,13 +657,13 @@ let's close the popup and have a notification at the top of the screen that says
 				}
 				
 				//TODO: similar code?
-				if (closeInterval) {
-					window.clearInterval(closeInterval);
+				if (closeTimeout) {
+					window.clearTimeout(closeTimeout);
 				}
 				$("#savedHelpText").html(resultText);
 				$("#savedHelpError").html("");
 				$("#savedHelp").fadeIn(300);
-				closeInterval = setInterval(function() { $("#savedHelp").fadeOut(200) }, 2500);
+				closeTimeout = setTimeout(function() { $("#savedHelp").fadeOut(200) }, 2500);
 			}
 		}
 	);

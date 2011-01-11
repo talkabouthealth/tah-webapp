@@ -47,6 +47,8 @@ import dao.TopicDAO;
 public class Home extends Controller {
 
     public static void index() {
+    	Logger.error("Home 0");
+    	
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
     	Logger.error("Home 1");
