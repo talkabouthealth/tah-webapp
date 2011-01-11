@@ -49,13 +49,17 @@ public class Home extends Controller {
     public static void index() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
+    	Logger.error("Home 1");
 		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
+		Logger.error("Home 2");
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
     	
+    	Logger.error("Home 3");
     	boolean showIMPopup = prepareIMPopup(session, talker);
-		
 		TalkerLogic.preloadTalkerInfo(talker);
+		
+		Logger.error("Home 4");
 		
 //		Yes, for HealthInfo, let's use all of the data. 
 //		For Profile info, we can use gender, age, marital status, number of children, and ages of children.
@@ -120,6 +124,8 @@ public class Home extends Controller {
 				break;
 			}
 		}
+		
+		Logger.error("Home 5");
 		
 		render("@newhome", talker, 
 				liveConversations, convoFeed, communityFeed, showIMPopup,
