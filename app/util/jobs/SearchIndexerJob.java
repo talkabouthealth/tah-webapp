@@ -26,6 +26,10 @@ import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import util.SearchUtil;
 
+/**
+ * Updates all search indexes
+ *
+ */
 @Every("5min")
 public class SearchIndexerJob extends Job {
 
@@ -43,45 +47,23 @@ public class SearchIndexerJob extends Job {
 				  }
 				  
 				  Document doc = new Document();
-				  doc.add(new Field("id", talker.getId(), Field.Store.YES,
-				                      Field.Index.NO));
-				  doc.add(new Field("uname", talker.getUserName(), Field.Store.YES,
-				                        Field.Index.TOKENIZED));
-				  
+				  doc.add(new Field("id", talker.getId(), Field.Store.YES, Field.Index.NO));
+				  doc.add(new Field("uname", talker.getUserName(), Field.Store.YES, Field.Index.TOKENIZED));
 				  if (talker.isAllowed(ProfilePreference.PERSONAL_INFO) && talker.getBio() != null) {
 					  doc.add(new Field("bio", talker.getBio(), Field.Store.YES,
 		                      Field.Index.TOKENIZED));
 				  }
-				  
-				  //setBoost
-				  
-	//				  doc.add(new Field("city", hotel.getCity(), Field.Store.YES,
-	//				                        Field.Index.UN_TOKENIZED));
-	//				  doc.add(new Field("description", hotel.getDescription(),
-	//				                   Field.Store.YES,
-	//				                   Field.Index.TOKENIZED));
-	//				  String fullSearchableText
-	//				        = hotel.getName()
-	//				         + " " + hotel.getCity() + " " + hotel.getDescription();
-	//
-	//				  doc.add(new Field("content", fullSearchableText,
-	//				                 Field.Store.NO,
-	//				                 Field.Index.TOKENIZED));
-				  
 				  talkerIndexWriter.addDocument(doc);
 				  
 				  //for autocomplete
 				  Document doc2 = new Document();
-				  doc2.add(new Field("uname", talker.getUserName(), Field.Store.YES,
-	                      Field.Index.TOKENIZED));
+				  doc2.add(new Field("uname", talker.getUserName(), Field.Store.YES, Field.Index.TOKENIZED));
 				  doc2.add(new Field("type", "User", Field.Store.YES, Field.Index.NO));
 				  autocompleteIndexWriter.addDocument(doc2);
 			}
 			
-			//Logger.error("Before convos: "+ConversationDAO.loadAllConversations().size());
 			for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
 	//			possibly weight titles, conversation details, summaries, and answers more than the archived real-time conversations?
-				
 				if (convo.isDeleted()) {
 					continue;
 				}
@@ -107,11 +89,9 @@ public class SearchIndexerJob extends Job {
 				Document doc2 = new Document();
 				doc2.add(new Field("title", convo.getTopic(), Field.Store.YES, Field.Index.TOKENIZED));
 				doc2.add(new Field("type", "Conversation", Field.Store.YES, Field.Index.NO));
-				//TODO: url can be changed after indexing?
 				if (convo.getMainURL() != null) {
 					doc2.add(new Field("url", convo.getMainURL(), Field.Store.YES, Field.Index.NO));
 				}
-				
 				autocompleteIndexWriter.addDocument(doc2);
 			}
 			

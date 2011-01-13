@@ -165,5 +165,20 @@ public class DBUtil {
 		for (String s : colls) {
 		    System.out.println(s);
 		}
+		
+		//TODO: create indexes
+//		activities
+//		configs
+//		convocomments
+//		convos
+//		diseases
+//		healthitems
+//		logins
+//		names
+//		notifications
+//		profilecomments
+//		system.indexes
+//		talkers
+//		topics
 	}
 }

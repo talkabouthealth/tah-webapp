@@ -20,6 +20,19 @@ import dao.ApplicationDAO;
 import dao.DiseaseDAO;
 import dao.TopicDAO;
 
+/**
+ * Imports topics tree
+ * Format:
+ 
+ Parent;Child;Child;Child;Child;Aliases;
+<TOP_TOPIC1>;;;;;<ALIAS>;
+;<TOPIC1>;;;;;
+;<TOPIC2>;;;;;
+<TOP_TOPIC2>;;;;;;
+;<TOPIC1>;;;;<ALIAS>;
+;;<SUB_TOPIC1>;;;;
+...
+ */
 public class TopicsImporter {
 	
 	final static int TOPIC_LEVELS = 5;
@@ -44,8 +57,6 @@ public class TopicsImporter {
 				continue;
 			}
 			
-//			System.out.println(Arrays.toString(lineArr));
-		
 			//check all levels
 			TopicBean topic = null;
 			for (int i=0; i<lineArr.length && i<TOPIC_LEVELS; i++) {
@@ -78,25 +89,25 @@ public class TopicsImporter {
 		}
 		
 		for (TopicBean topic : topics) {
-			//printTopic(topic, "");
-			saveTopic(topic);
+			printTopic(topic, "");
+//			saveTopic(topic);
 		}
 	}
 	
-	private static void saveTopic(TopicBean parent) {
-		Set<TopicBean> savedChildren = new LinkedHashSet<TopicBean>();
-		for (TopicBean child : parent.getChildren()) {
-			saveTopic(child);
-			savedChildren.add(child);
-		}
-		parent.setChildren(savedChildren);
-		TopicDAO.save(parent);
-	}
-	
-//	private static void printTopic(TopicBean parent, String prefix) {
-//		System.out.println(prefix+parent);
+//	private static void saveTopic(TopicBean parent) {
+//		Set<TopicBean> savedChildren = new LinkedHashSet<TopicBean>();
 //		for (TopicBean child : parent.getChildren()) {
-//			printTopic(child, prefix+"___");
+//			saveTopic(child);
+//			savedChildren.add(child);
 //		}
+//		parent.setChildren(savedChildren);
+//		TopicDAO.save(parent);
 //	}
+	
+	private static void printTopic(TopicBean parent, String prefix) {
+		System.out.println(prefix+parent);
+		for (TopicBean child : parent.getChildren()) {
+			printTopic(child, prefix+"___");
+		}
+	}
 }

@@ -102,11 +102,11 @@
 	<div id="top">
         <div id="logoac">
         	<a href="@{Application.index()}">
-        		<img width="328" height="73" class="logotopmargin" 
-        			alt="Talk About Health" src="/public/images/logo2.gif" border="0"/>
+        		<img width="342" height="66" class="logotopmargin" 
+        			alt="Talk About Health" src="/public/images/logonew.jpg" border="0"/>
         	</a>
         </div>
-        <div style="padding-left: 15px;" id="topnav3">
+        <div id="topnav3">
         	#{if session.contains("username") }
 				#{set currentUser = session.get("username") /}
 				<div class="topnavigationz">
@@ -131,24 +131,19 @@
 		                  #{ifnot session.prof }
 		                  	<li><a href="@{Profile.healthDetails()}">Edit Health Info</a></li>
 		                  #{/ifnot}
-		                  <li><a href="@{Profile.notifications()}">Notification Settings and Password</a></li>
+		                  <li><a href="@{Profile.notifications()}">Notification Settings</a></li>
 		                  <li><a href="@{Profile.preferences()}">Privacy Settings</a></li>
 		                </ul>
 		              </li>
 		              <li class="separator">|</li>
-		              <li> <a class="libull2" href="#">Help</a>
+		              <li> <a class="libull2" href="#">Other</a>
 		                <ul>
 		                  <li><a href="@{Static.faq()}">FAQ</a></li>
 		                  <li><a href="@{Static.communityguidelines()}">Community Guidelines</a></li>
 		                  <li><a href="http://blog.talkabouthealth.com">Blog</a></li>
-		                  <li><a href="@{Application.contactus()}">Feedback</a></li>
-		                  <li><a href="#" onclick="openInvitationsWindow();">Share TalkAboutHealth</a></li>
+		                  <li><a href="@{Secure.logout()}">Logout</a></li>
 		                </ul>
 		              </li>
-		              <li class="separator">|</li>
-		              <li class="tell"><a href="#" onclick="openInvitationsWindow();">Invite a Friend</a></li>
-		              <li class="separator">|</li>
-		              <li><a href="@{Secure.logout()}">Logout</a></li>
 		            </ul>
 	            	<div class="cb"></div>
 	          	</div>
@@ -156,8 +151,28 @@
 	          <div class="cb"></div>
           
 	          <div class="topnavCover">
+	          
+	          <div style="float: left; width: 265px;">
+	              <div class="topnavCover2">
+	                <div style="padding: 0px;" class="topsearchCover">
+	                  <div class="topsearchinput">
+	                    <input id="topSearchHelp" type="text" class="topserchz iebox"
+	                    	style="color: #aaaaaa;" value="Search answers and topics"
+	                    	/>
+	                    <input id="topSearchBox" type="text" class="topserchz iebox" style="display: none;"/>
+	                  </div>
+	                  <div class="topsubmitsz">
+	                    <input id="topSearchText" type="submit" onclick="return makeFullSearch();" 
+	                    	style="cursor: pointer;" value=" " src="images/topsubmitbtn.png" class="topsubmit"/>
+	                  </div>
+	                </div>
+	                <!--topsearchCover-->
+	              </div>
+	              <!--topnavCover2-->
+	            </div>
+	            
 	            <div class="topnavCover1">
-	              <ul id="nav">
+	              <ul id="nav" style="padding: 0px;">
 	                <li class="home no-hov"><a href="@{Home.index()}">Home</a></li>
 	                <!-- 
 	                <li class="profile"><a href="@{ViewDispatcher.view(currentUser)}">You</a></li>
@@ -198,25 +213,7 @@
 	              <!--nave-->
 	            </div>
 	            <!--topnavCover1-->
-	            <div style="float: right; width: 290px;">
-	              <div class="topnavCover2">
-	                <div style="padding-left: 25px;" class="topsearchCover">
-	                  <div class="topsearchinput">
-	                    <input id="topSearchHelp" type="text" class="topserchz iebox"
-	                    	style="color: #aaaaaa;" value="Search answers and topics"
-	                    	/>
-	                    <input id="topSearchBox" type="text" class="topserchz iebox" style="display: none;"/>
-	                  </div>
-	                  <div class="topsubmitsz">
-	                    <input id="topSearchText" type="submit" onclick="return makeFullSearch();" 
-	                    	style="cursor: pointer;" value=" " src="images/topsubmitbtn.png" class="topsubmit"/>
-	                  </div>
-	                </div>
-	                <!--topsearchCover-->
-	              </div>
-	              <!--topnavCover2-->
-	            </div>
-	            <!--blank-->
+	            
 	          </div>
 	      #{/if}
 	      #{else}

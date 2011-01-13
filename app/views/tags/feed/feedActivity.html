@@ -37,13 +37,20 @@
 		
 		#{if _activity.convo}
 			<div class="joinztextlink">
-				#{if _activity.convo.comments.size() == 0}
-					<a href="@{ViewDispatcher.view(_activity.convo.mainURL)}#answers">Answer</a> | 
+				*{ 2 users chatting | Unfollow | 4 minutes ago }*
+				#{if _activity.convo.convoType == models.ConversationBean.ConvoType.QUESTION }
+					#{if _activity.convo.comments.size() == 0}
+						<a href="@{ViewDispatcher.view(_activity.convo.mainURL)}#answers">Answer</a> | 
+					#{/if}
+					#{else}
+						<a href="@{ViewDispatcher.view(_activity.convo.mainURL)}#answers">${_activity.convo.comments.size()} 
+							Answer${_activity.convo.comments.pluralize()}</a> | 
+					#{/else}
 				#{/if}
 				#{else}
-					<a href="@{ViewDispatcher.view(_activity.convo.mainURL)}#answers">${_activity.convo.comments.size()} 
-						Answer${_activity.convo.comments.pluralize()}</a> | 
+					<a href="@{ViewDispatcher.view(_activity.convo.mainURL)}">${_activity.convo.numOfChatters} user(s) chatting</a> | 
 				#{/else}
+				
 				#{if session.username}
 					<a href="#" class="followConvoLink" rel="${_activity.convo.id}">
 						${_talker?.followingConvosList?.contains(_activity.convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 

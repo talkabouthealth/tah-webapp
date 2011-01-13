@@ -10,6 +10,15 @@ import java.util.Map;
 import logic.TalkerLogic;
 import util.CommonUtil;
 
+/**
+ * Imports information for matching Health Info with Topics.
+ * Used for recommending Topics based on Health Info
+ * Format:
+ 
+ <HEALTH_ITEM>|<TOPIC1>,<TOPIC2>,...
+ ....
+ 
+ */
 public class HealthItems2Topics {
 	
 	public static void main(String[] args) throws Exception {
@@ -29,7 +38,6 @@ public class HealthItems2Topics {
 			String[] topicsArr = lineArr[1].split(",");
 			
 			healthItems2TopicsMap.put(healthItem, Arrays.asList(topicsArr));
-//			System.out.println(healthItem+" : "+Arrays.asList(topicsArr));
 		}
 		
 		TalkerLogic.setHealthItems2TopicsMap(healthItems2TopicsMap);

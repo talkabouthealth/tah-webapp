@@ -13,6 +13,18 @@ import models.TopicBean;
 import util.CommonUtil;
 import dao.ApplicationDAO;
 
+/**
+ * Import field choices (options in <select>) for different profiles (i.e. Physician, Nurse, etc.)
+ * Format:
+
+---<FIELD_NAME>|<PROFILE_TYPE>
+<OPTION1>
+<OPTION2>
+....
+<EMPTY LINE>
+
+ *
+ */
 public class FieldsDataImporter {
 	
 	public static void main(String[] args) throws Exception {
@@ -32,7 +44,6 @@ public class FieldsDataImporter {
 		
 			if (line.length() == 0) {
 				if (currentField != null) {
-//					System.out.println(currentField+" : "+currentList);
 					fieldsDataMap.put(currentField, currentList);
 
 					currentField = null;

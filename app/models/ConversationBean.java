@@ -14,6 +14,7 @@ import play.Logger;
 
 import util.CommonUtil;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
@@ -63,6 +64,9 @@ public class ConversationBean {
 	private String summary;
 	private Set<TalkerBean> sumContributors;
 	
+	//number of online people in the chat
+	private int numOfChatters;
+	
 	private Set<ConversationBean> relatedConvos;
 	private Set<String> members;
 	private List<CommentBean> comments;
@@ -93,6 +97,12 @@ public class ConversationBean {
     	String type = (String)convoDBObject.get("type");
     	if (type != null) {
     		convoType = ConvoType.valueOf(type);
+    	}
+    	
+    	//online talkers
+    	BasicDBList talkersList = (BasicDBList)convoDBObject.get("talkers");
+    	if (talkersList != null) {
+    		numOfChatters = talkersList.size();
     	}
     	
     	//topics(tags)
@@ -433,6 +443,14 @@ public class ConversationBean {
 
 	public void setBitlyChat(String bitlyChat) {
 		this.bitlyChat = bitlyChat;
+	}
+
+	public int getNumOfChatters() {
+		return numOfChatters;
+	}
+
+	public void setNumOfChatters(int numOfChatters) {
+		this.numOfChatters = numOfChatters;
 	}
 	
 }

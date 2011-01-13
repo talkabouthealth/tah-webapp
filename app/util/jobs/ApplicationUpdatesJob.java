@@ -50,61 +50,33 @@ import util.importers.TopicsImporter;
 import util.oauth.TwitterOAuthProvider;
 
 /**
- * Job is used for different updates in db when deploying new features.
+ * Job for preparing db and app for work.
+ * Also is used for different updates in db when deploying new features.
+ * 
+ * //TODO: iptables + other admin stuff
+ * 
  */
 @OnApplicationStart
 public class ApplicationUpdatesJob extends Job {
 	
 	public void doJob() throws Exception {
-		/*
-		 	Before deploy:
-		 	1. Update health items
-		 		
-				Navelbine (vinorelbine)|Vinorelbine (Navelbine) - also move this to the medications section
-				remove 'Symptoms'
-				remove Doxil (doxorubicin)
-				
-		 		db.healthitems.find({ name : 'Navelbine (vinorelbine)'})
-		 		db.healthitems.find({ _id : ObjectId("4cd7bb02c0f6b19baa7c415b")})
-		 		db.healthitems.remove({ _id : ObjectId("4cd7bb02c0f6b19baa7c415b")})
-		 		
-		 		db.healthitems.remove({ name : 'Symptoms'})
-		 		db.healthitems.remove({ name : 'Doxil (doxorubicin)'})
-		 		
-		 	2. Move Twitter/Facebook to the new format?
-		 	
-		 	3. Add bit.ly links to the old topics/convos
-		 	
-		 */
 		
-		//Fields data for Profiles
+		//Fields data for Edit Profile
 		FieldsDataImporter.importData("fields.dat");
 		
-		//HealthItems -> Topics mapping
+		//HealthItems -> Topics mapping (for recommendations)
 		HealthItems2Topics.importData("healthitems2topics.dat");
 		
-		HealthItemsUpdater.updateHealthItems("healthitemsupd.dat");
-		
-		//update topic from "," to "/"
-		for (TopicBean topic : TopicDAO.loadAllTopics()) {
-			String topicTitle = topic.getTitle();
-			if (topicTitle.contains(",")) {
-				topicTitle = topicTitle.replaceAll(", ", "/");
-				topicTitle = topicTitle.replaceAll(",", "/");
-				topic.setTitle(topicTitle);
-			}
-			TopicDAO.updateTopic(topic);
-		}
-		
+		//Create collections if missing
 		if (ApplicationDAO.isCollectionEmpty(DiseaseDAO.DISEASES_COLLECTION)) {
 			DiseaseImporter.importDiseases("diseases.dat");
 		}
-		
 		if (ApplicationDAO.isCollectionEmpty(HealthItemDAO.HEALTH_ITEMS_COLLECTION)) {
 			HealthItemsImporter.importHealthItems("healthitems.dat");
 		}
-		
-		//TODO: iptables + other admin stuff
+		if (ApplicationDAO.isCollectionEmpty(TopicDAO.TOPICS_COLLECTION)) {
+			TopicsImporter.importTopics("topics.dat");
+		}
 		
 		//Talkers/Topics/Convos should have different names, stored in 'names' collection
 		if (ApplicationDAO.isCollectionEmpty(ApplicationDAO.NAMES_COLLECTION)) {
@@ -125,11 +97,30 @@ public class ApplicationUpdatesJob extends Job {
 			}
 		}
 		
-		if (ApplicationDAO.isCollectionEmpty(TopicDAO.TOPICS_COLLECTION)) {
-			TopicsImporter.importTopics("topics.dat");
+		addAdminUser();
+		
+		
+		// Updates for different items
+		HealthItemsUpdater.updateHealthItems("healthitemsupd.dat");
+		
+		//update topic from "," to "/"
+		for (TopicBean topic : TopicDAO.loadAllTopics()) {
+			String topicTitle = topic.getTitle();
+			if (topicTitle.contains(",")) {
+				topicTitle = topicTitle.replaceAll(", ", "/");
+				topicTitle = topicTitle.replaceAll(",", "/");
+				topic.setTitle(topicTitle);
+			}
+			TopicDAO.updateTopic(topic);
 		}
 		
-		//add admin user if missing
+//		createBitlyLinks();
+    }
+
+	/**
+	 * Add admin user if missing
+	 */
+	private void addAdminUser() {
 		TalkerBean admin = TalkerDAO.getByUserName("admin");
 		if (admin == null) {
 			admin = new TalkerBean();
@@ -156,63 +147,52 @@ public class ApplicationUpdatesJob extends Job {
 			
 			TalkerDAO.save(admin);
 		}
-		
-//		Executors.newSingleThreadExecutor().execute(new Runnable() {
-//			@Override
-//			public void run() {
-//				try {
-//					//timeout between API requests
-//					final int BITLY_TIMEOUT = 60*1000;
-//					for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
-//						if (convo.getBitly() == null || convo.getBitly().equals("RATE_LIMIT_EXCEEDE")) {
-//							//String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
-//							String convoURL = "http://talkabouthealth.com/"+convo.getMainURL();
-//							convo.setBitly(BitlyUtil.shortLink(convoURL));
-//							Thread.sleep(BITLY_TIMEOUT);
-//							
-//							ConversationDAO.updateConvo(convo);
-//						}
-//						if (convo.getBitlyChat() == null || convo.getBitlyChat().equals("RATE_LIMIT_EXCEEDE")) {
-////							String convoChatURL = CommonUtil.generateAbsoluteURL("Talk.talkApp", "convoId", convo.getTid());
-//							String convoChatURL = "http://talkabouthealth.com/chat/"+convo.getTid();
-//							convo.setBitlyChat(BitlyUtil.shortLink(convoChatURL));
-//							Thread.sleep(BITLY_TIMEOUT);
-//							
-//							ConversationDAO.updateConvo(convo);
-//						}
-//					}
-//					
-//					for (TopicBean topic : TopicDAO.loadAllTopics()) {
-//						if (topic.getBitly() == null || topic.getBitly().equals("RATE_LIMIT_EXCEEDE")) {
-////							String topicURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", topic.getMainURL());
-//							String topicURL = "http://talkabouthealth.com/"+topic.getMainURL();
-//							topic.setBitly(BitlyUtil.shortLink(topicURL));
-//							Thread.sleep(BITLY_TIMEOUT);
-//							
-//							TopicDAO.updateTopic(topic);
-//						}
-//					}
-//				}
-//				catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-		
-		//create indexes
-//		activities
-//		configs
-//		convocomments
-//		convos
-//		diseases
-//		healthitems
-//		logins
-//		names
-//		notifications
-//		profilecomments
-//		system.indexes
-//		talkers
-//		topics
-		
-    }
+	}
+
+	/**
+	 * Create BitLy links for convos, chat and topics
+	 */
+	private void createBitlyLinks() {
+		Executors.newSingleThreadExecutor().execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					//timeout between API requests
+					final int BITLY_TIMEOUT = 60*1000;
+					for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
+						if (convo.getBitly() == null || convo.getBitly().equals("RATE_LIMIT_EXCEEDE")) {
+							//String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
+							String convoURL = "http://talkabouthealth.com/"+convo.getMainURL();
+							convo.setBitly(BitlyUtil.shortLink(convoURL));
+							Thread.sleep(BITLY_TIMEOUT);
+							
+							ConversationDAO.updateConvo(convo);
+						}
+						if (convo.getBitlyChat() == null || convo.getBitlyChat().equals("RATE_LIMIT_EXCEEDE")) {
+	//						String convoChatURL = CommonUtil.generateAbsoluteURL("Talk.talkApp", "convoId", convo.getTid());
+							String convoChatURL = "http://talkabouthealth.com/chat/"+convo.getTid();
+							convo.setBitlyChat(BitlyUtil.shortLink(convoChatURL));
+							Thread.sleep(BITLY_TIMEOUT);
+							
+							ConversationDAO.updateConvo(convo);
+						}
+					}
+					
+					for (TopicBean topic : TopicDAO.loadAllTopics()) {
+						if (topic.getBitly() == null || topic.getBitly().equals("RATE_LIMIT_EXCEEDE")) {
+	//						String topicURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", topic.getMainURL());
+							String topicURL = "http://talkabouthealth.com/"+topic.getMainURL();
+							topic.setBitly(BitlyUtil.shortLink(topicURL));
+							Thread.sleep(BITLY_TIMEOUT);
+							
+							TopicDAO.updateTopic(topic);
+						}
+					}
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 }

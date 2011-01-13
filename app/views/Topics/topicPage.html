@@ -260,22 +260,48 @@
 	                </div>
 	                <div class="cb"></div>
 				#{/if}
-                <div class="topipsts">
-                	<div class="mtrighttxt">
-				     	<a class="${currentPage.equals('viewTopic') ? 'current' : ''}" 
-				     		href="@{ViewDispatcher.view(topic.mainURL)}">Topic Home</a>
-				    </div>
-                  #{if talker }
-                  	<div class="mtrighttxt">
-				     	<a class="${currentPage.equals('manageTopic') ? 'current' : ''}" 
-				     		href="@{Topics.manage(topic.mainURL)}">Manage Topic</a>
-				    </div>
-                  #{/if}
-                  <div class="mtop"></div>
-                  <div class="topicborder"></div>
-                  <div class="cb"></div>
-                </div>
-                <!--topipsts-->
+				
+				#{if talker }
+	                <div class="topipsts">
+	                	<div class="mtrighttxt">
+					     	<a class="${currentPage.equals('viewTopic') ? 'current' : ''}" 
+					     		href="@{ViewDispatcher.view(topic.mainURL)}">Topic Home</a>
+					    </div>
+	                  	<div class="mtrighttxt">
+					     	<a class="${currentPage.equals('manageTopic') ? 'current' : ''}" 
+					     		href="@{Topics.manage(topic.mainURL)}">Manage Topic</a>
+					    </div>
+	                  <div class="mtop"></div>
+	                  <div class="topicborder"></div>
+	                  <div class="cb"></div>
+	                </div>
+                #{/if}
+                #{else}
+                	<div class="topipsts">
+	                  <div class="mtrighttxt1">Join now for immediate answers and support.</div>
+	                  <div id="joinnowbutton" style="margin: 5px 0px;">
+							<a href="@{Application.signup()}">
+								<img src="/public/images/join_nowbutton.gif" alt="" width="178" height="55" border="0"/>
+							</a>
+					  </div>
+	                  <div class="latextCover latextr" style="font-size: 14px;">
+	                  	<a href="@{Static.aboutus()}">why you'll love it&raquo;</a>&nbsp;&nbsp;
+	                  	<a href="@{Static.privacy()}">safety&raquo;</a>
+	                  </div>
+	                  <div class="topicborder"></div>
+	                </div>
+	                <div class="topipsts">
+	                  <div class="mtrighttxt1">TalkAboutHealth matches users with similar
+	                  	health concerns for answers and live chats.</div>
+	                  <div class="latextCover latextr" style="font-size: 14px; margin-bottom: 7px;">
+	                  	<a href="@{Static.aboutus()}">about&raquo;</a>&nbsp;&nbsp;
+	                  	<a href="@{Static.faq()}">faq&raquo;</a>&nbsp;&nbsp;
+	                  	<a href="http://blog.talkabouthealth.com">blog&raquo;</a>
+	                  </div>
+	                  <div class="topicborder"></div>
+	                </div>
+                #{/else}
+                
                 <div class="topipsts">
                   <div class="mtrighttxt1">Topic Statistics</div>
                   <div class="latextCover">
@@ -372,6 +398,48 @@
                   
                   <div class="topicborder"></div>
                 </div>
+                
+                #{ifnot talker}
+                	<div class="topipsts">
+<br/>           	
+<iframe src="http://www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2Ftalkabouthealth&amp;width=240&amp;colorscheme=light&amp;show_faces=true&amp;stream=false&amp;header=true&amp;height=62" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:240px; height:62px;" allowTransparency="true"></iframe>
+<br/><br/>                  		
+<script src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'search',
+  search: 'talkabouthealth',
+  interval: 6000,
+  title: 'TalkAboutHealth on Twitter',
+  subject: 'TalkAboutHealth',
+  width: 240,
+  height: 300,
+  theme: {
+    shell: {
+      background: '#8ec1da',
+      color: '#ffffff'
+    },
+    tweets: {
+      background: '#ffffff',
+      color: '#444444',
+      links: '#1985b5'
+    }
+  },
+  features: {
+    scrollbar: false,
+    loop: true,
+    live: true,
+    hashtags: true,
+    timestamp: true,
+    avatars: true,
+    toptweets: true,
+    behavior: 'default'
+  }
+}).render().start();
+</script>
+                  	</div>
+                #{/ifnot}
                 
                 *{
                 <div class="topipsts">

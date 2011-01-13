@@ -8,6 +8,14 @@ import models.HealthItemBean;
 import util.CommonUtil;
 import dao.HealthItemDAO;
 
+/**
+ * Updates names of HealthItems based on give file
+ * Format:
+
+<OLD_NAME>|<NEW_NAME>
+...
+
+ */
 public class HealthItemsUpdater {
 	
 	public static void main(String[] args) throws Exception {

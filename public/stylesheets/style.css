@@ -92,8 +92,8 @@ caption, th {
 #topnav3 {
 	float:left;
 	height:79px;
-	width:600px;
-	padding-left:30px;
+	width:620px;
+	padding-left: 15px;
 }
 .topnavigationz {
 	clear:both;
@@ -1326,7 +1326,7 @@ a.footerlink:hover {
 }
 #mtright {
 	float:left;
-	width:244px;
+	width:248px;
 }
 .mtrighttxt {
 	height:23px;

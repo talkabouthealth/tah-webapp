@@ -11,7 +11,6 @@ import play.jobs.OnApplicationStart;
 
 /**
  * Job for running IM services on startup
- *
  */
 @OnApplicationStart
 public class IMServicesJob extends Job {

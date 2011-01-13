@@ -16,16 +16,24 @@ import dao.HealthItemDAO;
 import models.HealthItemBean;
 
 /**
+ * Imports HealthItems for particular disease (described by DEFAULT_DISEASE_ID)
+ * 
  * Format of the input file is:
-   --TopLevel1
-   healthitem1
-   healthitem2
-   healthitem3
-   --TopLevel2
-   -SubLevel1
-   healthitem4
-   -SubLevel3
-   healthitem5
+
+   --<TOP_LEVEL1>
+   <HEALTH_ITEM1>
+   <HEALTH_ITEM2>
+   ...
+   --<TOP_LEVEL2>
+   -<SUB_LEVEL1>
+   <HEALTH_ITEM4>
+   -<SUB_LEVEL2>
+   <HEALTH_ITEM5>
+   ..
+   
+ *
+ * TOP_LEVEL_NAME - symptoms, tests
+ * SUB_LEVEL - Screening, Diagnosis
  *
  */
 public class HealthItemsImporter {

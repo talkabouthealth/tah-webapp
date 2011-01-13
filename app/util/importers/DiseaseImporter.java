@@ -23,6 +23,20 @@ import models.HealthItemBean;
 import models.DiseaseBean.DiseaseQuestion;
 import models.DiseaseBean.DiseaseQuestion.DiseaseQuestionType;
 
+/**
+ * Importer for diseases info and related questions.
+ * 
+ * Format:
+
+Disease;<NAME_OF_DISEASE>;;;;;
+;;;;;;
+<QUESTION_NAME>;<QUESTION_TEXT>;<QUESTION_PROFILE_TEXT>;<QUESTION_TYPE(SELECT/MULTISELECT)>;;;
+choices;<LIST OF CHOICES FOR COMBOBOX>
+;;;;;;
+.... other questions
+
+ *
+ */
 public class DiseaseImporter {
 	
 	public static void main(String[] args) throws Exception {
@@ -38,7 +52,7 @@ public class DiseaseImporter {
 		while ((line = br.readLine()) != null && line.length() != 0) {
 			line = line.trim();
 			String[] lineArr = line.split(";");
-//			System.out.println(Arrays.toString(lineArr));
+			
 			if (lineArr.length == 0) {
 				continue;
 			}
