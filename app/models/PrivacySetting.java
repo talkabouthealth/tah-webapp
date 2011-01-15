@@ -1,0 +1,101 @@
+package models;
+
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBObject;
+
+public class PrivacySetting implements DBModel {
+	
+	public enum PrivacyType {
+		PROFILE_INFO("Profile Info"),
+		HEALTH_INFO("Health Info"),
+		ACTIVITY_STREAM("Activity Stream"),
+		FOLLOWERS("Followers"),
+		FOLLOWING("Following"),
+		THANKYOUS("Thank you's"),
+		QUESTIONS_STARTED("Questions Started"),
+		QUESTIONS_FOLLOWING("Questions Following"),
+		TOPICS_FOLLOWING("Topics Following");
+		
+		private final String description;
+		
+		private PrivacyType(String description) {
+			this.description = description;
+		}
+
+		public String getDescription() { return description; }
+	}
+
+	public enum PrivacyValue {
+		PUBLIC("Public (everyone)"),
+		COMMUNITY("Community (members)"),
+		PRIVATE("No one (private)");
+		
+		private final String description;
+		
+		private PrivacyValue(String description) {
+			this.description = description;
+		}
+
+		public String getDescription() { return description; }
+	}
+	
+	private PrivacyType type;
+	private PrivacyValue value;
+	
+	public PrivacySetting(PrivacyType type, PrivacyValue value) {
+		this.type = type;
+		this.value = value;
+	}
+
+	@Override
+	public DBObject toDBObject() {
+		DBObject privacyDBObject = BasicDBObjectBuilder.start()
+			.add("type", type.toString())
+			.add("value", value.toString())
+			.get();
+		return privacyDBObject;
+	}
+	
+	@Override
+	public void parseDBObject(DBObject dbObject) {
+		String typeStr = (String)dbObject.get("type");
+		setType(PrivacyType.valueOf(typeStr));
+		
+		String valueStr = (String)dbObject.get("value");
+		setValue(PrivacyValue.valueOf(valueStr));
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof PrivacySetting)) {
+			return false;
+		}
+		
+		PrivacySetting other = (PrivacySetting)obj;
+		return type == other.type;
+	}
+	
+	@Override
+	public int hashCode() {
+		if (type == null) {
+			return 47;
+		}
+		return type.hashCode();
+	}
+
+	public PrivacyType getType() {
+		return type;
+	}
+
+	public void setType(PrivacyType type) {
+		this.type = type;
+	}
+
+	public PrivacyValue getValue() {
+		return value;
+	}
+
+	public void setValue(PrivacyValue value) {
+		this.value = value;
+	}
+}
