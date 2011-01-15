@@ -68,7 +68,6 @@ public class ConversationLogic {
 		String topicURL = ApplicationDAO.createURLName(title);
 		convo.setMainURL(topicURL);
 
-		//TODO: check it for execution time delay?
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
 		convo.setBitly(BitlyUtil.shortLink(convoURL));
 		

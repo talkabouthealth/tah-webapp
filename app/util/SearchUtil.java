@@ -44,23 +44,12 @@ public class SearchUtil {
 		Query searchQuery = getHits(is, new String[] {"uname", "bio"}, "*"+query+"*");
 		Hits hits = is.search(searchQuery);
 		
-//		List<String> results = new ArrayList<String>();
 		List<TalkerBean> results = new ArrayList<TalkerBean>();
 		for (int i = 0; i < hits.length(); i++) {
 			Document doc = hits.doc(i);
-//			System.out.println(hits.score(i));
-//			System.out.println(doc.get("uname")+" : "+doc.get("id"));
-			
-//			String result = doc.get("uname");
-//			String bio = doc.get("bio");
-//			if (bio != null) {
-//				result += ("<br/>" + doc.get("bio"));
-//			}
-//			result = result.replaceAll(query, "<b>"+query+"</b>");
-//			results.add(result);
+
 			TalkerBean talker = TalkerDAO.getById(doc.get("id"));
 			results.add(talker);
-			
 			if (i == 8) {
 				break;
 			}
@@ -117,21 +106,6 @@ public class SearchUtil {
 		is.close();
 		return results;
 	}
-//	hlu.getFragmentsWithHighlightedTerms(analyzer,
-//            query, “contents”, contents, 5, 100);
-
-	private static void getFragmentsWithHighlightedTerms(String fieldName, String text, Analyzer analyzer) {
-//		TokenStream stream = TokenSources.getTokenStream(fieldName, fieldContents, analyzer);
-//		Scorer scorer = new SpanScorer(query, fieldName,
-//				new CachingTokenFilter(stream));
-//		Scorer scorer = new QueryScorer(query, fieldName);
-////		Fragmenter fragmenter = new SimpleSpanFragmenter(scorer, 100);
-//	
-//		Highlighter highlighter = new Highlighter(scorer);
-////		highlighter.setTextFragmenter(fragmenter);
-//		String[] fragments = highlighter.getBestFragments(analyzer, fieldName, text, 5);
-	}
-	
 
 	
 	//TODO: update Lucene and queries to most recent version
@@ -152,8 +126,6 @@ public class SearchUtil {
 		Query searchQuery = parser.parse(queryText);
 		Hits hits = is.search(searchQuery);
 
-//		System.out.println("SEARCH FOR: "+searchedConvo.getTopic()+", "+hits.length());
-		
 		List<ConversationBean> results = new ArrayList<ConversationBean>();
 		for (int i = 0; i < hits.length(); i++) {
 			Document doc = hits.doc(i);
@@ -163,7 +135,6 @@ public class SearchUtil {
 				continue;
 			}
 			ConversationBean convo = ConversationDAO.getById(convoId);
-//			convo.setComments(CommentsDAO.loadConvoAnswers(convoId));
 			results.add(convo);
 			
 			if (results.size() == 3) {

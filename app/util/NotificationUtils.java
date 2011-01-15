@@ -43,6 +43,12 @@ public class NotificationUtils {
 	
 	//Send IM and Twitter notifications in separate thread
 	public static void sendAllNotifications(final String convoId, final String restartTalkerId) {
+		boolean automaticNotification = ConfigDAO.getBooleanConfig(AUTOMATIC_NOTIFICATIONS_CONFIG);
+		if (!automaticNotification) {
+			System.out.println("NO AUTOMAT!");
+			return;
+		}
+		
 		Executors.newSingleThreadExecutor().execute(new Runnable() {
 			@Override
 			public void run() {
@@ -59,12 +65,6 @@ public class NotificationUtils {
 	 * - don't notify more the 3x per day
 	 */
 	public static void sendAutomaticNotifications(String convoId, String restartTalkerId) {
-		boolean automaticNotification = ConfigDAO.getBooleanConfig(AUTOMATIC_NOTIFICATIONS_CONFIG);
-		if (!automaticNotification) {
-			System.out.println("NO AUTOMAT!");
-			return;
-		}
-		
 		OnlineUsersSingleton onlineUsersSingleton = OnlineUsersSingleton.getInstance();
 		//TODO: later - find 10 latest people who came online?
 		Map<String, UserInfo> onlineUsers = onlineUsersSingleton.getOnlineUserMap();
@@ -80,8 +80,8 @@ public class NotificationUtils {
 			//notifications for last 3 hours and day
 			Calendar threeHoursBeforeNow = Calendar.getInstance();
 			threeHoursBeforeNow.add(Calendar.HOUR, -3);
-			int threeHoursNotifications = NotificationDAO.numOfNotificationsForTime(userInfo.getUid(), threeHoursBeforeNow);
-			int dayNotifications = NotificationDAO.numOfNotificationsForDay(userInfo.getUid());
+			int threeHoursNotifications = NotificationDAO.numOfNotificationsForTime(userInfo.getUid(), threeHoursBeforeNow, null);
+			int dayNotifications = NotificationDAO.numOfNotificationsForDay(userInfo.getUid(), null);
 			
 			if (threeHoursNotifications == 0 && dayNotifications < 3) {
 				talkersForNotification.add(userInfo.getUid());
@@ -102,8 +102,6 @@ public class NotificationUtils {
 	}
 	
 	public static void sendTwitterNotifications(String convoId, String restartTalkerId) {
-		//TODO: we must send only 2 notifications per day?
-		
 		ConversationBean convo = ConversationDAO.getById(convoId);
 		TalkerBean restartTalker = null;
 		if (restartTalkerId != null) {
@@ -128,17 +126,20 @@ public class NotificationUtils {
 		String messageText = TwitterUtil.prepareTwit(message.toString(), convo.getTopic());
     	
 		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
-			if (talker.isSuspended() || talker.isDeactivated()) {
-				continue;
-			}
-			
-			//do not send notification to author of the event
-			if (talker.equals(restartTalker)) {
+			if (talker.isSuspended() || talker.isDeactivated()
+					|| talker.equals(restartTalker)) { //do not send notification to author of the event
 				continue;
 			}
 			
 			ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
 			if (twitterAccount != null && twitterAccount.isTrue("NOTIFY")) {
+				//only 2 Twitter notifications per day
+				int dayNotifications = NotificationDAO.numOfNotificationsForDay(talker.getId(), "TWITTER");
+				if (dayNotifications >= 2) {
+					continue;
+				}
+				
+				NotificationDAO.saveTwitterNotification(talker.getId(), convoId);
 				TwitterUtil.sendDirect(twitterAccount.getId(), messageText);
 			}
 		}

@@ -379,7 +379,7 @@ public class TalkerDAO {
 			Date latestNotification = NotificationDAO.getLatestNotification(talker.getId());
 			talker.setLatestNotification(latestNotification);
 			
-			long numOfNotifications = NotificationDAO.numOfNotificationsForDay(talker.getId());
+			long numOfNotifications = NotificationDAO.numOfNotificationsForDay(talker.getId(), null);
 			talker.setNumOfNotifications(numOfNotifications);
 			
 			talkersList.add(talker);

@@ -23,25 +23,32 @@ public class NotificationDAO {
 	/**
 	 * Returns number of notifications for last 24 hours
 	 */
-	public static int numOfNotificationsForDay(String talkerId) {
+	public static int numOfNotificationsForDay(String talkerId, String type) {
 		Calendar oneDayBeforeNow = Calendar.getInstance();
 		oneDayBeforeNow.add(Calendar.DAY_OF_MONTH, -1);
 		
-		return numOfNotificationsForTime(talkerId, oneDayBeforeNow);
+		return numOfNotificationsForTime(talkerId, oneDayBeforeNow, type);
 	}
 	
 	/**
 	 * Returns number of notifications for talker after given time
 	 */
-	public static int numOfNotificationsForTime(String talkerId, Calendar time) {
+	public static int numOfNotificationsForTime(String talkerId, Calendar time, String type) {
 		DBCollection notificationsColl = getCollection(NOTIFICATIONS_COLLECTION);
 		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
-		DBObject query = BasicDBObjectBuilder.start()
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start()
 			.add("uid", talkerRef)
-			.add("time", new BasicDBObject("$gt", time.getTime()))
-			.get();
+			.add("time", new BasicDBObject("$gt", time.getTime()));
+		//no type or given type
+		if (type == null) {
+			queryBuilder.add("type", new BasicDBObject("$exists", false));
+		}
+		else {
+			queryBuilder.add("type", type);
+		}
 		
+		DBObject query = queryBuilder.get();
 		return notificationsColl.find(query).count();
 	}
 	
@@ -72,6 +79,21 @@ public class NotificationDAO {
 			.get();
 		
 		return notificationsColl.find(query).count();
+	}
+	
+	public static void saveTwitterNotification(String talkerId, String convoId) {
+		DBCollection notificationsColl = getCollection(NOTIFICATIONS_COLLECTION);
+		
+		DBRef talkerRef = new DBRef(getDB(), "talkers", new ObjectId(talkerId));
+		DBRef convoRef = new DBRef(getDB(), "convos", new ObjectId(convoId));
+		DBObject notificationDBObject = BasicDBObjectBuilder.start()
+			.add("uid", talkerRef)
+			.add("convoId", convoRef)
+			.add("type", "TWITTER")
+			.add("time", new Date())
+			.get();
+		
+		notificationsColl.save(notificationDBObject);
 	}
 
 }

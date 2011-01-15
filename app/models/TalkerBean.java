@@ -138,6 +138,7 @@ public class TalkerBean implements Serializable {
 	private String originalUserName;
 	private boolean deactivated;
 	private boolean suspended;
+	private Set<PrivacySetting> privacySettings;
 	
 	// FB/Twitter/IM accounts
 	private Set<ServiceAccountBean> serviceAccounts;
@@ -932,5 +933,11 @@ public class TalkerBean implements Serializable {
 	}
 	public void setAnswerList(List<CommentBean> answerList) {
 		this.answerList = answerList;
+	}
+	public Set<PrivacySetting> getPrivacySettings() {
+		return privacySettings;
+	}
+	public void setPrivacySettings(Set<PrivacySetting> privacySettings) {
+		this.privacySettings = privacySettings;
 	}
 }	

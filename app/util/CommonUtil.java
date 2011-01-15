@@ -50,7 +50,6 @@ import com.tah.im.model.IMAccount;
 
 import dao.TalkerDAO;
 
-//TODO: check util/importers/jobs packages
 public class CommonUtil {
 	
 	private static final MessageDigest MD5_MESSAGE_DIGEST;

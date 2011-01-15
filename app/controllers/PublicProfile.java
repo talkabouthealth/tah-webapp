@@ -90,7 +90,6 @@ public class PublicProfile extends Controller {
 		render(talker, currentTalker, firstTimeComment);
 	}
 	
-	//TODO: move this to some "ajax" controller?
 	public static void deleteComment(String commentId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	CommentBean comment = CommentsDAO.getProfileCommentById(commentId);

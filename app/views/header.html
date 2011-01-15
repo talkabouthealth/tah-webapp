@@ -9,14 +9,12 @@
 		background-image: url(/public/images/ajax-loader.gif);
 		width: 15px;
 		height: 15px;
-		position: fixed;
-		top: 30px;
-		left: 30px;
+		margin: 10px auto;
 	}
 	//for caching image
 	#ajaxLoading2 {
 		background-image: url(/public/images/ajax-loader.gif);
-		height: 0px;
+		height: 1px;
 	}
 </style>
 	
@@ -69,11 +67,14 @@
 		
 		makeAutocomplete("#topSearchBox", "all");
 
+		/*
+		Show ajax loading item for every Ajax request
 		$("#ajaxLoading").bind("ajaxSend", function(){
 			   $(this).show();
 			 }).bind("ajaxComplete", function(){
 			   $(this).hide();
 			 });
+	    */
 
 		//truncates big text - used for feeds, long answers, descriptions, etc.
 		$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
@@ -281,5 +282,5 @@
 	<div id="savedHelpError"></div>
 </div>      
 
-<div id="ajaxLoading"></div>
+<div id="ajaxLoading" class="ajaxLoading"></div>
 <div id="ajaxLoading2"></div>

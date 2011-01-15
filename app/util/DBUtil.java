@@ -166,7 +166,7 @@ public class DBUtil {
 		    System.out.println(s);
 		}
 		
-		//TODO: create indexes
+		//FIXME: add indexes later? for now we have not many users
 //		activities
 //		configs
 //		convocomments

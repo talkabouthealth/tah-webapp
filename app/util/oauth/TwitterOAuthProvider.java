@@ -151,9 +151,6 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 				
 				CommonUtil.updateTalker(talker, session);
 			}
-			else {
-				//TODO: probably some error?
-			}
 			
 			//to sharing or notification settings?
 			String redirectURL = session.get("oauth_redirect_url");

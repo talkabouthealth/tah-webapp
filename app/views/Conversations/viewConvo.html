@@ -636,9 +636,14 @@
 							<a href="#" id="followConvoBtn" class="followConvoBtn"></a>
 						#{/else}
 						<input type="button" class="restartConvoLink restartChatBtn" value="" />
+						
+						<div class="cb"></div>
+				    	<div class="topicborder" style="margin-top: 10px;"></div>
 					#{/if}
-				    <div class="cb"></div>
-				    <div class="topicborder" style="margin-top: 10px;"></div>
+					#{else}
+						#{include 'tahInfo.html' /}
+					#{/else}
+				    
 					<div class="topipsts">
 						<div class="Statics">
 							<div class="Staticsh1">Question Statistics</div>
@@ -717,8 +722,12 @@
 			                      <a href="#"><strong>See More Related Conversation</strong></a> </p>
 			                    -->
 							</div>
+							
+							<div class="topicborder"></div>
 							<div class="cb"></div>
 						</div><!--topipsts-->
+						
+					#{include 'tahShare.html' /}
 				               
                 	<div class="cb"></div>
 				</div>

@@ -439,14 +439,21 @@ function showResponse(responseText, statusText, xhr, $form)  {
 //used for paging in different feeds
 function loadMoreFeed(type, talkerName) {
 	var lastActionId = $("#"+type+"List").children().last().attr("id");
+	
+	//replace More button with loading image
+	var moreBtn = $("#"+type+"Btn");
+	$("#ajaxLoading").appendTo(moreBtn.parent()).show();
+	moreBtn.hide();
 
 	//public static void conversationFeedAjax(String afterActionId) {
 	$.get("/home/feedAjaxLoad", {afterActionId: lastActionId, feedType: type, talkerName: talkerName},
 			function(data) {
+				$("#ajaxLoading").hide();
+		
+				//show more button if it isn't the end of a feed
 				var feedSize = $(data).find(".joinpic").size();
-				if (feedSize < feedsPerPage) {
-					//no more feeds - hide 'More' link
-					$("#"+type+"Btn").hide();
+				if (feedSize >= feedsPerPage) {
+					moreBtn.show();
 				}
 				
 				$(data).appendTo($("#"+type+"List"));

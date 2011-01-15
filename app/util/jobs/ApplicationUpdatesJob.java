@@ -61,6 +61,13 @@ public class ApplicationUpdatesJob extends Job {
 	
 	public void doJob() throws Exception {
 		
+		/*
+		 *  1. Convert Privacy to the new format
+		 *  2. Notifications?
+		 *  3. Twitter settings
+		 * 
+		 */
+		
 		//Fields data for Edit Profile
 		FieldsDataImporter.importData("fields.dat");
 		
