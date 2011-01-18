@@ -33,11 +33,13 @@ import models.DiseaseBean.DiseaseQuestion;
 import models.EmailBean;
 import models.HealthItemBean;
 import models.IMAccountBean;
+import models.PrivacySetting;
+import models.PrivacySetting.PrivacyType;
+import models.PrivacySetting.PrivacyValue;
 import models.ServiceAccountBean;
 import models.TalkerBean;
 import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean.EmailSetting;
-import models.TalkerBean.ProfilePreference;
 import models.TalkerDiseaseBean;
 import models.TopicBean;
 import models.actions.UpdateProfileAction;
@@ -250,7 +252,6 @@ public class Profile extends Controller {
 	/* -------------- Preferences (Privacy)  ------------------------ */
 	public static void preferences() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		Set<ProfilePreference> profilePreferences = talker.getProfilePreferences();
 		TalkerLogic.preloadTalkerInfo(talker, "privacy");
 		
 		//user just needs to view their Privacy Settings page for ProfileCompletion
@@ -260,7 +261,9 @@ public class Profile extends Controller {
 			CommonUtil.updateTalker(talker, session);
 		}
 		
-		render(talker, profilePreferences);
+//		System.out.println(talker.getPrivacySettings());
+		
+		render(talker);
 	}
 	
 	//TODO: https: preferencesSave vs savePreferences ?
@@ -268,18 +271,29 @@ public class Profile extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 		Map<String, String> paramsMap = params.allSimple();
-		EnumSet<ProfilePreference> preferencesSet = EnumSet.noneOf(ProfilePreference.class);
+		Set<PrivacySetting> privacySettings = new HashSet<PrivacySetting>();
 		for (String paramName : paramsMap.keySet()) {
-			//try to parse all parameters to ProfilePreference enum
-			try {
-				ProfilePreference preference = ProfilePreference.valueOf(paramName);
-				preferencesSet.add(preference);
+			if (paramName.startsWith("privacy_")) {
+				PrivacyType type = PrivacyType.valueOf(paramName.substring(8));
+				PrivacyValue value = PrivacyValue.valueOf(paramsMap.get(paramName));
+				PrivacySetting privacySetting = new PrivacySetting(type, value);
+				privacySettings.add(privacySetting);
 			}
-			catch (IllegalArgumentException iae) {}
 		}
+		talker.setPrivacySettings(privacySettings);
 		
-		talker.setProfilePreferences(preferencesSet);
 		TalkerDAO.updateTalker(talker);
+		
+//		EnumSet<ProfilePreference> preferencesSet = EnumSet.noneOf(ProfilePreference.class);
+//		for (String paramName : paramsMap.keySet()) {
+//			//try to parse all parameters to ProfilePreference enum
+//			try {
+//				ProfilePreference preference = ProfilePreference.valueOf(paramName);
+//				preferencesSet.add(preference);
+//			}
+//			catch (IllegalArgumentException iae) {}
+//		}
+//		talker.setProfilePreferences(preferencesSet);
 		
 		renderText("ok");
 	}

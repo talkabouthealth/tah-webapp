@@ -23,7 +23,6 @@ import models.TalkerBean;
 import models.ConversationBean;
 import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean.EmailSetting;
-import models.TalkerBean.ProfilePreference;
 import models.TopicBean;
 
 import dao.ApplicationDAO;
@@ -65,7 +64,7 @@ public class ApplicationUpdatesJob extends Job {
 		 *  1. Convert Privacy to the new format
 		 *  2. Notifications?
 		 *  3. Twitter settings
-		 * 
+		 *  4. Change profilepreference everywhere.
 		 */
 		
 		//Fields data for Edit Profile
@@ -139,14 +138,7 @@ public class ApplicationUpdatesJob extends Job {
 			String hashedPassword = CommonUtil.hashPassword(admin.getPassword());
 			admin.setPassword(hashedPassword);
 			
-			EnumSet<ProfilePreference> defaultPreferences = 
-	        	EnumSet.complementOf(
-	        		EnumSet.of(
-	    				ProfilePreference.PERSONAL_INFO,
-	    				ProfilePreference.HEALTH_INFO
-	        		)
-	        	);
-			admin.setProfilePreferences(defaultPreferences);
+			admin.setPrivacySettings(CommonUtil.getDefaultPrivacySettings());
 	        
 	        //By default all email notifications are checked
 	        EnumSet<EmailSetting> emailSettings = EnumSet.allOf(EmailSetting.class);

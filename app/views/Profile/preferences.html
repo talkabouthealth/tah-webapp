@@ -52,16 +52,44 @@
 						<div id="signupleftarea">
 							<div class="signupmain">
 								<div class="generalcheck">
-									#{list items:models.TalkerBean.ProfilePreference.values(), as:'preference' }
-										#{ifnot talker.isProf() && preference == models.TalkerBean.ProfilePreference.HEALTH_INFO} 
-											<div class="preferencescheck">
-												<input type="checkbox" value="" name="${preference}"
-												#{if profilePreferences.contains(preference) } checked='checked' #{/if}
-												/>
-												<span class="blacktext14">&nbsp;${preference.description}</span>
-											</div>
-										#{/ifnot}
-									#{/list}
+									<table id="privacyTable">
+										<tr>
+											<th>Information</th>
+											<th>Viewable by:</th>
+										</tr>
+										#{list items:models.PrivacySetting.PrivacyType.values(), as:'preference' }
+											#{ifnot talker.isProf() && preference == models.PrivacySetting.PrivacyType.HEALTH_INFO} 
+												<tr>
+													<td>${preference.description}</td>
+													<td>
+														<div class="personaltextfield">
+															<select name="privacy_${preference}" class="personalfields">
+																#{list items:models.PrivacySetting.PrivacyValue.values(), as:'choice' }
+																	<option value="${choice}" 
+																	#{if talker?.getPrivacyValue(preference) == choice } selected #{/if}
+																	>${choice.description}</option>
+																#{/list}
+															</select>
+														</div>
+													</td>
+												</tr>
+											#{/ifnot}
+										#{/list}
+									</table>
+									
+									*{
+										Old privacy page.
+										#{list items:models.TalkerBean.ProfilePreference.values(), as:'preference' }
+											#{ifnot talker.isProf() && preference == models.TalkerBean.ProfilePreference.HEALTH_INFO} 
+												<div class="preferencescheck">
+													<input type="checkbox" value="" name="${preference}"
+													#{if profilePreferences.contains(preference) } checked='checked' #{/if}
+													/>
+													<span class="blacktext14">&nbsp;${preference.description}</span>
+												</div>
+											#{/ifnot}
+										#{/list}
+									}*
 								</div>
 							</div>
 							

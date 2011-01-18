@@ -8,18 +8,27 @@
 	<div class="boxtopcenter">
 		<div id="shareTwitterForm" class="popup">
 		  <div class="popupheading">
-		    <div class="popuph1">Tweet Topic</div>
+		    <div class="popuph1">Tweet ${_shareType}</div>
 		    <div class="close"><a href="#"><img src="/public/images/close.jpg" alt="close" border="0" /></a></div>
 		  </div>
 		  <!--popupheading-->
 		  <div class="invitepeople">Tweet as @${_userName}</div>
 		  <textarea id="sharetwitterNote" class="popupinut" rows="3" cols="3"
-		  	>Learning about ${_topicName} on TalkAboutHealth - ${_topicURL}</textarea>
+		  #{if _shareType.equals('Topic')}
+>Learning about ${_topicName} on TalkAboutHealth - ${_topicURL}</textarea>
+		  #{/if}
+		  #{elseif _shareType.equals('Conversation') }
+>TalkAboutHealth conversation: ${_topicName} - ${_topicURL}</textarea>
+		  #{/elseif}
+		  #{elseif _shareType.equals('TalkAboutHealth') }
+>I am meeting others and sharing my breast cancer experiences on TalkAboutHealth. http://talkabouthealth.com</textarea>
+		  #{/elseif}
+		  	
 		  <div class="sentbox">
 		    <div id="shareResultText" class="senttxt"></div>
 		    <div id="shareResultError" class="senttxt" style="color: red;"></div>
 		    <input type="submit" id="shareTopicBtn" 
-		    	onclick="return shareTopic('twitter');" value="Tweet" />
+		    	onclick="return sharePage('twitter');" value="Tweet" />
 		  </div>
       	</div>
       

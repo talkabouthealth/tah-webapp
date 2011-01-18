@@ -13,11 +13,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import models.CommentBean;
 import models.EmailBean;
 import models.IMAccountBean;
+import models.PrivacySetting;
+import models.PrivacySetting.PrivacyType;
 import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean;
 import models.ThankYouBean;
@@ -64,7 +67,7 @@ public class TalkerDAO {
 				.add("im_notify", talker.isImNotify())
 				.add("service_accounts", setToDB(talker.getServiceAccounts()))
 				
-				.add("prefs", talker.profilePreferencesToInt())
+				.add("privacy_settings", setToDB(talker.getPrivacySettings()))
 				.add("email_settings", talker.emailSettingsToList())
 				
 				.add("ch_num", -1)
@@ -128,7 +131,7 @@ public class TalkerDAO {
 			.add("invites", talker.getInvitations())
 			.add("keywords", talker.getKeywords())
 			
-			.add("prefs", talker.profilePreferencesToInt())
+			.add("privacy_settings", setToDB(talker.getPrivacySettings()))
 			.add("email_settings", talker.emailSettingsToList())
 			.add("following_convos", talker.getFollowingConvosList())
 			
@@ -395,6 +398,7 @@ public class TalkerDAO {
 		DBObject fields = BasicDBObjectBuilder.start()
 			.add("img", 1)
 			.add("deactivated", 1)
+			.add("privacy_settings", 1)
 			.get();
 		DBObject talkerDBObject = talkersColl.findOne(query, fields);
 		
@@ -402,8 +406,14 @@ public class TalkerDAO {
 			return null;
 		}
 		
+		//If user has private image, display the default profile image.
+		TalkerBean talker = new TalkerBean();
+		talker.setPrivacySettings(parseSet(PrivacySetting.class, talkerDBObject, "privacy_settings"));
+		if (talker.isPrivate(PrivacyType.PROFILE_INFO)) {
+			return null;
+		}
 		if (getBoolean(talkerDBObject, "deactivated")) {
-			//Show default image
+			//show default image
 			return null;
 		}
 		

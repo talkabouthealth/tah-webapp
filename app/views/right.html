@@ -1,5 +1,14 @@
 <div id="comright" style="padding-left:30px;">
 #{if session.username }
+	
+	<script type="text/javascript">
+		var currentURL = '${currentURL}';
+		#{if talker}
+			var hasTwitter = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) != null };
+			var hasFB = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.FACEBOOK) != null };		
+		#{/if}
+	</script>
+	
 	<div class="topipsts"> <br />
        	#{if session.username.equals(talker.userName) }
        		Welcome 
@@ -193,15 +202,13 @@
      <div class="topixtext"> Invite friends to join the Community </div>
      <!--topixtext-->
      <div class="membersarea">
-
-       <div class="sharicons">
-       	<img src="/public/images/emailicon.jpg" alt="Emails" class="rpad" />
-       	<a href="#" onclick="return openInvitationsWindow();">Email</a> 
-       </div>
-       *{
-       <div class="sharicons"><img src="/public/images/twittericon.jpg" alt="Twitter" class="rpad" /><a href="#">Twitter</a></div>
-       <div class="sharicons"><img src="/public/images/facebookicon.jpg" alt="Members" class="rpad" /><a href="#">Facebook</a></div>
-       }*
+		#{ share/buttons /}
+		*{
+	       <div class="sharicons">
+	       	<img src="/public/images/emailicon.jpg" alt="Emails" class="rpad" />
+	       	<a href="#" onclick="return openInvitationsWindow();">Email</a> 
+	       </div>
+       	}*
      </div>
      <!--membersarea-->
      <div class="topicborder"></div>
@@ -341,6 +348,12 @@
   
   #{if talker}
   	#{popups/imSettings talker: talker /}
+  	
+  	#{set twitterAccount = talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
+			
+	#{ popups/shareEmail shareType: 'TalkAboutHealth', userName: talker?.userName, topicName: topic.title, topicDetails: topic.summary, topicURL: currentURL /}	
+	#{ popups/shareTwitter shareType: 'TalkAboutHealth', userName: twitterAccount?.userName, topicName: topic.title, topicURL: topic.bitly /}
+	#{ popups/shareFacebook shareType: 'TalkAboutHealth', topicName: topic.title, topicURL: currentURL /}
   #{/if}
 	
   <!-- Mask to cover the whole screen -->

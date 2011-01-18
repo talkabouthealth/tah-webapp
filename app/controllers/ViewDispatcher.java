@@ -16,8 +16,8 @@ import logic.FeedsLogic;
 import logic.TalkerLogic;
 import models.DiseaseBean;
 import models.HealthItemBean;
+import models.PrivacySetting.PrivacyType;
 import models.TalkerBean;
-import models.TalkerBean.ProfilePreference;
 import models.TalkerDiseaseBean;
 import models.ConversationBean;
 import models.TopicBean;
@@ -141,8 +141,8 @@ public class ViewDispatcher extends Controller {
 			}
 			
 			//if user has not made the information viewable to the Community
-			if (!talker.getProfilePreferences().contains(ProfilePreference.PERSONAL_INFO)
-					|| !talker.getProfilePreferences().contains(ProfilePreference.HEALTH_INFO)) {
+			if (talker.isPrivate(PrivacyType.PROFILE_INFO) 
+					|| talker.isPrivate(PrivacyType.HEALTH_INFO)) {
 				notViewableInfo = true;
 			}
 		}
@@ -213,7 +213,9 @@ public class ViewDispatcher extends Controller {
 			e.printStackTrace();
 		}
 		
-		render("Conversations/viewConvo.html", talker, convo, latestActivityTime, relatedConvos, userHasAnswer);
+		String currentURL = "http://"+request.host+request.path;
+		
+		render("Conversations/viewConvo.html", talker, convo, latestActivityTime, relatedConvos, userHasAnswer, currentURL);
     }
 	
 	private static void showTopic(TopicBean topic) {

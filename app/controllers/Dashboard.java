@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import models.TalkerBean;
-import models.TalkerBean.ProfilePreference;
 
 import play.mvc.Controller;
 import play.mvc.With;

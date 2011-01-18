@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +34,11 @@ import logic.ConversationLogic;
 import logic.TopicLogic;
 import models.ConversationBean;
 import models.IMAccountBean;
+import models.PrivacySetting;
 import models.TalkerBean;
 import models.TopicBean;
+import models.PrivacySetting.PrivacyType;
+import models.PrivacySetting.PrivacyValue;
 import play.Play;
 import play.cache.Cache;
 import play.mvc.Http.Request;
@@ -249,7 +253,7 @@ public class CommonUtil {
 			return "";
 		}
 		StringBuilder html = new StringBuilder();
-		if (authenticated) {
+		if (authenticated || talker.isPublic(PrivacyType.PROFILE_INFO)) {
 			String url = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", talker.getUserName());
 			html.append("<a href='"+url+"'>"+talker.getUserName()+"</a>");
 			if (talker.getConnection() != null && talker.getConnection().length() != 0) {
@@ -354,5 +358,19 @@ public class CommonUtil {
 		vars.put("name", talker.getUserName());
 		vars.put("email", talker.getEmail());
 		EmailUtil.sendEmail(EmailTemplate.FLAGGED, EmailUtil.SUPPORT_EMAIL, vars, null, false);
+	}
+
+	public static Set<PrivacySetting> getDefaultPrivacySettings() {
+		Set<PrivacySetting> privacySettings = new HashSet<PrivacySetting>();
+		for (PrivacyType type : PrivacyType.values()) {
+			PrivacyValue value = PrivacyValue.COMMUNITY;
+			if (type == PrivacyType.PROFILE_INFO || type == PrivacyType.HEALTH_INFO) {
+				value = PrivacyValue.PRIVATE;
+			}
+			
+			PrivacySetting privacySetting = new PrivacySetting(type, value);
+			privacySettings.add(privacySetting);
+		}
+		return privacySettings;
 	}
 }

@@ -26,9 +26,9 @@ public class PrivacySetting implements DBModel {
 	}
 
 	public enum PrivacyValue {
-		PUBLIC("Public (everyone)"),
+		PRIVATE("No one (private)"),
 		COMMUNITY("Community (members)"),
-		PRIVATE("No one (private)");
+		PUBLIC("Public (everyone)");
 		
 		private final String description;
 		
@@ -65,6 +65,11 @@ public class PrivacySetting implements DBModel {
 		setValue(PrivacyValue.valueOf(valueStr));
 	}
 	
+	@Override
+	public String toString() {
+		return type.toString()+ " : " + value.toString();
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof PrivacySetting)) {

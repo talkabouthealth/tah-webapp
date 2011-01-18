@@ -57,6 +57,7 @@ public class FacebookUtil {
 					HttpResponse res = WS.url(
 							"https://graph.facebook.com/me/feed?access_token=%s&message=%s", token, text).post();
 					
+					System.err.println("FB update response: " + res.getStatus() + ", "+res.getString());
 					Logger.error("FB update response: " + res.getStatus() + ", "+res.getString());
 				} catch (Exception e) {
 					//Logger.error(e, "Wasn't able to follow Twitter user!");

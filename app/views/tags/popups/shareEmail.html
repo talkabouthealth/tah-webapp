@@ -1,6 +1,6 @@
 <style type="text/css">
 	#shareEmailsForm {
-		height: 357px;
+		height: 365px;
 	}
 </style>
 
@@ -9,25 +9,52 @@
 		
 		<div id="shareEmailsForm" class="popup">
 		  <div class="popupheading">
-		    <div class="popuph1">Share Topic</div>
+		    <div class="popuph1">Share ${_shareType}</div>
 		    <div class="close"><a href="#"><img src="/public/images/close.jpg" alt="close" border="0" /></a></div>
 		  </div>
 		  <!--popupheading-->
-		  <div class="invitepeople">To tell people about this topic, type their email addresses here (separated by commas):</div>
+		  <div class="invitepeople">
+			  #{if _shareType.equals('Topic')}
+				To tell people about this topic, type their email addresses here (separated by commas):
+			  #{/if}
+			  #{elseif _shareType.equals('Conversation') }
+				To tell people about this conversation, type their email addresses here (separated by commas):
+			  #{/elseif}
+			  #{elseif _shareType.equals('TalkAboutHealth') }
+				To share TalkAboutHealth with friends, type their email addresses here (separated by commas):
+			  #{/elseif}
+		  </div>
 		  <textarea id="shareEmails" class="popupinut" rows="4" cols="3"></textarea>
 		  <div class="invitepeople">
 		  	From: <input id="shareUserName" type="text" value="${_userName}" style="background-color:#F5F5F5;"/>
 		  </div>
 		  <div class="Addnote">Add a personal note here:</div>
+		  
 		  <textarea id="shareemailNote" class="popupinut" cols="4" rows="3" autocomplete="off"
-		  	>I thought you would be interested in the topic "${_topicName}" on TalkAboutHealth. - ${_topicURL}
+		  #{if _shareType.equals('Topic')}
+>I thought you would be interested in the topic "${_topicName}" on TalkAboutHealth. - ${_topicURL}
 		  	
 ${_topicDetails}</textarea>
+		  #{/if}
+		  #{elseif _shareType.equals('Conversation') }
+>I thought you would be interested in the TalkAboutHealth conversation:
+${_topicName}
+
+${_topicDetails}
+
+${_topicURL}</textarea>
+		  #{/elseif}		
+		  #{elseif _shareType.equals('TalkAboutHealth') }
+>I thought you would be interested in meeting others and sharing your experiences on TalkAboutHealth. http://talkabouthealth.com</textarea>
+		  #{/elseif}
+		  
+		  	
 		  <div class="sentbox">
 		    <div id="shareResultText" class="senttxt"></div>
 		    <div id="shareResultError" class="senttxt" style="color: red;"></div>
 		    <input type="submit" class="sendinvites" id="shareTopicBtn" 
-		    	onclick="return shareTopic('email', '${_topicName}');" value=" " src="images/sendinvites.jpg" />
+		    	value=" " src="images/sendinvites.jpg"
+		    	onclick="return sharePage('email', '${_shareType}', '${_topicName}');"  />
 		  </div>
       	</div>
       

@@ -150,9 +150,12 @@ public class NotificationUtils {
 		if (talker.getEmailSettings().contains(emailSetting)) {
 			vars.put("username", talker.getUserName());
 			
+			//for convo and thoughts replies we have separate templates
 			if (emailSetting == EmailSetting.CONVO_COMMENT && vars.get("reply_text") != null) {
-				//for replies we have separate template
 				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_CONVO_REPLY_TO_ANSWER, talker.getEmail(), vars, null, true);
+			}
+			else if (emailSetting == EmailSetting.RECEIVE_COMMENT && vars.get("reply_text") != null) {
+				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_REPLY_TO_COMMENT_IN_JOURNAL, talker.getEmail(), vars, null, true);
 			}
 			else {
 				EmailUtil.sendEmail(emailSetting.getEmailTemplate(), talker.getEmail(), vars, null, true);

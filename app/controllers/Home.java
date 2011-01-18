@@ -255,7 +255,7 @@ public class Home extends Controller {
     }
     
     
-    public static void share(String type, String emails, String from, String note, String item) {
+    public static void share(String type, String emails, String from, String note, String pageType, String pageInfo) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
     	if (type != null) {
@@ -271,14 +271,22 @@ public class Home extends Controller {
     			}
     			
     			validation.isTrue(!emailsToSend.isEmpty()).message("emails.incorrect");
-    			
     			if(validation.hasErrors()) {
     				renderText("Error: Please input correct emails");
     	            return;
     	        }
     			
     			Map<String, String> vars = new HashMap<String, String>();
-    			String subject = from+" thought you would be interested in the topic \""+item+"\" on TalkAboutHealth";
+    			String subject = "";
+    			if (pageType.equalsIgnoreCase("Topic")) {
+    				subject = from+" thought you would be interested in the topic \""+pageInfo+"\" on TalkAboutHealth";
+    			}
+    			else if (pageType.equalsIgnoreCase("Conversation")) {
+    				subject = from+" thought you would be interested in the conversation \""+pageInfo+"\" on TalkAboutHealth";
+    			}
+    			else if (pageType.equalsIgnoreCase("TalkAboutHealth")) {
+    				subject = from+" has invited you to try TalkAboutHealth";
+    			}
     			vars.put("title", subject);
     			note = note.replaceAll("\n", "<br/>");
     			vars.put("note", note);

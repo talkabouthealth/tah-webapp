@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Set;
 
 import models.CommentBean.Vote;
+import models.PrivacySetting.PrivacyType;
+import models.PrivacySetting.PrivacyValue;
 import models.ServiceAccountBean.ServiceType;
 import models.actions.Action;
 
@@ -222,14 +224,6 @@ public class TalkerBean implements Serializable {
 		this.userName = userName;
 	}
 
-	public TalkerBean(String id, String userName, String connection, boolean connectionVerified, boolean suspended) {
-		this.id = id;
-		this.userName = userName;
-		this.connection = connection;
-		this.connectionVerified = connectionVerified;
-		this.suspended = suspended;
-	}
-	
 	//TODO: verify equals & hashCode ? move to abstract DBModel class?
 	@Override
 	public boolean equals(Object obj) {
@@ -268,7 +262,10 @@ public class TalkerBean implements Serializable {
 		setConnectionVerified(getBoolean(talkerDBObject, "connection_verified")); 
 		
 		parseEmailSettings(getStringList(talkerDBObject, "email_settings"));
+		setPrivacySettings(parseSet(PrivacySetting.class, talkerDBObject, "privacy_settings"));
+		//TODO: remove old preferences
 		parseProfilePreferences(getInt(talkerDBObject, "prefs"));
+		
 		Collection<DBObject> thankYousCollection = (Collection<DBObject>)talkerDBObject.get("thankyous");
 		setNumOfThankYous(thankYousCollection == null ? 0 : thankYousCollection.size());
 	}
@@ -444,17 +441,6 @@ public class TalkerBean implements Serializable {
 		return topicsInfoList;
 	}
 	
-	/* 
-	 * Convert from Integer to ProfilePreferences EnumSet and vice versa 
-	 */
-	public int profilePreferencesToInt() {
-		int dbValue = 0;
-		for (ProfilePreference preference : profilePreferences) {
-			dbValue |= (1 << preference.getValue());
-		}
-		return dbValue;
-	}
-	
 	public void parseProfilePreferences(int dbValue) {
 		profilePreferences = EnumSet.noneOf(ProfilePreference.class);
 		for (ProfilePreference preference : ProfilePreference.values()) {
@@ -533,12 +519,27 @@ public class TalkerBean implements Serializable {
 	
 	// ----========= Useful methods for displaying data ============----
 	
-	public boolean isProf() {
-		return PROFESSIONAL_CONNECTIONS_LIST.contains(connection);
+	public PrivacyValue getPrivacyValue(PrivacyType type) {
+		for (PrivacySetting privacySetting : getPrivacySettings()) {
+			if (privacySetting.getType() == type) {
+				return privacySetting.getValue();
+			}
+		}
+		return null;
 	}
-	
-	public boolean isAdmin() {
-		return (userName != null && userName.equals("admin"));
+	public boolean isPrivate(PrivacyType type) {
+		PrivacyValue value = getPrivacyValue(type);
+		if (value == null) {
+			return true;
+		}
+		return value == PrivacyValue.PRIVATE;
+	}
+	public boolean isPublic(PrivacyType type) {
+		PrivacyValue value = getPrivacyValue(type);
+		if (value == null) {
+			return false;
+		}
+		return value == PrivacyValue.PUBLIC;
 	}
 	
 	public boolean isAllowed(ProfilePreference preference) {
@@ -546,6 +547,14 @@ public class TalkerBean implements Serializable {
 			return false;
 		}
 		return profilePreferences.contains(preference);
+	}
+	
+	public boolean isProf() {
+		return PROFESSIONAL_CONNECTIONS_LIST.contains(connection);
+	}
+	
+	public boolean isAdmin() {
+		return (userName != null && userName.equals("admin"));
 	}
 	
 	public String getAge() {

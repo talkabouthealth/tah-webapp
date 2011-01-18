@@ -8,16 +8,26 @@
 	<div class="boxtopcenter">
 		<div id="shareFBForm" class="popup">
 		  <div class="popupheading" style="background: none;">
-		    <div class="popuph1">Share Topic on Facebook</div>
+		    <div class="popuph1">Share ${_shareType} on Facebook</div>
 		    <div class="close"><a href="#"><img src="/public/images/close.jpg" alt="close" border="0" /></a></div>
 		  </div>
 		  <textarea id="sharefacebookNote" class="popupinut" rows="3" cols="3"
-		  	>Learning about ${_topicName} on TalkAboutHealth - ${_topicURL}</textarea>
+		   #{if _shareType.equals('Topic')}
+>Learning about ${_topicName} on TalkAboutHealth - ${_topicURL}</textarea>
+		  #{/if}
+		  #{elseif _shareType.equals('Conversation') }
+>TalkAboutHealth conversation: ${_topicName}
+${_topicURL}</textarea>
+		  #{/elseif}
+		  #{elseif _shareType.equals('TalkAboutHealth') }
+>I am meeting others and sharing my breast cancer experiences on TalkAboutHealth. http://talkabouthealth.com</textarea>
+		  #{/elseif}
+		  	
 		  <div class="sentbox">
 		    <div id="shareResultText" class="senttxt"></div>
 		    <div id="shareResultError" class="senttxt" style="color: red;"></div>
 		    <input type="submit" id="shareTopicBtn" 
-		    	onclick="return shareTopic('facebook');" value="Post" />
+		    	onclick="return sharePage('facebook');" value="Post" />
 		  </div>
       	</div>
       

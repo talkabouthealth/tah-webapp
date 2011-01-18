@@ -23,7 +23,7 @@ $(document).ready(function() {
 		else {
 			$(this).html("Unfollow");
 		}
-		$.post("/conversations/follow}", 
+		$.post("/conversations/follow", 
 				{ convoId: convoId },
 				function(data) {
 					//...
@@ -632,7 +632,33 @@ function showMore(type) {
 	return false;
 }
 
-function shareTopic(type, itemName) {
+
+/* ------------------- Sharing ---------------------- */
+
+function shareEmailPopup() {
+	$("#shareResultError").html("");
+	showPopup("#shareEmailDialog", 350);
+}
+function shareTwitterPopup() {
+	if (hasTwitter) {
+		showPopup("#shareTwitterDialog", 350);
+	}
+	else {
+		//show Twitter login
+		openTwitter(currentURL+'?share=twitter');
+	}
+}
+function shareFBPopup() {
+	if (hasFB) {
+		showPopup("#shareFBDialog", 450);
+	}
+	else {
+		//show FB login
+		openFacebook(currentURL+'?share=facebook');
+	}
+}
+
+function sharePage(type, pageType, pageInfo) {
 	var emails = $("#shareEmails").val();
 	var userName = $("#shareUserName").val();
 	var note = $("#share"+type+"Note").val();
@@ -641,7 +667,7 @@ function shareTopic(type, itemName) {
 	$("#shareResultText").html("");
 
 	$.post("/home/share", 
-		{ emails: emails, from: userName, note: note, type: type, item: itemName },
+		{ emails: emails, from: userName, note: note, type: type, pageType: pageType, pageInfo: pageInfo },
 		function(data) {
 			if (data.indexOf("Error") != -1) {
 				$("#shareResultError").html(data);

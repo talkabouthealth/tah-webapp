@@ -46,7 +46,6 @@ form {
 	padding:0px;
 	margin:0px;
 	height:73px;
-	background:url(../images/logo.gif) no-repeat top;
 	padding-top:6px;
 }
 #logo {
@@ -5316,3 +5315,8 @@ ul.tabs li.active, ul.tabs li.active span: {
 	float:left;
 	padding-top:20px;
 }
+
+
+#privacyTable { font-size: 14px; }
+#privacyTable th { font-weight: bold; padding-bottom: 20px; }
+#privacyTable td { padding-right: 20px; }

@@ -21,7 +21,6 @@ import models.ConversationBean;
 import models.TalkerTopicInfo;
 import models.TopicBean;
 import models.CommentBean.Vote;
-import models.TalkerBean.ProfilePreference;
 import models.actions.Action;
 import models.actions.AnswerConvoAction;
 import models.actions.AnswerDisplayAction;

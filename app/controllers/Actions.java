@@ -197,10 +197,21 @@ public class Actions extends Controller {
 			
 			CommentBean thought = CommentsDAO.getProfileCommentById(comment.getParentId());
 			if (!talker.equals(thought.getFromTalker())) {
-				//send to user who started the thread
+				//when user leaves post in someone else's Thoughts Feed, if there are replies, 
+				//send email to the owner of the Thoughts Feed as well as the user who started the thread.
+				
+//				{other_talker} replied to you on TalkAboutHealth.<br/><br/>
+//
+//				Thought:  "{comment_text}"<br/><br/>
+//				Reply:  "{reply_text}"<br/><br/>
+//				
+//				profile_talker - link
+				
 				Map<String, String> vars = new HashMap<String, String>();
 				vars.put("other_talker", talker.getUserName());
-				vars.put("comment_text", comment.getText());
+				vars.put("comment_text", thought.getText());
+				vars.put("reply_text", comment.getText());
+				vars.put("profile_talker", profileTalker.getUserName());
 				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
 						thought.getFromTalker(), vars);
 			}

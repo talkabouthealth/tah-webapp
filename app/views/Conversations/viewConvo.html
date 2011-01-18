@@ -30,8 +30,23 @@
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
 		var tid = '${convo.tid}';
+
+		var currentURL = '${currentURL}';
+		#{if talker}
+			var hasTwitter = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) != null };
+			var hasFB = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.FACEBOOK) != null };		
+		#{/if}
 		
 		$(document).ready(function() {
+			//TODO: similar code?
+			var share = "${params.share}";
+			if (share === "twitter") {
+				showPopup("#shareTwitterDialog", 350);
+			}
+			else if (share === "facebook") {
+				showPopup("#shareFBDialog", 450);
+			}
+			
 			$("#followConvoBtn").click(function() {
 				$.post("@{Conversations.follow()}", 
 	  				{ convoId: '${convo.id}'},
@@ -746,5 +761,17 @@
 	
 	#{ popups/flag /}
 	#{ popups/thankyou /}
+	
+	#{if talker}
+		#{set twitterAccount = talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
+		
+*{ 
+	Tags should be in one line because of the bug:
+	https://bugs.launchpad.net/play/+bug/579936
+}*
+		#{ popups/shareEmail shareType: 'Conversation', userName: talker?.userName, topicName: convo.topic, topicDetails: convo.summary, topicURL: currentURL /}
+		#{ popups/shareTwitter shareType: 'Conversation', userName: twitterAccount?.userName, topicName: convo.topic, topicURL: convo.bitly /}
+		#{ popups/shareFacebook shareType: 'Conversation', topicName: convo.topic, topicURL: currentURL /}							
+	#{/if}
 </div>
 <div id="mask"></div>

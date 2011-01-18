@@ -23,6 +23,7 @@ import dao.ConversationDAO;
 import dao.TopicDAO;
 
 import models.CommentBean;
+import models.PrivacySetting;
 import models.TalkerBean;
 import models.ConversationBean;
 import models.TopicBean;
@@ -72,11 +73,13 @@ public abstract class AbstractAction implements Action {
 		
 		DBObject talkerDBObject = ((DBRef)dbObject.get("uid")).fetch();
 		String talkerId = talkerDBObject.get("_id").toString();
-		String talkerName = (String)talkerDBObject.get("uname");
-		boolean suspended = getBoolean(talkerDBObject, "suspended");
-		String connection = (String)talkerDBObject.get("connection");
-		boolean connectionVerified = DBUtil.getBoolean(talkerDBObject, "connection_verified"); 
-		setTalker(new TalkerBean(talkerId, talkerName, connection, connectionVerified, suspended));
+		TalkerBean talker = new TalkerBean(talkerId);
+		talker.setUserName((String)talkerDBObject.get("uname"));
+		talker.setSuspended(getBoolean(talkerDBObject, "suspended"));
+		talker.setConnection((String)talkerDBObject.get("connection"));
+		talker.setConnectionVerified(DBUtil.getBoolean(talkerDBObject, "connection_verified"));
+		talker.setPrivacySettings(parseSet(PrivacySetting.class, talkerDBObject, "privacy_settings"));
+		setTalker(talker);
 		
 		setTime((Date)dbObject.get("time"));
 		setType(ActionType.valueOf((String)dbObject.get("type")));
@@ -197,11 +200,13 @@ public abstract class AbstractAction implements Action {
 		if (otherTalkerDBRef != null) {
 			DBObject talkerDBObject = otherTalkerDBRef.fetch();
 			String talkerId = talkerDBObject.get("_id").toString();
-			String talkerName = (String)talkerDBObject.get("uname");
-			String connection = (String)talkerDBObject.get("connection");
-			boolean connectionVerified = DBUtil.getBoolean(talkerDBObject, "connection_verified"); 
-	    	
-	    	return new TalkerBean(talkerId, talkerName, connection, connectionVerified, false);
+			
+			TalkerBean talker = new TalkerBean(talkerId);
+			talker.setUserName((String)talkerDBObject.get("uname"));
+			talker.setConnection((String)talkerDBObject.get("connection"));
+			talker.setConnectionVerified(DBUtil.getBoolean(talkerDBObject, "connection_verified"));
+			talker.setPrivacySettings(parseSet(PrivacySetting.class, talkerDBObject, "privacy_settings"));
+	    	return talker;
 		}
 		return null;
 	}

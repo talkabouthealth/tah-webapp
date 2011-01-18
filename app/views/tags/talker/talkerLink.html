@@ -1,6 +1,6 @@
-#{if session.username}
-	<a href="@{ViewDispatcher.view(_userName)}"><strong>${_userName}</strong></a>
+#{if session.username || _talker.isPublic(models.PrivacySetting.PrivacyType.PROFILE_INFO)}
+	<a href="@{ViewDispatcher.view(_talker.userName)}"><strong>${_talker.userName}</strong></a>
 #{/if}
 #{else}
-	<strong>${util.CommonUtil.getAnonymousName(_userName)}</strong>
+	<strong>${util.CommonUtil.getAnonymousName(_talker.userName)}</strong>
 #{/else}

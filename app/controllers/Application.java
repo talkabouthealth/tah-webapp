@@ -22,11 +22,13 @@ import org.apache.log4j.PropertyConfigurator;
 
 import models.EmailBean;
 import models.IMAccountBean;
+import models.PrivacySetting;
 import models.ServiceAccountBean;
+import models.PrivacySetting.PrivacyType;
+import models.PrivacySetting.PrivacyValue;
 import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean;
 import models.TalkerBean.EmailSetting;
-import models.TalkerBean.ProfilePreference;
 import play.Logger;
 import play.Play;
 import play.data.validation.Email;
@@ -264,15 +266,8 @@ public class Application extends Controller {
         talker.setNtime(1);
         talker.setCtype(TalkerBean.CONVERSATIONS_TYPES_ARRAY);
         
-        EnumSet<ProfilePreference> defaultPreferences = 
-        	EnumSet.complementOf(
-        		EnumSet.of(
-    				ProfilePreference.PERSONAL_INFO,
-    				ProfilePreference.HEALTH_INFO
-        		)
-        	);
-        talker.setProfilePreferences(defaultPreferences);
-        
+		talker.setPrivacySettings(CommonUtil.getDefaultPrivacySettings());
+		
         //By default all email notifications are checked
         EnumSet<EmailSetting> emailSettings = EnumSet.allOf(EmailSetting.class);
         talker.setEmailSettings(emailSettings);

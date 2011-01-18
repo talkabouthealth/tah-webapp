@@ -2,10 +2,10 @@
 	${_votes.size()} vote(s) by
 	#{list items: _votes, as: 'vote' }
 		#{ifnot vote_isLast}
-			#{talker/talkerLink userName: vote.talker.userName /},
+			#{talker/talkerLink talker: vote.talker /},
 		#{/ifnot}
 		#{else}
-			#{talker/talkerLink userName: vote.talker.userName /}
+			#{talker/talkerLink talker: vote.talker /}
 		#{/else}
 	#{/list}
 #{/if}

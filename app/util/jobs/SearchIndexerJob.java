@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.List;
 
 import models.CommentBean;
+import models.PrivacySetting.PrivacyType;
 import models.TalkerBean;
-import models.TalkerBean.ProfilePreference;
 import models.ConversationBean;
 import models.TopicBean;
 
@@ -49,7 +49,7 @@ public class SearchIndexerJob extends Job {
 				  Document doc = new Document();
 				  doc.add(new Field("id", talker.getId(), Field.Store.YES, Field.Index.NO));
 				  doc.add(new Field("uname", talker.getUserName(), Field.Store.YES, Field.Index.TOKENIZED));
-				  if (talker.isAllowed(ProfilePreference.PERSONAL_INFO) && talker.getBio() != null) {
+				  if (!talker.isPrivate(PrivacyType.PROFILE_INFO) && talker.getBio() != null) {
 					  doc.add(new Field("bio", talker.getBio(), Field.Store.YES,
 		                      Field.Index.TOKENIZED));
 				  }

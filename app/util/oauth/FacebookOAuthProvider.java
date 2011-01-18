@@ -28,16 +28,16 @@ import dao.TalkerDAO;
 
 public class FacebookOAuthProvider implements OAuthServiceProvider {
 	
-	private static final String APP_ID = "131545373528131";
-	private static final String APP_SECRET = "0620bead67e2ffa4e9e46f60b3376dec";
-	private static final String CALLBACK_URL =
-		"talkabouthealth.com/oauth/callback?type=facebook";
+//	private static final String APP_ID = "131545373528131";
+//	private static final String APP_SECRET = "0620bead67e2ffa4e9e46f60b3376dec";
+//	private static final String CALLBACK_URL =
+//		"talkabouthealth.com/oauth/callback?type=facebook";
 	
 // Test settings	
-//	public static final String APP_ID = "126479497379490";
-//	public static final String APP_SECRET = "cd4606efec03ea8c5bd9ffb9d49000ff";
-//	public static final String CALLBACK_URL =
-//		"kan.dev.com:9000/oauth/callback?type=facebook";
+	public static final String APP_ID = "126479497379490";
+	public static final String APP_SECRET = "cd4606efec03ea8c5bd9ffb9d49000ff";
+	public static final String CALLBACK_URL =
+		"kan.dev.com:9000/oauth/callback?type=facebook";
 	
 
 	public String getAuthURL(Session session, boolean secureRequest) {
@@ -48,7 +48,7 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			
 			authURL = "https://graph.facebook.com/oauth/authorize?" +
 				"client_id="+APP_ID+"&redirect_uri="+URLEncoder.encode(callbackURL, "UTF-8")+
-				"&scope=email,user_about_me,user_birthday,publish_stream";
+				"&scope=email,user_about_me,user_birthday,publish_stream,offline_access";
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -74,15 +74,14 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			List<String> lines = CommonUtil.makeGET(url, urlParams);
 			
 			//returned string is:
-			//access_token=...token...&expires=5745
+			//access_token=...token...
 			String accessToken = null;
 			for (String line : lines) {
 				if (line.startsWith("access_token")) {
-					int separatorIndex = line.lastIndexOf('&');
-					accessToken = line.substring(13, separatorIndex);
+					accessToken = line.substring(13);
+					break;
 				}
 			}
-			
 			session.put("token", accessToken);
 			
 			//parse Facebook id and email from reply
