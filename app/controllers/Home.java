@@ -63,6 +63,8 @@ public class Home extends Controller {
 		
 		Logger.error("Home 4");
 		
+		//TODO: cache recommendations
+		
 //		Yes, for HealthInfo, let's use all of the data. 
 //		For Profile info, we can use gender, age, marital status, number of children, and ages of children.
 		

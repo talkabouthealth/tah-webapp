@@ -1,15 +1,13 @@
-<ul id="nav">
-  <li class="explore"> <a href="#" class="menu2">Explore</a>
-    <ul style="width: 210px;">
-      <li><a href="@{Explore.conversations('feed')}">Community Conversation Feed</a></li>
-      <li><a href="@{Explore.conversations('popular')}">Popular Conversations</a></li>
+<ul id="nav" style="padding-top: 9px;">
+  <li class="explore"> <a href="#" class="menu4">Questions</a>
+    <ul>
+      <li><a href="@{Explore.conversations('feed')}">Community Questions</a></li>
+      <li><a href="@{Explore.conversations('popular')}">Popular Questions</a></li>
       <li class="gap"><a href="@{Explore.liveTalks()}">Live Chats</a></li>
-      <li><a href="@{Explore.openQuestions()}">Open Questions</a></li>
-      <li class="gap"><a href="@{Explore.browseTopics()}">Browse Topics</a></li>
-      <li><a href="@{Explore.searchConversations()}">Search Conversations</a></li>
+      <li><a href="@{Explore.openQuestions()}">Unanswered Questions</a></li>
+      <li class="gap"><a href="@{Explore.searchConversations()}">Search</a></li>
     </ul>
   </li>
-  <li><a href="http://blog.talkabouthealth.com">Blog</a></li>
-  <li><a href="@{Static.faq()}">FAQ</a></li>
-  <li><a href="@{Static.aboutus()}">About</a></li>
+  <li><a href="@{Explore.browseTopics()}">Topics</a></li>
+  <li><a href="@{Community.browseMembers()}">Members</a></li>
 </ul>

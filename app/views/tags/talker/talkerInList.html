@@ -18,7 +18,7 @@
         <span class="bluetext12">
         	#{ifnot _currentTalker?.equals(_talker) }
 			 	<a class="bluetext12" href="#" onclick="return followTalker(this, '${_talker.id}');">
-				${ _currentTalker.followingList.contains(_talker) ? 'Unfollow' : 'Follow'}
+				${ _currentTalker?.followingList?.contains(_talker) ? 'Unfollow' : 'Follow'}
 				</a> | 
 			#{/ifnot}
 		 	<a href="#" onclick="return showPopupForm('comment', '${_talker.id}', '${_talker.userName}');" 

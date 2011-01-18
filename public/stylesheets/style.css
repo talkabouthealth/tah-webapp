@@ -91,8 +91,8 @@ caption, th {
 #topnav3 {
 	float:left;
 	height:79px;
-	width:620px;
-	padding-left: 15px;
+	width:630px;
+	padding-left: 10px;
 }
 .topnavigationz {
 	clear:both;
@@ -224,6 +224,14 @@ a {
 	color:#fff;
 	background:url(../images/group.jpg);
 }
+#nav li a.menu4 {
+	background-image:url("../images/bullet.gif");
+	background-position:87px 9px;
+	background-repeat:no-repeat;
+	padding-right:20px;
+}
+
+
 .dropdown {
 	position:relative;
 }

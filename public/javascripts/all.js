@@ -107,10 +107,12 @@ function saveConvo(page) {
 		alert("Please input headline.");
 		return false;
 	}
-
+	
+	$("#convoCreateImage").show();
 	$.post("/conversations/create", 
 			{ type: type, title: title, details: details, topics: topics, fromPage: page},
 			function(data) {
+				$("#convoCreateImage").hide();
 				if (type === "CONVERSATION") {
 					$("#startTalkBtn").click(function() {
 	  					openChat(data.tid);

@@ -48,7 +48,7 @@
 				</div>
 			</form>
 			
-			#{if results }
+			#{if flash.query }
 				<div class="activitiestext" style="font-size: 14px; clear: left">		
 					#{list items:results, as: '_convo'}
 						<div class="joinbox">
@@ -89,14 +89,18 @@
 
 					#{/list}
 					#{else}
-						No results.
+						<span style="font-size: 14px;">Sorry, no matches were found.</span>
 					#{/else}
 					
 					#{ notLoggedNotice /}
 				</div>
 			#{/if}
+			
 		</div>
 		
 		#{ set currentPage = 'search' /}
-        #{ include 'right.html' /}
+        *{
+        	TODO: add it?
+        	#{ include 'right.html' /} 
+        }*
 	</div>

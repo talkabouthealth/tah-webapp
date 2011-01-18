@@ -4,7 +4,7 @@
 	/* Font size for autocomplete items */
 	.ui-menu .ui-menu-item a { font-size: 16px }
 	
-	#ajaxLoading {
+	.ajaxLoading {
 		display: none;
 		background-image: url(/public/images/ajax-loader.gif);
 		width: 15px;
@@ -153,7 +153,7 @@
           
 	          <div class="topnavCover">
 	          
-	          <div style="float: left; width: 265px;">
+	            <div style="float: left; width: 265px;">
 	              <div class="topnavCover2">
 	                <div style="padding-top: 2px;" class="topsearchCover">
 	                  <div class="topsearchinput">
@@ -241,29 +241,28 @@
 	          <div class="cb"></div>
           
 	          <div class="topnavCover">
-	            <div class="topnavCover1">
-	            	#{include 'notloggedinMenu.html' /}
-	            </div>
-	            <!--topnavCover1-->
-	            <div style="float: right; width: 290px;">
+	          	<div style="float: left; width: 265px;">
 	              <div class="topnavCover2">
-	                <div style="padding-left: 25px;" class="topsearchCover">
+	                <div style="padding-top: 2px;" class="topsearchCover">
 	                  <div class="topsearchinput">
-	                  	<input id="topSearchHelp" type="text" class="topserchz iebox"
+	                    <input id="topSearchHelp" type="text" class="topserchz iebox"
 	                    	style="color: #aaaaaa;" value="Search answers and topics"
 	                    	/>
 	                    <input id="topSearchBox" type="text" class="topserchz iebox" style="display: none;"/>
 	                  </div>
-	                  <!--topsearchinput-->
 	                  <div class="topsubmitsz">
-	                    <input type="submit" style="cursor: pointer;" value=" " src="images/topsubmitbtn.png" class="topsubmit"/>
+	                    <input id="topSearchText" type="submit" onclick="return makeFullSearch();" 
+	                    	style="cursor: pointer;" value=" " src="images/topsubmitbtn.png" class="topsubmit"/>
 	                  </div>
 	                </div>
 	                <!--topsearchCover-->
 	              </div>
 	              <!--topnavCover2-->
 	            </div>
-	            <!--blank-->
+	            
+	            <div class="topnavCover1">
+	            	#{include 'notloggedinMenu.html' /}
+	            </div>
 	          </div>	      
 	      #{/else}
 	      

@@ -6,7 +6,10 @@
             <div class="close"><img src="/public/images/close.jpg" alt="Close" /></div>
           </div>
           <div class="askquestion">
-            <b class="askquestionbox">I want to:</b>
+            <div class="askquestionbox">
+            	<b>I want to:</b><br/>
+            	<div id="convoCreateImage" class="ajaxLoading"></div>
+            </div>
             <div class="askquestionbox">
               <div class="asktext1">
               	<input id="newConvoTypeQuestion" name="newConvoType" checked="checked" type="radio" />
@@ -20,11 +23,12 @@
           <!--askquestion-->
           <div class="askheadingCoverz">
             <div class="askinputCover">
-				<textarea id="newConvoTitle" class="askkinput" cols="4" rows="4" 
+				<input id="newConvoTitle" class="askkinput" type="text"
 					onKeyDown="limitText(this, titleLimit);" onKeyUp="limitText(this, titleLimit);" 
 					onfocus="if (this.value == 'Enter your question or request here.') this.value=''" 
 			        onblur="if (this.value == '') this.value='Enter your question or request here.'"	
-				>Enter your question or request here.</textarea>
+				    value="Enter your question or request here."
+				>
             </div>
           </div>
           <div class="askheadingCover">

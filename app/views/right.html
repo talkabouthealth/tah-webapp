@@ -351,9 +351,9 @@
   	
   	#{set twitterAccount = talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
 			
-	#{ popups/shareEmail shareType: 'TalkAboutHealth', userName: talker?.userName, topicName: topic.title, topicDetails: topic.summary, topicURL: currentURL /}	
-	#{ popups/shareTwitter shareType: 'TalkAboutHealth', userName: twitterAccount?.userName, topicName: topic.title, topicURL: topic.bitly /}
-	#{ popups/shareFacebook shareType: 'TalkAboutHealth', topicName: topic.title, topicURL: currentURL /}
+	#{ popups/shareEmail shareType: 'TalkAboutHealth', userName: talker?.userName /}	
+	#{ popups/shareTwitter shareType: 'TalkAboutHealth', userName: twitterAccount?.userName /}
+	#{ popups/shareFacebook shareType: 'TalkAboutHealth' /}
   #{/if}
 	
   <!-- Mask to cover the whole screen -->
