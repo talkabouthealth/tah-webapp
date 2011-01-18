@@ -7,6 +7,7 @@ public class PrivacySetting implements DBModel {
 	
 	public enum PrivacyType {
 		PROFILE_INFO("Profile Info"),
+		PROFILE_IMAGE("Profile Image"),
 		HEALTH_INFO("Health Info"),
 		ACTIVITY_STREAM("Activity Stream"),
 		FOLLOWERS("Followers"),

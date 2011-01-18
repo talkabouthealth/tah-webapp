@@ -21,6 +21,7 @@ import models.EmailBean;
 import models.IMAccountBean;
 import models.PrivacySetting;
 import models.PrivacySetting.PrivacyType;
+import models.PrivacySetting.PrivacyValue;
 import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean;
 import models.ThankYouBean;
@@ -391,7 +392,7 @@ public class TalkerDAO {
 		return talkersList;
 	}
 	
-	public static byte[] loadTalkerImage(String userName) {
+	public static byte[] loadTalkerImage(String userName, String currentUser) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("uname", userName);
@@ -406,15 +407,19 @@ public class TalkerDAO {
 			return null;
 		}
 		
-		//If user has private image, display the default profile image.
-		TalkerBean talker = new TalkerBean();
-		talker.setPrivacySettings(parseSet(PrivacySetting.class, talkerDBObject, "privacy_settings"));
-		if (talker.isPrivate(PrivacyType.PROFILE_INFO)) {
-			return null;
-		}
-		if (getBoolean(talkerDBObject, "deactivated")) {
-			//show default image
-			return null;
+		//User can always see his/her own image
+		if (!userName.equals(currentUser)) {
+			//If user has private image, display the default profile image.
+			TalkerBean talker = new TalkerBean();
+			talker.setPrivacySettings(parseSet(PrivacySetting.class, talkerDBObject, "privacy_settings"));
+			
+			PrivacyValue privacyValue = talker.getPrivacyValue(PrivacyType.PROFILE_IMAGE);
+			if ( (currentUser == null && privacyValue != PrivacyValue.PUBLIC)
+					|| privacyValue == PrivacyValue.PRIVATE
+					|| getBoolean(talkerDBObject, "deactivated") ) {
+				//show default image
+				return null;
+			}
 		}
 		
 		return (byte[])talkerDBObject.get("img");

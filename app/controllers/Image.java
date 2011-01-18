@@ -22,7 +22,7 @@ public class Image extends Controller {
 //			return;
 //		}
 		
-		byte[] imageArray = TalkerDAO.loadTalkerImage(userName);
+		byte[] imageArray = TalkerDAO.loadTalkerImage(userName, Security.connected());
 		
 		response.setHeader("Content-Type", "image/gif");
 		if (imageArray == null) {
