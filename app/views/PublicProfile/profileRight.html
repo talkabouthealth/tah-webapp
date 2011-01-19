@@ -100,7 +100,7 @@
         <div class="cb"></div>
 	</div>
              
-	#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.FOLLOWING) }
+	#{if !talker.isPrivate(models.PrivacySetting.PrivacyType.FOLLOWING) }
 		<div class="followingbox">
 			<div class="followingtoptxt">
 				<div class="followingh1">
@@ -129,7 +129,7 @@
         <div class="topicborder"></div>
 	#{/if}
 	
-	#{if talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.FOLLOWERS) }
+	#{if !talker.isPrivate(models.PrivacySetting.PrivacyType.FOLLOWERS) }
 		<div class="followingbox">
 			<div class="followingtoptxt">
 				<div class="followingh1">

@@ -542,13 +542,6 @@ public class TalkerBean implements Serializable {
 		return value == PrivacyValue.PUBLIC;
 	}
 	
-	public boolean isAllowed(ProfilePreference preference) {
-		if (profilePreferences == null) {
-			return false;
-		}
-		return profilePreferences.contains(preference);
-	}
-	
 	public boolean isProf() {
 		return PROFESSIONAL_CONNECTIONS_LIST.contains(connection);
 	}

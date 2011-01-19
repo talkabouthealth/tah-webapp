@@ -90,7 +90,7 @@
                   </div>
                   <div class="topicborder"></div>
                   <div class="topicborder" style="margin-bottom: 10px;"></div>
-#{if talker.equals(currentTalker) || talker.profilePreferences?.contains(models.TalkerBean.ProfilePreference.TOPICS_FOLLOWED) }
+#{if talker.equals(currentTalker) || !talker.isPrivate(models.PrivacySetting.PrivacyType.TOPICS_FOLLOWING) }
 	
 	#{if talker.followingTopicsList.size() == 0 }
 		Currently no Topics being followed.<br/>
