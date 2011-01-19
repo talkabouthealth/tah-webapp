@@ -1,5 +1,6 @@
 package util;
 
+import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,9 +10,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import models.DBModel;
 import models.TalkerBean;
+import models.ServiceAccountBean.ServiceType;
 
 import org.bson.types.ObjectId;
 
@@ -165,6 +169,32 @@ public class DBUtil {
 		for (String s : colls) {
 		    System.out.println(s);
 		}
+		
+//		String accountId = null;
+//		String userEmail = null;
+//		
+//		List<String> lines = new ArrayList<String>();
+//		lines.add("{ \"id\": \"121450\", \"name\": \"Raji Kalra\" }");
+//		for (String line : lines) {
+//			if (line.startsWith("{")) {
+//				Pattern p = Pattern.compile("\"(\\w+)\":\"([@.\\s\\w]+)\"");
+//				Matcher m = p.matcher(line);
+//				while (m.find()) {
+//					String param = m.group(1);
+//					String value = m.group(2);
+//					if (param.equals("id")) {
+//						accountId = value;
+//					}
+//					else if (param.equals("email")) {
+//						userEmail = value;
+//					}
+//				}
+//			}
+//		}
+//		System.out.println(accountId+" : "+userEmail);
+//		
+//		TalkerBean anotherTalker = TalkerDAO.getByAccount(ServiceType.FACEBOOK, "");
+//		System.out.println(anotherTalker);
 		
 		//FIXME: add indexes later? for now we have not many users
 //		activities

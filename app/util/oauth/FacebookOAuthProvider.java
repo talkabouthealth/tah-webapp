@@ -89,6 +89,9 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			String userEmail = null;
 			lines = CommonUtil.makeGET("https://graph.facebook.com/me", 
 					"access_token="+URLEncoder.encode(accessToken, "UTF-8"));
+			Logger.error("---------- FACEBOOK INFO --------------");
+			Logger.error(lines.toString());
+			Logger.error("---------- FACEBOOK INFO END --------------");
 			for (String line : lines) {
 				if (line.startsWith("{")) {
 					Pattern p = Pattern.compile("\"(\\w+)\":\"([@.\\s\\w]+)\"");
@@ -141,6 +144,7 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			else {
 				//login or signup
 		        TalkerBean talker = TalkerDAO.getByAccount(ServiceType.FACEBOOK, accountId);
+		        Logger.error("Loading FB account: <%s>, Result: "+talker, accountId);
 		        if (talker != null) {
 		        	if (talker.isSuspended()) {
 		        		return "/application/suspendedAccount";
