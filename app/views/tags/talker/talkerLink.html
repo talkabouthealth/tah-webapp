@@ -2,5 +2,5 @@
 	<a href="@{ViewDispatcher.view(_talker.userName)}"><strong>${_talker.userName}</strong></a>
 #{/if}
 #{else}
-	<strong>${util.CommonUtil.getAnonymousName(_talker.userName)}</strong>
+	<strong>${util.CommonUtil.getAnonymousName(_talker)?.raw()}</strong>
 #{/else}

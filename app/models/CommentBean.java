@@ -19,7 +19,6 @@ import dao.TalkerDAO;
  * Represent Conversation answer/replies and Profile thoughts/replies.
  *
  */
-//TODO: update getters/setters
 public class CommentBean extends MessageBean {
 	
 	public static class Vote implements DBModel {
@@ -67,18 +66,10 @@ public class CommentBean extends MessageBean {
 			return talker.hashCode();
 		}
 		
-		public TalkerBean getTalker() {
-			return talker;
-		}
-		public void setTalker(TalkerBean talker) {
-			this.talker = talker;
-		}
-		public boolean isUp() {
-			return up;
-		}
-		public void setUp(boolean up) {
-			this.up = up;
-		}
+		public TalkerBean getTalker() { return talker; }
+		public void setTalker(TalkerBean talker) { this.talker = talker; }
+		public boolean isUp() { return up; }
+		public void setUp(boolean up) { this.up = up; }
 	}
 	
 	private String profileTalkerId;
@@ -186,67 +177,27 @@ public class CommentBean extends MessageBean {
 	public List<CommentBean> getChildren() { return children; }
 	public void setChildren(List<CommentBean> children) { this.children = children; }
 
-	public String getConvoId() {
-		return convoId;
-	}
+	public String getConvoId() { return convoId; }
+	public void setConvoId(String convoId) { this.convoId = convoId; }
 
-	public void setConvoId(String convoId) {
-		this.convoId = convoId;
-	}
+	public int getVoteScore() { return voteScore; }
+	public void setVoteScore(int voteScore) { this.voteScore = voteScore; }
 
-	public int getVoteScore() {
-		return voteScore;
-	}
+	public Set<Vote> getVotes() { return votes; }
+	public void setVotes(Set<Vote> votes) { this.votes = votes; }
 
-	public void setVoteScore(int voteScore) {
-		this.voteScore = voteScore;
-	}
+	public boolean isDeleted() { return deleted; }
+	public void setDeleted(boolean deleted) { this.deleted = deleted; }
 
-	public Set<Vote> getVotes() {
-		return votes;
-	}
+	public Set<String> getOldTexts() { return oldTexts; }
+	public void setOldTexts(Set<String> oldTexts) { this.oldTexts = oldTexts; }
 
-	public void setVotes(Set<Vote> votes) {
-		this.votes = votes;
-	}
+	public boolean isNotHelpful() { return notHelpful; }
+	public void setNotHelpful(boolean notHelpful) { this.notHelpful = notHelpful; }
 
-	public boolean isDeleted() {
-		return deleted;
-	}
+	public Set<Vote> getNotHelpfulVotes() { return notHelpfulVotes; }
+	public void setNotHelpfulVotes(Set<Vote> notHelpfulVotes) { this.notHelpfulVotes = notHelpfulVotes; }
 
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
-	public Set<String> getOldTexts() {
-		return oldTexts;
-	}
-
-	public void setOldTexts(Set<String> oldTexts) {
-		this.oldTexts = oldTexts;
-	}
-
-	public boolean isNotHelpful() {
-		return notHelpful;
-	}
-
-	public void setNotHelpful(boolean notHelpful) {
-		this.notHelpful = notHelpful;
-	}
-
-	public Set<Vote> getNotHelpfulVotes() {
-		return notHelpfulVotes;
-	}
-
-	public void setNotHelpfulVotes(Set<Vote> notHelpfulVotes) {
-		this.notHelpfulVotes = notHelpfulVotes;
-	}
-
-	public boolean isAnswer() {
-		return answer;
-	}
-
-	public void setAnswer(boolean answer) {
-		this.answer = answer;
-	}
+	public boolean isAnswer() { return answer; }
+	public void setAnswer(boolean answer) { this.answer = answer; }
 }

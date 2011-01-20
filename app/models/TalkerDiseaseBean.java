@@ -30,12 +30,10 @@ public class TalkerDiseaseBean {
 	//Map for "Other" fields
 	private Map<String, List<String>> otherHealthItems;
 	
-	public String getRecurrent() {
-		return recurrent;
-	}
-	public void setRecurrent(String recurrent) {
-		this.recurrent = recurrent;
-	}
+	
+	public String getRecurrent() { return recurrent; }
+	public void setRecurrent(String recurrent) { this.recurrent = recurrent; }
+	
 	public Date getSymptomDate() { return symptomDate; }
 	public void setSymptomDate(Date symptomDate) { this.symptomDate = symptomDate; }
 	
@@ -70,21 +68,12 @@ public class TalkerDiseaseBean {
 	public void setDiagnoseYear(int diagnoseYear) { this.diagnoseYear = diagnoseYear; }
 	
 	public Map<String, List<String>> getOtherHealthItems() { return otherHealthItems; }
-	public void setOtherHealthItems(Map<String, List<String>> otherHealthItems) {
-		this.otherHealthItems = otherHealthItems;
-	}
+	public void setOtherHealthItems(Map<String, List<String>> otherHealthItems) { this.otherHealthItems = otherHealthItems; }
 	
-	public Map<String, List<String>> getHealthInfo() {
-		return healthInfo;
-	}
-	public void setHealthInfo(Map<String, List<String>> healthInfo) {
-		this.healthInfo = healthInfo;
-	}
-	public String getHealthBio() {
-		return healthBio;
-	}
-	public void setHealthBio(String healthBio) {
-		this.healthBio = healthBio;
-	}
+	public Map<String, List<String>> getHealthInfo() { return healthInfo; }
+	public void setHealthInfo(Map<String, List<String>> healthInfo) { this.healthInfo = healthInfo; }
+	
+	public String getHealthBio() { return healthBio; }
+	public void setHealthBio(String healthBio) { this.healthBio = healthBio; }
 }
 

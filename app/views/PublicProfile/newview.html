@@ -162,7 +162,7 @@
 								<div class="Profileperson">Profile Info</div>
 			                    <div class="topicborder"></div>
 			                    
-			                    #{list items: profFields.keySet(), as: 'field'}
+			                    #{list items: logic.TalkerLogic.PROF_FIELDS_MAP.keySet(), as: 'field'}
 			                    	#{if field.equals("gender")}
 				                    	#{if talker.fullGender}
 						                    <div class="profiletxtCantant">
@@ -208,7 +208,7 @@
 			                    	#{elseif talker.profInfo.get(field) || (field.equals("educ") && talker.connection.equals("Physician"))}
 					                    <div class="profiletxtCantant">
 					                      <div class="profileCantanttxt1">
-					                      	<strong>${profFields.get(field)?.raw()}:</strong> 
+					                      	<strong>${logic.TalkerLogic.PROF_FIELDS_MAP.get(field)?.raw()}:</strong> 
 					                      	<span class="Profilepersonsub">${talker.profInfo.get(field)}</span>
 					                      </div>
 					                    </div>

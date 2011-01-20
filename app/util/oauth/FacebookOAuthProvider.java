@@ -61,50 +61,38 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			String callbackURL = (secureRequest ? "https://" : "http://");
 			callbackURL = callbackURL+CALLBACK_URL;
 			
-			//user confirmed app - get access token
-			String url = "https://graph.facebook.com/oauth/access_token";
-			String urlParams = 
-			    "client_id="+APP_ID+
-			    "&redirect_uri="+URLEncoder.encode(callbackURL, "UTF-8")+
-			    "&client_secret="+APP_SECRET+
-			    "&code="+URLEncoder.encode(code, "UTF-8");
-			//TODO: replace it
-//			HttpResponse res = WS.url(
-//					"https://graph.facebook.com/me/feed?access_token=%s&message=%s", token, text).post();
-			List<String> lines = CommonUtil.makeGET(url, urlParams);
+			HttpResponse res = 
+				WS.url("https://graph.facebook.com/oauth/access_token" +
+						"?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s", APP_ID, callbackURL, APP_SECRET, code).get();
+			String responseText = res.getString();
 			
 			//returned string is:
 			//access_token=...token...
 			String accessToken = null;
-			for (String line : lines) {
-				if (line.startsWith("access_token")) {
-					accessToken = line.substring(13);
-					break;
-				}
+			if (responseText.startsWith("access_token")) {
+				accessToken = responseText.substring(13);
 			}
 			session.put("token", accessToken);
 			
 			//parse Facebook id and email from reply
+			res = WS.url("https://graph.facebook.com/me?access_token=%s", accessToken).get();
+			responseText = res.getString();
+			Logger.error("---------- FACEBOOK INFO --------------");
+			Logger.error(responseText);
+			
 			String accountId = null;
 			String userEmail = null;
-			lines = CommonUtil.makeGET("https://graph.facebook.com/me", 
-					"access_token="+URLEncoder.encode(accessToken, "UTF-8"));
-			Logger.error("---------- FACEBOOK INFO --------------");
-			Logger.error(lines.toString());
-			Logger.error("---------- FACEBOOK INFO END --------------");
-			for (String line : lines) {
-				if (line.startsWith("{")) {
-					Pattern p = Pattern.compile("\"(\\w+)\":\"([@.\\s\\w]+)\"");
-					Matcher m = p.matcher(line);
-					while (m.find()) {
-						String param = m.group(1);
-						String value = m.group(2);
-						if (param.equals("id")) {
-							accountId = value;
-						}
-						else if (param.equals("email")) {
-							userEmail = value;
-						}
+			if (responseText.startsWith("{")) {
+				Pattern p = Pattern.compile("\"(\\w+)\":\"([@.\\s\\w]+)\"");
+				Matcher m = p.matcher(responseText);
+				while (m.find()) {
+					String param = m.group(1);
+					String value = m.group(2);
+					if (param.equals("id")) {
+						accountId = value;
+					}
+					else if (param.equals("email")) {
+						userEmail = value;
 					}
 				}
 			}

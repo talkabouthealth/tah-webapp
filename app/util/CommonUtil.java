@@ -87,36 +87,6 @@ public class CommonUtil {
 		return hashText;
 	}
 	
-	/**
-	 * Executes HTTP GET request and return reply as list of strings
-	 * @param urlString
-	 * @param parameters
-	 * @return
-	 */
-	public static List<String> makeGET(String urlString, String parameters) {
-		try {
-			URL url = new URL(urlString+"?"+parameters);
-			URLConnection urlConnection = url.openConnection();
-			
-			//read reply
-			List<String> lines = new ArrayList<String>();
-			BufferedReader in = new BufferedReader(
-                    new InputStreamReader(
-                    urlConnection.getInputStream()));
-			String inputLine;
-			while ((inputLine = in.readLine()) != null) {
-				lines.add(inputLine);
-			}
-			in.close();
-			return lines;
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	//Send IM invitation through Dashboard application
 	public static void sendIMInvitation(IMAccountBean imAccount) {
 		IMNotifier imNotifier = IMNotifier.getInstance();
@@ -267,7 +237,7 @@ public class CommonUtil {
 			}
 		}
 		else {
-			html.append(getAnonymousName(talker.getUserName()));
+			html.append(getAnonymousName(talker));
 		}
 		
 		return html.toString();
@@ -301,7 +271,8 @@ public class CommonUtil {
 		return topicsHTML.toString();
 	}
 	
-	public static String getAnonymousName(String userName) {
+	//Result: member301 (Patient, Supporter)
+	public static String getAnonymousName(TalkerBean talker) {
 		Request req = Request.current();
 		Map<String, String> namesMap = (Map<String, String>)req.args.get("namesMap");
 		if (namesMap == null) {
@@ -309,10 +280,24 @@ public class CommonUtil {
 			req.args.put("namesMap", namesMap);
 		}
 		
-		String anonymName = namesMap.get(userName);
+		String anonymName = namesMap.get(talker.getUserName());
 		if (anonymName == null) {
 			anonymName = generateDeactivatedUserName(true);
-			namesMap.put(userName, anonymName);
+			namesMap.put(talker.getUserName(), anonymName);
+		}
+		
+		//display credentials
+		if (talker.getConnection() != null && talker.getConnection().length() != 0) {
+			String notVerifiedStr = "";
+			if (TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.getConnection())) {
+				if (!talker.isConnectionVerified()) {
+					notVerifiedStr = " <span class=\"red12\">(not verified)</span>";
+				}
+			}
+			anonymName += " ("+talker.getConnection()+notVerifiedStr+", "+talker.getLevelOfRecognition()+")";
+		}
+		else {
+			anonymName += " ("+talker.getLevelOfRecognition()+")";
 		}
 		
 		return anonymName;

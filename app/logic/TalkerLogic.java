@@ -2,11 +2,15 @@ package logic;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import play.Logger;
 import play.templates.JavaExtensions;
 import dao.ActionDAO;
 import dao.CommentsDAO;
@@ -17,22 +21,65 @@ import dao.TalkerDiseaseDAO;
 import dao.TopicDAO;
 
 import util.CommonUtil;
+import util.FacebookUtil;
+import util.NotificationUtils;
+import util.TwitterUtil;
 
 import models.CommentBean;
 import models.ConversationBean;
 import models.HealthItemBean;
+import models.ServiceAccountBean;
 import models.TalkerBean;
 import models.TalkerDiseaseBean;
 import models.TopicBean;
 import models.ConversationBean.ConvoType;
+import models.ServiceAccountBean.ServiceType;
+import models.TalkerBean.EmailSetting;
 import models.actions.Action;
 import models.actions.AnswerDisplayAction;
+import models.actions.PersonalProfileCommentAction;
 import models.actions.Action.ActionType;
 
 public class TalkerLogic {
 	
 	private static Map<String, List<String>> fieldsDataMap;
 	private static Map<String, List<String>> healthItems2TopicsMap;
+	
+	/**
+	 * Map for connecting professional fields' names with fields' text descriptions (used on the Profile page)
+	 */
+	public static Map<String, String> PROF_FIELDS_MAP = new LinkedHashMap<String, String>();
+	static {
+		PROF_FIELDS_MAP.put("credentials", "Credential");
+		PROF_FIELDS_MAP.put("licenses", "Licenses");
+		PROF_FIELDS_MAP.put("prim_specialty", "Primary specialty");
+		PROF_FIELDS_MAP.put("sec_specialty", "Secondary specialty");
+		PROF_FIELDS_MAP.put("states_lic", "State Licenses");
+		PROF_FIELDS_MAP.put("specialty", "Specialty");
+		PROF_FIELDS_MAP.put("languages", "Languages");
+		PROF_FIELDS_MAP.put("gender", "Gender");
+		PROF_FIELDS_MAP.put("age", "Age");
+		PROF_FIELDS_MAP.put("nurse_school", "Nursing school");
+		PROF_FIELDS_MAP.put("pharm_school", "Pharmacy school");
+		PROF_FIELDS_MAP.put("school_uni", "School / University");
+		PROF_FIELDS_MAP.put("educ", "Education");
+		PROF_FIELDS_MAP.put("med_school", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Medical school");
+		PROF_FIELDS_MAP.put("residency", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Residency");
+		PROF_FIELDS_MAP.put("internship", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Internship");
+		PROF_FIELDS_MAP.put("board_certs", "Board certifications");
+		PROF_FIELDS_MAP.put("memberships", "Professional memberships");
+		PROF_FIELDS_MAP.put("expertise", "Areas of expertise");
+		PROF_FIELDS_MAP.put("research_interests", "Research interests");
+		PROF_FIELDS_MAP.put("awards", "Awards and publications");
+		PROF_FIELDS_MAP.put("affiliation", "Hospital affiliation");
+		PROF_FIELDS_MAP.put("other_affiliation", "Hospital or other affiliation");
+		PROF_FIELDS_MAP.put("pract_name", "Practice name");
+		PROF_FIELDS_MAP.put("pract_adr", "Practice address");
+		PROF_FIELDS_MAP.put("pract_phone", "Practice phone number");
+		PROF_FIELDS_MAP.put("web", "Web page");
+		PROF_FIELDS_MAP.put("vitals", "Vitals.com page");
+		PROF_FIELDS_MAP.put("zocdoc", "ZocDoc.com page");
+	}
 	
 	public static void setFieldsDataMap(Map<String, List<String>> fieldsDataMap) {
 		TalkerLogic.fieldsDataMap = fieldsDataMap;
@@ -132,16 +179,8 @@ public class TalkerLogic {
 			ActionType type = action.getType();
 			switch (type) {
 			case START_CONVO:
-				//TODO: different actions?
 				profileActions.add(ProfileCompletion.START_OR_JOIN_TALK);
 				profileActions.add(ProfileCompletion.ASK_QUESTION);
-				
-//				if (action.getConvo().getConvoType() == ConvoType.CONVERSATION) {
-//					profileActions.add(ProfileCompletion.START_OR_JOIN_TALK);
-//				}
-//				else {
-//					profileActions.add(ProfileCompletion.ASK_QUESTION);
-//				}
 				break;
 			case JOIN_CONVO:
 			case RESTART_CONVO:
@@ -332,5 +371,99 @@ public class TalkerLogic {
 	public static boolean talkerHasNoHealthInfo(TalkerBean talker) {
 		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
 		return (talkerDisease == null && !talker.isProf());
+	}
+	
+	/**
+	 * Save thought or reply
+	 * @param talker
+	 * @param profileTalkerId
+	 * @param parentId
+	 * @param text
+	 * @return
+	 */
+	public static CommentBean saveProfileComment(TalkerBean talker, String profileTalkerId, String parentId, String text) {
+		//find profile talker by parent thought or given talker id
+		if (parentId != null && parentId.length() != 0) {
+			CommentBean parentAnswer = CommentsDAO.getProfileCommentById(parentId);
+			if (parentAnswer != null) {
+				profileTalkerId = parentAnswer.getProfileTalkerId();
+			}
+		}
+		TalkerBean profileTalker = null;
+		if (profileTalkerId == null) {
+			profileTalker = talker;
+			profileTalkerId = profileTalker.getId();
+		}
+		else {
+			profileTalker = TalkerDAO.getById(profileTalkerId);
+		}
+		if (profileTalker == null) {
+			return null;
+		}
+		
+		CommentBean comment = new CommentBean();
+		if (parentId == null || parentId.trim().length() == 0) {
+			comment.setParentId(null);
+		}
+		else {
+			comment.setParentId(parentId);
+		}
+		comment.setProfileTalkerId(profileTalkerId);
+		comment.setFromTalker(talker);
+		comment.setText(text);
+		comment.setTime(new Date());
+		CommentsDAO.saveProfileComment(comment);
+		
+		if (comment.getParentId() == null) {
+			//post to personal Thoughts?
+			if (talker.equals(profileTalker)) {
+				ActionDAO.saveAction(new PersonalProfileCommentAction(
+						talker, profileTalker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT));
+				
+				for (ServiceAccountBean serviceAccount : talker.getServiceAccounts()) {
+					if (!serviceAccount.isTrue("SHARE_FROM_THOUGHTS")) {
+						continue;
+					}
+					
+					Logger.debug(serviceAccount.getType().toString()+", Share from Thoughts, Info: "+
+							serviceAccount.getToken()+" : "+serviceAccount.getTokenSecret());
+					
+					if (serviceAccount.getType() == ServiceType.TWITTER) {
+						TwitterUtil.makeUserTwit(comment.getText(), 
+								serviceAccount.getToken(), serviceAccount.getTokenSecret());
+					}
+					else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
+						FacebookUtil.post(comment.getText(), serviceAccount.getToken());
+					}
+				}
+			}
+		}
+		else {
+			//for replies we update action for parent comment
+			ActionDAO.updateProfileCommentAction(comment.getParentId());
+			
+			CommentBean thought = CommentsDAO.getProfileCommentById(comment.getParentId());
+			if (!talker.equals(thought.getFromTalker())) {
+				//when user leaves post in someone else's Thoughts Feed, if there are replies, 
+				//send email to the owner of the Thoughts Feed as well as the user who started the thread.
+				Map<String, String> vars = new HashMap<String, String>();
+				vars.put("other_talker", talker.getUserName());
+				vars.put("comment_text", thought.getText());
+				vars.put("reply_text", comment.getText());
+				vars.put("profile_talker", profileTalker.getUserName());
+				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
+						thought.getFromTalker(), vars);
+			}
+		}
+		
+		if (!talker.equals(profileTalker)) {
+			Map<String, String> vars = new HashMap<String, String>();
+			vars.put("other_talker", talker.getUserName());
+			vars.put("comment_text", comment.getText());
+			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
+					profileTalker, vars);
+		}
+		
+		return comment;
 	}
 }

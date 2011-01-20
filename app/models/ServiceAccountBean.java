@@ -154,54 +154,22 @@ public class ServiceAccountBean implements DBModel {
 		setSettings(settings);
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public ServiceType getType() {
-		return type;
-	}
-
-	public void setType(ServiceType type) {
-		this.type = type;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
-
-	public String getTokenSecret() {
-		return tokenSecret;
-	}
-
-	public void setTokenSecret(String tokenSecret) {
-		this.tokenSecret = tokenSecret;
-	}
-
-	public Map<String, String> getSettings() {
-		return settings;
-	}
-
-	public void setSettings(Map<String, String> settings) {
-		this.settings = settings;
-	}
-
 	
+	public String getId() { return id; }
+	public void setId(String id) { this.id = id; }
 
+	public String getUserName() { return userName; }
+	public void setUserName(String userName) { this.userName = userName; }
+
+	public ServiceType getType() { return type; }
+	public void setType(ServiceType type) { this.type = type; }
+
+	public String getToken() { return token; }
+	public void setToken(String token) { this.token = token; }
+
+	public String getTokenSecret() { return tokenSecret; }
+	public void setTokenSecret(String tokenSecret) { this.tokenSecret = tokenSecret; }
+
+	public Map<String, String> getSettings() { return settings; }
+	public void setSettings(Map<String, String> settings) { this.settings = settings; }
 }

@@ -19,29 +19,13 @@ public class TalkerTopicInfo {
 		endorsements = new HashSet<TalkerBean>();
 	}
 
-	public String getExperience() {
-		return experience;
-	}
-
-	public void setExperience(String experience) {
-		this.experience = experience;
-	}
 	
-	public Set<TalkerBean> getEndorsements() {
-		return endorsements;
-	}
-
-	public void setEndorsements(Set<TalkerBean> endorsements) {
-		this.endorsements = endorsements;
-	}
-
-	public int getNumOfAnswers() {
-		return numOfAnswers;
-	}
-
-	public void setNumOfAnswers(int numOfAnswers) {
-		this.numOfAnswers = numOfAnswers;
-	}
+	public String getExperience() { return experience; }
+	public void setExperience(String experience) { this.experience = experience; }
 	
-	
+	public Set<TalkerBean> getEndorsements() { return endorsements; }
+	public void setEndorsements(Set<TalkerBean> endorsements) { this.endorsements = endorsements; }
+
+	public int getNumOfAnswers() { return numOfAnswers; }
+	public void setNumOfAnswers(int numOfAnswers) { this.numOfAnswers = numOfAnswers; }
 }

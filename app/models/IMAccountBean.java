@@ -64,20 +64,10 @@ public class IMAccountBean implements DBModel {
 		return userName.hashCode();
 	}
 
-	public String getUserName() {
-		return userName;
-	}
+	
+	public String getUserName() { return userName; }
+	public void setUserName(String userName) { this.userName = userName; }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getService() {
-		return service;
-	}
-
-	public void setService(String service) {
-		this.service = service;
-	}
-
+	public String getService() { return service; }
+	public void setService(String service) { this.service = service; }
 }

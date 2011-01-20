@@ -89,19 +89,10 @@ public class PrivacySetting implements DBModel {
 		return type.hashCode();
 	}
 
-	public PrivacyType getType() {
-		return type;
-	}
+	
+	public PrivacyType getType() { return type; }
+	public void setType(PrivacyType type) { this.type = type; }
 
-	public void setType(PrivacyType type) {
-		this.type = type;
-	}
-
-	public PrivacyValue getValue() {
-		return value;
-	}
-
-	public void setValue(PrivacyValue value) {
-		this.value = value;
-	}
+	public PrivacyValue getValue() { return value; }
+	public void setValue(PrivacyValue value) { this.value = value; }
 }

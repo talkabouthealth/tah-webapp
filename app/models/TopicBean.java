@@ -195,100 +195,51 @@ public class TopicBean implements Comparable<TopicBean> {
 	}
 	
 	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	public String getMainURL() {
-		return mainURL;
-	}
-	public void setMainURL(String mainURL) {
-		this.mainURL = mainURL;
-	}
-	public Date getCreationDate() {
-		return creationDate;
-	}
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
-	}
-	public int getViews() {
-		return views;
-	}
-	public void setViews(int views) {
-		this.views = views;
-	}
-	public String getSummary() {
-		return summary;
-	}
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
-	public Set<String> getSumContributors() {
-		return sumContributors;
-	}
-	public void setSumContributors(Set<String> sumContributors) {
-		this.sumContributors = sumContributors;
-	}
-	public List<TalkerBean> getFollowers() {
-		return followers;
-	}
-	public void setFollowers(List<TalkerBean> followers) {
-		this.followers = followers;
-	}
-	public List<ConversationBean> getConversations() {
-		return conversations;
-	}
-	public void setConversations(List<ConversationBean> conversations) {
-		this.conversations = conversations;
-	}
-	public Set<String> getAliases() {
-		return aliases;
-	}
-	public void setAliases(Set<String> aliases) {
-		this.aliases = aliases;
-	}
-	public Set<TopicBean> getParents() {
-		return parents;
-	}
-	public void setParents(Set<TopicBean> parents) {
-		this.parents = parents;
-	}
-	public Set<TopicBean> getChildren() {
-		return children;
-	}
-	public void setChildren(Set<TopicBean> children) {
-		this.children = children;
-	}
-	public boolean isDeleted() {
-		return deleted;
-	}
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-	public Set<URLName> getOldNames() {
-		return oldNames;
-	}
-	public void setOldNames(Set<URLName> oldNames) {
-		this.oldNames = oldNames;
-	}
-	public boolean isFixed() {
-		return fixed;
-	}
-	public void setFixed(boolean fixed) {
-		this.fixed = fixed;
-	}
-	public String getBitly() {
-		return bitly;
-	}
-	public void setBitly(String bitly) {
-		this.bitly = bitly;
-	}
+	public String getId() { return id; }
+	public void setId(String id) { this.id = id; }
+	
+	public String getTitle() { return title; }
+	public void setTitle(String title) { this.title = title; }
+	
+	public String getMainURL() { return mainURL; }
+	public void setMainURL(String mainURL) { this.mainURL = mainURL; }
+	
+	public Date getCreationDate() { return creationDate; }
+	public void setCreationDate(Date creationDate) { this.creationDate = creationDate; }
+	
+	public int getViews() { return views; }
+	public void setViews(int views) { this.views = views; }
+	
+	public String getSummary() { return summary; }
+	public void setSummary(String summary) { this.summary = summary; }
+	
+	public Set<String> getSumContributors() { return sumContributors; }
+	public void setSumContributors(Set<String> sumContributors) { this.sumContributors = sumContributors; }
+	
+	public List<TalkerBean> getFollowers() { return followers; }
+	public void setFollowers(List<TalkerBean> followers) { this.followers = followers; }
+	
+	public List<ConversationBean> getConversations() { return conversations; }
+	public void setConversations(List<ConversationBean> conversations) { this.conversations = conversations; }
+	
+	public Set<String> getAliases() { return aliases; }
+	public void setAliases(Set<String> aliases) { this.aliases = aliases; }
+	
+	public Set<TopicBean> getParents() { return parents; }
+	public void setParents(Set<TopicBean> parents) { this.parents = parents; }
+	
+	public Set<TopicBean> getChildren() { return children; }
+	public void setChildren(Set<TopicBean> children) { this.children = children; }
+	
+	public boolean isDeleted() { return deleted; }
+	public void setDeleted(boolean deleted) { this.deleted = deleted; }
+	
+	public Set<URLName> getOldNames() { return oldNames; }
+	public void setOldNames(Set<URLName> oldNames) { this.oldNames = oldNames; }
+	
+	public boolean isFixed() { return fixed; }
+	public void setFixed(boolean fixed) { this.fixed = fixed; }
+	
+	public String getBitly() { return bitly; }
+	public void setBitly(String bitly) { this.bitly = bitly; }
 }

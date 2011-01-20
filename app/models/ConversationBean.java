@@ -321,9 +321,7 @@ public class ConversationBean {
 	}
 
 	
-	public String getMainURL() {
-		return mainURL;
-	}
+	public String getMainURL() { return mainURL; }
 	public void setMainURL(String mainURL) { this.mainURL = mainURL; }
 
 	public String getDetails() { return details; }
@@ -353,13 +351,8 @@ public class ConversationBean {
 	public List<MessageBean> getMessages() { return messages; }
 	public void setMessages(List<MessageBean> messages) { this.messages = messages; }
 	
-	public Set<TalkerBean> getSumContributors() {
-		return sumContributors;
-	}
-
-	public void setSumContributors(Set<TalkerBean> sumContributors) {
-		this.sumContributors = sumContributors;
-	}
+	public Set<TalkerBean> getSumContributors() { return sumContributors; }
+	public void setSumContributors(Set<TalkerBean> sumContributors) { this.sumContributors = sumContributors; }
 
 	public int getViews() { return views; }
 	public void setViews(int views) { this.views = views; }
@@ -373,84 +366,34 @@ public class ConversationBean {
 	public int getTid() { return tid; }
 	public void setTid(int tid) { this.tid = tid; }
 
-	public Set<URLName> getOldNames() {
-		return oldNames;
-	}
+	public Set<URLName> getOldNames() { return oldNames; }
+	public void setOldNames(Set<URLName> oldNames) { this.oldNames = oldNames; }
 
-	public void setOldNames(Set<URLName> oldNames) {
-		this.oldNames = oldNames;
-	}
+	public Set<TopicBean> getTopics() { return topics; }
+	public void setTopics(Set<TopicBean> topics) { this.topics = topics; }
 
-	public Set<TopicBean> getTopics() {
-		return topics;
-	}
+	public ConvoType getConvoType() { return convoType; }
+	public void setConvoType(ConvoType convoType) { this.convoType = convoType; }
 
-	public void setTopics(Set<TopicBean> topics) {
-		this.topics = topics;
-	}
+	public boolean isOpened() { return opened; }
+	public void setOpened(boolean opened) { this.opened = opened; }
 
-	public ConvoType getConvoType() {
-		return convoType;
-	}
+	public boolean isDeleted() { return deleted; }
+	public void setDeleted(boolean deleted) { this.deleted = deleted; }
 
-	public void setConvoType(ConvoType convoType) {
-		this.convoType = convoType;
-	}
+	public Set<ConversationBean> getRelatedConvos() { return relatedConvos; }
+	public void setRelatedConvos(Set<ConversationBean> relatedConvos) { this.relatedConvos = relatedConvos; }
 
-	public boolean isOpened() {
-		return opened;
-	}
+	public String getSearchFragment() { return searchFragment; }
+	public void setSearchFragment(String searchFragment) { this.searchFragment = searchFragment; }
 
-	public void setOpened(boolean opened) {
-		this.opened = opened;
-	}
+	public String getBitly() { return bitly; }
+	public void setBitly(String bitly) { this.bitly = bitly; }
 
-	public boolean isDeleted() {
-		return deleted;
-	}
+	public String getBitlyChat() { return bitlyChat; }
+	public void setBitlyChat(String bitlyChat) { this.bitlyChat = bitlyChat; }
 
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
-	public Set<ConversationBean> getRelatedConvos() {
-		return relatedConvos;
-	}
-
-	public void setRelatedConvos(Set<ConversationBean> relatedConvos) {
-		this.relatedConvos = relatedConvos;
-	}
-
-	public String getSearchFragment() {
-		return searchFragment;
-	}
-
-	public void setSearchFragment(String searchFragment) {
-		this.searchFragment = searchFragment;
-	}
-
-	public String getBitly() {
-		return bitly;
-	}
-
-	public void setBitly(String bitly) {
-		this.bitly = bitly;
-	}
-
-	public String getBitlyChat() {
-		return bitlyChat;
-	}
-
-	public void setBitlyChat(String bitlyChat) {
-		this.bitlyChat = bitlyChat;
-	}
-
-	public int getNumOfChatters() {
-		return numOfChatters;
-	}
-
-	public void setNumOfChatters(int numOfChatters) {
-		this.numOfChatters = numOfChatters;
-	}
+	public int getNumOfChatters() { return numOfChatters; }
+	public void setNumOfChatters(int numOfChatters) { this.numOfChatters = numOfChatters; }
 	
 }

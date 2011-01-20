@@ -327,14 +327,14 @@ public class TalkerBean implements Serializable {
 				
 				DBObject fromTalkerDBObject = ((DBRef)thankYouDBObject.get("from")).fetch();
 				TalkerBean fromTalker = new TalkerBean();
+				fromTalker.setId(fromTalkerDBObject.get("_id").toString());
 				fromTalker.setUserName((String)fromTalkerDBObject.get("uname"));
 				fromTalker.setConnection((String)fromTalkerDBObject.get("connection"));
 				fromTalker.setConnectionVerified(getBoolean(fromTalkerDBObject, "connection_verified")); 
-				
 				Collection<DBObject> thankYousCollection = (Collection<DBObject>)fromTalkerDBObject.get("thankyous");
 				fromTalker.setNumOfThankYous(thankYousCollection == null ? 0 : thankYousCollection.size());
 				
-				thankYouBean.setFrom(fromTalkerDBObject.get("_id").toString());
+				thankYouBean.setFrom(fromTalker.getId());
 				thankYouBean.setFromTalker(fromTalker);
 				
 				thankYous.add(thankYouBean);
@@ -694,18 +694,11 @@ public class TalkerBean implements Serializable {
 	}
 	public void setCountry(String country) { this.country = country; }
 	
-	public Set<ProfilePreference> getProfilePreferences() {
-		return profilePreferences;
-	}
-	public void setProfilePreferences(Set<ProfilePreference> profilePreferences) {
-		this.profilePreferences = profilePreferences;
-	}
-	public Set<EmailSetting> getEmailSettings() {
-		return emailSettings;
-	}
-	public void setEmailSettings(Set<EmailSetting> emailSettings) {
-		this.emailSettings = emailSettings;
-	}
+	public Set<ProfilePreference> getProfilePreferences() { return profilePreferences; }
+	public void setProfilePreferences(Set<ProfilePreference> profilePreferences) { this.profilePreferences = profilePreferences; }
+	
+	public Set<EmailSetting> getEmailSettings() { return emailSettings; }
+	public void setEmailSettings(Set<EmailSetting> emailSettings) { this.emailSettings = emailSettings; }
 
 	public int getNfreq() { return nfreq; }
 	public void setNfreq(int nfreq) { this.nfreq = nfreq; }
@@ -761,12 +754,8 @@ public class TalkerBean implements Serializable {
 	public String getBio() { return bio; }
 	public void setBio(String bio) { this.bio = bio; }
 
-	public List<String> getFollowingConvosList() {
-		return followingConvosList;
-	}
-	public void setFollowingConvosList(List<String> followingConvosList) {
-		this.followingConvosList = followingConvosList;
-	}
+	public List<String> getFollowingConvosList() { return followingConvosList; }
+	public void setFollowingConvosList(List<String> followingConvosList) { this.followingConvosList = followingConvosList; }
 	
 	public boolean isDeactivated() { return deactivated; }
 	public void setDeactivated(boolean deactivated) { this.deactivated = deactivated; }
@@ -798,148 +787,75 @@ public class TalkerBean implements Serializable {
 	public List<ThankYouBean> getThankYouList() { return thankYouList; }
 	public void setThankYouList(List<ThankYouBean> thankYouList) { this.thankYouList = thankYouList; }
 
-	public String getProfileCompletionMessage() {
-		return profileCompletionMessage;
-	}
-	public void setProfileCompletionMessage(String profileCompletionMessage) {
-		this.profileCompletionMessage = profileCompletionMessage;
-	}
-	public int getProfileCompletionValue() {
-		return profileCompletionValue;
-	}
-	public void setProfileCompletionValue(int profileCompletionValue) {
-		this.profileCompletionValue = profileCompletionValue;
-	}
-	public Set<EmailBean> getEmails() {
-		return emails;
-	}
-	public void setEmails(Set<EmailBean> emails) {
-		this.emails = emails;
-	}
-	public Set<IMAccountBean> getImAccounts() {
-		return imAccounts;
-	}
-	public void setImAccounts(Set<IMAccountBean> imAccounts) {
-		this.imAccounts = imAccounts;
-	}
-	public Date getLatestNotification() {
-		return latestNotification;
-	}
-	public void setLatestNotification(Date latestNotification) {
-		this.latestNotification = latestNotification;
-	}
-	public long getNumOfNotifications() {
-		return numOfNotifications;
-	}
-	public void setNumOfNotifications(long numOfNotifications) {
-		this.numOfNotifications = numOfNotifications;
-	}
-	public int getNumOfThankYous() {
-		return numOfThankYous;
-	}
-	public void setNumOfThankYous(int numOfThankYous) {
-		this.numOfThankYous = numOfThankYous;
-	}
-	public Set<TopicBean> getFollowingTopicsList() {
-		return followingTopicsList;
-	}
-	public void setFollowingTopicsList(Set<TopicBean> followingTopicsList) {
-		this.followingTopicsList = followingTopicsList;
-	}
-	public boolean isSuspended() {
-		return suspended;
-	}
-	public void setSuspended(boolean suspended) {
-		this.suspended = suspended;
-	}
-	public Map<TopicBean, TalkerTopicInfo> getTopicsInfoMap() {
-		return topicsInfoMap;
-	}
-	public void setTopicsInfoMap(Map<TopicBean, TalkerTopicInfo> topicsInfoMap) {
-		this.topicsInfoMap = topicsInfoMap;
-	}
-	public String getOriginalUserName() {
-		return originalUserName;
-	}
-	public void setOriginalUserName(String originalUserName) {
-		this.originalUserName = originalUserName;
-	}
-	public int getNumOfConvoAnswers() {
-		return numOfConvoAnswers;
-	}
-	public void setNumOfConvoAnswers(int numOfConvoAnswers) {
-		this.numOfConvoAnswers = numOfConvoAnswers;
-	}
-	public String getChildrenNumStr() {
-		return childrenNumStr;
-	}
-	public void setChildrenNumStr(String childrenNumStr) {
-		this.childrenNumStr = childrenNumStr;
-	}
-	public Set<String> getHiddenHelps() {
-		return hiddenHelps;
-	}
-	public void setHiddenHelps(Set<String> hiddenHelps) {
-		this.hiddenHelps = hiddenHelps;
-	}
-	public String getConfirmPassword() {
-		return confirmPassword;
-	}
-	public void setConfirmPassword(String confirmPassword) {
-		this.confirmPassword = confirmPassword;
-	}
-	public Map<String, String> getProfInfo() {
-		return profInfo;
-	}
-	public void setProfInfo(Map<String, String> profInfo) {
-		this.profInfo = profInfo;
-	}
-	public String getNextStepMessage() {
-		return nextStepMessage;
-	}
-	public void setNextStepMessage(String nextStepMessage) {
-		this.nextStepMessage = nextStepMessage;
-	}
-	public String getNextStepNote() {
-		return nextStepNote;
-	}
-	public void setNextStepNote(String nextStepNote) {
-		this.nextStepNote = nextStepNote;
-	}
-	public String getProfStatement() {
-		return profStatement;
-	}
-	public void setProfStatement(String profStatement) {
-		this.profStatement = profStatement;
-	}
-	public List<String> getInsuranceAccepted() {
-		return insuranceAccepted;
-	}
-	public void setInsuranceAccepted(List<String> insuranceAccepted) {
-		this.insuranceAccepted = insuranceAccepted;
-	}
-	public Set<ServiceAccountBean> getServiceAccounts() {
-		return serviceAccounts;
-	}
-	public void setServiceAccounts(Set<ServiceAccountBean> serviceAccounts) {
-		this.serviceAccounts = serviceAccounts;
-	}
-	public boolean isImNotify() {
-		return imNotify;
-	}
-	public void setImNotify(boolean imNotify) {
-		this.imNotify = imNotify;
-	}
-	public List<CommentBean> getAnswerList() {
-		return answerList;
-	}
-	public void setAnswerList(List<CommentBean> answerList) {
-		this.answerList = answerList;
-	}
-	public Set<PrivacySetting> getPrivacySettings() {
-		return privacySettings;
-	}
-	public void setPrivacySettings(Set<PrivacySetting> privacySettings) {
-		this.privacySettings = privacySettings;
-	}
+	public String getProfileCompletionMessage() { return profileCompletionMessage; }
+	public void setProfileCompletionMessage(String profileCompletionMessage) { this.profileCompletionMessage = profileCompletionMessage; }
+	
+	public int getProfileCompletionValue() { return profileCompletionValue; }
+	public void setProfileCompletionValue(int profileCompletionValue) { this.profileCompletionValue = profileCompletionValue; }
+	
+	public Set<EmailBean> getEmails() { return emails; }
+	public void setEmails(Set<EmailBean> emails) { this.emails = emails; }
+	
+	public Set<IMAccountBean> getImAccounts() { return imAccounts; }
+	public void setImAccounts(Set<IMAccountBean> imAccounts) { this.imAccounts = imAccounts; }
+	
+	public Date getLatestNotification() { return latestNotification; }
+	public void setLatestNotification(Date latestNotification) { this.latestNotification = latestNotification; }
+	
+	public long getNumOfNotifications() { return numOfNotifications; }
+	public void setNumOfNotifications(long numOfNotifications) { this.numOfNotifications = numOfNotifications; }
+	
+	public int getNumOfThankYous() { return numOfThankYous; }
+	public void setNumOfThankYous(int numOfThankYous) { this.numOfThankYous = numOfThankYous; }
+	
+	public Set<TopicBean> getFollowingTopicsList() { return followingTopicsList; }
+	public void setFollowingTopicsList(Set<TopicBean> followingTopicsList) { this.followingTopicsList = followingTopicsList; }
+	
+	public boolean isSuspended() { return suspended; }
+	public void setSuspended(boolean suspended) { this.suspended = suspended; }
+	
+	public Map<TopicBean, TalkerTopicInfo> getTopicsInfoMap() { return topicsInfoMap; }
+	public void setTopicsInfoMap(Map<TopicBean, TalkerTopicInfo> topicsInfoMap) { this.topicsInfoMap = topicsInfoMap; }
+	
+	public String getOriginalUserName() { return originalUserName; }
+	public void setOriginalUserName(String originalUserName) { this.originalUserName = originalUserName; }
+	
+	public int getNumOfConvoAnswers() { return numOfConvoAnswers; }
+	public void setNumOfConvoAnswers(int numOfConvoAnswers) { this.numOfConvoAnswers = numOfConvoAnswers; }
+	
+	public String getChildrenNumStr() { return childrenNumStr; }
+	public void setChildrenNumStr(String childrenNumStr) { this.childrenNumStr = childrenNumStr; }
+	
+	public Set<String> getHiddenHelps() { return hiddenHelps; }
+	public void setHiddenHelps(Set<String> hiddenHelps) { this.hiddenHelps = hiddenHelps; }
+	
+	public String getConfirmPassword() { return confirmPassword; }
+	public void setConfirmPassword(String confirmPassword) { this.confirmPassword = confirmPassword; }
+	
+	public Map<String, String> getProfInfo() { return profInfo; }
+	public void setProfInfo(Map<String, String> profInfo) { this.profInfo = profInfo; }
+	
+	public String getNextStepMessage() { return nextStepMessage; }
+	public void setNextStepMessage(String nextStepMessage) { this.nextStepMessage = nextStepMessage; }
+	
+	public String getNextStepNote() { return nextStepNote; }
+	public void setNextStepNote(String nextStepNote) { this.nextStepNote = nextStepNote; }
+	
+	public String getProfStatement() { return profStatement; }
+	public void setProfStatement(String profStatement) { this.profStatement = profStatement; }
+	
+	public List<String> getInsuranceAccepted() { return insuranceAccepted; }
+	public void setInsuranceAccepted(List<String> insuranceAccepted) { this.insuranceAccepted = insuranceAccepted; }
+	
+	public Set<ServiceAccountBean> getServiceAccounts() { return serviceAccounts; }
+	public void setServiceAccounts(Set<ServiceAccountBean> serviceAccounts) { this.serviceAccounts = serviceAccounts; }
+	
+	public boolean isImNotify() { return imNotify; }
+	public void setImNotify(boolean imNotify) { this.imNotify = imNotify; }
+	
+	public List<CommentBean> getAnswerList() { return answerList; }
+	public void setAnswerList(List<CommentBean> answerList) { this.answerList = answerList; }
+	
+	public Set<PrivacySetting> getPrivacySettings() { return privacySettings; }
+	public void setPrivacySettings(Set<PrivacySetting> privacySettings) { this.privacySettings = privacySettings; }
 }	

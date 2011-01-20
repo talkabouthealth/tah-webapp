@@ -16,6 +16,7 @@ import util.FacebookUtil;
 import util.NotificationUtils;
 import util.TwitterUtil;
 
+import logic.TalkerLogic;
 import models.CommentBean;
 import models.TalkerBean;
 import models.ConversationBean.ConvoType;
@@ -117,7 +118,9 @@ public class Actions extends Controller {
 	 * @param from page where request was made
 	 */
 	public static void saveProfileComment(String profileTalkerId, String parentId, String text, String from) {
-		CommentBean comment = saveProfileCommentInternal(profileTalkerId, parentId, text);
+		CommentBean comment = 
+			TalkerLogic.saveProfileComment(CommonUtil.loadCachedTalker(session), profileTalkerId, parentId, text);
+		notFoundIfNull(comment);
 		
 		if (from != null && from.equals("home")) {
     		TalkerBean _talker = comment.getFromTalker();
@@ -133,99 +136,4 @@ public class Actions extends Controller {
 		}
 	}
 	
-	//TODO: move to logic?
-	private static CommentBean saveProfileCommentInternal(String profileTalkerId, String parentId, String text) {
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
-		//find profile talker by parent thought or given talker id
-		if (parentId != null && parentId.length() != 0) {
-			CommentBean parentAnswer = CommentsDAO.getProfileCommentById(parentId);
-			if (parentAnswer != null) {
-				profileTalkerId = parentAnswer.getProfileTalkerId();
-			}
-		}
-		TalkerBean profileTalker = null;
-		if (profileTalkerId == null) {
-			profileTalker = talker;
-			profileTalkerId = profileTalker.getId();
-		}
-		else {
-			profileTalker = TalkerDAO.getById(profileTalkerId);
-		}
-		notFoundIfNull(profileTalker);
-		
-		CommentBean comment = new CommentBean();
-		if (parentId == null || parentId.trim().length() == 0) {
-			comment.setParentId(null);
-		}
-		else {
-			comment.setParentId(parentId);
-		}
-		comment.setProfileTalkerId(profileTalkerId);
-		comment.setFromTalker(talker);
-		comment.setText(text);
-		comment.setTime(new Date());
-		CommentsDAO.saveProfileComment(comment);
-		
-		if (comment.getParentId() == null) {
-			//post to personal Thoughts?
-			if (talker.equals(profileTalker)) {
-				ActionDAO.saveAction(new PersonalProfileCommentAction(
-						talker, profileTalker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT));
-				
-				for (ServiceAccountBean serviceAccount : talker.getServiceAccounts()) {
-					if (!serviceAccount.isTrue("SHARE_FROM_THOUGHTS")) {
-						continue;
-					}
-					
-					Logger.debug(serviceAccount.getType().toString()+", Share from Thoughts, Info: "+
-							serviceAccount.getToken()+" : "+serviceAccount.getTokenSecret());
-					
-					if (serviceAccount.getType() == ServiceType.TWITTER) {
-						TwitterUtil.makeUserTwit(comment.getText(), 
-								serviceAccount.getToken(), serviceAccount.getTokenSecret());
-					}
-					else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
-						FacebookUtil.post(comment.getText(), serviceAccount.getToken());
-					}
-				}
-			}
-		}
-		else {
-			//for replies we update action for parent comment
-			ActionDAO.updateProfileCommentAction(comment.getParentId());
-			
-			CommentBean thought = CommentsDAO.getProfileCommentById(comment.getParentId());
-			if (!talker.equals(thought.getFromTalker())) {
-				//when user leaves post in someone else's Thoughts Feed, if there are replies, 
-				//send email to the owner of the Thoughts Feed as well as the user who started the thread.
-				
-//				{other_talker} replied to you on TalkAboutHealth.<br/><br/>
-//
-//				Thought:  "{comment_text}"<br/><br/>
-//				Reply:  "{reply_text}"<br/><br/>
-//				
-//				profile_talker - link
-				
-				Map<String, String> vars = new HashMap<String, String>();
-				vars.put("other_talker", talker.getUserName());
-				vars.put("comment_text", thought.getText());
-				vars.put("reply_text", comment.getText());
-				vars.put("profile_talker", profileTalker.getUserName());
-				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
-						thought.getFromTalker(), vars);
-			}
-		}
-		
-		if (!talker.equals(profileTalker)) {
-			Map<String, String> vars = new HashMap<String, String>();
-			vars.put("other_talker", talker.getUserName());
-			vars.put("comment_text", comment.getText());
-			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
-					profileTalker, vars);
-		}
-		
-		return comment;
-	}
-
 }

@@ -108,7 +108,7 @@ public class SearchUtil {
 	}
 
 	
-	//TODO: update Lucene and queries to most recent version
+	//TODO: later - update Lucene and queries to most recent version
 	public static List<ConversationBean> getRelatedConvos(ConversationBean searchedConvo) throws Exception {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"conversations");
 //		MoreLikeThis mlt = new MoreLikeThis(is.getIndexReader());

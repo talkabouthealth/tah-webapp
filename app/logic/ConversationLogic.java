@@ -146,6 +146,13 @@ public class ConversationLogic {
 			convo.setOpened(false);
 			ConversationDAO.updateConvo(convo);
 		}
+		if (comment.isAnswer()) {
+			//when user answers a question, they automatically follow the question
+			if (!talker.getFollowingConvosList().contains(convo.getId())) {
+				talker.getFollowingConvosList().add(convo.getId());
+				TalkerDAO.updateTalker(talker);
+			}
+		}
 		
 		//actions
 		CommentBean answer = null;

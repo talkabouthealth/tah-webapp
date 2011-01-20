@@ -147,41 +147,6 @@ public class ViewDispatcher extends Controller {
 			}
 		}
 		
-		//prepare map for Prof Profile
-		//TODO: move to static
-		Map<String, String> profFields = new LinkedHashMap<String, String>();
-		if (talker.isProf()) {
-			profFields.put("credentials", "Credential");
-			profFields.put("licenses", "Licenses");
-			profFields.put("prim_specialty", "Primary specialty");
-			profFields.put("sec_specialty", "Secondary specialty");
-			profFields.put("states_lic", "State Licenses");
-			profFields.put("specialty", "Specialty");
-			profFields.put("languages", "Languages");
-			profFields.put("gender", "Gender");
-			profFields.put("age", "Age");
-			profFields.put("nurse_school", "Nursing school");
-			profFields.put("pharm_school", "Pharmacy school");
-			profFields.put("school_uni", "School / University");
-			profFields.put("educ", "Education");
-			profFields.put("med_school", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Medical school");
-			profFields.put("residency", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Residency");
-			profFields.put("internship", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Internship");
-			profFields.put("board_certs", "Board certifications");
-			profFields.put("memberships", "Professional memberships");
-			profFields.put("expertise", "Areas of expertise");
-			profFields.put("research_interests", "Research interests");
-			profFields.put("awards", "Awards and publications");
-			profFields.put("affiliation", "Hospital affiliation");
-			profFields.put("other_affiliation", "Hospital or other affiliation");
-			profFields.put("pract_name", "Practice name");
-			profFields.put("pract_adr", "Practice address");
-			profFields.put("pract_phone", "Practice phone number");
-			profFields.put("web", "Web page");
-			profFields.put("vitals", "Vitals.com page");
-			profFields.put("zocdoc", "ZocDoc.com page");
-		}
-		
 		Set<Action> talkerFeed = FeedsLogic.getTalkerFeed(talker, null);
 		
 		List<Action> answersFeed = new ArrayList<Action>();
@@ -190,7 +155,7 @@ public class ViewDispatcher extends Controller {
 		
 		render("PublicProfile/newview.html", talker, disease, talkerDisease, healthItemsMap, 
 				currentTalker, talkerFeed,
-				notProvidedInfo, notViewableInfo, profFields,
+				notProvidedInfo, notViewableInfo,
 				numOfAnswers, numOfTopAnswers, numOfStartedConvos);
 	}
 	
