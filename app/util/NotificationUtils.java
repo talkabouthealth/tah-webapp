@@ -45,7 +45,6 @@ public class NotificationUtils {
 	public static void sendAllNotifications(final String convoId, final String restartTalkerId) {
 		boolean automaticNotification = ConfigDAO.getBooleanConfig(AUTOMATIC_NOTIFICATIONS_CONFIG);
 		if (!automaticNotification) {
-			System.out.println("NO AUTOMAT!");
 			return;
 		}
 		
@@ -88,7 +87,7 @@ public class NotificationUtils {
 			}
 		}
 		
-		System.out.println("Notifying: "+talkersForNotification);
+		Logger.info("Notifying: "+talkersForNotification);
 		
 		if (!talkersForNotification.isEmpty()) {
 			IMNotifier imNotifier = IMNotifier.getInstance();

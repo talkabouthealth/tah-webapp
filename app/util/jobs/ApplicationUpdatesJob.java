@@ -67,10 +67,13 @@ public class ApplicationUpdatesJob extends Job {
 		 *  4. Change profilepreference everywhere.
 		 */
 		
-//		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
-//			talker.setPrivacySettings(CommonUtil.getDefaultPrivacySettings());
-//			TalkerDAO.updateTalker(talker);
-//		}
+		Logger.info("FB LINKS:");
+		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
+			ServiceAccountBean fbAccount = talker.serviceAccountByType(ServiceType.FACEBOOK);
+			if (fbAccount != null) {
+				Logger.info("%s: http://www.facebook.com/profile.php?id=%s", talker.getUserName(), fbAccount.getId());
+			}
+		}
 		
 		//Fields data for Edit Profile
 		FieldsDataImporter.importData("fields.dat");

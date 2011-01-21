@@ -137,16 +137,4 @@ public class Search extends Controller {
 		return results;
 	}
 	
-	public static void main(String[] args) throws Exception {
-//		test();
-		
-//		Hits hits = performSearch("test");
-//		for (int i = 0; i < hits.length(); i++) {
-//			Document doc = hits.doc(i);
-//			System.out.println(hits.score(i));
-//			System.out.println(doc.get("uname")+" : "+doc.get("id"));
-//		}
-	}
-
-
 }

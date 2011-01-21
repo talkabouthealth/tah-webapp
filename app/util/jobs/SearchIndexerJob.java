@@ -118,7 +118,6 @@ public class SearchIndexerJob extends Job {
 	
 	public static void main(String[] args) throws Exception {
 		new SearchIndexerJob().doJob();
-		System.out.println("finished");
 	}
 
 }

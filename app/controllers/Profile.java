@@ -261,8 +261,6 @@ public class Profile extends Controller {
 			CommonUtil.updateTalker(talker, session);
 		}
 		
-//		System.out.println(talker.getPrivacySettings());
-		
 		render(talker);
 	}
 	

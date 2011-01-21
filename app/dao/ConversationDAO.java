@@ -96,7 +96,7 @@ public class ConversationDAO {
 		catch (MongoException me) {
 			//E11000 duplicate key error index
 			if (me.getCode() == 11000) {
-				System.err.println("Duplicate key error while saving convo");
+				Logger.error("Duplicate key error while saving convo");
 				return saveInternal(convo, --count);
 			}
 			me.printStackTrace();

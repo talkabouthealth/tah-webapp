@@ -87,10 +87,9 @@ public class TwitterUtil {
 					consumer.sign(conn);
 					conn.connect();
 					
-					System.out.println("Twitter DM response: " + conn.getResponseCode() + " "
+					Logger.info("Twitter DM response: " + conn.getResponseCode() + " "
 			                + conn.getResponseMessage());
 				} catch (Exception e) {
-					e.printStackTrace();
 					Logger.error(e, "Wasn't able to follow Twitter user!");
 				}
 			}
@@ -114,7 +113,7 @@ public class TwitterUtil {
 					consumer.sign(conn);
 					
 					conn.connect();
-					System.out.println("Twitter update response: " + conn.getResponseCode() + " "
+					Logger.info("Twitter update response: " + conn.getResponseCode() + " "
 			                + conn.getResponseMessage());
 				} catch (Exception e) {
 					Logger.error(e, "Wasn't able to follow Twitter user!");
@@ -143,9 +142,7 @@ public class TwitterUtil {
 					consumer.sign(conn);
 					
 					conn.connect();
-					Logger.error("Twitter update response: " + conn.getResponseCode() + " "
-			                + conn.getResponseMessage());
-					System.out.println("Twitter update response: " + conn.getResponseCode() + " "
+					Logger.info("Twitter update response: " + conn.getResponseCode() + " "
 			                + conn.getResponseMessage());
 				} catch (Exception e) {
 					Logger.error(e, "Wasn't able to follow Twitter user!");
@@ -170,7 +167,7 @@ public class TwitterUtil {
 					
 					conn.connect();
 					
-					System.out.println("Twitter update response: " + conn.getResponseCode() + " "
+					Logger.info("Twitter update response: " + conn.getResponseCode() + " "
 			                + conn.getResponseMessage());
 					
 					DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -217,7 +214,7 @@ public class TwitterUtil {
 					
 					conn.connect();
 					
-					System.out.println("Twitter update response: " + conn.getResponseCode() + " "
+					Logger.info("Twitter update response: " + conn.getResponseCode() + " "
 			                + conn.getResponseMessage());
 					
 					DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -270,12 +267,4 @@ public class TwitterUtil {
 		}
 	}
 	
-	public static void main(String[] args) {
-		//"osezno" account id
-//		followUser("23594406");
-//		String res = prepareTwit("Hello suasdfsdf asld <PARAM> fjsaldkf jsasad;lfjasdl;kfj sadlfjs daflks adjf supersuperHello super", "COOOOO1000000002000000000300000000000400000000000000000005L");
-//		System.out.println(res.length());
-//		System.out.println(res);
-	}
-
 }

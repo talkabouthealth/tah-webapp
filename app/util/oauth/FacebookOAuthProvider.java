@@ -88,10 +88,11 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 				while (m.find()) {
 					String param = m.group(1);
 					String value = m.group(2);
-					if (param.equals("id")) {
+					//there are a few "id" fields possible, so we use only the first one
+					if (param.equals("id") && accountId == null) {
 						accountId = value;
 					}
-					else if (param.equals("email")) {
+					else if (param.equals("email") && userEmail == null) {
 						userEmail = value;
 					}
 				}

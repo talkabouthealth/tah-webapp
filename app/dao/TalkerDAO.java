@@ -517,8 +517,6 @@ public class TalkerDAO {
 		
 //		TalkerBean talker = TalkerDAO.getByVerifyCode("e7b279a1-7e41-4be6-8e3e-2bbb8821e57d");
 //		System.out.println(talker.getUserName());
-		
-		System.out.println("cool");
 	}
 }
 

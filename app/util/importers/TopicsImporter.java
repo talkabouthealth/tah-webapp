@@ -105,7 +105,6 @@ public class TopicsImporter {
 //	}
 	
 	private static void printTopic(TopicBean parent, String prefix) {
-		System.out.println(prefix+parent);
 		for (TopicBean child : parent.getChildren()) {
 			printTopic(child, prefix+"___");
 		}

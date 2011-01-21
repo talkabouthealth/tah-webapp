@@ -2,6 +2,8 @@ package util;
 
 import java.util.Map;
 
+import play.Logger;
+
 import models.EmailBean;
 import models.TalkerBean;
 
@@ -61,7 +63,7 @@ public class EmailUtil {
 			client = new TriggerMailClient(SAILTHRU_APIKEY, SAILTHRU_SECRET);
 			client.send(emailTemplate.toString().toLowerCase(), toEmail, vars, options);
 		} catch (Exception e) {
-			System.err.println("Couldn't send email: "+e.getMessage());
+			Logger.error("Couldn't send email: "+e.getMessage());
 			return false;
 		}
 		

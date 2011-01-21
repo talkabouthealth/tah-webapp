@@ -137,8 +137,7 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			try {
 		        TwitterUtil.followUser(accountId);
 			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("ERROR: "+e.getMessage());
+				Logger.error(e, "Twitter follow user");
 			}
 			
 			TalkerBean talker = CommonUtil.loadCachedTalker(session);
@@ -174,8 +173,6 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 		    		CommonUtil.updateTalker(talker, session);
 		    	}
 	        	
-//	        	System.out.println("CON: "+consumer.getToken());
-//	        	System.out.println("SES: "+session.get("token"));
 	        	ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
 	        	twitterAccount.setToken(consumer.getToken());
 				twitterAccount.setTokenSecret(consumer.getTokenSecret());

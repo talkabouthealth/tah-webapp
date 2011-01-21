@@ -170,32 +170,6 @@ public class DBUtil {
 		    System.out.println(s);
 		}
 		
-//		String accountId = null;
-//		String userEmail = null;
-//		
-//		List<String> lines = new ArrayList<String>();
-//		lines.add("{ \"id\": \"121450\", \"name\": \"Raji Kalra\" }");
-//		for (String line : lines) {
-//			if (line.startsWith("{")) {
-//				Pattern p = Pattern.compile("\"(\\w+)\":\"([@.\\s\\w]+)\"");
-//				Matcher m = p.matcher(line);
-//				while (m.find()) {
-//					String param = m.group(1);
-//					String value = m.group(2);
-//					if (param.equals("id")) {
-//						accountId = value;
-//					}
-//					else if (param.equals("email")) {
-//						userEmail = value;
-//					}
-//				}
-//			}
-//		}
-//		System.out.println(accountId+" : "+userEmail);
-//		
-//		TalkerBean anotherTalker = TalkerDAO.getByAccount(ServiceType.FACEBOOK, "");
-//		System.out.println(anotherTalker);
-		
 		//FIXME: add indexes later? for now we have not many users
 //		activities
 //		configs

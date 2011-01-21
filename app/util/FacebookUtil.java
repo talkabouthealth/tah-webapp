@@ -29,36 +29,16 @@ import util.oauth.TwitterOAuthProvider;
 
 public class FacebookUtil {
 	
-	public static void likeTAH(final String token) {
-		Executors.newSingleThreadExecutor().execute(new Runnable() {
-			@Override
-			public void run() {
-				try {
-//					//System.out.println(token+" : "+text);
-//					HttpResponse res = WS.url(
-//							"https://graph.facebook.com/me/feed?access_token=%s&message=%s", token, text).post();
-//					
-//					System.out.println("FB update response: " + res.getStatus() + ", "+res.getString());
-				} catch (Exception e) {
-					//Logger.error(e, "Wasn't able to follow Twitter user!");
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
 	public static void post(String fullText, final String token) {
 		final String text = fullText;
 		Executors.newSingleThreadExecutor().execute(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					//System.out.println(token+" : "+text);
 					HttpResponse res = WS.url(
 							"https://graph.facebook.com/me/feed?access_token=%s&message=%s", token, text).post();
 					
-					System.err.println("FB update response: " + res.getStatus() + ", "+res.getString());
-					Logger.error("FB update response: " + res.getStatus() + ", "+res.getString());
+					Logger.info("FB update response: " + res.getStatus() + ", "+res.getString());
 				} catch (Exception e) {
 					//Logger.error(e, "Wasn't able to follow Twitter user!");
 					e.printStackTrace();
@@ -75,7 +55,7 @@ public class FacebookUtil {
 					HttpResponse res = WS.url(
 							"https://graph.facebook.com/me/posts?access_token=%s&limit=3", token).get();
 					
-					System.out.println("FB update response: " + res.getStatus());
+					Logger.error("FB update response: " + res.getStatus());
 					
 //					GsonBuilder gson = new GsonBuilder();
 //					Map<String, Object> data = gson.create().fromJson(res.getString(), Map.class);
