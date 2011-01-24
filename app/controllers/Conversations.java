@@ -51,14 +51,18 @@ import util.EmailUtil;
 import util.NotificationUtils;
 import util.EmailUtil.EmailTemplate;
 
+/**
+ * All methods related to conversations and Conversation Summary page.
+ *
+ */
 @With(Secure.class)
 public class Conversations extends Controller {
 	
 	/* ---------- Conversation management actions --------------- */
-	
 	/**
 	 * Create conversation
-	 * @param type QUESTION or CONVERSATION (Chat)
+	 * @param type 'QUESTION' or 'CONVERSATION' (Chat)
+	 * @param topics tags for this convo
 	 * @param fromPage page where request was made
 	 */
 	public static void create(String type, String title, String details, String topics, String fromPage) {
@@ -84,7 +88,15 @@ public class Conversations extends Controller {
     		ConversationLogic.createConvo(convoType, title, talker, details, topicsSet, notifyTalkers);
     	CommonUtil.updateTalker(talker, session);
     	
-    	//Render needed template to "html" string.
+    	renderConvoData(fromPage, talker, convo);
+    }
+	
+	/**
+	 * Renders conversation's data in JSON format, based on parameters
+	 */
+	private static void renderConvoData(String fromPage, TalkerBean talker,
+			ConversationBean convo) {
+		//Render needed template to "html" string.
     	String templateName = "";
     	Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
         templateBinding.put("session", Scope.Session.current());
@@ -117,13 +129,12 @@ public class Conversations extends Controller {
     	jsonData.put("url", convoURL);
     	jsonData.put("html", html);
     	renderJSON(jsonData);
-    }
+	}
 	
-	//start Talk after creating it
+	//start Chat after creating it
 	public static void start(String convoId) {
     	ConversationBean convo = ConversationDAO.getById(convoId);
     	notFoundIfNull(convo);
-    	
     	NotificationUtils.sendAllNotifications(convo.getId(), null);
 	}
     
@@ -133,10 +144,9 @@ public class Conversations extends Controller {
     	notFoundIfNull(convo);
     	
     	ActionDAO.saveAction(new StartConvoAction(talker, convo, ActionType.RESTART_CONVO));
-    	
     	NotificationUtils.sendAllNotifications(convoId, talker.getId());
     	
-    	//prepare email params
+    	//email notifications
     	Map<String, String> vars = new HashMap<String, String>();
 		vars.put("convo", convo.getTopic());
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
@@ -150,8 +160,10 @@ public class Conversations extends Controller {
     	convo.setCreationDate(new Date());
     	ConversationDAO.updateConvo(convo);
     }
-    
-    //close Live Chat - used by admin
+
+    /**
+     * Close Live Chat - used by admin
+     */
     public static void close(String convoId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	if (!talker.isAdmin()) {
@@ -162,11 +174,15 @@ public class Conversations extends Controller {
     	ConversationDAO.closeLiveChat(convoId);
 	}
     
+    /**
+     * Marks given conversation as 'deleted'
+     */
     public static void delete(String convoId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	ConversationBean convo = ConversationDAO.getById(convoId);
     	notFoundIfNull(convo);
     	
+    	//only admin or author can do this
     	if ( !(talker.isAdmin() || convo.getTalker().equals(talker)) ) {
     		forbidden();
     		return;
@@ -189,7 +205,9 @@ public class Conversations extends Controller {
 		CommonUtil.flagContent("Conversation/Question", convo, reason, convo.getTopic(), talker);
     }
     
-	//follow or unfollow convo
+	/**
+	 * Follow/Unfollow given conversation
+	 */
     public static void follow(String convoId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
@@ -210,8 +228,15 @@ public class Conversations extends Controller {
     }
     
     
-    
     /* ---------------- Conversation Summary page actions ------------------ */
+    
+    /**
+     * Back-end methods for updating fields on ConvoSummary page - 
+     * title, details, summary, topic, relatedConvos
+     * 
+     * @param name name of the field to update
+     * @param value new value for the given field
+     */
     public static void updateField(String convoId, String name, String value) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	ConversationBean convo = ConversationDAO.getById(convoId);
@@ -288,7 +313,6 @@ public class Conversations extends Controller {
             	    	
             	    	TopicLogic.addToDefaultParent(topic);
         			}
-
         	    	convo.getTopics().add(topic);
         	    	ConversationDAO.updateConvo(convo);
         	    	
@@ -332,7 +356,9 @@ public class Conversations extends Controller {
     
     /* ---------------------- Answer related actions --------------------- */
     
-  //flag answer or reply
+    /**
+     * Flag convo answer or reply
+     */
     public static void flagAnswer(String answerId, String reason) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
@@ -362,6 +388,7 @@ public class Conversations extends Controller {
     	
     	Vote oldVote = answer.getVoteByTalker(talker, answer.getVotes());
     	if (oldVote != null) {
+    		//user already voted for this answer/reply
     		if (up == oldVote.isUp()) {
     			//try the same vote - already voted!
     			renderText("Error");
@@ -394,12 +421,16 @@ public class Conversations extends Controller {
     	render("tags/convo/answerVotesInfo.html", _votes);
     }
     
+    /**
+     * Update/delete or set 'Not Helpful' given answer
+     * @param todo action to do - 'update'/'delete'/'setNotHelpful'
+     */
     public static void updateAnswer(String answerId, String todo, String newText) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
     	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
     	notFoundIfNull(answer);
     	
+    	// update and delete are allowed only for author and admin
     	if (todo.equalsIgnoreCase("update") || todo.equalsIgnoreCase("delete")) {
     		if (!answer.getFromTalker().equals(talker) && !talker.isAdmin()) {
         		forbidden();
@@ -443,14 +474,16 @@ public class Conversations extends Controller {
     				answer.setNotHelpful(true);
     			}
     		}
-    		
     		CommentsDAO.updateConvoAnswer(answer);
     	}
     }
     
+    /**
+     * Create answer or reply for given conversation
+     * @param parentId id of answer (for replies)
+     */
     public static void saveAnswerOrReply(String convoId, String parentId, String text) {
 		TalkerBean _talker = CommonUtil.loadCachedTalker(session);
-		
 		ConversationBean convo = ConversationDAO.getById(convoId);
 		notFoundIfNull(convo);
 		
@@ -462,7 +495,11 @@ public class Conversations extends Controller {
 		render("tags/convo/convoCommentsTree.html", _commentsList, _level, _talker);
 	}
     
-    
+    /**
+     * Delete Live Chat message with given index
+     * Allowed only for admins
+     * @param index index of message (0, 1, 2...) to delete
+     */
     public static void deleteChatMessage(String convoId, int index) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	ConversationBean convo = ConversationDAO.getById(convoId);
@@ -477,10 +514,9 @@ public class Conversations extends Controller {
     	renderText("ok");
     }
     
-	//for Dashboard
+	//for Admin Dashboard
     public static void lastTopicId() {
     	String lastConvoId = ConversationDAO.getLastConvoId();
     	renderText(lastConvoId);
     }
-    
 }

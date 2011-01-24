@@ -63,38 +63,6 @@ public class TalkerBean implements Serializable {
 		"Physician", "Pharmacist", "Nurse", "Psychologist", "Social worker", "Researcher"
 	);
 	
-	/**
-	 * An order of elements is important - displayed on Profile Preference page.
-	 * Value is needed for conversion EnumSet to integer value (to save in DB).
-	 */
-	public enum ProfilePreference {
-		PERSONAL_INFO(0, "Display my Personal Info to the community (location, age, etc.)"),
-		HEALTH_INFO(1, "Display my Health Info to the community (disease, symptoms, medications, etc.)"),
-//		BASIC_INFO(2, "Display my Basic Info in my Public Profile (Recognition level, " +
-//				"No. of conversations)"),
-//		BIO(3, "Display my Bio to the community"),
-		FOLLOWERS(4, "Display my Followers to the community"),
-		FOLLOWING(5, "Display who I Follow to the community"),
-		THANKYOUS(6, "Display my Thank you's to the community"),
-		CONVERSATIONS(7, "Display the Conversations I started and joined to the community"),
-//		COMMENTS(8, "Display my Thoughts Feed to the community"),
-		ACTIVITY_STREAM(9, "Display my Activity Stream to the community"),
-		CONVERSATIONS_FOLLOWED(10, "Display the Conversations I Follow to the community"),
-		TOPICS_FOLLOWED(11, "Display the Topics I Follow to the community");
-		
-		private final int value;
-		private final String description;
-		
-		private ProfilePreference(int value, String description) {
-			this.value = value;
-			this.description = description;
-		}
-
-		public int getValue() { return value; }
-
-		public String getDescription() { return description; }
-	}
-	
 	//Convo-related items start with "CONVO" - we use it for display
 	public enum EmailSetting {
 		RECEIVE_COMMENT ("Send me an email when I receive a comment in my Thoughts Feed.", EmailTemplate.NOTIFICATION_PROFILE_COMMENT),
@@ -200,8 +168,6 @@ public class TalkerBean implements Serializable {
 	private Set<TopicBean> followingTopicsList;
 	private Map<TopicBean, TalkerTopicInfo> topicsInfoMap;
 	
-	//Privacy and Email settings
-	private Set<ProfilePreference> profilePreferences;
 	private Set<EmailSetting> emailSettings;
 	
 	//additional variables for displaying
@@ -263,8 +229,6 @@ public class TalkerBean implements Serializable {
 		
 		parseEmailSettings(getStringList(talkerDBObject, "email_settings"));
 		setPrivacySettings(parseSet(PrivacySetting.class, talkerDBObject, "privacy_settings"));
-		//TODO: remove old preferences
-		parseProfilePreferences(getInt(talkerDBObject, "prefs"));
 		
 		Collection<DBObject> thankYousCollection = (Collection<DBObject>)talkerDBObject.get("thankyous");
 		setNumOfThankYous(thankYousCollection == null ? 0 : thankYousCollection.size());
@@ -441,15 +405,6 @@ public class TalkerBean implements Serializable {
 		return topicsInfoList;
 	}
 	
-	public void parseProfilePreferences(int dbValue) {
-		profilePreferences = EnumSet.noneOf(ProfilePreference.class);
-		for (ProfilePreference preference : ProfilePreference.values()) {
-			if ( (dbValue & (1 << preference.getValue())) != 0) {
-				profilePreferences.add(preference);
-			}
-		}
-	}
-	
 	public List<String> emailSettingsToList() {
 		List<String> emailSettingsStringList = new ArrayList<String>();
 		if (emailSettings == null) {
@@ -474,7 +429,6 @@ public class TalkerBean implements Serializable {
 		}
 	}
 	
-	//TODO: move to some common DB function? 
 	public List<DBRef> followingTopicsToList() {
 		List<DBRef> dbRefList = new ArrayList<DBRef>();
 		if (followingTopicsList == null) {
@@ -693,9 +647,6 @@ public class TalkerBean implements Serializable {
 		return country;
 	}
 	public void setCountry(String country) { this.country = country; }
-	
-	public Set<ProfilePreference> getProfilePreferences() { return profilePreferences; }
-	public void setProfilePreferences(Set<ProfilePreference> profilePreferences) { this.profilePreferences = profilePreferences; }
 	
 	public Set<EmailSetting> getEmailSettings() { return emailSettings; }
 	public void setEmailSettings(Set<EmailSetting> emailSettings) { this.emailSettings = emailSettings; }

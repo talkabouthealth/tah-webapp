@@ -129,22 +129,10 @@ public class TopicDAO {
 	}
 	
 	public static Set<TopicBean> loadAllTopics() {
-		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
-		
-		DBObject query = new BasicDBObject("deleted", new BasicDBObject("$ne", true));
-		List<DBObject> topicsDBList = topicsColl.find(query).sort(new BasicDBObject("views", -1)).toArray();
-		
-		Set<TopicBean> topicsSet = new LinkedHashSet<TopicBean>();
-		for (DBObject topicDBObject : topicsDBList) {
-			TopicBean topic = new TopicBean();
-			topic.parseBasicFromDB(topicDBObject);
-			topicsSet.add(topic);
-		}
-		return topicsSet;
+		return loadAllTopics(true);
 	}
-
-	//TODO: check it?
-	public static Set<TopicBean> loadAllLightTopics() {
+	
+	public static Set<TopicBean> loadAllTopics(boolean loadBasicInfo) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("deleted", new BasicDBObject("$ne", true));
@@ -153,7 +141,12 @@ public class TopicDAO {
 		Set<TopicBean> topicsSet = new LinkedHashSet<TopicBean>();
 		for (DBObject topicDBObject : topicsDBList) {
 			TopicBean topic = new TopicBean();
-			topic.parseSuperBasicFromDB(topicDBObject);
+			if (loadBasicInfo) {
+				topic.parseBasicFromDB(topicDBObject);
+			}
+			else {
+				topic.parseSuperBasicFromDB(topicDBObject);
+			}
 			topicsSet.add(topic);
 		}
 		return topicsSet;

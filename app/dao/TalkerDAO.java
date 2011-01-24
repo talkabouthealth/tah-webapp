@@ -491,21 +491,6 @@ public class TalkerDAO {
 		return followerList;
 	}
 	
-	public static List<ConversationBean> loadFollowingConversations(TalkerBean talker) {
-		if (talker == null) {
-			return new ArrayList<ConversationBean>();
-		}
-		
-		//TODO: use DBRef for convos?
-		List<ConversationBean> followingConvoList = new ArrayList<ConversationBean>();
-		for (String convoId : talker.getFollowingConvosList()) {
-			ConversationBean convo = ConversationDAO.getById(convoId);
-			followingConvoList.add(convo);
-		}
-		
-		return followingConvoList;
-	}
-	
 	public static void main(String[] args) {
 //		TalkerDAO.follow("4c2cb43160adf3055c97d061", "4c35dbeb5165f305eebfc5f2", true);
 //		System.out.println(loadFollowers("4c35dbeb5165f305eebfc5f2"));

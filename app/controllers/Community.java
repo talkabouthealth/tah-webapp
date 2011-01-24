@@ -29,7 +29,7 @@ import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.TalkerDAO;
 
-//TODO: all code & html/js todos 
+//TODO: html/js todos 
 public class Community extends Controller {
 	
 	public static void viewCommunity() {
@@ -40,8 +40,7 @@ public class Community extends Controller {
 			List<CommentBean> answers = CommentsDAO.getTalkerAnswers(member.getId(), null);
 			member.setNumOfConvoAnswers(answers.size());
 		}
-		
-		//get only Top 3 by answers
+		//get only Top 3 members by number of answers
 		Collections.sort(communityMembers, new Comparator<TalkerBean>() {
 			@Override
 			public int compare(TalkerBean talker1, TalkerBean talker2) {
@@ -58,20 +57,11 @@ public class Community extends Controller {
 		render(talker, liveTalks, communityConvoFeed, communityMembers);
 	}
 	
-//	Tabs:
-//	1) Active
-//	2) New
-//	3) Search
-//	4) Experts
-//	5) Patients
-//	6) Former Patients
-//	7) Parents
-//	8) Caregivers
-//	9) Family & Friends
 	public static void browseMembers(String action) throws Throwable {
 		Secure.checkAccess();
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 
+		//Active talkers on this day
 		Calendar oneDayBeforeNow = Calendar.getInstance();
 		oneDayBeforeNow.add(Calendar.DAY_OF_MONTH, -1);
 		Set<TalkerBean> activeTalkers = ApplicationDAO.getActiveTalkers(oneDayBeforeNow.getTime());
@@ -100,6 +90,7 @@ public class Community extends Controller {
 		members.put("Caregivers", new LinkedHashSet<TalkerBean>());
 		members.put("Family & Friends", new LinkedHashSet<TalkerBean>());
 		
+		//match tabs with possible connections
 		Map<String, List<String>> memberTypes = new LinkedHashMap<String, List<String>>();
 		memberTypes.put("Experts", TalkerBean.PROFESSIONAL_CONNECTIONS_LIST);
 		memberTypes.put("Patients", Arrays.asList("Patient"));
@@ -117,6 +108,7 @@ public class Community extends Controller {
 			}
 		}
 		
+		//default tab is 'active'
 		if (action == null) {
 			action = "active";
 		}

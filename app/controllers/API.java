@@ -42,6 +42,13 @@ public class API extends Controller {
         }
     }
 	
+	/**
+	 * Create answer or reply to a conversation.
+	 * @param convoId
+	 * @param talkerId
+	 * @param parentId id of parent answer (for replies)
+	 * @param text
+	 */
 	public static void createAnswer(String convoId, String talkerId, String parentId, String text) {
 		TalkerBean authorTalker = TalkerDAO.getById(talkerId);
 		notFoundIfNull(authorTalker);
@@ -63,7 +70,12 @@ public class API extends Controller {
 		renderText(comment.getId());
 	}
 	
-	
+	/**
+	 * 
+	 * @param type String 'Question' or 'Conversation'
+	 * @param title
+	 * @param talkerId
+	 */
 	public static void createConvo(String type, String title, String talkerId) {
     	TalkerBean talker = TalkerDAO.getById(talkerId);
     	notFoundIfNull(talker);
@@ -74,7 +86,6 @@ public class API extends Controller {
     	}
     	ConversationBean convo = 
     		ConversationLogic.createConvo(convoType, title, talker, null, null, true);
-    	
 		renderText(convo.getTid());
     }
 	

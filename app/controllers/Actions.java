@@ -38,12 +38,13 @@ import dao.TalkerDAO;
 import dao.TopicDAO;
 
 /**
- * Different back-end for Ajax methods 
+ * Back-end for Ajax methods related to talker
  */
 @With(Secure.class)
 public class Actions extends Controller {
 	
 	/**
+	 * Create 'thank you' from authenticated talker to talker with id 'toTalkerId'
 	 * @param tagFile tag template file that is used for response
 	 */
 	public static void createThankYou(String toTalkerId, String note, String tagFile) {
@@ -63,6 +64,8 @@ public class Actions extends Controller {
 		
 		ActionDAO.saveAction(new GiveThanksAction(fromTalker, toTalker));
 		
+		//email notification
+		//TODO: separate email notifications?
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("other_talker", fromTalker.getUserName());
 		vars.put("thankyou_text", thankYouBean.getNote());
@@ -78,7 +81,7 @@ public class Actions extends Controller {
 	}
 	
 	/**
-	 * Follow or unfollow given talker
+	 * Follow or unfollow given talker by authenticated talker.
 	 */
 	public static void followTalker(String followingId) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
@@ -111,7 +114,7 @@ public class Actions extends Controller {
 	}
 	
 	/**
-	 * Save thought/reply in given profile
+	 * Save thought/reply in the given profile
 	 * @param profileTalkerId
 	 * @param parentId Id of the parent thought (for replies) or null
 	 * @param text

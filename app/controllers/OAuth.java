@@ -11,6 +11,11 @@ import util.oauth.TwitterOAuthProvider;
 
 public class OAuth extends Controller {
 	
+	/**
+	 * Redirect user to Twitter or Facebook authentication page
+	 * @param type 'twitter' or 'facebook'
+	 * @param redirectURL URL to redirect after Twitter/Facebook authentication
+	 */
 	public static void getAuth(String type, String redirectURL) {
 		if (redirectURL != null && !redirectURL.isEmpty()) {
     		session.put("oauth_redirect_url", redirectURL);
@@ -26,10 +31,13 @@ public class OAuth extends Controller {
 		if (sslHeader != null && sslHeader.value().equalsIgnoreCase("on")) {
 			request.secure = true;
 		}
-		
 		redirect(oauthProvider.getAuthURL(session, request.secure));
 	}
 	
+	/**
+	 * Callback after Twitter/Facebook authentication
+	 * @param type 'twitter' or 'facebook'
+	 */
 	public static void callback(String type) {
 		OAuthServiceProvider oauthProvider = getProvider(type);
 		
@@ -43,7 +51,7 @@ public class OAuth extends Controller {
 			String redirectURL = oauthProvider.handleCallback(session, params.allSimple(), request.secure);
 			Application.redirectPage(redirectURL);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.error(e, "OAuth callback exception");
 		}
 	}
 	

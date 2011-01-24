@@ -46,13 +46,16 @@ import dao.TopicDAO;
 @With( { Secure.class, LoggerController.class } )
 public class Home extends Controller {
 
+	/**
+	 * Home page
+	 */
     public static void index() {
     	Logger.error("Home 0");
-    	
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
     	Logger.error("Home 1");
 		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
+		
 		Logger.error("Home 2");
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
@@ -62,12 +65,10 @@ public class Home extends Controller {
 		TalkerLogic.preloadTalkerInfo(talker);
 		
 		Logger.error("Home 4");
-		
 		//TODO: cache recommendations
 		
 //		Yes, for HealthInfo, let's use all of the data. 
 //		For Profile info, we can use gender, age, marital status, number of children, and ages of children.
-		
 		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
 		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();
 		List<TopicBean> loadedTopics = new ArrayList<TopicBean>();
@@ -77,7 +78,7 @@ public class Home extends Controller {
 		Logger.error("Home 4 1");
 		if (recommendedTopics.isEmpty()) {
 			//display most popular Topics based on number of questions
-			loadedTopics = new ArrayList<TopicBean>(TopicDAO.loadAllLightTopics());
+			loadedTopics = new ArrayList<TopicBean>(TopicDAO.loadAllTopics(false));
 		}
 		
 		for (TopicBean topic : loadedTopics) {
@@ -214,7 +215,6 @@ public class Home extends Controller {
     	
     	flash.put("note", "I've joined TalkAboutHealth to get real-time health support. " +
     			"Here's an invitation for you to try it as well.");
-    	
     	render(invitations);
     }
     
@@ -256,7 +256,13 @@ public class Home extends Controller {
     	invitations();
     }
     
-    
+    /**
+     * Back-end method for Share features on Home/ConvoSummary/Topic pages
+     * @param type Share type: 'email', 'twitter' or 'facebook'
+     * @param from Username of talker who shares
+     * @param pageType Type where sharing was: 'Topic', 'Conversation', 'TalkAboutHealth', ..
+     * @param pageInfo Information related to this page (i.e. title of the topic or conversation)
+     */
     public static void share(String type, String emails, String from, String note, String pageType, String pageInfo) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
@@ -271,13 +277,13 @@ public class Home extends Controller {
     					emailsToSend.add(email);
     				}
     			}
-    			
     			validation.isTrue(!emailsToSend.isEmpty()).message("emails.incorrect");
     			if(validation.hasErrors()) {
     				renderText("Error: Please input correct emails");
     	            return;
     	        }
     			
+    			//preparing email parameters
     			Map<String, String> vars = new HashMap<String, String>();
     			String subject = "";
     			if (pageType.equalsIgnoreCase("Topic")) {

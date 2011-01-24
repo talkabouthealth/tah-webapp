@@ -78,20 +78,6 @@
 	#{/ifnot}
 #{/list}
 									</table>
-									
-									*{
-										Old privacy page.
-										#{list items:models.TalkerBean.ProfilePreference.values(), as:'preference' }
-											#{ifnot talker.isProf() && preference == models.TalkerBean.ProfilePreference.HEALTH_INFO} 
-												<div class="preferencescheck">
-													<input type="checkbox" value="" name="${preference}"
-													#{if profilePreferences.contains(preference) } checked='checked' #{/if}
-													/>
-													<span class="blacktext14">&nbsp;${preference.description}</span>
-												</div>
-											#{/ifnot}
-										#{/list}
-									}*
 								</div>
 							</div>
 							

@@ -12,6 +12,10 @@ import util.CommonUtil;
 @With(Secure.class)
 public class Talk extends Controller {
 	
+	/**
+	 * Shows page with Flash Live Chat application
+	 * @param convoId
+	 */
 	public static void talkApp(Integer convoId) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		ConversationBean topic = ConversationDAO.getByTid(convoId);

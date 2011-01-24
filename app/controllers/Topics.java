@@ -57,7 +57,10 @@ public class Topics extends Controller {
 		render(talker, topic);
     }
 	
-	//follow or unfollow topic
+	/**
+	 * Follow or unfollow given topic
+	 * @param topicId
+	 */
     public static void follow(String topicId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	TopicBean topic = new TopicBean(topicId);
@@ -77,6 +80,12 @@ public class Topics extends Controller {
     	renderText(nextAction);
     }
     
+    /**
+     * Update some topic's field: title, summary, freezing
+     * @param topicId
+     * @param name name of field to update
+     * @param value new value of the field
+     */
     public static void updateField(String topicId, String name, String value) {
     	TopicBean topic = TopicDAO.getById(topicId);
     	notFoundIfNull(topic);
@@ -122,6 +131,10 @@ public class Topics extends Controller {
     	}
     }
     
+    /**
+     * Mark given topic as deleted
+     * @param topicId
+     */
     public static void delete(String topicId) {
     	TopicBean topic = TopicDAO.getById(topicId);
     	notFoundIfNull(topic);
@@ -251,6 +264,8 @@ public class Topics extends Controller {
     	
     	renderText(htmlResponse.toString());
     }
+    
+    /* ------------ Related topics page ------------ */
     
 	public static void updateTopicExperience(String topicId, String newValue) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);

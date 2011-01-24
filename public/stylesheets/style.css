@@ -378,14 +378,14 @@ a {
 }
 #jsddm li a.libull2 {
 	background:url(../images/libuttlets.png);
-	background-position:42px 11px;
+	background-position:43px 11px;
 	background-repeat:no-repeat;
 	width:30px;
 	height:13px;
 }
 #jsddm li a.libull2:hover {
 	display:block;
-	height:12px;
+	height:13px;
 	width:30px;
 	background:url(../images/settingbg1.jpg);
 	background-repeat:no-repeat;
@@ -401,7 +401,7 @@ a {
 }
 #jsddm li a.libull3:hover {
 	display:block;
-	height:12px;
+	height:13px;
 	background:url(../images/settingbg1.jpg);
 	background-repeat:no-repeat;
 	background-position:6px 6px;

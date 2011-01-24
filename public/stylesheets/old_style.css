@@ -190,8 +190,8 @@ form { padding:0px; margin:0px;}
 .signrightbox { float:left; width:284px; padding-top:20px;}
 .personalinfosignrightbox { float:left; width:284px; padding-top:5px;}
 .personalinfosignrighttop { float:left; width:284px; background:url(../images/personalinforight_top.gif) no-repeat; height:57px; }
-.signrightop { float:left; width:284px; background:url(../images/signrighttop.gif) no-repeat; height:57px; }
-.aboutrightop { float:left; width:284px; background:url(../images/aboutrighttop.gif) no-repeat; height:57px; }
+.signrightop { float:left; width:284px; background:url(../images/signrighttop.jpg) no-repeat; height:57px; }
+.aboutrightop { float:left; width:284px; background:url(../images/aboutrighttop.jpg) no-repeat; height:57px; }
 .signrighmid { float:left; width:254px; background:url(../images/sinmid.gif) repeat-y; padding:15px; }
 .signrighbot { float:left; width:284px; background:url(../images/signrightbottom.gif) no-repeat; height:14px;}
 

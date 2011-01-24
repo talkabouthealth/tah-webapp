@@ -185,6 +185,7 @@ public class ConversationBean {
 	}
 	
 	//TODO: 3 same methods: Col<DBRef> -> Set<Object>
+	//and vise versa: List<Object> -> List/Set<DBRef>
 	private void parseSumContributors(Collection<DBRef> contributorsDBList) {
 		sumContributors = new HashSet<TalkerBean>();
 		if (contributorsDBList != null) {

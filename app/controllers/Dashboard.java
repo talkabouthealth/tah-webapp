@@ -19,6 +19,10 @@ import dao.ConfigDAO;
 import dao.TalkerDAO;
 import dao.ConversationDAO;
 
+/**
+ * Admin Dashboard
+ *
+ */
 @Check("admin")
 @With(Secure.class)
 public class Dashboard extends Controller {
@@ -36,6 +40,10 @@ public class Dashboard extends Controller {
 		render(topicsList, topicsWithNotificationsList, talkersList, lastTopicId, onlineUsersSingleton, automaticNotification);
 	}
 		
+	/**
+	 * Send notification to given users
+	 * @param uidArray array of ids of users to notify
+	 */
 	public static void notification(String[] uidArray, String convoId, String topic) {
 		IMNotifier imNotifier = IMNotifier.getInstance();
 		try {
@@ -47,6 +55,10 @@ public class Dashboard extends Controller {
 		renderText("ok");
 	}
 	
+	/**
+	 * Check if new conversation/live chat was created
+	 * @param oldLastTopic id of last convo known to the Admin
+	 */
 	public static void checkNewTopic(String oldLastTopic) {
 		String lastTopic = ConversationDAO.getLastConvoId();
 		
@@ -65,10 +77,8 @@ public class Dashboard extends Controller {
 	// --------------- Manage accounts -----------------------
 	public static void manageAccounts() {
 		List<TalkerBean> talkers = TalkerDAO.loadAllTalkers();
-		
 		render(talkers);
 	}
-	
 	public static void saveAccounts(List<String> selectedTalkerIds) {
 		List<TalkerBean> talkers = TalkerDAO.loadAllTalkers();
 		
@@ -86,14 +96,11 @@ public class Dashboard extends Controller {
 		manageAccounts();
 	}
 	
-	
 	// --------------- Verify Professionals ------------------
-
 	public static void verifyProfessionals() {
 		List<TalkerBean> talkers = loadProfessionalTalkers();
 		render(talkers);
 	}
-	
 	public static void saveVerifyProfessionals(List<String> selectedTalkerIds) {
 		List<TalkerBean> talkers = loadProfessionalTalkers();
 		

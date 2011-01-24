@@ -73,8 +73,7 @@ import dao.ConversationDAO;
 import dao.TopicDAO;
 
 /**
- * Different profile actions - profile info, health, notifications, privacy
- *
+ * Different profile related actions - profile info, health, notifications, privacy
  */
 @With(Secure.class)
 public class Profile extends Controller {
@@ -167,9 +166,12 @@ public class Profile extends Controller {
 		renderText("ok");
 	}
 	
+	/**
+	 * Change connection of authenticated talker
+	 * @param value
+	 */
 	public static void changeConnection(String value) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
 		talker.setConnection(value);
 		talker.setConnectionVerified(false);
 		CommonUtil.updateTalker(talker, session);
@@ -197,10 +199,13 @@ public class Profile extends Controller {
 	public static void image() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		String userName = talker.getUserName();
-		
 		render(userName);
 	}
 	
+	/**
+	 * Delete current or upload new image
+	 * @param submitAction 'Remove current image' or 'Upload'
+	 */
 	public static void uploadImage(String submitAction, File imageFile) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
@@ -215,29 +220,7 @@ public class Profile extends Controller {
 				}
 				else {
 					BufferedImage bsrc = ImageIO.read(imageFile);
-					
-					int width = 100;
-					int height = 100;
-					
-					int srcWidth = bsrc.getWidth();
-					int srcHeight = bsrc.getHeight();
-					int scaleToWidth = 0;
-					int scaleToHeight = 0;
-					if (srcHeight > srcWidth) {
-						scaleToWidth = width;
-						scaleToHeight = (srcHeight*width)/srcWidth;
-					}
-					else {
-						scaleToWidth = (srcWidth*height)/srcHeight;
-						scaleToHeight = height;
-					}
-					
-					BufferedImage bdest = ImageUtil.getScaledInstance(bsrc, scaleToWidth, scaleToHeight, 
-							RenderingHints.VALUE_INTERPOLATION_BICUBIC, true);
-					bdest = bdest.getSubimage(0, 0, width, height);
-					
-					ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		        	ImageIO.write(bdest, "GIF", baos);
+					ByteArrayOutputStream baos = ImageUtil.createThumbnail(bsrc);
 		        	TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
 				}
 			} catch (IOException e) {
@@ -281,18 +264,6 @@ public class Profile extends Controller {
 		talker.setPrivacySettings(privacySettings);
 		
 		TalkerDAO.updateTalker(talker);
-		
-//		EnumSet<ProfilePreference> preferencesSet = EnumSet.noneOf(ProfilePreference.class);
-//		for (String paramName : paramsMap.keySet()) {
-//			//try to parse all parameters to ProfilePreference enum
-//			try {
-//				ProfilePreference preference = ProfilePreference.valueOf(paramName);
-//				preferencesSet.add(preference);
-//			}
-//			catch (IllegalArgumentException iae) {}
-//		}
-//		talker.setProfilePreferences(preferencesSet);
-		
 		renderText("ok");
 	}
 	
@@ -301,6 +272,7 @@ public class Profile extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		TalkerLogic.preloadTalkerInfo(talker);
 		
+		//check possible parameters after adding Twitter/Facebook accounts
 		String error = params.get("err");
 		if (error != null) {
 			flash.put("err", "Sorry, this account is already connected.");
@@ -321,6 +293,7 @@ public class Profile extends Controller {
 		sessionTalker.setNtime(talker.getNtime());
 		sessionTalker.setCtype(talker.getCtype());
 		
+		//TODO: update other handling?
 		//parse other convo types field
 		otherCTypes = otherCTypes.trim();
 		if (!otherCTypes.equals("Other (please separate by commas)")) {
@@ -338,7 +311,6 @@ public class Profile extends Controller {
 			if (talker.getCtype() != null) {
 				cTypeList.addAll(Arrays.asList(talker.getCtype()));
 			}
-			
 			sessionTalker.setCtype(cTypeList.toArray(new String[]{}));
 		}
 		
@@ -346,6 +318,10 @@ public class Profile extends Controller {
 		renderText("ok");
 	}
 	
+	/**
+	 * @param imUserName Username of IM account
+	 * @param imService 'YahooIM'/'GoogleTalk'/'WindowLive'
+	 */
 	public static void addIMAccount(String imUserName, String imService) {
     	IMAccountBean imAccount = new IMAccountBean(imUserName, imService);
     	//check if such IM account exists
@@ -386,7 +362,7 @@ public class Profile extends Controller {
 		Map<String, String> paramsMap = params.allSimple();
 		EnumSet<EmailSetting> emailSettings = EnumSet.noneOf(EmailSetting.class);
 		for (String paramName : paramsMap.keySet()) {
-			//try to parse all parameters to ProfilePreference enum
+			//try to parse all parameters to EmailSetting enum
 			try {
 				EmailSetting emailSetting = EmailSetting.valueOf(paramName);
 				emailSettings.add(emailSetting);
@@ -406,6 +382,10 @@ public class Profile extends Controller {
 		renderText("ok");
 	}
 	
+	/**
+	 * Changes primary email of authenticated talker
+	 * @param newPrimaryEmail
+	 */
 	public static void makePrimaryEmail(String newPrimaryEmail) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
@@ -414,7 +394,7 @@ public class Profile extends Controller {
 		
 		//delete this email from non-primary
 		talker.getEmails().remove(newPrimaryEmailBean);
-		//make old primary non-primary
+		//make old primary as non-primary
 		talker.getEmails().add(new EmailBean(talker.getEmail(), talker.getVerifyCode()));
 		//set new primary
 		talker.setEmail(newPrimaryEmailBean.getValue());
@@ -424,13 +404,16 @@ public class Profile extends Controller {
 		notifications();
 	}
 	
+	/**
+	 * Adds new not-primary email for authenticated talker
+	 * @param newEmail
+	 */
 	public static void addEmail(String newEmail) {
 		validation.email(newEmail);
 		if (validation.hasError("newEmail")) {
 			renderText(validation.error("newEmail").message());
 			return;
 		}
-		
 		TalkerBean otherTalker = TalkerDAO.getByEmail(newEmail);
 		if (otherTalker != null) {
 			renderText(Messages.get("email.exists"));
@@ -442,6 +425,7 @@ public class Profile extends Controller {
 		talker.getEmails().add(email);
 		CommonUtil.updateTalker(talker, session);
 		
+		//send verification email
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("username", talker.getUserName());
 		vars.put("verify_code", email.getVerifyCode());
@@ -451,6 +435,10 @@ public class Profile extends Controller {
 		render("tags/profile/profileNotificationEmail.html", _email);
 	}
 	
+	/**
+	 * Deletes given non-primary email
+	 * @param email
+	 */
 	public static void deleteEmail(String email) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		talker.getEmails().remove(new EmailBean(email, null));
@@ -459,7 +447,7 @@ public class Profile extends Controller {
 		renderJSON("{\"result\" : \"ok\"}");
 	}
 	
-	/* ------------- Twitter/FB notifications ----------------*/
+	/* ------------- IM/Twitter/FB notifications ----------------*/
 	public static void serviceSettingsSave(String name, boolean value) {
 		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);
 
@@ -478,6 +466,10 @@ public class Profile extends Controller {
 		renderText("ok");
 	}
 	
+	/**
+	 * Delete Twitter or Facebook account
+	 * @param type
+	 */
 	public static void deleteServiceAccount(String type) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
@@ -489,7 +481,6 @@ public class Profile extends Controller {
 				CommonUtil.updateTalker(talker, session);
 			}
 		}
-		
 		renderText("ok");
 	}
 	
@@ -498,11 +489,9 @@ public class Profile extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 		String hashedPassword = CommonUtil.hashPassword(curPassword);
-		
 		validation.isTrue(talker.getPassword().equals(hashedPassword)).message("password.currentbad");
 		validation.isTrue(newPassword != null && newPassword.equals(confirmPassword)).message("password.different");
-		
-		if(validation.hasErrors()) {
+		if (validation.hasErrors()) {
 			flash.success("");
 			validation.keep();
 			notifications();
@@ -568,6 +557,11 @@ public class Profile extends Controller {
 		renderText("ok");
 	}
 	
+	/**
+	 * Parse answers to given disease questions from params
+	 * @param disease Disease which questions should be parsed
+	 * @param talkerDisease Object to save parsed health info
+	 */
 	private static void parseHealthQuestions(DiseaseBean disease, TalkerDiseaseBean talkerDisease) {
 		Map<String, String[]> paramsMap = params.all();
 		
@@ -581,6 +575,10 @@ public class Profile extends Controller {
 		talkerDisease.setHealthInfo(healthInfo);
 	}
 	
+	/**
+	 * Get selected health items from params
+	 * @param talkerDisease Object to save parsed health items
+	 */
 	private static void parseHealthItems(TalkerDiseaseBean talkerDisease) {
 		Map<String, String> paramsMap = params.allSimple();
 		
@@ -632,6 +630,7 @@ public class Profile extends Controller {
 	public static void deactivateAccount() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
+		//change username to deactivated (randomly generated)
 		String newUserName = CommonUtil.generateDeactivatedUserName(true);
 		talker.setOriginalUserName(talker.getUserName());
 		talker.setUserName(newUserName);

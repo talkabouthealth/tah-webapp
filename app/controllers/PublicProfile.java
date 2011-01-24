@@ -51,7 +51,7 @@ public class PublicProfile extends Controller {
 	 * ThankYous, Following/Followers
 	 * @param userName
 	 * @param action
-	 * @param from item to start from (used for paging)
+	 * @param from item to start from (was used for paging)
 	 */
 	public static void userBasedActions(String userName, String action, int from) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
@@ -89,11 +89,16 @@ public class PublicProfile extends Controller {
 		render(talker, currentTalker, firstTimeComment);
 	}
 	
+	/**
+	 * Delete thought/reply
+	 * @param commentId
+	 */
 	public static void deleteComment(String commentId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	CommentBean comment = CommentsDAO.getProfileCommentById(commentId);
     	notFoundIfNull(comment);
     	
+    	//only admin or author can delete
     	if ( !(talker.getId().equals(comment.getProfileTalkerId()) || talker.isAdmin()) ) {
     		forbidden();
     		return;
@@ -107,11 +112,17 @@ public class PublicProfile extends Controller {
     	renderText("ok");
     }
 	
+	/**
+	 * Update thought/reply
+	 * @param commentId
+	 * @param newText
+	 */
 	public static void updateComment(String commentId, String newText) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	CommentBean comment = CommentsDAO.getProfileCommentById(commentId);
     	notFoundIfNull(comment);
     	
+    	//only author can update
     	if (!talker.getId().equals(comment.getProfileTalkerId())) {
     		forbidden();
     		return;
@@ -141,6 +152,10 @@ public class PublicProfile extends Controller {
 		render(talker, currentTalker, answersFeed, numOfTopAnswers, noHealthInfo);
 	}
 	
+	/**
+	 * Started/Joined/Following conversations
+	 * @param userName
+	 */
 	public static void conversations(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
@@ -150,12 +165,13 @@ public class PublicProfile extends Controller {
 			TalkerLogic.prepareTalkerConvos(ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO));
 		List<Action> joinedConvosFeed = 
 			TalkerLogic.prepareTalkerConvos(ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO));
-		List<Action> followingConvosFeed = TalkerLogic.prepareTalkerConvos(TalkerDAO.loadFollowingConversations(talker));
+		List<Action> followingConvosFeed = TalkerLogic.prepareTalkerConvos(TalkerLogic.loadFollowingConversations(talker));
 		
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
 		TalkerLogic.preloadTalkerInfo(talker);
 		boolean noHealthInfo = TalkerLogic.talkerHasNoHealthInfo(talker);
 		
+		//TODO: move to recommended conversations
 		/* 
 		 	Ideas for recommended conversations :
 				1) match member following topics with convo topics
@@ -189,6 +205,7 @@ public class PublicProfile extends Controller {
 		TalkerBean talker = TalkerDAO.getByUserName(userName);
 		notFoundIfNull(talker);
 		
+		//get talker answers and related info for each topic
 		for (TopicBean topic : talker.getFollowingTopicsList()) {
 			List<CommentBean> answers = 
 				CommentsDAO.getTalkerAnswers(talker.getId(), topic);
@@ -216,6 +233,14 @@ public class PublicProfile extends Controller {
     	render("tags/publicprofile/recommendedTopicsList.html", _recommendedTopics, _talker);
     }
 	
+	/**
+	 * Return recommended topics for given talker.
+	 * Two criterias:
+	 * - based on HealthInfo;
+	 * - popularity of topics (number of questions)
+	 * 
+	 * @param afterId id of last topic from previous load (used for paging)
+	 */
 	private static List<TopicBean> loadRecommendedTopics(TalkerBean talker, 
 			TalkerDiseaseBean talkerDisease, String afterId) {
 		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();
@@ -228,10 +253,11 @@ public class PublicProfile extends Controller {
 			loadedTopics = new ArrayList<TopicBean>(TopicDAO.loadAllTopics());
 		}
 		
-		final int numberOfPages = 10;
+		final int numberPerPage = 10;
 		boolean canAdd = (afterId == null);
 		for (TopicBean topic : loadedTopics) {
 			if (canAdd && !talker.getFollowingTopicsList().contains(topic)) {
+				//recommended topics shouldn't contain default topics
 				if (! (topic.getTitle().equals(ConversationLogic.DEFAULT_QUESTION_TOPIC) 
 						|| topic.getTitle().equals(ConversationLogic.DEFAULT_TALK_TOPIC)) ) {
 					recommendedTopics.add(topic);
@@ -240,7 +266,8 @@ public class PublicProfile extends Controller {
 			if (topic.getId().equals(afterId)) {
 				canAdd = true;
 			}
-			if (recommendedTopics.size() == numberOfPages) {
+			//enough for this page?
+			if (recommendedTopics.size() == numberPerPage) {
 				break;
 			}
 		}

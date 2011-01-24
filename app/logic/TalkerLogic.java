@@ -367,6 +367,20 @@ public class TalkerLogic {
 		}
 		return convosFeed;
 	}
+	
+	public static List<ConversationBean> loadFollowingConversations(TalkerBean talker) {
+		if (talker == null) {
+			return new ArrayList<ConversationBean>();
+		}
+		
+		List<ConversationBean> followingConvoList = new ArrayList<ConversationBean>();
+		for (String convoId : talker.getFollowingConvosList()) {
+			ConversationBean convo = ConversationDAO.getById(convoId);
+			followingConvoList.add(convo);
+		}
+		
+		return followingConvoList;
+	}
 
 	public static boolean talkerHasNoHealthInfo(TalkerBean talker) {
 		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
@@ -437,6 +451,14 @@ public class TalkerLogic {
 					}
 				}
 			}
+			
+			if (!talker.equals(profileTalker)) {
+				Map<String, String> vars = new HashMap<String, String>();
+				vars.put("other_talker", talker.getUserName());
+				vars.put("comment_text", comment.getText());
+				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
+						profileTalker, vars);
+			}
 		}
 		else {
 			//for replies we update action for parent comment
@@ -454,14 +476,6 @@ public class TalkerLogic {
 				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
 						thought.getFromTalker(), vars);
 			}
-		}
-		
-		if (!talker.equals(profileTalker)) {
-			Map<String, String> vars = new HashMap<String, String>();
-			vars.put("other_talker", talker.getUserName());
-			vars.put("comment_text", comment.getText());
-			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
-					profileTalker, vars);
 		}
 		
 		return comment;

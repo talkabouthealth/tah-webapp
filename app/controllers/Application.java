@@ -44,6 +44,10 @@ import util.EmailUtil.EmailTemplate;
 import dao.ApplicationDAO;
 import dao.TalkerDAO;
 
+/**
+ * Operations for not-authenticated talkers:
+ * index page, registration, forgot password, email verification, contact us.
+ */
 @With( LoggerController.class )
 public class Application extends Controller {
 	
@@ -58,6 +62,9 @@ public class Application extends Controller {
 		"explore", "search", "community", "openquestions", "livechats", "conversationfeed"
 	});
 
+	/**
+	 * Landing page
+	 */
     public static void index() {
     	if (Security.isConnected()) {
     		Home.index();
@@ -73,14 +80,16 @@ public class Application extends Controller {
     	render();
     }
     
+    /**
+     * Send new password after password restoring.
+     */
     public static void sendNewPassword(@Email String email) {
-    	TalkerBean user = null;
+    	TalkerBean talker = null;
     	if (!validation.hasError("email")) {
-    		user = TalkerDAO.getByEmail(email);
-    		validation.isTrue(user != null).message("email.nosuchemail");
+    		talker = TalkerDAO.getByEmail(email);
+    		validation.isTrue(talker != null).message("email.nosuchemail");
     	}
-    	
-    	if(validation.hasErrors()) {
+    	if (validation.hasErrors()) {
             params.flash();
             validation.keep();
             forgotPassword();
@@ -90,12 +99,11 @@ public class Application extends Controller {
 		//generate new password
 		SecureRandom random = new SecureRandom();
 	    String newPassword = new BigInteger(60, random).toString(32);
-	    
-	    user.setPassword(CommonUtil.hashPassword(newPassword));
-	    TalkerDAO.updateTalker(user);
+	    talker.setPassword(CommonUtil.hashPassword(newPassword));
+	    TalkerDAO.updateTalker(talker);
 		
 		Map<String, String> vars = new HashMap<String, String>();
-		vars.put("username", user.getUserName());
+		vars.put("username", talker.getUserName());
 		vars.put("newpassword", newPassword);
 		boolean result = EmailUtil.sendEmail(EmailTemplate.FORGOT_PASSWORD, email, vars);
 		
@@ -133,8 +141,7 @@ public class Application extends Controller {
     		.message("Please agree to the TalkAboutHealth Terms of Service and Privacy Policy.");
     	
 		validateTalker(talker);
-		
-        if(validation.hasErrors()) {
+        if (validation.hasErrors()) {
             params.flash(); // add http parameters to the flash scope
             validation.keep(); // keep the errors for the next request
             signup();
@@ -143,7 +150,8 @@ public class Application extends Controller {
         
         prepareTalker(talker, session);
         
-        if (!TalkerDAO.save(talker)) {
+        boolean okSave = TalkerDAO.save(talker);
+        if (!okSave) {
         	params.flash();
             validation.keep();
         	flash.error("Sorry, unknown error. Please contact support.");
@@ -157,6 +165,7 @@ public class Application extends Controller {
         //Reserve this name as URL
         ApplicationDAO.createURLName(talker.getUserName());
 		
+        //Send 'email verification' and 'welcome' emails
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("username", talker.getUserName());
 		vars.put("verify_code", talker.getVerifyCode());
@@ -172,13 +181,12 @@ public class Application extends Controller {
 			TwitterUtil.followTAH(twitterAccount.getToken(), twitterAccount.getTokenSecret());
 		}
 
-		//login
+		//manually login this talker
 		ApplicationDAO.saveLogin(talker.getId());
 		session.put("username", talker.getUserName());
 		if (talker.isProf()) {
     		session.put("prof", "true");
     	}
-
 		session.put("justregistered", true);
         index();
     }
@@ -292,12 +300,10 @@ public class Application extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		render(talker);
     }
-    
     public static void sendContactEmail(@Email String email, String subject, String message) {
     	validation.required(email).message("Email is required");
     	validation.required(message).message("Message is required");
-    	
-    	if(validation.hasErrors()) {
+    	if (validation.hasErrors()) {
             params.flash();
             validation.keep();
             contactus();
@@ -315,12 +321,10 @@ public class Application extends Controller {
 		contactus();
     }
     
-    
     /* -------------------- Email saving/signup (for notifications & updates) ------------------- */
     public static void updatesEmail() {
     	render();
     }
-    
     public static void saveUpdatesEmail(@Required @Email String email) {
     	if(validation.hasErrors()) {
     		validation.keep();
@@ -333,9 +337,7 @@ public class Application extends Controller {
     	updatesEmail();
     }
     
-    
     /* ---------- Other useful methods ------------- */
-    
     /**
 	 * Redirects parent page to given url, is used during OAuth 
 	 * @param url
@@ -368,9 +370,9 @@ public class Application extends Controller {
 			Profile.edit(true);
 		}
 		else {
-			//not-authenticated users we redirect to special login page
 			TalkerDAO.updateTalker(talker);
 			
+			//not-authenticated users we redirect to special login page
 			flash.put("verifiedEmail", true);
 			Secure.login();
 		}

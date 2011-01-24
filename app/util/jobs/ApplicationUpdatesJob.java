@@ -64,7 +64,6 @@ public class ApplicationUpdatesJob extends Job {
 		
 		/*
 		 *  3. Twitter settings
-		 *  4. Change profilepreference everywhere.
 		 */
 		
 //			2011-01-21 08:35:35,279 INFO  ~ ThorAssociates: http://www.facebook.com/profile.php?id=113344035364476
@@ -80,9 +79,8 @@ public class ApplicationUpdatesJob extends Job {
 		fbMap.put("108424279189115", "542029051");
 		
 		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
-			if (talker.getUserName().equals("rkalra")) {
-				talker.setUserName("Bentia");
-				TalkerDAO.updateTalker(talker);
+			if (talker.getUserName().equals("Bentia")) {
+				TalkerDAO.updateTalkerImage(talker, null);
 			}
 			
 			ServiceAccountBean fbAccount = talker.serviceAccountByType(ServiceType.FACEBOOK);

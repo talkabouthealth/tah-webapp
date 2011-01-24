@@ -4,8 +4,38 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public class ImageUtil {
+	
+	public static ByteArrayOutputStream createThumbnail(BufferedImage bsrc) throws IOException {
+		int width = 100;
+		int height = 100;
+		
+		int srcWidth = bsrc.getWidth();
+		int srcHeight = bsrc.getHeight();
+		int scaleToWidth = 0;
+		int scaleToHeight = 0;
+		if (srcHeight > srcWidth) {
+			scaleToWidth = width;
+			scaleToHeight = (srcHeight*width)/srcWidth;
+		}
+		else {
+			scaleToWidth = (srcWidth*height)/srcHeight;
+			scaleToHeight = height;
+		}
+		
+		BufferedImage bdest = ImageUtil.getScaledInstance(bsrc, scaleToWidth, scaleToHeight, 
+				RenderingHints.VALUE_INTERPOLATION_BICUBIC, true);
+		bdest = bdest.getSubimage(0, 0, width, height);
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    	ImageIO.write(bdest, "GIF", baos);
+    	return baos;
+	}
 
 	/**
 	  * 

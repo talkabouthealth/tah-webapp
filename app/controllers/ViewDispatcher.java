@@ -90,9 +90,14 @@ public class ViewDispatcher extends Controller {
 			return;
 		}
 		
+		//nothing was found
 		notFound();
 	}
 
+	/**
+	 * Shows public profile page of given talker
+	 * @param talker
+	 */
 	private static void showTalker(TalkerBean talker) throws Throwable {
 		//user should be logged to view Public Profile
 		Secure.checkAccess();

@@ -16,6 +16,9 @@ public class Image extends Controller {
 	
 	public static final File DEFAULT_IMAGE_FILE = Play.getFile("public/images/img1.gif");
 	
+	/**
+	 * Renders image of given talker (or returns default image)
+	 */
 	public static void show(String userName) {
 		byte[] imageArray = TalkerDAO.loadTalkerImage(userName, Security.connected());
 		

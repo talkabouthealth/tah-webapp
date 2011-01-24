@@ -38,11 +38,15 @@ public class Search extends Controller {
 		render();
 	}
 	
+	/**
+	 * Back-end for header autocomplete
+	 * @param term String entered by user
+	 */
 	public static void ajaxSearch(String term) throws Exception {
 		List<String> allowedTypes = Arrays.asList("User", "Conversation", "Question", "Topic");
 		List<Map<String, String>> results = makeSearch(term, allowedTypes, null);
 		
-		//add link to full search
+		//add result entry which leads to the full search
 		Map<String, String> result = new HashMap<String, String>();
 		result.put("label", "Search for <b>"+term+"</b>");
 		result.put("value", term);
@@ -52,7 +56,11 @@ public class Search extends Controller {
 		
 		renderJSON(results);
 	}
-		
+	
+	/**
+	 * Back-end for conversation autocomplete
+	 * @param term
+	 */
 	public static void ajaxConvoSearch(String term) throws Exception {
 		List<String> allowedTypes = Arrays.asList("Conversation", "Question");
 		List<Map<String, String>> results = makeSearch(term, allowedTypes, null);
@@ -60,6 +68,11 @@ public class Search extends Controller {
 		renderJSON(results);
 	}
 	
+	/**
+	 * Back-end for topic autocomplete
+	 * @param term
+	 * @param parent If not null - search topic only in children of the 'parent'
+	 */
 	public static void ajaxTopicSearch(String term, String parent) throws Exception {
 		List<String> allowedTypes = Arrays.asList("Topic");
 		
@@ -73,23 +86,25 @@ public class Search extends Controller {
 		renderJSON(results);
 	}
 	
+	/**
+	 * Performs search in 'autocomplete' index
+	 * @param term
+	 * @param allowedTypes Types of items to search, e.g. 'User', 'Conversation', 'Topic', etc.
+	 * @param filterIds Return only results with these ids
+	 * @return
+	 * @throws Exception
+	 */
 	private static List<Map<String, String>> makeSearch(String term, 
 			List<String> allowedTypes, List<String> filterIds) throws Exception {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
 		
-//		Query searchQuery = new PrefixQuery(new Term("uname", term));
-//		Hits hits = is.search(searchQuery);
-		
 		Analyzer analyzer = new StandardAnalyzer();
-//		QueryParser parser = new QueryParser("uname", analyzer);
 		QueryParser parser = new MultiFieldQueryParser(new String[] {"uname", "title"}, analyzer);
 		parser.setAllowLeadingWildcard(true);
+		//search term everywhere
 		Query searchQuery = parser.parse("*"+term+"*");
 		Hits hits = is.search(searchQuery);
 		
-//		Scorer scorer = new QueryScorer(searchQuery);
-//		Highlighter highlighter = new Highlighter(scorer);
-
 		List<Map<String, String>> results = new ArrayList<Map<String, String>>();
 		for (int i = 0; i < hits.length(); i++) {
 			Document doc = hits.doc(i);
@@ -99,7 +114,6 @@ public class Search extends Controller {
 			if (!allowedTypes.contains(type)) {
 				continue;
 			}
-			
 			String id = doc.get("id");
 			if (id != null && filterIds != null) {
 				if (!filterIds.contains(id)) {
@@ -109,6 +123,7 @@ public class Search extends Controller {
 			
 			Map<String, String> result = new HashMap<String, String>();
 			
+			//prepare url and label for different types
 			String label = null;
 			String url = null;
 			if (type.equalsIgnoreCase("User")) {
@@ -119,21 +134,17 @@ public class Search extends Controller {
 				label = doc.get("title");
 				url = "/"+doc.get("url");
 			}
-			
 			result.put("label", label.replaceAll(term, "<b>"+term+"</b>"));
 			result.put("value", label);
 			result.put("url", url);
 			result.put("type", type);
-			
 			results.add(result);
 			
 			if (results.size() == 10) {
 				break;
 			}
 		}
-		
 		is.close();
-		
 		return results;
 	}
 	

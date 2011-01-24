@@ -66,7 +66,6 @@ public class Explore extends Controller {
 		List<ConversationBean> results = null;
 		if (query != null) {
 			params.flash("query");
-			
 			try {
 				results = SearchUtil.searchConvo(query);
 			}
@@ -74,11 +73,13 @@ public class Explore extends Controller {
 				Logger.error(e, "Search Conversations error");
 			}
 		}
-		
 		render(talker, results);
 	}
 
-	// Conversations Feed and popular conversations
+	/**
+	 * Page with conversations feed and popular conversations
+	 * @param action default tab ('feed' or 'popular')
+	 */
 	public static void conversations(String action) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		boolean loggedIn = (talker != null);
@@ -86,12 +87,6 @@ public class Explore extends Controller {
 		
 		//"Popular Conversations" - ordered by page views
 		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations();
-		Collections.sort(popularConvos, new Comparator<ConversationBean>() {
-			@Override
-			public int compare(ConversationBean o1, ConversationBean o2) {
-				return o2.getViews()-o1.getViews();
-			}
-		});
 		
 		if (action == null) {
 			action = "feed";

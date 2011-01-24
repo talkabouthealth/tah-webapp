@@ -8,6 +8,10 @@ import util.CommonUtil;
 import dao.ApplicationDAO;
 import dao.TalkerDAO;
  
+/**
+ * Handles authentication  
+ *
+ */
 public class Security extends Secure.Security {
 	
     static boolean authenticate(String usernameOrEmail, String password) {
@@ -16,6 +20,9 @@ public class Security extends Secure.Security {
     	return talker != null;
     }
     
+    /**
+     * Check if authenticated user has given profile (i.e. role)
+     */
     static boolean check(String profile) {
         if("admin".equals(profile)) {
         	//talker with userName "admin" is administrator
@@ -24,6 +31,9 @@ public class Security extends Secure.Security {
         return false;
     }
 
+    /**
+     * After successful authentication
+     */
     static void onAuthenticated() {
     	//if user logged with email - change session "username" to username (not email)
     	String connectedUser = connected();
@@ -31,6 +41,7 @@ public class Security extends Secure.Security {
     	TalkerBean talker = TalkerDAO.getByLoginInfo(connectedUser, null);
     	session.put("username", talker.getUserName());
     	
+    	//hanlde suspended or deactivated talkers
     	if (talker.isSuspended()) {
     		session.clear();
             response.setCookie("rememberme", "", 0);
@@ -38,7 +49,6 @@ public class Security extends Secure.Security {
             render("Application/suspendedAccount.html");
     		return;
     	}
-    	
     	if (talker.isDeactivated()) {
     		//return to original userName
     		talker.setUserName(talker.getOriginalUserName());
@@ -81,5 +91,4 @@ public class Security extends Secure.Security {
     static void onDisconnected() {
         Application.index();
     }
-    
 }
