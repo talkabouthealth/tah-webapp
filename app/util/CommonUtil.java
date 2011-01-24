@@ -223,7 +223,7 @@ public class CommonUtil {
 			return "";
 		}
 		StringBuilder html = new StringBuilder();
-		if (authenticated || talker.isPublic(PrivacyType.PROFILE_INFO)) {
+		if (authenticated || talker.isPublic(PrivacyType.USERNAME)) {
 			String url = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", talker.getUserName());
 			html.append("<a href='"+url+"'>"+talker.getUserName()+"</a>");
 			if (talker.getConnection() != null && talker.getConnection().length() != 0) {

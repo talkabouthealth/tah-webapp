@@ -1,4 +1,4 @@
-#{if session.username || _talker.isPublic(models.PrivacySetting.PrivacyType.PROFILE_INFO)}
+#{if session.username || _talker.isPublic(models.PrivacySetting.PrivacyType.USERNAME)}
 	<a href="@{ViewDispatcher.view(_talker.userName)}"><strong>${_talker.userName}</strong></a>
 #{/if}
 #{else}

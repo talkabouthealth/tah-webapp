@@ -5,8 +5,10 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
 
@@ -61,17 +63,35 @@ public class ApplicationUpdatesJob extends Job {
 	public void doJob() throws Exception {
 		
 		/*
-		 *  1. Convert Privacy to the new format
-		 *  2. Notifications?
 		 *  3. Twitter settings
 		 *  4. Change profilepreference everywhere.
 		 */
 		
-		Logger.info("FB LINKS:");
+//			2011-01-21 08:35:35,279 INFO  ~ ThorAssociates: http://www.facebook.com/profile.php?id=113344035364476
+//		ThorAssociates - not for sure, will check with her
+			
+		//Relation between old and correct ids;
+		Map<String, String> fbMap = new HashMap<String, String>();
+		fbMap.put("139572626057500", "669580190");
+		fbMap.put("105526899479797", "758924921");
+		fbMap.put("104880066216147", "639613153");
+		fbMap.put("111563985540297", "1603500081");
+		fbMap.put("112111905481230", "934807");
+		fbMap.put("108424279189115", "542029051");
+		
 		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
+			if (talker.getUserName().equals("rkalra")) {
+				talker.setUserName("Bentia");
+				TalkerDAO.updateTalker(talker);
+			}
+			
 			ServiceAccountBean fbAccount = talker.serviceAccountByType(ServiceType.FACEBOOK);
 			if (fbAccount != null) {
-				Logger.info("%s: http://www.facebook.com/profile.php?id=%s", talker.getUserName(), fbAccount.getId());
+				String correctId = fbMap.get(fbAccount.getId());
+				if (correctId != null) {
+					fbAccount.setId(correctId);
+					TalkerDAO.updateTalker(talker);
+				}
 			}
 		}
 		

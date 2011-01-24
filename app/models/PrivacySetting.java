@@ -6,8 +6,9 @@ import com.mongodb.DBObject;
 public class PrivacySetting implements DBModel {
 	
 	public enum PrivacyType {
-		PROFILE_INFO("Profile Info"),
+		USERNAME("Username"),
 		PROFILE_IMAGE("Profile Image"),
+		PROFILE_INFO("Personal Info"),
 		HEALTH_INFO("Health Info"),
 		ACTIVITY_STREAM("Activity Stream"),
 		FOLLOWERS("Followers"),

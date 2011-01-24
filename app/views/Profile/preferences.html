@@ -57,24 +57,26 @@
 											<th>Information</th>
 											<th>Viewable by:</th>
 										</tr>
-										#{list items:models.PrivacySetting.PrivacyType.values(), as:'preference' }
-											#{ifnot talker.isProf() && preference == models.PrivacySetting.PrivacyType.HEALTH_INFO} 
-												<tr>
-													<td>${preference.description}</td>
-													<td>
-														<div class="personaltextfield">
-															<select name="privacy_${preference}" class="personalfields">
-																#{list items:models.PrivacySetting.PrivacyValue.values(), as:'choice' }
-																	<option value="${choice}" 
-																	#{if talker?.getPrivacyValue(preference) == choice } selected #{/if}
-																	>${choice.description}</option>
-																#{/list}
-															</select>
-														</div>
-													</td>
-												</tr>
-											#{/ifnot}
-										#{/list}
+#{list items:models.PrivacySetting.PrivacyType.values(), as:'preference' }
+	#{ifnot talker.isProf() && preference == models.PrivacySetting.PrivacyType.HEALTH_INFO} 
+		<tr>
+			<td>${preference.description}</td>
+			<td>
+				<div class="personaltextfield">
+					<select name="privacy_${preference}" class="personalfields">
+						#{list items:models.PrivacySetting.PrivacyValue.values(), as:'choice' }
+							#{ifnot preference == models.PrivacySetting.PrivacyType.USERNAME && choice == models.PrivacySetting.PrivacyValue.PRIVATE}
+								<option value="${choice}" 
+								#{if talker?.getPrivacyValue(preference) == choice } selected #{/if}
+								>${choice.description}</option>
+							#{/ifnot}
+						#{/list}
+					</select>
+				</div>
+			</td>
+		</tr>
+	#{/ifnot}
+#{/list}
 									</table>
 									
 									*{
