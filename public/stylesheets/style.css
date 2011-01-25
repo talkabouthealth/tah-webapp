@@ -323,7 +323,7 @@ a {
 }
 #jsddm li a {
 	display: block;
-	padding: 5px 12px;
+	padding: 5px 5px;
 	text-decoration: none;
 	border-right: 1px solid white;
 	white-space: nowrap;
@@ -378,12 +378,28 @@ a {
 }
 #jsddm li a.libull2 {
 	background:url(../images/libuttlets.png);
-	background-position:43px 11px;
+	background-position:44px 11px;
 	background-repeat:no-repeat;
 	width:30px;
 	height:13px;
 }
 #jsddm li a.libull2:hover {
+	display:block;
+	height:13px;
+	width:30px;
+	background:url(../images/settingbg1.jpg);
+	background-repeat:no-repeat;
+	background-position:6px 6px;
+	color:#FFF;
+}
+#jsddm li a.libull4 {
+	background:url(../images/libuttlets.png);
+	background-position:33px 11px;
+	background-repeat:no-repeat;
+	width:30px;
+	height:13px;
+}
+#jsddm li a.libull4:hover {
 	display:block;
 	height:13px;
 	width:30px;
@@ -5324,7 +5340,1020 @@ ul.tabs li.active, ul.tabs li.active span: {
 	padding-top:20px;
 }
 
-
 #privacyTable { font-size: 14px; }
 #privacyTable th { font-weight: bold; padding-bottom: 20px; }
 #privacyTable td { padding-right: 20px; }
+
+
+
+
+
+
+
+
+
+
+/*
+	25.01.2011
+	CSS for new design - landing page and Inbox pages
+*/
+/*------------------------------------Home Page--------------------------------*/
+#bg {
+background-image:url(../images/bg.jpg);
+background-repeat:repeat-x;
+font-family:Arial, Helvetica, sans-serif;
+font-size:14px;
+color:5b5b5b;
+}
+#waperhome
+{
+width:957px;
+margin:0 auto;
+}
+#headerHome
+{
+width:957px;
+height:87px;
+background:url(../images/headerhome.jpg);
+background-repeat:no-repeat;
+background-position:left bottom;
+}
+.logohome {
+	float:left;
+	width:321px;
+	padding-top:26px;
+	height:42px;
+
+}
+.logohome2 {
+	float:left;
+	width:321px;
+	padding-top:13px;
+	height:50px;
+
+}
+.searchCoverhome
+{ float:left;
+padding-left:17px;
+padding-top:27px;
+width:294px; }
+.searchinputhome
+{
+border-color:#CACACA -moz-use-text-color #CACACA #CACACA;
+border-style:solid none solid solid;
+border-width:1px 0 1px 1px;
+color:#979797;
+float:left;
+font-size:16px;
+height:27px;
+padding-bottom:2px;
+padding-left:5px;
+padding-top:2px;
+width:248px;}
+.submithome
+{
+background:url(../images/submithome.jpg);
+width:32px;
+height:33px;
+border:0;
+cursor:pointer;
+}
+.headerright
+{
+float:left;
+width:320px;
+}
+.topmenuhome
+{
+color:#0680C5;
+float:left;
+font-size:12px;
+padding-bottom:5px;
+padding-left:40px;
+width:300px;
+
+}
+.topmenuhome a
+{
+padding-left:4px;
+padding-right:4px;
+color:#0680c5;
+}
+.topmenuhome a:hover
+{
+
+color:#0680c5;
+}
+.navcover {
+clear:both;
+float:left;
+padding-left:14px;
+width:auto;
+}
+.nav {
+	font-size:15px;
+	width:245px;
+	padding-top:5px;
+	color:#616161;
+	float:left;
+}
+.nav ul {
+	padding:0;
+	margin:0;
+}
+.nav li {
+	color:#0680C5;
+float:left;
+font-size:16px;
+font-weight:bold;
+height:20px;
+list-style:none outside none;
+margin:0;
+padding:6px 0 0;
+width:auto;
+}
+.nav li.lisep {
+	width:2px;
+	height:15px;
+	padding-left:4px;
+	padding-right:4px;
+	background:url(../images/liseparator.jpg);
+	background-repeat:no-repeat;
+	background-position:center 9px;
+}
+.nav li a {
+	color:#0680c5;
+}
+.nav li a:hover {
+	color:#0680c5;
+	text-decoration:underline;
+}
+.homesocail
+{
+float: right;
+padding-top:2px;
+width:145px;
+}
+.homesocail a { padding-left: 8px }
+	
+	
+.joinnowhome
+{
+float:left;
+padding-left:40px;
+padding-top:7px;
+color:#333333;
+width:115px;
+}
+.newmsgtext {
+color:#555555;
+float:left;
+font-size:14px;
+font-weight:bold;
+padding-left:20px;
+width:125px;
+}
+#ContentHome
+{
+width:957px;
+padding-top:30px;
+}
+.meetCover
+{
+background:url(../images/meetCover.png);
+width:614px;
+float:left;
+height:348px;
+}
+.meetOther
+{
+padding-top:30px;
+padding-left:35px;
+clear:both;
+}
+.meetOtherpic
+{
+padding-right:35px;
+float:left;
+width:43px;
+height:43px;
+}
+.meetOtherh2
+{
+font-size:24px;
+font-weight:bold;
+color:#1d1d1d;
+
+}
+.meetpuple {color: #1650a2}
+.meetOtherText
+{
+float:left;
+color:#1d1d1d;
+width:400px;
+}
+.shareblue {color: #1da455}
+.learnsblue {color: #eb1c92}
+.Communities
+{
+float:left;
+padding-left:40px;
+background:url(../images/Communities.png);
+background-repeat:no-repeat;
+background-position:right top;
+width:302px;
+height:349px;
+}
+.optionCover
+{
+padding-top:45px;
+clear:both;
+}
+.sharequestion
+{
+background:url(../images/sharequestion.jpg);
+background-repeat:no-repeat;
+background-position:left top;
+width:295px;
+height:248px;
+float:left;
+padding-right:36px;
+}
+.sharepic
+{
+height:149px;
+padding-left:5px;
+padding-top:10px;
+width:283px;
+}
+.FindsGroup
+{
+background:url(../images/sharequestion.jpg);
+background-repeat:no-repeat;
+background-position:left top;
+width:295px;
+height:248px;
+float:left;
+padding-right:36px;
+
+}
+.ArrangeGroup
+{
+background:url(../images/sharequestion.jpg);
+background-repeat:no-repeat;
+background-position:left top;
+width:295px;
+height:248px;
+float:left;
+}
+.optionCover2
+{
+padding-top:30px;
+clear:both;
+}
+.Meetothers
+{
+float:left;
+width:320px;
+padding-left:5px;
+}
+.Meetotherspic
+{
+float:left;
+width:99px;
+height:99px;
+}
+.Meetothertxt
+{
+float:left;
+width:210px;
+padding-left:10px;
+color:#5b5b5b;
+}
+.meetheading {color: #404040; font-weight:bold; font-size:18px;}
+.pinktxt {color: #e21c3f}
+.Learnfrompeers
+{
+float:left;
+width:290px;
+padding-left:10px;
+}
+.Learnfromtxt
+{
+float:left;
+width:180px;
+padding-left:10px;
+color:#5b5b5b;
+}
+.lgreen {color: #71860b}
+.YourExperiences
+{
+float:left;
+width:320px;
+padding-left:7px;
+}
+.YourExperiencestxt
+{
+color:#5B5B5B;
+float:left;
+padding-left:10px;
+width:210px;
+}
+.purpbletxt {color: #a90e99}
+.optionCover3
+{
+padding-top:50px;
+clear:both;
+}
+.JohnH
+{
+float:left;
+color:#5b5b5b;
+width:305px;
+}
+.SusanP
+{
+float:left;
+color:#5b5b5b;
+padding-left:20px;
+width:305px;
+}
+.DeloresB
+{
+color:#5B5B5B;
+float:left;
+padding-left:20px;
+width:300px;
+}
+.stayle3 {color: #1550a4}
+.joinTah
+{
+clear:both;
+padding-left:195px;
+padding-top:30px;
+}
+.JoinTweet
+{
+
+padding-left:11px;
+}
+.HealthCommunities
+{
+padding-top:25px;
+font-size:22px;
+font-weight:bold;
+color:#000000;
+padding-left:15px;
+}
+.BreastCancer
+{
+font-size:14px;
+font-weight:bold;
+color:#0680c5;
+padding-top:10px;
+padding-left:15px;
+}
+.Breastsubtxt
+{
+font-size:12px;
+font-weight:normal;
+color:#000000;
+padding-top:4px;
+padding-left:15px;
+}
+.ComingSoon
+{
+font-size:14px;
+font-weight:bold;
+color:#000000;
+padding-top:10px;
+padding-left:15px;
+}
+
+.ComingSoonsub
+{
+font-size:13px;
+padding-left:15px;
+font-weight:normal;
+line-height:18px;
+color:#000;
+padding-top:4px;
+
+}
+.ComingSoonsub a
+{
+color: #1550a4;
+
+}
+.ComingSoonsub a:hover
+{
+color: #1550a4;
+text-decoration:underline;
+
+}
+.tahfblikeCover
+{
+clear:both;
+padding-top:14px;
+padding-left:10px;
+}
+.tahfblikepic
+{
+float:left;
+padding-right:5px;
+width:50px;
+height:40px;
+}
+.sharequestionh1
+{
+font-size:16px;
+font-weight:bold;
+padding-left:30px;
+padding-top:5px;
+color:#000000;
+}
+.sharequestiontxt
+{
+color:#433d3d;
+padding-left:30px;
+padding-top:2px;
+font-size:14px;
+}
+.TalkAboutfacebook 
+{
+float:left;
+font-size:13px;
+font-weight:bold;
+width:216px;
+}
+.fbpeople
+{
+font-size:10px;
+}
+.csoontxt {
+	color: #1550a4;
+	font-size: 10px;
+	font-weight: bold;
+}
+#footercover
+{
+background:url(../images/footercover.jpg);
+margin-top:45px;
+height:84px;
+}
+.footer
+{
+padding-top:8px;
+width:957px;
+margin:0 auto;
+}
+.footerleft
+{
+float:left;
+padding-top:10px;
+	font-family: "Trebuchet MS";
+	color: #403c3e;
+	font-size: 11px;
+	
+}
+.footerleft a
+{
+
+	color: #403c3e;
+	padding-left:2px;
+	padding-right:2px;
+text-decoration:none;
+}
+.footerleft a:hover
+{
+
+	color: #403c3e;
+text-decoration:underline;
+}
+.footerright
+{
+	font-family: "Trebuchet MS";
+	color: #403c3e;
+	font-size: 11px;
+	float:right;
+}
+
+
+
+
+/*-----------------------------sub inbox----------------------------------*/
+#bg2 {
+background:url(../images/bg2.jpg);
+background-repeat:repeat-x;
+font-family:Arial, Helvetica, sans-serif;
+font-size:12px;
+color:5b5b5b;
+}
+#bodysubpge {
+float:left;
+width:660px;
+}
+.inboxCover
+{
+clear:both;
+height:35px;
+border-bottom:1px solid #8b8b8b;
+}
+.inboxbtn
+{
+float:left;
+background:url(../images/innbox.jpg);
+width:73px;
+padding-top:7px;
+margin-left:5px;
+text-align:center;
+margin-top:6px;
+height:22px;
+font-size:13px;
+color:#000000;
+}
+.inboxbtn a
+{
+
+color:#000000;
+}
+.inboxbtn a:hover
+{
+
+color:#000000;
+text-decoration:underline;
+}
+.Archive
+
+{
+float:left;
+background:url(../images/Archive.jpg);
+width:73px;
+padding-top:7px;
+margin-left:5px;
+text-align:center;
+height:22px;
+font-size:13px;
+margin-top:6px;
+color:#000000;
+}
+
+.Archive a
+{
+
+color:#000000;
+}
+.Archive a:hover
+{
+
+color:#000000;
+text-decoration:underline;
+}
+.NewMessage
+
+{
+background:url(../images/NewMessage.jpg);
+color:#000000;
+float:left;
+font-size:13px;
+height:20px;
+margin-left:120px;
+margin-right:3px;
+padding-top:5px;
+text-align:center;
+width:95px;
+}
+
+.NewMessage a
+{
+
+color:#000000;
+}
+.NewMessage a:hover
+{
+
+color:#000000;
+text-decoration:underline;
+}
+.InboxSearch
+{ 
+width:205px;
+float:left;
+ }
+.inboxsearchinput
+{
+float:left;
+width:170px;
+height:20px;
+padding-top:2px;
+padding-bottom:2px;
+border:0;
+background:url(../images/inboxsearchinput.jpg);
+background-position:right top;
+font-size:10px;
+color:#979797;
+}
+.inboxsubimt
+{
+background:url(../images/inboxsubimt.jpg);
+width:31px;
+height:24px;
+float:left;
+border:0;
+cursor:pointer;
+}
+.ArchiveCover
+{
+clear:both;
+padding-top:7px;
+height:38px;
+padding-left:15px;
+border-bottom:1px solid #8b8b8b;
+}
+.ArchiveCover2
+{
+border-bottom:1px solid #8B8B8B;
+clear:both;
+height:58px;
+padding-left:15px;
+padding-top:7px;
+}
+.Archivebtn
+
+{
+float:left;
+background:url(../images/Archivebtn.jpg);
+width:68px;
+padding-top:6px;
+text-align:center;
+height:21px;
+margin-right:2px;
+font-size:13px;
+color:#000000;
+}
+
+.Archivebtn a
+{
+
+color:#000000;
+}
+.Archivebtn a:hover
+{
+
+color:#000000;
+text-decoration:underline;
+}
+.Markasunreed
+
+{
+float:left;
+background:url(../images/Markasunread.jpg);
+width:109px;
+padding-top:6px;
+text-align:center;
+height:21px;
+margin-right:2px;
+font-size:13px;
+color:#000000;
+}
+
+.Markasunreed a
+{
+
+color:#000000;
+}
+.Markasunreed a:hover
+{
+
+color:#000000;
+text-decoration:underline;
+}
+.inboxprev
+{
+float:left;
+background:url(../images/inboxprev.jpg);
+width:52px;
+padding-top:4px;
+text-align:center;
+height:17px;
+margin-right:2px;
+font-size:11px;
+color:#000000;
+margin-left:50px;
+}
+
+.inboxprev a
+{
+
+color:#000000;
+}
+.inboxprev a:hover
+{
+
+color:#000000;
+text-decoration:underline;
+}
+.inboxnext
+{
+float:left;
+background:url(../images/inboxprev.jpg);
+width:52px;
+padding-top:4px;
+text-align:center;
+height:17px;
+margin-right:2px;
+font-size:11px;
+color:#000000;
+margin-left:2x;
+}
+
+.inboxnext a
+{
+
+color:#000000;
+}
+.inboxnext a:hover
+{
+
+color:#000000;
+text-decoration:underline;
+}
+.inboxtextpre
+{
+color:#254DA3;
+float:left;
+font-size:14px;
+font-weight:bold;
+width:125px;
+text-align:center;
+}
+.inboxtextpre a
+{
+color:#254da3;
+padding-left:5px;
+padding-right:5px;
+}
+.inboxtextpre a
+{
+color:#254da3;
+text-decoration:underline;
+}
+.KenCover
+{
+clear:both;
+padding-top:7px;
+height:42px;
+padding-left:15px;
+border-bottom:1px solid #8b8b8b;
+}
+.radioibox
+{
+float:left;
+width:auto;
+margin-right:14px;
+}
+.kanpic
+{
+float:left;
+width:34;
+}
+.kanpic1
+{
+float:left;
+padding-left:15px;
+width:34;
+}
+.Kantxt
+{
+float:left;
+font-size:11px;
+width:135px;
+padding-left:7px;
+color:#0286bc;
+}
+.Kantxt a
+{
+
+color:#0286bc;
+}
+.Kantxt a:hover
+{
+
+color:#0286bc;
+}
+.Kandate {
+	color: #707070;
+	font-size: 10px;
+}
+.kansubtxt
+{
+width:390px;
+font-weight:bold;
+color:#0680c5;
+float:left;
+}
+.inboxclose
+{
+float:left;
+width:auto;
+width:14px;
+height:14px;
+}
+.KenCovernex
+{
+clear:both;
+height:30px;
+padding-left:375px;
+padding-top:7px;
+
+}
+.NewmssageCover
+{
+clear:both;
+padding-top:20px;
+}
+.newsmessageTop
+{
+background:url(../images/newsmessageTop.jpg);
+color:#555555;
+font-size:20px;
+width:650px;
+font-weight:bold;
+height:28px;
+padding-left:10px;
+padding-top:10px;
+clear:both;
+}
+.newsmessagebot
+{
+background:url(../images/newsmessagebot.jpg);
+color:#555555;
+font-size:20px;
+width:660px;
+font-weight:bold;
+height:11px;
+clear:both;
+}
+.newsmessageMid
+{
+width:660px;
+background:url(../images/newsmessageMid.jpg);
+}
+.nmessage
+{
+clear:both;
+padding-top:15px;
+}
+.nmessagetxt
+{
+width:125px;
+padding-left:20px;
+float:left;
+font-size:14px;
+font-weight:bold;
+color:#555555;
+}
+.nmessageinput
+{
+width:480px;
+background:url(../images/nmessageinput.jpg);
+border:0;
+padding-left:6px;
+height:24px;
+padding-top:2px;
+padding-bottom:2px;
+}
+.inputtxtarea
+{
+width:480px;
+background:url(../images/inputtxtarea.jpg);
+border:0;
+padding-left:6px;
+height:128px;
+cursor:pointer;
+padding-top:2px;
+padding-bottom:2px;
+}
+.nmessage1
+{
+clear:both;
+padding-top:15px;
+padding-left:90px;
+}
+.inboxcancel
+{
+color:#0B82C5;
+float:left;
+font-size:11px;
+padding-left:428px;
+padding-top:15px;
+}
+.inboxcancel a
+{
+color:#0B82C5;
+}
+.inboxcancel a:hover
+{
+color:#0B82C5;
+}
+.inboxsend
+{
+float:right;
+margin-right:25px;
+background:url(../images/inboxsend.jpg);
+border:0;
+width:73px;
+height:30px;
+}
+.Kantxtemail
+{
+float:left;
+font-size:12px;
+width:575px;
+padding-left:7px;
+color:#070707;
+}
+.KenCoveremail
+{
+clear:both;
+padding-top:7px;
+height:140px;
+padding-left:15px;
+border-bottom:1px solid #dbdbdb;
+}
+.eamilreplyCover
+{
+clear:both;
+padding-top:20px;
+}
+.eamilreply
+{
+clear:both;
+}
+.nmessagetxt
+{
+width:50px;
+padding-left:35px;
+float:left;
+font-size:13px;
+font-weight:normal;
+color:#404141;
+}
+.replyinput
+{
+width:562px;
+background:url(../images/replyinput.jpg);
+border:0;
+padding-left:10px;
+height:69px;
+padding-top:2px;
+
+}
+.repltext2
+{
+clear:both;
+color:#0680C5;
+float:left;
+font-size:13px;
+font-weight:normal;
+padding-left:90px;
+padding-top:10px;
+width:150px;
+}
+.repltext2 a
+{
+
+color:#0680c5;
+}
+.repltext2 a:hover
+{
+
+color:#0680c5;
+}
+.emailrepsubit
+{
+
+background:url(../images/emailrepsubit.jpg);
+border:0 none;
+float:right;
+height:27px;
+margin-right:5px;
+margin-top:15px;
+width:60px;
+}
+.subiectline
+{
+clear:both;
+color:#000000;
+font-size:12px;
+font-weight:bold;
+padding-top:7px;
+}
+.butllethome
+{
+background:url(../images/butllethome.jpg);
+background-repeat:no-repeat;
+background-position:80px 14px;
+width:80px;
+display:block;
+}

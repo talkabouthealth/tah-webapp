@@ -222,21 +222,35 @@
 	      #{else}
 				<div class="topnavigationz">
 					<div class="top4ie7"></div>
-		            <ul id="jsddm">
-		              <li class="tell"><a href="@{Application.signup()}">Join Now</a></li>
-		              <li class="separator">|</li>
-		              <li class="tell"><a href="@{Secure.login()}">Sign In</a></li>
-		              <li class="separator">|</li>
-		              <li> <a class="libull2" href="#">Help</a>
-		                <ul>
-		                  <li><a href="@{Static.faq()}">FAQ</a></li>
-		                  <li><a href="@{Static.communityguidelines()}">Community Guidelines</a></li>
-		                  <li><a href="http://blog.talkabouthealth.com">Blog</a></li>
-		                  <li><a href="@{Application.contactus()}">Feedback</a></li>
-		                  <li><a href="#" onclick="openInvitationsWindow();">Share TalkAboutHealth</a></li>
-		                </ul>
-		              </li>
-		            </ul>
+					#{if currentPage?.equals('landing') }
+						<ul id="jsddm" style="float: left;">
+			              <li class="tell"><a href="@{Application.signup()}">Join Now</a></li>
+			              <li class="separator">|</li>
+			              <li class="tell"><a href="@{Secure.login()}">Sign In</a></li>
+			            </ul>
+			            <div class="homesocail">
+			          		<a href="#" onclick="openFacebook()"><img border="0" alt="Facebook" src="/public/images/facebook.jpg"/></a> 
+			          		<a href="#" onclick="openTwitter()"><img border="0" alt="Twitter" src="/public/images/twitter.jpg"/></a> 
+			          	</div>
+					#{/if}
+					#{else}
+						<ul id="jsddm">
+			              <li class="tell"><a href="@{Application.signup()}">Join Now</a></li>
+			              <li class="separator">|</li>
+			              <li class="tell"><a href="@{Secure.login()}">Sign In</a></li>
+			              <li class="separator">|</li>
+			              <li> <a class="libull4" href="#">Help</a>
+			                <ul>
+			                  <li><a href="@{Static.faq()}">FAQ</a></li>
+			                  <li><a href="@{Static.communityguidelines()}">Community Guidelines</a></li>
+			                  <li><a href="http://blog.talkabouthealth.com">Blog</a></li>
+			                  <li><a href="@{Application.contactus()}">Feedback</a></li>
+			                  <li><a href="#" onclick="openInvitationsWindow();">Share TalkAboutHealth</a></li>
+			                </ul>
+			              </li>
+			            </ul>
+					#{/else}
+		            
 	            	<div class="cb"></div>
 	          	</div>
 	          	

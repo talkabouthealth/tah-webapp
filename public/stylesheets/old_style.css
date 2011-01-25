@@ -80,7 +80,7 @@ form { padding:0px; margin:0px;}
 #boxarea_headmail { float:left;  width:962px; padding-top:30px; height:37px; }
 #boxarea_head { float:left;  width:962px; padding-top:27px; height:37px; }
 #innerarea_head { float:left;  width:962px; padding-bottom:5px; padding-top:5px; }
-#boxarea {float:left;  width:962px; padding-top:20px; padding-bottom:7px;}
+#boxarea { width:962px; padding-top:50px; padding-bottom:7px;}
 #innerboxarea {float:left;  width:962px;  padding-bottom:7px;}
 #innerleft { float:left; width:685px; }
 #innerright {float:left; width:239px; padding: 10px 5px 0px 28px}
