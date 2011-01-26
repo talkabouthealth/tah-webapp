@@ -9,12 +9,17 @@ public class PrivacySetting implements DBModel {
 		USERNAME("Username"),
 		PROFILE_IMAGE("Profile Image"),
 		PROFILE_INFO("Personal Info"),
+		//only for Prof users
+		PROFESSIONAL_INFO("Professional Info"),
 		HEALTH_INFO("Health Info"),
 		ACTIVITY_STREAM("Activity Stream"),
+		THOUGHTS("Thoughts"),
+		ANSWERS("Answers"),
 		FOLLOWERS("Followers"),
 		FOLLOWING("Following"),
 		THANKYOUS("Thank you's"),
-		QUESTIONS_STARTED("Questions Started"),
+		QUESTIONS_STARTED("Questions Asked"),
+		CHATS_JOINED("Chats Joined"),
 		QUESTIONS_FOLLOWING("Questions Following"),
 		TOPICS_FOLLOWING("Topics Following");
 		

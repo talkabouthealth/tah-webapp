@@ -164,14 +164,11 @@ public class CommentsDAO {
 		return topCommentsList;
 	}
 	
-	public static List<CommentBean> loadAllAnswers() {
+	public static int getNumberOfAnswers() {
 		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
 		
-		List<DBObject> commentsList = commentsColl.find().sort(new BasicDBObject("vote_score", -1)).toArray();
-		
-		//comments without parent (top in hierarchy)
-		List<CommentBean> topCommentsList = parseCommentsTree(commentsList);
-		return topCommentsList;
+		int numberOfAnswers = commentsColl.find(new BasicDBObject("answer", true)).size();
+		return numberOfAnswers;
 	}
 	
 	//by topic or all answers

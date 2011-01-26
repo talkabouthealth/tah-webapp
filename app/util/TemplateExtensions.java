@@ -3,6 +3,10 @@ package util;
 import java.util.Collections;
 import java.util.List;
 
+import models.TalkerBean;
+import models.PrivacySetting.PrivacyType;
+import models.PrivacySetting.PrivacyValue;
+
 import play.templates.JavaExtensions;
 
 /**
@@ -93,6 +97,18 @@ public class TemplateExtensions extends JavaExtensions {
 		else {
 			return source;
 		}
+	}
+	
+	public static boolean isAllowed(TalkerBean talker, PrivacyType privacyType, TalkerBean currentTalker) {
+		PrivacyValue privacyValue = talker.getPrivacyValue(privacyType);
+		
+		if (privacyValue == PrivacyValue.PUBLIC || talker.equals(currentTalker)) {
+			return true;
+		}
+		if (privacyValue == PrivacyValue.COMMUNITY && currentTalker != null) {
+			return true;
+		}
+		return false;
 	}
 
 }

@@ -68,70 +68,85 @@
 					        </ul>
 					        <div class="tab_container">
 					       		<div id="tab1" class="tab_content">
-					       			<h3>Questions Asked (${startedConvosFeed.size()})</h3>
-						       		<div id="questionsAskedList" class="activitiestext">
-						       			#{if startedConvosFeed.size() == 0}
-											<span class="blacktext14">
-												#{if talker.equals(currentTalker)}
-													You have yet to ask any questions.
-												#{/if}
-												#{else}
-													This user has not asked any questions yet.
-												#{/else}
-											</span>
-											<br/><br/>
-										#{/if}
-					                  	#{list items: startedConvosFeed, as: 'convoActivity'}
-					                  		#{feed/feedActivity activity: convoActivity, talker: talker /}
-					                  	#{/list}
-									</div>
-									<input id="questionsAskedMoreBtn" type="submit" value="" class="seemorecom" 
-	                        			style="margin-left: 25px; margin-top: 15px; display: none;" 
-	                        			onclick="return showMore('questionsAsked');"  />
+					       			#{if talker.isAllowed(models.PrivacySetting.PrivacyType.QUESTIONS_STARTED, currentTalker) }
+					       				<h3>Questions Asked (${startedConvosFeed.size()})</h3>
+							       		<div id="questionsAskedList" class="activitiestext">
+							       			#{if startedConvosFeed.size() == 0}
+												<span class="blacktext14">
+													#{if talker.equals(currentTalker)}
+														You have yet to ask any questions.
+													#{/if}
+													#{else}
+														This user has not asked any questions yet.
+													#{/else}
+												</span>
+												<br/><br/>
+											#{/if}
+						                  	#{list items: startedConvosFeed, as: 'convoActivity'}
+						                  		#{feed/feedActivity activity: convoActivity, talker: talker /}
+						                  	#{/list}
+										</div>
+										<input id="questionsAskedMoreBtn" type="submit" value="" class="seemorecom" 
+		                        			style="margin-left: 25px; margin-top: 15px; display: none;" 
+		                        			onclick="return showMore('questionsAsked');"  />
+	                        		#{/if}
+									#{else}
+										<span class="blacktext14">This information has been made private.</span>
+									#{/else}
 		    					</div>
 		    					<div id="tab2" class="tab_content">
-						       		<h3>Chats Joined (${joinedConvosFeed.size()})</h3>
-						       		<div id="chatsJoinedList" class="activitiestext">
-						       			#{if joinedConvosFeed.size() == 0}
-											<span class="blacktext14">
-												#{if talker.equals(currentTalker)}
-													You have not joined any live chats yet.
-												#{/if}
-												#{else}
-													This user has not joined any chats yet.
-												#{/else}
-											</span>
-											<br/><br/>
-										#{/if}
-					                  	#{list items: joinedConvosFeed, as: 'convoActivity'}
-					                  		#{feed/feedActivity activity: convoActivity, talker: talker /}
-					                  	#{/list}
-									</div>
-									<input id="chatsJoinedMoreBtn" type="submit" value="" class="seemorecom" 
-	                        			style="margin-left: 25px; margin-top: 15px; display: none;" 
-	                        			onclick="return showMore('chatsJoined');"  />
+		    						#{if talker.isAllowed(models.PrivacySetting.PrivacyType.CHATS_JOINED, currentTalker) }
+							       		<h3>Chats Joined (${joinedConvosFeed.size()})</h3>
+							       		<div id="chatsJoinedList" class="activitiestext">
+							       			#{if joinedConvosFeed.size() == 0}
+												<span class="blacktext14">
+													#{if talker.equals(currentTalker)}
+														You have not joined any live chats yet.
+													#{/if}
+													#{else}
+														This user has not joined any chats yet.
+													#{/else}
+												</span>
+												<br/><br/>
+											#{/if}
+						                  	#{list items: joinedConvosFeed, as: 'convoActivity'}
+						                  		#{feed/feedActivity activity: convoActivity, talker: talker /}
+						                  	#{/list}
+										</div>
+										<input id="chatsJoinedMoreBtn" type="submit" value="" class="seemorecom" 
+		                        			style="margin-left: 25px; margin-top: 15px; display: none;" 
+		                        			onclick="return showMore('chatsJoined');"  />
+	                        		#{/if}
+									#{else}
+										<span class="blacktext14">This information has been made private.</span>
+									#{/else}
 		    					</div>
 		    					<div id="tab3" class="tab_content">
-						       		<h3>Questions Following (${followingConvosFeed.size()})</h3>
-						       		<div id="questionsFollowingList" class="activitiestext">
-						       			#{if followingConvosFeed.size() == 0}
-											<span class="blacktext14">
-												#{if talker.equals(currentTalker)}
-													Currently you are not following any questions.
-												#{/if}
-												#{else}
-													This user is not following any questions yet.
-												#{/else}
-											</span>
-											<br/><br/>
-										#{/if}
-					                  	#{list items: followingConvosFeed, as: 'convoActivity'}
-					                  		#{feed/feedActivity activity: convoActivity, talker: talker /}
-					                  	#{/list}
-									</div>
-									<input id="questionsFollowingMoreBtn" type="submit" value="" class="seemorecom" 
-	                        			style="margin-left: 25px; margin-top: 15px; display: none;" 
-	                        			onclick="return showMore('questionsFollowing');"  />
+		    						#{if talker.isAllowed(models.PrivacySetting.PrivacyType.QUESTIONS_FOLLOWING, currentTalker) }
+							       		<h3>Questions Following (${followingConvosFeed.size()})</h3>
+							       		<div id="questionsFollowingList" class="activitiestext">
+							       			#{if followingConvosFeed.size() == 0}
+												<span class="blacktext14">
+													#{if talker.equals(currentTalker)}
+														Currently you are not following any questions.
+													#{/if}
+													#{else}
+														This user is not following any questions yet.
+													#{/else}
+												</span>
+												<br/><br/>
+											#{/if}
+						                  	#{list items: followingConvosFeed, as: 'convoActivity'}
+						                  		#{feed/feedActivity activity: convoActivity, talker: talker /}
+						                  	#{/list}
+										</div>
+										<input id="questionsFollowingMoreBtn" type="submit" value="" class="seemorecom" 
+		                        			style="margin-left: 25px; margin-top: 15px; display: none;" 
+		                        			onclick="return showMore('questionsFollowing');"  />
+	                        		#{/if}
+									#{else}
+										<span class="blacktext14">This information has been made private.</span>
+									#{/else}
 		    					</div>
 		    				</div>
 		    			</div>

@@ -24,7 +24,7 @@
    		});
 </script>
 <div style="padding-left: 30px; font-size: 12px;" id="mtright">
-	#{if currentPage.equals('publicProfile') && !talker.userName.equals(currentTalker.userName) }
+	#{if currentTalker && currentPage.equals('publicProfile') && !talker.userName.equals(currentTalker.userName) }
 		<input type="button" id="followActionImageBtn" value=""
 			class="${ currentTalker.followingList.contains(talker) ? 'followingMemberBtn' : 'followMemberBtn'}"  />
     #{/if}
@@ -41,28 +41,30 @@
 		<div class="followpic" style="width: 110px; height: 110px;">
 			<img src="@{Image.show(talker.userName)}" width="110" height="110"/>
 		</div>
-		<div class="foloowpictext" style="width: 110px;">
-			#{ifnot talker.userName.equals(currentTalker.userName) }
-				<a id="followActionlink" href="#">
-				${ currentTalker.followingList.contains(talker) ? 'Unfollow' : 'Follow'}
-				</a>
-				<br/>
-			#{/ifnot}
-            <a href="#" onclick="return showPopup('#commentPopup', 200);">Post Thought</a><br/>
-            #{ifnot talker.userName.equals(currentTalker.userName) }
-           		<a href="#" onclick="return showPopup('#thankYouPopup', 200);">Give a Thank You</a><br/>
-            #{/ifnot}
-            #{else}
-            	#{if currentPage.equals('publicProfile') }
-            		<a href="@{Profile.edit()}">Edit Profile</a><br />
-            		#{ifnot talker.isProf()}
-            			<a href="@{Profile.healthDetails()}">Edit Health Info</a><br />
-            		#{/ifnot}
-				<a href="@{Profile.preferences()}">Privacy Settings</a>
-            	#{/if}
-            #{/else}
-                 <!-- <a href="#">Private Message</a><br/>  -->
-		</div>
+		#{if currentTalker}
+			<div class="foloowpictext" style="width: 110px;">
+				#{ifnot talker.userName.equals(currentTalker.userName) }
+					<a id="followActionlink" href="#">
+					${ currentTalker.followingList.contains(talker) ? 'Unfollow' : 'Follow'}
+					</a>
+					<br/>
+				#{/ifnot}
+	            <a href="#" onclick="return showPopup('#commentPopup', 200);">Post Thought</a><br/>
+	            #{ifnot talker.userName.equals(currentTalker.userName) }
+	           		<a href="#" onclick="return showPopup('#thankYouPopup', 200);">Give a Thank You</a><br/>
+	            #{/ifnot}
+	            #{else}
+	            	#{if currentPage.equals('publicProfile') }
+	            		<a href="@{Profile.edit()}">Edit Profile</a><br />
+	            		#{ifnot talker.isProf()}
+	            			<a href="@{Profile.healthDetails()}">Edit Health Info</a><br />
+	            		#{/ifnot}
+					<a href="@{Profile.preferences()}">Privacy Settings</a>
+	            	#{/if}
+	            #{/else}
+	                 <!-- <a href="#">Private Message</a><br/>  -->
+			</div>
+		#{/if}
         <div class="mtop"></div>
         <div class="topicborder"></div>
         <br/>
@@ -73,34 +75,44 @@
 	     	<a class="${currentPage.equals('publicProfile') ? 'current' : ''}" 
 	     		href="@{ViewDispatcher.view(talker.userName)}">Profile</a>
 		</div>
-		<div class="mtrighttxt">
-			<a class="${currentPage.equals('thoughts') ? 'current' : ''}" 
-     			href="@{PublicProfile.thoughts(talker.userName)}">Thoughts</a>
-      	</div>
-      	<div class="mtrighttxt">
-           	<a class="${currentPage.equals('conversations') ? 'current' : ''}" 
-           		href="@{PublicProfile.conversations(talker.userName)}">Questions</a>
-		</div>
-		<div class="mtrighttxt">
-	     	<a class="${currentPage.equals('topicsFollowing') ? 'current' : ''}" 
-	     		href="@{PublicProfile.topicsFollowing(talker.userName)}"
-	     		>Topics Following (${talker.followingTopicsList.size()})</a>
-		</div>
-		<div class="mtrighttxt">
-               	<a class="${currentPage.equals('answers') ? 'current' : ''}" 
-     		href="@{PublicProfile.answers(talker.userName)}">Answers</a>
-		</div>
-		<div class="mtrighttxt">
-			<a class="${currentPage.equals('thankyous') ? 'current' : ''}" 
-               		href="@{PublicProfile.userBasedActions(talker.userName, 'thankyous')}"
-               	>Thank You's (${talker.thankYouList.size()})</a>
-		</div>
+		#{if talker.isAllowed(models.PrivacySetting.PrivacyType.THOUGHTS, currentTalker) }
+			<div class="mtrighttxt">
+				<a class="${currentPage.equals('thoughts') ? 'current' : ''}" 
+	     			href="@{PublicProfile.thoughts(talker.userName)}">Thoughts</a>
+	      	</div>
+      	#{/if}
+      	#{if talker.isAllowed(models.PrivacySetting.PrivacyType.QUESTIONS_STARTED, currentTalker) || talker.isAllowed(models.PrivacySetting.PrivacyType.CHATS_JOINED, currentTalker) || talker.isAllowed(models.PrivacySetting.PrivacyType.QUESTIONS_FOLLOWING, currentTalker)}
+	      	<div class="mtrighttxt">
+	           	<a class="${currentPage.equals('conversations') ? 'current' : ''}" 
+	           		href="@{PublicProfile.conversations(talker.userName)}">Questions</a>
+			</div>
+		#{/if}
+		#{if talker.isAllowed(models.PrivacySetting.PrivacyType.TOPICS_FOLLOWING, currentTalker) }
+			<div class="mtrighttxt">
+		     	<a class="${currentPage.equals('topicsFollowing') ? 'current' : ''}" 
+		     		href="@{PublicProfile.topicsFollowing(talker.userName)}"
+		     		>Topics Following (${talker.followingTopicsList.size()})</a>
+			</div>
+		#{/if}
+		#{if talker.isAllowed(models.PrivacySetting.PrivacyType.ANSWERS, currentTalker) }
+			<div class="mtrighttxt">
+	               	<a class="${currentPage.equals('answers') ? 'current' : ''}" 
+	     		href="@{PublicProfile.answers(talker.userName)}">Answers</a>
+			</div>
+		#{/if}
+		#{if talker.isAllowed(models.PrivacySetting.PrivacyType.THANKYOUS, currentTalker) }
+			<div class="mtrighttxt">
+				<a class="${currentPage.equals('thankyous') ? 'current' : ''}" 
+	               		href="@{PublicProfile.userBasedActions(talker.userName, 'thankyous')}"
+	               	>Thank You's (${talker.thankYouList.size()})</a>
+			</div>
+		#{/if}
         <div class="mtop"></div>
         <div class="topicborder"></div>
         <div class="cb"></div>
 	</div>
              
-	#{if !talker.isPrivate(models.PrivacySetting.PrivacyType.FOLLOWING) }
+	#{if talker.isAllowed(models.PrivacySetting.PrivacyType.FOLLOWING, currentTalker) }
 		<div class="followingbox">
 			<div class="followingtoptxt">
 				<div class="followingh1">
@@ -129,7 +141,7 @@
         <div class="topicborder"></div>
 	#{/if}
 	
-	#{if !talker.isPrivate(models.PrivacySetting.PrivacyType.FOLLOWERS) }
+	#{if talker.isAllowed(models.PrivacySetting.PrivacyType.FOLLOWERS, currentTalker) }
 		<div class="followingbox">
 			<div class="followingtoptxt">
 				<div class="followingh1">

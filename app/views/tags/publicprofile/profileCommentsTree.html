@@ -38,6 +38,7 @@
 					<div class='inline_form'>
 						<div style="float:left; width:auto; padding-bottom:5px;" >
 							<span class="comname" style="font-size: 14px;">
+								*{ TODO: check username privacy? }*
 								<a href="@{ViewDispatcher.view(comment.fromTalker.userName)}">${comment.fromTalker.userName}</a>
 							</span>
 				        	<textarea id="titleinput" type="text" style="width:470px; height: 100px;"  
@@ -57,7 +58,9 @@
 				#{if _level == 1}
 					&nbsp;|&nbsp;
 					#{if comment.children == null || comment.children?.size() == 0 }
-						<a href="#" onclick="return showReplyForm('${comment.id}');">Reply</a>
+						#{if session.username}
+							<a href="#" onclick="return showReplyForm('${comment.id}');">Reply</a>
+						#{/if}
 					#{/if}
 					#{elseif comment.children?.size() == 1}
 						1 Reply
@@ -82,34 +85,36 @@
 		<div class="commentsreply">
 			#{publicprofile/profileCommentsTree commentsList: comment.children, level: (_level+1), showDelete: _showDelete, isFeed: _isFeed /}
 			
-			<div id="reply${comment.id}" class="replytommentbax">
-				<div class="cb"></div>
-				<div>
+			#{if session.username}
+				<div id="reply${comment.id}" class="replytommentbax">
 					<div class="cb"></div>
-					<div class="inline-edit" id="replyAdd">
-						<div class="inline_display">
-							<div class="inline_full inline_empty">
-								<div style="clear:both; height:30px; margin-bottom:7px; position:relative;">
-									<a href="#" class="inline_editlink">
-					             		<textarea class="edititanputx" rows="1" cols="4" 
-					             			style="width:444px; height:20px;">Reply to thought ...</textarea>
-									</a>
+					<div>
+						<div class="cb"></div>
+						<div class="inline-edit" id="replyAdd">
+							<div class="inline_display">
+								<div class="inline_full inline_empty">
+									<div style="clear:both; height:30px; margin-bottom:7px; position:relative;">
+										<a href="#" class="inline_editlink">
+						             		<textarea class="edititanputx" rows="1" cols="4" 
+						             			style="width:444px; height:20px;">Reply to thought ...</textarea>
+										</a>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class='inline_form'>
-							<div class="addnewansar" style="text-align:left">Reply to thought</div>
-							<div style="float:left;">
-								<textarea id="replytext${comment.id}" class="edititinputx inline_text" 
-									style="width:444px" cols="4" rows="3" ></textarea>
-								<input type="submit" class="repcomsubmits inline_save" src="/public/images/repcomsubmits.jpg" value=" " 
-									onclick="return saveProfileComment('${comment.id}');" 
-									style="float:right;margin-right:2px; margin-top:7px;cursor:pointer"/>
+							<div class='inline_form'>
+								<div class="addnewansar" style="text-align:left">Reply to thought</div>
+								<div style="float:left;">
+									<textarea id="replytext${comment.id}" class="edititinputx inline_text" 
+										style="width:444px" cols="4" rows="3" ></textarea>
+									<input type="submit" class="repcomsubmits inline_save" src="/public/images/repcomsubmits.jpg" value=" " 
+										onclick="return saveProfileComment('${comment.id}');" 
+										style="float:right;margin-right:2px; margin-top:7px;cursor:pointer"/>
+								</div>
 							</div>
-						</div>
-					</div>						
+						</div>						
+					</div>
 				</div>
-			</div>
+			#{/if}
 		</div>
 	#{/if}
 	<div class="cb"></div>

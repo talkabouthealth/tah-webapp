@@ -42,6 +42,8 @@ import util.EmailUtil;
 import util.TwitterUtil;
 import util.EmailUtil.EmailTemplate;
 import dao.ApplicationDAO;
+import dao.CommentsDAO;
+import dao.ConversationDAO;
 import dao.TalkerDAO;
 
 /**
@@ -71,7 +73,11 @@ public class Application extends Controller {
     	}
     	else {
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
-    		render(numberOfMembers);
+    		int numberOfLiveChats = ConversationDAO.getLiveConversations().size();
+    		int numberOfQuestions = ConversationDAO.getNumberOfConversations();
+    		int numberOfAnswers = CommentsDAO.getNumberOfAnswers();
+    		
+    		render(numberOfMembers, numberOfLiveChats, numberOfQuestions, numberOfAnswers);
     	}
     }
     

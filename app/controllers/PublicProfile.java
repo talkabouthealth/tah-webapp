@@ -44,9 +44,9 @@ import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
 
-@With(Secure.class)
 public class PublicProfile extends Controller {
 	
+	//FIXME: check all methods PublicProfile
 	/**
 	 * ThankYous, Following/Followers
 	 * @param userName
@@ -92,8 +92,10 @@ public class PublicProfile extends Controller {
 	/**
 	 * Delete thought/reply
 	 * @param commentId
+	 * @throws Throwable 
 	 */
-	public static void deleteComment(String commentId) {
+	public static void deleteComment(String commentId) throws Throwable {
+		Secure.checkAccess();
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	CommentBean comment = CommentsDAO.getProfileCommentById(commentId);
     	notFoundIfNull(comment);
@@ -116,8 +118,10 @@ public class PublicProfile extends Controller {
 	 * Update thought/reply
 	 * @param commentId
 	 * @param newText
+	 * @throws Throwable 
 	 */
-	public static void updateComment(String commentId, String newText) {
+	public static void updateComment(String commentId, String newText) throws Throwable {
+		Secure.checkAccess();
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	CommentBean comment = CommentsDAO.getProfileCommentById(commentId);
     	notFoundIfNull(comment);

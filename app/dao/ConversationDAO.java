@@ -229,6 +229,14 @@ public class ConversationDAO {
 		return convosList;
 	}
 	
+	public static int getNumberOfConversations() {
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		int numberOfQuestions = convosColl.find().size();
+		return numberOfQuestions;
+	}
+	
+	
 	public static List<ConversationBean> loadPopularConversations() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		

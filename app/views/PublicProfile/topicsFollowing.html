@@ -90,7 +90,7 @@
                   </div>
                   <div class="topicborder"></div>
                   <div class="topicborder" style="margin-bottom: 10px;"></div>
-#{if talker.equals(currentTalker) || !talker.isPrivate(models.PrivacySetting.PrivacyType.TOPICS_FOLLOWING) }
+#{if talker.isAllowed(models.PrivacySetting.PrivacyType.TOPICS_FOLLOWING, currentTalker) }
 	
 	#{if talker.followingTopicsList.size() == 0 }
 		Currently no Topics being followed.<br/>
@@ -110,24 +110,26 @@
 						${talkerTopicInfo?.numOfAnswers} answer(s) | 
 					#{/if}
 					Endorsements: ${talkerTopicInfo.endorsements.size()}
-					#{ifnot session.username.equals(talker.userName) || talkerTopicInfo.endorsements.contains(currentTalker) }
+					#{ifnot currentTalker == null || currentTalker.equals(talker) || talkerTopicInfo.endorsements.contains(currentTalker) }
 						&nbsp;|&nbsp;<a href="#" onclick="return endorse('${topic.id}');">Endorse</a>
 					#{/ifnot}
 				</span>
 			</div>
-			<div class="topicfoltxt2">
-				#{set isFollowingTopic = currentTalker.getFollowingTopicsList().contains(topic) /}
-				<div id="topicUnfollowDiv${topic.id}" style="display : ${ isFollowingTopic ? 'block' : 'none' }">
-					<img class="topicfolright" alt="right" src="/public/images/right.jpg"/>
-					<div class="topicfoltxtsub1">Following</div>
-					<input type="submit" rel="${topic.id}" value=" " 
-						class="unfollowz unfollowTopicLink" src="/public/images/unfollowz.jpg"/>
+			#{if currentTalker}
+				<div class="topicfoltxt2">
+					#{set isFollowingTopic = currentTalker?.getFollowingTopicsList()?.contains(topic) /}
+					<div id="topicUnfollowDiv${topic.id}" style="display : ${ isFollowingTopic ? 'block' : 'none' }">
+						<img class="topicfolright" alt="right" src="/public/images/right.jpg"/>
+						<div class="topicfoltxtsub1">Following</div>
+						<input type="submit" rel="${topic.id}" value=" " 
+							class="unfollowz unfollowTopicLink" src="/public/images/unfollowz.jpg"/>
+					</div>
+					<div id="topicFollowDiv${topic.id}" style="display : ${ !isFollowingTopic ? 'block' : 'none' }">
+						<input type="submit" rel="${topic.id}" value=" " 
+							class="topiczfollow followTopicLink" src="/public/images/ppfollow.jpg" />
+					</div>
 				</div>
-				<div id="topicFollowDiv${topic.id}" style="display : ${ !isFollowingTopic ? 'block' : 'none' }">
-					<input type="submit" rel="${topic.id}" value=" " 
-						class="topiczfollow followTopicLink" src="/public/images/ppfollow.jpg" />
-				</div>
-			</div>
+			#{/if}
 			
 			<div style="border: 1px solid white; clear: both;">
 				<div class='inline-edit' id="experienceEdit${topic.id}">

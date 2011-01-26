@@ -358,4 +358,5 @@ public class CommonUtil {
 		}
 		return privacySettings;
 	}
+	
 }

@@ -77,8 +77,7 @@
 				        	<div class="headingarea">
 					            <div class="tabheading">
 					      			<span class="blacktext25">Thank you's <strong>(${talker.thankYouList.size()})</strong></span> 
-					      			#{if !talker.isPrivate(models.PrivacySetting.PrivacyType.THANKYOUS) &&
-											!talker.userName.equals(currentTalker.userName) }
+					      			#{if currentTalker && !talker.userName.equals(currentTalker.userName) }
 										<span class="greytext12">&nbsp;|&nbsp;</span> 
 										<a id="displayThankYouText" href="#" 
 											class="bluetext14">Give ${talker.userName} a "Thank you"</a>
@@ -102,7 +101,7 @@
 								</ul>
 							</div>
 				            <div id="thankyousList" class="thnksarea2">
-				            	#{if !talker.isPrivate(models.PrivacySetting.PrivacyType.THANKYOUS) }
+				            	#{if talker.isAllowed(models.PrivacySetting.PrivacyType.THANKYOUS, currentTalker) }
 									#{list items:talker.thankYouList, as:'thankYou'}
 										#{ publicprofile/thanksThankYou thankYou: thankYou /}
 									#{/list}
@@ -134,7 +133,7 @@
 					            </div>
 				            </div>
 				            <div id="followingList" class="thnksarea">
-				            	#{if !talker.isPrivate(models.PrivacySetting.PrivacyType.FOLLOWING) }
+				            	#{if talker.isAllowed(models.PrivacySetting.PrivacyType.FOLLOWING, currentTalker) }
 									#{list items:talker.followingList, as:'following' }
 										#{talker/talkerInList talker: following, currentTalker: currentTalker /}
 									#{/list}
@@ -165,7 +164,7 @@
 					            </div>
 				            </div>
 				            <div id="followerList" class="thnksarea">
-				            	#{if !talker.isPrivate(models.PrivacySetting.PrivacyType.FOLLOWERS) }
+				            	#{if talker.isAllowed(models.PrivacySetting.PrivacyType.FOLLOWERS, currentTalker) }
 									#{list items:talker.followerList, as:'follower' }
 										#{talker/talkerInList talker: follower, currentTalker: currentTalker /}
 									#{/list}

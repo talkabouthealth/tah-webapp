@@ -151,8 +151,7 @@
                       </div>
                     </div>
                     <!--profiletxtCantant-->
-					#{ifnot talker.isPrivate(models.PrivacySetting.PrivacyType.PROFILE_INFO) }
-							#{if talker.isProf()}
+							#{if talker.isProf() && !talker.isPrivate(models.PrivacySetting.PrivacyType.PROFESSIONAL_INFO)}
 								#{if talker.profStatement}
 									<div class="profilebio">Professional Statement</div>
 				                    <div class="topicborder"></div>
@@ -228,13 +227,13 @@
 			                    #{/if}
 							#{/if}
 							
-							#{if talker.bio}
+							#{if talker.bio && !talker.isPrivate(models.PrivacySetting.PrivacyType.PROFILE_INFO)}
 								<div class="profilebio">Personal Bio</div>
 			                    <div class="topicborder"></div>
 			                    <div class="profilebiotxt">${talker.bio.nl2br()}</div>
 							#{/if}
 							
-							#{if talker.isProf()}
+							#{if talker.isProf() && !talker.isPrivate(models.PrivacySetting.PrivacyType.PROFESSIONAL_INFO)}
 								#{ifnot talker.connection.equals("Physician")}
 									<br/>
 									#{if talker.city}
@@ -267,7 +266,7 @@
 				                    #{/if}
 								#{/ifnot}
 							#{/if}
-							#{else}
+							#{elseif !talker.isPrivate(models.PrivacySetting.PrivacyType.PROFILE_INFO)}
 								<div class="Profileperson">Personal Info</div>
 			                    <div class="topicborder"></div>
 			                    #{if talker.state && talker.city}
@@ -331,8 +330,7 @@
 			                      </div>
 				                </div>
 				                #{/if}
-							#{/else}
-					#{/ifnot}
+							#{/elseif}
 					
 					#{if !talker.isPrivate(models.PrivacySetting.PrivacyType.HEALTH_INFO) && talkerDisease && !talker.isProf() }
 							#{if talkerDisease.healthBio }
@@ -409,7 +407,7 @@
 							</div>
 					#{/if}
                                         
-                    #{if !talker.isPrivate(models.PrivacySetting.PrivacyType.ACTIVITY_STREAM) && talkerFeed}
+                    #{if talker.isAllowed(models.PrivacySetting.PrivacyType.ACTIVITY_STREAM, currentTalker) && talkerFeed}
 						<div class="Profilemurray">${talker.userName} Activities</div>
 	                    <div class="topicborder"></div>
 	                    <div>

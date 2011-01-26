@@ -58,7 +58,8 @@
 											<th>Viewable by:</th>
 										</tr>
 #{list items:models.PrivacySetting.PrivacyType.values(), as:'preference' }
-	#{ifnot talker.isProf() && preference == models.PrivacySetting.PrivacyType.HEALTH_INFO} 
+	#{ifnot talker.isProf() && preference == models.PrivacySetting.PrivacyType.HEALTH_INFO}
+	#{ifnot !talker.isProf() && preference == models.PrivacySetting.PrivacyType.PROFESSIONAL_INFO} 
 		<tr>
 			<td>${preference.description}</td>
 			<td>
@@ -75,6 +76,7 @@
 				</div>
 			</td>
 		</tr>
+	#{/ifnot}
 	#{/ifnot}
 #{/list}
 									</table>

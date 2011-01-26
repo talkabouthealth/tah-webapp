@@ -27,19 +27,24 @@
 	                    #{/if} 
 	                </div>
 	                
-	                #{if answersFeed.size() == 0 && talker.equals(currentTalker) }
-						<span class="blacktext14">No answers yet, 
-							but we are looking forward to you sharing your experiences and knowledge.</span>
-						<br/><br/>
-					#{/if}
-	                #{if noHealthInfo}
-	                	<span class="blacktext14">Please fill out your Health Information 
-	                		so that we can recommend conversations to answer.</span>
-                  	#{/if}
-                  	
-                  	#{list items: answersFeed, as: 'answerActivity'}
-                  		#{feed/feedActivity activity: answerActivity, talker: talker /}
-                  	#{/list}
+	                #{if talker.isAllowed(models.PrivacySetting.PrivacyType.ANSWERS, currentTalker) }
+		                #{if answersFeed.size() == 0 && talker.equals(currentTalker) }
+							<span class="blacktext14">No answers yet, 
+								but we are looking forward to you sharing your experiences and knowledge.</span>
+							<br/><br/>
+						#{/if}
+		                #{if noHealthInfo}
+		                	<span class="blacktext14">Please fill out your Health Information 
+		                		so that we can recommend conversations to answer.</span>
+	                  	#{/if}
+	                  	
+	                  	#{list items: answersFeed, as: 'answerActivity'}
+	                  		#{feed/feedActivity activity: answerActivity, talker: talker /}
+	                  	#{/list}
+	                 #{/if}
+	                 #{else}
+						<span class="blacktext14">This information has been made private.</span>
+					 #{/else}
                   	
                   </div>
                   <div class="cb"></div>

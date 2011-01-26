@@ -99,12 +99,12 @@ public class ViewDispatcher extends Controller {
 	 * @param talker
 	 */
 	private static void showTalker(TalkerBean talker) throws Throwable {
-		//user should be logged to view Public Profile
-		Secure.checkAccess();
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		
 		if (talker.isSuspended()) {
-			currentTalker.setFollowerList(TalkerDAO.loadFollowers(currentTalker.getId()));
+			if (currentTalker != null) {
+				currentTalker.setFollowerList(TalkerDAO.loadFollowers(currentTalker.getId()));
+			}
 			render("PublicProfile/suspended.html", currentTalker);
 			return;
 		}
@@ -132,7 +132,7 @@ public class ViewDispatcher extends Controller {
 		
 		boolean notProvidedInfo = false;
 		boolean notViewableInfo = false;
-		if (currentTalker.equals(talker)) {
+		if (talker.equals(currentTalker)) {
 			//if user has not provided Personal Info or Health Info
 			EnumSet<ActionType> userActionTypes = EnumSet.noneOf(ActionType.class);
 			for (Action action : talker.getActivityList()) {
@@ -148,6 +148,9 @@ public class ViewDispatcher extends Controller {
 			//if user has not made the information viewable to the Community
 			if (talker.isPrivate(PrivacyType.PROFILE_INFO) 
 					|| talker.isPrivate(PrivacyType.HEALTH_INFO)) {
+				notViewableInfo = true;
+			}
+			if (talker.isProf() && talker.isPrivate(PrivacyType.PROFESSIONAL_INFO)) {
 				notViewableInfo = true;
 			}
 		}

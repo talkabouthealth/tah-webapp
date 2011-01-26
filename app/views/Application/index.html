@@ -108,20 +108,25 @@
       <!--meetCover-->
       <div class="Communities">
         <div class="HealthCommunities">Health Communities</div>
-        <div class="BreastCancer">Breast Cancer</div>
-        <div class="Breastsubtxt">30 Member | 3 live video chats <br />
-          90 Question | 100 Answers</div>
+        <div class="BreastCancer" style="padding-top: 10px;">
+        	<a href="@{Community.viewCommunity()}" class="bluetext12" 
+						style="font-size: 16px;">Breast Cancer</a></div>
+        <div class="Breastsubtxt">${numberOfMembers} members | ${numberOfLiveChats} live video chats <br />
+          ${numberOfQuestions} questions | ${numberOfAnswers} answers</div>
         <div class="ComingSoon">Coming Soon</div>
-        <div class="ComingSoonsub"> Skin Cancer <span class="csoontxt">Join the waiting list</span><br />
-          Multiple Sclerosis <span class="csoontxt">Join the waiting list</span><br />
-          Diabtese <span class="csoontxt">Join the waiting list</span><br />
-          Heart Diseases <span class="csoontxt">Join the waiting list</span><br />
-          Alzheimer’s <span class="csoontxt">Join the waiting list</span><br />
-          <em><a href="#">See More...</a></em> </div>
+        <div class="ComingSoonsub"> Skin Cancer 
+        	<span class="csoontxt"><a href="@{Application.updatesEmail()}">Join the waiting list</a></span><br />
+          Multiple Sclerosis <span class="csoontxt"><a href="@{Application.updatesEmail()}">Join the waiting list</a></span><br />
+          Diabtese <span class="csoontxt"><a href="@{Application.updatesEmail()}">Join the waiting list</a></span><br />
+          Heart Diseases <span class="csoontxt"><a href="@{Application.updatesEmail()}">Join the waiting list</a></span><br />
+          Alzheimer’s <span class="csoontxt"><a href="@{Application.updatesEmail()}">Join the waiting list</a></span><br />
+          
+          <!-- <em><a href="#">See More...</a></em>  --> 
+        </div>
         <div class="tahfblikeCover">
           <div class="tahfblikepic"><img src="/public/images/tahfblike.jpg" alt="tahfblike" /></div>
           <div class="TalkAboutfacebook"> <br />
-            <div class="fbpeople"><img src="/public/images/fblike.jpg" />300 people Like Talk about Health</div>
+            #{share/fblike currentURL: 'http://talkabouthealth.com' /} 
           </div>
         </div>
         <!--tahfblike-->
@@ -160,6 +165,10 @@
 		</div>
 		<div id="bottomboxarea">
 			<div class="bottomboxinnerarea">
+				<div id="boxarea1">
+					<h3><span class="red">Meet</span> others like you</h3>
+					<p>Grow your support network and make new friends who understand.</p>
+				</div>
 				<div class="colantext">
 					<span class="blacktext14">Sometimes I need to talk to someone in the middle of the night.</span>
 					&nbsp; <img src="/public/images/colanbottom.gif"  width="19" height="15" /> <br />  
@@ -167,6 +176,10 @@
   				</div>
 			</div>
 			<div class="bottomboxinnerarea">
+				<div id="boxarea2">
+					<h3><span class="green">Learn </span> from peers</h3>
+					<p>Be more prepared after talking to experienced peers. Request their advice and opinions.</p>
+				</div>
 				<div class="colantext">
 					<span class="blacktext14">
 						I would like other people's opinions on best hospitals and physicians for my health issue. 
@@ -176,6 +189,10 @@
 				</div>
 			</div>
 			<div class="bottomboxinnerarea2">
+				<div id="boxarea3">
+					<h3><span class="purple">Share  </span> your experiences</h3>
+					<p>Feel better after sharing your experiences with peers who understand. Others will learn from you.</p>
+				</div>
 				<div class="colantext">
 					<span class="blacktext14">I want to meet others who understand what I am going through.</span>
 					<img src="/public/images/colanbottom.gif" /> <br />

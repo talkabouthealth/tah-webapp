@@ -91,36 +91,44 @@
               <div id="comleft">
                 <div class="comcontent">
                   <div class="topipcWraper">
-                    <div id="reply" class="comsearchbox">
-                      <div class="comh1" style="font-size:18px">
-                        #{if talker.equals(currentTalker) }
-                        	What are you thinking about or feeling? (To share with the community)
-                        #{/if}
-                        #{else}
-                        	Post a thought for ${talker.userName}. (To share with the community)
-                        #{/else}
-                      	<br />
-                      </div>
-                      <div class="comsearch">
-                        <textarea id="replytext" class="edititinputx" style="width:490px" cols="4" rows="3" ></textarea>
-                      </div>
-                      <input type="submit" src="/public/images/postcomments.jpg" value=" " class="postcomments" 
-                      	onclick="return saveProfileComment('');"/>
-                      #{if firstTimeComment}
-                      	<div class="comh1" style="font-size:14px; clear: both; margin-top: 5px; width: 100%;">
-                      		Your journal is a place for you to share your thoughts and feelings with the TalkAboutHealth community.
-                      	</div>
-                      #{/if}
-                    </div>
-                    <!--comsearchbox-->
-                    <div class="commentsarea" style="clear: both;">
-						#{if talker?.profileCommentsList?.isEmpty() && !talker.equals(currentTalker)}
-							<span id="firstcommentmessage" class="blacktext14">
-								${talker.userName} does not have any Comments, be the first to welcome ${talker.userName}.
-							</span>
-						#{/if}
-						#{publicprofile/profileCommentsTree commentsList: talker.profileCommentsList, level: 1, showDelete: (talker.equals(currentTalker) || currentTalker.isAdmin()), isFeed: false /}
-					</div>
+                  
+                  	#{if talker.isAllowed(models.PrivacySetting.PrivacyType.THOUGHTS, currentTalker) }
+                  		#{if currentTalker}
+		                    <div id="reply" class="comsearchbox">
+		                      <div class="comh1" style="font-size:18px">
+		                        #{if talker.equals(currentTalker) }
+		                        	What are you thinking about or feeling? (To share with the community)
+		                        #{/if}
+		                        #{else}
+		                        	Post a thought for ${talker.userName}. (To share with the community)
+		                        #{/else}
+		                      	<br />
+		                      </div>
+		                      <div class="comsearch">
+		                        <textarea id="replytext" class="edititinputx" style="width:490px" cols="4" rows="3" ></textarea>
+		                      </div>
+		                      <input type="submit" src="/public/images/postcomments.jpg" value=" " class="postcomments" 
+		                      	onclick="return saveProfileComment('');"/>
+		                      #{if firstTimeComment}
+		                      	<div class="comh1" style="font-size:14px; clear: both; margin-top: 5px; width: 100%;">
+		                      		Your journal is a place for you to share your thoughts and feelings with the TalkAboutHealth community.
+		                      	</div>
+		                      #{/if}
+		                    </div>
+	                    #{/if}
+	                    <!--comsearchbox-->
+	                    <div class="commentsarea" style="clear: both;">
+							#{if talker?.profileCommentsList?.isEmpty() && !talker.equals(currentTalker)}
+								<span id="firstcommentmessage" class="blacktext14">
+									${talker.userName} does not have any Comments, be the first to welcome ${talker.userName}.
+								</span>
+							#{/if}
+							#{publicprofile/profileCommentsTree commentsList: talker.profileCommentsList, level: 1, showDelete: (talker.equals(currentTalker) || currentTalker?.isAdmin()), isFeed: false /}
+						</div>
+					#{/if}
+					#{else}
+						<span class="blacktext14">This information has been made private.</span>
+					#{/else}
                     <div class="cb"></div>
                   </div>
                   <!--topipcWraper-->
