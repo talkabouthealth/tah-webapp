@@ -42,6 +42,25 @@ public class CommentsDAO {
 	public static final String CONVO_COMMENTS_COLLECTION = "convocomments";
 	
 	// ---------------- Profile comments --------------------------
+	
+	/**
+	 * Get thought/reply by id.
+	 */
+	public static CommentBean getProfileCommentById(String commentId) {
+		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
+		
+		DBObject query = new BasicDBObject("_id", new ObjectId(commentId));
+		DBObject answerDBObject = commentsColl.findOne(query);
+		
+		CommentBean comment = new CommentBean();
+		comment.parseBasicFromDB(answerDBObject);
+		return comment;
+	}
+	
+	/**
+	 * Save thought/reply.
+	 * Set newly created id to given comment object.
+	 */
 	public static void saveProfileComment(CommentBean comment) {
 		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
 		
@@ -61,6 +80,9 @@ public class CommentsDAO {
 		comment.setId(id);
 	}
 	
+	/**
+	 * Update thought/reply
+	 */
 	public static void updateProfileComment(CommentBean comment) {
 		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
 		
@@ -74,6 +96,9 @@ public class CommentsDAO {
 		commentsColl.update(commentId, new BasicDBObject("$set", commentObject));
 	}
 	
+	/**
+	 * Load tree of all thoughts and replies for given talker
+	 */
 	public static List<CommentBean> loadProfileComments(String talkerId) {
 		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
 		
@@ -89,6 +114,24 @@ public class CommentsDAO {
 	}
 
 	// -------------- Convo comments -----------------
+	
+	/**
+	 * Get conversation answer/reply by id.
+	 */
+	public static CommentBean getConvoAnswerById(String answerId) {
+		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		
+		DBObject query = new BasicDBObject("_id", new ObjectId(answerId));
+		DBObject answerDBObject = commentsColl.findOne(query);
+		
+		CommentBean answer = new CommentBean();
+		answer.parseBasicFromDB(answerDBObject);
+		return answer;
+	}
+	
+	/**
+	 * Save answer/reply
+	 */
 	public static String saveConvoComment(CommentBean comment) {
 		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
 		
@@ -104,7 +147,6 @@ public class CommentsDAO {
 		commentsColl.save(commentObject);
 		
 		updateParent(commentsColl, comment.getParentId(), getString(commentObject, "_id")); 
-		
 		return getString(commentObject, "_id");
 	}
 	
@@ -114,7 +156,7 @@ public class CommentsDAO {
 		DBObject answerObject = BasicDBObjectBuilder.start()
 			.add("vote_score", answer.getVoteScore())
 			.add("votes", setToDB(answer.getVotes()))
-			
+
 			.add("text", answer.getText())
 			.add("old_texts", answer.getOldTexts())
 			
@@ -130,6 +172,27 @@ public class CommentsDAO {
 		commentsColl.update(answerId, new BasicDBObject("$set", answerObject));
 	}
 	
+	/**
+	 * Loads full tree of answers and replies for given conversation.
+	 */
+	public static List<CommentBean> loadConvoAnswersTree(String convoId) {
+		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		
+		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId);
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("convo", convoRef)
+			.get();
+		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("vote_score", -1)).toArray();
+		
+		//comments without parent (top in hierarchy)
+		List<CommentBean> topCommentsList = parseCommentsTree(commentsList);
+		return topCommentsList;
+	}
+	
+	/**
+	 * Load all not-deleted answers for given conversation,
+	 * answers have only id.
+	 */
 	public static List<CommentBean> loadConvoAnswers(String convoId) {
 		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
 		
@@ -150,20 +213,9 @@ public class CommentsDAO {
 		return answersList;
 	}
 	
-	public static List<CommentBean> loadConvoAnswersTree(String convoId) {
-		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
-		
-		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId);
-		DBObject query = BasicDBObjectBuilder.start()
-			.add("convo", convoRef)
-			.get();
-		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("vote_score", -1)).toArray();
-		
-		//comments without parent (top in hierarchy)
-		List<CommentBean> topCommentsList = parseCommentsTree(commentsList);
-		return topCommentsList;
-	}
-	
+	/**
+	 * Returns number of all answers in this community
+	 */
 	public static int getNumberOfAnswers() {
 		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
 		
@@ -171,7 +223,9 @@ public class CommentsDAO {
 		return numberOfAnswers;
 	}
 	
-	//by topic or all answers
+	/**
+	 * Returns talker answers, all or filtered by given topic
+	 */
 	public static List<CommentBean> getTalkerAnswers(String talkerId, TopicBean topic) {
 		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
 		
@@ -198,29 +252,13 @@ public class CommentsDAO {
 		return answersList;
 	}
 	
-	public static CommentBean getConvoAnswerById(String answerId) {
-		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
-		
-		DBObject query = new BasicDBObject("_id", new ObjectId(answerId));
-		DBObject answerDBObject = commentsColl.findOne(query);
-		
-		CommentBean answer = new CommentBean();
-		answer.parseBasicFromDB(answerDBObject);
-		return answer;
-	}
 	
-	public static CommentBean getProfileCommentById(String commentId) {
-		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
-		
-		DBObject query = new BasicDBObject("_id", new ObjectId(commentId));
-		DBObject answerDBObject = commentsColl.findOne(query);
-		
-		CommentBean comment = new CommentBean();
-		comment.parseBasicFromDB(answerDBObject);
-		return comment;
-	}
 	
-	//update parent - add new comment "_id" to children array
+	/*---------------- Common --------------------*/
+	
+	/**
+	 * Adds newly created comment to given parent.
+	 */
 	private static void updateParent(DBCollection commentsColl, String parentCommentId, String commentId) {
 		if (parentCommentId != null) {
 			DBObject parentIdDBObject = new BasicDBObject("_id", new ObjectId(parentCommentId));
@@ -229,6 +267,10 @@ public class CommentsDAO {
 		}
 	}
 	
+	/**
+	 * Transforms list of comments/replies to tree of comments/replies
+	 * TODO: better?
+	 */
 	private static List<CommentBean> parseCommentsTree(List<DBObject> commentsList) {
 		List<CommentBean> topCommentsList = new ArrayList<CommentBean>();
 		//temp map for resolving children

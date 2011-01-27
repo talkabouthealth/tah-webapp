@@ -25,7 +25,6 @@ public class DiseaseDAO {
 		
 		List<DBObject> questionsDBList = new ArrayList<DBObject>();
 		for (DiseaseQuestion question : disease.getQuestions()) {
-			
 			DBObject questionDBObject = BasicDBObjectBuilder.start()
 				.add("name", question.getName())
 				.add("type", question.getType().toString())
@@ -33,7 +32,6 @@ public class DiseaseDAO {
 				.add("text", question.getText())
 				.add("choices", question.getChoices())
 				.get();
-			
 			questionsDBList.add(questionDBObject);
 		}
 		
@@ -73,20 +71,5 @@ public class DiseaseDAO {
 		return disease;
 	}
 	
-	//NOTE: later we need select by Id of disease, not by name
-	public static List<String> getValuesByDisease(String type, String diseaseName) {
-		DBCollection diseasesColl = getCollection(DISEASES_COLLECTION);
-		
-		DBObject query = new BasicDBObject("name", diseaseName);
-		DBObject diseaseDBObject = diseasesColl.findOne(query);
-		
-		return getStringList(diseaseDBObject, type);
-	}
-	
-	//for testing
-	public static void main(String[] args) {
-		System.out.println(DiseaseDAO.getValuesByDisease("stages", "Breast Cancer"));
-	}
-
 }
 

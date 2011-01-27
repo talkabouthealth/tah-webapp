@@ -58,14 +58,19 @@ public class HealthItemDAO {
 		healthItemsColl.update(healthItemId, new BasicDBObject("$set", healthItemObject));
 	}
 	
-	//For now we don't use "diseaseId" because we have one disease
+	/**
+	 * Load given health item and all its subtree.
+	 * 
+	 * @param name 
+	 * @param diseaseId For now we don't use 'diseaseId' because we have one disease
+	 * @return
+	 */
 	public static HealthItemBean getHealthItemByName(String name, String diseaseId) {
 		DBCollection healthItemsColl = getCollection(HEALTH_ITEMS_COLLECTION);
 		
 		//get root health item by name
 		DBObject query = new BasicDBObject("name", name);
 		DBObject healthItemDBObject = healthItemsColl.findOne(query);
-		
 		if (healthItemDBObject == null) {
 			return null;
 		}
@@ -75,6 +80,11 @@ public class HealthItemDAO {
 		return healthItem;
 	}
 	
+	/**
+	 * Get list of all health items.
+	 * @param diseaseId Not used for now (we have only 'Breast cancer')
+	 * @return
+	 */
 	public static List<HealthItemBean> getAllHealthItems(String diseaseId) {
 		DBCollection healthItemsColl = getCollection(HEALTH_ITEMS_COLLECTION);
 		List<DBObject> healthItemsDBList = healthItemsColl.find().toArray();
@@ -90,7 +100,7 @@ public class HealthItemDAO {
 
 	/**
 	 * Recursively load health item with given id and name
-	 * @topItem - defines if this item is top item in the tree (like "tests", "procedures")
+	 * @topItem - defines if this item is top/root item in the tree (e.g. "tests", "procedures")
 	 */
 	private static HealthItemBean loadHealthItem(DBCollection healthItemsColl, String id, 
 			String name, boolean topItem) {

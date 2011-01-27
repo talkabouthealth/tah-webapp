@@ -37,11 +37,12 @@ public class TopicDAO {
 			.add("title", topic.getTitle())
 			.add("main_url", topic.getMainURL())
 			.add("cr_date", new Date())
+			
 			.add("aliases", topic.getAliases())
 			.add("bitly", topic.getBitly())
+			.add("fixed", topic.isFixed())
 			
 			.add("children", topic.childrenToList())
-			.add("fixed", topic.isFixed())
 			.get();
 		topicsColl.save(topicDBObject);
 		
@@ -55,14 +56,14 @@ public class TopicDAO {
 			.add("title", topic.getTitle())
 			.add("main_url", topic.getMainURL())
 			.add("old_names", setToDB(topic.getOldNames()))
+			
 			.add("aliases", topic.getAliases())
 			.add("fixed", topic.isFixed())
+			.add("deleted", topic.isDeleted())
 			.add("bitly", topic.getBitly())
-			
 			.add("summary", topic.getSummary())
 			
 			.add("children", topic.childrenToList())
-			.add("deleted", topic.isDeleted())
 			.get();
 		
 		DBObject topicId = new BasicDBObject("_id", new ObjectId(topic.getId()));
@@ -107,7 +108,11 @@ public class TopicDAO {
 		return topicBean;
 	}
 	
-	//Also recreates topic if it was deleted
+	/**
+	 * Gets or recreates topic if it was deleted.
+	 * @param title
+	 * @return
+	 */
 	public static TopicBean getOrRestoreByTitle(String title) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
@@ -128,10 +133,16 @@ public class TopicDAO {
 		return topicBean;
 	}
 	
+	
 	public static Set<TopicBean> loadAllTopics() {
 		return loadAllTopics(true);
 	}
 	
+	/**
+	 * Loads all topics
+	 * @param loadBasicInfo Determines how much information to load.
+	 * @return
+	 */
 	public static Set<TopicBean> loadAllTopics(boolean loadBasicInfo) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		

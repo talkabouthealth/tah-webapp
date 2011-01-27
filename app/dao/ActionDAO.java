@@ -46,6 +46,10 @@ import models.actions.UpdateProfileAction;
 
 import static util.DBUtil.*;
 
+/**
+ * Action/activities (feed items) DAO
+ *
+ */
 public class ActionDAO {
 	
 	public static final String ACTIVITIES_COLLECTION = "activities";
@@ -76,11 +80,12 @@ public class ActionDAO {
 		);
 	
 	/*
-		Community Conversation Feed:
+		Community Conversation Feed & Topic Feed
 		- Talk started or Question asked
 		- Question answered
 		- Summary added or edited
 		- Answer received vote
+		- Talker thoughts/replies
 	*/
 	private static final EnumSet<ActionType> COMMUNITY_CONVO_FEED_ACTIONS = EnumSet.of(
 			ActionType.START_CONVO,
@@ -91,30 +96,18 @@ public class ActionDAO {
 		);
 	private static final EnumSet<ActionType> TOPIC_FEED_ACTIONS = COMMUNITY_CONVO_FEED_ACTIONS;
 	
-	//Talker feed doesn't contain this elements
+	//Talker feed contains all except 'UPDATE_...' actions
 	private static final EnumSet<ActionType> TALKER_FEED_ACTIONS = EnumSet.complementOf(
 			EnumSet.of(ActionType.UPDATE_BIO, ActionType.UPDATE_HEALTH, ActionType.UPDATE_PERSONAL)
 		);
 	
-	public static List<Action> loadTalkerActions(String talkerId) {
-		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
-		
-		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
-		DBObject query = new BasicDBObject("uid", talkerRef);
-		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
-		
-		List<Action> activitiesList = new ArrayList<Action>();
-		for (DBObject actionDBObject : activitiesDBList) {
-			//we need only type & conversation
-			Action action = new PreloadAction(actionDBObject);
-			activitiesList.add(action);
-		}
-		return activitiesList;
-	}
 	
 	//------------------ Feeds --------------------
 
+	/**
+	 * Personal Conversation Feed
+	 * @param nextActionId Id of last action from previous load (used for paging)
+	 */
 	public static List<Action> loadConvoFeed(TalkerBean talker, String nextActionId) {
 		DBRef currentTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talker.getId());
 		
@@ -179,6 +172,10 @@ public class ActionDAO {
 		return loadPreloadActions(query);
 	}
 	
+	/**
+	 * Community Conversation Feed
+	 * @param nextActionId Id of last action from previous load (used for paging)
+	 */
 	public static List<Action> loadCommunityFeed(String nextActionId, boolean loggedIn) {
 		//list of needed actions for this Feed
 		Set<String> actionTypes = new HashSet<String>();
@@ -208,7 +205,12 @@ public class ActionDAO {
 		return loadPreloadActions(query);
 	}
 	
+	/**
+	 * Talker Feed (displayed on the Public Profile)
+	 * @param nextActionId Id of last action from previous load (used for paging)
+	 */
 	public static List<Action> loadTalkerFeed(String talkerId, String nextActionId) {
+		//for paging
 		Date firstActionTime = null;
 		if (nextActionId != null) {
 			firstActionTime = getActionTime(nextActionId);
@@ -232,6 +234,10 @@ public class ActionDAO {
 		return loadPreloadActions(query);
 	}
 	
+	/**
+	 * Topic Feed - latest actions connected with this topic
+	 * @param nextActionId Id of last action from previous load (used for paging)
+	 */
 	public static List<Action> loadLatestByTopic(TopicBean topic, String nextActionId) {
 		Date firstActionTime = null;
 		if (nextActionId != null) {
@@ -257,6 +263,12 @@ public class ActionDAO {
 		return loadPreloadActions(query);
 	}
 	
+	/**
+	 *	Loads list of actions from DB that match given query.
+	 *	To be quicker it loads only basic info for actions 
+	 *  (because some actions aren't used in top layers, we don't need full info for them).
+	 * 
+	 */
 	private static List<Action> loadPreloadActions(DBObject query) {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
@@ -271,28 +283,23 @@ public class ActionDAO {
 		return activitiesList;
 	}
 	
-	
-	
-	public static Date getConvoLatestActivity(ConversationBean convo) {
+	public static Date getActionTime(String actionId) {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
-		
-		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getId());
-		DBObject query = new BasicDBObject("convoId", convoRef);
-		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
-		
-		if (activitiesDBList.size() > 0) {
-			Date latestActivityTime = (Date)activitiesDBList.get(0).get("time");
-			return latestActivityTime;
+
+		DBObject query = new BasicDBObject("_id", new ObjectId(actionId));
+		DBObject actionDBObject = activitiesColl.findOne(query);
+		if (actionDBObject != null) {
+			return (Date)actionDBObject.get("time");
 		}
-		else {
-			return null;
-		}
+		return null;
 	}
 	
+	
+	/**
+	 * Parses given DBObject to Action object
+	 */
 	public static Action actionFromDB(DBObject dbObject) {
 		String strType = (String)dbObject.get("type");
-		
 		if (strType == null) {
 			return null;
 		}
@@ -340,17 +347,65 @@ public class ActionDAO {
 		activitiesColl.save(actionDBObject);
 	}
 	
-	public static Date getActionTime(String actionId) {
+	/**
+	 * Load all actions connected with given talker
+	 */
+	public static List<Action> loadTalkerActions(String talkerId) {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
-
-		DBObject query = new BasicDBObject("_id", new ObjectId(actionId));
-		DBObject actionDBObject = activitiesColl.findOne(query);
-		if (actionDBObject != null) {
-			return (Date)actionDBObject.get("time");
+		
+		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
+		DBObject query = new BasicDBObject("uid", talkerRef);
+		List<DBObject> activitiesDBList = 
+			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		
+		List<Action> activitiesList = new ArrayList<Action>();
+		for (DBObject actionDBObject : activitiesDBList) {
+			//we need only type & conversation
+			Action action = new PreloadAction(actionDBObject);
+			activitiesList.add(action);
 		}
-		return null;
+		return activitiesList;
 	}
 	
+	/**
+	 * Returns date of the latest activity on this convo.
+	 */
+	public static Date getConvoLatestActivity(ConversationBean convo) {
+		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
+		
+		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getId());
+		DBObject query = new BasicDBObject("convoId", convoRef);
+		List<DBObject> activitiesDBList = 
+			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		
+		if (activitiesDBList.size() > 0) {
+			Date latestActivityTime = (Date)activitiesDBList.get(0).get("time");
+			return latestActivityTime;
+		}
+		else {
+			return null;
+		}
+	}
+	
+	/**
+	 * Sets 'time' of given thought to current date/time.
+	 */
+	public static void updateProfileCommentActionTime(String commentId) {
+		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
+		
+		DBRef commentRef = createRef(CommentsDAO.PROFILE_COMMENTS_COLLECTION, commentId);
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("type", ActionType.PERSONAL_PROFILE_COMMENT.toString())
+			.add("profile_comment", commentRef)
+			.get();
+		
+		activitiesColl.update(query,
+				new BasicDBObject("$set", new BasicDBObject("time", new Date())));
+	}
+	
+	/**
+	 * Deleted all actions connected with given thought/reply
+	 */
 	public static void deleteActionsByProfileComment(CommentBean comment) {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 
@@ -362,19 +417,6 @@ public class ActionDAO {
 				)
 			);
 		activitiesColl.remove(query);
-	}
-	
-	public static void updateProfileCommentAction(String commentId) {
-		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
-		
-		DBRef commentRef = createRef(CommentsDAO.PROFILE_COMMENTS_COLLECTION, commentId);
-		DBObject query = BasicDBObjectBuilder.start()
-			.add("type", ActionType.PERSONAL_PROFILE_COMMENT.toString())
-			.add("profile_comment", commentRef)
-			.get();
-		
-		activitiesColl.update(query,
-				new BasicDBObject("$set", new BasicDBObject("time", new Date())));
 	}
 	
 	public static void deleteActionsByAnswer(CommentBean answer) {

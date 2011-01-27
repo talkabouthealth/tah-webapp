@@ -55,8 +55,13 @@ public class Explore extends Controller {
     }
     
     public static void browseTopics() {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	if (talker != null) {
+    		TalkerLogic.preloadTalkerInfo(talker);
+    	}
+    	
     	Set<TopicBean> topicsTree = TopicLogic.getAllTopicsTree();
-    	render(topicsTree);
+    	render(topicsTree, talker);
     }
 
 	public static void searchConversations() {

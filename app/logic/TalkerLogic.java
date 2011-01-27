@@ -462,7 +462,7 @@ public class TalkerLogic {
 		}
 		else {
 			//for replies we update action for parent comment
-			ActionDAO.updateProfileCommentAction(comment.getParentId());
+			ActionDAO.updateProfileCommentActionTime(comment.getParentId());
 			
 			CommentBean thought = CommentsDAO.getProfileCommentById(comment.getParentId());
 			if (!talker.equals(thought.getFromTalker())) {

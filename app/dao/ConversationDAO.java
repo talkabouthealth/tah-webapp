@@ -43,10 +43,13 @@ public class ConversationDAO {
 	
 	public static final String CONVERSATIONS_COLLECTION = "convos";
 	
-	
 	//------------------- Save/Update methods -----------------------
+	
+	/**
+	 * Save conversation.
+	 * Tries to insert convo 5 times - to prevent not-unique 'tid'
+	 */
 	public static void save(ConversationBean convo) {
-		//we try to insert convo 5 times - to prevent not-unique 'tid'
 		int tid = saveInternal(convo, 5);
 		
 		if (tid != -1) {
@@ -126,16 +129,16 @@ public class ConversationDAO {
 			.add("cr_date", convo.getCreationDate())
 			
 			.add("deleted", convo.isDeleted())
-			.add("details", convo.getDetails())
 			.add("opened", convo.isOpened())
-			.add("bitly", convo.getBitly())
-			.add("bitly_chat", convo.getBitlyChat())
 			
+			.add("details", convo.getDetails())
 			.add("topics", convo.topicsToDB())
 			.add("related_convos", convo.relatedConvosToDB())
-			
 			.add("summary", convo.getSummary())
 			.add("sum_authors", sumContributorsDBList)
+			
+			.add("bitly", convo.getBitly())
+			.add("bitly_chat", convo.getBitlyChat())
 			.get();
 		
 		DBObject convoId = new BasicDBObject("_id", new ObjectId(convo.getId()));
@@ -188,8 +191,6 @@ public class ConversationDAO {
 	
 	/**
 	 * Find by main URL (current) or old urls.
-	 * @param url
-	 * @return
 	 */
 	public static ConversationBean getByURL(String url) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
@@ -213,7 +214,9 @@ public class ConversationDAO {
 		return convo;
 	}
 	
-	//includes deleted
+	/**
+	 * Get all conversations (deleted also).
+	 */
 	public static List<ConversationBean> loadAllConversations() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		List<DBObject> convosDBList = 
@@ -229,6 +232,9 @@ public class ConversationDAO {
 		return convosList;
 	}
 	
+	/**
+	 * Get number of all conversations in this community
+	 */
 	public static int getNumberOfConversations() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
@@ -236,7 +242,9 @@ public class ConversationDAO {
 		return numberOfQuestions;
 	}
 	
-	
+	/**
+	 * Popularity is based on number of views.
+	 */
 	public static List<ConversationBean> loadPopularConversations() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
@@ -253,10 +261,12 @@ public class ConversationDAO {
 			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
 	    	convosList.add(convo);
 		}
-		
 		return convosList;
 	}
 	
+	/**
+	 * Get all current Live Chats.
+	 */
 	public static List<ConversationBean> getLiveConversations() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
@@ -281,22 +291,8 @@ public class ConversationDAO {
 		return convosList;
 	}
 	
-	/*
-	 	Used by admin to close an old LiveChat (which wasn't closed automatically).
-	 */
-	public static void closeLiveChat(String convoId) {
-		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
-		
-		DBObject convoObject = BasicDBObjectBuilder.start()
-			.add("talkers", new ArrayList<DBObject>())
-			.get();
-		
-		DBObject query = new BasicDBObject("_id", new ObjectId(convoId));
-		convosColl.update(query, new BasicDBObject("$set", convoObject));
-	}
-	
 	/**
-	 * No one answered for question/conversation
+	 * Opened Questions - not answered, which are marked with 'opened' flag.
 	 */
 	public static List<ConversationBean> getOpenQuestions() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
@@ -319,6 +315,9 @@ public class ConversationDAO {
 	}
 	
 	//------------------- Other ----------------------
+	/**
+	 * Get id of the last created conversation.
+	 */
 	public static String getLastConvoId() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
@@ -345,7 +344,7 @@ public class ConversationDAO {
 			Map<String, String> topicInfoMap = new HashMap<String, String>();
 			
 			//noti_history.noti_time is null
-			int numOfNotifications = NotificationDAO.getNotiNumByTopic(topicDBObject.get("_id").toString());
+			int numOfNotifications = NotificationDAO.getNotiNumByConvo(topicDBObject.get("_id").toString());
 			if (withNotifications && numOfNotifications == 0) {
 				continue;
 			}
@@ -367,7 +366,7 @@ public class ConversationDAO {
 			topicInfoMap.put("gender", (String)talkerDBObject.get("gender"));
 			
 			if (withNotifications) {
-				int notificationsNum = NotificationDAO.getNotiNumByTopic(topicInfoMap.get("topicId"));
+				int notificationsNum = NotificationDAO.getNotiNumByConvo(topicInfoMap.get("topicId"));
 				topicInfoMap.put("notificationsNum", ""+notificationsNum);
 			}
 			
@@ -385,7 +384,9 @@ public class ConversationDAO {
 				new BasicDBObject("$inc", new BasicDBObject("views", 1)));
 	}
 	
-	//Load convos for given activity type - started, joined, etc.
+	/**
+	 * Load convos for given activity type - started, joined, etc.
+	 */
 	public static List<ConversationBean> loadConversations(String talkerId, ActionType type) {
 		DBCollection activitiesColl = getCollection(ActionDAO.ACTIVITIES_COLLECTION);
 		
@@ -410,7 +411,9 @@ public class ConversationDAO {
 		return convosList;
 	}
 	
-	
+	/**
+	 * Get all conversations that have at least one given topic.
+	 */
 	public static Set<DBRef> getConversationsByTopics(Set<TopicBean> topics) {
 		Set<DBRef> convosDBSet = new HashSet<DBRef>();
 		if (topics == null || topics.size() == 0) {
@@ -435,12 +438,15 @@ public class ConversationDAO {
 		return convosDBSet;
 	}
 	
-	public static void getAllTopics(List<DBRef> allTopics, TopicBean topic) {
-		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topic.getId());
+	/**
+	 * Recursive method that saves all subtree of given root topic to 'allTopics' list.
+	 */
+	public static void getAllTopics(List<DBRef> allTopics, TopicBean rootTopic) {
+		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, rootTopic.getId());
 		if (!allTopics.contains(topicRef)) {
 			allTopics.add(topicRef);
 			
-			for (TopicBean child : topic.getChildren()) {
+			for (TopicBean child : rootTopic.getChildren()) {
 				DBCollection topicsColl = getCollection(TopicDAO.TOPICS_COLLECTION);
 				DBObject query = new BasicDBObject("_id", new ObjectId(child.getId()));
 				DBObject topicDBObject = topicsColl.findOne(query);
@@ -462,6 +468,9 @@ public class ConversationDAO {
 		}
 	}
 	
+	/**
+	 * Load conversations that have given topic.
+	 */
 	public static List<ConversationBean> loadConversationsByTopic(String topicId) {
 		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
 		
@@ -481,6 +490,24 @@ public class ConversationDAO {
 		return convosList;
 	}
 	
+	
+	/**
+	 * Closes given LiveChat manually - deletes all live talkers.
+	 */
+	public static void closeLiveChat(String convoId) {
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		DBObject convoObject = BasicDBObjectBuilder.start()
+			.add("talkers", new ArrayList<DBObject>())
+			.get();
+		
+		DBObject query = new BasicDBObject("_id", new ObjectId(convoId));
+		convosColl.update(query, new BasicDBObject("$set", convoObject));
+	}
+	
+	/**
+	 * Deletes message with given index from given LiveChat
+	 */
 	public static void deleteChatMessage(String conversationId, int index) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		

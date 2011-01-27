@@ -1,5 +1,7 @@
 package util;
 
+import static util.DBUtil.getCollection;
+
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -52,6 +54,12 @@ public class DBUtil {
 	public static DBCollection getCollection(String collectionName) {
 		return getDB().getCollection(collectionName);
 	}
+	
+	public static boolean isCollectionEmpty(String collectionName) {
+		DBCollection coll = getCollection(collectionName);
+		return coll.count() == 0;
+	}
+	
 	
 	//-------- Different utility methods to use in DAO ------------
 	public static DBRef createRef(String collectionName, String objectId) {

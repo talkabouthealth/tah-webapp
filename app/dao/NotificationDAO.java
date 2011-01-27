@@ -22,6 +22,8 @@ public class NotificationDAO {
 	
 	/**
 	 * Returns number of notifications for last 24 hours
+	 * 
+	 * @param type 'TWITTER', 'FACEBOOK' or null
 	 */
 	public static int numOfNotificationsForDay(String talkerId, String type) {
 		Calendar oneDayBeforeNow = Calendar.getInstance();
@@ -70,7 +72,10 @@ public class NotificationDAO {
 		}
 	}
 	
-	public static int getNotiNumByTopic(String convoId) {
+	/**
+	 * Get number of notifications for given conversation
+	 */
+	public static int getNotiNumByConvo(String convoId) {
 		DBCollection notificationsColl = getCollection(NOTIFICATIONS_COLLECTION);
 		
 		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId);

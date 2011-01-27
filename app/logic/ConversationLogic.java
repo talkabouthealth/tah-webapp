@@ -41,6 +41,16 @@ public class ConversationLogic {
 	public static final String DEFAULT_TALK_TOPIC = "Chats";
 	public static final String DEFAULT_QUESTION_TOPIC = "Unorganized";
 	
+	/**
+	 * 
+	 * @param type
+	 * @param title
+	 * @param talker creator of the conversation
+	 * @param details
+	 * @param topicsSet topics/tags
+	 * @param notifyTalkers If true - try to send all notifications.
+	 * @return
+	 */
 	public static ConversationBean createConvo(ConvoType type, String title, 
 			TalkerBean talker, String details, Set<TopicBean> topicsSet, boolean notifyTalkers) {
 		
@@ -83,8 +93,7 @@ public class ConversationLogic {
 			//send notifications if Automatic Notifications is On
 			NotificationUtils.sendAllNotifications(convo.getId(), null);
 		}
-		
-		//send to Tw & Fb
+		//send to Tw & Fb created convo
 		for (ServiceAccountBean serviceAccount : talker.getServiceAccounts()) {
 			if (!serviceAccount.isTrue("POST_ON_CONVO")) {
 				continue;
@@ -133,7 +142,6 @@ public class ConversationLogic {
 		comment.setFromTalker(talker);
 		comment.setText(text);
 		comment.setTime(new Date());
-		
 		if (parentId == null) {
 			//it's an answer (not reply)
 			comment.setAnswer(true);

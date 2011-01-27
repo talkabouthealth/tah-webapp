@@ -55,27 +55,24 @@ public class TalkerDAO {
 				.add("pass", talker.getPassword())
 				.add("email", talker.getEmail())
 				.add("verify_code", talker.getVerifyCode())
-				
 				.add("dob", talker.getDob())
 				.add("timestamp",  Calendar.getInstance().getTime())
 				
 				.add("connection", talker.getConnection())
 				.add("connection_verified", talker.isConnectionVerified())
 				
-				.add("newsletter", talker.isNewsletter())
-				.add("invites", talker.getInvitations())
-				
+				.add("nfreq", talker.getNfreq())
+				.add("ntime", talker.getNtime())
+				.add("ctype", talker.getCtype())
 				.add("im_notify", talker.isImNotify())
 				.add("service_accounts", setToDB(talker.getServiceAccounts()))
 				
 				.add("privacy_settings", setToDB(talker.getPrivacySettings()))
 				.add("email_settings", talker.emailSettingsToList())
 				
+				.add("newsletter", talker.isNewsletter())
+				.add("invites", talker.getInvitations())
 				.add("ch_num", -1)
-				
-				.add("nfreq", talker.getNfreq())
-				.add("ntime", talker.getNtime())
-				.add("ctype", talker.getCtype())
 				.get();
 
 		talkersColl.save(talkerDBObject);
@@ -94,19 +91,17 @@ public class TalkerDAO {
 			.add("verify_code", talker.getVerifyCode())
 			.add("emails", setToDB(talker.getEmails()))
 			
-			.add("prof_info", talker.getProfInfo())
-			
 			.add("orig_uname", talker.getOriginalUserName())
 			.add("deactivated", talker.isDeactivated())
 			.add("suspended", talker.isSuspended())
 			
 			.add("connection", talker.getConnection())
 			.add("connection_verified", talker.isConnectionVerified())
+			.add("prof_info", talker.getProfInfo())
 			.add("insurance_accept", talker.getInsuranceAccepted())
 			
 			.add("im_accounts", setToDB(talker.getImAccounts()))
 			.add("im_notify", talker.isImNotify())
-			
 			.add("service_accounts", setToDB(talker.getServiceAccounts()))
 			
 			.add("hidden_helps", talker.getHiddenHelps())
@@ -134,11 +129,10 @@ public class TalkerDAO {
 			
 			.add("privacy_settings", setToDB(talker.getPrivacySettings()))
 			.add("email_settings", talker.emailSettingsToList())
-			.add("following_convos", talker.getFollowingConvosList())
 			
+			.add("following_convos", talker.getFollowingConvosList())
 			.add("following_topics", talker.followingTopicsToList())
 			.add("topics_info", talker.topicsInfoToDB())
-			
 			.get();
 		
 		DBObject talkerId = new BasicDBObject("_id", new ObjectId(talker.getId()));
@@ -173,6 +167,9 @@ public class TalkerDAO {
 		return getByField("orig_uname", userName);
 	}
 	
+	/**
+	 * Get by main or non-primary emails.
+	 */
 	public static TalkerBean getByEmail(String email) {
 		TalkerBean talker = getByField("email", email);
 		
@@ -195,6 +192,9 @@ public class TalkerDAO {
 		return talker;
 	}
 	
+	/**
+	 * Get by verify code of main or non-primary emails
+	 */
 	public static TalkerBean getByVerifyCode(String verifyCode) {
 		TalkerBean talker = getByField("verify_code", verifyCode);
 		
@@ -217,8 +217,8 @@ public class TalkerDAO {
 		return talker;
 	}
 	
-	/*
-	 * Loads talker bean by particular field
+	/**
+	 * Loads a talker by particular field
 	 */
 	private static TalkerBean getByField(String fieldName, Object fieldValue) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
@@ -236,6 +236,13 @@ public class TalkerDAO {
 		}
 	}
 	
+	/**
+	 * Get talker by:
+	 * - username/password;
+	 * - email/password;
+	 * - non-primary email/password;
+	 * - original username (before deactivation)/password.
+	 */
 	public static TalkerBean getByLoginInfo(String usernameOrEmail, String password) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
@@ -267,7 +274,6 @@ public class TalkerDAO {
 		DBObject query = new BasicDBObject("$or", 
 				Arrays.asList(usernameQuery, emailQuery, notPrimaryEmailQuery, deactivatedUsernameQuery)
 			);
-		
 		DBObject talkerDBObject = talkersColl.findOne(query);
 		
 		TalkerBean talker = null;
@@ -278,6 +284,12 @@ public class TalkerDAO {
 		return talker;
 	}
 	
+	/**
+	 * Get by Twitter or Facebook account
+	 * @param serviceType
+	 * @param accountId
+	 * @return
+	 */
 	public static TalkerBean getByAccount(ServiceType serviceType, String accountId) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
@@ -315,7 +327,11 @@ public class TalkerDAO {
 		return talker;
 	}
 	
-	//Checks userName and original userName (deactivated users)
+	/**
+	 * Checks userName and original userName (deactivated users)
+	 * @param userName
+	 * @return
+	 */
 	public static boolean isUserNameUnique(String userName) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
@@ -334,7 +350,10 @@ public class TalkerDAO {
 		return (talkerDBObject == null);
 	}
 	
-	
+	/**
+	 * Load all (deactivated and suspended also) talkers.
+	 * @return
+	 */
 	public static List<TalkerBean> loadAllTalkers() {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
@@ -351,6 +370,7 @@ public class TalkerDAO {
 		return talkerList;
 	}
 	
+	//TODO: check it
 	public static List<TalkerBean> loadAllLightTalkers() {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
@@ -392,6 +412,13 @@ public class TalkerDAO {
 		return talkersList;
 	}
 	
+	/**
+	 * Returns 'null' if Privacy Settings do not allow to show image.
+	 * 
+	 * @param userName
+	 * @param currentUser
+	 * @return
+	 */
 	public static byte[] loadTalkerImage(String userName, String currentUser) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
@@ -452,6 +479,9 @@ public class TalkerDAO {
 	
 	/**
 	 * Follows or unfollows depending on third parameter
+	 * @param followerId This talker follows/unfollows
+	 * @param followingId This talker is followed/unfollowed
+	 * @param follow
 	 */
 	public static void followAction(String followerId, String followingId, boolean follow) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);

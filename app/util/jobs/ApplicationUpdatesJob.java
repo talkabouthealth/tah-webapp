@@ -100,18 +100,18 @@ public class ApplicationUpdatesJob extends Job {
 		HealthItems2Topics.importData("healthitems2topics.dat");
 		
 		//Create collections if missing
-		if (ApplicationDAO.isCollectionEmpty(DiseaseDAO.DISEASES_COLLECTION)) {
+		if (DBUtil.isCollectionEmpty(DiseaseDAO.DISEASES_COLLECTION)) {
 			DiseaseImporter.importDiseases("diseases.dat");
 		}
-		if (ApplicationDAO.isCollectionEmpty(HealthItemDAO.HEALTH_ITEMS_COLLECTION)) {
+		if (DBUtil.isCollectionEmpty(HealthItemDAO.HEALTH_ITEMS_COLLECTION)) {
 			HealthItemsImporter.importHealthItems("healthitems.dat");
 		}
-		if (ApplicationDAO.isCollectionEmpty(TopicDAO.TOPICS_COLLECTION)) {
+		if (DBUtil.isCollectionEmpty(TopicDAO.TOPICS_COLLECTION)) {
 			TopicsImporter.importTopics("topics.dat");
 		}
 		
 		//Talkers/Topics/Convos should have different names, stored in 'names' collection
-		if (ApplicationDAO.isCollectionEmpty(ApplicationDAO.NAMES_COLLECTION)) {
+		if (DBUtil.isCollectionEmpty(ApplicationDAO.NAMES_COLLECTION)) {
 			for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
 				ApplicationDAO.createURLName(talker.getUserName());
 			}
