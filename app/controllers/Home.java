@@ -50,21 +50,21 @@ public class Home extends Controller {
 	 * Home page
 	 */
     public static void index() {
-    	Logger.error("Home 0");
+//    	Logger.error("Home 0");
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-    	Logger.error("Home 1");
+//    	Logger.error("Home 1");
 		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
 		
-		Logger.error("Home 2");
+//		Logger.error("Home 2");
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
     	
-    	Logger.error("Home 3");
+//    	Logger.error("Home 3");
     	boolean showIMPopup = prepareIMPopup(session, talker);
 		TalkerLogic.preloadTalkerInfo(talker);
 		
-		Logger.error("Home 4");
+//		Logger.error("Home 4");
 		//TODO: cache recommendations
 		
 //		Yes, for HealthInfo, let's use all of the data. 
@@ -75,7 +75,7 @@ public class Home extends Controller {
 		if (!talker.isProf() && talkerDisease != null) {
 			loadedTopics = TalkerLogic.getRecommendedTopics(talkerDisease);
 		}
-		Logger.error("Home 4 1");
+//		Logger.error("Home 4 1");
 		if (recommendedTopics.isEmpty()) {
 			//display most popular Topics based on number of questions
 			loadedTopics = new ArrayList<TopicBean>(TopicDAO.loadAllTopics(false));
@@ -93,7 +93,7 @@ public class Home extends Controller {
 			}
 		}
 		
-		Logger.error("Home 4 2");
+//		Logger.error("Home 4 2");
 		
 		//talk
 		List<TalkerBean> similarMembers = new ArrayList<TalkerBean>();
@@ -119,7 +119,7 @@ public class Home extends Controller {
 				  }
 			  }
 		}
-		Logger.error("Home 4 3");
+//		Logger.error("Home 4 3");
 		
 		List<ConversationBean> recommendedConvos = new ArrayList<ConversationBean>();
 		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations();	
@@ -133,7 +133,7 @@ public class Home extends Controller {
 			}
 		}
 		
-		Logger.error("Home 5");
+//		Logger.error("Home 5");
 		
 		render("@newhome", talker, 
 				liveConversations, convoFeed, communityFeed, showIMPopup,

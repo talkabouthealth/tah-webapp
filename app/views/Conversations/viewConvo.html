@@ -340,7 +340,7 @@
 												<div style="float:left; width:auto; padding-bottom:5px;" >
 										        	<input id="titleinput" type="text" style="width:600px"  
 										        		value="${convo.topic}" class="edititinputs inline_text notempty" 
-										        		onKeyDown="limitText(this, titleLimit);" onKeyUp="limitText(this, titleLimit);" >
+										        		maxlength="160" >
 										        </div>
 												<div style="float:right;margin-right:30px;">
 											        <input id="titleBtn" type="submit" class="updatebtns inline_save" value=" " />
@@ -742,6 +742,7 @@
 							<div class="cb"></div>
 						</div><!--topipsts-->
 						
+					#{set currentPage = 'conversationSummary' /}
 					#{include 'tahShare.html' /}
 				               
                 	<div class="cb"></div>

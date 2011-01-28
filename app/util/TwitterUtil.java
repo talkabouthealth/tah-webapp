@@ -124,7 +124,7 @@ public class TwitterUtil {
 	
 	
 	public static void makeUserTwit(String fullText, final String token, final String tokenSecret) {
-		if (fullText.length() > 135) {
+		if (fullText.length() > 140) {
 			fullText = fullText.substring(0, 135)+"...";
 		}
 		final String text = fullText;

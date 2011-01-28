@@ -24,7 +24,7 @@
           <div class="askheadingCoverz">
             <div class="askinputCover">
 				<input id="newConvoTitle" class="askkinput" type="text"
-					onKeyDown="limitText(this, titleLimit);" onKeyUp="limitText(this, titleLimit);" 
+					maxlength="160" 
 					onfocus="if (this.value == 'Enter your question or request here.') this.value=''" 
 			        onblur="if (this.value == '') this.value='Enter your question or request here.'"	
 				    value="Enter your question or request here."

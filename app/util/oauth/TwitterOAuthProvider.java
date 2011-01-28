@@ -77,7 +77,7 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 		String oauthVerifier = params.get("oauth_verifier");
 		String token = (String)session.get("twitter_token");
 		String tokenSecret = (String)session.get("twitter_token_secret");
-
+		
 		//SignPost check this flag to make access_token request
 		provider.setOAuth10a(true);
 		try {
@@ -86,6 +86,8 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			
 			session.put("token", consumer.getToken());
 			session.put("token_secret", consumer.getTokenSecret());
+			
+			Logger.info("Twitter Auth.%nToken: %s%nTokenSecret: %s", consumer.getToken(), consumer.getTokenSecret());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -145,7 +147,6 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 				ServiceAccountBean twitterAccount = new ServiceAccountBean(accountId, screenName, ServiceType.TWITTER);
 				twitterAccount.setToken(consumer.getToken());
 				twitterAccount.setTokenSecret(consumer.getTokenSecret());
-				
 				talker.getServiceAccounts().add(twitterAccount);
 				
 				CommonUtil.updateTalker(talker, session);
@@ -176,6 +177,7 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 	        	ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
 	        	twitterAccount.setToken(consumer.getToken());
 				twitterAccount.setTokenSecret(consumer.getTokenSecret());
+				Logger.info(twitterAccount.toString());
 				CommonUtil.updateTalker(talker, session);
 	        	
 	        	//simple login

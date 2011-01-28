@@ -13,20 +13,21 @@
 		  </div>
 		  <!--popupheading-->
 		  <div class="invitepeople">Tweet as @${_userName}</div>
-		  <textarea id="sharetwitterNote" class="popupinut" rows="3" cols="3"
+		  <textarea id="sharetwitterNote" class="popupinut" rows="3" cols="3" 
+		  	onKeyUp="$('#shareTwitterSize').html($(this).val().length);"
 		  #{if _shareType.equals('Topic')}
->Learning about ${_topicName} on TalkAboutHealth - ${_topicURL}</textarea>
+>Learning about ${_topicName.limitSize(80, "...")} on TalkAboutHealth - ${_topicURL}</textarea>
 		  #{/if}
 		  #{elseif _shareType.equals('Conversation') }
->TalkAboutHealth conversation: ${_topicName} - ${_topicURL}</textarea>
+>TalkAboutHealth conversation: ${_topicName.limitSize(84, "...")} - ${_topicURL}</textarea>
 		  #{/elseif}
 		  #{elseif _shareType.equals('TalkAboutHealth') }
 >I am meeting others and sharing my breast cancer experiences on TalkAboutHealth. http://talkabouthealth.com</textarea>
 		  #{/elseif}
 		  	
 		  <div class="sentbox">
-		    <div id="shareResultText" class="senttxt"></div>
 		    <div id="shareResultError" class="senttxt" style="color: red;"></div>
+		    <div id="shareTwitterSize" class="senttxt" style="padding-top: 5px;">0</div>
 		    <input type="submit" id="shareTopicBtn" 
 		    	onclick="return sharePage('twitter');" value="Tweet" />
 		  </div>

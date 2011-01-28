@@ -1,1 +1,7 @@
-<iframe src="http://www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2Ftalkabouthealth&amp;width=240&amp;colorscheme=light&amp;show_faces=true&amp;stream=false&amp;header=true&amp;height=283" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:240px; height:283px;" allowTransparency="true"></iframe>
+#{if _type?.equals("full") }
+	<iframe src="http://www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2Ftalkabouthealth&amp;width=240&amp;colorscheme=light&amp;show_faces=true&amp;stream=false&amp;header=true&amp;height=283" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:240px; height:283px;" allowTransparency="true"></iframe>
+#{/if}
+#{else}
+	*{ Only like, without faces }*
+	<iframe src="http://www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2Ftalkabouthealth&amp;width=240&amp;colorscheme=light&amp;show_faces=false&amp;stream=false&amp;header=false&amp;height=70" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:240px; height:70px;" allowTransparency="true"></iframe>
+#{/else}

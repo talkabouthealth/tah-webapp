@@ -19,8 +19,14 @@
                   	#{/else}
                     
                   </div>
-                 
-                  #{ share/fblike currentURL: currentURL /}
+                  
+                  #{if currentPage?.equals("conversationSummary") || currentPage?.equals("topicPage") } 
+                  	#{ share/fblike currentURL: currentURL /}
+                  #{/if}
+                  #{else}
+                  	#{ share/fbwidget /} 
+                  #{/else}
+                  
                   
                   <div class="topicborder"></div>
                 </div>
@@ -28,7 +34,7 @@
                 #{ifnot talker}
                 	<div class="topipsts">
 						<br/>         
-						#{ share/fbwidget /}  	
+						#{ share/fbwidget type: 'full' /}  	
 						<br/><br/>      
 						#{ share/twitwidget /}             		
                   	</div>

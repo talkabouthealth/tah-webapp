@@ -91,38 +91,6 @@
    <!--topipsts-->
    <div class="cb"></div>
    
-   *{
-   <div class="topipsts">
-     <div class="mtrighttxt">
-     	<a class="${currentPage.equals('home') ? 'current' : ''}" 
-     		href="@{Home.index()}">Home</a>
-     </div>
-     <div class="mtrighttxt">
-     	<a class="${currentPage.equals('thoughts') ? 'current' : ''}" 
-     		href="@{PublicProfile.thoughts(talker.userName)}">Thoughts</a>
-     </div>
-     <div class="mtrighttxt">
-     	<a class="${currentPage.equals('convoFeed') ? 'current' : ''}" 
-     		href="@{Home.conversationFeed()}">Conversation Feed</a>
-     </div>
-     <div class="mtrighttxt">
-     	<a class="${currentPage.equals('openQuestions') ? 'current' : ''}" 
-     		href="@{Explore.openQuestions()}">Open Questions</a>
-     </div>
-     <div class="mtrighttxt">
-     	<a class="${currentPage.equals('liveTalks') ? 'current' : ''}" 
-     		href="@{Explore.liveTalks()}">Live Chats</a>
-     </div>
-     <div class="mtrighttxt">
-     	<a class="${currentPage.equals('browseTopics') ? 'current' : ''}" 
-     		href="@{Explore.browseTopics()}">Browse Topics</a>
-     </div>
-     <div class="mtop"></div>
-     <div class="topicborder"></div>
-     <div class="cb"></div>
-   </div>
-   }*
-    
     #{if session.username.equals(talker.userName) && talker.verifyCode != null }
 		<div class="topipsts">
            <div class="mtrighttxt1">Please verify your email</div>
@@ -201,14 +169,11 @@
      <div class="mtrighttxt1">Share TalkAboutHealth</div>
      <div class="topixtext"> Invite friends to join the Community </div>
      <!--topixtext-->
-     <div class="membersarea">
+     <div class="membersarea" style="height: auto;">
 		#{ share/buttons /}
-		*{
-	       <div class="sharicons">
-	       	<img src="/public/images/emailicon.jpg" alt="Emails" class="rpad" />
-	       	<a href="#" onclick="return openInvitationsWindow();">Email</a> 
-	       </div>
-       	}*
+		#{if currentPage?.equals("home") }
+			#{ share/fbwidget /}
+		#{/if}
      </div>
      <!--membersarea-->
      <div class="topicborder"></div>

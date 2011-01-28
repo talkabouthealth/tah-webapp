@@ -79,32 +79,6 @@
         <!--joinTah-->
       </div>
       
-      *{
-      
-      
-      <div id="arearight">
-			<h1>Current Support Communities</h1>
-			<ul>
-				<li>
-					<span><a href="@{Community.viewCommunity()}" class="bluetext12" 
-						style="font-size: 16px;"><strong>Breast Cancer</strong></a></span><br />
-			  		<span class="blacktext11"><strong>3 active conversations | ${numberOfMembers} members</strong></span>
-			  	</li>
-			</ul>
-			<ul>
-				<li>
-					<span class="blacktext"><strong>Skin Cancer</strong></span><br />
-			  		<span class="blacktext11"><strong>Coming soon !</strong></span>
-			  	</li>
-			</ul>
-			<p>
-				<span class="blacktext"><strong>Multiple Sclerosis</strong></span><br />
- 				<span class="blacktext11"><strong>Coming soon !</strong></span>
- 			</p>
-		</div>
-		
-		
-		}*
       <!--meetCover-->
       <div class="Communities">
         <div class="HealthCommunities">Health Communities</div>
@@ -117,16 +91,15 @@
         <div class="ComingSoonsub"> Skin Cancer 
         	<span class="csoontxt"><a href="@{Application.updatesEmail()}">Join the waiting list</a></span><br />
           Multiple Sclerosis <span class="csoontxt"><a href="@{Application.updatesEmail()}">Join the waiting list</a></span><br />
-          Diabtese <span class="csoontxt"><a href="@{Application.updatesEmail()}">Join the waiting list</a></span><br />
+          Diabetes <span class="csoontxt"><a href="@{Application.updatesEmail()}">Join the waiting list</a></span><br />
           Heart Diseases <span class="csoontxt"><a href="@{Application.updatesEmail()}">Join the waiting list</a></span><br />
-          Alzheimer’s <span class="csoontxt"><a href="@{Application.updatesEmail()}">Join the waiting list</a></span><br />
+          Alzheimer's <span class="csoontxt"><a href="@{Application.updatesEmail()}">Join the waiting list</a></span><br />
           
           <!-- <em><a href="#">See More...</a></em>  --> 
         </div>
         <div class="tahfblikeCover">
-          <div class="tahfblikepic"><img src="/public/images/tahfblike.jpg" alt="tahfblike" /></div>
-          <div class="TalkAboutfacebook"> <br />
-            #{share/fblike currentURL: 'http://talkabouthealth.com' /} 
+          <div class="TalkAboutfacebook">
+            #{ share/fbwidget /} 
           </div>
         </div>
         <!--tahfblike-->

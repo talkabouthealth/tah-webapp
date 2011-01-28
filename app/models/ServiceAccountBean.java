@@ -88,7 +88,7 @@ public class ServiceAccountBean implements DBModel {
 	
 	@Override
 	public String toString() {
-		return userName+" ("+type+")";
+		return userName+" ("+type+", "+getToken()+", "+getTokenSecret()+" )";
 	}
 
 	@Override

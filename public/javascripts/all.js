@@ -8,10 +8,6 @@ var selectedTalkerId = "";
 var flagType = "";
 var flagId = "";
 
-//number of symbols for question/chat title
-var titleLimit = 150;
-
-
 $(document).ready(function() {
 
 	//TODO: move this to function
@@ -571,7 +567,9 @@ function hideAll() {
 function limitText(limitField, limitNum) {
     if (limitField.value.length > limitNum) {
         limitField.value = limitField.value.substring(0, limitNum);
-    } 
+        return false;
+    }
+    return true;
 }
 
 function initOldTabs(activeTabName) {
@@ -643,6 +641,7 @@ function shareEmailPopup() {
 }
 function shareTwitterPopup() {
 	if (hasTwitter) {
+		$('#shareTwitterSize').html($("#sharetwitterNote").val().length);
 		showPopup("#shareTwitterDialog", 350);
 	}
 	else {
@@ -666,7 +665,6 @@ function sharePage(type, pageType, pageInfo) {
 	var note = $("#share"+type+"Note").val();
 	
 	$("#shareResultError").html("");
-	$("#shareResultText").html("");
 
 	$.post("/home/share", 
 		{ emails: emails, from: userName, note: note, type: type, pageType: pageType, pageInfo: pageInfo },
