@@ -39,9 +39,6 @@ import dao.TopicDAO;
 
 import static util.DBUtil.*;
 
-/**
- *
- */
 public class TalkerBean implements Serializable {
 	
 	public static final String[] CHILDREN_AGES_ARRAY = new String[] {
@@ -55,7 +52,6 @@ public class TalkerBean implements Serializable {
 		"Patient", "Former Patient", "Parent", "Caregiver", "Family member", "Friend", 
 		//"professionals"
 		"Physician", "Pharmacist", "Nurse", "Psychologist", "Social worker", "Researcher",
-		
 		 "other"
 	};
 	// only professionals in this list
@@ -305,6 +301,7 @@ public class TalkerBean implements Serializable {
 			}
 		}
 		
+		//sort by creation time
 		Collections.sort(thankYous);
 		thankYouList = thankYous;
 	}
@@ -323,7 +320,6 @@ public class TalkerBean implements Serializable {
 				
 				TalkerBean followingTalker = new TalkerBean();
 				followingTalker.parseBasicFromDB(followingDBOBject);
-				
 				followingList.add(followingTalker);
 			}
 		}
@@ -344,6 +340,10 @@ public class TalkerBean implements Serializable {
 		}
 	}
 	
+	/**
+	 * Parse related info between talker and topic - experiences, endorsements
+	 * @param topicsInfoCol
+	 */
 	private void parseTopicsInfo(Collection<DBObject> topicsInfoCol) {
 		topicsInfoMap = new HashMap<TopicBean, TalkerTopicInfo>();
 		
@@ -376,12 +376,25 @@ public class TalkerBean implements Serializable {
 	
 	private void parseProfInfo(DBObject profInfoDBObject) {
 		profInfo = new HashMap<String, String>();
-		
 		if (profInfoDBObject != null) {
 			profInfo = profInfoDBObject.toMap();
 		}
 	}
 	
+	public void parseEmailSettings(List<String> dbEmailSettingsList) {
+		emailSettings = EnumSet.noneOf(EmailSetting.class);
+		if (dbEmailSettingsList == null) {
+			return;
+		}
+		
+		for (String dbEmailSetting : dbEmailSettingsList) {
+			EmailSetting emailSetting = EmailSetting.valueOf(dbEmailSetting);
+			emailSettings.add(emailSetting);
+		}
+	}
+	
+	/* ---------------- Convert to DB format methods --------------------- */
+
 	public List<DBObject> topicsInfoToDB() {
 		List<DBObject> topicsInfoList = new ArrayList<DBObject>();
 		if (topicsInfoMap != null) {
@@ -417,18 +430,6 @@ public class TalkerBean implements Serializable {
 		return emailSettingsStringList;
 	}
 	
-	public void parseEmailSettings(List<String> dbEmailSettingsList) {
-		emailSettings = EnumSet.noneOf(EmailSetting.class);
-		if (dbEmailSettingsList == null) {
-			return;
-		}
-		
-		for (String dbEmailSetting : dbEmailSettingsList) {
-			EmailSetting emailSetting = EmailSetting.valueOf(dbEmailSetting);
-			emailSettings.add(emailSetting);
-		}
-	}
-	
 	public List<DBRef> followingTopicsToList() {
 		List<DBRef> dbRefList = new ArrayList<DBRef>();
 		if (followingTopicsList == null) {
@@ -441,10 +442,15 @@ public class TalkerBean implements Serializable {
 		return dbRefList;
 	}
 	
-	public EmailBean findNonPrimaryEmail(String newPrimaryEmail, String verifyCode) {
+	/* -------------------- Useful methods for displaying data --------------------- */
+	
+	/**
+	 * Finds non-primary email by email value or verification code
+	 */
+	public EmailBean findNonPrimaryEmail(String email, String verifyCode) {
 		EmailBean nonPrimaryEmail = null;
 		for (EmailBean emailBean : getEmails()) {
-			if (emailBean.getValue().equals(newPrimaryEmail)) {
+			if (emailBean.getValue().equals(email)) {
 				nonPrimaryEmail = emailBean;
 				break;
 			}
@@ -461,7 +467,6 @@ public class TalkerBean implements Serializable {
 		if (serviceAccounts == null) {
 			return null;
 		}
-		
 		for (ServiceAccountBean serviceAccount : serviceAccounts) {
 			if (serviceAccount.getType() == serviceType) {
 				return serviceAccount;
@@ -469,9 +474,6 @@ public class TalkerBean implements Serializable {
 		}
 		return null;
 	}
-	
-	
-	// ----========= Useful methods for displaying data ============----
 	
 	public PrivacyValue getPrivacyValue(PrivacyType type) {
 		for (PrivacySetting privacySetting : getPrivacySettings()) {
@@ -496,6 +498,10 @@ public class TalkerBean implements Serializable {
 		return value == PrivacyValue.PUBLIC;
 	}
 	
+	/**
+	 * Is this talker professional?
+	 * @return
+	 */
 	public boolean isProf() {
 		return PROFESSIONAL_CONNECTIONS_LIST.contains(connection);
 	}

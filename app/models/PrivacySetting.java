@@ -3,6 +3,7 @@ package models;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 
+
 public class PrivacySetting implements DBModel {
 	
 	public enum PrivacyType {

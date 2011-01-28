@@ -5,13 +5,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Stores talker's Health Info related to particular disease
+ *
+ */
 public class TalkerDiseaseBean {
 	
 	private String uid;
+	//disease name
 	private String name;
-	private String stage;
-	private String type;
-	//done as string to handle "user-not-entered-info" case
+	//done as string to handle "user-not-entered-info" case 
+	//(i.e. we don't know if user selected 'false' or selected nothing)
 	private String recurrent;
 	
 	private String healthBio;
@@ -27,7 +31,7 @@ public class TalkerDiseaseBean {
 	private Map<String, List<String>> healthInfo;
 	
 	private Set<String> healthItems;
-	//Map for "Other" fields
+	//Map for "Other" fields - not selected, but entered by user
 	private Map<String, List<String>> otherHealthItems;
 	
 	
@@ -48,12 +52,6 @@ public class TalkerDiseaseBean {
 	
 	public Set<String> getHealthItems() { return healthItems; }
 	public void setHealthItems(Set<String> healthItems) { this.healthItems = healthItems; }
-	
-	public String getStage() { return stage; }
-	public void setStage(String stage) { this.stage = stage; }
-	
-	public String getType() { return type; }
-	public void setType(String type) { this.type = type; }
 	
 	public int getSymptomMonth() { return symptomMonth; }
 	public void setSymptomMonth(int symptomMonth) { this.symptomMonth = symptomMonth; }

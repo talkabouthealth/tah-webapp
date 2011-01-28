@@ -10,7 +10,7 @@ import com.mongodb.DBRef;
 import dao.TalkerDAO;
 
 /**
- * Class for old conversations and topics URLs/names  
+ * Class for conversations and topics old URLs/names  
  *
  */
 public class URLName implements DBModel {

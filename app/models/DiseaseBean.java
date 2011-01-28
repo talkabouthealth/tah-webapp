@@ -9,6 +9,10 @@ public class DiseaseBean {
 	private String name;
 	private List<DiseaseQuestion> questions;
 	
+	/**
+	 * Represent question related to some disease.
+	 *
+	 */
 	public static class DiseaseQuestion {
 		public enum DiseaseQuestionType {
 			TEXT,
@@ -17,9 +21,14 @@ public class DiseaseBean {
 		}
 		
 		private DiseaseQuestionType type;
+		//used internally
 		private String name;
+		//used for displaying info
 		private String displayName;
+		//used on the HealthInfo form
 		private String text;
+		
+		//possible choice if question is select/multiselect
 		private Set<String> choices;
 		
 		public DiseaseQuestionType getType() { return type; }

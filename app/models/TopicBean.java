@@ -31,13 +31,16 @@ public class TopicBean implements Comparable<TopicBean> {
 	private String mainURL;
 	private Set<URLName> oldNames;
 	private Set<String> aliases;
-	//top (fixed) topic?
+	//freezed (fixed) topic
 	private boolean fixed;
+	
+	//BitLy link to the topic
 	private String bitly;
 	
 	private String summary;
 	private Set<String> sumContributors;
 	
+	//related topics
 	private Set<TopicBean> parents;
 	private Set<TopicBean> children;
 	
@@ -120,25 +123,6 @@ public class TopicBean implements Comparable<TopicBean> {
 		parseRelatives(topicDBObject);
 	}
 	
-	private void parseRelatives(DBObject topicDBObject) {
-		//children
-		Collection<DBRef> childrenDBList = (Collection<DBRef>)topicDBObject.get("children");
-		children = new HashSet<TopicBean>();
-		if (childrenDBList != null) {
-			for (DBRef childDBRef : childrenDBList) {
-				TopicBean child = new TopicBean();
-				DBObject childDBObject = childDBRef.fetch();
-				child.setId(childDBObject.get("_id").toString());
-				child.setTitle((String)childDBObject.get("title"));
-				child.setMainURL((String)childDBObject.get("main_url"));
-				children.add(child);
-			}
-		}
-		
-		//parents
-		setParents(TopicDAO.getParentTopics(getString(topicDBObject, "_id")));
-	}
-	
 	public void parseFromDB(DBObject topicDBObject) {
 		parseBasicFromDB(topicDBObject);
 		
@@ -159,6 +143,25 @@ public class TopicBean implements Comparable<TopicBean> {
     	setFollowers(followers);
 	}
 	
+	private void parseRelatives(DBObject topicDBObject) {
+		//children
+		Collection<DBRef> childrenDBList = (Collection<DBRef>)topicDBObject.get("children");
+		children = new HashSet<TopicBean>();
+		if (childrenDBList != null) {
+			for (DBRef childDBRef : childrenDBList) {
+				TopicBean child = new TopicBean();
+				DBObject childDBObject = childDBRef.fetch();
+				child.setId(childDBObject.get("_id").toString());
+				child.setTitle((String)childDBObject.get("title"));
+				child.setMainURL((String)childDBObject.get("main_url"));
+				children.add(child);
+			}
+		}
+		
+		//parents
+		setParents(TopicDAO.getParentTopics(getString(topicDBObject, "_id")));
+	}
+	
 	public List<DBRef> childrenToList() {
 		List<DBRef> dbRefList = new ArrayList<DBRef>();
 		if (children == null) {
@@ -171,6 +174,11 @@ public class TopicBean implements Comparable<TopicBean> {
 		return dbRefList;
 	}
 	
+	/**
+	 * Returns old name of this topic with given title
+	 * @param title
+	 * @return
+	 */
 	public URLName getOldNameByTitle(String title) {
 		for (URLName oldName : getOldNames()) {
 			if (oldName.getTitle().equals(title)) {
@@ -180,7 +188,10 @@ public class TopicBean implements Comparable<TopicBean> {
 		return null;
 	}
 	
-	//titles of children for display
+	/**
+	 * Return titles of the children as comma-separated list
+	 * @return
+	 */
 	public String getChildrenInfo() {
 		StringBuilder sb = new StringBuilder();
 		if (!children.isEmpty()) {

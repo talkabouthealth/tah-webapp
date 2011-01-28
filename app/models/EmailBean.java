@@ -9,9 +9,15 @@ import com.mongodb.DBRef;
 
 import dao.TalkerDAO;
 
+/**
+ * Used for storing not-primary emails.
+ *
+ */
 public class EmailBean implements DBModel {
 	
 	private String value;
+	//code used for email verification
+	//(or 'null' if email is already verified)
 	private String verifyCode;
 	
 	public EmailBean(String value, String verifyCode) {

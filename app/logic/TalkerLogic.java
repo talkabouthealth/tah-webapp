@@ -42,7 +42,81 @@ import models.actions.Action.ActionType;
 
 public class TalkerLogic {
 	
+	/**
+	 * Describes steps required for profile completion.
+	 *
+	 */
+	enum ProfileCompletion {
+		BASIC(25, "Sign Up"),
+		UPDATE_HEALTH(5, 
+			"Share your <a href='"+CommonUtil.generateAbsoluteURL("Profile.healthDetails")+"'>Health Info</a>",
+			"So we can match you with Members, Topics, and Conversations most relevant to you."),
+		UPDATE_PERSONAL(10, 
+			"Update your <a href='"+CommonUtil.generateAbsoluteURL("Profile.edit")+"'>Profile Info</a>",
+			"So other member similar to you can find you if you choose."
+			),
+		VIEW_PRIVACY(10,
+			"Update your <a href='"+CommonUtil.generateAbsoluteURL("Profile.preferences")+"'>Privacy Settings</a>",
+			"So other member similar to you can find and reach out to you if you choose."),
+		ASK_QUESTION(10, "Ask a <a href='#' onclick='return showStartConvoDialog(\"question\");'>Question</a>"),
+		COMMENT_CONVO(10, "Answer a <a href='"+CommonUtil.generateAbsoluteURL("Explore.openQuestions")+"'>Question</a>"),
+		GIVE_THANKYOU(10, "Give a Thank you"),
+		COMMENT_THOUGHTS(5, "Comment in your <a href='"+
+				CommonUtil.generateAbsoluteURL("PublicProfile.thoughts", "userName", "<username>")+"'>Thoughts Feed</a>"),
+		FOLLOW(5, "Follow <a href='"+
+				CommonUtil.generateAbsoluteURL("Community.browseMembers", "action", "active")+"'>another member</a>"),
+		FOLLOW_TOPIC(5, "Follow a <a href='"+CommonUtil.generateAbsoluteURL("Explore.browseTopics")+"'>Topic</a>"),
+		START_OR_JOIN_TALK(5, "Start or join a <a href='"+CommonUtil.generateAbsoluteURL("Explore.liveTalks")+"'>Live Chat</a>");
+		
+		
+		private final int value;
+		private final String description;
+		private final String stepMessage;
+		private final String stepNote;
+		
+		private ProfileCompletion(int value, String stepMessage) {
+			this(value, null, stepMessage, null);
+		}
+		
+		private ProfileCompletion(int value, String stepMessage, String stepNote) {
+			this(value, null, stepMessage, stepNote);
+		}
+		
+		/**
+		 * 
+		 * @param value Value of this step in percents.
+		 * @param description Message used for ProfileCompletion panel.
+		 * @param stepMessage Message used for NextStep feature.
+		 * @param stepNote Additional note for NextStep feature.
+		 */
+		private ProfileCompletion(int value, String description, String stepMessage, String stepNote) {
+			this.value = value;
+			this.description = description;
+			this.stepMessage = stepMessage;
+			this.stepNote = stepNote;
+		}
+
+		public int getValue() {
+			return value;
+		}
+		public String getDescription() {
+			if (description == null) {
+				return stepMessage+" to get to ";
+			}
+			return description;
+		}
+		public String getStepMessage() {
+			return stepMessage;
+		}
+		public String getStepNote() {
+			return stepNote;
+		}
+	}
+	
+	//Field choices (options in <select>) for different fields/profiles(i.e. Nurse, etc)
 	private static Map<String, List<String>> fieldsDataMap;
+	
+	//Matches HealthItem with list of topics
 	private static Map<String, List<String>> healthItems2TopicsMap;
 	
 	/**
@@ -89,7 +163,12 @@ public class TalkerLogic {
 		TalkerLogic.healthItems2TopicsMap = healthItems2TopicsMap;
 	}
 
-	//load data for combo boxes on EditProfile page
+	/**
+	 * Get data for combo boxes on EditProfile page
+	 * @param fieldName
+	 * @param talkerType Talker's connection (e.g. Nurse, Caregiver, etc.)
+	 * @return
+	 */
 	public static List<String> getFieldsData(String fieldName, String talkerType) {
 		String key = fieldName+"|"+talkerType;
 		if (fieldsDataMap.containsKey(key)) {
@@ -101,66 +180,10 @@ public class TalkerLogic {
 		}
 	}
 
-	enum ProfileCompletion {
-		BASIC(25, "Sign Up"),
-		UPDATE_HEALTH(5, 
-			"Share your <a href='"+CommonUtil.generateAbsoluteURL("Profile.healthDetails")+"'>Health Info</a>",
-			"So we can match you with Members, Topics, and Conversations most relevant to you."),
-		UPDATE_PERSONAL(10, 
-			"Update your <a href='"+CommonUtil.generateAbsoluteURL("Profile.edit")+"'>Profile Info</a>",
-			"So other member similar to you can find you if you choose."
-			),
-		VIEW_PRIVACY(10,
-			"Update your <a href='"+CommonUtil.generateAbsoluteURL("Profile.preferences")+"'>Privacy Settings</a>",
-			"So other member similar to you can find and reach out to you if you choose."),
-		ASK_QUESTION(10, "Ask a <a href='#' onclick='return showStartConvoDialog(\"question\");'>Question</a>"),
-		COMMENT_CONVO(10, "Answer a <a href='"+CommonUtil.generateAbsoluteURL("Explore.openQuestions")+"'>Question</a>"),
-		GIVE_THANKYOU(10, "Give a Thank you"),
-		COMMENT_THOUGHTS(5, "Comment in your <a href='"+
-				CommonUtil.generateAbsoluteURL("PublicProfile.thoughts", "userName", "<username>")+"'>Thoughts Feed</a>"),
-		FOLLOW(5, "Follow <a href='"+
-				CommonUtil.generateAbsoluteURL("Community.browseMembers", "action", "active")+"'>another member</a>"),
-		FOLLOW_TOPIC(5, "Follow a <a href='"+CommonUtil.generateAbsoluteURL("Explore.browseTopics")+"'>Topic</a>"),
-		START_OR_JOIN_TALK(5, "Start or join a <a href='"+CommonUtil.generateAbsoluteURL("Explore.liveTalks")+"'>Live Chat</a>");
-		
-		
-		private final int value;
-		private final String description;
-		private final String stepMessage;
-		private final String stepNote;
-		
-		private ProfileCompletion(int value, String stepMessage) {
-			this(value, null, stepMessage, null);
-		}
-		
-		private ProfileCompletion(int value, String stepMessage, String stepNote) {
-			this(value, null, stepMessage, stepNote);
-		}
-		
-		private ProfileCompletion(int value, String description, String stepMessage, String stepNote) {
-			this.value = value;
-			this.description = description;
-			this.stepMessage = stepMessage;
-			this.stepNote = stepNote;
-		}
-
-		public int getValue() {
-			return value;
-		}
-		public String getDescription() {
-			if (description == null) {
-				return stepMessage+" to get to ";
-			}
-			return description;
-		}
-		public String getStepMessage() {
-			return stepMessage;
-		}
-		public String getStepNote() {
-			return stepNote;
-		}
-	}
-	
+	/**
+	 * Prepares talker information and calculates profile completion for displaying.
+	 * 
+	 */
 	public static void preloadTalkerInfo(TalkerBean talker) {
 		preloadTalkerInfo(talker, null);
 	}
@@ -171,6 +194,11 @@ public class TalkerLogic {
 		calculateProfileCompletion(talker, page);
 	}
 	
+	/**
+	 * Calculates and prepares ProfileCompletion and NextStep features.
+	 * @param talker
+	 * @param page Page where information will be displayed
+	 */
 	private static void calculateProfileCompletion(TalkerBean talker, String page) {
 		//check what items are completed
 		EnumSet<ProfileCompletion> profileActions = EnumSet.of(ProfileCompletion.BASIC);
@@ -203,6 +231,7 @@ public class TalkerLogic {
 				break;
 			}
 		}
+		//for some steps we check lists, not actions
 		if (!talker.getFollowingList().isEmpty()) {
 			profileActions.add(ProfileCompletion.FOLLOW);
 		}
@@ -247,6 +276,7 @@ public class TalkerLogic {
 		talker.setProfileCompletionValue(sum);
 		
 		if (sum != 100) {
+			//prepare messages for dispaying
 			int nextSum = sum + nextItem.getValue();
 			String nextMessage = nextItem.getStepMessage();
 			nextMessage = nextMessage.replaceAll("<username>", talker.getUserName());
@@ -258,6 +288,11 @@ public class TalkerLogic {
 		}
 	}
 	
+	/**
+	 * Gets list of recommended topics based on talker's HealthInfo
+	 * @param talkerDisease
+	 * @return
+	 */
 	public static List<TopicBean> getRecommendedTopics(TalkerDiseaseBean talkerDisease) {
 		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();
 		
@@ -297,6 +332,7 @@ public class TalkerLogic {
 			topicNames.add("Recurrent (Recurring)");
 		}
 		
+		//convert health items to topic names
 		Set<String> healthItems = talkerDisease.getHealthItems();
 		List<HealthItemBean> allHealthItems = HealthItemDAO.getAllHealthItems(null);
 		for (HealthItemBean healthItem : allHealthItems) {
@@ -326,6 +362,13 @@ public class TalkerLogic {
 		return recommendedTopics;
 	}
 	
+	/**
+	 * Loads all answers of this talker in Feed format
+	 * 
+	 * @param talkerId
+	 * @param answersFeed Feed where answer actions are stored
+	 * @return Number of top answers of this talker
+	 */
 	public static int prepareTalkerAnswers(String talkerId, List<Action> answersFeed) {
 		int numOfTopAnswers = 0;
 		List<CommentBean> allAnswers = CommentsDAO.getTalkerAnswers(talkerId, null);
@@ -333,18 +376,24 @@ public class TalkerLogic {
 			ConversationBean convo = ConversationDAO.getById(answer.getConvoId());
 			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
 			
+			//if first in the list - top answer
 			if (!convo.getComments().isEmpty() && convo.getComments().get(0).equals(answer)) {
 				numOfTopAnswers++;
 			}
-			
+
+			//Use special action for answer displaying.
 			AnswerDisplayAction answerAction = new AnswerDisplayAction(convo.getTalker(), convo, answer, ActionType.ANSWER_CONVO, false);
 			answerAction.setTime(answer.getTime());
-			
 			answersFeed.add(answerAction);
 		}
 		return numOfTopAnswers;
 	}
 	
+	/**
+	 * Converts given list of talker's conversations to Feed format
+	 * @param loadFollowingConversations
+	 * @return
+	 */
 	public static List<Action> prepareTalkerConvos(List<ConversationBean> loadFollowingConversations) {
 		List<Action> convosFeed = new ArrayList<Action>();
 		for (ConversationBean convo : loadFollowingConversations) {

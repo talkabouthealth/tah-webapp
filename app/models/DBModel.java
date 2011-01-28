@@ -11,5 +11,4 @@ public interface DBModel {
 	public DBObject toDBObject();
 	
 	public void parseDBObject(DBObject dbObject);
-	
 }

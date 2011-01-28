@@ -28,6 +28,7 @@ import dao.TopicDAO;
 public class ConversationBean {
 	
 	public enum ConvoType {
+		//Live Chat/Live Talk
 		CONVERSATION,
 		QUESTION;
 		
@@ -37,9 +38,9 @@ public class ConversationBean {
 	}
 	
 	private String id;
+	//increment id, used for Live Chat page
 	private int tid;
 	private ConvoType convoType = ConvoType.CONVERSATION;
-	private boolean deleted;
 	
 	//title (name) of this conversation
 	private String topic;
@@ -54,6 +55,7 @@ public class ConversationBean {
 	private Date creationDate;
 	//Convo with no answers is opened
 	private boolean opened;
+	private boolean deleted;
 	
 	//creator
 	private String uid;
@@ -61,6 +63,7 @@ public class ConversationBean {
 	
 	private String details;
 	private int views;
+	private Set<TopicBean> topics;
 	private String summary;
 	private Set<TalkerBean> sumContributors;
 	
@@ -68,17 +71,18 @@ public class ConversationBean {
 	private int numOfChatters;
 	
 	private Set<ConversationBean> relatedConvos;
-	private Set<String> members;
+	//answers/replies
 	private List<CommentBean> comments;
-	private List<MessageBean> messages;
 	private List<TalkerBean> followers;
-	private Set<TopicBean> topics;
+	
+	//members and message from Live Chat
+	private Set<String> members;
+	private List<MessageBean> messages;
 	
 	//used for search display
 	private String searchFragment;
 	
 	public ConversationBean() {}
-	
 	public ConversationBean(String id) {
 		this.id = id;
 	}
@@ -127,11 +131,17 @@ public class ConversationBean {
 		parseBasicFromDB(convoDBObject);
 		
 		parseRelatedConvos((Collection<DBRef>)convoDBObject.get("related_convos"));
-
-    	//messages from Talk Window
-    	List<MessageBean> messages = new ArrayList<MessageBean>();
+    	parseChatMessages((Collection<DBObject>)convoDBObject.get("messages"));
+    	setFollowers(ConversationDAO.getConversationFollowers(getId()));
+	}
+	
+	/**
+	 * Parses messages/members information from Chat messages
+	 * @param messagesDBList
+	 */
+	private void parseChatMessages(Collection<DBObject> messagesDBList) {
+		List<MessageBean> messages = new ArrayList<MessageBean>();
     	Set<String> members = new HashSet<String>();
-    	Collection<DBObject> messagesDBList = (Collection<DBObject>)convoDBObject.get("messages");
     	if (messagesDBList != null) {
     		int cnt = -1;
     		for (DBObject messageDBObject : messagesDBList) {
@@ -164,25 +174,8 @@ public class ConversationBean {
     	}
     	setMembers(members);
     	setMessages(messages);
-    	
-    	//followers of this convo
-    	DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
-    	DBObject query = new BasicDBObject("following_convos", getId());
-    	DBObject fields = BasicDBObjectBuilder.start()
-    		.add("uname", 1)
-    		.add("email", 1)
-    		.add("bio", 1)
-    		.add("email_settings", 1)
-    		.get();
-    	List<DBObject> followersDBList = talkersColl.find(query, fields).toArray();
-    	List<TalkerBean> followers = new ArrayList<TalkerBean>();
-    	for (DBObject followerDBObject : followersDBList) {
-    		TalkerBean followerTalker = new TalkerBean();
-    		followerTalker.parseBasicFromDB(followerDBObject);
-			followers.add(followerTalker);
-    	}
-    	setFollowers(followers);
 	}
+	
 	
 	//TODO: 3 same methods: Col<DBRef> -> Set<Object>
 	//and vise versa: List<Object> -> List/Set<DBRef>
@@ -208,7 +201,6 @@ public class ConversationBean {
 					//maybe deleted topic
 					continue;
 				}
-				
 				topics.add(topic);
 			}
 		}
@@ -246,7 +238,11 @@ public class ConversationBean {
 		return relatedDBList;
 	}
 	
-	
+	/**
+	 * Returns old conversation name (URLname object) with given title
+	 * @param title
+	 * @return
+	 */
 	public URLName getOldNameByTitle(String title) {
 		for (URLName oldName : getOldNames()) {
 			if (oldName.getTitle().equals(title)) {
@@ -274,7 +270,11 @@ public class ConversationBean {
 		return id.hashCode();
 	}
 	
-	//for displaying (e.g. in OpenQuestions)
+	/**
+	 * Used for displaying (e.g. in OpenQuestions)
+	 * @param authenticated Is current user logged in?
+	 * @return
+	 */
 	public String getHtmlDetails(boolean authenticated) {
 		StringBuilder htmlDetails = new StringBuilder();
 		if (convoType == ConvoType.CONVERSATION) {
@@ -285,18 +285,21 @@ public class ConversationBean {
 		}
 		htmlDetails.append(CommonUtil.talkerToHTML(talker, authenticated)+" ");
 		htmlDetails.append(CommonUtil.topicsToHTML(this));
-		
 		return htmlDetails.toString();
 	}
 	
 	public List<CommentBean> getNotHelpfulAnswers() {
 		return filterAnswers(true);
 	}
-	
 	public List<CommentBean> getHelpfulAnswers() {
 		return filterAnswers(false);
 	}
 	
+	/**
+	 * Returns helpful or not helpful answers based on parameter
+	 * @param notHelpful
+	 * @return
+	 */
 	public List<CommentBean> filterAnswers(boolean notHelpful) {
 		List<CommentBean> filteredAnswers = new ArrayList<CommentBean>();
 		for (CommentBean answer : getComments()) {
@@ -309,6 +312,11 @@ public class ConversationBean {
 		return filteredAnswers;
 	}
 	
+	/**
+	 * Has talker answered in this conversation?
+	 * @param talker
+	 * @return
+	 */
 	public boolean hasUserAnswer(TalkerBean talker) {
 		if (comments == null || talker == null) {
 			return false;

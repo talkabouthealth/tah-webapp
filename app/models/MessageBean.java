@@ -5,14 +5,15 @@ import java.util.Date;
 public class MessageBean {
 	
 	protected String id;
+	//author of the message
 	private TalkerBean fromTalker;
 	private String text;
 	private Date time;
+	
 	//index in the 'messages' array, used for updating
 	private int index;
 	
 	public MessageBean() {}
-
 	public MessageBean(String messageId) {
 		id = messageId;
 	}

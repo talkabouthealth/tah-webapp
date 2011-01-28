@@ -10,9 +10,15 @@ import models.ServiceAccountBean.ServiceType;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 
-//Facebook or Twitter info
+/**
+ * Twitter or Facebook account
+ *
+ */
 public class ServiceAccountBean implements DBModel {
 	
+	public enum ServiceType { TWITTER, FACEBOOK }
+	
+	//All possible settings for Twitter and Facebook
 	private static final Map<String, String> TWITTER_SETTINGS_NAMES;
 	private static final Map<String, String> FACEBOOK_SETTINGS_NAMES; 
 	
@@ -33,15 +39,16 @@ public class ServiceAccountBean implements DBModel {
 		FACEBOOK_SETTINGS_NAMES.put("POST_ON_CONVO", "Post on Facebook when I ask a question or start a live chat.");
 	}
 	
-	public enum ServiceType { TWITTER, FACEBOOK }
-	
 	private String id;
 	private String userName;
 	private ServiceType type;
 	
+	//auth info
 	private String token;
 	private String tokenSecret;
 	
+	//checked settings
+	//TODO: key/value? Maybe store it as list of selected settings?
 	private Map<String, String> settings;
 	
 	

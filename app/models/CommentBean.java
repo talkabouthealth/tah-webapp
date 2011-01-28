@@ -17,11 +17,14 @@ import dao.TalkerDAO;
 
 /**
  * Represent Conversation answer/replies and Profile thoughts/replies.
- *
  */
 public class CommentBean extends MessageBean {
 	
+	/**
+	 * A vote for conversation answers
+	 */
 	public static class Vote implements DBModel {
+		//who voted
 		private TalkerBean talker;
 		private boolean up;
 		
@@ -72,25 +75,28 @@ public class CommentBean extends MessageBean {
 		public void setUp(boolean up) { this.up = up; }
 	}
 	
+	//for thoughts/replies - id of profile where it was published
 	private String profileTalkerId;
+	
+	//for answers/replies - id of conversation where it was created
 	private String convoId;
-	private boolean deleted;
 	//is it answer or reply ?
 	private boolean answer;
 	
 	//old versions of the text
 	private Set<String> oldTexts;
+	private boolean deleted;
 	
 	private String parentId;
 	private List<CommentBean> children;
 	
+	//votes are used for answers
 	private int voteScore;
 	private Set<Vote> votes;
 	private boolean notHelpful;
 	private Set<Vote> notHelpfulVotes;
 	
 	public CommentBean() {}
-
 	public CommentBean(String commentId) {
 		super(commentId);
 	}
@@ -122,26 +128,34 @@ public class CommentBean extends MessageBean {
 		setText((String)commentDBObject.get("text"));
 		setOldTexts(getStringSet(commentDBObject, "old_texts"));
 		setTime((Date)commentDBObject.get("time"));
+		
 		setDeleted(getBoolean(commentDBObject, "deleted"));
 		setAnswer(getBoolean(commentDBObject, "answer"));
-		setNotHelpful(getBoolean(commentDBObject, "not_helpful"));
 		
 		DBRef convoRef = (DBRef)commentDBObject.get("convo");
 		if (convoRef != null) {
 			setConvoId(convoRef.getId().toString());
 		}
 		
-		setVoteScore(getInt(commentDBObject, "vote_score"));
-		setVotes(parseSet(Vote.class, commentDBObject, "votes"));
-		setNotHelpfulVotes(parseSet(Vote.class, commentDBObject, "not_helpful_votes"));
-		
 		setFromTalker(parseTalker(commentDBObject, "from"));
 		DBRef profileTalkeRef = (DBRef)commentDBObject.get("profile");
 		if (profileTalkeRef != null) {
 			setProfileTalkerId(profileTalkeRef.getId().toString());
 		}
+		
+		setVoteScore(getInt(commentDBObject, "vote_score"));
+		setVotes(parseSet(Vote.class, commentDBObject, "votes"));
+		setNotHelpful(getBoolean(commentDBObject, "not_helpful"));
+		setNotHelpfulVotes(parseSet(Vote.class, commentDBObject, "not_helpful_votes"));
 	}
 	
+	/**
+	 * Get vote of given talker from given set of votes (usual or nothelful)
+	 * 
+	 * @param talker
+	 * @param votesSet
+	 * @return Vote object or 'null' if there is no vote by this talker
+	 */
 	public Vote getVoteByTalker(TalkerBean talker, Set<Vote> votesSet) {
 		if (votesSet == null) {
 			return null;
@@ -155,6 +169,10 @@ public class CommentBean extends MessageBean {
 		return null;
 	}
 	
+	/**
+	 * Returns only 'up' votes
+	 * @return
+	 */
 	public Set<Vote> getUpVotes() {
 		Set<Vote> upVotes = new HashSet<Vote>();
 		if (getVotes() == null) {

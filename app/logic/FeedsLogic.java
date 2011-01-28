@@ -66,7 +66,7 @@ public class FeedsLogic {
 		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();
 		
 		String nextActionId = null;
-		//can we add 
+		//TODO: check - we need this?
 		boolean canAdd = (afterActionId == null);
 		while (true) {
 			List<Action> feedActions = new ArrayList<Action>();
@@ -100,9 +100,21 @@ public class FeedsLogic {
 		return feed;
 	}
 	
+	/**
+	 * Filters given feed actions to new Feed.
+	 * 
+	 * @param feed Result feed
+	 * @param feedActions Source feed actions
+	 * @param addedConvos Conversations that are already in the feed
+	 * @param afterActionId
+	 * @param canAdd 
+	 * @param feedSize Size of the feed that we need
+	 * @return
+	 */
 	private static boolean filter(Set<Action> feed, 
 			List<Action> feedActions, Set<ConversationBean> addedConvos, 
 			String afterActionId, boolean canAdd, int feedSize) {
+		
 		for (Action action : feedActions) {
 			ConversationBean actionConvo = action.getConvo();
 			//check repeated conversations
@@ -119,6 +131,7 @@ public class FeedsLogic {
 				if (canAdd) {
 					PreloadAction preAction = (PreloadAction)action;
 					Action fullAction = preAction.getFullAction();
+					//we do not include thoughts of suspended users
 					if (!(fullAction.getType() == ActionType.PERSONAL_PROFILE_COMMENT
 							&& fullAction.getTalker().isSuspended())) {
 						feed.add(fullAction);
@@ -126,6 +139,7 @@ public class FeedsLogic {
 				}
 			}
 
+			//enough size?
 			if (feed.size() >= feedSize) {
 				break;
 			}

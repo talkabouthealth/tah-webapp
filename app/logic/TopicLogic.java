@@ -16,6 +16,9 @@ import dao.TopicDAO;
 
 public class TopicLogic {
 	
+	/**
+	 * Default parent topic
+	 */
 	public static final String DEFAULT_TOPIC = "Unorganized";
 	
 	public static void addToDefaultParent(TopicBean topic) {
@@ -26,6 +29,9 @@ public class TopicLogic {
 		}
 	}
 	
+	/**
+	 * Get all topics as tree.
+	 */
 	public static Set<TopicBean> getAllTopicsTree() {
 		Set<TopicBean> topics = TopicDAO.loadAllTopics();
     	Map<String, TopicBean> topicsMap = new HashMap<String, TopicBean>();
@@ -44,9 +50,16 @@ public class TopicLogic {
     	return topicsTree;
 	}
 	
-	private static Set<TopicBean> buildTree(TopicBean topic, Map<String, TopicBean> topicsMap) {
+	/**
+	 * Recursive method for building topic tree
+	 * 
+	 * @param rootTopic Root topic of this subtree.
+	 * @param topicsMap Map of all topics, key - id, value - topic object.
+	 * @return
+	 */
+	private static Set<TopicBean> buildTree(TopicBean rootTopic, Map<String, TopicBean> topicsMap) {
 		Set<TopicBean> newChildren = new TreeSet<TopicBean>();
-		for (TopicBean child : topic.getChildren()) {
+		for (TopicBean child : rootTopic.getChildren()) {
 			TopicBean newChild = topicsMap.get(child.getId());
 			newChildren.add(newChild);
 			newChild.setChildren(buildTree(newChild, topicsMap));
@@ -55,6 +68,11 @@ public class TopicLogic {
 	}
 	
 	
+	/**
+	 * Get list of all topics in subtree
+	 * @param parentTopic
+	 * @return
+	 */
 	public static List<String> getSubTopics(TopicBean parentTopic) {
 		List<DBRef> allTopics = new ArrayList<DBRef>();
 		ConversationDAO.getAllTopics(allTopics, parentTopic);

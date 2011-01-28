@@ -315,6 +315,31 @@ public class ConversationDAO {
 	}
 	
 	//------------------- Other ----------------------
+	
+	/**
+	 * Returns followers of the given conversation
+	 */
+	public static List<TalkerBean> getConversationFollowers(String convoId) {
+    	DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
+    	
+    	DBObject query = new BasicDBObject("following_convos", convoId);
+    	DBObject fields = BasicDBObjectBuilder.start()
+    		.add("uname", 1)
+    		.add("email", 1)
+    		.add("bio", 1)
+    		.add("email_settings", 1)
+    		.get();
+    	List<DBObject> followersDBList = talkersColl.find(query, fields).toArray();
+    	
+    	List<TalkerBean> followers = new ArrayList<TalkerBean>();
+    	for (DBObject followerDBObject : followersDBList) {
+    		TalkerBean followerTalker = new TalkerBean();
+    		followerTalker.parseBasicFromDB(followerDBObject);
+			followers.add(followerTalker);
+    	}
+		return followers;
+	}
+	
 	/**
 	 * Get id of the last created conversation.
 	 */

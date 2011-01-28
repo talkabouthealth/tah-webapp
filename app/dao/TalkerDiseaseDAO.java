@@ -44,8 +44,6 @@ public class TalkerDiseaseDAO {
 	    }
 		
 		DBObject diseaseObject = BasicDBObjectBuilder.start()
-			.add("stage", talkerDisease.getStage())
-			.add("type", talkerDisease.getType())
 			.add("recur", talkerDisease.getRecurrent())
 			.add("symp_date", talkerDisease.getSymptomDate())
 			.add("diag_date", talkerDisease.getDiagnoseDate())
