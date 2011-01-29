@@ -4,12 +4,14 @@ import models.TalkerBean;
 
 import com.mongodb.DBObject;
 
+/**
+ * Occurs when talker updates bio/profile/health info
+ */
 public class UpdateProfileAction extends AbstractAction {
 	
 	public UpdateProfileAction(TalkerBean talker, ActionType type) {
 		super(type, talker);
 	}
-
 	public UpdateProfileAction(DBObject dbObject) {
 		super(dbObject);
 	}

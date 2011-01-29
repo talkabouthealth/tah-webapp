@@ -6,13 +6,15 @@ import models.actions.Action.ActionType;
 
 import com.mongodb.DBObject;
 
+/**
+ * Occurs when talker joins to a Live Chat
+ */
 public class JoinConvoAction extends AbstractAction {
 	
 	public JoinConvoAction(TalkerBean talker, ConversationBean convo) {
 		super(ActionType.JOIN_CONVO, talker);
 		this.convo = convo;
 	}
-
 	public JoinConvoAction(DBObject dbObject) {
 		super(dbObject);
 	}

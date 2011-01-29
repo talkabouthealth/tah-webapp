@@ -1,9 +1,11 @@
 package util;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import play.Logger;
 
+import models.ConversationBean;
 import models.EmailBean;
 import models.TalkerBean;
 
@@ -13,7 +15,6 @@ import dao.TalkerDAO;
 
 /**
  * Uses Sailthru API, http://sailthru.com/
- * @author kindcoder
  */
 public class EmailUtil {
 	private static final String SAILTHRU_APIKEY = "4007bc4d4b48586353eb44012172eaf3";
@@ -22,6 +23,9 @@ public class EmailUtil {
 	public static final String SUPPORT_EMAIL = "support@talkabouthealth.com";
 	public static final String MURRAY_EMAIL = "murrayjones@gmail.com";
 	
+	/**
+	 * Names are the same (only uppercase) as templates' names on http://sailthru.com/
+	 */
 	public enum EmailTemplate {
 		WELCOME,
 		FORGOT_PASSWORD,
@@ -52,6 +56,15 @@ public class EmailUtil {
 		return sendEmail(emailTemplate, toEmail, vars, null, true);
 	}
 	
+	/**
+	 * Send email through Sailthru
+	 * @param emailTemplate Template to use
+	 * @param toEmail Recipient's email
+	 * @param vars Parameters for templates
+	 * @param options Additional Sailthru options, usually 'null'
+	 * @param verify Should recipient's email be verified?
+	 * @return
+	 */
 	public static boolean sendEmail(EmailTemplate emailTemplate, String toEmail, 
 			Map<String, String> vars, Map<String, String> options, boolean verify) {
 		if (verify && !isVerifiedEmail(toEmail)) {
@@ -63,16 +76,20 @@ public class EmailUtil {
 			client = new TriggerMailClient(SAILTHRU_APIKEY, SAILTHRU_SECRET);
 			client.send(emailTemplate.toString().toLowerCase(), toEmail, vars, options);
 		} catch (Exception e) {
-			Logger.error("Couldn't send email: "+e.getMessage());
+			Logger.error(e, "Couldn't send email");
 			return false;
 		}
 		
 		return true;
 	}
 
+	/**
+	 * Checks if given email was verified by talker
+	 * @param email
+	 * @return
+	 */
 	private static boolean isVerifiedEmail(String email) {
 		TalkerBean talker = TalkerDAO.getByEmail(email);
-		
 		if (talker == null) {
 			return false;
 		}
@@ -87,6 +104,26 @@ public class EmailUtil {
 			EmailBean emailBean = talker.findNonPrimaryEmail(email, null);
 			return emailBean.getVerifyCode() == null;
 		}
+	}
+	
+	/**
+	 * Send email to TAH Support about flagging some content
+	 * @param contentType
+	 * @param convo
+	 * @param reason
+	 * @param content
+	 * @param talker
+	 */
+	public static void flagContent(String contentType, ConversationBean convo,
+			String reason, String content, TalkerBean talker) {
+		Map<String, String> vars = new HashMap<String, String>();
+    	vars.put("content_type", contentType);
+    	vars.put("content_link", CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL()));
+    	vars.put("reason", reason);
+		vars.put("content", content);
+		vars.put("name", talker.getUserName());
+		vars.put("email", talker.getEmail());
+		EmailUtil.sendEmail(EmailTemplate.FLAGGED, EmailUtil.SUPPORT_EMAIL, vars, null, false);
 	}
 }
 

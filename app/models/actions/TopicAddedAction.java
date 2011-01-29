@@ -7,6 +7,9 @@ import models.actions.Action.ActionType;
 
 import com.mongodb.DBObject;
 
+/**
+ * Occurs when talker adds conversation to a topic
+ */
 public class TopicAddedAction extends AbstractAction {
 	
 	public TopicAddedAction(TalkerBean talker, ConversationBean convo, TopicBean topic) {

@@ -31,16 +31,19 @@ import models.TopicBean;
 public abstract class AbstractAction implements Action {
 	
 	protected String id;
+	//author of the activity
 	protected TalkerBean talker;
 	protected Date time;
 	protected ActionType type;
 	
-	//other possible data
+	//other possible data connected with action
 	protected ConversationBean convo;
 	protected TopicBean topic;
 	protected TalkerBean otherTalker;
+	//conversation answer/reply
 	protected CommentBean answer;
 	protected CommentBean reply;
+	//thought/reply
 	protected CommentBean profileComment;
 	protected CommentBean profileReply;
 	
@@ -84,6 +87,7 @@ public abstract class AbstractAction implements Action {
 		setTime((Date)dbObject.get("time"));
 		setType(ActionType.valueOf((String)dbObject.get("type")));
 		
+		//parse additional info if it exists
 		if (hasConvo()) {
 			convo = parseConvo(dbObject);
 		}
@@ -140,6 +144,8 @@ public abstract class AbstractAction implements Action {
 		return dbObject;
 	}
 	
+	//default - everything false
+	//Child actions override these methods
 	protected boolean hasConvo() { return false; }
 	protected boolean hasTopic() { return false; }
 	protected boolean hasOtherTalker() { return false; }
@@ -148,36 +154,19 @@ public abstract class AbstractAction implements Action {
 	protected boolean hasProfileComment() { return false; }
 	protected boolean hasProfileReply() { return false; }
 	
-	protected String userName() {
-		return "<b>"+talker.getUserName()+"</b>";
-	}
 	
-	protected String fullUserName(TalkerBean user, boolean authenticated) {
-		return CommonUtil.talkerToHTML(user, authenticated);
-	}
-	
-	protected String convoTopics() {
-		return CommonUtil.topicsToHTML(convo);
-	}
-	
-	protected String topic() {
-		String topicURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", topic.getMainURL());
-		String topicLink = "<a href='"+topicURL+"'>"+topic.getTitle()+"</a>";
-		return topicLink;
-	}
+	/* --------------- Methods for parsing/saving info from/to db --------------- */
 	
 	protected void addConvo(DBObject dbObject, ConversationBean convo) {
 		DBRef topicRef = new DBRef(DBUtil.getDB(), ConversationDAO.CONVERSATIONS_COLLECTION, new ObjectId(convo.getId()));
 		dbObject.put("convoId", topicRef);
 	}
-	
 	protected ConversationBean parseConvo(DBObject dbObject) {
 		DBObject convoDBObject = ((DBRef)dbObject.get("convoId")).fetch();
 		
 		ConversationBean convo = new ConversationBean();
 		convo.parseSuperBasicFromDB(convoDBObject);
 		convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
-    	
     	return convo;
 	}
 	
@@ -185,7 +174,6 @@ public abstract class AbstractAction implements Action {
 		DBRef topicRef = new DBRef(DBUtil.getDB(), TopicDAO.TOPICS_COLLECTION, new ObjectId(topic.getId()));
 		dbObject.put("topicId", topicRef);
 	}
-	
 	protected TopicBean parseTopic(DBObject dbObject) {
 		DBObject topicDBObject = ((DBRef)dbObject.get("topicId")).fetch();
 		
@@ -194,7 +182,11 @@ public abstract class AbstractAction implements Action {
     	return topic;
 	}
 	
-	// Other talker connected actions
+	//Other talker connected with this action (i.e. followed talker)
+	protected void addOtherTalker(DBObject dbObject, TalkerBean talker) {
+		DBRef talkerRef = new DBRef(DBUtil.getDB(), TalkerDAO.TALKERS_COLLECTION, new ObjectId(talker.getId()));
+		dbObject.put("otherTalker", talkerRef);
+	}
 	protected TalkerBean parseOtherTalker(DBObject dbObject) {
 		DBRef otherTalkerDBRef = (DBRef)dbObject.get("otherTalker");
 		if (otherTalkerDBRef != null) {
@@ -211,12 +203,14 @@ public abstract class AbstractAction implements Action {
 		return null;
 	}
 	
-	protected void addOtherTalker(DBObject dbObject, TalkerBean talker) {
-		DBRef talkerRef = new DBRef(DBUtil.getDB(), TalkerDAO.TALKERS_COLLECTION, new ObjectId(talker.getId()));
-		dbObject.put("otherTalker", talkerRef);
+	//conversation answer/reply
+	protected void addAnswerOrReply(DBObject dbObject, String name, CommentBean answer) {
+		if (answer != null) {
+			DBRef answerRef = new DBRef(DBUtil.getDB(), 
+					CommentsDAO.CONVO_COMMENTS_COLLECTION, new ObjectId(answer.getId()));
+			dbObject.put(name, answerRef);
+		}
 	}
-	
-	// Answer & Reply actions
 	protected CommentBean parseAnswerOrReply(DBObject dbObject, String name) {
 		DBRef answerDBRef = (DBRef)dbObject.get(name);
 		if (answerDBRef == null) {
@@ -232,15 +226,14 @@ public abstract class AbstractAction implements Action {
     	return answer;
 	}
 	
-	protected void addAnswerOrReply(DBObject dbObject, String name, CommentBean answer) {
-		if (answer != null) {
-			DBRef answerRef = new DBRef(DBUtil.getDB(), 
-					CommentsDAO.CONVO_COMMENTS_COLLECTION, new ObjectId(answer.getId()));
-			dbObject.put(name, answerRef);
+	//thought/reply
+	protected void addProfileCommentOrReply(DBObject dbObject, String name, CommentBean comment) {
+		if (comment != null) {
+			DBRef commentRef = new DBRef(DBUtil.getDB(), 
+					CommentsDAO.PROFILE_COMMENTS_COLLECTION, new ObjectId(comment.getId()));
+			dbObject.put(name, commentRef);
 		}
 	}
-	
-	//Comments/Replies on Profiles
 	protected CommentBean parseProfileCommentOrReply(DBObject dbObject, String name) {
 		DBRef commentDBRef = (DBRef)dbObject.get(name);
 		if (commentDBRef == null) {
@@ -255,6 +248,7 @@ public abstract class AbstractAction implements Action {
 		comment.setFromTalker(parseTalker(commentDBObject, "from"));
 		
 		if (name.equalsIgnoreCase("profile_comment")) {
+			//for thought we also load replies
 			List<CommentBean> childrenList = new ArrayList<CommentBean>();
 			List<String> childrenIdsList = getStringList(commentDBObject, "children");
 			for (String childId : childrenIdsList) {
@@ -275,56 +269,48 @@ public abstract class AbstractAction implements Action {
 			}
 			comment.setChildren(childrenList);
 		}
-		
     	return comment;
 	}
 	
-	protected void addProfileCommentOrReply(DBObject dbObject, String name, CommentBean comment) {
-		if (comment != null) {
-			DBRef commentRef = new DBRef(DBUtil.getDB(), 
-					CommentsDAO.PROFILE_COMMENTS_COLLECTION, new ObjectId(comment.getId()));
-			dbObject.put(name, commentRef);
-		}
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
+	
+	/*------------ Methods for display ----------------- */
+	/**
+	 * Returns user info as html string (username, connection, etc.)
+	 * @param talker
+	 * @param authenticated Is current user logged in?
+	 * @return
+	 */
+	protected String fullUserName(TalkerBean talker, boolean authenticated) {
+		return CommonUtil.talkerToHTML(talker, authenticated);
 	}
 	
-	public ConversationBean getConvo() {
-		return convo;
+	/**
+	 * Returns convo topics as html string
+	 * @return
+	 */
+	protected String convoTopics() {
+		return CommonUtil.topicsToHTML(convo);
 	}
-
-	public void setConvo(ConversationBean convo) {
-		this.convo = convo;
+	
+	protected String topic() {
+		String topicURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", topic.getMainURL());
+		String topicLink = "<a href='"+topicURL+"'>"+topic.getTitle()+"</a>";
+		return topicLink;
 	}
+	
+	
+	public String getId() { return id; }
+	public void setId(String id) { this.id = id; }
+	
+	public ConversationBean getConvo() { return convo; }
+	public void setConvo(ConversationBean convo) { this.convo = convo; }
 
-	public TalkerBean getTalker() {
-		return talker;
-	}
+	public TalkerBean getTalker() { return talker; }
+	public void setTalker(TalkerBean talker) { this.talker = talker; }
 
-	public void setTalker(TalkerBean talker) {
-		this.talker = talker;
-	}
+	public Date getTime() { return time; }
+	public void setTime(Date time) { this.time = time; }
 
-	public Date getTime() {
-		return time;
-	}
-
-	public void setTime(Date time) {
-		this.time = time;
-	}
-
-	public ActionType getType() {
-		return type;
-	}
-
-	public void setType(ActionType type) {
-		this.type = type;
-	}
-
+	public ActionType getType() { return type; }
+	public void setType(ActionType type) { this.type = type; }
 }

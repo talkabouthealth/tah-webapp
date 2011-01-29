@@ -39,6 +39,7 @@ import models.TalkerBean;
 import models.TopicBean;
 import models.PrivacySetting.PrivacyType;
 import models.PrivacySetting.PrivacyValue;
+import play.Logger;
 import play.Play;
 import play.cache.Cache;
 import play.mvc.Http.Request;
@@ -54,6 +55,10 @@ import com.tah.im.model.IMAccount;
 
 import dao.TalkerDAO;
 
+/**
+ * Different utility methods used through application
+ *
+ */
 public class CommonUtil {
 	
 	private static final MessageDigest MD5_MESSAGE_DIGEST;
@@ -71,13 +76,15 @@ public class CommonUtil {
 			try {
 				md5hash = MD5_MESSAGE_DIGEST.digest(password.getBytes("UTF-8"));
 			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
+				Logger.error(e, "Password hashing");
 			}
 			MD5_MESSAGE_DIGEST.reset();
 		}
 		if (md5hash == null) {
 			return null;
 		}
+		
+		//convert to string
 		BigInteger bigInt = new BigInteger(1, md5hash);
 		String hashText = bigInt.toString(16);
 		//integer can remove leading zeroes - add them back
@@ -87,33 +94,31 @@ public class CommonUtil {
 		return hashText;
 	}
 	
-	//Send IM invitation through Dashboard application
-	public static void sendIMInvitation(IMAccountBean imAccount) {
-		IMNotifier imNotifier = IMNotifier.getInstance();
-		try {
-			imNotifier.addContact(imAccount.getService(), imAccount.getUserName());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
 	/**
-	 * Updates talker in DB and Cache
+	 * Updates given talker in DB and Cache
 	 */
 	public static void updateTalker(TalkerBean talker, Session session) {
 		TalkerDAO.updateTalker(talker);
 		CommonUtil.refreshCachedTalker(session);
 	}
-	
+	/**
+	 * Get cached logged-in talker instance or load a new one
+	 * @param session
+	 * @return
+	 */
 	public static TalkerBean loadCachedTalker(Session session) {
 		TalkerBean talker = Cache.get(session.getId() + "-talker", TalkerBean.class);
 	    if (talker == null) {
-	        // Cache miss
+	        //nothing in cache - load a new one
 	    	talker = refreshCachedTalker(session);
 	    }
 	    return talker;
 	}
-	
+	/**
+	 * Loads logged-in talker instance and updates cache
+	 * @param session
+	 * @return
+	 */
 	public static TalkerBean refreshCachedTalker(Session session) {
 		String sessionUserName = session.get("username");
 		if (sessionUserName == null) {
@@ -127,7 +132,14 @@ public class CommonUtil {
         return talker;
 	}
 	
-	public static Date parseDate(String dateString) {
+	//TODO: better parsing?
+	public static Date parseDate(int month, int day, int year) {
+		if (month == 0 || day == 0 || year == 0) {
+			return null;
+		}
+		return parseDate(month+"/"+day+"/"+year);
+	}
+	private static Date parseDate(String dateString) {
 		try {
 			DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 			Date date = dateFormat.parse(dateString);
@@ -137,20 +149,18 @@ public class CommonUtil {
 		return null;
 	}
 
-	public static Date parseDate(int month, int day, int year) {
-		if (month == 0 || day == 0 || year == 0) {
-			return null;
-		}
-		return parseDate(month+"/"+day+"/"+year);
-	}
-
+	/**
+	 * Parse given value as comma separated list of strings
+	 * @param otherItems
+	 * @param defaultValue Default value used in text input, doesn't include it in return list
+	 * @return
+	 */
 	public static List<String> parseCommaSerapatedList(String otherItems, String defaultValue) {
 		if (otherItems == null) {
 			return null;
 		}
 		
 		String[] otherArray = otherItems.split(",");
-		
 		//validate and add
 		List<String> itemsList = new ArrayList<String>();
 		for (String otherItem : otherArray) {
@@ -159,10 +169,13 @@ public class CommonUtil {
 				itemsList.add(otherItem);
 			}
 		}
-		
 		return itemsList;
 	}
 
+	/**
+	 * Generates unique verification code for emails
+	 * @return
+	 */
 	public static String generateVerifyCode() {
 		String verifyCode = null;
 		boolean unique = true;
@@ -174,7 +187,12 @@ public class CommonUtil {
 		return verifyCode;
 	}
 	
-	public static String generateDeactivatedUserName(boolean checkUnique) {
+	/**
+	 * Generates random username as 'member'+number
+	 * @param checkUnique return only unique name?
+	 * @return
+	 */
+	public static String generateRandomUserName(boolean checkUnique) {
 		String userName = null;
 		Random random = new Random();
 		while (true) {
@@ -188,18 +206,25 @@ public class CommonUtil {
 		return userName;
 	}
 	
-	//Generate url by Play! action and parameters
+	/**
+	 * Generate absolute url to some application page
+	 * @param action Play action in format "Controller.method", e.g. "ViewDispatcher.view"
+	 * @param paramName 
+	 * @param paramValue
+	 * @return
+	 */
 	public static String generateAbsoluteURL(String action, String paramName, Object paramValue) {
+		//prepare parameters if they exist
 		Map<String, Object> args = new HashMap<String, Object>(1);
 		if (paramName != null) {
 			args.put(paramName, paramValue);
 		}
 		
+		//Generate absolute url from given params
 		ActionDefinition actionDef = Router.reverse(action, args);
 		actionDef.absolute();
 		return actionDef.url;
 	}
-	
 	public static String generateAbsoluteURL(String action) {
 		return generateAbsoluteURL(action, null, null);
 	}
@@ -216,8 +241,12 @@ public class CommonUtil {
 	}
 	
 	
-	
-	//for displaying info
+	/**
+	 * Returns user info as html string (username, connection, etc.)
+	 * @param talker
+	 * @param authenticated Is current user logged in?
+	 * @return
+	 */
 	public static String talkerToHTML(TalkerBean talker, boolean authenticated) {
 		if (talker == null) {
 			return "";
@@ -243,6 +272,10 @@ public class CommonUtil {
 		return html.toString();
 	}
 	
+	/**
+	 * Returns convo topics as html string
+	 * @return
+	 */
 	public static String topicsToHTML(ConversationBean convo) {
 		StringBuilder topicsHTML = new StringBuilder();
 		
@@ -271,6 +304,7 @@ public class CommonUtil {
 		return topicsHTML.toString();
 	}
 	
+	//TODO: check display methods
 	//Result: member301 (Patient, Supporter)
 	public static String getAnonymousName(TalkerBean talker) {
 		Request req = Request.current();
@@ -282,7 +316,7 @@ public class CommonUtil {
 		
 		String anonymName = namesMap.get(talker.getUserName());
 		if (anonymName == null) {
-			anonymName = generateDeactivatedUserName(true);
+			anonymName = generateRandomUserName(true);
 			namesMap.put(talker.getUserName(), anonymName);
 		}
 		
@@ -303,6 +337,11 @@ public class CommonUtil {
 		return anonymName;
 	}
 
+	/**
+	 * Parses IM account information (service, username) from email
+	 * @param email
+	 * @return
+	 */
 	public static IMAccountBean parseIMAccount(String email) {
 		//default
 		String imService = "GoogleTalk";
@@ -324,39 +363,12 @@ public class CommonUtil {
 		
 		return new IMAccountBean(imUsername, imService);
 	}
-	
 	private static String removeService(String imUsername) {
 		int end = imUsername.indexOf("@");
 		if (end != -1) {
 			imUsername = imUsername.substring(0, end);
 		}
 		return imUsername;
-	}
-
-	public static void flagContent(String contentType, ConversationBean convo,
-			String reason, String content, TalkerBean talker) {
-		Map<String, String> vars = new HashMap<String, String>();
-    	vars.put("content_type", contentType);
-    	vars.put("content_link", CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL()));
-    	vars.put("reason", reason);
-		vars.put("content", content);
-		vars.put("name", talker.getUserName());
-		vars.put("email", talker.getEmail());
-		EmailUtil.sendEmail(EmailTemplate.FLAGGED, EmailUtil.SUPPORT_EMAIL, vars, null, false);
-	}
-
-	public static Set<PrivacySetting> getDefaultPrivacySettings() {
-		Set<PrivacySetting> privacySettings = new HashSet<PrivacySetting>();
-		for (PrivacyType type : PrivacyType.values()) {
-			PrivacyValue value = PrivacyValue.COMMUNITY;
-			if (type == PrivacyType.PROFILE_INFO || type == PrivacyType.HEALTH_INFO) {
-				value = PrivacyValue.PRIVATE;
-			}
-			
-			PrivacySetting privacySetting = new PrivacySetting(type, value);
-			privacySettings.add(privacySetting);
-		}
-		return privacySettings;
 	}
 	
 }

@@ -6,13 +6,15 @@ import models.actions.Action.ActionType;
 
 import com.mongodb.DBObject;
 
+/**
+ * Occurs when talker gives 'Thank You' to another talker
+ */
 public class GiveThanksAction extends AbstractAction {
 	
 	public GiveThanksAction(TalkerBean talker, TalkerBean otherTalker) {
 		super(ActionType.GIVE_THANKS, talker);
 		this.otherTalker = otherTalker;
 	}
-
 	public GiveThanksAction(DBObject dbObject) {
 		super(dbObject);
 	}

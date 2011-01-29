@@ -7,6 +7,9 @@ import models.ConversationBean;
 
 import com.mongodb.DBObject;
 
+/**
+ * Occurs when talker answers/replies to a conversation 
+ */
 public class AnswerConvoAction extends AbstractAction {
 	
 	public AnswerConvoAction(TalkerBean talker, ConversationBean convo, 

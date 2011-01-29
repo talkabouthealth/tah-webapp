@@ -11,6 +11,12 @@ import javax.imageio.ImageIO;
 
 public class ImageUtil {
 	
+	/**
+	 * Creates 100x100 thumbnail from given image
+	 * @param bsrc
+	 * @return
+	 * @throws IOException
+	 */
 	public static ByteArrayOutputStream createThumbnail(BufferedImage bsrc) throws IOException {
 		int width = 100;
 		int height = 100;

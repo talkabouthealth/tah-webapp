@@ -22,6 +22,7 @@ import util.EmailUtil.EmailTemplate;
 
 import models.ConversationBean;
 import models.ConversationBean.ConvoType;
+import models.IMAccountBean;
 import models.ServiceAccountBean;
 import models.TalkerBean;
 import models.ServiceAccountBean.ServiceType;
@@ -39,9 +40,16 @@ import dao.TalkerDAO;
 
 public class NotificationUtils {
 	
+	//Used for storing configuration for automatic/manual configuration
 	public static final String AUTOMATIC_NOTIFICATIONS_CONFIG = "AutomaticNotifications";
 	
-	//Send IM and Twitter notifications in separate thread
+	/**
+	 * Sends IM and Twitter notifications if automatic notification is ON.
+	 * Notifies about new question/chat and restart chat.
+	 * 
+	 * @param convoId
+	 * @param restartTalkerId If restarted chat - id of talker who restarted
+	 */
 	public static void sendAllNotifications(final String convoId, final String restartTalkerId) {
 		boolean automaticNotification = ConfigDAO.getBooleanConfig(AUTOMATIC_NOTIFICATIONS_CONFIG);
 		if (!automaticNotification) {
@@ -65,16 +73,13 @@ public class NotificationUtils {
 	 */
 	public static void sendAutomaticNotifications(String convoId, String restartTalkerId) {
 		OnlineUsersSingleton onlineUsersSingleton = OnlineUsersSingleton.getInstance();
-		//TODO: later - find 10 latest people who came online?
 		Map<String, UserInfo> onlineUsers = onlineUsersSingleton.getOnlineUserMap();
 		
 		Set<String> talkersForNotification = new HashSet<String>();
-		
 		//let's have support@talkabouthealth.com receive all notifications via IM
 		talkersForNotification.add(EmailUtil.SUPPORT_EMAIL);
 		
-//		talkersForNotification.add(TalkerDAO.getByUserName("osezno1").getId());
-		
+		//prepare talkers that are ok to notify
 		for (UserInfo userInfo : onlineUsers.values()) {
 			//notifications for last 3 hours and day
 			Calendar threeHoursBeforeNow = Calendar.getInstance();
@@ -144,6 +149,13 @@ public class NotificationUtils {
 		}
 	}
 	
+	/**
+	 * Sends email notification if talker turned on given email setting.
+	 * 
+	 * @param emailSetting Notification belongs to this email setting
+	 * @param talker Talker to notify
+	 * @param vars
+	 */
 	public static void sendEmailNotification(EmailSetting emailSetting, 
 			TalkerBean talker, Map<String, String> vars) {
 		if (talker.getEmailSettings().contains(emailSetting)) {
@@ -159,6 +171,18 @@ public class NotificationUtils {
 			else {
 				EmailUtil.sendEmail(emailSetting.getEmailTemplate(), talker.getEmail(), vars, null, true);
 			}
+		}
+	}
+	
+	/**
+	 * Send IM invitation for newly added IM account
+	 */
+	public static void sendIMInvitation(IMAccountBean imAccount) {
+		IMNotifier imNotifier = IMNotifier.getInstance();
+		try {
+			imNotifier.addContact(imAccount.getService(), imAccount.getUserName());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

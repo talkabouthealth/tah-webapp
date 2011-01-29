@@ -15,13 +15,15 @@ import models.TalkerBean;
 import models.ConversationBean;
 import models.actions.Action.ActionType;
 
+/**
+ * Occurs when talker starts/restarts a Live Chat or asks a Question
+ */
 public class StartConvoAction extends AbstractAction {
 	
 	public StartConvoAction(TalkerBean talker, ConversationBean convo, ActionType type) {
 		super(type, talker);
 		this.convo = convo;
 	}
-
 	public StartConvoAction(DBObject dbObject) {
 		super(dbObject);
 	}

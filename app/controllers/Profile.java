@@ -63,6 +63,7 @@ import util.CommonUtil;
 import util.EmailUtil;
 import util.EmailUtil.EmailTemplate;
 import util.ImageUtil;
+import util.NotificationUtils;
 import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.DiseaseDAO;
@@ -335,7 +336,7 @@ public class Profile extends Controller {
 		talker.getImAccounts().add(imAccount);
 		CommonUtil.updateTalker(talker, session);
 		
-		CommonUtil.sendIMInvitation(imAccount);
+		NotificationUtils.sendIMInvitation(imAccount);
 		
 		IMAccountBean _imAccount = imAccount;
 		render("tags/profile/profileNotificationIM.html", _imAccount);
@@ -631,7 +632,7 @@ public class Profile extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 		//change username to deactivated (randomly generated)
-		String newUserName = CommonUtil.generateDeactivatedUserName(true);
+		String newUserName = CommonUtil.generateRandomUserName(true);
 		talker.setOriginalUserName(talker.getUserName());
 		talker.setUserName(newUserName);
 		talker.setDeactivated(true);

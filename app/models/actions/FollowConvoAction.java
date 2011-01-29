@@ -6,13 +6,15 @@ import models.actions.Action.ActionType;
 
 import com.mongodb.DBObject;
 
+/**
+ * Occurs when talker follows a conversation 
+ */
 public class FollowConvoAction extends AbstractAction {
 	
 	public FollowConvoAction(TalkerBean talker, ConversationBean convo) {
 		super(ActionType.FOLLOW_CONVO, talker);
 		this.convo = convo;
 	}
-
 	public FollowConvoAction(DBObject dbObject) {
 		super(dbObject);
 	}

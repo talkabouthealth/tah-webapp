@@ -21,6 +21,8 @@ import models.ServiceAccountBean.ServiceType;
 
 import org.bson.types.ObjectId;
 
+import play.Logger;
+
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -40,9 +42,9 @@ public class DBUtil {
 		try {
 			mongo = new Mongo("localhost", 27017);
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			Logger.error(e, "DB connection");
 		} catch (MongoException e) {
-			e.printStackTrace();
+			Logger.error(e, "DB connection");
 		}
 	}
 	
@@ -60,8 +62,11 @@ public class DBUtil {
 		return coll.count() == 0;
 	}
 	
+	/* -------- Different utility methods to use in DAO layer ------------ */
 	
-	//-------- Different utility methods to use in DAO ------------
+	/**
+	 * Create DB reference for given id and collection
+	 */
 	public static DBRef createRef(String collectionName, String objectId) {
 		DBRef ref = new DBRef(getDB(), collectionName, new ObjectId(objectId));
 		return ref;
@@ -72,10 +77,8 @@ public class DBUtil {
 		if (talkerRef == null) {
 			return null;
 		}
-		
 		return parseTalker(talkerRef);
 	}
-	
 	public static TalkerBean parseTalker(DBRef talkerRef) {
 		DBObject talkerDBObject = talkerRef.fetch();
 		TalkerBean talker = new TalkerBean();
@@ -83,6 +86,7 @@ public class DBUtil {
 		return talker;
 	}
 	
+	//Get String, int or boolean value from given DBObject
 	public static String getString(DBObject dbObject, String name) {
 		Object value = dbObject.get(name);
 		if (value == null) {
@@ -90,7 +94,6 @@ public class DBUtil {
 		}
 		return value.toString();
 	}
-	
 	public static int getInt(DBObject dbObject, String name) {
 		Integer value = (Integer)dbObject.get(name);
 		if (value == null) {
@@ -98,7 +101,6 @@ public class DBUtil {
 		}
 		return value.intValue();
 	}
-	
 	public static boolean getBoolean(DBObject dbObject, String name) {
 		Boolean value = (Boolean)dbObject.get(name);
 		if (value == null) {
@@ -107,12 +109,11 @@ public class DBUtil {
 		return value.booleanValue();
 	}
 	
-	//generic?
+	//Useful methods for loading string list/set/map
 	public static List<String> getStringList(DBObject dbObject, String name) {
 		Set<String> stringSet = getSet(dbObject, name);
 		return new ArrayList<String>(stringSet);
 	}
-	
 	public static Set<String> getStringSet(DBObject dbObject, String name) {
 		return getSet(dbObject, name);
 	}
@@ -135,7 +136,16 @@ public class DBUtil {
 		return map;
 	}
 	
-	//--------- Using DBModel -----------
+	/* ----------------- Use for DBModel instances ---------------- */
+	
+	/**
+	 * Parse set of objects from DB
+	 * 
+	 * @param <T> Any class thate implements DBModel interface
+	 * @param clazz Class of objects to load
+	 * @param dbObject Source DBObject
+	 * @param name Name of collection in the DB
+	 */
 	public static <T extends DBModel> Set<T> parseSet(Class<T> clazz, DBObject dbObject, String name) {
 		Collection<DBObject> value = (Collection<DBObject>)dbObject.get(name);
 		if (value == null) {
@@ -160,6 +170,12 @@ public class DBUtil {
 		return valueSet;
 	}
 	
+	/**
+	 * Returns set of objects as set of DBObjects
+	 * @param <T>
+	 * @param valueSet
+	 * @return
+	 */
 	public static <T extends DBModel> Set<DBObject> setToDB(Set<T> valueSet) {
 		Set<DBObject> dbSet = new HashSet<DBObject>();
 		if (valueSet != null) {

@@ -202,7 +202,7 @@ public class Conversations extends Controller {
     	ConversationBean convo = ConversationDAO.getById(convoId);
     	notFoundIfNull(convo);
     	
-		CommonUtil.flagContent("Conversation/Question", convo, reason, convo.getTopic(), talker);
+    	EmailUtil.flagContent("Conversation/Question", convo, reason, convo.getTopic(), talker);
     }
     
 	/**
@@ -365,7 +365,7 @@ public class Conversations extends Controller {
     	notFoundIfNull(answer);
     	ConversationBean convo = ConversationDAO.getById(answer.getConvoId());
     	
-		CommonUtil.flagContent("Answer/Reply", convo, reason, answer.getText(), talker);
+    	EmailUtil.flagContent("Answer/Reply", convo, reason, answer.getText(), talker);
     }
     
     /**
@@ -409,7 +409,7 @@ public class Conversations extends Controller {
     		//But also send an email to "support@talkabouthealth.com" add a comment
     		if (answer.isNotHelpful()) {
     			answer.setNotHelpful(false);
-        		CommonUtil.flagContent("Answer", convo, "User voted up for this 'Not Helpful' answer", answer.getText(), talker);
+    			EmailUtil.flagContent("Answer", convo, "User voted up for this 'Not Helpful' answer", answer.getText(), talker);
     		}
     	}
     	

@@ -18,6 +18,7 @@ import oauth.signpost.basic.DefaultOAuthConsumer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 
+import logic.TalkerLogic;
 import models.CommentBean;
 import models.IMAccountBean;
 import models.ServiceAccountBean;
@@ -164,7 +165,7 @@ public class ApplicationUpdatesJob extends Job {
 			String hashedPassword = CommonUtil.hashPassword(admin.getPassword());
 			admin.setPassword(hashedPassword);
 			
-			admin.setPrivacySettings(CommonUtil.getDefaultPrivacySettings());
+			admin.setPrivacySettings(TalkerLogic.getDefaultPrivacySettings());
 	        
 	        //By default all email notifications are checked
 	        EnumSet<EmailSetting> emailSettings = EnumSet.allOf(EmailSetting.class);

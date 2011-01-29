@@ -7,6 +7,9 @@ import models.actions.Action.ActionType;
 
 import com.mongodb.DBObject;
 
+/**
+ * Occurs when talker votes for an answer
+ */
 public class AnswerVotedAction extends AbstractAction {
 	
 	public AnswerVotedAction(TalkerBean talker, ConversationBean convo, 

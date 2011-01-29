@@ -20,6 +20,7 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.PropertyConfigurator;
 
+import logic.TalkerLogic;
 import models.EmailBean;
 import models.IMAccountBean;
 import models.PrivacySetting;
@@ -280,7 +281,7 @@ public class Application extends Controller {
         talker.setNtime(1);
         talker.setCtype(TalkerBean.CONVERSATIONS_TYPES_ARRAY);
         
-		talker.setPrivacySettings(CommonUtil.getDefaultPrivacySettings());
+		talker.setPrivacySettings(TalkerLogic.getDefaultPrivacySettings());
 		
         //By default all email notifications are checked
         EnumSet<EmailSetting> emailSettings = EnumSet.allOf(EmailSetting.class);

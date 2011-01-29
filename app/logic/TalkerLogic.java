@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,11 +29,14 @@ import util.TwitterUtil;
 import models.CommentBean;
 import models.ConversationBean;
 import models.HealthItemBean;
+import models.PrivacySetting;
 import models.ServiceAccountBean;
 import models.TalkerBean;
 import models.TalkerDiseaseBean;
 import models.TopicBean;
 import models.ConversationBean.ConvoType;
+import models.PrivacySetting.PrivacyType;
+import models.PrivacySetting.PrivacyValue;
 import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean.EmailSetting;
 import models.actions.Action;
@@ -528,5 +532,20 @@ public class TalkerLogic {
 		}
 		
 		return comment;
+	}
+	
+	
+	public static Set<PrivacySetting> getDefaultPrivacySettings() {
+		Set<PrivacySetting> privacySettings = new HashSet<PrivacySetting>();
+		for (PrivacyType type : PrivacyType.values()) {
+			PrivacyValue value = PrivacyValue.COMMUNITY;
+			if (type == PrivacyType.PROFILE_INFO || type == PrivacyType.HEALTH_INFO) {
+				value = PrivacyValue.PRIVATE;
+			}
+			
+			PrivacySetting privacySetting = new PrivacySetting(type, value);
+			privacySettings.add(privacySetting);
+		}
+		return privacySettings;
 	}
 }

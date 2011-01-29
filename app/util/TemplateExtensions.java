@@ -11,7 +11,7 @@ import play.templates.JavaExtensions;
 
 /**
  * Extensions that can be used in Play! templates.
- * Must extend "JavaExtensions" class, so Play! could find them on start-up. 
+ * Must extend "JavaExtensions" class, so Play! could find it on start-up. 
  *
  */
 public class TemplateExtensions extends JavaExtensions {
@@ -99,6 +99,14 @@ public class TemplateExtensions extends JavaExtensions {
 		}
 	}
 	
+	/**
+	 * Checks if talker allows to show particular info to currentTalker
+	 * 
+	 * @param talker 
+	 * @param privacyType Information belongs to this privacy type
+	 * @param currentTalker Logged in talker or 'null'
+	 * @return
+	 */
 	public static boolean isAllowed(TalkerBean talker, PrivacyType privacyType, TalkerBean currentTalker) {
 		PrivacyValue privacyValue = talker.getPrivacyValue(privacyType);
 		

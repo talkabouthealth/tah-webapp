@@ -35,52 +35,38 @@ public class PreloadAction implements Action {
 			setConvo(convo);
 		}
 	}
+	
+	/**
+	 * Loads full action information
+	 * @return
+	 */
+	public Action getFullAction() {
+		Action action = ActionDAO.actionFromDB(dbObject);
+		return action;
+	}
+	
 
 	@Override
 	public DBObject toDBObject() {
 		return null;
 	}
-
-	@Override
-	public Date getTime() {
-		return null;
-	}
-
-	@Override
-	public ActionType getType() {
-		return type;
-	}
-
-	@Override
-	public ConversationBean getConvo() {
-		return convo;
-	}
 	
 	@Override
-	public TalkerBean getTalker() {
-		return null;
-	}
+	public String getId() { return id; }
+	public void setId(String id) { this.id = id; }
 
 	@Override
-	public String getId() {
-		return id;
-	}
+	public Date getTime() { return null; }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+	@Override
+	public ActionType getType() { return type; }
+	public void setType(ActionType type) { this.type = type; }
 
-	public void setConvo(ConversationBean convo) {
-		this.convo = convo;
-	}
+	@Override
+	public ConversationBean getConvo() { return convo; }
+	public void setConvo(ConversationBean convo) { this.convo = convo; }
 	
-	public void setType(ActionType type) {
-		this.type = type;
-	}
-
-	public Action getFullAction() {
-		Action action = ActionDAO.actionFromDB(dbObject);
-		return action;
-	}
+	@Override
+	public TalkerBean getTalker() { return null; }
 
 }

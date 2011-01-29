@@ -6,6 +6,9 @@ import models.actions.Action.ActionType;
 
 import com.mongodb.DBObject;
 
+/**
+ * Occurs when talker writes thought/reply for another talker
+ */
 public class PersonalProfileCommentAction extends AbstractAction {
 	
 	public PersonalProfileCommentAction(TalkerBean talker, TalkerBean profileTalker, 
@@ -15,7 +18,6 @@ public class PersonalProfileCommentAction extends AbstractAction {
 		this.profileReply = profileReply;
 		this.otherTalker = profileTalker;
 	}
-
 	public PersonalProfileCommentAction(DBObject dbObject) {
 		super(dbObject);
 	}
@@ -27,12 +29,7 @@ public class PersonalProfileCommentAction extends AbstractAction {
 	public String toHTML(boolean authenticated) {
 		StringBuilder result = new StringBuilder();
 		result.append(fullUserName(talker, authenticated));
-		//if (type == ActionType.PERSONAL_PROFILE_COMMENT) {
-			result.append(" left a comment for ");
-//		}
-//		else if (type == ActionType.PERSONAL_PROFILE_REPLY) {
-//			result.append(" replied to ");
-//		}
+		result.append(" left a comment for ");
 		result.append(fullUserName(otherTalker, authenticated));
 		
 		return result.toString();
