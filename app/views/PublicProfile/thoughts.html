@@ -7,6 +7,8 @@
 		.comreply { margin-bottom: 2px }
 		.comtext { font-size: 14px }
 		.comreplytxt { font-size: 14px }
+		
+		.ajaxLoading { padding-right: 5px }
 	</style>
 	
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
@@ -37,11 +39,11 @@
    	   	   		alert('Please input comment');
    	   	   		return;
    	   		}
-
+			
    	   		commentText = linkify(commentText);
-   	   	
-   			$("#replytext"+parentId).val("");
 
+   	   		$("#saveThoughtImage"+parentId).show();
+   			$("#replytext"+parentId).val("");
    			$.post("@{Actions.saveProfileComment()}", 
   				{ profileTalkerId: '${talker.id}', parentId: parentId, text: commentText},
   				function(html) {
@@ -58,6 +60,7 @@
   						//add as last element in subtree
   						$("#reply"+parentId).before($(html));
   					}
+  					$("#saveThoughtImage"+parentId).hide();
   				}
   			);
    			
@@ -107,6 +110,7 @@
 		                      <div class="comsearch">
 		                        <textarea id="replytext" class="edititinputx" style="width:490px" cols="4" rows="3" ></textarea>
 		                      </div>
+		                      <div id="saveThoughtImage" class="ajaxLoading" style="float: right; margin-right: 40px;"></div>
 		                      <input type="submit" src="/public/images/postcomments.jpg" value=" " class="postcomments" 
 		                      	onclick="return saveProfileComment('');"/>
 		                      #{if firstTimeComment}

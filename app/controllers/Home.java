@@ -57,6 +57,7 @@ public class Home extends Controller {
 		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
 		
 //		Logger.error("Home 2");
+		//TODO: convo&community together = problems for adding comments
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
     	

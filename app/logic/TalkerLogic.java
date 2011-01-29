@@ -534,7 +534,10 @@ public class TalkerLogic {
 		return comment;
 	}
 	
-	
+	/**
+	 * The Personal Info and Health Info should be private by default. 
+	 * All other items should be set to viewable by the community by default.
+	 */
 	public static Set<PrivacySetting> getDefaultPrivacySettings() {
 		Set<PrivacySetting> privacySettings = new HashSet<PrivacySetting>();
 		for (PrivacyType type : PrivacyType.values()) {

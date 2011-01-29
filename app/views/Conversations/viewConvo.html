@@ -197,6 +197,7 @@
    		function saveAnswerOrReply(parentId) {
    	   		var commentText = $("#replytext"+parentId).val();
    			$("#replytext"+parentId).val("");
+   			$("#saveAnswerImage"+parentId).show();
    			commentText = linkify(commentText);
 
    			$.post("@{Conversations.saveAnswerOrReply()}", 
@@ -204,6 +205,7 @@
   				function(html) {
   	  				$("#firstcommentmessage").hide();
   					$("#replyform"+parentId).before($(html));
+  					$("#saveAnswerImage"+parentId).hide();
 
   					//user can post only one answer per convo
   					if (parentId === '') {
@@ -585,6 +587,8 @@
 											onclick="if (this.value === 'Add New Answer') this.value='';">Add New Answer</textarea><br />
 										<input type="submit" onclick="return saveAnswerOrReply('');" 
 											src="/public/images/addcomments.jpg" class="addcomments" value=" " />
+										<div id="saveAnswerImage" class="ajaxLoading" 
+											style="float: right; margin-right: 15px; margin-top: 20px;"></div>
 									</div>
 									<div id="noAnswerText" style="display: ${!userHasAnswer ? 'none' : 'block'};">
 										Only one answer per conversation per user. You may edit your answer though.

@@ -1625,7 +1625,7 @@ a.footerlink:hover {
 	width:auto;
 	color:#0286bc;
 	font-size:12px;
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 }
 .sharicons a {
 	color:#0286bc;
@@ -2076,6 +2076,9 @@ As Community page copied from Home page . So this is using most of home page css
 	padding-top:25px;
 	padding-bottom:7px;
 	padding-left:25px;
+}
+.replytommentbax {
+	width: 420px;
 }
 jointxttopza {
 	text-decoration:underline;
@@ -3535,7 +3538,7 @@ a.popup_black10s:hover {
 }
 .comsearch {
 	float:left;
-	width:525px;
+	width:510px;
 }
 .comsearchz {
 	float:left;
@@ -5756,7 +5759,7 @@ text-decoration:underline;
 {
 clear:both;
 padding-top:14px;
-padding-left:10px;
+padding-left:15px;
 }
 .tahfblikepic
 {

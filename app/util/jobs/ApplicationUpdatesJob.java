@@ -21,6 +21,9 @@ import org.apache.lucene.document.Field;
 import logic.TalkerLogic;
 import models.CommentBean;
 import models.IMAccountBean;
+import models.PrivacySetting;
+import models.PrivacySetting.PrivacyType;
+import models.PrivacySetting.PrivacyValue;
 import models.ServiceAccountBean;
 import models.TalkerBean;
 import models.ConversationBean;
@@ -68,22 +71,12 @@ public class ApplicationUpdatesJob extends Job {
 		 */
 		
 //			2011-01-21 08:35:35,279 INFO  ~ ThorAssociates: http://www.facebook.com/profile.php?id=113344035364476
-//		ThorAssociates - not for sure, will check with her
-			
+		
 		//Relation between old and correct ids;
 		Map<String, String> fbMap = new HashMap<String, String>();
-		fbMap.put("139572626057500", "669580190");
-		fbMap.put("105526899479797", "758924921");
-		fbMap.put("104880066216147", "639613153");
-		fbMap.put("111563985540297", "1603500081");
-		fbMap.put("112111905481230", "934807");
-		fbMap.put("108424279189115", "542029051");
+		fbMap.put("113344035364476", "629943601");
 		
 		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
-			if (talker.getUserName().equals("Bentia")) {
-				TalkerDAO.updateTalkerImage(talker, null);
-			}
-			
 			ServiceAccountBean fbAccount = talker.serviceAccountByType(ServiceType.FACEBOOK);
 			if (fbAccount != null) {
 				String correctId = fbMap.get(fbAccount.getId());
@@ -92,6 +85,34 @@ public class ApplicationUpdatesJob extends Job {
 					TalkerDAO.updateTalker(talker);
 				}
 			}
+			
+//			ACTIVITY_STREAM("Activity Stream"),
+//			THOUGHTS("Thoughts"),
+//			ANSWERS("Answers"),
+//			FOLLOWERS("Followers"),
+//			FOLLOWING("Following"),
+//			THANKYOUS("Thank you's"),
+//			QUESTIONS_STARTED("Questions Asked"),
+//			CHATS_JOINED("Chats Joined"),
+//			QUESTIONS_FOLLOWING("Questions Following"),
+//			TOPICS_FOLLOWING("Topics Following");
+			
+			
+//			- "Thoughts"
+//			- Answers
+//			- Chats Joined
+//			- Professional Info - for new users let's make this by default viewable by the community.
+			Set<PrivacySetting> privacySettings = talker.getPrivacySettings();
+			for (PrivacySetting privacySetting : privacySettings) {
+				if (privacySetting.getType() == PrivacyType.PROFESSIONAL_INFO
+						|| privacySetting.getType() == PrivacyType.THOUGHTS
+						|| privacySetting.getType() == PrivacyType.ANSWERS
+						|| privacySetting.getType() == PrivacyType.TOPICS_FOLLOWING) {
+					privacySetting.setValue(PrivacyValue.COMMUNITY);
+				}
+			}
+			talker.setPrivacySettings(privacySettings);
+			TalkerDAO.updateTalker(talker);
 		}
 		
 		//Fields data for Edit Profile

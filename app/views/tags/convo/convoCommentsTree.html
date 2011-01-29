@@ -130,6 +130,7 @@
 								#{convo/convoCommentsTree commentsList: comment.children, level: (_level+1), talker: _talker /}
 								#{if session.username }
 									<div id="replyform${comment.id}" style="clear:both">
+										<div id="saveAnswerImage${comment.id}" class="ajaxLoading" ></div>
 					                    <div class="repcommbox22">
 						                    <textarea id="replytext${comment.id}" type="text" class="repcominput" ></textarea>
 						                    <div class="repcommstextbox">

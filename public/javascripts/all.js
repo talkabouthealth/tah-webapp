@@ -227,12 +227,14 @@ function sendProfileComment() {
 //saveProfileComment(String profileTalkerId, String parentId, String text)
 function saveProfileComment(parentId) {
 	var commentText = $("#replytext"+parentId).val();
+	$("#saveThoughtImage"+parentId).show();
 	$("#replytext"+parentId).val("");
 
 	$.post("/actions/saveProfileComment", 
 		{ parentId: parentId, text: commentText},
 		function(html) {
 			$("#firstcommentmessage").hide();
+			$("#saveThoughtImage"+parentId).hide();
 			//put comment in the tree
 			if (parentId == '') {
 				//add as first element in the top
