@@ -438,12 +438,12 @@
 			<b>${talker.name}</b> has chosen to have all or some of their profile information private or only viewable by the community.</div>
 	#{/if}
 #{/if}
-#{elseif}
+#{else}
 	#{if !talker.isAllowed(models.PrivacySetting.PrivacyType.USERNAME, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_IMAGE, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_INFO, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.HEALTH_INFO, currentTalker) }
 		<div style="padding-top: 50px; clear: both;">
 			<b>${talker.name}</b> has chosen to have all or some of their profile information private or only viewable by the community.</div>
 	#{/if}
-#{/elseif}
+#{/else}
                     
                   </div>
                   <!--profileCatant-->

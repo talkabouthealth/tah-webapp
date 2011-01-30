@@ -229,7 +229,8 @@ public class PublicProfile extends Controller {
 		render(talker, currentTalker, talkerDisease, recommendedTopics);
 	}
 	
-	public static void recommendedTopicsAjaxLoad(String afterId) {
+	public static void recommendedTopicsAjaxLoad(String afterId) throws Throwable {
+		Secure.checkAccess();
     	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
     	TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(_talker.getId());
     	

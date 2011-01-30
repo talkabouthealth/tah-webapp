@@ -100,8 +100,11 @@ public class ApplicationUpdatesJob extends Job {
 				}
 			}
 			talker.setPrivacySettings(privacySettings);
+//			
+//			talker.setAnonymousName(CommonUtil.generateRandomUserName(true));
 			
-			talker.setAnonymousName(CommonUtil.generateRandomUserName(true));
+			talker.getHiddenHelps().add("notificationAccounts");
+			
 			TalkerDAO.updateTalker(talker);
 		}
 		
