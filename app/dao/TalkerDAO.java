@@ -52,6 +52,7 @@ public class TalkerDAO {
 		
 		DBObject talkerDBObject = BasicDBObjectBuilder.start()
 				.add("uname", talker.getUserName())
+				.add("anon_name", talker.getAnonymousName())
 				.add("pass", talker.getPassword())
 				.add("email", talker.getEmail())
 				.add("verify_code", talker.getVerifyCode())
@@ -86,6 +87,7 @@ public class TalkerDAO {
 		
 		DBObject talkerObject = BasicDBObjectBuilder.start()
 			.add("uname", talker.getUserName())
+			.add("anon_name", talker.getAnonymousName())
 			.add("pass", talker.getPassword())
 			.add("email", talker.getEmail())
 			.add("verify_code", talker.getVerifyCode())
@@ -158,13 +160,48 @@ public class TalkerDAO {
 	public static TalkerBean getByUserName(String userName) {
 		return getByField("uname", userName);
 	}
-	
 	public static TalkerBean getById(String talkerId) {
 		return getByField("_id", new ObjectId(talkerId));
 	}
-	
 	public static TalkerBean getByOriginalUsername(String userName) {
 		return getByField("orig_uname", userName);
+	}
+	/**
+	 * Loads a talker by particular field
+	 */
+	private static TalkerBean getByField(String fieldName, Object fieldValue) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		
+		DBObject query = new BasicDBObject(fieldName, fieldValue);
+		DBObject talkerDBObject = talkersColl.findOne(query);
+		
+		if (talkerDBObject == null) {
+			return null;
+		}
+		else {
+			TalkerBean talker = new TalkerBean();
+			talker.parseFromDB(talkerDBObject);
+			return talker;
+		}
+	}
+	
+	/**
+	 * Get by userName or anonymous name
+	 */
+	public static TalkerBean getByURLName(String urlName) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		
+		DBObject usernameQuery = new BasicDBObject("uname", urlName);
+		DBObject anonymousQuery = new BasicDBObject("anon_name", urlName);
+		DBObject query = new BasicDBObject("$or", Arrays.asList(usernameQuery, anonymousQuery));
+		DBObject talkerDBObject = talkersColl.findOne(query);
+		
+		TalkerBean talker = null;
+		if (talkerDBObject != null) {
+			talker = new TalkerBean();
+			talker.parseFromDB(talkerDBObject);
+		}
+		return talker;
 	}
 	
 	/**
@@ -215,25 +252,6 @@ public class TalkerDAO {
 		}
 		
 		return talker;
-	}
-	
-	/**
-	 * Loads a talker by particular field
-	 */
-	private static TalkerBean getByField(String fieldName, Object fieldValue) {
-		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
-		
-		DBObject query = new BasicDBObject(fieldName, fieldValue);
-		DBObject talkerDBObject = talkersColl.findOne(query);
-		
-		if (talkerDBObject == null) {
-			return null;
-		}
-		else {
-			TalkerBean talker = new TalkerBean();
-			talker.parseFromDB(talkerDBObject);
-			return talker;
-		}
 	}
 	
 	/**
@@ -341,9 +359,12 @@ public class TalkerDAO {
 		DBObject originalUsernameQuery = BasicDBObjectBuilder.start()
 			.add("orig_uname", userName)
 			.get();
+		DBObject anonNameQuery = BasicDBObjectBuilder.start()
+			.add("anon_name", userName)
+			.get();
 		
 		DBObject query = new BasicDBObject("$or", 
-				Arrays.asList(usernameQuery, originalUsernameQuery)
+				Arrays.asList(usernameQuery, originalUsernameQuery, anonNameQuery)
 			);
 		
 		DBObject talkerDBObject = talkersColl.findOne(query);

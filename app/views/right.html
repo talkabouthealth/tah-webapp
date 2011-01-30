@@ -110,6 +110,48 @@
 	     <div class="topicborder"></div>
 	   </div>
  	#{/if}
+ 	
+ 	#{if currentPage?.equals("home") && showNotificationAccounts }
+ 		<div id="notificationAccountsHelp" class="topipsts">
+		   <div class="close" style="padding-top: 7px; padding-right: 7px;">
+		   	<img src="/public/images/close.jpg" alt="Close" onclick="return hideHelpInfo('notificationAccounts', true);" />
+		   </div>
+           <div class="mtrighttxt1">Notify me of questions and chats relevant to me.</div>
+           <div class="topixtext">
+             <div class="tellustext">
+             	Select a service:<br/>
+             	<input type="radio" name="notifyType" class="notifyType" 
+             		${ talker.im?.equalsIgnoreCase("GoogleTalk") ? 'checked="true"' : '' } 
+             		value="GoogleTalk" /> Google chat (murrayjones@gmail.com)<br/>
+             	<input type="radio" name="notifyType" class="notifyType"
+             		${ talker.im?.equalsIgnoreCase("WindowLive") ? 'checked="true"' : '' }  
+             		value="WindowLive" /> Windows live chat (murrayjones@live.com)<br/>
+             	<input type="radio" name="notifyType" class="notifyType"
+             		${ talker.im?.equalsIgnoreCase("YahooIM") ? 'checked="true"' : '' }  
+             		value="YahooIM" /> Yahoo Messenger (murrayjones@yahoo.com)<br/>
+             	<input type="radio" name="notifyType" class="notifyType"
+             		${ talker.im?.equalsIgnoreCase("Twitter") ? 'checked="true"' : '' } 
+             		value="Twitter" /> Twitter (@murrayjones)<br/>
+             	
+             	<div id="notifyUsernamePanel" style="padding-top: 12px;">
+	             	Username: <input id="notificationUsername"  type="text" value="${talker.imUsername}" />
+	             	<br/>
+	             	<span class="textgreylight12" style="line-height: 14px;">Just the username, 
+									  		no need for the "@gmail.com" or "@yahoo.com" (i.e. joesmith)</span>
+				</div>
+             	
+             	<div style="padding-top: 25px;">
+             		<input id="addNotificationAccount"  type="submit" style="margin: -5px 10px 0px 0px;"
+             			value=" " src="/public/images/addbtn.jpg" class="addbtn"/>
+             		<a href="#" onclick="return hideHelpInfo('notificationAccounts', true);">No thanks.</a>
+             	</div>
+             </div>
+           </div>
+           <!--topixtext-->
+	     <div class="mtop"></div>
+	     <div class="topicborder"></div>
+	   </div>
+    #{/if}
     
     *{
     #{if session.username.equals(talker.userName) && talker.nextStepMessage }
@@ -313,8 +355,6 @@
   #{popups/startConvo page: currentPage /}
   
   #{if talker}
-  	#{popups/imSettings talker: talker /}
-  	
   	#{set twitterAccount = talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
 			
 	#{ popups/shareEmail shareType: 'TalkAboutHealth', userName: talker?.userName /}	

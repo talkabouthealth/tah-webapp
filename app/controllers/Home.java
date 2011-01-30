@@ -62,7 +62,7 @@ public class Home extends Controller {
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
     	
 //    	Logger.error("Home 3");
-    	boolean showIMPopup = prepareIMPopup(session, talker);
+    	boolean showNotificationAccounts = prepareNotificationPanel(session, talker);
 		TalkerLogic.preloadTalkerInfo(talker);
 		
 //		Logger.error("Home 4");
@@ -137,26 +137,16 @@ public class Home extends Controller {
 //		Logger.error("Home 5");
 		
 		render("@newhome", talker, 
-				liveConversations, convoFeed, communityFeed, showIMPopup,
+				liveConversations, convoFeed, communityFeed, showNotificationAccounts,
 				recommendedTopics, similarMembers, experts, recommendedConvos);
     }
     
-    private static boolean prepareIMPopup(Session session, TalkerBean talker) {
-    	boolean hasNoIMAccounts = (talker.getImAccounts() == null || talker.getImAccounts().size() == 0);
-		//not show if twitter account or fb account has 'notify' option
-		ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
-		if (twitterAccount != null && twitterAccount.isTrue("NOTIFY")) {
-			hasNoIMAccounts = false;
-		}
-		ServiceAccountBean fbAccount = talker.serviceAccountByType(ServiceType.FACEBOOK);
-		if (fbAccount != null && fbAccount.isTrue("NOTIFY")) {
-			hasNoIMAccounts = false;
-		}
-		
-		boolean showIMPopup = (session.get("justregistered") != null && hasNoIMAccounts && !talker.isAdmin());
-		if (showIMPopup) {
+    private static boolean prepareNotificationPanel(Session session, TalkerBean talker) {
+		boolean showNotificationAccounts = (!talker.getHiddenHelps().contains("notificationAccounts") && !talker.isAdmin());
+		if (showNotificationAccounts) {
 			//If user signs up via twitter, populate the Username field with the twitter username 
 			//and automatically have the Twitter option checked
+			ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
 			if (twitterAccount != null) {
 				talker.setIm("Twitter");
 				talker.setImUsername(twitterAccount.getUserName());
@@ -169,9 +159,8 @@ public class Home extends Controller {
 				talker.setImUsername(imInfo.getUserName());
 			}
 		}
-		session.remove("justregistered");
 		
-		return showIMPopup;
+		return showNotificationAccounts;
 	}
 
 	public static void conversationFeed() {

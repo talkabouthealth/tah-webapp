@@ -59,7 +59,7 @@ public class NotificationUtils {
 		Executors.newSingleThreadExecutor().execute(new Runnable() {
 			@Override
 			public void run() {
-				NotificationUtils.sendAutomaticNotifications(convoId, restartTalkerId);
+				NotificationUtils.sendIMNotifications(convoId, restartTalkerId);
 				NotificationUtils.sendTwitterNotifications(convoId, restartTalkerId);
 			}
 		});
@@ -71,7 +71,7 @@ public class NotificationUtils {
 	 * - don't notify more than 1x every 3 hours
 	 * - don't notify more the 3x per day
 	 */
-	public static void sendAutomaticNotifications(String convoId, String restartTalkerId) {
+	public static void sendIMNotifications(String convoId, String restartTalkerId) {
 		OnlineUsersSingleton onlineUsersSingleton = OnlineUsersSingleton.getInstance();
 		Map<String, UserInfo> onlineUsers = onlineUsersSingleton.getOnlineUserMap();
 		

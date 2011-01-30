@@ -90,6 +90,7 @@ public class TalkerBean implements Serializable {
 	
 	private String id;
 	@Required @Match(ValidateData.USER_REGEX) private String userName;
+	private String anonymousName;
 	@Required private String password;
 	private String confirmPassword;
 	@Required @Email private String email;
@@ -209,6 +210,7 @@ public class TalkerBean implements Serializable {
 	public void parseBasicFromDB(DBObject talkerDBObject) {
 		setId(talkerDBObject.get("_id").toString());
 		setUserName((String)talkerDBObject.get("uname"));
+		setAnonymousName((String)talkerDBObject.get("anon_name"));
 		setPassword((String)talkerDBObject.get("pass"));
 		setEmail((String)talkerDBObject.get("email"));
 		setEmails(parseSet(EmailBean.class, talkerDBObject, "emails"));
@@ -287,13 +289,7 @@ public class TalkerBean implements Serializable {
 				
 				DBObject fromTalkerDBObject = ((DBRef)thankYouDBObject.get("from")).fetch();
 				TalkerBean fromTalker = new TalkerBean();
-				fromTalker.setId(fromTalkerDBObject.get("_id").toString());
-				fromTalker.setUserName((String)fromTalkerDBObject.get("uname"));
-				fromTalker.setConnection((String)fromTalkerDBObject.get("connection"));
-				fromTalker.setConnectionVerified(getBoolean(fromTalkerDBObject, "connection_verified")); 
-				Collection<DBObject> thankYousCollection = (Collection<DBObject>)fromTalkerDBObject.get("thankyous");
-				fromTalker.setNumOfThankYous(thankYousCollection == null ? 0 : thankYousCollection.size());
-				
+				fromTalker.parseBasicFromDB(fromTalkerDBObject);
 				thankYouBean.setFrom(fromTalker.getId());
 				thankYouBean.setFromTalker(fromTalker);
 				
@@ -608,6 +604,9 @@ public class TalkerBean implements Serializable {
 	// ---- Getters & Setters -------
 	public String getUserName() { return userName; }
 	public void setUserName(String userName) { this.userName = userName; }
+	
+	public String getAnonymousName() { return anonymousName; }
+	public void setAnonymousName(String anonymousName) { this.anonymousName = anonymousName; }
 	
 	public String getPassword() { return password; }
 	public void setPassword(String password) { this.password = password; }

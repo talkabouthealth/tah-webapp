@@ -75,13 +75,8 @@ public abstract class AbstractAction implements Action {
 		setId(dbObject.get("_id").toString());
 		
 		DBObject talkerDBObject = ((DBRef)dbObject.get("uid")).fetch();
-		String talkerId = talkerDBObject.get("_id").toString();
-		TalkerBean talker = new TalkerBean(talkerId);
-		talker.setUserName((String)talkerDBObject.get("uname"));
-		talker.setSuspended(getBoolean(talkerDBObject, "suspended"));
-		talker.setConnection((String)talkerDBObject.get("connection"));
-		talker.setConnectionVerified(DBUtil.getBoolean(talkerDBObject, "connection_verified"));
-		talker.setPrivacySettings(parseSet(PrivacySetting.class, talkerDBObject, "privacy_settings"));
+		TalkerBean talker = new TalkerBean();
+		talker.parseBasicFromDB(talkerDBObject);
 		setTalker(talker);
 		
 		setTime((Date)dbObject.get("time"));
@@ -191,13 +186,8 @@ public abstract class AbstractAction implements Action {
 		DBRef otherTalkerDBRef = (DBRef)dbObject.get("otherTalker");
 		if (otherTalkerDBRef != null) {
 			DBObject talkerDBObject = otherTalkerDBRef.fetch();
-			String talkerId = talkerDBObject.get("_id").toString();
-			
-			TalkerBean talker = new TalkerBean(talkerId);
-			talker.setUserName((String)talkerDBObject.get("uname"));
-			talker.setConnection((String)talkerDBObject.get("connection"));
-			talker.setConnectionVerified(DBUtil.getBoolean(talkerDBObject, "connection_verified"));
-			talker.setPrivacySettings(parseSet(PrivacySetting.class, talkerDBObject, "privacy_settings"));
+			TalkerBean talker = new TalkerBean();
+			talker.parseBasicFromDB(talkerDBObject);
 	    	return talker;
 		}
 		return null;

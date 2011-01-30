@@ -239,6 +239,8 @@ public class Application extends Controller {
 		//by default we notify user through IM
 		talker.setImNotify(true);
 		
+		talker.setAnonymousName(CommonUtil.generateRandomUserName(true));
+		
 		//if user signed up through Twitter or Facebook
 		String accountType = session.get("accounttype");
 		if (accountType != null) {

@@ -86,18 +86,6 @@ public class ApplicationUpdatesJob extends Job {
 				}
 			}
 			
-//			ACTIVITY_STREAM("Activity Stream"),
-//			THOUGHTS("Thoughts"),
-//			ANSWERS("Answers"),
-//			FOLLOWERS("Followers"),
-//			FOLLOWING("Following"),
-//			THANKYOUS("Thank you's"),
-//			QUESTIONS_STARTED("Questions Asked"),
-//			CHATS_JOINED("Chats Joined"),
-//			QUESTIONS_FOLLOWING("Questions Following"),
-//			TOPICS_FOLLOWING("Topics Following");
-			
-			
 //			- "Thoughts"
 //			- Answers
 //			- Chats Joined
@@ -107,11 +95,14 @@ public class ApplicationUpdatesJob extends Job {
 				if (privacySetting.getType() == PrivacyType.PROFESSIONAL_INFO
 						|| privacySetting.getType() == PrivacyType.THOUGHTS
 						|| privacySetting.getType() == PrivacyType.ANSWERS
-						|| privacySetting.getType() == PrivacyType.TOPICS_FOLLOWING) {
+						|| privacySetting.getType() == PrivacyType.CHATS_JOINED) {
 					privacySetting.setValue(PrivacyValue.COMMUNITY);
 				}
 			}
 			talker.setPrivacySettings(privacySettings);
+			
+//			talker.setAnonymousName(CommonUtil.generateRandomUserName(true));
+			
 			TalkerDAO.updateTalker(talker);
 		}
 		
@@ -179,6 +170,7 @@ public class ApplicationUpdatesJob extends Job {
 		if (admin == null) {
 			admin = new TalkerBean();
 			admin.setUserName("admin");
+			admin.setAnonymousName("member000");
 			admin.setPassword("admin");
 			admin.setDob(new Date());
 			admin.setEmail("admin@talkabouthealth.com");

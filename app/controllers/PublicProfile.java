@@ -55,7 +55,7 @@ public class PublicProfile extends Controller {
 	 */
 	public static void userBasedActions(String userName, String action, int from) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
-		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		TalkerBean talker = TalkerDAO.getByURLName(userName);
 		notFoundIfNull(talker);
 		
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
@@ -66,7 +66,7 @@ public class PublicProfile extends Controller {
 	
 	public static void thoughts(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
-		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		TalkerBean talker = TalkerDAO.getByURLName(userName);
 		notFoundIfNull(talker);
 		
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
@@ -144,7 +144,7 @@ public class PublicProfile extends Controller {
 	
 	public static void answers(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
-		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		TalkerBean talker = TalkerDAO.getByURLName(userName);
 		notFoundIfNull(talker);
 		
 		TalkerLogic.preloadTalkerInfo(talker);
@@ -162,7 +162,7 @@ public class PublicProfile extends Controller {
 	 */
 	public static void conversations(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
-		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		TalkerBean talker = TalkerDAO.getByURLName(userName);
 		notFoundIfNull(talker);
 		
 		List<Action> startedConvosFeed = 
@@ -206,7 +206,7 @@ public class PublicProfile extends Controller {
 	
 	public static void topicsFollowing(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
-		TalkerBean talker = TalkerDAO.getByUserName(userName);
+		TalkerBean talker = TalkerDAO.getByURLName(userName);
 		notFoundIfNull(talker);
 		
 		//get talker answers and related info for each topic

@@ -16,30 +16,29 @@
 
 		$(document).ready(function() {
 			initNewTabs();
-			
-			var showIMPopup = ${showIMPopup};
-			if (showIMPopup) {
-				var id = "#imDialog";
-				showPopup(id, 350);
-			}
 
-			$('.window #saveIMBtn').click(function (e) {
-				//Cancel the link behavior
-				e.preventDefault();
+			//radio buttons for Notification Accounts
+			$(".notifyType").click(function() {
+				var selectedType = $(this).val();
+				if (selectedType === "Twitter") {
+					$("#notifyUsernamePanel").hide();
+				}
+				else {
+					$("#notifyUsernamePanel").show();
+				}
+			}); 
 
-				var imService = $("#imDialog input:checked").val();
-				var imUserName = $("#imUserName").val();
-
-				if (imService.length == 0) {
+			$("#addNotificationAccount").click(function () {
+				var imService = $("#notificationAccountsHelp input:checked").val();
+				var imUserName = $("#notificationUsername").val();
+				if (!imService || imService.length == 0) {
 					alert("Please choose IM Service");
 					return;
 				}
-
+				
 				if (imService === "Twitter") {
-					$('#mask').hide();
-					$('.window').hide();
-					
 					openTwitter();
+					hideHelpInfo('notificationAccounts', true);
 				}
 				else {
 					if (imUserName.length == 0) {
@@ -51,10 +50,8 @@
 						{imUserName : imUserName, imService : imService},
 						function(data) {
 							if (data.indexOf("<tr>") == 0) {
-								$("#imUserName").val("");
-
-								$('#mask').hide();
-								$('.window').hide();
+								$("#notificationUsername").val("");
+								hideHelpInfo('notificationAccounts', true);
 							}
 							else {
 								alert(data);

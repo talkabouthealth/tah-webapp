@@ -631,10 +631,8 @@ public class Profile extends Controller {
 	public static void deactivateAccount() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-		//change username to deactivated (randomly generated)
-		String newUserName = CommonUtil.generateRandomUserName(true);
 		talker.setOriginalUserName(talker.getUserName());
-		talker.setUserName(newUserName);
+		talker.setUserName(talker.getAnonymousName());
 		talker.setDeactivated(true);
 		TalkerDAO.updateTalker(talker);
 		

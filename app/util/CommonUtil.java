@@ -196,7 +196,7 @@ public class CommonUtil {
 		String userName = null;
 		Random random = new Random();
 		while (true) {
-			int num = random.nextInt(1000)+1;
+			int num = random.nextInt(10000)+1;
 			userName = "member"+num;
 			if (!checkUnique || TalkerDAO.isUserNameUnique(userName)) {
 				break;
@@ -307,18 +307,7 @@ public class CommonUtil {
 	//TODO: check display methods
 	//Result: member301 (Patient, Supporter)
 	public static String getAnonymousName(TalkerBean talker) {
-		Request req = Request.current();
-		Map<String, String> namesMap = (Map<String, String>)req.args.get("namesMap");
-		if (namesMap == null) {
-			namesMap = new HashMap<String, String>();
-			req.args.put("namesMap", namesMap);
-		}
-		
-		String anonymName = namesMap.get(talker.getUserName());
-		if (anonymName == null) {
-			anonymName = generateRandomUserName(true);
-			namesMap.put(talker.getUserName(), anonymName);
-		}
+		String anonymName = talker.getAnonymousName();
 		
 		//display credentials
 		if (talker.getConnection() != null && talker.getConnection().length() != 0) {

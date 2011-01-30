@@ -366,6 +366,7 @@ a {
 	background:url(../images/libuttlets.png);
 	background-position:58px 11px;
 	background-repeat:no-repeat;
+	padding: 5px 12px;
 }
 #jsddm li a.libull:hover {
 	display:block;
@@ -375,6 +376,7 @@ a {
 	background-repeat:no-repeat;
 	background-position:6px 6px;
 	color:#FFF;
+	padding: 5px 12px;
 }
 #jsddm li a.libull2 {
 	background:url(../images/libuttlets.png);
@@ -382,6 +384,7 @@ a {
 	background-repeat:no-repeat;
 	width:30px;
 	height:13px;
+	padding: 5px 12px;
 }
 #jsddm li a.libull2:hover {
 	display:block;
@@ -391,6 +394,7 @@ a {
 	background-repeat:no-repeat;
 	background-position:6px 6px;
 	color:#FFF;
+	padding: 5px 12px;
 }
 #jsddm li a.libull4 {
 	background:url(../images/libuttlets.png);
@@ -5347,6 +5351,14 @@ ul.tabs li.active, ul.tabs li.active span: {
 #privacyTable { font-size: 14px; }
 #privacyTable th { font-weight: bold; padding-bottom: 20px; }
 #privacyTable td { padding-right: 20px; }
+
+.notifyType { margin-bottom: 5px; }
+
+
+
+
+
+
 
 
 

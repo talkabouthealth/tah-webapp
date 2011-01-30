@@ -48,7 +48,7 @@ public class ViewDispatcher extends Controller {
 	
 	public static void view(String name) throws Throwable {
 		//first try user
-		TalkerBean talker = TalkerDAO.getByUserName(name);
+		TalkerBean talker = TalkerDAO.getByURLName(name);
 		if (talker != null) {
 			showTalker(talker);
 			return;
