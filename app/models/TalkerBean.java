@@ -25,6 +25,7 @@ import org.bson.types.ObjectId;
 import play.data.validation.Email;
 import play.data.validation.Match;
 import play.data.validation.Required;
+import play.mvc.Scope.Session;
 import util.DBUtil;
 import util.ValidateData;
 import util.EmailUtil.EmailTemplate;
@@ -439,6 +440,20 @@ public class TalkerBean implements Serializable {
 	}
 	
 	/* -------------------- Useful methods for displaying data --------------------- */
+	
+	/**
+	 * Returns userName or anonymous name, 
+	 * based on privacy settings and current logged in talker
+	 */
+	public String getName() {
+		String loggedinUsername = Session.current().get("username");
+		
+		PrivacyValue privacyValue = getPrivacyValue(PrivacyType.USERNAME);
+		if (privacyValue == PrivacyValue.PUBLIC || loggedinUsername != null) {
+			return getUserName();
+		}
+		return getAnonymousName();
+	}
 	
 	/**
 	 * Finds non-primary email by email value or verification code

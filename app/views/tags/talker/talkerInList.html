@@ -1,10 +1,10 @@
 <div class="thnksfollowing">
     <div class="thnksfollowingimg">
-		#{talker/talkerImageLink size: 80, userName: _talker.userName /}
+		#{talker/talkerImageLink size: 80, userName: _talker.name /}
 	</div>
 	<div class="thnksfollowingtext">
-      	<a class="blue13" href="@{ViewDispatcher.view(_talker.userName)}">
-     		<strong>${_talker.userName}</strong>
+      	<a class="blue13" href="@{ViewDispatcher.view(_talker.name)}">
+     		<strong>${_talker.name}</strong>
      	</a>
         <span class="blacktext12">
 			#{talker/talkerInfo talker: _talker /}

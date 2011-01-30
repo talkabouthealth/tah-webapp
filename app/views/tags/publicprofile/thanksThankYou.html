@@ -1,10 +1,10 @@
 <div class="thnkstext2">
 	<div class="thnksfollowingimg">
-		#{talker/talkerImageLink size: 80, userName: _thankYou.fromTalker.userName /}
+		#{talker/talkerImageLink size: 80, userName: _thankYou.fromTalker.name /}
 	</div>
 	<div class="thnksfollowingtext">
-		<a href="@{ViewDispatcher.view(_thankYou.fromTalker.userName)}" 
-			class="blue13"><strong>${_thankYou.fromTalker.userName}</strong></a>
+		<a href="@{ViewDispatcher.view(_thankYou.fromTalker.name)}" 
+			class="blue13"><strong>${_thankYou.fromTalker.name}</strong></a>
 		<span class="blacktext12">
 			#{if _thankYou.fromTalker.connection}
 				(#{talker/connectionInfo talker: _thankYou.fromTalker /}, ${_thankYou.fromTalker.levelOfRecognition})

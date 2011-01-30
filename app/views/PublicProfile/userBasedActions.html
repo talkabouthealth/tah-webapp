@@ -61,7 +61,7 @@
 	<div id="innermain">
 		<div style="float: left; width: 630px;">
 		<div class="blacktext2" id="innerheading" style="width: 550px;">
-			<a href="@{ViewDispatcher.view(talker.userName)}" class="bluetext20">${talker.userName}'s</a> 
+			<a href="@{ViewDispatcher.view(talker.name)}" class="bluetext20">${talker.name}'s</a> 
 			Contacts and Thank you's</div>
 		<div id="innermiddlearea" style="width: 600px;">
 			<div class="tabbed_box" id="tabbed_box_1" style="width: 600px;">
@@ -80,7 +80,7 @@
 					      			#{if currentTalker && !talker.userName.equals(currentTalker.userName) }
 										<span class="greytext12">&nbsp;|&nbsp;</span> 
 										<a id="displayThankYouText" href="#" 
-											class="bluetext14">Give ${talker.userName} a "Thank you"</a>
+											class="bluetext14">Give ${talker.name} a "Thank you"</a>
 									#{/if}
 					      		</div>
 						    </div>

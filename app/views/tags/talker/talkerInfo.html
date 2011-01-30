@@ -1,8 +1,6 @@
-#{if session.username}
-	#{if _talker.connection}
-		(#{talker/connectionInfo talker: _talker /}, ${_talker.levelOfRecognition} )
-	#{/if}
-	#{else}
-		(${_talker.levelOfRecognition})
-	#{/else}
+#{if _talker.connection}
+	(#{talker/connectionInfo talker: _talker /}, ${_talker.levelOfRecognition} )
 #{/if}
+#{else}
+	(${_talker.levelOfRecognition})
+#{/else}

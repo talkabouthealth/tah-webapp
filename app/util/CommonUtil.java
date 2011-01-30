@@ -251,24 +251,26 @@ public class CommonUtil {
 		if (talker == null) {
 			return "";
 		}
-		StringBuilder html = new StringBuilder();
+		String talkerName = null;
 		if (authenticated || talker.isPublic(PrivacyType.USERNAME)) {
-			String url = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", talker.getUserName());
-			html.append("<a href='"+url+"'>"+talker.getUserName()+"</a>");
-			if (talker.getConnection() != null && talker.getConnection().length() != 0) {
-				String notVerifiedStr = "";
-				if (TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.getConnection())) {
-					if (!talker.isConnectionVerified()) {
-						notVerifiedStr = " <span class=\"red12\">(not verified)</span>";
-					}
-				}
-				html.append(" ("+talker.getConnection()+notVerifiedStr+")");
-			}
+			talkerName = talker.getUserName();
 		}
 		else {
-			html.append(getAnonymousName(talker));
+			talkerName = talker.getAnonymousName();
 		}
 		
+		StringBuilder html = new StringBuilder();
+		String url = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", talkerName);
+		html.append("<a href='"+url+"'>"+talkerName+"</a>");
+		if (talker.getConnection() != null && talker.getConnection().length() != 0) {
+			String notVerifiedStr = "";
+			if (TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.getConnection())) {
+				if (!talker.isConnectionVerified()) {
+					notVerifiedStr = " <span class=\"red12\">(not verified)</span>";
+				}
+			}
+			html.append(" ("+talker.getConnection()+notVerifiedStr+", "+talker.getLevelOfRecognition()+")");
+		}
 		return html.toString();
 	}
 	
@@ -304,7 +306,7 @@ public class CommonUtil {
 		return topicsHTML.toString();
 	}
 	
-	//TODO: check display methods
+	//TODO: check display methods, remove it??
 	//Result: member301 (Patient, Supporter)
 	public static String getAnonymousName(TalkerBean talker) {
 		String anonymName = talker.getAnonymousName();

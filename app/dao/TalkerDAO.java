@@ -443,7 +443,9 @@ public class TalkerDAO {
 	public static byte[] loadTalkerImage(String userName, String currentUser) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
-		DBObject query = new BasicDBObject("uname", userName);
+		DBObject usernameQuery = new BasicDBObject("uname", userName);
+		DBObject anonymousQuery = new BasicDBObject("anon_name", userName);
+		DBObject query = new BasicDBObject("$or", Arrays.asList(usernameQuery, anonymousQuery));
 		DBObject fields = BasicDBObjectBuilder.start()
 			.add("img", 1)
 			.add("deactivated", 1)

@@ -97,7 +97,7 @@
                   
                     <div class="pph1Cover">
                       <div class="pph1">
-                      		${talker.userName} 
+                      		${talker.name} 
                       		#{if talker.connection}
 								#{if models.TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.connection)}
 									(${talker.connection}
@@ -123,7 +123,7 @@
                       <div class="profileCantanttxt1"><strong>Community:</strong> Breast Cancer</div>
                       <div class="profileCantanttxt2">
                       	<strong>Thank You's:</strong>
-                      	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.userName, 'thankyous')}">
+                      	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.name, 'thankyous')}">
 							${talker.thankYouList.size()}
 						</a>
 					  </div>
@@ -134,7 +134,7 @@
                       <div class="profileCantanttxt2">
                       	<strong>Top Answers:&nbsp;</strong>
                       	<a style="text-decoration: none" 
-                      		href="@{PublicProfile.answers(talker.userName)}">${numOfTopAnswers}</a>
+                      		href="@{PublicProfile.answers(talker.name)}">${numOfTopAnswers}</a>
                       </div>
                     </div>
                     <!--profiletxtCantant-->
@@ -142,12 +142,12 @@
                       <div class="profileCantanttxt1">
                       	<strong>Conversations:&nbsp;</strong>
                       	<a style="text-decoration: none" 
-                      		href="@{PublicProfile.conversations(talker.userName)}">${numOfStartedConvos}</a>
+                      		href="@{PublicProfile.conversations(talker.name)}">${numOfStartedConvos}</a>
                       </div>
                       <div class="profileCantanttxt2">
                       	<strong>Answers:&nbsp;</strong>
                       	<a style="text-decoration: none" 
-                      		href="@{PublicProfile.answers(talker.userName)}">${numOfAnswers}</a>
+                      		href="@{PublicProfile.answers(talker.name)}">${numOfAnswers}</a>
                       </div>
                     </div>
                     <!--profiletxtCantant-->
@@ -408,7 +408,7 @@
 					#{/if}
                                         
                     #{if talker.isAllowed(models.PrivacySetting.PrivacyType.ACTIVITY_STREAM, currentTalker) && talkerFeed}
-						<div class="Profilemurray">${talker.userName} Activities</div>
+						<div class="Profilemurray">${talker.name} Activities</div>
 	                    <div class="topicborder"></div>
 	                    <div>
 	                        <div id="talkerFeedList">
@@ -435,13 +435,13 @@
 #{if talker.isProf()}					
 	#{if !talker.isAllowed(models.PrivacySetting.PrivacyType.USERNAME, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_IMAGE, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_INFO, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.PROFESSIONAL_INFO, currentTalker) }
 		<div style="padding-top: 50px; clear: both;">
-			<b>${talker.userName}</b> has chosen to have all or some of their profile information private or only viewable by the community.</div>
+			<b>${talker.name}</b> has chosen to have all or some of their profile information private or only viewable by the community.</div>
 	#{/if}
 #{/if}
 #{elseif}
 	#{if !talker.isAllowed(models.PrivacySetting.PrivacyType.USERNAME, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_IMAGE, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_INFO, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.HEALTH_INFO, currentTalker) }
 		<div style="padding-top: 50px; clear: both;">
-			<b>${talker.userName}</b> has chosen to have all or some of their profile information private or only viewable by the community.</div>
+			<b>${talker.name}</b> has chosen to have all or some of their profile information private or only viewable by the community.</div>
 	#{/if}
 #{/elseif}
                     

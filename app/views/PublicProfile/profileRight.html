@@ -34,12 +34,12 @@
            	<a href="@{ViewDispatcher.view(talker.userName)}"><strong>${talker.userName}</strong></a>!
      	#{/if}
      	#{else}
-     		<a href="@{ViewDispatcher.view(talker.userName)}"><strong>${talker.userName}'s</strong></a> Profile
+     		<a href="@{ViewDispatcher.view(talker.name)}"><strong>${talker.name}'s</strong></a> Profile
      	#{/else}
     </div>
 	<div class="followpicbox" style="padding-top: 3px;">
 		<div class="followpic" style="width: 110px; height: 110px;">
-			<img src="@{Image.show(talker.userName)}" width="110" height="110"/>
+			<img src="@{Image.show(talker.name)}" width="110" height="110"/>
 		</div>
 		#{if currentTalker}
 			<div class="foloowpictext" style="width: 110px;">
@@ -73,37 +73,37 @@
 	<div class="topipsts">
 		<div class="mtrighttxt">
 	     	<a class="${currentPage.equals('publicProfile') ? 'current' : ''}" 
-	     		href="@{ViewDispatcher.view(talker.userName)}">Profile</a>
+	     		href="@{ViewDispatcher.view(talker.name)}">Profile</a>
 		</div>
 		#{if talker.isAllowed(models.PrivacySetting.PrivacyType.THOUGHTS, currentTalker) }
 			<div class="mtrighttxt">
 				<a class="${currentPage.equals('thoughts') ? 'current' : ''}" 
-	     			href="@{PublicProfile.thoughts(talker.userName)}">Thoughts</a>
+	     			href="@{PublicProfile.thoughts(talker.name)}">Thoughts</a>
 	      	</div>
       	#{/if}
       	#{if talker.isAllowed(models.PrivacySetting.PrivacyType.QUESTIONS_STARTED, currentTalker) || talker.isAllowed(models.PrivacySetting.PrivacyType.CHATS_JOINED, currentTalker) || talker.isAllowed(models.PrivacySetting.PrivacyType.QUESTIONS_FOLLOWING, currentTalker)}
 	      	<div class="mtrighttxt">
 	           	<a class="${currentPage.equals('conversations') ? 'current' : ''}" 
-	           		href="@{PublicProfile.conversations(talker.userName)}">Questions</a>
+	           		href="@{PublicProfile.conversations(talker.name)}">Questions</a>
 			</div>
 		#{/if}
 		#{if talker.isAllowed(models.PrivacySetting.PrivacyType.TOPICS_FOLLOWING, currentTalker) }
 			<div class="mtrighttxt">
 		     	<a class="${currentPage.equals('topicsFollowing') ? 'current' : ''}" 
-		     		href="@{PublicProfile.topicsFollowing(talker.userName)}"
+		     		href="@{PublicProfile.topicsFollowing(talker.name)}"
 		     		>Topics Following (${talker.followingTopicsList.size()})</a>
 			</div>
 		#{/if}
 		#{if talker.isAllowed(models.PrivacySetting.PrivacyType.ANSWERS, currentTalker) }
 			<div class="mtrighttxt">
 	               	<a class="${currentPage.equals('answers') ? 'current' : ''}" 
-	     		href="@{PublicProfile.answers(talker.userName)}">Answers</a>
+	     		href="@{PublicProfile.answers(talker.name)}">Answers</a>
 			</div>
 		#{/if}
 		#{if talker.isAllowed(models.PrivacySetting.PrivacyType.THANKYOUS, currentTalker) }
 			<div class="mtrighttxt">
 				<a class="${currentPage.equals('thankyous') ? 'current' : ''}" 
-	               		href="@{PublicProfile.userBasedActions(talker.userName, 'thankyous')}"
+	               		href="@{PublicProfile.userBasedActions(talker.name, 'thankyous')}"
 	               	>Thank You's (${talker.thankYouList.size()})</a>
 			</div>
 		#{/if}
@@ -116,7 +116,7 @@
 		<div class="followingbox">
 			<div class="followingtoptxt">
 				<div class="followingh1">
-                  	<a href="@{PublicProfile.userBasedActions(talker.userName, 'following')}">
+                  	<a href="@{PublicProfile.userBasedActions(talker.name, 'following')}">
                   		Following (${talker.followingList.size()})</a>
 				</div>
 			</div>
@@ -127,10 +127,10 @@
 			#{list items:talker.followingList.limit(8), as:'following' }
 				<div class="followingtxtpic">
                     <div class="followingpic">
-						#{talker/talkerImageLink size: 48, userName: following.userName /}
+						#{talker/talkerImageLink size: 48, userName: following.name /}
                     </div>
                     <div class="followingpictxt">
-                    	<a href="@{ViewDispatcher.view(following.userName)}">${following.userName.limitSize(8)}</a>
+                    	<a href="@{ViewDispatcher.view(following.name)}">${following.name.limitSize(8)}</a>
                     </div>
                     <div class="cb"></div>
 				</div>
@@ -145,7 +145,7 @@
 		<div class="followingbox">
 			<div class="followingtoptxt">
 				<div class="followingh1">
-                  	<a href="@{PublicProfile.userBasedActions(talker.userName, 'followers')}">
+                  	<a href="@{PublicProfile.userBasedActions(talker.name, 'followers')}">
                   		Followers (${talker.followerList.size()})</a>
 				</div>
 			</div>
@@ -155,10 +155,10 @@
 			#{list items:talker.followerList.limit(8), as:'following' }
 				<div class="followingtxtpic">
                     <div class="followingpic">
-                    	#{talker/talkerImageLink size: 48, userName: following.userName /}
+                    	#{talker/talkerImageLink size: 48, userName: following.name /}
                     </div>
                     <div class="followingpictxt">
-                    	<a href="@{ViewDispatcher.view(following.userName)}">${following.userName.limitSize(8)}</a>
+                    	<a href="@{ViewDispatcher.view(following.name)}">${following.name.limitSize(8)}</a>
                     </div>
                     <div class="cb"></div>
 				</div>
