@@ -76,37 +76,37 @@ public class ApplicationUpdatesJob extends Job {
 		Map<String, String> fbMap = new HashMap<String, String>();
 		fbMap.put("113344035364476", "629943601");
 		
-		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
-			ServiceAccountBean fbAccount = talker.serviceAccountByType(ServiceType.FACEBOOK);
-			if (fbAccount != null) {
-				String correctId = fbMap.get(fbAccount.getId());
-				if (correctId != null) {
-					fbAccount.setId(correctId);
-					TalkerDAO.updateTalker(talker);
-				}
-			}
-			
-//			- "Thoughts"
-//			- Answers
-//			- Chats Joined
-//			- Professional Info - for new users let's make this by default viewable by the community.
-			Set<PrivacySetting> privacySettings = talker.getPrivacySettings();
-			for (PrivacySetting privacySetting : privacySettings) {
-				if (privacySetting.getType() == PrivacyType.PROFESSIONAL_INFO
-						|| privacySetting.getType() == PrivacyType.THOUGHTS
-						|| privacySetting.getType() == PrivacyType.ANSWERS
-						|| privacySetting.getType() == PrivacyType.CHATS_JOINED) {
-					privacySetting.setValue(PrivacyValue.COMMUNITY);
-				}
-			}
-			talker.setPrivacySettings(privacySettings);
+//		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
+//			ServiceAccountBean fbAccount = talker.serviceAccountByType(ServiceType.FACEBOOK);
+//			if (fbAccount != null) {
+//				String correctId = fbMap.get(fbAccount.getId());
+//				if (correctId != null) {
+//					fbAccount.setId(correctId);
+//					TalkerDAO.updateTalker(talker);
+//				}
+//			}
 //			
-//			talker.setAnonymousName(CommonUtil.generateRandomUserName(true));
-			
-			talker.getHiddenHelps().add("notificationAccounts");
-			
-			TalkerDAO.updateTalker(talker);
-		}
+////			- "Thoughts"
+////			- Answers
+////			- Chats Joined
+////			- Professional Info - for new users let's make this by default viewable by the community.
+//			Set<PrivacySetting> privacySettings = talker.getPrivacySettings();
+//			for (PrivacySetting privacySetting : privacySettings) {
+//				if (privacySetting.getType() == PrivacyType.PROFESSIONAL_INFO
+//						|| privacySetting.getType() == PrivacyType.THOUGHTS
+//						|| privacySetting.getType() == PrivacyType.ANSWERS
+//						|| privacySetting.getType() == PrivacyType.CHATS_JOINED) {
+//					privacySetting.setValue(PrivacyValue.COMMUNITY);
+//				}
+//			}
+//			talker.setPrivacySettings(privacySettings);
+////			
+////			talker.setAnonymousName(CommonUtil.generateRandomUserName(true));
+//			
+////			talker.getHiddenHelps().add("notificationAccounts");
+//			
+//			TalkerDAO.updateTalker(talker);
+//		}
 		
 		//Fields data for Edit Profile
 		FieldsDataImporter.importData("fields.dat");
