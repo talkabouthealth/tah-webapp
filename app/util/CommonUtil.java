@@ -306,28 +306,6 @@ public class CommonUtil {
 		return topicsHTML.toString();
 	}
 	
-	//TODO: check display methods, remove it??
-	//Result: member301 (Patient, Supporter)
-	public static String getAnonymousName(TalkerBean talker) {
-		String anonymName = talker.getAnonymousName();
-		
-		//display credentials
-		if (talker.getConnection() != null && talker.getConnection().length() != 0) {
-			String notVerifiedStr = "";
-			if (TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.getConnection())) {
-				if (!talker.isConnectionVerified()) {
-					notVerifiedStr = " <span class=\"red12\">(not verified)</span>";
-				}
-			}
-			anonymName += " ("+talker.getConnection()+notVerifiedStr+", "+talker.getLevelOfRecognition()+")";
-		}
-		else {
-			anonymName += " ("+talker.getLevelOfRecognition()+")";
-		}
-		
-		return anonymName;
-	}
-
 	/**
 	 * Parses IM account information (service, username) from email
 	 * @param email

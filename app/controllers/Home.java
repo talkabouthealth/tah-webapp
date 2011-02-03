@@ -149,15 +149,14 @@ public class Home extends Controller {
 			ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
 			if (twitterAccount != null) {
 				talker.setIm("Twitter");
-				talker.setImUsername(twitterAccount.getUserName());
 			}
 			else {
 				//if user provides an email from gmail, windows live, or yahoo - 
 				//automatically populate the username with that item and check the option for what they provided
 				IMAccountBean imInfo = CommonUtil.parseIMAccount(talker.getEmail());
 				talker.setIm(imInfo.getService());
-				talker.setImUsername(imInfo.getUserName());
 			}
+			talker.setImUsername(talker.getUserName());
 		}
 		
 		return showNotificationAccounts;
