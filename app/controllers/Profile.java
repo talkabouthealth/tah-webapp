@@ -239,7 +239,7 @@ public class Profile extends Controller {
 		TalkerLogic.preloadTalkerInfo(talker, "privacy");
 		
 		//user just needs to view their Privacy Settings page for ProfileCompletion
-		//TODO: rename 'hiddenHelps' to some common name - we can put there all actions
+		//TODO: rename 'hiddenHelps' to some common name - we can put there all actions & make tag for helps?
 		if (!talker.getHiddenHelps().contains("privacyViewed")) {
 			talker.getHiddenHelps().add("privacyViewed");
 			CommonUtil.updateTalker(talker, session);
@@ -543,7 +543,7 @@ public class Profile extends Controller {
 		talkerDisease.setDiagnoseDate(diagnoseDate);
 		
 		//Automatically follow topics based on HealthInfo
-		List<TopicBean> recommendedTopics = TalkerLogic.getRecommendedTopics(talkerDisease);
+		List<TopicBean> recommendedTopics = TalkerLogic.getTopicsByHealthInfo(talkerDisease);
 		if (!recommendedTopics.isEmpty()) {
 			for (TopicBean topic : recommendedTopics) {
 				talker.getFollowingTopicsList().add(topic);

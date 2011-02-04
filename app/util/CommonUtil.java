@@ -16,9 +16,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -132,21 +134,12 @@ public class CommonUtil {
         return talker;
 	}
 	
-	//TODO: better parsing?
-	public static Date parseDate(int month, int day, int year) {
-		if (month == 0 || day == 0 || year == 0) {
+	public static Date parseDate(int month, int date, int year) {
+		if (month == 0 || date == 0 || year == 0) {
 			return null;
 		}
-		return parseDate(month+"/"+day+"/"+year);
-	}
-	private static Date parseDate(String dateString) {
-		try {
-			DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-			Date date = dateFormat.parse(dateString);
-			return date;
-		} catch (ParseException e) {}
-		
-		return null;
+		Calendar dateCalendar = new GregorianCalendar(year, month-1, date);
+		return dateCalendar.getTime();
 	}
 
 	/**

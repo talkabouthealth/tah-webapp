@@ -373,41 +373,33 @@ public class TalkerDAO {
 	
 	/**
 	 * Load all (deactivated and suspended also) talkers.
+	 * @param basicInfo Load full or only basic info
 	 * @return
 	 */
+	public static List<TalkerBean> loadAllTalkers(boolean basicInfo) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		
+		List<DBObject> talkersDBObjectList = 
+			talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
+		
+		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
+		for (DBObject talkerDBObject : talkersDBObjectList) {
+			TalkerBean talker = new TalkerBean();
+			if (basicInfo) {
+				talker.parseBasicFromDB(talkerDBObject);
+			}
+			else {
+				talker.parseFromDB(talkerDBObject);
+			}
+			talkerList.add(talker);
+		}
+		
+		return talkerList;
+	}
 	public static List<TalkerBean> loadAllTalkers() {
-		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
-		
-		List<DBObject> talkersDBObjectList = 
-			talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
-		
-		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
-		for (DBObject talkerDBObject : talkersDBObjectList) {
-			TalkerBean talker = new TalkerBean();
-			talker.parseFromDB(talkerDBObject);
-			talkerList.add(talker);
-		}
-		
-		return talkerList;
+		return loadAllTalkers(false);
 	}
-	
-	//TODO: check it
-	public static List<TalkerBean> loadAllLightTalkers() {
-		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
-		
-		List<DBObject> talkersDBObjectList = 
-			talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
-		
-		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
-		for (DBObject talkerDBObject : talkersDBObjectList) {
-			TalkerBean talker = new TalkerBean();
-			talker.parseBasicFromDB(talkerDBObject);
-			talkerList.add(talker);
-		}
-		
-		return talkerList;
-	}
-	
+
 	
 	// --------------------- Other ---------------------------
 	

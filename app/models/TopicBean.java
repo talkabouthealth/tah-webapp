@@ -95,7 +95,7 @@ public class TopicBean implements Comparable<TopicBean> {
 		return title.compareTo(o.title);
 	}
 	
-	public void parseSuperBasicFromDB(DBObject topicDBObject) {
+	public void parseBasicFromDB(DBObject topicDBObject) {
 		if (topicDBObject == null) {
 			return;
 		}
@@ -108,11 +108,11 @@ public class TopicBean implements Comparable<TopicBean> {
 		setBitly((String)topicDBObject.get("bitly"));
 	}
 	
-	public void parseBasicFromDB(DBObject topicDBObject) {
+	public void parseFromDB(DBObject topicDBObject) {
 		if (topicDBObject == null) {
 			return;
 		}
-		parseSuperBasicFromDB(topicDBObject);
+		parseBasicFromDB(topicDBObject);
 		
 		setSummary((String)topicDBObject.get("summary"));
 		setAliases(getStringSet(topicDBObject, "aliases"));
@@ -121,26 +121,6 @@ public class TopicBean implements Comparable<TopicBean> {
 		setCreationDate((Date)topicDBObject.get("cr_date"));
 		
 		parseRelatives(topicDBObject);
-	}
-	
-	public void parseFromDB(DBObject topicDBObject) {
-		parseBasicFromDB(topicDBObject);
-		
-		setConversations(ConversationDAO.loadConversationsByTopic(getId()));
-		
-		//followers of this topic
-    	DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
-    	DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, getId());
-    	DBObject query = new BasicDBObject("following_topics", topicRef);
-    	List<DBObject> followersDBList = talkersColl.find(query).toArray();
-    	
-    	List<TalkerBean> followers = new ArrayList<TalkerBean>();
-    	for (DBObject followerDBObject : followersDBList) {
-    		TalkerBean followerTalker = new TalkerBean();
-    		followerTalker.parseBasicFromDB(followerDBObject);
-			followers.add(followerTalker);
-    	}
-    	setFollowers(followers);
 	}
 	
 	private void parseRelatives(DBObject topicDBObject) {

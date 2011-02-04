@@ -94,6 +94,8 @@ public class TopicDAO {
 		
 		TopicBean topic = new TopicBean();
 		topic.parseFromDB(topicDBObject);
+		topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
+    	topic.setFollowers(getTopicFollowers(topic));
 		return topic;
 	}
 	
@@ -104,7 +106,7 @@ public class TopicDAO {
 		DBObject topicDBObject = topicsColl.findOne(query);
 		
 		TopicBean topicBean = new TopicBean();
-		topicBean.parseBasicFromDB(topicDBObject);
+		topicBean.parseFromDB(topicDBObject);
 		return topicBean;
 	}
 	
@@ -123,7 +125,7 @@ public class TopicDAO {
 		}
 		
 		TopicBean topicBean = new TopicBean();
-		topicBean.parseBasicFromDB(topicDBObject);
+		topicBean.parseFromDB(topicDBObject);
 		
 		if (topicBean.isDeleted()) {
 			topicBean.setDeleted(false);
@@ -133,10 +135,6 @@ public class TopicDAO {
 		return topicBean;
 	}
 	
-	
-	public static Set<TopicBean> loadAllTopics() {
-		return loadAllTopics(true);
-	}
 	
 	/**
 	 * Loads all topics
@@ -156,11 +154,14 @@ public class TopicDAO {
 				topic.parseBasicFromDB(topicDBObject);
 			}
 			else {
-				topic.parseSuperBasicFromDB(topicDBObject);
+				topic.parseFromDB(topicDBObject);
 			}
 			topicsSet.add(topic);
 		}
 		return topicsSet;
+	}
+	public static Set<TopicBean> loadAllTopics() {
+		return loadAllTopics(false);
 	}
 	
 	public static Set<TopicBean> getParentTopics(String topicId) {
@@ -181,13 +182,28 @@ public class TopicDAO {
 		return parentTopics;
 	}
 	
-	
 	public static void incrementTopicViews(String topicId) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
 		DBObject topicIdDBObject = new BasicDBObject("_id", new ObjectId(topicId));
 		topicsColl.update(topicIdDBObject, 
 				new BasicDBObject("$inc", new BasicDBObject("views", 1)));
+	}
+	
+	public static List<TalkerBean> getTopicFollowers(TopicBean topic) {
+		DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
+		
+    	DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topic.getId());
+    	DBObject query = new BasicDBObject("following_topics", topicRef);
+    	List<DBObject> followersDBList = talkersColl.find(query).toArray();
+    	
+    	List<TalkerBean> followers = new ArrayList<TalkerBean>();
+    	for (DBObject followerDBObject : followersDBList) {
+    		TalkerBean followerTalker = new TalkerBean();
+    		followerTalker.parseBasicFromDB(followerDBObject);
+			followers.add(followerTalker);
+    	}
+    	return followers;
 	}
 	
 }

@@ -46,7 +46,6 @@ import util.CommonUtil;
 
 public class PublicProfile extends Controller {
 	
-	//FIXME: check all methods PublicProfile
 	/**
 	 * ThankYous, Following/Followers
 	 * @param userName
@@ -175,28 +174,9 @@ public class PublicProfile extends Controller {
 		TalkerLogic.preloadTalkerInfo(talker);
 		boolean noHealthInfo = TalkerLogic.talkerHasNoHealthInfo(talker);
 		
-		//TODO: move to recommended conversations
-		/* 
-		 	Ideas for recommended conversations :
-				1) match member following topics with convo topics
-				2) match member info with full convo info
-				3) what conversations are being followed by other members the user follows. 
-		*/
-		Set<ConversationBean> allConvos = new LinkedHashSet<ConversationBean>();
-		for (TopicBean topic : talker.getFollowingTopicsList()) {
-			allConvos.addAll(ConversationDAO.loadConversationsByTopic(topic.getId()));
-		}
-		allConvos.addAll(ConversationDAO.loadPopularConversations());
-		
 		List<ConversationBean> recommendedConvos = new ArrayList<ConversationBean>();
-		for (ConversationBean convo : allConvos) {
-			if (talker.getFollowingConvosList().contains(convo.getId())) {
-				continue;
-			}
-			recommendedConvos.add(convo);
-			if (recommendedConvos.size() == 3) {
-				break;
-			}
+		if (talker.equals(currentTalker)) {
+			recommendedConvos = TalkerLogic.getRecommendedConvos(talker);
 		}
 		
 		render(talker, currentTalker, startedConvosFeed, joinedConvosFeed, followingConvosFeed, 
@@ -251,7 +231,7 @@ public class PublicProfile extends Controller {
 		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();
 		List<TopicBean> loadedTopics = new ArrayList<TopicBean>();
 		if (!talker.isProf() && talkerDisease != null) {
-			loadedTopics = TalkerLogic.getRecommendedTopics(talkerDisease);
+			loadedTopics = TalkerLogic.getTopicsByHealthInfo(talkerDisease);
 		}
 		if (recommendedTopics.isEmpty()) {
 			//display most popular Topics based on number of questions

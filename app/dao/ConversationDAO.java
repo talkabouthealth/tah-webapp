@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -87,9 +88,11 @@ public class ConversationDAO {
 			.add("main_url", convo.getMainURL())
 			.add("topics", convo.topicsToDB())
 			.add("details", convo.getDetails())
+			
+			.add("opened", convo.isOpened())
+			
 			.add("bitly", convo.getBitly())
 			.add("bitly_chat", convo.getBitlyChat())
-			.add("opened", true)
 			.get();
 
 		//Only with SAFE WriteConcern we receive exception on duplicate key
@@ -139,6 +142,9 @@ public class ConversationDAO {
 			
 			.add("bitly", convo.getBitly())
 			.add("bitly_chat", convo.getBitlyChat())
+			
+			.add("from", convo.getFrom())
+			.add("from_id", convo.getFromId())
 			.get();
 		
 		DBObject convoId = new BasicDBObject("_id", new ObjectId(convo.getId()));
@@ -179,6 +185,23 @@ public class ConversationDAO {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("topic", title);
+		DBObject convoDBObject = convosColl.findOne(query);
+		
+		if (convoDBObject == null) {
+			return null;
+		}
+		ConversationBean convo = new ConversationBean();
+		convo.parseBasicFromDB(convoDBObject);
+		return convo;
+	}
+	
+	public static ConversationBean getByFromInfo(String from, String fromId) {
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("from", from)
+			.add("from_id", fromId)
+			.get();
 		DBObject convoDBObject = convosColl.findOne(query);
 		
 		if (convoDBObject == null) {
@@ -285,7 +308,8 @@ public class ConversationDAO {
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
 			ConversationBean convo = new ConversationBean();
-			convo.parseFromDB(convoDBObject);
+			convo.parseBasicFromDB(convoDBObject);
+			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
 	    	convosList.add(convo);
 		}
 		return convosList;
@@ -307,7 +331,7 @@ public class ConversationDAO {
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
 			ConversationBean convo = new ConversationBean();
-			convo.parseFromDB(convoDBObject);
+			convo.parseBasicFromDB(convoDBObject);
 	    	convosList.add(convo);
 		}
 		
@@ -412,7 +436,7 @@ public class ConversationDAO {
 	/**
 	 * Load convos for given activity type - started, joined, etc.
 	 */
-	public static List<ConversationBean> loadConversations(String talkerId, ActionType type) {
+	public static Set<ConversationBean> loadConversations(String talkerId, ActionType type) {
 		DBCollection activitiesColl = getCollection(ActionDAO.ACTIVITIES_COLLECTION);
 		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
@@ -423,17 +447,18 @@ public class ConversationDAO {
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
-		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
+		Set<ConversationBean> convosSet = new LinkedHashSet<ConversationBean>();
 		for (DBObject activityDBObject : activitiesDBList) {
 			DBObject convoDBObject = ((DBRef)activityDBObject.get("convoId")).fetch();
 			
 			ConversationBean convo = new ConversationBean();
 			convo.parseFromDB(convoDBObject);
+			
 			if (!convo.isDeleted()) {
-				convosList.add(convo);
+				convosSet.add(convo);
 			}
 		}
-		return convosList;
+		return convosSet;
 	}
 	
 	/**

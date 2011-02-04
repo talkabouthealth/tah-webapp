@@ -299,7 +299,7 @@
 				                      <div class="topic">
 				                        <div id="convoFeedList" class="conversationsList">
 					                    	#{list items: convoFeed, as: 'activity'}
-												#{feed/feedActivity activity: activity, talker: talker /}
+												#{feed/feedActivity activity: activity, talker: talker, parentList: 'convoFeedList' /}
 											#{/list}
 											#{else}
 												<br /><span class="blacktext16">Follow topics, conversations, and
@@ -324,7 +324,7 @@
 				                      <div class="topic">
 				                        <div id="communityFeedList">
 					                    	#{list items: communityFeed, as: 'activity'}
-												#{feed/feedActivity activity: activity, talker: talker /}
+												#{feed/feedActivity activity: activity, talker: talker, parentList: 'communityFeedContent' /}
 											#{/list}
 										</div>
 										#{if communityFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }

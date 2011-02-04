@@ -34,14 +34,23 @@ import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.TalkerDAO;
 
-//TODO: check FB, Twitter, Search utils, jobs & oauth
 public class SearchUtil {
 	
 	public static final String SEARCH_INDEX_PATH = Play.configuration.getProperty("search.index");
 
+	/**
+	 * Returns eight talkers for given query.
+	 * Search by username and bio.
+	 * 
+	 * @param query
+	 * @return
+	 * @throws CorruptIndexException
+	 * @throws IOException
+	 * @throws ParseException
+	 */
 	public static List<TalkerBean> searchTalker(String query) throws CorruptIndexException, IOException, ParseException {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"talker");
-		Query searchQuery = getHits(is, new String[] {"uname", "bio"}, "*"+query+"*");
+		Query searchQuery = prepareSearchQuery(is, new String[] {"uname", "bio"}, "*"+query+"*");
 		Hits hits = is.search(searchQuery);
 		
 		List<TalkerBean> results = new ArrayList<TalkerBean>();
@@ -50,18 +59,28 @@ public class SearchUtil {
 
 			TalkerBean talker = TalkerDAO.getById(doc.get("id"));
 			results.add(talker);
-			if (i == 8) {
+			if (i == 7) {
 				break;
 			}
 		}
-		
 		is.close();
 		return results;
 	}
 	
+	/**
+	 * Search 10 conversations for given query.
+	 * Searches in titles and answers.
+	 * 
+	 * @param query
+	 * @return
+	 * @throws CorruptIndexException
+	 * @throws IOException
+	 * @throws ParseException
+	 */
 	public static List<ConversationBean> searchConvo(String query) throws CorruptIndexException, IOException, ParseException {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"conversations");
-//		Query searchQuery = getHits(is, new String[] {"title", "answers"}, "*"+query+"*");
+		
+		//prepare query to search
 		Analyzer analyzer = new StandardAnalyzer();
 		QueryParser parser = new MultiFieldQueryParser(new String[] {"title", "answers"}, analyzer);
 		parser.setAllowLeadingWildcard(true);
@@ -85,20 +104,17 @@ public class SearchUtil {
 				answersString.append(" ... ");
 			}
 			
+			//get result fragment with highlighted matching parts
 			searchQuery = searchQuery.rewrite(is.getIndexReader());
 			Scorer scorer = new QueryScorer(searchQuery, "answers");
 			Highlighter highlighter = new Highlighter(scorer);
 			Fragmenter fragmenter = new SimpleFragmenter(60);
 			highlighter.setTextFragmenter(fragmenter);
 			String fr = highlighter.getBestFragment(analyzer, "answers", answersString.toString());
-//			String[] fragments = highlighter.getBestFragments(new StandardAnalyzer(), 
-//					"answers", answersString.toString(), 5);
-//			System.out.println(answersString.toString()+",  FR: "+fr);
 			convo.setSearchFragment(fr);
 			
 			results.add(convo);
-			
-			if (i == 9) {
+			if (results.size() == 10) {
 				break;
 			}
 		}
@@ -109,8 +125,14 @@ public class SearchUtil {
 
 	
 	//TODO: later - update Lucene and queries to most recent version
+	//TODO: check logs for search errors
+	/**
+	 * Returns 3 conversations related to given.
+	 */
 	public static List<ConversationBean> getRelatedConvos(ConversationBean searchedConvo) throws Exception {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"conversations");
+		
+		//Possible implementation?
 //		MoreLikeThis mlt = new MoreLikeThis(is.getIndexReader());
 //		mlt.setAnalyzer(new StandardAnalyzer());
 //		mlt.setFieldNames(new String[] {"title"});
@@ -121,9 +143,7 @@ public class SearchUtil {
 		String queryText = searchedConvo.getTopic();
 		queryText = queryText.replaceAll("[\\W_]", " ");
 		
-		Analyzer analyzer = new StandardAnalyzer();
-		QueryParser parser = new MultiFieldQueryParser(new String[] {"title"}, analyzer);
-		Query searchQuery = parser.parse(queryText);
+		Query searchQuery = prepareSearchQuery(is, new String[] {"title"}, queryText);
 		Hits hits = is.search(searchQuery);
 
 		List<ConversationBean> results = new ArrayList<ConversationBean>();
@@ -136,7 +156,6 @@ public class SearchUtil {
 			}
 			ConversationBean convo = ConversationDAO.getById(convoId);
 			results.add(convo);
-			
 			if (results.size() == 3) {
 				break;
 			}
@@ -147,7 +166,7 @@ public class SearchUtil {
 	}
 	
 	//TODO: later - recommended to use only one searcher? Open after reindex?
-	private static Query getHits(IndexSearcher is, String[] fields, String query) 
+	private static Query prepareSearchQuery(IndexSearcher is, String[] fields, String query) 
 			throws CorruptIndexException, IOException, ParseException {
 		Analyzer analyzer = new StandardAnalyzer();
 		QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
@@ -157,6 +176,4 @@ public class SearchUtil {
 		return searchQuery;
 	}
 	
-//	ParallelMultiSearcher pms = new ParallelMultiSearcher(new i);
-//		QueryParser parser = new QueryParser("uname", analyzer);
 }

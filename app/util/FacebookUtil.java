@@ -10,6 +10,8 @@ import java.util.concurrent.Executors;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import models.ServiceAccountBean;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -29,19 +31,24 @@ import util.oauth.TwitterOAuthProvider;
 
 public class FacebookUtil {
 	
-	public static void post(String fullText, final String token) {
+	/**
+	 * Post wall message with given text from given account
+	 * @param fullText
+	 * @param fbAccount
+	 */
+	public static void post(String fullText, final ServiceAccountBean fbAccount) {
 		final String text = fullText;
 		Executors.newSingleThreadExecutor().execute(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					HttpResponse res = WS.url(
-							"https://graph.facebook.com/me/feed?access_token=%s&message=%s", token, text).post();
+							"https://graph.facebook.com/me/feed?access_token=%s&message=%s", 
+							fbAccount.getToken(), text).post();
 					
-					Logger.info("FB update response: " + res.getStatus() + ", "+res.getString());
+					Logger.debug("FB update response: " + res.getStatus() + ", "+res.getString());
 				} catch (Exception e) {
-					//Logger.error(e, "Wasn't able to follow Twitter user!");
-					e.printStackTrace();
+					Logger.error(e, "FB post error");
 				}
 			}
 		});

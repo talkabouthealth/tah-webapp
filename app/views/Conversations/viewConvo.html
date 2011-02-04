@@ -38,7 +38,6 @@
 		#{/if}
 		
 		$(document).ready(function() {
-			//TODO: similar code?
 			var share = "${params.share}";
 			if (share === "twitter") {
 				showPopup("#shareTwitterDialog", 350);
@@ -60,12 +59,10 @@
 	  				}
 	  			);
 			});
-
 			$(".restartConvoLink").click(function() {
 				openChat(tid);
 				$.post("@{Conversations.restart}", {convoId: '${convo.id}'});
 			});
-
 			$(".flagConvoLink").click(function() {
 				flagType = "convo";
 				flagId = '${convo.id}';
@@ -203,7 +200,6 @@
    			$.post("@{Conversations.saveAnswerOrReply()}", 
   				{ convoId: '${convo.id}', parentId: parentId, text: commentText},
   				function(html) {
-  	  				$("#firstcommentmessage").hide();
   					$("#replyform"+parentId).before($(html));
   					$("#saveAnswerImage"+parentId).hide();
 

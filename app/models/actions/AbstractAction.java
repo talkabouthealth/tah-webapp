@@ -160,7 +160,7 @@ public abstract class AbstractAction implements Action {
 		DBObject convoDBObject = ((DBRef)dbObject.get("convoId")).fetch();
 		
 		ConversationBean convo = new ConversationBean();
-		convo.parseSuperBasicFromDB(convoDBObject);
+		convo.parseBasicFromDB(convoDBObject);
 		convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
     	return convo;
 	}
@@ -173,7 +173,7 @@ public abstract class AbstractAction implements Action {
 		DBObject topicDBObject = ((DBRef)dbObject.get("topicId")).fetch();
 		
 		TopicBean topic = new TopicBean();
-		topic.parseSuperBasicFromDB(topicDBObject);
+		topic.parseBasicFromDB(topicDBObject);
     	return topic;
 	}
 	
@@ -247,6 +247,7 @@ public abstract class AbstractAction implements Action {
 				DBObject query = new BasicDBObject("_id", new ObjectId(childId));
 				DBObject answerDBObject = commentsColl.findOne(query);
 				
+				//TODO: big load? load in one request? and store "parent"?
 				CommentBean child = new CommentBean();
 				child.setId(getString(answerDBObject, "_id"));
 				child.setText((String)answerDBObject.get("text"));

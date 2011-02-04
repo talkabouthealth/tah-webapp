@@ -2,9 +2,8 @@
 
 #{list items: _commentsList, as: 'comment' }
 #{ifnot comment.deleted}
-<div id="comment${comment.id}" class="${_level == 1 ? 'comments' : 'comreply'}"
+<div class="comment${comment.id} ${_level == 1 ? 'comments' : 'comreply'}"
 		#{if _level != 1}
-			*{ TODO: handle deleted? }*
 			style="display: ${comment_index > (numberOfReplies-2) ? 'block' : 'none'};"
 		#{/if}
 		>
@@ -27,7 +26,7 @@
 							<span class="comname">
 								<a href="@{ViewDispatcher.view(comment.fromTalker.name)}">${comment.fromTalker.name}</a>
 							</span>&nbsp;&nbsp;&nbsp;
-							<span class="inline_view" style="color:#000000;">${comment.text.nl2br()}</span>
+							<span class="inline_view" style="color:#000000;">${comment.text?.nl2br()}</span>
 							#{if _showDelete && session.username?.equals(comment.fromTalker.userName)}
 								<span class="editit2">
 									<a href="#" class="inline_editlink">Edit</a>
@@ -85,8 +84,8 @@
 			#{publicprofile/profileCommentsTree commentsList: comment.children, level: (_level+1), showDelete: _showDelete, isFeed: _isFeed /}
 			
 			#{if session.username}
-				<div id="reply${comment.id}" class="replytommentbax">
-					<div id="saveThoughtImage${comment.id}" class="ajaxLoading"></div>
+				<div class="reply${comment.id} replytommentbax">
+					<div class="saveThoughtImage${comment.id} ajaxLoading"></div>
 					<div class="cb"></div>
 					<div>
 						<div class="cb"></div>
@@ -104,10 +103,10 @@
 							<div class='inline_form'>
 								<div class="addnewansar" style="text-align:left">Reply to thought</div>
 								<div style="float:left;">
-									<textarea id="replytext${comment.id}" class="edititinputx inline_text" 
+									<textarea class="replytext${comment.id} edititinputx inline_text" 
 										style="width:444px" cols="4" rows="3" ></textarea>
 									<input type="submit" class="repcomsubmits inline_save" src="/public/images/repcomsubmits.jpg" value=" " 
-										onclick="return saveProfileComment('${comment.id}');" 
+										onclick="return saveProfileComment('${comment.id}', '${_parentList}');" 
 										style="float:right;margin-right:2px; margin-top:7px;cursor:pointer"/>
 								</div>
 							</div>

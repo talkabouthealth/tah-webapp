@@ -328,7 +328,7 @@ public class TalkerBean implements Serializable {
 			for (DBRef topicDBRef : followingTopicsDBList) {
 				TopicBean topic = new TopicBean();
 				if (topicDBRef.fetch() != null) {
-					topic.parseBasicFromDB(topicDBRef.fetch());
+					topic.parseFromDB(topicDBRef.fetch());
 					if (!topic.isDeleted()) {
 						followingTopicsList.add(topic);
 					}
@@ -349,7 +349,7 @@ public class TalkerBean implements Serializable {
 				//topic
 				DBObject topicDBObject = ((DBRef)topicInfoDBObject.get("topic")).fetch();
 				TopicBean topic = new TopicBean();
-				topic.parseBasicFromDB(topicDBObject);
+				topic.parseFromDB(topicDBObject);
 				
 				if (topic.getId() == null) {
 					//maybe deleted topic

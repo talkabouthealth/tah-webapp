@@ -66,9 +66,9 @@ public class FeedsLogic {
 		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();
 		
 		String nextActionId = null;
-		//TODO: check - we need this?
 		boolean canAdd = (afterActionId == null);
 		while (true) {
+			Logger.error("Feed loading... 1 ");
 			List<Action> feedActions = new ArrayList<Action>();
 			switch (feedType) {
 				case CONVERSATION: 
@@ -85,8 +85,12 @@ public class FeedsLogic {
 					break;
 			}
 			
+			Logger.error("Feed loading... 2 ");
+			
 			canAdd = filter(feed, feedActions, 
 					addedConvos, afterActionId, canAdd, feedsPerPage);
+			
+			Logger.error("Feed loading... 3 ");
 			
 			//exit if no more actions to preload or feed is big enough for this page
 			if (feedActions.size() < ACTIONS_PRELOAD || feed.size() >= feedsPerPage) {
@@ -106,8 +110,8 @@ public class FeedsLogic {
 	 * @param feed Result feed
 	 * @param feedActions Source feed actions
 	 * @param addedConvos Conversations that are already in the feed
-	 * @param afterActionId
-	 * @param canAdd 
+	 * @param afterActionId Latest id from previous page - we need to load only older answer
+	 * @param canAdd Determines if we can add feed items (we don't need items already loaded in previous page)
 	 * @param feedSize Size of the feed that we need
 	 * @return
 	 */
@@ -143,7 +147,7 @@ public class FeedsLogic {
 			if (feed.size() >= feedSize) {
 				break;
 			}
-			if (action.getId().equals(afterActionId)) {
+			if (!canAdd && action.getId().equals(afterActionId)) {
 				canAdd = true;
 			}
 		}

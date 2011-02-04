@@ -48,6 +48,11 @@ public class ConversationBean {
 	//includes old titles and urls
 	private Set<URLName> oldNames;
 	
+	//Where convo was created (e.g. 'twitter')
+	private String from;
+	//Id related to creation source (e.g. id of tweet)
+	private String fromId;
+	
 	//Short urls for ConvoSummary and Chat
 	private String bitly;
 	private String bitlyChat;
@@ -87,16 +92,24 @@ public class ConversationBean {
 		this.id = id;
 	}
 	
-	public void parseSuperBasicFromDB(DBObject convoDBObject) {
+	public void parseBasicFromDB(DBObject convoDBObject) {
 		setId(convoDBObject.get("_id").toString());
     	setTid((Integer)convoDBObject.get("tid"));
     	setTopic((String)convoDBObject.get("topic"));
     	setCreationDate((Date)convoDBObject.get("cr_date"));
     	setDetails((String)convoDBObject.get("details"));
+    	setMainURL((String)convoDBObject.get("main_url"));
+    	setOldNames(parseSet(URLName.class, convoDBObject, "old_names"));
+    	setViews(getInt(convoDBObject, "views"));
+
     	setBitly((String)convoDBObject.get("bitly"));
     	setBitlyChat((String)convoDBObject.get("bitly_chat"));
+    	
     	setDeleted(getBoolean(convoDBObject, "deleted"));
-    	setMainURL((String)convoDBObject.get("main_url"));
+    	setOpened(getBoolean(convoDBObject, "opened"));
+    	
+    	setFrom((String)convoDBObject.get("from"));
+    	setFromId((String)convoDBObject.get("from_id"));
     	
     	String type = (String)convoDBObject.get("type");
     	if (type != null) {
@@ -111,24 +124,15 @@ public class ConversationBean {
     	
     	//topics(tags)
     	parseTopics((Collection<DBRef>)convoDBObject.get("topics"));  
-	}
-	
-	public void parseBasicFromDB(DBObject convoDBObject) {
-		parseSuperBasicFromDB(convoDBObject);
-    	
-    	setOpened(getBoolean(convoDBObject, "opened"));
-    	setOldNames(parseSet(URLName.class, convoDBObject, "old_names"));
-    	setViews(getInt(convoDBObject, "views"));
-    	
-    	setSummary((String)convoDBObject.get("summary"));
-    	parseSumContributors((Collection<DBRef>)convoDBObject.get("sum_authors"));
-    	
     	//author
     	setTalker(parseTalker(convoDBObject, "uid"));
 	}
 	
 	public void parseFromDB(DBObject convoDBObject) {
 		parseBasicFromDB(convoDBObject);
+		
+		setSummary((String)convoDBObject.get("summary"));
+    	parseSumContributors((Collection<DBRef>)convoDBObject.get("sum_authors"));
 		
 		parseRelatedConvos((Collection<DBRef>)convoDBObject.get("related_convos"));
     	parseChatMessages((Collection<DBObject>)convoDBObject.get("messages"));
@@ -176,9 +180,6 @@ public class ConversationBean {
     	setMessages(messages);
 	}
 	
-	
-	//TODO: 3 same methods: Col<DBRef> -> Set<Object>
-	//and vise versa: List<Object> -> List/Set<DBRef>
 	private void parseSumContributors(Collection<DBRef> contributorsDBList) {
 		sumContributors = new HashSet<TalkerBean>();
 		if (contributorsDBList != null) {
@@ -195,7 +196,7 @@ public class ConversationBean {
 		if (topicsDBList != null) {
 			for (DBRef topicDBRef : topicsDBList) {
 				TopicBean topic = new TopicBean();
-				topic.parseSuperBasicFromDB(topicDBRef.fetch());
+				topic.parseBasicFromDB(topicDBRef.fetch());
 				
 				if (topic.getId() == null) {
 					//maybe deleted topic
@@ -405,4 +406,16 @@ public class ConversationBean {
 	public int getNumOfChatters() { return numOfChatters; }
 	public void setNumOfChatters(int numOfChatters) { this.numOfChatters = numOfChatters; }
 	
+	public String getFrom() {
+		return from;
+	}
+	public void setFrom(String from) {
+		this.from = from;
+	}
+	public String getFromId() {
+		return fromId;
+	}
+	public void setFromId(String fromId) {
+		this.fromId = fromId;
+	}
 }

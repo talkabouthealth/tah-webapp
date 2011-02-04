@@ -54,6 +54,7 @@ public class ViewDispatcher extends Controller {
 			return;
 		}
 		
+		
 		//next - question or conversation
 		ConversationBean convo = ConversationDAO.getByURL(name);
 		if (convo != null) {
@@ -187,7 +188,6 @@ public class ViewDispatcher extends Controller {
 		}
 		
 		String currentURL = "http://"+request.host+request.path;
-		
 		render("Conversations/viewConvo.html", talker, convo, latestActivityTime, relatedConvos, userHasAnswer, currentURL);
     }
 	
@@ -217,9 +217,7 @@ public class ViewDispatcher extends Controller {
 		List<ConversationBean> trendingConvos = new ArrayList<ConversationBean>();
 		
 		//for FB like button
-		//TODO: possibly handle SSL urls also?
 		String currentURL = "http://"+request.host+request.path;
-		
 		render("Topics/viewTopic.html", talker, topic, activities, popularConvos, trendingConvos, currentURL);
 	}
 

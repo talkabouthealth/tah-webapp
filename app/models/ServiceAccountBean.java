@@ -48,7 +48,6 @@ public class ServiceAccountBean implements DBModel {
 	private String tokenSecret;
 	
 	//checked settings
-	//TODO: key/value? Maybe store it as list of selected settings?
 	private Map<String, String> settings;
 	
 	

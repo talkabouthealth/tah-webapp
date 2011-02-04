@@ -53,7 +53,7 @@ public class CommentsDAO {
 		DBObject answerDBObject = commentsColl.findOne(query);
 		
 		CommentBean comment = new CommentBean();
-		comment.parseBasicFromDB(answerDBObject);
+		comment.parseFromDB(answerDBObject);
 		return comment;
 	}
 	
@@ -125,7 +125,7 @@ public class CommentsDAO {
 		DBObject answerDBObject = commentsColl.findOne(query);
 		
 		CommentBean answer = new CommentBean();
-		answer.parseBasicFromDB(answerDBObject);
+		answer.parseFromDB(answerDBObject);
 		return answer;
 	}
 	
@@ -246,7 +246,7 @@ public class CommentsDAO {
 		List<CommentBean> answersList = new ArrayList<CommentBean>();
 		for (DBObject answerDBObject : commentsList) {
 			CommentBean answer = new CommentBean();
-			answer.parseBasicFromDB(answerDBObject);
+			answer.parseFromDB(answerDBObject);
 			answersList.add(answer);
 		}
 		return answersList;
@@ -269,38 +269,36 @@ public class CommentsDAO {
 	
 	/**
 	 * Transforms list of comments/replies to tree of comments/replies
-	 * TODO: better?
 	 */
 	private static List<CommentBean> parseCommentsTree(List<DBObject> commentsList) {
 		List<CommentBean> topCommentsList = new ArrayList<CommentBean>();
+		
 		//temp map for resolving children
 		Map<String, CommentBean> commentsCacheMap = new HashMap<String, CommentBean>();
 		for (DBObject commentDBObject : commentsList) {
-			String commentId = getString(commentDBObject, "_id");
+			CommentBean commentBean = new CommentBean();
+			commentBean.parseFromDB(commentDBObject);
+			commentsCacheMap.put(commentBean.getId(), commentBean);
 			
-			CommentBean commentBean = commentsCacheMap.get(commentId);
-			if (commentBean == null) {
-				commentBean = new CommentBean(commentId);
-				commentsCacheMap.put(commentId, commentBean);
-				
+			if (!commentBean.isDeleted()) {
 				topCommentsList.add(commentBean);
 			}
-			
-			commentBean.parseBasicFromDB(commentDBObject);
+		}
+		
+		for (DBObject commentDBObject : commentsList) {
+			String commentId = getString(commentDBObject, "_id");
+			CommentBean commentBean = commentsCacheMap.get(commentId);
 			
 			//save children
 			List<CommentBean> childrenList = new ArrayList<CommentBean>();
 			List<String> childrenIdsList = getStringList(commentDBObject, "children");
 			for (String childId : childrenIdsList) {
-				//try to get cached instance
 				CommentBean childrenCommentBean = commentsCacheMap.get(childId);
-				if (childrenCommentBean == null) {
-					childrenCommentBean = new CommentBean(childId);
-					commentsCacheMap.put(childId, childrenCommentBean);
+				if (!childrenCommentBean.isDeleted()) {
+					childrenList.add(childrenCommentBean);
 				}
 				
-				childrenList.add(childrenCommentBean);
-				//remove child comments from top list
+				//remove replies from the list of answers/thoughts
 				topCommentsList.remove(childrenCommentBean);
 			}
 			commentBean.setChildren(childrenList);

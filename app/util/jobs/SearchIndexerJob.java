@@ -56,10 +56,10 @@ public class SearchIndexerJob extends Job {
 				  talkerIndexWriter.addDocument(doc);
 				  
 				  //for autocomplete
-				  Document doc2 = new Document();
-				  doc2.add(new Field("uname", talker.getUserName(), Field.Store.YES, Field.Index.TOKENIZED));
-				  doc2.add(new Field("type", "User", Field.Store.YES, Field.Index.NO));
-				  autocompleteIndexWriter.addDocument(doc2);
+				  doc = new Document();
+				  doc.add(new Field("uname", talker.getUserName(), Field.Store.YES, Field.Index.TOKENIZED));
+				  doc.add(new Field("type", "User", Field.Store.YES, Field.Index.NO));
+				  autocompleteIndexWriter.addDocument(doc);
 			}
 			
 			for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
@@ -68,13 +68,12 @@ public class SearchIndexerJob extends Job {
 					continue;
 				}
 				
-				List<CommentBean> answersList = CommentsDAO.loadConvoAnswersTree(convo.getId());
-				
 				Document doc = new Document();
 				doc.add(new Field("id", convo.getId(), Field.Store.YES, Field.Index.NO));
 				doc.add(new Field("title", convo.getTopic(), Field.Store.YES, Field.Index.TOKENIZED));
 				
 				//add an answer, reply, or live conversation text ?
+				List<CommentBean> answersList = CommentsDAO.loadConvoAnswersTree(convo.getId());
 				StringBuilder answersString = new StringBuilder();
 				for (CommentBean answer : answersList) {
 					if (!answer.isDeleted()) {
@@ -86,13 +85,13 @@ public class SearchIndexerJob extends Job {
 				  
 						
 				//for autocomplete
-				Document doc2 = new Document();
-				doc2.add(new Field("title", convo.getTopic(), Field.Store.YES, Field.Index.TOKENIZED));
-				doc2.add(new Field("type", "Conversation", Field.Store.YES, Field.Index.NO));
+				doc = new Document();
+				doc.add(new Field("title", convo.getTopic(), Field.Store.YES, Field.Index.TOKENIZED));
+				doc.add(new Field("type", "Conversation", Field.Store.YES, Field.Index.NO));
 				if (convo.getMainURL() != null) {
-					doc2.add(new Field("url", convo.getMainURL(), Field.Store.YES, Field.Index.NO));
+					doc.add(new Field("url", convo.getMainURL(), Field.Store.YES, Field.Index.NO));
 				}
-				autocompleteIndexWriter.addDocument(doc2);
+				autocompleteIndexWriter.addDocument(doc);
 			}
 			
 			for (TopicBean topic : TopicDAO.loadAllTopics()) {
@@ -105,7 +104,6 @@ public class SearchIndexerJob extends Job {
 				doc.add(new Field("title", topic.getTitle(), Field.Store.YES, Field.Index.TOKENIZED));
 				doc.add(new Field("type", "Topic", Field.Store.YES, Field.Index.NO));
 				doc.add(new Field("url", topic.getMainURL(), Field.Store.YES, Field.Index.NO));
-				
 				autocompleteIndexWriter.addDocument(doc);
 			}
 		}

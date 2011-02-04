@@ -185,7 +185,7 @@ public class Application extends Controller {
 		ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
 		if (twitterAccount != null && twitterAccount.isTrue("FOLLOW")) {
 			//follow TAH by this user
-			TwitterUtil.followTAH(twitterAccount.getToken(), twitterAccount.getTokenSecret());
+			TwitterUtil.followTAH(twitterAccount);
 		}
 
 		//manually login this talker

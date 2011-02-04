@@ -2,6 +2,8 @@ package models.actions;
 
 import java.util.Date;
 
+import play.Logger;
+
 import models.ConversationBean;
 import models.TalkerBean;
 import models.actions.Action.ActionType;
@@ -41,7 +43,9 @@ public class PreloadAction implements Action {
 	 * @return
 	 */
 	public Action getFullAction() {
+//		long start = System.currentTimeMillis();
 		Action action = ActionDAO.actionFromDB(dbObject);
+//		Logger.info(action.getClass().toString()+" : "+(System.currentTimeMillis()-start));
 		return action;
 	}
 	

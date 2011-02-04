@@ -119,7 +119,7 @@ public class CommentBean extends MessageBean {
 		return id.hashCode();
 	}
 	
-	public void parseBasicFromDB(DBObject commentDBObject) {
+	public void parseFromDB(DBObject commentDBObject) {
 		if (commentDBObject == null) {
 			return;
 		}

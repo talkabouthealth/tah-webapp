@@ -186,7 +186,8 @@
 						                    	<div class="profileCantanttxt1">
 						                      	<strong>Webpage:</strong> 
 						                      	<span class="Profilepersonsub">
-						                      		<a href="${talker.webpage}" target="_blank">${talker.webpage}</a>
+						                      		<a href="${talker.webpage.startsWith('http') ? talker.webpage : 'http://'+talker.webpage}"
+						                      			target="_blank">${talker.webpage}</a>
 						                      	</span>
 						                      </div>
 							                </div>
@@ -317,7 +318,8 @@
 			                    	<div class="profileCantanttxt1">
 			                      	<strong>Webpage:</strong>
 			                      	<span class="Profilepersonsub">
-			                      		<a href="${talker.webpage}" target="_blank">${talker.webpage}</a>
+			                      		<a href="${talker.webpage.startsWith('http') ? talker.webpage : 'http://'+talker.webpage}"
+						                      			target="_blank">${talker.webpage}</a>
 			                      	</span>
 			                      </div>
 				                </div>

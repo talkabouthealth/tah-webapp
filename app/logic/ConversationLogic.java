@@ -54,6 +54,10 @@ public class ConversationLogic {
 	public static ConversationBean createConvo(ConvoType type, String title, 
 			TalkerBean talker, String details, Set<TopicBean> topicsSet, boolean notifyTalkers) {
 		
+		if (topicsSet == null) {
+			topicsSet = new HashSet<TopicBean>();
+		}
+		
 		//when a new topic is created, it automatically has a parent topic of "Unorganized"
 		//When a "Live Talk" is started, tag it with the topic "Talks" instead of "Unorganized"
 		TopicBean topic = null;
@@ -75,6 +79,7 @@ public class ConversationLogic {
 		convo.setCreationDate(Calendar.getInstance().getTime());
 		convo.setDetails(details);
 		convo.setTopics(topicsSet);
+		convo.setOpened(true);
 		String topicURL = ApplicationDAO.createURLName(title);
 		convo.setMainURL(topicURL);
 
@@ -118,12 +123,12 @@ public class ConversationLogic {
 			if (serviceAccount.getType() == ServiceType.TWITTER) {
 				postText = postText + bitlyLinkText;
 				postText = TwitterUtil.prepareTwit(postText, convo.getTopic());
-				TwitterUtil.makeUserTwit(postText, serviceAccount.getToken(), serviceAccount.getTokenSecret());
+				TwitterUtil.tweet(postText, serviceAccount);
 			}
 			else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
 				postText = postText + fullLinkText;
 				postText = postText.replace("<PARAM>", convo.getTopic());
-				FacebookUtil.post(postText, serviceAccount.getToken());
+				FacebookUtil.post(postText, serviceAccount);
 			}
 		}
 		
@@ -203,12 +208,30 @@ public class ConversationLogic {
     			if (serviceAccount.getType() == ServiceType.TWITTER) {
     				postText = postText + convo.getBitly();
     				postText = TwitterUtil.prepareTwit(postText, convo.getTopic());
-    				TwitterUtil.makeUserTwit(postText, serviceAccount.getToken(), serviceAccount.getTokenSecret());
+    				TwitterUtil.tweet(postText, serviceAccount);
     			}
     			else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
     				postText = postText + convoURL;
     				postText = postText.replace("<PARAM>", convo.getTopic());
-    				FacebookUtil.post(postText, serviceAccount.getToken());
+    				FacebookUtil.post(postText, serviceAccount);
+    			}
+    		}
+    		
+    		//If conversation was created from Twitter - send notification to author
+    		if (convo.getFrom() != null && convo.getFrom().equals("twitter")) {
+    			TalkerBean convoAuthor = TalkerDAO.getById(convo.getTalker().getId());
+    			if (!talker.equals(convoAuthor)) {
+    				ServiceAccountBean twitterAccount = convoAuthor.serviceAccountByType(ServiceType.TWITTER);
+    				if (twitterAccount != null) {
+    					//You have received an answer to "<question>...". View the answer at: http://bit.ly/lksa
+    					StringBuilder dmText = new StringBuilder();
+    					dmText.append("You have received an answer to \"<PARAM>\". ");
+    					dmText.append("\nView the answer at: ");
+    					dmText.append(convo.getBitly());
+    					
+    					String dmTextString = TwitterUtil.prepareTwit(dmText.toString(), convo.getTopic());
+    					TwitterUtil.sendDirect(twitterAccount.getId(), dmTextString);
+    				}
     			}
     		}
     	}

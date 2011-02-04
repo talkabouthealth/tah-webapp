@@ -7,6 +7,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -293,11 +294,286 @@ public class TalkerLogic {
 	}
 	
 	/**
+	 * Loads all answers of this talker in Feed format
+	 * 
+	 * @param talkerId
+	 * @param answersFeed Feed where answer actions are stored
+	 * @return Number of top answers of this talker
+	 */
+	public static int prepareTalkerAnswers(String talkerId, List<Action> answersFeed) {
+		int numOfTopAnswers = 0;
+		List<CommentBean> allAnswers = CommentsDAO.getTalkerAnswers(talkerId, null);
+		for (CommentBean answer : allAnswers) {
+			ConversationBean convo = ConversationDAO.getById(answer.getConvoId());
+			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
+			
+			//if first in the list - top answer
+			if (!convo.getComments().isEmpty() && convo.getComments().get(0).equals(answer)) {
+				numOfTopAnswers++;
+			}
+
+			//Use special action for answer displaying.
+			AnswerDisplayAction answerAction = new AnswerDisplayAction(convo.getTalker(), convo, answer, ActionType.ANSWER_CONVO, false);
+			answerAction.setTime(answer.getTime());
+			answersFeed.add(answerAction);
+		}
+		return numOfTopAnswers;
+	}
+	
+	/**
+	 * Converts given list of talker's conversations to Feed format
+	 * @param loadFollowingConversations
+	 * @return
+	 */
+	public static List<Action> prepareTalkerConvos(Set<ConversationBean> loadFollowingConversations) {
+		List<Action> convosFeed = new ArrayList<Action>();
+		for (ConversationBean convo : loadFollowingConversations) {
+			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
+			
+			TalkerBean activityTalker = convo.getTalker();
+			//show top answer or simple convo
+			CommentBean topAnswer = null;
+			if (!convo.getComments().isEmpty()) {
+				topAnswer = convo.getComments().get(0);
+				topAnswer = CommentsDAO.getConvoAnswerById(topAnswer.getId());
+				activityTalker = topAnswer.getFromTalker();
+			}
+			
+			AnswerDisplayAction convoAction =
+				new AnswerDisplayAction(activityTalker, convo, topAnswer, ActionType.ANSWER_CONVO, topAnswer != null);
+			convoAction.setTime(convo.getCreationDate());
+			
+			convosFeed.add(convoAction);
+		}
+		return convosFeed;
+	}
+	
+	public static Set<ConversationBean> loadFollowingConversations(TalkerBean talker) {
+		if (talker == null) {
+			return new HashSet<ConversationBean>();
+		}
+		
+		Set<ConversationBean> followingConvoSet = new LinkedHashSet<ConversationBean>();
+		for (String convoId : talker.getFollowingConvosList()) {
+			ConversationBean convo = ConversationDAO.getById(convoId);
+			followingConvoSet.add(convo);
+		}
+		
+		return followingConvoSet;
+	}
+
+	public static boolean talkerHasNoHealthInfo(TalkerBean talker) {
+		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
+		return (talkerDisease == null && !talker.isProf());
+	}
+	
+	/**
+	 * Save thought or reply
+	 * @param talker
+	 * @param profileTalkerId
+	 * @param parentId
+	 * @param text
+	 * @return
+	 */
+	public static CommentBean saveProfileComment(TalkerBean talker, String profileTalkerId, String parentId, String text) {
+		//find profile talker by parent thought or given talker id
+		if (parentId != null && parentId.length() != 0) {
+			CommentBean parentAnswer = CommentsDAO.getProfileCommentById(parentId);
+			if (parentAnswer != null) {
+				profileTalkerId = parentAnswer.getProfileTalkerId();
+			}
+		}
+		TalkerBean profileTalker = null;
+		if (profileTalkerId == null) {
+			profileTalker = talker;
+			profileTalkerId = profileTalker.getId();
+		}
+		else {
+			profileTalker = TalkerDAO.getById(profileTalkerId);
+		}
+		if (profileTalker == null) {
+			return null;
+		}
+		
+		CommentBean comment = new CommentBean();
+		if (parentId == null || parentId.trim().length() == 0) {
+			comment.setParentId(null);
+		}
+		else {
+			comment.setParentId(parentId);
+		}
+		comment.setProfileTalkerId(profileTalkerId);
+		comment.setFromTalker(talker);
+		comment.setText(text);
+		comment.setTime(new Date());
+		CommentsDAO.saveProfileComment(comment);
+		
+		if (comment.getParentId() == null) {
+			//post to personal Thoughts?
+			if (talker.equals(profileTalker)) {
+				ActionDAO.saveAction(new PersonalProfileCommentAction(
+						talker, profileTalker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT));
+				
+				for (ServiceAccountBean serviceAccount : talker.getServiceAccounts()) {
+					if (!serviceAccount.isTrue("SHARE_FROM_THOUGHTS")) {
+						continue;
+					}
+					
+					Logger.debug(serviceAccount.getType().toString()+", Share from Thoughts, Info: "+
+							serviceAccount.getToken()+" : "+serviceAccount.getTokenSecret());
+					
+					if (serviceAccount.getType() == ServiceType.TWITTER) {
+						TwitterUtil.tweet(comment.getText(), serviceAccount);
+					}
+					else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
+						FacebookUtil.post(comment.getText(), serviceAccount);
+					}
+				}
+			}
+			
+			if (!talker.equals(profileTalker)) {
+				Map<String, String> vars = new HashMap<String, String>();
+				vars.put("other_talker", talker.getUserName());
+				vars.put("comment_text", comment.getText());
+				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
+						profileTalker, vars);
+			}
+		}
+		else {
+			//for replies we update action for parent comment
+			ActionDAO.updateProfileCommentActionTime(comment.getParentId());
+			
+			CommentBean thought = CommentsDAO.getProfileCommentById(comment.getParentId());
+			if (!talker.equals(thought.getFromTalker())) {
+				//when user leaves post in someone else's Thoughts Feed, if there are replies, 
+				//send email to the owner of the Thoughts Feed as well as the user who started the thread.
+				Map<String, String> vars = new HashMap<String, String>();
+				vars.put("other_talker", talker.getUserName());
+				vars.put("comment_text", thought.getText());
+				vars.put("reply_text", comment.getText());
+				vars.put("profile_talker", profileTalker.getUserName());
+				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
+						thought.getFromTalker(), vars);
+				
+				if (!talker.equals(profileTalker)) {
+					NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
+							profileTalker, vars);
+				}
+			}
+		}
+		
+		return comment;
+	}
+	
+	/**
+	 * The Personal Info and Health Info should be private by default. 
+	 * All other items should be set to viewable by the community by default.
+	 */
+	public static Set<PrivacySetting> getDefaultPrivacySettings() {
+		Set<PrivacySetting> privacySettings = new HashSet<PrivacySetting>();
+		for (PrivacyType type : PrivacyType.values()) {
+			PrivacyValue value = PrivacyValue.COMMUNITY;
+			if (type == PrivacyType.PROFILE_INFO || type == PrivacyType.HEALTH_INFO) {
+				value = PrivacyValue.PRIVATE;
+			}
+			
+			PrivacySetting privacySetting = new PrivacySetting(type, value);
+			privacySettings.add(privacySetting);
+		}
+		return privacySettings;
+	}
+	
+	
+	/* -------------------------- Recommendations ---------------------- */
+	
+	public static List<TopicBean> getRecommendedTopics(TalkerBean talker) {
+		List<TopicBean> loadedTopics = new ArrayList<TopicBean>();
+		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();
+		
+		//try topics based on HealthInfo
+		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
+		if (!talker.isProf() && talkerDisease != null) {
+			loadedTopics = TalkerLogic.getTopicsByHealthInfo(talkerDisease);
+		}
+		
+		if (loadedTopics.isEmpty()) {
+			//display most popular Topics based on number of questions
+			loadedTopics = new ArrayList<TopicBean>(TopicDAO.loadAllTopics(true));
+		}
+		
+		for (TopicBean topic : loadedTopics) {
+			//not following and not default
+			if (!talker.getFollowingTopicsList().contains(topic)) {
+				if (! (topic.getTitle().equals(ConversationLogic.DEFAULT_QUESTION_TOPIC) 
+						|| topic.getTitle().equals(ConversationLogic.DEFAULT_TALK_TOPIC)) ) {
+					recommendedTopics.add(topic);
+				}
+			}
+			if (recommendedTopics.size() == 3) {
+				break;
+			}
+		}
+		return recommendedTopics;
+	}
+	
+	public static void getRecommendedTalkers(TalkerBean talker, List<TalkerBean> similarMembers,
+			List<TalkerBean> experts) {
+		List<TalkerBean> allMembers = TalkerDAO.loadAllTalkers(true);
+		for (TalkerBean member : allMembers) {
+			  if (member.isSuspended() || member.isDeactivated() || member.isAdmin()) {
+				  continue;
+			  }
+			  if (talker.equals(member) || talker.getFollowingList().contains(member)) {
+				  continue;
+			  }
+			  
+			  if (member.isProf()) {
+				  if (experts.size() < 3) {
+					  experts.add(member);
+				  }
+			  }
+			  else {
+				  if (similarMembers.size() < 3) {
+					  similarMembers.add(member);
+				  }
+			  }
+		}
+	}
+	
+	public static List<ConversationBean> getRecommendedConvos(TalkerBean talker) {
+		/* 
+		 	Ideas for recommended conversations :
+				1) match member following topics with convo topics
+				2) match member info with full convo info
+				3) what conversations are being followed by other members the user follows. 
+		*/
+		
+		List<ConversationBean> recommendedConvos = new ArrayList<ConversationBean>();
+		Set<ConversationBean> allConvos = new LinkedHashSet<ConversationBean>();
+		for (TopicBean topic : talker.getFollowingTopicsList()) {
+			allConvos.addAll(ConversationDAO.loadConversationsByTopic(topic.getId()));
+		}
+		allConvos.addAll(ConversationDAO.loadPopularConversations());
+		
+		for (ConversationBean convo : allConvos) {
+			if (talker.getFollowingConvosList().contains(convo.getId())) {
+				continue;
+			}
+			recommendedConvos.add(convo);
+			if (recommendedConvos.size() == 3) {
+				break;
+			}
+		}
+		
+		return recommendedConvos;
+	}
+	
+	/**
 	 * Gets list of recommended topics based on talker's HealthInfo
 	 * @param talkerDisease
 	 * @return
 	 */
-	public static List<TopicBean> getRecommendedTopics(TalkerDiseaseBean talkerDisease) {
+	public static List<TopicBean> getTopicsByHealthInfo(TalkerDiseaseBean talkerDisease) {
 		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();
 		
 		//No topics should be followed for "What part of the breast did the cancer begin?"
@@ -366,189 +642,4 @@ public class TalkerLogic {
 		return recommendedTopics;
 	}
 	
-	/**
-	 * Loads all answers of this talker in Feed format
-	 * 
-	 * @param talkerId
-	 * @param answersFeed Feed where answer actions are stored
-	 * @return Number of top answers of this talker
-	 */
-	public static int prepareTalkerAnswers(String talkerId, List<Action> answersFeed) {
-		int numOfTopAnswers = 0;
-		List<CommentBean> allAnswers = CommentsDAO.getTalkerAnswers(talkerId, null);
-		for (CommentBean answer : allAnswers) {
-			ConversationBean convo = ConversationDAO.getById(answer.getConvoId());
-			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
-			
-			//if first in the list - top answer
-			if (!convo.getComments().isEmpty() && convo.getComments().get(0).equals(answer)) {
-				numOfTopAnswers++;
-			}
-
-			//Use special action for answer displaying.
-			AnswerDisplayAction answerAction = new AnswerDisplayAction(convo.getTalker(), convo, answer, ActionType.ANSWER_CONVO, false);
-			answerAction.setTime(answer.getTime());
-			answersFeed.add(answerAction);
-		}
-		return numOfTopAnswers;
-	}
-	
-	/**
-	 * Converts given list of talker's conversations to Feed format
-	 * @param loadFollowingConversations
-	 * @return
-	 */
-	public static List<Action> prepareTalkerConvos(List<ConversationBean> loadFollowingConversations) {
-		List<Action> convosFeed = new ArrayList<Action>();
-		for (ConversationBean convo : loadFollowingConversations) {
-			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
-			
-			TalkerBean activityTalker = convo.getTalker();
-			//show top answer or simple convo
-			CommentBean topAnswer = null;
-			if (!convo.getComments().isEmpty()) {
-				topAnswer = convo.getComments().get(0);
-				topAnswer = CommentsDAO.getConvoAnswerById(topAnswer.getId());
-				activityTalker = topAnswer.getFromTalker();
-			}
-			
-			AnswerDisplayAction convoAction =
-				new AnswerDisplayAction(activityTalker, convo, topAnswer, ActionType.ANSWER_CONVO, topAnswer != null);
-			convoAction.setTime(convo.getCreationDate());
-			
-			convosFeed.add(convoAction);
-		}
-		return convosFeed;
-	}
-	
-	public static List<ConversationBean> loadFollowingConversations(TalkerBean talker) {
-		if (talker == null) {
-			return new ArrayList<ConversationBean>();
-		}
-		
-		List<ConversationBean> followingConvoList = new ArrayList<ConversationBean>();
-		for (String convoId : talker.getFollowingConvosList()) {
-			ConversationBean convo = ConversationDAO.getById(convoId);
-			followingConvoList.add(convo);
-		}
-		
-		return followingConvoList;
-	}
-
-	public static boolean talkerHasNoHealthInfo(TalkerBean talker) {
-		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
-		return (talkerDisease == null && !talker.isProf());
-	}
-	
-	/**
-	 * Save thought or reply
-	 * @param talker
-	 * @param profileTalkerId
-	 * @param parentId
-	 * @param text
-	 * @return
-	 */
-	public static CommentBean saveProfileComment(TalkerBean talker, String profileTalkerId, String parentId, String text) {
-		//find profile talker by parent thought or given talker id
-		if (parentId != null && parentId.length() != 0) {
-			CommentBean parentAnswer = CommentsDAO.getProfileCommentById(parentId);
-			if (parentAnswer != null) {
-				profileTalkerId = parentAnswer.getProfileTalkerId();
-			}
-		}
-		TalkerBean profileTalker = null;
-		if (profileTalkerId == null) {
-			profileTalker = talker;
-			profileTalkerId = profileTalker.getId();
-		}
-		else {
-			profileTalker = TalkerDAO.getById(profileTalkerId);
-		}
-		if (profileTalker == null) {
-			return null;
-		}
-		
-		CommentBean comment = new CommentBean();
-		if (parentId == null || parentId.trim().length() == 0) {
-			comment.setParentId(null);
-		}
-		else {
-			comment.setParentId(parentId);
-		}
-		comment.setProfileTalkerId(profileTalkerId);
-		comment.setFromTalker(talker);
-		comment.setText(text);
-		comment.setTime(new Date());
-		CommentsDAO.saveProfileComment(comment);
-		
-		if (comment.getParentId() == null) {
-			//post to personal Thoughts?
-			if (talker.equals(profileTalker)) {
-				ActionDAO.saveAction(new PersonalProfileCommentAction(
-						talker, profileTalker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT));
-				
-				for (ServiceAccountBean serviceAccount : talker.getServiceAccounts()) {
-					if (!serviceAccount.isTrue("SHARE_FROM_THOUGHTS")) {
-						continue;
-					}
-					
-					Logger.debug(serviceAccount.getType().toString()+", Share from Thoughts, Info: "+
-							serviceAccount.getToken()+" : "+serviceAccount.getTokenSecret());
-					
-					if (serviceAccount.getType() == ServiceType.TWITTER) {
-						TwitterUtil.makeUserTwit(comment.getText(), 
-								serviceAccount.getToken(), serviceAccount.getTokenSecret());
-					}
-					else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
-						FacebookUtil.post(comment.getText(), serviceAccount.getToken());
-					}
-				}
-			}
-			
-			if (!talker.equals(profileTalker)) {
-				Map<String, String> vars = new HashMap<String, String>();
-				vars.put("other_talker", talker.getUserName());
-				vars.put("comment_text", comment.getText());
-				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
-						profileTalker, vars);
-			}
-		}
-		else {
-			//for replies we update action for parent comment
-			ActionDAO.updateProfileCommentActionTime(comment.getParentId());
-			
-			CommentBean thought = CommentsDAO.getProfileCommentById(comment.getParentId());
-			if (!talker.equals(thought.getFromTalker())) {
-				//when user leaves post in someone else's Thoughts Feed, if there are replies, 
-				//send email to the owner of the Thoughts Feed as well as the user who started the thread.
-				Map<String, String> vars = new HashMap<String, String>();
-				vars.put("other_talker", talker.getUserName());
-				vars.put("comment_text", thought.getText());
-				vars.put("reply_text", comment.getText());
-				vars.put("profile_talker", profileTalker.getUserName());
-				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
-						thought.getFromTalker(), vars);
-			}
-		}
-		
-		return comment;
-	}
-	
-	/**
-	 * The Personal Info and Health Info should be private by default. 
-	 * All other items should be set to viewable by the community by default.
-	 */
-	public static Set<PrivacySetting> getDefaultPrivacySettings() {
-		Set<PrivacySetting> privacySettings = new HashSet<PrivacySetting>();
-		for (PrivacyType type : PrivacyType.values()) {
-			PrivacyValue value = PrivacyValue.COMMUNITY;
-			if (type == PrivacyType.PROFILE_INFO || type == PrivacyType.HEALTH_INFO) {
-				value = PrivacyValue.PRIVATE;
-			}
-			
-			PrivacySetting privacySetting = new PrivacySetting(type, value);
-			privacySettings.add(privacySetting);
-		}
-		return privacySettings;
-	}
 }

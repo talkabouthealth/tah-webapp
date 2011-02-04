@@ -32,9 +32,8 @@
 			}
 		}
 
-		*{ TODO: Similar method? }*
    		function saveProfileComment(parentId) {
-   	   		var commentText = $("#replytext"+parentId).val();
+   	   		var commentText = $(".replytext"+parentId).val();
    	   		if (commentText === '') {
    	   	   		alert('Please input comment');
    	   	   		return;
@@ -43,7 +42,7 @@
    	   		commentText = linkify(commentText);
 
    	   		$("#saveThoughtImage"+parentId).show();
-   			$("#replytext"+parentId).val("");
+   			$(".replytext"+parentId).val("");
    			$.post("@{Actions.saveProfileComment()}", 
   				{ profileTalkerId: '${talker.id}', parentId: parentId, text: commentText},
   				function(html) {
@@ -58,7 +57,7 @@
   					}
   					else {
   						//add as last element in subtree
-  						$("#reply"+parentId).before($(html));
+  						$(".reply"+parentId).before($(html));
   					}
   					$("#saveThoughtImage"+parentId).hide();
   				}
@@ -70,7 +69,7 @@
    		function deleteComment(commentId) {
    	   		var confirmDel = confirm("Are you sure want to delete this thought/reply?");
    	   		if (confirmDel) {
-   	   	   		$("#comment"+commentId).remove();
+   	   	   		$(".comment"+commentId).remove();
 
    	   	  		$.post("@{PublicProfile.deleteComment()}", 
     				{ commentId : commentId},
@@ -97,7 +96,7 @@
                   
                   	#{if talker.isAllowed(models.PrivacySetting.PrivacyType.THOUGHTS, currentTalker) }
                   		#{if currentTalker}
-		                    <div id="reply" class="comsearchbox">
+		                    <div class="reply comsearchbox">
 		                      <div class="comh1" style="font-size:18px">
 		                        #{if talker.equals(currentTalker) }
 		                        	What are you thinking about or feeling? (To share with the community)
@@ -108,7 +107,7 @@
 		                      	<br />
 		                      </div>
 		                      <div class="comsearch">
-		                        <textarea id="replytext" class="edititinputx" style="width:490px" cols="4" rows="3" ></textarea>
+		                        <textarea class="replytext edititinputx" style="width:490px" cols="4" rows="3" ></textarea>
 		                      </div>
 		                      <div id="saveThoughtImage" class="ajaxLoading" style="float: right; margin-right: 40px;"></div>
 		                      <input type="submit" src="/public/images/postcomments.jpg" value=" " class="postcomments" 

@@ -48,124 +48,144 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			
 			authURL = "https://graph.facebook.com/oauth/authorize?" +
 				"client_id="+APP_ID+"&redirect_uri="+URLEncoder.encode(callbackURL, "UTF-8")+
-				"&scope=email,user_about_me,user_birthday,publish_stream,offline_access";
+				"&scope=email,user_about_me,publish_stream,offline_access";
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			Logger.error(e, "");
 		}
 		return authURL;
 	}
 
 	public String handleCallback(Session session, Map<String, String> params, boolean secureRequest) throws Exception {
+		//code returned by Facebook
 		String code = params.get("code");
-		if (code != null) {
-			String callbackURL = (secureRequest ? "https://" : "http://");
-			callbackURL = callbackURL+CALLBACK_URL;
-			
-			HttpResponse res = 
-				WS.url("https://graph.facebook.com/oauth/access_token" +
-						"?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s", APP_ID, callbackURL, APP_SECRET, code).get();
-			String responseText = res.getString();
-			
-			//returned string is:
-			//access_token=...token...
-			String accessToken = null;
-			if (responseText.startsWith("access_token")) {
-				accessToken = responseText.substring(13);
-			}
-			session.put("token", accessToken);
-			
-			//parse Facebook id and email from reply
-			res = WS.url("https://graph.facebook.com/me?access_token=%s", accessToken).get();
-			responseText = res.getString();
-			Logger.error("---------- FACEBOOK INFO --------------");
-			Logger.error(responseText);
-			
-			String accountId = null;
-			String userEmail = null;
-			if (responseText.startsWith("{")) {
-				Pattern p = Pattern.compile("\"(\\w+)\":\"([@.\\s\\w]+)\"");
-				Matcher m = p.matcher(responseText);
-				while (m.find()) {
-					String param = m.group(1);
-					String value = m.group(2);
-					//there are a few "id" fields possible, so we use only the first one
-					if (param.equals("id") && accountId == null) {
-						accountId = value;
-					}
-					else if (param.equals("email") && userEmail == null) {
-						userEmail = value;
-					}
+		if (code == null) {
+			return null;
+		}
+		
+		String accessToken = loadAccessToken(secureRequest, code);
+		session.put("token", accessToken);
+		
+		//load user info, parse Facebook id and email from reply
+		HttpResponse res = WS.url("https://graph.facebook.com/me?access_token=%s", accessToken).get();
+		String responseText = res.getString();
+		Logger.info("---------- FACEBOOK INFO --------------");
+		Logger.info(responseText);
+		
+		String accountId = null;
+		String userEmail = null;
+		if (responseText.startsWith("{")) {
+			Pattern p = Pattern.compile("\"(\\w+)\":\"([@.\\s\\w]+)\"");
+			Matcher m = p.matcher(responseText);
+			while (m.find()) {
+				String param = m.group(1);
+				String value = m.group(2);
+				//there are a few "id" fields possible, so we use only the first one
+				if (param.equals("id") && accountId == null) {
+					accountId = value;
 				}
-			}
-			
-			boolean isConnected = session.contains("username");
-			if (isConnected) {
-				//it's not login/signup - it's notifications page
-				
-				TalkerBean anotherTalker = TalkerDAO.getByAccount(ServiceType.FACEBOOK, accountId);
-				if (anotherTalker != null) {
-					//this account is already connected by another user
-					return "/profile/notificationsettings?err=notunique&from="+ServiceType.FACEBOOK.toString();
+				else if (param.equals("email") && userEmail == null) {
+					userEmail = value;
 				}
-				
-				Logger.error("Adding new Facebook account: "+userEmail);
-				Logger.error(accessToken);
-				
-				TalkerBean talker = CommonUtil.loadCachedTalker(session);
-				if (talker.serviceAccountByType(ServiceType.FACEBOOK) == null) {
-					ServiceAccountBean fbAccount = new ServiceAccountBean(accountId, userEmail, ServiceType.FACEBOOK);
-					fbAccount.setToken(accessToken);
-					
-					talker.getServiceAccounts().add(fbAccount);
-					
-					CommonUtil.updateTalker(talker, session);
-				}
-		        
-				//to sharing or notification settings?
-				String redirectURL = session.get("oauth_redirect_url");
-				if (redirectURL != null) {
-					return redirectURL;
-				}
-				else {
-					return "/profile/notificationsettings";
-				}
-			}
-			else {
-				//login or signup
-		        TalkerBean talker = TalkerDAO.getByAccount(ServiceType.FACEBOOK, accountId);
-		        Logger.error("Loading FB account: <%s>, Result: "+talker, accountId);
-		        if (talker != null) {
-		        	if (talker.isSuspended()) {
-		        		return "/application/suspendedAccount";
-		        	}
-		        	
-		        	if (talker.isDeactivated()) {
-			    		talker.setDeactivated(false);
-			    		CommonUtil.updateTalker(talker, session);
-			    	}
-		        	
-		        	ServiceAccountBean fbAccount = talker.serviceAccountByType(ServiceType.FACEBOOK);
-					fbAccount.setToken(accessToken);
-					CommonUtil.updateTalker(talker, session);
-		        	
-		        	// insert login record into db
-					ApplicationDAO.saveLogin(talker.getId());
-	
-					// add TalkerBean to session
-					session.put("username", talker.getUserName());
-					
-					return "/home";
-		        }
-		        else {
-		        	session.put("accounttype", ServiceType.FACEBOOK);
-		        	session.put("accountname", userEmail);
-				    session.put("accountid", accountId);
-				    
-				    return "/signup?talker.email="+userEmail+"&from="+ServiceType.FACEBOOK.toString();
-		        }
 			}
 		}
-		return null;
+		
+		boolean isConnected = session.contains("username");
+		if (isConnected) {
+			//it's not login/signup - it's notifications or sharing page
+			return addAccount(session, accessToken, accountId, userEmail);
+		}
+		else {
+	        return loginOrSignupWithAccount(session, accessToken, accountId,
+					userEmail);
+		}
+	}
+	
+	private String loadAccessToken(boolean secureRequest, String code) {
+		String callbackURL = (secureRequest ? "https://" : "http://");
+		callbackURL = callbackURL+CALLBACK_URL;
+		
+		HttpResponse res = 
+			WS.url("https://graph.facebook.com/oauth/access_token" +
+					"?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s", APP_ID, callbackURL, APP_SECRET, code).get();
+		String responseText = res.getString();
+		
+		//returned string is:
+		//access_token=...token...
+		String accessToken = null;
+		if (responseText.startsWith("access_token")) {
+			accessToken = responseText.substring(13);
+		}
+		return accessToken;
+	}
+
+	/**
+	 * Add new FB account to existing user.
+	 * @param session
+	 * @param accessToken
+	 * @param accountId
+	 * @param userEmail
+	 * @return
+	 */
+	private String addAccount(Session session, String accessToken,
+			String accountId, String userEmail) {
+		TalkerBean anotherTalker = TalkerDAO.getByAccount(ServiceType.FACEBOOK, accountId);
+		if (anotherTalker != null) {
+			//this account is already connected by another user
+			return "/profile/notificationsettings?err=notunique&from="+ServiceType.FACEBOOK.toString();
+		}
+		
+		Logger.info("Adding new Facebook account: "+userEmail);
+		Logger.info(accessToken);
+		
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		if (talker.serviceAccountByType(ServiceType.FACEBOOK) == null) {
+			ServiceAccountBean fbAccount = new ServiceAccountBean(accountId, userEmail, ServiceType.FACEBOOK);
+			fbAccount.setToken(accessToken);
+			
+			talker.getServiceAccounts().add(fbAccount);
+			CommonUtil.updateTalker(talker, session);
+		}
+		
+		//to sharing or notification settings?
+		String redirectURL = session.get("oauth_redirect_url");
+		if (redirectURL != null) {
+			return redirectURL;
+		}
+		else {
+			return "/profile/notificationsettings";
+		}
+	}
+	
+	private String loginOrSignupWithAccount(Session session,
+			String accessToken, String accountId, String userEmail) {
+		TalkerBean talker = TalkerDAO.getByAccount(ServiceType.FACEBOOK, accountId);
+		Logger.info("Loading FB account: <%s>, Result: "+talker, accountId);
+		if (talker != null) {
+			if (talker.isSuspended()) {
+				return "/application/suspendedAccount";
+			}
+			if (talker.isDeactivated()) {
+				talker.setDeactivated(false);
+				CommonUtil.updateTalker(talker, session);
+			}
+			
+			ServiceAccountBean fbAccount = talker.serviceAccountByType(ServiceType.FACEBOOK);
+			fbAccount.setToken(accessToken);
+			CommonUtil.updateTalker(talker, session);
+			
+			//manual login
+			ApplicationDAO.saveLogin(talker.getId());
+			session.put("username", talker.getUserName());
+			
+			return "/home";
+		}
+		else {
+			session.put("accounttype", ServiceType.FACEBOOK);
+			session.put("accountname", userEmail);
+		    session.put("accountid", accountId);
+		    
+		    return "/signup?talker.email="+userEmail+"&from="+ServiceType.FACEBOOK.toString();
+		}
 	}
 
 }

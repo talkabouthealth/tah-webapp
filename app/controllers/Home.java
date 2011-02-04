@@ -50,91 +50,34 @@ public class Home extends Controller {
 	 * Home page
 	 */
     public static void index() {
-//    	Logger.error("Home 0");
+    	Logger.error("Home 0");
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-//    	Logger.error("Home 1");
+    	Logger.error("Home 1");
 		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
 		
-//		Logger.error("Home 2");
-		//TODO: convo&community together = problems for adding comments
+		Logger.error("Home 2");
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
     	
-//    	Logger.error("Home 3");
+    	Logger.error("Home 3");
     	boolean showNotificationAccounts = prepareNotificationPanel(session, talker);
 		TalkerLogic.preloadTalkerInfo(talker);
 		
-//		Logger.error("Home 4");
-		//TODO: cache recommendations
+		Logger.error("Home 4");
 		
+		//TODO: check recommendations
 //		Yes, for HealthInfo, let's use all of the data. 
 //		For Profile info, we can use gender, age, marital status, number of children, and ages of children.
-		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
-		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();
-		List<TopicBean> loadedTopics = new ArrayList<TopicBean>();
-		if (!talker.isProf() && talkerDisease != null) {
-			loadedTopics = TalkerLogic.getRecommendedTopics(talkerDisease);
-		}
-//		Logger.error("Home 4 1");
-		if (recommendedTopics.isEmpty()) {
-			//display most popular Topics based on number of questions
-			loadedTopics = new ArrayList<TopicBean>(TopicDAO.loadAllTopics(false));
-		}
+		List<TopicBean> recommendedTopics = TalkerLogic.getRecommendedTopics(talker);
 		
-		for (TopicBean topic : loadedTopics) {
-			if (!talker.getFollowingTopicsList().contains(topic)) {
-				if (! (topic.getTitle().equals(ConversationLogic.DEFAULT_QUESTION_TOPIC) 
-						|| topic.getTitle().equals(ConversationLogic.DEFAULT_TALK_TOPIC)) ) {
-					recommendedTopics.add(topic);
-				}
-			}
-			if (recommendedTopics.size() == 3) {
-				break;
-			}
-		}
-		
-//		Logger.error("Home 4 2");
-		
-		//talk
 		List<TalkerBean> similarMembers = new ArrayList<TalkerBean>();
 		List<TalkerBean> experts = new ArrayList<TalkerBean>();
+		TalkerLogic.getRecommendedTalkers(talker, similarMembers, experts);
 		
-		List<TalkerBean> allMembers = TalkerDAO.loadAllLightTalkers();
-		for (TalkerBean member : allMembers) {
-			  if (member.isSuspended() || member.isAdmin()) {
-				  continue;
-			  }
-			  if (talker.equals(member) || talker.getFollowingList().contains(member)) {
-				  continue;
-			  }
-			  
-			  if (member.isProf()) {
-				  if (experts.size() < 3) {
-					  experts.add(member);
-				  }
-			  }
-			  else {
-				  if (similarMembers.size() < 3) {
-					  similarMembers.add(member);
-				  }
-			  }
-		}
-//		Logger.error("Home 4 3");
+		List<ConversationBean> recommendedConvos = TalkerLogic.getRecommendedConvos(talker);
 		
-		List<ConversationBean> recommendedConvos = new ArrayList<ConversationBean>();
-		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations();	
-		for (ConversationBean convo : popularConvos) {
-			if (talker.getFollowingConvosList().contains(convo.getId())) {
-				continue;
-			}
-			recommendedConvos.add(convo);
-			if (recommendedConvos.size() == 3) {
-				break;
-			}
-		}
-		
-//		Logger.error("Home 5");
+		Logger.error("Home 5");
 		
 		render("@newhome", talker, 
 				liveConversations, convoFeed, communityFeed, showNotificationAccounts,
@@ -294,14 +237,13 @@ public class Home extends Controller {
     		else if (type.equalsIgnoreCase("twitter")) {
     			ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
     			if (twitterAccount != null) {
-    				TwitterUtil.makeUserTwit(note, 
-        					twitterAccount.getToken(), twitterAccount.getTokenSecret());
+    				TwitterUtil.tweet(note, twitterAccount);
     			}
     		}
     		else if (type.equalsIgnoreCase("facebook")) {
     			ServiceAccountBean fbAccount = talker.serviceAccountByType(ServiceType.FACEBOOK);
     			if (fbAccount != null) {
-    				FacebookUtil.post(note, fbAccount.getToken());
+    				FacebookUtil.post(note, fbAccount);
     			}
     		}
     	}

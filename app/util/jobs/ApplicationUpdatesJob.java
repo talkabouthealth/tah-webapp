@@ -70,21 +70,7 @@ public class ApplicationUpdatesJob extends Job {
 		 *  3. Twitter settings
 		 */
 		
-//			2011-01-21 08:35:35,279 INFO  ~ ThorAssociates: http://www.facebook.com/profile.php?id=113344035364476
-		
-		//Relation between old and correct ids;
-		Map<String, String> fbMap = new HashMap<String, String>();
-		fbMap.put("113344035364476", "629943601");
-		
 //		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
-//			ServiceAccountBean fbAccount = talker.serviceAccountByType(ServiceType.FACEBOOK);
-//			if (fbAccount != null) {
-//				String correctId = fbMap.get(fbAccount.getId());
-//				if (correctId != null) {
-//					fbAccount.setId(correctId);
-//					TalkerDAO.updateTalker(talker);
-//				}
-//			}
 //			
 ////			- "Thoughts"
 ////			- Answers
@@ -100,10 +86,6 @@ public class ApplicationUpdatesJob extends Job {
 //				}
 //			}
 //			talker.setPrivacySettings(privacySettings);
-////			
-////			talker.setAnonymousName(CommonUtil.generateRandomUserName(true));
-//			
-////			talker.getHiddenHelps().add("notificationAccounts");
 //			
 //			TalkerDAO.updateTalker(talker);
 //		}
@@ -145,7 +127,6 @@ public class ApplicationUpdatesJob extends Job {
 		}
 		
 		addAdminUser();
-		
 		
 		// Updates for different items
 		HealthItemsUpdater.updateHealthItems("healthitemsupd.dat");
@@ -202,7 +183,6 @@ public class ApplicationUpdatesJob extends Job {
 					final int BITLY_TIMEOUT = 60*1000;
 					for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
 						if (convo.getBitly() == null || convo.getBitly().equals("RATE_LIMIT_EXCEEDE")) {
-							//String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
 							String convoURL = "http://talkabouthealth.com/"+convo.getMainURL();
 							convo.setBitly(BitlyUtil.shortLink(convoURL));
 							Thread.sleep(BITLY_TIMEOUT);
@@ -210,7 +190,6 @@ public class ApplicationUpdatesJob extends Job {
 							ConversationDAO.updateConvo(convo);
 						}
 						if (convo.getBitlyChat() == null || convo.getBitlyChat().equals("RATE_LIMIT_EXCEEDE")) {
-	//						String convoChatURL = CommonUtil.generateAbsoluteURL("Talk.talkApp", "convoId", convo.getTid());
 							String convoChatURL = "http://talkabouthealth.com/chat/"+convo.getTid();
 							convo.setBitlyChat(BitlyUtil.shortLink(convoChatURL));
 							Thread.sleep(BITLY_TIMEOUT);
@@ -221,7 +200,6 @@ public class ApplicationUpdatesJob extends Job {
 					
 					for (TopicBean topic : TopicDAO.loadAllTopics()) {
 						if (topic.getBitly() == null || topic.getBitly().equals("RATE_LIMIT_EXCEEDE")) {
-	//						String topicURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", topic.getMainURL());
 							String topicURL = "http://talkabouthealth.com/"+topic.getMainURL();
 							topic.setBitly(BitlyUtil.shortLink(topicURL));
 							Thread.sleep(BITLY_TIMEOUT);
