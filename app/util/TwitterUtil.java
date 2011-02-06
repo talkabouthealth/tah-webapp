@@ -43,19 +43,19 @@ import util.oauth.TwitterOAuthProvider;
  */
 //TODO: later - rewrite it with new Play OAuth API
 public class TwitterUtil {
-	/* Account @talkforhealth */
+	/* Account @talkabouthealth */
 	private static final String CONSUMER_KEY = "dntMSxZl859YGyAeKcTFcg";
 	private static final String CONSUMER_SECRET = "gP8XNqM8bpnuYzBSfJDZLMXrDowE58znsZJuwjfAsQ";
 	
 	private static final String ACCESS_TOKEN = "136322338-kNsQxRvvPQBHYp1EBU8F6CJAKEm9R3FXtT7S19ua";
 	private static final String ACCESS_TOKEN_SECRET = "bROleD290VFQCjtTeSfhPm3IBn6sM69uCID1hHJz44";
 	
-	public static final String TALKFORHEALTH_ID = "136322338";
+	public static final String TALKABOUTHEALTH_ID = "136322338";
 	
 	/*------------------ Operations from TAH account ------------------- */
 	
 	/**
-	 * Follow given user by @talkforhealth
+	 * Follow given user by @talkabouthealth
 	 * @param userAccountId Twitter Id of user to follow
 	 */
 	public static void followUser(final String userAccountId) {
@@ -83,7 +83,7 @@ public class TwitterUtil {
 	}
 	
 	/**
-	 * Send DirectMessage from @talkforhealth to given user
+	 * Send DirectMessage from @talkabouthealth to given user
 	 * @param userAccountId
 	 * @param text
 	 */
@@ -115,7 +115,7 @@ public class TwitterUtil {
 	}
 	
 	/**
-	 * Load last 10 tweets that contain '@talkforhealth' in it
+	 * Load last 10 tweets that contain '@talkabouthealth' in it
 	 * @return
 	 */
 	public static List<Tweet> loadMentions() {
@@ -171,7 +171,7 @@ public class TwitterUtil {
 	/*---------------------- Operations from user's account --------------------- */
 	
 	/**
-	 * Follow @talkforhealth by given user
+	 * Follow @talkabouthealth by given user
 	 */
 	public static void followTAH(final ServiceAccountBean twitterAccount) {
 		Executors.newSingleThreadExecutor().execute(new Runnable() {
@@ -181,7 +181,7 @@ public class TwitterUtil {
 				consumer.setTokenWithSecret(twitterAccount.getToken(), twitterAccount.getTokenSecret());
 				
 				try {
-					URL url = new URL("http://api.twitter.com/1/friendships/create/"+TALKFORHEALTH_ID+".xml");
+					URL url = new URL("http://api.twitter.com/1/friendships/create/"+TALKABOUTHEALTH_ID+".xml");
 					
 					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 					conn.setRequestMethod("POST");

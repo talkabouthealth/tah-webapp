@@ -189,7 +189,6 @@ public class Application extends Controller {
 		}
 
 		//manually login this talker
-		ApplicationDAO.saveLogin(talker.getId());
 		session.put("username", talker.getUserName());
 		if (talker.isProf()) {
     		session.put("prof", "true");

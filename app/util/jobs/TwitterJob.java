@@ -17,18 +17,18 @@ import models.Tweet;
 import util.TwitterUtil;
 
 /**
- * Checks Twitter every minute for possible convo creations (tweets with 'talkforhealth' and '?')
+ * Checks Twitter every minute for possible convo creations (tweets with 'talkabouthealth' and '?')
  *
  */
 @Every("1min")
 public class TwitterJob {
 	
 	public void doJob() throws Exception {
-		//get 10 last tweets with '@talkforhealth'
+		//get 10 last tweets with '@talkabouthealth'
 		List<Tweet> mentionTweets = TwitterUtil.loadMentions();
 		for (Tweet tweet : mentionTweets) {
 			String text = tweet.getText().trim();
-			if (text.endsWith("@talkforhealth") && text.contains("?") && !text.contains("RT")) {
+			if (text.endsWith("@talkabouthealth") && text.contains("?") && !text.contains("RT")) {
 				//check if we've already created this convo
 				ConversationBean convo = ConversationDAO.getByFromInfo("twitter", tweet.getId());
 				if (convo == null) {
@@ -49,7 +49,7 @@ public class TwitterJob {
 		}
 		
 		String title = tweet.getText();
-		title = title.replaceAll("@talkforhealth", "").trim();
+		title = title.replaceAll("@talkabouthealth", "").trim();
 		
 		ConversationBean convo = ConversationLogic.createConvo(ConvoType.QUESTION, title, talker, null, null, true);
 		convo.setFrom("twitter");

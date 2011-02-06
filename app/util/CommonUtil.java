@@ -256,13 +256,16 @@ public class CommonUtil {
 		String url = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", talkerName);
 		html.append("<a href='"+url+"'>"+talkerName+"</a>");
 		if (talker.getConnection() != null && talker.getConnection().length() != 0) {
-			String notVerifiedStr = "";
+			String verificationStr = "";
 			if (TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.getConnection())) {
-				if (!talker.isConnectionVerified()) {
-					notVerifiedStr = " <span class=\"red12\">(not verified)</span>";
+				if (talker.isConnectionVerified()) {
+					verificationStr = " <span class=\"green12\">(Verified)</span>";
+				}
+				else {
+					verificationStr = " <span class=\"red12\">(not verified)</span>";
 				}
 			}
-			html.append(" ("+talker.getConnection()+notVerifiedStr+", "+talker.getLevelOfRecognition()+")");
+			html.append(" ("+talker.getConnection()+verificationStr+", "+talker.getLevelOfRecognition()+")");
 		}
 		return html.toString();
 	}
