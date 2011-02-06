@@ -444,21 +444,22 @@ public class TalkerLogic {
 			ActionDAO.updateProfileCommentActionTime(comment.getParentId());
 			
 			CommentBean thought = CommentsDAO.getProfileCommentById(comment.getParentId());
+			
+			//when user leaves post in someone else's Thoughts Feed, if there are replies, 
+			//send email to the owner of the Thoughts Feed as well as the user who started the thread.
+			Map<String, String> vars = new HashMap<String, String>();
+			vars.put("other_talker", talker.getUserName());
+			vars.put("comment_text", thought.getText());
+			vars.put("reply_text", comment.getText());
+			vars.put("profile_talker", profileTalker.getUserName());
+			
 			if (!talker.equals(thought.getFromTalker())) {
-				//when user leaves post in someone else's Thoughts Feed, if there are replies, 
-				//send email to the owner of the Thoughts Feed as well as the user who started the thread.
-				Map<String, String> vars = new HashMap<String, String>();
-				vars.put("other_talker", talker.getUserName());
-				vars.put("comment_text", thought.getText());
-				vars.put("reply_text", comment.getText());
-				vars.put("profile_talker", profileTalker.getUserName());
 				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
 						thought.getFromTalker(), vars);
-				
-				if (!talker.equals(profileTalker)) {
-					NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
-							profileTalker, vars);
-				}
+			}
+			if (!talker.equals(profileTalker)) {
+				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
+						profileTalker, vars);
 			}
 		}
 		

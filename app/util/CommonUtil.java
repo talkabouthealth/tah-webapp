@@ -45,6 +45,7 @@ import play.Logger;
 import play.Play;
 import play.cache.Cache;
 import play.mvc.Http.Request;
+import play.mvc.Http;
 import play.mvc.Router;
 import play.mvc.Router.ActionDefinition;
 import play.mvc.Scope.Session;
@@ -207,6 +208,20 @@ public class CommonUtil {
 	 * @return
 	 */
 	public static String generateAbsoluteURL(String action, String paramName, Object paramValue) {
+		//we can't generate url without request (e.g. calling this method from some Job)
+		if (Http.Request.current() == null) {
+			System.out.println(action+" : "+paramValue);
+			if (action.equals("ViewDispatcher.view")) {
+				return "http://talkabouthealth.com/"+paramValue;
+			}
+			else if (action.equals("Talk.talkApp")) {
+				return "http://talkabouthealth.com/chat/"+paramValue;
+			}
+			else {
+				return null;
+			}
+		}
+		
 		//prepare parameters if they exist
 		Map<String, Object> args = new HashMap<String, Object>(1);
 		if (paramName != null) {
