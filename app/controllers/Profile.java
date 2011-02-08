@@ -61,6 +61,7 @@ import play.mvc.With;
 import play.templates.JavaExtensions;
 import util.CommonUtil;
 import util.EmailUtil;
+import util.TwitterUtil;
 import util.EmailUtil.EmailTemplate;
 import util.ImageUtil;
 import util.NotificationUtils;
@@ -166,6 +167,57 @@ public class Profile extends Controller {
 		
 		renderText("ok");
 	}
+	
+	
+	public static void updateProfile(String name, String newValue) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+
+		if (name.equals("userName")) {
+			String oldUserName = talker.getUserName();
+			if (!oldUserName.equals(newValue)) {
+				boolean nameNotExists = !ApplicationDAO.isURLNameExists(newValue);
+				validation.isTrue(nameNotExists).message("username.exists");
+			}
+			if (validation.hasErrors()) {
+				Error error = validation.errors().get(0);
+				renderText("Error:"+error.message());
+	            return;
+	        }
+			
+			talker.setUserName(newValue);
+			CommonUtil.updateTalker(talker, session);
+			if (!oldUserName.equals(newValue)) {
+				session.put("username", talker.getUserName());
+				ApplicationDAO.createURLName(talker.getUserName());
+			}
+		}
+		else if (name.equals("password")) {
+			talker.setPassword(CommonUtil.hashPassword(newValue));
+			TalkerDAO.updateTalker(talker);
+		}
+		else if (name.equals("twittersettings")) {
+			ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
+			if (twitterAccount != null) {
+				twitterAccount.parseSettingsFromParams(params.allSimple());
+				CommonUtil.updateTalker(talker, session);
+				
+				if (twitterAccount.isTrue("FOLLOW")) {
+					//follow TAH by this user
+					TwitterUtil.followTAH(twitterAccount);
+				}
+			}
+		}
+		else if (name.equals("facebooksettings")) {
+			ServiceAccountBean fbAccount = talker.serviceAccountByType(ServiceType.FACEBOOK);
+			if (fbAccount != null) {
+				fbAccount.parseSettingsFromParams(params.allSimple());
+				CommonUtil.updateTalker(talker, session);
+			}
+		}
+		
+		renderText("ok");
+	}
+	
 	
 	/**
 	 * Change connection of authenticated talker
@@ -449,7 +501,7 @@ public class Profile extends Controller {
 	}
 	
 	/* ------------- IM/Twitter/FB notifications ----------------*/
-	public static void serviceSettingsSave(String name, boolean value) {
+	public static void serviceSettingsSave() {
 		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);
 
 		Set<ServiceAccountBean> serviceAccounts = sessionTalker.getServiceAccounts();

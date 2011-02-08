@@ -17,6 +17,7 @@ import play.libs.WS.HttpResponse;
 import play.mvc.Http.Request;
 import play.mvc.Scope.Session;
 
+import logic.TalkerLogic;
 import models.ServiceAccountBean.ServiceType;
 import models.ServiceAccountBean;
 import models.TalkerBean;
@@ -48,7 +49,7 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			
 			authURL = "https://graph.facebook.com/oauth/authorize?" +
 				"client_id="+APP_ID+"&redirect_uri="+URLEncoder.encode(callbackURL, "UTF-8")+
-				"&scope=email,user_about_me,publish_stream,offline_access";
+				"&scope=email,publish_stream,offline_access";
 		} catch (UnsupportedEncodingException e) {
 			Logger.error(e, "");
 		}
@@ -71,10 +72,14 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 		Logger.info("---------- FACEBOOK INFO --------------");
 		Logger.info(responseText);
 		
+		
+		//{"id":"745278081","name":"Murray Nathan Jones","first_name":"Murray","middle_name":"Nathan","last_name":"Jones","link":"http:\/\/www.facebook.com\/murraynathaniel","birthday":"05\/20\/1975","gender":"male","email":"murrayjones\u0040gmail.com","timezone":-5,"locale":"en_US","verified":true,"updated_time":"2011-01-10T17:47:23+0000"}
+		//{"id":"100001842920779","name":"Osya Osezno","first_name":"Osya","last_name":"Osezno","link":"http:\/\/www.facebook.com\/profile.php?id=100001842920779","birthday":"01\/01\/1986","location":{"id":"106078429431815","name":"London, United Kingdom"},"gender":"female","email":"ira_osezno\u0040mail.ru","timezone":2,"locale":"en_US"}
+		
 		String accountId = null;
 		String userEmail = null;
 		if (responseText.startsWith("{")) {
-			Pattern p = Pattern.compile("\"(\\w+)\":\"([@.\\s\\w]+)\"");
+			Pattern p = Pattern.compile("\"(\\w+)\":\"([\\\\@.\\s\\w]+)\"");
 			Matcher m = p.matcher(responseText);
 			while (m.find()) {
 				String param = m.group(1);
@@ -84,7 +89,7 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 					accountId = value;
 				}
 				else if (param.equals("email") && userEmail == null) {
-					userEmail = value;
+					userEmail = value.replace("\\u0040", "@");
 				}
 			}
 		}
@@ -180,11 +185,17 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			return "/home";
 		}
 		else {
-			session.put("accounttype", ServiceType.FACEBOOK);
-			session.put("accountname", userEmail);
-		    session.put("accountid", accountId);
-		    
-		    return "/signup?talker.email="+userEmail+"&from="+ServiceType.FACEBOOK.toString();
+			//try to get username from email
+			String screenName = null;
+			int atIndex = userEmail.indexOf("@");
+			if (atIndex != -1) {
+				screenName = userEmail.substring(0, atIndex);
+			}
+			
+			TalkerLogic.signupFromService(ServiceType.FACEBOOK, session, screenName, userEmail, accountId);
+		     
+//		    return "/signup?talker.email="+userEmail+"&from="+ServiceType.FACEBOOK.toString();
+		    return "/application/tosConfirm";
 		}
 	}
 

@@ -57,8 +57,11 @@ public class Home extends Controller {
 		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
 		
 //		Logger.error("Home 2");
-		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
-    	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
+//		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
+//    	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
+		//FIXME: update this
+		Set<Action> convoFeed = new HashSet<Action>();
+    	Set<Action> communityFeed = new HashSet<Action>();
     	
 //    	Logger.error("Home 3");
     	boolean showNotificationAccounts = prepareNotificationPanel(session, talker);

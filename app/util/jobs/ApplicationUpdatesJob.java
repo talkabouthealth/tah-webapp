@@ -67,28 +67,20 @@ public class ApplicationUpdatesJob extends Job {
 	public void doJob() throws Exception {
 		
 		/*
-		 *  3. Twitter settings
+		 *  Update settings for old users.
+		 *  
 		 */
 		
-//		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
-//			
-////			- "Thoughts"
-////			- Answers
-////			- Chats Joined
-////			- Professional Info - for new users let's make this by default viewable by the community.
-//			Set<PrivacySetting> privacySettings = talker.getPrivacySettings();
-//			for (PrivacySetting privacySetting : privacySettings) {
-//				if (privacySetting.getType() == PrivacyType.PROFESSIONAL_INFO
-//						|| privacySetting.getType() == PrivacyType.THOUGHTS
-//						|| privacySetting.getType() == PrivacyType.ANSWERS
-//						|| privacySetting.getType() == PrivacyType.CHATS_JOINED) {
-//					privacySetting.setValue(PrivacyValue.COMMUNITY);
-//				}
-//			}
-//			talker.setPrivacySettings(privacySettings);
+		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
+//			Set<String> hiddenHelps = talker.getHiddenHelps();
+//			hiddenHelps.add("updateUsername");
+//			hiddenHelps.add("updatePassword");
+//			hiddenHelps.add("updateConnection");
+//			hiddenHelps.add("updateTwitterSettings");
+//			hiddenHelps.add("updateFacebookSettings");
 //			
 //			TalkerDAO.updateTalker(talker);
-//		}
+		}
 		
 		//Fields data for Edit Profile
 		FieldsDataImporter.importData("fields.dat");

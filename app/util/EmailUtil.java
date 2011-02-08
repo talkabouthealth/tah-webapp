@@ -67,6 +67,9 @@ public class EmailUtil {
 	 */
 	public static boolean sendEmail(EmailTemplate emailTemplate, String toEmail, 
 			Map<String, String> vars, Map<String, String> options, boolean verify) {
+		if (toEmail == null) {
+			return false;
+		}
 		if (verify && !isVerifiedEmail(toEmail)) {
 			return false;
 		}

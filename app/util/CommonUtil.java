@@ -11,6 +11,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -179,6 +180,12 @@ public class CommonUtil {
 		} while (!unique);
 		
 		return verifyCode;
+	}
+	
+	public static String generateRandomPassword() {
+		SecureRandom random = new SecureRandom();
+	    String newPassword = new BigInteger(60, random).toString(32);
+	    return newPassword;
 	}
 	
 	/**

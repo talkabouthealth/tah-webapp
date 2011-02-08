@@ -148,7 +148,7 @@ public class TalkerBean implements Serializable {
 	private String country;
 	private String zip;
 	//a set of hidden help popups for this user
-	private Set<String> hiddenHelps;
+	private Set<String> hiddenHelps = new HashSet<String>();
 	
 	//notifications settings
 	private String[] ctype;

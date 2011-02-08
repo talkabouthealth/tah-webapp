@@ -11,8 +11,10 @@
 	<script type="text/javascript">
 		function redirectParent() {
 			var url = '${url?.raw()}';
-			window.opener.document.location = url;
-			window.close();
+			if (url) {
+				window.opener.document.location = url;
+				window.close();
+			}
 		}
 	</script>
 </head>

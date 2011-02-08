@@ -1,10 +1,13 @@
 package util.oauth;
 
+import static util.DBUtil.setToDB;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
@@ -13,6 +16,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import logic.TalkerLogic;
 import models.ServiceAccountBean;
 import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean;
@@ -91,6 +95,7 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
         String screenName = null;
         String accountId = null;
         while ((line = br.readLine()) != null) {
+//        	System.out.println(line);
         	//For now we get only screen_name
         	//Ex: <screen_name>kankangaroo</screen_name>
         	line = line.trim();			        	
@@ -200,15 +205,15 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			return "/home";
 		}
 		else {
-			//redirect to signup
-			
+			//signup
 			TwitterUtil.followUser(accountId);
-			session.put("accounttype", ServiceType.TWITTER);
-			session.put("accountname", screenName);
-		    session.put("accountid", accountId);
+		    
+		    TalkerLogic.signupFromService(ServiceType.TWITTER, session, screenName, null, accountId);
 		     
-		    return "/signup?talker.userName="+screenName+"&from="+ServiceType.TWITTER.toString();
+		    //return "/signup?talker.userName="+screenName+"&from="+ServiceType.TWITTER.toString();
+		    return "/application/tosConfirm";
 		}
 	}
+
 }
 

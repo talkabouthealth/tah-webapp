@@ -13,8 +13,10 @@ import java.util.Map;
 import java.util.Set;
 
 import play.Logger;
+import play.mvc.Scope.Session;
 import play.templates.JavaExtensions;
 import dao.ActionDAO;
+import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.HealthItemDAO;
@@ -23,9 +25,11 @@ import dao.TalkerDiseaseDAO;
 import dao.TopicDAO;
 
 import util.CommonUtil;
+import util.EmailUtil;
 import util.FacebookUtil;
 import util.NotificationUtils;
 import util.TwitterUtil;
+import util.EmailUtil.EmailTemplate;
 
 import models.CommentBean;
 import models.ConversationBean;
@@ -643,4 +647,147 @@ public class TalkerLogic {
 		return recommendedTopics;
 	}
 	
+	
+	
+	/*----------------------- SignUp methods ---------------------------- */
+	/**
+     * Initializes talker with different default values or parsed info
+     */
+	public static void prepareTalkerForSignup(TalkerBean talker) {
+		talker.setInvitations(100);
+		//by default we notify user through IM
+		talker.setImNotify(true);
+		
+		talker.setAnonymousName(CommonUtil.generateRandomUserName(true));
+		
+//		String imService = talker.getIm();
+//        String imUsername = talker.getImUsername();
+//        if (!imService.isEmpty()) {
+//        	//if userName empty - parse from email
+//        	if (imUsername.trim().isEmpty()) {
+//    			int atIndex = talker.getEmail().indexOf('@');
+//    			imUsername = talker.getEmail().substring(0, atIndex);
+//    		}
+//        	
+//        	IMAccountBean imAccount = new IMAccountBean(imUsername, imService);
+//        	talker.setImAccounts(new HashSet<IMAccountBean>(Arrays.asList(imAccount)));
+//        }
+        
+        /*
+         	TODO: later - better to use Enum (these settings are from the first prototype version)
+         	Default notification settings:
+			- 2 to 5 times per day
+			- whenever I am online
+			- types of conversations: check all
+        */
+        talker.setNfreq(3);
+        talker.setNtime(1);
+        talker.setCtype(TalkerBean.CONVERSATIONS_TYPES_ARRAY);
+        
+		talker.setPrivacySettings(TalkerLogic.getDefaultPrivacySettings());
+		
+        //By default all email notifications are checked
+        EnumSet<EmailSetting> emailSettings = EnumSet.allOf(EmailSetting.class);
+        talker.setEmailSettings(emailSettings);
+        
+        String hashedPassword = CommonUtil.hashPassword(talker.getPassword());
+        talker.setPassword(hashedPassword);
+        
+        //code for email validation
+        talker.setVerifyCode(CommonUtil.generateVerifyCode());
+        
+        talker.setConnectionVerified(false);
+	}
+	
+	/**
+	 * Handler method after successful signup.
+	 * 
+	 * @param talker Just registered talker
+	 * @param session
+	 */
+	public static void onSignup(TalkerBean talker, Session session) {
+		//Reserve this name as URL
+        ApplicationDAO.createURLName(talker.getUserName());
+		
+        //Send 'email verification' and 'welcome' emails
+		Map<String, String> vars = new HashMap<String, String>();
+		
+		if (talker.getVerifyCode() != null) {
+			vars.put("username", talker.getUserName());
+			vars.put("verify_code", talker.getVerifyCode());
+			EmailUtil.sendEmail(EmailTemplate.VERIFICATION, talker.getEmail(), vars, null, false);
+		}
+		
+		vars = new HashMap<String, String>();
+		vars.put("username", talker.getUserName());
+		EmailUtil.sendEmail(EmailTemplate.WELCOME, talker.getEmail(), vars, null, false);
+		
+		ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
+		if (twitterAccount != null && twitterAccount.isTrue("FOLLOW")) {
+			//follow TAH by this user
+			TwitterUtil.followTAH(twitterAccount);
+		}
+
+		//manually login this talker
+		ApplicationDAO.saveLogin(talker.getId(), "signup");
+		session.put("username", talker.getUserName());
+		if (talker.isProf()) {
+    		session.put("prof", "true");
+    	}
+		session.put("justregistered", true);
+	}
+	
+	/**
+	 * Signup with Twitter or Facebook account
+	 * 
+	 * @param session
+	 * @param screenName
+	 * @param accountId
+	 */
+	public static void signupFromService(ServiceType serviceType, Session session, 
+			String screenName, String email, String accountId) {
+		TalkerBean talker = new TalkerBean();
+		
+		//initial username will be their username on Facebook or Twitter, 
+		//or if it is taken already, add a number to the username - i.e. murray1
+		String initialUsername = screenName;
+		int i=1; 
+		while (ApplicationDAO.isURLNameExists(initialUsername)) {
+			initialUsername = screenName+i;
+			i++;
+		}
+		talker.setUserName(initialUsername);
+		
+		//for Tw/Fb users password is random
+		talker.setPassword(CommonUtil.generateRandomPassword());
+		
+		prepareTalkerForSignup(talker);
+		
+		//we don't need to validate Facebook email
+		talker.setEmail(email);
+		talker.setVerifyCode(null);
+		
+		//default connection
+		talker.setConnection("Patient");
+		
+		//add Tw/Fb as notification account
+		ServiceAccountBean account = new ServiceAccountBean(accountId, screenName, serviceType);
+		account.setToken(session.get("token"));
+		account.setTokenSecret(session.get("token_secret"));
+		
+		Set<ServiceAccountBean> serviceAccounts = new HashSet<ServiceAccountBean>();
+		serviceAccounts.add(account);
+		talker.setServiceAccounts(serviceAccounts);
+		
+		Set<String> hiddenHelps = talker.getHiddenHelps();
+		if (serviceType == ServiceType.TWITTER) {
+			hiddenHelps.add("updateFacebookSettings");
+		}
+		else {
+			hiddenHelps.add("updateTwitterSettings");
+		}
+		
+		TalkerDAO.save(talker);
+		onSignup(talker, session);
+	}
 }

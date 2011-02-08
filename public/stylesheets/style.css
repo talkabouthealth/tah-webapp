@@ -817,15 +817,6 @@ a {
 	height:50px;
 	width:490px;
 }
-.updatebtns {
-	float:left;
-	border:0;
-	background:url(../images/update.jpg);
-	width:59px;
-	height:20px;
-	margin-left:10px;
-	margin-top:5px;
-}
 .canclebtnz {
 	float:left;
 	width:auto;
@@ -3635,6 +3626,7 @@ a.popup_black10s:hover {
 	width:80px;
 	height:24px;
 	background:url(../images/cupdate.jpg);
+	cursor:pointer;
 }
 .cupdateCover {
 	clear:both;
@@ -5055,7 +5047,7 @@ border:0;
 	padding-left:15px;
 }
 #savedHelpText { margin-top: 15px; font-size: 20px; }
-#savedHelpError { margin-top: 15px; font-size: 18px; color: red; }
+#savedHelpError { margin-top: 15px; font-size: 18px; color: #FFDDDD; }
 
 #feedbackImage {
 	background-color:#cccccc;
@@ -5187,6 +5179,12 @@ border:0;
 	background: url(../images/startChatBtn.jpg); 
 	width: 117px;
 	height: 34px;
+}
+#newConnection {
+	border:1px solid #AAAAAA;
+	height:23px;
+	margin: 0px 0px 0px 10px;
+	width:139px;
 }
 
 /* New following buttons */

@@ -91,7 +91,125 @@
    <!--topipsts-->
    <div class="cb"></div>
    
-    #{if session.username.equals(talker.userName) && talker.verifyCode != null }
+ 	#{if currentPage?.equals("home") }
+ 		#{ifnot talker?.hiddenHelps.contains("updateUsername") }
+	 		<div id="updateUsernameHelp" class="topipsts">
+			   <div class="close" style="padding-top: 7px; padding-right: 7px;">
+			   	<img src="/public/images/close.jpg" alt="Close" onclick="return hideHelpInfo('updateUsername', true);" />
+			   </div>
+	           <div class="mtrighttxt1">Update username</div>
+	           <div class="topixtext">
+	             <div class="tellustext">
+	             	<input id="newUsername"  type="text" value="${talker.userName}" style="width: 190px;"/>
+	             	<div style="padding-top: 15px;">
+	             		<input id="updateUsernameBtn"  type="submit" style="margin: -5px 10px 0px 0px;"
+	             			value=" " class="cupdate" />
+	             		<a href="#" onclick="return hideHelpInfo('updateUsername', true);">No thanks.</a>
+	             	</div>
+	             </div>
+	           </div>
+	           <!--topixtext-->
+		     <div class="mtop"></div>
+		     <div class="topicborder"></div>
+		   </div>
+	   #{/ifnot}
+	   
+	   #{ifnot talker?.hiddenHelps.contains("updatePassword") }
+	   <div id="updatePasswordHelp" class="topipsts">
+           <div class="mtrighttxt1">Update password</div>
+           <div class="topixtext">
+             <div class="tellustext">
+             	<input id="newPassword"  type="password" value="" style="width: 190px;" />
+             	<div style="padding-top: 15px;">
+             		<input id="updatePasswordBtn"  type="submit" style="margin: -5px 10px 0px 0px;"
+             			value=" " class="cupdate" />
+             	</div>
+             </div>
+           </div>
+           <!--topixtext-->
+	     <div class="mtop"></div>
+	     <div class="topicborder"></div>
+	   </div>
+	   #{/ifnot}
+	   
+	   #{ifnot talker?.hiddenHelps.contains("updateConnection") }
+	   <div id="updateConnectionHelp" class="topipsts">
+           <div class="mtrighttxt1">
+           		I am a 
+				<select size="1" class="personalfields" id="newConnection">
+			  		#{list items:models.TalkerBean.CONNECTIONS_ARRAY, as:'connection'}
+					    <option value="${connection}"
+					    #{if connection.equals(talker.connection) } selected #{/if} 
+					    >${connection}</option>
+					#{/list}
+				</select>
+           </div>
+           <div class="topixtext">
+             <div class="tellustext">
+             	<div style="padding-top: 7px;">
+             		<input id="updateConnectionBtn"  type="submit" style="margin: -5px 10px 0px 0px;"
+             			value=" " class="cupdate" />
+             	</div>
+             </div>
+           </div>
+           <!--topixtext-->
+	     <div class="mtop"></div>
+	     <div class="topicborder"></div>
+	   </div>
+	   #{/ifnot}
+	   
+	   #{ifnot talker?.hiddenHelps.contains("updateTwitterSettings") }
+	   <div id="updateTwitterSettingsHelp" class="topipsts">
+           <div class="mtrighttxt1">Twitter Features</div>
+           <div class="topixtext">
+             <div class="tellustext">
+             	#{set settingsNames = models.ServiceAccountBean.settingsNamesByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
+				#{list items: settingsNames.keySet(), as: 'key' }
+					<div class="preferencescheck" style="width: 250px;">
+						<input type="checkbox" value="true" name="TWITTER_${key}" />
+						<span class="blacktext12">&nbsp;${settingsNames.get(key)}</span>
+					</div>
+				#{/list}
+             	<div style="padding-top: 10px; float: left;">
+             		<input id="updateTwitterSettingsBtn"  type="submit" style="margin: -5px 10px 0px 0px;"
+             			value=" " class="cupdate" />
+             		<a href="#" onclick="return hideHelpInfo('updateTwitterSettings', true);">No thanks.</a>
+             	</div>
+             </div>
+           </div>
+           <!--topixtext-->
+	     <div class="mtop"></div>
+	     <div class="topicborder"></div>
+	   </div>
+	   #{/ifnot}
+	   
+	   #{ifnot talker?.hiddenHelps.contains("updateFacebookSettings") }
+	   <div id="updateFacebookSettingsHelp" class="topipsts">
+           <div class="mtrighttxt1">Facebook Features</div>
+           <div class="topixtext">
+             <div class="tellustext">
+             	#{set settingsNames = models.ServiceAccountBean.settingsNamesByType(models.ServiceAccountBean.ServiceType.FACEBOOK) /}
+				#{list items: settingsNames.keySet(), as: 'key' }
+					<div class="preferencescheck" style="width: 250px;">
+						<input type="checkbox" value="true" name="FACEBOOK_${key}" />
+						<span class="blacktext12">&nbsp;${settingsNames.get(key)}</span>
+					</div>
+				#{/list}
+             	<div style="padding-top: 10px; float: left;">
+             		<input id="updateFacebookSettingsBtn"  type="submit" style="margin: -5px 10px 0px 0px;"
+             			value=" " class="cupdate" />
+             		<a href="#" onclick="return hideHelpInfo('updateFacebookSettings', true);">No thanks.</a>
+             	</div>
+             </div>
+           </div>
+           <!--topixtext-->
+	     <div class="mtop"></div>
+	     <div class="topicborder"></div>
+	   </div>
+	   #{/ifnot}
+ 	#{/if}
+ 	
+ 	#{if session.username.equals(talker.userName) && talker.verifyCode != null }
 		<div class="topipsts">
            <div class="mtrighttxt1">Please verify your email</div>
            <div class="topixtext">
@@ -207,22 +325,6 @@
 	#{/if}
 
 	
-   <div class="topipsts">
-     <div class="mtrighttxt1">Share TalkAboutHealth</div>
-     <div class="topixtext"> Invite friends to join the Community </div>
-     <!--topixtext-->
-     <div class="membersarea" style="height: auto;">
-		#{ share/buttons /}
-		#{if currentPage?.equals("home") }
-			<br/>
-			#{ share/fblike currentURL: 'www.facebook.com/talkabouthealth' /}
-		#{/if}
-     </div>
-     <!--membersarea-->
-     <div class="topicborder"></div>
-
-   </div>
-   
    #{if similarMembers}
    <div class="topipsts">
      <div class="mtrighttxt1">Similar Members</div>
@@ -333,14 +435,28 @@
 			   </div>
 			#{/list} 
    		</div>
+   		<div class="topicborder"></div>
 	</div>
 	#{/if}
+	
+	<div class="topipsts">
+	     <div class="mtrighttxt1">Share TalkAboutHealth</div>
+	     <div class="topixtext"> Invite friends to join the Community </div>
+	     <!--topixtext-->
+	     <div class="membersarea" style="height: auto;">
+			#{ share/buttons /}
+			#{if currentPage?.equals("home") }
+				<br/>
+				#{ share/fblike currentURL: 'www.facebook.com/talkabouthealth' /}
+			#{/if}
+	     </div>
+	     <!--membersarea-->
+	     <div class="topicborder"></div>
+	
+	</div>
    
    <div class="mtop"></div>
-   <br />
 
-   <div class="cb"></div>
-   <br />
    <div class="cb"></div>
 #{/if}
 #{else}

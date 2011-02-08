@@ -71,6 +71,8 @@ public class TalkerDAO {
 				.add("privacy_settings", setToDB(talker.getPrivacySettings()))
 				.add("email_settings", talker.emailSettingsToList())
 				
+				.add("hidden_helps", talker.getHiddenHelps())
+				
 				.add("newsletter", talker.isNewsletter())
 				.add("invites", talker.getInvitations())
 				.add("ch_num", -1)
