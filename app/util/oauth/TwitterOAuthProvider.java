@@ -194,7 +194,7 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			CommonUtil.updateTalker(talker, session);
 			
 			//manual login
-			ApplicationDAO.saveLogin(talker.getId());
+			ApplicationDAO.saveLogin(talker.getId(), "twitter");
 			session.put("username", talker.getUserName());
 			
 			return "/home";

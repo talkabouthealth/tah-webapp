@@ -50,21 +50,21 @@ public class Home extends Controller {
 	 * Home page
 	 */
     public static void index() {
-    	Logger.error("Home 0");
+//    	Logger.error("Home 0");
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-    	Logger.error("Home 1");
+//    	Logger.error("Home 1");
 		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
 		
-		Logger.error("Home 2");
+//		Logger.error("Home 2");
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
     	
-    	Logger.error("Home 3");
+//    	Logger.error("Home 3");
     	boolean showNotificationAccounts = prepareNotificationPanel(session, talker);
 		TalkerLogic.preloadTalkerInfo(talker);
 		
-		Logger.error("Home 4");
+//		Logger.error("Home 4");
 		
 		//TODO: check recommendations
 //		Yes, for HealthInfo, let's use all of the data. 
@@ -77,7 +77,7 @@ public class Home extends Controller {
 		
 		List<ConversationBean> recommendedConvos = TalkerLogic.getRecommendedConvos(talker);
 		
-		Logger.error("Home 5");
+//		Logger.error("Home 5");
 		
 		render("@newhome", talker, 
 				liveConversations, convoFeed, communityFeed, showNotificationAccounts,

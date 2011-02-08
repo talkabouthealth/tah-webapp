@@ -125,7 +125,7 @@ public class Dashboard extends Controller {
 		
 		List<TalkerBean> professionalTalkers = new ArrayList<TalkerBean>();
 		for (TalkerBean talker : talkerList) {
-			if (TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.getConnection())) {
+			if (talker.isProf()) {
 				professionalTalkers.add(talker);
 			}
 		}

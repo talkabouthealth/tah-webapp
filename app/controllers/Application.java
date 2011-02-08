@@ -189,6 +189,7 @@ public class Application extends Controller {
 		}
 
 		//manually login this talker
+		ApplicationDAO.saveLogin(talker.getId(), "signup");
 		session.put("username", talker.getUserName());
 		if (talker.isProf()) {
     		session.put("prof", "true");
@@ -294,13 +295,7 @@ public class Application extends Controller {
         //code for email validation
         talker.setVerifyCode(CommonUtil.generateVerifyCode());
         
-        //professional connections are unverified by default
-        if (TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.getConnection())) {
-        	talker.setConnectionVerified(false);
-        }
-        else {
-        	talker.setConnectionVerified(true);
-        }
+        talker.setConnectionVerified(false);
 	}
 	
 	/* ----------------- Contact Us ------------------------- */

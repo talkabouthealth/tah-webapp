@@ -222,9 +222,10 @@ public class TalkerBean implements Serializable {
 		setSuspended(getBoolean(talkerDBObject, "suspended"));
 		
 		setBio((String)talkerDBObject.get("bio"));
-		setProfStatement((String)talkerDBObject.get("prof_statement"));
 		setConnection((String)talkerDBObject.get("connection"));
 		setConnectionVerified(getBoolean(talkerDBObject, "connection_verified")); 
+		setProfStatement((String)talkerDBObject.get("prof_statement"));
+		parseProfInfo((DBObject)talkerDBObject.get("prof_info"));
 		
 		parseEmailSettings(getStringList(talkerDBObject, "email_settings"));
 		setPrivacySettings(parseSet(PrivacySetting.class, talkerDBObject, "privacy_settings"));
@@ -276,7 +277,6 @@ public class TalkerBean implements Serializable {
 		setFollowingConvosList(getStringList(talkerDBObject, "following_convos"));
 		parseFollowingTopics((Collection<DBRef>)talkerDBObject.get("following_topics"));
 		parseTopicsInfo((Collection<DBObject>)talkerDBObject.get("topics_info"));
-		parseProfInfo((DBObject)talkerDBObject.get("prof_info"));
 		setAnswerList(CommentsDAO.getTalkerAnswers(getId(), null));
 	}
 	
@@ -507,6 +507,19 @@ public class TalkerBean implements Serializable {
 			return false;
 		}
 		return value == PrivacyValue.PUBLIC;
+	}
+	
+	/**
+	 * Returns true if talker has made at least one piece of information public 
+	 * @return
+	 */
+	public boolean hasSomePublicInfo() {
+		for (PrivacySetting privacySetting : getPrivacySettings()) {
+			if (privacySetting.getValue() == PrivacyValue.PUBLIC) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**

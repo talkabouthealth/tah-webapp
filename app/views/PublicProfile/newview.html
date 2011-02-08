@@ -98,24 +98,7 @@
                     <div class="pph1Cover">
                       <div class="pph1">
                       		${talker.name} 
-                      		#{if talker.connection}
-								#{if models.TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.connection)}
-									(${talker.connection}
-									#{if talker.connectionVerified }
-										<span class="green12">(Verified)</span>,
-									#{/if}
-									#{else}
-										<span class="red12">(Not Verified)</span>,
-									#{/else}
-								#{/if}
-								#{else}
-									(${talker.connection},
-								#{/else}
-								${talker.levelOfRecognition})
-							#{/if}
-							#{else}
-								(${talker.levelOfRecognition})
-							#{/else}
+                      		#{talker/talkerInfo talker: talker /}
                       </div>
                     </div>
                     <!--pph1Cover-->

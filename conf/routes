@@ -21,8 +21,8 @@ GET		/verify/{verifyCode}					Application.verifyEmail
 *		/profile/notificationsettings			Profile.notifications
 *		/profile/privacysettings				Profile.preferences
 
-GET		/explore/members						Community.browseMembers(action:'active')
-*		/search/members							Community.browseMembers(action:'search')
+GET		/explore/members						Explore.browseMembers(action:'active')
+*		/search/members							Explore.browseMembers(action:'search')
 GET		/community/breast-cancer				Community.viewCommunity
 
 *		/search									Search.allSearch

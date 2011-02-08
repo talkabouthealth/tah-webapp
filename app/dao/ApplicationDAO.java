@@ -34,13 +34,14 @@ public class ApplicationDAO {
 	/**
 	 * Save login record.
 	 */
-	public static void saveLogin(String talkerId) {
+	public static void saveLogin(String talkerId, String from) {
 		DBCollection loginsColl = getCollection(LOGIN_HISTORY_COLLECTION);
 		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		DBObject loginHistoryObject = BasicDBObjectBuilder.start()
 			.add("uid", talkerRef)
 			.add("log_time", new Date())
+			.add("from", from)
 			.get();
 
 		loginsColl.save(loginHistoryObject);

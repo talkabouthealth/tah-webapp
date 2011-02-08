@@ -130,7 +130,7 @@
 						</div>
 					</div>
 					
-					#{if models.TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.connection)}
+					#{if talker.isProf()}
 						#{include 'Profile/editfieldsProf.html' /}
 					#{/if}
 					#{else}
