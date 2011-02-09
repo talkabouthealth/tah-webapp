@@ -39,12 +39,12 @@
    	   	   		return;
    	   		}
 			
-   	   		commentText = linkify(commentText);
+   	   		linkedText = linkify(commentText);
 
    	   		$("#saveThoughtImage"+parentId).show();
    			$(".replytext"+parentId).val("");
    			$.post("@{Actions.saveProfileComment()}", 
-  				{ profileTalkerId: '${talker.id}', parentId: parentId, text: commentText},
+  				{ profileTalkerId: '${talker.id}', parentId: parentId, text: linkedText, cleanText: commentText},
   				function(html) {
   	  				$("#firstcommentmessage").hide();
   					//put comment in the tree

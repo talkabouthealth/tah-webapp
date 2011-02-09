@@ -55,10 +55,7 @@
 			})
 			.keydown(function(c) {
 				if (c.keyCode === 13) {
-					//alert(c.keyCode);
-					//alert( $("#topSearchBox").autocomplete().element );
-					//a.menu.element.is(":visible")
-					makeFullSearch();
+					makeFullSearch("#topSearchBox");
 					return false;
 				}
 			});
@@ -91,13 +88,13 @@
 		});
 	});
 
-	function makeFullSearch() {
-		var query = $("#topSearchBox").val();
+	function makeFullSearch(inputId) {
+		var query = $(inputId).val();
 		if (query === '') {
 			alert("Please enter search query");
 			return false;
 		}
-		var url = "/search/conversations?query="+query;
+		var url = "/search?query="+query;
 		document.location = url;
 	}
 	
@@ -167,7 +164,7 @@
 	                    <input id="topSearchBox" type="text" class="topserchz iebox" style="display: none;"/>
 	                  </div>
 	                  <div class="topsubmitsz">
-	                    <input id="topSearchText" type="submit" onclick="return makeFullSearch();" 
+	                    <input id="topSearchText" type="submit" onclick="return makeFullSearch('#topSearchBox');" 
 	                    	style="cursor: pointer;" value=" " src="images/topsubmitbtn.png" class="topsubmit"/>
 	                  </div>
 	                </div>
@@ -201,7 +198,7 @@
 	                    <li class="gap"><a href="@{Explore.browseMembers('active')}">Browse Members</a></li>
 	                    <li><a href="@{Explore.browseMembers('search')}">Search Members</a></li>
 	                    <li class="gap"><a href="@{Explore.browseTopics()}">Browse Topics</a></li>
-	                    <li><a href="@{Explore.searchConversations()}">Search Answers and Topics</a></li>
+	                    <li><a href="@{Search.allSearch()}">Search Answers and Topics</a></li>
 	                  </ul>
 	                </li>
 	                <!--<li><a href="@{Explore.liveTalks()}">Chats</a></li>-->
@@ -269,7 +266,7 @@
 	                    <input id="topSearchBox" type="text" class="topserchz iebox" style="display: none;"/>
 	                  </div>
 	                  <div class="topsubmitsz">
-	                    <input id="topSearchText" type="submit" onclick="return makeFullSearch();" 
+	                    <input id="topSearchText" type="submit" onclick="return makeFullSearch('#topSearchBox');" 
 	                    	style="cursor: pointer;" value=" " src="images/topsubmitbtn.png" class="topsubmit"/>
 	                  </div>
 	                </div>

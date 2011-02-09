@@ -307,7 +307,7 @@ function makeAutocomplete(id, type) {
 				var url = ui.item.url;
 				if (url === "#fullsearch") {
 					//go to full conversations search
-					url = "/search/conversations?query="+ui.item.value;
+					url = "/search?query="+ui.item.value;
 				}
 				document.location = url;
 			}

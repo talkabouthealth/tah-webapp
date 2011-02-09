@@ -138,7 +138,7 @@ public class Explore extends Controller {
 		if (query != null) {
 			params.flash("query");
 			try {
-				results = SearchUtil.searchConvo(query);
+				results = SearchUtil.searchConvo(query, 10);
 			}
 			catch (Exception e) {
 				Logger.error(e, "Search Conversations error");

@@ -2,6 +2,7 @@ package logic;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -325,13 +326,13 @@ public class TalkerLogic {
 	}
 	
 	/**
-	 * Converts given list of talker's conversations to Feed format
-	 * @param loadFollowingConversations
+	 * Converts given list of conversations to Feed format (for better display)
+	 * @param conversations
 	 * @return
 	 */
-	public static List<Action> prepareTalkerConvos(Set<ConversationBean> loadFollowingConversations) {
+	public static List<Action> convosToFeed(Collection<ConversationBean> conversations) {
 		List<Action> convosFeed = new ArrayList<Action>();
-		for (ConversationBean convo : loadFollowingConversations) {
+		for (ConversationBean convo : conversations) {
 			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
 			
 			TalkerBean activityTalker = convo.getTalker();
@@ -377,9 +378,11 @@ public class TalkerLogic {
 	 * @param profileTalkerId
 	 * @param parentId
 	 * @param text
+	 * @param cleanText 
 	 * @return
 	 */
-	public static CommentBean saveProfileComment(TalkerBean talker, String profileTalkerId, String parentId, String text) {
+	public static CommentBean saveProfileComment(TalkerBean talker, String profileTalkerId, 
+			String parentId, String text, String cleanText) {
 		//find profile talker by parent thought or given talker id
 		if (parentId != null && parentId.length() != 0) {
 			CommentBean parentAnswer = CommentsDAO.getProfileCommentById(parentId);
@@ -427,10 +430,10 @@ public class TalkerLogic {
 							serviceAccount.getToken()+" : "+serviceAccount.getTokenSecret());
 					
 					if (serviceAccount.getType() == ServiceType.TWITTER) {
-						TwitterUtil.tweet(comment.getText(), serviceAccount);
+						TwitterUtil.tweet(cleanText, serviceAccount);
 					}
 					else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
-						FacebookUtil.post(comment.getText(), serviceAccount);
+						FacebookUtil.post(cleanText, serviceAccount);
 					}
 				}
 			}

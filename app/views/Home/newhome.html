@@ -237,10 +237,10 @@
    	   			alert("Please enter thought");
    	   			return;
    			}
-   			text = linkify(text);
+   			linkedText = linkify(text);
 
    			$.post("@{Actions.saveProfileComment()}", 
-  				{ parentId: '', text: text, from: 'home'},
+  				{ parentId: '', text: linkedText, cleanText: text, from: 'home'},
   				function(html) {
   					$(html).prependTo($("#convoFeedList"));
   					$(html).prependTo($("#communityFeedList"));

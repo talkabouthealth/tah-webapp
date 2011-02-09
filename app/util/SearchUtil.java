@@ -77,7 +77,7 @@ public class SearchUtil {
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public static List<ConversationBean> searchConvo(String query) throws CorruptIndexException, IOException, ParseException {
+	public static List<ConversationBean> searchConvo(String query, int numOfResults) throws CorruptIndexException, IOException, ParseException {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"conversations");
 		
 		//prepare query to search
@@ -114,7 +114,7 @@ public class SearchUtil {
 			convo.setSearchFragment(fr);
 			
 			results.add(convo);
-			if (results.size() == 10) {
+			if (results.size() == numOfResults) {
 				break;
 			}
 		}

@@ -4192,9 +4192,10 @@ a.popup_black10s:hover {
 /*--------------Search Results--------------------*/
 .resultsaerch {
 	width: 490px;
-	height:25px;
+	height:23px;
 	float:left;
 	padding-left:5px;
+	padding-top: 3px;
 	font-size:16px;
 	border:1px solid #CCC;
 	border-right:0;
