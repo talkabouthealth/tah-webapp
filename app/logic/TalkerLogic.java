@@ -339,7 +339,7 @@ public class TalkerLogic {
 			CommentBean topAnswer = null;
 			if (!convo.getComments().isEmpty()) {
 				topAnswer = convo.getComments().get(0);
-				topAnswer = CommentsDAO.getConvoAnswerById(topAnswer.getId());
+				topAnswer = CommentsDAO.getConvoCommentById(topAnswer.getId());
 				activityTalker = topAnswer.getFromTalker();
 			}
 			

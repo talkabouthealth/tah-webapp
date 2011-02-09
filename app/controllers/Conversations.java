@@ -361,7 +361,7 @@ public class Conversations extends Controller {
      */
     public static void flagAnswer(String answerId, String reason) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
+    	CommentBean answer = CommentsDAO.getConvoCommentById(answerId);
     	notFoundIfNull(answer);
     	ConversationBean convo = ConversationDAO.getById(answer.getConvoId());
     	
@@ -373,7 +373,7 @@ public class Conversations extends Controller {
      */
     public static void vote(String answerId, boolean up) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
+    	CommentBean answer = CommentsDAO.getConvoCommentById(answerId);
     	notFoundIfNull(answer);
     	
     	//talker cannot vote for his/her answer/reply
@@ -415,19 +415,19 @@ public class Conversations extends Controller {
     	
     	answer.getVotes().add(newVote);
     	answer.setVoteScore(voteScore);
-    	CommentsDAO.updateConvoAnswer(answer);
+    	CommentsDAO.updateConvoComment(answer);
     	
     	Set<Vote> _votes = answer.getUpVotes();
     	render("tags/convo/answerVotesInfo.html", _votes);
     }
     
     /**
-     * Update/delete or set 'Not Helpful' given answer
+     * Update/delete or set 'Not Helpful' given answer or reply
      * @param todo action to do - 'update'/'delete'/'setNotHelpful'
      */
     public static void updateAnswer(String answerId, String todo, String newText) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	CommentBean answer = CommentsDAO.getConvoAnswerById(answerId);
+    	CommentBean answer = CommentsDAO.getConvoCommentById(answerId);
     	notFoundIfNull(answer);
     	
     	// update and delete are allowed only for author and admin
@@ -443,12 +443,12 @@ public class Conversations extends Controller {
     		if (!oldText.equals(newText)) {
     			answer.getOldTexts().add(oldText);
     			answer.setText(newText);
-    			CommentsDAO.updateConvoAnswer(answer);
+    			CommentsDAO.updateConvoComment(answer);
     		}
     	}
     	else if (todo.equalsIgnoreCase("delete")) {
     		answer.setDeleted(true);
-    		CommentsDAO.updateConvoAnswer(answer);
+    		CommentsDAO.updateConvoComment(answer);
     		
     		//remove related actions
     		ActionDAO.deleteActionsByAnswer(answer);
@@ -474,15 +474,17 @@ public class Conversations extends Controller {
     				answer.setNotHelpful(true);
     			}
     		}
-    		CommentsDAO.updateConvoAnswer(answer);
+    		CommentsDAO.updateConvoComment(answer);
     	}
     }
     
     /**
      * Create answer or reply for given conversation
      * @param parentId id of answer (for replies)
+     * @throws Throwable 
      */
-    public static void saveAnswerOrReply(String convoId, String parentId, String text) {
+    public static void saveAnswerOrReply(String convoId, String parentId, String text) throws Throwable {
+    	Secure.checkAccess();
 		TalkerBean _talker = CommonUtil.loadCachedTalker(session);
 		ConversationBean convo = ConversationDAO.getById(convoId);
 		notFoundIfNull(convo);
@@ -513,6 +515,22 @@ public class Conversations extends Controller {
     	ConversationDAO.deleteChatMessage(convo.getId(), index);
     	renderText("ok");
     }
+    
+    /* ----------- Convo replies ------------- */
+    /**
+     * Create conversation reply for given conversation
+     */
+    public static void saveConvoReply(String convoId, String text) throws Throwable {
+    	Secure.checkAccess();
+		TalkerBean _talker = CommonUtil.loadCachedTalker(session);
+		ConversationBean convo = ConversationDAO.getById(convoId);
+		notFoundIfNull(convo);
+		
+		CommentBean _reply = ConversationLogic.createConvoReply(convo, _talker, text);
+		
+		//render html of new comment using tag
+		render("tags/convo/convoReply.html", _reply, _talker);
+	}
     
 	//for Admin Dashboard
     public static void lastTopicId() {

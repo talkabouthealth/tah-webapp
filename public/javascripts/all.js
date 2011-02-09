@@ -199,7 +199,7 @@ function showPopupForm (type, talkerId, userName) {
 	selectedTalkerId = talkerId;
 
 	showPopup("#"+type+"Popup", 200);
-	return false;
+	return true;
 }
 
 //void createThankYou(String toTalkerId, String note, String tagFile) {

@@ -78,6 +78,7 @@ public class ConversationBean {
 	private Set<ConversationBean> relatedConvos;
 	//answers/replies
 	private List<CommentBean> comments;
+	private List<CommentBean> replies;
 	private List<TalkerBean> followers;
 	
 	//members and message from Live Chat
@@ -417,5 +418,11 @@ public class ConversationBean {
 	}
 	public void setFromId(String fromId) {
 		this.fromId = fromId;
+	}
+	public List<CommentBean> getReplies() {
+		return replies;
+	}
+	public void setReplies(List<CommentBean> replies) {
+		this.replies = replies;
 	}
 }

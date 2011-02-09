@@ -14,6 +14,7 @@ import java.util.Set;
 
 import logic.FeedsLogic;
 import logic.TalkerLogic;
+import models.CommentBean;
 import models.DiseaseBean;
 import models.HealthItemBean;
 import models.PrivacySetting.PrivacyType;
@@ -179,6 +180,8 @@ public class ViewDispatcher extends Controller {
 		
 		convo.setComments(CommentsDAO.loadConvoAnswersTree(convo.getId()));
 		boolean userHasAnswer = convo.hasUserAnswer(talker);
+		
+		convo.setReplies(CommentsDAO.loadConvoReplies(convo.getId()));
 		
 		List<ConversationBean> relatedConvos = null;
 		try {

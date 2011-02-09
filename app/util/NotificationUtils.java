@@ -165,6 +165,9 @@ public class NotificationUtils {
 			if (emailSetting == EmailSetting.CONVO_COMMENT && vars.get("reply_text") != null) {
 				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_CONVO_REPLY_TO_ANSWER, talker.getEmail(), vars, null, true);
 			}
+			else if (emailSetting == EmailSetting.CONVO_COMMENT && vars.get("convoreply_text") != null) {
+				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_CONVO_REPLY, talker.getEmail(), vars, null, true);
+			}
 			else if (emailSetting == EmailSetting.RECEIVE_COMMENT && vars.get("reply_text") != null) {
 				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_REPLY_TO_COMMENT_IN_JOURNAL, talker.getEmail(), vars, null, true);
 			}

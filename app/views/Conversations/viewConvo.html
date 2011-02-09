@@ -218,7 +218,7 @@
    		}
 
    		function deleteAnswer(answerId) {
-   	   		var confirmDel = confirm("Are you sure want to delete this answer?");
+   	   		var confirmDel = confirm("Are you sure want to delete this answer/reply?");
    	   		if (confirmDel) {
    	   	   		$("#comment"+answerId).remove();
 
@@ -257,6 +257,27 @@
    	   		}
    	   		
    	   		return false;
+   		}
+
+   		//------------ Convo replies ---------------
+   		function saveConvoReply() {
+   	   		var replyText = $("#convoReplyText").val();
+   	   		$("#convoReplyText").val("");
+   			$("#saveConvoReplyImage").show();
+   			replyText = linkify(replyText);
+
+   			$.post("@{Conversations.saveConvoReply()}", 
+  				{ convoId: '${convo.id}', text: replyText},
+  				function(html) {
+  					$("#convoReplyForm").before($(html));
+  					$("#saveConvoReplyImage").hide();
+
+  					$('.inline-edit').inlineEdit(
+				  		{ hover: '', saveFunction: saveData, updateFunction: updateData}
+				  	);
+  				}
+  			);
+  			return false;
    		}
 
    		//used by admin
@@ -441,13 +462,63 @@
                       			#{if talker }
 									<div class="tagtxts">
 				                    	<a href="#" class="restartConvoLink">Re-start chat</a> |  
-				                    	<!-- <a href="#">Start Follow up conversation</a>  |  -->  
-				                    	<a href="#" class="flagConvoLink">Flag As Inappropriate</a> 
+				                    	
+				                    	<a href="#" onclick="$('#convoreplies').toggle(); return false;"
+		                        			#{if convo.replies.size() == 0}
+		                        				>Add Reply</a>
+		                        			#{/if}
+			                        		#{elseif convo.replies.size() == 1}
+			                        			>1 Reply</a>
+			                        		#{/elseif}
+			                        		#{else}
+			                        			>${convo.replies.size()} Replies</a>
+			                        		#{/else}		                        		
+		                        		
+				                    	 | <a href="#" class="flagConvoLink">Flag As Inappropriate</a> 
 				                    	#{if session.username?.equals("admin") || convo.talker.userName.equals(session.username)}
 				                        	  |  <a href="#" onclick="return deleteConvo();">Delete</a> 
 				                        #{/if}
 				                    </div>
 								#{/if}
+								#{else}
+									<div class="tagtxts">
+				                    	<a href="#" onclick="$('#convoreplies').toggle(); return false;"
+		                        			#{if convo.replies.size() == 0}
+		                        				></a>
+		                        			#{/if}
+			                        		#{elseif convo.replies.size() == 1}
+			                        			>1 Reply</a>
+			                        		#{/elseif}
+			                        		#{else}
+			                        			>${convo.replies.size()} Replies</a>
+			                        		#{/else}		                        		
+				                    </div>
+								#{/else}
+								
+								<div id="convoreplies" class="replysub" style="display: none;">
+									#{list items: convo.replies, as: 'convoReply'}
+										#{convo/convoReply reply: convoReply, talker: talker /}
+									#{/list}
+									
+									#{if talker}
+										<div id="convoReplyForm" style="clear:both">
+											<div id="saveConvoReplyImage" class="ajaxLoading" ></div>
+						                    <div class="repcommbox22">
+							                    <textarea id="convoReplyText" class="repcominput" ></textarea>
+							                    <div class="repcommstextbox">
+							                    	<input type="submit" class="repcomsubmits" 
+							                    		onclick="return saveConvoReply();"
+							                    		value=" " />
+							                     	<span class="canclelz">
+							                     		<a href="#" onclick="$('#convoreplies').hide(); return false;">Cancel</a>
+							                     	</span>
+							                    </div>
+							                    <div class="cb"></div>
+						                    </div>
+					                    </div><!--Blankdivsub-->
+									#{/if}
+								</div>
+								
 								<div class="cb"></div>
 							</div> <!--topic-->
 							

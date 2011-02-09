@@ -116,17 +116,17 @@ public class CommentsDAO {
 	// -------------- Convo comments -----------------
 	
 	/**
-	 * Get conversation answer/reply by id.
+	 * Get conversation answer/reply/convoreply by id.
 	 */
-	public static CommentBean getConvoAnswerById(String answerId) {
+	public static CommentBean getConvoCommentById(String commentId) {
 		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
 		
-		DBObject query = new BasicDBObject("_id", new ObjectId(answerId));
+		DBObject query = new BasicDBObject("_id", new ObjectId(commentId));
 		DBObject answerDBObject = commentsColl.findOne(query);
 		
-		CommentBean answer = new CommentBean();
-		answer.parseFromDB(answerDBObject);
-		return answer;
+		CommentBean comment = new CommentBean();
+		comment.parseFromDB(answerDBObject);
+		return comment;
 	}
 	
 	/**
@@ -143,6 +143,7 @@ public class CommentsDAO {
 			.add("text", comment.getText())
 			.add("time", comment.getTime())
 			.add("answer", comment.isAnswer())
+			.add("convoreply", comment.isConvoReply())
 			.get();
 		commentsColl.save(commentObject);
 		
@@ -150,7 +151,7 @@ public class CommentsDAO {
 		return getString(commentObject, "_id");
 	}
 	
-	public static void updateConvoAnswer(CommentBean answer) {
+	public static void updateConvoComment(CommentBean answer) {
 		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
 		
 		DBObject answerObject = BasicDBObjectBuilder.start()
@@ -162,6 +163,7 @@ public class CommentsDAO {
 			
 			.add("deleted", answer.isDeleted())
 			.add("answer", answer.isAnswer())
+			.add("convoreply", answer.isConvoReply())
 			
 			.add("not_helpful", answer.isNotHelpful())
 			.add("not_helpful_votes", setToDB(answer.getNotHelpfulVotes()))
@@ -181,12 +183,33 @@ public class CommentsDAO {
 		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId);
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("convo", convoRef)
+			.add("convoreply", new BasicDBObject("$ne", true))
 			.get();
 		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("vote_score", -1)).toArray();
 		
 		//comments without parent (top in hierarchy)
 		List<CommentBean> topCommentsList = parseCommentsTree(commentsList);
 		return topCommentsList;
+	}
+	
+	public static List<CommentBean> loadConvoReplies(String convoId) {
+		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		
+		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId);
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("convo", convoRef)
+			.add("convoreply", true)
+			.add("deleted", new BasicDBObject("$ne", true))
+			.get();
+		List<DBObject> commentsDBList = commentsColl.find(query).sort(new BasicDBObject("time", 1)).toArray();
+		
+		List<CommentBean> convoReplies = new ArrayList<CommentBean>();
+		for (DBObject commentDBObject : commentsDBList) {
+			CommentBean commentBean = new CommentBean();
+			commentBean.parseFromDB(commentDBObject);
+			convoReplies.add(commentBean);
+		}
+		return convoReplies;
 	}
 	
 	/**

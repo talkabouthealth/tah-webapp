@@ -56,7 +56,7 @@ public class API extends Controller {
 		ConversationBean convo = null;
 		if(convoId == null || convoId.length() == 0) {
 			//try to find convo by parent answer
-			CommentBean answer = CommentsDAO.getConvoAnswerById(parentId);
+			CommentBean answer = CommentsDAO.getConvoCommentById(parentId);
 			if (answer != null) {
 				convo = ConversationDAO.getById(answer.getConvoId());
 			}
