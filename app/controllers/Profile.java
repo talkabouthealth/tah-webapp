@@ -195,6 +195,28 @@ public class Profile extends Controller {
 			talker.setPassword(CommonUtil.hashPassword(newValue));
 			TalkerDAO.updateTalker(talker);
 		}
+		else if (name.equals("email")) {
+			validation.email(newValue);
+			if (validation.hasError("newValue")) {
+				renderText("Error:"+validation.error("newValue").message());
+				return;
+			}
+			TalkerBean otherTalker = TalkerDAO.getByEmail(newValue);
+			if (otherTalker != null) {
+				renderText("Error:"+Messages.get("email.exists"));
+				return;
+			}
+			
+			talker.setEmail(newValue);
+			talker.setVerifyCode(CommonUtil.generateVerifyCode());
+			CommonUtil.updateTalker(talker, session);
+			
+			//send verification email
+			Map<String, String> vars = new HashMap<String, String>();
+			vars.put("username", talker.getUserName());
+			vars.put("verify_code", talker.getVerifyCode());
+			EmailUtil.sendEmail(EmailTemplate.VERIFICATION, talker.getEmail(), vars, null, false);
+		}
 		else if (name.equals("twittersettings")) {
 			ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
 			if (twitterAccount != null) {

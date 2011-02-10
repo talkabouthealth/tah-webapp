@@ -117,6 +117,24 @@
 						}
 					);
 			});
+			$("#updateEmailBtn").click(function() {
+				if (closeTimeout) {
+					window.clearTimeout(closeTimeout);
+				}
+				$("#savedHelpText").html("Saving...");
+				$("#savedHelpError").html("");
+				$("#savedHelp").fadeIn(300);
+
+				var newValue = $("#newEmail").val();
+				$.post("/profile/updateProfile", {name: 'email', newValue: newValue},
+						function(data) {
+							showResponse(data);
+							if (data.indexOf("Error:") !== 0) {
+								hideHelpInfo('updateEmail', false);
+							}
+						}
+					);
+			});
 			$("#updateConnectionBtn").click(function() {
 				if (closeTimeout) {
 					window.clearTimeout(closeTimeout);
