@@ -72,14 +72,14 @@ public class ApplicationUpdatesJob extends Job {
 		 */
 		
 		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
-			Set<String> hiddenHelps = talker.getHiddenHelps();
-			hiddenHelps.add("updateUsername");
-			hiddenHelps.add("updatePassword");
-			hiddenHelps.add("updateConnection");
-			hiddenHelps.add("updateTwitterSettings");
-			hiddenHelps.add("updateFacebookSettings");
-			
-			TalkerDAO.updateTalker(talker);
+//			Set<String> hiddenHelps = talker.getHiddenHelps();
+//			hiddenHelps.add("updateUsername");
+//			hiddenHelps.add("updatePassword");
+//			hiddenHelps.add("updateConnection");
+//			hiddenHelps.add("updateTwitterSettings");
+//			hiddenHelps.add("updateFacebookSettings");
+//			
+//			TalkerDAO.updateTalker(talker);
 		}
 		
 		//Fields data for Edit Profile
