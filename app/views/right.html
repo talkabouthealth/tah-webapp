@@ -487,6 +487,7 @@
   <div id="dialog" class="window"> </div>
   
   #{popups/startConvo page: currentPage /}
+  #{popups/emailVerification talker: talker /}
   
   #{if talker}
   	#{set twitterAccount = talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}

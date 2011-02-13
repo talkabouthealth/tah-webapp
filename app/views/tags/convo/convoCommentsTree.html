@@ -42,7 +42,7 @@
 										<div class="suggestxt inline_display">
 											<div class="inline_full inline_empty">
 												<span class="styles2 inline_view styles2answers"
-													>${comment.text.nl2br()}</span>
+													>${comment.text?.nl2br()}</span>
 												#{if session.username?.equals(comment.fromTalker.userName) }
 													<span class="editit2" style="float: none;">
 														<a href="#" class="inline_editlink">Edit</a>

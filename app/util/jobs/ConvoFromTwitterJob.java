@@ -22,7 +22,7 @@ import util.TwitterUtil;
  *
  */
 @Every("1min")
-public class TwitterJob extends Job {
+public class ConvoFromTwitterJob extends Job {
 	
 	@Override
 	public void doJob() throws Exception {

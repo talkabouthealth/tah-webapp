@@ -154,7 +154,10 @@ public class CommentsDAO {
 	public static void updateConvoComment(CommentBean answer) {
 		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
 		
+		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, answer.getConvoId());
 		DBObject answerObject = BasicDBObjectBuilder.start()
+			.add("convo", convoRef)
+			
 			.add("vote_score", answer.getVoteScore())
 			.add("votes", setToDB(answer.getVotes()))
 

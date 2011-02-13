@@ -48,6 +48,9 @@ public class ConversationBean {
 	//includes old titles and urls
 	private Set<URLName> oldNames;
 	
+	//id of the conversation where this convo was merged
+	private String mergedWith;
+	
 	//Where convo was created (e.g. 'twitter')
 	private String from;
 	//Id related to creation source (e.g. id of tweet)
@@ -102,6 +105,12 @@ public class ConversationBean {
     	setMainURL((String)convoDBObject.get("main_url"));
     	setOldNames(parseSet(URLName.class, convoDBObject, "old_names"));
     	setViews(getInt(convoDBObject, "views"));
+    	
+    	//"merged_with"
+    	DBRef mergedWithRef = (DBRef)convoDBObject.get("merged_with");
+		if (mergedWithRef != null) {
+			setMergedWith(mergedWithRef.getId().toString());
+		}
 
     	setBitly((String)convoDBObject.get("bitly"));
     	setBitlyChat((String)convoDBObject.get("bitly_chat"));
@@ -424,5 +433,11 @@ public class ConversationBean {
 	}
 	public void setReplies(List<CommentBean> replies) {
 		this.replies = replies;
+	}
+	public String getMergedWith() {
+		return mergedWith;
+	}
+	public void setMergedWith(String mergedWith) {
+		this.mergedWith = mergedWith;
 	}
 }

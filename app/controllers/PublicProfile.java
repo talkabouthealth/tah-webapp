@@ -61,6 +61,7 @@ public class PublicProfile extends Controller {
 		TalkerLogic.preloadTalkerInfo(talker);
 		
 		render(talker, currentTalker, action, from);
+		
 	}
 	
 	public static void thoughts(String userName) {

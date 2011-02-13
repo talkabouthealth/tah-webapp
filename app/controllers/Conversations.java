@@ -537,4 +537,62 @@ public class Conversations extends Controller {
     	String lastConvoId = ConversationDAO.getLastConvoId();
     	renderText(lastConvoId);
     }
+    
+    /**
+     * Merges two conversations together. 
+     * After merging there is only one (main) conversation, second is deleted (and redirected to main).
+     * 
+     * @param convoId Main conversation in merging
+     * @param convoToMergeURL Secondary conversation
+     * @throws Throwable 
+     */
+    public static void mergeConvos(String convoId, String convoToMergeURL) throws Throwable {
+    	Secure.checkAccess();
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		if (!talker.isAdmin()) {
+			forbidden();
+			return;
+		}
+		
+		ConversationBean convo = ConversationDAO.getById(convoId);
+		if (convoToMergeURL.startsWith("/")) {
+			convoToMergeURL = convoToMergeURL.substring(1);
+		}
+		ConversationBean secondConvo = ConversationDAO.getByURL(convoToMergeURL);
+		if (convo == null || secondConvo == null) {
+			notFound();
+			return;
+		}
+		
+		//combine answers
+		List<CommentBean> secondConvoAnswers = CommentsDAO.loadConvoAnswersTree(secondConvo.getId());
+		for (CommentBean answer : secondConvoAnswers) {
+			answer.setConvoId(convo.getId());
+			CommentsDAO.updateConvoComment(answer);
+			
+			for (CommentBean reply : answer.getChildren()) {
+				reply.setConvoId(convo.getId());
+				CommentsDAO.updateConvoComment(reply);
+			}
+		}
+		
+		//combine followers
+		List<TalkerBean> followersList = convo.getFollowers();
+		for (TalkerBean follower : secondConvo.getFollowers()) {
+			TalkerBean fullTalker = TalkerDAO.getById(follower.getId());
+			if (!followersList.contains(follower)) {
+				fullTalker.getFollowingConvosList().add(convo.getId());
+			}
+			fullTalker.getFollowingConvosList().remove(secondConvo.getId());
+			TalkerDAO.updateTalker(fullTalker);
+		}
+		
+		//move actions from second to main convo
+    	ActionDAO.updateActionsConvo(secondConvo, convo);
+		
+		secondConvo.setMergedWith(convo.getId());
+		ConversationDAO.updateConvo(secondConvo);
+		
+		renderText("ok");
+    }
 }

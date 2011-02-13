@@ -1,5 +1,7 @@
 package dao;
 
+import groovy.util.ObjectGraphBuilder.DefaultReferenceResolver;
+
 import java.awt.image.DataBufferByte;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -125,11 +127,14 @@ public class ConversationDAO {
 			}
 		}
 		
+		DBRef mergedWithRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getMergedWith());
 		DBObject convoObject = BasicDBObjectBuilder.start()
 			.add("topic", convo.getTopic())
 			.add("main_url", convo.getMainURL())
 			.add("old_names", setToDB(convo.getOldNames()))
 			.add("cr_date", convo.getCreationDate())
+			
+			.add("merged_with", mergedWithRef)
 			
 			.add("deleted", convo.isDeleted())
 			.add("opened", convo.isOpened())

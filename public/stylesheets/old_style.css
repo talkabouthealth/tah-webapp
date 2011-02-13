@@ -303,6 +303,8 @@ a.blacktextbold:hover {text-decoration: none; color: #000000; font-weight: bold;
 a.red:hover {text-decoration: none; color: #e21c3f;}
 .red12 {font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none; color: #e21c3f;}
 a.red12:hover {text-decoration: none; color: #e21c3f;}
+.red16 {font-family: arial; font-size: 16px; font-weight: normal; text-decoration: none; color: #e21c3f;}
+a.red16:hover {text-decoration: none; color: #e21c3f;}
 .green {font-family: arial; font-size: 18px; font-weight: bold; text-decoration: none; color: #71860b;}
 a.green:hover {text-decoration: none; color: #71860b;}
 .green12 {font-family: arial; font-size: 12px; font-weight: bold; text-decoration: none; color: #1ba553;}

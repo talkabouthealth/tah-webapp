@@ -181,6 +181,7 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			//manual login
 			ApplicationDAO.saveLogin(talker.getId(), "facebook");
 			session.put("username", talker.getUserName());
+			session.put("justloggedin", true);
 			
 			return "/home";
 		}

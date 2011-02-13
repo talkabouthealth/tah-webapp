@@ -439,5 +439,22 @@ public class ActionDAO {
 		DBObject query = new BasicDBObject("convoId", convoRef);
 		activitiesColl.remove(query);
 	}
+	
+	/**
+	 * Updates all actions with one conversation to use another convo. 
+	 * 
+	 * @param convo
+	 * @param newConvo
+	 */
+	public static void updateActionsConvo(ConversationBean convo, ConversationBean newConvo) {
+		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
+
+		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getId());
+		DBRef newConvoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, newConvo.getId());
+		
+		DBObject query = new BasicDBObject("convoId", convoRef);
+		activitiesColl.update(query,
+				new BasicDBObject("$set", new BasicDBObject("convoId", newConvoRef)), false, true);
+	}
 
 }

@@ -263,6 +263,9 @@ function saveProfileComment(parentId, parentList) {
 
 
 /* --------------- Autocompletes ---------------- */
+//URL of selected conversation in autocomplete
+var selectedConvoURL;
+
 //Uses jQuery Autocomplete plugin
 function makeAutocomplete(id, type) {
 	if ($(id).size() === 0) {
@@ -313,6 +316,7 @@ function makeAutocomplete(id, type) {
 			}
 			else {
 				$(id).val(ui.item.value);
+				selectedConvoURL = ui.item.url;
 			}
 			
 			return false;
@@ -546,7 +550,7 @@ function showPopup(id, popupWidth) {
 	var maskHeight = $(document).height();
 	var maskWidth = $(window).width();
 
-	//Set heigth and width to mask to fill up the whole screen
+	//Set height and width to mask to fill up the whole screen
 	$('#mask').css({'width':maskWidth,'height':maskHeight});
 	
 	//show background	

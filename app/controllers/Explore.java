@@ -31,7 +31,7 @@ import util.CommonUtil;
 import util.FacebookUtil;
 import util.SearchUtil;
 import util.TwitterUtil;
-import util.jobs.TwitterJob;
+import util.jobs.ConvoFromTwitterJob;
 import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.ConversationDAO;

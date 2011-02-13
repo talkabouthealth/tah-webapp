@@ -63,6 +63,10 @@ public class ViewDispatcher extends Controller {
 				//we come here by old url - redirect to main
 				redirect("/"+convo.getMainURL());
 			}
+			if (convo.getMergedWith() != null) {
+				ConversationBean mainConvo = ConversationDAO.getById(convo.getMergedWith());
+				redirect("/"+mainConvo.getMainURL(), true);
+			}
 			
 			showConvo(convo);
 			return;

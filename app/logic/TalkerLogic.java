@@ -737,7 +737,6 @@ public class TalkerLogic {
 		if (talker.isProf()) {
     		session.put("prof", "true");
     	}
-		session.put("justregistered", true);
 	}
 	
 	/**

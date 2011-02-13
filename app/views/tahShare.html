@@ -1,5 +1,15 @@
 			<div class="topipsts">
-                  <div class="mtrighttxt1">Share and Like Topic</div>
+                  <div class="mtrighttxt1">
+                  	#{if currentPage?.equals("topicPage") } 
+	                  	Share and Like Topic
+	                #{/if}
+	                #{elseif currentPage?.equals("conversationSummary") }
+	                	Share and Like Question
+	                #{/elseif}
+	                #{else}
+	                	Share TalkAboutHealth
+	                #{/else}
+                  </div>
                   <!--topixtext-->
                   <div class="membersarea">
                   	#{if talker}

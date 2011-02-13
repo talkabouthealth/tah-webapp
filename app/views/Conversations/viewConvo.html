@@ -129,12 +129,38 @@
    				return false;
    			});
 
+   			$("#mergeConvosBtn").click(function() {
+   	   			if (selectedConvoURL) {
+   	   				var confirmMerge = confirm("Are you sure you want to merge the following question: "+selectedConvoURL);
+		   	   		if (confirmMerge) {
+			   	   		if (closeTimeout) {
+							window.clearTimeout(closeTimeout);
+						}
+						$("#savedHelpText").html("Merging...");
+						$("#savedHelpError").html("");
+						$("#savedHelp").fadeIn(300);
+					
+		   	   	  		$.post("@{Conversations.mergeConvos()}", 
+		    				{ convoId : '${convo.id}', convoToMergeURL : selectedConvoURL},
+		    				function(html) {
+		    					window.location.reload();
+		    				}
+		    			);
+		   	   		}
+   	   			}
+   	   			else {
+   	   	   			alert("Please select correct conversation");
+   	   			}
+				return false;
+			});
+
    			$('.inline-edit').inlineEdit(
 		  		{ hover: '', saveFunction: saveData, updateFunction: updateData}
 		  	);
 
    			makeTopicsAutocomplete("#topicInput");
    			makeAutocomplete("#relatedConvosInput", "convoedit");
+   			makeAutocomplete("#convoToMerge", "convoedit");
 		});
 
 		function saveData(dataType, newValue) {
@@ -453,7 +479,7 @@
 						                   	<input type="submit" value=" " id="addTopicBtn" 
 						                   		class="addcomsubmit inline_add" style="float:left; width:80;"  />
 									        <div class="canclebtnz" style="float:left; width:auto;">
-									          	<a class="cancel" href="#">Cancel</a>
+									          	<a class="cancel" href="#">Done</a>
 									        </div> 
 									    </div>
 									</div>
@@ -700,6 +726,21 @@
 								#{/if}
 							    <div class="cb"></div>
 							</div>
+							
+							
+							#{if talker?.isAdmin() }
+								<div class="topic">
+			                      <div class="topich1">Merge conversation</div>
+			                      <div class="mtinputbox" style="padding-top: 0px;">
+			                        <input id="convoToMerge" type="text" onfocus="selectedConvoURL = '';"
+			                        	class="mtinput" style="width: 300px; margin-right: 10px;"/>
+			                        <input id="mergeConvosBtn" type="submit" value="" src="/public/images/mergebtn.jpg" class="mergebtn"/>
+			                        <div class="cb"></div>
+			                      </div>
+			                      <!--mtinputbox-->
+			                      <div class="cb"></div>
+			                    </div>
+							#{/if}
 
 							#{ notLoggedNotice /}
 							<span style="color: red; font-weight: bold;">

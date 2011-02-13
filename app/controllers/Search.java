@@ -149,8 +149,6 @@ public class Search extends Controller {
 		return results;
 	}
 	
-	
-	
 	public static void allSearch(String query) throws Exception {
 		List<TopicBean> topicResults = topicsSearch(query);
 		List<Action> convoResults = 

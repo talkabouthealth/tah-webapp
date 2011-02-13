@@ -65,6 +65,7 @@ public class Security extends Secure.Security {
     	}
     	
 		ApplicationDAO.saveLogin(talker.getId(), "login");
+		session.put("justloggedin", true);
 		
 		 /*
 	     	Play! 1.0.3 has problems with cookies in IE8 (FLASH cookies aren't stored correctly),
