@@ -127,7 +127,10 @@ public class ConversationDAO {
 			}
 		}
 		
-		DBRef mergedWithRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getMergedWith());
+		DBRef mergedWithRef = null;
+		if (convo.getMergedWith() != null) {
+			mergedWithRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getMergedWith());
+		}
 		DBObject convoObject = BasicDBObjectBuilder.start()
 			.add("topic", convo.getTopic())
 			.add("main_url", convo.getMainURL())
