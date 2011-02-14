@@ -487,9 +487,10 @@
   <div id="dialog" class="window"> </div>
   
   #{popups/startConvo page: currentPage /}
-  #{popups/emailVerification talker: talker /}
   
   #{if talker}
+  	#{popups/emailVerification talker: talker /}
+  	
   	#{set twitterAccount = talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
 			
 	#{ popups/shareEmail shareType: 'TalkAboutHealth', userName: talker?.userName /}	
