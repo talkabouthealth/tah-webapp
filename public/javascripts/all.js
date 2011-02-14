@@ -267,7 +267,7 @@ function saveProfileComment(parentId, parentList) {
 var selectedConvoURL;
 
 //Uses jQuery Autocomplete plugin
-function makeAutocomplete(id, type) {
+function makeAutocomplete(id, type, parentTopic) {
 	if ($(id).size() === 0) {
 		return;
 	}
@@ -294,7 +294,8 @@ function makeAutocomplete(id, type) {
 				response( cache[ request.term ] );
 				return;
 			}
-			
+			//used when we need autocomplete of subtopics
+			request.parent = parentTopic;
 			$.ajax({
 				url: url,
 				dataType: "json",
@@ -562,7 +563,7 @@ function showPopup(id, popupWidth) {
 	var winW = $(window).width();
           
 	//Set the popup window to center and show
-	$(id).css('top', 50);
+	$(id).css('top', 30);
 	$(id).css('left', winW/2-popupWidth);
 	$(id).fadeIn(200); 
 	

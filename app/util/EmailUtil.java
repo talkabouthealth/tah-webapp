@@ -28,6 +28,7 @@ public class EmailUtil {
 	 */
 	public enum EmailTemplate {
 		WELCOME,
+		WELCOME_WAITINGLIST,
 		FORGOT_PASSWORD,
 		INVITATION,
 		SHARE,

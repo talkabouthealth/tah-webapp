@@ -6,7 +6,48 @@
 	</style>
 
 	<!-- scripts -->
-	<script language="javascript">
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+			$(".joinWaitingLink").click(function() {
+				//show form in popup
+				$("#joiningFromDiv").show()
+				$("#thanksForJoiningDiv").hide();
+				$("#emailError").html("");
+
+				//initialize popup with community and waiting users number
+				var community = $(this).attr("rel");
+				$("#communityName").html(community);
+				$("#healthCommunity").val(community);
+				$("#communityWaiting").html($(this).next().html());
+				 
+				showPopup("#joinWaitingListDialog", 400);
+			});
+
+			makeAutocomplete("#healthCommunity", "topic", "Diseases");
+		});
+
+		//Add user to community's waiting list
+		function addToWaiting() {
+			var community = $("#healthCommunity").val();
+			var email = $("#email").val();
+			
+			$.post("@{Application.addToWaitingList()}", 
+  				{ community: community, email: email},
+  				function(responseText) {
+  	  				//TODO: create function for checking error in response?
+  					if (responseText.indexOf("Error:") === 0) {
+  						var errorText = responseText.replace("Error:", "");
+  						$("#emailError").html(errorText); 
+  					}
+  					else {
+  	  					$("#joiningFromDiv").hide();
+  	  					$("#thanksForJoiningDiv").show();
+  					}
+  				}
+  			);
+		}
+
 		//methods below are used for landing page with new-convo form
 		function checkForm() {
 			//Check topic name field
@@ -88,13 +129,18 @@
         <div class="Breastsubtxt">${numberOfMembers} members | ${numberOfLiveChats} live video chats <br />
           ${numberOfQuestions} questions | ${numberOfAnswers} answers</div>
         <div class="ComingSoon">Coming Soon</div>
-        <div class="ComingSoonsub"> Skin Cancer 
-        	<span class="csoontxt"><a href="@{Application.updatesEmail()}">Join the waiting list</a></span><br />
-          Multiple Sclerosis <span class="csoontxt"><a href="@{Application.updatesEmail()}">Join the waiting list</a></span><br />
-          Diabetes <span class="csoontxt"><a href="@{Application.updatesEmail()}">Join the waiting list</a></span><br />
-          Heart Diseases <span class="csoontxt"><a href="@{Application.updatesEmail()}">Join the waiting list</a></span><br />
-          Alzheimer's <span class="csoontxt"><a href="@{Application.updatesEmail()}">Join the waiting list</a></span><br />
-          
+        <div class="ComingSoonsub"> 
+          #{list items:["Skin Cancer", "Multiple Sclerosis", "Diabetes", "Heart Diseases", "Alzheimer's"], as: "community"}
+          	#{set numOfWaiting = waitingCommunitiesInfo.get(community) ? waitingCommunitiesInfo.get(community) : 0 /}
+          	${community} 
+          	<span class="csoontxt">
+          		<a href="#" rel="${community}" class="joinWaitingLink">
+          			Join waiting list (${numOfWaiting})
+          		</a>
+          		<span style="display: none;">${numOfWaiting}</span>
+          	</span>
+          	<br />
+          #{/list}
           <!-- <em><a href="#">See More...</a></em>  --> 
         </div>
         <div class="tahfblikeCover">
@@ -174,4 +220,11 @@
 			</div>
 		</div>
 </div>
+</div>
+
+<div id="boxes">
+  #{popups/joinWaitingList /}
+	
+  <!-- Mask to cover the whole screen -->
+  <div id="mask"></div>
 </div>

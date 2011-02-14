@@ -766,6 +766,7 @@ public class TalkerLogic {
 		prepareTalkerForSignup(talker);
 		
 		//we don't need to validate Facebook email
+		//for Twitter we have 'null' email
 		talker.setEmail(email);
 		talker.setVerifyCode(null);
 		

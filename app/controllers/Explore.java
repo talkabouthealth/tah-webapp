@@ -76,9 +76,9 @@ public class Explore extends Controller {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 
 		//Active talkers on this day
-		Calendar oneDayBeforeNow = Calendar.getInstance();
-		oneDayBeforeNow.add(Calendar.DAY_OF_MONTH, -1);
-		Set<TalkerBean> activeTalkers = ApplicationDAO.getActiveTalkers(oneDayBeforeNow.getTime());
+		Calendar twoWeeksBeforeNow = Calendar.getInstance();
+		twoWeeksBeforeNow.add(Calendar.DAY_OF_MONTH, -14);
+		Set<TalkerBean> activeTalkers = ApplicationDAO.getActiveTalkers(twoWeeksBeforeNow.getTime());
 		Set<TalkerBean> newTalkers = ApplicationDAO.getNewTalkers();
 		
 		//check if search is performed now

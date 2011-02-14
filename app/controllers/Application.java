@@ -77,7 +77,11 @@ public class Application extends Controller {
     		int numberOfQuestions = ConversationDAO.getNumberOfConversations();
     		int numberOfAnswers = CommentsDAO.getNumberOfAnswers();
     		
-    		render(numberOfMembers, numberOfLiveChats, numberOfQuestions, numberOfAnswers);
+    		//future communities
+    		Map<String, Integer> waitingCommunitiesInfo = ApplicationDAO.getWaitingCommunitiesInfo();
+    		
+    		render(waitingCommunitiesInfo, numberOfMembers, numberOfLiveChats, 
+    				numberOfQuestions, numberOfAnswers);
     	}
     }
     
@@ -298,4 +302,21 @@ public class Application extends Controller {
 			Secure.login();
 		}
 	}
+    
+    public static void addToWaitingList(String community, @Required @Email String email) {
+    	if (validation.hasErrors()) {
+    		renderText("Error: Please input correct email");
+            return;
+        }
+    	
+    	ApplicationDAO.addToWaitingList(community, email);
+    	
+    	//send welcome email
+    	Map<String, String> vars = new HashMap<String, String>();
+    	String parsedUsername = email.substring(0, email.indexOf("@"));
+		vars.put("username", parsedUsername);
+		EmailUtil.sendEmail(EmailTemplate.WELCOME_WAITINGLIST, email, vars, null, false);
+    	
+    	renderText("ok");
+    }
 }

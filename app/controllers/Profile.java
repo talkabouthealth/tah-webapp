@@ -168,7 +168,12 @@ public class Profile extends Controller {
 		renderText("ok");
 	}
 	
-	
+	/**
+	 * Back-end for updating profile on the right side of the Home page
+	 * 
+	 * @param name
+	 * @param newValue
+	 */
 	public static void updateProfile(String name, String newValue) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 

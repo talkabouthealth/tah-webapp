@@ -1,28 +1,55 @@
-/* CSS Document */
-
-.iebox 
-{ 
-width: 220px; height:23px; float:left; padding-left:5px; font-size:16px; border-right:0; padding-top:3px;
+.iebox { 
+	width: 220px; height:23px; float:left; padding-left:5px; font-size:16px; border-right:0; padding-top:3px;
 }
 .mleft { position:relative; margin-left:-25px; border:1px solid red; z-index:999;}
-.top4ie7 { float:left; width:238px; height:10px;}
-.logotopmargin { margin-top:-6px;}
+
 .haderbanner {
 	float:left;
 	width:100%;
 	height:10px;
 	margin-top:0px;
-	
 }
-.padlefts
-{
-padding-left:25px;
+.padlefts {
+	padding-left:25px;
 }
-.mtopz { margin-top:-10px; display:block;
-border:1px solid red;
+.mtopz { 
+	margin-top:-10px; 
+	display:block;
+	border:1px solid red;
+	height:60px;
+}
+.mtapz { margin-top:-2px; }
 
-height:60px;}
-.mtapz
-{
-margin-top:-2px;
+.stayle3 {color: #1550a4}
+.optionCover {
+	clear:both;
+	padding:0;
+	padding-top:10px;
 }
+.optionCover2 {
+	clear:both;
+	padding:0;
+	padding-top:20px;
+}
+.optionCover3 {
+	clear:both;
+	padding:0;
+	padding-top:20px;
+}
+.joinTah {
+	margin-top:-30px;
+}
+.meetOther
+{
+	padding-top:20px;
+	padding-left:35px;
+	clear:both;
+}
+
+/*
+Do we need this? Left from designers, but doesn't look good. 
+
+.top4ie7 { float:left; width:238px; height:10px;}
+.logotopmargin { margin-top:-6px;}
+
+*/

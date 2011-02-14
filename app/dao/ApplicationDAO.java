@@ -2,9 +2,11 @@ package dao;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import models.TalkerBean;
@@ -30,6 +32,7 @@ public class ApplicationDAO {
 	public static final String LOGIN_HISTORY_COLLECTION = "logins";
 	public static final String UPDATES_EMAIL_COLLECTION = "emails";
 	public static final String NAMES_COLLECTION = "names";
+	public static final String WAITING_COLLECTION = "waiting";
 	
 	/**
 	 * Save login record.
@@ -183,9 +186,41 @@ public class ApplicationDAO {
         return name.replaceAll("[\\W_]", "-").replaceAll("-{2,}", "-").replaceAll("-$", "").toLowerCase();
 	}
 	
-	public static void main(String[] args) {
-//		System.out.println(ApplicationDAO.getURLName(JavaExtensions.slugify("hello_world")));
-//		System.out.println(prepareName("_cool test topic___with unusual _s_symbols!!_"));
+	
+	/* ----------------- Waiting list actions --------------- */
+	
+	public static void addToWaitingList(String community, String email) {
+		DBCollection waitingColl = getCollection(WAITING_COLLECTION);
+		
+		DBObject waitingDBObject = BasicDBObjectBuilder.start()
+			.add("community", community)
+			.add("email", email)
+			.get();
+		waitingColl.save(waitingDBObject);
+	}
+	
+	/**
+	 * Loads all communities that users are waiting for and
+	 * number of users waiting for each community.
+	 * 
+	 * @return
+	 */
+	public static Map<String, Integer> getWaitingCommunitiesInfo() {
+		DBCollection waitingColl = getCollection(WAITING_COLLECTION);
+		List<DBObject> waitingDBList = waitingColl.find().toArray();
+		
+		Map<String, Integer> waitingInfo = new HashMap<String, Integer>();
+		for (DBObject waitingDBObject : waitingDBList) {
+			String community = (String)waitingDBObject.get("community");
+			if (waitingInfo.containsKey(community)) {
+				int numOfWaiting = waitingInfo.get(community);
+				waitingInfo.put(community, numOfWaiting+1);
+			}
+			else {
+				waitingInfo.put(community, 1);
+			}
+		}
+		return waitingInfo;
 	}
 
 }
