@@ -1,51 +1,40 @@
-			<div class="topipsts">
-                  <div class="mtrighttxt1">
-                  	#{if currentPage?.equals("topicPage") } 
-	                  	Share and Like Topic
-	                #{/if}
-	                #{elseif currentPage?.equals("conversationSummary") }
-	                	Share and Like Question
-	                #{/elseif}
-	                #{else}
-	                	Share TalkAboutHealth
-	                #{/else}
-                  </div>
-                  <!--topixtext-->
-                  <div class="membersarea">
-                  	#{if talker}
-                  		#{ share/buttons /}
-                  	#{/if}
-                  	#{else}
-	                    <div class="sharicons">
-	                    	<img class="rpad" alt="Twitter" src="/public/images/twittericon.jpg"/>
-	                    	<a href="http://twitter.com/share?text=${"I am meeting others and sharing my health experiences on TalkAboutHealth. http://talkabouthealth.com"}" target="_blank">Twitter</a>
-	                    </div>
-	                    <div class="sharicons">
-	                    	<img class="rpad" alt="Members" src="/public/images/facebookicon.jpg"/>
-	                    	<a href="http://www.facebook.com/share.php?u=${currentURL}"
-	                    		target="_blank"
-	                    		>Facebook</a>
-	                    </div>
-                  	#{/else}
-                    
-                  </div>
+<div class="topipsts">
+	<div class="mtrighttxt1">
+		#{if currentPage?.equals("topicPage") } 
+        	Share and Like Topic
+		#{/if}
+		#{elseif currentPage?.equals("conversationSummary") }
+			Share and Like Question
+		#{/elseif}
+		#{else}
+			Share TalkAboutHealth
+		#{/else}
+	</div>
+	<div class="membersarea">
+		#{if talker}
+			#{ share/buttons /}
+		#{/if}
+		#{else}
+		  <div class="sharicons">
+		  	<img class="rpad" alt="Twitter" src="/public/images/twittericon.jpg"/>
+		  	<a href="http://twitter.com/share?text=${"I am meeting others and sharing my health experiences on TalkAboutHealth. http://talkabouthealth.com"}" target="_blank">Twitter</a>
+		  </div>
+		  <div class="sharicons">
+		  	<img class="rpad" alt="Members" src="/public/images/facebookicon.jpg"/>
+		  	<a href="http://www.facebook.com/share.php?u=${currentURL}"
+		  		target="_blank"
+		  		>Facebook</a>
+		  </div>
+		#{/else}
+	</div>
                   
-                  #{if currentPage?.equals("conversationSummary") || currentPage?.equals("topicPage") } 
-                  	#{ share/fblike currentURL: currentURL /}
-                  #{/if}
-                  #{else}
-                  	#{ share/fblike currentURL: 'www.facebook.com/talkabouthealth' /}
-                  #{/else}
+    #{if currentPage?.equals("conversationSummary") || currentPage?.equals("topicPage") } 
+    	#{ share/fblike currentURL: currentURL /}
+    #{/if}
+    #{else}
+    	#{ share/fblike currentURL: 'www.facebook.com/talkabouthealth' /}
+    #{/else}
                   
-                  
-                  <div class="topicborder"></div>
-                </div>
+	<div class="topicborder"></div>
+</div>
                 
-                #{ifnot talker}
-                	<div class="topipsts">
-						<br/>         
-						#{ share/fbwidget type: 'full' /}  	
-						<br/><br/>      
-						#{ share/twitwidget /}             		
-                  	</div>
-                #{/ifnot}

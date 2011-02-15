@@ -2,9 +2,11 @@ package logic;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,7 +33,9 @@ import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean;
 import models.TopicBean;
 import models.TalkerBean.EmailSetting;
+import models.actions.Action;
 import models.actions.AnswerConvoAction;
+import models.actions.AnswerDisplayAction;
 import models.actions.FollowConvoAction;
 import models.actions.StartConvoAction;
 import models.actions.Action.ActionType;
@@ -303,6 +307,35 @@ public class ConversationLogic {
 		}
     	
     	return convoReply;
+	}
+	
+	
+	/**
+	 * Converts given list of conversations to Feed format (for better display)
+	 * @param conversations
+	 * @return
+	 */
+	public static List<Action> convosToFeed(Collection<ConversationBean> conversations) {
+		List<Action> convosFeed = new ArrayList<Action>();
+		for (ConversationBean convo : conversations) {
+			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
+			
+			TalkerBean activityTalker = convo.getTalker();
+			//show top answer or simple convo
+			CommentBean topAnswer = null;
+			if (!convo.getComments().isEmpty()) {
+				topAnswer = convo.getComments().get(0);
+				topAnswer = CommentsDAO.getConvoCommentById(topAnswer.getId());
+				activityTalker = topAnswer.getFromTalker();
+			}
+			
+			AnswerDisplayAction convoAction =
+				new AnswerDisplayAction(activityTalker, convo, topAnswer, ActionType.ANSWER_CONVO, topAnswer != null);
+			convoAction.setTime(convo.getCreationDate());
+			
+			convosFeed.add(convoAction);
+		}
+		return convosFeed;
 	}
 
 }

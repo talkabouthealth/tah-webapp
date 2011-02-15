@@ -1,5 +1,7 @@
+#{set pageType = 'Conversation' /}
 #{set pageTitle = convo.topic /}
-#{set pageDescription = (convo.details?.length() > 0 ? convo.details : convo.topic) /}
+#{set pageDescription = convo.pageDescription /}
+#{set pageKeywords = convo.pageKeywords /}
 
 #{extends 'main.html' /}
 	<style>
@@ -15,12 +17,18 @@
 		#topicsList, #topicsEditList { float: left }
 		#topicsList .deleteTopicLink { display: none; }
 		
-		/* Convo title */
+		/* Convo title and description */
 		h1 {
 			color:#000000;
 			font-family:arial;
 			font-size:20px;
 			text-decoration:none;
+		}
+		h2 {
+			color:#4B4B4B;
+			font-family:Arial;
+			font-size:14px;
+			font-weight: normal;
 		}
 		
 		/* for popups */
@@ -401,7 +409,7 @@
 									<div class='inline-edit' id="detailsEdit">
 										<div class="suggestxt inline_display">
 											<div class="inline_full" style="display: ${convo.details ? 'block' : 'none'}">
-												<p style="display: inline; padding-top:10px;" class="inline_view">${convo.details?.nl2br()}</p>
+												<h2 class="inline_view" style="display: inline;">${convo.details?.nl2br()}</h2>
 												#{if talker }
 													<span class="editit2" style="float: none;">
 														<a href="#" class="inline_editlink">Edit</a>
@@ -856,6 +864,7 @@
 						
 					#{set currentPage = 'conversationSummary' /}
 					#{include 'tahShare.html' /}
+					#{include 'shareWidgets.html' /}
 				               
                 	<div class="cb"></div>
 				</div>

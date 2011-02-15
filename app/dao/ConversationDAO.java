@@ -541,6 +541,7 @@ public class ConversationDAO {
 			ConversationBean convo = new ConversationBean();
 			convo.parseFromDB(convoDBObject);
 			if (!convo.isDeleted()) {
+				//TODO: do we need to load this?
 				convo.setComments(CommentsDAO.loadConvoAnswersTree(convo.getId()));
 				convosList.add(convo);
 			}

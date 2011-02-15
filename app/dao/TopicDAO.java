@@ -43,6 +43,8 @@ public class TopicDAO {
 			.add("fixed", topic.isFixed())
 			
 			.add("children", topic.childrenToList())
+			
+			.add("last_update", new Date())
 			.get();
 		topicsColl.save(topicDBObject);
 		
@@ -64,6 +66,8 @@ public class TopicDAO {
 			.add("summary", topic.getSummary())
 			
 			.add("children", topic.childrenToList())
+			
+			.add("last_update", new Date())
 			.get();
 		
 		DBObject topicId = new BasicDBObject("_id", new ObjectId(topic.getId()));
@@ -206,4 +210,26 @@ public class TopicDAO {
     	return followers;
 	}
 	
+	/**
+	 * Loads the 20 most recently updated Topics
+	 */
+	public static List<TopicBean> getRecentTopics() {
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
+		
+		DBObject query = new BasicDBObject("deleted", new BasicDBObject("$ne", true));
+		List<DBObject> topicsDBList = topicsColl.find(query).sort(new BasicDBObject("last_update", -1)).toArray();
+		
+		List<TopicBean> recentTopics = new ArrayList<TopicBean>();
+		for (DBObject topicDBObject : topicsDBList) {
+			TopicBean topic = new TopicBean();
+			topic.parseBasicFromDB(topicDBObject);
+			topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
+			recentTopics.add(topic);
+			
+			if (recentTopics.size() == 20) {
+				break;
+			}
+		}
+		return recentTopics;
+	}
 }

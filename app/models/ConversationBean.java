@@ -13,6 +13,7 @@ import java.util.Set;
 import play.Logger;
 
 import util.CommonUtil;
+import util.TemplateExtensions;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -339,7 +340,54 @@ public class ConversationBean {
 		}
 		return false;
 	}
-
+	
+	/**
+	 * Returns page description for ConvoSummary page.
+	 * The rules are:
+	 * - first 160 characters of the top answer;
+	 * - or convo's description;
+	 * - or convo's title
+	 * 
+	 */
+	public String getPageDescription() {
+		String pageDescription = null;
+		if (getComments() != null && !getComments().isEmpty()) {
+			//try top answer
+			CommentBean topAnswer = getComments().get(0);
+			String topAnswerText = topAnswer.getText();
+			if (topAnswerText != null) {
+				pageDescription = topAnswerText;
+				if (pageDescription.length() > 160) {
+					pageDescription = pageDescription.substring(0, 160);
+				}
+			}
+		}
+		else if (getDetails() != null && getDetails().length() > 0) {
+			pageDescription = getDetails();
+		}
+		else {
+			pageDescription = getTopic();
+		}
+		
+		return pageDescription;
+	}
+	
+	/**
+	 * Returns page keywords for ConvoSummary page.
+	 * Keywords consist of convo's topics
+	 * 
+	 */
+	public String getPageKeywords() {
+		String pageKeywords = null;
+		if (getTopics() != null && !getTopics().isEmpty())  {
+			List<String> topicsTitles = new ArrayList<String>();
+			for (TopicBean topic : getTopics()) {
+				topicsTitles.add(topic.getTitle());
+			}
+			pageKeywords = TemplateExtensions.toCommaString(topicsTitles, null);
+		}
+		return pageKeywords;
+	}
 	
 	public String getMainURL() { return mainURL; }
 	public void setMainURL(String mainURL) { this.mainURL = mainURL; }

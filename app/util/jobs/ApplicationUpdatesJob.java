@@ -124,15 +124,15 @@ public class ApplicationUpdatesJob extends Job {
 		HealthItemsUpdater.updateHealthItems("healthitemsupd.dat");
 		
 		//update topic from "," to "/"
-		for (TopicBean topic : TopicDAO.loadAllTopics()) {
-			String topicTitle = topic.getTitle();
-			if (topicTitle.contains(",")) {
-				topicTitle = topicTitle.replaceAll(", ", "/");
-				topicTitle = topicTitle.replaceAll(",", "/");
-				topic.setTitle(topicTitle);
-			}
-			TopicDAO.updateTopic(topic);
-		}
+//		for (TopicBean topic : TopicDAO.loadAllTopics()) {
+//			String topicTitle = topic.getTitle();
+//			if (topicTitle.contains(",")) {
+//				topicTitle = topicTitle.replaceAll(", ", "/");
+//				topicTitle = topicTitle.replaceAll(",", "/");
+//				topic.setTitle(topicTitle);
+//			}
+//			TopicDAO.updateTopic(topic);
+//		}
 		
 //		createBitlyLinks();
     }

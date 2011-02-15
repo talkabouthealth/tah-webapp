@@ -166,10 +166,10 @@ public class PublicProfile extends Controller {
 		notFoundIfNull(talker);
 		
 		List<Action> startedConvosFeed = 
-			TalkerLogic.convosToFeed(ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO));
+			ConversationLogic.convosToFeed(ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO));
 		List<Action> joinedConvosFeed = 
-			TalkerLogic.convosToFeed(ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO));
-		List<Action> followingConvosFeed = TalkerLogic.convosToFeed(TalkerLogic.loadFollowingConversations(talker));
+			ConversationLogic.convosToFeed(ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO));
+		List<Action> followingConvosFeed = ConversationLogic.convosToFeed(TalkerLogic.loadFollowingConversations(talker));
 		
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
 		TalkerLogic.preloadTalkerInfo(talker);

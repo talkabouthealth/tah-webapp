@@ -470,18 +470,22 @@
 	     </div>
 	     <!--membersarea-->
 	     <div class="topicborder"></div>
-	
 	</div>
+	
+	#{common/recentTopics recentTopics: recentTopics /}
    
-   <div class="mtop"></div>
-
-   <div class="cb"></div>
+	<div class="mtop"></div>
+	<div class="cb"></div>
 #{/if}
 #{else}
 	#{include 'tahInfo.html' /}
 	#{include 'tahShare.html' /}
+	
+	#{common/recentTopics recentTopics: recentTopics /}
+	
+	#{include 'shareWidgets.html' /}	
 #{/else}
- </div>
+</div>
  
 <div id="boxes">
   <div id="dialog" class="window"> </div>

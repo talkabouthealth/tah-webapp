@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import logic.ConversationLogic;
 import logic.TalkerLogic;
 import logic.TopicLogic;
 import models.TalkerBean;
@@ -152,7 +153,7 @@ public class Search extends Controller {
 	public static void allSearch(String query) throws Exception {
 		List<TopicBean> topicResults = topicsSearch(query);
 		List<Action> convoResults = 
-			TalkerLogic.convosToFeed(SearchUtil.searchConvo(query, 5));
+			ConversationLogic.convosToFeed(SearchUtil.searchConvo(query, 5));
 		
 		render(topicResults, convoResults);
 	}
@@ -179,12 +180,10 @@ public class Search extends Controller {
 			
 			String topicId = doc.get("id");
 			TopicBean topic = TopicDAO.getById(topicId);
+			//load info for 130 Followers | 200 Conversations
 			topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
 	    	topic.setFollowers(TopicDAO.getTopicFollowers(topic));
 			results.add(topic);
-			
-			//130 Followers | 200 Conversations
-			
 			
 			if (results.size() == 3) {
 				break;

@@ -325,34 +325,6 @@ public class TalkerLogic {
 		return numOfTopAnswers;
 	}
 	
-	/**
-	 * Converts given list of conversations to Feed format (for better display)
-	 * @param conversations
-	 * @return
-	 */
-	public static List<Action> convosToFeed(Collection<ConversationBean> conversations) {
-		List<Action> convosFeed = new ArrayList<Action>();
-		for (ConversationBean convo : conversations) {
-			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
-			
-			TalkerBean activityTalker = convo.getTalker();
-			//show top answer or simple convo
-			CommentBean topAnswer = null;
-			if (!convo.getComments().isEmpty()) {
-				topAnswer = convo.getComments().get(0);
-				topAnswer = CommentsDAO.getConvoCommentById(topAnswer.getId());
-				activityTalker = topAnswer.getFromTalker();
-			}
-			
-			AnswerDisplayAction convoAction =
-				new AnswerDisplayAction(activityTalker, convo, topAnswer, ActionType.ANSWER_CONVO, topAnswer != null);
-			convoAction.setTime(convo.getCreationDate());
-			
-			convosFeed.add(convoAction);
-		}
-		return convosFeed;
-	}
-	
 	public static Set<ConversationBean> loadFollowingConversations(TalkerBean talker) {
 		if (talker == null) {
 			return new HashSet<ConversationBean>();

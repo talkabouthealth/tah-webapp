@@ -47,18 +47,26 @@ public class Explore extends Controller {
     		TalkerLogic.preloadTalkerInfo(talker);
     	}
     	
+    	//TODO: use cache for common data? 
+    	//see: http://groups.google.com/group/play-framework/browse_thread/thread/b723f73ee52a04bd/8d084ac77c588b3a?lnk=gst&q=use+cache+in+template#8d084ac77c588b3a
+    	List<TopicBean> recentTopics = TopicDAO.getRecentTopics();
+    	
 		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions();
-		render(talker, openQuestions);
+		render(talker, openQuestions, recentTopics);
     }
     
     public static void liveTalks() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	List<TopicBean> recentTopics = null;
     	if (talker != null) {
     		TalkerLogic.preloadTalkerInfo(talker);
     	}
+    	else {
+    		recentTopics = TopicDAO.getRecentTopics();
+    	}
     	
     	List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
-		render(talker, liveTalks);
+		render(talker, liveTalks, recentTopics);
     }
     
     public static void browseTopics() {
@@ -67,8 +75,10 @@ public class Explore extends Controller {
     		TalkerLogic.preloadTalkerInfo(talker);
     	}
     	
+    	List<TopicBean> recentTopics = TopicDAO.getRecentTopics();
+    	
     	Set<TopicBean> topicsTree = TopicLogic.getAllTopicsTree();
-    	render(topicsTree, talker);
+    	render(topicsTree, talker, recentTopics);
     }
     
     
@@ -156,12 +166,17 @@ public class Explore extends Controller {
 		boolean loggedIn = (talker != null);
 		Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, loggedIn);
 		
+		List<TopicBean> recentTopics = null;
+    	if (talker == null) {
+    		recentTopics = TopicDAO.getRecentTopics();
+    	}
+		
 		//"Popular Conversations" - ordered by page views
 		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations();
 		
 		if (action == null) {
 			action = "feed";
 		}
-		render(action, communityFeed, popularConvos);
+		render(action, communityFeed, popularConvos, recentTopics);
 	}
 }

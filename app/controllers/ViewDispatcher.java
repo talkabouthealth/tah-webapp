@@ -55,7 +55,6 @@ public class ViewDispatcher extends Controller {
 			return;
 		}
 		
-		
 		//next - question or conversation
 		ConversationBean convo = ConversationDAO.getByURL(name);
 		if (convo != null) {
@@ -195,7 +194,8 @@ public class ViewDispatcher extends Controller {
 		}
 		
 		String currentURL = "http://"+request.host+request.path;
-		render("Conversations/viewConvo.html", talker, convo, latestActivityTime, relatedConvos, userHasAnswer, currentURL);
+		render("Conversations/viewConvo.html", talker, convo, latestActivityTime, 
+				relatedConvos, userHasAnswer, currentURL);
     }
 	
 	private static void showTopic(TopicBean topic) {
