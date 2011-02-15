@@ -303,9 +303,9 @@ public class Application extends Controller {
 		}
 	}
     
-    public static void addToWaitingList(String community, @Required @Email String email) {
+    public static void addToWaitingList(@Required String community, @Required @Email String email) {
     	if (validation.hasErrors()) {
-    		renderText("Error: Please input correct email");
+    		renderText("Error: Please input correct health community and email");
             return;
         }
     	
