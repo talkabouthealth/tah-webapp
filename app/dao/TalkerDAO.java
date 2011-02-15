@@ -128,6 +128,8 @@ public class TalkerDAO {
 			.add("prof_statement", talker.getProfStatement())
 			.add("ch_ages", talker.getChildrenAges())
 			.add("ch_num", talker.getChildrenNum())
+			.add("ethnicities", talker.getEthnicities())
+			
 			.add("invites", talker.getInvitations())
 			.add("keywords", talker.getKeywords())
 			

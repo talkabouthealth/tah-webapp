@@ -150,7 +150,7 @@
 	   </div>
 	   #{/ifnot}
 	   
-	   #{ifnot talker?.hiddenHelps.contains("updateConnection") }
+	   #{ifnot !talker?.hiddenHelps.contains("updateConnection") }
 	   <div id="updateConnectionHelp" class="topipsts">
            <div class="mtrighttxt1">
            		I am a 

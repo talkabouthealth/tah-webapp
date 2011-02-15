@@ -156,7 +156,10 @@ public class Profile extends Controller {
 			oldTalker.setMaritalStatus(talker.getMaritalStatus());
 			oldTalker.setChildrenNum(talker.getChildrenNum());
 			oldTalker.setChildrenAges(talker.getChildrenAges());
-			oldTalker.setKeywords(talker.getKeywords());			
+			oldTalker.setKeywords(talker.getKeywords());	
+			
+			
+			oldTalker.setEthnicities(talker.getEthnicities());
 		}
 		
 		CommonUtil.updateTalker(oldTalker, session);

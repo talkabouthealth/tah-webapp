@@ -149,7 +149,7 @@ form { padding:0px; margin:0px;}
 .personaltextarea {float:left; width:156px; height:27px; line-height:27px; padding-top:10px;}
 .personaltextfield {float:left; width:276px; background:url(../images/fieldsbg.gif) no-repeat top; height:37px; line-height:37px;  padding-top:4px; padding-left:5px;  }
 #personalsettings {float:left; width:270px; height:37px; line-height:37px; }
-.personalcheck {float:left; width:281px; padding-left:156px; padding-bottom:10px; }
+.personalcheck {float:left; width:281px; padding: 10px 0px; }
 .personalcheck1 {float:left; width:138px; padding-right:5px; }
 .personalcheck2 {float:left; width:138px;   }
 .personaltextarea2 {float:left; width:156px; height:94px; padding-top:10px;}
