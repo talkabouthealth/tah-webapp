@@ -193,9 +193,11 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 				screenName = userEmail.substring(0, atIndex);
 			}
 			
-			TalkerLogic.signupFromService(ServiceType.FACEBOOK, session, screenName, userEmail, accountId);
-		     
-//		    return "/signup?talker.email="+userEmail+"&from="+ServiceType.FACEBOOK.toString();
+			session.put("serviceType", ServiceType.FACEBOOK);
+			session.put("screenName", screenName);
+			session.put("userEmail", userEmail);
+			session.put("accountId", accountId);
+			
 		    return "/application/tosConfirm";
 		}
 	}

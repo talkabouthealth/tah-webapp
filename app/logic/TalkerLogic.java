@@ -682,7 +682,7 @@ public class TalkerLogic {
 	 */
 	public static void onSignup(TalkerBean talker, Session session) {
 		//Reserve this name as URL
-        ApplicationDAO.createURLName(talker.getUserName());
+        ApplicationDAO.createURLName(talker.getUserName(), true);
 		
         //Send 'email verification' and 'welcome' emails
 		Map<String, String> vars = new HashMap<String, String>();
@@ -724,13 +724,13 @@ public class TalkerLogic {
 		
 		//initial username will be their username on Facebook or Twitter, 
 		//or if it is taken already, add a number to the username - i.e. murray1
-		String initialUsername = screenName;
+		String newUsername = screenName;
 		int i=1; 
-		while (ApplicationDAO.isURLNameExists(initialUsername)) {
-			initialUsername = screenName+i;
+		while (ApplicationDAO.isURLNameExists(newUsername)) {
+			newUsername = screenName+i;
 			i++;
 		}
-		talker.setUserName(initialUsername);
+		talker.setUserName(newUsername);
 		
 		//for Tw/Fb users password is random
 		talker.setPassword(CommonUtil.generateRandomPassword());

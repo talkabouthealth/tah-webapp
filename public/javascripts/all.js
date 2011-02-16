@@ -563,7 +563,7 @@ function showPopup(id, popupWidth) {
 	var winW = $(window).width();
           
 	//Set the popup window to center and show
-	$(id).css('top', 30);
+	$(id).css('top', 40);
 	$(id).css('left', winW/2-popupWidth);
 	$(id).fadeIn(200); 
 	

@@ -130,7 +130,7 @@
 						function(data) {
 							showResponse(data);
 							if (data.indexOf("Error:") !== 0) {
-								hideHelpInfo('updateEmail', false);
+								hideAll();
 							}
 						}
 					);
@@ -240,7 +240,10 @@
 				}
 			});	
 
-			if (${emailVerification}) {
+			if (${emailAdd}) {
+				showPopup("#emailAddDialog", 350);
+			}
+			else if (${emailVerification}) {
 				showPopup("#emailVerificationDialog", 350);
 			}
 

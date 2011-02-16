@@ -4,6 +4,9 @@
 #{set pageKeywords = convo.pageKeywords /}
 
 #{extends 'main.html' /}
+
+	Hi = #{get 'currentURL' /}
+	
 	<style>
 		body {
 			background:url(/public/images/inner_bgmt.gif) repeat-x top;
@@ -39,7 +42,7 @@
 	<script type="text/javascript">
 		var tid = '${convo.tid}';
 
-		var currentURL = '${currentURL}';
+		var currentURL = "http://"+"${request.host}"+"${request.path}";;
 		#{if talker}
 			var hasTwitter = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) != null };
 			var hasFB = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.FACEBOOK) != null };		

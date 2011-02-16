@@ -5028,7 +5028,7 @@ border:0;
 	margin:0 auto 0 -200px;
 	width:400px;
 	height: 60px;
-	z-index:1001;
+	z-index:9999;
 	
 	text-align: center;
 	border-top: none;

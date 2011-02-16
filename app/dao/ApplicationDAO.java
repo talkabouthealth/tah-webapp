@@ -147,8 +147,11 @@ public class ApplicationDAO {
 	 * 
 	 * If the same name already exists - adds "_X" to the name, where X - counter.
 	 */
-	public static String createURLName(String name) {
-		name = prepareName(name);
+	public static String createURLName(String name, boolean isUsername) {
+		if (!isUsername) {
+			//We convert name to url for all objects except username
+			name = prepareName(name);
+		}
 		
 		DBCollection namesColl = getCollection(NAMES_COLLECTION);
 		DBObject query = new BasicDBObject("name", name);
@@ -166,7 +169,7 @@ public class ApplicationDAO {
 		if (cnt == 1) {
 			//if new URL name is a reserved path - create other
 			if (Application.RESERVED_WORDS.contains(name)) {
-				return createURLName(name);
+				return createURLName(name, isUsername);
 			}
 			return name;
 		}
@@ -174,6 +177,9 @@ public class ApplicationDAO {
 			//duplicate name
 			return name+"_"+(cnt-1);
 		}
+	}
+	public static String createURLName(String name) {
+		return createURLName(name, false);
 	}
 	
 	/**
@@ -222,6 +228,5 @@ public class ApplicationDAO {
 		}
 		return waitingInfo;
 	}
-
 }
 

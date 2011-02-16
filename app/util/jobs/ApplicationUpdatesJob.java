@@ -102,7 +102,7 @@ public class ApplicationUpdatesJob extends Job {
 		//Talkers/Topics/Convos should have different names, stored in 'names' collection
 		if (DBUtil.isCollectionEmpty(ApplicationDAO.NAMES_COLLECTION)) {
 			for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
-				ApplicationDAO.createURLName(talker.getUserName());
+				ApplicationDAO.createURLName(talker.getUserName(), true);
 			}
 			
 			for (TopicBean topic : TopicDAO.loadAllTopics()) {

@@ -233,7 +233,6 @@ public class ConversationDAO {
 						new BasicDBObject("old_names.url", url)
 					)
 			)
-			.add("deleted", new BasicDBObject("$ne", true))
 			.get();
 		DBObject convoDBObject = convosColl.findOne(query);
 		

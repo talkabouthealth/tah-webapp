@@ -182,6 +182,25 @@ public class Application extends Controller {
         
         index();
     }
+    
+    /**
+     * Register with Facebook or Twitter.
+     * Called after accepting TOS and PP by user.
+     * 
+     */
+    public static void signupFromService() {
+    	ServiceType serviceType = ServiceType.valueOf(session.get("serviceType"));
+    	String screenName = session.get("screenName");
+    	String userEmail = session.get("userEmail");
+    	String accountId = session.get("accountId");
+    	
+    	if (serviceType == ServiceType.TWITTER) {
+    		TwitterUtil.followUser(accountId);
+    	}
+    	TalkerLogic.signupFromService(serviceType, session, screenName, userEmail, accountId);
+    	
+    	renderText("ok");
+    }
 
     private static void validateTalker(TalkerBean talker) {
 		if (!validation.hasError("talker.userName")) {

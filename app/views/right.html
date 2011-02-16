@@ -2,11 +2,16 @@
 #{if session.username }
 	
 	<script type="text/javascript">
-		var currentURL = '${currentURL}';
-		#{if talker}
-			var hasTwitter = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) != null };
-			var hasFB = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.FACEBOOK) != null };		
-		#{/if}
+		$(document).ready(function() {
+			//TODO: move to common header?
+			var share = "${params.share}";
+			if (share === "twitter") {
+				showPopup("#shareTwitterDialog", 350);
+			}
+			else if (share === "facebook") {
+				showPopup("#shareFBDialog", 450);
+			}
+		});
 	</script>
 	
 	<div class="topipsts"> <br />
@@ -132,25 +137,21 @@
 	   </div>
 	   #{/ifnot}
 	   
-	   #{ifnot talker.email }
-	   <div id="updateEmailHelp" class="topipsts">
-           <div class="mtrighttxt1">Add email</div>
-           <div class="topixtext">
-             <div class="tellustext">
-             	<input id="newEmail"  type="text" value="" style="width: 190px;" />
-             	<div style="padding-top: 15px;">
-             		<input id="updateEmailBtn"  type="submit" style="margin: -5px 10px 0px 0px;"
-             			value=" " class="cupdate" />
-             	</div>
-             </div>
-           </div>
-           <!--topixtext-->
-	     <div class="mtop"></div>
-	     <div class="topicborder"></div>
-	   </div>
-	   #{/ifnot}
+	   *{
+		   <div id="updateEmailHelp" class="topipsts">
+	           <div class="mtrighttxt1">Add email</div>
+	           <div class="topixtext">
+	             <div class="tellustext">
+	             	
+	             </div>
+	           </div>
+	           <!--topixtext-->
+		     <div class="mtop"></div>
+		     <div class="topicborder"></div>
+		   </div>
+	   }*
 	   
-	   #{ifnot !talker?.hiddenHelps.contains("updateConnection") }
+	   #{ifnot talker?.hiddenHelps.contains("updateConnection") }
 	   <div id="updateConnectionHelp" class="topipsts">
            <div class="mtrighttxt1">
            		I am a 
@@ -493,7 +494,7 @@
   #{popups/startConvo page: currentPage /}
   
   #{if talker}
-  	#{popups/emailVerification talker: talker /}
+  	#{popups/emailDialogs talker: talker /}
   	
   	#{set twitterAccount = talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
 			

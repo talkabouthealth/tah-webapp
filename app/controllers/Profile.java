@@ -165,7 +165,7 @@ public class Profile extends Controller {
 		CommonUtil.updateTalker(oldTalker, session);
 		if (!oldUserName.equals(talker.getUserName())) {
 			session.put("username", talker.getUserName());
-			ApplicationDAO.createURLName(talker.getUserName());
+			ApplicationDAO.createURLName(talker.getUserName(), true);
 		}
 		
 		renderText("ok");
@@ -196,7 +196,7 @@ public class Profile extends Controller {
 			CommonUtil.updateTalker(talker, session);
 			if (!oldUserName.equals(newValue)) {
 				session.put("username", talker.getUserName());
-				ApplicationDAO.createURLName(talker.getUserName());
+				ApplicationDAO.createURLName(talker.getUserName(), true);
 			}
 		}
 		else if (name.equals("password")) {

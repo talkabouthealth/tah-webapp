@@ -66,6 +66,9 @@ public class ViewDispatcher extends Controller {
 				ConversationBean mainConvo = ConversationDAO.getById(convo.getMergedWith());
 				redirect("/"+mainConvo.getMainURL(), true);
 			}
+			if (convo.isDeleted()) {
+				notFound();
+			}
 			
 			showConvo(convo);
 			return;
@@ -193,9 +196,8 @@ public class ViewDispatcher extends Controller {
 			e.printStackTrace();
 		}
 		
-		String currentURL = "http://"+request.host+request.path;
 		render("Conversations/viewConvo.html", talker, convo, latestActivityTime, 
-				relatedConvos, userHasAnswer, currentURL);
+				relatedConvos, userHasAnswer);
     }
 	
 	private static void showTopic(TopicBean topic) {
@@ -224,8 +226,7 @@ public class ViewDispatcher extends Controller {
 		List<ConversationBean> trendingConvos = new ArrayList<ConversationBean>();
 		
 		//for FB like button
-		String currentURL = "http://"+request.host+request.path;
-		render("Topics/viewTopic.html", talker, topic, activities, popularConvos, trendingConvos, currentURL);
+		render("Topics/viewTopic.html", talker, topic, activities, popularConvos, trendingConvos);
 	}
 
 }

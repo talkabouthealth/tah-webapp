@@ -206,12 +206,15 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			return "/home";
 		}
 		else {
-			//signup
-			TwitterUtil.followUser(accountId);
-		    
-		    TalkerLogic.signupFromService(ServiceType.TWITTER, session, screenName, null, accountId);
-		     
-		    //return "/signup?talker.userName="+screenName+"&from="+ServiceType.TWITTER.toString();
+			session.put("serviceType", ServiceType.TWITTER);
+			session.put("screenName", screenName);
+			session.put("userEmail", null);
+			session.put("accountId", accountId);
+			
+			//for Twitter we need to show "Add email" popup as after login
+			session.put("justloggedin", true);
+			
+			//redirect to TOS and PP confirmation
 		    return "/application/tosConfirm";
 		}
 	}

@@ -559,7 +559,7 @@ public class Conversations extends Controller {
 			convoToMergeURL = convoToMergeURL.substring(1);
 		}
 		ConversationBean secondConvo = ConversationDAO.getByURL(convoToMergeURL);
-		if (convo == null || secondConvo == null) {
+		if (convo == null || secondConvo == null || secondConvo.isDeleted()) {
 			notFound();
 			return;
 		}
@@ -591,6 +591,7 @@ public class Conversations extends Controller {
     	ActionDAO.updateActionsConvo(secondConvo, convo);
 		
 		secondConvo.setMergedWith(convo.getId());
+		secondConvo.setDeleted(true);
 		ConversationDAO.updateConvo(secondConvo);
 		
 		renderText("ok");
