@@ -393,7 +393,7 @@ public class ConversationBean {
 	//TalkAboutHealth Q&A: <question>... - http://bit.ly/gyiUhy
 	public String getTwitterShareText() {
 		String sampleTwitterURL = "http://t.co/3tkmYZN";
-		String shareText = TwitterUtil.prepareTwit("TalkAboutHealth Q&A: <PARAM> - "+sampleTwitterURL, getTopic());
+		String shareText = TwitterUtil.prepareTwit("TalkAboutHealth Q&A: <PARAM> -"+sampleTwitterURL, getTopic());
 		return shareText.substring(0, shareText.length()-sampleTwitterURL.length());
 	}
 	

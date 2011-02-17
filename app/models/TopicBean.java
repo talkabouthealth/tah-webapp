@@ -190,7 +190,7 @@ public class TopicBean implements Comparable<TopicBean> {
 	//TODO: think about it
 	public String getTwitterShareText() {
 		String sampleTwitterURL = "http://t.co/3tkmYZN";
-		String shareText = TwitterUtil.prepareTwit("Learning about <PARAM> on TalkAboutHealth - "+sampleTwitterURL, getTitle());
+		String shareText = TwitterUtil.prepareTwit("Learning about <PARAM> on TalkAboutHealth -"+sampleTwitterURL, getTitle());
 		return shareText.substring(0, shareText.length()-sampleTwitterURL.length());
 	}
 	

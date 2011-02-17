@@ -363,7 +363,7 @@ public class CommonUtil {
 	
 	
 	//TODO: make simple regex
-    public static final String WEB_URL_PATTERN = "((https?|ftp)://[a-zA-Z0-9+&@#/%?=~_|!:,.;]*[a-zA-Z0-9+&@#/%=~_|])";
+    public static final String WEB_URL_PATTERN = "((https?|ftp)://[a-zA-Z0-9+\\-&@#/%?=~_|!:,.;]*[a-zA-Z0-9+&@#/%=~_|])";
 
 	public static String linkify(String text) {
 		if (text == null) {
@@ -373,4 +373,8 @@ public class CommonUtil {
 		String replacedText = text.replaceAll(WEB_URL_PATTERN, "<a href=\"$1\" target=\"_blank\">$1</a>");
 		return replacedText;
 	}
+	
+//	public static void main(String[] args) {
+//		System.out.println(linkify("cool http://hello-world.com/su-per"));
+//	}
 }

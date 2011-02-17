@@ -4,7 +4,7 @@
 		#{list items: _recentTopics, as: 'topic'}
 			<div id="${topic.id}" class="topbox1" style="margin-top: 0px;">
 				<a style="color:#0286BC;" href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a>
-				&nbsp;&nbsp;${topic.conversations?.size()} questions
+				&nbsp;&nbsp;${topic.conversations?.size()} question(s)
 		   	</div>
 		#{/list} 
 		<div class="topicborder"></div>

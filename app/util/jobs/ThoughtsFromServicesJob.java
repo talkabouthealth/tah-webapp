@@ -42,9 +42,7 @@ public class ThoughtsFromServicesJob extends Job {
 				
 				List<ServicePost> postsList = new ArrayList<ServicePost>();
 				if (serviceAccount.getType() == ServiceType.TWITTER) {
-					//TODO: update it
-			    	//postsList = TwitterUtil.importTweets(serviceAccount, serviceAccount.getLastPostId());
-					postsList = TwitterUtil.importTweets(serviceAccount, null);
+			    	postsList = TwitterUtil.importTweets(serviceAccount, serviceAccount.getLastPostId());
 				}
 				else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
 					postsList = FacebookUtil.importPosts(serviceAccount, serviceAccount.getLastPostId());
