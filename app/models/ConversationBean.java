@@ -14,6 +14,7 @@ import play.Logger;
 
 import util.CommonUtil;
 import util.TemplateExtensions;
+import util.TwitterUtil;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -387,6 +388,20 @@ public class ConversationBean {
 			pageKeywords = TemplateExtensions.toCommaString(topicsTitles, null);
 		}
 		return pageKeywords;
+	}
+	
+	//TalkAboutHealth Q&A: <question>... - http://bit.ly/gyiUhy
+	public String getTwitterShareText() {
+		String sampleTwitterURL = "http://t.co/3tkmYZN";
+		String shareText = TwitterUtil.prepareTwit("TalkAboutHealth Q&A: <PARAM> - "+sampleTwitterURL, getTopic());
+		return shareText.substring(0, shareText.length()-sampleTwitterURL.length());
+	}
+	
+	//TalkAboutHealth Q&A: <question>... - http://talkabouthealth.com/question_title
+	public String getFacebookShareText() {
+		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", getMainURL());
+		String shareText = "TalkAboutHealth Q&A: "+getTopic()+" - "+convoURL;
+		return shareText;
 	}
 	
 	public String getMainURL() { return mainURL; }

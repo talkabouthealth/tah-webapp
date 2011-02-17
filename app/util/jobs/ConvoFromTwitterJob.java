@@ -13,7 +13,7 @@ import models.ConversationBean;
 import models.ConversationBean.ConvoType;
 import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean;
-import models.Tweet;
+import models.ServicePost;
 
 import util.TwitterUtil;
 
@@ -27,9 +27,9 @@ public class ConvoFromTwitterJob extends Job {
 	@Override
 	public void doJob() throws Exception {
 		//get 10 last tweets with '@talkabouthealth'
-		List<Tweet> mentionTweets = TwitterUtil.loadMentions();
+		List<ServicePost> mentionTweets = TwitterUtil.loadMentions();
 //		System.out.println(mentionTweets);
-		for (Tweet tweet : mentionTweets) {
+		for (ServicePost tweet : mentionTweets) {
 			String text = tweet.getText().trim();
 			if ( (text.endsWith("@talkabouthealth") || text.endsWith("@TalkAboutHealth"))
 					&& text.contains("?") && !text.contains("RT")) {
@@ -45,7 +45,7 @@ public class ConvoFromTwitterJob extends Job {
 	/**
 	 * Creates conversation from given tweet and notifies user with DM.
 	 */
-	private void createConvoFromTweet(Tweet tweet) {
+	private void createConvoFromTweet(ServicePost tweet) {
 		//check if creator is TAH user
 		TalkerBean talker = TalkerDAO.getByAccount(ServiceType.TWITTER, tweet.getUserId());
 		if (talker == null) {

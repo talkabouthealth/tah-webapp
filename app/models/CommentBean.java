@@ -85,6 +85,11 @@ public class CommentBean extends MessageBean {
 	//is it reply to conversation?
 	private boolean convoReply;
 	
+	//Where thought was created (e.g. 'facebook')
+	private String from;
+	//Id related to creation source (e.g. id of FB post)
+	private String fromId;
+	
 	//old versions of the text
 	private Set<String> oldTexts;
 	private boolean deleted;
@@ -227,5 +232,17 @@ public class CommentBean extends MessageBean {
 	}
 	public void setConvoReply(boolean convoReply) {
 		this.convoReply = convoReply;
+	}
+	public String getFrom() {
+		return from;
+	}
+	public void setFrom(String from) {
+		this.from = from;
+	}
+	public String getFromId() {
+		return fromId;
+	}
+	public void setFromId(String fromId) {
+		this.fromId = fromId;
 	}
 }

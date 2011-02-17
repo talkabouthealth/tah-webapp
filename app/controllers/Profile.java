@@ -93,9 +93,9 @@ public class Profile extends Controller {
 		TalkerBean oldTalker = CommonUtil.loadCachedTalker(session);
 		
 		//FIXME: fix this
-		System.out.println("------");
-		System.out.println(talker.getLanguages());
-		System.out.println("xxxxxxx");
+//		System.out.println("------");
+//		System.out.println(talker.getLanguages());
+//		System.out.println("xxxxxxx");
 		
 		//------- validate
 		String oldUserName = oldTalker.getUserName();
@@ -165,10 +165,10 @@ public class Profile extends Controller {
 			oldTalker.setChildrenAges(talker.getChildrenAges());
 			oldTalker.setKeywords(talker.getKeywords());	
 			
-			oldTalker.setEthnicities(talker.getEthnicities());
-			oldTalker.setReligion(talker.getReligion());
-			oldTalker.setReligionSerious(talker.getReligionSerious());
-			oldTalker.setLanguages(new LinkedHashSet<LanguageBean>(talker.getLanguagesList()));
+//			oldTalker.setEthnicities(talker.getEthnicities());
+//			oldTalker.setReligion(talker.getReligion());
+//			oldTalker.setReligionSerious(talker.getReligionSerious());
+//			oldTalker.setLanguages(new LinkedHashSet<LanguageBean>(talker.getLanguagesList()));
 		}
 		
 		CommonUtil.updateTalker(oldTalker, session);

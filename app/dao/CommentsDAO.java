@@ -14,6 +14,7 @@ import java.util.Set;
 
 import models.CommentBean;
 import models.CommentBean.Vote;
+import models.ConversationBean;
 import models.TalkerBean;
 import models.TopicBean;
 
@@ -71,6 +72,9 @@ public class CommentsDAO {
 			.add("from", fromTalkerRef)
 			.add("text", comment.getText())
 			.add("time", comment.getTime())
+			
+			.add("from_service", comment.getFrom())
+			.add("from_service_id", comment.getFromId())
 			.get();
 		commentsColl.save(commentObject);
 		
@@ -112,6 +116,24 @@ public class CommentsDAO {
 		List<CommentBean> topCommentsList = parseCommentsTree(commentsList);
 		return topCommentsList;
 	}
+	
+	public static CommentBean getThoughtByFromInfo(String from, String fromId) {
+		DBCollection convosColl = getCollection(PROFILE_COMMENTS_COLLECTION);
+		
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("from_service", from)
+			.add("from_service_id", fromId)
+			.get();
+		DBObject commentDBObject = convosColl.findOne(query);
+		
+		if (commentDBObject == null) {
+			return null;
+		}
+		CommentBean thought = new CommentBean();
+		thought.parseFromDB(commentDBObject);
+		return thought;
+	}
+	
 
 	// -------------- Convo comments -----------------
 	

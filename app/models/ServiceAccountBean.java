@@ -47,9 +47,11 @@ public class ServiceAccountBean implements DBModel {
 	private String token;
 	private String tokenSecret;
 	
+	//id of the last imported Tweet/Post
+	private String lastPostId;
+	
 	//checked settings
 	private Map<String, String> settings;
-	
 	
 	public ServiceAccountBean(String id, String userName, ServiceType type) {
 		this.id = id;
@@ -66,8 +68,9 @@ public class ServiceAccountBean implements DBModel {
 			
 			.add("token", getToken())
 			.add("token_secret", getTokenSecret())
-			
 			.add("settings", getSettings())
+			
+			.add("last_post_id", getLastPostId())
 			.get();
 		
 		return accountDBObject;
@@ -81,8 +84,9 @@ public class ServiceAccountBean implements DBModel {
 
 		setToken((String)dbObject.get("token"));
 		setTokenSecret((String)dbObject.get("token_secret"));
-		
 		setSettings((Map)dbObject.get("settings"));
+		
+		setLastPostId((String)dbObject.get("last_post_id"));
 	}
 	
 	@Override
@@ -178,4 +182,12 @@ public class ServiceAccountBean implements DBModel {
 
 	public Map<String, String> getSettings() { return settings; }
 	public void setSettings(Map<String, String> settings) { this.settings = settings; }
+
+	public String getLastPostId() {
+		return lastPostId;
+	}
+
+	public void setLastPostId(String lastPostId) {
+		this.lastPostId = lastPostId;
+	}
 }

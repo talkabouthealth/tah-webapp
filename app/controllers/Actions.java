@@ -124,7 +124,8 @@ public class Actions extends Controller {
 	//TODO: check better option for cleanText?
 	public static void saveProfileComment(String profileTalkerId, String parentId, String text, String cleanText, String from) {
 		CommentBean comment = 
-			TalkerLogic.saveProfileComment(CommonUtil.loadCachedTalker(session), profileTalkerId, parentId, text, cleanText);
+			TalkerLogic.saveProfileComment(CommonUtil.loadCachedTalker(session), 
+					profileTalkerId, parentId, text, cleanText, null, null);
 		notFoundIfNull(comment);
 		
 		if (from != null && from.equals("home")) {

@@ -12,6 +12,7 @@ import java.util.Set;
 
 import sun.security.action.GetBooleanAction;
 import util.DBUtil;
+import util.TwitterUtil;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
@@ -183,6 +184,14 @@ public class TopicBean implements Comparable<TopicBean> {
 		}
 		
 		return sb.toString();
+	}
+	
+	//Learning about <topic> on TalkAboutHealth - http://bit.ly/gyiUhy
+	//TODO: think about it
+	public String getTwitterShareText() {
+		String sampleTwitterURL = "http://t.co/3tkmYZN";
+		String shareText = TwitterUtil.prepareTwit("Learning about <PARAM> on TalkAboutHealth - "+sampleTwitterURL, getTitle());
+		return shareText.substring(0, shareText.length()-sampleTwitterURL.length());
 	}
 	
 	

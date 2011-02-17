@@ -2,26 +2,32 @@ package util;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import models.ServiceAccountBean;
-import models.Tweet;
+import models.ServicePost;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.google.gson.GsonBuilder;
 
@@ -118,11 +124,11 @@ public class TwitterUtil {
 	 * Load last 10 tweets that contain '@talkabouthealth' in it
 	 * @return
 	 */
-	public static List<Tweet> loadMentions() {
+	public static List<ServicePost> loadMentions() {
 		OAuthConsumer consumer = new DefaultOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
 		consumer.setTokenWithSecret(ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
 		
-		List<Tweet> mentionTweets = new ArrayList<Tweet>();
+		List<ServicePost> mentionTweets = new ArrayList<ServicePost>();
 		try {
 			URL url = new URL("http://api.twitter.com/1/statuses/mentions.xml?count=10&trim_user=1");
 			
@@ -131,35 +137,7 @@ public class TwitterUtil {
 			consumer.sign(conn);
 			conn.connect();
 			
-			//parse returned xml to Document
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document doc = db.parse(conn.getInputStream());
-			
-			//list of <status> objects
-			NodeList statusNodeList = doc.getFirstChild().getChildNodes();
-			for (int i=0; i<statusNodeList.getLength(); i++) {
-				Node statusNode = statusNodeList.item(i);
-				NodeList childNodes = statusNode.getChildNodes();
-				if (childNodes.getLength() > 0) {
-					//parse Tweet data
-					Tweet tweet = new Tweet();
-					for (int j=0; j<childNodes.getLength(); j++) {
-						Node child = childNodes.item(j);
-						String nodeName = child.getNodeName();
-						if (nodeName.equals("id")) {
-							tweet.setId(child.getFirstChild().getNodeValue());
-						}
-						else if (nodeName.equals("text")) {
-							tweet.setText(child.getFirstChild().getNodeValue());
-						}
-						else if (nodeName.equals("user")) {
-							tweet.setUserId(child.getFirstChild().getNextSibling().getFirstChild().getNodeValue());
-						}
-					}
-					mentionTweets.add(tweet);
-				}
-			}
+			mentionTweets = parseTweetsFromResponse(conn.getInputStream());
 		} catch (Exception e) {
 			Logger.error(e, "Error loading mentions");
 		}
@@ -255,51 +233,102 @@ public class TwitterUtil {
 		}
 	}
 	
-	public static void importTweets(final String token, final String tokenSecret) {
-		Executors.newSingleThreadExecutor().execute(new Runnable() {
-			@Override
-			public void run() {
-				OAuthConsumer consumer = new DefaultOAuthConsumer(TwitterOAuthProvider.CONSUMER_KEY, TwitterOAuthProvider.CONSUMER_SECRET);
-				consumer.setTokenWithSecret(token, tokenSecret);
-				
-				try {
-					URL url = new URL("http://api.twitter.com/1/statuses/user_timeline.xml?count=200");
-					
-					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-					conn.setRequestMethod("GET");
-					consumer.sign(conn);
-					
-					conn.connect();
-					
-					Logger.info("Twitter response: " + conn.getResponseCode() + " "
-			                + conn.getResponseMessage());
-					
-					DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-					DocumentBuilder db = dbf.newDocumentBuilder();
-					Document doc = db.parse(conn.getInputStream());
-					
-					NodeList statusNodeList = doc.getFirstChild().getChildNodes();
-					for (int i=0; i<statusNodeList.getLength(); i++) {
-						Node statusNode = statusNodeList.item(i);
-						NodeList childNodes = statusNode.getChildNodes();
-//						  <created_at>Tue Mar 10 14:17:11 +0000 2009</created_at>
-//						  <id>1305504773</id>
-//						  <text>hi kan!</text>
-						for (int j=0; j<childNodes.getLength(); j++) {
-							Node child = childNodes.item(j);
-							if (child.getNodeName().equals("text")) {
-								System.out.println(":"+child.getFirstChild().getNodeValue());
-							}
-						}
-						
-
-					}
-					
-				} catch (Exception e) {
-					Logger.error(e, "Wasn't able to follow Twitter user!");
+	public static List<ServicePost> importTweets(ServiceAccountBean twitterAccount, String sinceId) {
+		OAuthConsumer consumer = new DefaultOAuthConsumer(TwitterOAuthProvider.CONSUMER_KEY, TwitterOAuthProvider.CONSUMER_SECRET);
+		consumer.setTokenWithSecret(twitterAccount.getToken(), twitterAccount.getTokenSecret());
+		
+		List<ServicePost> tweetsList = new ArrayList<ServicePost>();
+		try {
+			int pageSize = 200;
+			int count = 0;
+			int page = 1;
+			//maximum per page is 200 tweets, so we try to load multiply pages
+			do {
+				String params = "";
+				if (sinceId != null) {
+					params = params + ("&since_id="+sinceId);
 				}
-			}
-		});
+				if (page > 1) {
+					params = params + ("&page="+page);
+				}
+				URL url = new URL("http://api.twitter.com/1/statuses/user_timeline.xml" +
+						"?count="+pageSize+"&trim_user=1"+params);
+				
+				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+				conn.setRequestMethod("GET");
+				consumer.sign(conn);
+				conn.connect();
+				
+				List<ServicePost> results = parseTweetsFromResponse(conn.getInputStream());
+				tweetsList.addAll(results);
+				
+				count = results.size();
+				page++;
+				
+				if (page == 17) {
+					//maximum is 16 pages (3200 tweets)
+					break;
+				}
+			} while (count == pageSize);
+			
+		} catch (Exception e) {
+			Logger.error(e, "Wasn't able to import Twitter posts!");
+		}
+		
+		return tweetsList;
 	}
 	
+	
+	/**
+	 * Parses given input stream to list of Tweets.
+	 * 
+	 * @param inputStream Response input stream from Twitter API call
+	 * @return
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 */
+	private static List<ServicePost> parseTweetsFromResponse(InputStream inputStream) throws Exception {
+		List<ServicePost> tweetsList = new ArrayList<ServicePost>();
+		
+		//parse returned xml to Document
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		Document doc = db.parse(inputStream);
+		
+		//Mon Jul 12 00:27:26 +0000 2010
+		Locale.setDefault(Locale.US);
+		DateFormat timeFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy");
+		
+		//list of <status> objects
+		NodeList statusNodeList = doc.getFirstChild().getChildNodes();
+		for (int i=0; i<statusNodeList.getLength(); i++) {
+			Node statusNode = statusNodeList.item(i);
+			NodeList childNodes = statusNode.getChildNodes();
+			if (childNodes.getLength() > 0) {
+				//parse Tweet data
+				ServicePost tweet = new ServicePost();
+				for (int j=0; j<childNodes.getLength(); j++) {
+					Node child = childNodes.item(j);
+					String nodeName = child.getNodeName();
+					if (nodeName.equals("id")) {
+						tweet.setId(child.getFirstChild().getNodeValue());
+					}
+					else if (nodeName.equals("text")) {
+						tweet.setText(child.getFirstChild().getNodeValue());
+					}
+					else if (nodeName.equals("created_at")) {
+						String timeString = child.getFirstChild().getNodeValue();
+						tweet.setTime(timeFormat.parse(timeString));
+					}
+					else if (nodeName.equals("user")) {
+						tweet.setUserId(child.getFirstChild().getNextSibling().getFirstChild().getNodeValue());
+					}
+					
+				}
+				tweetsList.add(tweet);
+			}
+		}
+		return tweetsList;
+	}
 }

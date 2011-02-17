@@ -38,13 +38,7 @@
 
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
-		var tid = '${convo.tid}';
-
-		var currentURL = "http://"+"${request.host}"+"${request.path}";;
-		#{if talker}
-			var hasTwitter = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) != null };
-			var hasFB = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.FACEBOOK) != null };		
-		#{/if}
+		var tid = "${convo.tid}";
 		
 		$(document).ready(function() {
 			var share = "${params.share}";

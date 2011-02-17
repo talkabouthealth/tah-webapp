@@ -16,6 +16,7 @@ import java.util.TreeSet;
 import java.util.Map.Entry;
 
 import play.Logger;
+import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 
@@ -23,6 +24,8 @@ import logic.FeedsLogic;
 import logic.TalkerLogic;
 import logic.TopicLogic;
 import models.ConversationBean;
+import models.ServiceAccountBean;
+import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean;
 import models.TopicBean;
 import models.actions.Action;
@@ -32,6 +35,7 @@ import util.FacebookUtil;
 import util.SearchUtil;
 import util.TwitterUtil;
 import util.jobs.ConvoFromTwitterJob;
+import util.jobs.ThoughtsFromServicesJob;
 import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.ConversationDAO;
@@ -40,6 +44,12 @@ import dao.TopicDAO;
 
 @With( LoggerController.class )
 public class Explore extends Controller {
+	
+	@Before
+	static void prepareParams() {
+        String currentURL = "http://"+request.host+request.path;
+        renderArgs.put("currentURL", currentURL);
+	}
 	
 	public static void openQuestions() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);

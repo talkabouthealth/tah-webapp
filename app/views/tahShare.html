@@ -1,14 +1,21 @@
+#{if currentPage?.equals("topicPage") } 
+    #{set shareTitle: 'Share and Like Topic' /}
+    #{set twitterShareText: topic.twitterShareText /}
+    #{set facebookShareURL: currentURL /}
+#{/if}
+#{elseif currentPage?.equals("conversationSummary") }
+	#{set shareTitle: 'Share and Like Question' /}
+	#{set twitterShareText: convo.twitterShareText /}
+	#{set facebookShareURL: currentURL /}
+#{/elseif}
+#{else}
+	#{set shareTitle: 'Share TalkAboutHealth' /}
+	#{set twitterShareText: 'I am meeting others and sharing my health experiences on TalkAboutHealth.' /}
+	#{set facebookShareURL: 'http://talkabouthealth.com' /}
+#{/else}
 <div class="topipsts">
 	<div class="mtrighttxt1">
-		#{if currentPage?.equals("topicPage") } 
-        	Share and Like Topic
-		#{/if}
-		#{elseif currentPage?.equals("conversationSummary") }
-			Share and Like Question
-		#{/elseif}
-		#{else}
-			Share TalkAboutHealth
-		#{/else}
+		#{get 'shareTitle' /}
 	</div>
 	<div class="membersarea">
 		#{if talker}
@@ -17,11 +24,11 @@
 		#{else}
 		  <div class="sharicons">
 		  	<img class="rpad" alt="Twitter" src="/public/images/twittericon.jpg"/>
-		  	<a href="http://twitter.com/share?text=${"I am meeting others and sharing my health experiences on TalkAboutHealth. http://talkabouthealth.com"}" target="_blank">Twitter</a>
+		  	<a href="http://twitter.com/share?text=${twitterShareText.urlEncode()}" target="_blank">Twitter</a>
 		  </div>
 		  <div class="sharicons">
 		  	<img class="rpad" alt="Members" src="/public/images/facebookicon.jpg"/>
-		  	<a href="http://www.facebook.com/share.php?u=${currentURL}" target="_blank">Facebook</a>
+		  	<a href="http://www.facebook.com/share.php?u=${facebookShareURL.urlEncode()}" target="_blank">Facebook</a>
 		  </div>
 		#{/else}
 	</div>

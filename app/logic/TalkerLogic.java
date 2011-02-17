@@ -354,7 +354,7 @@ public class TalkerLogic {
 	 * @return
 	 */
 	public static CommentBean saveProfileComment(TalkerBean talker, String profileTalkerId, 
-			String parentId, String text, String cleanText) {
+			String parentId, String text, String cleanText, String from, String fromId) {
 		//find profile talker by parent thought or given talker id
 		if (parentId != null && parentId.length() != 0) {
 			CommentBean parentAnswer = CommentsDAO.getProfileCommentById(parentId);
@@ -385,11 +385,13 @@ public class TalkerLogic {
 		comment.setFromTalker(talker);
 		comment.setText(text);
 		comment.setTime(new Date());
+		comment.setFrom(from);
+		comment.setFromId(fromId);
 		CommentsDAO.saveProfileComment(comment);
 		
 		if (comment.getParentId() == null) {
-			//post to personal Thoughts?
-			if (talker.equals(profileTalker)) {
+			//If post to personal thoughts and this thought isn't imported from Tw/Fb
+			if (talker.equals(profileTalker) && comment.getFrom() == null) {
 				ActionDAO.saveAction(new PersonalProfileCommentAction(
 						talker, profileTalker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT));
 				

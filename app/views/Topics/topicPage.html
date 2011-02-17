@@ -26,12 +26,6 @@
 	
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
-		var currentURL = "http://"+"${request.host}"+"${request.path}";
-		#{if talker}
-			var hasTwitter = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) != null };
-			var hasFB = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.FACEBOOK) != null };		
-		#{/if}
-
 		$(document).ready(function() {
 			$("#followTopicLink").click(function() {
 				$.post("@{Topics.follow()}", 

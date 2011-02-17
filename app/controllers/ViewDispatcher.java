@@ -33,6 +33,7 @@ import dao.TalkerDiseaseDAO;
 import dao.ConversationDAO;
 import dao.TopicDAO;
 import play.Logger;
+import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 import play.templates.JavaExtensions;
@@ -46,6 +47,12 @@ import util.SearchUtil;
  */
 @With( LoggerController.class )
 public class ViewDispatcher extends Controller {
+	
+	@Before
+	static void prepareParams() {
+        String currentURL = "http://"+request.host+request.path;
+        renderArgs.put("currentURL", currentURL);
+	}
 	
 	public static void view(String name) throws Throwable {
 		//first try user

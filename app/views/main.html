@@ -9,8 +9,6 @@
 	<meta name="author" content="TalkAboutHealth" /> 
 	<meta name="robots" content="all" /> 
 	
-	#{set currentURL: "http://"+request.host+request.path /}
-	
 	<title>${pageTitle ? pageTitle : 'TalkAboutHealth - Real-time health support'}</title>
 	<meta name="description" content="${pageDescription ? pageDescription : 'Real-time support for your health issues'}" /> 
 	<meta name="keywords" content="${pageKeywords ? pageKeywords : 'support, health, talk'}" /> 
@@ -41,7 +39,6 @@
 	<script type="text/javascript" src="/public/javascripts/headermenu.js" ></script>
 	
 	<script type="text/javascript">
-		//TODO: how to get it better?
 		var currentURL = "${currentURL}";
 		#{if talker}
 			var hasTwitter = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) != null };
