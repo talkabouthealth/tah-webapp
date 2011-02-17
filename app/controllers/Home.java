@@ -82,18 +82,12 @@ public class Home extends Controller {
 //		Logger.error("Home 5");
 		
 		boolean emailVerification = false;
-		boolean emailAdd = false;
-		if (session.contains("justloggedin")) {
-			if (talker.getEmail() == null) {
-				emailAdd = true;
-			}
-			else if (talker.getVerifyCode() != null) {
-				emailVerification = true;
-			}
+		if (session.contains("justloggedin") && talker.getVerifyCode() != null) {
+			emailVerification = true;
 		}
 		session.remove("justloggedin");
 		
-		render("@newhome", talker, emailVerification, emailAdd,
+		render("@newhome", talker, emailVerification,
 				liveConversations, convoFeed, communityFeed, showNotificationAccounts,
 				recommendedTopics, similarMembers, experts, recommendedConvos);
     }

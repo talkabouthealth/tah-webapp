@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -33,6 +34,7 @@ import models.DiseaseBean.DiseaseQuestion;
 import models.EmailBean;
 import models.HealthItemBean;
 import models.IMAccountBean;
+import models.LanguageBean;
 import models.PrivacySetting;
 import models.PrivacySetting.PrivacyType;
 import models.PrivacySetting.PrivacyValue;
@@ -89,6 +91,11 @@ public class Profile extends Controller {
 	
 	public static void save(@Valid TalkerBean talker) {
 		TalkerBean oldTalker = CommonUtil.loadCachedTalker(session);
+		
+		//FIXME: fix this
+		System.out.println("------");
+		System.out.println(talker.getLanguages());
+		System.out.println("xxxxxxx");
 		
 		//------- validate
 		String oldUserName = oldTalker.getUserName();
@@ -158,8 +165,10 @@ public class Profile extends Controller {
 			oldTalker.setChildrenAges(talker.getChildrenAges());
 			oldTalker.setKeywords(talker.getKeywords());	
 			
-			
 			oldTalker.setEthnicities(talker.getEthnicities());
+			oldTalker.setReligion(talker.getReligion());
+			oldTalker.setReligionSerious(talker.getReligionSerious());
+			oldTalker.setLanguages(new LinkedHashSet<LanguageBean>(talker.getLanguagesList()));
 		}
 		
 		CommonUtil.updateTalker(oldTalker, session);

@@ -69,6 +69,7 @@ public class ApplicationUpdatesJob extends Job {
 		/*
 		 *  Update settings for old users.
 		 *  
+		 *  1. BitLy links!!
 		 */
 		
 		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
@@ -134,7 +135,7 @@ public class ApplicationUpdatesJob extends Job {
 //			TopicDAO.updateTopic(topic);
 //		}
 		
-//		createBitlyLinks();
+		createBitlyLinks();
     }
 
 	/**

@@ -44,7 +44,7 @@ function openTwitter(redirectURL) {
 		redirectURL = "";
 	}
 	var popupWindow = window.open("/oauth/getauth?type=twitter&redirectURL="+redirectURL, 
-		"TwitterLogin", "width=800,height=430,toolbar=no,location=no,menubar=no");
+		"TwitterLogin", "width=800,height=470,toolbar=no,location=no,menubar=no");
 	
 	return false;
 }

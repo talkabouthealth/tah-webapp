@@ -141,7 +141,7 @@ public class DBUtil {
 	/**
 	 * Parse set of objects from DB
 	 * 
-	 * @param <T> Any class thate implements DBModel interface
+	 * @param <T> Any class that implements DBModel interface
 	 * @param clazz Class of objects to load
 	 * @param dbObject Source DBObject
 	 * @param name Name of collection in the DB

@@ -8,6 +8,7 @@ public class LanguageBean implements DBModel {
 	private String name;
 	private String proficiency;
 	
+	public LanguageBean(){}
 	public LanguageBean(String name, String proficiency) {
 		this.name = name;
 		this.proficiency = proficiency;

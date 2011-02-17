@@ -155,6 +155,8 @@ public class TalkerBean implements Serializable {
 	private String religion;
 	private String religionSerious;
 	private Set<LanguageBean> languages;
+	//Play! has a bug with binding Set, so for binding we use list
+	private List<LanguageBean> languagesList;
 	
 	private String webpage;
 	private List<String> keywords;
@@ -293,6 +295,9 @@ public class TalkerBean implements Serializable {
 		setChildrenAges(getStringList(talkerDBObject, "ch_ages"));
 		setKeywords(getStringList(talkerDBObject, "keywords"));
 		setEthnicities(getStringSet(talkerDBObject, "ethnicities"));
+		setReligion((String)talkerDBObject.get("religion"));
+		setReligionSerious((String)talkerDBObject.get("religion_serious"));
+		setLanguages(parseSet(LanguageBean.class, talkerDBObject, "languages"));
 		
 		setInsuranceAccepted(getStringList(talkerDBObject, "insurance_accept"));
 		
@@ -890,5 +895,11 @@ public class TalkerBean implements Serializable {
 	}
 	public void setLanguages(Set<LanguageBean> languages) {
 		this.languages = languages;
+	}
+	public List<LanguageBean> getLanguagesList() {
+		return languagesList;
+	}
+	public void setLanguagesList(List<LanguageBean> languagesList) {
+		this.languagesList = languagesList;
 	}
 }	

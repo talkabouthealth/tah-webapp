@@ -5350,7 +5350,12 @@ ul.tabs li.active, ul.tabs li.active span: {
 
 .notifyType { margin-bottom: 5px; }
 
-
+.simpleselect {
+	border:1px solid #AAAAAA;
+	height:23px;
+	margin:0 10px 0 0;
+	width:130px;
+}
 
 
 

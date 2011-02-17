@@ -129,6 +129,9 @@ public class TalkerDAO {
 			.add("ch_ages", talker.getChildrenAges())
 			.add("ch_num", talker.getChildrenNum())
 			.add("ethnicities", talker.getEthnicities())
+			.add("religion", talker.getReligion())
+			.add("religion_serious", talker.getReligionSerious())
+			.add("languages", setToDB(talker.getLanguages()))
 			
 			.add("invites", talker.getInvitations())
 			.add("keywords", talker.getKeywords())

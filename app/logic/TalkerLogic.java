@@ -719,7 +719,7 @@ public class TalkerLogic {
 	 * @param accountId
 	 */
 	public static void signupFromService(ServiceType serviceType, Session session, 
-			String screenName, String email, String accountId) {
+			String screenName, String email, String verifyCode, String accountId) {
 		TalkerBean talker = new TalkerBean();
 		
 		//initial username will be their username on Facebook or Twitter, 
@@ -737,10 +737,8 @@ public class TalkerLogic {
 		
 		prepareTalkerForSignup(talker);
 		
-		//we don't need to validate Facebook email
-		//for Twitter we have 'null' email
 		talker.setEmail(email);
-		talker.setVerifyCode(null);
+		talker.setVerifyCode(verifyCode);
 		
 		//default connection
 		talker.setConnection("Patient");

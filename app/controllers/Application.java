@@ -34,6 +34,7 @@ import play.Play;
 import play.data.validation.Email;
 import play.data.validation.Required;
 import play.data.validation.Valid;
+import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.With;
 import play.mvc.Scope.Session;
@@ -188,16 +189,35 @@ public class Application extends Controller {
      * Called after accepting TOS and PP by user.
      * 
      */
-    public static void signupFromService() {
+    public static void signupFromService(String email) {
     	ServiceType serviceType = ServiceType.valueOf(session.get("serviceType"));
     	String screenName = session.get("screenName");
     	String userEmail = session.get("userEmail");
     	String accountId = session.get("accountId");
+    	String verifyCode = null;
     	
     	if (serviceType == ServiceType.TWITTER) {
+    		//for Twitter we check email
+    		validation.required(email);
+    		validation.email(email);
+			if (validation.hasError("email")) {
+				renderText("Error: "+validation.error("email").message());
+				return;
+			}
+			TalkerBean otherTalker = TalkerDAO.getByEmail(email);
+			if (otherTalker != null) {
+				renderText("Error: "+Messages.get("email.exists"));
+				return;
+			}
+			
+			userEmail = email;
+			verifyCode = CommonUtil.generateVerifyCode();
+
+			//follow this user by TAH
     		TwitterUtil.followUser(accountId);
     	}
-    	TalkerLogic.signupFromService(serviceType, session, screenName, userEmail, accountId);
+    	TalkerLogic.signupFromService(serviceType, session, screenName, 
+    			userEmail, verifyCode, accountId);
     	
     	renderText("ok");
     }

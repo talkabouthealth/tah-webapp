@@ -13,7 +13,8 @@
 	
 	<style type="text/css">
 		body {
-			background:#F7FCFF none repeat scroll 0 0;
+			/* background:#F7FCFF none repeat scroll 0 0; */
+			background: #FFFFFF none repeat scroll 0 0;
 		}
 		#container {
 			height:400px;
@@ -34,10 +35,20 @@
 	
 	<script type="text/javascript">
 		function redirectToHome() {
-			$.post("@{Application.signupFromService()}", {},
-  				function(html) {
-					window.opener.document.location = '/home';
-					window.close();
+			var email = "";
+			if ($("#email")) {
+				email = $("#email").val();
+			}
+			$.post("@{Application.signupFromService()}", {email: email},
+  				function(data) {
+					if (data.indexOf("Error:") === 0) {
+						//show validation error
+						$("#emailError").html(data); 
+					}
+					else {
+						window.opener.document.location = '/home';
+						window.close();
+					}
   				}
   			);
 		}
@@ -46,11 +57,21 @@
 <body>
 
 <div id="container">
-	<div class="tah">
-		<img src="/public/images/talkabouthealth.jpg" alt="TalkAboutHealth" 
-			onmouseover="this.style.cursor='pointer'"/>
+	<div class="tah" style="height: 70px;">
+		<img src="/public/images/mainlogo.png" alt="TalkAboutHealth" />
 	</div>
-	<h1 class="title">
+	#{if session.serviceType?.equals("TWITTER")}
+		<span id="emailError" class="red16" style="padding: 0px;"></span>
+		<div class="signupmain" style="padding-top: 3px;">
+			<div class="signuptextarea" style="padding-top: 4px; width: 100px;">
+				<span style="font-size: 25px; padding: 0px;">E-mail:</span>
+			</div>
+			<div class="personaltextfield">
+			  	<input id="email" type="text" class="personalfields" value="" />
+			</div>
+		</div>
+	#{/if}
+	<h1 class="title" style="clear: both;">
 		I agree to the TalkAboutHealth 
 		<a href="#" 
 			onclick="window.open('@{Static.tos()}', 'TermsOfService','width=1000,height=550,resizable=1,scrollbars=1');" 

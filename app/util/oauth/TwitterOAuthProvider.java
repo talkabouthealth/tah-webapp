@@ -211,9 +211,6 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			session.put("userEmail", null);
 			session.put("accountId", accountId);
 			
-			//for Twitter we need to show "Add email" popup as after login
-			session.put("justloggedin", true);
-			
 			//redirect to TOS and PP confirmation
 		    return "/application/tosConfirm";
 		}

@@ -46,6 +46,7 @@ import play.mvc.With;
 import play.templates.JavaExtensions;
 import play.templates.Template;
 import play.templates.TemplateLoader;
+import util.BitlyUtil;
 import util.CommonUtil;
 import util.EmailUtil;
 import util.NotificationUtils;
@@ -309,6 +310,8 @@ public class Conversations extends Controller {
             	    	topic = new TopicBean();
             	    	topic.setTitle(topicName);
             	    	topic.setMainURL(ApplicationDAO.createURLName(topicName));
+            	    	String topicURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", topic.getMainURL());
+            			topic.setBitly(BitlyUtil.shortLink(topicURL));
             	    	TopicDAO.save(topic);
             	    	
             	    	TopicLogic.addToDefaultParent(topic);

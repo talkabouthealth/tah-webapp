@@ -180,27 +180,28 @@
 						</div>
 					</div>
 					
-					*{
 					<div class="personalmain">
 						<div class="personaltextarea"><span class="blacktext14">Languages</span></div>
-						#{list items:[0..5], as: 'count'}
-							<select id="talker.languages" name="talker.languages" class="personalfields">
+						<div class="personaltextarea" style="width: 250px; height: auto;">
+						#{list items:[0, 1, 2, 3, 4], as: 'count'}
+							<select name="talker.languagesList[${count}].name" class="simpleselect">
+								<option value=""></option>
 								#{list items:models.TalkerBean.LANGUAGE_ARRAY, as:'language'}
 									<option value="${language}"
-									#{if false } selected #{/if} 
+									#{if language.equals(talker.languages[count]?.name) } selected #{/if} 
 									>${language}</option>
 								#{/list}
 							</select>
-							<select id="talker.languages2" name="talker.languages2">
-								#{list items:['Fluently', 'Okay', 'Poorly'], as:'proficiency'}
+							<select name="talker.languagesList[${count}].proficiency" class="simpleselect" style="width: 80px;">
+								#{list items:['', 'Fluently', 'Okay', 'Poorly'], as:'proficiency'}
 									<option value="${proficiency}"
-									#{if false } selected #{/if} 
+									#{if proficiency.equals(talker.languages[count]?.proficiency) } selected #{/if} 
 									>${proficiency}</option>
 								#{/list}
 							</select>
 						#{/list}
+						</div>
 					</div>
-					}*
 					
 					<div class="personalmain">
 						<div class="personaltextarea">
