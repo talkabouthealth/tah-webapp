@@ -39,7 +39,7 @@
 			if ($("#email")) {
 				email = $("#email").val();
 			}
-			$.post("@{Application.signupFromService()}", {email: email},
+			$.post("@{Application.createUserFromService()}", {email: email},
   				function(data) {
 					if (data.indexOf("Error:") === 0) {
 						//show validation error

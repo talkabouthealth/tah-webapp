@@ -189,7 +189,7 @@ public class Application extends Controller {
      * Called after accepting TOS and PP by user.
      * 
      */
-    public static void signupFromService(String email) {
+    public static void createUserFromService(String email) {
     	ServiceType serviceType = ServiceType.valueOf(session.get("serviceType"));
     	String screenName = session.get("screenName");
     	String userEmail = session.get("userEmail");
