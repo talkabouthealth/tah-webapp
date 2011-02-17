@@ -2,7 +2,6 @@ package controllers;
 
 import java.math.BigInteger;
 import java.net.URL;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -35,6 +34,7 @@ import play.Play;
 import play.data.validation.Email;
 import play.data.validation.Required;
 import play.data.validation.Valid;
+import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.With;
 import play.mvc.Scope.Session;
@@ -78,7 +78,11 @@ public class Application extends Controller {
     		int numberOfQuestions = ConversationDAO.getNumberOfConversations();
     		int numberOfAnswers = CommentsDAO.getNumberOfAnswers();
     		
-    		render(numberOfMembers, numberOfLiveChats, numberOfQuestions, numberOfAnswers);
+    		//future communities
+    		Map<String, Integer> waitingCommunitiesInfo = ApplicationDAO.getWaitingCommunitiesInfo();
+    		
+    		render(waitingCommunitiesInfo, numberOfMembers, numberOfLiveChats, 
+    				numberOfQuestions, numberOfAnswers);
     	}
     }
     
@@ -104,8 +108,7 @@ public class Application extends Controller {
         }
     	
 		//generate new password
-		SecureRandom random = new SecureRandom();
-	    String newPassword = new BigInteger(60, random).toString(32);
+	    String newPassword = CommonUtil.generateRandomPassword();
 	    talker.setPassword(CommonUtil.hashPassword(newPassword));
 	    TalkerDAO.updateTalker(talker);
 		
@@ -155,7 +158,15 @@ public class Application extends Controller {
             return;
         }
         
-        prepareTalker(talker, session);
+        TalkerLogic.prepareTalkerForSignup(talker);
+        
+        //for these users we do not show update panels
+		Set<String> hiddenHelps = talker.getHiddenHelps();
+		hiddenHelps.add("updateUsername");
+		hiddenHelps.add("updatePassword");
+		hiddenHelps.add("updateConnection");
+		hiddenHelps.add("updateTwitterSettings");
+		hiddenHelps.add("updateFacebookSettings");
         
         boolean okSave = TalkerDAO.save(talker);
         if (!okSave) {
@@ -168,36 +179,49 @@ public class Application extends Controller {
         	return;
 		}
 
-		//Successful signup!
-        //Reserve this name as URL
-        ApplicationDAO.createURLName(talker.getUserName());
-		
-        //Send 'email verification' and 'welcome' emails
-		Map<String, String> vars = new HashMap<String, String>();
-		vars.put("username", talker.getUserName());
-		vars.put("verify_code", talker.getVerifyCode());
-		EmailUtil.sendEmail(EmailTemplate.VERIFICATION, talker.getEmail(), vars, null, false);
-		
-		vars = new HashMap<String, String>();
-		vars.put("username", talker.getUserName());
-		EmailUtil.sendEmail(EmailTemplate.WELCOME, talker.getEmail(), vars, null, false);
-		
-		ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
-		if (twitterAccount != null && twitterAccount.isTrue("FOLLOW")) {
-			//follow TAH by this user
-			TwitterUtil.followTAH(twitterAccount);
-		}
-
-		//manually login this talker
-		ApplicationDAO.saveLogin(talker.getId());
-		session.put("username", talker.getUserName());
-		if (talker.isProf()) {
-    		session.put("prof", "true");
-    	}
-		session.put("justregistered", true);
+        TalkerLogic.onSignup(talker, session);
+        
         index();
     }
     
+    /**
+     * Register with Facebook or Twitter.
+     * Called after accepting TOS and PP by user.
+     * 
+     */
+    public static void signupFromService(String email) {
+    	ServiceType serviceType = ServiceType.valueOf(session.get("serviceType"));
+    	String screenName = session.get("screenName");
+    	String userEmail = session.get("userEmail");
+    	String accountId = session.get("accountId");
+    	String verifyCode = null;
+    	
+    	if (serviceType == ServiceType.TWITTER) {
+    		//for Twitter we check email
+    		validation.required(email);
+    		validation.email(email);
+			if (validation.hasError("email")) {
+				renderText("Error: "+validation.error("email").message());
+				return;
+			}
+			TalkerBean otherTalker = TalkerDAO.getByEmail(email);
+			if (otherTalker != null) {
+				renderText("Error: "+Messages.get("email.exists"));
+				return;
+			}
+			
+			userEmail = email;
+			verifyCode = CommonUtil.generateVerifyCode();
+
+			//follow this user by TAH
+    		TwitterUtil.followUser(accountId);
+    	}
+    	TalkerLogic.signupFromService(serviceType, session, screenName, 
+    			userEmail, verifyCode, accountId);
+    	
+    	renderText("ok");
+    }
+
     private static void validateTalker(TalkerBean talker) {
 		if (!validation.hasError("talker.userName")) {
 			boolean nameNotExists = !ApplicationDAO.isURLNameExists(talker.getUserName());
@@ -231,79 +255,6 @@ public class Application extends Controller {
 //        }
 	}
 
-    /**
-     * Initializes talker with different default values or parsed info
-     */
-	private static void prepareTalker(TalkerBean talker, Session session) {
-		talker.setInvitations(100);
-		//by default we notify user through IM
-		talker.setImNotify(true);
-		
-		talker.setAnonymousName(CommonUtil.generateRandomUserName(true));
-		
-		//if user signed up through Twitter or Facebook
-		String accountType = session.get("accounttype");
-		if (accountType != null) {
-			ServiceType serviceType = ServiceAccountBean.parseServiceType(accountType);
-			
-			ServiceAccountBean account = new ServiceAccountBean(session.get("accountid"), 
-					session.get("accountname"), serviceType);
-			account.setToken(session.get("token"));
-			account.setTokenSecret(session.get("token_secret"));
-			
-			//parse additional params
-			account.parseSettingsFromParams(params.allSimple());
-			
-			Set<ServiceAccountBean> serviceAccounts = new HashSet<ServiceAccountBean>();
-			serviceAccounts.add(account);
-			talker.setServiceAccounts(serviceAccounts);
-		}
-		
-//		String imService = talker.getIm();
-//        String imUsername = talker.getImUsername();
-//        if (!imService.isEmpty()) {
-//        	//if userName empty - parse from email
-//        	if (imUsername.trim().isEmpty()) {
-//    			int atIndex = talker.getEmail().indexOf('@');
-//    			imUsername = talker.getEmail().substring(0, atIndex);
-//    		}
-//        	
-//        	IMAccountBean imAccount = new IMAccountBean(imUsername, imService);
-//        	talker.setImAccounts(new HashSet<IMAccountBean>(Arrays.asList(imAccount)));
-//        }
-        
-        /*
-         	TODO: later - better to use Enum (these settings are from the first prototype version)
-         	Default notification settings:
-			- 2 to 5 times per day
-			- whenever I am online
-			- types of conversations: check all
-        */
-        talker.setNfreq(3);
-        talker.setNtime(1);
-        talker.setCtype(TalkerBean.CONVERSATIONS_TYPES_ARRAY);
-        
-		talker.setPrivacySettings(TalkerLogic.getDefaultPrivacySettings());
-		
-        //By default all email notifications are checked
-        EnumSet<EmailSetting> emailSettings = EnumSet.allOf(EmailSetting.class);
-        talker.setEmailSettings(emailSettings);
-        
-        String hashedPassword = CommonUtil.hashPassword(talker.getPassword());
-        talker.setPassword(hashedPassword);
-        
-        //code for email validation
-        talker.setVerifyCode(CommonUtil.generateVerifyCode());
-        
-        //professional connections are unverified by default
-        if (TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.getConnection())) {
-        	talker.setConnectionVerified(false);
-        }
-        else {
-        	talker.setConnectionVerified(true);
-        }
-	}
-	
 	/* ----------------- Contact Us ------------------------- */
 	public static void contactus() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
@@ -355,6 +306,10 @@ public class Application extends Controller {
 		render(url);
 	}
     
+	public static void tosConfirm() {
+		render();
+	}
+	
     public static void suspendedAccount() {
     	render();
     }
@@ -386,4 +341,21 @@ public class Application extends Controller {
 			Secure.login();
 		}
 	}
+    
+    public static void addToWaitingList(@Required String community, @Required @Email String email) {
+    	if (validation.hasErrors()) {
+    		renderText("Error: Please input correct health community and email");
+            return;
+        }
+    	
+    	ApplicationDAO.addToWaitingList(community, email);
+    	
+    	//send welcome email
+    	Map<String, String> vars = new HashMap<String, String>();
+    	String parsedUsername = email.substring(0, email.indexOf("@"));
+		vars.put("username", parsedUsername);
+		EmailUtil.sendEmail(EmailTemplate.WELCOME_WAITINGLIST, email, vars, null, false);
+    	
+    	renderText("ok");
+    }
 }

@@ -1,26 +1,28 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:og="http://ogp.me/ns#"
+		xmlns:fb="http://www.facebook.com/2008/fbml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
-	<meta name="author" content="Talkmi" /> 
-	<meta name="keywords" content="support, health, talk" /> 
+	<meta name="author" content="TalkAboutHealth" /> 
 	<meta name="robots" content="all" /> 
 	
-	#{if pageDescription }
-		<meta name="description" content="${pageDescription}" /> 
-	#{/if}
-	#{else}
-		<meta name="description" content="real-time support for your health issues" /> 
-	#{/else}
+	#{set currentURL: "http://"+request.host+request.path /}
 	
-	#{if pageTitle }
-		<title>${pageTitle}</title>
+	<title>${pageTitle ? pageTitle : 'TalkAboutHealth - Real-time health support'}</title>
+	<meta name="description" content="${pageDescription ? pageDescription : 'Real-time support for your health issues'}" /> 
+	<meta name="keywords" content="${pageKeywords ? pageKeywords : 'support, health, talk'}" /> 
+	
+	#{if pageType?.equals("Conversation") || pageType?.equals("Topic") }
+		<meta property="og:title" content="${pageTitle}" />
+		<meta property="og:type" content="article"/>
+		<meta property="og:url" content="${currentURL}"/>
+		<meta property="og:image" content="http://talkabouthealth.com/public/images/mainlogo.png"/>
+		<meta property="og:site_name" content="TalkAboutHealth"/>
+		<meta property="og:description" content="${pageDescription}"/>
 	#{/if}
-	#{else}
-		<title>TalkAboutHealth - Real-time health support</title>
-	#{/else}
 	
 	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
 	
@@ -38,6 +40,15 @@
 	<script type="text/javascript" src="/public/javascripts/all.js" ></script>
 	<script type="text/javascript" src="/public/javascripts/headermenu.js" ></script>
 	
+	<script type="text/javascript">
+		//TODO: how to get it better?
+		var currentURL = "${currentURL}";
+		#{if talker}
+			var hasTwitter = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) != null };
+			var hasFB = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.FACEBOOK) != null };		
+		#{/if}
+	</script>
+		
 	#{doLayout /}
 	
 	<div id="footerarea">
@@ -47,7 +58,7 @@
 					<a href="http://www.facebook.com/pages/TalkAboutHealth/123999230963635?ref=sgm" >
 						<img src="/public/images/facebookfooter.gif" width="17" height="17" border="0" />
 					</a>
-					<a href="http://twitter.com/talkforhealth">
+					<a href="http://twitter.com/talkabouthealth">
 						<img src="/public/images/twitterfooter.gif" width="17" height="17" border="0" />
 					</a>
 				</div>

@@ -105,11 +105,6 @@ caption, th {
 	margin:0;
 	padding:5px 31px 0 0;
 }
-.topnavigationz {
-	clear:both;
-	float:right;
-	margin:0;
-}
 .topnavigations ul {
 	clear:both;
 	padding:0;
@@ -802,7 +797,7 @@ a {
 	font-family:Arial, Helvetica, sans-serif;
 	float:left;
 	font-size:1.4em;
-	font-weight:bold;
+	font-weight:normal;
 	height:30px;
 	padding:0;
 	padding-bottom:4px;
@@ -816,15 +811,6 @@ a {
 	font-weight:normal;
 	height:50px;
 	width:490px;
-}
-.updatebtns {
-	float:left;
-	border:0;
-	background:url(../images/update.jpg);
-	width:59px;
-	height:20px;
-	margin-left:10px;
-	margin-top:5px;
 }
 .canclebtnz {
 	float:left;
@@ -840,6 +826,7 @@ a {
 	color:#0286BC;
 	text-decoration:underline;
 }
+ul li.comLink { padding-top: 1px }
 .display {
 	float:left;
 	width:45px;
@@ -850,6 +837,8 @@ a {
 }
 .canclelz {
 	color:#0286BC;
+	display:block;
+	float:left;
 	padding-top:5px;
 }
 .canclelz a {
@@ -2385,12 +2374,12 @@ padding-top:30px;
 	width:20px;
 	padding-top:15px;
 }
-.replyl1 {
+.answerl1 {
 	float:left;
 	width:570px;
 	padding-left:10px;
 }
-.replyz {
+.answerz {
 	clear:both;
 }
 .talkerCover {
@@ -2567,7 +2556,7 @@ padding-top:30px;
 	background-position:left bottom;
 	*/
 	width:570px;
-	height:13px;
+	height:7px;
 }
 /*.answerinput { background:url(../images/answerinput.jpg); width:600px; height:70px; clear:both; padding-top:10px; background-repeat:no-repeat; border:0; color:#656565; padding-left:10px;}*/
 .answerinput {
@@ -2751,12 +2740,13 @@ width:auto;
 .stylexx {
 	font-size: 18px;
 }
-.stylexz {
-	font-size: 15px
-}
 .stylezx {
 	color: #787878;
 	font-size: 10px;
+}
+.stylezx14 {
+	color: #787878;
+	font-size: 14px;
 }
 .styles1 {
 	color: #000;
@@ -2871,9 +2861,8 @@ width:auto;
 }
 .replysub {
 	clear:both;
-	padding-top:10px;
 	padding-bottom:10px;
-	padding-left:50px;
+	padding-left:17px;
 }
 .replytopsub {
 	background:url(../images/replytopsub.jpg);
@@ -2945,14 +2934,15 @@ width:auto;
 }
 .repcominput {
 	background:url(../images/repcominput.jpg);
-	width:271px;
-	padding-left:10px;
-	height:52px;
 	float:left;
-	margin-right:10px;
 	border:0;
 	background-repeat:no-repeat;
 	color:#656565;
+	height:51px;
+	margin-right:10px;
+	padding-left:6px;
+	padding-top:3px;
+	width:277px;
 }
 .repcomtxtarea {
 	width:278px;
@@ -2964,7 +2954,7 @@ width:auto;
 }
 .repcommstextbox {
 	float:left;
-	padding-top:30px;
+	padding-top:17px;
 }
 .repcomsubmits {
 	float:left;
@@ -2984,8 +2974,7 @@ width:auto;
 .repcommbox22 {
 	clear:both;
 	padding-top:10px;
-	padding-bottom:10px;
-	padding-left:70px;
+	padding-left:11px;
 }
 .repcomflag {
 	float:left;
@@ -3458,7 +3447,6 @@ a.popup_black10s:hover {
 	text-align:left;
 	padding-left:6px;
 	color:#000;
-	cursor:pointer;
 }
 .allaliasbtn {
 	background:url(../images/addaliasbtn.jpg);
@@ -3635,6 +3623,7 @@ a.popup_black10s:hover {
 	width:80px;
 	height:24px;
 	background:url(../images/cupdate.jpg);
+	cursor:pointer;
 }
 .cupdateCover {
 	clear:both;
@@ -4197,9 +4186,10 @@ a.popup_black10s:hover {
 /*--------------Search Results--------------------*/
 .resultsaerch {
 	width: 490px;
-	height:25px;
+	height:23px;
 	float:left;
 	padding-left:5px;
+	padding-top: 3px;
 	font-size:16px;
 	border:1px solid #CCC;
 	border-right:0;
@@ -5038,7 +5028,7 @@ border:0;
 	margin:0 auto 0 -200px;
 	width:400px;
 	height: 60px;
-	z-index:1001;
+	z-index:9999;
 	
 	text-align: center;
 	border-top: none;
@@ -5055,7 +5045,7 @@ border:0;
 	padding-left:15px;
 }
 #savedHelpText { margin-top: 15px; font-size: 20px; }
-#savedHelpError { margin-top: 15px; font-size: 18px; color: red; }
+#savedHelpError { margin-top: 15px; font-size: 18px; color: #FFDDDD; }
 
 #feedbackImage {
 	background-color:#cccccc;
@@ -5187,6 +5177,12 @@ border:0;
 	background: url(../images/startChatBtn.jpg); 
 	width: 117px;
 	height: 34px;
+}
+#newConnection {
+	border:1px solid #AAAAAA;
+	height:23px;
+	margin: 0px 0px 0px 10px;
+	width:139px;
 }
 
 /* New following buttons */
@@ -5354,7 +5350,12 @@ ul.tabs li.active, ul.tabs li.active span: {
 
 .notifyType { margin-bottom: 5px; }
 
-
+.simpleselect {
+	border:1px solid #AAAAAA;
+	height:23px;
+	margin:0 10px 0 0;
+	width:130px;
+}
 
 
 

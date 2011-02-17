@@ -116,7 +116,11 @@
 			#{/if}
 		</div>
 	#{/if}
+	
 	<div class="cb"></div>
+	#{if _level == 1 && !_isFeed}
+		<div class="joinborder" style="margin-bottom: 10px;"></div>
+	#{/if}
 </div>
 #{/ifnot}
 #{/list}

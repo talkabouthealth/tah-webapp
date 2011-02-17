@@ -42,13 +42,6 @@ import static util.DBUtil.*;
 
 public class TalkerBean implements Serializable {
 	
-	public static final String[] CHILDREN_AGES_ARRAY = new String[] {
-		"New born", "1-2 years old", "2-6 years old", 
-		"6-12 years old", "12-18 years old", "Over 18 years old"
-	};
-	public static final String[] CONVERSATIONS_TYPES_ARRAY = new String[] {
-		"Informational", "Advice and opinions", "Meet new people", "Emotional support"
-	};
 	public static final String[] CONNECTIONS_ARRAY = new String[] {
 		"Patient", "Former Patient", "Parent", "Caregiver", "Family member", "Friend", 
 		//"professionals"
@@ -59,6 +52,31 @@ public class TalkerBean implements Serializable {
 	public static final List<String> PROFESSIONAL_CONNECTIONS_LIST = Arrays.asList(
 		"Physician", "Pharmacist", "Nurse", "Psychologist", "Social worker", "Researcher"
 	);
+	public static final String[] CHILDREN_AGES_ARRAY = new String[] {
+		"New born", "1-2 years old", "2-6 years old", 
+		"6-12 years old", "12-18 years old", "Over 18 years old"
+	};
+	//TODO: better to store here or in editfields template?
+	public static final String[] ETHNICITY_ARRAY = new String[] {
+		"Asian", "Middle Eastern", "Black", "Native American",
+		"Indian", "Pacific Islander", "Hispanic / Latin", "White",
+		"Other", "Undeclared"
+	};
+	public static final String[] LANGUAGE_ARRAY = new String[] {
+		"English", "Afrikaans", "Albanian", "Arabic", 
+		"Basque", "Belarusan", "Bengali", "Breton", "Bulgarian", 
+		"Catalan", "Cebuano", "Chechen", "Chinese", "Croatian", "Czech", 
+		"Danish", "Dutch", "Esperanto", "Estonian", "Farsi", "Finnish", "French", "Frisian", 
+		"Georgian", "German", "Greek", "Ancient Greek", "Hawaiian", "Hebrew", "Hindi", "Hungarian", 
+		"Icelandic", "Ilongo", "Indonesian", "Irish", "Italian", "Japanese", "Khmer", "Korean", 
+		"Latin", "Latvian", "Lithuanian", "Malay", "Maori", "Mongolian", "Norwegian", 
+		"Occitan", "Other", "Persian", "Polish", "Portuguese", "Romanian", "Rotuman", "Russian", 
+		"Sanskrit", "Sardinian", "Serbian", "Sign Language", "Slovak", "Slovenian", "Spanish", "Swahili", "Swedish", 
+		"Tagalog", "Tamil", "Thai", "Tibetan", "Turkish", "Ukrainian", "Urdu", "Vietnamese", "Welsh", "Yiddish"
+	};
+	public static final String[] CONVERSATIONS_TYPES_ARRAY = new String[] {
+		"Informational", "Advice and opinions", "Meet new people", "Emotional support"
+	};
 	
 	//Convo-related items start with "CONVO" - we use it for display
 	public enum EmailSetting {
@@ -133,6 +151,13 @@ public class TalkerBean implements Serializable {
 	//for editing (we can't show/save default value with int)
 	private String childrenNumStr;
 	private List<String> childrenAges;
+	private Set<String> ethnicities;
+	private String religion;
+	private String religionSerious;
+	private Set<LanguageBean> languages;
+	//Play! has a bug with binding Set, so for binding we use list
+	private List<LanguageBean> languagesList;
+	
 	private String webpage;
 	private List<String> keywords;
 	private String bio;
@@ -148,7 +173,7 @@ public class TalkerBean implements Serializable {
 	private String country;
 	private String zip;
 	//a set of hidden help popups for this user
-	private Set<String> hiddenHelps;
+	private Set<String> hiddenHelps = new HashSet<String>();
 	
 	//notifications settings
 	private String[] ctype;
@@ -222,9 +247,10 @@ public class TalkerBean implements Serializable {
 		setSuspended(getBoolean(talkerDBObject, "suspended"));
 		
 		setBio((String)talkerDBObject.get("bio"));
-		setProfStatement((String)talkerDBObject.get("prof_statement"));
 		setConnection((String)talkerDBObject.get("connection"));
 		setConnectionVerified(getBoolean(talkerDBObject, "connection_verified")); 
+		setProfStatement((String)talkerDBObject.get("prof_statement"));
+		parseProfInfo((DBObject)talkerDBObject.get("prof_info"));
 		
 		parseEmailSettings(getStringList(talkerDBObject, "email_settings"));
 		setPrivacySettings(parseSet(PrivacySetting.class, talkerDBObject, "privacy_settings"));
@@ -268,6 +294,10 @@ public class TalkerBean implements Serializable {
 		setWebpage((String)talkerDBObject.get("webpage"));
 		setChildrenAges(getStringList(talkerDBObject, "ch_ages"));
 		setKeywords(getStringList(talkerDBObject, "keywords"));
+		setEthnicities(getStringSet(talkerDBObject, "ethnicities"));
+		setReligion((String)talkerDBObject.get("religion"));
+		setReligionSerious((String)talkerDBObject.get("religion_serious"));
+		setLanguages(parseSet(LanguageBean.class, talkerDBObject, "languages"));
 		
 		setInsuranceAccepted(getStringList(talkerDBObject, "insurance_accept"));
 		
@@ -276,7 +306,6 @@ public class TalkerBean implements Serializable {
 		setFollowingConvosList(getStringList(talkerDBObject, "following_convos"));
 		parseFollowingTopics((Collection<DBRef>)talkerDBObject.get("following_topics"));
 		parseTopicsInfo((Collection<DBObject>)talkerDBObject.get("topics_info"));
-		parseProfInfo((DBObject)talkerDBObject.get("prof_info"));
 		setAnswerList(CommentsDAO.getTalkerAnswers(getId(), null));
 	}
 	
@@ -507,6 +536,19 @@ public class TalkerBean implements Serializable {
 			return false;
 		}
 		return value == PrivacyValue.PUBLIC;
+	}
+	
+	/**
+	 * Returns true if talker has made at least one piece of information public 
+	 * @return
+	 */
+	public boolean hasSomePublicInfo() {
+		for (PrivacySetting privacySetting : getPrivacySettings()) {
+			if (privacySetting.getValue() == PrivacyValue.PUBLIC) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -829,4 +871,35 @@ public class TalkerBean implements Serializable {
 	
 	public Set<PrivacySetting> getPrivacySettings() { return privacySettings; }
 	public void setPrivacySettings(Set<PrivacySetting> privacySettings) { this.privacySettings = privacySettings; }
+
+	public Set<String> getEthnicities() {
+		return ethnicities;
+	}
+	public void setEthnicities(Set<String> ethnicities) {
+		this.ethnicities = ethnicities;
+	}
+	public String getReligion() {
+		return religion;
+	}
+	public void setReligion(String religion) {
+		this.religion = religion;
+	}
+	public String getReligionSerious() {
+		return religionSerious;
+	}
+	public void setReligionSerious(String religionSerious) {
+		this.religionSerious = religionSerious;
+	}
+	public Set<LanguageBean> getLanguages() {
+		return languages;
+	}
+	public void setLanguages(Set<LanguageBean> languages) {
+		this.languages = languages;
+	}
+	public List<LanguageBean> getLanguagesList() {
+		return languagesList;
+	}
+	public void setLanguagesList(List<LanguageBean> languagesList) {
+		this.languagesList = languagesList;
+	}
 }	

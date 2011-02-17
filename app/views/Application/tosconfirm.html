@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="support, health, talk" /> 
+	<meta name="description" content="real-time support for your health issues" /> 
+	<meta name="robots" content="all" /> 
+	<title>TalkAboutHealth</title>
+	
+	<script type="text/javascript" src="/public/javascripts/jquery-1.4.2.min.js" ></script>
+	<link href="/public/stylesheets/style.css" rel="stylesheet" type="text/css" />
+	<link href="/public/stylesheets/old_style.css" rel="stylesheet" type="text/css" />
+	
+	<style type="text/css">
+		body {
+			/* background:#F7FCFF none repeat scroll 0 0; */
+			background: #FFFFFF none repeat scroll 0 0;
+		}
+		#container {
+			height:400px;
+			width:650px;
+			text-align:left;
+			margin: 20px auto;
+		}
+		h1 {
+			color: #000000;
+			font-size: 25px;
+		}
+		h1 a { 
+			color:#0680C5;
+			font-size: 25px 
+		}
+		span { display: block; padding: 15px 0px }
+	</style>
+	
+	<script type="text/javascript">
+		function redirectToHome() {
+			var email = "";
+			if ($("#email")) {
+				email = $("#email").val();
+			}
+			$.post("@{Application.signupFromService()}", {email: email},
+  				function(data) {
+					if (data.indexOf("Error:") === 0) {
+						//show validation error
+						$("#emailError").html(data); 
+					}
+					else {
+						window.opener.document.location = '/home';
+						window.close();
+					}
+  				}
+  			);
+		}
+	</script>
+</head>
+<body>
+
+<div id="container">
+	<div class="tah" style="height: 70px;">
+		<img src="/public/images/mainlogo.png" alt="TalkAboutHealth" />
+	</div>
+	#{if session.serviceType?.equals("TWITTER")}
+		<span id="emailError" class="red16" style="padding: 0px;"></span>
+		<div class="signupmain" style="padding-top: 3px;">
+			<div class="signuptextarea" style="padding-top: 4px; width: 100px;">
+				<span style="font-size: 25px; padding: 0px;">E-mail:</span>
+			</div>
+			<div class="personaltextfield">
+			  	<input id="email" type="text" class="personalfields" value="" />
+			</div>
+		</div>
+	#{/if}
+	<h1 class="title" style="clear: both;">
+		I agree to the TalkAboutHealth 
+		<a href="#" 
+			onclick="window.open('@{Static.tos()}', 'TermsOfService','width=1000,height=550,resizable=1,scrollbars=1');" 
+			>Terms Of Service</a> and 
+		<a href="#" 
+			onclick="window.open('@{Static.privacy()}', 'PrivacyPolicy','width=1000,height=550,resizable=1,scrollbars=1');" 
+			>Privacy Policy</a>.
+	</h1>
+	<span style="padding-top: 10px;" class="popusertxzt">Note: Your information will remain safe and private.</span>
+    <div style="float: left;">
+       	<input type="button" id="agreeBtn" value="I agree." 
+       		style="padding: 10px 25px; font-size: 20px; margin: 5px 0px; clear: both;"
+       		onclick="redirectToHome();"
+       		onmouseover="this.style.cursor='pointer'"/>
+    	<br/>
+	    <span style="color: red; font-size: 14px;">
+			<b>Note:</b> All content on this site is informational and not a substitute for professional medical advice. 
+			Always seek the advice of your physician or other qualified health provider with questions regarding your health.
+		</span>
+	    <span class="popusertxzt">Health care professionals (i.e. physicians, pharmacists, nurses, etc.) are 
+	    	members of the TalkAboutHealth Community and participate by sharing
+	    	insights and knowledge. Just like any other member, their communications are informational 
+	    	and are not personal medical advice.
+	    </span>
+    </div>
+    
+    <div class="cb"></div>
+</div>
+
+	#{ common/googleAnalytics /}
+
+</body>
+</html>

@@ -118,11 +118,13 @@ public class Actions extends Controller {
 	 * @param profileTalkerId
 	 * @param parentId Id of the parent thought (for replies) or null
 	 * @param text
+	 * @param cleanText Text of comment without html (used for links)
 	 * @param from page where request was made
 	 */
-	public static void saveProfileComment(String profileTalkerId, String parentId, String text, String from) {
+	//TODO: check better option for cleanText?
+	public static void saveProfileComment(String profileTalkerId, String parentId, String text, String cleanText, String from) {
 		CommentBean comment = 
-			TalkerLogic.saveProfileComment(CommonUtil.loadCachedTalker(session), profileTalkerId, parentId, text);
+			TalkerLogic.saveProfileComment(CommonUtil.loadCachedTalker(session), profileTalkerId, parentId, text, cleanText);
 		notFoundIfNull(comment);
 		
 		if (from != null && from.equals("home")) {

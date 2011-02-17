@@ -6,8 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import logic.ConversationLogic;
+import logic.TalkerLogic;
 import logic.TopicLogic;
+import models.TalkerBean;
 import models.TopicBean;
+import models.actions.Action;
+import models.actions.Action.ActionType;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -20,21 +25,18 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
 
+import dao.ConversationDAO;
 import dao.TopicDAO;
 
 import play.mvc.Controller;
 import play.mvc.With;
+import util.CommonUtil;
 import util.SearchUtil;
 
 public class Search extends Controller {
 	
+	//TODO: remove this?
 	public static void search() throws Exception {
-		render();
-	}
-	
-	public static void allSearch(String query) throws Exception {
-		//renderJSON(results);
-		
 		render();
 	}
 	
@@ -141,6 +143,49 @@ public class Search extends Controller {
 			results.add(result);
 			
 			if (results.size() == 10) {
+				break;
+			}
+		}
+		is.close();
+		return results;
+	}
+	
+	public static void allSearch(String query) throws Exception {
+		List<TopicBean> topicResults = topicsSearch(query);
+		List<Action> convoResults = 
+			ConversationLogic.convosToFeed(SearchUtil.searchConvo(query, 5));
+		
+		render(topicResults, convoResults);
+	}
+	
+	private static List<TopicBean> topicsSearch(String query) throws Exception {
+		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
+		
+		Analyzer analyzer = new StandardAnalyzer();
+		QueryParser parser = new MultiFieldQueryParser(new String[] {"title"}, analyzer);
+		parser.setAllowLeadingWildcard(true);
+		//search term everywhere
+		Query searchQuery = parser.parse("*"+query+"*");
+		Hits hits = is.search(searchQuery);
+		
+		List<TopicBean> results = new ArrayList<TopicBean>();
+		for (int i = 0; i < hits.length(); i++) {
+			Document doc = hits.doc(i);
+			
+			//get only topics
+			String type = doc.get("type");
+			if (type == null || !type.equals("Topic")) {
+				continue;
+			}
+			
+			String topicId = doc.get("id");
+			TopicBean topic = TopicDAO.getById(topicId);
+			//load info for 130 Followers | 200 Conversations
+			topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
+	    	topic.setFollowers(TopicDAO.getTopicFollowers(topic));
+			results.add(topic);
+			
+			if (results.size() == 3) {
 				break;
 			}
 		}

@@ -1,5 +1,7 @@
 package dao;
 
+import groovy.util.ObjectGraphBuilder.DefaultReferenceResolver;
+
 import java.awt.image.DataBufferByte;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -125,11 +127,17 @@ public class ConversationDAO {
 			}
 		}
 		
+		DBRef mergedWithRef = null;
+		if (convo.getMergedWith() != null) {
+			mergedWithRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getMergedWith());
+		}
 		DBObject convoObject = BasicDBObjectBuilder.start()
 			.add("topic", convo.getTopic())
 			.add("main_url", convo.getMainURL())
 			.add("old_names", setToDB(convo.getOldNames()))
 			.add("cr_date", convo.getCreationDate())
+			
+			.add("merged_with", mergedWithRef)
 			
 			.add("deleted", convo.isDeleted())
 			.add("opened", convo.isOpened())
@@ -225,7 +233,6 @@ public class ConversationDAO {
 						new BasicDBObject("old_names.url", url)
 					)
 			)
-			.add("deleted", new BasicDBObject("$ne", true))
 			.get();
 		DBObject convoDBObject = convosColl.findOne(query);
 		
@@ -533,6 +540,7 @@ public class ConversationDAO {
 			ConversationBean convo = new ConversationBean();
 			convo.parseFromDB(convoDBObject);
 			if (!convo.isDeleted()) {
+				//TODO: do we need to load this?
 				convo.setComments(CommentsDAO.loadConvoAnswersTree(convo.getId()));
 				convosList.add(convo);
 			}

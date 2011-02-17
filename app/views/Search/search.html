@@ -26,7 +26,7 @@ $(function() {
 			var url = ui.item.url;
 			if (url === "#fullsearch") {
 				//go to full conversations search
-				url = "@{Explore.searchConversations()}?query="+ui.item.value;
+				url = "@{Search.allSearch()}?query="+ui.item.value;
 			}
 			document.location = url;
 			return false;

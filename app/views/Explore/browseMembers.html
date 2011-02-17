@@ -48,7 +48,9 @@
 				            </div>
 				            <div class="thnksarea">
 				            	#{list items: activeTalkers, as: 'talker' }
-				            		#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
+				            		#{if currentTalker || talker.hasSomePublicInfo()}
+				            			#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
+				            		#{/if}
 				            	#{/list}
 				            </div>
 			        	</div>
@@ -63,7 +65,9 @@
 				            </div>
 				            <div class="thnksarea">
 				            	#{list items: newTalkers, as: 'talker' }
-				            		#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
+				            		#{if currentTalker || talker.hasSomePublicInfo()}
+				            			#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
+				            		#{/if}
 				            	#{/list}
 				            </div>
 			        	</div>
@@ -90,7 +94,7 @@
 					            </div>
 				            </div>
 				            <div class="thnksarea">
-				            	<form name="searchForm" action="@{Community.browseMembers('search')}" method="POST">
+				            	<form name="searchForm" action="@{Explore.browseMembers('search')}" method="POST">
 									<div id="searcharea">
 										<input name="query" type="text" class="search"  value="${flash.query ? flash.query : 'Search Members'}" 
 											onclick="if (this.value == 'Search Members') this.value=''" onblur=""/>
@@ -105,7 +109,9 @@
 								#{if results }
 									<div style="font-size: 14px; clear: left; padding-top: 10px">	
 										#{list items:results, as: 'talker'}
-											#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
+											#{if currentTalker || talker.hasSomePublicInfo()}
+						            			#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
+						            		#{/if}
 										#{/list}
 									</div>
 								#{/if}
@@ -129,7 +135,9 @@
 						            </div>
 						            <div class="thnksarea">
 						            	#{list items: members.get(memberType), as: 'talker' }
-						            		#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
+						            		#{if currentTalker || talker.hasSomePublicInfo()}
+						            			#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
+						            		#{/if}
 						            	#{/list}
 						            </div>
 					        	</div>
@@ -138,6 +146,12 @@
     				</div>
     			</div>
 			</div>
+			
+			#{ifnot currentTalker}
+				<div style="padding-top: 50px; clear: both; font-size: 12px;">
+					Only members who have chosen to make their profile information public are viewable here.
+				</div>
+			#{/ifnot}
 		</div>
 	</div>
 	

@@ -13,6 +13,7 @@ import java.util.Set;
 import play.Logger;
 
 import util.CommonUtil;
+import util.TemplateExtensions;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -48,6 +49,9 @@ public class ConversationBean {
 	//includes old titles and urls
 	private Set<URLName> oldNames;
 	
+	//id of the conversation where this convo was merged
+	private String mergedWith;
+	
 	//Where convo was created (e.g. 'twitter')
 	private String from;
 	//Id related to creation source (e.g. id of tweet)
@@ -78,6 +82,7 @@ public class ConversationBean {
 	private Set<ConversationBean> relatedConvos;
 	//answers/replies
 	private List<CommentBean> comments;
+	private List<CommentBean> replies;
 	private List<TalkerBean> followers;
 	
 	//members and message from Live Chat
@@ -101,6 +106,12 @@ public class ConversationBean {
     	setMainURL((String)convoDBObject.get("main_url"));
     	setOldNames(parseSet(URLName.class, convoDBObject, "old_names"));
     	setViews(getInt(convoDBObject, "views"));
+    	
+    	//"merged_with"
+    	DBRef mergedWithRef = (DBRef)convoDBObject.get("merged_with");
+		if (mergedWithRef != null) {
+			setMergedWith(mergedWithRef.getId().toString());
+		}
 
     	setBitly((String)convoDBObject.get("bitly"));
     	setBitlyChat((String)convoDBObject.get("bitly_chat"));
@@ -329,7 +340,54 @@ public class ConversationBean {
 		}
 		return false;
 	}
-
+	
+	/**
+	 * Returns page description for ConvoSummary page.
+	 * The rules are:
+	 * - first 160 characters of the top answer;
+	 * - or convo's description;
+	 * - or convo's title
+	 * 
+	 */
+	public String getPageDescription() {
+		String pageDescription = null;
+		if (getComments() != null && !getComments().isEmpty()) {
+			//try top answer
+			CommentBean topAnswer = getComments().get(0);
+			String topAnswerText = topAnswer.getText();
+			if (topAnswerText != null) {
+				pageDescription = topAnswerText;
+				if (pageDescription.length() > 160) {
+					pageDescription = pageDescription.substring(0, 160);
+				}
+			}
+		}
+		else if (getDetails() != null && getDetails().length() > 0) {
+			pageDescription = getDetails();
+		}
+		else {
+			pageDescription = getTopic();
+		}
+		
+		return pageDescription;
+	}
+	
+	/**
+	 * Returns page keywords for ConvoSummary page.
+	 * Keywords consist of convo's topics
+	 * 
+	 */
+	public String getPageKeywords() {
+		String pageKeywords = null;
+		if (getTopics() != null && !getTopics().isEmpty())  {
+			List<String> topicsTitles = new ArrayList<String>();
+			for (TopicBean topic : getTopics()) {
+				topicsTitles.add(topic.getTitle());
+			}
+			pageKeywords = TemplateExtensions.toCommaString(topicsTitles, null);
+		}
+		return pageKeywords;
+	}
 	
 	public String getMainURL() { return mainURL; }
 	public void setMainURL(String mainURL) { this.mainURL = mainURL; }
@@ -417,5 +475,17 @@ public class ConversationBean {
 	}
 	public void setFromId(String fromId) {
 		this.fromId = fromId;
+	}
+	public List<CommentBean> getReplies() {
+		return replies;
+	}
+	public void setReplies(List<CommentBean> replies) {
+		this.replies = replies;
+	}
+	public String getMergedWith() {
+		return mergedWith;
+	}
+	public void setMergedWith(String mergedWith) {
+		this.mergedWith = mergedWith;
 	}
 }

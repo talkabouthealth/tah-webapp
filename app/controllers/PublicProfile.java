@@ -61,6 +61,7 @@ public class PublicProfile extends Controller {
 		TalkerLogic.preloadTalkerInfo(talker);
 		
 		render(talker, currentTalker, action, from);
+		
 	}
 	
 	public static void thoughts(String userName) {
@@ -165,10 +166,10 @@ public class PublicProfile extends Controller {
 		notFoundIfNull(talker);
 		
 		List<Action> startedConvosFeed = 
-			TalkerLogic.prepareTalkerConvos(ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO));
+			ConversationLogic.convosToFeed(ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO));
 		List<Action> joinedConvosFeed = 
-			TalkerLogic.prepareTalkerConvos(ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO));
-		List<Action> followingConvosFeed = TalkerLogic.prepareTalkerConvos(TalkerLogic.loadFollowingConversations(talker));
+			ConversationLogic.convosToFeed(ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO));
+		List<Action> followingConvosFeed = ConversationLogic.convosToFeed(TalkerLogic.loadFollowingConversations(talker));
 		
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
 		TalkerLogic.preloadTalkerInfo(talker);

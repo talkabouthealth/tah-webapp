@@ -67,28 +67,21 @@ public class ApplicationUpdatesJob extends Job {
 	public void doJob() throws Exception {
 		
 		/*
-		 *  3. Twitter settings
+		 *  Update settings for old users.
+		 *  
+		 *  1. BitLy links!!
 		 */
 		
-//		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
-//			
-////			- "Thoughts"
-////			- Answers
-////			- Chats Joined
-////			- Professional Info - for new users let's make this by default viewable by the community.
-//			Set<PrivacySetting> privacySettings = talker.getPrivacySettings();
-//			for (PrivacySetting privacySetting : privacySettings) {
-//				if (privacySetting.getType() == PrivacyType.PROFESSIONAL_INFO
-//						|| privacySetting.getType() == PrivacyType.THOUGHTS
-//						|| privacySetting.getType() == PrivacyType.ANSWERS
-//						|| privacySetting.getType() == PrivacyType.CHATS_JOINED) {
-//					privacySetting.setValue(PrivacyValue.COMMUNITY);
-//				}
-//			}
-//			talker.setPrivacySettings(privacySettings);
+		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
+//			Set<String> hiddenHelps = talker.getHiddenHelps();
+//			hiddenHelps.add("updateUsername");
+//			hiddenHelps.add("updatePassword");
+//			hiddenHelps.add("updateConnection");
+//			hiddenHelps.add("updateTwitterSettings");
+//			hiddenHelps.add("updateFacebookSettings");
 //			
 //			TalkerDAO.updateTalker(talker);
-//		}
+		}
 		
 		//Fields data for Edit Profile
 		FieldsDataImporter.importData("fields.dat");
@@ -110,7 +103,7 @@ public class ApplicationUpdatesJob extends Job {
 		//Talkers/Topics/Convos should have different names, stored in 'names' collection
 		if (DBUtil.isCollectionEmpty(ApplicationDAO.NAMES_COLLECTION)) {
 			for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
-				ApplicationDAO.createURLName(talker.getUserName());
+				ApplicationDAO.createURLName(talker.getUserName(), true);
 			}
 			
 			for (TopicBean topic : TopicDAO.loadAllTopics()) {
@@ -132,17 +125,17 @@ public class ApplicationUpdatesJob extends Job {
 		HealthItemsUpdater.updateHealthItems("healthitemsupd.dat");
 		
 		//update topic from "," to "/"
-		for (TopicBean topic : TopicDAO.loadAllTopics()) {
-			String topicTitle = topic.getTitle();
-			if (topicTitle.contains(",")) {
-				topicTitle = topicTitle.replaceAll(", ", "/");
-				topicTitle = topicTitle.replaceAll(",", "/");
-				topic.setTitle(topicTitle);
-			}
-			TopicDAO.updateTopic(topic);
-		}
+//		for (TopicBean topic : TopicDAO.loadAllTopics()) {
+//			String topicTitle = topic.getTitle();
+//			if (topicTitle.contains(",")) {
+//				topicTitle = topicTitle.replaceAll(", ", "/");
+//				topicTitle = topicTitle.replaceAll(",", "/");
+//				topic.setTitle(topicTitle);
+//			}
+//			TopicDAO.updateTopic(topic);
+//		}
 		
-//		createBitlyLinks();
+		createBitlyLinks();
     }
 
 	/**

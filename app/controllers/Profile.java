@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -33,6 +34,7 @@ import models.DiseaseBean.DiseaseQuestion;
 import models.EmailBean;
 import models.HealthItemBean;
 import models.IMAccountBean;
+import models.LanguageBean;
 import models.PrivacySetting;
 import models.PrivacySetting.PrivacyType;
 import models.PrivacySetting.PrivacyValue;
@@ -61,6 +63,7 @@ import play.mvc.With;
 import play.templates.JavaExtensions;
 import util.CommonUtil;
 import util.EmailUtil;
+import util.TwitterUtil;
 import util.EmailUtil.EmailTemplate;
 import util.ImageUtil;
 import util.NotificationUtils;
@@ -88,6 +91,11 @@ public class Profile extends Controller {
 	
 	public static void save(@Valid TalkerBean talker) {
 		TalkerBean oldTalker = CommonUtil.loadCachedTalker(session);
+		
+		//FIXME: fix this
+		System.out.println("------");
+		System.out.println(talker.getLanguages());
+		System.out.println("xxxxxxx");
 		
 		//------- validate
 		String oldUserName = oldTalker.getUserName();
@@ -155,17 +163,100 @@ public class Profile extends Controller {
 			oldTalker.setMaritalStatus(talker.getMaritalStatus());
 			oldTalker.setChildrenNum(talker.getChildrenNum());
 			oldTalker.setChildrenAges(talker.getChildrenAges());
-			oldTalker.setKeywords(talker.getKeywords());			
+			oldTalker.setKeywords(talker.getKeywords());	
+			
+			oldTalker.setEthnicities(talker.getEthnicities());
+			oldTalker.setReligion(talker.getReligion());
+			oldTalker.setReligionSerious(talker.getReligionSerious());
+			oldTalker.setLanguages(new LinkedHashSet<LanguageBean>(talker.getLanguagesList()));
 		}
 		
 		CommonUtil.updateTalker(oldTalker, session);
 		if (!oldUserName.equals(talker.getUserName())) {
 			session.put("username", talker.getUserName());
-			ApplicationDAO.createURLName(talker.getUserName());
+			ApplicationDAO.createURLName(talker.getUserName(), true);
 		}
 		
 		renderText("ok");
 	}
+	
+	/**
+	 * Back-end for updating profile on the right side of the Home page
+	 * 
+	 * @param name
+	 * @param newValue
+	 */
+	public static void updateProfile(String name, String newValue) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+
+		if (name.equals("userName")) {
+			String oldUserName = talker.getUserName();
+			if (!oldUserName.equals(newValue)) {
+				boolean nameNotExists = !ApplicationDAO.isURLNameExists(newValue);
+				validation.isTrue(nameNotExists).message("username.exists");
+			}
+			if (validation.hasErrors()) {
+				Error error = validation.errors().get(0);
+				renderText("Error:"+error.message());
+	            return;
+	        }
+			
+			talker.setUserName(newValue);
+			CommonUtil.updateTalker(talker, session);
+			if (!oldUserName.equals(newValue)) {
+				session.put("username", talker.getUserName());
+				ApplicationDAO.createURLName(talker.getUserName(), true);
+			}
+		}
+		else if (name.equals("password")) {
+			talker.setPassword(CommonUtil.hashPassword(newValue));
+			TalkerDAO.updateTalker(talker);
+		}
+		else if (name.equals("email")) {
+			validation.email(newValue);
+			if (validation.hasError("newValue")) {
+				renderText("Error:"+validation.error("newValue").message());
+				return;
+			}
+			TalkerBean otherTalker = TalkerDAO.getByEmail(newValue);
+			if (otherTalker != null) {
+				renderText("Error:"+Messages.get("email.exists"));
+				return;
+			}
+			
+			talker.setEmail(newValue);
+			talker.setVerifyCode(CommonUtil.generateVerifyCode());
+			CommonUtil.updateTalker(talker, session);
+			
+			//send verification email
+			Map<String, String> vars = new HashMap<String, String>();
+			vars.put("username", talker.getUserName());
+			vars.put("verify_code", talker.getVerifyCode());
+			EmailUtil.sendEmail(EmailTemplate.VERIFICATION, talker.getEmail(), vars, null, false);
+		}
+		else if (name.equals("twittersettings")) {
+			ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
+			if (twitterAccount != null) {
+				twitterAccount.parseSettingsFromParams(params.allSimple());
+				CommonUtil.updateTalker(talker, session);
+				
+				if (twitterAccount.isTrue("FOLLOW")) {
+					//follow TAH by this user
+					TwitterUtil.followTAH(twitterAccount);
+				}
+			}
+		}
+		else if (name.equals("facebooksettings")) {
+			ServiceAccountBean fbAccount = talker.serviceAccountByType(ServiceType.FACEBOOK);
+			if (fbAccount != null) {
+				fbAccount.parseSettingsFromParams(params.allSimple());
+				CommonUtil.updateTalker(talker, session);
+			}
+		}
+		
+		renderText("ok");
+	}
+	
 	
 	/**
 	 * Change connection of authenticated talker
@@ -449,7 +540,7 @@ public class Profile extends Controller {
 	}
 	
 	/* ------------- IM/Twitter/FB notifications ----------------*/
-	public static void serviceSettingsSave(String name, boolean value) {
+	public static void serviceSettingsSave() {
 		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);
 
 		Set<ServiceAccountBean> serviceAccounts = sessionTalker.getServiceAccounts();

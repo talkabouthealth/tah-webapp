@@ -130,7 +130,7 @@
 						</div>
 					</div>
 					
-					#{if models.TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.connection)}
+					#{if talker.isProf()}
 						#{include 'Profile/editfieldsProf.html' /}
 					#{/if}
 					#{else}
@@ -181,14 +181,6 @@
 								</div>
 							#{/ifnot}
 						#{/list}
-						<div class="personalmain">
-							<div class="personaltextarea"></div>
-							<div class="personaltextarea" style="height:46px; padding-top:2px;">
-								<a href="#insuranceform" onclick="document.changeInsuranceForm.submit();">
-									<img src="/public/images/savechanges_btn.gif" width="186" height="46" border="0" />
-								</a>
-							</div>
-						</div>
 					</form>
 				</div>
 			#{/if}

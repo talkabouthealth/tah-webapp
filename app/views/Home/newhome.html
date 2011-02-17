@@ -17,50 +17,6 @@
 		$(document).ready(function() {
 			initNewTabs();
 
-			//radio buttons for Notification Accounts
-			$(".notifyType").click(function() {
-				var selectedType = $(this).val();
-				if (selectedType === "Twitter") {
-					$("#notifyUsernamePanel").hide();
-				}
-				else {
-					$("#notifyUsernamePanel").show();
-				}
-			}); 
-
-			$("#addNotificationAccount").click(function () {
-				var imService = $("#notificationAccountsHelp input:checked").val();
-				var imUserName = $("#notificationUsername").val();
-				if (!imService || imService.length == 0) {
-					alert("Please choose IM Service");
-					return;
-				}
-				
-				if (imService === "Twitter") {
-					openTwitter();
-					hideHelpInfo('notificationAccounts', true);
-				}
-				else {
-					if (imUserName.length == 0) {
-						alert("Please enter correct IM Username");
-						return;
-					}
-					
-					$.post("@{Profile.addIMAccount()}", 
-						{imUserName : imUserName, imService : imService},
-						function(data) {
-							if (data.indexOf("<tr>") == 0) {
-								$("#notificationUsername").val("");
-								hideHelpInfo('notificationAccounts', true);
-							}
-							else {
-								alert(data);
-							}
-						}
-					);
-				}
-			});	
-
 			//start convo tabs
 			$(".topTabLink").click(function() {
    				$(".activeTopTab").removeClass("activeTopTab").addClass("topTab"); //Remove any "active" class
@@ -127,6 +83,167 @@
 	  			return false;
 			});
 
+			/* -------------- Right profile updates ------------- */
+			//TODO: check them
+			$("#updateUsernameBtn").click(function() {
+				if (closeTimeout) {
+					window.clearTimeout(closeTimeout);
+				}
+				$("#savedHelpText").html("Saving...");
+				$("#savedHelpError").html("");
+				$("#savedHelp").fadeIn(300);
+
+				var newValue = $("#newUsername").val();
+				$.post("/profile/updateProfile", {name: 'userName', newValue: newValue},
+						function(data) {
+							showResponse(data);
+							hideHelpInfo('updateUsername', true);
+						}
+					);
+			});
+			$("#updatePasswordBtn").click(function() {
+				if (closeTimeout) {
+					window.clearTimeout(closeTimeout);
+				}
+				$("#savedHelpText").html("Saving...");
+				$("#savedHelpError").html("");
+				$("#savedHelp").fadeIn(300);
+
+				var newValue = $("#newPassword").val();
+				$.post("/profile/updateProfile", {name: 'password', newValue: newValue},
+						function(data) {
+							showResponse(data);
+							hideHelpInfo('updatePassword', true);
+						}
+					);
+			});
+			$("#updateEmailBtn").click(function() {
+				if (closeTimeout) {
+					window.clearTimeout(closeTimeout);
+				}
+				$("#savedHelpText").html("Saving...");
+				$("#savedHelpError").html("");
+				$("#savedHelp").fadeIn(300);
+
+				var newValue = $("#newEmail").val();
+				$.post("/profile/updateProfile", {name: 'email', newValue: newValue},
+						function(data) {
+							showResponse(data);
+							if (data.indexOf("Error:") !== 0) {
+								hideAll();
+							}
+						}
+					);
+			});
+			$("#updateConnectionBtn").click(function() {
+				if (closeTimeout) {
+					window.clearTimeout(closeTimeout);
+				}
+				$("#savedHelpText").html("Saving...");
+				$("#savedHelpError").html("");
+				$("#savedHelp").fadeIn(300);
+
+				var newValue = $("#newConnection").val();
+				$.post("/profile/changeConnection", {value: newValue},
+						function(data) {
+							showResponse(data);
+							hideHelpInfo('updateConnection', true);
+						}
+					);
+			});
+			$("#updateTwitterSettingsBtn").click(function() {
+				if (closeTimeout) {
+					window.clearTimeout(closeTimeout);
+				}
+				$("#savedHelpText").html("Saving...");
+				$("#savedHelpError").html("");
+				$("#savedHelp").fadeIn(300);
+
+				var params =  {name: "twittersettings"};
+				$("#updateTwitterSettingsHelp input:checked").each(
+						function() {
+							params[$(this).attr("name")] = true;
+						}
+					); 
+				$.post("/profile/updateProfile", params,
+						function(data) {
+							showResponse(data);
+							hideHelpInfo("updateTwitterSettings", true);
+						}
+					);
+			});
+			$("#updateFacebookSettingsBtn").click(function() {
+				if (closeTimeout) {
+					window.clearTimeout(closeTimeout);
+				}
+				$("#savedHelpText").html("Saving...");
+				$("#savedHelpError").html("");
+				$("#savedHelp").fadeIn(300);
+
+				var params =  {name: "facebooksettings"};
+				$("#updateFacebookSettingsHelp input:checked").each(
+						function() {
+							params[$(this).attr("name")] = true;
+						}
+					); 
+				$.post("/profile/updateProfile", params,
+						function(data) {
+							showResponse(data);
+							hideHelpInfo("updateFacebookSettings", true);
+						}
+					);
+			});
+			
+			/* -------------- Right accounts updates ------------- */
+			
+			//radio buttons for Notification Accounts
+			$(".notifyType").click(function() {
+				var selectedType = $(this).val();
+				if (selectedType === "Twitter") {
+					$("#notifyUsernamePanel").hide();
+				}
+				else {
+					$("#notifyUsernamePanel").show();
+				}
+			}); 
+
+			$("#addNotificationAccount").click(function () {
+				var imService = $("#notificationAccountsHelp input:checked").val();
+				var imUserName = $("#notificationUsername").val();
+				if (!imService || imService.length == 0) {
+					alert("Please choose IM Service");
+					return;
+				}
+				
+				if (imService === "Twitter") {
+					openTwitter();
+					hideHelpInfo('notificationAccounts', true);
+				}
+				else {
+					if (imUserName.length == 0) {
+						alert("Please enter correct IM Username");
+						return;
+					}
+					
+					$.post("@{Profile.addIMAccount()}", 
+						{imUserName : imUserName, imService : imService},
+						function(data) {
+							if (data.indexOf("<tr>") == 0) {
+								$("#notificationUsername").val("");
+								hideHelpInfo('notificationAccounts', true);
+							}
+							else {
+								alert(data);
+							}
+						}
+					);
+				}
+			});	
+
+			if (${emailVerification}) {
+				showPopup("#emailVerificationDialog", 350);
+			}
+
 			makeAutocomplete("#postQuestionText", "convo");
 			makeAutocomplete("#startChatText", "convo");
 			$('.inline-edit').inlineEdit( { hover: ''} );
@@ -141,10 +258,10 @@
    	   			alert("Please enter thought");
    	   			return;
    			}
-   			text = linkify(text);
+   			linkedText = linkify(text);
 
    			$.post("@{Actions.saveProfileComment()}", 
-  				{ parentId: '', text: text, from: 'home'},
+  				{ parentId: '', text: linkedText, cleanText: text, from: 'home'},
   				function(html) {
   					$(html).prependTo($("#convoFeedList"));
   					$(html).prependTo($("#communityFeedList"));

@@ -137,6 +137,72 @@
 							#{/list}
 						</div>
 					</div>
+					
+					
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Ethnicity</span></div>
+						<div class="personalcheck">
+							#{list items:models.TalkerBean.ETHNICITY_ARRAY, as:'ethnicity'}
+								#{if ethnicity_parity.equals('odd') }
+									<div class="personalcheck1">
+								#{/if}
+								#{else}
+									<div class="personalcheck2">
+								#{/else}
+										<input name="talker.ethnicities" type="checkbox" value="${ethnicity}" 
+										${talker.ethnicities?.contains(ethnicity) ? 'checked="true"' : ''}
+										/>
+										&nbsp; <span class="blacktext14">${ethnicity}</span>
+									</div>
+							#{/list}
+						</div>
+					</div>
+					
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Religion</span></div>
+						<div class="personaltextfield">
+							<select id="talker.religion" name="talker.religion" class="personalfields">
+		#{list items:["", "Agnosticism", "Atheism", "Christianity", "Judaism", "Catholicism", "Islam", "Hinduism", "Buddhism", "Other"], as:'religion'}
+	  		<option value="${religion}" 
+		    #{if religion.equals(talker.religion) } selected #{/if} 
+		    >${religion}</option>
+		#{/list}
+							</select>
+						</div>
+						<div class="personaltextfield" style="margin-left: 156px;">
+							<select id="talker.religionSerious" name="talker.religionSerious" class="personalfields">
+		#{list items:["", "and very serious about it", "and somewhat serious about it", "but not too serious about it", "and laughing about it"], as:'religionSerious'}
+	  		<option value="${religionSerious}" 
+		    #{if religionSerious.equals(talker.religionSerious) } selected #{/if} 
+		    >${religionSerious}</option>
+		#{/list}
+							</select>
+						</div>
+					</div>
+					
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Languages</span></div>
+						<div class="personaltextarea" style="width: 250px; height: auto;">
+						#{list items:[0, 1, 2, 3, 4], as: 'count'}
+							<select name="talker.languagesList[${count}].name" class="simpleselect">
+								<option value=""></option>
+								#{list items:models.TalkerBean.LANGUAGE_ARRAY, as:'language'}
+									<option value="${language}"
+									#{if language.equals(talker.languages[count]?.name) } selected #{/if} 
+									>${language}</option>
+								#{/list}
+							</select>
+							<select name="talker.languagesList[${count}].proficiency" class="simpleselect" style="width: 80px;">
+								#{list items:['', 'Fluently', 'Okay', 'Poorly'], as:'proficiency'}
+									<option value="${proficiency}"
+									#{if proficiency.equals(talker.languages[count]?.proficiency) } selected #{/if} 
+									>${proficiency}</option>
+								#{/list}
+							</select>
+						#{/list}
+						</div>
+					</div>
+					
 					<div class="personalmain">
 						<div class="personaltextarea">
 							<span class="blacktext14">Web Page<br/>

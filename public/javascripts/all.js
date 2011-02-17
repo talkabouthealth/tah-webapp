@@ -44,7 +44,7 @@ function openTwitter(redirectURL) {
 		redirectURL = "";
 	}
 	var popupWindow = window.open("/oauth/getauth?type=twitter&redirectURL="+redirectURL, 
-		"TwitterLogin", "width=800,height=430,toolbar=no,location=no,menubar=no");
+		"TwitterLogin", "width=800,height=470,toolbar=no,location=no,menubar=no");
 	
 	return false;
 }
@@ -199,7 +199,7 @@ function showPopupForm (type, talkerId, userName) {
 	selectedTalkerId = talkerId;
 
 	showPopup("#"+type+"Popup", 200);
-	return false;
+	return true;
 }
 
 //void createThankYou(String toTalkerId, String note, String tagFile) {
@@ -263,8 +263,11 @@ function saveProfileComment(parentId, parentList) {
 
 
 /* --------------- Autocompletes ---------------- */
+//URL of selected conversation in autocomplete
+var selectedConvoURL;
+
 //Uses jQuery Autocomplete plugin
-function makeAutocomplete(id, type) {
+function makeAutocomplete(id, type, parentTopic) {
 	if ($(id).size() === 0) {
 		return;
 	}
@@ -291,7 +294,8 @@ function makeAutocomplete(id, type) {
 				response( cache[ request.term ] );
 				return;
 			}
-			
+			//used when we need autocomplete of subtopics
+			request.parent = parentTopic;
 			$.ajax({
 				url: url,
 				dataType: "json",
@@ -307,12 +311,13 @@ function makeAutocomplete(id, type) {
 				var url = ui.item.url;
 				if (url === "#fullsearch") {
 					//go to full conversations search
-					url = "/search/conversations?query="+ui.item.value;
+					url = "/search?query="+ui.item.value;
 				}
 				document.location = url;
 			}
 			else {
 				$(id).val(ui.item.value);
+				selectedConvoURL = ui.item.url;
 			}
 			
 			return false;
@@ -546,7 +551,7 @@ function showPopup(id, popupWidth) {
 	var maskHeight = $(document).height();
 	var maskWidth = $(window).width();
 
-	//Set heigth and width to mask to fill up the whole screen
+	//Set height and width to mask to fill up the whole screen
 	$('#mask').css({'width':maskWidth,'height':maskHeight});
 	
 	//show background	
@@ -558,7 +563,7 @@ function showPopup(id, popupWidth) {
 	var winW = $(window).width();
           
 	//Set the popup window to center and show
-	$(id).css('top', 50);
+	$(id).css('top', 40);
 	$(id).css('left', winW/2-popupWidth);
 	$(id).fadeIn(200); 
 	

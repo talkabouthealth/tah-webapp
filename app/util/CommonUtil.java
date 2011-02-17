@@ -11,6 +11,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,6 +46,7 @@ import play.Logger;
 import play.Play;
 import play.cache.Cache;
 import play.mvc.Http.Request;
+import play.mvc.Http;
 import play.mvc.Router;
 import play.mvc.Router.ActionDefinition;
 import play.mvc.Scope.Session;
@@ -180,6 +182,12 @@ public class CommonUtil {
 		return verifyCode;
 	}
 	
+	public static String generateRandomPassword() {
+		SecureRandom random = new SecureRandom();
+	    String newPassword = new BigInteger(60, random).toString(32);
+	    return newPassword;
+	}
+	
 	/**
 	 * Generates random username as 'member'+number
 	 * @param checkUnique return only unique name?
@@ -207,6 +215,20 @@ public class CommonUtil {
 	 * @return
 	 */
 	public static String generateAbsoluteURL(String action, String paramName, Object paramValue) {
+		//we can't generate url without request (e.g. calling this method from some Job)
+		if (Http.Request.current() == null) {
+			System.out.println(action+" : "+paramValue);
+			if (action.equals("ViewDispatcher.view")) {
+				return "http://talkabouthealth.com/"+paramValue;
+			}
+			else if (action.equals("Talk.talkApp")) {
+				return "http://talkabouthealth.com/chat/"+paramValue;
+			}
+			else {
+				return null;
+			}
+		}
+		
 		//prepare parameters if they exist
 		Map<String, Object> args = new HashMap<String, Object>(1);
 		if (paramName != null) {
@@ -255,15 +277,19 @@ public class CommonUtil {
 		StringBuilder html = new StringBuilder();
 		String url = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", talkerName);
 		html.append("<a href='"+url+"'>"+talkerName+"</a>");
-		if (talker.getConnection() != null && talker.getConnection().length() != 0) {
-			String notVerifiedStr = "";
-			if (TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(talker.getConnection())) {
-				if (!talker.isConnectionVerified()) {
-					notVerifiedStr = " <span class=\"red12\">(not verified)</span>";
-				}
+		String additionalInfo = "";
+		if (talker.isProf()) {
+			if (talker.getConnection().equals("Physician") && talker.getProfInfo().get("prim_specialty") != null) {
+				additionalInfo = " - "+talker.getProfInfo().get("prim_specialty");
 			}
-			html.append(" ("+talker.getConnection()+notVerifiedStr+", "+talker.getLevelOfRecognition()+")");
+			if (talker.isConnectionVerified()) {
+				additionalInfo += " <span class=\"green12\">(Verified)</span>";
+			}
+			else {
+				additionalInfo += " <span class=\"red12\">(not verified)</span>";
+			}
 		}
+		html.append(" ("+talker.getConnection()+additionalInfo+", "+talker.getLevelOfRecognition()+")");
 		return html.toString();
 	}
 	

@@ -28,6 +28,7 @@ public class EmailUtil {
 	 */
 	public enum EmailTemplate {
 		WELCOME,
+		WELCOME_WAITINGLIST,
 		FORGOT_PASSWORD,
 		INVITATION,
 		SHARE,
@@ -44,6 +45,7 @@ public class EmailUtil {
 		NOTIFICATION_CONVO_RESTART,
 		NOTIFICATION_CONVO_ANSWER,
 		NOTIFICATION_CONVO_REPLY_TO_ANSWER,
+		NOTIFICATION_CONVO_REPLY,
 		NOTIFICATION_CONVO_SUMMARY
 		;
 	}
@@ -67,6 +69,9 @@ public class EmailUtil {
 	 */
 	public static boolean sendEmail(EmailTemplate emailTemplate, String toEmail, 
 			Map<String, String> vars, Map<String, String> options, boolean verify) {
+		if (toEmail == null) {
+			return false;
+		}
 		if (verify && !isVerifiedEmail(toEmail)) {
 			return false;
 		}

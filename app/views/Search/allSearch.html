@@ -2,36 +2,22 @@
 
 	<script type="text/javascript"> 	 
 		$(document).ready(function() {
-			makeAutocomplete("#query", "convo");
+			makeAutocomplete("#allSearchBox", "all");
 
-			$("#query")
+			$("#allSearchBox")
+				.focus(function() {
+					$("#allSearchBox").autocomplete( "search" );
+				})
 				.keydown(function(c) {
 					if (c.keyCode === 13) {
-						var query = $("#query").val();
-						if (query === '') {
-							alert("Please enter search query");
-							return false;
-						}
-						var url = "?query="+query;
-						document.location = url;
-						
+						makeFullSearch("#allSearchBox");
 						return false;
 					}
 				});
-
 		});
    	</script>
 	<style>
-		body {
-			background:url(/public/images/inner_bg.gif) repeat-x top;
-			font-family:arial;
-			font-size:11px;
-		}
 		#innermiddlearea { padding: 0px }
-		
-		.activitiestext span {
-			font-size: 12px;
-		}
 	</style>
 </head>
 <body>
@@ -42,109 +28,61 @@
 	          <div id="innermiddlearea">
 	            <div id="mtcover">
 	              <div id="mtleft">
-	
 	                <div class="profileCatant">
 	                  <div class="mtcontent">
 	                    <div class="pph1Cover">
-	                  
-	                  <div class="resultsaerchCover">
-	                    <input type="text" class="resultsaerch ieseachbox" />
-	                  </div>
-	                  <!--topsearchinput-->
-	                  <div class="topsubmitsz">
-	                    <input type="submit" class="topsubmit" src="images/topsubmitbtn.png" value=" " style="cursor:pointer" />
-	
-	                  </div>
-	                
+			                  <div class="resultsaerchCover">
+			                    <input id="allSearchBox" type="text" class="resultsaerch ieseachbox" value="${params.query}"/>
+			                  </div>
+			                  <!--topsearchinput-->
+			                  <div class="topsubmitsz">
+			                    <input type="submit" class="topsubmit" 
+			                    	onclick="return makeFullSearch('#allSearchBox');"
+			                    	src="images/topsubmitbtn.png" value=" " style="cursor:pointer" />
+			                  </div>
 	                    </div>
-	                 
-	<div class="cb"></div>
+						<div class="cb"></div>
 	                  </div>
-	                  <div class="searchresulth1">Search Results</div>
-	                  <div class="topicborder"></div>
-	                  <div class="resulttopics">Topics</div>
-	                  <div class="topicborder"></div>
-	
-	                  <div class="resulbreast"><a href="#">Breast</a></div>
-	                  <div class="resulbreasttxt"><a href="#">130 Followers</a>  |  <a href="#">200 Conversations</a></div>
-	                  <div class="resulbreast"><a href="#">Breast Cancer </a></div>
-	                  <div class="resulbreasttxt"><a href="#">130 Followers</a>  |  <a href="#">200 Conversations</a></div>
-	
-	                  <div class="resulbreast"><a href="#">Breast Pain</a></div>
-	                  <div class="resulbreasttxt"><a href="#">130 Followers</a>  |  <a href="#">200 Conversations</a></div>
-	                   <div class="resulttopics">Conversations</div>
-	                  <div class="topicborder"></div>
-	                  <!--profileCatant-->
-	                  <div class="topic">
-	
-	                  <div class="joinbox">
-	                          <div class="joinpic"><img src="images/joinpic.jpg" alt="join" /></div>
-	                          <div class="jointxtbox">
-	                            <div class="jointextstop"> <a href="#">Received 2 different Diagnoses today, What do i do next?
-	                              Shouldi speak to another...</a></div>
-	                            <div class="joinztextlink"><a href="#">1 Answert</a> | <a href="#"> 3 peopleSpoke</a> | <a href="#"> Follow  </a> | <a href="#">Restart  </a> | <a href="#">2 hours ago</a></div>
-	
-	                            <div class="jointxtlink1">Top Answer by <a href="#"> Jane  </a> (Patiant) in topic <a href="#"> Diagnosis</a> ...<a href="#" style="font-size:11px; font-weight:normal;"> more</a></div>
-	                            <div class="srtextz">Need a study partner? Sure you do! Studying with others is not only fun, but one of the best ways to learn. So Grockit has added a cool new feature ...<a href="#" style="font-size:11px; font-weight:normal;"> more</a></div>
-	
-	                          </div>
-	                          <!--jointxtbox-->
-	                          <div class="joinconbox"></div>
-	                          <div class="cb"></div>
-	                          </div>
-	                        <!--joinbox-->
-	                        <div class="joinbox">
-	                          <div class="joinpic"><img src="images/joinpic.jpg" alt="join" /></div>
-	                          <div class="jointxtbox">
-	
-	                            <div class="jointextstop"> <a href="#">Recived 2 diffent will uncover many.</a></div>
-	                            <div class="joinztextlink"><a href="#">1 Answert</a> | <a href="#"> 3 peopleSpoke</a> | <a href="#"> Follow  </a> | <a href="#">Restart  </a> | <a href="#">2 hours ago</a></div>
-	
-	                            <div class="jointxtlink1">Conversation Started by <a href="#"> Jill  </a>  (Patiant) in topic <a href="#"> Diagnosis</a> ...<a href="#" style="font-size:11px; font-weight:normal;"> more</a></div>
-	                          </div>
-	                          <!--jointxtbox-->
-	
-	                          <div class="joinconbox"></div>
-	                          <div class="cb"></div>
-	                          </div>
-	                        <!--joinbox-->
-	                        <div class="joinbox">
-	                          <div class="joinpic"><img src="images/joinpic.jpg" alt="join" /></div>
-	                          <div class="jointxtbox">
-	                            <div class="jointextstop"> <a href="#">Web sites still in their infancy. Various versions</a></div>
-	
-	                            <div class="joinztextlink"><a href="#">1 Answert</a> | <a href="#"> 3 peopleSpoke</a> | <a href="#"> Follow  </a> | <a href="#">Restart  </a> | <a href="#">2 hours ago</a></div>
-	
-	                            <div class="jointxtlink1">Top Answer by <a href="#"> Jane  </a> (Patiant) in topic <a href="#"> Diagnosis</a> ...<a href="#" style="font-size:11px; font-weight:normal;"> more</a></div>
-	                            <div class="srtextz">Need a study partner? Sure you do! Studying with others is not only fun, but one of the best ways to learn. So Grockit has added a cool new feature ...<a href="#" style="font-size:11px; font-weight:normal;"> more</a></div>
-	
-	                          </div>
-	                          <!--jointxtbox-->
-	                          <div class="joinconbox"></div>
-	                          <div class="cb"></div>
-	                          </div>
-	                        <!--joinbox-->
-	                        <div class="joinbox">
-	                          <div class="joinpic"><img src="images/joinpic.jpg" alt="join" /></div>
-	                          <div class="jointxtbox">
-	
-	                            <div class="jointextstop"> <a href="#">Recived 2 diffent will uncover many.</a></div>
-	                            <div class="joinztextlink"><a href="#">1 Answert</a> | <a href="#"> 3 peopleSpoke</a> | <a href="#"> Follow  </a> | <a href="#">Restart  </a> | <a href="#">2 hours ago</a></div>
-	
-	                            <div class="jointxtlink1">Conversation Started by <a href="#"> Jill  </a>  (Patiant) in topic <a href="#"> Diagnosis</a> ...<a href="#" style="font-size:11px; font-weight:normal;"> more</a></div>
-	                          </div>
-	                          <!--jointxtbox-->
-	
-	                          <div class="joinconbox"></div>
-	                          <div class="cb"></div>
-	                          </div>
-	                        <!--joinbox-->
-	                        <div class="cb"></div>
-	                  </div><!--topic-->
-	                  <div class="cb"></div>
+	                  #{if params.query}
+		                  <div class="searchresulth1">Search Results</div>
+		                  <div class="topicborder"></div>
+		                  
+		                  #{ifnot topicResults || convoResults }
+							<span style="font-size: 14px;"><br/>Sorry, no matches were found.</span>
+		                  #{/ifnot}
+		                  
+		                  #{if topicResults}
+		                 	  <div class="resulttopics">Topics</div>
+			                  <div class="topicborder"></div>
+			
+							#{list items: topicResults, as: 'topic'}
+								<div class="resulbreast">
+									<a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a>
+								</div>
+			                  	<div class="resulbreasttxt">
+			                  		${topic.followers.size()} Follower(s) | ${topic.conversations.size()} Conversation(s)
+			                  	</div>
+							#{/list}
+		                  #{/if}
+		                  
+		                  #{if convoResults}
+			                <div class="resulttopics">Conversations</div>
+			                <div class="topicborder"></div>
+		                  	
+						  	<div class="activitiestext">
+			                  	#{list items: convoResults, as: 'convoResult'}
+			                  		#{feed/feedActivity activity: convoResult, talker: talker /}
+			                  	#{/list}
+							</div>
+		                  #{/if}
+		                  
+		                  <div class="cb" style="padding: 25px 0px"></div>
+		              #{/if}
+		              #{else}
+		              		<div class="cb" style="padding: 100px 0px"></div>
+		              #{/else}
+		              
 	                </div>
-	                <!--mtcontent-->
-	
 	                <div class="cb"></div>
 	              </div>
 	              <!--mtleft--><!--mtright-->

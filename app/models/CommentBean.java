@@ -82,6 +82,8 @@ public class CommentBean extends MessageBean {
 	private String convoId;
 	//is it answer or reply ?
 	private boolean answer;
+	//is it reply to conversation?
+	private boolean convoReply;
 	
 	//old versions of the text
 	private Set<String> oldTexts;
@@ -131,6 +133,7 @@ public class CommentBean extends MessageBean {
 		
 		setDeleted(getBoolean(commentDBObject, "deleted"));
 		setAnswer(getBoolean(commentDBObject, "answer"));
+		setConvoReply(getBoolean(commentDBObject, "convoreply"));
 		
 		DBRef convoRef = (DBRef)commentDBObject.get("convo");
 		if (convoRef != null) {
@@ -218,4 +221,11 @@ public class CommentBean extends MessageBean {
 
 	public boolean isAnswer() { return answer; }
 	public void setAnswer(boolean answer) { this.answer = answer; }
+	
+	public boolean isConvoReply() {
+		return convoReply;
+	}
+	public void setConvoReply(boolean convoReply) {
+		this.convoReply = convoReply;
+	}
 }

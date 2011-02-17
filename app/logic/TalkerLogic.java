@@ -2,6 +2,7 @@ package logic;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -13,8 +14,10 @@ import java.util.Map;
 import java.util.Set;
 
 import play.Logger;
+import play.mvc.Scope.Session;
 import play.templates.JavaExtensions;
 import dao.ActionDAO;
+import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.HealthItemDAO;
@@ -23,9 +26,11 @@ import dao.TalkerDiseaseDAO;
 import dao.TopicDAO;
 
 import util.CommonUtil;
+import util.EmailUtil;
 import util.FacebookUtil;
 import util.NotificationUtils;
 import util.TwitterUtil;
+import util.EmailUtil.EmailTemplate;
 
 import models.CommentBean;
 import models.ConversationBean;
@@ -69,7 +74,7 @@ public class TalkerLogic {
 		COMMENT_THOUGHTS(5, "Comment in your <a href='"+
 				CommonUtil.generateAbsoluteURL("PublicProfile.thoughts", "userName", "<username>")+"'>Thoughts Feed</a>"),
 		FOLLOW(5, "Follow <a href='"+
-				CommonUtil.generateAbsoluteURL("Community.browseMembers", "action", "active")+"'>another member</a>"),
+				CommonUtil.generateAbsoluteURL("Explore.browseMembers", "action", "active")+"'>another member</a>"),
 		FOLLOW_TOPIC(5, "Follow a <a href='"+CommonUtil.generateAbsoluteURL("Explore.browseTopics")+"'>Topic</a>"),
 		START_OR_JOIN_TALK(5, "Start or join a <a href='"+CommonUtil.generateAbsoluteURL("Explore.liveTalks")+"'>Live Chat</a>");
 		
@@ -320,34 +325,6 @@ public class TalkerLogic {
 		return numOfTopAnswers;
 	}
 	
-	/**
-	 * Converts given list of talker's conversations to Feed format
-	 * @param loadFollowingConversations
-	 * @return
-	 */
-	public static List<Action> prepareTalkerConvos(Set<ConversationBean> loadFollowingConversations) {
-		List<Action> convosFeed = new ArrayList<Action>();
-		for (ConversationBean convo : loadFollowingConversations) {
-			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
-			
-			TalkerBean activityTalker = convo.getTalker();
-			//show top answer or simple convo
-			CommentBean topAnswer = null;
-			if (!convo.getComments().isEmpty()) {
-				topAnswer = convo.getComments().get(0);
-				topAnswer = CommentsDAO.getConvoAnswerById(topAnswer.getId());
-				activityTalker = topAnswer.getFromTalker();
-			}
-			
-			AnswerDisplayAction convoAction =
-				new AnswerDisplayAction(activityTalker, convo, topAnswer, ActionType.ANSWER_CONVO, topAnswer != null);
-			convoAction.setTime(convo.getCreationDate());
-			
-			convosFeed.add(convoAction);
-		}
-		return convosFeed;
-	}
-	
 	public static Set<ConversationBean> loadFollowingConversations(TalkerBean talker) {
 		if (talker == null) {
 			return new HashSet<ConversationBean>();
@@ -373,9 +350,11 @@ public class TalkerLogic {
 	 * @param profileTalkerId
 	 * @param parentId
 	 * @param text
+	 * @param cleanText 
 	 * @return
 	 */
-	public static CommentBean saveProfileComment(TalkerBean talker, String profileTalkerId, String parentId, String text) {
+	public static CommentBean saveProfileComment(TalkerBean talker, String profileTalkerId, 
+			String parentId, String text, String cleanText) {
 		//find profile talker by parent thought or given talker id
 		if (parentId != null && parentId.length() != 0) {
 			CommentBean parentAnswer = CommentsDAO.getProfileCommentById(parentId);
@@ -423,10 +402,10 @@ public class TalkerLogic {
 							serviceAccount.getToken()+" : "+serviceAccount.getTokenSecret());
 					
 					if (serviceAccount.getType() == ServiceType.TWITTER) {
-						TwitterUtil.tweet(comment.getText(), serviceAccount);
+						TwitterUtil.tweet(cleanText, serviceAccount);
 					}
 					else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
-						FacebookUtil.post(comment.getText(), serviceAccount);
+						FacebookUtil.post(cleanText, serviceAccount);
 					}
 				}
 			}
@@ -444,21 +423,22 @@ public class TalkerLogic {
 			ActionDAO.updateProfileCommentActionTime(comment.getParentId());
 			
 			CommentBean thought = CommentsDAO.getProfileCommentById(comment.getParentId());
+			
+			//when user leaves post in someone else's Thoughts Feed, if there are replies, 
+			//send email to the owner of the Thoughts Feed as well as the user who started the thread.
+			Map<String, String> vars = new HashMap<String, String>();
+			vars.put("other_talker", talker.getUserName());
+			vars.put("comment_text", thought.getText());
+			vars.put("reply_text", comment.getText());
+			vars.put("profile_talker", profileTalker.getUserName());
+			
 			if (!talker.equals(thought.getFromTalker())) {
-				//when user leaves post in someone else's Thoughts Feed, if there are replies, 
-				//send email to the owner of the Thoughts Feed as well as the user who started the thread.
-				Map<String, String> vars = new HashMap<String, String>();
-				vars.put("other_talker", talker.getUserName());
-				vars.put("comment_text", thought.getText());
-				vars.put("reply_text", comment.getText());
-				vars.put("profile_talker", profileTalker.getUserName());
 				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
 						thought.getFromTalker(), vars);
-				
-				if (!talker.equals(profileTalker)) {
-					NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
-							profileTalker, vars);
-				}
+			}
+			if (!talker.equals(profileTalker)) {
+				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
+						profileTalker, vars);
 			}
 		}
 		
@@ -642,4 +622,145 @@ public class TalkerLogic {
 		return recommendedTopics;
 	}
 	
+	
+	
+	/*----------------------- SignUp methods ---------------------------- */
+	/**
+     * Initializes talker with different default values or parsed info
+     */
+	public static void prepareTalkerForSignup(TalkerBean talker) {
+		talker.setInvitations(100);
+		//by default we notify user through IM
+		talker.setImNotify(true);
+		
+		talker.setAnonymousName(CommonUtil.generateRandomUserName(true));
+		
+//		String imService = talker.getIm();
+//        String imUsername = talker.getImUsername();
+//        if (!imService.isEmpty()) {
+//        	//if userName empty - parse from email
+//        	if (imUsername.trim().isEmpty()) {
+//    			int atIndex = talker.getEmail().indexOf('@');
+//    			imUsername = talker.getEmail().substring(0, atIndex);
+//    		}
+//        	
+//        	IMAccountBean imAccount = new IMAccountBean(imUsername, imService);
+//        	talker.setImAccounts(new HashSet<IMAccountBean>(Arrays.asList(imAccount)));
+//        }
+        
+        /*
+         	TODO: later - better to use Enum (these settings are from the first prototype version)
+         	Default notification settings:
+			- 2 to 5 times per day
+			- whenever I am online
+			- types of conversations: check all
+        */
+        talker.setNfreq(3);
+        talker.setNtime(1);
+        talker.setCtype(TalkerBean.CONVERSATIONS_TYPES_ARRAY);
+        
+		talker.setPrivacySettings(TalkerLogic.getDefaultPrivacySettings());
+		
+        //By default all email notifications are checked
+        EnumSet<EmailSetting> emailSettings = EnumSet.allOf(EmailSetting.class);
+        talker.setEmailSettings(emailSettings);
+        
+        String hashedPassword = CommonUtil.hashPassword(talker.getPassword());
+        talker.setPassword(hashedPassword);
+        
+        //code for email validation
+        talker.setVerifyCode(CommonUtil.generateVerifyCode());
+        
+        talker.setConnectionVerified(false);
+	}
+	
+	/**
+	 * Handler method after successful signup.
+	 * 
+	 * @param talker Just registered talker
+	 * @param session
+	 */
+	public static void onSignup(TalkerBean talker, Session session) {
+		//Reserve this name as URL
+        ApplicationDAO.createURLName(talker.getUserName(), true);
+		
+        //Send 'email verification' and 'welcome' emails
+		Map<String, String> vars = new HashMap<String, String>();
+		
+		if (talker.getVerifyCode() != null) {
+			vars.put("username", talker.getUserName());
+			vars.put("verify_code", talker.getVerifyCode());
+			EmailUtil.sendEmail(EmailTemplate.VERIFICATION, talker.getEmail(), vars, null, false);
+		}
+		
+		vars = new HashMap<String, String>();
+		vars.put("username", talker.getUserName());
+		EmailUtil.sendEmail(EmailTemplate.WELCOME, talker.getEmail(), vars, null, false);
+		
+		ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
+		if (twitterAccount != null && twitterAccount.isTrue("FOLLOW")) {
+			//follow TAH by this user
+			TwitterUtil.followTAH(twitterAccount);
+		}
+
+		//manually login this talker
+		ApplicationDAO.saveLogin(talker.getId(), "signup");
+		session.put("username", talker.getUserName());
+		if (talker.isProf()) {
+    		session.put("prof", "true");
+    	}
+	}
+	
+	/**
+	 * Signup with Twitter or Facebook account
+	 * 
+	 * @param session
+	 * @param screenName
+	 * @param accountId
+	 */
+	public static void signupFromService(ServiceType serviceType, Session session, 
+			String screenName, String email, String verifyCode, String accountId) {
+		TalkerBean talker = new TalkerBean();
+		
+		//initial username will be their username on Facebook or Twitter, 
+		//or if it is taken already, add a number to the username - i.e. murray1
+		String newUsername = screenName;
+		int i=1; 
+		while (ApplicationDAO.isURLNameExists(newUsername)) {
+			newUsername = screenName+i;
+			i++;
+		}
+		talker.setUserName(newUsername);
+		
+		//for Tw/Fb users password is random
+		talker.setPassword(CommonUtil.generateRandomPassword());
+		
+		prepareTalkerForSignup(talker);
+		
+		talker.setEmail(email);
+		talker.setVerifyCode(verifyCode);
+		
+		//default connection
+		talker.setConnection("Patient");
+		
+		//add Tw/Fb as notification account
+		ServiceAccountBean account = new ServiceAccountBean(accountId, screenName, serviceType);
+		account.setToken(session.get("token"));
+		account.setTokenSecret(session.get("token_secret"));
+		
+		Set<ServiceAccountBean> serviceAccounts = new HashSet<ServiceAccountBean>();
+		serviceAccounts.add(account);
+		talker.setServiceAccounts(serviceAccounts);
+		
+		Set<String> hiddenHelps = talker.getHiddenHelps();
+		if (serviceType == ServiceType.TWITTER) {
+			hiddenHelps.add("updateFacebookSettings");
+		}
+		else {
+			hiddenHelps.add("updateTwitterSettings");
+		}
+		
+		TalkerDAO.save(talker);
+		onSignup(talker, session);
+	}
 }

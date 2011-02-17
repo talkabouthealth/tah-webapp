@@ -3,24 +3,23 @@
 	<div id="comment${comment.id}" class="topic" 
 			style="padding-bottom:5px; ${_level == 1 ? 'margin-left:-40px;' : ''} ">
     	<div class="answerCover">
-			<div class="replyWraper">
-				#{if _level == 1 }
-					<div id="vote${comment.id}" class="replyr1">
-						#{ifnot session.username?.equals(comment.fromTalker.userName) || !session.username}
-							#{set talkerVote = comment.getVoteByTalker(_talker, comment.getVotes()) /}
-							<div class="arrowups">
-								<a href="#" class="votebtnup ${ (talkerVote && talkerVote.up) ? 'selected' : ''} " 
-									rel="${comment.id}">&nbsp;</a>
-							</div> 
-							<div class="arrowdons">
-								<a href="#" class="votebtndown ${ (talkerVote && !talkerVote.up) ? 'selected' : ''} "
-									rel="${comment.id}">&nbsp;</a>
-							</div>
-						#{/ifnot}
-		            </div><!--replyr1-->
-	            #{/if}
-	            <div class="replyl1">
-	            	<div class="replyz">
+			#{if _level == 1 }
+				<div id="vote${comment.id}" class="replyr1">
+					#{ifnot session.username?.equals(comment.fromTalker.userName) || !session.username}
+						#{set talkerVote = comment.getVoteByTalker(_talker, comment.getVotes()) /}
+						<div class="arrowups">
+							<a href="#" class="votebtnup ${ (talkerVote && talkerVote.up) ? 'selected' : ''} " 
+								rel="${comment.id}">&nbsp;</a>
+						</div> 
+						<div class="arrowdons">
+							<a href="#" class="votebtndown ${ (talkerVote && !talkerVote.up) ? 'selected' : ''} "
+								rel="${comment.id}">&nbsp;</a>
+						</div>
+					#{/ifnot}
+	            </div><!--replyr1-->
+	            
+	            <div class="answerl1">
+	            	<div class="answerz">
 						<div class="replytop"></div>
 						<div class="replymid">
 	                    	<div class="replypics">
@@ -34,88 +33,81 @@
 									<span class="stylexz"> #{talker/talkerInfo talker: comment.fromTalker /} - </span> 
 									<span class="stylezx">${comment.time.format("MM / dd / yyyy")}</span>
 								</p>
-	               				<p>   
-						 			<div class="styles1">
-					 					<div class="votestxt3">
-					 						#{convo/answerVotesInfo votes: comment.upVotes /}
-										</div>
-						 				
-										<div class='inline-edit' id="answerEdit${comment.id}" style="padding: 7px 0; width: 100%;">
-											<div class="suggestxt inline_display">
-												<div class="inline_full inline_empty">
-													<span class="styles2 inline_view ${ _level == 1 ? 'styles2answers' : 'styles2replies'}"
-														>${comment.text.nl2br()}</span>
-													#{if session.username?.equals(comment.fromTalker.userName) }
-														<span class="editit2" style="float: none;">
-															<a href="#" class="inline_editlink">Edit</a>
-														</span>
-													#{/if}
-												</div>
-								            </div>
-								            <div style="margin-top:10px; margin-bottom:10px;"></div>
-											<div class='inline_form'>
-												<div style="float:left; width: 100%; padding-bottom:5px;" >
-										        	<textarea id="titleinput" type="text" style="width:100%; height: 150px;"  
-										        		class="edititinputs inline_text">${comment.text}</textarea>
+					 			<div class="styles1">
+				 					<div class="votestxt3">
+				 						#{convo/answerVotesInfo votes: comment.upVotes /}
+									</div>
+					 				
+									<div class='inline-edit' id="answerEdit${comment.id}" style="padding: 7px 0; width: 100%;">
+										<div class="suggestxt inline_display">
+											<div class="inline_full inline_empty">
+												<span class="styles2 inline_view styles2answers"
+													>${comment.text?.nl2br()}</span>
+												#{if session.username?.equals(comment.fromTalker.userName) }
+													<span class="editit2" style="float: none;">
+														<a href="#" class="inline_editlink">Edit</a>
+													</span>
+												#{/if}
+											</div>
+							            </div>
+							            <div style="margin-top:10px; margin-bottom:10px;"></div>
+										<div class='inline_form'>
+											<div style="float:left; width: 100%; padding-bottom:5px;" >
+									        	<textarea id="titleinput" type="text" style="width:100%; height: 150px;"  
+									        		class="edititinputs inline_text">${comment.text}</textarea>
+									        </div>
+											<div style="float:right;margin-right:30px;">
+										        <input id="titleBtn" type="submit" class="updatebtns inline_save" value=" " />
+										        <div class="canclebtnz">
+										        	<a class="cancel" href="#">Cancel</a>
 										        </div>
-												<div style="float:right;margin-right:30px;">
-											        <input id="titleBtn" type="submit" class="updatebtns inline_save" value=" " />
-											        <div class="canclebtnz">
-											        	<a class="cancel" href="#">Cancel</a>
-											        </div>
-												</div>
 											</div>
 										</div>
 									</div>
-			                        <div class="sstyles3">
-				                        <ul>
-				                        	#{if _level == 1}
-				                        		<li><a href="#" onclick="$('#replies${comment.id}').show(); return false;"
-				                        			#{if comment.children == null || comment.children?.size() == 0}
-				                        				#{if session.username}
-				                        					>Add Reply</a>
-				                        				#{/if}
-				                        				#{else}
-				                        					></a>
-				                        				#{/else}
-				                        			#{/if}
-					                        		#{elseif comment.children?.size() == 1}
-					                        			>1 Reply</a>
-					                        		#{/elseif}
-					                        		#{else}
-					                        			>${comment.children?.size()} Replies</a>
-					                        		#{/else}
-				                        		</li>
-				                        		#{if session.username}
-				                        			<li>&nbsp;|&nbsp;</li>
-				                        		#{/if}
-					                        #{/if}
-					                        #{if session.username?.equals(comment.fromTalker.userName) ||
-					                        		session.username?.equals("admin") }
-					                        	<li><a href="#" onclick="return deleteAnswer('${comment.id}');">Delete</a></li>
-					                        #{/if}
-					                  		#{if session.username && !session.username?.equals(comment.fromTalker.userName)}
-				<li><a href="#" 
-					onclick="return showPopupForm('thankYou', '${comment.fromTalker.id}', '${comment.fromTalker.userName}');">Thank</a></li>
-				
-												#{if _level == 1}
-						                        	<li>&nbsp;|&nbsp;</li>
-						                        	#{if comment.notHelpful }
-						                        		<li><a href="#" onclick="return markNotHelpful('${comment.id}')">Not Helpful</a></li>
-						                        	#{/if}
-						                        	#{else}
-						                        		<li><a href="#" onclick="return markNotHelpful('${comment.id}')">Not Helpful</a></li>
-						                        	#{/else}
-						                        #{/if}
-						                        
-						                      	<li>&nbsp;|&nbsp;</li>
-						                        <li><a href="#" class="flagAnswerLink" rel="${comment.id}"
-						                        	>${ _level == 1 ? 'Flag As Inappropriate' : 'Flag Reply' }</a></li> 
-						                        
-						                    #{/if}
-				                       	</ul>
-			                    	</div> 
-			                   	</p>
+								</div>
+		                        <div class="sstyles3">
+			                        <ul>
+		                        		<li><a href="#" onclick="$('#replies${comment.id}').toggle(); return false;"
+		                        			#{if comment.children == null || comment.children?.size() == 0}
+		                        				#{if session.username}
+		                        					>Add Reply</a>
+		                        				#{/if}
+		                        				#{else}
+		                        					></a>
+		                        				#{/else}
+		                        			#{/if}
+			                        		#{elseif comment.children?.size() == 1}
+			                        			>1 Reply</a>
+			                        		#{/elseif}
+			                        		#{else}
+			                        			>${comment.children?.size()} Replies</a>
+			                        		#{/else}
+		                        		</li>
+		                        		#{if session.username}
+		                        			<li>&nbsp;|&nbsp;</li>
+		                        		#{/if}
+		                        		
+				                        #{if session.username?.equals(comment.fromTalker.userName) ||
+				                        		session.username?.equals("admin") }
+				                        	<li><a href="#" onclick="return deleteAnswer('${comment.id}');">Delete</a></li>
+				                        #{/if}
+				                  		#{if session.username && !session.username?.equals(comment.fromTalker.userName)}
+			<li><a href="#" 
+				onclick="return showPopupForm('thankYou', '${comment.fromTalker.id}', '${comment.fromTalker.userName}');">Thank</a></li>
+			
+				                        	<li>&nbsp;|&nbsp;</li>
+				                        	#{if comment.notHelpful }
+				                        		<li><a href="#" onclick="return markNotHelpful('${comment.id}')">Not Helpful</a></li>
+				                        	#{/if}
+				                        	#{else}
+				                        		<li><a href="#" onclick="return markNotHelpful('${comment.id}')">Not Helpful</a></li>
+				                        	#{/else}
+					                        
+					                      	<li>&nbsp;|&nbsp;</li>
+					                        <li><a href="#" class="flagAnswerLink" rel="${comment.id}">Flag As Inappropriate</a></li> 
+					                    #{/if}
+			                       	</ul>
+		                    	</div> 
 							</div><!--replytextarea-->
 	                    	<div class="cb"></div>
 	                   	</div><!--replymid-->
@@ -124,32 +116,96 @@
 	               	</div><!--replyz-->
 	            	<div class="cb"></div>
 	            
-				     #{if _level == 1}
-				     	<div id="replies${comment.id}" class="replysub" style="display: none">
-			            	<div style="clear:both" id="foo">
-								#{convo/convoCommentsTree commentsList: comment.children, level: (_level+1), talker: _talker /}
-								#{if session.username }
-									<div id="replyform${comment.id}" style="clear:both">
-										<div id="saveAnswerImage${comment.id}" class="ajaxLoading" ></div>
-					                    <div class="repcommbox22">
-						                    <textarea id="replytext${comment.id}" type="text" class="repcominput" ></textarea>
-						                    <div class="repcommstextbox">
-						                    	<input type="submit" class="repcomsubmits" onclick="return saveAnswerOrReply('${comment.id}');"
-						                    		src="/public/images/repcomsubmits.jpg" value=" " />
-						                     	<span class="canclelz">
-						                     		<a href="#" onclick="$('#replies${comment.id}').hide(); return false;">Cancel</a>
-						                     	</span>
-						                    </div>
-						                    <div class="cb"></div>
+			     	<div id="replies${comment.id}" class="replysub" style="display: none">
+		            	<div style="clear:both" id="foo">
+							#{convo/convoCommentsTree commentsList: comment.children, level: (_level+1), talker: _talker /}
+							#{if session.username }
+								<div id="replyform${comment.id}" style="clear:both">
+									<div id="saveAnswerImage${comment.id}" class="ajaxLoading" ></div>
+				                    <div class="repcommbox22">
+					                    <textarea id="replytext${comment.id}" type="text" class="repcominput" ></textarea>
+					                    <div class="repcommstextbox">
+					                    	<input type="submit" class="repcomsubmits" onclick="return saveAnswerOrReply('${comment.id}');"
+					                    		value=" " />
+					                     	<span class="canclelz">
+					                     		<a href="#" onclick="$('#replies${comment.id}').hide(); return false;">Cancel</a>
+					                     	</span>
 					                    </div>
-				                    </div><!--Blankdivsub-->
-								#{/if}
-							</div>
+					                    <div class="cb"></div>
+				                    </div>
+			                    </div><!--Blankdivsub-->
+							#{/if}
 						</div>
-					#{/if}
+					</div>
 				</div>
-				<div class="cb"></div>
-			</div>
+            #{/if}
+            #{else}
+            	<div class="answerl1">
+	            	<div class="answerz">
+	             			<div class="replytextarea" style="width: 550px;">
+								<div class='inline-edit' id="answerEdit${comment.id}" 
+										style="padding: 7px 0px 2px 0px; width: 100%;">
+									<div class="suggestxt inline_display" style="width:520px;">
+										<div class="inline_full inline_empty">
+											<span class="styles2 inline_view styles2answers"
+												>${comment.text.nl2br()}</span>
+											#{if session.username?.equals(comment.fromTalker.userName) }
+												<span class="editit2" style="float: none;">
+													<a href="#" class="inline_editlink">Edit</a>
+												</span>
+											#{/if}
+										</div>
+						            </div>
+						            <div style="margin-top:10px; margin-bottom:10px;"></div>
+									<div class='inline_form'>
+										<div style="float:left; width: 100%; padding-bottom:5px;" >
+								        	<textarea id="titleinput" type="text" style="width:100%; height: 150px;"  
+								        		class="edititinputs inline_text">${comment.text}</textarea>
+								        </div>
+										<div style="float:right;margin-right:30px;">
+									        <input id="titleBtn" type="submit" class="updatebtns inline_save" value=" " />
+									        <div class="canclebtnz">
+									        	<a class="cancel" href="#">Cancel</a>
+									        </div>
+										</div>
+									</div>
+								</div>
+		                        <div class="sstyles3">
+			                        <ul>
+			                        	<li>
+											<a href="@{ViewDispatcher.view(comment.fromTalker.name)}"
+												style="color: #0286BC; font-size: 14px;"
+												>${comment.fromTalker.name}</a>
+											#{if session.username}
+												<span class="stylezx14">&nbsp;-&nbsp;&nbsp;</span>
+											#{/if}
+			                        	</li>
+				                        #{if session.username?.equals(comment.fromTalker.userName) ||
+				                        		session.username?.equals("admin") }
+				                        	<li class="comLink"><a href="#" onclick="return deleteAnswer('${comment.id}');">Delete</a></li>
+				                        #{/if}
+				                  		#{if session.username && !session.username?.equals(comment.fromTalker.userName)}
+			<li class="comLink"><a href="#" 
+				onclick="return showPopupForm('thankYou', '${comment.fromTalker.id}', '${comment.fromTalker.userName}');">Thank</a></li>
+			
+					                      	<li class="comLink">&nbsp;|&nbsp;</li>
+					                        <li class="comLink"><a href="#" class="flagAnswerLink" rel="${comment.id}">Flag Reply</a></li> 
+					                    #{/if}
+					                    <li>
+					                    	<span class="stylezx14">&nbsp;&nbsp;-&nbsp;</span>
+					                    	<span class="stylezx">${comment.time.format("MM/dd/yyyy")}</span>
+					                    </li>
+			                       	</ul>
+		                    	</div> 
+							</div><!--replytextarea-->
+	                    	<div class="cb"></div>
+	                   	
+	               	</div>
+	            	<div class="cb"></div>
+				</div>
+            #{/else}
+	            
+			<div class="cb"></div>
 		</div>
 		<div class="cb"></div>
 	</div>  

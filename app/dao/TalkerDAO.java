@@ -71,6 +71,8 @@ public class TalkerDAO {
 				.add("privacy_settings", setToDB(talker.getPrivacySettings()))
 				.add("email_settings", talker.emailSettingsToList())
 				
+				.add("hidden_helps", talker.getHiddenHelps())
+				
 				.add("newsletter", talker.isNewsletter())
 				.add("invites", talker.getInvitations())
 				.add("ch_num", -1)
@@ -126,6 +128,11 @@ public class TalkerDAO {
 			.add("prof_statement", talker.getProfStatement())
 			.add("ch_ages", talker.getChildrenAges())
 			.add("ch_num", talker.getChildrenNum())
+			.add("ethnicities", talker.getEthnicities())
+			.add("religion", talker.getReligion())
+			.add("religion_serious", talker.getReligionSerious())
+			.add("languages", setToDB(talker.getLanguages()))
+			
 			.add("invites", talker.getInvitations())
 			.add("keywords", talker.getKeywords())
 			

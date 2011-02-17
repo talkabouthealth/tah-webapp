@@ -1,0 +1,8 @@
+#{ifnot session.username}
+	<div class="topipsts">
+		<br/>         
+		#{ share/fbwidget type: 'full' /}  	
+		<br/><br/>      
+		#{ share/twitwidget /}             		
+	</div>
+#{/ifnot}

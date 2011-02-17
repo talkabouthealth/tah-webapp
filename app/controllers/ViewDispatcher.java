@@ -14,6 +14,7 @@ import java.util.Set;
 
 import logic.FeedsLogic;
 import logic.TalkerLogic;
+import models.CommentBean;
 import models.DiseaseBean;
 import models.HealthItemBean;
 import models.PrivacySetting.PrivacyType;
@@ -54,13 +55,19 @@ public class ViewDispatcher extends Controller {
 			return;
 		}
 		
-		
 		//next - question or conversation
 		ConversationBean convo = ConversationDAO.getByURL(name);
 		if (convo != null) {
 			if (!convo.getMainURL().equals(name)) {
 				//we come here by old url - redirect to main
 				redirect("/"+convo.getMainURL());
+			}
+			if (convo.getMergedWith() != null) {
+				ConversationBean mainConvo = ConversationDAO.getById(convo.getMergedWith());
+				redirect("/"+mainConvo.getMainURL(), true);
+			}
+			if (convo.isDeleted()) {
+				notFound();
 			}
 			
 			showConvo(convo);
@@ -180,6 +187,8 @@ public class ViewDispatcher extends Controller {
 		convo.setComments(CommentsDAO.loadConvoAnswersTree(convo.getId()));
 		boolean userHasAnswer = convo.hasUserAnswer(talker);
 		
+		convo.setReplies(CommentsDAO.loadConvoReplies(convo.getId()));
+		
 		List<ConversationBean> relatedConvos = null;
 		try {
 			relatedConvos = SearchUtil.getRelatedConvos(convo);
@@ -187,8 +196,8 @@ public class ViewDispatcher extends Controller {
 			e.printStackTrace();
 		}
 		
-		String currentURL = "http://"+request.host+request.path;
-		render("Conversations/viewConvo.html", talker, convo, latestActivityTime, relatedConvos, userHasAnswer, currentURL);
+		render("Conversations/viewConvo.html", talker, convo, latestActivityTime, 
+				relatedConvos, userHasAnswer);
     }
 	
 	private static void showTopic(TopicBean topic) {
@@ -217,8 +226,7 @@ public class ViewDispatcher extends Controller {
 		List<ConversationBean> trendingConvos = new ArrayList<ConversationBean>();
 		
 		//for FB like button
-		String currentURL = "http://"+request.host+request.path;
-		render("Topics/viewTopic.html", talker, topic, activities, popularConvos, trendingConvos, currentURL);
+		render("Topics/viewTopic.html", talker, topic, activities, popularConvos, trendingConvos);
 	}
 
 }

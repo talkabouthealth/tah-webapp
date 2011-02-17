@@ -1,7 +1,10 @@
+#{set pageType = 'Conversation' /}
 #{set pageTitle = convo.topic /}
-#{set pageDescription = (convo.details?.length() > 0 ? convo.details : convo.topic) /}
+#{set pageDescription = convo.pageDescription /}
+#{set pageKeywords = convo.pageKeywords /}
 
 #{extends 'main.html' /}
+
 	<style>
 		body {
 			background:url(/public/images/inner_bgmt.gif) repeat-x top;
@@ -15,12 +18,18 @@
 		#topicsList, #topicsEditList { float: left }
 		#topicsList .deleteTopicLink { display: none; }
 		
-		/* Convo title */
+		/* Convo title and description */
 		h1 {
 			color:#000000;
 			font-family:arial;
 			font-size:20px;
 			text-decoration:none;
+		}
+		h2 {
+			color:#4B4B4B;
+			font-family:Arial;
+			font-size:14px;
+			font-weight: normal;
 		}
 		
 		/* for popups */
@@ -31,7 +40,7 @@
 	<script type="text/javascript">
 		var tid = '${convo.tid}';
 
-		var currentURL = '${currentURL}';
+		var currentURL = "http://"+"${request.host}"+"${request.path}";;
 		#{if talker}
 			var hasTwitter = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) != null };
 			var hasFB = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.FACEBOOK) != null };		
@@ -129,12 +138,38 @@
    				return false;
    			});
 
+   			$("#mergeConvosBtn").click(function() {
+   	   			if (selectedConvoURL) {
+   	   				var confirmMerge = confirm("Are you sure you want to merge the following question: "+selectedConvoURL);
+		   	   		if (confirmMerge) {
+			   	   		if (closeTimeout) {
+							window.clearTimeout(closeTimeout);
+						}
+						$("#savedHelpText").html("Merging...");
+						$("#savedHelpError").html("");
+						$("#savedHelp").fadeIn(300);
+					
+		   	   	  		$.post("@{Conversations.mergeConvos()}", 
+		    				{ convoId : '${convo.id}', convoToMergeURL : selectedConvoURL},
+		    				function(html) {
+		    					window.location.reload();
+		    				}
+		    			);
+		   	   		}
+   	   			}
+   	   			else {
+   	   	   			alert("Please select correct conversation");
+   	   			}
+				return false;
+			});
+
    			$('.inline-edit').inlineEdit(
 		  		{ hover: '', saveFunction: saveData, updateFunction: updateData}
 		  	);
 
    			makeTopicsAutocomplete("#topicInput");
    			makeAutocomplete("#relatedConvosInput", "convoedit");
+   			makeAutocomplete("#convoToMerge", "convoedit");
 		});
 
 		function saveData(dataType, newValue) {
@@ -218,7 +253,7 @@
    		}
 
    		function deleteAnswer(answerId) {
-   	   		var confirmDel = confirm("Are you sure want to delete this answer?");
+   	   		var confirmDel = confirm("Are you sure want to delete this answer/reply?");
    	   		if (confirmDel) {
    	   	   		$("#comment"+answerId).remove();
 
@@ -257,6 +292,27 @@
    	   		}
    	   		
    	   		return false;
+   		}
+
+   		//------------ Convo replies ---------------
+   		function saveConvoReply() {
+   	   		var replyText = $("#convoReplyText").val();
+   	   		$("#convoReplyText").val("");
+   			$("#saveConvoReplyImage").show();
+   			replyText = linkify(replyText);
+
+   			$.post("@{Conversations.saveConvoReply()}", 
+  				{ convoId: '${convo.id}', text: replyText},
+  				function(html) {
+  					$("#convoReplyForm").before($(html));
+  					$("#saveConvoReplyImage").hide();
+
+  					$('.inline-edit').inlineEdit(
+				  		{ hover: '', saveFunction: saveData, updateFunction: updateData}
+				  	);
+  				}
+  			);
+  			return false;
    		}
 
    		//used by admin
@@ -354,7 +410,7 @@
 									<div class='inline-edit' id="detailsEdit">
 										<div class="suggestxt inline_display">
 											<div class="inline_full" style="display: ${convo.details ? 'block' : 'none'}">
-												<p style="display: inline; padding-top:10px;" class="inline_view">${convo.details.nl2br()}</p>
+												<h2 class="inline_view" style="display: inline;">${convo.details?.nl2br()}</h2>
 												#{if talker }
 													<span class="editit2" style="float: none;">
 														<a href="#" class="inline_editlink">Edit</a>
@@ -432,7 +488,7 @@
 						                   	<input type="submit" value=" " id="addTopicBtn" 
 						                   		class="addcomsubmit inline_add" style="float:left; width:80;"  />
 									        <div class="canclebtnz" style="float:left; width:auto;">
-									          	<a class="cancel" href="#">Cancel</a>
+									          	<a class="cancel" href="#">Done</a>
 									        </div> 
 									    </div>
 									</div>
@@ -441,13 +497,63 @@
                       			#{if talker }
 									<div class="tagtxts">
 				                    	<a href="#" class="restartConvoLink">Re-start chat</a> |  
-				                    	<!-- <a href="#">Start Follow up conversation</a>  |  -->  
-				                    	<a href="#" class="flagConvoLink">Flag As Inappropriate</a> 
+				                    	
+				                    	<a href="#" onclick="$('#convoreplies').toggle(); return false;"
+		                        			#{if convo.replies.size() == 0}
+		                        				>Add Reply</a>
+		                        			#{/if}
+			                        		#{elseif convo.replies.size() == 1}
+			                        			>1 Reply</a>
+			                        		#{/elseif}
+			                        		#{else}
+			                        			>${convo.replies.size()} Replies</a>
+			                        		#{/else}		                        		
+		                        		
+				                    	 | <a href="#" class="flagConvoLink">Flag As Inappropriate</a> 
 				                    	#{if session.username?.equals("admin") || convo.talker.userName.equals(session.username)}
 				                        	  |  <a href="#" onclick="return deleteConvo();">Delete</a> 
 				                        #{/if}
 				                    </div>
 								#{/if}
+								#{else}
+									<div class="tagtxts">
+				                    	<a href="#" onclick="$('#convoreplies').toggle(); return false;"
+		                        			#{if convo.replies.size() == 0}
+		                        				></a>
+		                        			#{/if}
+			                        		#{elseif convo.replies.size() == 1}
+			                        			>1 Reply</a>
+			                        		#{/elseif}
+			                        		#{else}
+			                        			>${convo.replies.size()} Replies</a>
+			                        		#{/else}		                        		
+				                    </div>
+								#{/else}
+								
+								<div id="convoreplies" class="replysub" style="display: none;">
+									#{list items: convo.replies, as: 'convoReply'}
+										#{convo/convoReply reply: convoReply, talker: talker /}
+									#{/list}
+									
+									#{if talker}
+										<div id="convoReplyForm" style="clear:both">
+											<div id="saveConvoReplyImage" class="ajaxLoading" ></div>
+						                    <div class="repcommbox22">
+							                    <textarea id="convoReplyText" class="repcominput" ></textarea>
+							                    <div class="repcommstextbox">
+							                    	<input type="submit" class="repcomsubmits" 
+							                    		onclick="return saveConvoReply();"
+							                    		value=" " />
+							                     	<span class="canclelz">
+							                     		<a href="#" onclick="$('#convoreplies').hide(); return false;">Cancel</a>
+							                     	</span>
+							                    </div>
+							                    <div class="cb"></div>
+						                    </div>
+					                    </div><!--Blankdivsub-->
+									#{/if}
+								</div>
+								
 								<div class="cb"></div>
 							</div> <!--topic-->
 							
@@ -629,6 +735,21 @@
 								#{/if}
 							    <div class="cb"></div>
 							</div>
+							
+							
+							#{if talker?.isAdmin() }
+								<div class="topic">
+			                      <div class="topich1">Merge conversation</div>
+			                      <div class="mtinputbox" style="padding-top: 0px;">
+			                        <input id="convoToMerge" type="text" onfocus="selectedConvoURL = '';"
+			                        	class="mtinput" style="width: 300px; margin-right: 10px;"/>
+			                        <input id="mergeConvosBtn" type="submit" value="" src="/public/images/mergebtn.jpg" class="mergebtn"/>
+			                        <div class="cb"></div>
+			                      </div>
+			                      <!--mtinputbox-->
+			                      <div class="cb"></div>
+			                    </div>
+							#{/if}
 
 							#{ notLoggedNotice /}
 							<span style="color: red; font-weight: bold;">
@@ -744,6 +865,7 @@
 						
 					#{set currentPage = 'conversationSummary' /}
 					#{include 'tahShare.html' /}
+					#{include 'shareWidgets.html' /}
 				               
                 	<div class="cb"></div>
 				</div>
