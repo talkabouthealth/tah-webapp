@@ -92,7 +92,6 @@ public class Profile extends Controller {
 	public static void save(@Valid TalkerBean talker) {
 		TalkerBean oldTalker = CommonUtil.loadCachedTalker(session);
 		
-		//FIXME: fix this
 //		System.out.println("------");
 //		System.out.println(talker.getLanguages());
 //		System.out.println("xxxxxxx");

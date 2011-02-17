@@ -49,8 +49,8 @@ public class OAuth extends Controller {
 			}
 			
 			String redirectURL = oauthProvider.handleCallback(session, params.allSimple(), request.secure);
-			if (redirectURL != null && redirectURL.contains("tosConfirm")) {
-				Application.tosConfirm();
+			if (redirectURL != null && redirectURL.contains("tosAccept")) {
+				Application.tosAccept();
 			}
 			else {
 				Application.redirectPage(redirectURL);

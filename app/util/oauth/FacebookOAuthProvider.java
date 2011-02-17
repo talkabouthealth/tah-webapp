@@ -198,7 +198,7 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			session.put("userEmail", userEmail);
 			session.put("accountId", accountId);
 			
-		    return "/application/tosConfirm";
+		    return "/application/tosAccept";
 		}
 	}
 

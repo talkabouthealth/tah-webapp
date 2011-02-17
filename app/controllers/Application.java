@@ -306,7 +306,7 @@ public class Application extends Controller {
 		render(url);
 	}
     
-	public static void tosConfirm() {
+	public static void tosAccept() {
 		render();
 	}
 	

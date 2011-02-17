@@ -212,7 +212,7 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			session.put("accountId", accountId);
 			
 			//redirect to TOS and PP confirmation
-		    return "/application/tosConfirm";
+		    return "/application/tosAccept";
 		}
 	}
 
