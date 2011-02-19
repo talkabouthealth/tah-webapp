@@ -411,7 +411,7 @@
 								<li>
 									<textarea class="textarea3" rows="5" cols="45" style="padding: 5px; border: 1px solid #999999;"
 										onclick="if (this.value == 'Other (please separate by commas)') this.value='';" 
-										id="otherCTypes" name="otherCTypes">${talker.getOtherCTypes()}</textarea>
+										id="otherCTypes" name="otherCTypes">${talker.otherCtype?.toCommaString('Other')}</textarea>
 								</li>	
 							</ul>
 						</div>

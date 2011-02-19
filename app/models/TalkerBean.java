@@ -56,7 +56,6 @@ public class TalkerBean implements Serializable {
 		"New born", "1-2 years old", "2-6 years old", 
 		"6-12 years old", "12-18 years old", "Over 18 years old"
 	};
-	//TODO: better to store here or in editfields template?
 	public static final String[] ETHNICITY_ARRAY = new String[] {
 		"Asian", "Middle Eastern", "Black", "Native American",
 		"Indian", "Pacific Islander", "Hispanic / Latin", "White",
@@ -176,8 +175,12 @@ public class TalkerBean implements Serializable {
 	private Set<String> hiddenHelps = new HashSet<String>();
 	
 	//notifications settings
+	//what conversations interesting?
 	private String[] ctype;
+	private List<String> otherCtype;
+	//how often?
 	private int nfreq;
+	//when?
 	private int ntime;
 	
 	private List<ThankYouBean> thankYouList;
@@ -213,7 +216,6 @@ public class TalkerBean implements Serializable {
 		this.userName = userName;
 	}
 
-	//TODO: verify equals & hashCode ? move to abstract DBModel class?
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof TalkerBean)) {
@@ -276,6 +278,7 @@ public class TalkerBean implements Serializable {
 		if (ctype != null) {
 			setCtype(ctype.toArray(new String[]{}));
 		}
+		setOtherCtype(getStringList(talkerDBObject, "ctype_other"));
 		
 		setNewsletter(getBoolean(talkerDBObject, "newsletter"));
 		setGender((String)talkerDBObject.get("gender"));
@@ -636,28 +639,6 @@ public class TalkerBean implements Serializable {
 		return levelOfRecognition;
 	}
 	
-	//Returns other(non-standard) ctypes as comma-separated list
-	public String getOtherCTypes() {
-		final String defaultMessage = "Other (please separate by commas)";
-		if (ctype == null) {
-			return defaultMessage;
-		}
-		
-		//get only non-standard (other) ctypes
-		List<String> cTypesList = new ArrayList<String>(Arrays.asList(ctype));
-		cTypesList.removeAll(Arrays.asList(CONVERSATIONS_TYPES_ARRAY));
-		
-		if (cTypesList.size() == 0) {
-			return defaultMessage;
-		}
-		else {
-			//format [entry1, entry2]
-			String cTypesListString = cTypesList.toString();
-			return cTypesListString.substring(1, cTypesListString.length()-1);
-		}
-	}
-	
-	
 	// ---- Getters & Setters -------
 	public String getUserName() { return userName; }
 	public void setUserName(String userName) { this.userName = userName; }
@@ -901,5 +882,11 @@ public class TalkerBean implements Serializable {
 	}
 	public void setLanguagesList(List<LanguageBean> languagesList) {
 		this.languagesList = languagesList;
+	}
+	public List<String> getOtherCtype() {
+		return otherCtype;
+	}
+	public void setOtherCtype(List<String> otherCtype) {
+		this.otherCtype = otherCtype;
 	}
 }	

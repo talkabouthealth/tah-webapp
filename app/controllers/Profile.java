@@ -338,7 +338,6 @@ public class Profile extends Controller {
 		render(talker);
 	}
 	
-	//TODO: https: preferencesSave vs savePreferences ?
 	public static void preferencesSave() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
@@ -383,27 +382,7 @@ public class Profile extends Controller {
 		sessionTalker.setNfreq(talker.getNfreq());
 		sessionTalker.setNtime(talker.getNtime());
 		sessionTalker.setCtype(talker.getCtype());
-		
-		//TODO: update other handling?
-		//parse other convo types field
-		otherCTypes = otherCTypes.trim();
-		if (!otherCTypes.equals("Other (please separate by commas)")) {
-			String[] otherCTypesArray = otherCTypes.split(",");
-			//validate and add other ctypes
-			List<String> cTypeList = new ArrayList<String>();
-			for (String cType : otherCTypesArray) {
-				cType = cType.trim();
-				if (cType.length() != 0) {
-					cTypeList.add(cType);
-				}
-			}
-			
-			//add standard ctypes to the list
-			if (talker.getCtype() != null) {
-				cTypeList.addAll(Arrays.asList(talker.getCtype()));
-			}
-			sessionTalker.setCtype(cTypeList.toArray(new String[]{}));
-		}
+		sessionTalker.setOtherCtype(CommonUtil.parseCommaSerapatedList(otherCTypes, "Other (please separate by commas)"));
 		
 		TalkerDAO.updateTalker(sessionTalker);
 		renderText("ok");

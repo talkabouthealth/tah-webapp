@@ -47,7 +47,7 @@ public class ThoughtsFromServicesJob extends Job {
 				else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
 					postsList = FacebookUtil.importPosts(serviceAccount, serviceAccount.getLastPostId());
 				}
-				System.out.println(">>>"+postsList.size());
+//				System.out.println(">>>"+postsList.size());
 		    	if (postsList.size() > 0) {
 		    		Collections.sort(postsList);
 			    	for (ServicePost post : postsList) {

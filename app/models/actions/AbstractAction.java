@@ -55,6 +55,9 @@ public abstract class AbstractAction implements Action {
 	
 	@Override
 	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
 		if (!(obj instanceof AbstractAction)) {
 			return false;
 		}

@@ -477,7 +477,7 @@ public class ConversationDAO {
 			return convosDBSet;
 		}
 		
-		//TODO: restructure topics to make it more effective?
+		//TODO: later - restructure topics to make it more effective?
 		//http://www.mongodb.org/display/DOCS/Trees+in+MongoDB#TreesinMongoDB-ArrayofAncestors
 		List<DBRef> allTopics = new ArrayList<DBRef>();
 		for (TopicBean topic : topics) {

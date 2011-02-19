@@ -21,7 +21,7 @@ import util.TwitterUtil;
  * Checks Twitter every minute for possible convo creations (tweets with 'talkabouthealth' and '?')
  *
  */
-@Every("1min")
+@Every("2min")
 public class ConvoFromTwitterJob extends Job {
 	
 	@Override

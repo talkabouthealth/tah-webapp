@@ -108,24 +108,6 @@ public class CommentBean extends MessageBean {
 		super(commentId);
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof CommentBean)) {
-			return false;
-		}
-		
-		CommentBean other = (CommentBean)obj;
-		return id.equals(other.id);
-	}
-	
-	@Override
-	public int hashCode() {
-		if (id == null) {
-			return 47;
-		}
-		return id.hashCode();
-	}
-	
 	public void parseFromDB(DBObject commentDBObject) {
 		if (commentDBObject == null) {
 			return;

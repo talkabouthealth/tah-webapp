@@ -69,19 +69,10 @@ public class ApplicationUpdatesJob extends Job {
 		/*
 		 *  Update settings for old users.
 		 *  
-		 *  1. BitLy links!!
 		 */
 		
-		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
-//			Set<String> hiddenHelps = talker.getHiddenHelps();
-//			hiddenHelps.add("updateUsername");
-//			hiddenHelps.add("updatePassword");
-//			hiddenHelps.add("updateConnection");
-//			hiddenHelps.add("updateTwitterSettings");
-//			hiddenHelps.add("updateFacebookSettings");
-//			
-//			TalkerDAO.updateTalker(talker);
-		}
+//		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
+//		}
 		
 		//Fields data for Edit Profile
 		FieldsDataImporter.importData("fields.dat");
@@ -135,7 +126,7 @@ public class ApplicationUpdatesJob extends Job {
 //			TopicDAO.updateTopic(topic);
 //		}
 		
-		createBitlyLinks();
+//		createBitlyLinks();
     }
 
 	/**

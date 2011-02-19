@@ -101,11 +101,9 @@ public class ServiceAccountBean implements DBModel {
 		}
 		
 		ServiceAccountBean other = (ServiceAccountBean)obj;
-		
 		if (userName == null) {
 			return other.userName == null && type == other.type;
 		}
-		
 		return userName.equals(other.userName) && type == other.type;
 	}
 	

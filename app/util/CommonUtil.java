@@ -66,6 +66,9 @@ import dao.TalkerDAO;
  */
 public class CommonUtil {
 	
+	//pattern for locating links in the text
+	public static final String WEB_URL_PATTERN = "((https?|ftp)://[a-zA-Z0-9+\\-&@#/%?=~_|!:,.;]*[a-zA-Z0-9+&@#/%=~_|])";
+	
 	private static final MessageDigest MD5_MESSAGE_DIGEST;
 	static {
 		try {
@@ -360,11 +363,12 @@ public class CommonUtil {
 		return imUsername;
 	}
 	
-	
-	
-	//TODO: make simple regex
-    public static final String WEB_URL_PATTERN = "((https?|ftp)://[a-zA-Z0-9+\\-&@#/%?=~_|!:,.;]*[a-zA-Z0-9+&@#/%=~_|])";
-
+	/**
+	 * Replaces plain text links with html links.
+	 * 
+	 * @param text
+	 * @return
+	 */
 	public static String linkify(String text) {
 		if (text == null) {
 			return null;
@@ -374,7 +378,4 @@ public class CommonUtil {
 		return replacedText;
 	}
 	
-//	public static void main(String[] args) {
-//		System.out.println(linkify("cool http://hello-world.com/su-per"));
-//	}
 }

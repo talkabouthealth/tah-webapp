@@ -182,9 +182,7 @@ public class ConversationBean {
         			messages.add(message);
     			}
     			else {
-    				//TODO: remove bad conversation 
-    				//{ "_id" : ObjectId("4cd828541a98b19b4ec451e2"), "main_url" : "best-tips-on-handling-kids-with-adhd" }
-    				//Logger.error("NULL talker in conversation message: "+getId()+", index: "+message.getIndex());
+    				Logger.error("NULL talker in conversation message: "+getId()+", index: "+message.getIndex());
     			}
     		}
     	}
@@ -390,14 +388,20 @@ public class ConversationBean {
 		return pageKeywords;
 	}
 	
-	//TalkAboutHealth Q&A: <question>... - http://bit.ly/gyiUhy
+	/**
+	 * Return Twitter share text for not-loggedin users.
+	 * Ex: TalkAboutHealth Q&A: <question> - 
+	 */
 	public String getTwitterShareText() {
 		String sampleTwitterURL = "http://t.co/3tkmYZN";
 		String shareText = TwitterUtil.prepareTwit("TalkAboutHealth Q&A: <PARAM> -"+sampleTwitterURL, getTopic());
+		//remove Twitter url, it will be added by Twitter
 		return shareText.substring(0, shareText.length()-sampleTwitterURL.length());
 	}
-	
-	//TalkAboutHealth Q&A: <question>... - http://talkabouthealth.com/question_title
+	/**
+	 * Return Facebook share text for not-loggedin users.
+	 * Ex: TalkAboutHealth Q&A: <question> - http://talkabouthealth.com/question_title 
+	 */
 	public String getFacebookShareText() {
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", getMainURL());
 		String shareText = "TalkAboutHealth Q&A: "+getTopic()+" - "+convoURL;

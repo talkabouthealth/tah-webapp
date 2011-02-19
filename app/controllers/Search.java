@@ -19,6 +19,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
+import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
@@ -34,11 +35,6 @@ import util.CommonUtil;
 import util.SearchUtil;
 
 public class Search extends Controller {
-	
-	//TODO: remove this?
-	public static void search() throws Exception {
-		render();
-	}
 	
 	/**
 	 * Back-end for header autocomplete
@@ -101,10 +97,7 @@ public class Search extends Controller {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
 		
 		Analyzer analyzer = new StandardAnalyzer();
-		QueryParser parser = new MultiFieldQueryParser(new String[] {"uname", "title"}, analyzer);
-		parser.setAllowLeadingWildcard(true);
-		//search term everywhere
-		Query searchQuery = parser.parse("*"+term+"*");
+		Query searchQuery = SearchUtil.prepareSearchQuery(term, new String[] {"uname", "title"}, analyzer);
 		Hits hits = is.search(searchQuery);
 		
 		List<Map<String, String>> results = new ArrayList<Map<String, String>>();
@@ -162,10 +155,7 @@ public class Search extends Controller {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
 		
 		Analyzer analyzer = new StandardAnalyzer();
-		QueryParser parser = new MultiFieldQueryParser(new String[] {"title"}, analyzer);
-		parser.setAllowLeadingWildcard(true);
-		//search term everywhere
-		Query searchQuery = parser.parse("*"+query+"*");
+		Query searchQuery = SearchUtil.prepareSearchQuery(query, new String[] {"title"}, analyzer);
 		Hits hits = is.search(searchQuery);
 		
 		List<TopicBean> results = new ArrayList<TopicBean>();

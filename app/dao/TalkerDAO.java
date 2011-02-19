@@ -65,6 +65,7 @@ public class TalkerDAO {
 				.add("nfreq", talker.getNfreq())
 				.add("ntime", talker.getNtime())
 				.add("ctype", talker.getCtype())
+				.add("ctype_other", talker.getOtherCtype())
 				.add("im_notify", talker.isImNotify())
 				.add("service_accounts", setToDB(talker.getServiceAccounts()))
 				
@@ -120,6 +121,7 @@ public class TalkerDAO {
 			.add("nfreq", talker.getNfreq())
 			.add("ntime", talker.getNtime())
 			.add("ctype", talker.getCtype())
+			.add("ctype_other", talker.getOtherCtype())
 			.add("firstname", talker.getFirstName())
 			.add("lastname", talker.getLastName())
 			.add("zip", talker.getZip())

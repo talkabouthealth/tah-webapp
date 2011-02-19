@@ -65,7 +65,6 @@ public class Actions extends Controller {
 		ActionDAO.saveAction(new GiveThanksAction(fromTalker, toTalker));
 		
 		//email notification
-		//TODO: separate email notifications?
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("other_talker", fromTalker.getUserName());
 		vars.put("thankyou_text", thankYouBean.getNote());

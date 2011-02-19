@@ -50,7 +50,9 @@ public class SearchUtil {
 	 */
 	public static List<TalkerBean> searchTalker(String query) throws CorruptIndexException, IOException, ParseException {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"talker");
-		Query searchQuery = prepareSearchQuery(is, new String[] {"uname", "bio"}, "*"+query+"*");
+		
+		Analyzer analyzer = new StandardAnalyzer();
+		Query searchQuery = prepareSearchQuery(query, new String[] {"uname", "bio"}, analyzer);
 		Hits hits = is.search(searchQuery);
 		
 		List<TalkerBean> results = new ArrayList<TalkerBean>();
@@ -82,9 +84,7 @@ public class SearchUtil {
 		
 		//prepare query to search
 		Analyzer analyzer = new StandardAnalyzer();
-		QueryParser parser = new MultiFieldQueryParser(new String[] {"title", "answers"}, analyzer);
-		parser.setAllowLeadingWildcard(true);
-		Query searchQuery = parser.parse("*"+query+"*");
+		Query searchQuery = prepareSearchQuery(query, new String[] {"title", "answers"}, analyzer);
 		Hits hits = is.search(searchQuery);
 		
 		List<ConversationBean> results = new ArrayList<ConversationBean>();
@@ -125,7 +125,6 @@ public class SearchUtil {
 
 	
 	//TODO: later - update Lucene and queries to most recent version
-	//TODO: check logs for search errors
 	/**
 	 * Returns 3 conversations related to given.
 	 */
@@ -143,7 +142,8 @@ public class SearchUtil {
 		String queryText = searchedConvo.getTopic();
 		queryText = queryText.replaceAll("[\\W_]", " ");
 		
-		Query searchQuery = prepareSearchQuery(is, new String[] {"title"}, queryText);
+		Analyzer analyzer = new StandardAnalyzer();
+		Query searchQuery = prepareSearchQuery(queryText, new String[] {"title"}, analyzer);
 		Hits hits = is.search(searchQuery);
 
 		List<ConversationBean> results = new ArrayList<ConversationBean>();
@@ -166,13 +166,18 @@ public class SearchUtil {
 	}
 	
 	//TODO: later - recommended to use only one searcher? Open after reindex?
-	private static Query prepareSearchQuery(IndexSearcher is, String[] fields, String query) 
-			throws CorruptIndexException, IOException, ParseException {
-		Analyzer analyzer = new StandardAnalyzer();
+	public static Query prepareSearchQuery(String term, String[] fields, Analyzer analyzer)
+			throws ParseException {
 		QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
 		parser.setAllowLeadingWildcard(true);
-		Query searchQuery = parser.parse(query);
-		
+		String searchTerm = term;
+		if (term != null && term.length() > 0) {
+			//if term contains only one word (or part) - use wildcard search
+			if (term.split(" ").length == 1) {
+				searchTerm = "*"+term+"*";
+			}
+		}
+		Query searchQuery = parser.parse(searchTerm);
 		return searchQuery;
 	}
 	
