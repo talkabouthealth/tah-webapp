@@ -4,6 +4,7 @@
  * Corey Hart @ http://www.codenothing.com
  * 
  * Updated on Sep 16, 2010 by Kangaroo
+ * TODO: comment and explain this
  */ 
 (function( $, undefined ){
 
@@ -128,13 +129,24 @@
 			// Cancel Actions
 			$cancel.bind( 'click.inline-edit', function(){
 				$form.hide();
+				
+				//For edit lists (like related convos, topics) we check on 'Done' click
+				if ($form.find("a").size() === 1) {
+					$displayFull.hide();
+					$displayEmpty.show();
+				}
+				else {
+					$displayEmpty.hide();
+					$displayFull.show();
+				}
+				
 				$display.show();
 
 				// Remove hover action if stalled
 				if ( $display.hasClass( settings.hover ) ) {
 					$display.removeClass( settings.hover );
 				}
-
+				
 				return false;
 			});
 

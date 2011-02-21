@@ -81,6 +81,7 @@ public class ConversationBean {
 	private int numOfChatters;
 	
 	private Set<ConversationBean> relatedConvos;
+	private Set<ConversationBean> followupConvos;
 	//answers/replies
 	private List<CommentBean> comments;
 	private List<CommentBean> replies;
@@ -147,6 +148,7 @@ public class ConversationBean {
     	parseSumContributors((Collection<DBRef>)convoDBObject.get("sum_authors"));
 		
 		parseRelatedConvos((Collection<DBRef>)convoDBObject.get("related_convos"));
+		parseFollowupConvos((Collection<DBRef>)convoDBObject.get("followup_convos"));
     	parseChatMessages((Collection<DBObject>)convoDBObject.get("messages"));
     	setFollowers(ConversationDAO.getConversationFollowers(getId()));
 	}
@@ -190,6 +192,7 @@ public class ConversationBean {
     	setMessages(messages);
 	}
 	
+	//TODO: use DBModel for them?
 	private void parseSumContributors(Collection<DBRef> contributorsDBList) {
 		sumContributors = new HashSet<TalkerBean>();
 		if (contributorsDBList != null) {
@@ -228,6 +231,17 @@ public class ConversationBean {
 		}
 	}
 	
+	private void parseFollowupConvos(Collection<DBRef> followupDBList) {
+		followupConvos = new HashSet<ConversationBean>();
+		if (followupDBList != null) {
+			for (DBRef convoDBRef : followupDBList) {
+				ConversationBean convo = new ConversationBean();
+				convo.parseBasicFromDB(convoDBRef.fetch());
+				followupConvos.add(convo);
+			}
+		}
+	}
+	
 	public List<DBRef> topicsToDB() {
 		List<DBRef> topicsDBList = new ArrayList<DBRef>();
 		for (TopicBean topic : getTopics()) {
@@ -243,10 +257,22 @@ public class ConversationBean {
 			return relatedDBList;
 		}
 		for (ConversationBean convo : getRelatedConvos()) {
-			DBRef topicRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getId());
-			relatedDBList.add(topicRef);
+			DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getId());
+			relatedDBList.add(convoRef);
 		}
 		return relatedDBList;
+	}
+	
+	public Set<DBRef> followupConvosToDB() {
+		Set<DBRef> followupDBList = new HashSet<DBRef>();
+		if (getFollowupConvos() == null) {
+			return followupDBList;
+		}
+		for (ConversationBean convo : getFollowupConvos()) {
+			DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getId());
+			followupDBList.add(convoRef);
+		}
+		return followupDBList;
 	}
 	
 	/**
@@ -506,5 +532,11 @@ public class ConversationBean {
 	}
 	public void setMergedWith(String mergedWith) {
 		this.mergedWith = mergedWith;
+	}
+	public Set<ConversationBean> getFollowupConvos() {
+		return followupConvos;
+	}
+	public void setFollowupConvos(Set<ConversationBean> followupConvos) {
+		this.followupConvos = followupConvos;
 	}
 }

@@ -1,5 +1,8 @@
 package logic;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -12,6 +15,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.imageio.ImageIO;
 
 import play.Logger;
 import play.mvc.Scope.Session;
@@ -28,6 +33,7 @@ import dao.TopicDAO;
 import util.CommonUtil;
 import util.EmailUtil;
 import util.FacebookUtil;
+import util.ImageUtil;
 import util.NotificationUtils;
 import util.TwitterUtil;
 import util.EmailUtil.EmailTemplate;
@@ -479,7 +485,7 @@ public class TalkerLogic {
 		}
 		
 		if (loadedTopics.isEmpty()) {
-			//display most popular Topics based on number of questions
+			//display most popular Topics based on views
 			loadedTopics = new ArrayList<TopicBean>(TopicDAO.loadAllTopics(true));
 		}
 		
@@ -763,6 +769,15 @@ public class TalkerLogic {
 		}
 		
 		TalkerDAO.save(talker);
+		
+		//if user signs up with Facebook, let's use the user's FB image on TAH
+		if (serviceType == ServiceType.FACEBOOK) {
+//			URL pictureURL = new URL("http://graph.facebook.com/"+accountId+"/picture");
+//			BufferedImage bsrc = ImageIO.read(pictureURL);
+//			ByteArrayOutputStream baos = ImageUtil.createThumbnail(bsrc);
+//        	TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
+		}
+		
 		onSignup(talker, session);
 	}
 }

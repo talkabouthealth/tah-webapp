@@ -66,7 +66,8 @@ public class Conversations extends Controller {
 	 * @param topics tags for this convo
 	 * @param fromPage page where request was made
 	 */
-	public static void create(String type, String title, String details, String topics, String fromPage) {
+	public static void create(String type, String title, String details, String topics, 
+			String fromPage, String parentConvoId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
     	//prepare params
@@ -83,10 +84,16 @@ public class Conversations extends Controller {
     		}
     	}
     	
+    	ConversationBean parentConvo = null;
+    	if (parentConvoId != null && parentConvoId.length() > 0) {
+    		parentConvo = ConversationDAO.getById(parentConvoId);
+    	}
+    	
     	//in this case we notify only after new question (for chats - after chat start)
     	boolean notifyTalkers = (convoType == ConvoType.QUESTION);
     	ConversationBean convo = 
-    		ConversationLogic.createConvo(convoType, title, talker, details, topicsSet, notifyTalkers);
+    		ConversationLogic.createConvo(convoType, title, talker, details, 
+    				topicsSet, notifyTalkers, parentConvo);
     	CommonUtil.updateTalker(talker, session);
     	
     	renderConvoData(fromPage, talker, convo);
@@ -316,6 +323,10 @@ public class Conversations extends Controller {
             	    	
             	    	TopicLogic.addToDefaultParent(topic);
         			}
+        			else {
+        				//change 'last_update' of the topic
+        				TopicDAO.updateTopic(topic);
+        			}
         	    	convo.getTopics().add(topic);
         	    	ConversationDAO.updateConvo(convo);
         	    	
@@ -345,12 +356,31 @@ public class Conversations extends Controller {
     				
         	    	renderText(
 		    			"<p class=\"rcpadtop\"><a href=\""+relatedConvo.getMainURL()+"\">"+relatedConvo.getTopic()+"</a>&nbsp;" +
-		    			"<a class=\"deleteConvoLink\" href=\"#\" rel=\""+relatedConvo.getId()+"\">X</a></p>");
+		    			"<a class=\"deleteConvoLink relatedConvos\" href=\"#\" rel=\""+relatedConvo.getId()+"\">X</a></p>");
     			}
     		}
     		else if (todo.equalsIgnoreCase("remove")) {
     			ConversationBean relatedConvo = new ConversationBean(value);
     			convo.getRelatedConvos().remove(relatedConvo);
+    	    	ConversationDAO.updateConvo(convo);
+    		}
+    	}
+    	else if (name.equalsIgnoreCase("followupConvos")) {
+    		String todo = params.get("todo");
+    		if (todo.equalsIgnoreCase("add")) {
+    			ConversationBean followupConvo = ConversationDAO.getByTitle(value);
+    			if (followupConvo != null) {
+    				convo.getFollowupConvos().add(followupConvo);
+    				ConversationDAO.updateConvo(convo);
+    				
+        	    	renderText(
+		    			"<p class=\"rcpadtop\"><a href=\""+followupConvo.getMainURL()+"\">"+followupConvo.getTopic()+"</a>&nbsp;" +
+		    			"<a class=\"deleteConvoLink\" href=\"#\" rel=\""+followupConvo.getId()+"\">X</a></p>");
+    			}
+    		}
+    		else if (todo.equalsIgnoreCase("remove")) {
+    			ConversationBean followupConvo = new ConversationBean(value);
+    			convo.getFollowupConvos().remove(followupConvo);
     	    	ConversationDAO.updateConvo(convo);
     		}
     	}

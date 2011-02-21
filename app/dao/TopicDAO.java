@@ -4,6 +4,8 @@ import static util.DBUtil.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -25,6 +27,8 @@ import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+
+import controllers.Conversations;
 
 public class TopicDAO {
 	
@@ -141,7 +145,7 @@ public class TopicDAO {
 	
 	
 	/**
-	 * Loads all topics
+	 * Loads all topics, sorted by views number
 	 * @param loadBasicInfo Determines how much information to load.
 	 * @return
 	 */
@@ -231,5 +235,35 @@ public class TopicDAO {
 			}
 		}
 		return recentTopics;
+	}
+	
+	/**
+	 * Loads the most popular 20 topics, based on number of questions.
+	 */
+	public static List<TopicBean> getPopularTopics() {
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
+		
+		DBObject query = new BasicDBObject("deleted", new BasicDBObject("$ne", true));
+		List<DBObject> topicsDBList = topicsColl.find(query).sort(new BasicDBObject("last_update", -1)).toArray();
+		
+		List<TopicBean> popularTopics = new ArrayList<TopicBean>();
+		for (DBObject topicDBObject : topicsDBList) {
+			TopicBean topic = new TopicBean();
+			topic.parseBasicFromDB(topicDBObject);
+			topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
+			popularTopics.add(topic);
+		}
+		
+		//sort by number of questions
+		Collections.sort(popularTopics, new Comparator<TopicBean>() {
+			@Override
+			public int compare(TopicBean o1, TopicBean o2) {
+				return o2.getConversations().size() - o1.getConversations().size();
+			}		
+		});
+		if (popularTopics.size() > 20) {
+			popularTopics = popularTopics.subList(0, 20);
+		}
+		return popularTopics;
 	}
 }

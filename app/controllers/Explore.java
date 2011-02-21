@@ -58,25 +58,26 @@ public class Explore extends Controller {
     	}
     	
     	//TODO: use cache for common data? 
+    	//TODO: or improve loading time?
     	//see: http://groups.google.com/group/play-framework/browse_thread/thread/b723f73ee52a04bd/8d084ac77c588b3a?lnk=gst&q=use+cache+in+template#8d084ac77c588b3a
-    	List<TopicBean> recentTopics = TopicDAO.getRecentTopics();
+    	List<TopicBean> popularTopics = TopicDAO.getPopularTopics();
     	
 		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions();
-		render(talker, openQuestions, recentTopics);
+		render(talker, openQuestions, popularTopics);
     }
     
     public static void liveTalks() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	List<TopicBean> recentTopics = null;
+    	List<TopicBean> popularTopics = null;
     	if (talker != null) {
     		TalkerLogic.preloadTalkerInfo(talker);
     	}
     	else {
-    		recentTopics = TopicDAO.getRecentTopics();
+    		popularTopics = TopicDAO.getPopularTopics();
     	}
     	
     	List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
-		render(talker, liveTalks, recentTopics);
+		render(talker, liveTalks, popularTopics);
     }
     
     public static void browseTopics() {
@@ -85,10 +86,10 @@ public class Explore extends Controller {
     		TalkerLogic.preloadTalkerInfo(talker);
     	}
     	
-    	List<TopicBean> recentTopics = TopicDAO.getRecentTopics();
+    	List<TopicBean> popularTopics = TopicDAO.getPopularTopics();
     	
     	Set<TopicBean> topicsTree = TopicLogic.getAllTopicsTree();
-    	render(topicsTree, talker, recentTopics);
+    	render(topicsTree, talker, popularTopics);
     }
     
     
@@ -176,9 +177,9 @@ public class Explore extends Controller {
 		boolean loggedIn = (talker != null);
 		Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, loggedIn);
 		
-		List<TopicBean> recentTopics = null;
+		List<TopicBean> popularTopics = null;
     	if (talker == null) {
-    		recentTopics = TopicDAO.getRecentTopics();
+    		popularTopics = TopicDAO.getPopularTopics();
     	}
 		
 		//"Popular Conversations" - ordered by page views
@@ -187,6 +188,6 @@ public class Explore extends Controller {
 		if (action == null) {
 			action = "feed";
 		}
-		render(action, communityFeed, popularConvos, recentTopics);
+		render(action, communityFeed, popularConvos, popularTopics);
 	}
 }

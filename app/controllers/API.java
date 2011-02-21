@@ -85,7 +85,7 @@ public class API extends Controller {
     		convoType = ConvoType.QUESTION;
     	}
     	ConversationBean convo = 
-    		ConversationLogic.createConvo(convoType, title, talker, null, null, true);
+    		ConversationLogic.createConvo(convoType, title, talker, null, null, true, null);
 		renderText(convo.getTid());
     }
 	

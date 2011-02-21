@@ -9,12 +9,12 @@
 		<div class="joinztextlink">
 			<a href="#" onclick="return openChat('${_convo.tid}');">${_convo.numOfChatters} user(s) chatting</a> | 
 			
-			#{if _convo.comments.size() == 0}
+			#{if _convo.comments?.size() == 0}
 				<a href="@{ViewDispatcher.view(_convo.mainURL)}#answers">Answer</a> | 
 			#{/if}
 			#{else}
-				<a href="@{ViewDispatcher.view(_convo.mainURL)}#answers">${_convo.comments.size()} 
-					Answer${_convo.comments.pluralize()}</a> | 
+				<a href="@{ViewDispatcher.view(_convo.mainURL)}#answers">${_convo.comments?.size()} 
+					Answer${_convo.comments?.pluralize()}</a> | 
 			#{/else}
 				
 			#{if session.username}

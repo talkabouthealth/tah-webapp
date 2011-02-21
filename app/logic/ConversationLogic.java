@@ -53,10 +53,12 @@ public class ConversationLogic {
 	 * @param details
 	 * @param topicsSet topics/tags
 	 * @param notifyTalkers If true - try to send all notifications.
+	 * @param parentConvo Parent convo if new question is follow-up
 	 * @return
 	 */
 	public static ConversationBean createConvo(ConvoType type, String title, 
-			TalkerBean talker, String details, Set<TopicBean> topicsSet, boolean notifyTalkers) {
+			TalkerBean talker, String details, Set<TopicBean> topicsSet, 
+			boolean notifyTalkers, ConversationBean parentConvo) {
 		
 		if (topicsSet == null) {
 			topicsSet = new HashSet<TopicBean>();
@@ -139,6 +141,12 @@ public class ConversationLogic {
 		//automatically follow started topic
 		talker.getFollowingConvosList().add(convo.getId());
 		TalkerDAO.updateTalker(talker);
+		
+		//update parent topic - add new follow-up question
+		if (parentConvo != null) {
+			parentConvo.getFollowupConvos().add(convo);
+			ConversationDAO.updateConvo(parentConvo);
+		}
 
 		return convo;
 	}

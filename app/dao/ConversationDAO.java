@@ -145,6 +145,7 @@ public class ConversationDAO {
 			.add("details", convo.getDetails())
 			.add("topics", convo.topicsToDB())
 			.add("related_convos", convo.relatedConvosToDB())
+			.add("followup_convos", convo.followupConvosToDB())
 			.add("summary", convo.getSummary())
 			.add("sum_authors", sumContributorsDBList)
 			

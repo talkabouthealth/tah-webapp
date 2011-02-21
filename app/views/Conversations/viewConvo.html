@@ -12,7 +12,7 @@
 		}
 		#innermiddlearea { padding-top: 10px }
 		
-		#relatedConvosList .deleteConvoLink { display: none; }
+		.inline_full .deleteConvoLink { display: none; }
 		.topicTitle { margin-left: 10px; }
 		.deleteTopicLink { margin-right: 10px }
 		#topicsList, #topicsEditList { float: left }
@@ -39,6 +39,7 @@
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
 		var tid = "${convo.tid}";
+		var currentConvoId = "${convo.id}";
 		
 		$(document).ready(function() {
 			var share = "${params.share}";
@@ -119,13 +120,26 @@
    			});
 
    			$(".deleteConvoLink").live("click", function() {
-   				var relatedConvoId = $(this).attr("rel");
+   				var deleteConvoId = $(this).attr("rel");
    	   			$(this).parent().remove();
 
+   	   			var name = "";
+   	   			if ($(this).hasClass("relatedConvos")) {
+   	   				name = "relatedConvos";
+   	   			}
+   	   			else {
+   	   	   			name = "followupConvos";
+   	   			}
+
    	   			$.post("@{Conversations.updateField()}", 
-   					{ convoId : '${convo.id}', name: 'relatedConvos', value: relatedConvoId, todo: 'remove'},
+   					{ convoId : '${convo.id}', name: name, value: deleteConvoId, todo: 'remove'},
    					function(html) {
-   	   					$("#relatedConvosList").html($("#relatedConvosEditList").html());
+   						if (name === "relatedConvos") {
+   							$("#relatedConvosList").html($("#relatedConvosEditList").html());
+   		   	   			}
+   		   	   			else {
+   		   	   				$("#followupConvosList").html($("#followupConvosEditList").html());
+   		   	   			}
    					}
    				);
    				
@@ -157,12 +171,17 @@
 				return false;
 			});
 
+   			$("#postFollowupLink").click(function() {
+				return showStartConvoDialog("question");
+			});
+
    			$('.inline-edit').inlineEdit(
 		  		{ hover: '', saveFunction: saveData, updateFunction: updateData}
 		  	);
 
    			makeTopicsAutocomplete("#topicInput");
    			makeAutocomplete("#relatedConvosInput", "convoedit");
+   			makeAutocomplete("#followupConvosInput", "convoedit");
    			makeAutocomplete("#convoToMerge", "convoedit");
 		});
 
@@ -203,6 +222,16 @@
    	   					$(html).appendTo($("#relatedConvosEditList"));
 
    	   					$("#relatedConvosList").html($("#relatedConvosEditList").html());
+   					}
+   				);
+			}
+			else if (dataType === 'followupConvosEdit') {
+				$.post("@{Conversations.updateField()}", 
+   					{ convoId : '${convo.id}', name: 'followupConvos', value: newValue, todo: 'add'},
+   					function(html) {
+   	   					$(html).appendTo($("#followupConvosEditList"));
+
+   	   					$("#followupConvosList").html($("#followupConvosEditList").html());
    					}
    				);
 			}
@@ -491,6 +520,7 @@
                       			#{if talker }
 									<div class="tagtxts">
 				                    	<a href="#" class="restartConvoLink">Re-start chat</a> |  
+				                    	<a href="#" id="postFollowupLink">Post follow-up question</a> |  
 				                    	
 				                    	<a href="#" onclick="$('#convoreplies').toggle(); return false;"
 		                        			#{if convo.replies.size() == 0}
@@ -791,72 +821,122 @@
 						</div>
 						<div class="cb"></div>
 					</div><!--topipsts-->
-						<div class="topipsts">
-							<div class="rconversation">
-								<div class='inline-edit' id="relatedConvosEdit">
-									<div class="inline_display">
-										<div class="inline_full" style="display: ${(convo.relatedConvos || relatedConvos) ? 'block' : 'none'}">
-											<div class="Staticsh1 style1 style2" style="float:left; padding-top:10px;">
-												Related Conversations</div>
-											#{if talker }
-												<div class="editdiv">
-													<div class="editit" style="padding-top:10px;">
-														<a href="#" class="inline_editlink">Edit</a>
-													</div>
-												</div>
-											#{/if}
-											<div id="relatedConvosList">
-												#{list items: convo.relatedConvos, as: 'relatedConvo'}
-													<p class="rcpadtop">
-														<a href="${relatedConvo.mainURL}">${relatedConvo.topic}</a>
-							                		</p>
-												#{/list}
+					
+					<div class="topipsts">
+						<div class='inline-edit' id="relatedConvosEdit" style="padding-bottom: 3px;">
+							<div class="inline_display">
+								<div class="Staticsh1" style="float:left; padding:10px 0 0 0;">Similar Conversations</div>
+								<div class="inline_full" style="display: ${(convo.relatedConvos || relatedConvos) ? 'block' : 'none'}">
+									#{if talker }
+										<div class="editdiv">
+											<div class="editit" style="padding-top:10px;">
+												<a href="#" class="inline_editlink">Edit</a>
 											</div>
-											#{list items: relatedConvos, as: 'relatedConvo'}
-												<p class="rcpadtop">
-													<a href="${relatedConvo.mainURL}">${relatedConvo.topic}</a>
-						                		</p>
-											#{/list}
 										</div>
-										<div class="inline_empty" style="display: ${!(convo.relatedConvos || relatedConvos) ? 'block' : 'none'}">
-											#{if talker }
-												<div class="targetenew">
-													<a class="inline_addlink" href="#">Add Related Conversations</a>
-												</div>
-											#{/if}
+									#{/if}
+									<div id="relatedConvosList">
+										#{list items: convo.relatedConvos, as: 'relatedConvo'}
+											<p class="rcpadtop">
+												<a href="${relatedConvo.mainURL}">${relatedConvo.topic}</a>
+					                		</p>
+										#{/list}
+									</div>
+									#{list items: relatedConvos, as: 'relatedConvo'}
+										<p class="rcpadtop">
+											<a href="${relatedConvo.mainURL}">${relatedConvo.topic}</a>
+				                		</p>
+									#{/list}
+								</div>
+								<div class="inline_empty" style="display: ${!(convo.relatedConvos || relatedConvos) ? 'block' : 'none'}">
+									#{if talker }
+										<div class="targetenew">
+											<a class="inline_addlink" href="#">Add a new similar question</a>
 										</div>
-						            </div>
-									<div class='inline_form'>
-										<div id="relatedConvosEditList">
-											#{list items: convo.relatedConvos, as: 'relatedConvo'}
-												<p class="rcpadtop">
-													<a href="${relatedConvo.mainURL}">${relatedConvo.topic}</a>&nbsp;
-													<a class="deleteConvoLink" href="#" rel="${relatedConvo.id}">X</a>
-						                		</p>
-											#{/list}
+									#{/if}
+								</div>
+				            </div>
+							<div class='inline_form'>
+								<div class="Staticsh1" style="float:left; padding:10px 0 0 0;">Similar Conversations</div>
+								<div style="float:left; font-size: 14px;">Add a similar question</div>
+								<div id="relatedConvosEditList">
+									#{list items: convo.relatedConvos, as: 'relatedConvo'}
+										<p class="rcpadtop">
+											<a href="${relatedConvo.mainURL}">${relatedConvo.topic}</a>&nbsp;
+											<a class="deleteConvoLink relatedConvos" href="#" rel="${relatedConvo.id}">X</a>
+				                		</p>
+									#{/list}
+								</div>
+								<div style="float: left; padding-top:10px;">
+							        <input type="text" id="relatedConvosInput" class="edititinputx inline_text" 
+							        	style="width:200px; height: 22px;" value="" />
+						        </div>
+								<div style="float:left; width: 205px; padding-top: 5px; text-align: right;">
+									<a href="#" class="cancel">Done</a>
+									<input type="submit" class="inline_add" 
+										value="Add" style="margin-left: 7px;" />
+								</div>
+							</div>
+						</div>
+						
+						<div class="topicborder"></div>
+						<div class="cb"></div>
+					</div><!--topipsts-->
+					
+					<div class="topipsts">
+						<div class="inline-edit" id="followupConvosEdit" style="padding-bottom: 3px;">
+							<div class="inline_display">
+								<div class="Staticsh1" style="float:left; padding:10px 0 0 0;">Follow-up Conversations</div>
+								<div class="inline_full" style="display: ${convo.followupConvos ? 'block' : 'none'}">
+									#{if talker }
+										<div class="editdiv">
+											<div class="editit" style="padding-top:10px;">
+												<a href="#" class="inline_editlink">Edit</a>
+											</div>
 										</div>
-										<div style="padding-top:10px;">
-									        <input type="text" id="relatedConvosInput" class="edititinputx inline_text" 
-									        	style="width:200px; height: 23px;" value="" />
-								        </div>
-										<div style="float:right; margin-right:30px;">
-											<input id="detailsBtn" type="submit" class="inline_add" 
-												value="Add" style="float: left;"/>
-											<input id="detailsBtn" type="submit" class="cancel" 
-												value="Done" style="float: left; margin-left: 10px;"/>
-										</div>
+									#{/if}
+									<div id="followupConvosList">
+										#{list items: convo.followupConvos, as: 'followupConvo'}
+											<p class="rcpadtop">
+												<a href="${followupConvo.mainURL}">${followupConvo.topic}</a>
+					                		</p>
+										#{/list}
 									</div>
 								</div>
-								<!-- 
-			              		<p><br />
-			                      <a href="#"><strong>See More Related Conversation</strong></a> </p>
-			                    -->
+								<div class="inline_empty" style="display: ${!convo.followupConvos ? 'block' : 'none'}">
+									#{if talker }
+										<div class="targetenew">
+											<a class="inline_addlink" href="#">Add a new follow up question</a>
+										</div>
+									#{/if}
+								</div>
+				            </div>
+							<div class='inline_form'>
+								<div class="Staticsh1" style="float:left; padding:10px 0 0 0;">Follow-up Conversations</div>
+								<div style="float:left; font-size: 14px;">Add a follow up question</div>
+								<div id="followupConvosEditList">
+									#{list items: convo.followupConvos, as: 'followupConvo'}
+										<p class="rcpadtop">
+											<a href="${followupConvo.mainURL}">${followupConvo.topic}</a>&nbsp;
+											<a class="deleteConvoLink" href="#" rel="${followupConvo.id}">X</a>
+				                		</p>
+									#{/list}
+								</div>
+								<div style="float: left; padding-top:10px;">
+							        <input type="text" id="followupConvosInput" class="edititinputx inline_text" 
+							        	style="width:200px; height: 22px;" value="" />
+						        </div>
+								<div style="float:left; width: 205px; padding-top: 5px; text-align: right;">
+									<a href="#" class="cancel">Done</a>
+									<input type="submit" class="inline_add" 
+										value="Add" style="margin-left: 7px;" />
+								</div>
 							</div>
-							
-							<div class="topicborder"></div>
-							<div class="cb"></div>
-						</div><!--topipsts-->
+						</div>
 						
+						<div class="topicborder"></div>
+						<div class="cb"></div>
+					</div><!--topipsts-->
+					
 					#{set currentPage = 'conversationSummary' /}
 					#{include 'tahShare.html' /}
 					#{include 'shareWidgets.html' /}
@@ -878,6 +958,8 @@
 	
 	#{ popups/flag /}
 	#{ popups/thankyou /}
+	
+	#{popups/startConvo page: "conversationSummary" /}
 	
 	#{if talker}
 		#{set twitterAccount = talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}

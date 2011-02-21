@@ -98,6 +98,12 @@ function saveConvo(page) {
 	}
 	//var topics = $("#newConvoTopics").val();
 	var topics = '';
+	
+	//if new question if follow-up - we save id of parent convo
+	var parentConvoId = "";
+	if (page === "conversationSummary") {
+		parentConvoId = currentConvoId;
+	}
 
 	if (title === "") {
 		alert("Please input headline.");
@@ -106,7 +112,7 @@ function saveConvo(page) {
 	
 	$("#convoCreateImage").show();
 	$.post("/conversations/create", 
-			{ type: type, title: title, details: details, topics: topics, fromPage: page},
+			{ type: type, title: title, details: details, topics: topics, fromPage: page, parentConvoId: parentConvoId},
 			function(data) {
 				$("#convoCreateImage").hide();
 				if (type === "CONVERSATION") {
