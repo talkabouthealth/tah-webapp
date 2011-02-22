@@ -17,6 +17,7 @@ import oauth.signpost.basic.DefaultOAuthConsumer;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.bson.types.ObjectId;
 
 import logic.TalkerLogic;
 import models.CommentBean;
@@ -29,6 +30,7 @@ import models.TalkerBean;
 import models.ConversationBean;
 import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean.EmailSetting;
+import models.ThankYouBean;
 import models.TopicBean;
 
 import dao.ApplicationDAO;
@@ -67,12 +69,23 @@ public class ApplicationUpdatesJob extends Job {
 	public void doJob() throws Exception {
 		
 		/*
-		 *  Update settings for old users.
+		 *  Generate IDs for ThankYous!
 		 *  
 		 */
-		
-//		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
-//		}
+		int updated = 0;
+		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
+			int index = 0;
+			for (ThankYouBean thankYouBean : talker.getThankYouList()) {
+				if (thankYouBean.getId() == null) {
+					thankYouBean.setTo(talker.getId());
+					thankYouBean.setId(new ObjectId().toString());
+					TalkerDAO.updateThankYou(thankYouBean, index);
+					updated++;
+				}
+				index++;
+			}
+		}
+		System.out.println("-----Finished! "+updated);
 		
 		//Fields data for Edit Profile
 		FieldsDataImporter.importData("fields.dat");

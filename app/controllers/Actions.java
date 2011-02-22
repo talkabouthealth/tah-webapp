@@ -71,12 +71,29 @@ public class Actions extends Controller {
 		NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_THANKYOU, 
 				toTalker, vars);
 		
-		//render html of new comment using tag - different for PublicProfile and ThankYous page
 		ThankYouBean _thankYou = thankYouBean;
-		if (tagFile == null) {
-			tagFile = "publicprofile/profileThankYou";
+		TalkerBean _currentTalker = fromTalker;
+		render("tags/publicprofile/thanksThankYou.html", _thankYou, _currentTalker);
+	}
+	
+	/**
+	 * Deletes thank you
+	 * 
+	 * @param talkerId Id of talker to whom this ThankYou is
+	 * @param thankYouId
+	 */
+	public static void deleteThankYou(String talkerId, String thankYouId) {
+		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+		TalkerBean talker = TalkerDAO.getById(talkerId);
+		ThankYouBean thankYou = talker.getThankYouById(thankYouId);
+		if ( !(currentTalker.isAdmin() || currentTalker.equals(thankYou.getFromTalker())) ) {
+			//only admin or thankyou creator can delete it
+			forbidden();
+			return;
 		}
-		render("tags/"+tagFile+".html", _thankYou);
+		
+		TalkerDAO.deleteThankYou(thankYou);
+		renderText("ok");
 	}
 	
 	/**

@@ -355,13 +355,7 @@ public class ConversationDAO {
     	DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
     	
     	DBObject query = new BasicDBObject("following_convos", convoId);
-    	DBObject fields = BasicDBObjectBuilder.start()
-    		.add("uname", 1)
-    		.add("email", 1)
-    		.add("bio", 1)
-    		.add("email_settings", 1)
-    		.get();
-    	List<DBObject> followersDBList = talkersColl.find(query, fields).toArray();
+    	List<DBObject> followersDBList = talkersColl.find(query).toArray();
     	
     	List<TalkerBean> followers = new ArrayList<TalkerBean>();
     	for (DBObject followerDBObject : followersDBList) {

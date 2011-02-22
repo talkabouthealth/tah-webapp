@@ -25,6 +25,7 @@ public class ServiceAccountBean implements DBModel {
 	static {
 		TWITTER_SETTINGS_NAMES = new LinkedHashMap<String, String>();
 		TWITTER_SETTINGS_NAMES.put("NOTIFY", "Notify me of relevant questions and live chats via Twitter direct message.");
+		TWITTER_SETTINGS_NAMES.put("NOTIFY_ON_ANSWER", "Notify me when an answer is posted to a conversation I follow.");
 		TWITTER_SETTINGS_NAMES.put("SHARE_TO_THOUGHTS", "Share my Twitter posts in my TalkAboutHealth Thoughts Feed.");
 		TWITTER_SETTINGS_NAMES.put("SHARE_FROM_THOUGHTS", "Share my TalkAboutHealth Thoughts Feed posts in my Twitter feed.");
 		TWITTER_SETTINGS_NAMES.put("POST_ON_ANSWER", "Post on Twitter when I answer a question.");
@@ -33,6 +34,7 @@ public class ServiceAccountBean implements DBModel {
 		
 		FACEBOOK_SETTINGS_NAMES = new LinkedHashMap<String, String>();
 		FACEBOOK_SETTINGS_NAMES.put("NOTIFY", "Notify me of relevant questions and live chats via Facebook chat.");
+//		FACEBOOK_SETTINGS_NAMES.put("NOTIFY_ON_ANSWER", "Notify me via direct message when an answer is posted to a conversation I follow.");
 		FACEBOOK_SETTINGS_NAMES.put("SHARE_TO_THOUGHTS", "Share my Facebook posts in my TalkAboutHealth Thoughts Feed.");
 		FACEBOOK_SETTINGS_NAMES.put("SHARE_FROM_THOUGHTS", "Share my TalkAboutHealth Thoughts Feed posts in my Facebook feed.");
 		FACEBOOK_SETTINGS_NAMES.put("POST_ON_ANSWER", "Post on Facebook when I answer a question.");
@@ -128,6 +130,7 @@ public class ServiceAccountBean implements DBModel {
 		}
 	}
 	
+	//TODO: IM todos
 	//TODO: user ENUM instead of strings
 	public boolean isTrue(String key) {
 		if (settings == null) {

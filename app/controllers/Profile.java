@@ -526,6 +526,7 @@ public class Profile extends Controller {
 			serviceAccount.parseSettingsFromParams(params.allSimple());
 		}
 		
+		//TODO: !think about IM notifications? the same as service?
 		boolean imNotify = false;
 		if (params.get("im_notify") != null) {
 			imNotify = true;

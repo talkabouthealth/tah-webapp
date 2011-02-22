@@ -192,7 +192,7 @@ public class ConversationBean {
     	setMessages(messages);
 	}
 	
-	//TODO: use DBModel for them?
+	//TODO: use DBModel for them? and check other classes also
 	private void parseSumContributors(Collection<DBRef> contributorsDBList) {
 		sumContributors = new HashSet<TalkerBean>();
 		if (contributorsDBList != null) {

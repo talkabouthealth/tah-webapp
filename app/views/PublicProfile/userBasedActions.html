@@ -21,6 +21,19 @@
    				return false;
 	   		});
 
+	   		$(".deleteThankYouLink").click(function() {
+	   			var confirmDel = confirm("Are you sure want to delete this Thank You?");
+	   	   		if (confirmDel) {
+		   	   		var thankYouId = $(this).attr("rel");
+	   	   	   		$("#thankYou"+thankYouId).remove();
+
+	   	   	  		$.post("@{Actions.deleteThankYou()}", 
+	    				{ talkerId: "${talker.id}", thankYouId: thankYouId }	    				
+	    			);
+	   	   		}
+	   	   		return false;
+	   		});
+
 			prepareList("thankyous");
 			prepareList("following");
 			prepareList("follower");
@@ -103,7 +116,7 @@
 				            <div id="thankyousList" class="thnksarea2">
 				            	#{if talker.isAllowed(models.PrivacySetting.PrivacyType.THANKYOUS, currentTalker) }
 									#{list items:talker.thankYouList, as:'thankYou'}
-										#{ publicprofile/thanksThankYou thankYou: thankYou /}
+										#{ publicprofile/thanksThankYou thankYou: thankYou, currentTalker: currentTalker /}
 									#{/list}
 								#{/if}
 								#{else}

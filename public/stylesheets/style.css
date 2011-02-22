@@ -5048,7 +5048,7 @@ border:0;
 #savedHelpError { margin-top: 15px; font-size: 18px; color: #FFDDDD; }
 
 #feedbackImage {
-	background-color:#cccccc;
+	background-color:#939393;
 	background-image:url(/public/images/feedbackImage.png);
 	background-position:2px 50%;
 	background-repeat:no-repeat;
@@ -5066,8 +5066,14 @@ border:0;
 	text-indent:-4000px;
 	z-index:99999;
 	border-color:#bbbbbb #aaaaaa #bbbbbb #bbbbbb;
-	/* border-style:outset none outset outset; */
-	border-width:2px medium 2px 2px;
+	border-style:outset none outset outset;
+	border-width:1px medium 1px 1px;
+}
+#feedbackImage:hover {
+	background-color:#67AB3A;
+	border-color:#67AB3A -moz-use-text-color #67AB3A #67AB3A;
+	border-style:outset none outset outset;
+	border-width:1px medium 1px 1px;
 }
 
 .iwant1 { font-size: 22px }

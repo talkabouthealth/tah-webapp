@@ -1,10 +1,10 @@
-<div class="thnkstext2">
+<div id="thankYou${_thankYou.id}" class="thnkstext2">
 	<div class="thnksfollowingimg">
 		#{talker/talkerImageLink size: 80, userName: _thankYou.fromTalker.name /}
 	</div>
 	<div class="thnksfollowingtext">
 		<a href="@{ViewDispatcher.view(_thankYou.fromTalker.name)}" 
-			class="blue13"><strong>${_thankYou.fromTalker.name}</strong></a>
+			class="blue13"><strong>${_thankYou.fromTalker.name}</strong></a>&nbsp;
 		<span class="blacktext12">
 			#{if _thankYou.fromTalker.connection}
 				(#{talker/connectionInfo talker: _thankYou.fromTalker /}, ${_thankYou.fromTalker.levelOfRecognition})
@@ -16,8 +16,11 @@
 		<span class="greytext12 moreThankYouText">
 			${_thankYou.note}
 		</span>
-		<span class="greytext12 fulltext">${_thankYou.note}</span>
 		<br/>
+		#{if _currentTalker && (_currentTalker.isAdmin() || _currentTalker.equals(_thankYou.fromTalker)) }
+			<a href="#" class="deleteThankYouLink lightgrey12" rel="${_thankYou.id}">Delete</a>
+			<span class="lightgrey12">&nbsp;|&nbsp;</span> 
+		#{/if}
 		<span class="lightgrey12">${_thankYou.time?.format('M/d/yyyy')}</span>
 	</div>
 </div>

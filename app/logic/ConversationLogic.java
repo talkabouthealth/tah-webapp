@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import play.Logger;
 import play.mvc.Scope.Session;
 
 import com.tah.im.IMNotifier;
@@ -104,6 +105,7 @@ public class ConversationLogic {
 			//send notifications if Automatic Notifications is On
 			NotificationUtils.sendAllNotifications(convo.getId(), null);
 		}
+		
 		//send to Tw & Fb created convo
 		for (ServiceAccountBean serviceAccount : talker.getServiceAccounts()) {
 			if (!serviceAccount.isTrue("POST_ON_CONVO")) {
@@ -189,7 +191,7 @@ public class ConversationLogic {
 			ActionDAO.saveAction(new AnswerConvoAction(talker, convo, answer, comment, ActionType.REPLY_CONVO));
 		}
 		
-		//Email and IM notifications
+		//Email/IM/Twitter/FB notifications
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("convo", convo.getTopic());
 		vars.put("other_talker", talker.getUserName());
@@ -205,10 +207,43 @@ public class ConversationLogic {
 		vars.put("convo_url", convoURL);
 		if (comment.isAnswer()) {
 			for (TalkerBean follower : convo.getFollowers()) {
-	    		if (!talker.equals(follower)) { //do not send notification to himself
+	    		if (!follower.equals(talker)) { //do not send notification to himself
 	        		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_COMMENT, follower, vars);
+	        		
+	        		//check Twitter/FB/IM
+	        		for (ServiceAccountBean serviceAccount : follower.getServiceAccounts()) {
+	        			if (!serviceAccount.isTrue("NOTIFY_ON_ANSWER")) {
+            				continue;
+            			}
+	        			
+	        			//TODO: make separate Tw/Fb classes?
+	        			if (serviceAccount.getType() == ServiceType.TWITTER) {
+	        				//New answer by <username> for <question>... http://bit.ly/asdfw
+	        				String dmText = TwitterUtil.prepareTwit("New answer by "+
+	        						comment.getFromTalker().getUserName()+" for <PARAM> "+convo.getBitly(), convo.getTopic());
+	        				TwitterUtil.sendDirect(serviceAccount.getId(), dmText);
+	        			}
+//	        			else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
+//	        				//New answer by <username> for <question>: <answer>
+//	        				String dmText = "New answer by "+
+//	        						comment.getFromTalker().getUserName()+" for "+convo.getTopic()+": "+comment.getText();
+//	        				FacebookUtil.sendDirect(serviceAccount.getId(), dmText);
+//	        			}
+	        		}
+	        		
+	        		//IM notification
+	        		//For convo author we send other IM notification
+	        		if (!follower.equals(convo.getTalker())) {
+	        			//TODO: add settings check
+	        			String imText = "New answer by "+
+							comment.getFromTalker().getUserName()+" for "+convo.getTopic()+": "+comment.getText();
+	        			IMNotifier.getInstance().followersAnswerNotification(follower.getId(), convo.getId(), imText);
+	        		}
+	        		
 	    		}
 	    	}
+			
+			
 		}
 		else {
 			//for replies - send to author of answer and question.
@@ -260,6 +295,7 @@ public class ConversationLogic {
     		}
     	}
     	
+    	//TODO: check if we need to send this (notification settings)
 //    	The exception is users will receive IM notifications of answers 
 //    	if they started the conversation/question or if they answered a question and 
 //    	the user who started the question wants to follow up.
@@ -277,7 +313,7 @@ public class ConversationLogic {
 				imNotifier.answerNotify(uidArray, talker.getUserName(), convo.getId(), 
 						comment.getParentId(), comment.getId(), comment.getText());
 			} catch (Exception e) {
-				e.printStackTrace();
+				Logger.error(e, "Sending notifications on Convo answer");
 			}
 		}
     	

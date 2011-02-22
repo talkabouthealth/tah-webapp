@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class ThankYouBean implements Comparable<ThankYouBean> {
 	
+	private String id;
 	private Date time;
 	private String note;
 	
@@ -17,6 +18,14 @@ public class ThankYouBean implements Comparable<ThankYouBean> {
 		return o.time.compareTo(time);
 	}
 	
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public TalkerBean getFromTalker() { return fromTalker; }
 	public void setFromTalker(TalkerBean fromTalker) { this.fromTalker = fromTalker; }
 	

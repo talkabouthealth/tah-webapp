@@ -254,6 +254,12 @@ public class TalkerBean implements Serializable {
 		setProfStatement((String)talkerDBObject.get("prof_statement"));
 		parseProfInfo((DBObject)talkerDBObject.get("prof_info"));
 		
+		setIm((String)talkerDBObject.get("im"));
+		setImUsername((String)talkerDBObject.get("im_uname"));
+		setImNotify(getBoolean(talkerDBObject, "im_notify"));
+		setImAccounts(parseSet(IMAccountBean.class, talkerDBObject, "im_accounts"));
+		setServiceAccounts(parseSet(ServiceAccountBean.class, talkerDBObject, "service_accounts"));
+		
 		parseEmailSettings(getStringList(talkerDBObject, "email_settings"));
 		setPrivacySettings(parseSet(PrivacySetting.class, talkerDBObject, "privacy_settings"));
 		
@@ -265,12 +271,6 @@ public class TalkerBean implements Serializable {
 		parseBasicFromDB(talkerDBObject);
 		
 		setHiddenHelps(getStringSet(talkerDBObject, "hidden_helps"));
-		
-		setIm((String)talkerDBObject.get("im"));
-		setImUsername((String)talkerDBObject.get("im_uname"));
-		setImNotify(getBoolean(talkerDBObject, "im_notify"));
-		setImAccounts(parseSet(IMAccountBean.class, talkerDBObject, "im_accounts"));
-		setServiceAccounts(parseSet(ServiceAccountBean.class, talkerDBObject, "service_accounts"));
 		
 		setNfreq(getInt(talkerDBObject, "nfreq"));
 		setNtime(getInt(talkerDBObject, "ntime"));
@@ -317,8 +317,10 @@ public class TalkerBean implements Serializable {
 		if (thankYouDBList != null) {
 			for (DBObject thankYouDBObject : thankYouDBList) {
 				ThankYouBean thankYouBean = new ThankYouBean();
+				thankYouBean.setId((String)thankYouDBObject.get("id"));
 				thankYouBean.setTime((Date)thankYouDBObject.get("time"));
 				thankYouBean.setNote((String)thankYouDBObject.get("note"));
+				thankYouBean.setTo(getId());
 				
 				DBObject fromTalkerDBObject = ((DBRef)thankYouDBObject.get("from")).fetch();
 				TalkerBean fromTalker = new TalkerBean();
@@ -637,6 +639,18 @@ public class TalkerBean implements Serializable {
 		}
 		
 		return levelOfRecognition;
+	}
+	
+	public ThankYouBean getThankYouById(String thankYouId) {
+		if (getThankYouList() == null) {
+			return null;
+		}
+		for (ThankYouBean thankYou : getThankYouList()) {
+			if (thankYou.getId().equals(thankYouId)) {
+				return thankYou;
+			}
+		}
+		return null;
 	}
 	
 	// ---- Getters & Setters -------

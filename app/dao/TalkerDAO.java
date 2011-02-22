@@ -491,14 +491,33 @@ public class TalkerDAO {
 		
 		DBRef fromTalkerRef = createRef(TALKERS_COLLECTION, thankYouBean.getFromTalker().getId());
 		DBObject thankYouObject = BasicDBObjectBuilder.start()
+			.add("id", new ObjectId().toString())
 			.add("time", thankYouBean.getTime())
 			.add("note", thankYouBean.getNote())
 			.add("from", fromTalkerRef)
 			.get();
 		
-		DBObject talkerId = new BasicDBObject("_id", new ObjectId(thankYouBean.getTo()));
+		DBObject query = new BasicDBObject("_id", new ObjectId(thankYouBean.getTo()));
 		//For creating/adding to array: { $push : { field : value } }
-		talkersColl.update(talkerId, new BasicDBObject("$push", new BasicDBObject("thankyous", thankYouObject)));
+		talkersColl.update(query, new BasicDBObject("$push", new BasicDBObject("thankyous", thankYouObject)));
+	}
+	
+	public static void deleteThankYou(ThankYouBean thankYou) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		
+		DBObject thankYouObject = new BasicDBObject("id", thankYou.getId());
+		DBObject query = new BasicDBObject("_id", new ObjectId(thankYou.getTo()));
+		talkersColl.update(query,
+				new BasicDBObject("$pull", new BasicDBObject("thankyous", thankYouObject)));
+	}
+	
+	//TODO: temporary, remove it
+	public static void updateThankYou(ThankYouBean thankYouBean, int index) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		
+		DBObject messageObj = new BasicDBObject("thankyous."+index+".id", thankYouBean.getId());
+		DBObject talkerId = new BasicDBObject("_id", new ObjectId(thankYouBean.getTo()));
+		talkersColl.update(talkerId, new BasicDBObject("$set", messageObj));
 	}
 	
 	/**
