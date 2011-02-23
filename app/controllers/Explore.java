@@ -61,7 +61,11 @@ public class Explore extends Controller {
     	//TODO: use cache for common data? 
     	//TODO: or improve loading time?
     	//see: http://groups.google.com/group/play-framework/browse_thread/thread/b723f73ee52a04bd/8d084ac77c588b3a?lnk=gst&q=use+cache+in+template#8d084ac77c588b3a
+    	Logger.error("S:"+System.currentTimeMillis());
     	List<TopicBean> popularTopics = TopicDAO.getPopularTopics();
+    	Logger.error("F:"+System.currentTimeMillis());
+    	
+    	Logger.error("Empty: "+popularTopics.get(0).getId());
     	
 		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions();
 		render(talker, openQuestions, popularTopics);
