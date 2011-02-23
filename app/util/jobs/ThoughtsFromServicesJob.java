@@ -56,7 +56,8 @@ public class ThoughtsFromServicesJob extends Job {
 			    			CommentsDAO.getThoughtByFromInfo(serviceAccount.getType().toString(), post.getId());
 			    		if (thought == null) {
 			    			TalkerLogic.saveProfileComment(talker, talker.getId(), null, 
-									CommonUtil.linkify(post.getText()), post.getText(), serviceAccount.getType().toString(), post.getId());
+									CommonUtil.linkify(post.getText()), post.getText(), 
+									serviceAccount.getType().toString(), post.getId(), null, null);
 			    		}
 					}
 			    	

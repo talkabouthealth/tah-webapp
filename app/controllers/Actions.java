@@ -138,10 +138,11 @@ public class Actions extends Controller {
 	 * @param from page where request was made
 	 */
 	//TODO: check better option for cleanText?
-	public static void saveProfileComment(String profileTalkerId, String parentId, String text, String cleanText, String from) {
+	public static void saveProfileComment(String profileTalkerId, String parentId, 
+			String text, String cleanText, String from, Boolean ccTwitter, Boolean ccFacebook) {
 		CommentBean comment = 
 			TalkerLogic.saveProfileComment(CommonUtil.loadCachedTalker(session), 
-					profileTalkerId, parentId, text, cleanText, null, null);
+					profileTalkerId, parentId, text, cleanText, null, null, ccTwitter, ccFacebook);
 		notFoundIfNull(comment);
 		
 		if (from != null && from.equals("home")) {

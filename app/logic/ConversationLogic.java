@@ -59,7 +59,7 @@ public class ConversationLogic {
 	 */
 	public static ConversationBean createConvo(ConvoType type, String title, 
 			TalkerBean talker, String details, Set<TopicBean> topicsSet, 
-			boolean notifyTalkers, ConversationBean parentConvo) {
+			boolean notifyTalkers, ConversationBean parentConvo, Boolean ccTwitter, Boolean ccFacebook) {
 		
 		if (topicsSet == null) {
 			topicsSet = new HashSet<TopicBean>();
@@ -108,9 +108,24 @@ public class ConversationLogic {
 		
 		//send to Tw & Fb created convo
 		for (ServiceAccountBean serviceAccount : talker.getServiceAccounts()) {
-			if (!serviceAccount.isTrue("POST_ON_CONVO")) {
-				continue;
+			//TODO: clear this?
+			if (serviceAccount.getType() == ServiceType.TWITTER) {
+				if (ccTwitter != null && !ccTwitter) {
+					continue;
+				}
+				if (ccTwitter == null && !serviceAccount.isTrue("POST_ON_CONVO")) {
+					continue;
+				}
 			}
+			else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
+				if (ccFacebook != null && !ccFacebook) {
+					continue;
+				}
+				if (ccFacebook == null && !serviceAccount.isTrue("POST_ON_CONVO")) {
+					continue;
+				}
+			}
+			
 //			Just asked a question on TalkAboutHealth: "What are the best hospitals in NYC for breast cancer ..." http://bit.ly/lksa
 //			Just started a live chat on TalkAboutHealth: "What are the best hospitals in NYC for breast cancer ..." http://bit.ly/lksa
 			
@@ -124,7 +139,7 @@ public class ConversationLogic {
 			}
 			else {
 				postText = "Just asked a question on TalkAboutHealth: \"<PARAM>\" ";
-				bitlyLinkText = convo.getBitlyChat();
+				bitlyLinkText = convo.getBitly();
 				fullLinkText = convoURL;
 			}
 			

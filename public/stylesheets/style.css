@@ -5171,7 +5171,7 @@ border:0;
 
 /* New Home page buttons */
 #shareThoughtBtn, #postQuestionBtn, #startChatBtn {
-	margin-left: 15px;
+	margin-left: 10px;
 	border: 0 none;
 	cursor: pointer;
 	width: 125px;

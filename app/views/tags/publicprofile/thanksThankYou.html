@@ -5,14 +5,7 @@
 	<div class="thnksfollowingtext">
 		<a href="@{ViewDispatcher.view(_thankYou.fromTalker.name)}" 
 			class="blue13"><strong>${_thankYou.fromTalker.name}</strong></a>&nbsp;
-		<span class="blacktext12">
-			#{if _thankYou.fromTalker.connection}
-				(#{talker/connectionInfo talker: _thankYou.fromTalker /}, ${_thankYou.fromTalker.levelOfRecognition})
-			#{/if}
-			#{else}
-				(${_thankYou.fromTalker.levelOfRecognition})
-			#{/else}
-		</span><br/>	
+		<span class="blacktext12">(#{talker/connectionInfo talker: _thankYou.fromTalker /})</span><br/>	
 		<span class="greytext12 moreThankYouText">
 			${_thankYou.note}
 		</span>

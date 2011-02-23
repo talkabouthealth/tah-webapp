@@ -56,7 +56,7 @@ public class ConvoFromTwitterJob extends Job {
 		title = title.replaceAll("@talkabouthealth", "").replaceAll("@TalkAboutHealth", "").trim();
 		
 		ConversationBean convo = 
-			ConversationLogic.createConvo(ConvoType.QUESTION, title, talker, null, null, true, null);
+			ConversationLogic.createConvo(ConvoType.QUESTION, title, talker, null, null, true, null, null, null);
 		convo.setFrom("twitter");
 		convo.setFromId(tweet.getId());
 		ConversationDAO.updateConvo(convo);

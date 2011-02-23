@@ -352,15 +352,20 @@ public class TalkerLogic {
 	
 	/**
 	 * Save thought or reply
+	 * TODO: update doc
+	 * 
 	 * @param talker
 	 * @param profileTalkerId
 	 * @param parentId
 	 * @param text
 	 * @param cleanText 
+	 * @param ccTwitter If null - nothing happens, if true/false - determines if thought should be posted on Twitter
+	 * @param ccFacebook Same as ccTwitter but for Facebook
+	 * 
 	 * @return
 	 */
 	public static CommentBean saveProfileComment(TalkerBean talker, String profileTalkerId, 
-			String parentId, String text, String cleanText, String from, String fromId) {
+			String parentId, String text, String cleanText, String from, String fromId, Boolean ccTwitter, Boolean ccFacebook) {
 		//find profile talker by parent thought or given talker id
 		if (parentId != null && parentId.length() != 0) {
 			CommentBean parentAnswer = CommentsDAO.getProfileCommentById(parentId);
@@ -401,18 +406,24 @@ public class TalkerLogic {
 				ActionDAO.saveAction(new PersonalProfileCommentAction(
 						talker, profileTalker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT));
 				
+				//TODO: better implement?
 				for (ServiceAccountBean serviceAccount : talker.getServiceAccounts()) {
-					if (!serviceAccount.isTrue("SHARE_FROM_THOUGHTS")) {
-						continue;
-					}
-					
-					Logger.debug(serviceAccount.getType().toString()+", Share from Thoughts, Info: "+
-							serviceAccount.getToken()+" : "+serviceAccount.getTokenSecret());
-					
 					if (serviceAccount.getType() == ServiceType.TWITTER) {
+						if (ccTwitter != null && !ccTwitter) {
+							continue;
+						}
+						if (ccTwitter == null && !serviceAccount.isTrue("SHARE_FROM_THOUGHTS")) {
+							continue;
+						}
 						TwitterUtil.tweet(cleanText, serviceAccount);
 					}
 					else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
+						if (ccFacebook != null && !ccFacebook) {
+							continue;
+						}
+						if (ccFacebook == null && !serviceAccount.isTrue("SHARE_FROM_THOUGHTS")) {
+							continue;
+						}
 						FacebookUtil.post(cleanText, serviceAccount);
 					}
 				}

@@ -12,7 +12,9 @@
 		function redirectParent() {
 			var url = '${url?.raw()}';
 			if (url) {
-				window.opener.document.location = url;
+				if (url !== "sameurl") {
+					window.opener.document.location = url;
+				}
 				window.close();
 			}
 		}

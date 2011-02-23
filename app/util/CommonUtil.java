@@ -293,7 +293,7 @@ public class CommonUtil {
 				additionalInfo += " <span class=\"red12\">(not verified)</span>";
 			}
 		}
-		html.append(" ("+talker.getConnection()+additionalInfo+", "+talker.getLevelOfRecognition()+")");
+		html.append(" ("+talker.getConnection()+additionalInfo+")");
 		return html.toString();
 	}
 	

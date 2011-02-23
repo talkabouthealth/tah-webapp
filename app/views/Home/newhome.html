@@ -238,6 +238,19 @@
 						}
 					);
 				}
+			});
+
+			$(".ccTwitterCheckbox").click(function() {
+				if (!hasTwitter && $(this).attr("checked")) {
+					hasTwitter = true;
+					openTwitter("sameurl");
+				}
+			});	
+			$(".ccFacebookCheckbox").click(function() {
+				if (!hasFacebook && $(this).attr("checked")) {
+					hasFacebook = true;
+					openFacebook("sameurl");
+				}
 			});	
 
 			if (${emailVerification}) {
@@ -251,6 +264,9 @@
 
    		function saveThought() {
    	   		var text = $("#shareThoughtText").val();
+   	   		var ccTwitter = $("#ccTwitterThought").attr("checked");
+			var ccFacebook = $("#ccFacebookThought").attr("checked");
+			
    			$("#shareThoughtText").val("");
    			$("#shareThoughtTextSize").html("0");
 
@@ -261,7 +277,8 @@
    			linkedText = linkify(text);
 
    			$.post("@{Actions.saveProfileComment()}", 
-  				{ parentId: '', text: linkedText, cleanText: text, from: 'home'},
+  				{ parentId: '', text: linkedText, cleanText: text, from: 'home', 
+  					ccTwitter: ccTwitter, ccFacebook: ccFacebook},
   				function(html) {
   					$(html).prependTo($("#convoFeedList"));
   					$(html).prependTo($("#communityFeedList"));
@@ -318,6 +335,9 @@
 				</div>
 				<div class="cb"></div>
 				
+				#{set twAccount: talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
+				#{set fbAccount: talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.FACEBOOK) /}
+				
                 <div class="topipcWraper">
                   <div class="startsearchbox" style="padding: 0px;">
                   	<div id="startConvoSmall" style="clear:both; height:30px; margin-bottom:7px; position:relative;">
@@ -327,20 +347,6 @@
 					            >Post a question and receive an answer within a couple of minutes.</textarea>
 						</a>
 					</div>
-                  	<div id="shareThoughtTabContent" class="topTabContent">	
-                  		<div style="float:left;">
-							<textarea id="shareThoughtText" class="edititinputx inline_text greyarea" 
-								onKeyUp=" $('#shareThoughtTextSize').html($(this).val().length);"
-								onfocus="clearTextArea('shareThoughtText', 'What are you thinking or feeling?');"
-								style="width:627px; height: 70px; margin: 0px; padding: 3px;" cols="4" rows="4" 
-								>What are you thinking or feeling?</textarea>
-						</div>
-						<div style="float: right; padding-top: 5px;">
-							<span id="shareThoughtTextSize" style="font-size: 16px;">0</span>
-							<input type="button" onclick="return saveThought();" 
-								id="shareThoughtBtn" value="" />
-						</div>
-                  	</div>
                   	<div id="postQuestionTabContent" class="topTabContent">	
                   		<div style="float:left;">
 							<input type="text" id="postQuestionText" class="edititinputx inline_text greyarea" 
@@ -351,7 +357,8 @@
 								value="Post a question and receive an answer within a couple of minutes." />							
 						</div>
 						<div style="float: right; padding-top: 5px;">
-							<span id="postQuestionTextSize" style="font-size: 16px;">0</span>
+							<span id="postQuestionTextSize" style="font-size: 16px; float: left;">0</span>
+							#{ convo/ccInputs type: "Question", setting: "POST_ON_CONVO" /}
 							<input type="button" onclick="return showSaveDialog('postQuestion');" 
 								id="postQuestionBtn" value="" />
 						</div>
@@ -366,9 +373,25 @@
 								value="Start a live chat by sharing the topic you would like to discuss. Your peers will join within minutes." />
 						</div>
 						<div style="float: right; padding-top: 5px;">
-							<span id="startChatTextSize" style="font-size: 16px;">0</span>
+							<span id="startChatTextSize" style="font-size: 16px; float: left;">0</span>
+							#{ convo/ccInputs type: "Chat", setting: "POST_ON_CONVO" /}
 							<input type="button" onclick="return showSaveDialog('startChat');" 
 								id="startChatBtn" value="" />
+						</div>
+                  	</div>
+                  	<div id="shareThoughtTabContent" class="topTabContent">	
+                  		<div style="float:left;">
+							<textarea id="shareThoughtText" class="edititinputx inline_text greyarea" 
+								onKeyUp=" $('#shareThoughtTextSize').html($(this).val().length);"
+								onfocus="clearTextArea('shareThoughtText', 'What are you thinking or feeling?');"
+								style="width:627px; height: 70px; margin: 0px; padding: 3px;" cols="4" rows="4" 
+								>What are you thinking or feeling?</textarea>
+						</div>
+						<div style="float: right; padding-top: 5px;">
+							<span id="shareThoughtTextSize" style="font-size: 16px; float: left;">0</span>
+							#{ convo/ccInputs type: "Thought", setting: "SHARE_FROM_THOUGHTS" /}
+							<input type="button" onclick="return saveThought();" 
+								id="shareThoughtBtn" value="" />
 						</div>
                   	</div>
 				  </div>

@@ -104,6 +104,21 @@ function saveConvo(page) {
 	if (page === "conversationSummary") {
 		parentConvoId = currentConvoId;
 	}
+	
+	//check ccTwitter and ccFacebook buttons
+	//TODO: better pass of parameters?
+	var ccTwitter = "";
+	var ccFacebook = "";
+	if (page === "home") {
+		if (type === "QUESTION") {
+			ccTwitter = $("#ccTwitterQuestion").attr("checked");
+			ccFacebook = $("#ccFacebookQuestion").attr("checked");
+		}
+		else {
+			ccTwitter = $("#ccTwitterChat").attr("checked");
+			ccFacebook = $("#ccFacebookChat").attr("checked");
+		}
+	}
 
 	if (title === "") {
 		alert("Please input headline.");
@@ -112,7 +127,8 @@ function saveConvo(page) {
 	
 	$("#convoCreateImage").show();
 	$.post("/conversations/create", 
-			{ type: type, title: title, details: details, topics: topics, fromPage: page, parentConvoId: parentConvoId},
+			{ type: type, title: title, details: details, topics: topics, fromPage: page, 
+				parentConvoId: parentConvoId, ccTwitter: ccTwitter, ccFacebook: ccFacebook},
 			function(data) {
 				$("#convoCreateImage").hide();
 				if (type === "CONVERSATION") {
@@ -670,7 +686,7 @@ function shareTwitterPopup() {
 	}
 }
 function shareFBPopup() {
-	if (hasFB) {
+	if (hasFacebook) {
 		showPopup("#shareFBDialog", 450);
 	}
 	else {

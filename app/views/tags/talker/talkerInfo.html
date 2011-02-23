@@ -1,6 +1,3 @@
 #{if _talker.connection}
-	(#{talker/connectionInfo talker: _talker /}, ${_talker.levelOfRecognition})
+	(#{talker/connectionInfo talker: _talker /})
 #{/if}
-#{else}
-	(${_talker.levelOfRecognition})
-#{/else}
