@@ -64,7 +64,6 @@ public class ConversationLogic {
 		if (topicsSet == null) {
 			topicsSet = new HashSet<TopicBean>();
 		}
-		
 		//when a new topic is created, it automatically has a parent topic of "Unorganized"
 		//When a "Live Talk" is started, tag it with the topic "Talks" instead of "Unorganized"
 		TopicBean topic = null;

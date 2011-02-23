@@ -70,6 +70,7 @@ public class Application extends Controller {
 	 */
     public static void index() {
     	if (Security.isConnected()) {
+    		//redirect to Home page if user is logged in
     		Home.index();
     	}
     	else {
@@ -117,6 +118,7 @@ public class Application extends Controller {
 		vars.put("newpassword", newPassword);
 		boolean result = EmailUtil.sendEmail(EmailTemplate.FORGOT_PASSWORD, email, vars);
 		
+		//TODO: better validation
 		validation.isTrue(result).message("Not verified email or unknown error. " +
 				"Please contact support at <a href=\"mailto:"+EmailUtil.SUPPORT_EMAIL+"\">"+EmailUtil.SUPPORT_EMAIL+"</a>");
 		if(validation.hasErrors()) {
@@ -180,7 +182,6 @@ public class Application extends Controller {
 		}
 
         TalkerLogic.onSignup(talker, session);
-        
         index();
     }
     
@@ -198,6 +199,7 @@ public class Application extends Controller {
     	
     	if (serviceType == ServiceType.TWITTER) {
     		//for Twitter we check email
+    		//TODO: the same email validation?
     		validation.required(email);
     		validation.email(email);
 			if (validation.hasError("email")) {
@@ -281,12 +283,12 @@ public class Application extends Controller {
 		contactus();
     }
     
-    /* -------------------- Email saving/signup (for notifications & updates) ------------------- */
+    /* -------------------- Email saving (for notifications & updates) ------------------- */
     public static void updatesEmail() {
     	render();
     }
     public static void saveUpdatesEmail(@Required @Email String email) {
-    	if(validation.hasErrors()) {
+    	if (validation.hasErrors()) {
     		validation.keep();
     		updatesEmail();
             return;

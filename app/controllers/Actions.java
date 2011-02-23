@@ -38,6 +38,7 @@ import dao.TalkerDAO;
 import dao.TopicDAO;
 
 /**
+ * TODO: move to other controller
  * Back-end for Ajax methods related to talker
  */
 @With(Secure.class)
@@ -50,6 +51,7 @@ public class Actions extends Controller {
 	public static void createThankYou(String toTalkerId, String note, String tagFile) {
 		TalkerBean fromTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean toTalker = TalkerDAO.getById(toTalkerId);
+		//TODO: better design for permissions?
 		if (fromTalker.equals(toTalker)) {
 			forbidden();
 			return;
@@ -62,6 +64,7 @@ public class Actions extends Controller {
 		thankYouBean.setTo(toTalkerId);
 		TalkerDAO.saveThankYou(thankYouBean);
 		
+		//TODO: actions and email notifications? - better design?
 		ActionDAO.saveAction(new GiveThanksAction(fromTalker, toTalker));
 		
 		//email notification
@@ -138,6 +141,7 @@ public class Actions extends Controller {
 	 * @param from page where request was made
 	 */
 	//TODO: check better option for cleanText?
+	//TODO: too many params?
 	public static void saveProfileComment(String profileTalkerId, String parentId, 
 			String text, String cleanText, String from, Boolean ccTwitter, Boolean ccFacebook) {
 		CommentBean comment = 

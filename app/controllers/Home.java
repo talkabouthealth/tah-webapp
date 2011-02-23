@@ -50,6 +50,7 @@ public class Home extends Controller {
 	 * Home page
 	 */
     public static void index() {
+    	//TODO: check loading times
 //    	Logger.error("Home 0");
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
@@ -209,6 +210,7 @@ public class Home extends Controller {
     	if (type != null) {
     		if (type.equalsIgnoreCase("email")) {
     			//parse and validate emails
+    			//TODO: the same code?
     			Set<String> emailsToSend = new HashSet<String>();
     			String[] emailsArr = emails.split(",");	
     			for (String email : emailsArr) {
@@ -224,6 +226,7 @@ public class Home extends Controller {
     	        }
     			
     			//preparing email parameters
+    			//TODO: emails, notifications and other texts - move in one place?
     			Map<String, String> vars = new HashMap<String, String>();
     			String subject = "";
     			if (pageType.equalsIgnoreCase("Topic")) {
@@ -242,6 +245,7 @@ public class Home extends Controller {
     				EmailUtil.sendEmail(EmailTemplate.SHARE, email, vars, null, false);
     			}
     		}
+    		//TODO: make abstract method + implement for Tw/Fb?
     		else if (type.equalsIgnoreCase("twitter")) {
     			ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
     			if (twitterAccount != null) {

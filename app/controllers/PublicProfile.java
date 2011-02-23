@@ -94,6 +94,7 @@ public class PublicProfile extends Controller {
 	 * @param commentId
 	 * @throws Throwable 
 	 */
+	//TODO: move delete/update to other controller?
 	public static void deleteComment(String commentId) throws Throwable {
 		Secure.checkAccess();
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
@@ -227,6 +228,7 @@ public class PublicProfile extends Controller {
 	 * 
 	 * @param afterId id of last topic from previous load (used for paging)
 	 */
+	//TODO: move to logic?
 	private static List<TopicBean> loadRecommendedTopics(TalkerBean talker, 
 			TalkerDiseaseBean talkerDisease, String afterId) {
 		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();

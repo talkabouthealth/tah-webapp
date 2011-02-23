@@ -142,6 +142,7 @@ public class Profile extends Controller {
 		if (oldTalker.isProf()) {
 			oldTalker.setProfStatement(talker.getProfStatement());
 			
+			//TODO: separ method
 			Map<String, String> profInfo = new HashMap<String, String>();
 			//parse "pr_" fields - proffesional fields
 			Map<String, String> paramsMap = params.allSimple();
@@ -267,6 +268,8 @@ public class Profile extends Controller {
 		talker.setConnectionVerified(false);
 		CommonUtil.updateTalker(talker, session);
 		
+		//used for menu displaying
+		//TODO: try without it? 
 		if (talker.isProf()) {
 			session.put("prof", "true");
 		}

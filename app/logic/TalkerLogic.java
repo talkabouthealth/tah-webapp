@@ -783,10 +783,7 @@ public class TalkerLogic {
 		
 		//if user signs up with Facebook, let's use the user's FB image on TAH
 		if (serviceType == ServiceType.FACEBOOK) {
-//			URL pictureURL = new URL("http://graph.facebook.com/"+accountId+"/picture");
-//			BufferedImage bsrc = ImageIO.read(pictureURL);
-//			ByteArrayOutputStream baos = ImageUtil.createThumbnail(bsrc);
-//        	TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
+			FacebookUtil.useFacebookImage(talker, accountId);
 		}
 		
 		onSignup(talker, session);

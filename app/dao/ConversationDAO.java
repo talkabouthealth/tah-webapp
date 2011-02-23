@@ -182,6 +182,7 @@ public class ConversationDAO {
 		DBObject query = new BasicDBObject("tid", tid);
 		DBObject convoDBObject = convosColl.findOne(query);
 		
+		//TODO: same code
 		if (convoDBObject == null) {
 			return null;
 		}
@@ -493,6 +494,7 @@ public class ConversationDAO {
 	/**
 	 * Recursive method that saves all subtree of given root topic to 'allTopics' list.
 	 */
+	//TODO: move to topics dao?
 	public static void getAllTopics(List<DBRef> allTopics, TopicBean rootTopic) {
 		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, rootTopic.getId());
 		if (!allTopics.contains(topicRef)) {

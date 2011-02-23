@@ -42,6 +42,22 @@ public class ImageUtil {
     	ImageIO.write(bdest, "GIF", baos);
     	return baos;
 	}
+	
+	public static ByteArrayOutputStream createThumbnailFromFacebook(BufferedImage bsrc) throws IOException {
+		int width = bsrc.getWidth();
+		int height = bsrc.getHeight();
+		if (width > 100) {
+			width = 100;
+		}
+		if (height > 100) {
+			height = 100;
+		}
+		bsrc = bsrc.getSubimage(0, 0, width, height);
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    	ImageIO.write(bsrc, "GIF", baos);
+    	return baos;
+	}
 
 	/**
 	  * 

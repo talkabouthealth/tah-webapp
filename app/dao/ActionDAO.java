@@ -441,7 +441,8 @@ public class ActionDAO {
 	}
 	
 	/**
-	 * Updates all actions with one conversation to use another convo. 
+	 * Updates all actions with one conversation to use another convo.
+	 * (Used during merging)
 	 * 
 	 * @param convo
 	 * @param newConvo

@@ -51,6 +51,7 @@ public class TalkerDAO {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
 		DBObject talkerDBObject = BasicDBObjectBuilder.start()
+				//TODO: organize fields lists everywhere
 				.add("uname", talker.getUserName())
 				.add("anon_name", talker.getAnonymousName())
 				.add("pass", talker.getPassword())

@@ -73,6 +73,7 @@ public class Conversations extends Controller {
     	//prepare params
     	ConvoType convoType = ConvoType.valueOf(type);
     	
+    	//TODO: separate to method
     	Set<TopicBean> topicsSet = new HashSet<TopicBean>();
     	String[] topicsArr = topics.split(",");
     	for (String topicTitle : topicsArr) {
@@ -216,6 +217,7 @@ public class Conversations extends Controller {
 	/**
 	 * Follow/Unfollow given conversation
 	 */
+    //TODO: separate all follow/unfollow functions?
     public static void follow(String convoId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
@@ -245,6 +247,7 @@ public class Conversations extends Controller {
      * @param name name of the field to update
      * @param value new value for the given field
      */
+    //TODO: too complicated for one method?
     public static void updateField(String convoId, String name, String value) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	ConversationBean convo = ConversationDAO.getById(convoId);

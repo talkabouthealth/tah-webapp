@@ -145,6 +145,7 @@ public class ViewDispatcher extends Controller {
 			ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO).size();
 		TalkerLogic.preloadTalkerInfo(talker);
 		
+		//TODO: separate method?
 		boolean notProvidedInfo = false;
 		boolean notViewableInfo = false;
 		if (talker.equals(currentTalker)) {

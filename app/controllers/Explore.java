@@ -47,6 +47,7 @@ public class Explore extends Controller {
 	
 	@Before
 	static void prepareParams() {
+		//used for Tw/Fb sharing and SEO
         String currentURL = "http://"+request.host+request.path;
         renderArgs.put("currentURL", currentURL);
 	}
@@ -91,7 +92,6 @@ public class Explore extends Controller {
     	Set<TopicBean> topicsTree = TopicLogic.getAllTopicsTree();
     	render(topicsTree, talker, popularTopics);
     }
-    
     
     public static void browseMembers(String action) throws Throwable {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);

@@ -1,40 +1,29 @@
 package util;
 
-import java.net.HttpURLConnection;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.Executors;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+import javax.imageio.ImageIO;
 
 import models.ServiceAccountBean;
 import models.ServicePost;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import models.TalkerBean;
+import play.Logger;
+import play.libs.WS;
+import play.libs.WS.HttpResponse;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.util.JSON;
 
-
-import oauth.signpost.OAuthConsumer;
-import oauth.signpost.basic.DefaultOAuthConsumer;
-import play.Logger;
-import play.libs.WS;
-import play.libs.WS.HttpResponse;
-import play.libs.WS.WSRequest;
-import util.oauth.TwitterOAuthProvider;
+import dao.TalkerDAO;
 
 public class FacebookUtil {
 	
@@ -98,6 +87,19 @@ public class FacebookUtil {
 			Logger.error(e, "Wasn't able to import Facebook posts");
 		}
 		return postsList;
+	}
+	
+	public static void useFacebookImage(TalkerBean talker, String accountId) {
+		try {
+			URL pictureURL = new URL("http://graph.facebook.com/"+accountId+"/picture?type=normal");
+			BufferedImage bsrc = ImageIO.read(pictureURL);
+			ByteArrayOutputStream baos = ImageUtil.createThumbnailFromFacebook(bsrc);
+	    	TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
+		}
+		catch (Exception e) {
+			Logger.error(e, "Downloading Facebook image");
+		}
+		
 	}
 
 }
