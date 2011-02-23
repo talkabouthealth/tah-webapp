@@ -162,6 +162,8 @@ public class ConversationBean {
     	Set<String> members = new HashSet<String>();
     	if (messagesDBList != null) {
     		int cnt = -1;
+    		//number of messages without correct talker (caused by LiveChat Flash work)
+    		int errorCount = 0;
     		for (DBObject messageDBObject : messagesDBList) {
     			cnt++;
     			
@@ -184,8 +186,13 @@ public class ConversationBean {
         			messages.add(message);
     			}
     			else {
-    				Logger.error("NULL talker in conversation message: "+getId()+", index: "+message.getIndex());
+    				//TODO: remove another conversation
+    				//NULL talker in conversation message: 4cd83ea41a98b19bfec451e2, index: 42
+    				errorCount++;
     			}
+    		}
+    		if (errorCount > 0) {
+    			Logger.error("NULL talker in conversation message: "+getId()+", messages: "+errorCount);
     		}
     	}
     	setMembers(members);

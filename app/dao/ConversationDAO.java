@@ -545,6 +545,23 @@ public class ConversationDAO {
 		return convosList;
 	}
 	
+	//TODO: check this and previous methods
+	public static List<ConversationBean> loadSimpleConversationsByTopic(String topicId) {
+		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
+		
+		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topicId);
+		DBObject query = new BasicDBObject("topics", topicRef);
+		List<DBObject> convosDBList = convosColl.find(query).toArray();
+		
+		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
+		for (DBObject convoDBObject : convosDBList) {
+			ConversationBean convo = new ConversationBean();
+			convo.setId(convoDBObject.get("_id").toString());
+			convosList.add(convo);
+		}
+		return convosList;
+	}
+	
 	
 	/**
 	 * Closes given LiveChat manually - deletes all live talkers.

@@ -250,7 +250,7 @@ public class TopicDAO {
 		for (DBObject topicDBObject : topicsDBList) {
 			TopicBean topic = new TopicBean();
 			topic.parseBasicFromDB(topicDBObject);
-			topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
+			topic.setConversations(ConversationDAO.loadSimpleConversationsByTopic(topic.getId()));
 			popularTopics.add(topic);
 		}
 		
