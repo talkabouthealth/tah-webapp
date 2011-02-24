@@ -31,6 +31,7 @@ import com.mongodb.DBRef;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 
+import play.Play;
 import dao.TalkerDAO;
 
 
@@ -38,9 +39,20 @@ public class DBUtil {
 	
 	private static Mongo mongo;
 	
+	private static String HOST_NAME = Play.configuration.getProperty("db.hostname");
+	
 	static {
 		try {
-			mongo = new Mongo("localhost", 27017);
+			if(HOST_NAME==null) {
+				System.out.println("Connecting to DB on localhost...");
+				mongo = new Mongo("localhost", 27017);
+				System.out.println("Connected, proceeding!");
+			}
+			else {
+				System.out.println("Connecting to DB on " + HOST_NAME + "...");
+				mongo = new Mongo(HOST_NAME, 27017);
+				System.out.println("Connected, proceeding!");
+			}
 		} catch (UnknownHostException e) {
 			Logger.error(e, "DB connection");
 		} catch (MongoException e) {
