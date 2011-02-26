@@ -38,7 +38,6 @@ import dao.TalkerDAO;
 import dao.TopicDAO;
 
 /**
- * TODO: move to other controller
  * Back-end for Ajax methods related to talker
  */
 @With(Secure.class)
@@ -51,7 +50,6 @@ public class Actions extends Controller {
 	public static void createThankYou(String toTalkerId, String note, String tagFile) {
 		TalkerBean fromTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean toTalker = TalkerDAO.getById(toTalkerId);
-		//TODO: better design for permissions?
 		if (fromTalker.equals(toTalker)) {
 			forbidden();
 			return;
@@ -76,7 +74,8 @@ public class Actions extends Controller {
 		
 		ThankYouBean _thankYou = thankYouBean;
 		TalkerBean _currentTalker = fromTalker;
-		render("tags/publicprofile/thanksThankYou.html", _thankYou, _currentTalker);
+		TalkerBean _talker = toTalker;
+		render("tags/publicprofile/thanksThankYou.html", _thankYou, _talker, _currentTalker);
 	}
 	
 	/**
@@ -89,7 +88,9 @@ public class Actions extends Controller {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getById(talkerId);
 		ThankYouBean thankYou = talker.getThankYouById(thankYouId);
-		if ( !(currentTalker.isAdmin() || currentTalker.equals(thankYou.getFromTalker())) ) {
+		if ( !(currentTalker.isAdmin() 
+				|| currentTalker.equals(thankYou.getFromTalker())
+				|| currentTalker.equals(talker)) ) {
 			//only admin or thankyou creator can delete it
 			forbidden();
 			return;
@@ -141,7 +142,6 @@ public class Actions extends Controller {
 	 * @param from page where request was made
 	 */
 	//TODO: check better option for cleanText?
-	//TODO: too many params?
 	public static void saveProfileComment(String profileTalkerId, String parentId, 
 			String text, String cleanText, String from, Boolean ccTwitter, Boolean ccFacebook) {
 		CommentBean comment = 
@@ -150,6 +150,7 @@ public class Actions extends Controller {
 		notFoundIfNull(comment);
 		
 		if (from != null && from.equals("home")) {
+			//for Home page we add new thought to feeds, so we return thought as feed activity item
     		TalkerBean _talker = comment.getFromTalker();
     		Action _activity = new PersonalProfileCommentAction(_talker, _talker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT);
     		render("tags/feed/feedActivity.html", _talker, _activity);
@@ -163,4 +164,56 @@ public class Actions extends Controller {
 		}
 	}
 	
+	/**
+	 * Delete thought/reply
+	 * @param commentId
+	 * @throws Throwable 
+	 */
+	public static void deleteComment(String commentId) throws Throwable {
+		Secure.checkAccess();
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	CommentBean comment = CommentsDAO.getProfileCommentById(commentId);
+    	notFoundIfNull(comment);
+    	
+    	//only admin or author can delete
+    	if ( !(talker.getId().equals(comment.getProfileTalkerId()) || talker.isAdmin()) ) {
+    		forbidden();
+    		return;
+    	}
+    	
+    	comment.setDeleted(true);
+		CommentsDAO.updateProfileComment(comment);
+		
+		//remove all actions connected with this comment
+		ActionDAO.deleteActionsByProfileComment(comment);
+    	renderText("ok");
+    }
+	
+	/**
+	 * Update thought/reply
+	 * @param commentId
+	 * @param newText
+	 * @throws Throwable 
+	 */
+	public static void updateComment(String commentId, String newText) throws Throwable {
+		Secure.checkAccess();
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	CommentBean comment = CommentsDAO.getProfileCommentById(commentId);
+    	notFoundIfNull(comment);
+    	
+    	//only author can update
+    	if (!talker.getId().equals(comment.getProfileTalkerId())) {
+    		forbidden();
+    		return;
+    	}
+    	
+    	String oldText = comment.getText();
+		if (!oldText.equals(newText)) {
+			comment.getOldTexts().add(oldText);
+			comment.setText(newText);
+			CommentsDAO.updateProfileComment(comment);
+		}
+		
+    	renderText("ok");
+    }
 }

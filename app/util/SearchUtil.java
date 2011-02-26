@@ -165,7 +165,6 @@ public class SearchUtil {
 		return results;
 	}
 	
-	//TODO: later - recommended to use only one searcher? Open after reindex?
 	public static Query prepareSearchQuery(String term, String[] fields, Analyzer analyzer)
 			throws ParseException {
 		QueryParser parser = new MultiFieldQueryParser(fields, analyzer);

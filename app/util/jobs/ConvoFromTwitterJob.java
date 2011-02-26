@@ -21,14 +21,13 @@ import util.TwitterUtil;
  * Checks Twitter every minute for possible convo creations (tweets with 'talkabouthealth' and '?')
  *
  */
-@Every("2min")
+@Every("3min")
 public class ConvoFromTwitterJob extends Job {
 	
 	@Override
 	public void doJob() throws Exception {
 		//get 10 last tweets with '@talkabouthealth'
 		List<ServicePost> mentionTweets = TwitterUtil.loadMentions();
-//		System.out.println(mentionTweets);
 		for (ServicePost tweet : mentionTweets) {
 			String text = tweet.getText().trim();
 			if ( (text.endsWith("@talkabouthealth") || text.endsWith("@TalkAboutHealth"))

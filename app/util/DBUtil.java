@@ -84,20 +84,6 @@ public class DBUtil {
 		return ref;
 	}
 	
-	public static TalkerBean parseTalker(DBObject dbObject, String name) {
-		DBRef talkerRef = (DBRef)dbObject.get(name);
-		if (talkerRef == null) {
-			return null;
-		}
-		return parseTalker(talkerRef);
-	}
-	public static TalkerBean parseTalker(DBRef talkerRef) {
-		DBObject talkerDBObject = talkerRef.fetch();
-		TalkerBean talker = new TalkerBean();
-		talker.parseBasicFromDB(talkerDBObject);
-		return talker;
-	}
-	
 	//Get String, int or boolean value from given DBObject
 	public static String getString(DBObject dbObject, String name) {
 		Object value = dbObject.get(name);
@@ -139,15 +125,6 @@ public class DBUtil {
 		return set;
 	}
 	
-	public static Map<String, String> getStringMap(DBObject dbObject, String name) {
-		DBObject value = (DBObject)dbObject.get(name);
-		if (value == null) {
-			return Collections.emptyMap();
-		}
-		Map<String, String> map = value.toMap();
-		return map;
-	}
-	
 	/* ----------------- Use for DBModel instances ---------------- */
 	
 	/**
@@ -170,9 +147,9 @@ public class DBUtil {
 			try {
 				t = clazz.newInstance();
 			} catch (InstantiationException e) {
-				e.printStackTrace();
+				Logger.error(e, "");
 			} catch (IllegalAccessException e) {
-				e.printStackTrace();
+				Logger.error(e, "");
 			}
 			if (t != null) {
 				t.parseDBObject(valueDBObject);
@@ -183,7 +160,7 @@ public class DBUtil {
 	}
 	
 	/**
-	 * Returns set of objects as set of DBObjects
+	 * Returns set of objects as set of DBObjects to save in DB
 	 * @param <T>
 	 * @param valueSet
 	 * @return
@@ -199,26 +176,11 @@ public class DBUtil {
 	}
 	
 	
-	public static void main(String[] args) {
-		Set<String> colls = getDB().getCollectionNames();
-
-		for (String s : colls) {
-		    System.out.println(s);
-		}
-		
-		//FIXME: add indexes later? for now we have not many users
-//		activities
-//		configs
-//		convocomments
-//		convos
-//		diseases
-//		healthitems
-//		logins
-//		names
-//		notifications
-//		profilecomments
-//		system.indexes
-//		talkers
-//		topics
-	}
+//	public static void main(String[] args) {
+//		Set<String> colls = getDB().getCollectionNames();
+//
+//		for (String s : colls) {
+//		    System.out.println(s);
+//		}
+//	}
 }

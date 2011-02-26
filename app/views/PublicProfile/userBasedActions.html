@@ -116,7 +116,7 @@
 				            <div id="thankyousList" class="thnksarea2">
 				            	#{if talker.isAllowed(models.PrivacySetting.PrivacyType.THANKYOUS, currentTalker) }
 									#{list items:talker.thankYouList, as:'thankYou'}
-										#{ publicprofile/thanksThankYou thankYou: thankYou, currentTalker: currentTalker /}
+										#{ publicprofile/thanksThankYou thankYou: thankYou, talker: talker, currentTalker: currentTalker /}
 									#{/list}
 								#{/if}
 								#{else}

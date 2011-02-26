@@ -11,7 +11,7 @@ import play.mvc.Scope.Session;
 public interface OAuthServiceProvider {
 	
 	/**
-	 * Returns URL for user's authentication (where wer redirect user)
+	 * Returns URL for user's authentication (where we redirect user)
 	 * @param session
 	 * @param secureRequest
 	 * @return

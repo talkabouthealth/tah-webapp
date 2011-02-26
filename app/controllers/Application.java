@@ -116,17 +116,7 @@ public class Application extends Controller {
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("username", talker.getUserName());
 		vars.put("newpassword", newPassword);
-		boolean result = EmailUtil.sendEmail(EmailTemplate.FORGOT_PASSWORD, email, vars);
-		
-		//TODO: better validation
-		validation.isTrue(result).message("Not verified email or unknown error. " +
-				"Please contact support at <a href=\"mailto:"+EmailUtil.SUPPORT_EMAIL+"\">"+EmailUtil.SUPPORT_EMAIL+"</a>");
-		if(validation.hasErrors()) {
-            params.flash();
-            validation.keep();
-            forgotPassword();
-            return;
-        }
+		EmailUtil.sendEmail(EmailTemplate.FORGOT_PASSWORD, email, vars, null, false);
 		
 		flash.success("ok");
 		forgotPassword();
@@ -199,7 +189,6 @@ public class Application extends Controller {
     	
     	if (serviceType == ServiceType.TWITTER) {
     		//for Twitter we check email
-    		//TODO: the same email validation?
     		validation.required(email);
     		validation.email(email);
 			if (validation.hasError("email")) {

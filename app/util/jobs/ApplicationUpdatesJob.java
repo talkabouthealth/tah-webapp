@@ -68,25 +68,6 @@ public class ApplicationUpdatesJob extends Job {
 	
 	public void doJob() throws Exception {
 		
-		/*
-		 *  Generate IDs for ThankYous!
-		 *  
-		 */
-		int updated = 0;
-		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
-			int index = 0;
-			for (ThankYouBean thankYouBean : talker.getThankYouList()) {
-				if (thankYouBean.getId() == null) {
-					thankYouBean.setTo(talker.getId());
-					thankYouBean.setId(new ObjectId().toString());
-					TalkerDAO.updateThankYou(thankYouBean, index);
-					updated++;
-				}
-				index++;
-			}
-		}
-		System.out.println("-----Finished! "+updated);
-		
 		//Fields data for Edit Profile
 		FieldsDataImporter.importData("fields.dat");
 		
@@ -127,17 +108,6 @@ public class ApplicationUpdatesJob extends Job {
 		
 		// Updates for different items
 		HealthItemsUpdater.updateHealthItems("healthitemsupd.dat");
-		
-		//update topic from "," to "/"
-//		for (TopicBean topic : TopicDAO.loadAllTopics()) {
-//			String topicTitle = topic.getTitle();
-//			if (topicTitle.contains(",")) {
-//				topicTitle = topicTitle.replaceAll(", ", "/");
-//				topicTitle = topicTitle.replaceAll(",", "/");
-//				topic.setTitle(topicTitle);
-//			}
-//			TopicDAO.updateTopic(topic);
-//		}
 		
 //		createBitlyLinks();
     }

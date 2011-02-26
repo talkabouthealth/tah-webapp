@@ -43,6 +43,12 @@ public class ImageUtil {
     	return baos;
 	}
 	
+	/**
+	 * Truncates width and height of given image to 100px max
+	 * @param bsrc
+	 * @return
+	 * @throws IOException
+	 */
 	public static ByteArrayOutputStream createThumbnailFromFacebook(BufferedImage bsrc) throws IOException {
 		int width = bsrc.getWidth();
 		int height = bsrc.getHeight();

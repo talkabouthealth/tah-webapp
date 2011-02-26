@@ -89,60 +89,6 @@ public class PublicProfile extends Controller {
 		render(talker, currentTalker, firstTimeComment);
 	}
 	
-	/**
-	 * Delete thought/reply
-	 * @param commentId
-	 * @throws Throwable 
-	 */
-	//TODO: move delete/update to other controller?
-	public static void deleteComment(String commentId) throws Throwable {
-		Secure.checkAccess();
-    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	CommentBean comment = CommentsDAO.getProfileCommentById(commentId);
-    	notFoundIfNull(comment);
-    	
-    	//only admin or author can delete
-    	if ( !(talker.getId().equals(comment.getProfileTalkerId()) || talker.isAdmin()) ) {
-    		forbidden();
-    		return;
-    	}
-    	
-    	comment.setDeleted(true);
-		CommentsDAO.updateProfileComment(comment);
-		
-		//remove all actions connected with this comment
-		ActionDAO.deleteActionsByProfileComment(comment);
-    	renderText("ok");
-    }
-	
-	/**
-	 * Update thought/reply
-	 * @param commentId
-	 * @param newText
-	 * @throws Throwable 
-	 */
-	public static void updateComment(String commentId, String newText) throws Throwable {
-		Secure.checkAccess();
-    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	CommentBean comment = CommentsDAO.getProfileCommentById(commentId);
-    	notFoundIfNull(comment);
-    	
-    	//only author can update
-    	if (!talker.getId().equals(comment.getProfileTalkerId())) {
-    		forbidden();
-    		return;
-    	}
-    	
-    	String oldText = comment.getText();
-		if (!oldText.equals(newText)) {
-			comment.getOldTexts().add(oldText);
-			comment.setText(newText);
-			CommentsDAO.updateProfileComment(comment);
-		}
-		
-    	renderText("ok");
-    }
-	
 	public static void answers(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByURLName(userName);

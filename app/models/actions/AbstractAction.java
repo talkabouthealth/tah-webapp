@@ -28,6 +28,10 @@ import models.TalkerBean;
 import models.ConversationBean;
 import models.TopicBean;
 
+//TODO: maybe write text descritions? Like:
+//Every action has different data - convo, topics, answer or all this data together... Etc.
+
+//TODO: try to use TAH db and check loading times?
 public abstract class AbstractAction implements Action {
 	
 	protected String id;
@@ -211,11 +215,12 @@ public abstract class AbstractAction implements Action {
 		}
 		
 		DBObject answerDBObject = answerDBRef.fetch();
+		//TODO: use parseFrom? 
 		CommentBean answer = new CommentBean();
 		answer.setId(getString(answerDBObject, "_id"));
 		answer.setText((String)answerDBObject.get("text"));
 		answer.setTime((Date)answerDBObject.get("time"));
-		answer.setFromTalker(parseTalker(answerDBObject, "from"));
+		answer.setFromTalker(TalkerDAO.parseTalker(answerDBObject, "from"));
     	return answer;
 	}
 	
@@ -238,7 +243,7 @@ public abstract class AbstractAction implements Action {
 		comment.setId(getString(commentDBObject, "_id"));
 		comment.setText((String)commentDBObject.get("text"));
 		comment.setTime((Date)commentDBObject.get("time"));
-		comment.setFromTalker(parseTalker(commentDBObject, "from"));
+		comment.setFromTalker(TalkerDAO.parseTalker(commentDBObject, "from"));
 		
 		if (name.equalsIgnoreCase("profile_comment")) {
 			//for thought we also load replies
@@ -255,7 +260,7 @@ public abstract class AbstractAction implements Action {
 				child.setId(getString(answerDBObject, "_id"));
 				child.setText((String)answerDBObject.get("text"));
 				child.setTime((Date)answerDBObject.get("time"));
-				child.setFromTalker(parseTalker(answerDBObject, "from"));
+				child.setFromTalker(TalkerDAO.parseTalker(answerDBObject, "from"));
 				child.setDeleted(getBoolean(answerDBObject, "deleted"));
 				if (!child.isDeleted()) {
 					childrenList.add(child);

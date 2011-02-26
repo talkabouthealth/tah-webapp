@@ -73,17 +73,7 @@ public class Conversations extends Controller {
     	//prepare params
     	ConvoType convoType = ConvoType.valueOf(type);
     	
-    	//TODO: separate to method
-    	Set<TopicBean> topicsSet = new HashSet<TopicBean>();
-    	String[] topicsArr = topics.split(",");
-    	for (String topicTitle : topicsArr) {
-    		if (topicTitle.trim().length() != 0) {
-    			TopicBean topic = TopicDAO.getOrRestoreByTitle(topicTitle.trim());
-        		if (topic != null) {
-        			topicsSet.add(topic);
-        		}
-    		}
-    	}
+    	Set<TopicBean> topicsSet = TopicLogic.parseTopicsFromString(topics);
     	
     	ConversationBean parentConvo = null;
     	if (parentConvoId != null && parentConvoId.length() > 0) {
@@ -99,7 +89,7 @@ public class Conversations extends Controller {
     	
     	renderConvoData(fromPage, talker, convo);
     }
-	
+
 	/**
 	 * Renders conversation's data in JSON format, based on parameters
 	 */
@@ -211,7 +201,7 @@ public class Conversations extends Controller {
     	ConversationBean convo = ConversationDAO.getById(convoId);
     	notFoundIfNull(convo);
     	
-    	EmailUtil.flagContent("Conversation/Question", convo, reason, convo.getTopic(), talker);
+    	ConversationLogic.flagContent("Conversation/Question", convo, reason, convo.getTopic(), talker);
     }
     
 	/**
@@ -247,7 +237,6 @@ public class Conversations extends Controller {
      * @param name name of the field to update
      * @param value new value for the given field
      */
-    //TODO: too complicated for one method?
     public static void updateField(String convoId, String name, String value) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	ConversationBean convo = ConversationDAO.getById(convoId);
@@ -401,7 +390,7 @@ public class Conversations extends Controller {
     	notFoundIfNull(answer);
     	ConversationBean convo = ConversationDAO.getById(answer.getConvoId());
     	
-    	EmailUtil.flagContent("Answer/Reply", convo, reason, answer.getText(), talker);
+    	ConversationLogic.flagContent("Answer/Reply", convo, reason, answer.getText(), talker);
     }
     
     /**
@@ -445,7 +434,7 @@ public class Conversations extends Controller {
     		//But also send an email to "support@talkabouthealth.com" add a comment
     		if (answer.isNotHelpful()) {
     			answer.setNotHelpful(false);
-    			EmailUtil.flagContent("Answer", convo, "User voted up for this 'Not Helpful' answer", answer.getText(), talker);
+    			ConversationLogic.flagContent("Answer", convo, "User voted up for this 'Not Helpful' answer", answer.getText(), talker);
     		}
     	}
     	

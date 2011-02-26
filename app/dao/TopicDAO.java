@@ -4,6 +4,7 @@ import static util.DBUtil.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -84,7 +85,7 @@ public class TopicDAO {
 	 * @return
 	 */
 	public static TopicBean getByURL(String url) {
-		DBCollection topicsColl = getDB().getCollection(TOPICS_COLLECTION);
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("$or", 
@@ -172,6 +173,37 @@ public class TopicDAO {
 		return loadAllTopics(false);
 	}
 	
+	
+	/**
+	 * Recursive method that saves all subtree of given root topic to 'allTopics' list.
+	 */
+	public static void loadSubTopicsAsTree(List<DBRef> allTopics, TopicBean rootTopic) {
+		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, rootTopic.getId());
+		if (!allTopics.contains(topicRef)) {
+			allTopics.add(topicRef);
+			
+			for (TopicBean child : rootTopic.getChildren()) {
+				DBCollection topicsColl = getCollection(TopicDAO.TOPICS_COLLECTION);
+				DBObject query = new BasicDBObject("_id", new ObjectId(child.getId()));
+				DBObject topicDBObject = topicsColl.findOne(query);
+				
+				TopicBean fullChild = new TopicBean();
+				fullChild.setId(getString(topicDBObject, "_id"));
+				//children
+				Collection<DBRef> childrenDBList = (Collection<DBRef>)topicDBObject.get("children");
+				Set<TopicBean> children = new HashSet<TopicBean>();
+				if (childrenDBList != null) {
+					for (DBRef childDBRef : childrenDBList) {
+						children.add(new TopicBean(childDBRef.getId().toString()));
+					}
+				}
+				fullChild.setChildren(children);
+				
+				loadSubTopicsAsTree(allTopics, fullChild);
+			}
+		}
+	}
+	
 	public static Set<TopicBean> getParentTopics(String topicId) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
@@ -250,7 +282,7 @@ public class TopicDAO {
 		for (DBObject topicDBObject : topicsDBList) {
 			TopicBean topic = new TopicBean();
 			topic.parseBasicFromDB(topicDBObject);
-			topic.setConversations(ConversationDAO.loadSimpleConversationsByTopic(topic.getId()));
+			topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
 			popularTopics.add(topic);
 		}
 		

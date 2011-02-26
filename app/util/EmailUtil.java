@@ -111,24 +111,5 @@ public class EmailUtil {
 		}
 	}
 	
-	/**
-	 * Send email to TAH Support about flagging some content
-	 * @param contentType
-	 * @param convo
-	 * @param reason
-	 * @param content
-	 * @param talker
-	 */
-	public static void flagContent(String contentType, ConversationBean convo,
-			String reason, String content, TalkerBean talker) {
-		Map<String, String> vars = new HashMap<String, String>();
-    	vars.put("content_type", contentType);
-    	vars.put("content_link", CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL()));
-    	vars.put("reason", reason);
-		vars.put("content", content);
-		vars.put("name", talker.getUserName());
-		vars.put("email", talker.getEmail());
-		EmailUtil.sendEmail(EmailTemplate.FLAGGED, EmailUtil.SUPPORT_EMAIL, vars, null, false);
-	}
 }
 

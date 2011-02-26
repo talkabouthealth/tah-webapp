@@ -43,7 +43,6 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 	private static final String CALLBACK_URL =
 		"talkabouthealth.com/oauth/callback?type=twitter";
 	
-//	Test values FIXME: use production settings
 //	public static final String CONSUMER_KEY = "7VymbW3wmOOoQ892BqIsaA";
 //	public static final String CONSUMER_SECRET = "s8aexaIBgMxAm4ZqQNayv5SAr6Wd1SKFVETUEPv0cmM";
 //	public static final String CALLBACK_URL =

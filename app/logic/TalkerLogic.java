@@ -406,9 +406,9 @@ public class TalkerLogic {
 				ActionDAO.saveAction(new PersonalProfileCommentAction(
 						talker, profileTalker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT));
 				
-				//TODO: better implement?
 				for (ServiceAccountBean serviceAccount : talker.getServiceAccounts()) {
 					if (serviceAccount.getType() == ServiceType.TWITTER) {
+						//Check if user deselected Cc: or if Share setting isn't set
 						if (ccTwitter != null && !ccTwitter) {
 							continue;
 						}

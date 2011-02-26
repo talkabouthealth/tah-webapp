@@ -142,21 +142,7 @@ public class Profile extends Controller {
 		if (oldTalker.isProf()) {
 			oldTalker.setProfStatement(talker.getProfStatement());
 			
-			//TODO: separ method
-			Map<String, String> profInfo = new HashMap<String, String>();
-			//parse "pr_" fields - proffesional fields
-			Map<String, String> paramsMap = params.allSimple();
-			for (Entry<String, String> param : paramsMap.entrySet()) {
-				if (param.getKey().startsWith("pr_")) {
-					//profile info parameter
-					String value = param.getValue();
-					if (value != null && value.equals("(separate by commas if multiple)")) {
-						value = null;
-					}
-					
-					profInfo.put(param.getKey().substring(3), value);
-				}
-			}
+			Map<String, String> profInfo = oldTalker.parseProfInfoFromParams(params.allSimple());
 			oldTalker.setProfInfo(profInfo);
 		}
 		else {
@@ -269,7 +255,6 @@ public class Profile extends Controller {
 		CommonUtil.updateTalker(talker, session);
 		
 		//used for menu displaying
-		//TODO: try without it? 
 		if (talker.isProf()) {
 			session.put("prof", "true");
 		}

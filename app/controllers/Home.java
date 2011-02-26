@@ -162,15 +162,7 @@ public class Home extends Controller {
     public static void sendInvitations(String emails, String note) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-		//parse and validate emails
-		Set<String> emailsToSend = new HashSet<String>();
-		String[] emailsArr = emails.split(",");	
-		for (String email : emailsArr) {
-			email = email.trim();
-			if (ValidateData.validateEmail(email)) {
-				emailsToSend.add(email);
-			}
-		}
+		Set<String> emailsToSend = CommonUtil.parseEmailsFromString(emails);
 		
 		validation.isTrue(!emailsToSend.isEmpty()).message("emails.incorrect");
 		validation.isTrue(emailsToSend.size() <= talker.getInvitations()).message("emails.noinvites");
@@ -196,7 +188,7 @@ public class Home extends Controller {
     	flash.success("ok");
     	invitations();
     }
-    
+
     /**
      * Back-end method for Share features on Home/ConvoSummary/Topic pages
      * @param type Share type: 'email', 'twitter' or 'facebook'
@@ -209,16 +201,8 @@ public class Home extends Controller {
     	
     	if (type != null) {
     		if (type.equalsIgnoreCase("email")) {
-    			//parse and validate emails
-    			//TODO: the same code?
-    			Set<String> emailsToSend = new HashSet<String>();
-    			String[] emailsArr = emails.split(",");	
-    			for (String email : emailsArr) {
-    				email = email.trim();
-    				if (ValidateData.validateEmail(email)) {
-    					emailsToSend.add(email);
-    				}
-    			}
+    			Set<String> emailsToSend = CommonUtil.parseEmailsFromString(emails);
+    			
     			validation.isTrue(!emailsToSend.isEmpty()).message("emails.incorrect");
     			if(validation.hasErrors()) {
     				renderText("Error: Please input correct emails");
@@ -245,7 +229,6 @@ public class Home extends Controller {
     				EmailUtil.sendEmail(EmailTemplate.SHARE, email, vars, null, false);
     			}
     		}
-    		//TODO: make abstract method + implement for Tw/Fb?
     		else if (type.equalsIgnoreCase("twitter")) {
     			ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
     			if (twitterAccount != null) {

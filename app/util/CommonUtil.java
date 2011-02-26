@@ -221,7 +221,6 @@ public class CommonUtil {
 	public static String generateAbsoluteURL(String action, String paramName, Object paramValue) {
 		//we can't generate url without request (e.g. calling this method from some Job)
 		if (Http.Request.current() == null) {
-			System.out.println(action+" : "+paramValue);
 			if (action.equals("ViewDispatcher.view")) {
 				return "http://talkabouthealth.com/"+paramValue;
 			}
@@ -378,4 +377,20 @@ public class CommonUtil {
 		return replacedText;
 	}
 	
+	/**
+	 * Parse and validate emails from comma-separated string
+	 * @param emails
+	 * @return
+	 */
+	public static Set<String> parseEmailsFromString(String emails) {
+		Set<String> emailsToSend = new HashSet<String>();
+		String[] emailsArr = emails.split(",");	
+		for (String email : emailsArr) {
+			email = email.trim();
+			if (ValidateData.validateEmail(email)) {
+				emailsToSend.add(email);
+			}
+		}
+		return emailsToSend;
+	}
 }

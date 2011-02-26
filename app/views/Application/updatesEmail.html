@@ -9,7 +9,7 @@
 	name="emailform" method="post" class="loginform"> 
 	#{ifErrors}
 	   #{errors}
-	   	   *{ Raw output - we have "a" link in one of the errors }*
+	   	   *{ Raw output - we have "a" tag in one of the errors }*
 	       <span class="error">${error.raw()}</span><br/><br/><br/><br/>
 	   #{/errors}
 	#{/ifErrors}

@@ -13,6 +13,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import models.CommentBean.Vote;
 import models.PrivacySetting.PrivacyType;
@@ -396,7 +397,7 @@ public class TalkerBean implements Serializable {
 				
 				Set<TalkerBean> endorsements = new HashSet<TalkerBean>();
 				for (DBRef talkerDBRef : DBUtil.<DBRef>getSet(topicInfoDBObject, "endorsements")) {
-					endorsements.add(parseTalker(talkerDBRef));
+					endorsements.add(TalkerDAO.parseTalker(talkerDBRef));
 				}
 				topicInfo.setEndorsements(endorsements);
 				
@@ -473,11 +474,11 @@ public class TalkerBean implements Serializable {
 		return dbRefList;
 	}
 	
-	/* -------------------- Useful methods for displaying data --------------------- */
+	/* -------------------- Different useful methods --------------------- */
 	
 	/**
 	 * Returns userName or anonymous name, 
-	 * based on privacy settings and current logged in talker
+	 * based on privacy settings and current logged-in talker
 	 */
 	public String getName() {
 		String loggedinUsername = Session.current().get("username");
@@ -554,6 +555,29 @@ public class TalkerBean implements Serializable {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Parse professional info from http params (submitted from the form)
+	 * @param paramsMap
+	 * @return
+	 */
+	public Map<String, String> parseProfInfoFromParams(Map<String, String> paramsMap) {
+		Map<String, String> profInfo = new HashMap<String, String>();
+		//parse "pr_" fields - proffesional fields
+		for (Entry<String, String> param : paramsMap.entrySet()) {
+			if (param.getKey().startsWith("pr_")) {
+				//profile info parameter
+				String value = param.getValue();
+				if (value != null && value.equals("(separate by commas if multiple)")) {
+					value = null;
+				}
+				
+				//remove "pr_" part and add to map
+				profInfo.put(param.getKey().substring(3), value);
+			}
+		}
+		return profInfo;
 	}
 	
 	/**
@@ -903,4 +927,5 @@ public class TalkerBean implements Serializable {
 	public void setOtherCtype(List<String> otherCtype) {
 		this.otherCtype = otherCtype;
 	}
+	
 }	

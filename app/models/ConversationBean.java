@@ -138,7 +138,7 @@ public class ConversationBean {
     	//topics(tags)
     	parseTopics((Collection<DBRef>)convoDBObject.get("topics"));  
     	//author
-    	setTalker(parseTalker(convoDBObject, "uid"));
+    	setTalker(TalkerDAO.parseTalker(convoDBObject, "uid"));
 	}
 	
 	public void parseFromDB(DBObject convoDBObject) {
@@ -188,6 +188,7 @@ public class ConversationBean {
     			else {
     				//TODO: remove another conversation
     				//NULL talker in conversation message: 4cd83ea41a98b19bfec451e2, index: 42
+    				//NULL talker in conversation message: 4cd83d711a98b19bd4c451e2, messages: 2
     				errorCount++;
     			}
     		}
@@ -294,24 +295,6 @@ public class ConversationBean {
 			}
 		}
 		return null;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof ConversationBean)) {
-			return false;
-		}
-		
-		ConversationBean other = (ConversationBean)obj;
-		return id.equals(other.id);
-	}
-	
-	@Override
-	public int hashCode() {
-		if (id == null) {
-			return 47;
-		}
-		return id.hashCode();
 	}
 	
 	/**
@@ -439,6 +422,25 @@ public class ConversationBean {
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", getMainURL());
 		String shareText = "TalkAboutHealth Q&A: "+getTopic()+" - "+convoURL;
 		return shareText;
+	}
+	
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof ConversationBean)) {
+			return false;
+		}
+		
+		ConversationBean other = (ConversationBean)obj;
+		return id.equals(other.id);
+	}
+	
+	@Override
+	public int hashCode() {
+		if (id == null) {
+			return 47;
+		}
+		return id.hashCode();
 	}
 	
 	public String getMainURL() { return mainURL; }

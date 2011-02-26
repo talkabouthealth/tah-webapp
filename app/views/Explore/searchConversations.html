@@ -4,8 +4,8 @@
 		$(document).ready(function() {
 			makeAutocomplete("#query", "convo");
 
-			$("#query")
-				.keydown(function(c) {
+			$("#query").keydown(function(c) {
+					//search on enter
 					if (c.keyCode === 13) {
 						var query = $("#query").val();
 						if (query === '') {
@@ -98,8 +98,4 @@
 			
 		</div>
 		
-		#{ set currentPage = 'search' /}
-        *{
-        	#{ include 'right.html' /} 
-        }*
 	</div>

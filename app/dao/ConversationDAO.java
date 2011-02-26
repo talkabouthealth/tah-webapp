@@ -182,7 +182,7 @@ public class ConversationDAO {
 		DBObject query = new BasicDBObject("tid", tid);
 		DBObject convoDBObject = convosColl.findOne(query);
 		
-		//TODO: same code
+		//TODO: same code?
 		if (convoDBObject == null) {
 			return null;
 		}
@@ -477,7 +477,7 @@ public class ConversationDAO {
 		//http://www.mongodb.org/display/DOCS/Trees+in+MongoDB#TreesinMongoDB-ArrayofAncestors
 		List<DBRef> allTopics = new ArrayList<DBRef>();
 		for (TopicBean topic : topics) {
-			getAllTopics(allTopics, topic);
+			TopicDAO.loadSubTopicsAsTree(allTopics, topic);
 		}
 		
 		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
@@ -492,76 +492,26 @@ public class ConversationDAO {
 	}
 	
 	/**
-	 * Recursive method that saves all subtree of given root topic to 'allTopics' list.
-	 */
-	//TODO: move to topics dao?
-	public static void getAllTopics(List<DBRef> allTopics, TopicBean rootTopic) {
-		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, rootTopic.getId());
-		if (!allTopics.contains(topicRef)) {
-			allTopics.add(topicRef);
-			
-			for (TopicBean child : rootTopic.getChildren()) {
-				DBCollection topicsColl = getCollection(TopicDAO.TOPICS_COLLECTION);
-				DBObject query = new BasicDBObject("_id", new ObjectId(child.getId()));
-				DBObject topicDBObject = topicsColl.findOne(query);
-				
-				TopicBean fullChild = new TopicBean();
-				fullChild.setId(getString(topicDBObject, "_id"));
-				//children
-				Collection<DBRef> childrenDBList = (Collection<DBRef>)topicDBObject.get("children");
-				Set<TopicBean> children = new HashSet<TopicBean>();
-				if (childrenDBList != null) {
-					for (DBRef childDBRef : childrenDBList) {
-						children.add(new TopicBean(childDBRef.getId().toString()));
-					}
-				}
-				fullChild.setChildren(children);
-				
-				getAllTopics(allTopics, fullChild);
-			}
-		}
-	}
-	
-	/**
 	 * Load conversations that have given topic.
 	 */
 	public static List<ConversationBean> loadConversationsByTopic(String topicId) {
 		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
 		
 		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topicId);
-		DBObject query = new BasicDBObject("topics", topicRef);
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("topics", topicRef)
+			.add("deleted", new BasicDBObject("$ne", true))
+			.get();
 		List<DBObject> convosDBList = convosColl.find(query).toArray();
 		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
 			ConversationBean convo = new ConversationBean();
-			convo.parseFromDB(convoDBObject);
-			if (!convo.isDeleted()) {
-				//TODO: do we need to load this?
-				convo.setComments(CommentsDAO.loadConvoAnswersTree(convo.getId()));
-				convosList.add(convo);
-			}
-		}
-		return convosList;
-	}
-	
-	//TODO: check this and previous methods
-	public static List<ConversationBean> loadSimpleConversationsByTopic(String topicId) {
-		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
-		
-		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topicId);
-		DBObject query = new BasicDBObject("topics", topicRef);
-		List<DBObject> convosDBList = convosColl.find(query).toArray();
-		
-		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
-		for (DBObject convoDBObject : convosDBList) {
-			ConversationBean convo = new ConversationBean();
-			convo.setId(convoDBObject.get("_id").toString());
+			convo.parseBasicFromDB(convoDBObject);
 			convosList.add(convo);
 		}
 		return convosList;
 	}
-	
 	
 	/**
 	 * Closes given LiveChat manually - deletes all live talkers.

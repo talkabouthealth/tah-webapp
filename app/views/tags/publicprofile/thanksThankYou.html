@@ -10,7 +10,7 @@
 			${_thankYou.note}
 		</span>
 		<br/>
-		#{if _currentTalker && (_currentTalker.isAdmin() || _currentTalker.equals(_thankYou.fromTalker)) }
+		#{if _currentTalker && (_currentTalker.isAdmin() || _currentTalker.equals(_thankYou.fromTalker) || _currentTalker.equals(_talker)) }
 			<a href="#" class="deleteThankYouLink lightgrey12" rel="${_thankYou.id}">Delete</a>
 			<span class="lightgrey12">&nbsp;|&nbsp;</span> 
 		#{/if}

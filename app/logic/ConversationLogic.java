@@ -17,9 +17,11 @@ import com.tah.im.IMNotifier;
 
 import util.BitlyUtil;
 import util.CommonUtil;
+import util.EmailUtil;
 import util.FacebookUtil;
 import util.NotificationUtils;
 import util.TwitterUtil;
+import util.EmailUtil.EmailTemplate;
 import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
@@ -41,6 +43,7 @@ import models.actions.FollowConvoAction;
 import models.actions.StartConvoAction;
 import models.actions.Action.ActionType;
 
+//TODO: check all logic
 public class ConversationLogic {
 	
 	public static final String DEFAULT_TALK_TOPIC = "Chats";
@@ -230,7 +233,6 @@ public class ConversationLogic {
             				continue;
             			}
 	        			
-	        			//TODO: make separate Tw/Fb classes?
 	        			if (serviceAccount.getType() == ServiceType.TWITTER) {
 	        				//New answer by <username> for <question>... http://bit.ly/asdfw
 	        				String dmText = TwitterUtil.prepareTwit("New answer by "+
@@ -248,7 +250,6 @@ public class ConversationLogic {
 	        		//IM notification
 	        		//For convo author we send other IM notification
 	        		if (!follower.equals(convo.getTalker())) {
-	        			//TODO: add settings check
 	        			String imText = "New answer by "+
 							comment.getFromTalker().getUserName()+" for "+convo.getTopic()+": "+comment.getText();
 	        			IMNotifier.getInstance().followersAnswerNotification(follower.getId(), convo.getId(), imText);
@@ -309,7 +310,7 @@ public class ConversationLogic {
     		}
     	}
     	
-    	//TODO: check if we need to send this (notification settings)
+    	//TODO: check if we need to send this (notification settings), add check for all IM notifications
 //    	The exception is users will receive IM notifications of answers 
 //    	if they started the conversation/question or if they answered a question and 
 //    	the user who started the question wants to follow up.
@@ -396,4 +397,24 @@ public class ConversationLogic {
 		return convosFeed;
 	}
 
+	/**
+	 * Send email to TAH Support about flagging some content
+	 * 
+	 * @param contentType
+	 * @param convo
+	 * @param reason
+	 * @param content
+	 * @param talker
+	 */
+	public static void flagContent(String contentType, ConversationBean convo,
+			String reason, String content, TalkerBean talker) {
+		Map<String, String> vars = new HashMap<String, String>();
+    	vars.put("content_type", contentType);
+    	vars.put("content_link", CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL()));
+    	vars.put("reason", reason);
+		vars.put("content", content);
+		vars.put("name", talker.getUserName());
+		vars.put("email", talker.getEmail());
+		EmailUtil.sendEmail(EmailTemplate.FLAGGED, EmailUtil.SUPPORT_EMAIL, vars, null, false);
+	}
 }

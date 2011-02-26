@@ -12,6 +12,7 @@ public class PrivacySetting implements DBModel {
 		PROFILE_INFO("Personal Info"),
 		//only for Prof users
 		PROFESSIONAL_INFO("Professional Info"),
+		//only for non-Prof users
 		HEALTH_INFO("Health Info"),
 		ACTIVITY_STREAM("Activity Stream"),
 		THOUGHTS("Thoughts"),

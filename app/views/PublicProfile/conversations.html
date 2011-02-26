@@ -11,6 +11,7 @@
 			prepareList("chatsJoined");
 			prepareList("questionsFollowing");
 
+			//TODO: same follow/unfollow?
 			$(".followConvoLink2, .unfollowConvoLink2").live('click', function() {
 				var convoId = $(this).attr("rel");
 				$.post("@{Conversations.follow()}", 

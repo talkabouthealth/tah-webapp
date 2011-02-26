@@ -71,6 +71,7 @@ public class NotificationUtils {
 	 * - don't notify more than 1x every 3 hours
 	 * - don't notify more the 3x per day
 	 */
+	//TODO: simplify IM notifications
 	public static void sendIMNotifications(String convoId, String restartTalkerId) {
 		OnlineUsersSingleton onlineUsersSingleton = OnlineUsersSingleton.getInstance();
 		Map<String, UserInfo> onlineUsers = onlineUsersSingleton.getOnlineUserMap();

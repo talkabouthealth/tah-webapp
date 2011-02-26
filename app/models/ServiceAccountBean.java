@@ -14,6 +14,7 @@ import com.mongodb.DBObject;
  * Twitter or Facebook account
  *
  */
+//TODO: twitter/facebook subclasses?
 public class ServiceAccountBean implements DBModel {
 	
 	public enum ServiceType { TWITTER, FACEBOOK }
@@ -130,7 +131,6 @@ public class ServiceAccountBean implements DBModel {
 		}
 	}
 	
-	//TODO: IM todos
 	//TODO: user ENUM instead of strings
 	public boolean isTrue(String key) {
 		if (settings == null) {

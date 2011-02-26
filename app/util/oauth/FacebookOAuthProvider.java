@@ -40,7 +40,6 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 //	public static final String CALLBACK_URL =
 //		"kan.dev.com:9000/oauth/callback?type=facebook";
 	
-	//TODO: check patterns
 	public String getAuthURL(Session session, boolean secureRequest) {
 		String authURL = null;
 		try {

@@ -2,6 +2,7 @@ package logic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -75,13 +76,33 @@ public class TopicLogic {
 	 */
 	public static List<String> getSubTopics(TopicBean parentTopic) {
 		List<DBRef> allTopics = new ArrayList<DBRef>();
-		ConversationDAO.getAllTopics(allTopics, parentTopic);
+		TopicDAO.loadSubTopicsAsTree(allTopics, parentTopic);
 		
 		List<String> topicsTree = new ArrayList<String>();
 		for (DBRef topicRef : allTopics) {
 			topicsTree.add(topicRef.getId().toString());
 		}
 		return topicsTree;
+	}
+	
+	/**
+	 * Parse set of topics from comma-separated string of topic names
+	 * 
+	 * @param topics
+	 * @return
+	 */
+	public static Set<TopicBean> parseTopicsFromString(String topics) {
+		Set<TopicBean> topicsSet = new HashSet<TopicBean>();
+    	String[] topicsArr = topics.split(",");
+    	for (String topicTitle : topicsArr) {
+    		if (topicTitle.trim().length() != 0) {
+    			TopicBean topic = TopicDAO.getOrRestoreByTitle(topicTitle.trim());
+        		if (topic != null) {
+        			topicsSet.add(topic);
+        		}
+    		}
+    	}
+		return topicsSet;
 	}
 
 }

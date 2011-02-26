@@ -51,7 +51,6 @@ public class TalkerDAO {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
 		DBObject talkerDBObject = BasicDBObjectBuilder.start()
-				//TODO: organize fields lists everywhere
 				.add("uname", talker.getUserName())
 				.add("anon_name", talker.getAnonymousName())
 				.add("pass", talker.getPassword())
@@ -274,6 +273,7 @@ public class TalkerDAO {
 	public static TalkerBean getByLoginInfo(String usernameOrEmail, String password) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
+		//for case insensitive search we use regex
 		Pattern usernameOrEmailRegex = Pattern.compile("^"+usernameOrEmail+"$", Pattern.CASE_INSENSITIVE);
 		
 		Object passwordRegex = password;
@@ -354,6 +354,25 @@ public class TalkerDAO {
 		talker.parseFromDB(talkerDBObject);
 		return talker;
 	}
+	
+	
+	public static TalkerBean parseTalker(DBObject dbObject, String name) {
+		DBRef talkerRef = (DBRef)dbObject.get(name);
+		if (talkerRef == null) {
+			return null;
+		}
+		return parseTalker(talkerRef);
+	}
+	
+	public static TalkerBean parseTalker(DBRef talkerRef) {
+		DBObject talkerDBObject = talkerRef.fetch();
+		TalkerBean talker = new TalkerBean();
+		talker.parseBasicFromDB(talkerDBObject);
+		return talker;
+	}
+	
+	
+	// ---------------------- Other methods -----------------------
 	
 	/**
 	 * Checks userName and original userName (deactivated users)
@@ -510,15 +529,6 @@ public class TalkerDAO {
 		DBObject query = new BasicDBObject("_id", new ObjectId(thankYou.getTo()));
 		talkersColl.update(query,
 				new BasicDBObject("$pull", new BasicDBObject("thankyous", thankYouObject)));
-	}
-	
-	//TODO: temporary, remove it
-	public static void updateThankYou(ThankYouBean thankYouBean, int index) {
-		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
-		
-		DBObject messageObj = new BasicDBObject("thankyous."+index+".id", thankYouBean.getId());
-		DBObject talkerId = new BasicDBObject("_id", new ObjectId(thankYouBean.getTo()));
-		talkersColl.update(talkerId, new BasicDBObject("$set", messageObj));
 	}
 	
 	/**

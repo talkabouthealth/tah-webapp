@@ -17,6 +17,9 @@
 		addAjaxForm("#changeInsuranceForm");
 	});
 
+	/*
+		When user changes connection we reload page to update fields	
+	*/
 	function changeConnection(elem) {
 		var newConnection = $(elem).val();
 		$.post("@{Profile.changeConnection()}", 

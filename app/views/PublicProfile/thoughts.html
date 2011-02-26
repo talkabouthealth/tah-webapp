@@ -19,11 +19,12 @@
 		  	);
 		});
 
+		//TODO: describe save/update function
 		function saveData(dataType, newValue) {
 			if (dataType.indexOf('commentEdit') == 0) {
 				var commentId = dataType.substring(11);
 				
-	   	   		$.post("@{PublicProfile.updateComment()}", 
+	   	   		$.post("@{Actions.updateComment()}", 
 	  				{ commentId: commentId, newText: newValue},
 	  				function(html) {
 	  	  				//...
@@ -71,7 +72,7 @@
    	   		if (confirmDel) {
    	   	   		$(".comment"+commentId).remove();
 
-   	   	  		$.post("@{PublicProfile.deleteComment()}", 
+   	   	  		$.post("@{Actions.deleteComment()}", 
     				{ commentId : commentId},
     				function(html) {
     	  				//...

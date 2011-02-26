@@ -7,7 +7,6 @@
 
 	<!-- scripts -->
 	<script type="text/javascript">
-
 		$(document).ready(function() {
 			$(".joinWaitingLink").click(function() {
 				//show form in popup
@@ -46,37 +45,6 @@
   					}
   				}
   			);
-		}
-
-		//methods below are used for landing page with new-convo form
-		function checkForm() {
-			//Check topic name field
-			var newTopicField = document.postnewtopic.newtopic;
-			if((newTopicField.value == "") 
-					|| (newTopicField.value == "Please enter your Conversation here ...")) {
-				alert("Please enter topic name.");
-				newTopicField.focus();
-				return false;
-			}
-			
-			return true;
-		}
-
-		function submitenter(myfield,e) {
-			var keycode;
-			if (window.event) keycode = window.event.keyCode;
-			else if (e) keycode = e.which;
-			else return true;
-			
-			if (keycode == 13) {
-				signup();
-		    }
-			return true;
-		}
-		
-		function signup() {
-			var newTopic = document.getElementById('newtopic').value;				
-			document.location = "@{Application.signup()}";
 		}
 	</script>
 </head>
