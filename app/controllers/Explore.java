@@ -123,8 +123,6 @@ public class Explore extends Controller {
 			}
 		}
 		
-		Logger.error("F1:"+System.currentTimeMillis());
-		
 		//Move members to particular tabs based on member's connection
 		Map<String, Set<TalkerBean>> members = new LinkedHashMap<String, Set<TalkerBean>>();
 		members.put("Experts", new LinkedHashSet<TalkerBean>());
@@ -144,6 +142,7 @@ public class Explore extends Controller {
 		memberTypes.put("Family & Friends", Arrays.asList("Family member", "Friend"));
 		
 		Set<TalkerBean> allActiveTalkers = ApplicationDAO.getActiveTalkers(null);
+		//re-structure members by connection type
 		for (TalkerBean talker : allActiveTalkers) {
 			for (Entry<String, List<String>> memberTypeEntry : memberTypes.entrySet()) {
 				if (memberTypeEntry.getValue().contains(talker.getConnection())) {

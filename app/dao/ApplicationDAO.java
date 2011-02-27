@@ -13,6 +13,7 @@ import models.TalkerBean;
 
 import org.bson.types.ObjectId;
 
+import play.Logger;
 import play.templates.JavaExtensions;
 
 import util.DBUtil;
@@ -73,9 +74,11 @@ public class ApplicationDAO {
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("log_time", new BasicDBObject("$gt", afterTime))
 			.get();
+		Logger.error("BefQ:"+System.currentTimeMillis());
 		List<DBObject> loginsDBList = 
 			loginsColl.find(query).sort(new BasicDBObject("log_time", -1)).toArray();
 		
+		Logger.error("BefPars:"+System.currentTimeMillis());
 		Set<TalkerBean> activeTalkers = new LinkedHashSet<TalkerBean>();
 		for (DBObject loginDBObject : loginsDBList) {
 			DBObject talkerDBObject = ((DBRef)loginDBObject.get("uid")).fetch();
@@ -89,6 +92,8 @@ public class ApplicationDAO {
 				}
 			}
 		}
+		
+		Logger.error("AfterPars:"+System.currentTimeMillis());
 		
 		return activeTalkers;
 	}
