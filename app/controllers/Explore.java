@@ -53,10 +53,12 @@ public class Explore extends Controller {
 	}
 	
 	public static void openQuestions() {
+		Logger.error("S0:"+System.currentTimeMillis());
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	if (talker != null) {
     		TalkerLogic.preloadTalkerInfo(talker);
     	}
+    	Logger.error("F0:"+System.currentTimeMillis());
     	
     	//TODO: use cache for common data? 
     	//see: http://groups.google.com/group/play-framework/browse_thread/thread/b723f73ee52a04bd/8d084ac77c588b3a?lnk=gst&q=use+cache+in+template#8d084ac77c588b3a
@@ -64,9 +66,11 @@ public class Explore extends Controller {
     	List<TopicBean> popularTopics = TopicDAO.getPopularTopics();
     	Logger.error("F:"+System.currentTimeMillis());
     	
-    	Logger.error("Empty: "+popularTopics.get(0).getId());
+//    	Logger.error("Empty: "+popularTopics.get(0).getId());
     	
+    	Logger.error("S2:"+System.currentTimeMillis());
 		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions();
+		Logger.error("F2:"+System.currentTimeMillis());
 		render(talker, openQuestions, popularTopics);
     }
     
