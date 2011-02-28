@@ -10,7 +10,6 @@ var flagId = "";
 
 $(document).ready(function() {
 
-	//TODO: move this to function
 	$(".followConvoLink").live('click', function() {
 		var convoId = $(this).attr("rel");
 		if ($(this).html().indexOf("Unfollow") != -1) {
@@ -106,7 +105,6 @@ function saveConvo(page) {
 	}
 	
 	//check ccTwitter and ccFacebook buttons
-	//TODO: better pass of parameters?
 	var ccTwitter = "";
 	var ccFacebook = "";
 	if (page === "home") {
@@ -440,12 +438,7 @@ var options = {
 function addAjaxForm(formId) {
 	//add change event hanlder to every input in a form
 	$(formId+" input, "+formId+" select, "+formId+" textarea").change(function() {
-		if (closeTimeout) {
-			window.clearTimeout(closeTimeout);
-		}
-		$("#savedHelpText, #saveBtnText").html("Saving...");
-		$("#savedHelpError").html("");
-		$("#savedHelp").fadeIn(300);
+		showStatus("Saving...");
 		
 		//submit all data of the form
 		$(formId).ajaxSubmit(options); 
@@ -668,6 +661,23 @@ function showMore(type) {
 	return false;
 }
 
+function showStatus(statusText) {
+	if (closeTimeout) {
+		window.clearTimeout(closeTimeout);
+	}
+	$("#savedHelpText, #saveBtnText").html(statusText);
+	$("#savedHelpError").html("");
+	$("#savedHelp").fadeIn(300);
+}
+
+//Remove help text from text field
+function clearTextArea (id, defaultText) {
+	var value = $("#"+id).val();
+	$("#"+id).removeClass("greyarea");
+	if (value === defaultText) {
+   		$("#"+id).val("");
+	}
+}
 
 /* ------------------- Sharing ---------------------- */
 
@@ -725,13 +735,7 @@ let's close the popup and have a notification at the top of the screen that says
 					resultText = "Successfully posted to Facebook.";
 				}
 				
-				//TODO: similar code?
-				if (closeTimeout) {
-					window.clearTimeout(closeTimeout);
-				}
-				$("#savedHelpText").html(resultText);
-				$("#savedHelpError").html("");
-				$("#savedHelp").fadeIn(300);
+				showStatus(resultText);
 				closeTimeout = setTimeout(function() { $("#savedHelp").fadeOut(200) }, 2500);
 			}
 		}

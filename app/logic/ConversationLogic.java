@@ -110,7 +110,6 @@ public class ConversationLogic {
 		
 		//send to Tw & Fb created convo
 		for (ServiceAccountBean serviceAccount : talker.getServiceAccounts()) {
-			//TODO: clear this?
 			if (serviceAccount.getType() == ServiceType.TWITTER) {
 				if (ccTwitter != null && !ccTwitter) {
 					continue;
@@ -128,31 +127,12 @@ public class ConversationLogic {
 				}
 			}
 			
-//			Just asked a question on TalkAboutHealth: "What are the best hospitals in NYC for breast cancer ..." http://bit.ly/lksa
-//			Just started a live chat on TalkAboutHealth: "What are the best hospitals in NYC for breast cancer ..." http://bit.ly/lksa
-			
-			String postText = null;
-			String bitlyLinkText = null;
-			String fullLinkText = null;
-			if (convo.getConvoType() == ConvoType.CONVERSATION) {
-				postText = "Just started a live chat on TalkAboutHealth: \"<PARAM>\" ";
-				bitlyLinkText = convo.getBitlyChat();
-				fullLinkText = convoChatURL;
-			}
-			else {
-				postText = "Just asked a question on TalkAboutHealth: \"<PARAM>\" ";
-				bitlyLinkText = convo.getBitly();
-				fullLinkText = convoURL;
-			}
-			
+			String postText = 
+				NotificationUtils.preparePostMessageOnConvo(serviceAccount, convo, convoURL, convoChatURL);
 			if (serviceAccount.getType() == ServiceType.TWITTER) {
-				postText = postText + bitlyLinkText;
-				postText = TwitterUtil.prepareTwit(postText, convo.getTopic());
 				TwitterUtil.tweet(postText, serviceAccount);
 			}
 			else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
-				postText = postText + fullLinkText;
-				postText = postText.replace("<PARAM>", convo.getTopic());
 				FacebookUtil.post(postText, serviceAccount);
 			}
 		}
@@ -338,15 +318,15 @@ public class ConversationLogic {
 	/**
 	 * Creates reply to the given conversation
 	 * @param convo
-	 * @param talker
+	 * @param fromTalker
 	 * @param text
 	 */
-	public static CommentBean createConvoReply(ConversationBean convo, TalkerBean talker, String text) {
+	public static CommentBean createConvoReply(ConversationBean convo, TalkerBean fromTalker, String text) {
 		CommentBean convoReply = new CommentBean();
 		convoReply.setConvoReply(true);
 		convoReply.setParentId(null);
 		convoReply.setConvoId(convo.getId());
-		convoReply.setFromTalker(talker);
+		convoReply.setFromTalker(fromTalker);
 		convoReply.setText(text);
 		convoReply.setTime(new Date());
 		
@@ -354,21 +334,13 @@ public class ConversationLogic {
 		convoReply.setId(id);
 		
 		//When a reply is added, an email is sent to the original author of the question.
-		Map<String, String> vars = new HashMap<String, String>();
-		vars.put("convo", convo.getTopic());
-		vars.put("other_talker", talker.getUserName());
-		vars.put("convoreply_text", convoReply.getText());
-		vars.put("convo_type", convo.getConvoType().stringValue());
-		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
-		vars.put("convo_url", convoURL);
-		if (!talker.equals(convo.getTalker())) {
-    		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_COMMENT, convo.getTalker(), vars);
+		if (!fromTalker.equals(convo.getTalker())) {
+			NotificationUtils.emailNotifyOnConvoReply(convo, fromTalker, convoReply);
 		}
     	
     	return convoReply;
 	}
-	
-	
+
 	/**
 	 * Converts given list of conversations to Feed format (for better display)
 	 * @param conversations

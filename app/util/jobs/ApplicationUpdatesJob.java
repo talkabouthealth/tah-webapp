@@ -67,6 +67,9 @@ import util.oauth.TwitterOAuthProvider;
 public class ApplicationUpdatesJob extends Job {
 	
 	public void doJob() throws Exception {
+		/**
+		 * For deploy
+		 */
 		
 		//Fields data for Edit Profile
 		FieldsDataImporter.importData("fields.dat");

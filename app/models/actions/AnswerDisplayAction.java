@@ -16,6 +16,11 @@ public class AnswerDisplayAction extends AbstractAction {
 	
 	private boolean showTopAnswer;
 	
+	
+	public AnswerDisplayAction() {
+		super(null, null);
+	}
+
 	public AnswerDisplayAction(TalkerBean talker, ConversationBean convo, 
 			CommentBean answer, ActionType type, boolean showTopAnswer) {
 		super(type, talker);

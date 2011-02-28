@@ -14,7 +14,6 @@ import com.mongodb.DBObject;
  * Twitter or Facebook account
  *
  */
-//TODO: twitter/facebook subclasses?
 public class ServiceAccountBean implements DBModel {
 	
 	public enum ServiceType { TWITTER, FACEBOOK }

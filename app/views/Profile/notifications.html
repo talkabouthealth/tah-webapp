@@ -40,7 +40,6 @@
 <script type="text/javascript" charset="utf-8">
 	$(document).ready(function() {
 
-		//TODO: more JS comments
 		addAjaxForm("#setNotifyFrequency");
 		addAjaxForm("#emailsettings");
 		addAjaxForm("#serviceSettingsForm");
@@ -64,7 +63,6 @@
 				}
 			);
 		});
-
 		$(".deleteEmailLink").live("click", function() {
 			var email = $(this).attr("title");
 			//remove raw in the table
@@ -83,12 +81,10 @@
 			$("#imError").html("");
 			var imUserName = $("#imUserName").val();
 			var imService = $("#imService").val();
-
 			if (imService.length == 0) {
 				alert("Please choose IM Service");
 				return;
 			}
-			
 			if (imUserName.length == 0) {
 				alert("Please enter correct IM Username");
 				return;
@@ -110,7 +106,6 @@
 				}
 			);
 		});
-
 		$(".deleteIMLink").live("click", function() {
 			var imId = $(this).attr("rel");
 			//remove raw in the table
@@ -121,6 +116,7 @@
 			);
 		});
 
+		//Show or Hide settings of IM, Email, etc.
 		$(".showSettingsLink").click(function() {
 			var currentText = $(this).html();
 			if (currentText.indexOf("+") > -1) {
@@ -175,7 +171,6 @@
 			openFacebook();
 		}
 	}
-
 	function deleteServiceAccount(serviceType) {
 		var confirmDel = confirm("Are you sure want to delete this account?");
    		if (confirmDel) {

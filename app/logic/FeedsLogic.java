@@ -31,6 +31,7 @@ public class FeedsLogic {
 	//Number of actions to preload from DB (later filtered)
 	public static final int ACTIONS_PRELOAD = 500;
 	
+	//TODO: better speed?
 	public static Set<Action> getConvoFeed(TalkerBean talker, String afterActionId) {
 		return loadFeed(FeedType.CONVERSATION, afterActionId, talker, null, true, FEEDS_PER_PAGE);
 	}

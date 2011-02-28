@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.mongodb.DBRef;
+
 import logic.ConversationLogic;
 import logic.FeedsLogic;
 import logic.TalkerLogic;
@@ -34,6 +36,7 @@ import play.mvc.With;
 import util.CommonUtil;
 import util.EmailUtil;
 import util.FacebookUtil;
+import util.NotificationUtils;
 import util.TwitterUtil;
 import util.EmailUtil.EmailTemplate;
 import util.ValidateData;
@@ -50,24 +53,15 @@ public class Home extends Controller {
 	 * Home page
 	 */
     public static void index() {
-    	//TODO: check loading times
-//    	Logger.error("Home 0");
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
-//    	Logger.error("Home 1");
+
 		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
 		
-//		Logger.error("Home 2");
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
-//		Set<Action> convoFeed = new HashSet<Action>();
-//    	Set<Action> communityFeed = new HashSet<Action>();
     	
-//    	Logger.error("Home 3");
     	boolean showNotificationAccounts = prepareNotificationPanel(session, talker);
 		TalkerLogic.preloadTalkerInfo(talker);
-		
-//		Logger.error("Home 4");
 		
 		//TODO: check recommendations
 //		Yes, for HealthInfo, let's use all of the data. 
@@ -77,10 +71,8 @@ public class Home extends Controller {
 		List<TalkerBean> similarMembers = new ArrayList<TalkerBean>();
 		List<TalkerBean> experts = new ArrayList<TalkerBean>();
 		TalkerLogic.getRecommendedTalkers(talker, similarMembers, experts);
-		
+	
 		List<ConversationBean> recommendedConvos = TalkerLogic.getRecommendedConvos(talker);
-		
-//		Logger.error("Home 5");
 		
 		boolean emailVerification = false;
 		if (session.contains("justloggedin") && talker.getVerifyCode() != null) {
@@ -210,19 +202,8 @@ public class Home extends Controller {
     	        }
     			
     			//preparing email parameters
-    			//TODO: emails, notifications and other texts - move in one place?
     			Map<String, String> vars = new HashMap<String, String>();
-    			String subject = "";
-    			if (pageType.equalsIgnoreCase("Topic")) {
-    				subject = from+" thought you would be interested in the topic \""+pageInfo+"\" on TalkAboutHealth";
-    			}
-    			else if (pageType.equalsIgnoreCase("Conversation")) {
-    				subject = from+" thought you would be interested in the conversation \""+pageInfo+"\" on TalkAboutHealth";
-    			}
-    			else if (pageType.equalsIgnoreCase("TalkAboutHealth")) {
-    				subject = from+" has invited you to try TalkAboutHealth";
-    			}
-    			vars.put("title", subject);
+    			vars.put("title", NotificationUtils.prepareEmailShareMessage(from, pageType, pageInfo));
     			note = note.replaceAll("\n", "<br/>");
     			vars.put("note", note);
     			for (String email : emailsToSend) {

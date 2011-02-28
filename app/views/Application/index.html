@@ -34,7 +34,6 @@
 			$.post("@{Application.addToWaitingList()}", 
   				{ community: community, email: email},
   				function(responseText) {
-  	  				//TODO: create function for checking error in response?
   					if (responseText.indexOf("Error:") === 0) {
   						var errorText = responseText.replace("Error:", "");
   						$("#emailError").html(errorText); 

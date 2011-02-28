@@ -4,7 +4,8 @@
  * Corey Hart @ http://www.codenothing.com
  * 
  * Updated on Sep 16, 2010 by Kangaroo
- * TODO: comment and explain this
+ * Some elements were changed for TAH. 
+ * Added support for editing lists (e.g. tags, related conversations).
  */ 
 (function( $, undefined ){
 
@@ -62,7 +63,7 @@
 				return false;
 			});
 	
-			// Display Actions
+			// Edit link
 			$editLink.bind( 'click.inline-edit', function(){
 				$display.hide();
 				$form.show();
@@ -75,24 +76,11 @@
 					editText = editText.replace(/<br>/g, '\n');
 					editText = editText.replace(/<BR>/g, '\n');
 					
-					//<a href="http://$2" target="_blank">$2</a>
+					//remove links html code before editing
 					editText = editText.replace(/<a[^>]*>/g, '');
 					editText = editText.replace(/<\/a>/g, '');
 				}
 				$text.val(editText).focus();
-
-				/*
-				if ( settings.html ) {
-					if ( original === undefined ) {
-						original = $view.html();
-					}
-					alert(original);
-					$text.val( original ).focus();
-				}
-				else if ( original === undefined ) {
-					original = $text.val();
-				}
-				*/
 
 				return false;
 			})
@@ -102,7 +90,8 @@
 			.bind( 'mouseleave.inline-edit', function(){
 				$display.removeClass( settings.hover );
 			});
-			
+
+			// Add new value if current is empty
 			$addLink.bind( 'click.inline-edit', function(){
 				$text.val("").focus();
 				
@@ -111,10 +100,12 @@
 				return false;
 			});
 			
+			// Add new value to the edited list (e.g. a new tag to the list of tags)
 			$addBtn.bind( 'click.inline-edit', function() {
 				var newValue = $.trim($text.val());
 				$text.val("");
 				
+				//callback for updating list on the page
 				settings.updateFunction.apply( window, [ $dataType, newValue] );
 			});
 			
@@ -123,14 +114,13 @@
 				$text.val( original || '' ).focus();
 				return false;
 			});
-			
-			
 
-			// Cancel Actions
+			// Cancel or Done link
 			$cancel.bind( 'click.inline-edit', function(){
 				$form.hide();
-				
-				//For edit lists (like related convos, topics) we check on 'Done' click
+
+				//if form has only one link (i.e. 'Done' link) - 
+				//it means that list is empty, whe show empty text
 				if ($form.find("a").size() === 1) {
 					$displayFull.hide();
 					$displayEmpty.show();
@@ -139,7 +129,6 @@
 					$displayEmpty.hide();
 					$displayFull.show();
 				}
-				
 				$display.show();
 
 				// Remove hover action if stalled
@@ -154,13 +143,14 @@
 			$save.bind( 'click.inline-edit', function( event ) {
 				var newValue = $.trim($text.val());
 				if ($text.hasClass('notempty') && newValue === '') {
+					//if value should be notempty - validate and show error message
 					alert('Incorrect value.');
 					$text.focus();
 					return false;
 				}
 				
 				$form.hide();
-				
+				//prepare plain text for display
 				newValue = linkify(newValue);
 				newValue = newValue.replace(/\n/g, '<br/>');
 				$view.html(newValue);
@@ -176,35 +166,10 @@
 				$display.show();
 				
 				if (settings.saveFunction) {
+					//callback for saving new value on the server
 					settings.saveFunction.apply( window, [ $dataType, newValue ] );
 				}
 				
-				/*
-				$display.html( settings.loadtxt ).show();
-
-				if ( $display.hasClass( settings.hover ) ) {
-					$display.removeClass( settings.hover );
-				}
-
-				$.ajax({
-					url: settings.href,
-					type: settings.requestType,
-					data: settings.postFormat ? 
-						settings.postFormat.call( $main, event, { settings: settings, postData: settings.postData } ) :
-						settings.postData,
-					success: function( response ){
-						original = undefined;
-
-						if ( settings.load ) {
-							settings.load.call( $display, event, { response: response, settings: settings } );
-							return;
-						}
-
-						$display.html( response );
-					}
-				});
-				*/
-
 				return false;
 			});
 		});

@@ -29,7 +29,6 @@ import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.TalkerDAO;
 
-//TODO: html/js todos 
 public class Community extends Controller {
 	
 	public static void viewCommunity() {

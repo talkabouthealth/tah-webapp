@@ -147,10 +147,10 @@ public class TopicDAO {
 	
 	/**
 	 * Loads all topics, sorted by views number
-	 * @param loadBasicInfo Determines how much information to load.
+	 * @param onlyBasicInfo Determines how much information to load.
 	 * @return
 	 */
-	public static Set<TopicBean> loadAllTopics(boolean loadBasicInfo) {
+	public static Set<TopicBean> loadAllTopics(boolean onlyBasicInfo) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("deleted", new BasicDBObject("$ne", true));
@@ -159,7 +159,7 @@ public class TopicDAO {
 		Set<TopicBean> topicsSet = new LinkedHashSet<TopicBean>();
 		for (DBObject topicDBObject : topicsDBList) {
 			TopicBean topic = new TopicBean();
-			if (loadBasicInfo) {
+			if (onlyBasicInfo) {
 				topic.parseBasicFromDB(topicDBObject);
 			}
 			else {

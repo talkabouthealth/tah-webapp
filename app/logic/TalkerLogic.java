@@ -18,6 +18,8 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+import org.bson.types.ObjectId;
+
 import play.Logger;
 import play.mvc.Scope.Session;
 import play.templates.JavaExtensions;
@@ -55,6 +57,7 @@ import models.actions.Action;
 import models.actions.AnswerDisplayAction;
 import models.actions.PersonalProfileCommentAction;
 import models.actions.Action.ActionType;
+import models.actions.PreloadAction;
 
 public class TalkerLogic {
 	
@@ -306,27 +309,38 @@ public class TalkerLogic {
 	
 	/**
 	 * Loads all answers of this talker in Feed format
+	 * and checks what answers are top answers.
 	 * 
 	 * @param talkerId
 	 * @param answersFeed Feed where answer actions are stored
+	 * @param loadAllInfo Do we need all conversations' info or only number of answers/top answers?
 	 * @return Number of top answers of this talker
 	 */
-	public static int prepareTalkerAnswers(String talkerId, List<Action> answersFeed) {
+	public static int prepareTalkerAnswers(String talkerId, List<Action> answersFeed, boolean loadAllInfo) {
 		int numOfTopAnswers = 0;
 		List<CommentBean> allAnswers = CommentsDAO.getTalkerAnswers(talkerId, null);
 		for (CommentBean answer : allAnswers) {
-			ConversationBean convo = ConversationDAO.getById(answer.getConvoId());
-			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
+			List<CommentBean> convoAnswers = CommentsDAO.loadConvoAnswers(answer.getConvoId());
 			
-			//if first in the list - top answer
-			if (!convo.getComments().isEmpty() && convo.getComments().get(0).equals(answer)) {
+			//the first in the list - top answer
+			if (!convoAnswers.isEmpty() && convoAnswers.get(0).equals(answer)) {
 				numOfTopAnswers++;
 			}
 
-			//Use special action for answer displaying.
-			AnswerDisplayAction answerAction = new AnswerDisplayAction(convo.getTalker(), convo, answer, ActionType.ANSWER_CONVO, false);
-			answerAction.setTime(answer.getTime());
-			answersFeed.add(answerAction);
+			if (loadAllInfo) {
+				ConversationBean convo = ConversationDAO.getById(answer.getConvoId());
+				convo.setComments(convoAnswers);
+				
+				//Use special action for answer displaying.
+				AnswerDisplayAction answerAction = new AnswerDisplayAction(convo.getTalker(), convo,
+						answer, ActionType.ANSWER_CONVO, false);
+				answerAction.setTime(answer.getTime());
+				answersFeed.add(answerAction);
+			}
+			else {
+				//just empty stub as we need only number of answers
+				answersFeed.add(new AnswerDisplayAction());
+			}
 		}
 		return numOfTopAnswers;
 	}
@@ -336,13 +350,12 @@ public class TalkerLogic {
 			return new HashSet<ConversationBean>();
 		}
 		
-		Set<ConversationBean> followingConvoSet = new LinkedHashSet<ConversationBean>();
+		List<ObjectId> convoIds = new ArrayList<ObjectId>();
 		for (String convoId : talker.getFollowingConvosList()) {
-			ConversationBean convo = ConversationDAO.getById(convoId);
-			followingConvoSet.add(convo);
+			convoIds.add(new ObjectId(convoId));
 		}
-		
-		return followingConvoSet;
+		Set<ConversationBean> followingConvos = ConversationDAO.getConvosByIds(convoIds);
+		return followingConvos;
 	}
 
 	public static boolean talkerHasNoHealthInfo(TalkerBean talker) {
@@ -352,13 +365,12 @@ public class TalkerLogic {
 	
 	/**
 	 * Save thought or reply
-	 * TODO: update doc
 	 * 
-	 * @param talker
-	 * @param profileTalkerId
-	 * @param parentId
+	 * @param talker Author of the thought/reply
+	 * @param profileTalkerId Id of the profile where thought/reply was added
+	 * @param parentId Id of the thought if reply was added
 	 * @param text
-	 * @param cleanText 
+	 * @param cleanText Text version of the comment (without html tags)
 	 * @param ccTwitter If null - nothing happens, if true/false - determines if thought should be posted on Twitter
 	 * @param ccFacebook Same as ccTwitter but for Facebook
 	 * 
@@ -549,9 +561,9 @@ public class TalkerLogic {
 		
 		List<ConversationBean> recommendedConvos = new ArrayList<ConversationBean>();
 		Set<ConversationBean> allConvos = new LinkedHashSet<ConversationBean>();
-		for (TopicBean topic : talker.getFollowingTopicsList()) {
-			allConvos.addAll(ConversationDAO.loadConversationsByTopic(topic.getId()));
-		}
+//		for (TopicBean topic : talker.getFollowingTopicsList()) {
+//			allConvos.addAll(ConversationDAO.loadConversationsByTopic(topic.getId()));
+//		}
 		allConvos.addAll(ConversationDAO.loadPopularConversations());
 		
 		for (ConversationBean convo : allConvos) {

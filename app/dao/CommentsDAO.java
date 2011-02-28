@@ -291,7 +291,6 @@ public class CommentsDAO {
 		DBObject query = queryBuilder.get();
 		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
-		//TODO: from DB list - normal list; Same method?
 		List<CommentBean> answersList = new ArrayList<CommentBean>();
 		for (DBObject answerDBObject : commentsList) {
 			CommentBean answer = new CommentBean();

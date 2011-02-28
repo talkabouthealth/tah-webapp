@@ -22,9 +22,11 @@ import util.EmailUtil.EmailTemplate;
 
 import models.ConversationBean;
 import models.ConversationBean.ConvoType;
+import models.CommentBean;
 import models.IMAccountBean;
 import models.ServiceAccountBean;
 import models.TalkerBean;
+import models.ThankYouBean;
 import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean.EmailSetting;
 
@@ -71,7 +73,7 @@ public class NotificationUtils {
 	 * - don't notify more than 1x every 3 hours
 	 * - don't notify more the 3x per day
 	 */
-	//TODO: simplify IM notifications
+	//TODO: simplify IM notifications & add here comments
 	public static void sendIMNotifications(String convoId, String restartTalkerId) {
 		OnlineUsersSingleton onlineUsersSingleton = OnlineUsersSingleton.getInstance();
 		Map<String, UserInfo> onlineUsers = onlineUsersSingleton.getOnlineUserMap();
@@ -108,31 +110,19 @@ public class NotificationUtils {
 	
 	public static void sendTwitterNotifications(String convoId, String restartTalkerId) {
 		ConversationBean convo = ConversationDAO.getById(convoId);
-		TalkerBean restartTalker = null;
+		TalkerBean authorTalker = null;
 		if (restartTalkerId != null) {
-			restartTalker = TalkerDAO.getById(restartTalkerId);
+			authorTalker = TalkerDAO.getById(restartTalkerId);
 		}
 		else {
-			restartTalker = convo.getTalker();
+			authorTalker = convo.getTalker();
 		}
 		
-		StringBuilder message = new StringBuilder();
-		message.append(restartTalker.getUserName());
-		if (convo.getConvoType() == ConvoType.CONVERSATION || restartTalkerId != null) {
-			//mnj5 started the talk: What items come in handy after a mastectomy... To join the talk: http://bit.ly/dfsqe
-			message.append(" started the chat: \"<PARAM>\" To join: ");
-    		message.append(convo.getBitlyChat());
-		}
-		else {
-    		//mnj5 asked the question: What items come in handy after a mastectomy... To answer: http://bit.ly/dfsqe
-			message.append(" asked the question: \"<PARAM>\" To answer: ");
-    		message.append(convo.getBitly());
-		}
-		String messageText = TwitterUtil.prepareTwit(message.toString(), convo.getTopic());
+		String messageText = prepareTwitterNotificationOnConvo(restartTalkerId, convo, authorTalker);
     	
 		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
 			if (talker.isSuspended() || talker.isDeactivated()
-					|| talker.equals(restartTalker)) { //do not send notification to author of the event
+					|| talker.equals(authorTalker)) { //do not send notification to author of the event
 				continue;
 			}
 			
@@ -149,7 +139,7 @@ public class NotificationUtils {
 			}
 		}
 	}
-	
+
 	/**
 	 * Sends email notification if talker turned on given email setting.
 	 * 
@@ -162,14 +152,16 @@ public class NotificationUtils {
 		if (talker.getEmailSettings().contains(emailSetting)) {
 			vars.put("username", talker.getUserName());
 			
-			//for convo and thoughts replies we have separate templates
 			if (emailSetting == EmailSetting.CONVO_COMMENT && vars.get("reply_text") != null) {
+				//Reply to the convo answer
 				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_CONVO_REPLY_TO_ANSWER, talker.getEmail(), vars, null, true);
 			}
 			else if (emailSetting == EmailSetting.CONVO_COMMENT && vars.get("convoreply_text") != null) {
+				//Reply to the conversation
 				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_CONVO_REPLY, talker.getEmail(), vars, null, true);
 			}
 			else if (emailSetting == EmailSetting.RECEIVE_COMMENT && vars.get("reply_text") != null) {
+				//Reply to the thought
 				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_REPLY_TO_COMMENT_IN_JOURNAL, talker.getEmail(), vars, null, true);
 			}
 			else {
@@ -177,6 +169,164 @@ public class NotificationUtils {
 			}
 		}
 	}
+	
+	//--------------- Different convenient methods for email notifications --------
+	/**
+	 * @param convo
+	 * @param fromTalker
+	 * @param convoReply
+	 */
+	public static void emailNotifyOnConvoReply(ConversationBean convo,
+			TalkerBean fromTalker, CommentBean convoReply) {
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("convo", convo.getTopic());
+		vars.put("other_talker", fromTalker.getUserName());
+		vars.put("convoreply_text", convoReply.getText());
+		vars.put("convo_type", convo.getConvoType().stringValue());
+		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
+		vars.put("convo_url", convoURL);
+   		sendEmailNotification(EmailSetting.CONVO_COMMENT, convo.getTalker(), vars);
+	}
+	
+	/**
+	 * @param fromTalker
+	 * @param toTalker
+	 * @param thankYouBean
+	 */
+	public static void emailNotifyOnThankYou(TalkerBean fromTalker,
+			TalkerBean toTalker, ThankYouBean thankYouBean) {
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("other_talker", fromTalker.getUserName());
+		vars.put("thankyou_text", thankYouBean.getNote());
+		sendEmailNotification(EmailSetting.RECEIVE_THANKYOU, 
+				toTalker, vars);
+	}
+	
+	/**
+	 * @param talker
+	 * @param followingTalker
+	 */
+	public static void emailNotifyOnFollow(TalkerBean talker, TalkerBean followingTalker) {
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("other_talker", talker.getUserName());
+		sendEmailNotification(EmailSetting.NEW_FOLLOWER, 
+				followingTalker, vars);
+	}
+	
+	/**
+	 * @param convo
+	 */
+	public static void emailNotifyOnConvoRestart(ConversationBean convo) {
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("convo", convo.getTopic());
+		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
+		vars.put("convo_url", convoURL);
+		String convoTalkURL = CommonUtil.generateAbsoluteURL("Talk.talkApp", "convoId", convo.getTid());
+		vars.put("convo_talk_url", convoTalkURL);
+    	for (TalkerBean follower : convo.getFollowers()) {
+    		sendEmailNotification(EmailSetting.CONVO_RESTART, follower, vars);
+    	}
+	}
+	
+	/**
+	 * @param talker
+	 * @param convo
+	 */
+	public static void emailNotifyOnConvoSummary(TalkerBean talker, ConversationBean convo) {
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("convo", convo.getTopic());
+		vars.put("other_talker", talker.getUserName());
+		vars.put("summary_text", convo.getSummary());
+		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
+		vars.put("convo_url", convoURL);
+		for (TalkerBean follower : convo.getFollowers()) {
+			sendEmailNotification(EmailSetting.CONVO_SUMMARY, follower, vars);
+		}
+	}
+	
+	
+	// ------------------ Methods for generating share/notification messages -----------
+	
+	/**
+	 * 
+	 * @param restartTalkerId Id of talker if convo was restarted (on null)
+	 * @param convo
+	 * @param authorTalker
+	 * @return
+	 */
+	public static String prepareTwitterNotificationOnConvo(String restartTalkerId,
+			ConversationBean convo, TalkerBean authorTalker) {
+		StringBuilder message = new StringBuilder();
+		message.append(authorTalker.getUserName());
+		if (convo.getConvoType() == ConvoType.CONVERSATION || restartTalkerId != null) {
+			//mnj5 started the chat: What items come in handy after a mastectomy... To join: http://bit.ly/dfsqe
+			message.append(" started the chat: \"<PARAM>\" To join: ");
+    		message.append(convo.getBitlyChat());
+		}
+		else {
+    		//mnj5 asked the question: What items come in handy after a mastectomy... To answer: http://bit.ly/dfsqe
+			message.append(" asked the question: \"<PARAM>\" To answer: ");
+    		message.append(convo.getBitly());
+		}
+		String messageText = TwitterUtil.prepareTwit(message.toString(), convo.getTopic());
+		return messageText;
+	}
+	
+//	Just asked a question on TalkAboutHealth: "What are the best hospitals in NYC for breast cancer ..." http://bit.ly/lksa
+//	Just started a live chat on TalkAboutHealth: "What are the best hospitals in NYC for breast cancer ..." http://bit.ly/lksa
+	public static String preparePostMessageOnConvo(ServiceAccountBean serviceAccount, 
+			ConversationBean convo, String convoURL, String convoChatURL) {
+		String postText = null;
+		String bitlyLinkText = null;
+		String fullLinkText = null;
+		if (convo.getConvoType() == ConvoType.CONVERSATION) {
+			postText = "Just started a live chat on TalkAboutHealth: \"<PARAM>\" ";
+			bitlyLinkText = convo.getBitlyChat();
+			fullLinkText = convoChatURL;
+		}
+		else {
+			postText = "Just asked a question on TalkAboutHealth: \"<PARAM>\" ";
+			bitlyLinkText = convo.getBitly();
+			fullLinkText = convoURL;
+		}
+		
+		if (serviceAccount.getType() == ServiceType.TWITTER) {
+			postText = postText + bitlyLinkText;
+			postText = TwitterUtil.prepareTwit(postText, convo.getTopic());
+			TwitterUtil.tweet(postText, serviceAccount);
+		}
+		else if (serviceAccount.getType() == ServiceType.FACEBOOK) {
+			postText = postText + fullLinkText;
+			postText = postText.replace("<PARAM>", convo.getTopic());
+			FacebookUtil.post(postText, serviceAccount);
+		}
+		return postText;
+	}
+	
+	/**
+	 * @param fromTalker
+	 * @param pageType
+	 * @param pageInfo Topic's or Conversation's title, depending on page type
+	 * @return
+	 */
+	public static String prepareEmailShareMessage(String fromTalker, String pageType, String pageInfo) {
+		String subject = "";
+		if (pageType.equalsIgnoreCase("Topic")) {
+			subject = fromTalker+" thought you would be interested in the topic \""+pageInfo+"\" on TalkAboutHealth";
+		}
+		else if (pageType.equalsIgnoreCase("Conversation")) {
+			subject = fromTalker+" thought you would be interested in the conversation \""+pageInfo+"\" on TalkAboutHealth";
+		}
+		else if (pageType.equalsIgnoreCase("TalkAboutHealth")) {
+			subject = fromTalker+" has invited you to try TalkAboutHealth";
+		}
+		return subject;
+	}
+	
+	
+	
+	
+	
 	
 	/**
 	 * Send IM invitation for newly added IM account

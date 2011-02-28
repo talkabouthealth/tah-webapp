@@ -62,22 +62,15 @@ public class Actions extends Controller {
 		thankYouBean.setTo(toTalkerId);
 		TalkerDAO.saveThankYou(thankYouBean);
 		
-		//TODO: actions and email notifications? - better design?
 		ActionDAO.saveAction(new GiveThanksAction(fromTalker, toTalker));
-		
-		//email notification
-		Map<String, String> vars = new HashMap<String, String>();
-		vars.put("other_talker", fromTalker.getUserName());
-		vars.put("thankyou_text", thankYouBean.getNote());
-		NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_THANKYOU, 
-				toTalker, vars);
+		NotificationUtils.emailNotifyOnThankYou(fromTalker, toTalker, thankYouBean);
 		
 		ThankYouBean _thankYou = thankYouBean;
 		TalkerBean _currentTalker = fromTalker;
 		TalkerBean _talker = toTalker;
 		render("tags/publicprofile/thanksThankYou.html", _thankYou, _talker, _currentTalker);
 	}
-	
+
 	/**
 	 * Deletes thank you
 	 * 
@@ -118,13 +111,8 @@ public class Actions extends Controller {
 		
 		//Text for the follow link after this action
 		if (follow) {
-			//follow notifications
 			ActionDAO.saveAction(new FollowTalkerAction(talker, followingTalker));
-			
-			Map<String, String> vars = new HashMap<String, String>();
-			vars.put("other_talker", talker.getUserName());
-			NotificationUtils.sendEmailNotification(EmailSetting.NEW_FOLLOWER, 
-					followingTalker, vars);
+			NotificationUtils.emailNotifyOnFollow(talker, followingTalker);
 			
 			renderText("Unfollow");
 		}
@@ -132,7 +120,7 @@ public class Actions extends Controller {
 			renderText("Follow");
 		}
 	}
-	
+
 	/**
 	 * Save thought/reply in the given profile
 	 * @param profileTalkerId

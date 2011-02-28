@@ -14,7 +14,6 @@
 		var username = "${talker.userName}";
 		var feedsPerPage = ${logic.FeedsLogic.FEEDS_PER_PAGE};
 
-		//TODO: to many js here
 		$(document).ready(function() {
 			initNewTabs();
 
@@ -85,14 +84,8 @@
 			});
 
 			/* -------------- Right profile updates ------------- */
-			//TODO: check them
 			$("#updateUsernameBtn").click(function() {
-				if (closeTimeout) {
-					window.clearTimeout(closeTimeout);
-				}
-				$("#savedHelpText").html("Saving...");
-				$("#savedHelpError").html("");
-				$("#savedHelp").fadeIn(300);
+				showStatus("Saving...");
 
 				var newValue = $("#newUsername").val();
 				$.post("/profile/updateProfile", {name: 'userName', newValue: newValue},
@@ -103,12 +96,7 @@
 					);
 			});
 			$("#updatePasswordBtn").click(function() {
-				if (closeTimeout) {
-					window.clearTimeout(closeTimeout);
-				}
-				$("#savedHelpText").html("Saving...");
-				$("#savedHelpError").html("");
-				$("#savedHelp").fadeIn(300);
+				showStatus("Saving...");
 
 				var newValue = $("#newPassword").val();
 				$.post("/profile/updateProfile", {name: 'password', newValue: newValue},
@@ -119,12 +107,7 @@
 					);
 			});
 			$("#updateEmailBtn").click(function() {
-				if (closeTimeout) {
-					window.clearTimeout(closeTimeout);
-				}
-				$("#savedHelpText").html("Saving...");
-				$("#savedHelpError").html("");
-				$("#savedHelp").fadeIn(300);
+				showStatus("Saving...");
 
 				var newValue = $("#newEmail").val();
 				$.post("/profile/updateProfile", {name: 'email', newValue: newValue},
@@ -137,12 +120,7 @@
 					);
 			});
 			$("#updateConnectionBtn").click(function() {
-				if (closeTimeout) {
-					window.clearTimeout(closeTimeout);
-				}
-				$("#savedHelpText").html("Saving...");
-				$("#savedHelpError").html("");
-				$("#savedHelp").fadeIn(300);
+				showStatus("Saving...");
 
 				var newValue = $("#newConnection").val();
 				$.post("/profile/changeConnection", {value: newValue},
@@ -153,12 +131,7 @@
 					);
 			});
 			$("#updateTwitterSettingsBtn").click(function() {
-				if (closeTimeout) {
-					window.clearTimeout(closeTimeout);
-				}
-				$("#savedHelpText").html("Saving...");
-				$("#savedHelpError").html("");
-				$("#savedHelp").fadeIn(300);
+				showStatus("Saving...");
 
 				var params =  {name: "twittersettings"};
 				$("#updateTwitterSettingsHelp input:checked").each(
@@ -174,12 +147,7 @@
 					);
 			});
 			$("#updateFacebookSettingsBtn").click(function() {
-				if (closeTimeout) {
-					window.clearTimeout(closeTimeout);
-				}
-				$("#savedHelpText").html("Saving...");
-				$("#savedHelpError").html("");
-				$("#savedHelp").fadeIn(300);
+				showStatus("Saving...");;
 
 				var params =  {name: "facebooksettings"};
 				$("#updateFacebookSettingsHelp input:checked").each(
@@ -309,14 +277,6 @@
 				$("#newConvoTitle").val($("#"+type+"Text").val());
 			}
 			showPopup("#startDialog", 350);
-   		}
-
-   		function clearTextArea (id, defaultText) {
-   	   		var value = $("#"+id).val();
-   	   		$("#"+id).removeClass("greyarea");
-   	   		if (value === defaultText) {
-   	   	   		$("#"+id).val("");
-   	   		}
    		}
 	</script>
 		

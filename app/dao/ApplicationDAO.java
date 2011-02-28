@@ -74,26 +74,22 @@ public class ApplicationDAO {
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("log_time", new BasicDBObject("$gt", afterTime))
 			.get();
-		Logger.error("BefQ:"+System.currentTimeMillis());
 		List<DBObject> loginsDBList = 
 			loginsColl.find(query).sort(new BasicDBObject("log_time", -1)).toArray();
 		
-		Logger.error("BefPars:"+System.currentTimeMillis());
 		Set<TalkerBean> activeTalkers = new LinkedHashSet<TalkerBean>();
 		for (DBObject loginDBObject : loginsDBList) {
-			DBObject talkerDBObject = ((DBRef)loginDBObject.get("uid")).fetch();
-			
+			DBRef talkerDBRef = (DBRef)loginDBObject.get("uid");
 			TalkerBean talker = new TalkerBean();
-			talker.setId(getString(talkerDBObject, "_id"));
+			talker.setId(talkerDBRef.getId().toString());
 			if (!activeTalkers.contains(talker)) {
+				DBObject talkerDBObject = talkerDBRef.fetch();
 				talker.parseBasicFromDB(talkerDBObject);
 				if (!talker.isSuspended()) {
 					activeTalkers.add(talker);
 				}
 			}
 		}
-		
-		Logger.error("AfterPars:"+System.currentTimeMillis());
 		
 		return activeTalkers;
 	}

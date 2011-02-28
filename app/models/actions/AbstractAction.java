@@ -215,12 +215,8 @@ public abstract class AbstractAction implements Action {
 		}
 		
 		DBObject answerDBObject = answerDBRef.fetch();
-		//TODO: use parseFrom? 
 		CommentBean answer = new CommentBean();
-		answer.setId(getString(answerDBObject, "_id"));
-		answer.setText((String)answerDBObject.get("text"));
-		answer.setTime((Date)answerDBObject.get("time"));
-		answer.setFromTalker(TalkerDAO.parseTalker(answerDBObject, "from"));
+		answer.parseFromDB(answerDBObject);
     	return answer;
 	}
 	
@@ -240,10 +236,7 @@ public abstract class AbstractAction implements Action {
 		
 		DBObject commentDBObject = commentDBRef.fetch();
 		CommentBean comment = new CommentBean();
-		comment.setId(getString(commentDBObject, "_id"));
-		comment.setText((String)commentDBObject.get("text"));
-		comment.setTime((Date)commentDBObject.get("time"));
-		comment.setFromTalker(TalkerDAO.parseTalker(commentDBObject, "from"));
+		comment.parseFromDB(commentDBObject);
 		
 		if (name.equalsIgnoreCase("profile_comment")) {
 			//for thought we also load replies
@@ -255,13 +248,8 @@ public abstract class AbstractAction implements Action {
 				DBObject query = new BasicDBObject("_id", new ObjectId(childId));
 				DBObject answerDBObject = commentsColl.findOne(query);
 				
-				//TODO: big load? load in one request? and store "parent"?
 				CommentBean child = new CommentBean();
-				child.setId(getString(answerDBObject, "_id"));
-				child.setText((String)answerDBObject.get("text"));
-				child.setTime((Date)answerDBObject.get("time"));
-				child.setFromTalker(TalkerDAO.parseTalker(answerDBObject, "from"));
-				child.setDeleted(getBoolean(answerDBObject, "deleted"));
+				child.parseFromDB(answerDBObject);
 				if (!child.isDeleted()) {
 					childrenList.add(child);
 				}

@@ -168,27 +168,16 @@ public class ConversationDAO {
 		DBObject query = new BasicDBObject("_id", new ObjectId(convoId));
 		DBObject convoDBObject = convosColl.findOne(query);
 		
-		if (convoDBObject == null) {
-			return null;
-		}
-		ConversationBean convo = new ConversationBean();
-		convo.parseFromDB(convoDBObject);
-		return convo;
+		return parseConvoFromDBObject(convoDBObject, false);
 	}
-	
+
 	public static ConversationBean getByTid(Integer tid) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("tid", tid);
 		DBObject convoDBObject = convosColl.findOne(query);
 		
-		//TODO: same code?
-		if (convoDBObject == null) {
-			return null;
-		}
-		ConversationBean convo = new ConversationBean();
-		convo.parseFromDB(convoDBObject);
-		return convo;
+		return parseConvoFromDBObject(convoDBObject, false);
 	}
 	
 	public static ConversationBean getByTitle(String title) {
@@ -197,12 +186,7 @@ public class ConversationDAO {
 		DBObject query = new BasicDBObject("topic", title);
 		DBObject convoDBObject = convosColl.findOne(query);
 		
-		if (convoDBObject == null) {
-			return null;
-		}
-		ConversationBean convo = new ConversationBean();
-		convo.parseBasicFromDB(convoDBObject);
-		return convo;
+		return parseConvoFromDBObject(convoDBObject, true);
 	}
 	
 	public static ConversationBean getByFromInfo(String from, String fromId) {
@@ -214,12 +198,7 @@ public class ConversationDAO {
 			.get();
 		DBObject convoDBObject = convosColl.findOne(query);
 		
-		if (convoDBObject == null) {
-			return null;
-		}
-		ConversationBean convo = new ConversationBean();
-		convo.parseBasicFromDB(convoDBObject);
-		return convo;
+		return parseConvoFromDBObject(convoDBObject, true);
 	}
 	
 	/**
@@ -238,11 +217,24 @@ public class ConversationDAO {
 			.get();
 		DBObject convoDBObject = convosColl.findOne(query);
 		
+		return parseConvoFromDBObject(convoDBObject, false);
+	}
+	
+	/**
+	 * @param convoDBObject
+	 * @return
+	 */
+	public static ConversationBean parseConvoFromDBObject(DBObject convoDBObject, boolean onlyBasicInfo) {
 		if (convoDBObject == null) {
 			return null;
 		}
 		ConversationBean convo = new ConversationBean();
-		convo.parseFromDB(convoDBObject);
+		if (onlyBasicInfo) {
+			convo.parseBasicFromDB(convoDBObject);
+		}
+		else {
+			convo.parseFromDB(convoDBObject);
+		}
 		return convo;
 	}
 	
@@ -289,7 +281,7 @@ public class ConversationDAO {
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
 			ConversationBean convo = new ConversationBean();
-			convo.parseFromDB(convoDBObject);
+			convo.parseBasicFromDB(convoDBObject);
 			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
 	    	convosList.add(convo);
 		}
@@ -343,11 +335,43 @@ public class ConversationDAO {
 			convo.parseBasicFromDB(convoDBObject);
 	    	convosList.add(convo);
 		}
-		
 		return convosList;
 	}
 	
 	//------------------- Other ----------------------
+	
+	public static int getNumOfStartedConvos(String talkerId) {
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("uid", talkerRef)
+			.add("deleted", new BasicDBObject("$ne", true))
+			.get();
+		int numOfStartedConvos = convosColl.find(query).size();
+		return numOfStartedConvos;
+	}
+	
+	public static List<ConversationBean> getStartedConvos(String talkerId) {
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("uid", talkerRef)
+			.add("deleted", new BasicDBObject("$ne", true))
+			.get();
+		List<DBObject> convosDBList = 
+			convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
+		
+		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
+		for (DBObject convoDBObject : convosDBList) {
+			ConversationBean convo = new ConversationBean();
+			convo.parseBasicFromDB(convoDBObject);
+	    	convosList.add(convo);
+		}
+		return convosList;
+	}
+	
 	
 	/**
 	 * Returns followers of the given conversation
@@ -450,17 +474,35 @@ public class ConversationDAO {
 		List<DBObject> activitiesDBList = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
-		Set<ConversationBean> convosSet = new LinkedHashSet<ConversationBean>();
+		//prepare list of matching conversations
+		List<ObjectId> convoIds = new ArrayList<ObjectId>();
 		for (DBObject activityDBObject : activitiesDBList) {
-			DBObject convoDBObject = ((DBRef)activityDBObject.get("convoId")).fetch();
-			
+			DBRef convoRef = (DBRef)activityDBObject.get("convoId");
+			convoIds.add((ObjectId)convoRef.getId());
+		}
+		
+		return getConvosByIds(convoIds);
+	}
+
+	/**
+	 * @param convoIds
+	 * @return
+	 */
+	public static Set<ConversationBean> getConvosByIds(List<ObjectId> convoIds) {
+		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
+		DBObject query = new BasicDBObject("_id", new BasicDBObject("$in", convoIds));
+		List<DBObject> convosDBList = convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
+		
+		Set<ConversationBean> convosSet = new LinkedHashSet<ConversationBean>();
+		for (DBObject convoDBObject : convosDBList) {
 			ConversationBean convo = new ConversationBean();
-			convo.parseFromDB(convoDBObject);
+			convo.parseBasicFromDB(convoDBObject);
 			
 			if (!convo.isDeleted()) {
 				convosSet.add(convo);
 			}
 		}
+		
 		return convosSet;
 	}
 	
@@ -556,7 +598,7 @@ public class ConversationDAO {
 //		getAllTopics(allTopics, TopicDAO.getById("4cc944b0b8682ba9e3eba5f2"));
 //		System.out.println(allTopics.size());
 	}
-	
+
 	//used for testing
 //	private static void updateLiveTalkers(int tid, String talkerId, 
 //			String talkerName, boolean connected) {

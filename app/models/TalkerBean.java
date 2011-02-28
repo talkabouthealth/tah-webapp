@@ -272,7 +272,6 @@ public class TalkerBean implements Serializable {
 		parseBasicFromDB(talkerDBObject);
 		
 		setHiddenHelps(getStringSet(talkerDBObject, "hidden_helps"));
-		
 		setNfreq(getInt(talkerDBObject, "nfreq"));
 		setNtime(getInt(talkerDBObject, "ntime"));
 		Collection<String> ctype = (Collection<String>)talkerDBObject.get("ctype");

@@ -12,6 +12,7 @@ import java.util.Set;
 import logic.ConversationLogic;
 import logic.FeedsLogic;
 import logic.TalkerLogic;
+import logic.TopicLogic;
 import models.CommentBean;
 import models.DiseaseBean;
 import models.HealthItemBean;
@@ -57,11 +58,9 @@ public class PublicProfile extends Controller {
 		TalkerBean talker = TalkerDAO.getByURLName(userName);
 		notFoundIfNull(talker);
 		
-		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
 		TalkerLogic.preloadTalkerInfo(talker);
 		
 		render(talker, currentTalker, action, from);
-		
 	}
 	
 	public static void thoughts(String userName) {
@@ -98,7 +97,7 @@ public class PublicProfile extends Controller {
 		boolean noHealthInfo = TalkerLogic.talkerHasNoHealthInfo(talker);
 		
 		List<Action> answersFeed = new ArrayList<Action>();
-		int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeed);
+		int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeed, true);
 		
 		render(talker, currentTalker, answersFeed, numOfTopAnswers, noHealthInfo);
 	}
@@ -107,18 +106,18 @@ public class PublicProfile extends Controller {
 	 * Started/Joined/Following conversations
 	 * @param userName
 	 */
+	//TODO: later - add paging, as we have many convos on this page
 	public static void conversations(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByURLName(userName);
 		notFoundIfNull(talker);
 		
 		List<Action> startedConvosFeed = 
-			ConversationLogic.convosToFeed(ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO));
+			ConversationLogic.convosToFeed(ConversationDAO.getStartedConvos(talker.getId()));
 		List<Action> joinedConvosFeed = 
 			ConversationLogic.convosToFeed(ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO));
 		List<Action> followingConvosFeed = ConversationLogic.convosToFeed(TalkerLogic.loadFollowingConversations(talker));
 		
-		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
 		TalkerLogic.preloadTalkerInfo(talker);
 		boolean noHealthInfo = TalkerLogic.talkerHasNoHealthInfo(talker);
 		
@@ -151,8 +150,13 @@ public class PublicProfile extends Controller {
 		}
 		
 		TalkerLogic.preloadTalkerInfo(talker);
-		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
-		List<TopicBean> recommendedTopics = loadRecommendedTopics(talker, talkerDisease, null);
+		
+		TalkerDiseaseBean talkerDisease = null;
+		List<TopicBean> recommendedTopics = null;
+		if (talker.equals(currentTalker)) {
+			talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
+			recommendedTopics = TopicLogic.loadRecommendedTopics(talker, talkerDisease, null);
+		}
 		
 		render(talker, currentTalker, talkerDisease, recommendedTopics);
 	}
@@ -162,51 +166,8 @@ public class PublicProfile extends Controller {
     	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
     	TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(_talker.getId());
     	
-    	List<TopicBean> _recommendedTopics = loadRecommendedTopics(_talker, talkerDisease, afterId);
+    	List<TopicBean> _recommendedTopics = TopicLogic.loadRecommendedTopics(_talker, talkerDisease, afterId);
     	render("tags/publicprofile/recommendedTopicsList.html", _recommendedTopics, _talker);
     }
-	
-	/**
-	 * Return recommended topics for given talker.
-	 * Two criterias:
-	 * - based on HealthInfo;
-	 * - popularity of topics (number of questions)
-	 * 
-	 * @param afterId id of last topic from previous load (used for paging)
-	 */
-	//TODO: move to logic?
-	private static List<TopicBean> loadRecommendedTopics(TalkerBean talker, 
-			TalkerDiseaseBean talkerDisease, String afterId) {
-		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();
-		List<TopicBean> loadedTopics = new ArrayList<TopicBean>();
-		if (!talker.isProf() && talkerDisease != null) {
-			loadedTopics = TalkerLogic.getTopicsByHealthInfo(talkerDisease);
-		}
-		if (recommendedTopics.isEmpty()) {
-			//display most popular Topics based on number of questions
-			loadedTopics = new ArrayList<TopicBean>(TopicDAO.loadAllTopics());
-		}
-		
-		final int numberPerPage = 10;
-		boolean canAdd = (afterId == null);
-		for (TopicBean topic : loadedTopics) {
-			if (canAdd && !talker.getFollowingTopicsList().contains(topic)) {
-				//recommended topics shouldn't contain default topics
-				if (! (topic.getTitle().equals(ConversationLogic.DEFAULT_QUESTION_TOPIC) 
-						|| topic.getTitle().equals(ConversationLogic.DEFAULT_TALK_TOPIC)) ) {
-					recommendedTopics.add(topic);
-				}
-			}
-			if (topic.getId().equals(afterId)) {
-				canAdd = true;
-			}
-			//enough for this page?
-			if (recommendedTopics.size() == numberPerPage) {
-				break;
-			}
-		}
-		
-		return recommendedTopics;
-	}
 	
 }

@@ -1,7 +1,7 @@
 @charset "utf-8";
 /* 
 	CSS for the new design.
-	TODO: clear it? looks awful
+	We need to clear it sometime, after all different designers it looks awful
  */
 body {
 	margin: 0px;
@@ -336,7 +336,8 @@ a {
 	position: absolute;
 	visibility: hidden;
 	border:1px solid #CCC;
-	border-top: 1px solid #CCC
+	border-top: 1px solid #CCC;
+	z-index: 1000;
 }
 #jsddm li ul li {
 	float: none;

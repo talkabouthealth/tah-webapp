@@ -144,17 +144,7 @@ public class Conversations extends Controller {
     	
     	ActionDAO.saveAction(new StartConvoAction(talker, convo, ActionType.RESTART_CONVO));
     	NotificationUtils.sendAllNotifications(convoId, talker.getId());
-    	
-    	//email notifications
-    	Map<String, String> vars = new HashMap<String, String>();
-		vars.put("convo", convo.getTopic());
-		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
-		vars.put("convo_url", convoURL);
-		String convoTalkURL = CommonUtil.generateAbsoluteURL("Talk.talkApp", "convoId", convo.getTid());
-		vars.put("convo_talk_url", convoTalkURL);
-    	for (TalkerBean follower : convo.getFollowers()) {
-    		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_RESTART, follower, vars);
-    	}
+    	NotificationUtils.emailNotifyOnConvoRestart(convo);
     	
     	convo.setCreationDate(new Date());
     	ConversationDAO.updateConvo(convo);
@@ -207,7 +197,6 @@ public class Conversations extends Controller {
 	/**
 	 * Follow/Unfollow given conversation
 	 */
-    //TODO: separate all follow/unfollow functions?
     public static void follow(String convoId) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
@@ -279,17 +268,7 @@ public class Conversations extends Controller {
     		else {
     			ActionDAO.saveAction(new SummaryConvoAction(talker, convo, ActionType.SUMMARY_EDITED));
     		}
-    		
-        	//prepare email params
-        	Map<String, String> vars = new HashMap<String, String>();
-    		vars.put("convo", convo.getTopic());
-    		vars.put("other_talker", talker.getUserName());
-    		vars.put("summary_text", convo.getSummary());
-    		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
-    		vars.put("convo_url", convoURL);
-        	for (TalkerBean follower : convo.getFollowers()) {
-        		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_SUMMARY, follower, vars);
-        	}
+        	NotificationUtils.emailNotifyOnConvoSummary(talker, convo);
     	}
     	else if (name.equalsIgnoreCase("topic")) {
     		String todo = params.get("todo");
@@ -377,8 +356,8 @@ public class Conversations extends Controller {
     		}
     	}
     }
-    
-    
+
+
     /* ---------------------- Answer related actions --------------------- */
     
     /**

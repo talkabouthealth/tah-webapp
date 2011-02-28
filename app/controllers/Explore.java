@@ -67,6 +67,7 @@ public class Explore extends Controller {
 //    	Logger.error("Empty: "+popularTopics.get(0).getId());
     	
 		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions();
+		
 		render(talker, openQuestions, popularTopics);
     }
     
@@ -81,6 +82,7 @@ public class Explore extends Controller {
     	}
     	
     	List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
+    	
 		render(talker, liveTalks, popularTopics);
     }
     
@@ -99,15 +101,12 @@ public class Explore extends Controller {
     public static void browseMembers(String action) throws Throwable {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 
-		Logger.error("S0:"+System.currentTimeMillis());
-		
 		//Active talkers on this day
 		Calendar twoWeeksBeforeNow = Calendar.getInstance();
 		twoWeeksBeforeNow.add(Calendar.DAY_OF_MONTH, -14);
 		Set<TalkerBean> activeTalkers = ApplicationDAO.getActiveTalkers(twoWeeksBeforeNow.getTime());
-		Set<TalkerBean> newTalkers = ApplicationDAO.getNewTalkers();
 		
-		Logger.error("F0:"+System.currentTimeMillis());
+		Set<TalkerBean> newTalkers = ApplicationDAO.getNewTalkers();
 		
 		//check if search is performed now
 		String query = params.get("query");
@@ -151,8 +150,6 @@ public class Explore extends Controller {
 			}
 		}
 		
-		Logger.error("F2:"+System.currentTimeMillis());
-		
 		//default tab is 'active'
 		if (action == null || action.equals("browsemembers")) {
 			action = "active";
@@ -191,7 +188,7 @@ public class Explore extends Controller {
     	if (talker == null) {
     		popularTopics = TopicDAO.getPopularTopics();
     	}
-		
+    	
 		//"Popular Conversations" - ordered by page views
 		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations();
 		

@@ -141,8 +141,7 @@ public class ViewDispatcher extends Controller {
 			healthItemsMap.put(itemName, healthItem);
 		}
 		
-		int numOfStartedConvos = 
-			ConversationDAO.loadConversations(talker.getId(), ActionType.START_CONVO).size();
+		int numOfStartedConvos = ConversationDAO.getNumOfStartedConvos(talker.getId());
 		TalkerLogic.preloadTalkerInfo(talker);
 		
 		boolean notProvidedInfo = false;
@@ -173,7 +172,7 @@ public class ViewDispatcher extends Controller {
 		Set<Action> talkerFeed = FeedsLogic.getTalkerFeed(talker, null);
 		
 		List<Action> answersFeed = new ArrayList<Action>();
-		int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeed);
+		int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeed, false);
 		int numOfAnswers = answersFeed.size();
 		
 		render("PublicProfile/newview.html", talker, disease, talkerDisease, healthItemsMap, 

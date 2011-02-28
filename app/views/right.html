@@ -1,9 +1,7 @@
 <div id="comright" style="padding-left:30px;">
 #{if session.username }
-	
 	<script type="text/javascript">
 		$(document).ready(function() {
-			//TODO: move to common header?
 			var share = "${params.share}";
 			if (share === "twitter") {
 				showPopup("#shareTwitterDialog", 350);

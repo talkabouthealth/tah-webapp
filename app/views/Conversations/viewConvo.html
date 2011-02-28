@@ -41,8 +41,6 @@
 		var tid = "${convo.tid}";
 		var currentConvoId = "${convo.id}";
 
-		//TODO: add js comments
-		//TODO: use 'include' to separate complicated files?
 		$(document).ready(function() {
 			var share = "${params.share}";
 			if (share === "twitter") {
@@ -76,6 +74,7 @@
 			});
 
 			//----- Answers ------
+			//Vote Up/Vote Down handler
 			$(".votebtnup, .votebtndown").live("click", function() {
    				var value = $(this).hasClass("votebtnup") ? true : false;
    				var answerId = $(this).attr("rel");
@@ -106,6 +105,7 @@
 				showPopup("#flagPopup", 200);
 			});
 
+			//Delete topic from topics (tags)
    			$(".deleteTopicLink").live("click", function() {
    	   			$(this).prev().remove();
    	   			var topicId = $(this).attr("rel");
@@ -121,6 +121,7 @@
    	   			return false;
    			});
 
+			//Delete conversation from Related/Follow-Up conversations
    			$(".deleteConvoLink").live("click", function() {
    				var deleteConvoId = $(this).attr("rel");
    	   			$(this).parent().remove();
@@ -152,12 +153,7 @@
    	   			if (selectedConvoURL) {
    	   				var confirmMerge = confirm("Are you sure you want to merge the following question: "+selectedConvoURL);
 		   	   		if (confirmMerge) {
-			   	   		if (closeTimeout) {
-							window.clearTimeout(closeTimeout);
-						}
-						$("#savedHelpText").html("Merging...");
-						$("#savedHelpError").html("");
-						$("#savedHelp").fadeIn(300);
+		   	   			showStatus("Merging...");
 					
 		   	   	  		$.post("@{Conversations.mergeConvos()}", 
 		    				{ convoId : '${convo.id}', convoToMergeURL : selectedConvoURL},
@@ -187,6 +183,9 @@
    			makeAutocomplete("#convoToMerge", "convoedit");
 		});
 
+		/**
+		* Called after inline editing of title/details/summary/etc.
+		*/
 		function saveData(dataType, newValue) {
 			if (dataType === 'titleEdit') {
 				$.post("@{Conversations.updateField()}", 
@@ -216,6 +215,9 @@
 			}
 		}
 
+		/**
+		* Called after editing lists - topics, related/follow-up conversations
+		*/
 		function updateData(dataType, newValue) {
 			if (dataType === 'relatedConvosEdit') {
 				$.post("@{Conversations.updateField()}", 

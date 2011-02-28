@@ -51,7 +51,7 @@ public class FacebookUtil {
 	}
 	
 	public static List<ServicePost> importPosts(ServiceAccountBean fbAccount, String sinceId) {
-		//TODO: implement sinceId use
+		//TODO: later - implement sinceId use?
 		List<ServicePost> postsList = new ArrayList<ServicePost>();
 		try {
 			HttpResponse res = WS.url(

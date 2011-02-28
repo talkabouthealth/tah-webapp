@@ -121,7 +121,7 @@ public class Topics extends Controller {
     	}
     	else if (name.equalsIgnoreCase("freeze")) {
     		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    		if (!talker.getUserName().equalsIgnoreCase("admin")) {
+    		if (!talker.isAdmin()) {
     			forbidden();
     		}
     		
