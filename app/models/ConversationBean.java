@@ -137,7 +137,7 @@ public class ConversationBean {
     	
     	//topics(tags)
     	parseTopics((Collection<DBRef>)convoDBObject.get("topics"));  
-    	//author
+    	//author talker
     	setTalker(TalkerDAO.parseTalker(convoDBObject, "uid"));
 	}
 	
