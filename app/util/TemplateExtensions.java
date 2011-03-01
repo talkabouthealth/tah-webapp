@@ -1,5 +1,6 @@
 package util;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class TemplateExtensions extends JavaExtensions {
 	 * Used for "other" fields in the forms.
 	 * 
 	 */
-	public static String toCommaString(List<String> list, String fieldName) {
+	public static String toCommaString(Collection<String> list, String fieldName) {
 		if (list == null || list.size() == 0) {
 			return fieldName+" (please separate by commas)";
 		}
@@ -36,7 +37,7 @@ public class TemplateExtensions extends JavaExtensions {
 		}
 	}
 	
-	public static String toCommaStringView(List<String> list, String fieldName) {
+	public static String toCommaStringView(Collection<String> list, String fieldName) {
 		if (list == null || list.size() == 0) {
 			return "";
 		}

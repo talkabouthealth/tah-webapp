@@ -138,7 +138,6 @@
 						</div>
 					</div>
 					
-					*{
 					<div class="personalmain">
 						<div class="personaltextarea"><span class="blacktext14">Ethnicity</span></div>
 						<div class="personalcheck">
@@ -188,22 +187,20 @@
 								<option value=""></option>
 								#{list items:models.TalkerBean.LANGUAGE_ARRAY, as:'language'}
 									<option value="${language}"
-									#{if language.equals(talker.languages[count]?.name) } selected #{/if} 
+									#{if language.equals(talker.languagesList[count]?.name) } selected #{/if} 
 									>${language}</option>
 								#{/list}
 							</select>
 							<select name="talker.languagesList[${count}].proficiency" class="simpleselect" style="width: 80px;">
 								#{list items:['', 'Fluently', 'Okay', 'Poorly'], as:'proficiency'}
 									<option value="${proficiency}"
-									#{if proficiency.equals(talker.languages[count]?.proficiency) } selected #{/if} 
+									#{if proficiency.equals(talker.languagesList[count]?.proficiency) } selected #{/if} 
 									>${proficiency}</option>
 								#{/list}
 							</select>
 						#{/list}
 						</div>
 					</div>
-					
-					}*
 					
 					<div class="personalmain">
 						<div class="personaltextarea">

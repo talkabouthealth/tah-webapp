@@ -35,6 +35,9 @@ public class LanguageBean implements DBModel {
 	@Override
 	public String toString() {
 		String languageString = getName();
+		if (languageString == null || languageString.length() == 0) {
+			return "";
+		}
 		if (getProficiency() != null && getProficiency().length() > 0) {
 			languageString = languageString+" ("+getProficiency()+")";
 		}

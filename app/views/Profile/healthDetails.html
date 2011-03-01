@@ -39,6 +39,35 @@
 			<div class="blacktext2" id="innerheading">Edit Your Health Information</div>
 			<div id="innerpersonalarea">
 				<div id="signupleft">
+					#{if verifiedEmail}
+						<div id="verifiedEmailHelp" class="helpInfo">
+						      <div class="popboxWraper">
+						        <div class="popbox2">
+						          <div class="closecover" style="clear: none; float: right;">
+						            <div class="close" onclick="return hideHelpInfo('verifiedEmail', false);">
+						            	<img src="/public/images/close.jpg" alt="Close" /></div>
+						          </div>
+						          <div class="note">
+						          	#{if talker.isProf()}
+						          		<strong>Email verified successfully.  Thank you.</strong><br/><br/>
+										Please tell us more about you so that we can personalize your experience and recommend topics and conversations. 
+										As well, this enables community members to find you and follow your answers and comments if you choose.  
+										Providing profile information is optional.
+						          	#{/if}
+						          	#{else}
+						          		<strong>Email verified successfully. Thank you.</strong><br/><br/>
+									  	Please tell us more about you so that we can match you for conversations most relevant to you.
+									  	Also, other community members with similar concerns can find and connect with you.
+						          	#{/else}
+								  	<br/>
+								  	<br/>
+						          </div>
+						          <div class="cb"></div>
+						        </div>
+						      </div>
+						      <div class="cb"></div>
+						</div> 	
+					#{/if}			
 					#{ifnot talker?.hiddenHelps.contains('health')}
 					<div id="healthHelp" class="helpInfo">
 					      <div class="popboxWraper">

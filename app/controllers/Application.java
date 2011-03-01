@@ -322,7 +322,13 @@ public class Application extends Controller {
 		
 		if (Security.isConnected()) {
 			CommonUtil.updateTalker(talker, session);
-			Profile.edit(true);
+			if (talker.isProf()) {
+				Profile.edit(true);
+			}
+			else {
+				Profile.healthDetails(true);
+			}
+
 		}
 		else {
 			TalkerDAO.updateTalker(talker);

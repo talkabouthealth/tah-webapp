@@ -156,7 +156,7 @@ public class TalkerBean implements Serializable {
 	private String religionSerious;
 	private Set<LanguageBean> languages;
 	//Play! has a bug with binding Set, so for binding we use list
-	private List<LanguageBean> languagesList;
+	private List<LanguageBean> languagesList = new ArrayList<LanguageBean>();
 	
 	private String webpage;
 	private List<String> keywords;
@@ -300,7 +300,8 @@ public class TalkerBean implements Serializable {
 		setEthnicities(getStringSet(talkerDBObject, "ethnicities"));
 		setReligion((String)talkerDBObject.get("religion"));
 		setReligionSerious((String)talkerDBObject.get("religion_serious"));
-		setLanguages(parseSet(LanguageBean.class, talkerDBObject, "languages"));
+//		setLanguages(parseSet(LanguageBean.class, talkerDBObject, "languages"));
+		parseLanguages((Collection<DBObject>)talkerDBObject.get("languages"));
 		
 		setInsuranceAccepted(getStringList(talkerDBObject, "insurance_accept"));
 		
@@ -371,6 +372,17 @@ public class TalkerBean implements Serializable {
 		}
 	}
 	
+	private void parseLanguages(Collection<DBObject> languagesDBList) {
+		languagesList = new ArrayList<LanguageBean>();
+		if (languagesDBList != null) {
+			for (DBObject langDBObject : languagesDBList) {
+				LanguageBean language = new LanguageBean();
+				language.parseDBObject(langDBObject);
+				languagesList.add(language);
+			}
+		}
+	}
+	
 	/**
 	 * Parse related info between talker and topic - experiences, endorsements
 	 * @param topicsInfoCol
@@ -425,6 +437,14 @@ public class TalkerBean implements Serializable {
 	}
 	
 	/* ---------------- Convert to DB format methods --------------------- */
+	
+	public List<DBObject> languagesToDB() {
+		List<DBObject> languagesDBList = new ArrayList<DBObject>();
+		for (LanguageBean language : getLanguagesList()) {
+			languagesDBList.add(language.toDBObject());
+		}
+		return languagesDBList;
+	}
 
 	public List<DBObject> topicsInfoToDB() {
 		List<DBObject> topicsInfoList = new ArrayList<DBObject>();
@@ -926,5 +946,4 @@ public class TalkerBean implements Serializable {
 	public void setOtherCtype(List<String> otherCtype) {
 		this.otherCtype = otherCtype;
 	}
-	
 }	

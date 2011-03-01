@@ -151,9 +151,10 @@ public class Profile extends Controller {
 			oldTalker.setChildrenAges(talker.getChildrenAges());
 			oldTalker.setKeywords(talker.getKeywords());	
 			
-//			oldTalker.setEthnicities(talker.getEthnicities());
-//			oldTalker.setReligion(talker.getReligion());
-//			oldTalker.setReligionSerious(talker.getReligionSerious());
+			oldTalker.setEthnicities(talker.getEthnicities());
+			oldTalker.setReligion(talker.getReligion());
+			oldTalker.setReligionSerious(talker.getReligionSerious());
+			oldTalker.setLanguagesList(talker.getLanguagesList());
 //			oldTalker.setLanguages(new LinkedHashSet<LanguageBean>(talker.getLanguagesList()));
 		}
 		
@@ -565,7 +566,7 @@ public class Profile extends Controller {
 	}
 	
 	/* ------------- Health Info -------------------------- */
-	public static void healthDetails() {
+	public static void healthDetails(boolean verifiedEmail) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		TalkerLogic.preloadTalkerInfo(talker, "health");
 		
@@ -582,7 +583,7 @@ public class Profile extends Controller {
 			healthItemsMap.put(itemName, healthItem);
 		}
 		
-		render(talker, talkerDisease, disease, healthItemsMap);
+		render(talker, talkerDisease, disease, healthItemsMap, verifiedEmail);
 	}
 
 	public static void saveHealthDetails(TalkerDiseaseBean talkerDisease, String section) {

@@ -35,6 +35,7 @@ import util.FacebookUtil;
 import util.SearchUtil;
 import util.TwitterUtil;
 import util.jobs.ConvoFromTwitterJob;
+import util.jobs.EmailReminderJob;
 import util.jobs.ThoughtsFromServicesJob;
 import dao.ActionDAO;
 import dao.ApplicationDAO;
@@ -80,6 +81,12 @@ public class Explore extends Controller {
     	else {
     		popularTopics = TopicDAO.getPopularTopics();
     	}
+    	
+//    	try {
+//			EmailReminderJob.doJob();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
     	
     	List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
     	

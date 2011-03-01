@@ -31,7 +31,6 @@ import models.TopicBean;
 //TODO: maybe write text descritions? Like:
 //Every action has different data - convo, topics, answer or all this data together... Etc.
 
-//TODO: try to use TAH db and check loading times?
 public abstract class AbstractAction implements Action {
 	
 	protected String id;

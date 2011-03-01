@@ -30,7 +30,7 @@ import util.SearchUtil;
  * Updates all search indexes
  *
  */
-@Every("5min")
+@Every("10min")
 public class SearchIndexerJob extends Job {
 
 	@Override

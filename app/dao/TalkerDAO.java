@@ -133,7 +133,7 @@ public class TalkerDAO {
 			.add("ethnicities", talker.getEthnicities())
 			.add("religion", talker.getReligion())
 			.add("religion_serious", talker.getReligionSerious())
-			.add("languages", setToDB(talker.getLanguages()))
+			.add("languages", talker.languagesToDB())
 			
 			.add("invites", talker.getInvitations())
 			.add("keywords", talker.getKeywords())

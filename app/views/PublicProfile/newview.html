@@ -296,6 +296,30 @@
 				                    </div>
 				                </div>
 				                #{/if}
+				                #{if talker.ethnicities}
+				                <div class="profiletxtCantant">
+			                    	<div class="profileCantanttxt1">
+				                      	<strong>Ethnicity:</strong>
+			                      		<span class="Profilepersonsub"> ${talker.ethnicities?.toCommaStringView()}</span>
+				                    </div>
+				                </div>
+				                #{/if}
+				                #{if talker.religion}
+				                <div class="profiletxtCantant">
+			                    	<div class="profileCantanttxt1">
+				                      	<strong>Religion:</strong>
+			                      		<span class="Profilepersonsub"> ${talker.religion} ${talker.religionSerious}</span>
+				                    </div>
+				                </div>
+				                #{/if}
+				                #{if talker.languagesList}
+				                <div class="profiletxtCantant">
+			                    	<div class="profileCantanttxt1">
+				                      	<strong>Speaks:</strong>
+			                      		<span class="Profilepersonsub"> ${talker.religion} ${talker.religionSerious}</span>
+				                    </div>
+				                </div>
+				                #{/if}
 				                #{if talker.webpage}
 				                <div class="profiletxtCantant">
 			                    	<div class="profileCantanttxt1">

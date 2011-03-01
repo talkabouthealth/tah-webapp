@@ -2,6 +2,7 @@ package util.jobs;
 
 import java.util.List;
 
+import play.Logger;
 import play.jobs.Every;
 import play.jobs.Job;
 
@@ -26,6 +27,16 @@ public class ConvoFromTwitterJob extends Job {
 	
 	@Override
 	public void doJob() throws Exception {
+		Logger.error("------------Mem Info------------");
+		Runtime rt = Runtime.getRuntime();
+		Logger.error("   Free memory = "+rt.freeMemory());
+		Logger.error("   Total memory = "+rt.totalMemory());
+		Logger.error("   Maximum memory = "+rt.maxMemory());
+		rt.gc();
+		Logger.error("   Free memory = "+rt.freeMemory());
+		Logger.error("   Total memory = "+rt.totalMemory());
+		Logger.error("   Maximum memory = "+rt.maxMemory());
+		
 		//get 10 last tweets with '@talkabouthealth'
 		List<ServicePost> mentionTweets = TwitterUtil.loadMentions();
 		for (ServicePost tweet : mentionTweets) {
