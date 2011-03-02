@@ -63,7 +63,7 @@ public class Home extends Controller {
     	boolean showNotificationAccounts = prepareNotificationPanel(session, talker);
 		TalkerLogic.preloadTalkerInfo(talker);
 		
-		//TODO: check recommendations
+		//TODO: check recommendations?
 //		Yes, for HealthInfo, let's use all of the data. 
 //		For Profile info, we can use gender, age, marital status, number of children, and ages of children.
 		List<TopicBean> recommendedTopics = TalkerLogic.getRecommendedTopics(talker);

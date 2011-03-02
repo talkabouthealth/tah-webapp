@@ -43,7 +43,6 @@ import models.actions.FollowConvoAction;
 import models.actions.StartConvoAction;
 import models.actions.Action.ActionType;
 
-//TODO: check all logic
 public class ConversationLogic {
 	
 	public static final String DEFAULT_TALK_TOPIC = "Chats";

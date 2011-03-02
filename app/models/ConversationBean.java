@@ -186,7 +186,7 @@ public class ConversationBean {
         			messages.add(message);
     			}
     			else {
-    				//TODO: remove another conversation
+    				//TODO: remove another bad conversation
     				//NULL talker in conversation message: 4cd83ea41a98b19bfec451e2, index: 42
     				//NULL talker in conversation message: 4cd83d711a98b19bd4c451e2, messages: 2
     				errorCount++;

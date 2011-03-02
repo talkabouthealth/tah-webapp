@@ -106,7 +106,7 @@ public class PublicProfile extends Controller {
 	 * Started/Joined/Following conversations
 	 * @param userName
 	 */
-	//TODO: later - add paging, as we have many convos on this page
+	//TODO: later - add paging? as we have many convos on this page
 	public static void conversations(String userName) {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByURLName(userName);

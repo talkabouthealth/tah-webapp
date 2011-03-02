@@ -61,8 +61,6 @@ import util.oauth.TwitterOAuthProvider;
  * Job for preparing db and app for work.
  * Also is used for different updates in db when deploying new features.
  * 
- * //TODO: iptables + other admin stuff
- * 
  */
 @OnApplicationStart
 public class ApplicationUpdatesJob extends Job {
@@ -73,20 +71,6 @@ public class ApplicationUpdatesJob extends Job {
 		 * 
 		 * 
 		 */
-		//TODO: remove this:
-		TopicBean badTopic = TopicDAO.getOrRestoreByTitle("Breast Cancer Advocates");
-		if (badTopic != null) {
-			TopicLogic.addToDefaultParent(badTopic);
-		}
-		badTopic = TopicDAO.getOrRestoreByTitle("Lists");
-		if (badTopic != null) {
-			TopicLogic.addToDefaultParent(badTopic);
-		}
-		badTopic = TopicDAO.getOrRestoreByTitle("Twitter");
-		if (badTopic != null) {
-			TopicLogic.addToDefaultParent(badTopic);
-		}
-		
 		
 		//Fields data for Edit Profile
 		FieldsDataImporter.importData("fields.dat");

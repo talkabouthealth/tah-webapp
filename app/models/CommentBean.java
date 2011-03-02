@@ -75,8 +75,6 @@ public class CommentBean extends MessageBean {
 		public void setUp(boolean up) { this.up = up; }
 	}
 	
-	//TODO: organize fields in all models, maybe subobjects? and save/update DAO lists
-	
 	//for thoughts/replies - id of profile where it was published
 	private String profileTalkerId;
 	

@@ -129,7 +129,6 @@ public class Actions extends Controller {
 	 * @param cleanText Text of comment without html (used for links)
 	 * @param from page where request was made
 	 */
-	//TODO: check better option for cleanText?
 	public static void saveProfileComment(String profileTalkerId, String parentId, 
 			String text, String cleanText, String from, Boolean ccTwitter, Boolean ccFacebook) {
 		CommentBean comment = 
