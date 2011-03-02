@@ -76,16 +76,16 @@ public class ThoughtsFromServicesJob extends Job {
 	
 	private String prepareText(ServiceType type, String text) {
 		String htmlText = CommonUtil.linkify(text);
-		if (type == ServiceType.TWITTER) {
-//			String regex = "(?:\\s|\\A)[#]+([A-Za-z0-9-_]+)";
-//			String regex2 = "(?:\\s|\\A)[@]+([A-Za-z0-9-_]+)";
-			
-			String regex = "(\\s|\\A)#(\\w+)";
-			String regex2 = "(\\s|\\A)@(\\w+)";
-			
-			htmlText = htmlText.replaceAll(regex, "$1<a href=\"http://twitter.com/search?q=%23$2\" target=\"_blank\">#$2</a>");
-			htmlText = htmlText.replaceAll(regex2, "$1<a href=\"http://twitter.com/$2\" target=\"_blank\">@$2</a>");
-		}
+//		if (type == ServiceType.TWITTER) {
+////			String regex = "(?:\\s|\\A)[#]+([A-Za-z0-9-_]+)";
+////			String regex2 = "(?:\\s|\\A)[@]+([A-Za-z0-9-_]+)";
+//			
+//			String regex = "(\\s|\\A)#(\\w+)";
+//			String regex2 = "(\\s|\\A)@(\\w+)";
+//			
+//			htmlText = htmlText.replaceAll(regex, "$1<a href=\"http://twitter.com/search?q=%23$2\" target=\"_blank\">#$2</a>");
+//			htmlText = htmlText.replaceAll(regex2, "$1<a href=\"http://twitter.com/$2\" target=\"_blank\">@$2</a>");
+//		}
 		return htmlText;
 	}
 

@@ -154,8 +154,6 @@ public class TalkerBean implements Serializable {
 	private Set<String> ethnicities;
 	private String religion;
 	private String religionSerious;
-	private Set<LanguageBean> languages;
-	//Play! has a bug with binding Set, so for binding we use list
 	private List<LanguageBean> languagesList = new ArrayList<LanguageBean>();
 	
 	private String webpage;
@@ -300,7 +298,6 @@ public class TalkerBean implements Serializable {
 		setEthnicities(getStringSet(talkerDBObject, "ethnicities"));
 		setReligion((String)talkerDBObject.get("religion"));
 		setReligionSerious((String)talkerDBObject.get("religion_serious"));
-//		setLanguages(parseSet(LanguageBean.class, talkerDBObject, "languages"));
 		parseLanguages((Collection<DBObject>)talkerDBObject.get("languages"));
 		
 		setInsuranceAccepted(getStringList(talkerDBObject, "insurance_accept"));
@@ -375,11 +372,20 @@ public class TalkerBean implements Serializable {
 	private void parseLanguages(Collection<DBObject> languagesDBList) {
 		languagesList = new ArrayList<LanguageBean>();
 		if (languagesDBList != null) {
+			int count = 0;
 			for (DBObject langDBObject : languagesDBList) {
 				LanguageBean language = new LanguageBean();
 				language.parseDBObject(langDBObject);
+				if (count == 0) {
+					//first language is English by default
+					language.setName("English");
+				}
+				count++;
 				languagesList.add(language);
 			}
+		}
+		if (languagesList.size() == 0) {
+			languagesList.add(new LanguageBean("English", null));
 		}
 	}
 	
@@ -696,6 +702,18 @@ public class TalkerBean implements Serializable {
 		return null;
 	}
 	
+	public String getLanguagesAsString() {
+		StringBuilder languagesString = new StringBuilder();
+		for (LanguageBean language : getLanguagesList()) {
+			if (language.getName() != null && language.getName().length() > 0) {
+				languagesString.append(language.toString()).append(", ");
+			}
+		}
+		//remove last comma
+		languagesString.delete(languagesString.length()-2, languagesString.length());
+		return languagesString.toString();
+	}
+	
 	// ---- Getters & Setters -------
 	public String getUserName() { return userName; }
 	public void setUserName(String userName) { this.userName = userName; }
@@ -927,12 +945,6 @@ public class TalkerBean implements Serializable {
 	}
 	public void setReligionSerious(String religionSerious) {
 		this.religionSerious = religionSerious;
-	}
-	public Set<LanguageBean> getLanguages() {
-		return languages;
-	}
-	public void setLanguages(Set<LanguageBean> languages) {
-		this.languages = languages;
 	}
 	public List<LanguageBean> getLanguagesList() {
 		return languagesList;

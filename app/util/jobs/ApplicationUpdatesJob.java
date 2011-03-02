@@ -20,6 +20,7 @@ import org.apache.lucene.document.Field;
 import org.bson.types.ObjectId;
 
 import logic.TalkerLogic;
+import logic.TopicLogic;
 import models.CommentBean;
 import models.IMAccountBean;
 import models.PrivacySetting;
@@ -69,7 +70,23 @@ public class ApplicationUpdatesJob extends Job {
 	public void doJob() throws Exception {
 		/**
 		 * For deploy
+		 * 
+		 * 
 		 */
+		//TODO: remove this:
+		TopicBean badTopic = TopicDAO.getOrRestoreByTitle("Breast Cancer Advocates");
+		if (badTopic != null) {
+			TopicLogic.addToDefaultParent(badTopic);
+		}
+		badTopic = TopicDAO.getOrRestoreByTitle("Lists");
+		if (badTopic != null) {
+			TopicLogic.addToDefaultParent(badTopic);
+		}
+		badTopic = TopicDAO.getOrRestoreByTitle("Twitter");
+		if (badTopic != null) {
+			TopicLogic.addToDefaultParent(badTopic);
+		}
+		
 		
 		//Fields data for Edit Profile
 		FieldsDataImporter.importData("fields.dat");

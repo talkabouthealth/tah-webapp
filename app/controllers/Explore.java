@@ -82,14 +82,7 @@ public class Explore extends Controller {
     		popularTopics = TopicDAO.getPopularTopics();
     	}
     	
-//    	try {
-//			EmailReminderJob.doJob();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-    	
     	List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
-    	
 		render(talker, liveTalks, popularTopics);
     }
     

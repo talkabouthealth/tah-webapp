@@ -183,7 +183,8 @@
 						<div class="personaltextarea"><span class="blacktext14">Languages</span></div>
 						<div class="personaltextarea" style="width: 250px; height: auto;">
 						#{list items:[0, 1, 2, 3, 4], as: 'count'}
-							<select name="talker.languagesList[${count}].name" class="simpleselect">
+							<select name="talker.languagesList[${count}].name" 
+									#{if count == 0} disabled #{/if} class="simpleselect">
 								<option value=""></option>
 								#{list items:models.TalkerBean.LANGUAGE_ARRAY, as:'language'}
 									<option value="${language}"

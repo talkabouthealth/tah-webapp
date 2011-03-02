@@ -92,10 +92,6 @@ public class Profile extends Controller {
 	public static void save(@Valid TalkerBean talker) {
 		TalkerBean oldTalker = CommonUtil.loadCachedTalker(session);
 		
-//		System.out.println("------");
-//		System.out.println(talker.getLanguages());
-//		System.out.println("xxxxxxx");
-		
 		//------- validate
 		String oldUserName = oldTalker.getUserName();
 		if (!oldUserName.equals(talker.getUserName())) {
@@ -155,7 +151,6 @@ public class Profile extends Controller {
 			oldTalker.setReligion(talker.getReligion());
 			oldTalker.setReligionSerious(talker.getReligionSerious());
 			oldTalker.setLanguagesList(talker.getLanguagesList());
-//			oldTalker.setLanguages(new LinkedHashSet<LanguageBean>(talker.getLanguagesList()));
 		}
 		
 		CommonUtil.updateTalker(oldTalker, session);

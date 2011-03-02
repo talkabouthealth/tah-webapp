@@ -112,6 +112,12 @@ public class SearchIndexerJob extends Job {
 			convoIndexWriter.close();
 			autocompleteIndexWriter.close();
 		}
+		
+		//Temporary logging
+		Logger.info("------------Mem Info------------");
+		Runtime rt = Runtime.getRuntime();
+		Logger.info("   Free: "+rt.freeMemory()/1024+", Total: "+rt.totalMemory()/1024);
+		rt.gc();
 	}
 	
 	public static void main(String[] args) throws Exception {
