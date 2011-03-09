@@ -143,7 +143,14 @@
 				                    <div class="profilebiotxt">${talker.profStatement.nl2br()}</div>
 								#{/if}
 								
-								<div class="Profileperson">Profile Info</div>
+								<div class="Profileperson">
+								#{if talker.isProf()}
+								Professional Info
+								#{/if}
+								#{else}
+								Profile Info
+								#{/else}
+								</div>
 			                    <div class="topicborder"></div>
 			                    
 			                    #{list items: logic.TalkerLogic.PROF_FIELDS_MAP.keySet(), as: 'field'}
