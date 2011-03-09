@@ -1,0 +1,37 @@
+#{set talkerType = talker.connection /}
+
+#{set profInfo = talker.profInfo /}
+
+<div class="personalmain">
+	<div class="personaltextarea"><span class="blacktext14">Description</span><br />
+	<span class="footerlink">(about you, your services, your practice, etc.)</span>	
+	</div>
+	<div class="textareabig">
+		<textarea name="talker.profStatement" cols="45" rows="5" class="textarea3">${talker.profStatement}</textarea>
+	</div>
+</div>
+
+	<div class="personalmain">
+		<div class="personaltextarea">
+			<span class="blacktext14">Web page<br/></span>
+		</div>
+		<div class="personaltextfield">
+			<input name="talker.webpage" type="text" class="personalfields"
+					value="${talker.webpage}" />
+		</div>
+	</div>
+
+	#{profile/field type: 'text', des: 'Twitter page', name: 'tw_page', talkerType: talkerType, profInfo: profInfo /}
+	#{profile/field type: 'text', des: 'Facebook page', name: 'fb_page', talkerType: talkerType, profInfo: profInfo /}
+	#{profile/field type: 'text', des: 'LinkedIn page', name: 'li_page', talkerType: talkerType, profInfo: profInfo /}	
+	#{profile/field type: 'text', des: 'Email address', name: 'pract_email', talkerType: talkerType, profInfo: profInfo /}
+	#{profile/field type: 'text', des: 'Phone number', name: 'pract_phone', talkerType: talkerType, profInfo: profInfo /}
+	#{profile/field type: 'text', des: 'Address line 1', name: 'pract_adr1', talkerType: talkerType, profInfo: profInfo /}
+	#{profile/field type: 'text', des: 'Address line 2', name: 'pract_adr2', talkerType: talkerType, profInfo: profInfo /}
+	#{profile/field type: 'text', des: 'City', name: 'pract_city', talkerType: talkerType, profInfo: profInfo /}
+	#{profile/field type: 'text', des: 'State', name: 'pract_state', talkerType: talkerType, profInfo: profInfo /}
+	#{profile/field type: 'text', des: 'Zip code', name: 'pract_zip', talkerType: talkerType, profInfo: profInfo /}
+
+#{profile/field type: 'textarea_multiple', des: 'Keywords', name: 'research_interests', talkerType: talkerType, profInfo: profInfo /}
+
+<div class="personalmain"></div>
