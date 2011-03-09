@@ -133,9 +133,12 @@
 						</div>
 					</div>
 					
-					#{if talker.isProf()}
-						#{include 'Profile/editfieldsProf.html' /}
+					#{if talker.connection.equals("Organization")}
+						#{include 'Profile/editfieldsOrganization.html' /}
 					#{/if}
+					#{elseif talker.isProf()}
+						#{include 'Profile/editfieldsProf.html' /}
+					#{/elseif}
 					#{else}
 						#{include 'Profile/editfields.html' /}					
 					#{/else}
