@@ -120,6 +120,7 @@
                       		href="@{PublicProfile.answers(talker.name)}">${numOfTopAnswers}</a>
                       </div>
                     </div>
+                    
                     <!--profiletxtCantant-->
                     <div class="profiletxtCantant">
                       <div class="profileCantanttxt1">
@@ -127,6 +128,7 @@
                       	<a style="text-decoration: none" 
                       		href="@{PublicProfile.conversations(talker.name)}">${numOfStartedConvos}</a>
                       </div>
+                      
                       <div class="profileCantanttxt2">
                       	<strong>Answers:&nbsp;</strong>
                       	<a style="text-decoration: none" 
@@ -192,7 +194,11 @@
 					                    <div class="profiletxtCantant">
 					                      <div class="profileCantanttxt1">
 					                      	<strong>${logic.TalkerLogic.PROF_FIELDS_MAP.get(field)?.raw()}:</strong> 
-					                      	<span class="Profilepersonsub">${talker.profInfo.get(field)}</span>
+					                      	<span class="Profilepersonsub">
+					                      	#{if talker.profInfo.get(field)} 
+					                      		${talker.profInfo.get(field).nl2br()}
+					                      	#{/if}
+					                      	</span>
 					                      </div>
 					                    </div>
 				                    #{/elseif}

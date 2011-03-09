@@ -3836,7 +3836,6 @@ a.popup_black10s:hover {
 }
 .profileCantanttxt1 {
 	float:left;
-	width:250px;
 }
 .profileCantanttxt1 a {
 	text-decoration:none;
@@ -3850,6 +3849,7 @@ a.popup_black10s:hover {
 .profileCantanttxt2 {
 	float:left;
 	width:370px;
+	padding-left:5px;
 }
 .profileCantanttxt2 a {
 	text-decoration:none;
