@@ -133,7 +133,7 @@
 						</div>
 					</div>
 					
-					#{if talker.connection.equals("Organization")}
+					#{if talker.connection.equals("Organization") || talker.connection.equals("Support Group")}
 						#{include 'Profile/editfieldsOrganization.html' /}
 					#{/if}
 					#{elseif talker.isProf()}

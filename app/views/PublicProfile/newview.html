@@ -197,7 +197,7 @@
 					                      </div>
 						                </div>
 					                #{/elseif}
-					                #{elseif field.equals("pract_adr") && talker.connection.equals("Organization")}
+					                #{elseif field.equals("pract_adr") && (talker.connection.equals("Organization") || talker.connection.equals("Support Group"))}
 						                <div class="profiletxtCantant">
 					                    	<div class="profileCantanttxt1">
 					                      	<strong>Organization address:</strong>
@@ -209,10 +209,10 @@
 					                      </div>
 						                </div>
 					                #{/elseif}
-					                #{elseif field.equals("research_interests") && talker.connection.equals("Organization")}
+					                #{elseif field.equals("research_interests") && (talker.connection.equals("Organization") || talker.connection.equals("Support Group"))}
 					                
 					                #{/elseif}
-					                #{elseif field.equals("pract_phone") && talker.connection.equals("Organization")}
+					                #{elseif field.equals("pract_phone") && (talker.connection.equals("Organization") || talker.connection.equals("Support Group"))}
 						                <div class="profiletxtCantant">
 					                    	<div class="profileCantanttxt1">
 					                      	<strong>Organization phone:</strong>
