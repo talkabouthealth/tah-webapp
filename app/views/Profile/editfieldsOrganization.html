@@ -34,9 +34,6 @@
 				#{elseif talker.getTwitterAccount()}
 				http://twitter.com/${talker.getTwitterAccount().getUserName()}
 				#{/elseif}
-				#{else}
-				http://twitter.com/
-				#{/else}
 		" />
 		</div>
 	</div>
@@ -49,9 +46,6 @@
 				#{if profInfo.get("fb_page")}
 				${profInfo.get("fb_page")}
 				#{/if}
-				#{else}
-				http://facebook.com/
-				#{/else}
 		" />
 		</div>
 	</div>
