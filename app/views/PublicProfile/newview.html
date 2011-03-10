@@ -141,13 +141,17 @@
 							#{if talker.isProf() && talker.isAllowed(models.PrivacySetting.PrivacyType.PROFESSIONAL_INFO, currentTalker)}
 								#{if talker.isOrg()}
 								<div class="profilebio">Organization Info</div>
+			                    <div class="topicborder"></div>
 								#{/if}				
 								#{else}
 								<div class="profilebio">Professional Statement</div>
 								#{/else}
-			                    <div class="topicborder"></div>								
 										
 								#{if talker.profStatement}
+									#{ifnot talker.isOrg()}
+									<div class="profilebio">Professional Statement</div>
+				                    <div class="topicborder"></div>
+									#{/ifnot}
 				                    <div class="profilebiotxt">${talker.profStatement.nl2br()}</div>
 								#{/if}
 								
