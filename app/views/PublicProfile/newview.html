@@ -139,9 +139,11 @@
                     
                     <!--profiletxtCantant-->
 							#{if talker.isProf() && talker.isAllowed(models.PrivacySetting.PrivacyType.PROFESSIONAL_INFO, currentTalker)}
+								#{if talker.isOrg()}
+								<div class="profilebio">Organization Info</div>
+								#{/if}						
 								#{if talker.profStatement}
 									#{if talker.isOrg()}
-									<div class="profilebio">Organization Info</div>
 									#{/if}
 									#{else}
 									<div class="profilebio">Professional Statement</div>
