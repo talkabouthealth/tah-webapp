@@ -53,6 +53,10 @@ public class TalkerBean implements Serializable {
 	public static final List<String> PROFESSIONAL_CONNECTIONS_LIST = Arrays.asList(
 		"Physician", "Pharmacist", "Nurse", "Psychologist", "Social worker", "Researcher", "Organization","Support Group"
 	);
+	// only organizations in this list
+	public static final List<String> ORGANIZATIONS_CONNECTIONS_LIST = Arrays.asList(
+		"Organization","Support Group"
+	);	
 	public static final String[] CHILDREN_AGES_ARRAY = new String[] {
 		"New born", "1-2 years old", "2-6 years old", 
 		"6-12 years old", "12-18 years old", "Over 18 years old"
@@ -612,6 +616,10 @@ public class TalkerBean implements Serializable {
 	public boolean isProf() {
 		return PROFESSIONAL_CONNECTIONS_LIST.contains(connection);
 	}
+	
+	public boolean isOrg() {
+		return ORGANIZATIONS_CONNECTIONS_LIST.contains(connection);
+	}	
 	
 	public boolean isAdmin() {
 		return (userName != null && userName.equals("admin"));

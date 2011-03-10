@@ -23,8 +23,23 @@
 
 	#{profile/field type: 'text', des: 'Twitter page', name: 'tw_page', talkerType: talkerType, profInfo: profInfo /}
 	#{profile/field type: 'text', des: 'Facebook page', name: 'fb_page', talkerType: talkerType, profInfo: profInfo /}
-	#{profile/field type: 'text', des: 'LinkedIn page', name: 'li_page', talkerType: talkerType, profInfo: profInfo /}	
-	#{profile/field type: 'text', des: 'Email address', name: 'pract_email', talkerType: talkerType, profInfo: profInfo /}
+	#{profile/field type: 'text', des: 'LinkedIn page', name: 'li_page', talkerType: talkerType, profInfo: profInfo /}
+	<div class="personalmain">
+		<div class="personaltextarea">
+			<span class="blacktext14">Email address</span>
+		</div>		
+		<div class="personaltextfield">
+			<input name="pr_pract_email" type="text" class="personalfields" value="
+			#{if profInfo.get("pract_email")}
+			${profInfo.get("pract_email")}
+			#{/if}
+			#{else}
+			${talker.email}
+			#{/else}
+			" />			
+		</div>
+	</div>			
+	*{#{profile/field type: 'text', des: 'Email address', name: 'pract_email', talkerType: talkerType, profInfo: profInfo /}}*
 	#{profile/field type: 'text', des: 'Phone number', name: 'pract_phone', talkerType: talkerType, profInfo: profInfo /}
 	#{profile/field type: 'text', des: 'Address line 1', name: 'pract_adr1', talkerType: talkerType, profInfo: profInfo /}
 	#{profile/field type: 'text', des: 'Address line 2', name: 'pract_adr2', talkerType: talkerType, profInfo: profInfo /}
@@ -32,6 +47,26 @@
 	#{profile/field type: 'text', des: 'State', name: 'pract_state', talkerType: talkerType, profInfo: profInfo /}
 	#{profile/field type: 'text', des: 'Zip code', name: 'pract_zip', talkerType: talkerType, profInfo: profInfo /}
 
-#{profile/field type: 'textarea_multiple', des: 'Keywords', name: 'research_interests', talkerType: talkerType, profInfo: profInfo /}
+*{#{profile/field type: 'textarea_multiple', des: 'Keywords', name: 'research_interests', talkerType: talkerType, profInfo: profInfo /}}*
+
+	<div class="personalmain">
+		<div class="personaltextarea2">
+			<span class="blacktext14">Keywords<br />
+			<span class="footerlink">(We use keywords to connect you with the right users.)</span>
+			</span>
+		</div>
+		*{<div class="personaltextfield">
+			<input id="talkerkeywords" name="talker.keywords" type="text" class="personalfields"
+				onclick="if (this.value == 'Keywords (please separate by commas)') this.value = ''"
+				value="${talker.keywords?.toCommaString('Keywords')}"/>
+		</div>
+		}*		
+		<div class="textareabig">
+		<textarea id="talkerkeywords" name="talker.keywords" cols="45" rows="5" 
+			onclick="if (this.value == 'Keywords (please separate by commas)') this.value = ''"
+			class="textarea3">${talker.keywords?.toCommaString('Keywords')}</textarea>
+		</div>
+	</div>
+
 
 <div class="personalmain"></div>

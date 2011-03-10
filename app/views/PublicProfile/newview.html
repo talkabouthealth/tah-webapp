@@ -138,20 +138,30 @@
                     <!--profiletxtCantant-->
 							#{if talker.isProf() && talker.isAllowed(models.PrivacySetting.PrivacyType.PROFESSIONAL_INFO, currentTalker)}
 								#{if talker.profStatement}
+									#{if talker.isOrg()}
+									<div class="profilebio">Organization Info</div>
+									#{/if}
+									#{else}
 									<div class="profilebio">Professional Statement</div>
+									#{/else}
 				                    <div class="topicborder"></div>
 				                    <div class="profilebiotxt">${talker.profStatement.nl2br()}</div>
 								#{/if}
 								
-								<div class="Profileperson">
-								#{if talker.isProf()}
+								#{if talker.isOrg()}
+								#{/if}							
+								#{elseif talker.isProf()}
+								<div class="Profileperson">								
 								Professional Info
-								#{/if}
-								#{else}
-								Profile Info
-								#{/else}
 								</div>
-			                    <div class="topicborder"></div>
+			                    <div class="topicborder"></div>								
+								#{/elseif}
+								#{else}
+								<div class="Profileperson">								
+								Profile Info
+								</div>
+			                    <div class="topicborder"></div>								
+								#{/else}
 			                    
 			                    #{list items: logic.TalkerLogic.PROF_FIELDS_MAP.keySet(), as: 'field'}
 			                    	#{if field.equals("gender")}
@@ -197,7 +207,7 @@
 					                      </div>
 						                </div>
 					                #{/elseif}
-					                #{elseif field.equals("pract_adr") && (talker.connection.equals("Organization") || talker.connection.equals("Support Group"))}
+					                #{elseif field.equals("pract_adr") && talker.isOrg()}
 						                <div class="profiletxtCantant">
 					                    	<div class="profileCantanttxt1">
 					                      	<strong>Organization address:</strong>
@@ -209,26 +219,33 @@
 					                      </div>
 						                </div>
 					                #{/elseif}
-					                #{elseif field.equals("research_interests") && (talker.connection.equals("Organization") || talker.connection.equals("Support Group"))}
-					                
-					                #{/elseif}
-					                #{elseif field.equals("pract_phone") && (talker.connection.equals("Organization") || talker.connection.equals("Support Group"))}
+					                #{elseif field.equals("pract_phone") && talker.isOrg()}
 						                <div class="profiletxtCantant">
 					                    	<div class="profileCantanttxt1">
-					                      	<strong>Organization phone:</strong>
+					                      	<strong>Contact phone:</strong>
 					                      	<span class="Profilepersonsub">
 					                      		${talker.profInfo.get("pract_phone")}
 					                      	</span>
 					                      </div>
 						                </div>
-					                #{/elseif}					                					                					                					                
+					                #{/elseif}
+					                #{elseif field.equals("pract_email") && talker.isOrg()}
+						                <div class="profiletxtCantant">
+					                    	<div class="profileCantanttxt1">
+					                      	<strong>Contact email:</strong>
+					                      	<span class="Profilepersonsub">
+					                      		${talker.profInfo.get("pract_email")}
+					                      	</span>
+					                      </div>
+						                </div>
+					                #{/elseif}
 			                    	#{elseif talker.profInfo.get(field) || (field.equals("educ") && talker.connection.equals("Physician"))}
 					                    <div class="profiletxtCantant">
 					                      <div class="profileCantanttxt1">
 					                      	<strong>${logic.TalkerLogic.PROF_FIELDS_MAP.get(field)?.raw()}:</strong> 
 					                      	<span class="Profilepersonsub">
 					                      	#{if talker.profInfo.get(field)} 
-					                      		${talker.profInfo.get(field).nl2br()}
+					                      		${talker.profInfo.get(field).replaceAll("(http://[^\"\'\n ]+)", "<a href=\"\$1\" target=_blank>\$1</a>").nl2br()}					                      		
 					                      	#{/if}
 					                      	</span>
 					                      </div>

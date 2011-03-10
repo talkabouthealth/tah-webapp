@@ -168,10 +168,14 @@ public class TalkerLogic {
 		PROF_FIELDS_MAP.put("other_affiliation", "Hospital or other affiliation");
 		PROF_FIELDS_MAP.put("pract_name", "Practice name");
 		PROF_FIELDS_MAP.put("pract_adr", "Practice address");
+		PROF_FIELDS_MAP.put("pract_email", "Practice email");		
 		PROF_FIELDS_MAP.put("pract_phone", "Practice phone number");
 		PROF_FIELDS_MAP.put("web", "Web page");
 		PROF_FIELDS_MAP.put("vitals", "Vitals.com page");
 		PROF_FIELDS_MAP.put("zocdoc", "ZocDoc.com page");
+		PROF_FIELDS_MAP.put("fb_page", "Facebook");
+		PROF_FIELDS_MAP.put("tw_page", "Twitter");		
+		PROF_FIELDS_MAP.put("li_page", "LinkedIn");
 	}
 	
 	public static void setFieldsDataMap(Map<String, List<String>> fieldsDataMap) {
