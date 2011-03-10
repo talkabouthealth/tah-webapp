@@ -135,6 +135,8 @@
                       		href="@{PublicProfile.answers(talker.name)}">${numOfAnswers}</a>
                       </div>
                     </div>
+                    
+                    
                     <!--profiletxtCantant-->
 							#{if talker.isProf() && talker.isAllowed(models.PrivacySetting.PrivacyType.PROFESSIONAL_INFO, currentTalker)}
 								#{if talker.profStatement}
@@ -239,6 +241,28 @@
 					                      </div>
 						                </div>
 					                #{/elseif}
+			                    	#{elseif field.equals("tw_page")}			                    	
+			                    		#{if talker.profInfo.get("tw_page")}
+					                    <div class="profiletxtCantant">
+					                      <div class="profileCantanttxt1">
+					                      	<strong>${logic.TalkerLogic.PRIV_FIELDS_MAP.get(field)?.raw()}:</strong> 
+					                      	<span class="Profilepersonsub">
+					                      	<a href="${talker.profInfo.get("tw_page")}" target=_blank>${talker.profInfo.get("tw_page")}</a>					                      		
+					                      	</span>
+					                      </div>
+					                    </div>			                    		
+			                    		#{/if}
+			                    		#{elseif talker.getTwitterAccount()}
+					                    <div class="profiletxtCantant">
+					                      <div class="profileCantanttxt1">
+					                      	<strong>${logic.TalkerLogic.PRIV_FIELDS_MAP.get(field)?.raw()}:</strong> 
+					                      	<span class="Profilepersonsub">
+					                      	<a href="http://twitter.com/${talker.getTwitterAccount().getUserName()}" target=_blank>http://twitter.com/${talker.getTwitterAccount().getUserName()}</a>					                      		
+					                      	</span>
+					                      </div>
+					                    </div>			                    		
+			                    		#{/elseif}			                    	
+			                    	#{/elseif}
 			                    	#{elseif talker.profInfo.get(field) || (field.equals("educ") && talker.connection.equals("Physician"))}
 					                    <div class="profiletxtCantant">
 					                      <div class="profileCantanttxt1">
@@ -394,6 +418,56 @@
 			                      </div>
 				                </div>
 				                #{/if}
+
+			                    #{list items: logic.TalkerLogic.PRIV_FIELDS_MAP.keySet(), as: 'field'}
+			                    	#{if field.equals("tw_page")}			                    	
+			                    		#{if talker.profInfo.get("tw_page")}
+					                    <div class="profiletxtCantant">
+					                      <div class="profileCantanttxt1">
+					                      	<strong>${logic.TalkerLogic.PRIV_FIELDS_MAP.get(field)?.raw()}:</strong> 
+					                      	<span class="Profilepersonsub">
+					                      	<a href="${talker.profInfo.get("tw_page")}" target=_blank>${talker.profInfo.get("tw_page")}</a>					                      		
+					                      	</span>
+					                      </div>
+					                    </div>			                    		
+			                    		#{/if}
+			                    		#{elseif talker.getTwitterAccount()}
+					                    <div class="profiletxtCantant">
+					                      <div class="profileCantanttxt1">
+					                      	<strong>${logic.TalkerLogic.PRIV_FIELDS_MAP.get(field)?.raw()}:</strong> 
+					                      	<span class="Profilepersonsub">
+					                      	<a href="http://twitter.com/${talker.getTwitterAccount().getUserName()}" target=_blank>http://twitter.com/${talker.getTwitterAccount().getUserName()}</a>					                      		
+					                      	</span>
+					                      </div>
+					                    </div>			                    		
+			                    		#{/elseif}			                    	
+			                    	#{/if}
+			                    	#{elseif field.equals("fb_page")}
+			                    		#{if talker.profInfo.get("fb_page")}
+					                    <div class="profiletxtCantant">
+					                      <div class="profileCantanttxt1">
+					                      	<strong>${logic.TalkerLogic.PRIV_FIELDS_MAP.get(field)?.raw()}:</strong> 
+					                      	<span class="Profilepersonsub">
+					                      	<a href="${talker.profInfo.get("fb_page")}" target=_blank>${talker.profInfo.get("fb_page")}</a>					                      		
+					                      	</span>
+					                      </div>
+					                    </div>			                    		
+			                    		#{/if}
+			                    	#{/elseif}			                    			                    				                    
+			                    	#{elseif talker.profInfo.get(field)}
+					                    <div class="profiletxtCantant">
+					                      <div class="profileCantanttxt1">
+					                      	<strong>${logic.TalkerLogic.PRIV_FIELDS_MAP.get(field)?.raw()}:</strong> 
+					                      	<span class="Profilepersonsub">
+					                      	#{if talker.profInfo.get(field)} 
+					                      		${talker.profInfo.get(field).replaceAll("(http://[^\"\'\n ]+)", "<a href=\"\$1\" target=_blank>\$1</a>").nl2br()}					                      		
+					                      	#{/if}
+					                      	</span>
+					                      </div>
+					                    </div>
+				                    #{/elseif}
+			                    #{/list}
+				                
 							#{/elseif}
 					
 					#{if talker.isAllowed(models.PrivacySetting.PrivacyType.HEALTH_INFO, currentTalker) && talkerDisease && !talker.isProf() }

@@ -550,6 +550,14 @@ public class TalkerBean implements Serializable {
 		return null;
 	}
 	
+	public ServiceAccountBean getTwitterAccount() {
+		return this.serviceAccountByType(ServiceType.TWITTER);
+	}
+
+	public ServiceAccountBean getFacebookAccount() {
+		return this.serviceAccountByType(ServiceType.FACEBOOK);
+	}
+	
 	public PrivacyValue getPrivacyValue(PrivacyType type) {
 		for (PrivacySetting privacySetting : getPrivacySettings()) {
 			if (privacySetting.getType() == type) {

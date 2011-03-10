@@ -1,3 +1,5 @@
+#{set profInfo = talker.profInfo /}
+
 					*{
 						Currently hidden fields
 						
@@ -214,6 +216,44 @@
 									value="${talker.webpage}" />
 						</div>
 					</div>
+	
+	<!-- SOCIAL ACCOUNTS -->
+	<div class="personalmain">
+		<div class="personaltextarea">
+			<span class="blacktext14">Twitter page</span>
+		</div>
+		<div class="personaltextfield">
+		<input name="pr_tw_page" type="text" class="personalfields" value="
+				#{if profInfo.get("tw_page")}
+				${profInfo.get("tw_page")}
+				#{/if}
+				#{elseif talker.getTwitterAccount()}
+				http://twitter.com/${talker.getTwitterAccount().getUserName()}
+				#{/elseif}
+				#{else}
+				http://twitter.com/
+				#{/else}
+		" />
+		</div>
+	</div>
+	<div class="personalmain">
+		<div class="personaltextarea">
+			<span class="blacktext14">Facebook page</span>
+		</div>
+		<div class="personaltextfield">
+		<input name="pr_fb_page" type="text" class="personalfields" value="
+				#{if profInfo.get("fb_page")}
+				${profInfo.get("fb_page")}
+				#{/if}
+				#{else}
+				http://facebook.com/
+				#{/else}
+		" />
+		</div>
+	</div>
+	#{profile/field type: 'text', des: 'Blog page', name: 'bl_page', talkerType: talkerType, profInfo: profInfo /}
+	<!-- SOCIAL ACCOUNTS -->
+					
 					<div class="personalmain">
 						<div class="personaltextarea2">
 							<span class="blacktext14">Ask me about<br />

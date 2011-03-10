@@ -188,6 +188,6 @@ public class ServiceAccountBean implements DBModel {
 	}
 
 	public void setLastPostId(String lastPostId) {
-		this.lastPostId = lastPostId;
+		this.lastPostId = lastPostId;		
 	}
 }

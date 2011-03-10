@@ -176,7 +176,19 @@ public class TalkerLogic {
 		PROF_FIELDS_MAP.put("fb_page", "Facebook");
 		PROF_FIELDS_MAP.put("tw_page", "Twitter");		
 		PROF_FIELDS_MAP.put("li_page", "LinkedIn");
+		PROF_FIELDS_MAP.put("bl_page", "Blog");
 	}
+
+	/**
+	 * Map for connecting professional fields' names with fields' text descriptions (used on the Profile page)
+	 */
+	public static Map<String, String> PRIV_FIELDS_MAP = new LinkedHashMap<String, String>();
+	static {
+		PRIV_FIELDS_MAP.put("fb_page", "Facebook");
+		PRIV_FIELDS_MAP.put("tw_page", "Twitter");		
+		PRIV_FIELDS_MAP.put("li_page", "LinkedIn");
+		PRIV_FIELDS_MAP.put("bl_page", "Blog");
+	}	
 	
 	public static void setFieldsDataMap(Map<String, List<String>> fieldsDataMap) {
 		TalkerLogic.fieldsDataMap = fieldsDataMap;

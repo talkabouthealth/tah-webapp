@@ -135,11 +135,16 @@ public class Profile extends Controller {
 		oldTalker.setState(talker.getState());
 		oldTalker.setCountry(talker.getCountry());
 		oldTalker.setZip(talker.getZip());
+		
+		Map<String, String> profInfo = oldTalker.parseProfInfoFromParams(params.allSimple());
+		oldTalker.setProfInfo(profInfo);
+		
 		if (oldTalker.isProf()) {
 			oldTalker.setProfStatement(talker.getProfStatement());
 			
-			Map<String, String> profInfo = oldTalker.parseProfInfoFromParams(params.allSimple());
-			oldTalker.setProfInfo(profInfo);
+			//YURIY: ALL USERS NOW CAN HAVE DATA IN `PROF-INFO`
+			//Map<String, String> profInfo = oldTalker.parseProfInfoFromParams(params.allSimple());
+			//oldTalker.setProfInfo(profInfo);
 		}
 		else {
 			oldTalker.setMaritalStatus(talker.getMaritalStatus());
