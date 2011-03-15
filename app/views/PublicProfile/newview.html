@@ -102,39 +102,40 @@
                       </div>
                     </div>
                     <!--pph1Cover-->
-                    <div class="profiletxtCantant">
-                      <div class="profileCantanttxt1"><strong>Community:</strong> Breast Cancer</div>
-                      <div class="profileCantanttxt2">
+                    <table class="profiletxtCantant">
+                    <tr>
+                      <td class="profileCantanttxt1"><strong>Community:</strong> Breast Cancer</td>
+                      <td class="profileCantanttxt2">
                       	<strong>Thank You's:</strong>
                       	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.name, 'thankyous')}">
 							${talker.thankYouList.size()}
 						</a>
-					  </div>
-                    </div>
+					  </td>
+                    </tr>
                     <!--profiletxtCantant-->
-                    <div class="profiletxtCantant">
-                      <div class="profileCantanttxt1"><strong>Member Since:&nbsp;</strong>${talker.regDate.format('MMM. yyyy')}</div>
-                      <div class="profileCantanttxt2">
+                    <tr>
+                      <td class="profileCantanttxt1"><strong>Member Since:&nbsp;</strong>${talker.regDate.format('MMM. yyyy')}</td>
+                      <td class="profileCantanttxt2">
                       	<strong>Top Answers:&nbsp;</strong>
                       	<a style="text-decoration: none" 
                       		href="@{PublicProfile.answers(talker.name)}">${numOfTopAnswers}</a>
-                      </div>
-                    </div>
+                      </td>
+                    </tr>
                     
                     <!--profiletxtCantant-->
-                    <div class="profiletxtCantant">
-                      <div class="profileCantanttxt1">
+                    <tr>
+                      <td class="profileCantanttxt1">
                       	<strong>Conversations:&nbsp;</strong>
                       	<a style="text-decoration: none" 
                       		href="@{PublicProfile.conversations(talker.name)}">${numOfStartedConvos}</a>
-                      </div>
-                      
-                      <div class="profileCantanttxt2">
+                      </td>                      
+                      <td class="profileCantanttxt2">
                       	<strong>Answers:&nbsp;</strong>
                       	<a style="text-decoration: none" 
                       		href="@{PublicProfile.answers(talker.name)}">${numOfAnswers}</a>
-                      </div>
-                    </div>
+                      </td>
+                    </tr>
+                    </table>
                     
                     
                     <!--profiletxtCantant-->
@@ -149,7 +150,7 @@
 									<div class="profilebio">Professional Statement</div>
 				                    <div class="topicborder"></div>
 									#{/ifnot}
-				                    <div class="profilebiotxt">${talker.profStatement.nl2br()}</div>
+				                    <div class="profilebiotxt">${talker.profStatement.replaceAll("(http://[^\"\'\n ]+)", "<a href=\"\$1\" target=_blank>\$1</a>").nl2br()}</div>
 								#{/if}
 								
 								#{if talker.isOrg()}
@@ -199,19 +200,21 @@
 							                </div>
 						                #{/if}
 					                #{/elseif}
-					                #{elseif field.equals("pract_adr") && talker.connection.equals("Physician")}
-						                <div class="profiletxtCantant">
-					                    	<div class="profileCantanttxt1">
-					                      	<strong>Practice address:</strong>
-					                      	<span class="Profilepersonsub">
-					                      		${talker.profInfo.get("pract_adr1")} ${talker.profInfo.get("pract_adr2")}
-					                      		${talker.profInfo.get("pract_city")}, ${talker.profInfo.get("pract_state")} 
-					                      		${talker.profInfo.get("pract_zip")}
-					                      	</span>
-					                      </div>
-						                </div>
-					                #{/elseif}
+					                #{elseif logic.TalkerLogic.isURL(field)}
+				                    	#{if talker.profInfo.get(field)}
+							                <div class="profiletxtCantant">
+						                    	<div class="profileCantanttxt1">
+						                      	<strong>${logic.TalkerLogic.PROF_FIELDS_MAP.get(field)?.raw()}</strong> 
+						                      	<span class="Profilepersonsub">
+						                      		<a href="${talker.profInfo.get(field).startsWith('http') ? talker.profInfo.get(field) : 'http://'+talker.profInfo.get(field)}"
+						                      			target="_blank">${talker.profInfo.get(field)}</a>
+						                      	</span>
+						                      </div>
+							                </div>
+						                #{/if}
+					                #{/elseif}					                
 					                #{elseif field.equals("pract_adr") && talker.isOrg()}
+					                	#{if talker.profInfo.get("pract_adr1") || talker.profInfo.get("pract_adr2") || talker.profInfo.get("pract_city") || talker.profInfo.get("pract_state") || talker.profInfo.get("pract_zip")}					                
 						                <div class="profiletxtCantant">
 					                    	<div class="profileCantanttxt1">
 					                      	<strong>Organization address:</strong>
@@ -222,8 +225,10 @@
 					                      	</span>
 					                      </div>
 						                </div>
+						                #{/if}
 					                #{/elseif}
 					                #{elseif field.equals("pract_phone") && talker.isOrg()}
+				                    	#{if talker.profInfo.get("pract_phone")}
 						                <div class="profiletxtCantant">
 					                    	<div class="profileCantanttxt1">
 					                      	<strong>Contact phone:</strong>
@@ -232,17 +237,52 @@
 					                      	</span>
 					                      </div>
 						                </div>
+						                #{/if}
 					                #{/elseif}
 					                #{elseif field.equals("pract_email") && talker.isOrg()}
 						                <div class="profiletxtCantant">
 					                    	<div class="profileCantanttxt1">
 					                      	<strong>Contact email:</strong>
 					                      	<span class="Profilepersonsub">
-					                      		${talker.profInfo.get("pract_email")}
+					                      	#{if talker.profInfo.get("pract_email")}
+					                      		<a href="mailto:${talker.profInfo.get("pract_email")}">${talker.profInfo.get("pract_email")}</a>
+					                      	#{/if}
+					                      	#{else}
+					                      		<a href="mailto:${talker.email}">${talker.email}</a>
+					                      	#{/else}
 					                      	</span>
 					                      </div>
 						                </div>
 					                #{/elseif}
+					                #{elseif field.equals("pract_adr") && talker.connection.equals("Physician")}
+					                	#{if talker.profInfo.get("pract_adr1") || talker.profInfo.get("pract_adr2") || talker.profInfo.get("pract_city") || talker.profInfo.get("pract_state") || talker.profInfo.get("pract_zip")}					                
+						                <div class="profiletxtCantant">
+					                    	<div class="profileCantanttxt1">
+					                      	<strong>Practice address:</strong>
+					                      	<span class="Profilepersonsub">
+					                      		${talker.profInfo.get("pract_adr1")} ${talker.profInfo.get("pract_adr2")}
+					                      		${talker.profInfo.get("pract_city")}, ${talker.profInfo.get("pract_state")} 
+					                      		${talker.profInfo.get("pract_zip")}
+					                      	</span>
+					                      </div>
+						                </div>
+						                #{/if}
+					                #{/elseif}					                
+					                #{elseif field.equals("pract_email")}
+						                <div class="profiletxtCantant">
+					                    	<div class="profileCantanttxt1">
+					                      	<strong>${logic.TalkerLogic.PROF_FIELDS_MAP.get(field)?.raw()}:</strong>
+					                      	<span class="Profilepersonsub">
+					                      	#{if talker.profInfo.get("pract_email")}
+					                      		<a href="mailto:${talker.profInfo.get("pract_email")}">${talker.profInfo.get("pract_email")}</a>
+					                      	#{/if}
+					                      	#{else}
+					                      		<a href="mailto:${talker.email}">${talker.email}</a>
+					                      	#{/else}
+					                      	</span>
+					                      </div>
+						                </div>
+					                #{/elseif}					                
 			                    	#{elseif field.equals("tw_page")}			                    	
 			                    		#{if talker.profInfo.get("tw_page")}
 					                    <div class="profiletxtCantant">
@@ -266,16 +306,16 @@
 			                    		#{/elseif}			                    	
 			                    	#{/elseif}
 			                    	#{elseif talker.profInfo.get(field) || (field.equals("educ") && talker.connection.equals("Physician"))}
+					                    #{if talker.profInfo.get(field)} 			                    	
 					                    <div class="profiletxtCantant">
 					                      <div class="profileCantanttxt1">
 					                      	<strong>${logic.TalkerLogic.PROF_FIELDS_MAP.get(field)?.raw()}:</strong> 
 					                      	<span class="Profilepersonsub">
-					                      	#{if talker.profInfo.get(field)} 
 					                      		${talker.profInfo.get(field).replaceAll("(http://[^\"\'\n ]+)", "<a href=\"\$1\" target=_blank>\$1</a>").nl2br()}					                      		
-					                      	#{/if}
 					                      	</span>
 					                      </div>
 					                    </div>
+					                    #{/if}
 				                    #{/elseif}
 			                    #{/list}
 			                    

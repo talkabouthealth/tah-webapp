@@ -180,7 +180,7 @@ public class TalkerLogic {
 	}
 
 	/**
-	 * Map for connecting professional fields' names with fields' text descriptions (used on the Profile page)
+	 * Map for connecting private fields' names with fields' text descriptions (used on the Profile page)
 	 */
 	public static Map<String, String> PRIV_FIELDS_MAP = new LinkedHashMap<String, String>();
 	static {
@@ -189,6 +189,14 @@ public class TalkerLogic {
 		PRIV_FIELDS_MAP.put("li_page", "LinkedIn");
 		PRIV_FIELDS_MAP.put("bl_page", "Blog");
 	}	
+	
+	/**
+	 * List of profile fields which are urls
+	 */
+	public static final List<String> URL_FIELDS_LIST = Arrays.asList(
+		"web", "vitals", "zocdoc", "fb_page", "tw_page", "li_page", "bl_page"
+	);
+	
 	
 	public static void setFieldsDataMap(Map<String, List<String>> fieldsDataMap) {
 		TalkerLogic.fieldsDataMap = fieldsDataMap;
@@ -214,6 +222,16 @@ public class TalkerLogic {
 			return fieldsDataMap.get(key);
 		}
 	}
+	
+	/**
+	 * Is profile field an URL
+	 * @param field
+	 * @return
+	 */
+	public static boolean isURL(String field) {
+		return TalkerLogic.URL_FIELDS_LIST.contains(field);
+	}	
+	
 
 	/**
 	 * Prepares talker information and calculates profile completion for displaying.

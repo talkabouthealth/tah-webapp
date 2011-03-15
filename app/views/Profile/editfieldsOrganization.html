@@ -14,6 +14,7 @@
 	<div class="personalmain">
 		<div class="personaltextarea">
 			<span class="blacktext14">Web page<br/></span>
+			<span class="footerlink">(http://www.mysite.com)</span>			
 		</div>
 		<div class="personaltextfield">
 			<input name="talker.webpage" type="text" class="personalfields"
@@ -25,28 +26,27 @@
 	<div class="personalmain">
 		<div class="personaltextarea">
 			<span class="blacktext14">Twitter page</span>
+			<span class="footerlink">(http://twitter.com/mysite)</span>			
 		</div>
 		<div class="personaltextfield">
-		<input name="pr_tw_page" type="text" class="personalfields" value="
-				#{if profInfo.get("tw_page")}
-				${profInfo.get("tw_page")}
-				#{/if}
-				#{elseif talker.getTwitterAccount()}
-				http://twitter.com/${talker.getTwitterAccount().getUserName()}
-				#{/elseif}
-		" />
+		#{if profInfo.get("tw_page")}
+		<input name="pr_tw_page" type="text" class="personalfields" value="${profInfo.get("tw_page")}" />
+		#{/if}
+		#{elseif talker.getTwitterAccount()}
+		<input name="pr_tw_page" type="text" class="personalfields" value="http://twitter.com/${talker.getTwitterAccount().getUserName()}" />
+		#{/elseif}
+		#{else}
+		<input name="pr_tw_page" type="text" class="personalfields" value="" />
+		#{/else}		
 		</div>
 	</div>
 	<div class="personalmain">
 		<div class="personaltextarea">
 			<span class="blacktext14">Facebook page</span>
+			<span class="footerlink">(http://facebook.com/mysite)</span>						
 		</div>
 		<div class="personaltextfield">
-		<input name="pr_fb_page" type="text" class="personalfields" value="
-				#{if profInfo.get("fb_page")}
-				${profInfo.get("fb_page")}
-				#{/if}
-		" />
+		<input name="pr_fb_page" type="text" class="personalfields" value="#{if profInfo.get("fb_page")}${profInfo.get("fb_page")}#{/if}" />
 		</div>
 	</div>
 	#{profile/field type: 'text', des: 'LinkedIn page', name: 'li_page', talkerType: talkerType, profInfo: profInfo /}	
