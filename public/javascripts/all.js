@@ -256,9 +256,12 @@ function saveProfileComment(parentId, parentList) {
 //	alert(commentText);
 	$(parentListId+".saveThoughtImage"+parentId).show();
 	$(parentListId+".replytext"+parentId).val("");
+	
+	//YURIY: FIX FOR URLS IN REPLIES NOT BEING TRANSLATED -- SPENT 2h TO HUNT THIS DOWN %-/
+	linkedText = linkify(commentText);
 
 	$.post("/actions/saveProfileComment", 
-		{ parentId: parentId, text: commentText},
+		{ parentId: parentId, text: linkedText},
 		function(html) {
 			$("#firstcommentmessage").hide();
 			$(parentListId+".saveThoughtImage"+parentId).hide();
