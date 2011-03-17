@@ -138,6 +138,13 @@
 										</div>
 									#{/list}
 								</div>
+								#{if question.name.equals("rareforms")}
+								<div class="signupmain">
+									<div class="personaltextfield">
+								  		#{ profile/otherField name:'rareforms', values: talkerDisease?.otherHealthItems /}
+									</div>
+								</div>
+								#{/if}
 							#{/else}
 						</div>
 						#{/list}
