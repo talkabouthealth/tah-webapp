@@ -44,9 +44,10 @@ import static util.DBUtil.*;
 public class TalkerBean implements Serializable {
 	
 	public static final String[] CONNECTIONS_ARRAY = new String[] {
-		"Patient", "Former Patient", "Parent", "Caregiver", "Family member", "Friend", 
+		"Patient", "Former Patient", "Parent", "Caregiver", "Family member", "Friend","High Risk Individual", 
 		//"professionals"
-		"Physician", "Pharmacist", "Nurse", "Psychologist", "Social worker", "Researcher", "Organization","Support Group",
+		"Physician", "Pharmacist", "Nurse", "Psychologist", "Social worker", "Researcher", 
+		"Organization","Support Group",
 		 "other"
 	};
 	// only professionals in this list
@@ -57,6 +58,9 @@ public class TalkerBean implements Serializable {
 	public static final List<String> ORGANIZATIONS_CONNECTIONS_LIST = Arrays.asList(
 		"Organization","Support Group"
 	);	
+	public static final List<String> HIGH_RISK_QUESTIONS_SET = Arrays.asList(
+			"hrgeneral","hrgenetic","hrbenigh1","hrbenigh2"
+	);
 	public static final String[] CHILDREN_AGES_ARRAY = new String[] {
 		"New born", "1-2 years old", "2-6 years old", 
 		"6-12 years old", "12-18 years old", "Over 18 years old"
@@ -627,7 +631,11 @@ public class TalkerBean implements Serializable {
 	
 	public boolean isOrg() {
 		return ORGANIZATIONS_CONNECTIONS_LIST.contains(connection);
-	}	
+	}
+	
+	public boolean isHighRiskQ(String name) {
+		return HIGH_RISK_QUESTIONS_SET.contains(name);
+	}		
 	
 	public boolean isAdmin() {
 		return (userName != null && userName.equals("admin"));
