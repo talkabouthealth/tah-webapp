@@ -497,6 +497,7 @@ public class TalkerLogic {
 			vars.put("reply_text", comment.getText());
 			vars.put("profile_talker", profileTalker.getUserName());
 			
+			//TODO -- FIX SEND LIST ON REPLIES
 			if (!talker.equals(thought.getFromTalker())) {
 				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
 						thought.getFromTalker(), vars);
@@ -509,6 +510,25 @@ public class TalkerLogic {
 		
 		return comment;
 	}
+
+	/**
+	 * Overloading getDefaultPrivacySettings() with user-specific settings.
+	 * The Personal Info and Health Info should be private by default. 
+	 * All other items should be set to viewable by the community by default.
+	 */
+	public static Set<PrivacySetting> getDefaultPrivacySettings(TalkerBean talker) {
+		Set<PrivacySetting> privacySettings = new HashSet<PrivacySetting>();
+		
+		PrivacyValue dft = PrivacyValue.COMMUNITY;
+		if(talker.isProf()) dft = PrivacyValue.PUBLIC;
+		
+		for (PrivacyType type : PrivacyType.values()) {
+			PrivacyValue value = dft;			
+			PrivacySetting privacySetting = new PrivacySetting(type, value);
+			privacySettings.add(privacySetting);
+		}
+		return privacySettings;
+	}	
 	
 	/**
 	 * The Personal Info and Health Info should be private by default. 
@@ -724,7 +744,7 @@ public class TalkerLogic {
         talker.setNtime(1);
         talker.setCtype(TalkerBean.CONVERSATIONS_TYPES_ARRAY);
         
-		talker.setPrivacySettings(TalkerLogic.getDefaultPrivacySettings());
+		talker.setPrivacySettings(TalkerLogic.getDefaultPrivacySettings(talker));
 		
         //By default all email notifications are checked
         EnumSet<EmailSetting> emailSettings = EnumSet.allOf(EmailSetting.class);
