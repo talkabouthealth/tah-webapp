@@ -26,6 +26,7 @@ import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean;
 import models.ThankYouBean;
 import models.ConversationBean;
+import models.actions.Action;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.lucene.analysis.cn.ChineseTokenizer;

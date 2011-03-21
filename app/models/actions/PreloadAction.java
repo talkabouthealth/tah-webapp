@@ -30,6 +30,7 @@ public class PreloadAction implements Action {
 		setId(dbObject.get("_id").toString());
 		setType(ActionType.valueOf((String)dbObject.get("type")));
 		
+		//we need to preload this info for checking duplicate conversations during filtering
 		DBRef convoRef = (DBRef)dbObject.get("convoId");
 		if (convoRef != null) {
 			ConversationBean convo = new ConversationBean();
@@ -45,7 +46,7 @@ public class PreloadAction implements Action {
 	public Action getFullAction() {
 //		long start = System.currentTimeMillis();
 		Action action = ActionDAO.actionFromDB(dbObject);
-//		Logger.info(action.getClass().toString()+" : "+(System.currentTimeMillis()-start));
+//		System.out.println(action.getClass().toString()+" : "+(System.currentTimeMillis()-start));
 		return action;
 	}
 	

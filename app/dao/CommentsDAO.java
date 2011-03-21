@@ -11,9 +11,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import models.CommentBean;
 import models.CommentBean.Vote;
+import models.actions.Action;
+import models.actions.PersonalProfileCommentAction;
+import models.actions.PreloadAction;
+import models.actions.Action.ActionType;
 import models.ConversationBean;
 import models.TalkerBean;
 import models.TopicBean;
@@ -355,4 +360,28 @@ public class CommentsDAO {
 		return topCommentsList;
 	}
 	
+	
+	
+	public static Set<Action> getTalkerMentions(TalkerBean talker) {
+		//for case insensitive search we use regex
+		Pattern mentionRegex = Pattern.compile("@"+talker.getUserName());
+		
+		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
+		
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("text", mentionRegex)
+			.get();
+		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		
+		Set<Action> talkerMentions = new HashSet<Action>();
+		for (DBObject commentDBObject : commentsList) {
+			CommentBean commentBean = new CommentBean();
+			commentBean.parseFromDB(commentDBObject);
+			//TODO: check profile talker
+			Action thoughtAction = new PersonalProfileCommentAction(
+					talker, talker, commentBean, null, ActionType.PERSONAL_PROFILE_COMMENT);
+			talkerMentions.add(thoughtAction);
+		}
+		return talkerMentions;
+	}
 }

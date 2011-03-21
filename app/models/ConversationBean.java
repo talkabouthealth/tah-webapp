@@ -193,7 +193,7 @@ public class ConversationBean {
     			}
     		}
     		if (errorCount > 0) {
-    			Logger.error("NULL talker in conversation message: "+getId()+", messages: "+errorCount);
+//    			Logger.error("NULL talker in conversation message: "+getId()+", messages: "+errorCount);
     		}
     	}
     	setMembers(members);

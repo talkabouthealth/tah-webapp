@@ -517,7 +517,9 @@ public class ConversationDAO {
 		
 		List<DBRef> allTopics = new ArrayList<DBRef>();
 		for (TopicBean topic : topics) {
-			TopicDAO.loadSubTopicsAsTree(allTopics, topic);
+			//TopicDAO.loadSubTopicsAsTree(allTopics, topic);
+			DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topic.getId());
+			allTopics.add(topicRef);
 		}
 		
 		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);

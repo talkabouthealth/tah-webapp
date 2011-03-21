@@ -20,6 +20,7 @@ import util.DBUtil;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
@@ -272,12 +273,12 @@ public class ActionDAO {
 	private static List<Action> loadPreloadActions(DBObject query) {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
-		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(FeedsLogic.ACTIONS_PRELOAD).toArray();
+		DBCursor dbCursor = 
+			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(FeedsLogic.ACTIONS_PRELOAD);
 		
 		List<Action> activitiesList = new ArrayList<Action>();
-		for (DBObject actionDBObject : activitiesDBList) {
-			Action action = new PreloadAction(actionDBObject);
+		while (dbCursor.hasNext()) {
+			Action action = new PreloadAction(dbCursor.next());
 			activitiesList.add(action);
 		}
 		return activitiesList;

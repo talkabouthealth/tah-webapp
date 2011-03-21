@@ -68,7 +68,7 @@ public class FeedsLogic {
 		String nextActionId = null;
 		boolean canAdd = (afterActionId == null);
 		while (true) {
-//			Logger.error("Feed loading... 1 ");
+			System.out.println("F1:"+System.currentTimeMillis());
 			List<Action> feedActions = new ArrayList<Action>();
 			switch (feedType) {
 				case CONVERSATION: 
@@ -85,12 +85,12 @@ public class FeedsLogic {
 					break;
 			}
 			
-//			Logger.error("Feed loading... 2 ");
+			System.out.println("F2:"+System.currentTimeMillis());
 			
 			canAdd = filter(feed, feedActions, 
 					addedConvos, afterActionId, canAdd, feedsPerPage);
 			
-//			Logger.error("Feed loading... 3 ");
+			System.out.println("F3:"+System.currentTimeMillis());
 			
 			//exit if no more actions to preload or feed is big enough for this page
 			if (feedActions.size() < ACTIONS_PRELOAD || feed.size() >= feedsPerPage) {

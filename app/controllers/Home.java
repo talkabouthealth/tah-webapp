@@ -41,6 +41,7 @@ import util.TwitterUtil;
 import util.EmailUtil.EmailTemplate;
 import util.ValidateData;
 import dao.ActionDAO;
+import dao.CommentsDAO;
 import dao.TalkerDAO;
 import dao.ConversationDAO;
 import dao.TalkerDiseaseDAO;
@@ -55,24 +56,43 @@ public class Home extends Controller {
     public static void index() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 
-		List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
-		
+    	Logger.info("---");
+    	Logger.info("S1:"+System.currentTimeMillis());
+    	List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
+
+    	Logger.info("Sa:"+System.currentTimeMillis());
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
+		Logger.info("Sb:"+System.currentTimeMillis());
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
+    	
+    	Logger.info("S2:"+System.currentTimeMillis());
+    	
+    	//find mentions
+    	Set<Action> mentions = CommentsDAO.getTalkerMentions(talker);
+    	
+    	Logger.info("S3:"+System.currentTimeMillis());
     	
     	boolean showNotificationAccounts = prepareNotificationPanel(session, talker);
 		TalkerLogic.preloadTalkerInfo(talker);
+		
+		Logger.info("S4:"+System.currentTimeMillis());
 		
 		//TODO: check recommendations?
 //		Yes, for HealthInfo, let's use all of the data. 
 //		For Profile info, we can use gender, age, marital status, number of children, and ages of children.
 		List<TopicBean> recommendedTopics = TalkerLogic.getRecommendedTopics(talker);
 		
+		Logger.info("S5:"+System.currentTimeMillis());
+		
 		List<TalkerBean> similarMembers = new ArrayList<TalkerBean>();
 		List<TalkerBean> experts = new ArrayList<TalkerBean>();
 		TalkerLogic.getRecommendedTalkers(talker, similarMembers, experts);
 	
+		Logger.info("S6:"+System.currentTimeMillis());
+		
 		List<ConversationBean> recommendedConvos = TalkerLogic.getRecommendedConvos(talker);
+		
+		Logger.info("F1:"+System.currentTimeMillis());
 		
 		boolean emailVerification = false;
 		if (session.contains("justloggedin") && talker.getVerifyCode() != null) {
@@ -81,7 +101,7 @@ public class Home extends Controller {
 		session.remove("justloggedin");
 		
 		render("@newhome", talker, emailVerification,
-				liveConversations, convoFeed, communityFeed, showNotificationAccounts,
+				liveConversations, convoFeed, communityFeed, mentions, showNotificationAccounts,
 				recommendedTopics, similarMembers, experts, recommendedConvos);
     }
     

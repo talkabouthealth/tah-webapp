@@ -61,11 +61,7 @@ public class Explore extends Controller {
     	
     	//TODO: use cache for common data? 
     	//see: http://groups.google.com/group/play-framework/browse_thread/thread/b723f73ee52a04bd/8d084ac77c588b3a?lnk=gst&q=use+cache+in+template#8d084ac77c588b3a
-    	Logger.error("Soq:"+System.currentTimeMillis());
     	List<TopicBean> popularTopics = TopicDAO.getPopularTopics();
-    	Logger.error("Foq:"+System.currentTimeMillis());
-    	
-//    	Logger.error("Empty: "+popularTopics.get(0).getId());
     	
 		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions();
 		
@@ -81,6 +77,8 @@ public class Explore extends Controller {
     	else {
     		popularTopics = TopicDAO.getPopularTopics();
     	}
+    	
+//    	CommonUtil.test();
     	
     	List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
 		render(talker, liveTalks, popularTopics);

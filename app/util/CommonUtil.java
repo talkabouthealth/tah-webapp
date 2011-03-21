@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -59,6 +60,7 @@ import com.tah.im.IMNotifier;
 import com.tah.im.model.IMAccount;
 
 import dao.TalkerDAO;
+import dao.TopicDAO;
 
 /**
  * Different utility methods used through application
@@ -392,5 +394,35 @@ public class CommonUtil {
 			}
 		}
 		return emailsToSend;
+	}
+	
+	private static Map<String, String> allTopics = new HashMap<String, String>();
+	private static List<String> allTalkers = new ArrayList<String>();
+	static {
+		for (TopicBean topic : TopicDAO.loadAllTopics(true)) {
+			allTopics.put(topic.getTitle(), topic.getMainURL());
+		}
+		for (TalkerBean talker : TalkerDAO.loadAllTalkers(true)) {
+			allTalkers.add(talker.getUserName());
+		}
+	}
+
+	public static void test() {
+		String t = "Hello @kangaroo cool! world, #Areola how #Side Effects are #Areola #cool you?";
+		if (t.contains("#")) {
+			for (Entry<String, String> topicEntry : allTopics.entrySet()) {
+				t = t.replaceAll("#"+topicEntry.getKey(), 
+						"<a href=\"http://talkabouthealth/"+topicEntry.getValue()+"\">#&"
+						+topicEntry.getKey()+"</a>");
+			}
+		}
+		if (t.contains("@")) {
+			for (String talker : allTalkers) {
+				t = t.replaceAll("@"+talker, 
+						"<a href=\"http://talkabouthealth/"+talker+"\">@&"+talker+"</a>");
+			}
+		}
+		t = t.replaceAll(">#&", ">#").replaceAll(">@&", ">@");
+		System.out.println(t);
 	}
 }

@@ -390,6 +390,11 @@
 							  <div class="${convoFeed.size() < 20 ? 'newActiveTab' : 'newTab'}">
 							  	<a href="#" id="communityFeed" class="tabLink">Breast Cancer Community Feed</a>
 							  </div>
+							  *{
+							  <div class="newTab">
+							  	<a href="#" id="mentionsTab" class="tabLink">@mentions</a>
+							  </div>
+							  }*
 							  <div class="laborder"></div>
 							</div>
 							<div class="cb"></div>
@@ -439,6 +444,16 @@
 				                      </div>
 				                      <!--newpageCover-->
 				                      <div class="cb"></div>
+				                    </div> 
+								</div>
+								<div id="mentionsTabContent" class="tabContent" style="display: none;">	
+									<div class="topic">
+				                        <div id="mentionsList">
+					                    	#{list items: mentions, as: 'talkerMention'}
+												#{feed/feedActivity activity: talkerMention, talker: talker, parentList: 'mentionsList' /}
+											#{/list}
+										</div>
+				                    	<div class="cb"></div>
 				                    </div> 
 								</div>    
 							</div>               
