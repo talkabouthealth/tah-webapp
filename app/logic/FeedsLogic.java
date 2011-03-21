@@ -26,10 +26,10 @@ public class FeedsLogic {
 	
 	//Actions per page for Talker Feed and all other feeds
 	public static final int TALKERFEEDS_PER_PAGE = 20;
-	public static final int FEEDS_PER_PAGE = 40;
+	public static final int FEEDS_PER_PAGE = 20;
 	
 	//Number of actions to preload from DB (later filtered)
-	public static final int ACTIONS_PRELOAD = 500;
+	public static final int ACTIONS_PRELOAD = 300;
 	
 	public static Set<Action> getConvoFeed(TalkerBean talker, String afterActionId) {
 		return loadFeed(FeedType.CONVERSATION, afterActionId, talker, null, true, FEEDS_PER_PAGE);
@@ -68,7 +68,7 @@ public class FeedsLogic {
 		String nextActionId = null;
 		boolean canAdd = (afterActionId == null);
 		while (true) {
-			System.out.println("F1:"+System.currentTimeMillis());
+			Logger.info("L1:"+System.currentTimeMillis());
 			List<Action> feedActions = new ArrayList<Action>();
 			switch (feedType) {
 				case CONVERSATION: 
@@ -85,12 +85,12 @@ public class FeedsLogic {
 					break;
 			}
 			
-			System.out.println("F2:"+System.currentTimeMillis());
+			Logger.info("L2:"+System.currentTimeMillis());
 			
 			canAdd = filter(feed, feedActions, 
 					addedConvos, afterActionId, canAdd, feedsPerPage);
 			
-			System.out.println("F3:"+System.currentTimeMillis());
+			Logger.info("L3:"+System.currentTimeMillis());
 			
 			//exit if no more actions to preload or feed is big enough for this page
 			if (feedActions.size() < ACTIONS_PRELOAD || feed.size() >= feedsPerPage) {

@@ -56,26 +56,20 @@ public class Home extends Controller {
     public static void index() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 
-    	Logger.info("---");
-    	Logger.info("S1:"+System.currentTimeMillis());
+    	Logger.info("---"+talker.getUserName()+"---");
     	List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
 
     	Logger.info("Sa:"+System.currentTimeMillis());
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
 		Logger.info("Sb:"+System.currentTimeMillis());
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
-    	
     	Logger.info("S2:"+System.currentTimeMillis());
     	
     	//find mentions
     	Set<Action> mentions = CommentsDAO.getTalkerMentions(talker);
     	
-    	Logger.info("S3:"+System.currentTimeMillis());
-    	
     	boolean showNotificationAccounts = prepareNotificationPanel(session, talker);
 		TalkerLogic.preloadTalkerInfo(talker);
-		
-		Logger.info("S4:"+System.currentTimeMillis());
 		
 		//TODO: check recommendations?
 //		Yes, for HealthInfo, let's use all of the data. 
