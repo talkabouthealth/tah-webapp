@@ -94,6 +94,7 @@ public class CommentBean extends MessageBean {
 	private Set<String> oldTexts;
 	private boolean deleted;
 	
+	private String rootId;
 	private String parentId;
 	private List<CommentBean> children;
 	
@@ -126,6 +127,9 @@ public class CommentBean extends MessageBean {
 		if (convoRef != null) {
 			setConvoId(convoRef.getId().toString());
 		}
+		
+		// Add root-id character
+		setRootId((String)commentDBObject.get("rootid"));
 		
 		setFromTalker(TalkerDAO.parseTalker(commentDBObject, "from"));
 		DBRef profileTalkeRef = (DBRef)commentDBObject.get("profile");
@@ -179,6 +183,9 @@ public class CommentBean extends MessageBean {
 	public String getProfileTalkerId() { return profileTalkerId; }
 	public void setProfileTalkerId(String profileTalkerId) { this.profileTalkerId = profileTalkerId; }
 
+	public String getRootId() { return rootId; }
+	public void setRootId(String rootId) { this.rootId = rootId; }	
+	
 	public String getParentId() { return parentId; }
 	public void setParentId(String parentId) { this.parentId = parentId; }
 

@@ -413,12 +413,22 @@ public class TalkerLogic {
 	public static CommentBean saveProfileComment(TalkerBean talker, String profileTalkerId, 
 			String parentId, String text, String cleanText, String from, String fromId, Boolean ccTwitter, Boolean ccFacebook) {
 		//find profile talker by parent thought or given talker id
+		// also retrieve thread's rootid from parent comment
+		String rootId = "";
+		
 		if (parentId != null && parentId.length() != 0) {
 			CommentBean parentAnswer = CommentsDAO.getProfileCommentById(parentId);
 			if (parentAnswer != null) {
 				profileTalkerId = parentAnswer.getProfileTalkerId();
+				if(parentAnswer.getRootId().length()>0) {
+					rootId = parentAnswer.getRootId();
+				}
+				else {
+					rootId = parentId;
+				}
 			}
 		}
+				
 		TalkerBean profileTalker = null;
 		if (profileTalkerId == null) {
 			profileTalker = talker;
@@ -444,6 +454,7 @@ public class TalkerLogic {
 		comment.setTime(new Date());
 		comment.setFrom(from);
 		comment.setFromId(fromId);
+		comment.setRootId(rootId);
 		CommentsDAO.saveProfileComment(comment);
 		
 		if (comment.getParentId() == null) {
@@ -497,11 +508,34 @@ public class TalkerLogic {
 			vars.put("reply_text", comment.getText());
 			vars.put("profile_talker", profileTalker.getUserName());
 			
-			//TODO -- FIX SEND LIST ON REPLIES
-			if (!talker.equals(thought.getFromTalker())) {
+			// FIXING SENDING ALL THOUGHT RESPONDENTS ON NEW REPLIES
+			// * added field "rootid" to comments db records -- db side
+			// * pull all records with given root -- CommentsDAO.getbyrootid
+			List<CommentBean> allCommentsHere = CommentsDAO.getThoughtByRootId(comment.getRootId());
+			Set<TalkerBean> allTalkersHere = new HashSet<TalkerBean>();
+			
+			// * collect *unique* userids for these comments -- here			
+			for(CommentBean thisComment : allCommentsHere) {
+				TalkerBean thisTalker = thisComment.getFromTalker();
+				allTalkersHere.add(thisTalker);
+			}
+
+			// * shoot emails -- here
+			for(TalkerBean thisTalker : allTalkersHere) {
+				if(!thisTalker.equals(talker) && !thisTalker.equals(profileTalker) && 
+						!thisTalker.equals(thought.getFromTalker())) {
+					NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
+							thisTalker, vars);
+				}
+			}
+					
+			// fix bug of double email sending to thread owner & parent author; parent author here
+			if (!talker.equals(thought.getFromTalker()) && !profileTalker.equals(thought.getFromTalker())) {
 				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
 						thought.getFromTalker(), vars);
 			}
+			
+			// thread owner
 			if (!talker.equals(profileTalker)) {
 				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
 						profileTalker, vars);

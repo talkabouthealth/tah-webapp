@@ -148,7 +148,7 @@ public class NotificationUtils {
 	 * @param vars
 	 */
 	public static void sendEmailNotification(EmailSetting emailSetting, 
-			TalkerBean talker, Map<String, String> vars) {
+			TalkerBean talker, Map<String, String> vars) {		
 		if (talker.getEmailSettings().contains(emailSetting)) {
 			vars.put("username", talker.getUserName());
 			

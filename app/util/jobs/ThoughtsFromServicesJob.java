@@ -57,6 +57,9 @@ public class ThoughtsFromServicesJob extends Job {
 			    		//check if we've already imported it
 			    		CommentBean thought = 
 			    			CommentsDAO.getThoughtByFromInfo(serviceAccount.getType().toString(), post.getId());
+			    		
+			    		//TODO YURIY add check on "full text" + "user" + "date<1 day back"
+			    		
 			    		if (thought == null) {
 			    			String htmlText = prepareText(serviceAccount.getType(), post.getText());
 			    			TalkerLogic.saveProfileComment(talker, talker.getId(), null, 
