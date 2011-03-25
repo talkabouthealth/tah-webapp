@@ -44,7 +44,7 @@ import static util.DBUtil.*;
 public class TalkerBean implements Serializable {
 	
 	public static final String[] CONNECTIONS_ARRAY = new String[] {
-		"Patient", "Former Patient", "Parent", "Caregiver", "Family member", "Friend","High Risk Individual", 
+		"Patient","High Risk Individual","Former Patient", "Parent", "Caregiver", "Family member", "Friend", 
 		//"professionals"
 		"Physician", "Pharmacist", "Nurse", "Psychologist", "Social worker", "Researcher", 
 		"Organization","Support Group",
