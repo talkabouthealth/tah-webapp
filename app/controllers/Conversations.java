@@ -68,7 +68,15 @@ public class Conversations extends Controller {
 	 */
 	public static void create(String type, String title, String details, String topics, 
 			String fromPage, String parentConvoId, Boolean ccTwitter, Boolean ccFacebook) {
+
+		String targetId="";
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+    	// if passed a targeted question from profiles, parentConvoId contains talkerId of target user
+		if(fromPage.equals("openQuestions")) {
+			targetId=parentConvoId;
+			parentConvoId="";
+		}		
     	
     	//prepare params
     	ConvoType convoType = ConvoType.valueOf(type);
@@ -85,7 +93,25 @@ public class Conversations extends Controller {
     	ConversationBean convo = 
     		ConversationLogic.createConvo(convoType, title, talker, details, 
     				topicsSet, notifyTalkers, parentConvo, ccTwitter, ccFacebook);
+    	
     	CommonUtil.updateTalker(talker, session);
+    	
+    	// send email notification to target user if any
+    	if(targetId != null && targetId.length()>0) {
+    		TalkerBean targetTalker = TalkerDAO.getById(targetId);
+    		if(targetTalker != null) {
+    			String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
+    			String description = convo.getPageOriginalSummary();
+    			
+				Map<String, String> vars = new HashMap<String, String>();
+				vars.put("other_talker", talker.getUserName());
+				vars.put("convo", description);
+				vars.put("convo_url",convoURL);
+    			
+    			// TODO YURIY TEMPLATES :-/
+				NotificationUtils.sendEmailNotification(EmailSetting.CONVO_PERSONAL,targetTalker, vars);    			
+    		}
+    	}
     	
     	renderConvoData(fromPage, talker, convo);
     }

@@ -237,12 +237,14 @@
 											<h4>Conversation Related</h4>
 											#{set showConvoTitle = false /}
 										#{/if}
+										#{if setting.description.length()>0}
 										<div class="preferencescheck">
 											<input type="checkbox" value="" name="${setting}"
 												#{if talker.emailSettings?.contains(setting) } checked='checked' #{/if}
 											/>
 											<span class="blacktext14">&nbsp;${setting.description}</span>
 										</div>
+										#{/if}
 									#{/list}
 								</div>
 								<h4>Newsletter</h4>
