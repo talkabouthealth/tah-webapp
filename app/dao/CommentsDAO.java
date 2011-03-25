@@ -144,6 +144,27 @@ public class CommentsDAO {
 		return thought;
 	}
 	
+	public static boolean getThoughtDuplicates(String fromId,String text,int lookupDepth) {
+		DBCollection convosColl = getCollection(PROFILE_COMMENTS_COLLECTION);
+		
+		DBRef fromTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, fromId);		
+		
+		// three days back
+		Date now = new Date();
+		Date start = new Date(now.getTime()-lookupDepth*24*3600000);
+		//BasicDBObject time = new BasicDBObject("ts", start);
+		BasicDBObject time = new BasicDBObject("$gt", start);
+		
+		DBObject query = BasicDBObjectBuilder.start()
+		.add("text",text)
+		.add("from",fromTalkerRef)
+		.add("time", time)
+		.get();
+		
+		DBCursor cur = convosColl.find(query);
+		return cur.hasNext();
+	}
+	
 	/**
 	 * Return list of replies with given root id
 	 * 

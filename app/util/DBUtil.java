@@ -40,6 +40,7 @@ public class DBUtil {
 	private static Mongo mongo;
 	
 	private static String HOST_NAME = Play.configuration.getProperty("db.hostname");
+	//private static String HOST_NAME = null;
 	
 	static {
 		try {

@@ -58,9 +58,10 @@ public class ThoughtsFromServicesJob extends Job {
 			    		CommentBean thought = 
 			    			CommentsDAO.getThoughtByFromInfo(serviceAccount.getType().toString(), post.getId());
 			    		
-			    		//TODO YURIY add check on "full text" + "user" + "date<1 day back"
+			    		// check duplicates by full-text + sender + some-days-back, and reject if found 
+			    		boolean isDuplicate = CommentsDAO.getThoughtDuplicates(talker.getId(),post.getText(),3);
 			    		
-			    		if (thought == null) {
+			    		if (thought == null && !isDuplicate) {
 			    			String htmlText = prepareText(serviceAccount.getType(), post.getText());
 			    			TalkerLogic.saveProfileComment(talker, talker.getId(), null, 
 									htmlText, post.getText(), 
