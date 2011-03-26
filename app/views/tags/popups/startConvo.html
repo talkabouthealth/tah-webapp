@@ -7,9 +7,15 @@
           </div>
           <div class="askquestion">
             <div class="askquestionbox">
-            	<b>I want to:</b><br/>
-            	<div id="convoCreateImage" class="ajaxLoading"></div>
+                #{if _page.equals("openQuestions")}
+                <input id="newConvoTargetId" type="hidden" value="${_target.id}" />
+                <b>Your question to ${_target.name}:</b>
+                #{/if}
+                #{else}
+            	<b>Question:</b>
+            	#{/else}
             </div>
+            <!-- REFACTOR REMOVE LIVE CHAT OPTIONS
             <div class="askquestionbox">
               <div class="asktext1">
               	<input id="newConvoTypeQuestion" name="newConvoType" checked="checked" type="radio" />
@@ -19,6 +25,7 @@
               </div>
             </div>
             <div style="clear: both;"></div>
+            -->
           </div>
           <!--askquestion-->
           <div class="askheadingCoverz">
@@ -74,15 +81,26 @@
       </div>
       <!--popboxWraper-->
       <div id="newQuestionConfirm" class="popboxWraper" style="display: none;">
-        <div class="popbox3">
+        #{if _page.equals("openQuestions")}
+        <div class="popbox3a">
+        #{/if}
+        #{else}
+        <div class="popbox3">   
+        #{/else}     
           <div class="closecover">
             <div class="close"><img src="/public/images/close.jpg" alt="Close" /></div>
           </div>
-          <div class="iwant1">Thank you for sharing your question</div>
+          <div class="iwant1">
+          Thank you for sharing your question.
+          #{if _page.equals("openQuestions")}
+          We will notify ${_target.name} right away.
+          #{/if}
+          </div>
 
           <div class="popusertxt3">We will notify other members of your question. 
           Responses will be sent to your email account as well as viewable at the
-            following link: <a id="questionLink" href="#"></a></div>
+          following link:<br />
+          <a id="questionLink" href="#"></a></div>
           <div class="popsubmitcover1">
             <div class="popnothanks3"><a class="cancelLink" href="#">Close</a></div>
           </div>

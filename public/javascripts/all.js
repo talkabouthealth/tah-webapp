@@ -123,6 +123,10 @@ function saveConvo(page) {
 		return false;
 	}
 	
+	if(page === "openQuestions") {
+		parentConvoId = document.getElementById("newConvoTargetId").value;
+	}
+	
 	$("#convoCreateImage").show();
 	$.post("/conversations/create", 
 			{ type: type, title: title, details: details, topics: topics, fromPage: page, 

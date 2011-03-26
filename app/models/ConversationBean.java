@@ -385,6 +385,19 @@ public class ConversationBean {
 		
 		return pageDescription;
 	}
+
+	/**
+	 * Return title + description (if available)
+	 * @return String
+	 */
+	public String getPageOriginalSummary() {
+		String pageDescription = getTopic();  
+		if (getDetails() != null && getDetails().length() > 0) {
+			pageDescription = pageDescription + "<br />" + getDetails();
+		}
+		
+		return pageDescription;
+	}	
 	
 	/**
 	 * Returns page keywords for ConvoSummary page.

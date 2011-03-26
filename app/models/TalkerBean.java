@@ -44,7 +44,7 @@ import static util.DBUtil.*;
 public class TalkerBean implements Serializable {
 	
 	public static final String[] CONNECTIONS_ARRAY = new String[] {
-		"Patient", "Former Patient", "Parent", "Caregiver", "Family member", "Friend","High Risk Individual", 
+		"Patient","High Risk Individual","Former Patient", "Parent", "Caregiver", "Family member", "Friend", 
 		//"professionals"
 		"Physician", "Pharmacist", "Nurse", "Psychologist", "Social worker", "Researcher", 
 		"Organization","Support Group",
@@ -98,7 +98,10 @@ public class TalkerBean implements Serializable {
 		CONVO_COMMENT ("Send me an email when an Answer is added to a Conversation I follow.", 
 				EmailTemplate.NOTIFICATION_CONVO_ANSWER),
 		CONVO_SUMMARY ("Send me an email when a Summary of a Conversation I follow is updated.", 
-				EmailTemplate.NOTIFICATION_CONVO_SUMMARY);
+				EmailTemplate.NOTIFICATION_CONVO_SUMMARY),
+		CONVO_PERSONAL ("",
+				EmailTemplate.NOTIFICATION_PERSONAL_QUESTION);
+		
 		
 		private final String description;
 		private final EmailTemplate emailTemplate;

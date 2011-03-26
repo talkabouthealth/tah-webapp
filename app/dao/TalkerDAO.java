@@ -40,6 +40,7 @@ import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import com.mongodb.QueryBuilder;
 
 import static util.DBUtil.*;
 
@@ -405,6 +406,32 @@ public class TalkerDAO {
 		return (talkerDBObject == null);
 	}
 	
+	/**
+	 * Load several talkers specified by ids
+	 * @param ids List of ids
+	 * @return
+	 */
+	public static List<TalkerBean> loadSetTalkers(List<String> ids) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		
+		QueryBuilder query = QueryBuilder.start();
+		
+		for(String id: ids) {
+			query.or(new BasicDBObject("_id", new ObjectId(id)));
+		}
+				
+		List<DBObject> talkersDBObjectList = 
+			talkersColl.find(query.get()).toArray();
+		
+		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
+		for (DBObject talkerDBObject : talkersDBObjectList) {
+			TalkerBean talker = new TalkerBean();
+			talker.parseBasicFromDB(talkerDBObject);
+			talkerList.add(talker);
+		}
+		
+		return talkerList;
+	}	
 	/**
 	 * Load all (deactivated and suspended also) talkers.
 	 * @param basicInfo Load full or only basic info

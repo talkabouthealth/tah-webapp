@@ -58,14 +58,14 @@
 			<span class="blacktext14">Email address</span>
 		</div>		
 		<div class="personaltextfield">
-			<input name="pr_pract_email" type="text" class="personalfields" value="
+			<input name="pr_pract_email" type="text" class="personalfields"
 			#{if profInfo.get("pract_email")}
-			${profInfo.get("pract_email")}
+			value="${profInfo.get("pract_email")}"
 			#{/if}
 			#{else}
-			${talker.email}
+			value="${talker.email}"
 			#{/else}
-			" />			
+			 />			
 		</div>
 	</div>			
 	*{#{profile/field type: 'text', des: 'Email address', name: 'pract_email', talkerType: talkerType, profInfo: profInfo /}}*

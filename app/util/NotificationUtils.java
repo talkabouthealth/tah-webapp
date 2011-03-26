@@ -148,8 +148,10 @@ public class NotificationUtils {
 	 * @param vars
 	 */
 	public static void sendEmailNotification(EmailSetting emailSetting, 
-			TalkerBean talker, Map<String, String> vars) {
-		if (talker.getEmailSettings().contains(emailSetting)) {
+			TalkerBean talker, Map<String, String> vars) {	
+
+		// always send notification for personal questions %-/
+		if (emailSetting == EmailSetting.CONVO_PERSONAL || talker.getEmailSettings().contains(emailSetting)) {
 			vars.put("username", talker.getUserName());
 			
 			if (emailSetting == EmailSetting.CONVO_COMMENT && vars.get("reply_text") != null) {
@@ -164,6 +166,10 @@ public class NotificationUtils {
 				//Reply to the thought
 				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_REPLY_TO_COMMENT_IN_JOURNAL, talker.getEmail(), vars, null, true);
 			}
+			else if (emailSetting == EmailSetting.CONVO_PERSONAL && vars.get("convo") != null) {
+				//Personal question
+				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_PERSONAL_QUESTION, talker.getEmail(), vars, null, true);
+			}			
 			else {
 				EmailUtil.sendEmail(emailSetting.getEmailTemplate(), talker.getEmail(), vars, null, true);
 			}

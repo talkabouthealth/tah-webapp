@@ -57,7 +57,7 @@
 					          	#{/if}
 					          	#{else}
 					          		<strong>Email verified successfully. Thank you.</strong><br/><br/>
-								  	Please tell us more about you so that we can match you for conversations most relevant to you.
+								  	Please tell us more about you so that we can match you with peers, survivors, and experts who can help.
 								  	Also, other community members with similar concerns can find and connect with you.
 					          	#{/else}
 							  	<br/>
@@ -80,19 +80,20 @@
 					          <div class="note">
 					          	#{if talker.isProf()}
 					          		<strong>Provide profile information so we can personalize your experience:</strong><br/>
-									- Notify you of questions, chats, and information relevant to you.<br/>
+								  	- Match you with peers, survivors, and experts who can help.	
+                                                                        - Match you with questions and information relevant to you.<br/>
 									- Enables others to find you based on location, health concern, specialty, etc.<br/>
 									<br/>
-									<strong>Your profile info is private by default.</strong><br/>
-									- Update your <a href="@{Profile.preferences()}">privacy settings</a> to share your profile information with the community.<br/>
+									<strong>Your profile info is viewable by the community by default.</strong><br/>
+									- Update your <a href="@{Profile.preferences()}">privacy settings</a> to make your profile information public or private.<br/>
 					          	#{/if}
 					          	#{else}
 					          		<strong>Provide profile information so we can personalize your experience:</strong><br/>
-								        - Recommend similar members for you to meet.<br/>	
-					                                - Notify you of questions, chats, and information relevant to you.<br/>
+								        - Match you with peers, survivors, and experts who can help.<br/>	
+					                                - Match you of questions and information relevant to you.<br/>
 								  	<br/>
-								  	<strong>Your profile is private by default.</strong><br/>
-								  	- Update your <a href="@{Profile.preferences()}">privacy settings</a> to share your profile information with the community.<br/>
+								  	<strong>Your profile is viewable by the community by default.</strong><br/>
+								  	- Update your <a href="@{Profile.preferences()}">privacy settings</a> to make your profile information public or private.<br/>
 					          	#{/else}
 							  	<br/>
 					          </div>
@@ -228,8 +229,8 @@
 				          	#{/if}
 				          	#{else}
 				          		Filling in your profile information enables us to match you with 
-								questions and talks most relevant to you. <br/><br/>
-								The more information you provide, the more likely other members with similar concerns will find and connect with you.
+								peers, survivors, and experts who can help. <br/><br/>
+								As well, the more information you provide, the more likely other members with similar concerns will find and connect with you.
 								<br /><br />
 								The more information everyone in the community shares, the more we help each other.
 				          	#{/else}
@@ -237,8 +238,8 @@
 						<span class="blacktext14"><strong><br />
 						<br />Is the information I provide private?</strong></span>
 						<span class="blacktext12"><br />
-						By default, the information you provide is private. 
-						You can make your information viewable to the community 
+						By default, the information you provide is viewable by the community. 
+						You can make your information public or private 
 						by changing your <a href="@{Profile.preferences()}">Privacy Settings</a>.</span></span><br />
 						<br />
 					</div>

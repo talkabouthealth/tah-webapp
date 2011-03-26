@@ -31,6 +31,7 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
@@ -72,6 +73,7 @@ public class CommentsDAO {
 		
 		DBRef profileTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, comment.getProfileTalkerId());
 		DBRef fromTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, comment.getFromTalker().getId());
+		
 		DBObject commentObject = BasicDBObjectBuilder.start()
 			.add("profile", profileTalkerRef)
 			.add("from", fromTalkerRef)
@@ -80,6 +82,8 @@ public class CommentsDAO {
 			
 			.add("from_service", comment.getFrom())
 			.add("from_service_id", comment.getFromId())
+			
+			.add("rootid",comment.getRootId())
 			.get();
 		commentsColl.save(commentObject);
 		
@@ -134,9 +138,57 @@ public class CommentsDAO {
 		if (commentDBObject == null) {
 			return null;
 		}
+		
 		CommentBean thought = new CommentBean();
 		thought.parseFromDB(commentDBObject);
 		return thought;
+	}
+	
+	public static boolean getThoughtDuplicates(String fromId,String text,int lookupDepth) {
+		DBCollection convosColl = getCollection(PROFILE_COMMENTS_COLLECTION);
+		
+		DBRef fromTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, fromId);		
+		
+		// three days back
+		Date now = new Date();
+		Date start = new Date(now.getTime()-lookupDepth*24*3600000);
+		//BasicDBObject time = new BasicDBObject("ts", start);
+		BasicDBObject time = new BasicDBObject("$gt", start);
+		
+		DBObject query = BasicDBObjectBuilder.start()
+		.add("text",text)
+		.add("from",fromTalkerRef)
+		.add("time", time)
+		.get();
+		
+		DBCursor cur = convosColl.find(query);
+		return cur.hasNext();
+	}
+	
+	/**
+	 * Return list of replies with given root id
+	 * 
+	 * @param rootId
+	 * @return
+	 */
+	public static List<CommentBean> getThoughtByRootId(String rootId) {
+		DBCollection convosColl = getCollection(PROFILE_COMMENTS_COLLECTION);
+		
+		DBObject query = BasicDBObjectBuilder.start()
+		.add("rootid",rootId)
+		.get();
+		
+		DBCursor cur = convosColl.find(query);
+		
+		if(!cur.hasNext()) return null; 
+		List<CommentBean> result = new ArrayList<CommentBean>();
+        while(cur.hasNext()) {
+        	CommentBean m = new CommentBean();   
+        	m.parseFromDB(cur.next());
+        	result.add(m);        	
+        }		
+		
+		return result;
 	}
 	
 
