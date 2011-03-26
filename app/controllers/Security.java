@@ -85,7 +85,7 @@ public class Security extends Secure.Security {
 	     */
 	    url = flash.get("url");
         if(url != null && url.trim().length() == 0) {
-        	flash.put("url", "/");
+        	flash.put("url", "/home");
         }
     }
     

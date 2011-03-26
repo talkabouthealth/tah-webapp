@@ -672,14 +672,6 @@ a {
 .topipcWraper {
 	clear:both;
 }
-#managtopic1 {
-	background-image:url(images/inner_bgmt.gif);
-	background-repeat:repeat-x;
-}
-#managtopic {
-	background-image:url(images/inner_bgmt.gif);
-	background-repeat:repeat-x;
-}
 
 /*============================ Right Section Global
 
@@ -4468,11 +4460,6 @@ ul.menuz, .item-list ul {
 }
 ul.menuz ul, .item-list ul ul {
 	margin-left: 0em; /* LTR */
-}
-ul li, ul.menuz li, .item-list ul li, li.leaf {
-	list-style-type: none;
-	list-style-image: none;
-	background: transparent url(images/menu-leaf.gif) no-repeat 1px .35em; /* LTR */
 }
 .cat_close {
 	background-image:url(../images/Plus.jpg);

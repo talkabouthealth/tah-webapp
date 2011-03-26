@@ -626,15 +626,15 @@ public class TalkerLogic {
 				  continue;
 			  }
 			  
-			  if (member.isProf()) {
-				  if (experts.size() < 3) {
-					  experts.add(member);
-				  }
+			  if (member.isProf() && experts.size() < 3) {
+				  experts.add(member);
 			  }
-			  else {
-				  if (similarMembers.size() < 3) {
-					  similarMembers.add(member);
-				  }
+			  if (!member.isProf() && similarMembers.size() < 3) {
+				  similarMembers.add(member);
+			  }
+
+			  if (experts.size() == 3 && similarMembers.size() == 3) {
+				  break;
 			  }
 		}
 	}

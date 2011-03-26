@@ -32,12 +32,15 @@ import org.apache.commons.io.FileUtils;
 import org.apache.lucene.analysis.cn.ChineseTokenizer;
 import org.bson.types.ObjectId;
 
+import play.Logger;
+
 import util.DBUtil;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.QueryBuilder;
@@ -440,9 +443,12 @@ public class TalkerDAO {
 	public static List<TalkerBean> loadAllTalkers(boolean basicInfo) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
+		long start = System.currentTimeMillis();
 		List<DBObject> talkersDBObjectList = 
 			talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
+		Logger.info("All from db: "+(System.currentTimeMillis() - start));
 		
+		start = System.currentTimeMillis();
 		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
 		for (DBObject talkerDBObject : talkersDBObjectList) {
 			TalkerBean talker = new TalkerBean();
@@ -454,6 +460,7 @@ public class TalkerDAO {
 			}
 			talkerList.add(talker);
 		}
+		Logger.info("Parsing: "+(System.currentTimeMillis() - start));
 		
 		return talkerList;
 	}
@@ -461,6 +468,31 @@ public class TalkerDAO {
 		return loadAllTalkers(false);
 	}
 
+	
+	public static List<TalkerBean> loadAllTalkers2(boolean basicInfo) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		
+		long start = System.currentTimeMillis();
+		DBCursor talkersDBObjectList = 
+			talkersColl.find().sort(new BasicDBObject("uname", 1));
+		Logger.info("All from db22: "+(System.currentTimeMillis() - start));
+		
+		start = System.currentTimeMillis();
+		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
+		for (DBObject talkerDBObject : talkersDBObjectList) {
+			TalkerBean talker = new TalkerBean();
+			if (basicInfo) {
+				talker.parseBasicFromDB(talkerDBObject);
+			}
+			else {
+				talker.parseFromDB(talkerDBObject);
+			}
+			talkerList.add(talker);
+		}
+		Logger.info("Parsing22: "+(System.currentTimeMillis() - start));
+		
+		return talkerList;
+	}
 	
 	// --------------------- Other ---------------------------
 	

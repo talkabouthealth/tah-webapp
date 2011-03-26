@@ -88,16 +88,22 @@ public class Explore extends Controller {
     	
 //    	CommonUtil.test();
     	//FIXME
-    	/*
+    	
+    	long start = System.currentTimeMillis();
     	List<TalkerBean> ts = TalkerDAO.loadAllTalkers();
-    	for (TalkerBean t : ts) {
-    		DBRef r = DBUtil.createRef(TalkerDAO.TALKERS_COLLECTION, t.getId());
-    		long s = System.currentTimeMillis();
-    		DBObject o = r.fetch();
-    		String uname = (String)o.get("uname");
-    		System.out.println("Res: "+(System.currentTimeMillis() - s)+" ("+uname+")");    		
-		}
-		*/
+    	Logger.info("All talkers: "+(System.currentTimeMillis() - start));
+    	
+    	start = System.currentTimeMillis();
+    	ts = TalkerDAO.loadAllTalkers();
+    	Logger.info("All talkers22: "+(System.currentTimeMillis() - start));
+    	
+//    	for (TalkerBean t : ts) {
+//    		DBRef r = DBUtil.createRef(TalkerDAO.TALKERS_COLLECTION, t.getId());
+//    		long s = System.currentTimeMillis();
+//    		DBObject o = r.fetch();
+//    		String uname = (String)o.get("uname");
+//    		System.out.println("Res: "+(System.currentTimeMillis() - s)+" ("+uname+")");    		
+//		}
     	
     	
     	List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
