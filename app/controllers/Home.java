@@ -60,11 +60,8 @@ public class Home extends Controller {
     	List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
 
     	long start = System.currentTimeMillis();
-    	Logger.info("Sa:"+System.currentTimeMillis());
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
-		Logger.info("Sb:"+System.currentTimeMillis());
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
-    	Logger.info("S2:"+System.currentTimeMillis());
     	
     	//find mentions
     	//Set<Action> mentions = CommentsDAO.getTalkerMentions(talker);
@@ -88,7 +85,8 @@ public class Home extends Controller {
 		
 		List<ConversationBean> recommendedConvos = TalkerLogic.getRecommendedConvos(talker);
 		
-		Logger.info("F1:"+System.currentTimeMillis());
+		Logger.info("S7:"+System.currentTimeMillis());
+		Logger.info("F1:"+ (System.currentTimeMillis() - start));
 		System.out.println("F1:"+ (System.currentTimeMillis() - start));
 		
 		boolean emailVerification = false;

@@ -552,8 +552,9 @@ public class ConversationDAO {
 		}
 		
 		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
+		DBObject fields = new BasicDBObject("_id", "1");
 		DBObject query = new BasicDBObject("topics", new BasicDBObject("$in", allTopics));
-		List<DBObject> convosDBList = convosColl.find(query).toArray();
+		List<DBObject> convosDBList = convosColl.find(query, fields).toArray();
 		
 		for (DBObject convoDBObject : convosDBList) {
 			convosDBSet.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, getString(convoDBObject, "_id")));

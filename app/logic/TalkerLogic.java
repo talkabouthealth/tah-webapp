@@ -21,6 +21,7 @@ import javax.imageio.ImageIO;
 import org.bson.types.ObjectId;
 
 import play.Logger;
+import play.cache.Cache;
 import play.mvc.Scope.Session;
 import play.templates.JavaExtensions;
 import dao.ActionDAO;
@@ -605,7 +606,8 @@ public class TalkerLogic {
 		
 		if (loadedTopics.isEmpty()) {
 			//display most popular Topics based on views
-			loadedTopics = new ArrayList<TopicBean>(TopicDAO.loadAllTopics(true));
+			//FIXME: list or set?
+			loadedTopics = new ArrayList<TopicBean>(loadAllTopicsFromCache());
 		}
 		
 		Logger.info("TT4:"+System.currentTimeMillis());
@@ -631,7 +633,7 @@ public class TalkerLogic {
 	public static void getRecommendedTalkers(TalkerBean talker, List<TalkerBean> similarMembers,
 			List<TalkerBean> experts) {
 		//FIXME: load from cache?
-		List<TalkerBean> allMembers = TalkerDAO.loadAllTalkers(true);
+		List<TalkerBean> allMembers = loadAllTalkersFromCache();
 		for (TalkerBean member : allMembers) {
 			  if (member.isSuspended() || member.isDeactivated() || member.isAdmin()) {
 				  continue;
@@ -653,6 +655,33 @@ public class TalkerLogic {
 		}
 	}
 	
+	public static List<TalkerBean> loadAllTalkersFromCache() {
+		List<TalkerBean> allTalkers = (List<TalkerBean>) Cache.get("talkersList"); 
+		if (allTalkers == null) {
+			allTalkers = TalkerDAO.loadAllTalkers(true);
+			Cache.set("talkersList", allTalkers, "3h");
+		}
+		return allTalkers;
+	}
+	
+	public static List<ConversationBean> loadPopularConversationsFromCache() {
+		List<ConversationBean> popularConversations = (List<ConversationBean>) Cache.get("popularConversations");
+		if (popularConversations == null) {
+			popularConversations = ConversationDAO.loadPopularConversations();
+			Cache.set("popularConversations", popularConversations, "2h");
+		}
+		return popularConversations;
+	}
+	
+	public static Set<TopicBean> loadAllTopicsFromCache() {
+		Set<TopicBean> allTopics = (Set<TopicBean>) Cache.get("topicsList");
+		if (allTopics == null) {
+			allTopics = TopicDAO.loadAllTopics(true);
+			Cache.set("popularConversations", allTopics, "5h");
+		}
+		return allTopics;
+	}
+	
 	public static List<ConversationBean> getRecommendedConvos(TalkerBean talker) {
 		/* 
 		 	Ideas for recommended conversations :
@@ -667,7 +696,7 @@ public class TalkerLogic {
 //		for (TopicBean topic : talker.getFollowingTopicsList()) {
 //			allConvos.addAll(ConversationDAO.loadConversationsByTopic(topic.getId()));
 //		}
-		allConvos.addAll(ConversationDAO.loadPopularConversations());
+		allConvos.addAll(loadPopularConversationsFromCache());
 		
 		for (ConversationBean convo : allConvos) {
 			if (talker.getFollowingConvosList().contains(convo.getId())) {
