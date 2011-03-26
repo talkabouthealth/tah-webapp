@@ -113,11 +113,11 @@ public class SearchIndexerJob extends Job {
 			autocompleteIndexWriter.close();
 		}
 		
-		//Temporary logging
+		/*//Temporary logging
 		Logger.info("------------Mem Info------------");
 		Runtime rt = Runtime.getRuntime();
 		Logger.info("   Free: "+rt.freeMemory()/1024+", Total: "+rt.totalMemory()/1024);
-		rt.gc();
+		rt.gc();*/
 	}
 	
 	public static void main(String[] args) throws Exception {

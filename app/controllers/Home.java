@@ -59,6 +59,7 @@ public class Home extends Controller {
     	Logger.info("---"+talker.getUserName()+"---");
     	List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
 
+    	System.out.println("Sa:"+System.currentTimeMillis());
     	Logger.info("Sa:"+System.currentTimeMillis());
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
 		Logger.info("Sb:"+System.currentTimeMillis());
@@ -87,6 +88,7 @@ public class Home extends Controller {
 		List<ConversationBean> recommendedConvos = TalkerLogic.getRecommendedConvos(talker);
 		
 		Logger.info("F1:"+System.currentTimeMillis());
+		System.out.println("F1:"+System.currentTimeMillis());
 		
 		boolean emailVerification = false;
 		if (session.contains("justloggedin") && talker.getVerifyCode() != null) {

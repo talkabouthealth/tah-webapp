@@ -15,6 +15,12 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+
 import play.Logger;
 import play.mvc.Before;
 import play.mvc.Controller;
@@ -25,12 +31,14 @@ import logic.TalkerLogic;
 import logic.TopicLogic;
 import models.ConversationBean;
 import models.ServiceAccountBean;
+import models.PrivacySetting.PrivacyType;
 import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean;
 import models.TopicBean;
 import models.actions.Action;
 import util.BitlyUtil;
 import util.CommonUtil;
+import util.DBUtil;
 import util.FacebookUtil;
 import util.SearchUtil;
 import util.TwitterUtil;
@@ -79,6 +87,18 @@ public class Explore extends Controller {
     	}
     	
 //    	CommonUtil.test();
+    	//FIXME
+    	/*
+    	List<TalkerBean> ts = TalkerDAO.loadAllTalkers();
+    	for (TalkerBean t : ts) {
+    		DBRef r = DBUtil.createRef(TalkerDAO.TALKERS_COLLECTION, t.getId());
+    		long s = System.currentTimeMillis();
+    		DBObject o = r.fetch();
+    		String uname = (String)o.get("uname");
+    		System.out.println("Res: "+(System.currentTimeMillis() - s)+" ("+uname+")");    		
+		}
+		*/
+    	
     	
     	List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
 		render(talker, liveTalks, popularTopics);

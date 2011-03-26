@@ -366,7 +366,11 @@ public class TalkerDAO {
 	}
 	
 	public static TalkerBean parseTalker(DBRef talkerRef) {
+		long s = System.currentTimeMillis();
 		DBObject talkerDBObject = talkerRef.fetch();
+		String uname = (String)talkerDBObject.get("uname");
+		//FIXME
+//		System.out.println("----Res: "+(System.currentTimeMillis() - s)+" ("+uname+")");
 		TalkerBean talker = new TalkerBean();
 		talker.parseBasicFromDB(talkerDBObject);
 		return talker;
