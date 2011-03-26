@@ -90,11 +90,11 @@ public class Explore extends Controller {
     	//FIXME
     	
     	long start = System.currentTimeMillis();
-    	List<TalkerBean> ts = TalkerDAO.loadAllTalkers();
+    	List<TalkerBean> ts = TalkerDAO.loadAllTalkers(true);
     	Logger.info("All talkers: "+(System.currentTimeMillis() - start));
     	
     	start = System.currentTimeMillis();
-    	ts = TalkerDAO.loadAllTalkers();
+    	ts = TalkerDAO.loadAllTalkers2(true);
     	Logger.info("All talkers22: "+(System.currentTimeMillis() - start));
     	
 //    	for (TalkerBean t : ts) {

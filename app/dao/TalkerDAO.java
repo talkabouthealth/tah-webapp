@@ -442,10 +442,22 @@ public class TalkerDAO {
 	 */
 	public static List<TalkerBean> loadAllTalkers(boolean basicInfo) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+
+//		talkersColl.createIndex(new BasicDBObject("uname", 1));
+		
+		//.sort(new BasicDBObject("uname", 1))
+		
+		DBObject fields = BasicDBObjectBuilder.start()
+			.add("following_topics", 0)
+			.add("following_convos", 0)
+			.add("img", 0)
+			.add("following", 0)
+			.add("privacy_settings", 0)
+			.get();
 		
 		long start = System.currentTimeMillis();
 		List<DBObject> talkersDBObjectList = 
-			talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
+			talkersColl.find(null, fields).toArray();
 		Logger.info("All from db: "+(System.currentTimeMillis() - start));
 		
 		start = System.currentTimeMillis();
