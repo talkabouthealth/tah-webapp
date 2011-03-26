@@ -29,7 +29,7 @@ public class FeedsLogic {
 	public static final int FEEDS_PER_PAGE = 20;
 	
 	//Number of actions to preload from DB (later filtered)
-	public static final int ACTIONS_PRELOAD = 300;
+	public static final int ACTIONS_PRELOAD = 200;
 	
 	public static Set<Action> getConvoFeed(TalkerBean talker, String afterActionId) {
 		return loadFeed(FeedType.CONVERSATION, afterActionId, talker, null, true, FEEDS_PER_PAGE);

@@ -62,7 +62,7 @@ public class TalkerDiseaseDAO {
 		DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
 				
 		DBObject query = new BasicDBObject("_id", new ObjectId(talkerId));
-		DBObject talkerDBObject = talkersColl.findOne(query, new BasicDBObject("disease", ""));
+		DBObject talkerDBObject = talkersColl.findOne(query, new BasicDBObject("disease", "1"));
 		
 		//load and parse disease data from talker
 		DBObject diseaseDBObject = (DBObject)talkerDBObject.get("disease");

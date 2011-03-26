@@ -119,6 +119,25 @@ public class TopicDAO {
 		return topicBean;
 	}
 	
+	public static TopicBean getByIdBasic(String topicId) {
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
+		
+		DBObject fields = BasicDBObjectBuilder.start()
+			.add("title", 1)
+			.add("fixed", 1)
+			.add("deleted", 1)
+			.add("main_url", 1)
+			.add("bitly", 1)
+			.get();
+		
+		DBObject query = new BasicDBObject("_id", new ObjectId(topicId));
+		DBObject topicDBObject = topicsColl.findOne(query, fields);
+		
+		TopicBean topicBean = new TopicBean();
+		topicBean.parseBasicFromDB(topicDBObject);
+		return topicBean;
+	}
+	
 	/**
 	 * Gets or recreates topic if it was deleted.
 	 * @param title
@@ -153,8 +172,25 @@ public class TopicDAO {
 	public static Set<TopicBean> loadAllTopics(boolean onlyBasicInfo) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
+		//FIXME
+		topicsColl.ensureIndex(new BasicDBObject("views", 1));
+		
 		DBObject query = new BasicDBObject("deleted", new BasicDBObject("$ne", true));
-		List<DBObject> topicsDBList = topicsColl.find(query).sort(new BasicDBObject("views", -1)).toArray();
+		List<DBObject> topicsDBList = null;
+		if (onlyBasicInfo) {
+			DBObject fields = BasicDBObjectBuilder.start()
+				.add("title", 1)
+				.add("fixed", 1)
+				.add("deleted", 1)
+				.add("main_url", 1)
+				.add("bitly", 1)
+				.get();
+			
+			topicsDBList = topicsColl.find(query, fields).sort(new BasicDBObject("views", -1)).toArray();
+		}
+		else {
+			topicsDBList = topicsColl.find(query).sort(new BasicDBObject("views", -1)).toArray();
+		}
 		
 		Set<TopicBean> topicsSet = new LinkedHashSet<TopicBean>();
 		for (DBObject topicDBObject : topicsDBList) {

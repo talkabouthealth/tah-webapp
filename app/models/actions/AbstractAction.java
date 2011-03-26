@@ -79,11 +79,7 @@ public abstract class AbstractAction implements Action {
 	
 	public AbstractAction(DBObject dbObject) {
 		setId(dbObject.get("_id").toString());
-		
-		DBObject talkerDBObject = ((DBRef)dbObject.get("uid")).fetch();
-		TalkerBean talker = new TalkerBean();
-		talker.parseBasicFromDB(talkerDBObject);
-		setTalker(talker);
+		setTalker(TalkerDAO.parseTalker(dbObject, "uid"));
 		
 		setTime((Date)dbObject.get("time"));
 		setType(ActionType.valueOf((String)dbObject.get("type")));
@@ -163,10 +159,10 @@ public abstract class AbstractAction implements Action {
 		dbObject.put("convoId", topicRef);
 	}
 	protected ConversationBean parseConvo(DBObject dbObject) {
-		DBObject convoDBObject = ((DBRef)dbObject.get("convoId")).fetch();
+		String convoId = ((DBRef)dbObject.get("convoId")).getId().toString();
 		
-		ConversationBean convo = new ConversationBean();
-		convo.parseBasicFromDB(convoDBObject);
+		ConversationBean convo = ConversationDAO.getByIdBasic(convoId);
+		//FIXME: move this to the convo field?
 		convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
     	return convo;
 	}
@@ -176,10 +172,9 @@ public abstract class AbstractAction implements Action {
 		dbObject.put("topicId", topicRef);
 	}
 	protected TopicBean parseTopic(DBObject dbObject) {
-		DBObject topicDBObject = ((DBRef)dbObject.get("topicId")).fetch();
+		String topicId = ((DBRef)dbObject.get("topicId")).getId().toString();
 		
-		TopicBean topic = new TopicBean();
-		topic.parseBasicFromDB(topicDBObject);
+		TopicBean topic = TopicDAO.getByIdBasic(topicId);
     	return topic;
 	}
 	
@@ -189,14 +184,8 @@ public abstract class AbstractAction implements Action {
 		dbObject.put("otherTalker", talkerRef);
 	}
 	protected TalkerBean parseOtherTalker(DBObject dbObject) {
-		DBRef otherTalkerDBRef = (DBRef)dbObject.get("otherTalker");
-		if (otherTalkerDBRef != null) {
-			DBObject talkerDBObject = otherTalkerDBRef.fetch();
-			TalkerBean talker = new TalkerBean();
-			talker.parseBasicFromDB(talkerDBObject);
-	    	return talker;
-		}
-		return null;
+		TalkerBean talker = TalkerDAO.parseTalker(dbObject, "otherTalker");
+		return talker;
 	}
 	
 	//conversation answer/reply

@@ -240,6 +240,7 @@ public class TalkerLogic {
 	public static void preloadTalkerInfo(TalkerBean talker) {
 		preloadTalkerInfo(talker, null);
 	}
+	//TODO: can we optimize this?
 	public static void preloadTalkerInfo(TalkerBean talker, String page) {
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		talker.setActivityList(ActionDAO.loadTalkerActions(talker.getId()));
@@ -589,16 +590,25 @@ public class TalkerLogic {
 		List<TopicBean> loadedTopics = new ArrayList<TopicBean>();
 		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();
 		
+		Logger.info("TT1:"+System.currentTimeMillis());
+		
 		//try topics based on HealthInfo
 		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
+		
+		Logger.info("TT2:"+System.currentTimeMillis());
+		
 		if (!talker.isProf() && talkerDisease != null) {
 			loadedTopics = TalkerLogic.getTopicsByHealthInfo(talkerDisease);
 		}
+		
+		Logger.info("TT3:"+System.currentTimeMillis());
 		
 		if (loadedTopics.isEmpty()) {
 			//display most popular Topics based on views
 			loadedTopics = new ArrayList<TopicBean>(TopicDAO.loadAllTopics(true));
 		}
+		
+		Logger.info("TT4:"+System.currentTimeMillis());
 		
 		for (TopicBean topic : loadedTopics) {
 			//not following and not default
@@ -612,11 +622,15 @@ public class TalkerLogic {
 				break;
 			}
 		}
+		
+		Logger.info("TT5:"+System.currentTimeMillis());
+		
 		return recommendedTopics;
 	}
 	
 	public static void getRecommendedTalkers(TalkerBean talker, List<TalkerBean> similarMembers,
 			List<TalkerBean> experts) {
+		//FIXME: load from cache?
 		List<TalkerBean> allMembers = TalkerDAO.loadAllTalkers(true);
 		for (TalkerBean member : allMembers) {
 			  if (member.isSuspended() || member.isDeactivated() || member.isAdmin()) {
@@ -647,6 +661,7 @@ public class TalkerLogic {
 				3) what conversations are being followed by other members the user follows. 
 		*/
 		
+		//FIXME: check this
 		List<ConversationBean> recommendedConvos = new ArrayList<ConversationBean>();
 		Set<ConversationBean> allConvos = new LinkedHashSet<ConversationBean>();
 //		for (TopicBean topic : talker.getFollowingTopicsList()) {

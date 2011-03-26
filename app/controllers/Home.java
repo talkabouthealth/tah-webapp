@@ -67,7 +67,8 @@ public class Home extends Controller {
     	Logger.info("S2:"+System.currentTimeMillis());
     	
     	//find mentions
-    	Set<Action> mentions = CommentsDAO.getTalkerMentions(talker);
+    	//Set<Action> mentions = CommentsDAO.getTalkerMentions(talker);
+    	Set<Action> mentions = new HashSet<Action>();
     	
     	boolean showNotificationAccounts = prepareNotificationPanel(session, talker);
 		TalkerLogic.preloadTalkerInfo(talker);

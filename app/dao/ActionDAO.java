@@ -273,6 +273,14 @@ public class ActionDAO {
 	private static List<Action> loadPreloadActions(DBObject query) {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
+//		DBObject fields = BasicDBObjectBuilder.start()
+//			.add("type", 1)
+//			.add("convoId", 1)
+//			.get();
+		
+		//FIXME
+		activitiesColl.ensureIndex(new BasicDBObject("time", 1));
+		
 		DBCursor dbCursor = 
 			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(FeedsLogic.ACTIONS_PRELOAD);
 		
@@ -356,12 +364,17 @@ public class ActionDAO {
 		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		DBObject query = new BasicDBObject("uid", talkerRef);
+		DBObject fields = BasicDBObjectBuilder.start()
+			.add("type", 1)
+			.add("convoId", 1)
+			.get();
 		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+			activitiesColl.find(query, fields).sort(new BasicDBObject("time", -1)).toArray();
 		
 		List<Action> activitiesList = new ArrayList<Action>();
 		for (DBObject actionDBObject : activitiesDBList) {
 			//we need only type & conversation
+			//TODO: possible memory issue?
 			Action action = new PreloadAction(actionDBObject);
 			activitiesList.add(action);
 		}

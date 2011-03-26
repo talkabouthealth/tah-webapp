@@ -477,7 +477,7 @@ public class TalkerDAO {
 	public static List<TalkerBean> loadAllTalkers(boolean basicInfo) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 
-//		talkersColl.createIndex(new BasicDBObject("uname", 1));
+		talkersColl.ensureIndex(new BasicDBObject("uname", 1));
 		
 		//FIXME
 		//.sort(new BasicDBObject("uname", 1))
@@ -491,7 +491,28 @@ public class TalkerDAO {
 //			.get();
 		
 //		long start = System.currentTimeMillis();
-		List<DBObject> talkersDBObjectList = talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
+		List<DBObject> talkersDBObjectList = null;
+		if (basicInfo) {
+			DBObject fields = BasicDBObjectBuilder.start()
+				.add("following_topics", 0)
+				.add("following_convos", 0)
+				.add("img", 0)
+				.add("following", 0)
+				.add("topics_info", 0)
+				.add("thankyous", 0)
+				.add("hidden_helps", 0)
+				.add("ch_ages", 0)
+				.add("keywords", 0)
+				.add("ethnicities", 0)
+				.add("languages", 0)
+				.add("insurance_accept", 0)
+				.get();
+			talkersDBObjectList = talkersColl.find(null, fields).sort(new BasicDBObject("uname", 1)).toArray();
+		}
+		else {
+			talkersDBObjectList = talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
+		}
+		
 //		Logger.info("All from db: "+(System.currentTimeMillis() - start));
 		
 //		start = System.currentTimeMillis();
@@ -665,8 +686,23 @@ public class TalkerDAO {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 
 		DBRef followingTalkerRef = createRef(TALKERS_COLLECTION, talkerId);
+		//move to method
+		DBObject fields = BasicDBObjectBuilder.start()
+			.add("following_topics", 0)
+			.add("following_convos", 0)
+			.add("img", 0)
+			.add("following", 0)
+			.add("topics_info", 0)
+			.add("thankyous", 0)
+			.add("hidden_helps", 0)
+			.add("ch_ages", 0)
+			.add("keywords", 0)
+			.add("ethnicities", 0)
+			.add("languages", 0)
+			.add("insurance_accept", 0)
+			.get();
 		BasicDBObject query = new BasicDBObject("following", followingTalkerRef);
-		List<DBObject> followerDBList = talkersColl.find(query).toArray();
+		List<DBObject> followerDBList = talkersColl.find(query, fields).toArray();
 		
 		List<TalkerBean> followerList = new ArrayList<TalkerBean>();
 		for (DBObject followerDBObject : followerDBList) {

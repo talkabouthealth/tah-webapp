@@ -170,6 +170,24 @@ public class ConversationDAO {
 		
 		return parseConvoFromDBObject(convoDBObject, false);
 	}
+	
+	public static ConversationBean getByIdBasic(String convoId) {
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		//FIXME
+		DBObject fields = BasicDBObjectBuilder.start()
+			.add("summary", 0)
+			.add("sum_authors", 0)
+			.add("related_convos", 0)
+			.add("followup_convos", 0)
+			.add("messages", 0)
+			.get();
+		
+		DBObject query = new BasicDBObject("_id", new ObjectId(convoId));
+		DBObject convoDBObject = convosColl.findOne(query, fields);
+		
+		return parseConvoFromDBObject(convoDBObject, true);
+	}
 
 	public static ConversationBean getByTid(Integer tid) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
@@ -272,11 +290,22 @@ public class ConversationDAO {
 	public static List<ConversationBean> loadPopularConversations() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
+		convosColl.ensureIndex(new BasicDBObject("views", -1));
+		
+		//FIXME
+		DBObject fields = BasicDBObjectBuilder.start()
+			.add("summary", 0)
+			.add("sum_authors", 0)
+			.add("related_convos", 0)
+			.add("followup_convos", 0)
+			.add("messages", 0)
+			.get();
+		
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("deleted", new BasicDBObject("$ne", true))
 			.get();
 		List<DBObject> convosDBList = 
-			convosColl.find(query).sort(new BasicDBObject("views", -1)).limit(20).toArray();
+			convosColl.find(query, fields).sort(new BasicDBObject("views", -1)).limit(20).toArray();
 		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {

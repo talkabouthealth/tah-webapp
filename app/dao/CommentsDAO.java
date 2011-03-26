@@ -307,7 +307,7 @@ public class CommentsDAO {
 			.add("deleted", new BasicDBObject("$ne", true))
 			.add("answer", true)
 			.get();
-		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("vote_score", -1)).toArray();
+		List<DBObject> commentsList = commentsColl.find(query, new BasicDBObject("_id", 1)).toArray();
 		
 		List<CommentBean> answersList = new ArrayList<CommentBean>();
 		for (DBObject answerDBObject : commentsList) {
