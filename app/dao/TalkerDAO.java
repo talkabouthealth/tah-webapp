@@ -370,6 +370,39 @@ public class TalkerDAO {
 	}
 	
 	public static TalkerBean parseTalker(DBRef talkerRef) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		
+		//FIXME
+		DBObject fields = BasicDBObjectBuilder.start()
+			.add("following_topics", 0)
+			.add("following_convos", 0)
+			.add("img", 0)
+			.add("following", 0)
+			.add("topics_info", 0)
+			.add("thankyous", 0)
+			.add("hidden_helps", 0)
+			.add("ch_ages", 0)
+			.add("keywords", 0)
+			.add("ethnicities", 0)
+			.add("languages", 0)
+			.add("insurance_accept", 0)
+			.get();
+		
+		DBObject query = new BasicDBObject("_id", talkerRef.getId());
+		DBObject talkerDBObject = talkersColl.findOne(query, fields);
+		
+		if (talkerDBObject == null) {
+			return null;
+		}
+		else {
+			TalkerBean talker = new TalkerBean();
+			talker.parseBasicFromDB(talkerDBObject);
+			return talker;
+		}
+	}
+	
+	/*
+	public static TalkerBean parseTalker(DBRef talkerRef) {
 		long s = System.currentTimeMillis();
 		DBObject talkerDBObject = talkerRef.fetch();
 		String uname = (String)talkerDBObject.get("uname");
@@ -379,6 +412,7 @@ public class TalkerDAO {
 		talker.parseBasicFromDB(talkerDBObject);
 		return talker;
 	}
+	*/
 	
 	
 	// ---------------------- Other methods -----------------------
@@ -445,22 +479,22 @@ public class TalkerDAO {
 
 //		talkersColl.createIndex(new BasicDBObject("uname", 1));
 		
+		//FIXME
 		//.sort(new BasicDBObject("uname", 1))
 		
-		DBObject fields = BasicDBObjectBuilder.start()
-			.add("following_topics", 0)
-			.add("following_convos", 0)
-			.add("img", 0)
-			.add("following", 0)
-			.add("privacy_settings", 0)
-			.get();
+//		DBObject fields = BasicDBObjectBuilder.start()
+//			.add("following_topics", 0)
+//			.add("following_convos", 0)
+//			.add("img", 0)
+//			.add("following", 0)
+//			.add("privacy_settings", 0)
+//			.get();
 		
-		long start = System.currentTimeMillis();
-		List<DBObject> talkersDBObjectList = 
-			talkersColl.find(null, fields).toArray();
-		Logger.info("All from db: "+(System.currentTimeMillis() - start));
+//		long start = System.currentTimeMillis();
+		List<DBObject> talkersDBObjectList = talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
+//		Logger.info("All from db: "+(System.currentTimeMillis() - start));
 		
-		start = System.currentTimeMillis();
+//		start = System.currentTimeMillis();
 		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
 		for (DBObject talkerDBObject : talkersDBObjectList) {
 			TalkerBean talker = new TalkerBean();
@@ -472,7 +506,7 @@ public class TalkerDAO {
 			}
 			talkerList.add(talker);
 		}
-		Logger.info("Parsing: "+(System.currentTimeMillis() - start));
+//		Logger.info("Parsing: "+(System.currentTimeMillis() - start));
 		
 		return talkerList;
 	}
