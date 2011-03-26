@@ -677,7 +677,7 @@ public class TalkerLogic {
 		Set<TopicBean> allTopics = (Set<TopicBean>) Cache.get("topicsList");
 		if (allTopics == null) {
 			allTopics = TopicDAO.loadAllTopics(true);
-			Cache.set("popularConversations", allTopics, "5h");
+			Cache.set("topicsList", allTopics, "5h");
 		}
 		return allTopics;
 	}
