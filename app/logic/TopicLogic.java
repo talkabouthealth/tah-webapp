@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import play.Logger;
+
 import com.mongodb.DBRef;
 
 import models.TalkerBean;
@@ -36,11 +38,14 @@ public class TopicLogic {
 	 * Get all topics as tree.
 	 */
 	public static Set<TopicBean> getAllTopicsTree() {
+		//FIXME: improve here?
 		Set<TopicBean> topics = TopicDAO.loadAllTopics();
     	Map<String, TopicBean> topicsMap = new HashMap<String, TopicBean>();
     	for (TopicBean topic : topics) {
     		topicsMap.put(topic.getId(), topic);
     	}
+    	
+    	Logger.info("BTX:"+System.currentTimeMillis());
 
     	Set<TopicBean> rootTopics = new TreeSet<TopicBean>();
     	for (TopicBean topic : topics) {
@@ -124,7 +129,7 @@ public class TopicLogic {
 		}
 		if (recommendedTopics.isEmpty()) {
 			//display most popular Topics based on views
-			loadedTopics = new ArrayList<TopicBean>(TopicDAO.loadAllTopics(true));
+			loadedTopics = new ArrayList<TopicBean>(TalkerLogic.loadAllTopicsFromCache());
 		}
 		
 		final int numberPerPage = 10;

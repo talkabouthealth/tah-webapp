@@ -3,6 +3,8 @@ package controllers;
 import java.util.Calendar;
 import java.util.Date;
 
+import play.Logger;
+
 import models.TalkerBean;
 import util.CommonUtil;
 import dao.ApplicationDAO;
@@ -35,7 +37,7 @@ public class Security extends Secure.Security {
      * After successful authentication
      */
     static void onAuthenticated() {
-    	//if user logged with email - change session "username" to username (not email)
+    	//if user logged with email - change session variable "username" to username (not email)
     	String connectedUser = connected();
     	
     	TalkerBean talker = TalkerDAO.getByLoginInfo(connectedUser, null);
@@ -50,6 +52,9 @@ public class Security extends Secure.Security {
     		return;
     	}
     	if (talker.isDeactivated()) {
+    		//load full talker information (to update it)
+    		talker = TalkerDAO.getById(talker.getId());
+    		
     		//return to original userName
     		talker.setUserName(talker.getOriginalUserName());
     		talker.setOriginalUserName(null);

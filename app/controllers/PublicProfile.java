@@ -40,6 +40,7 @@ import dao.TalkerDAO;
 import dao.TalkerDiseaseDAO;
 import dao.ConversationDAO;
 import dao.TopicDAO;
+import play.Logger;
 import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -64,12 +65,20 @@ public class PublicProfile extends Controller {
 	}
 	
 	public static void thoughts(String userName) {
+		Logger.info("====== Thoughts ("+userName+") =======");
+		long start = System.currentTimeMillis();
+		Logger.info("Th0:"+System.currentTimeMillis());
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+		Logger.info("Th1:"+System.currentTimeMillis());
 		TalkerBean talker = TalkerDAO.getByURLName(userName);
 		notFoundIfNull(talker);
 		
+		Logger.info("Th2:"+System.currentTimeMillis());
+		
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
 		TalkerLogic.preloadTalkerInfo(talker);
+		
+		Logger.info("Th3:"+System.currentTimeMillis());
 		
 		//If the user views his own thoughts he should see the following text under the text box 
 		//until the user posts for the first time (even if another user posts first, this should still appear):
@@ -85,19 +94,31 @@ public class PublicProfile extends Controller {
 			}
 		}
 		
+		Logger.info("Th4:"+System.currentTimeMillis());
+		Logger.info("ThF1:"+ (System.currentTimeMillis() - start));
+		
 		render(talker, currentTalker, firstTimeComment);
 	}
 	
 	public static void answers(String userName) {
+		Logger.info("====== Answers ("+userName+") =======");
+		Logger.info("AN0:"+System.currentTimeMillis());
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByURLName(userName);
 		notFoundIfNull(talker);
 		
+		Logger.info("AN1:"+System.currentTimeMillis());
+		
 		TalkerLogic.preloadTalkerInfo(talker);
+		Logger.info("ANa:"+System.currentTimeMillis());
 		boolean noHealthInfo = TalkerLogic.talkerHasNoHealthInfo(talker);
+		
+		Logger.info("AN2:"+System.currentTimeMillis());
 		
 		List<Action> answersFeed = new ArrayList<Action>();
 		int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeed, true);
+		
+		Logger.info("AN3:"+System.currentTimeMillis());
 		
 		render(talker, currentTalker, answersFeed, numOfTopAnswers, noHealthInfo);
 	}
@@ -108,23 +129,36 @@ public class PublicProfile extends Controller {
 	 */
 	//TODO: later - add paging? as we have many convos on this page
 	public static void conversations(String userName) {
+		Logger.info("====== Questions ("+userName+") =======");
+		Logger.info("QU0:"+System.currentTimeMillis());
+		//TODO: can we improver this? very usual
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByURLName(userName);
 		notFoundIfNull(talker);
 		
+		Logger.info("QU1:"+System.currentTimeMillis());
+		
 		List<Action> startedConvosFeed = 
 			ConversationLogic.convosToFeed(ConversationDAO.getStartedConvos(talker.getId()));
+		Logger.info("QUa:"+System.currentTimeMillis());
 		List<Action> joinedConvosFeed = 
 			ConversationLogic.convosToFeed(ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO));
+		Logger.info("QUb:"+System.currentTimeMillis());
 		List<Action> followingConvosFeed = ConversationLogic.convosToFeed(TalkerLogic.loadFollowingConversations(talker));
+		
+		Logger.info("QU2:"+System.currentTimeMillis());
 		
 		TalkerLogic.preloadTalkerInfo(talker);
 		boolean noHealthInfo = TalkerLogic.talkerHasNoHealthInfo(talker);
+		
+		Logger.info("QU3:"+System.currentTimeMillis());
 		
 		List<ConversationBean> recommendedConvos = new ArrayList<ConversationBean>();
 		if (talker.equals(currentTalker)) {
 			recommendedConvos = TalkerLogic.getRecommendedConvos(talker);
 		}
+		
+		Logger.info("QU4:"+System.currentTimeMillis());
 		
 		render(talker, currentTalker, startedConvosFeed, joinedConvosFeed, followingConvosFeed, 
 				noHealthInfo, recommendedConvos);
@@ -132,12 +166,17 @@ public class PublicProfile extends Controller {
 	
 	
 	public static void topicsFollowing(String userName) {
+		Logger.info("====== Topics Following ("+userName+") =======");
+		Logger.info("TF0:"+System.currentTimeMillis());
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByURLName(userName);
 		notFoundIfNull(talker);
 		
+		Logger.info("TF1:"+System.currentTimeMillis());
+		
 		//get talker answers and related info for each topic
 		for (TopicBean topic : talker.getFollowingTopicsList()) {
+			//TODO: improve here?
 			List<CommentBean> answers = 
 				CommentsDAO.getTalkerAnswers(talker.getId(), topic);
 			
@@ -149,7 +188,11 @@ public class PublicProfile extends Controller {
 			talkerTopicInfo.setNumOfAnswers(answers.size());
 		}
 		
+		Logger.info("TF2:"+System.currentTimeMillis());
+		
 		TalkerLogic.preloadTalkerInfo(talker);
+		
+		Logger.info("TF3:"+System.currentTimeMillis());
 		
 		TalkerDiseaseBean talkerDisease = null;
 		List<TopicBean> recommendedTopics = null;
@@ -157,6 +200,8 @@ public class PublicProfile extends Controller {
 			talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
 			recommendedTopics = TopicLogic.loadRecommendedTopics(talker, talkerDisease, null);
 		}
+		
+		Logger.info("TF4:"+System.currentTimeMillis());
 		
 		render(talker, currentTalker, talkerDisease, recommendedTopics);
 	}

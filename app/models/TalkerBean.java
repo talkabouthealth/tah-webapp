@@ -23,6 +23,7 @@ import models.actions.Action;
 
 import org.bson.types.ObjectId;
 
+import play.Logger;
 import play.data.validation.Email;
 import play.data.validation.Match;
 import play.data.validation.Required;
@@ -313,11 +314,19 @@ public class TalkerBean implements Serializable {
 		
 		setInsuranceAccepted(getStringList(talkerDBObject, "insurance_accept"));
 		
+		//FIXME try this
+//		Logger.info("Ta1:"+System.currentTimeMillis());
+		
 		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
+//		Logger.info("Ta2:"+System.currentTimeMillis());
 		parseFollowing((Collection<DBRef>)talkerDBObject.get("following"));
+//		Logger.info("Ta3:"+System.currentTimeMillis());
 		setFollowingConvosList(getStringList(talkerDBObject, "following_convos"));
+//		Logger.info("Ta4:"+System.currentTimeMillis());
 		parseFollowingTopics((Collection<DBRef>)talkerDBObject.get("following_topics"));
+//		Logger.info("Ta5:"+System.currentTimeMillis());
 		parseTopicsInfo((Collection<DBObject>)talkerDBObject.get("topics_info"));
+//		Logger.info("Ta6:"+System.currentTimeMillis());
 		setAnswerList(CommentsDAO.getTalkerAnswers(getId(), null));
 	}
 	
@@ -331,9 +340,7 @@ public class TalkerBean implements Serializable {
 				thankYouBean.setNote((String)thankYouDBObject.get("note"));
 				thankYouBean.setTo(getId());
 				
-				DBObject fromTalkerDBObject = ((DBRef)thankYouDBObject.get("from")).fetch();
-				TalkerBean fromTalker = new TalkerBean();
-				fromTalker.parseBasicFromDB(fromTalkerDBObject);
+				TalkerBean fromTalker = TalkerDAO.parseTalker(thankYouDBObject, "from");
 				thankYouBean.setFrom(fromTalker.getId());
 				thankYouBean.setFromTalker(fromTalker);
 				
@@ -350,16 +357,11 @@ public class TalkerBean implements Serializable {
 		followingList = new ArrayList<TalkerBean>();
 		if (followingDBList != null) {
 			for (DBRef followingDBRef : followingDBList) {
-				DBObject followingDBOBject = followingDBRef.fetch();
+				TalkerBean followingTalker = TalkerDAO.parseTalker(followingDBRef);
 				
-				boolean isDeactivated = getBoolean(followingDBOBject, "deactivated");
-				boolean isSuspended = getBoolean(followingDBOBject, "suspended");
-				if (isDeactivated || isSuspended) {
+				if (followingTalker.isDeactivated() || followingTalker.isSuspended()) {
 					continue;
 				}
-				
-				TalkerBean followingTalker = new TalkerBean();
-				followingTalker.parseBasicFromDB(followingDBOBject);
 				followingList.add(followingTalker);
 			}
 		}
@@ -369,9 +371,11 @@ public class TalkerBean implements Serializable {
 		followingTopicsList = new LinkedHashSet<TopicBean>();
 		if (followingTopicsDBList != null) {
 			for (DBRef topicDBRef : followingTopicsDBList) {
-				TopicBean topic = new TopicBean();
-				if (topicDBRef.fetch() != null) {
-					topic.parseFromDB(topicDBRef.fetch());
+				//FIXME: check it
+				DBObject topicDBObject = topicDBRef.fetch();
+				if (topicDBObject != null) {
+					TopicBean topic = new TopicBean();
+					topic.parseFromDB(topicDBObject);
 					if (!topic.isDeleted()) {
 						followingTopicsList.add(topic);
 					}

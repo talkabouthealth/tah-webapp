@@ -60,7 +60,7 @@ public class Home extends Controller {
     public static void index() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 
-    	Logger.info("---"+talker.getUserName()+"---");
+    	Logger.info("Home: ---"+talker.getUserName()+"---");
     	List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
 
     	long start = System.currentTimeMillis();

@@ -55,8 +55,10 @@ public class ViewDispatcher extends Controller {
 	}
 	
 	public static void view(String name) throws Throwable {
+		Logger.info("V1:"+System.currentTimeMillis());
 		//first try user
 		TalkerBean talker = TalkerDAO.getByURLName(name);
+		Logger.info("V2:"+System.currentTimeMillis());
 		if (talker != null) {
 			showTalker(talker);
 			return;
@@ -114,15 +116,21 @@ public class ViewDispatcher extends Controller {
 	 * @param talker
 	 */
 	private static void showTalker(TalkerBean talker) throws Throwable {
+		Logger.info("====== View ("+talker.getUserName()+") =======");
+		
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		
 		if (talker.isSuspended()) {
 			if (currentTalker != null) {
+				//we need followers for displaying user's info
 				currentTalker.setFollowerList(TalkerDAO.loadFollowers(currentTalker.getId()));
 			}
 			render("PublicProfile/suspended.html", currentTalker);
 			return;
 		}
+		
+		Logger.info("--"+talker.getUserName());
+		Logger.info("V3:"+System.currentTimeMillis());
 		
 		//Health info
 		//For now we have only one disease - Breast Cancer
@@ -133,16 +141,17 @@ public class ViewDispatcher extends Controller {
 			talkerDisease.setName(diseaseName);
 		}
 		
+		Logger.info("V4:"+System.currentTimeMillis());
+		
 		//Load all healthItems for this disease
-		Map<String, HealthItemBean> healthItemsMap = new HashMap<String, HealthItemBean>();
-		for (String itemName : new String[] {"symptoms", "tests", 
-				"procedures", "treatments", "sideeffects"}) {
-			HealthItemBean healthItem = HealthItemDAO.getHealthItemByName(itemName, diseaseName);
-			healthItemsMap.put(itemName, healthItem);
-		}
+		Map<String, HealthItemBean> healthItemsMap = TalkerLogic.loadHealthItemsFromCache(diseaseName);
+		
+		Logger.info("V5:"+System.currentTimeMillis());
 		
 		int numOfStartedConvos = ConversationDAO.getNumOfStartedConvos(talker.getId());
 		TalkerLogic.preloadTalkerInfo(talker);
+		
+		Logger.info("V6:"+System.currentTimeMillis());
 		
 		boolean notProvidedInfo = false;
 		boolean notViewableInfo = false;
@@ -169,11 +178,17 @@ public class ViewDispatcher extends Controller {
 			}
 		}
 		
+		Logger.info("V7:"+System.currentTimeMillis());
+		
 		Set<Action> talkerFeed = FeedsLogic.getTalkerFeed(talker, null);
+		
+		Logger.info("V8:"+System.currentTimeMillis());
 		
 		List<Action> answersFeed = new ArrayList<Action>();
 		int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeed, false);
 		int numOfAnswers = answersFeed.size();
+		
+		Logger.info("V9:"+System.currentTimeMillis());
 		
 		render("PublicProfile/newview.html", talker, disease, talkerDisease, healthItemsMap, 
 				currentTalker, talkerFeed,
@@ -217,7 +232,7 @@ public class ViewDispatcher extends Controller {
 		//load latest activities for convos with this topic
 		Set<Action> activities = FeedsLogic.getTopicFeed(topic, null);
 		
-		//- "Popular Conversations" - ordered by page views
+		//- "Popular Conversations" - topic conversations ordered by page views
 		List<ConversationBean> popularConvos = 
 			new ArrayList<ConversationBean>(topic.getConversations());
 		Collections.sort(popularConvos, new Comparator<ConversationBean>() {
@@ -231,7 +246,6 @@ public class ViewDispatcher extends Controller {
 		//cannot contain conversations in the top 10 of "Popular Conversations" tab
 		List<ConversationBean> trendingConvos = new ArrayList<ConversationBean>();
 		
-		//for FB like button
 		render("Topics/viewTopic.html", talker, topic, activities, popularConvos, trendingConvos);
 	}
 

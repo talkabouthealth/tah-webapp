@@ -88,7 +88,7 @@ public class Explore extends Controller {
     	
 //    	CommonUtil.test();
     	//FIXME
-    	
+    	/*
     	long start = System.currentTimeMillis();
     	List<TalkerBean> ts = TalkerDAO.loadAllTalkers(true);
     	Logger.info("All talkers: "+(System.currentTimeMillis() - start));
@@ -96,7 +96,7 @@ public class Explore extends Controller {
     	start = System.currentTimeMillis();
     	ts = TalkerDAO.loadAllTalkers2(true);
     	Logger.info("All talkers22: "+(System.currentTimeMillis() - start));
-    	
+    	*/
 //    	for (TalkerBean t : ts) {
 //    		DBRef r = DBUtil.createRef(TalkerDAO.TALKERS_COLLECTION, t.getId());
 //    		long s = System.currentTimeMillis();
@@ -111,6 +111,9 @@ public class Explore extends Controller {
     }
     
     public static void browseTopics() {
+    	Logger.info("====== Browse Topics =======");
+    	Logger.info("BT1:"+System.currentTimeMillis());
+    	
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	if (talker != null) {
     		TalkerLogic.preloadTalkerInfo(talker);
@@ -118,19 +121,29 @@ public class Explore extends Controller {
     	
     	List<TopicBean> popularTopics = TopicDAO.getPopularTopics();
     	
+    	Logger.info("BT2:"+System.currentTimeMillis());
+    	
     	Set<TopicBean> topicsTree = TopicLogic.getAllTopicsTree();
+    	
+    	Logger.info("BT3:"+System.currentTimeMillis());
     	render(topicsTree, talker, popularTopics);
     }
     
     public static void browseMembers(String action) throws Throwable {
+    	Logger.info("====== Browse Members =======");
+    	Logger.info("BM1:"+System.currentTimeMillis());
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 
 		//Active talkers on this day
-		Calendar twoWeeksBeforeNow = Calendar.getInstance();
-		twoWeeksBeforeNow.add(Calendar.DAY_OF_MONTH, -14);
-		Set<TalkerBean> activeTalkers = ApplicationDAO.getActiveTalkers(twoWeeksBeforeNow.getTime());
+		Calendar oneWeekBeforeNow = Calendar.getInstance();
+		oneWeekBeforeNow.add(Calendar.DAY_OF_MONTH, -7);
+		Set<TalkerBean> activeTalkers = ApplicationDAO.getActiveTalkers(oneWeekBeforeNow.getTime());
+		
+		Logger.info("BM2:"+System.currentTimeMillis());
 		
 		Set<TalkerBean> newTalkers = ApplicationDAO.getNewTalkers();
+		
+		Logger.info("BM3:"+System.currentTimeMillis());
 		
 		//check if search is performed now
 		String query = params.get("query");
@@ -145,6 +158,8 @@ public class Explore extends Controller {
 				Logger.error(e, "Talker search on Browser Members page.");
 			}
 		}
+		
+		Logger.info("BM4:"+System.currentTimeMillis());
 		
 		//Move members to particular tabs based on member's connection
 		Map<String, Set<TalkerBean>> members = new LinkedHashMap<String, Set<TalkerBean>>();
@@ -173,6 +188,8 @@ public class Explore extends Controller {
 				}
 			}
 		}
+		
+		Logger.info("BM5:"+System.currentTimeMillis());
 		
 		//default tab is 'active'
 		if (action == null || action.equals("browsemembers")) {

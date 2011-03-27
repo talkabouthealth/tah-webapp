@@ -243,9 +243,16 @@ public class TopicDAO {
 	public static Set<TopicBean> getParentTopics(String topicId) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
+		topicsColl.ensureIndex(new BasicDBObject("children", 1));
+		
+		DBObject fields = BasicDBObjectBuilder.start()
+			.add("title", 1)
+			.add("main_url", 1)
+			.get();
+		
 		DBRef topicDBRef = createRef(TOPICS_COLLECTION, topicId);
 		DBObject query = new BasicDBObject("children", topicDBRef);
-		List<DBObject> topicsDBList = topicsColl.find(query).toArray();
+		List<DBObject> topicsDBList = topicsColl.find(query, fields).toArray();
 		
 		Set<TopicBean> parentTopics = new HashSet<TopicBean>();
 		for (DBObject topicDBObject : topicsDBList) {
@@ -309,7 +316,7 @@ public class TopicDAO {
 	 * Loads the most popular 20 topics, based on number of questions.
 	 */
 	public static List<TopicBean> getPopularTopics() {
-		//temp, fix it with cache
+		//TODO: temp, fix it with cache
 		return new ArrayList<TopicBean>();
 		
 //		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);

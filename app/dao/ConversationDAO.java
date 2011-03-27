@@ -377,12 +377,23 @@ public class ConversationDAO {
 			.add("uid", talkerRef)
 			.add("deleted", new BasicDBObject("$ne", true))
 			.get();
-		int numOfStartedConvos = convosColl.find(query).size();
+		int numOfStartedConvos = convosColl.find(query).count();
 		return numOfStartedConvos;
 	}
 	
 	public static List<ConversationBean> getStartedConvos(String talkerId) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		//FIXME check this
+		convosColl.ensureIndex(new BasicDBObject("cr_date", 1));
+		
+		DBObject fields = BasicDBObjectBuilder.start()
+			.add("summary", 0)
+			.add("sum_authors", 0)
+			.add("related_convos", 0)
+			.add("followup_convos", 0)
+			.add("messages", 0)
+			.get();
 		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		DBObject query = BasicDBObjectBuilder.start()
@@ -390,7 +401,7 @@ public class ConversationDAO {
 			.add("deleted", new BasicDBObject("$ne", true))
 			.get();
 		List<DBObject> convosDBList = 
-			convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
+			convosColl.find(query, fields).sort(new BasicDBObject("cr_date", -1)).toArray();
 		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
@@ -495,13 +506,15 @@ public class ConversationDAO {
 	public static Set<ConversationBean> loadConversations(String talkerId, ActionType type) {
 		DBCollection activitiesColl = getCollection(ActionDAO.ACTIVITIES_COLLECTION);
 		
+		//FIXME: check this
+		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("uid", talkerRef)
 			.add("type", type.toString())
 			.get();
 		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+			activitiesColl.find(query, new BasicDBObject("convoId", 1)).toArray();
 		
 		//prepare list of matching conversations
 		List<ObjectId> convoIds = new ArrayList<ObjectId>();
@@ -519,8 +532,20 @@ public class ConversationDAO {
 	 */
 	public static Set<ConversationBean> getConvosByIds(List<ObjectId> convoIds) {
 		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
+		
+		convosColl.ensureIndex(new BasicDBObject("cr_date", -1));
+		
+		//FIXME
+		DBObject fields = BasicDBObjectBuilder.start()
+			.add("summary", 0)
+			.add("sum_authors", 0)
+			.add("related_convos", 0)
+			.add("followup_convos", 0)
+			.add("messages", 0)
+			.get();
+		
 		DBObject query = new BasicDBObject("_id", new BasicDBObject("$in", convoIds));
-		List<DBObject> convosDBList = convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
+		List<DBObject> convosDBList = convosColl.find(query, fields).sort(new BasicDBObject("cr_date", -1)).toArray();
 		
 		Set<ConversationBean> convosSet = new LinkedHashSet<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {

@@ -389,11 +389,11 @@ public class ActionDAO {
 		
 		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getId());
 		DBObject query = new BasicDBObject("convoId", convoRef);
-		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		DBCursor cursor = 
+			activitiesColl.find(query, new BasicDBObject("time", 1)).sort(new BasicDBObject("time", -1)).limit(1);
 		
-		if (activitiesDBList.size() > 0) {
-			Date latestActivityTime = (Date)activitiesDBList.get(0).get("time");
+		if (cursor.hasNext()) {
+			Date latestActivityTime = (Date)cursor.next().get("time");
 			return latestActivityTime;
 		}
 		else {

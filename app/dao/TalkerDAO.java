@@ -205,10 +205,16 @@ public class TalkerDAO {
 	public static TalkerBean getByURLName(String urlName) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
+		//FIXME
+		talkersColl.ensureIndex(new BasicDBObject("uname", 1));
+		talkersColl.ensureIndex(new BasicDBObject("anon_name", 1));
+		
 		DBObject usernameQuery = new BasicDBObject("uname", urlName);
 		DBObject anonymousQuery = new BasicDBObject("anon_name", urlName);
 		DBObject query = new BasicDBObject("$or", Arrays.asList(usernameQuery, anonymousQuery));
 		DBObject talkerDBObject = talkersColl.findOne(query);
+		
+		Logger.info("ThX:"+System.currentTimeMillis());
 		
 		TalkerBean talker = null;
 		if (talkerDBObject != null) {
@@ -307,12 +313,27 @@ public class TalkerDAO {
 		DBObject query = new BasicDBObject("$or", 
 				Arrays.asList(usernameQuery, emailQuery, notPrimaryEmailQuery, deactivatedUsernameQuery)
 			);
-		DBObject talkerDBObject = talkersColl.findOne(query);
+		//FIXME
+		DBObject fields = BasicDBObjectBuilder.start()
+			.add("following_topics", 0)
+			.add("following_convos", 0)
+			.add("img", 0)
+			.add("following", 0)
+			.add("topics_info", 0)
+			.add("thankyous", 0)
+			.add("hidden_helps", 0)
+			.add("ch_ages", 0)
+			.add("keywords", 0)
+			.add("ethnicities", 0)
+			.add("languages", 0)
+			.add("insurance_accept", 0)
+			.get();
+		DBObject talkerDBObject = talkersColl.findOne(query, fields);
 		
 		TalkerBean talker = null;
 		if (talkerDBObject != null) {
 			talker = new TalkerBean();
-			talker.parseFromDB(talkerDBObject);
+			talker.parseBasicFromDB(talkerDBObject);
 		}
 		return talker;
 	}

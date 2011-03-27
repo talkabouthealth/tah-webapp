@@ -114,6 +114,8 @@ public class CommentsDAO {
 	 */
 	public static List<CommentBean> loadProfileComments(String talkerId) {
 		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
+
+		commentsColl.ensureIndex(new BasicDBObject("time", 1));
 		
 		DBRef profileTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		DBObject query = BasicDBObjectBuilder.start()
@@ -429,7 +431,8 @@ public class CommentsDAO {
 		for (DBObject commentDBObject : commentsList) {
 			CommentBean commentBean = new CommentBean();
 			commentBean.parseFromDB(commentDBObject);
-			//TODO: check profile talker
+			
+			//TODO: check profile talker and fix for NPE
 			Action thoughtAction = new PersonalProfileCommentAction(
 					talker, talker, commentBean, null, ActionType.PERSONAL_PROFILE_COMMENT);
 			talkerMentions.add(thoughtAction);
