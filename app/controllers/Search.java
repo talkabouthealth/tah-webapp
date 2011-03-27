@@ -144,9 +144,13 @@ public class Search extends Controller {
 	}
 	
 	public static void allSearch(String query) throws Exception {
-		List<TopicBean> topicResults = topicsSearch(query);
-		List<Action> convoResults = 
-			ConversationLogic.convosToFeed(SearchUtil.searchConvo(query, 5));
+		List<TopicBean> topicResults = null;
+		List<Action> convoResults = null;
+		if (query != null) {
+			topicResults = topicsSearch(query);
+			convoResults = 
+				ConversationLogic.convosToFeed(SearchUtil.searchConvo(query, 5));
+		}
 		
 		render(topicResults, convoResults);
 	}

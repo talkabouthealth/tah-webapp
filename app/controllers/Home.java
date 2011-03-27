@@ -50,6 +50,10 @@ import dao.TopicDAO;
 @With( { Secure.class, LoggerController.class } )
 public class Home extends Controller {
 
+//	public static void index() {
+//		renderText("hello!");
+//	}
+	
 	/**
 	 * Home page
 	 */

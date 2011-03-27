@@ -7,7 +7,7 @@
           </div>
           <div class="askquestion">
             <div class="askquestionbox">
-                #{if _page.equals("openQuestions")}
+                #{if _page.equals("profileRight")}
                 <input id="newConvoTargetId" type="hidden" value="${_target.id}" />
                 <b>Your question to ${_target.name}:</b>
                 #{/if}
@@ -81,7 +81,7 @@
       </div>
       <!--popboxWraper-->
       <div id="newQuestionConfirm" class="popboxWraper" style="display: none;">
-        #{if _page.equals("openQuestions")}
+        #{if _page.equals("profileRight")}
         <div class="popbox3a">
         #{/if}
         #{else}
@@ -92,7 +92,7 @@
           </div>
           <div class="iwant1">
           Thank you for sharing your question.
-          #{if _page.equals("openQuestions")}
+          #{if _page.equals("profileRight")}
           We will notify ${_target.name} right away.
           #{/if}
           </div>

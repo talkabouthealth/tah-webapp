@@ -123,7 +123,7 @@ function saveConvo(page) {
 		return false;
 	}
 	
-	if(page === "openQuestions") {
+	if(page === "profileRight") {
 		parentConvoId = document.getElementById("newConvoTargetId").value;
 	}
 	

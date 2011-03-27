@@ -73,7 +73,7 @@ public class Conversations extends Controller {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
     	// if passed a targeted question from profiles, parentConvoId contains talkerId of target user
-		if(fromPage.equals("openQuestions")) {
+		if(fromPage.equals("profileRight")) {
 			targetId=parentConvoId;
 			parentConvoId="";
 		}		

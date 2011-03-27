@@ -655,6 +655,7 @@ public class TalkerLogic {
 		}
 	}
 	
+	//TODO: serializable?
 	public static List<TalkerBean> loadAllTalkersFromCache() {
 		List<TalkerBean> allTalkers = (List<TalkerBean>) Cache.get("talkersList"); 
 		if (allTalkers == null) {
