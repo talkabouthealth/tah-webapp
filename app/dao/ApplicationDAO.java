@@ -86,7 +86,7 @@ public class ApplicationDAO {
 			talker.setId(talkerDBRef.getId().toString());
 			if (!activeTalkers.contains(talker)) {
 				talker = TalkerDAO.parseTalker(talkerDBRef);
-				if (!talker.isSuspended()) {
+				if (!talker.isSuspended() && !talker.isDeactivated()) {
 					activeTalkers.add(talker);
 				}
 			}
