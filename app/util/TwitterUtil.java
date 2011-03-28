@@ -31,7 +31,6 @@ import org.xml.sax.SAXException;
 
 import com.google.gson.GsonBuilder;
 
-import fr.zenexity.json.JSON;
 import groovy.time.BaseDuration.From;
 
 import oauth.signpost.OAuthConsumer;

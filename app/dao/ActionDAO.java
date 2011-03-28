@@ -273,12 +273,6 @@ public class ActionDAO {
 	private static List<Action> loadPreloadActions(DBObject query) {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
-//		DBObject fields = BasicDBObjectBuilder.start()
-//			.add("type", 1)
-//			.add("convoId", 1)
-//			.get();
-		
-		//FIXME
 		activitiesColl.ensureIndex(new BasicDBObject("time", 1));
 		
 		DBCursor dbCursor = 

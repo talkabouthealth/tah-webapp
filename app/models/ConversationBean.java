@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import logic.TalkerLogic;
+
 import play.Logger;
 
 import util.CommonUtil;
@@ -138,7 +140,7 @@ public class ConversationBean {
     	//topics(tags)
     	parseTopics((Collection<DBRef>)convoDBObject.get("topics"));  
     	//author talker
-    	setTalker(TalkerDAO.parseTalker(convoDBObject, "uid"));
+    	setTalker(TalkerLogic.loadTalkerFromCache(convoDBObject, "uid"));
 	}
 	
 	public void parseFromDB(DBObject convoDBObject) {

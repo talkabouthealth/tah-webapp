@@ -174,7 +174,19 @@ public class ConversationDAO {
 	public static ConversationBean getByIdBasic(String convoId) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
-		//FIXME
+		DBObject fields = getBasicConversationFields();
+		
+		DBObject query = new BasicDBObject("_id", new ObjectId(convoId));
+		DBObject convoDBObject = convosColl.findOne(query, fields);
+		
+		return parseConvoFromDBObject(convoDBObject, true);
+	}
+
+	/**
+	 * TODO: check it
+	 * @return
+	 */
+	public static DBObject getBasicConversationFields() {
 		DBObject fields = BasicDBObjectBuilder.start()
 			.add("summary", 0)
 			.add("sum_authors", 0)
@@ -182,11 +194,7 @@ public class ConversationDAO {
 			.add("followup_convos", 0)
 			.add("messages", 0)
 			.get();
-		
-		DBObject query = new BasicDBObject("_id", new ObjectId(convoId));
-		DBObject convoDBObject = convosColl.findOne(query, fields);
-		
-		return parseConvoFromDBObject(convoDBObject, true);
+		return fields;
 	}
 
 	public static ConversationBean getByTid(Integer tid) {
@@ -292,14 +300,7 @@ public class ConversationDAO {
 		
 		convosColl.ensureIndex(new BasicDBObject("views", -1));
 		
-		//FIXME
-		DBObject fields = BasicDBObjectBuilder.start()
-			.add("summary", 0)
-			.add("sum_authors", 0)
-			.add("related_convos", 0)
-			.add("followup_convos", 0)
-			.add("messages", 0)
-			.get();
+		DBObject fields = getBasicConversationFields();
 		
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("deleted", new BasicDBObject("$ne", true))
@@ -384,16 +385,9 @@ public class ConversationDAO {
 	public static List<ConversationBean> getStartedConvos(String talkerId) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
-		//FIXME check this
 		convosColl.ensureIndex(new BasicDBObject("cr_date", 1));
 		
-		DBObject fields = BasicDBObjectBuilder.start()
-			.add("summary", 0)
-			.add("sum_authors", 0)
-			.add("related_convos", 0)
-			.add("followup_convos", 0)
-			.add("messages", 0)
-			.get();
+		DBObject fields = getBasicConversationFields();
 		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		DBObject query = BasicDBObjectBuilder.start()
@@ -506,8 +500,7 @@ public class ConversationDAO {
 	public static Set<ConversationBean> loadConversations(String talkerId, ActionType type) {
 		DBCollection activitiesColl = getCollection(ActionDAO.ACTIVITIES_COLLECTION);
 		
-		//FIXME: check this
-		
+		//TODO: check speed
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("uid", talkerRef)
@@ -535,14 +528,7 @@ public class ConversationDAO {
 		
 		convosColl.ensureIndex(new BasicDBObject("cr_date", -1));
 		
-		//FIXME
-		DBObject fields = BasicDBObjectBuilder.start()
-			.add("summary", 0)
-			.add("sum_authors", 0)
-			.add("related_convos", 0)
-			.add("followup_convos", 0)
-			.add("messages", 0)
-			.get();
+		DBObject fields = getBasicConversationFields();
 		
 		DBObject query = new BasicDBObject("_id", new BasicDBObject("$in", convoIds));
 		List<DBObject> convosDBList = convosColl.find(query, fields).sort(new BasicDBObject("cr_date", -1)).toArray();

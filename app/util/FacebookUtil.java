@@ -3,6 +3,7 @@ package util;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,8 +55,10 @@ public class FacebookUtil {
 		//TODO: later - implement sinceId use?
 		List<ServicePost> postsList = new ArrayList<ServicePost>();
 		try {
+			//FIXME: bug with URL
 			HttpResponse res = WS.url(
-					"https://graph.facebook.com/me/posts?access_token=%s&limit=500", fbAccount.getToken()).get();
+					"https://graph.facebook.com/me/posts?access_token=%s&limit=500", 
+					URLEncoder.encode(fbAccount.getToken(), "UTF-8")).get();
 			
 			BasicDBObject data = (BasicDBObject)JSON.parse(res.getString());
 			BasicDBList dataList = (BasicDBList)data.get("data");

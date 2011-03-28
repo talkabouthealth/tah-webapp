@@ -129,7 +129,6 @@ public class ViewDispatcher extends Controller {
 			return;
 		}
 		
-		Logger.info("--"+talker.getUserName());
 		Logger.info("V3:"+System.currentTimeMillis());
 		
 		//Health info

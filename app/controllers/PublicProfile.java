@@ -131,7 +131,7 @@ public class PublicProfile extends Controller {
 	public static void conversations(String userName) {
 		Logger.info("====== Questions ("+userName+") =======");
 		Logger.info("QU0:"+System.currentTimeMillis());
-		//TODO: can we improver this? very usual
+		//TODO: can we improver this? very common
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByURLName(userName);
 		notFoundIfNull(talker);

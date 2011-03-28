@@ -22,6 +22,7 @@ import dao.TalkerDAO;
 import dao.ConversationDAO;
 import dao.TopicDAO;
 
+import logic.TalkerLogic;
 import models.CommentBean;
 import models.PrivacySetting;
 import models.TalkerBean;
@@ -79,7 +80,7 @@ public abstract class AbstractAction implements Action {
 	
 	public AbstractAction(DBObject dbObject) {
 		setId(dbObject.get("_id").toString());
-		setTalker(TalkerDAO.parseTalker(dbObject, "uid"));
+		setTalker(TalkerLogic.loadTalkerFromCache(dbObject, "uid"));
 		
 		setTime((Date)dbObject.get("time"));
 		setType(ActionType.valueOf((String)dbObject.get("type")));
@@ -162,7 +163,7 @@ public abstract class AbstractAction implements Action {
 		String convoId = ((DBRef)dbObject.get("convoId")).getId().toString();
 		
 		ConversationBean convo = ConversationDAO.getByIdBasic(convoId);
-		//FIXME: move this to the convo field?
+		//TODO: move this to the convo field?
 		convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
     	return convo;
 	}
@@ -184,7 +185,7 @@ public abstract class AbstractAction implements Action {
 		dbObject.put("otherTalker", talkerRef);
 	}
 	protected TalkerBean parseOtherTalker(DBObject dbObject) {
-		TalkerBean talker = TalkerDAO.parseTalker(dbObject, "otherTalker");
+		TalkerBean talker = TalkerLogic.loadTalkerFromCache(dbObject, "otherTalker");
 		return talker;
 	}
 	

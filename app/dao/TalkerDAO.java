@@ -205,7 +205,6 @@ public class TalkerDAO {
 	public static TalkerBean getByURLName(String urlName) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
-		//FIXME
 		talkersColl.ensureIndex(new BasicDBObject("uname", 1));
 		talkersColl.ensureIndex(new BasicDBObject("anon_name", 1));
 		
@@ -213,8 +212,6 @@ public class TalkerDAO {
 		DBObject anonymousQuery = new BasicDBObject("anon_name", urlName);
 		DBObject query = new BasicDBObject("$or", Arrays.asList(usernameQuery, anonymousQuery));
 		DBObject talkerDBObject = talkersColl.findOne(query);
-		
-		Logger.info("ThX:"+System.currentTimeMillis());
 		
 		TalkerBean talker = null;
 		if (talkerDBObject != null) {
@@ -313,21 +310,8 @@ public class TalkerDAO {
 		DBObject query = new BasicDBObject("$or", 
 				Arrays.asList(usernameQuery, emailQuery, notPrimaryEmailQuery, deactivatedUsernameQuery)
 			);
-		//FIXME
-		DBObject fields = BasicDBObjectBuilder.start()
-			.add("following_topics", 0)
-			.add("following_convos", 0)
-			.add("img", 0)
-			.add("following", 0)
-			.add("topics_info", 0)
-			.add("thankyous", 0)
-			.add("hidden_helps", 0)
-			.add("ch_ages", 0)
-			.add("keywords", 0)
-			.add("ethnicities", 0)
-			.add("languages", 0)
-			.add("insurance_accept", 0)
-			.get();
+
+		DBObject fields = getBasicTalkerFields();
 		DBObject talkerDBObject = talkersColl.findOne(query, fields);
 		
 		TalkerBean talker = null;
@@ -391,25 +375,15 @@ public class TalkerDAO {
 	}
 	
 	public static TalkerBean parseTalker(DBRef talkerRef) {
+		return parseTalker(talkerRef.getId().toString());
+	}
+	
+	public static TalkerBean parseTalker(String talkerId) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
-		//FIXME
-		DBObject fields = BasicDBObjectBuilder.start()
-			.add("following_topics", 0)
-			.add("following_convos", 0)
-			.add("img", 0)
-			.add("following", 0)
-			.add("topics_info", 0)
-			.add("thankyous", 0)
-			.add("hidden_helps", 0)
-			.add("ch_ages", 0)
-			.add("keywords", 0)
-			.add("ethnicities", 0)
-			.add("languages", 0)
-			.add("insurance_accept", 0)
-			.get();
+		DBObject fields = getBasicTalkerFields();
 		
-		DBObject query = new BasicDBObject("_id", talkerRef.getId());
+		DBObject query = new BasicDBObject("_id", new ObjectId(talkerId));
 		DBObject talkerDBObject = talkersColl.findOne(query, fields);
 		
 		if (talkerDBObject == null) {
@@ -421,20 +395,6 @@ public class TalkerDAO {
 			return talker;
 		}
 	}
-	
-	/*
-	public static TalkerBean parseTalker(DBRef talkerRef) {
-		long s = System.currentTimeMillis();
-		DBObject talkerDBObject = talkerRef.fetch();
-		String uname = (String)talkerDBObject.get("uname");
-		//FIXME
-//		System.out.println("----Res: "+(System.currentTimeMillis() - s)+" ("+uname+")");
-		TalkerBean talker = new TalkerBean();
-		talker.parseBasicFromDB(talkerDBObject);
-		return talker;
-	}
-	*/
-	
 	
 	// ---------------------- Other methods -----------------------
 	
@@ -500,43 +460,15 @@ public class TalkerDAO {
 
 		talkersColl.ensureIndex(new BasicDBObject("uname", 1));
 		
-		//FIXME
-		//.sort(new BasicDBObject("uname", 1))
-		
-//		DBObject fields = BasicDBObjectBuilder.start()
-//			.add("following_topics", 0)
-//			.add("following_convos", 0)
-//			.add("img", 0)
-//			.add("following", 0)
-//			.add("privacy_settings", 0)
-//			.get();
-		
-//		long start = System.currentTimeMillis();
 		List<DBObject> talkersDBObjectList = null;
 		if (basicInfo) {
-			DBObject fields = BasicDBObjectBuilder.start()
-				.add("following_topics", 0)
-				.add("following_convos", 0)
-				.add("img", 0)
-				.add("following", 0)
-				.add("topics_info", 0)
-				.add("thankyous", 0)
-				.add("hidden_helps", 0)
-				.add("ch_ages", 0)
-				.add("keywords", 0)
-				.add("ethnicities", 0)
-				.add("languages", 0)
-				.add("insurance_accept", 0)
-				.get();
+			DBObject fields = getBasicTalkerFields();
 			talkersDBObjectList = talkersColl.find(null, fields).sort(new BasicDBObject("uname", 1)).toArray();
 		}
 		else {
 			talkersDBObjectList = talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
 		}
 		
-//		Logger.info("All from db: "+(System.currentTimeMillis() - start));
-		
-//		start = System.currentTimeMillis();
 		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
 		for (DBObject talkerDBObject : talkersDBObjectList) {
 			TalkerBean talker = new TalkerBean();
@@ -548,7 +480,6 @@ public class TalkerDAO {
 			}
 			talkerList.add(talker);
 		}
-//		Logger.info("Parsing: "+(System.currentTimeMillis() - start));
 		
 		return talkerList;
 	}
@@ -556,32 +487,7 @@ public class TalkerDAO {
 		return loadAllTalkers(false);
 	}
 
-	
-	public static List<TalkerBean> loadAllTalkers2(boolean basicInfo) {
-		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
-		long start = System.currentTimeMillis();
-		DBCursor talkersDBObjectList = 
-			talkersColl.find().sort(new BasicDBObject("uname", 1));
-		Logger.info("All from db22: "+(System.currentTimeMillis() - start));
-		
-		start = System.currentTimeMillis();
-		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
-		for (DBObject talkerDBObject : talkersDBObjectList) {
-			TalkerBean talker = new TalkerBean();
-			if (basicInfo) {
-				talker.parseBasicFromDB(talkerDBObject);
-			}
-			else {
-				talker.parseFromDB(talkerDBObject);
-			}
-			talkerList.add(talker);
-		}
-		Logger.info("Parsing22: "+(System.currentTimeMillis() - start));
-		
-		return talkerList;
-	}
-	
 	// --------------------- Other ---------------------------
 	
 	public static List<TalkerBean> loadTalkersForDashboard() {
@@ -753,6 +659,25 @@ public class TalkerDAO {
 		
 //		TalkerBean talker = TalkerDAO.getByVerifyCode("e7b279a1-7e41-4be6-8e3e-2bbb8821e57d");
 //		System.out.println(talker.getUserName());
+	}
+
+	//TODO: check, update name
+	public static DBObject getBasicTalkerFields() {
+		DBObject fields = BasicDBObjectBuilder.start()
+			.add("following_topics", 0)
+			.add("following_convos", 0)
+			.add("img", 0)
+			.add("following", 0)
+			.add("topics_info", 0)
+			.add("thankyous", 0)
+			.add("hidden_helps", 0)
+			.add("ch_ages", 0)
+			.add("keywords", 0)
+			.add("ethnicities", 0)
+			.add("languages", 0)
+			.add("insurance_accept", 0)
+			.get();
+		return fields;
 	}
 }
 

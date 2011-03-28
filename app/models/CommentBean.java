@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import logic.TalkerLogic;
+
 import sun.security.action.GetBooleanAction;
 
 import com.mongodb.BasicDBObjectBuilder;
@@ -131,7 +133,7 @@ public class CommentBean extends MessageBean {
 		// Add root-id character
 		setRootId((String)commentDBObject.get("rootid"));
 		
-		setFromTalker(TalkerDAO.parseTalker(commentDBObject, "from"));
+		setFromTalker(TalkerLogic.loadTalkerFromCache(commentDBObject, "from"));
 		DBRef profileTalkeRef = (DBRef)commentDBObject.get("profile");
 		if (profileTalkeRef != null) {
 			setProfileTalkerId(profileTalkeRef.getId().toString());

@@ -146,6 +146,9 @@ public class TopicDAO {
 	public static TopicBean getOrRestoreByTitle(String title) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
+		//TODO: check this
+		topicsColl.ensureIndex(new BasicDBObject("title", 1));
+		
 		DBObject query = new BasicDBObject("title", title);
 		DBObject topicDBObject = topicsColl.findOne(query);
 		if (topicDBObject == null) {
@@ -172,7 +175,6 @@ public class TopicDAO {
 	public static Set<TopicBean> loadAllTopics(boolean onlyBasicInfo) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
-		//FIXME
 		topicsColl.ensureIndex(new BasicDBObject("views", 1));
 		
 		DBObject query = new BasicDBObject("deleted", new BasicDBObject("$ne", true));

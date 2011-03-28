@@ -65,7 +65,6 @@ public class ApplicationDAO {
 	public static Set<TalkerBean> getActiveTalkers(Date afterTime) {
 		DBCollection loginsColl = getCollection(LOGIN_HISTORY_COLLECTION);
 		
-		//FIXME check it
 		loginsColl.ensureIndex(new BasicDBObject("log_time", 1));
 		
 		if (afterTime == null) {
@@ -109,21 +108,7 @@ public class ApplicationDAO {
 			.add("timestamp", new BasicDBObject("$gt", twoWeeksBeforeNow.getTime()))
 			.get();
 		
-		//FIXME
-		DBObject fields = BasicDBObjectBuilder.start()
-			.add("following_topics", 0)
-			.add("following_convos", 0)
-			.add("img", 0)
-			.add("following", 0)
-			.add("topics_info", 0)
-			.add("thankyous", 0)
-			.add("hidden_helps", 0)
-			.add("ch_ages", 0)
-			.add("keywords", 0)
-			.add("ethnicities", 0)
-			.add("languages", 0)
-			.add("insurance_accept", 0)
-			.get();
+		DBObject fields = TalkerDAO.getBasicTalkerFields();
 		
 		List<DBObject> talkersDBList = 
 			loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).toArray();

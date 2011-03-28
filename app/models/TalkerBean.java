@@ -314,7 +314,7 @@ public class TalkerBean implements Serializable {
 		
 		setInsuranceAccepted(getStringList(talkerDBObject, "insurance_accept"));
 		
-		//FIXME try this
+		//TODO: try to analyze it more
 //		Logger.info("Ta1:"+System.currentTimeMillis());
 		
 		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
@@ -371,7 +371,7 @@ public class TalkerBean implements Serializable {
 		followingTopicsList = new LinkedHashSet<TopicBean>();
 		if (followingTopicsDBList != null) {
 			for (DBRef topicDBRef : followingTopicsDBList) {
-				//FIXME: check it
+				//TODO: check speed
 				DBObject topicDBObject = topicDBRef.fetch();
 				if (topicDBObject != null) {
 					TopicBean topic = new TopicBean();

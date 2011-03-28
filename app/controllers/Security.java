@@ -46,7 +46,7 @@ public class Security extends Secure.Security {
     	//hanlde suspended or deactivated talkers
     	if (talker.isSuspended()) {
     		session.clear();
-            response.setCookie("rememberme", "", 0);
+    		response.removeCookie("rememberme");
             
             render("Application/suspendedAccount.html");
     		return;

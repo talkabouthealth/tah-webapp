@@ -20,6 +20,9 @@ import javax.imageio.ImageIO;
 
 import org.bson.types.ObjectId;
 
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+
 import play.Logger;
 import play.cache.Cache;
 import play.mvc.Scope.Session;
@@ -608,7 +611,7 @@ public class TalkerLogic {
 		
 		if (loadedTopics.isEmpty()) {
 			//display most popular Topics based on views
-			//FIXME: list or set?
+			//TODO: list or set?
 			loadedTopics = new ArrayList<TopicBean>(loadAllTopicsFromCache());
 		}
 		
@@ -634,7 +637,6 @@ public class TalkerLogic {
 	
 	public static void getRecommendedTalkers(TalkerBean talker, List<TalkerBean> similarMembers,
 			List<TalkerBean> experts) {
-		//FIXME: load from cache?
 		List<TalkerBean> allMembers = loadAllTalkersFromCache();
 		for (TalkerBean member : allMembers) {
 			  if (member.isSuspended() || member.isDeactivated() || member.isAdmin()) {
@@ -657,49 +659,6 @@ public class TalkerLogic {
 		}
 	}
 	
-	//TODO: serializable?
-	public static List<TalkerBean> loadAllTalkersFromCache() {
-		List<TalkerBean> allTalkers = (List<TalkerBean>) Cache.get("talkersList"); 
-		if (allTalkers == null) {
-			allTalkers = TalkerDAO.loadAllTalkers(true);
-			Cache.set("talkersList", allTalkers, "3h");
-		}
-		return allTalkers;
-	}
-	
-	public static List<ConversationBean> loadPopularConversationsFromCache() {
-		List<ConversationBean> popularConversations = (List<ConversationBean>) Cache.get("popularConversations");
-		if (popularConversations == null) {
-			popularConversations = ConversationDAO.loadPopularConversations();
-			Cache.set("popularConversations", popularConversations, "2h");
-		}
-		return popularConversations;
-	}
-	
-	public static Set<TopicBean> loadAllTopicsFromCache() {
-		Set<TopicBean> allTopics = (Set<TopicBean>) Cache.get("topicsList");
-		if (allTopics == null) {
-			allTopics = TopicDAO.loadAllTopics(true);
-			Cache.set("topicsList", allTopics, "5h");
-		}
-		return allTopics;
-	}
-	
-	public static Map<String, HealthItemBean> loadHealthItemsFromCache(String diseaseName) {
-		Map<String, HealthItemBean> healthItemsMap = (Map<String, HealthItemBean>) Cache.get("healthItemsMap");
-		if (healthItemsMap == null) {
-			healthItemsMap = new HashMap<String, HealthItemBean>();
-			for (String itemName : new String[] {"symptoms", "tests", 
-					"procedures", "treatments", "sideeffects"}) {
-				HealthItemBean healthItem = HealthItemDAO.getHealthItemByName(itemName, diseaseName);
-				healthItemsMap.put(itemName, healthItem);
-			}
-			Cache.set("healthItemsMap", healthItemsMap, "30d");
-		}
-		return healthItemsMap;
-	}
-	
-	
 	public static List<ConversationBean> getRecommendedConvos(TalkerBean talker) {
 		/* 
 		 	Ideas for recommended conversations :
@@ -708,7 +667,7 @@ public class TalkerLogic {
 				3) what conversations are being followed by other members the user follows. 
 		*/
 		
-		//FIXME: check this
+		//TODO: check this
 		List<ConversationBean> recommendedConvos = new ArrayList<ConversationBean>();
 		Set<ConversationBean> allConvos = new LinkedHashSet<ConversationBean>();
 //		for (TopicBean topic : talker.getFollowingTopicsList()) {
@@ -949,5 +908,79 @@ public class TalkerLogic {
 		}
 		
 		onSignup(talker, session);
+	}
+	
+	
+	/* 
+	 * Temporary methods for caching
+	 * If it works well, we'll clean up and refactor them.
+	 *  
+	 */
+	
+	//TODO: serializable?
+	public static List<TalkerBean> loadAllTalkersFromCache() {
+		List<TalkerBean> allTalkers = (List<TalkerBean>) Cache.get("talkersList"); 
+		if (allTalkers == null) {
+			allTalkers = TalkerDAO.loadAllTalkers(true);
+			Cache.set("talkersList", allTalkers, "1h");
+		}
+		return allTalkers;
+	}
+	
+	//FIXME: check? time of cache? remove cache entry on talker's update?
+	public static TalkerBean loadTalkerFromCache(DBObject dbObject, String name) {
+		DBRef talkerRef = (DBRef)dbObject.get(name);
+		if (talkerRef == null) {
+			return null;
+		}
+		return loadTalkerFromCache(talkerRef.getId().toString());
+	}
+	
+	public static TalkerBean loadTalkerFromCache(String talkerId) {
+		List<TalkerBean> allTalkers = loadAllTalkersFromCache();
+		
+		TalkerBean talker = null;
+		for (TalkerBean t : allTalkers) {
+			if (t.getId().equals(talkerId)) {
+				return t;
+			}
+		}
+		
+		if (talker == null) {
+			talker = TalkerDAO.parseTalker(talkerId);
+		}
+		return talker;
+	}
+	
+	public static List<ConversationBean> loadPopularConversationsFromCache() {
+		List<ConversationBean> popularConversations = (List<ConversationBean>) Cache.get("popularConversations");
+		if (popularConversations == null) {
+			popularConversations = ConversationDAO.loadPopularConversations();
+			Cache.set("popularConversations", popularConversations, "2h");
+		}
+		return popularConversations;
+	}
+	
+	public static Set<TopicBean> loadAllTopicsFromCache() {
+		Set<TopicBean> allTopics = (Set<TopicBean>) Cache.get("topicsList");
+		if (allTopics == null) {
+			allTopics = TopicDAO.loadAllTopics(true);
+			Cache.set("topicsList", allTopics, "5h");
+		}
+		return allTopics;
+	}
+	
+	public static Map<String, HealthItemBean> loadHealthItemsFromCache(String diseaseName) {
+		Map<String, HealthItemBean> healthItemsMap = (Map<String, HealthItemBean>) Cache.get("healthItemsMap");
+		if (healthItemsMap == null) {
+			healthItemsMap = new HashMap<String, HealthItemBean>();
+			for (String itemName : new String[] {"symptoms", "tests", 
+					"procedures", "treatments", "sideeffects"}) {
+				HealthItemBean healthItem = HealthItemDAO.getHealthItemByName(itemName, diseaseName);
+				healthItemsMap.put(itemName, healthItem);
+			}
+			Cache.set("healthItemsMap", healthItemsMap, "30d");
+		}
+		return healthItemsMap;
 	}
 }

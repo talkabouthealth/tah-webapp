@@ -38,7 +38,7 @@ public class TopicLogic {
 	 * Get all topics as tree.
 	 */
 	public static Set<TopicBean> getAllTopicsTree() {
-		//FIXME: improve here?
+		//TODO: improve here?
 		Set<TopicBean> topics = TopicDAO.loadAllTopics();
     	Map<String, TopicBean> topicsMap = new HashMap<String, TopicBean>();
     	for (TopicBean topic : topics) {
