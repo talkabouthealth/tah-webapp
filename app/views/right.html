@@ -245,7 +245,8 @@
 	   </div>
  	#{/if}
  	
- 	#{if currentPage?.equals("home") && showNotificationAccounts }
+ 	<!-- REFACTOR DEEMPHASIZE IM --> 
+ 	#{if false && currentPage?.equals("home") && showNotificationAccounts }
  		<div id="notificationAccountsHelp" class="topipsts">
 		   <div class="close" style="padding-top: 7px; padding-right: 7px;">
 		   	<img src="/public/images/close.jpg" alt="Close" onclick="return hideHelpInfo('notificationAccounts', true);" />
