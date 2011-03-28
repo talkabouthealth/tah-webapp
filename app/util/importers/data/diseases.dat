@@ -3,10 +3,10 @@ Disease;Breast Cancer;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage 0 (DCIS);Stage 0 (LCIS);Stage I;Stage II;Stage III;Stage IV
 ;;;;;;
-invasive;Is the cancer invasive or non-invasive?;Invasive type;select;;;
+invasive;Is the cancer invasive or non-invasive?;Invasive/Non-invasive;select;;;
 choices;Invasive;Non-invasive;;;;
 ;;;;;;
-beginpart;What part of the breast did the cancer begin?;Started from;select;;;
+beginpart;What part of the breast did the cancer begin?;Cancer started in;select;;;
 choices;milk ducts;milk producing lobules;connective tissue;;;
 ;;;;;;
 hormones;Are the cancer cells fueled by hormones?;Hormones;multiselect;;;

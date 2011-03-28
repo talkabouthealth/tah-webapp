@@ -144,7 +144,7 @@
                     <!--profiletxtCantant-->
                     <tr>
                       <td class="profileCantanttxt1">
-                      	<strong>Conversations:&nbsp;</strong>
+                      	<strong>Questions:&nbsp;</strong>
                       	<a style="text-decoration: none" 
                       		href="@{PublicProfile.conversations(talker.name)}">${numOfStartedConvos}</a>
                       </td>                      
@@ -372,7 +372,7 @@
 							#{/if}
 							
 							#{if talker.bio && talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_INFO, currentTalker)}
-								<div class="profilebio">Personal Bio</div>
+								<div class="profilebio">Personal Bio (My story)</div>
 			                    <div class="topicborder"></div>
 			                    <div class="profilebiotxt">${talker.bio.nl2br()}</div>
 							#{/if}
@@ -553,7 +553,7 @@
 					
 					#{if talker.isAllowed(models.PrivacySetting.PrivacyType.HEALTH_INFO, currentTalker) && talkerDisease && !talker.isProf() }
 							#{if talkerDisease.healthBio }
-								<div class="profilebio">Health Bio</div>
+								<div class="profilebio">Health Bio (My Health Story)</div>
 		                    	<div class="topicborder"></div>
 		                    	<div class="profilebiotxt">${talkerDisease.healthBio.nl2br()}</div>
 							#{/if}
