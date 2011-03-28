@@ -139,7 +139,7 @@ public class ViewDispatcher extends Controller {
 		if (talkerDisease != null) {
 			talkerDisease.setName(diseaseName);
 		}
-		
+
 		Logger.info("V4:"+System.currentTimeMillis());
 		
 		//Load all healthItems for this disease
@@ -188,7 +188,8 @@ public class ViewDispatcher extends Controller {
 		int numOfAnswers = answersFeed.size();
 		
 		Logger.info("V9:"+System.currentTimeMillis());
-		
+
+		talkerDisease.setHealthItemsMap(healthItemsMap);
 		render("PublicProfile/newview.html", talker, disease, talkerDisease, healthItemsMap, 
 				currentTalker, talkerFeed,
 				notProvidedInfo, notViewableInfo,

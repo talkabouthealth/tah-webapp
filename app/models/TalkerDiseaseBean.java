@@ -34,6 +34,10 @@ public class TalkerDiseaseBean {
 	//Map for "Other" fields - not selected, but entered by user
 	private Map<String, List<String>> otherHealthItems;
 	
+	//Map of health items
+	private Map<String, HealthItemBean> healthItemsMap;
+	
+	public void setHealthItemsMap(Map<String, HealthItemBean> map) { this.healthItemsMap=map; }
 	
 	public String getRecurrent() { return recurrent; }
 	public void setRecurrent(String recurrent) { this.recurrent = recurrent; }
@@ -73,5 +77,32 @@ public class TalkerDiseaseBean {
 	
 	public String getHealthBio() { return healthBio; }
 	public void setHealthBio(String healthBio) { this.healthBio = healthBio; }
+	
+	private boolean isNestedNotEmpty(HealthItemBean healthItem, TalkerDiseaseBean talkerDisease) {
+		boolean flag=false;
+		
+		if(healthItem == null) return false;
+		
+		for(HealthItemBean item : healthItem.getChildren()) {
+			if(item.getChildren().size()>0) {
+				flag = isNestedNotEmpty(item,talkerDisease);
+			}
+			else {
+				if(talkerDisease.getHealthItems().contains(item.getId())) flag=true;
+			}
+			if(flag) return true;
+		}
+
+		return flag;
+	}
+	
+
+	public boolean isEmpty(String submap) {
+		return !isNestedNotEmpty(healthItemsMap.get(submap),this);
+	}
+	
+	public boolean isEmptyHealthInfo() {
+		return isEmpty("symptoms") && isEmpty("test") && isEmpty("procedures") && isEmpty("treatments")&& isEmpty("sideeffects");
+	}
 }
 
