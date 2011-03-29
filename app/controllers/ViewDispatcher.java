@@ -189,7 +189,7 @@ public class ViewDispatcher extends Controller {
 		
 		Logger.info("V9:"+System.currentTimeMillis());
 
-		talkerDisease.setHealthItemsMap(healthItemsMap);
+		if(healthItemsMap != null) talkerDisease.setHealthItemsMap(healthItemsMap);
 		render("PublicProfile/newview.html", talker, disease, talkerDisease, healthItemsMap, 
 				currentTalker, talkerFeed,
 				notProvidedInfo, notViewableInfo,

@@ -35,7 +35,7 @@ public class TalkerDiseaseBean {
 	private Map<String, List<String>> otherHealthItems;
 	
 	//Map of health items
-	private Map<String, HealthItemBean> healthItemsMap;
+	private Map<String, HealthItemBean> healthItemsMap = null;
 	
 	public void setHealthItemsMap(Map<String, HealthItemBean> map) { this.healthItemsMap=map; }
 	
@@ -98,6 +98,8 @@ public class TalkerDiseaseBean {
 	
 
 	public boolean isEmpty(String submap) {
+		if(healthItemsMap==null) return true;
+		
 		return !isNestedNotEmpty(healthItemsMap.get(submap),this);
 	}
 	
