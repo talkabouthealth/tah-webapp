@@ -98,6 +98,9 @@ public class TalkerDiseaseBean {
 	
 
 	public boolean isEmpty(String submap) {
+		//TODO REVERSE
+		//if(true) return false;
+		
 		if(healthItemsMap==null) return true;
 		
 		return !isNestedNotEmpty(healthItemsMap.get(submap),this);
