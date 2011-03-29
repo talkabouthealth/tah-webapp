@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import models.DiseaseBean.DiseaseQuestion;
+
 /**
  * Stores talker's Health Info related to particular disease
  *
@@ -37,7 +39,12 @@ public class TalkerDiseaseBean {
 	//Map of health items
 	private Map<String, HealthItemBean> healthItemsMap = null;
 	
+	//Map of disease questions
+	private DiseaseBean disease = null;
+	
 	public void setHealthItemsMap(Map<String, HealthItemBean> map) { this.healthItemsMap=map; }
+	
+	public void setDiseaseQuestions(DiseaseBean questions) { this.disease = questions; }
 	
 	public String getRecurrent() { return recurrent; }
 	public void setRecurrent(String recurrent) { this.recurrent = recurrent; }
@@ -98,15 +105,40 @@ public class TalkerDiseaseBean {
 	
 
 	public boolean isEmpty(String submap) {
-		//TODO REVERSE
-		if(true) return false;
-		
+		// if there is no health-items-map -- probably nothing, return Empty
 		if(healthItemsMap==null) return true;
 		
+		// check if other-health-items contain any entries for here, return NotEmpty if so
+		if(otherHealthItems!=null && otherHealthItems.get(submap)!=null) return false;
+		
+		// otherwise perform full nested lookup for anything in here
 		return !isNestedNotEmpty(healthItemsMap.get(submap),this);
 	}
 	
+	public String combinedToCommaString(String submap) {
+		String result = "";
+
+		// get regular items
+		if(this.healthInfo != null && this.healthInfo.get(submap) != null) for(String val: this.healthInfo.get(submap)) result+=val + ", "; 			
+		
+		// get other items
+		if(this.otherHealthItems != null && this.otherHealthItems.get(submap) != null) for(String val: this.otherHealthItems.get(submap)) result += val + ", ";			
+		
+		if(result.length()>2) return result.substring(0,result.length()-2); else return result;
+	}
+	
 	public boolean isEmptyHealthInfo() {
+		// check for any disease questions
+		for(DiseaseQuestion question: disease.getQuestions()) {
+			if(this.getHealthInfo().get(question.getName()) != null) return false;
+		}
+		
+		if(this.symptomDate != null) return false;
+		
+		if(this.diagnoseDate != null) return false;
+				
+		if(this.recurrent != null && this.recurrent.length()>0) return false;
+		
 		return isEmpty("symptoms") && isEmpty("test") && isEmpty("procedures") && isEmpty("treatments")&& isEmpty("sideeffects");
 	}
 }
