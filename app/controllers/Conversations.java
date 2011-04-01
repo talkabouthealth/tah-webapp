@@ -519,11 +519,14 @@ public class Conversations extends Controller {
 		ConversationBean convo = ConversationDAO.getById(convoId);
 		notFoundIfNull(convo);
 		
-		CommentBean comment = ConversationLogic.createAnswerOrReply(convo, _talker, parentId, text);
+		// YURIY: we only do this if comment is non-empty		
+		if(text.trim().length()==0) return;
 		
+		CommentBean comment = ConversationLogic.createAnswerOrReply(convo, _talker, parentId, text);
 		//render html of new comment using tag
 		List<CommentBean> _commentsList = Arrays.asList(comment);
 		int _level = (comment.getParentId() == null ? 1 : 2);
+		
 		render("tags/convo/convoCommentsTree.html", _commentsList, _level, _talker);
 	}
     
