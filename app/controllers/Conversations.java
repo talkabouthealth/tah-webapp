@@ -520,7 +520,7 @@ public class Conversations extends Controller {
 		notFoundIfNull(convo);
 		
 		// YURIY: we only do this if comment is non-empty		
-		if(text.trim().length()==0) return;
+		//if(text.trim().length()==0) return;
 		
 		CommentBean comment = ConversationLogic.createAnswerOrReply(convo, _talker, parentId, text);
 		//render html of new comment using tag
