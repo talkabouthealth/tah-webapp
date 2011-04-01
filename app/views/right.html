@@ -360,7 +360,7 @@
 					#{talker/talkerInfo talker: member /}
 				</span>
 	         </div>
-	         <div id="memberFollowDiv${member.id}" class="follow">
+	         <div id="memberFollowDiv${member.id}" class="follow" style='margin-left:125px;'>
 	           <input type="submit" rel="${member.id}" class="followers followMemberLink" value=" " />
 	         </div>
 	         <div id="memberUnfollowDiv${member.id}" class="follow" style="display: none; text-align: right;">
@@ -392,7 +392,7 @@
 					#{talker/talkerInfo talker: member /}
 				</span>
 	         </div>
-	         <div id="memberFollowDiv${member.id}" class="follow">
+	         <div id="memberFollowDiv${member.id}" class="follow" style='margin-left:125px;'>
 	           <input type="submit" rel="${member.id}" class="followers followMemberLink" value=" " />
 	         </div>
 	         <div id="memberUnfollowDiv${member.id}" class="follow" style="display: none; text-align: right;">
@@ -416,7 +416,7 @@
 			         <div class="trendingtext">
 			           	<a style="color:#0286BC;" href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a>
 			         </div>
-			         <div id="topicFollowDiv${topic.id}" class="follow">
+			         <div id="topicFollowDiv${topic.id}" class="follow" style='margin-left:175px;'>
 			           <input type="submit" rel="${topic.id}" class="followers followTopicLink" value=" " />
 			         </div>
 			         <div id="topicUnfollowDiv${topic.id}" class="follow" style="display: none; text-align: right;">
@@ -441,7 +441,7 @@
 			         <div class="trendingtext">
 			           	<a style="color:#0286BC;" href="@{ViewDispatcher.view(convo.mainURL)}">${convo.topic}</a>
 			         </div>
-			         <div id="convoFollowDiv${convo.id}" class="follow">
+			         <div id="convoFollowDiv${convo.id}" class="follow" style='margin-left:175px;'>
 			           <input type="submit" rel="${convo.id}" class="followers followConvoLink2" value=" " />
 			         </div>
 			         <div id="convoUnfollowDiv${convo.id}" class="follow" style="display: none; text-align: right;">

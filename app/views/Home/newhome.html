@@ -36,6 +36,11 @@
 
 			/* ------- Follow methods for Recommended sections ---------- */
 			$(".followTopicLink").live('click', function() {
+				//replace More button with loading image
+				var moreBtn = this;
+				$("#ajaxLoading").appendTo(moreBtn.parentNode).show();
+				moreBtn.style.display='none';
+			
 				var topicId = $(this).attr("rel");
 				$.post("@{Topics.follow()}", 
 	  				{ topicId: topicId},
@@ -53,6 +58,11 @@
 	  			return false;
 			});
 			$(".followConvoLink2").live('click', function() {
+				//replace More button with loading image
+				var moreBtn = this;
+				$("#ajaxLoading").appendTo(moreBtn.parentNode).show();
+				moreBtn.style.display='none';
+			
 				var convoId = $(this).attr("rel");
 				$.post("@{Conversations.follow()}", 
 	  				{convoId : convoId},
@@ -64,6 +74,11 @@
 	  			return false;
 			});
 			$(".followMemberLink").live('click', function() {
+				//replace More button with loading image
+				var moreBtn = this;
+				$("#ajaxLoading").appendTo(moreBtn.parentNode).show();
+				moreBtn.style.display='none';
+			
 				var memberId = $(this).attr("rel");
 				$.post("@{Actions.followTalker()}", 
 					{followingId: memberId},
