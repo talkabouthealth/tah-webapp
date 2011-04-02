@@ -41,7 +41,7 @@ public class EmailReminderJob extends Job {
 					int numOfFollowers = TalkerDAO.loadFollowers(talker.getId()).size();
 					//number of answers to the questions started by talker
 					int numOfAnswers = 0;
-					List<ConversationBean> startedConvos = ConversationDAO.getStartedConvos(talker.getId());
+					List<ConversationBean> startedConvos = ConversationDAO.getStartedConvos(talker.getId(), null, -1);
 					for (ConversationBean convo : startedConvos) {
 						numOfAnswers += CommentsDAO.loadConvoAnswers(convo.getId()).size();
 					}

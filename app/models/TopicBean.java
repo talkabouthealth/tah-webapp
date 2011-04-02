@@ -130,6 +130,7 @@ public class TopicBean implements Comparable<TopicBean> {
 		children = new HashSet<TopicBean>();
 		if (childrenDBList != null) {
 			for (DBRef childDBRef : childrenDBList) {
+				//TODO: cache?
 				TopicBean child = new TopicBean();
 				DBObject childDBObject = childDBRef.fetch();
 				child.setId(childDBObject.get("_id").toString());

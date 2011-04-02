@@ -1,11 +1,14 @@
 package logic;
 
+import static util.DBUtil.getCollection;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -20,6 +23,9 @@ import javax.imageio.ImageIO;
 
 import org.bson.types.ObjectId;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
@@ -239,7 +245,6 @@ public class TalkerLogic {
 
 	/**
 	 * Prepares talker information and calculates profile completion for displaying.
-	 * 
 	 */
 	public static void preloadTalkerInfo(TalkerBean talker) {
 		preloadTalkerInfo(talker, null);
@@ -247,8 +252,6 @@ public class TalkerLogic {
 	//TODO: can we optimize this?
 	public static void preloadTalkerInfo(TalkerBean talker, String page) {
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-		talker.setActivityList(ActionDAO.loadTalkerActions(talker.getId()));
-		
 		calculateProfileCompletion(talker, page);
 	}
 	
@@ -261,8 +264,7 @@ public class TalkerLogic {
 		//check what items are completed
 		EnumSet<ProfileCompletion> profileActions = EnumSet.of(ProfileCompletion.BASIC);
 		
-		for (Action action : talker.getActivityList()) {
-			ActionType type = action.getType();
+		for (ActionType type : ActionDAO.loadTalkerActionTypes(talker.getId())) {
 			switch (type) {
 			case START_CONVO:
 				profileActions.add(ProfileCompletion.START_OR_JOIN_TALK);
@@ -367,7 +369,7 @@ public class TalkerLogic {
 			}
 
 			if (loadAllInfo) {
-				ConversationBean convo = ConversationDAO.getById(answer.getConvoId());
+				ConversationBean convo = TalkerLogic.loadConvoFromCache(answer.getConvoId());
 				convo.setComments(convoAnswers);
 				
 				//Use special action for answer displaying.
@@ -384,7 +386,8 @@ public class TalkerLogic {
 		return numOfTopAnswers;
 	}
 	
-	public static Set<ConversationBean> loadFollowingConversations(TalkerBean talker) {
+	public static Set<ConversationBean> loadFollowingConversations(TalkerBean talker,
+			String nextConvoId, int numOfConversations) {
 		if (talker == null) {
 			return new HashSet<ConversationBean>();
 		}
@@ -393,8 +396,22 @@ public class TalkerLogic {
 		for (String convoId : talker.getFollowingConvosList()) {
 			convoIds.add(new ObjectId(convoId));
 		}
-		Set<ConversationBean> followingConvos = ConversationDAO.getConvosByIds(convoIds);
+		Set<ConversationBean> followingConvos = ConversationDAO.getConvosByIds(convoIds, nextConvoId, numOfConversations);
 		return followingConvos;
+	}
+	
+	public static int getNumOfFollowingConversations(TalkerBean talker) {
+		//TODO: update
+		if (talker == null) {
+			return 0;
+		}
+		
+		List<ObjectId> convoIds = new ArrayList<ObjectId>();
+		for (String convoId : talker.getFollowingConvosList()) {
+			convoIds.add(new ObjectId(convoId));
+		}
+		int numOfFollowingConvos = ConversationDAO.getNumOfConvosByIds(convoIds);
+		return numOfFollowingConvos;
 	}
 
 	public static boolean talkerHasNoHealthInfo(TalkerBean talker) {
@@ -673,7 +690,7 @@ public class TalkerLogic {
 //		for (TopicBean topic : talker.getFollowingTopicsList()) {
 //			allConvos.addAll(ConversationDAO.loadConversationsByTopic(topic.getId()));
 //		}
-		allConvos.addAll(loadPopularConversationsFromCache());
+		allConvos.addAll(loadPopularConversations());
 		
 		for (ConversationBean convo : allConvos) {
 			if (talker.getFollowingConvosList().contains(convo.getId())) {
@@ -686,6 +703,14 @@ public class TalkerLogic {
 		}
 		
 		return recommendedConvos;
+	}
+	
+	public static List<ConversationBean> loadPopularConversations() {
+		List<ConversationBean> popularConversations = loadAllConversationsFromCache();
+		//sort by views
+		Collections.sort(popularConversations);
+		
+		return popularConversations;
 	}
 	
 	/**
@@ -952,14 +977,31 @@ public class TalkerLogic {
 		return talker;
 	}
 	
-	public static List<ConversationBean> loadPopularConversationsFromCache() {
-		List<ConversationBean> popularConversations = (List<ConversationBean>) Cache.get("popularConversations");
-		if (popularConversations == null) {
-			popularConversations = ConversationDAO.loadPopularConversations();
-			Cache.set("popularConversations", popularConversations, "2h");
+	public static List<ConversationBean> loadAllConversationsFromCache() {
+		List<ConversationBean> allConversations = (List<ConversationBean>) Cache.get("conversationsList");
+		if (allConversations == null) {
+			allConversations = ConversationDAO.loadAllConversations(true);
+			Cache.set("conversationsList", allConversations, "2h");
 		}
-		return popularConversations;
+		return allConversations;
 	}
+	
+	public static ConversationBean loadConvoFromCache(String convoId) {
+		List<ConversationBean> allConversations = loadAllConversationsFromCache();
+		
+		ConversationBean convo = null;
+		for (ConversationBean c : allConversations) {
+			if (c.getId().equals(convoId)) {
+				return c;
+			}
+		}
+		
+		if (convo == null) {
+			convo = ConversationDAO.getByIdBasic(convoId);
+		}
+		return convo;
+	}
+	
 	
 	public static Set<TopicBean> loadAllTopicsFromCache() {
 		Set<TopicBean> allTopics = (Set<TopicBean>) Cache.get("topicsList");

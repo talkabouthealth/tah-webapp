@@ -29,7 +29,7 @@ import dao.ConversationDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
 
-public class ConversationBean {
+public class ConversationBean implements Comparable<ConversationBean> {
 	
 	public enum ConvoType {
 		//Live Chat/Live Talk
@@ -455,6 +455,11 @@ public class ConversationBean {
 			return 47;
 		}
 		return id.hashCode();
+	}
+	
+	@Override
+	public int compareTo(ConversationBean o) {
+		return o.views - views;
 	}
 	
 	public String getMainURL() { return mainURL; }

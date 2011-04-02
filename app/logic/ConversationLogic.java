@@ -48,6 +48,8 @@ public class ConversationLogic {
 	public static final String DEFAULT_TALK_TOPIC = "Chats";
 	public static final String DEFAULT_QUESTION_TOPIC = "Unorganized";
 	
+	public static final int CONVERSATIONS_PER_PAGE = 10;
+	
 	/**
 	 * 
 	 * @param type
@@ -361,6 +363,7 @@ public class ConversationLogic {
 			
 			AnswerDisplayAction convoAction =
 				new AnswerDisplayAction(activityTalker, convo, topAnswer, ActionType.ANSWER_CONVO, topAnswer != null);
+			convoAction.setId(convo.getId());
 			convoAction.setTime(convo.getCreationDate());
 			
 			convosFeed.add(convoAction);

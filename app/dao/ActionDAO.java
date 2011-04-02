@@ -351,28 +351,21 @@ public class ActionDAO {
 	}
 	
 	/**
-	 * Load all actions connected with given talker
+	 * Load action types connected with given talker
 	 */
-	public static List<Action> loadTalkerActions(String talkerId) {
+	public static EnumSet<ActionType> loadTalkerActionTypes(String talkerId) {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		DBObject query = new BasicDBObject("uid", talkerRef);
-		DBObject fields = BasicDBObjectBuilder.start()
-			.add("type", 1)
-			.add("convoId", 1)
-			.get();
-		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query, fields).sort(new BasicDBObject("time", -1)).toArray();
+		//Distinct returns only distinct "type" values
+		List<String> actionTypesDBList = activitiesColl.distinct("type", query);
 		
-		List<Action> activitiesList = new ArrayList<Action>();
-		for (DBObject actionDBObject : activitiesDBList) {
-			//we need only type & conversation
-			//TODO: possible memory issue?
-			Action action = new PreloadAction(actionDBObject);
-			activitiesList.add(action);
+		EnumSet<ActionType> actionTypes = EnumSet.noneOf(ActionType.class);
+		for (String actionTypeString : actionTypesDBList) {
+			actionTypes.add(ActionType.valueOf(actionTypeString));
 		}
-		return activitiesList;
+		return actionTypes;
 	}
 	
 	/**

@@ -148,6 +148,9 @@ public class ViewDispatcher extends Controller {
 		Logger.info("V5:"+System.currentTimeMillis());
 		
 		int numOfStartedConvos = ConversationDAO.getNumOfStartedConvos(talker.getId());
+		
+		Logger.info("V5a:"+System.currentTimeMillis());
+		
 		TalkerLogic.preloadTalkerInfo(talker);
 		
 		Logger.info("V6:"+System.currentTimeMillis());
@@ -156,10 +159,9 @@ public class ViewDispatcher extends Controller {
 		boolean notViewableInfo = false;
 		if (talker.equals(currentTalker)) {
 			//if user has not provided Personal Info or Health Info
-			EnumSet<ActionType> userActionTypes = EnumSet.noneOf(ActionType.class);
-			for (Action action : talker.getActivityList()) {
-				userActionTypes.add(action.getType());
-			}
+			EnumSet<ActionType> userActionTypes = 
+				ActionDAO.loadTalkerActionTypes(talker.getId());
+			
 			if (!userActionTypes.contains(ActionType.UPDATE_PERSONAL)) {
 				notProvidedInfo = true;
 			}
@@ -239,12 +241,7 @@ public class ViewDispatcher extends Controller {
 		//- "Popular Conversations" - topic conversations ordered by page views
 		List<ConversationBean> popularConvos = 
 			new ArrayList<ConversationBean>(topic.getConversations());
-		Collections.sort(popularConvos, new Comparator<ConversationBean>() {
-			@Override
-			public int compare(ConversationBean o1, ConversationBean o2) {
-				return o2.getViews()-o1.getViews();
-			}
-		});
+		Collections.sort(popularConvos);
 		
 		//- "Trending Conversations" - ordered by page views in the last two weeks, 
 		//cannot contain conversations in the top 10 of "Popular Conversations" tab

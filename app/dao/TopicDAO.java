@@ -174,7 +174,6 @@ public class TopicDAO {
 	 */
 	public static Set<TopicBean> loadAllTopics(boolean onlyBasicInfo) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
-		
 		topicsColl.ensureIndex(new BasicDBObject("views", 1));
 		
 		DBObject query = new BasicDBObject("deleted", new BasicDBObject("$ne", true));
@@ -244,7 +243,6 @@ public class TopicDAO {
 	
 	public static Set<TopicBean> getParentTopics(String topicId) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
-		
 		topicsColl.ensureIndex(new BasicDBObject("children", 1));
 		
 		DBObject fields = BasicDBObjectBuilder.start()

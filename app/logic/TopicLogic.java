@@ -38,15 +38,13 @@ public class TopicLogic {
 	 * Get all topics as tree.
 	 */
 	public static Set<TopicBean> getAllTopicsTree() {
-		//TODO: improve here?
+		//TODO: improve here? we can keep all in cache?
 		Set<TopicBean> topics = TopicDAO.loadAllTopics();
     	Map<String, TopicBean> topicsMap = new HashMap<String, TopicBean>();
     	for (TopicBean topic : topics) {
     		topicsMap.put(topic.getId(), topic);
     	}
     	
-    	Logger.info("BTX:"+System.currentTimeMillis());
-
     	Set<TopicBean> rootTopics = new TreeSet<TopicBean>();
     	for (TopicBean topic : topics) {
     		if (topic.getParents() == null || topic.getParents().size() == 0) {

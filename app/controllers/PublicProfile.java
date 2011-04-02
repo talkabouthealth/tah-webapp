@@ -76,6 +76,9 @@ public class PublicProfile extends Controller {
 		Logger.info("Th2:"+System.currentTimeMillis());
 		
 		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
+		
+		Logger.info("Th2a:"+System.currentTimeMillis());
+		
 		TalkerLogic.preloadTalkerInfo(talker);
 		
 		Logger.info("Th3:"+System.currentTimeMillis());
@@ -101,6 +104,8 @@ public class PublicProfile extends Controller {
 	}
 	
 	public static void answers(String userName) {
+		long start = System.currentTimeMillis();
+		
 		Logger.info("====== Answers ("+userName+") =======");
 		Logger.info("AN0:"+System.currentTimeMillis());
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
@@ -110,7 +115,6 @@ public class PublicProfile extends Controller {
 		Logger.info("AN1:"+System.currentTimeMillis());
 		
 		TalkerLogic.preloadTalkerInfo(talker);
-		Logger.info("ANa:"+System.currentTimeMillis());
 		boolean noHealthInfo = TalkerLogic.talkerHasNoHealthInfo(talker);
 		
 		Logger.info("AN2:"+System.currentTimeMillis());
@@ -119,6 +123,7 @@ public class PublicProfile extends Controller {
 		int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeed, true);
 		
 		Logger.info("AN3:"+System.currentTimeMillis());
+		Logger.info("ANF1:"+ (System.currentTimeMillis() - start));
 		
 		render(talker, currentTalker, answersFeed, numOfTopAnswers, noHealthInfo);
 	}
@@ -129,6 +134,8 @@ public class PublicProfile extends Controller {
 	 */
 	//TODO: later - add paging? as we have many convos on this page
 	public static void conversations(String userName) {
+		long start = System.currentTimeMillis();
+		
 		Logger.info("====== Questions ("+userName+") =======");
 		Logger.info("QU0:"+System.currentTimeMillis());
 		//TODO: can we improver this? very common
@@ -138,13 +145,21 @@ public class PublicProfile extends Controller {
 		
 		Logger.info("QU1:"+System.currentTimeMillis());
 		
+		//FIXME: number of convos
 		List<Action> startedConvosFeed = 
-			ConversationLogic.convosToFeed(ConversationDAO.getStartedConvos(talker.getId()));
+			ConversationLogic.convosToFeed(
+					ConversationDAO.getStartedConvos(talker.getId(), null, ConversationLogic.CONVERSATIONS_PER_PAGE));
+		int numOfStartedConvos = ConversationDAO.getNumOfStartedConvos(talker.getId());
+		
 		Logger.info("QUa:"+System.currentTimeMillis());
 		List<Action> joinedConvosFeed = 
 			ConversationLogic.convosToFeed(ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO));
 		Logger.info("QUb:"+System.currentTimeMillis());
-		List<Action> followingConvosFeed = ConversationLogic.convosToFeed(TalkerLogic.loadFollowingConversations(talker));
+		
+		List<Action> followingConvosFeed = 
+			ConversationLogic.convosToFeed(
+					TalkerLogic.loadFollowingConversations(talker, null, ConversationLogic.CONVERSATIONS_PER_PAGE));
+		int numOfFollowingConvos = TalkerLogic.getNumOfFollowingConversations(talker);
 		
 		Logger.info("QU2:"+System.currentTimeMillis());
 		
@@ -159,13 +174,38 @@ public class PublicProfile extends Controller {
 		}
 		
 		Logger.info("QU4:"+System.currentTimeMillis());
+		Logger.info("QUF1:"+ (System.currentTimeMillis() - start));
 		
-		render(talker, currentTalker, startedConvosFeed, joinedConvosFeed, followingConvosFeed, 
+		render(talker, currentTalker, 
+				startedConvosFeed, joinedConvosFeed, followingConvosFeed,
+				numOfStartedConvos, numOfFollowingConvos,
 				noHealthInfo, recommendedConvos);
 	}
 	
+	/**
+	 * Used by "More" button for loading started, joined and following conversations
+	 */
+    public static void convoAjaxLoad(String convoType, String afterConvoId, String talkerId) {
+    	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
+    	
+    	List<Action> _feedItems = null;
+    	if ("questionsAsked".equalsIgnoreCase(convoType)) {
+    		_feedItems = ConversationLogic.convosToFeed(
+					ConversationDAO.getStartedConvos(talkerId, afterConvoId, ConversationLogic.CONVERSATIONS_PER_PAGE));
+    	}
+    	else if ("questionsFollowing".equalsIgnoreCase(convoType)) {
+    		TalkerBean talkerForLoad = TalkerDAO.getById(talkerId);
+    		_feedItems = ConversationLogic.convosToFeed(
+					TalkerLogic.loadFollowingConversations(talkerForLoad, afterConvoId, ConversationLogic.CONVERSATIONS_PER_PAGE));
+    	}
+    	
+    	render("tags/feed/feedList.html", _feedItems, _talker);
+    }
+	
 	
 	public static void topicsFollowing(String userName) {
+		long start = System.currentTimeMillis();
+		
 		Logger.info("====== Topics Following ("+userName+") =======");
 		Logger.info("TF0:"+System.currentTimeMillis());
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
@@ -176,16 +216,12 @@ public class PublicProfile extends Controller {
 		
 		//get talker answers and related info for each topic
 		for (TopicBean topic : talker.getFollowingTopicsList()) {
-			//TODO: improve here?
-			List<CommentBean> answers = 
-				CommentsDAO.getTalkerAnswers(talker.getId(), topic);
-			
 			TalkerTopicInfo talkerTopicInfo = talker.getTopicsInfoMap().get(topic);
 			if (talkerTopicInfo == null) {
 				talkerTopicInfo = new TalkerTopicInfo();
 				talker.getTopicsInfoMap().put(topic, talkerTopicInfo);
 			}
-			talkerTopicInfo.setNumOfAnswers(answers.size());
+			talkerTopicInfo.setNumOfAnswers(CommentsDAO.getTalkerNumberOfAnswers(talker.getId(), topic));
 		}
 		
 		Logger.info("TF2:"+System.currentTimeMillis());
@@ -202,6 +238,7 @@ public class PublicProfile extends Controller {
 		}
 		
 		Logger.info("TF4:"+System.currentTimeMillis());
+		Logger.info("TFF1:"+ (System.currentTimeMillis() - start));
 		
 		render(talker, currentTalker, talkerDisease, recommendedTopics);
 	}

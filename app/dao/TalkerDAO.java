@@ -187,7 +187,7 @@ public class TalkerDAO {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
 		DBObject query = new BasicDBObject(fieldName, fieldValue);
-		DBObject talkerDBObject = talkersColl.findOne(query);
+		DBObject talkerDBObject = talkersColl.findOne(query, new BasicDBObject("img", 0));
 		
 		if (talkerDBObject == null) {
 			return null;

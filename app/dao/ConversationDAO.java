@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import logic.TalkerLogic;
 import models.CommentBean;
 import models.MessageBean;
 import models.TalkerBean;
@@ -267,19 +268,29 @@ public class ConversationDAO {
 	/**
 	 * Get all conversations (deleted also).
 	 */
-	public static List<ConversationBean> loadAllConversations() {
+	public static List<ConversationBean> loadAllConversations(boolean basicInfo) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
-		List<DBObject> convosDBList = 
-			convosColl.find().sort(new BasicDBObject("cr_date", -1)).toArray();
+		convosColl.ensureIndex(new BasicDBObject("cr_date", 1));
+		
+		List<DBObject> convosDBList = null;
+		if (basicInfo) {
+			DBObject fields = getBasicConversationFields();
+			convosDBList = 
+				convosColl.find(null, fields).sort(new BasicDBObject("cr_date", -1)).toArray();
+		}
+		else {
+			convosDBList = 
+				convosColl.find().sort(new BasicDBObject("cr_date", -1)).toArray();
+		}
 		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
-			ConversationBean convo = new ConversationBean();
-			convo.parseFromDB(convoDBObject);
-	    	convosList.add(convo);
+	    	convosList.add(parseConvoFromDBObject(convoDBObject, basicInfo));
 		}
-		
 		return convosList;
+	}
+	public static List<ConversationBean> loadAllConversations() {
+		return loadAllConversations(false);
 	}
 	
 	/**
@@ -293,11 +304,11 @@ public class ConversationDAO {
 	}
 	
 	/**
+	 * TODO: need this?
 	 * Popularity is based on number of views.
 	 */
 	public static List<ConversationBean> loadPopularConversations() {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
-		
 		convosColl.ensureIndex(new BasicDBObject("views", -1));
 		
 		DBObject fields = getBasicConversationFields();
@@ -382,25 +393,44 @@ public class ConversationDAO {
 		return numOfStartedConvos;
 	}
 	
-	public static List<ConversationBean> getStartedConvos(String talkerId) {
+	/**
+	 * TODO: finish
+	 * @param talkerId
+	 * @param nextConvoId
+	 * @param numOfConversations
+	 * @return
+	 */
+	public static List<ConversationBean> getStartedConvos(String talkerId, String nextConvoId, int numOfConversations) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		Date firstConvoTime = null;
+		if (nextConvoId != null) {
+			ConversationBean convo = TalkerLogic.loadConvoFromCache(nextConvoId);
+			firstConvoTime = convo.getCreationDate();
+		}
 		
 		convosColl.ensureIndex(new BasicDBObject("cr_date", 1));
 		
 		DBObject fields = getBasicConversationFields();
-		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
-		DBObject query = BasicDBObjectBuilder.start()
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start()
 			.add("uid", talkerRef)
-			.add("deleted", new BasicDBObject("$ne", true))
-			.get();
-		List<DBObject> convosDBList = 
-			convosColl.find(query, fields).sort(new BasicDBObject("cr_date", -1)).toArray();
+			.add("deleted", new BasicDBObject("$ne", true));
+
+		if (firstConvoTime != null) {
+			queryBuilder.add("cr_date", new BasicDBObject("$lt", firstConvoTime));
+		}
+			
+		DBCursor dbCursor = 
+			convosColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("cr_date", -1));
+		if (numOfConversations != -1) {
+			dbCursor = dbCursor.limit(numOfConversations);
+		}
 		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
-		for (DBObject convoDBObject : convosDBList) {
+		while (dbCursor.hasNext()) {
 			ConversationBean convo = new ConversationBean();
-			convo.parseBasicFromDB(convoDBObject);
+			convo.parseBasicFromDB(dbCursor.next());
 	    	convosList.add(convo);
 		}
 		return convosList;
@@ -516,35 +546,64 @@ public class ConversationDAO {
 			convoIds.add((ObjectId)convoRef.getId());
 		}
 		
-		return getConvosByIds(convoIds);
+		return getConvosByIds(convoIds, null, -1);
 	}
 
 	/**
 	 * @param convoIds
 	 * @return
 	 */
-	public static Set<ConversationBean> getConvosByIds(List<ObjectId> convoIds) {
+	public static Set<ConversationBean> getConvosByIds(List<ObjectId> convoIds, 
+			String nextConvoId, int numOfConversations) {
 		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
-		
 		convosColl.ensureIndex(new BasicDBObject("cr_date", -1));
 		
-		DBObject fields = getBasicConversationFields();
-		
-		DBObject query = new BasicDBObject("_id", new BasicDBObject("$in", convoIds));
-		List<DBObject> convosDBList = convosColl.find(query, fields).sort(new BasicDBObject("cr_date", -1)).toArray();
-		
-		Set<ConversationBean> convosSet = new LinkedHashSet<ConversationBean>();
-		for (DBObject convoDBObject : convosDBList) {
-			ConversationBean convo = new ConversationBean();
-			convo.parseBasicFromDB(convoDBObject);
-			
-			if (!convo.isDeleted()) {
-				convosSet.add(convo);
-			}
+		Date firstConvoTime = null;
+		if (nextConvoId != null) {
+			ConversationBean convo = TalkerLogic.loadConvoFromCache(nextConvoId);
+			firstConvoTime = convo.getCreationDate();
 		}
 		
+		DBObject fields = getBasicConversationFields();
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start()
+			.add("_id", new BasicDBObject("$in", convoIds))
+			.add("deleted", new BasicDBObject("$ne", true));
+		if (firstConvoTime != null) {
+			queryBuilder.add("cr_date", new BasicDBObject("$lt", firstConvoTime));
+		}
+		
+		DBCursor dbCursor = 
+			convosColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("cr_date", -1));
+		if (numOfConversations != -1) {
+			dbCursor = dbCursor.limit(numOfConversations);
+		}
+		
+		Set<ConversationBean> convosSet = new LinkedHashSet<ConversationBean>();
+		while (dbCursor.hasNext()) {
+			ConversationBean convo = new ConversationBean();
+			convo.parseBasicFromDB(dbCursor.next());
+			convosSet.add(convo);
+		}
 		return convosSet;
 	}
+	
+	/*
+	 * TODO: finish this
+	 * We need this because some convo could be deleted.
+	 */
+	public static int getNumOfConvosByIds(List<ObjectId> convoIds) {
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("_id", new BasicDBObject("$in", convoIds))
+			.add("deleted", new BasicDBObject("$ne", true))
+			.get();
+		
+		int numOfConvos = convosColl.find(query).count();
+		return numOfConvos;
+	}
+	
+	
 	
 	/**
 	 * Get all conversations that have at least one given topic.

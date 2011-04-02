@@ -162,7 +162,7 @@ public abstract class AbstractAction implements Action {
 	protected ConversationBean parseConvo(DBObject dbObject) {
 		String convoId = ((DBRef)dbObject.get("convoId")).getId().toString();
 		
-		ConversationBean convo = ConversationDAO.getByIdBasic(convoId);
+		ConversationBean convo = TalkerLogic.loadConvoFromCache(convoId);
 		//TODO: move this to the convo field?
 		convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
     	return convo;

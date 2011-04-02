@@ -25,6 +25,8 @@ import models.TopicBean;
 
 import org.bson.types.ObjectId;
 
+import play.Logger;
+
 import util.DBUtil;
 
 import com.mongodb.BasicDBList;
@@ -359,7 +361,28 @@ public class CommentsDAO {
 		return answersList;
 	}
 	
-	
+	/**
+	 * Returns talker number of answers, all or filtered by given topic
+	 */
+	public static int getTalkerNumberOfAnswers(String talkerId, TopicBean topic) {
+		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		
+		DBRef fromTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start()
+			.add("from", fromTalkerRef)
+			.add("deleted", new BasicDBObject("$ne", true))
+			.add("answer", true);
+		if (topic != null) {
+			//TODO: cache this?
+			Set<DBRef> convosDBSet = 
+				ConversationDAO.getConversationsByTopics(new HashSet<TopicBean>(Arrays.asList(topic)));
+			queryBuilder.add("convo", new BasicDBObject("$in", convosDBSet));
+		}
+		DBObject query = queryBuilder.get();
+		
+		int numOfAnswers = commentsColl.find(query).count();
+		return numOfAnswers;
+	}
 	
 	/*---------------- Common --------------------*/
 	

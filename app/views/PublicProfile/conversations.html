@@ -1,15 +1,15 @@
 #{ extends 'main.html' /}
 
 	<script type="text/javascript"> 
-		var perPage = 5;	 
+		var perPage = 10;	 
+		var convosPerPage = ${logic.ConversationLogic.CONVERSATIONS_PER_PAGE};
+		
    		$(document).ready(function() {
    			//default action
 			var activeTab = "tab1";
 			initOldTabs(activeTab);	
 
-			prepareList("questionsAsked");
 			prepareList("chatsJoined");
-			prepareList("questionsFollowing");
 
 			$(".followConvoLink2, .unfollowConvoLink2").live('click', function() {
 				var convoId = $(this).attr("rel");
@@ -29,6 +29,35 @@
 	  			return false;
 			});
    		});
+
+   		function loadMoreConversations(type) {
+   	   		var talkerId = "${talker.id}";
+   			var lastConvoId = $("#"+type+"List").children().last().attr("id");
+   			
+   			//replace More button with loading image
+   			var moreBtn = $("#"+type+"Btn");
+   			$("#ajaxLoading").appendTo(moreBtn.parent()).show();
+   			moreBtn.hide();
+
+   			$.get("/publicprofile/convoAjaxLoad", {afterConvoId: lastConvoId, convoType: type, talkerId: talkerId},
+   					function(data) {
+   						$("#ajaxLoading").hide();
+   				
+   						//show more button if it isn't the end of a feed
+   						var feedSize = $(data).find(".joinpic").size();
+   						if (feedSize >= convosPerPage) {
+   							moreBtn.show();
+   						}
+   						
+   						$(data).appendTo($("#"+type+"List"));
+   						
+   						//for new items
+   						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
+   					}
+   				);
+   			
+   			return false;
+   		}
    	</script>
 	<style>
 		body {
@@ -42,6 +71,7 @@
 		}
 		
 		.tab_content { padding-top: 10px }
+		.ajaxLoading { clear: both; }
 	</style>
 </header>
 <body>
@@ -61,14 +91,14 @@
 					<div class="tabbed_box" id="tabbed_box_1" style="width: 600px;">
 		    			<div class="tabbed_area">
 					        <ul class="tabs" style="padding-left: 0px;">
-					            <li><a href="#tab1"><span>Questions Asked (${startedConvosFeed.size()})</span></a></li>
+					            <li><a href="#tab1"><span>Questions Asked (${numOfStartedConvos})</span></a></li>
 					            <li><a href="#tab2"><span>Chats Joined (${joinedConvosFeed.size()})</span></a></li>
-					            <li><a href="#tab3"><span>Questions Following (${followingConvosFeed.size()})</span></a></li>
+					            <li><a href="#tab3"><span>Questions Following (${numOfFollowingConvos})</span></a></li>
 					        </ul>
 					        <div class="tab_container">
 					       		<div id="tab1" class="tab_content">
 					       			#{if talker.isAllowed(models.PrivacySetting.PrivacyType.QUESTIONS_STARTED, currentTalker) }
-					       				<h3>Questions Asked (${startedConvosFeed.size()})</h3>
+					       				<h3>Questions Asked (${numOfStartedConvos})</h3>
 							       		<div id="questionsAskedList" class="activitiestext">
 							       			#{if startedConvosFeed.size() == 0}
 												<span class="blacktext14">
@@ -85,9 +115,12 @@
 						                  		#{feed/feedActivity activity: convoActivity, talker: talker /}
 						                  	#{/list}
 										</div>
-										<input id="questionsAskedMoreBtn" type="submit" value="" class="seemorecom" 
-		                        			style="margin-left: 25px; margin-top: 15px; display: none;" 
-		                        			onclick="return showMore('questionsAsked');"  />
+										#{if startedConvosFeed.size() == logic.ConversationLogic.CONVERSATIONS_PER_PAGE }
+											<div class="replytommentbox" id="questionsAskedBtn">
+					                          <input type="submit" src="images/seemore.jpg" 
+					                          	onclick="return loadMoreConversations('questionsAsked');" value=" " class="seemorecom" />
+					                        </div>
+										#{/if}
 	                        		#{/if}
 									#{else}
 										<span class="blacktext14">This information has been made private.</span>
@@ -122,7 +155,7 @@
 		    					</div>
 		    					<div id="tab3" class="tab_content">
 		    						#{if talker.isAllowed(models.PrivacySetting.PrivacyType.QUESTIONS_FOLLOWING, currentTalker) }
-							       		<h3>Questions Following (${followingConvosFeed.size()})</h3>
+							       		<h3>Questions Following (${numOfFollowingConvos})</h3>
 							       		<div id="questionsFollowingList" class="activitiestext">
 							       			#{if followingConvosFeed.size() == 0}
 												<span class="blacktext14">
@@ -139,9 +172,12 @@
 						                  		#{feed/feedActivity activity: convoActivity, talker: talker /}
 						                  	#{/list}
 										</div>
-										<input id="questionsFollowingMoreBtn" type="submit" value="" class="seemorecom" 
-		                        			style="margin-left: 25px; margin-top: 15px; display: none;" 
-		                        			onclick="return showMore('questionsFollowing');"  />
+										#{if startedConvosFeed.size() == logic.ConversationLogic.CONVERSATIONS_PER_PAGE }
+											<div class="replytommentbox" id="questionsFollowingBtn">
+					                          <input type="submit" src="images/seemore.jpg" 
+					                          	onclick="return loadMoreConversations('questionsFollowing');" value=" " class="seemorecom" />
+					                        </div>
+										#{/if}
 	                        		#{/if}
 									#{else}
 										<span class="blacktext14">This information has been made private.</span>

@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import logic.TalkerLogic;
 import models.CommentBean.Vote;
 import models.PrivacySetting.PrivacyType;
 import models.PrivacySetting.PrivacyValue;
@@ -316,7 +317,6 @@ public class TalkerBean implements Serializable {
 		
 		//TODO: try to analyze it more
 //		Logger.info("Ta1:"+System.currentTimeMillis());
-		
 		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
 //		Logger.info("Ta2:"+System.currentTimeMillis());
 		parseFollowing((Collection<DBRef>)talkerDBObject.get("following"));
@@ -356,13 +356,22 @@ public class TalkerBean implements Serializable {
 	private void parseFollowing(Collection<DBRef> followingDBList) {
 		followingList = new ArrayList<TalkerBean>();
 		if (followingDBList != null) {
+			List<TalkerBean> allTalkers = TalkerLogic.loadAllTalkersFromCache();
 			for (DBRef followingDBRef : followingDBList) {
-				TalkerBean followingTalker = TalkerDAO.parseTalker(followingDBRef);
-				
-				if (followingTalker.isDeactivated() || followingTalker.isSuspended()) {
-					continue;
+				TalkerBean followingTalker = null;
+				for (TalkerBean cachedTalker : allTalkers) {
+					if (cachedTalker.getId().equals(followingDBRef.getId().toString())) {
+						followingTalker = cachedTalker;
+						break;
+					}
 				}
-				followingList.add(followingTalker);
+				if (followingTalker == null) {
+					followingTalker = TalkerDAO.parseTalker(followingDBRef);
+				}
+				
+				if (! (followingTalker.isDeactivated() || followingTalker.isSuspended()) ) {
+					followingList.add(followingTalker);
+				}
 			}
 		}
 	}
@@ -370,15 +379,22 @@ public class TalkerBean implements Serializable {
 	private void parseFollowingTopics(Collection<DBRef> followingTopicsDBList) {
 		followingTopicsList = new LinkedHashSet<TopicBean>();
 		if (followingTopicsDBList != null) {
+			Set<TopicBean> allTopics = TalkerLogic.loadAllTopicsFromCache();
 			for (DBRef topicDBRef : followingTopicsDBList) {
-				//TODO: check speed
-				DBObject topicDBObject = topicDBRef.fetch();
-				if (topicDBObject != null) {
-					TopicBean topic = new TopicBean();
-					topic.parseFromDB(topicDBObject);
-					if (!topic.isDeleted()) {
-						followingTopicsList.add(topic);
+				//TODO: better to have common function
+				TopicBean followingTopic = null;
+				for (TopicBean cachedTopic : allTopics) {
+					if (cachedTopic.getId().equals(topicDBRef.getId().toString())) {
+						followingTopic = cachedTopic;
+						break;
 					}
+				}
+				if (followingTopic == null) {
+					followingTopic = TopicDAO.getByIdBasic(topicDBRef.getId().toString());
+				}
+				
+				if (!followingTopic.isDeleted()) {
+					followingTopicsList.add(followingTopic);
 				}
 			}
 		}
