@@ -285,7 +285,7 @@
 
 			var convoTitle = $("#"+type+"Text").val();
 			if (convoTitle !== "" 
-					&& convoTitle !== "Post a question and receive an answer within a couple of minutes."
+					&& convoTitle !== "Post a question and we will notify the right members to answer."
 					&& convoTitle !== "Start a live chat by sharing the topic you would like to discuss. Your peers will join within minutes." ) {
 				$("#newConvoTitle").val($("#"+type+"Text").val());
 			}
@@ -319,7 +319,7 @@
                   	<div id="startConvoSmall" style="clear:both; height:30px; margin-bottom:7px; position:relative;">
 						<a href="#">
 		             		<textarea name="textarea" 
-					            class="edititinputx greyarea" rows="1" cols="3" style="width:627px;height:30px; margin: 0px; padding-top: 10px;">Post a question and receive an answer within a couple of minutes.</textarea>
+					            class="edititinputx greyarea" rows="1" cols="3" style="width:627px;height:30px; margin: 0px; padding-top: 10px;">Post a question and we will notify the right members to answer.</textarea>
 						</a>
 					</div>
 
@@ -328,9 +328,9 @@
 							<input type="text" id="postQuestionText" class="edititinputx inline_text greyarea" 
 								onKeyUp=" $('#postQuestionTextSize').html($(this).val().length);"
 								maxlength="160"
-								onfocus="clearTextArea('postQuestionText', 'Post a question and receive an answer within a couple of minutes.');"
+								onfocus="clearTextArea('postQuestionText', 'Post a question and we will notify the right members to answer.');"
 								style="width:627px; height: 35px; margin: 0px; padding: 3px;" cols="4" rows="4" 
-								value="Post a question and receive an answer within a couple of minutes." />							
+								value="Post a question and we will notify the right members to answer." />							
 						</div>
 						<div style="float: right; padding-top: 5px;">
 							<span id="postQuestionTextSize" style="font-size: 16px; float: left;">0</span>
