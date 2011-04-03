@@ -27,14 +27,23 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#followTopicLink").click(function() {
+				//replace More button with loading image
+				var moreBtn = this;
+				$("#ajaxLoading").appendTo(moreBtn.parentNode).show();
+				moreBtn.style.display='none';
+			
 				$.post("@{Topics.follow()}", 
 	  				{ topicId: '${topic.id}'},
 	  				function(nextAction) {
 		  				if (nextAction === "follow") {
 		  					$("#followTopicLink").removeClass().addClass("followTopicBtn");
+		  					$("#ajaxLoading").hide();
+		  					$("#followTopicLink").show();		  					
 		  				}
 		  				else {
 		  					$("#followTopicLink").removeClass().addClass("followingTopicBtn");
+		  					$("#ajaxLoading").hide();
+		  					$("#followTopicLink").show();		  					
 		  				}
 	  				}
 	  			);

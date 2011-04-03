@@ -50,14 +50,23 @@
 			}
 			
 			$("#followConvoBtn").click(function() {
+				//replace More button with loading image
+				var moreBtn = this;
+				$("#ajaxLoading").appendTo(moreBtn.parentNode).show();
+				moreBtn.style.display='none';
+			
 				$.post("@{Conversations.follow()}", 
 	  				{ convoId: '${convo.id}'},
 	  				function(nextAction) {
 		  				if (nextAction === "follow") {
 		  					$("#followConvoBtn").removeClass().addClass("followConvoBtn");
+		  					$("#ajaxLoading").hide();
+		  					$("#followConvoBtn").show();
 		  				}
 		  				else {
 		  					$("#followConvoBtn").removeClass().addClass("followingConvoBtn");
+		  					$("#ajaxLoading").hide();
+		  					$("#followConvoBtn").show();
 		  				}
 	  				}
 	  			);
@@ -796,12 +805,14 @@
                 </div>
 				<div id="mtright1" style="padding-top: 10px">
 					#{if talker }
+					<div width=100%>
 						#{if talker.followingConvosList?.contains(convo.id) }
 							<a href="#" id="followConvoBtn" class="followingConvoBtn"></a>
 						#{/if}
 						#{else}
 							<a href="#" id="followConvoBtn" class="followConvoBtn"></a>
 						#{/else}
+					</div>
 						<!-- REFACTOR REMOVE LIVE CHAT OPTION
 						<input type="button" class="restartConvoLink restartChatBtn" value="" />
 						-->
