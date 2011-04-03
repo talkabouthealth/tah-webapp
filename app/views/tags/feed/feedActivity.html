@@ -10,14 +10,12 @@
 		#{/if}
 		
 		<div class="jointxtlink2 moretext">
-			*{
-			#{if _activity?.reply}
-				${_activity?.reply.text}
+			#{if _activity.reply}
+				${_activity.reply.text}
 			#{/if}
-			#{elseif _activity?.answer}
-				${_activity?.answer.text.nl2br()}
+			#{elseif _activity.answer}
+			${_activity.answer.text?.nl2br()}
 			#{/elseif}
-			}*
 		</div>
 		
 		#{if _activity.profileComment}
