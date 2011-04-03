@@ -213,6 +213,55 @@ public class CommentsDAO {
 	}
 	
 	/**
+	 * Get list of replies stored with conversation comment
+	 * @param String parentId
+	 * @return List<String> of reply-ids in string form
+	 */
+	public static List<String> getConvoReplies(String parentId) {
+		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		
+		DBObject query = new BasicDBObject("_id", new ObjectId(parentId));
+		DBObject answerDBObject = commentsColl.findOne(query);
+		
+		List<String> result = new ArrayList<String>();
+		
+		BasicDBList replies = (BasicDBList) answerDBObject.get("children");
+		if(replies.size()>0) for(Object reply : replies) result.add((String)reply);
+
+		return result;
+	}
+	
+	/**
+	 * Retrieve a set of comments by a list of their ids
+	 * @param List<String> commentIds
+	 * @return List<CommentBean> list of replies in CommentBean form
+	 */
+	public static List<CommentBean> getConvoCommentsByIds(List<String> commentIds) {
+		if(commentIds.size()==0) return new ArrayList<CommentBean>();
+		
+		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		
+		List<ObjectId> objects = new ArrayList<ObjectId>();
+		for(String commentID : commentIds) objects.add(new ObjectId(commentID));
+		
+		DBObject query = BasicDBObjectBuilder.start()
+		.add("_id", new BasicDBObject("$in",objects))
+		.get();
+		
+		DBCursor cur = commentsColl.find(query);
+
+		List<CommentBean> result = new ArrayList<CommentBean>();
+		
+		while(cur.hasNext()) {
+			CommentBean comment = new CommentBean();
+			comment.parseFromDB(cur.next());
+			result.add(comment);
+		}
+		
+		return result;
+	}
+		
+	/**
 	 * Save answer/reply
 	 */
 	public static String saveConvoComment(CommentBean comment) {
@@ -396,7 +445,7 @@ public class CommentsDAO {
 					new BasicDBObject("$push", new BasicDBObject("children", commentId)));
 		}
 	}
-	
+		
 	/**
 	 * Transforms list of comments/replies to tree of comments/replies
 	 */

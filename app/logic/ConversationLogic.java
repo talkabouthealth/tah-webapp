@@ -203,6 +203,7 @@ public class ConversationLogic {
 		vars.put("convo_type", convo.getConvoType().stringValue());
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
 		vars.put("convo_url", convoURL);
+		
 		if (comment.isAnswer()) {
 			for (TalkerBean follower : convo.getFollowers()) {
 	    		if (!follower.equals(talker)) { //do not send notification to himself
@@ -235,7 +236,6 @@ public class ConversationLogic {
 							comment.getFromTalker().getUserName()+" for "+convo.getTopic()+": "+comment.getText();
 	        			IMNotifier.getInstance().followersAnswerNotification(follower.getId(), convo.getId(), imText);
 	        		}
-	        		
 	    		}
 	    	}
 			
@@ -246,9 +246,31 @@ public class ConversationLogic {
 			if (!talker.equals(convo.getTalker())) {
         		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_COMMENT, convo.getTalker(), vars);
     		}
-			if (!talker.equals(answer.getFromTalker()) && !convo.getTalker().equals(answer.getFromTalker())) {
-        		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_COMMENT, answer.getFromTalker(), vars);
-    		}
+			
+			// we are going to change this to send emails to all reply authors of the same answer
+			//if (!talker.equals(answer.getFromTalker()) && !convo.getTalker().equals(answer.getFromTalker())) {
+        	//	NotificationUtils.sendEmailNotification(EmailSetting.CONVO_COMMENT, answer.getFromTalker(), vars);
+    		//}			
+			String parent = comment.getParentId();
+			
+			List<String> replies = CommentsDAO.getConvoReplies(parent);
+			// include the originating answer in the list of comments to be retrieved
+			replies.add(parent);
+			List<CommentBean> objreplies = CommentsDAO.getConvoCommentsByIds(replies);
+			
+			// construct set (single occurrences) of participating users 
+			Set<TalkerBean> participants = new HashSet<TalkerBean>();
+			for(CommentBean reply : objreplies) {
+				TalkerBean thistalker = reply.getFromTalker();
+				participants.add(thistalker);
+			}	
+						
+			// distribute emails to all, do not send to yourself + question author (sent above)
+			for(TalkerBean thistalker : participants) {
+				if(!thistalker.equals(talker) && !thistalker.equals(convo.getTalker())) {
+	        		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_COMMENT, thistalker, vars);
+				}
+			}	
 		}
     	
     	
