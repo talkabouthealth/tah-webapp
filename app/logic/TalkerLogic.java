@@ -608,31 +608,21 @@ public class TalkerLogic {
 	/* -------------------------- Recommendations ---------------------- */
 	
 	public static List<TopicBean> getRecommendedTopics(TalkerBean talker) {
-		Logger.info("====== Recom Topics ("+talker.getUserName()+") =======");
-		
 		List<TopicBean> loadedTopics = new ArrayList<TopicBean>();
 		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();
-		
-		Logger.info("TT1:"+System.currentTimeMillis());
 		
 		//try topics based on HealthInfo
 		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
 		
-		Logger.info("TT2:"+System.currentTimeMillis());
-		
 		if (!talker.isProf() && talkerDisease != null) {
 			loadedTopics = TalkerLogic.getTopicsByHealthInfo(talkerDisease);
 		}
-		
-		Logger.info("TT3:"+System.currentTimeMillis());
 		
 		if (loadedTopics.isEmpty()) {
 			//display most popular Topics based on views
 			//TODO: list or set?
 			loadedTopics = new ArrayList<TopicBean>(loadAllTopicsFromCache());
 		}
-		
-		Logger.info("TT4:"+System.currentTimeMillis());
 		
 		for (TopicBean topic : loadedTopics) {
 			//not following and not default
@@ -646,8 +636,6 @@ public class TalkerLogic {
 				break;
 			}
 		}
-		
-		Logger.info("TT5:"+System.currentTimeMillis());
 		
 		return recommendedTopics;
 	}

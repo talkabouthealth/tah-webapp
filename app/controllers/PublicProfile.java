@@ -55,11 +55,18 @@ public class PublicProfile extends Controller {
 	 * @param from item to start from (was used for paging)
 	 */
 	public static void userBasedActions(String userName, String action, int from) {
+		Logger.info("====== ThankYous ("+userName+") =======");
+		Logger.info("UBA0:"+System.currentTimeMillis());
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+		Logger.info("UBA1:"+System.currentTimeMillis());
 		TalkerBean talker = TalkerDAO.getByURLName(userName);
 		notFoundIfNull(talker);
 		
+		Logger.info("UBA2:"+System.currentTimeMillis());
+		
 		TalkerLogic.preloadTalkerInfo(talker);
+		
+		Logger.info("UBA3:"+System.currentTimeMillis());
 		
 		render(talker, currentTalker, action, from);
 	}
