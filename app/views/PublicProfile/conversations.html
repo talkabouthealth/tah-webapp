@@ -92,7 +92,9 @@
 		    			<div class="tabbed_area">
 					        <ul class="tabs" style="padding-left: 0px;">
 					            <li><a href="#tab1"><span>Questions Asked (${numOfStartedConvos})</span></a></li>
+					            <!-- YURIY REFACTOR REMOVE LIVE CHATS
 					            <li><a href="#tab2"><span>Chats Joined (${joinedConvosFeed.size()})</span></a></li>
+					            -->
 					            <li><a href="#tab3"><span>Questions Following (${numOfFollowingConvos})</span></a></li>
 					        </ul>
 					        <div class="tab_container">
@@ -127,6 +129,7 @@
 									#{/else}
 		    					</div>
 		    					<div id="tab2" class="tab_content">
+					            <!-- YURIY REFACTOR REMOVE LIVE CHATS		    					
 		    						#{if talker.isAllowed(models.PrivacySetting.PrivacyType.CHATS_JOINED, currentTalker) }
 							       		<h3>Chats Joined (${joinedConvosFeed.size()})</h3>
 							       		<div id="chatsJoinedList" class="activitiestext">
@@ -152,6 +155,7 @@
 									#{else}
 										<span class="blacktext14">This information has been made private.</span>
 									#{/else}
+								-->
 		    					</div>
 		    					<div id="tab3" class="tab_content">
 		    						#{if talker.isAllowed(models.PrivacySetting.PrivacyType.QUESTIONS_FOLLOWING, currentTalker) }
