@@ -129,7 +129,6 @@
 									#{/else}
 		    					</div>
 		    					<div id="tab2" class="tab_content">
-					            <!-- YURIY REFACTOR REMOVE LIVE CHATS		    					
 		    						#{if talker.isAllowed(models.PrivacySetting.PrivacyType.CHATS_JOINED, currentTalker) }
 							       		<h3>Chats Joined (${joinedConvosFeed.size()})</h3>
 							       		<div id="chatsJoinedList" class="activitiestext">
@@ -155,7 +154,6 @@
 									#{else}
 										<span class="blacktext14">This information has been made private.</span>
 									#{/else}
-								-->
 		    					</div>
 		    					<div id="tab3" class="tab_content">
 		    						#{if talker.isAllowed(models.PrivacySetting.PrivacyType.QUESTIONS_FOLLOWING, currentTalker) }
