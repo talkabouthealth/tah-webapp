@@ -482,8 +482,9 @@ public class TalkerLogic {
 		if (comment.getParentId() == null) {
 			//If post to personal thoughts and this thought isn't imported from Tw/Fb
 			if (talker.equals(profileTalker) && comment.getFrom() == null) {
-				ActionDAO.saveAction(new PersonalProfileCommentAction(
+				String actionID = ActionDAO.saveActionGetId(new PersonalProfileCommentAction(
 						talker, profileTalker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT));
+				comment.setActionId(actionID);
 				
 				for (ServiceAccountBean serviceAccount : talker.getServiceAccounts()) {
 					if (serviceAccount.getType() == ServiceType.TWITTER) {

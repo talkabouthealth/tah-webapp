@@ -275,6 +275,7 @@ public abstract class AbstractAction implements Action {
 	}
 	
 	
+	public void setID(String id) { this.id=id; }
 	public String getId() { return id; }
 	public void setId(String id) { this.id = id; }
 	

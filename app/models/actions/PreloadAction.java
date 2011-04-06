@@ -74,4 +74,9 @@ public class PreloadAction implements Action {
 	@Override
 	public TalkerBean getTalker() { return null; }
 
+	@Override
+	public void setID(String id) {
+		this.id=id;
+	}
+
 }

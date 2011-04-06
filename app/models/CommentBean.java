@@ -106,6 +106,11 @@ public class CommentBean extends MessageBean {
 	private boolean notHelpful;
 	private Set<Vote> notHelpfulVotes;
 	
+	private String actionID;
+	
+	public void setActionId(String id) { this.actionID = id; }
+	public String getActionId() { return this.actionID; }
+	
 	public CommentBean() {}
 	public CommentBean(String commentId) {
 		super(commentId);

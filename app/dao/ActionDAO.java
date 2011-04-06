@@ -344,10 +344,25 @@ public class ActionDAO {
 	}
 	
 	public static void saveAction(Action action) {
+		String actionID = ActionDAO.saveActionGetId(action);
+	}
+	
+	public static String saveActionGetId(Action action) {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 
 		DBObject actionDBObject = action.toDBObject();
-		activitiesColl.save(actionDBObject);
+		activitiesColl.save(actionDBObject);	
+		
+		String id;
+		
+		try{
+			id=actionDBObject.get("_id").toString();
+		}
+		catch(Throwable e) { 
+			id=null;
+		}
+		
+		return id;
 	}
 	
 	/**

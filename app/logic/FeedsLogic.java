@@ -20,7 +20,7 @@ import models.actions.PreloadAction;
 
 public class FeedsLogic {
 	
-	enum FeedType {
+	public enum FeedType {
 		CONVERSATION, COMMUNITY, TALKER, TOPIC
 	}
 	
@@ -46,6 +46,81 @@ public class FeedsLogic {
 	public static Set<Action> getTopicFeed(TopicBean topic, String afterActionId) {
 		return loadFeed(FeedType.TOPIC, afterActionId, null, topic, true, FEEDS_PER_PAGE);
 	}
+	
+	// TODO request update for feed
+	public static Set<Action> updateFeed(FeedType feedType, String beforeActionId,
+			TalkerBean talker, boolean loggedIn) {
+		TopicBean topic = null;
+		Set<Action> feed = new LinkedHashSet<Action>();
+		
+		//conversations that are already added to the feed
+		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();
+		
+		String nextActionId = null;
+		while (true) {
+			//Logger.info("L1:"+System.currentTimeMillis());
+			List<Action> feedActions = new ArrayList<Action>();
+			switch (feedType) {
+				case CONVERSATION: 
+					feedActions = ActionDAO.loadConvoFeed(talker, nextActionId);
+					break;
+				case COMMUNITY: 
+					feedActions = ActionDAO.loadCommunityFeed(nextActionId, loggedIn);
+					break;
+				case TALKER: 
+					feedActions = ActionDAO.loadTalkerFeed(talker.getId(), nextActionId);
+					break;
+				case TOPIC: 
+					feedActions = ActionDAO.loadLatestByTopic(topic, nextActionId);
+					break;
+			}
+			
+			//Logger.info("L2:"+System.currentTimeMillis());
+			
+			boolean canAdd = true;
+			for (Action action : feedActions) {
+				if (canAdd && action.getId().equals(beforeActionId)) {
+					canAdd = false;
+				}
+				
+				ConversationBean actionConvo = action.getConvo();
+				//check repeated conversations
+				if (actionConvo != null) {
+					if (!addedConvos.contains(actionConvo)) {
+						if (canAdd) {
+							PreloadAction preAction = (PreloadAction)action;
+							feed.add(preAction.getFullAction());
+						}
+						addedConvos.add(actionConvo);
+					}
+				}
+				else {
+					if (canAdd) {
+						PreloadAction preAction = (PreloadAction)action;
+						Action fullAction = preAction.getFullAction();
+						//we do not include thoughts of suspended users
+						if (!(fullAction.getType() == ActionType.PERSONAL_PROFILE_COMMENT
+								&& fullAction.getTalker().isSuspended())) {
+							feed.add(fullAction);
+						}
+					}
+				}
+			}
+			
+			//Logger.info("L3:"+System.currentTimeMillis());
+			
+			//id for next preload from db
+			nextActionId = feedActions.get(feedActions.size()-1).getId();
+			
+			//exit if no more actions to preload or feed is big enough for this page
+			if (nextActionId.equals(beforeActionId) || !canAdd || feedActions.size() < ACTIONS_PRELOAD || feed.size() >= 100) {
+				break;
+			}
+						
+		}
+		
+		return feed;
+	}	
 	
 	/**
 	 * Load feed page based on given parameters.

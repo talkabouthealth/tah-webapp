@@ -140,6 +140,7 @@ public class Actions extends Controller {
 			//for Home page we add new thought to feeds, so we return thought as feed activity item
     		TalkerBean _talker = comment.getFromTalker();
     		Action _activity = new PersonalProfileCommentAction(_talker, _talker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT);
+    		_activity.setID(comment.getActionId());
     		render("tags/feed/feedActivity.html", _talker, _activity);
 		}
 		else {

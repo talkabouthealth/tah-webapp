@@ -17,6 +17,7 @@ import com.mongodb.DBRef;
 import logic.ConversationLogic;
 import logic.FeedsLogic;
 import logic.TalkerLogic;
+import logic.FeedsLogic.FeedType;
 import models.IMAccountBean;
 import models.ServiceAccountBean;
 import models.TalkerBean;
@@ -134,6 +135,30 @@ public class Home extends Controller {
 		
 		render(talker, convoFeed, communityFeed);
     }
+	
+	//TODO
+	public static void feedAjaxUpdate(String feedType,String beforeActionId,String talkerName,String isheader) {
+    	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
+    	
+    	boolean loggedIn = (_talker != null);
+    	
+    	Set<Action> _feedItems = null;
+    	if ("convoFeed".equalsIgnoreCase(feedType)) {
+    		_feedItems = FeedsLogic.updateFeed(FeedType.CONVERSATION,beforeActionId,_talker,true);
+    	}
+    	else if ("communityFeed".equalsIgnoreCase(feedType)) {
+    		_feedItems = FeedsLogic.updateFeed(FeedType.COMMUNITY,beforeActionId,null,loggedIn);
+    	}
+    	else {
+    		TalkerBean profileTalker = TalkerDAO.getByUserName(talkerName);
+    		if (profileTalker != null) {
+        		_feedItems = FeedsLogic.updateFeed(FeedType.TALKER,beforeActionId,profileTalker,true);
+    		}
+    	}
+    	
+    	int counter = _feedItems.size();
+    	if(isheader.equals("1")) render("tags/feed/feedCounter.html",counter); else render("tags/feed/feedList.html", _feedItems, _talker);		
+	}
 
 	/**
 	 * Used by "More" button in different feeds.

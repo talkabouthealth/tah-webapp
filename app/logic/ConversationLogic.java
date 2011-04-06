@@ -102,7 +102,8 @@ public class ConversationLogic {
 		convo.setBitlyChat(BitlyUtil.shortLink(convoChatURL));
 		ConversationDAO.updateConvo(convo);
 		
-		ActionDAO.saveAction(new StartConvoAction(talker, convo, ActionType.START_CONVO));
+		String actionID = ActionDAO.saveActionGetId(new StartConvoAction(talker, convo, ActionType.START_CONVO));
+		convo.setActionID(actionID);
 		
 		if (notifyTalkers) {
 			//send notifications if Automatic Notifications is On

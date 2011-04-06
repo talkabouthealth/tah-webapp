@@ -96,6 +96,12 @@ public class ConversationBean implements Comparable<ConversationBean> {
 	//used for search display
 	private String searchFragment;
 	
+	//action id
+	private String actionID;
+	
+	public void setActionID(String actionID) { this.actionID = actionID; }
+	public String getActionID() { return this.actionID; }
+	
 	public ConversationBean() {}
 	public ConversationBean(String id) {
 		this.id = id;

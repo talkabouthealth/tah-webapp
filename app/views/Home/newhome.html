@@ -5,6 +5,18 @@
 		
 		/* Width for autocomplete */
 		.ui-menu { width: 350px }
+		
+		a.morenotification {
+		display:block;
+		text-decoration:none;
+		color:black;
+		background-color;#ebf4ef;width:640px;
+		border:solid #d9e2df 1px;
+		padding:10px 0px 10px 0px;
+		text-align:center;
+		margin-top:10px;
+		margin-bottom:5px;		
+		}
 	</style>
 	
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
@@ -291,6 +303,58 @@
 			}
 			showPopup("#startDialog", 350);
    		}
+   		
+var update_retrieving = 0;
+function checkFeed(type,talkerName) {
+	if(update_retrieving==1) return;
+
+	//var firstActionId = $("#"+type+"List").children().eq(2).attr("id");
+	var firstActionId = $("#"+type+"List").children().first().attr("id");
+	
+	//public static void conversationFeedAjax(String afterActionId) {
+	$.get("/home/feedAjaxUpdate", {beforeActionId: firstActionId, feedType: type, talkerName: talkerName,isheader:1},
+			function(data) {
+				if(data!='0') {
+					$("#"+type+"Notifications").show(); 
+				} else {
+					$("#"+type+"Notifications").hide();
+				}
+				$("#"+type+"Notifications").html(data + " new items");
+			}
+		);	
+}	
+setInterval("checkFeed('communityFeed');",60000);
+setInterval("checkFeed('convoFeed');",60000);
+ 
+function updateFeed(type,talkerName) {
+	update_retrieving=1;
+	
+	//replace More button with loading image
+	var moreBtn = $("#"+type+"Notifications");
+	$("#ajaxLoading").prependTo(moreBtn.parent()).show();
+	moreBtn.hide();
+	
+	//var firstActionId = $("#"+type+"List").children().eq(2).attr("id");
+	var firstActionId = $("#"+type+"List").children().first().attr("id");
+	
+	
+	//public static void conversationFeedAjax(String afterActionId) {
+	$.get("/home/feedAjaxUpdate", {beforeActionId: firstActionId, feedType: type, talkerName: talkerName,isheader:0},
+			function(data) {
+				$("#ajaxLoading").hide();				
+				$("#"+type+"Notifications").hide();
+				
+				$(data).prependTo($("#"+type+"List"));
+				
+				// for new items
+				$('.inline-edit').inlineEdit( { hover: ''} );
+				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
+				
+				update_retrieving=0;
+			}
+		);			
+}	
+   		
 	</script>
 		
 <div id="managtopic1">
@@ -419,6 +483,9 @@
 									<div class="topic">
 				                      <div class="cb"></div>
 				                      <div class="topic">
+				                        <a href=# id="convoFeedNotifications" class="morenotification" style='display:none' onClick="updateFeed('convoFeed'); return false;" >
+				                        0 new items
+				                        </a>				                      
 				                        <div id="convoFeedList" class="conversationsList">
 					                    	#{list items: convoFeed, as: 'activity'}
 												#{feed/feedActivity activity: activity, talker: talker, parentList: 'convoFeedList' /}
@@ -443,7 +510,10 @@
 										style="display: ${convoFeed.size() < 20 ? 'block' : 'none'};">	
 									<div class="topic">
 				                      <div class="cb"></div>
-				                      <div class="topic">
+				                      <div class="topic" id='comfeed'>
+				                        <a href=# id="communityFeedNotifications" class="morenotification" style='display:none' onClick="updateFeed('communityFeed'); return false;" >
+				                        0 new items
+				                        </a>
 				                        <div id="communityFeedList">
 					                    	#{list items: communityFeed, as: 'activity'}
 												#{feed/feedActivity activity: activity, talker: talker, parentList: 'communityFeedContent' /}

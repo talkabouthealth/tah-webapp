@@ -108,7 +108,6 @@ public class Conversations extends Controller {
 				vars.put("convo", description);
 				vars.put("convo_url",convoURL);
     			
-    			// TODO YURIY TEMPLATES :-/
 				NotificationUtils.sendEmailNotification(EmailSetting.CONVO_PERSONAL,targetTalker, vars);    			
     		}
     	}
@@ -132,6 +131,7 @@ public class Conversations extends Controller {
     		templateName = "tags/feed/feedActivity.html";
     		Action activity = new StartConvoAction(talker, convo, ActionType.START_CONVO);
     		activity.getConvo().setComments(new ArrayList<CommentBean>());
+    		activity.setID(convo.getActionID());
     		templateBinding.put("_activity", activity);
     	}
     	else if (fromPage.equalsIgnoreCase("liveTalks")) {
@@ -143,9 +143,12 @@ public class Conversations extends Controller {
     		//#{convo/openQuestion convo: convo, talker: talker /}
     		templateName = "tags/convo/openQuestion.html";
     		templateBinding.put("_convo", convo);
+    		templateBinding.put("_id",convo.getId());
     	}
         Template template = TemplateLoader.load(templateName);
     	String html = template.render(templateBinding.data);
+    	
+    	System.out.println("New convo - " + convo.getId());
     	
     	Map<String, String> jsonData = new HashMap<String, String>();
     	jsonData.put("id", convo.getId());
