@@ -10,7 +10,8 @@
 		display:block;
 		text-decoration:none;
 		color:black;
-		background-color;#ebf4ef;width:640px;
+		background-color;#ebf4ef;
+		width:640px;
 		border:solid #d9e2df 1px;
 		padding:10px 0px 10px 0px;
 		text-align:center;
@@ -314,12 +315,13 @@ function checkFeed(type,talkerName) {
 	//public static void conversationFeedAjax(String afterActionId) {
 	$.get("/home/feedAjaxUpdate", {beforeActionId: firstActionId, feedType: type, talkerName: talkerName,isheader:1},
 			function(data) {
-				if(data!='0') {
-					$("#"+type+"Notifications").show(); 
+				if(parseInt(data)>0) {
+					$("#"+type+"Notifications").show();
+					$("#"+type+"Notifications").html(data + " new items"); 
 				} else {
 					$("#"+type+"Notifications").hide();
-				}
-				$("#"+type+"Notifications").html(data + " new items");
+					$("#"+type+"Notifications").html("No new items");
+				}				
 			}
 		);	
 }	
