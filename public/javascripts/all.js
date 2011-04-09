@@ -635,6 +635,7 @@ function initNewTabs() {
 		var id = $(this).attr("id");
 		$(".tabContent").hide();
 		$("#"+id+"Content").fadeIn();
+		$("#"+id+"Notifications").addClass("morenotification");
 		return false;
 	});
 	

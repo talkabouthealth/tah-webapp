@@ -199,11 +199,11 @@ public class ConversationLogic {
 		vars.put("convo", convo.getTopic());
 		vars.put("other_talker", talker.getUserName());
 		if (comment.isAnswer()) {
-			vars.put("answer_text", comment.getText());
+			vars.put("answer_text", comment.getText().replaceAll("\n","<br/>"));
 		}
 		else {
-			vars.put("reply_text", comment.getText());
-			vars.put("answer_text", answer.getText());
+			vars.put("reply_text", comment.getText().replaceAll("\n","<br/>"));
+			vars.put("answer_text", answer.getText().replaceAll("\n","<br/>"));
 		}
 		vars.put("convo_type", convo.getConvoType().stringValue());
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
