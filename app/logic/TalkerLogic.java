@@ -512,7 +512,7 @@ public class TalkerLogic {
 			if (!talker.equals(profileTalker)) {
 				Map<String, String> vars = new HashMap<String, String>();
 				vars.put("other_talker", talker.getUserName());
-				vars.put("comment_text", comment.getText());
+				vars.put("comment_text", comment.getText().replaceAll("\n","<br/>"));
 				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
 						profileTalker, vars);
 			}
@@ -527,8 +527,8 @@ public class TalkerLogic {
 			//send email to the owner of the Thoughts Feed as well as the user who started the thread.
 			Map<String, String> vars = new HashMap<String, String>();
 			vars.put("other_talker", talker.getUserName());
-			vars.put("comment_text", thought.getText());
-			vars.put("reply_text", comment.getText());
+			vars.put("comment_text", thought.getText().replaceAll("\n","<br/>"));
+			vars.put("reply_text", comment.getText().replaceAll("\n","<br/>"));
 			vars.put("profile_talker", profileTalker.getUserName());
 			
 			// FIXING SENDING ALL THOUGHT RESPONDENTS ON NEW REPLIES
