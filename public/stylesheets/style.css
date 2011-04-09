@@ -6377,3 +6377,15 @@ background-position:80px 14px;
 width:80px;
 display:block;
 }
+a.morenotification {
+display:block;
+text-decoration:none;
+color:black;
+background-color;#ebf4ef;
+width:640px;
+border:solid #d9e2df 1px;
+padding:10px 0px 10px 0px;
+text-align:center;
+margin-top:10px;
+margin-bottom:5px;		
+}
