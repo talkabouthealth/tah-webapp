@@ -47,6 +47,7 @@ import com.mongodb.DBRef;
  */
 public class CommentsDAO {
 	
+	public static final String CONVERSATIONS_COLLECTION = "convos";	
 	public static final String PROFILE_COMMENTS_COLLECTION = "profilecomments";
 	public static final String CONVO_COMMENTS_COLLECTION = "convocomments";
 	
@@ -218,18 +219,26 @@ public class CommentsDAO {
 	 * @return List<String> of reply-ids in string form
 	 */
 	public static List<String> getConvoReplies(String parentId) {
-		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		return CommentsDAO.getConvoReplies(getCollection(CONVO_COMMENTS_COLLECTION),parentId);
+	}
+	
+	/**
+	 * Get list of replies stored with conversation comment
+	 * @param String parentId
+	 * @return List<String> of reply-ids in string form
+	 */
+	public static List<String> getConvoReplies(DBCollection coll, String parentId) {
+		List<String> result = new ArrayList<String>();
+		if(parentId == null) return result;
 		
 		DBObject query = new BasicDBObject("_id", new ObjectId(parentId));
-		DBObject answerDBObject = commentsColl.findOne(query);
-		
-		List<String> result = new ArrayList<String>();
-		
+		DBObject answerDBObject = coll.findOne(query);
+				
 		BasicDBList replies = (BasicDBList) answerDBObject.get("children");
 		if(replies.size()>0) for(Object reply : replies) result.add((String)reply);
 
 		return result;
-	}
+	}	
 	
 	/**
 	 * Retrieve a set of comments by a list of their ids
@@ -242,7 +251,7 @@ public class CommentsDAO {
 		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
 		
 		List<ObjectId> objects = new ArrayList<ObjectId>();
-		for(String commentID : commentIds) objects.add(new ObjectId(commentID));
+		for(String commentID : commentIds) if(commentID != null) objects.add(new ObjectId(commentID));
 		
 		DBObject query = BasicDBObjectBuilder.start()
 		.add("_id", new BasicDBObject("$in",objects))
@@ -279,7 +288,14 @@ public class CommentsDAO {
 			.get();
 		commentsColl.save(commentObject);
 		
-		updateParent(commentsColl, comment.getParentId(), getString(commentObject, "_id")); 
+		// update [children ...] repo on target answer/comment
+		updateParent(commentsColl, comment.getParentId(), getString(commentObject, "_id"));
+		
+		if(comment.getParentId() == null) {
+			// if nothing, then save this at the [children ...] of the conversation root
+			DBCollection convoColl = getCollection(CONVERSATIONS_COLLECTION);
+			updateParent(convoColl, comment.getConvoId(), getString(commentObject, "_id"));
+		}
 		return getString(commentObject, "_id");
 	}
 	

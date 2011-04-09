@@ -195,6 +195,23 @@ public class NotificationUtils {
 	}
 	
 	/**
+	 * @param convo
+	 * @param fromTalker
+	 * @param convoReply
+	 */
+	public static void emailNotifyOnConvoReply(ConversationBean convo,
+			TalkerBean fromTalker, CommentBean convoReply,TalkerBean toTalker) {
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("convo", convo.getTopic());
+		vars.put("other_talker", fromTalker.getUserName());
+		vars.put("convoreply_text", convoReply.getText());
+		vars.put("convo_type", convo.getConvoType().stringValue());
+		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
+		vars.put("convo_url", convoURL);
+   		sendEmailNotification(EmailSetting.CONVO_COMMENT, toTalker, vars);
+	}
+	
+	/**
 	 * @param fromTalker
 	 * @param toTalker
 	 * @param thankYouBean

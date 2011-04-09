@@ -17,11 +17,15 @@ import com.tah.im.IMNotifier;
 
 import util.BitlyUtil;
 import util.CommonUtil;
+import util.DBUtil;
 import util.EmailUtil;
 import util.FacebookUtil;
 import util.NotificationUtils;
 import util.TwitterUtil;
 import util.EmailUtil.EmailTemplate;
+
+import static util.DBUtil.*;
+
 import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
@@ -321,14 +325,14 @@ public class ConversationLogic {
     	}
     	
     	//TODO: check if we need to send this (notification settings), add check for all IM notifications
-//    	The exception is users will receive IM notifications of answers 
-//    	if they started the conversation/question or if they answered a question and 
-//    	the user who started the question wants to follow up.
-    	Set<String> talkersForNotification = new HashSet<String>();
-    	talkersForNotification.add(convo.getTalker().getId());
-    	if (answer != null) {
-    		talkersForNotification.add(answer.getFromTalker().getId());
-    	}
+    	//The exception is users will receive IM notifications of answers 
+    	//if they started the conversation/question or if they answered a question and 
+    	//the user who started the question wants to follow up.
+    	//Set<String> talkersForNotification = new HashSet<String>();
+    	//talkersForNotification.add(convo.getTalker().getId());
+    	//if (answer != null) {
+    	//	talkersForNotification.add(answer.getFromTalker().getId());
+    	//}
     	//TODO IM-ERROR THIS CAUSES ERRORS do not send notification to himself; I disabled this completely
     	/*
     	talkersForNotification.remove(talker.getId());
@@ -370,6 +374,29 @@ public class ConversationLogic {
 		if (!fromTalker.equals(convo.getTalker())) {
 			NotificationUtils.emailNotifyOnConvoReply(convo, fromTalker, convoReply);
 		}
+		
+		// we are going to change this to send emails to all reply authors of the same answer
+		//  for top replies [children ...] are stored on root convo record
+		String parent = convoReply.getConvoId();
+		
+		List<String> replies = CommentsDAO.getConvoReplies(DBUtil.getCollection(CommentsDAO.CONVERSATIONS_COLLECTION),parent);
+		// include the originating answer in the list of comments to be retrieved
+		replies.add(parent);
+		List<CommentBean> objreplies = CommentsDAO.getConvoCommentsByIds(replies);
+		
+		// construct set (single occurrences) of participating users 
+		Set<TalkerBean> participants = new HashSet<TalkerBean>();
+		for(CommentBean reply : objreplies) {
+			TalkerBean thistalker = reply.getFromTalker();
+			participants.add(thistalker);
+		}	
+					
+		// distribute emails to all, do not send to yourself + question author (sent above)
+		for(TalkerBean thistalker : participants) {
+			if(!thistalker.equals(fromTalker) && !thistalker.equals(convo.getTalker())) {
+				NotificationUtils.emailNotifyOnConvoReply(convo, fromTalker, convoReply,thistalker);
+			}
+		}		
     	
     	return convoReply;
 	}
