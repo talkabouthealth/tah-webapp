@@ -317,10 +317,12 @@ function checkFeed(type,talkerName) {
 			function(data) {
 				if(parseInt(data)>0) {
 					$("#"+type+"Notifications").show();
-					$("#"+type+"Notifications").html(data + " new items"); 
+					$("#"+type+"Notifications").html(data + " new items");
+					$("#"+type+"Notifications").addClass("morenotification");  
 				} else {
 					$("#"+type+"Notifications").hide();
 					$("#"+type+"Notifications").html("No new items");
+					$("#"+type+"Notifications").addClass("morenotification");
 				}				
 			}
 		);	
