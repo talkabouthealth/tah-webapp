@@ -372,6 +372,7 @@
 							#{/if}
 							
 							#{if talker.bio && talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_INFO, currentTalker)}
+							<div class=cb></div>							
 								<div class="profilebio">Personal Bio (My story)</div>
 			                    <div class="topicborder"></div>
 			                    <div class="profilebiotxt">${talker.bio.nl2br()}</div>
@@ -550,8 +551,9 @@
 			                    #{/list}
 				                
 							#{/elseif}
-					
+										
 					#{if talker.isAllowed(models.PrivacySetting.PrivacyType.HEALTH_INFO, currentTalker) && talkerDisease && !talker.isProf() }
+					<div class=cb></div>
 							#{if talkerDisease.healthBio }
 								<div class="profilebio">Health Bio (My Health Story)</div>
 		                    	<div class="topicborder"></div>
