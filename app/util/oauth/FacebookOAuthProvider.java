@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import play.Logger;
 import play.libs.WS;
 import play.libs.WS.HttpResponse;
+import play.libs.WS.WSRequest;
 import play.mvc.Http.Request;
 import play.mvc.Scope.Session;
 
@@ -108,9 +109,12 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 		String callbackURL = (secureRequest ? "https://" : "http://");
 		callbackURL = callbackURL+CALLBACK_URL;
 		
-		HttpResponse res = 
-			WS.url("https://graph.facebook.com/oauth/access_token" +
-					"?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s", APP_ID, callbackURL, APP_SECRET, code).get();
+		//HttpResponse res =  
+		//	WS.url("https://graph.facebook.com/oauth/access_token" +
+		//			"?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s", APP_ID, callbackURL, APP_SECRET, code).get();
+		WSRequest A = WS.url("https://graph.facebook.com/oauth/access_token" +
+						"?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s", APP_ID, callbackURL, APP_SECRET, WS.encode(code));
+		HttpResponse res = A.get();
 		String responseText = res.getString();
 		
 		//returned string is:
