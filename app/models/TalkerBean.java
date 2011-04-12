@@ -95,11 +95,11 @@ public class TalkerBean implements Serializable {
 		RECEIVE_DIRECT ("Send me an email when I receive a Direct Message.", EmailTemplate.NOTIFICATION_DIRECT_MESSAGE),
 		NEW_FOLLOWER ("Send me an email when someone follows me.", EmailTemplate.NOTIFICATION_FOLLOWER),
 		
-		CONVO_RESTART ("Send me an email when a Conversation I follow is re-started.", 
+		CONVO_RESTART ("Send me an email when a Conversation I follow is re-started.",
 				EmailTemplate.NOTIFICATION_CONVO_RESTART),
-		CONVO_COMMENT ("Send me an email when an Answer is added to a Conversation I follow.", 
+		CONVO_COMMENT ("Send me an email when an Answer is added to a Question I follow.", 
 				EmailTemplate.NOTIFICATION_CONVO_ANSWER),
-		CONVO_SUMMARY ("Send me an email when a Summary of a Conversation I follow is updated.", 
+		CONVO_SUMMARY ("Send me an email when a Answer Summary is edited or updated for a Question I follow.", 
 				EmailTemplate.NOTIFICATION_CONVO_SUMMARY),
 		CONVO_PERSONAL ("",
 				EmailTemplate.NOTIFICATION_PERSONAL_QUESTION);

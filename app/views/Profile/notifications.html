@@ -233,7 +233,7 @@
 									#{set showConvoTitle = true /}
 									#{list items:models.TalkerBean.EmailSetting.values(), as:'setting' }
 										#{if setting.toString().startsWith('CONVO') && showConvoTitle}
-											<h4>Conversation Related</h4>
+											<h4>Question Related</h4>
 											#{set showConvoTitle = false /}
 										#{/if}
 										#{if setting.description.length()>0}

@@ -392,8 +392,8 @@
             <div class="close" onclick="return hideHelpInfo('convo', true);"><img src="/public/images/close.jpg" alt="Close" /></div>
           </div>
           <div class="note">
-		  	<strong>Help: <a href="@{ViewDispatcher.view('what-can-i-do-on-the-conversation-summary-page')}"
-		  		>What can I do on the Conversation Summary page?</a></strong>
+		  	<strong>Help: <a href="@{ViewDispatcher.view('what-can-i-do-on-the-question-page')}"
+		  		>What can I do on the Question page?</a></strong>
 		  	<br/><br/>
           </div>
           <div class="cb"></div>
@@ -456,7 +456,7 @@
 												#{if talker }
 													<div class="targetenew">
 														<a class="inline_addlink" 
-															href="#">Add Conversation Details (Context or Background Info)</a>
+															href="#">Add Question Details (Context or Background Info)</a>
 													</div>
 												#{/if}
 											</div>
@@ -538,7 +538,7 @@
 				                    	
 				                    	<a href="#" onclick="$('#convoreplies').toggle(); return false;"
 		                        			#{if convo.replies.size() == 0}
-		                        				>Add Reply</a>
+		                        				>Reply</a>
 		                        			#{/if}
 			                        		#{elseif convo.replies.size() == 1}
 			                        			>1 Reply</a>
@@ -604,14 +604,14 @@
                     				<div class="inline_empty" style="display: ${!convo.summary ? 'block' : 'none'}">
                     					#{if talker }
 											<div class="targetenew" style="margin-top: 10px;">
-												<a class="inline_addlink" href="#">Add Conversation Summary</a>
+												<a class="inline_addlink" href="#">Add Answer Summary</a>
 											</div>
 										#{/if}
 									</div>
 	                    			<div class="cscover inline_full" style="display: ${convo.summary ? 'block' : 'none'}">
 	                    				<div class="cstop">
 						                   <div>
-						 						<div class="cstoptext" id="hidit3">Conversation Summary</div>
+						 						<div class="cstoptext" id="hidit3">Answer Summary</div>
 											</div>
 	                    				</div><!--cstop-->
 					                    <div class="csmid">
@@ -657,7 +657,7 @@
                     			<div class="cscover inline_form">
 	                    				<div class="cstop">
 						                   <div>
-						 						<div class="cstoptext" id="hidit3">Conversation Summary</div>
+						 						<div class="cstoptext" id="hidit3">Answer Summary</div>
 											</div>
 	                    				</div><!--cstop-->
 					                    <div class="csmid">
@@ -845,7 +845,7 @@
 					<div class="topipsts">
 						<div class='inline-edit' id="relatedConvosEdit" style="padding-bottom: 3px;">
 							<div class="inline_display">
-								<div class="Staticsh1" style="float:left; padding:10px 0 0 0;">Similar Conversations</div>
+								<div class="Staticsh1" style="float:left; padding:10px 0 0 0;">Similar Questions</div>
 								<div class="inline_full" style="display: ${(convo.relatedConvos || relatedConvos) ? 'block' : 'none'}">
 									#{if talker }
 										<div class="editdiv">
@@ -876,7 +876,7 @@
 								</div>
 				            </div>
 							<div class='inline_form'>
-								<div class="Staticsh1" style="float:left; padding:10px 0 0 0;">Similar Conversations</div>
+								<div class="Staticsh1" style="float:left; padding:10px 0 0 0;">Similar Questions</div>
 								<div style="float:left; font-size: 14px;">Add a similar question</div>
 								<div id="relatedConvosEditList">
 									#{list items: convo.relatedConvos, as: 'relatedConvo'}
@@ -905,7 +905,7 @@
 					<div class="topipsts">
 						<div class="inline-edit" id="followupConvosEdit" style="padding-bottom: 3px;">
 							<div class="inline_display">
-								<div class="Staticsh1" style="float:left; padding:10px 0 0 0;">Follow-up Conversations</div>
+								<div class="Staticsh1" style="float:left; padding:10px 0 0 0;">Follow-up Questions</div>
 								<div class="inline_full" style="display: ${convo.followupConvos ? 'block' : 'none'}">
 									#{if talker }
 										<div class="editdiv">
@@ -931,7 +931,7 @@
 								</div>
 				            </div>
 							<div class='inline_form'>
-								<div class="Staticsh1" style="float:left; padding:10px 0 0 0;">Follow-up Conversations</div>
+								<div class="Staticsh1" style="float:left; padding:10px 0 0 0;">Follow-up Questions</div>
 								<div style="float:left; font-size: 14px;">Add a follow up question</div>
 								<div id="followupConvosEditList">
 									#{list items: convo.followupConvos, as: 'followupConvo'}
