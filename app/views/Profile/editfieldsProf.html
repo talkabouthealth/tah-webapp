@@ -5,7 +5,9 @@
 
 #{set profInfo = talker.profInfo /}
 
+#{ifnot talkerType.equals("Complementary Care Expert") }
 #{profile/field type: 'select', des: 'Credentials', name: 'credentials', talkerType: talkerType, profInfo: profInfo /}
+#{/ifnot}
 
 #{if talkerType.equals("Physician")}
 	#{profile/field type: 'select', des: 'Primary specialty', name: 'prim_specialty', talkerType: talkerType, profInfo: profInfo /}
