@@ -153,8 +153,8 @@ public class Explore extends Controller {
 		//match tabs with possible connections
 		Map<String, List<String>> memberTypes = new LinkedHashMap<String, List<String>>();
 		memberTypes.put("Experts", TalkerBean.PROFESSIONAL_CONNECTIONS_LIST);
-		memberTypes.put("Patients", Arrays.asList("Patient"));
-		memberTypes.put("Former Patients", Arrays.asList("Former Patient"));
+		memberTypes.put("Patients", Arrays.asList("Just Diagnosed","Current Patient"));
+		memberTypes.put("Former Patients", Arrays.asList("Survivor (1 year)","Survivor (2 - 5 years)","Survivor (5 - 10 years)","Survivor (10 - 20 years)","Survivor (Greater than 20 years)"));
 		memberTypes.put("Parents", Arrays.asList("Parent"));
 		memberTypes.put("Caregivers", Arrays.asList("Caregiver"));
 		memberTypes.put("Family & Friends", Arrays.asList("Family member", "Friend"));
