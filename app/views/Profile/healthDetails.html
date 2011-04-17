@@ -97,16 +97,22 @@
 						<div class="signupmain">
 							#{if talker.connection.equals("High Risk Individual")}
 							<div class="generaltextarea2">
+								<span class="blacktext16"><strong>Health Bio</strong> (Your health story. Share some of your health experiences.)</span>
+							</div>
+							<div class="textareabigerer1">
+								<textarea name="talkerDisease.healthBio" cols="45" rows="5" 
+									class="textarea6">${talkerDisease?.healthBio}</textarea>
+							</div>							
 							#{/if}
 							#{else}
-							<div class="generaltextarea">
-							#{/else}							
-								<span class="blacktext16"><strong>Health Bio</strong></span>
+							<div class="generaltextarea2">
+								<span class="blacktext16"><strong>Health Bio</strong> (Your health story. Share some of your health experiences.)</span>
 							</div>
-							<div class="textareabig">
+							<div class="textareabigerer">
 								<textarea name="talkerDisease.healthBio" cols="45" rows="5" 
-									class="textarea3">${talkerDisease?.healthBio}</textarea>
-							</div>
+									class="textarea5">${talkerDisease?.healthBio}</textarea>
+							</div>							
+							#{/else}							
 						</div>
 						#{list items:disease.questions, as:'question'}
 						#{if (talker.connection.equals("High Risk Individual") && talker.isHighRiskQ(question.name)) || (!talker.connection.equals("High Risk Individual") && !talker.isHighRiskQ(question.name))} 

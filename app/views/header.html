@@ -131,6 +131,8 @@
 		              <li class="separator">|</li>
 		              <li> <a class="libull2" href="#">Other</a>
 		                <ul>
+			              <li><a href="@{Static.aboutus()}">About</a></li>
+			              <li><a href="@{Static.howitworks()}">How it works</a></li>		                
 		                  <li><a href="@{Static.faq()}">FAQ</a></li>
 		                  <li><a href="@{Static.communityguidelines()}">Community Guidelines</a></li>
 		                  <li><a href="http://blog.talkabouthealth.com">Blog</a></li>
@@ -212,12 +214,24 @@
 	          </div>
 	      #{/if}
 	      #{else}
-				<div class="topnavigationz" style="width: 270px;">
+				<div class="topnavigationz" style="width: 270px;">	      
 					#{if currentPage?.equals('landing') }
-						<ul id="jsddm" style="float: left;">
+						<ul id="jsddm" style="float: left;margin-left:-40px;">
 			              <li class="tell"><a href="@{Application.signup()}">Join Now</a></li>
 			              <li class="separator">|</li>
 			              <li class="tell"><a href="@{Secure.login()}">Sign In</a></li>
+			              <li class="separator">|</li>			              
+			              <li> <a class="libull4" href="#">More</a>
+			                <ul>
+			                  <li><a href="@{Static.aboutus()}">About</a></li>
+			                  <li><a href="@{Static.howitworks()}">How it works</a></li>
+			                  <li><a href="@{Static.faq()}">FAQ</a></li>
+			                  <li><a href="@{Static.communityguidelines()}">Community Guidelines</a></li>
+			                  <li><a href="http://blog.talkabouthealth.com">Blog</a></li>
+			                  <li><a href="@{Application.contactus()}">Feedback</a></li>
+			                  <li><a href="#" onclick="openInvitationsWindow();">Share TalkAboutHealth</a></li>
+			                </ul>
+			              </li>			              
 			            </ul>
 			            <div class="homesocail">
 			          		<a href="#" onclick="openFacebook()"><img border="0" alt="Facebook" src="/public/images/facebook.jpg"/></a> 
@@ -230,8 +244,10 @@
 			              <li class="separator">|</li>
 			              <li class="tell"><a href="@{Secure.login()}">Sign In</a></li>
 			              <li class="separator">|</li>
-			              <li> <a class="libull4" href="#">Help</a>
+			              <li> <a class="libull4" href="#">More</a>
 			                <ul>
+			                  <li><a href="@{Static.aboutus()}">About</a></li>
+			                  <li><a href="@{Static.howitworks()}">How it works</a></li>			                
 			                  <li><a href="@{Static.faq()}">FAQ</a></li>
 			                  <li><a href="@{Static.communityguidelines()}">Community Guidelines</a></li>
 			                  <li><a href="http://blog.talkabouthealth.com">Blog</a></li>
