@@ -442,7 +442,7 @@ public class TalkerLogic {
 			CommentBean parentAnswer = CommentsDAO.getProfileCommentById(parentId);
 			if (parentAnswer != null) {
 				profileTalkerId = parentAnswer.getProfileTalkerId();
-				if(parentAnswer.getRootId().length()>0) {
+				if(parentAnswer.getRootId() != null && parentAnswer.getRootId().length()>0) {
 					rootId = parentAnswer.getRootId();
 				}
 				else {
@@ -673,7 +673,6 @@ public class TalkerLogic {
 				3) what conversations are being followed by other members the user follows. 
 		*/
 		
-		//TODO: check this
 		List<ConversationBean> recommendedConvos = new ArrayList<ConversationBean>();
 		Set<ConversationBean> allConvos = new LinkedHashSet<ConversationBean>();
 //		for (TopicBean topic : talker.getFollowingTopicsList()) {

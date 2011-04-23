@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import static util.DBUtil.*;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,9 +15,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import logic.TalkerLogic;
 import models.CommentBean;
 import models.CommentBean.Vote;
+import models.actions.AbstractAction;
 import models.actions.Action;
+import models.actions.AnswerDisplayAction;
 import models.actions.PersonalProfileCommentAction;
 import models.actions.PreloadAction;
 import models.actions.Action.ActionType;
@@ -502,11 +507,69 @@ public class CommentsDAO {
 		return topCommentsList;
 	}
 	
-	
-	
-	public static Set<Action> getTalkerMentions(TalkerBean talker) {
+	//TODO: add also answers?
+	public static List<Action> getTalkerMentions(TalkerBean talker) {
 		//for case insensitive search we use regex
-		Pattern mentionRegex = Pattern.compile("@"+talker.getUserName());
+		//TODO: should be space or end of the thought? or other symbols????
+		Pattern mentionRegex = Pattern.compile("@"+talker.getUserName()+"\\s");
+		
+		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
+		
+		//TODO: only thoughts without replies?
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("text", mentionRegex)
+			.get();
+		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		
+		List<Action> talkerMentions = new ArrayList<Action>();
+		for (DBObject commentDBObject : commentsList) {
+			CommentBean commentBean = new CommentBean();
+			commentBean.parseFromDB(commentDBObject);
+			
+			PersonalProfileCommentAction thoughtAction = new PersonalProfileCommentAction(
+					talker, talker, commentBean, null, ActionType.PERSONAL_PROFILE_COMMENT);
+			thoughtAction.setID(commentBean.getId());
+			thoughtAction.setTime(commentBean.getTime());
+			talkerMentions.add(thoughtAction);
+		}
+		
+		//add answers also
+		commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		
+		query = BasicDBObjectBuilder.start()
+			.add("text", mentionRegex)
+			.add("answer", true)
+			.get();
+		commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		
+		for (DBObject commentDBObject : commentsList) {
+			CommentBean answer = new CommentBean();
+			answer.parseFromDB(commentDBObject);
+			
+			ConversationBean convo = TalkerLogic.loadConvoFromCache(answer.getConvoId());
+//			convo.setComments(convoAnswers);
+			
+			AnswerDisplayAction answerAction = new AnswerDisplayAction(convo.getTalker(), convo,
+					answer, ActionType.ANSWER_CONVO, false);
+			answerAction.setTime(answer.getTime());
+			talkerMentions.add(answerAction);
+		}
+		
+		Collections.sort(talkerMentions, new Comparator<Action>() {
+			@Override
+			public int compare(Action o1, Action o2) {
+				return o2.getTime().compareTo(o1.getTime());
+			}
+		});
+		
+		return talkerMentions;
+	}
+
+	//TODO: similar method
+	//TODO: load replies??
+	public static List<Action> getTopicMentions(TopicBean topic) {
+		//for case insensitive search we use regex
+		Pattern mentionRegex = Pattern.compile("#"+topic.getTitle());
 		
 		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
 		
@@ -515,16 +578,17 @@ public class CommentsDAO {
 			.get();
 		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
-		Set<Action> talkerMentions = new HashSet<Action>();
+		List<Action> topicMentions = new ArrayList<Action>();
 		for (DBObject commentDBObject : commentsList) {
 			CommentBean commentBean = new CommentBean();
 			commentBean.parseFromDB(commentDBObject);
 			
 			//TODO: check profile talker and fix for NPE
-			Action thoughtAction = new PersonalProfileCommentAction(
-					talker, talker, commentBean, null, ActionType.PERSONAL_PROFILE_COMMENT);
-			talkerMentions.add(thoughtAction);
+			Action thoughtAction = new PersonalProfileCommentAction(commentBean.getFromTalker(),
+					commentBean.getFromTalker(), commentBean, null, ActionType.PERSONAL_PROFILE_COMMENT);
+			thoughtAction.setID(commentBean.getId());
+			topicMentions.add(thoughtAction);
 		}
-		return talkerMentions;
+		return topicMentions;
 	}
 }

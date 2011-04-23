@@ -79,30 +79,8 @@ public class ThoughtsFromServicesJob extends Job {
 
 	
 	private String prepareText(ServiceType type, String text) {
+		//TODO: remove from db?
 		String htmlText = CommonUtil.linkify(text);
-//		if (type == ServiceType.TWITTER) {
-////			String regex = "(?:\\s|\\A)[#]+([A-Za-z0-9-_]+)";
-////			String regex2 = "(?:\\s|\\A)[@]+([A-Za-z0-9-_]+)";
-//			
-//			String regex = "(\\s|\\A)#(\\w+)";
-//			String regex2 = "(\\s|\\A)@(\\w+)";
-//			
-//			htmlText = htmlText.replaceAll(regex, "$1<a href=\"http://twitter.com/search?q=%23$2\" target=\"_blank\">#$2</a>");
-//			htmlText = htmlText.replaceAll(regex2, "$1<a href=\"http://twitter.com/$2\" target=\"_blank\">@$2</a>");
-//		}
 		return htmlText;
-	}
-
-
-	public static void main(String[] args) {
-		String text = "@test #anothertag @super @cool#Arrogance http://adobe.com/index.html#anchor1. John Nack on &#Adobe: @thebest Information about Photoshop© CS3 on Snow Leopard #fail#design";
-		
-		Pattern p = Pattern.compile("(?:\\s|\\A)[##]+([A-Za-z0-9-_]+)");
-		String regex = "(?:\\s|\\A)[#]+([A-Za-z0-9-_]+)";
-		String regex2 = "(\\s|\\A)@(\\w+)";
-		
-		//String replacedText = text.replaceAll(WEB_URL_PATTERN, "<a href=\"$1\" target=\"_blank\">$1</a>");
-		String replacedText = text.replaceAll(regex2, "$1[$2]");
-		System.out.println(replacedText);
 	}
 }

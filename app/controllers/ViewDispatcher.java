@@ -14,6 +14,7 @@ import java.util.Set;
 
 import logic.FeedsLogic;
 import logic.TalkerLogic;
+import logic.TopicLogic;
 import models.CommentBean;
 import models.DiseaseBean;
 import models.HealthItemBean;
@@ -55,10 +56,8 @@ public class ViewDispatcher extends Controller {
 	}
 	
 	public static void view(String name) throws Throwable {
-		Logger.info("V1:"+System.currentTimeMillis());
 		//first try user
 		TalkerBean talker = TalkerDAO.getByURLName(name);
-		Logger.info("V2:"+System.currentTimeMillis());
 		if (talker != null) {
 			showTalker(talker);
 			return;
@@ -116,8 +115,6 @@ public class ViewDispatcher extends Controller {
 	 * @param talker
 	 */
 	private static void showTalker(TalkerBean talker) throws Throwable {
-		Logger.info("====== View ("+talker.getUserName()+") =======");
-		
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		
 		if (talker.isSuspended()) {
@@ -129,8 +126,6 @@ public class ViewDispatcher extends Controller {
 			return;
 		}
 		
-		Logger.info("V3:"+System.currentTimeMillis());
-		
 		//Health info
 		//For now we have only one disease - Breast Cancer
 		final String diseaseName = "Breast Cancer";
@@ -140,20 +135,12 @@ public class ViewDispatcher extends Controller {
 			talkerDisease.setName(diseaseName);
 		}
 
-		Logger.info("V4:"+System.currentTimeMillis());
-		
 		//Load all healthItems for this disease
 		Map<String, HealthItemBean> healthItemsMap = TalkerLogic.loadHealthItemsFromCache(diseaseName);
 		
-		Logger.info("V5:"+System.currentTimeMillis());
-		
 		int numOfStartedConvos = ConversationDAO.getNumOfStartedConvos(talker.getId());
 		
-		Logger.info("V5a:"+System.currentTimeMillis());
-		
 		TalkerLogic.preloadTalkerInfo(talker);
-		
-		Logger.info("V6:"+System.currentTimeMillis());
 		
 		boolean notProvidedInfo = false;
 		boolean notViewableInfo = false;
@@ -179,18 +166,12 @@ public class ViewDispatcher extends Controller {
 			}
 		}
 		
-		Logger.info("V7:"+System.currentTimeMillis());
-		
 		Set<Action> talkerFeed = FeedsLogic.getTalkerFeed(talker, null);
-		
-		Logger.info("V8:"+System.currentTimeMillis());
 		
 		List<Action> answersFeed = new ArrayList<Action>();
 		int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeed, false);
 		int numOfAnswers = answersFeed.size();
 		
-		Logger.info("V9:"+System.currentTimeMillis());
-
 		if(talkerDisease != null) {
 			talkerDisease.setHealthItemsMap(healthItemsMap);
 			talkerDisease.setDiseaseQuestions(disease);
@@ -247,7 +228,10 @@ public class ViewDispatcher extends Controller {
 		//cannot contain conversations in the top 10 of "Popular Conversations" tab
 		List<ConversationBean> trendingConvos = new ArrayList<ConversationBean>();
 		
-		render("Topics/viewTopic.html", talker, topic, activities, popularConvos, trendingConvos);
+		List<Action> topicMentions = CommentsDAO.getTopicMentions(topic);
+		
+		render("Topics/viewTopic.html", talker, topic, activities, 
+				popularConvos, trendingConvos, topicMentions);
 	}
 
 }

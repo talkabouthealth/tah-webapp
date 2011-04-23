@@ -8,6 +8,7 @@ import play.Logger;
 import play.Play;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
+import util.DBUtil;
 
 /**
  * Job for running IM services on startup
@@ -29,11 +30,11 @@ public class IMServicesJob extends Job {
     public void doJob() {
     	String appMode = (String)Play.configuration.get("application.mode");
     	if (appMode != null && appMode.equalsIgnoreCase("prod")) {
-    		IMNotifier.init(PROD_LOGIN_ARRAY);
+    		IMNotifier.init(PROD_LOGIN_ARRAY, DBUtil.getHost(), DBUtil.getPort());
     	}
     	else {
     		try {
-    			IMNotifier.init(DEV_LOGIN_ARRAY);
+    			IMNotifier.init(DEV_LOGIN_ARRAY, DBUtil.getHost(), DBUtil.getPort());
     		}
     		catch (Exception e) {
     			Logger.error(e, "IM initialization in DEV environment.");

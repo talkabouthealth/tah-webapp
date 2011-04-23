@@ -150,25 +150,46 @@
 				}
 				
 				$form.hide();
-				//prepare plain text for display
-				newValue = linkify(newValue);
-				newValue = newValue.replace(/\n/g, '<br/>');
-				$view.html(newValue);
 				
-				if (newValue === '') {
-					$displayFull.hide();
-					$displayEmpty.show();
+				if ($dataType.indexOf('commentEdit') == 0) {
+					//TODO: remove completely?
+					newValue = linkify(newValue);
+					newValue = newValue.replace(/\n/g, '<br/>');
+					
+					var commentId = $dataType.substring(11);
+					
+		   	   		$.post("/actions/updateComment", 
+		  				{ commentId: commentId, newText: newValue},
+		  				function(newText) {		  					
+							$view.html(newText);
+							
+							$displayEmpty.hide();
+							$displayFull.show();
+							$display.show();
+		  				}
+		  			);		  			
 				}
 				else {
-					$displayEmpty.hide();
-					$displayFull.show();
-				}
-				$display.show();
-				
-				if (settings.saveFunction) {
-					//callback for saving new value on the server
-					settings.saveFunction.apply( window, [ $dataType, newValue ] );
-				}
+					//prepare plain text for display
+					newValue = linkify(newValue);
+					newValue = newValue.replace(/\n/g, '<br/>');
+					$view.html(newValue);
+					
+					if (newValue === '') {
+						$displayFull.hide();
+						$displayEmpty.show();
+					}
+					else {
+						$displayEmpty.hide();
+						$displayFull.show();
+					}
+					$display.show();
+					
+					if (settings.saveFunction) {
+						//callback for saving new value on the server
+						settings.saveFunction.apply( window, [ $dataType, newValue ] );
+					}
+				}								
 				
 				return false;
 			});

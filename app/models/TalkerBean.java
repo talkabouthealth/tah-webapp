@@ -316,7 +316,7 @@ public class TalkerBean implements Serializable {
 		setInsuranceAccepted(getStringList(talkerDBObject, "insurance_accept"));
 		
 		//TODO: try to analyze it more
-//		Logger.info("Ta1:"+System.currentTimeMillis());
+		Logger.info("Ta1:"+System.currentTimeMillis());
 		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
 //		Logger.info("Ta2:"+System.currentTimeMillis());
 		parseFollowing((Collection<DBRef>)talkerDBObject.get("following"));

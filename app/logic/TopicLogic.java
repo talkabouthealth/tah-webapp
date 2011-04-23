@@ -12,10 +12,13 @@ import play.Logger;
 
 import com.mongodb.DBRef;
 
+import models.CommentBean;
 import models.TalkerBean;
 import models.TalkerDiseaseBean;
 import models.TopicBean;
+import models.actions.Action;
 import dao.ApplicationDAO;
+import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.TopicDAO;
 

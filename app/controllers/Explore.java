@@ -110,27 +110,19 @@ public class Explore extends Controller {
     }
     
     public static void browseMembers(String action) throws Throwable {
-    	Logger.info("====== Browse Members =======");
-    	Logger.info("BM1:"+System.currentTimeMillis());
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 
 		//Active talkers on this day
 		Calendar oneWeekBeforeNow = Calendar.getInstance();
 		oneWeekBeforeNow.add(Calendar.DAY_OF_MONTH, -7);
 		Set<TalkerBean> activeTalkers = ApplicationDAO.getActiveTalkers(oneWeekBeforeNow.getTime());
-		
-		Logger.info("BM2:"+System.currentTimeMillis());
-		
 		Set<TalkerBean> newTalkers = ApplicationDAO.getNewTalkers();
-		
-		Logger.info("BM3:"+System.currentTimeMillis());
 		
 		//check if search is performed now
 		String query = params.get("query");
 		List<TalkerBean> results = null;
 		if (query != null) {
 			params.flash("query");
-			
 			try {
 				results = SearchUtil.searchTalker(query);
 			}
@@ -138,8 +130,6 @@ public class Explore extends Controller {
 				Logger.error(e, "Talker search on Browser Members page.");
 			}
 		}
-		
-		Logger.info("BM4:"+System.currentTimeMillis());
 		
 		//Move members to particular tabs based on member's connection
 		Map<String, Set<TalkerBean>> members = new LinkedHashMap<String, Set<TalkerBean>>();
@@ -168,8 +158,6 @@ public class Explore extends Controller {
 				}
 			}
 		}
-		
-		Logger.info("BM5:"+System.currentTimeMillis());
 		
 		//default tab is 'active'
 		if (action == null || action.equals("browsemembers")) {

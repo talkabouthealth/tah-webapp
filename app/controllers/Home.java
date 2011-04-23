@@ -51,10 +51,6 @@ import dao.TopicDAO;
 @With( { Secure.class, LoggerController.class } )
 public class Home extends Controller {
 
-//	public static void index() {
-//		renderText("hello!");
-//	}
-	
 	/**
 	 * Home page
 	 */
@@ -68,9 +64,8 @@ public class Home extends Controller {
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
     	
-    	//find mentions
-    	//Set<Action> mentions = CommentsDAO.getTalkerMentions(talker);
-    	Set<Action> mentions = new HashSet<Action>();
+    	//find mentions (@<username> in the thoughts)
+    	List<Action> mentions = CommentsDAO.getTalkerMentions(talker);
     	
     	boolean showNotificationAccounts = prepareNotificationPanel(session, talker);
 		TalkerLogic.preloadTalkerInfo(talker);
@@ -80,19 +75,13 @@ public class Home extends Controller {
 //		For Profile info, we can use gender, age, marital status, number of children, and ages of children.
 		List<TopicBean> recommendedTopics = TalkerLogic.getRecommendedTopics(talker);
 		
-		Logger.info("S5:"+System.currentTimeMillis());
-		
 		List<TalkerBean> similarMembers = new ArrayList<TalkerBean>();
 		List<TalkerBean> experts = new ArrayList<TalkerBean>();
 		TalkerLogic.getRecommendedTalkers(talker, similarMembers, experts);
 	
-		Logger.info("S6:"+System.currentTimeMillis());
-		
 		List<ConversationBean> recommendedConvos = TalkerLogic.getRecommendedConvos(talker);
 		
-		Logger.info("S7:"+System.currentTimeMillis());
 		Logger.info("F1:"+ (System.currentTimeMillis() - start));
-		System.out.println("F1:"+ (System.currentTimeMillis() - start));
 		
 		boolean emailVerification = false;
 		if (session.contains("justloggedin") && talker.getVerifyCode() != null) {

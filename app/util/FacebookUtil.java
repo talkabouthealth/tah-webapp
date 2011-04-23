@@ -55,7 +55,6 @@ public class FacebookUtil {
 		//TODO: later - implement sinceId use?
 		List<ServicePost> postsList = new ArrayList<ServicePost>();
 		try {
-			//FIXME: bug with URL
 			HttpResponse res = WS.url(
 					"https://graph.facebook.com/me/posts?access_token=%s&limit=500", 
 					URLEncoder.encode(fbAccount.getToken(), "UTF-8")).get();

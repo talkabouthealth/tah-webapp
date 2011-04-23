@@ -184,7 +184,6 @@ public class ConversationDAO {
 	}
 
 	/**
-	 * TODO: check it
 	 * @return
 	 */
 	public static DBObject getBasicConversationFields() {

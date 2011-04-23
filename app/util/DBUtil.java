@@ -40,20 +40,14 @@ public class DBUtil {
 	private static Mongo mongo;
 	
 	private static String HOST_NAME = Play.configuration.getProperty("db.hostname");
+	private static int PORT = 27017;
 	//private static String HOST_NAME = null;
 	
 	static {
 		try {
-			if(HOST_NAME==null) {
-				System.out.println("Connecting to DB on localhost...");
-				mongo = new Mongo("localhost", 27017);
-				System.out.println("Connected, proceeding!");
-			}
-			else {
-				System.out.println("Connecting to DB on " + HOST_NAME + "...");
-				mongo = new Mongo(HOST_NAME, 27017);
-				System.out.println("Connected, proceeding!");
-			}
+			System.out.println("Connecting to DB on " + getHost() + "...");
+			mongo = new Mongo(getHost(), getPort());
+			System.out.println("Connected, proceeding!");
 		} catch (UnknownHostException e) {
 			Logger.error(e, "DB connection");
 		} catch (MongoException e) {
@@ -64,6 +58,18 @@ public class DBUtil {
 	public static DB getDB() {
 		//boolean auth = db.authenticate(myUserName, myPassword);
 		return mongo.getDB("tahdb");
+	}
+	
+	public static String getHost() {
+		String host = HOST_NAME;
+		if (host == null) {
+			host = "localhost";
+		}
+		return host;
+	}
+	
+	public static int getPort() {
+		return PORT;
 	}
 
 	public static DBCollection getCollection(String collectionName) {

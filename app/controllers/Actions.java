@@ -198,11 +198,19 @@ public class Actions extends Controller {
     	String oldText = comment.getText();
 		if (!oldText.equals(newText)) {
 			comment.getOldTexts().add(oldText);
-			comment.setText(newText);
+			comment.setText(newText);						
+			
 			CommentsDAO.updateProfileComment(comment);
 		}
 		
-    	renderText("ok");
+		if (comment.getFrom() != null && comment.getFrom().equalsIgnoreCase("twitter")) {
+			newText = CommonUtil.prepareTwitterThought(newText);
+		}
+		else {
+			newText = CommonUtil.prepareThought(newText);
+		}
+		
+    	renderText(newText);
     }
 	
 	

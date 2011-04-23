@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import logic.TalkerLogic;
+
 import sun.security.action.GetBooleanAction;
 import util.DBUtil;
 import util.TwitterUtil;
@@ -129,13 +131,23 @@ public class TopicBean implements Comparable<TopicBean> {
 		Collection<DBRef> childrenDBList = (Collection<DBRef>)topicDBObject.get("children");
 		children = new HashSet<TopicBean>();
 		if (childrenDBList != null) {
+			//FIXME: check this?
+			Set<TopicBean> allTopics = TalkerLogic.loadAllTopicsFromCache();
 			for (DBRef childDBRef : childrenDBList) {
-				//TODO: cache?
-				TopicBean child = new TopicBean();
-				DBObject childDBObject = childDBRef.fetch();
-				child.setId(childDBObject.get("_id").toString());
-				child.setTitle((String)childDBObject.get("title"));
-				child.setMainURL((String)childDBObject.get("main_url"));
+				TopicBean child = null;
+				for (TopicBean cachedTopic : allTopics) {
+					if (cachedTopic.getId().equals(childDBRef.getId().toString())) {
+						child = cachedTopic;
+						break;
+					}
+				}
+				if (child == null) {
+					child = new TopicBean();
+					DBObject childDBObject = childDBRef.fetch();
+					child.setId(childDBObject.get("_id").toString());
+					child.setTitle((String)childDBObject.get("title"));
+					child.setMainURL((String)childDBObject.get("main_url"));
+				}
 				children.add(child);
 			}
 		}

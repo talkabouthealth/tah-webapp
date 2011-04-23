@@ -58,7 +58,6 @@ public class FeedsLogic {
 		
 		String nextActionId = null;
 		while (true) {
-			//Logger.info("L1:"+System.currentTimeMillis());
 			List<Action> feedActions = new ArrayList<Action>();
 			switch (feedType) {
 				case CONVERSATION: 
@@ -74,8 +73,6 @@ public class FeedsLogic {
 					feedActions = ActionDAO.loadLatestByTopic(topic, nextActionId);
 					break;
 			}
-			
-			//Logger.info("L2:"+System.currentTimeMillis());
 			
 			boolean canAdd = true;
 			for (Action action : feedActions) {
@@ -106,8 +103,6 @@ public class FeedsLogic {
 					}
 				}
 			}
-			
-			//Logger.info("L3:"+System.currentTimeMillis());
 			
 			//id for next preload from db
 			nextActionId = feedActions.get(feedActions.size()-1).getId();
@@ -144,7 +139,6 @@ public class FeedsLogic {
 		//TODO: we don't need this anymore?
 		boolean canAdd = (afterActionId == null);
 		while (true) {
-			Logger.info("L1:"+System.currentTimeMillis());
 			List<Action> feedActions = new ArrayList<Action>();
 			switch (feedType) {
 				case CONVERSATION: 
@@ -161,12 +155,8 @@ public class FeedsLogic {
 					break;
 			}
 			
-			Logger.info("L2:"+System.currentTimeMillis());
-			
 			canAdd = filter(feed, feedActions, 
 					addedConvos, afterActionId, canAdd, feedsPerPage);
-			
-			Logger.info("L3:"+System.currentTimeMillis());
 			
 			//exit if no more actions to preload or feed is big enough for this page
 			if (feedActions.size() < ACTIONS_PRELOAD || feed.size() >= feedsPerPage) {

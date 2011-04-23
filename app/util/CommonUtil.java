@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -396,6 +397,9 @@ public class CommonUtil {
 		return emailsToSend;
 	}
 	
+	
+	//-------------------------------------------------------------------------
+	
 	private static Map<String, String> allTopics = new HashMap<String, String>();
 	private static List<String> allTalkers = new ArrayList<String>();
 	static {
@@ -405,24 +409,48 @@ public class CommonUtil {
 		for (TalkerBean talker : TalkerDAO.loadAllTalkers(true)) {
 			allTalkers.add(talker.getUserName());
 		}
+		//TODO: clear & finish it
+		Collections.sort(allTalkers, new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				return o2.length() - o1.length();
+			}
+		});
+	}
+	
+	public static void test() {
+		String text = "Hello @kangaroo cool! world, #Areola how #Side Effects are #Areola #cool you?";
+		System.out.println(prepareThought(text));
 	}
 
-	public static void test() {
-		String t = "Hello @kangaroo cool! world, #Areola how #Side Effects are #Areola #cool you?";
-		if (t.contains("#")) {
+	public static String prepareThought(String text) {
+		//TODO: recheck it
+		if (text.contains("#")) {
 			for (Entry<String, String> topicEntry : allTopics.entrySet()) {
-				t = t.replaceAll("#"+topicEntry.getKey(), 
+				text = text.replaceAll("#"+topicEntry.getKey(), 
 						"<a href=\"http://talkabouthealth/"+topicEntry.getValue()+"\">#&"
 						+topicEntry.getKey()+"</a>");
 			}
 		}
-		if (t.contains("@")) {
+		if (text.contains("@")) {
 			for (String talker : allTalkers) {
-				t = t.replaceAll("@"+talker, 
+				System.out.println(talker);
+				text = text.replaceAll("@"+talker, 
 						"<a href=\"http://talkabouthealth/"+talker+"\">@&"+talker+"</a>");
 			}
 		}
-		t = t.replaceAll(">#&", ">#").replaceAll(">@&", ">@");
-		System.out.println(t);
+		text = text.replaceAll(">#&", ">#").replaceAll(">@&", ">@");	
+		return text;
+	}
+
+	//TODO: fix 'more' JS for displaying HTML text
+	public static String prepareTwitterThought(String htmlText) {
+		String searchRegex = "(\\s|\\A)#(\\w+)";
+		String userRegex = "(\\s|\\A)@(\\w+)";
+		
+		htmlText = htmlText.replaceAll(searchRegex, "$1<a href=\"http://twitter.com/search?q=%23$2\" target=\"_blank\">#$2</a>");
+		htmlText = htmlText.replaceAll(userRegex, "$1<a href=\"http://twitter.com/$2\" target=\"_blank\">@$2</a>");
+		
+		return htmlText;
 	}
 }

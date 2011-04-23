@@ -661,7 +661,6 @@ public class TalkerDAO {
 //		System.out.println(talker.getUserName());
 	}
 
-	//TODO: check, update name
 	public static DBObject getBasicTalkerFields() {
 		DBObject fields = BasicDBObjectBuilder.start()
 			.add("following_topics", 0)

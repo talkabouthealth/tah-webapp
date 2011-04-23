@@ -144,6 +144,9 @@ public class CommentBean extends MessageBean {
 			setProfileTalkerId(profileTalkeRef.getId().toString());
 		}
 		
+		setFrom(getString(commentDBObject, "from_service"));
+		setFromId(getString(commentDBObject, "from_service_id"));
+		
 		setVoteScore(getInt(commentDBObject, "vote_score"));
 		setVotes(parseSet(Vote.class, commentDBObject, "votes"));
 		setNotHelpful(getBoolean(commentDBObject, "not_helpful"));

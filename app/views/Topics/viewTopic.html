@@ -10,6 +10,7 @@
   <div class="newActiveTab"><a href="#" id="latestActivity" class="tabLink">Latest Activity</a></div>
   <div class="newTab"><a href="#" id="openQuestions" class="tabLink">Unanswered Questions</a></div>
   <div class="newTab"><a href="#" id="popularConvos" class="tabLink">Popular Questions</a></div>
+  <div class="newTab"><a href="#" id="thoughts" class="tabLink">Thoughts</a></div>
   <!-- <div class="newTab"><a href="#" id="trendingConvos" class="tabLink">Trending Questions</a></div>  -->
   <div class="laborder"></div>
 </div>
@@ -31,6 +32,11 @@
 		#{list items: popularConvos, as: 'convo' }
 			#{convo/convoListItem convo: convo, talker: talker /}
 		#{/list}	
+	</div>
+	<div id="thoughtsContent" class="tabContent" style="display: none;">
+		#{list items: topicMentions, as: 'activity'}
+			#{feed/feedActivity activity: activity, talker: talker /}
+		#{/list}
 	</div>
 	*{
 		<div id="trendingConvosContent" class="tabContent" style="display: none;">

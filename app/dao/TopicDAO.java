@@ -146,7 +146,6 @@ public class TopicDAO {
 	public static TopicBean getOrRestoreByTitle(String title) {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
-		//TODO: check this
 		topicsColl.ensureIndex(new BasicDBObject("title", 1));
 		
 		DBObject query = new BasicDBObject("title", title);
