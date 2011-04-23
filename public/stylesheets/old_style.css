@@ -124,7 +124,7 @@ form { padding:0px; margin:0px;}
 #innermiddlearea {float:left; width: 942px; padding-top:20px; padding-bottom:20px;}
 #innerpersonalarea {float:left; width: 942px; padding-top:20px; padding-bottom:10px;}
 .generaltextarea {float:left; width:285px; height:27px; line-height:27px; padding-top:10px;}
-.generaltextarea2 {float:left; width:500px; height:27px; line-height:27px; padding-top:10px;}
+.generaltextarea2 {float:left; width:550px; height:27px; line-height:27px; padding-top:10px;}
 .button {float:left; width:500px;  padding-top:10px;}
 .generalcheck {float:left; width:580px;  padding-bottom:10px; }
 .generalcheck1 {float:left; width:255px; padding-right:5px; }
@@ -147,6 +147,7 @@ form { padding:0px; margin:0px;}
 .signtag { float:left; width:580px; }
 .personalmain { float:left; width:437px; padding-bottom:10px;}
 .personaltextarea {float:left; width:156px; height:27px; line-height:27px; padding-top:10px;}
+.personaltextarea11 {width:400px; height:27px; line-height:27px; padding-top:10px;}
 .personaltextfield {float:left; width:276px; background:url(../images/fieldsbg.gif) no-repeat top; height:37px; line-height:37px;  padding-top:4px; padding-left:5px;  }
 #personalsettings {float:left; width:270px; height:37px; line-height:37px; }
 .personalcheck {float:left; width:281px; padding: 10px 0px; }
@@ -154,7 +155,13 @@ form { padding:0px; margin:0px;}
 .personalcheck2 {float:left; width:138px;   }
 .personaltextarea2 {float:left; width:156px; height:94px; padding-top:10px;}
 .textareabig {float:left; width:276px; background:url(../images/textareabig.gif) no-repeat top; height:94px; padding-top:4px; margin-bottom:5px; padding-left:5px; }
+.textareabiger {float:left; width:435px; background:url(../images/textareabiger.gif) no-repeat top; height:196px; padding-top:6px; margin-bottom:5px; padding-left:10px; }
+.textareabigerer {float:left; width:550px;background:url(../images/textareabigerer.gif) no-repeat top; height:196px; padding-top:6px; margin-bottom:5px; padding-left:10px; }
+.textareabigerer1 {float:left; width:495px;background:url(../images/textareabigerer1.gif) no-repeat top; height:196px; padding-top:6px; margin-bottom:5px; padding-left:10px; }
 .textarea3 { border:0px solid #ffffff; width:271px; height:85px;}
+.textarea4 { border:0px solid #ffffff; width:420px; height:185px;}
+.textarea5 { border:0px solid #ffffff; width:535px; height:185px;}
+.textarea6 { border:0px solid #ffffff; width:480px; height:185px;}
 #personalright { float:left; width:143px; padding-left:10px;}
 #personalrightimg { float:left; width:143px; }
 #personalrighttext { float:left; width:143px; padding-top:5px; }

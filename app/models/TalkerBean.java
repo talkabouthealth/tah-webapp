@@ -46,15 +46,21 @@ import static util.DBUtil.*;
 public class TalkerBean implements Serializable {
 	
 	public static final String[] CONNECTIONS_ARRAY = new String[] {
-		"Patient","High Risk Individual","Former Patient", "Parent", "Caregiver", "Family member", "Friend", 
+		//"Patient","High Risk Individual","Former Patient",
+		"High Risk Individual","Just Diagnosed","Current Patient","Survivor (1 year)","Survivor (2 - 5 years)",
+		"Survivor (5 - 10 years)","Survivor (10 - 20 years)","Survivor (Greater than 20 years)",
+		"Parent", "Caregiver", "Family member", "Friend", 
 		//"professionals"
-		"Physician", "Pharmacist", "Nurse", "Psychologist", "Social worker", "Researcher", 
+		"Physician", "Pharmacist", "Nurse", "Psychologist", "Social worker", "Complementary Care Expert","Researcher", 
 		"Organization","Support Group",
 		 "other"
 	};
+	public static final List<String> CONNECTIONS_INTERRUPTORS = Arrays.asList(
+		"Survivor (Greater than 20 years)","Friend","Researcher"
+	);
 	// only professionals in this list
 	public static final List<String> PROFESSIONAL_CONNECTIONS_LIST = Arrays.asList(
-		"Physician", "Pharmacist", "Nurse", "Psychologist", "Social worker", "Researcher", "Organization","Support Group"
+		"Physician", "Pharmacist", "Nurse", "Psychologist", "Social worker","Complementary Care Expert","Researcher", "Organization","Support Group"
 	);
 	// only organizations in this list
 	public static final List<String> ORGANIZATIONS_CONNECTIONS_LIST = Arrays.asList(
@@ -655,6 +661,10 @@ public class TalkerBean implements Serializable {
 	public boolean isOrg() {
 		return ORGANIZATIONS_CONNECTIONS_LIST.contains(connection);
 	}
+	
+	static public boolean isInterruptor(String name) {
+		return TalkerBean.CONNECTIONS_INTERRUPTORS.contains(name);
+	}	
 	
 	public boolean isHighRiskQ(String name) {
 		return HIGH_RISK_QUESTIONS_SET.contains(name);

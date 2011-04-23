@@ -4,6 +4,14 @@ import play.mvc.Controller;
 
 public class Static extends Controller {
 	
+	public static void resources() {
+		render();
+	}
+	
+	public static void howitworks() {
+		render();
+	}
+	
     public static void aboutus() {
         render();
     }
