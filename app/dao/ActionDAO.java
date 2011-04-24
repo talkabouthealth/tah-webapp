@@ -99,7 +99,7 @@ public class ActionDAO {
 	
 	//Talker feed contains all except 'UPDATE_...' actions
 	private static final EnumSet<ActionType> TALKER_FEED_ACTIONS = EnumSet.complementOf(
-			EnumSet.of(ActionType.UPDATE_BIO, ActionType.UPDATE_HEALTH, ActionType.UPDATE_PERSONAL)
+			EnumSet.of(ActionType.UPDATE_BIO, ActionType.UPDATE_HEALTH, ActionType.UPDATE_PERSONAL,ActionType.GIVE_THANKS,ActionType.FOLLOW_TALKER)
 		);
 	
 	
