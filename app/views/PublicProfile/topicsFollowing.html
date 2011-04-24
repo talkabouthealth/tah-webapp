@@ -101,15 +101,20 @@
 		
 		<div class="topicfoltxtCover">
 			<div class="topicfoltxt1">
-				<a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a> - 
+				<a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a> 
+				<!-- YURIY: REMOVE ENDORESEMENTS
+				-
+				--> 
 				<span class="topicfoltxtsub">
 					#{if talkerTopicInfo?.numOfAnswers != 0}
-						${talkerTopicInfo?.numOfAnswers} answer(s) | 
+						- ${talkerTopicInfo?.numOfAnswers} answer(s) | 
 					#{/if}
+					<!-- YURIY: REMOVE ENDORESEMENTS
 					Endorsements: ${talkerTopicInfo.endorsements.size()}
 					#{ifnot currentTalker == null || currentTalker.equals(talker) || talkerTopicInfo.endorsements.contains(currentTalker) }
 						&nbsp;|&nbsp;<a href="#" onclick="return endorse('${topic.id}');">Endorse</a>
 					#{/ifnot}
+					-->
 				</span>
 			</div>
 			#{if currentTalker}
