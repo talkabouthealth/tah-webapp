@@ -121,29 +121,23 @@ public class TemplateExtensions extends JavaExtensions {
 		return false;
 	}
 	
-	public static Object linkify(String text) {
-		String htmlText = CommonUtil.linkify(text);
-		
-		//TODO: only for thoughts? for Twitter thoughts?
-		htmlText = CommonUtil.prepareThought(htmlText);
-		
-		htmlText = htmlText.replace("\n", "<br/>");
-		return JavaExtensions.raw(htmlText);
-	}
-	
-	public static Object printThought(CommentBean thought) {
-		String text = thought.getText();
+	public static Object printThoughtOrAnswer(CommentBean thoughtOrAnswer) {
+		String text = thoughtOrAnswer.getText();
 		if (text == null) {
 			return "";
 		}
 		
-		String htmlText = CommonUtil.linkify(text);
+		//delinkify because previously we store links in db
+		//TODO: update db?
+		text = text.replaceAll("<a[^>]*>", "");
+		text = text.replaceAll("</a>", "");
 		
-		if (thought.getFrom() != null && thought.getFrom().equalsIgnoreCase("twitter")) {
+		String htmlText = text;
+		if (thoughtOrAnswer.getFrom() != null && thoughtOrAnswer.getFrom().equalsIgnoreCase("twitter")) {
 			htmlText = CommonUtil.prepareTwitterThought(htmlText);
 		}
 		else {
-			htmlText = CommonUtil.prepareThought(htmlText);
+			htmlText = CommonUtil.prepareThoughtOrAnswer(htmlText);
 		}
 		
 		htmlText = htmlText.replace("\n", "<br/>");

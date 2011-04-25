@@ -323,18 +323,11 @@ public class TalkerBean implements Serializable {
 		
 		setInsuranceAccepted(getStringList(talkerDBObject, "insurance_accept"));
 		
-		//TODO: try to analyze it more
-		Logger.info("Ta1:"+System.currentTimeMillis());
 		parseThankYous((Collection<DBObject>)talkerDBObject.get("thankyous"));
-//		Logger.info("Ta2:"+System.currentTimeMillis());
 		parseFollowing((Collection<DBRef>)talkerDBObject.get("following"));
-//		Logger.info("Ta3:"+System.currentTimeMillis());
 		setFollowingConvosList(getStringList(talkerDBObject, "following_convos"));
-//		Logger.info("Ta4:"+System.currentTimeMillis());
 		parseFollowingTopics((Collection<DBRef>)talkerDBObject.get("following_topics"));
-//		Logger.info("Ta5:"+System.currentTimeMillis());
 		parseTopicsInfo((Collection<DBObject>)talkerDBObject.get("topics_info"));
-//		Logger.info("Ta6:"+System.currentTimeMillis());
 		setAnswerList(CommentsDAO.getTalkerAnswers(getId(), null));
 	}
 	
@@ -364,19 +357,9 @@ public class TalkerBean implements Serializable {
 	private void parseFollowing(Collection<DBRef> followingDBList) {
 		followingList = new ArrayList<TalkerBean>();
 		if (followingDBList != null) {
-			List<TalkerBean> allTalkers = TalkerLogic.loadAllTalkersFromCache();
 			for (DBRef followingDBRef : followingDBList) {
-				TalkerBean followingTalker = null;
-				for (TalkerBean cachedTalker : allTalkers) {
-					if (cachedTalker.getId().equals(followingDBRef.getId().toString())) {
-						followingTalker = cachedTalker;
-						break;
-					}
-				}
-				if (followingTalker == null) {
-					followingTalker = TalkerDAO.parseTalker(followingDBRef);
-				}
-				
+				TalkerBean followingTalker = 
+					TalkerLogic.loadTalkerFromCache(followingDBRef.getId().toString());
 				if (! (followingTalker.isDeactivated() || followingTalker.isSuspended()) ) {
 					followingList.add(followingTalker);
 				}
@@ -430,7 +413,7 @@ public class TalkerBean implements Serializable {
 				//topic
 				DBObject topicDBObject = ((DBRef)topicInfoDBObject.get("topic")).fetch();
 				TopicBean topic = new TopicBean();
-				topic.parseFromDB(topicDBObject);
+				topic.parseBasicFromDB(topicDBObject);
 				
 				if (topic.getId() == null) {
 					//maybe deleted topic

@@ -62,7 +62,9 @@ public class ThoughtsFromServicesJob extends Job {
 			    		boolean isDuplicate = CommentsDAO.getThoughtDuplicates(talker.getId(),post.getText(),3);
 			    		
 			    		if (thought == null && !isDuplicate) {
-			    			String htmlText = prepareText(serviceAccount.getType(), post.getText());
+			    			//Now we do no store html tags in the db
+//			    			String htmlText = prepareText(serviceAccount.getType(), post.getText());
+			    			String htmlText = post.getText();
 			    			TalkerLogic.saveProfileComment(talker, talker.getId(), null, 
 									htmlText, post.getText(), 
 									serviceAccount.getType().toString(), post.getId(), null, null);
@@ -77,9 +79,7 @@ public class ThoughtsFromServicesJob extends Job {
 		}
 	}
 
-	
 	private String prepareText(ServiceType type, String text) {
-		//TODO: remove from db?
 		String htmlText = CommonUtil.linkify(text);
 		return htmlText;
 	}

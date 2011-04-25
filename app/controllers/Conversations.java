@@ -478,6 +478,9 @@ public class Conversations extends Controller {
     			answer.setText(newText);
     			CommentsDAO.updateConvoComment(answer);
     		}
+    		
+   			newText = CommonUtil.prepareThoughtOrAnswer(newText);
+        	renderText(newText);
     	}
     	else if (todo.equalsIgnoreCase("delete")) {
     		answer.setDeleted(true);

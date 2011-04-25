@@ -77,7 +77,7 @@
 				        				<p>
 				        					#{set topAnswer = _convo.comments.get(0) /}
 					        				<span class="blacktext14">Top Answer by: ${topAnswer.fromTalker.name}</span><br/>
-					        				<span class="blacktext12">${topAnswer.text?.raw()}</span>
+					        				<span class="blacktext12">${topAnswer.printThoughtOrAnswer()}</span>
 					        			</p>
 				        			#{/elseif}
 								</div>

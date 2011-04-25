@@ -109,7 +109,6 @@ public class PublicProfile extends Controller {
 	 * @param userName
 	 */
 	public static void conversations(String userName) {
-		//TODO: can we improver this? very common
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		TalkerBean talker = TalkerDAO.getByURLName(userName);
 		notFoundIfNull(talker);

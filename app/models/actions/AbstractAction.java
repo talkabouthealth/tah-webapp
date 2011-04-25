@@ -29,9 +29,7 @@ import models.TalkerBean;
 import models.ConversationBean;
 import models.TopicBean;
 
-//TODO: maybe write text descritions? Like:
-//Every action has different data - convo, topics, answer or all this data together... Etc.
-
+//Every action has different data - convo, topics, answer or all this data together...
 public abstract class AbstractAction implements Action {
 	
 	protected String id;

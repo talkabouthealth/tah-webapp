@@ -269,7 +269,8 @@
    	   			alert("Please enter thought");
    	   			return;
    			}
-   			linkedText = linkify(text);
+   			//linkedText = linkify(text);
+   			linkedText = text;
 
    			$.post("@{Actions.saveProfileComment()}", 
   				{ parentId: '', text: linkedText, cleanText: text, from: 'home', 

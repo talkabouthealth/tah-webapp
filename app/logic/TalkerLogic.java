@@ -618,7 +618,6 @@ public class TalkerLogic {
 		}
 		if (loadedTopics.isEmpty()) {
 			//display most popular Topics based on views
-			//TODO: list or set?
 			loadedTopics = new ArrayList<TopicBean>(loadAllTopicsFromCache());
 		}
 		
@@ -927,7 +926,7 @@ public class TalkerLogic {
 	 *  
 	 */
 	
-	//TODO: serializable?
+	//FIXME: check? time of cache? remove cache entry on talker's update? serializable
 	public static List<TalkerBean> loadAllTalkersFromCache() {
 		List<TalkerBean> allTalkers = (List<TalkerBean>) Cache.get("talkersList"); 
 		if (allTalkers == null) {
@@ -937,7 +936,6 @@ public class TalkerLogic {
 		return allTalkers;
 	}
 	
-	//FIXME: check? time of cache? remove cache entry on talker's update?
 	public static TalkerBean loadTalkerFromCache(DBObject dbObject, String name) {
 		DBRef talkerRef = (DBRef)dbObject.get(name);
 		if (talkerRef == null) {

@@ -265,7 +265,7 @@
    	   		var commentText = $("#replytext"+parentId).val();
    			$("#replytext"+parentId).val("");
    			$("#saveAnswerImage"+parentId).show();
-   			commentText = linkify(commentText);
+   			//commentText = linkify(commentText);
 
    			$.post("@{Conversations.saveAnswerOrReply()}", 
   				{ convoId: '${convo.id}', parentId: parentId, text: commentText},
@@ -334,7 +334,6 @@
    	   		var replyText = $("#convoReplyText").val();
    	   		$("#convoReplyText").val("");
    			$("#saveConvoReplyImage").show();
-   			replyText = linkify(replyText);
 
    			$.post("@{Conversations.saveConvoReply()}", 
   				{ convoId: '${convo.id}', text: replyText},

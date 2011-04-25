@@ -207,7 +207,7 @@ public class Actions extends Controller {
 			newText = CommonUtil.prepareTwitterThought(newText);
 		}
 		else {
-			newText = CommonUtil.prepareThought(newText);
+			newText = CommonUtil.prepareThoughtOrAnswer(newText);
 		}
 		
     	renderText(newText);

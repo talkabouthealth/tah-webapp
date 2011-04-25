@@ -154,22 +154,32 @@
 				$form.hide();
 				
 				if ($dataType.indexOf('commentEdit') == 0) {
-					//TODO: remove completely?
-					newValue = linkify(newValue);
-					newValue = newValue.replace(/\n/g, '<br/>');
-					
 					var commentId = $dataType.substring(11);
 					
 		   	   		$.post("/actions/updateComment", 
 		  				{ commentId: commentId, newText: newValue},
-		  				function(newText) {		  					
-							$view.html(newText);
+		  				function(returnText) {		  					
+							$view.html(returnText);
 							
 							$displayEmpty.hide();
 							$displayFull.show();
 							$display.show();
 		  				}
 		  			);		  			
+				}
+				else if ($dataType.indexOf('answerEdit') == 0) {
+					var answerId = $dataType.substring(10);
+					
+		   	   		$.post("/conversations/updateAnswer", 
+		  				{ answerId: answerId, todo: 'update', newText: newValue},
+		  				function(returnText) {
+		  					$view.html(returnText);
+							
+							$displayEmpty.hide();
+							$displayFull.show();
+							$display.show();
+		  				}
+		  			);
 				}
 				else {
 					//prepare plain text for display

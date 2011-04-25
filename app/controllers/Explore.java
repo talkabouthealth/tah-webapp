@@ -88,21 +88,14 @@ public class Explore extends Controller {
     }
     
     public static void browseTopics() {
-    	Logger.info("====== Browse Topics =======");
-    	Logger.info("BT1:"+System.currentTimeMillis());
-    	
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	if (talker != null) {
     		TalkerLogic.preloadTalkerInfo(talker);
     	}
     	
     	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics();
-    	
-    	Logger.info("BT2:"+System.currentTimeMillis());
-    	
     	Set<TopicBean> topicsTree = TopicLogic.getAllTopicsTree();
     	
-    	Logger.info("BT3:"+System.currentTimeMillis());
     	render(topicsTree, talker, popularTopics);
     }
     

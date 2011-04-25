@@ -109,6 +109,8 @@ public class TopicBean implements Comparable<TopicBean> {
 		setDeleted(getBoolean(topicDBObject, "deleted"));
 		setMainURL((String)topicDBObject.get("main_url"));
 		setBitly((String)topicDBObject.get("bitly"));
+		setViews(DBUtil.getInt(topicDBObject, "views"));
+		setCreationDate((Date)topicDBObject.get("cr_date"));
 	}
 	
 	public void parseFromDB(DBObject topicDBObject) {
@@ -120,8 +122,6 @@ public class TopicBean implements Comparable<TopicBean> {
 		setSummary((String)topicDBObject.get("summary"));
 		setAliases(getStringSet(topicDBObject, "aliases"));
 		setOldNames(parseSet(URLName.class, topicDBObject, "old_names"));
-		setViews(DBUtil.getInt(topicDBObject, "views"));
-		setCreationDate((Date)topicDBObject.get("cr_date"));
 		
 		parseRelatives(topicDBObject);
 	}

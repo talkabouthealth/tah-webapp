@@ -263,7 +263,8 @@ function saveProfileComment(parentId, parentList) {
 	$(parentListId+".replytext"+parentId).val("");
 	
 	//YURIY: FIX FOR URLS IN REPLIES NOT BEING TRANSLATED -- SPENT 2h TO HUNT THIS DOWN %-/
-	linkedText = linkify(commentText);
+	//linkedText = linkify(commentText);
+	linkedText = commentText;
 
 	$.post("/actions/saveProfileComment", 
 		{ parentId: parentId, text: linkedText},

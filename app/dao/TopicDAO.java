@@ -128,6 +128,8 @@ public class TopicDAO {
 			.add("deleted", 1)
 			.add("main_url", 1)
 			.add("bitly", 1)
+			.add("views", 1)
+			.add("cr_date", 1)
 			.get();
 		
 		DBObject query = new BasicDBObject("_id", new ObjectId(topicId));
@@ -184,6 +186,8 @@ public class TopicDAO {
 				.add("deleted", 1)
 				.add("main_url", 1)
 				.add("bitly", 1)
+				.add("views", 1)
+				.add("cr_date", 1)
 				.get();
 			
 			topicsDBList = topicsColl.find(query, fields).sort(new BasicDBObject("views", -1)).toArray();

@@ -506,15 +506,15 @@ public class CommentsDAO {
 		return topCommentsList;
 	}
 	
-	//TODO: add also answers?
+	/**
+	 * Returns talker's mentions ('@username') in thoughts and answers
+	 * @param talker
+	 * @return
+	 */
 	public static List<Action> getTalkerMentions(TalkerBean talker) {
-		//for case insensitive search we use regex
-		//TODO: should be space or end of the thought? or other symbols????
-		Pattern mentionRegex = Pattern.compile("@"+talker.getUserName()+"\\s");
-		
 		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
 		
-		//TODO: only thoughts without replies?
+		Pattern mentionRegex = Pattern.compile("@"+talker.getUserName()+"[^\\w]*");
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("text", mentionRegex)
 			.get();
@@ -546,7 +546,6 @@ public class CommentsDAO {
 			answer.parseFromDB(commentDBObject);
 			
 			ConversationBean convo = TalkerLogic.loadConvoFromCache(answer.getConvoId());
-//			convo.setComments(convoAnswers);
 			
 			AnswerDisplayAction answerAction = new AnswerDisplayAction(convo.getTalker(), convo,
 					answer, ActionType.ANSWER_CONVO, false);
@@ -564,14 +563,10 @@ public class CommentsDAO {
 		return talkerMentions;
 	}
 
-	//TODO: similar method
-	//TODO: load replies??
 	public static List<Action> getTopicMentions(TopicBean topic) {
-		//for case insensitive search we use regex
-		Pattern mentionRegex = Pattern.compile("#"+topic.getTitle());
-		
 		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
 		
+		Pattern mentionRegex = Pattern.compile("#"+topic.getTitle()+"[^\\w]*");
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("text", mentionRegex)
 			.get();

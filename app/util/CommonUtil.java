@@ -31,9 +31,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.ComparatorUtils;
 import org.apache.commons.lang.StringUtils;
 
 import logic.ConversationLogic;
@@ -399,9 +403,9 @@ public class CommonUtil {
 	
 	
 	//-------------------------------------------------------------------------
-	
-	private static Map<String, String> allTopics = new HashMap<String, String>();
-	private static List<String> allTalkers = new ArrayList<String>();
+	//TODO: test code for linkifying, update later
+	private static Map<String, String> allTopics = new TreeMap<String, String>(new StringLengthComparator());
+	private static Set<String> allTalkers = new TreeSet<String>(new StringLengthComparator());
 	static {
 		for (TopicBean topic : TopicDAO.loadAllTopics(true)) {
 			allTopics.put(topic.getTitle(), topic.getMainURL());
@@ -409,22 +413,21 @@ public class CommonUtil {
 		for (TalkerBean talker : TalkerDAO.loadAllTalkers(true)) {
 			allTalkers.add(talker.getUserName());
 		}
-		//TODO: clear & finish it
-		Collections.sort(allTalkers, new Comparator<String>() {
-			@Override
-			public int compare(String o1, String o2) {
+	}
+	private static class StringLengthComparator implements Comparator<String> {
+		@Override
+		public int compare(String o1, String o2) {
+			if (o1.length() == o2.length()) {
+				return o1.compareTo(o2);
+			}
+			else {
 				return o2.length() - o1.length();
 			}
-		});
+		}
 	}
 	
-	public static void test() {
-		String text = "Hello @kangaroo cool! world, #Areola how #Side Effects are #Areola #cool you?";
-		System.out.println(prepareThought(text));
-	}
-
-	public static String prepareThought(String text) {
-		//TODO: recheck it
+	public static String prepareThoughtOrAnswer(String text) {
+		text = CommonUtil.linkify(text);
 		if (text.contains("#")) {
 			for (Entry<String, String> topicEntry : allTopics.entrySet()) {
 				text = text.replaceAll("#"+topicEntry.getKey(), 
@@ -434,7 +437,6 @@ public class CommonUtil {
 		}
 		if (text.contains("@")) {
 			for (String talker : allTalkers) {
-//				System.out.println(talker);
 				text = text.replaceAll("@"+talker, 
 						"<a href=\"http://talkabouthealth/"+talker+"\">@&"+talker+"</a>");
 			}
@@ -445,6 +447,8 @@ public class CommonUtil {
 
 	//TODO: fix 'more' JS for displaying HTML text
 	public static String prepareTwitterThought(String htmlText) {
+		htmlText = CommonUtil.linkify(htmlText);
+		
 		String searchRegex = "(\\s|\\A)#(\\w+)";
 		String userRegex = "(\\s|\\A)@(\\w+)";
 		

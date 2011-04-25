@@ -38,16 +38,15 @@ import dao.TalkerDAO;
  */
 public class TwitterOAuthProvider implements OAuthServiceProvider {
 	
-//	public static final String CONSUMER_KEY = "D9iFrN4G8ObpLCtGJ9w";
-//	public static final String CONSUMER_SECRET = "Yy1srQbpldqjtqzzAXpJe3RzuWGxHFKPCF8FPsZKU";
-//	private static final String CALLBACK_URL =
-//		"talkabouthealth.com/oauth/callback?type=twitter";
+	public static final String CONSUMER_KEY = "D9iFrN4G8ObpLCtGJ9w";
+	public static final String CONSUMER_SECRET = "Yy1srQbpldqjtqzzAXpJe3RzuWGxHFKPCF8FPsZKU";
+	private static final String CALLBACK_URL =
+		"talkabouthealth.com/oauth/callback?type=twitter";
 	
-	//FIXME: Update this!!
-	public static final String CONSUMER_KEY = "7VymbW3wmOOoQ892BqIsaA";
-	public static final String CONSUMER_SECRET = "s8aexaIBgMxAm4ZqQNayv5SAr6Wd1SKFVETUEPv0cmM";
-	public static final String CALLBACK_URL =
-		"kan.dev.com:9000/oauth/callback?type=twitter";
+//	public static final String CONSUMER_KEY = "7VymbW3wmOOoQ892BqIsaA";
+//	public static final String CONSUMER_SECRET = "s8aexaIBgMxAm4ZqQNayv5SAr6Wd1SKFVETUEPv0cmM";
+//	public static final String CALLBACK_URL =
+//		"kan.dev.com:9000/oauth/callback?type=twitter";
 	
 	private OAuthConsumer consumer;
 	private OAuthProvider provider;
