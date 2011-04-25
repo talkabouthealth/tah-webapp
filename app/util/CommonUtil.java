@@ -430,6 +430,9 @@ public class CommonUtil {
 		text = CommonUtil.linkify(text);
 		if (text.contains("#")) {
 			for (Entry<String, String> topicEntry : allTopics.entrySet()) {
+				if (topicEntry.getKey().length() == 0) {
+					continue;
+				}
 				text = text.replaceAll("#"+topicEntry.getKey(), 
 						"<a href=\"http://talkabouthealth/"+topicEntry.getValue()+"\">#&"
 						+topicEntry.getKey()+"</a>");
