@@ -434,14 +434,14 @@ public class CommonUtil {
 					continue;
 				}
 				text = text.replaceAll("#"+topicEntry.getKey(), 
-						"<a href=\"http://talkabouthealth/"+topicEntry.getValue()+"\">#&"
+						"<a href=\"http://talkabouthealth.com/"+topicEntry.getValue()+"\">#&"
 						+topicEntry.getKey()+"</a>");
 			}
 		}
 		if (text.contains("@")) {
 			for (String talker : allTalkers) {
 				text = text.replaceAll("@"+talker, 
-						"<a href=\"http://talkabouthealth/"+talker+"\">@&"+talker+"</a>");
+						"<a href=\"http://talkabouthealth.com/"+talker+"\">@&"+talker+"</a>");
 			}
 		}
 		text = text.replaceAll(">#&", ">#").replaceAll(">@&", ">@");	
