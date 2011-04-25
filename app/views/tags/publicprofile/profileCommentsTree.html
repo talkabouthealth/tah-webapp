@@ -27,7 +27,7 @@
 								<a href="@{ViewDispatcher.view(comment.fromTalker.name)}">${comment.fromTalker.name}</a>
 							</span>&nbsp;&nbsp;&nbsp;
 							<span class="inline_view moretext2" style="color:#000000;">${comment.printThought()}</span>
-							#{if _showDelete && session.username?.equals(comment.fromTalker.userName)}
+							#{if _showDelete || session.username?.equals(comment.fromTalker.userName)}
 								<span class="editit2">
 									<a href="#" class="inline_editlink">Edit</a>
 								</span>
@@ -70,7 +70,7 @@
 						<a href="#" onclick="return showAllReplies('${comment.id}');">View all ${comment.children?.size()} replies</a>
 					#{/else}
 				#{/if}
-				#{if _showDelete }
+				#{if _showDelete || session.username?.equals(comment.fromTalker.userName) }
 					&nbsp;|&nbsp;
 					<a href="#" onclick="deleteComment('${comment.id}');">Delete</a>
 				#{/if}
