@@ -90,6 +90,24 @@
 	}
 	
 	document.onclick = jsddm_close;
+	
+// MOVED YURIY
+   		function deleteComment(commentId) {
+   	   		var confirmDel = confirm("Are you sure want to delete this thought/reply?");
+   	   		if (confirmDel) {
+   	   	   		//$(".comment"+commentId).remove();
+   	   	   		$(".comment"+commentId).html("<div class=\"inline_view moretext2\" style=\"color:#000000;padding-bottom:5px; border-bottom:solid 0px gray\">Thought deleted ...</span>");
+
+   	   	  		$.post("@{Actions.deleteComment()}", 
+    				{ commentId : commentId},
+    				function(html) {
+    	  				//...
+    				}
+    			);
+   	   		}
+   	   		return false;
+   		}
+// MOVED YURIY   			
 </script>
 <div id="top_container">
 	<div id="top">

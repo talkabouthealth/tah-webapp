@@ -65,21 +65,6 @@
    			
   			return false;
    		}
-
-   		function deleteComment(commentId) {
-   	   		var confirmDel = confirm("Are you sure want to delete this thought/reply?");
-   	   		if (confirmDel) {
-   	   	   		$(".comment"+commentId).remove();
-
-   	   	  		$.post("@{Actions.deleteComment()}", 
-    				{ commentId : commentId},
-    				function(html) {
-    	  				//...
-    				}
-    			);
-   	   		}
-   	   		return false;
-   		}
 	</script>
 		
 <div id="managtopic1">
