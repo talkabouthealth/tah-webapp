@@ -1,6 +1,8 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -155,4 +157,28 @@ public class TopicLogic {
 		return recommendedTopics;
 	}
 
+	/**
+	 * Loads the most popular 20 topics, based on number of questions.
+	 */
+	public static List<TopicBean> loadPopularTopics() {
+		List<TopicBean> popularTopics = new ArrayList<TopicBean>();
+		for (TopicBean topic : TalkerLogic.loadAllTopicsFromCache()) {
+			if (topic.getConversations() == null) {
+				topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
+			}
+			popularTopics.add(topic);
+		}
+		
+		//sort by number of questions
+		Collections.sort(popularTopics, new Comparator<TopicBean>() {
+			@Override
+			public int compare(TopicBean o1, TopicBean o2) {
+				return o2.getConversations().size() - o1.getConversations().size();
+			}		
+		});
+		if (popularTopics.size() > 20) {
+			popularTopics = popularTopics.subList(0, 20);
+		}
+		return popularTopics;
+	}
 }

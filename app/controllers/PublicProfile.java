@@ -108,7 +108,6 @@ public class PublicProfile extends Controller {
 	 * Started/Joined/Following conversations
 	 * @param userName
 	 */
-	//TODO: later - add paging? as we have many convos on this page
 	public static void conversations(String userName) {
 		//TODO: can we improver this? very common
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
@@ -120,14 +119,18 @@ public class PublicProfile extends Controller {
 					ConversationDAO.getStartedConvos(talker.getId(), null, ConversationLogic.CONVERSATIONS_PER_PAGE));
 		int numOfStartedConvos = ConversationDAO.getNumOfStartedConvos(talker.getId());
 		
+		//Chats were removed temporarily
+		List<Action> joinedConvosFeed = new ArrayList<Action>();
+		/*
 		List<Action> joinedConvosFeed = 
 			ConversationLogic.convosToFeed(ConversationDAO.loadConversations(talker.getId(), ActionType.JOIN_CONVO));
+		*/
 		
 		List<Action> followingConvosFeed = 
 			ConversationLogic.convosToFeed(
 					TalkerLogic.loadFollowingConversations(talker, null, ConversationLogic.CONVERSATIONS_PER_PAGE));
 		int numOfFollowingConvos = TalkerLogic.getNumOfFollowingConversations(talker);
-		
+
 		TalkerLogic.preloadTalkerInfo(talker);
 		boolean noHealthInfo = TalkerLogic.talkerHasNoHealthInfo(talker);
 		

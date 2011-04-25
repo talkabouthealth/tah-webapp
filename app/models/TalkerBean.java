@@ -189,7 +189,9 @@ public class TalkerBean implements Serializable {
 	private String state;
 	private String country;
 	private String zip;
-	//a set of hidden help popups for this user
+	
+	//Contains different settings for this user
+	//(e.g. name of help panels that were hidden by this user)
 	private Set<String> hiddenHelps = new HashSet<String>();
 	
 	//notifications settings
@@ -385,19 +387,9 @@ public class TalkerBean implements Serializable {
 	private void parseFollowingTopics(Collection<DBRef> followingTopicsDBList) {
 		followingTopicsList = new LinkedHashSet<TopicBean>();
 		if (followingTopicsDBList != null) {
-			Set<TopicBean> allTopics = TalkerLogic.loadAllTopicsFromCache();
 			for (DBRef topicDBRef : followingTopicsDBList) {
-				//TODO: better to have common function
-				TopicBean followingTopic = null;
-				for (TopicBean cachedTopic : allTopics) {
-					if (cachedTopic.getId().equals(topicDBRef.getId().toString())) {
-						followingTopic = cachedTopic;
-						break;
-					}
-				}
-				if (followingTopic == null) {
-					followingTopic = TopicDAO.getByIdBasic(topicDBRef.getId().toString());
-				}
+				TopicBean followingTopic = 
+					TalkerLogic.loadTopicFromCache(topicDBRef.getId().toString());
 				
 				if (!followingTopic.isDeleted()) {
 					followingTopicsList.add(followingTopic);

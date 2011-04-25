@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import logic.TalkerLogic;
 import models.CommentBean;
 import models.EmailBean;
 import models.IMAccountBean;
@@ -611,37 +612,16 @@ public class TalkerDAO {
 	
 	public static List<TalkerBean> loadFollowers(String talkerId) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
-
+		
 		DBRef followingTalkerRef = createRef(TALKERS_COLLECTION, talkerId);
-		//move to method
-		DBObject fields = BasicDBObjectBuilder.start()
-			.add("following_topics", 0)
-			.add("following_convos", 0)
-			.add("img", 0)
-			.add("following", 0)
-			.add("topics_info", 0)
-			.add("thankyous", 0)
-			.add("hidden_helps", 0)
-			.add("ch_ages", 0)
-			.add("keywords", 0)
-			.add("ethnicities", 0)
-			.add("languages", 0)
-			.add("insurance_accept", 0)
-			.get();
 		BasicDBObject query = new BasicDBObject("following", followingTalkerRef);
-		List<DBObject> followerDBList = talkersColl.find(query, fields).toArray();
+		
+		List<DBObject> followerDBList = talkersColl.find(query, new BasicDBObject("_id", 1)).toArray();
 		
 		List<TalkerBean> followerList = new ArrayList<TalkerBean>();
 		for (DBObject followerDBObject : followerDBList) {
-			TalkerBean followerTalker = new TalkerBean();
-			
-			boolean isDeactivated = getBoolean(followerDBObject, "deactivated");
-			boolean isSuspended = getBoolean(followerDBObject, "suspended");
-			if (isDeactivated || isSuspended) {
-				continue;
-			}
-			
-			followerTalker.parseBasicFromDB(followerDBObject);
+			TalkerBean followerTalker = 
+				TalkerLogic.loadTalkerFromCache(followerDBObject.get("_id").toString());
 			followerList.add(followerTalker);
 		}
 		

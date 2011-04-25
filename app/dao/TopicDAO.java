@@ -311,36 +311,4 @@ public class TopicDAO {
 		return recentTopics;
 	}
 	
-	/**
-	 * Loads the most popular 20 topics, based on number of questions.
-	 */
-	public static List<TopicBean> getPopularTopics() {
-		//TODO: temp, fix it with cache
-		return new ArrayList<TopicBean>();
-		
-//		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
-//		
-//		DBObject query = new BasicDBObject("deleted", new BasicDBObject("$ne", true));
-//		List<DBObject> topicsDBList = topicsColl.find(query).sort(new BasicDBObject("last_update", -1)).toArray();
-//		
-//		List<TopicBean> popularTopics = new ArrayList<TopicBean>();
-//		for (DBObject topicDBObject : topicsDBList) {
-//			TopicBean topic = new TopicBean();
-//			topic.parseBasicFromDB(topicDBObject);
-//			topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
-//			popularTopics.add(topic);
-//		}
-//		
-//		//sort by number of questions
-//		Collections.sort(popularTopics, new Comparator<TopicBean>() {
-//			@Override
-//			public int compare(TopicBean o1, TopicBean o2) {
-//				return o2.getConversations().size() - o1.getConversations().size();
-//			}		
-//		});
-//		if (popularTopics.size() > 20) {
-//			popularTopics = popularTopics.subList(0, 20);
-//		}
-//		return popularTopics;
-	}
 }

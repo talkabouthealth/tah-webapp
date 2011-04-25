@@ -131,23 +131,8 @@ public class TopicBean implements Comparable<TopicBean> {
 		Collection<DBRef> childrenDBList = (Collection<DBRef>)topicDBObject.get("children");
 		children = new HashSet<TopicBean>();
 		if (childrenDBList != null) {
-			//FIXME: check this?
-			Set<TopicBean> allTopics = TalkerLogic.loadAllTopicsFromCache();
 			for (DBRef childDBRef : childrenDBList) {
-				TopicBean child = null;
-				for (TopicBean cachedTopic : allTopics) {
-					if (cachedTopic.getId().equals(childDBRef.getId().toString())) {
-						child = cachedTopic;
-						break;
-					}
-				}
-				if (child == null) {
-					child = new TopicBean();
-					DBObject childDBObject = childDBRef.fetch();
-					child.setId(childDBObject.get("_id").toString());
-					child.setTitle((String)childDBObject.get("title"));
-					child.setMainURL((String)childDBObject.get("main_url"));
-				}
+				TopicBean child = TalkerLogic.loadTopicFromCache(childDBRef.getId().toString());
 				children.add(child);
 			}
 		}

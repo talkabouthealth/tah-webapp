@@ -318,7 +318,6 @@ public class Profile extends Controller {
 		TalkerLogic.preloadTalkerInfo(talker, "privacy");
 		
 		//user just needs to view their Privacy Settings page for ProfileCompletion
-		//TODO: rename 'hiddenHelps' to some common name - we can put there all actions & make tag for helps?
 		if (!talker.getHiddenHelps().contains("privacyViewed")) {
 			talker.getHiddenHelps().add("privacyViewed");
 			CommonUtil.updateTalker(talker, session);

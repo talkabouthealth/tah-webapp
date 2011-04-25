@@ -119,15 +119,17 @@
 			$cancel.bind( 'click.inline-edit', function(){
 				$form.hide();
 
-				//if form has only one link (i.e. 'Done' link) - 
-				//it means that list is empty, whe show empty text
-				if ($form.find("a").size() === 1) {
-					$displayFull.hide();
-					$displayEmpty.show();
-				}
-				else {
-					$displayEmpty.hide();
-					$displayFull.show();
+				if ($cancel.html() == "Done") {
+					//if form has only one link ('Done' link) - 
+					//it means that list is empty, whe show empty text
+					if ($form.find("a").size() === 1) {
+						$displayFull.hide();
+						$displayEmpty.show();
+					}
+					else {
+						$displayEmpty.hide();
+						$displayFull.show();
+					}
 				}
 				$display.show();
 

@@ -443,7 +443,6 @@ public class CommentsDAO {
 			.add("deleted", new BasicDBObject("$ne", true))
 			.add("answer", true);
 		if (topic != null) {
-			//TODO: cache this?
 			Set<DBRef> convosDBSet = 
 				ConversationDAO.getConversationsByTopics(new HashSet<TopicBean>(Arrays.asList(topic)));
 			queryBuilder.add("convo", new BasicDBObject("$in", convosDBSet));
@@ -583,7 +582,6 @@ public class CommentsDAO {
 			CommentBean commentBean = new CommentBean();
 			commentBean.parseFromDB(commentDBObject);
 			
-			//TODO: check profile talker and fix for NPE
 			Action thoughtAction = new PersonalProfileCommentAction(commentBean.getFromTalker(),
 					commentBean.getFromTalker(), commentBean, null, ActionType.PERSONAL_PROFILE_COMMENT);
 			thoughtAction.setID(commentBean.getId());

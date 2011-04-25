@@ -194,14 +194,13 @@ public class ConversationBean implements Comparable<ConversationBean> {
         			messages.add(message);
     			}
     			else {
-    				//TODO: remove another bad conversation
-    				//NULL talker in conversation message: 4cd83ea41a98b19bfec451e2, index: 42
-    				//NULL talker in conversation message: 4cd83d711a98b19bd4c451e2, messages: 2
     				errorCount++;
     			}
     		}
     		if (errorCount > 0) {
-//    			Logger.error("NULL talker in conversation message: "+getId()+", messages: "+errorCount);
+    			//This happens when somebody use main Red5 server for testing chat,
+    			//bad conversations should be removed manually
+    			Logger.error("NULL talker in conversation message: "+getId()+", messages: "+errorCount);
     		}
     	}
     	setMembers(members);

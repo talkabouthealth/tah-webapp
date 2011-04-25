@@ -434,7 +434,7 @@ public class CommonUtil {
 		}
 		if (text.contains("@")) {
 			for (String talker : allTalkers) {
-				System.out.println(talker);
+//				System.out.println(talker);
 				text = text.replaceAll("@"+talker, 
 						"<a href=\"http://talkabouthealth/"+talker+"\">@&"+talker+"</a>");
 			}

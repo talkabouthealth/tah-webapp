@@ -249,7 +249,6 @@ public class TalkerLogic {
 	public static void preloadTalkerInfo(TalkerBean talker) {
 		preloadTalkerInfo(talker, null);
 	}
-	//TODO: can we optimize this?
 	public static void preloadTalkerInfo(TalkerBean talker, String page) {
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 		calculateProfileCompletion(talker, page);
@@ -401,7 +400,6 @@ public class TalkerLogic {
 	}
 	
 	public static int getNumOfFollowingConversations(TalkerBean talker) {
-		//TODO: update
 		if (talker == null) {
 			return 0;
 		}
@@ -618,7 +616,6 @@ public class TalkerLogic {
 		if (!talker.isProf() && talkerDisease != null) {
 			loadedTopics = TalkerLogic.getTopicsByHealthInfo(talkerDisease);
 		}
-		
 		if (loadedTopics.isEmpty()) {
 			//display most popular Topics based on views
 			//TODO: list or set?
@@ -951,18 +948,13 @@ public class TalkerLogic {
 	
 	public static TalkerBean loadTalkerFromCache(String talkerId) {
 		List<TalkerBean> allTalkers = loadAllTalkersFromCache();
-		
-		TalkerBean talker = null;
 		for (TalkerBean t : allTalkers) {
 			if (t.getId().equals(talkerId)) {
 				return t;
 			}
 		}
 		
-		if (talker == null) {
-			talker = TalkerDAO.parseTalker(talkerId);
-		}
-		return talker;
+		return TalkerDAO.parseTalker(talkerId);
 	}
 	
 	public static List<ConversationBean> loadAllConversationsFromCache() {
@@ -976,22 +968,36 @@ public class TalkerLogic {
 	
 	public static ConversationBean loadConvoFromCache(String convoId) {
 		List<ConversationBean> allConversations = loadAllConversationsFromCache();
-		
-		ConversationBean convo = null;
 		for (ConversationBean c : allConversations) {
 			if (c.getId().equals(convoId)) {
 				return c;
 			}
 		}
 		
-		if (convo == null) {
-			convo = ConversationDAO.getByIdBasic(convoId);
-		}
-		return convo;
+		return ConversationDAO.getByIdBasic(convoId);
 	}
 	
 	
 	public static Set<TopicBean> loadAllTopicsFromCache() {
+		Set<TopicBean> allTopics = (Set<TopicBean>) Cache.get("topicsList");
+		if (allTopics == null) {
+			allTopics = TopicDAO.loadAllTopics(true);
+			Cache.set("topicsList", allTopics, "5h");
+		}
+		return allTopics;
+	}
+	public static TopicBean loadTopicFromCache(String topicId) {
+		Set<TopicBean> allTopics = loadAllTopicsFromCache();
+		for (TopicBean cachedTopic : allTopics) {
+			if (cachedTopic.getId().equals(topicId)) {
+				return cachedTopic;
+			}
+		}
+		
+		return TopicDAO.getByIdBasic(topicId);
+	}
+	
+	public static Set<TopicBean> loadAllPopularTopicsFromCache() {
 		Set<TopicBean> allTopics = (Set<TopicBean>) Cache.get("topicsList");
 		if (allTopics == null) {
 			allTopics = TopicDAO.loadAllTopics(true);

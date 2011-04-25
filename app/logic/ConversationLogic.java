@@ -234,12 +234,12 @@ public class ConversationLogic {
 //	        			}
 	        		}
 	        		
-	        		//TODO IM-ERRORS this causes errors IM notification; I disabled this completely
 	        		//For convo author we send other IM notification
 	        		if (!follower.equals(convo.getTalker())) {
 	        			try {
 	        				String imText = "New answer by "+
 								comment.getFromTalker().getUserName()+" for "+convo.getTopic()+": "+comment.getText();
+	        				System.out.println("NOTIFY: "+imText);
 	        				IMNotifier.getInstance().followersAnswerNotification(follower.getId(), convo.getId(), imText);
 		    			} catch (Throwable e) {
 		    				Logger.error(e, "Sending notifications on Convo answer");
@@ -331,7 +331,7 @@ public class ConversationLogic {
     	if (answer != null) {
     		talkersForNotification.add(answer.getFromTalker().getId());
     	}
-    	//TODO IM-ERROR THIS CAUSES ERRORS do not send notification to himself; I disabled this completely
+    	//do not send notification to himself
     	talkersForNotification.remove(talker.getId());
     	if (!talkersForNotification.isEmpty()) {
     		System.out.println("In IM segment!");

@@ -303,7 +303,6 @@ public class ConversationDAO {
 	}
 	
 	/**
-	 * TODO: need this?
 	 * Popularity is based on number of views.
 	 */
 	public static List<ConversationBean> loadPopularConversations() {
@@ -393,13 +392,13 @@ public class ConversationDAO {
 	}
 	
 	/**
-	 * TODO: finish
 	 * @param talkerId
-	 * @param nextConvoId
-	 * @param numOfConversations
+	 * @param nextConvoId Id of the last convo from the previous page
+	 * @param numOfConversations Number of convos to load (-1 for all)
 	 * @return
 	 */
-	public static List<ConversationBean> getStartedConvos(String talkerId, String nextConvoId, int numOfConversations) {
+	public static List<ConversationBean> getStartedConvos(String talkerId, 
+			String nextConvoId, int numOfConversations) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
 		Date firstConvoTime = null;
@@ -415,7 +414,6 @@ public class ConversationDAO {
 		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start()
 			.add("uid", talkerRef)
 			.add("deleted", new BasicDBObject("$ne", true));
-
 		if (firstConvoTime != null) {
 			queryBuilder.add("cr_date", new BasicDBObject("$lt", firstConvoTime));
 		}
@@ -529,7 +527,6 @@ public class ConversationDAO {
 	public static Set<ConversationBean> loadConversations(String talkerId, ActionType type) {
 		DBCollection activitiesColl = getCollection(ActionDAO.ACTIVITIES_COLLECTION);
 		
-		//TODO: check speed
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("uid", talkerRef)
@@ -587,7 +584,6 @@ public class ConversationDAO {
 	}
 	
 	/*
-	 * TODO: finish this
 	 * We need this because some convo could be deleted.
 	 */
 	public static int getNumOfConvosByIds(List<ObjectId> convoIds) {
@@ -643,12 +639,13 @@ public class ConversationDAO {
 			.add("topics", topicRef)
 			.add("deleted", new BasicDBObject("$ne", true))
 			.get();
-		List<DBObject> convosDBList = convosColl.find(query).toArray();
+		List<DBObject> convosDBList = convosColl.find(query, new BasicDBObject("_id", 1)).toArray();
 		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
-			ConversationBean convo = new ConversationBean();
-			convo.parseBasicFromDB(convoDBObject);
+			ConversationBean convo = 
+				TalkerLogic.loadConvoFromCache(convoDBObject.get("_id").toString());
+//			convo.parseBasicFromDB(convoDBObject);
 			convosList.add(convo);
 		}
 		return convosList;

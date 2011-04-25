@@ -136,7 +136,6 @@ public class FeedsLogic {
 		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();
 		
 		String nextActionId = null;
-		//TODO: we don't need this anymore?
 		boolean canAdd = (afterActionId == null);
 		while (true) {
 			List<Action> feedActions = new ArrayList<Action>();

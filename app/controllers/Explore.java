@@ -67,10 +67,7 @@ public class Explore extends Controller {
     		TalkerLogic.preloadTalkerInfo(talker);
     	}
     	
-    	//TODO: use cache for common data? 
-    	//see: http://groups.google.com/group/play-framework/browse_thread/thread/b723f73ee52a04bd/8d084ac77c588b3a?lnk=gst&q=use+cache+in+template#8d084ac77c588b3a
-    	List<TopicBean> popularTopics = TopicDAO.getPopularTopics();
-    	
+    	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics();
 		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions();
 		
 		render(talker, openQuestions, popularTopics);
@@ -83,7 +80,7 @@ public class Explore extends Controller {
     		TalkerLogic.preloadTalkerInfo(talker);
     	}
     	else {
-    		popularTopics = TopicDAO.getPopularTopics();
+    		popularTopics = TopicLogic.loadPopularTopics();
     	}
     	
     	List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
@@ -99,7 +96,7 @@ public class Explore extends Controller {
     		TalkerLogic.preloadTalkerInfo(talker);
     	}
     	
-    	List<TopicBean> popularTopics = TopicDAO.getPopularTopics();
+    	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics();
     	
     	Logger.info("BT2:"+System.currentTimeMillis());
     	
@@ -195,7 +192,7 @@ public class Explore extends Controller {
 		
 		List<TopicBean> popularTopics = null;
     	if (talker == null) {
-    		popularTopics = TopicDAO.getPopularTopics();
+    		popularTopics = TopicLogic.loadPopularTopics();
     	}
     	
 		//"Popular Conversations" - ordered by page views
