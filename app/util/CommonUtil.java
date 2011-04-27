@@ -42,6 +42,7 @@ import org.apache.commons.lang.StringUtils;
 
 import logic.ConversationLogic;
 import logic.TopicLogic;
+import models.CommentBean;
 import models.ConversationBean;
 import models.IMAccountBean;
 import models.PrivacySetting;
@@ -408,7 +409,8 @@ public class CommonUtil {
 	private static Set<String> allTalkers = new TreeSet<String>(new StringLengthComparator());
 	static {
 		for (TopicBean topic : TopicDAO.loadAllTopics(true)) {
-			allTopics.put(topic.getTitle(), topic.getMainURL());
+			String topicTitle = topic.getTitle().replaceAll(" ", "");
+			allTopics.put(topicTitle, topic.getMainURL());
 		}
 		for (TalkerBean talker : TalkerDAO.loadAllTalkers(true)) {
 			allTalkers.add(talker.getUserName());
@@ -433,15 +435,16 @@ public class CommonUtil {
 				if (topicEntry.getKey().length() == 0) {
 					continue;
 				}
-				text = text.replaceAll("#"+topicEntry.getKey(), 
-						"<a href=\"http://talkabouthealth.com/"+topicEntry.getValue()+"\">#&"
-						+topicEntry.getKey()+"</a>");
+				//case insensitive
+				text = text.replaceAll("(?i)#("+topicEntry.getKey()+")", 
+						"<a href=\"http://talkabouthealth.com/"+topicEntry.getValue()+"\">#&$1</a>");
 			}
 		}
 		if (text.contains("@")) {
 			for (String talker : allTalkers) {
-				text = text.replaceAll("@"+talker, 
-						"<a href=\"http://talkabouthealth.com/"+talker+"\">@&"+talker+"</a>");
+				//case insensitive
+				text = text.replaceAll("(?i)@("+talker+")", 
+						"<a href=\"http://talkabouthealth.com/$1\">@&$1</a>");
 			}
 		}
 		text = text.replaceAll(">#&", ">#").replaceAll(">@&", ">@");	
@@ -458,6 +461,29 @@ public class CommonUtil {
 		htmlText = htmlText.replaceAll(searchRegex, "$1<a href=\"http://twitter.com/search?q=%23$2\" target=\"_blank\">#$2</a>");
 		htmlText = htmlText.replaceAll(userRegex, "$1<a href=\"http://twitter.com/$2\" target=\"_blank\">@$2</a>");
 		
+		return htmlText;
+	}
+
+	public static String commentToHTML(CommentBean thoughtOrAnswer) {
+		String text = thoughtOrAnswer.getText();
+		if (text == null) {
+			return "";
+		}
+		
+		//delinkify because previously we store links in db
+		//TODO: update db?
+		text = text.replaceAll("<a[^>]*>", "");
+		text = text.replaceAll("</a>", "");
+		
+		String htmlText = text;
+		if (thoughtOrAnswer.getFrom() != null && thoughtOrAnswer.getFrom().equalsIgnoreCase("twitter")) {
+			htmlText = CommonUtil.prepareTwitterThought(htmlText);
+		}
+		else {
+			htmlText = CommonUtil.prepareThoughtOrAnswer(htmlText);
+		}
+		
+		htmlText = htmlText.replace("\n", "<br/>");
 		return htmlText;
 	}
 }

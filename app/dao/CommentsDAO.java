@@ -514,9 +514,10 @@ public class CommentsDAO {
 	public static List<Action> getTalkerMentions(TalkerBean talker) {
 		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
 		
-		Pattern mentionRegex = Pattern.compile("@"+talker.getUserName()+"[^\\w]*");
+		Pattern mentionRegex = Pattern.compile("@"+talker.getUserName()+"[^\\w]*", Pattern.CASE_INSENSITIVE);
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("text", mentionRegex)
+			.add("deleted", new BasicDBObject("$ne", true))
 			.get();
 		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
@@ -538,6 +539,7 @@ public class CommentsDAO {
 		query = BasicDBObjectBuilder.start()
 			.add("text", mentionRegex)
 			.add("answer", true)
+			.add("deleted", new BasicDBObject("$ne", true))
 			.get();
 		commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
@@ -547,8 +549,8 @@ public class CommentsDAO {
 			
 			ConversationBean convo = TalkerLogic.loadConvoFromCache(answer.getConvoId());
 			
-			AnswerDisplayAction answerAction = new AnswerDisplayAction(convo.getTalker(), convo,
-					answer, ActionType.ANSWER_CONVO, false);
+			AnswerDisplayAction answerAction = new AnswerDisplayAction(answer.getFromTalker(), convo,
+					answer, ActionType.ANSWER_CONVO, "Answer");
 			answerAction.setTime(answer.getTime());
 			talkerMentions.add(answerAction);
 		}
@@ -566,9 +568,11 @@ public class CommentsDAO {
 	public static List<Action> getTopicMentions(TopicBean topic) {
 		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
 		
-		Pattern mentionRegex = Pattern.compile("#"+topic.getTitle()+"[^\\w]*");
+		String topicTitle = topic.getTitle().replaceAll(" ", "");
+		Pattern mentionRegex = Pattern.compile("#"+topicTitle+"[^\\w]*", Pattern.CASE_INSENSITIVE);
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("text", mentionRegex)
+			.add("deleted", new BasicDBObject("$ne", true))
 			.get();
 		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		

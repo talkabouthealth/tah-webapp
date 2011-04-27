@@ -199,11 +199,11 @@ public class ConversationLogic {
 		vars.put("convo", convo.getTopic());
 		vars.put("other_talker", talker.getUserName());
 		if (comment.isAnswer()) {
-			vars.put("answer_text", comment.getText().replaceAll("\n","<br/>"));
+			vars.put("answer_text", CommonUtil.commentToHTML(comment));
 		}
 		else {
-			vars.put("reply_text", comment.getText().replaceAll("\n","<br/>"));
-			vars.put("answer_text", answer.getText().replaceAll("\n","<br/>"));
+			vars.put("reply_text", CommonUtil.commentToHTML(comment));
+			vars.put("answer_text", CommonUtil.commentToHTML(answer));
 		}
 		vars.put("convo_type", convo.getConvoType().stringValue());
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
@@ -416,8 +416,14 @@ public class ConversationLogic {
 				activityTalker = topAnswer.getFromTalker();
 			}
 			
+			String actionText = null;
+			if (topAnswer != null) {
+				actionText = "Top Answer";
+			}
+			
 			AnswerDisplayAction convoAction =
-				new AnswerDisplayAction(activityTalker, convo, topAnswer, ActionType.ANSWER_CONVO, topAnswer != null);
+				new AnswerDisplayAction(activityTalker, convo, topAnswer, 
+						ActionType.ANSWER_CONVO, actionText);
 			convoAction.setId(convo.getId());
 			convoAction.setTime(convo.getCreationDate());
 			

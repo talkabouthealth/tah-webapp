@@ -398,7 +398,8 @@ public class Conversations extends Controller {
     	notFoundIfNull(answer);
     	ConversationBean convo = ConversationDAO.getById(answer.getConvoId());
     	
-    	ConversationLogic.flagContent("Answer/Reply", convo, reason, answer.getText(), talker);
+    	ConversationLogic.flagContent("Answer/Reply", convo, reason, 
+    			CommonUtil.commentToHTML(answer), talker);
     }
     
     /**

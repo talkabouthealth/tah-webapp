@@ -187,7 +187,7 @@ public class NotificationUtils {
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("convo", convo.getTopic());
 		vars.put("other_talker", fromTalker.getUserName());
-		vars.put("convoreply_text", convoReply.getText().replaceAll("\n","<br/>"));
+		vars.put("convoreply_text", CommonUtil.commentToHTML(convoReply));
 		vars.put("convo_type", convo.getConvoType().stringValue());
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
 		vars.put("convo_url", convoURL);
@@ -204,7 +204,7 @@ public class NotificationUtils {
 		Map<String, String> vars = new HashMap<String, String>();
 		vars.put("convo", convo.getTopic());
 		vars.put("other_talker", fromTalker.getUserName());
-		vars.put("convoreply_text", convoReply.getText().replaceAll("\n","<br/>"));
+		vars.put("convoreply_text", CommonUtil.commentToHTML(convoReply));
 		vars.put("convo_type", convo.getConvoType().stringValue());
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
 		vars.put("convo_url", convoURL);
