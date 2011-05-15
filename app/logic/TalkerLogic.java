@@ -187,6 +187,8 @@ public class TalkerLogic {
 		PROF_FIELDS_MAP.put("tw_page", "Twitter");		
 		PROF_FIELDS_MAP.put("li_page", "LinkedIn");
 		PROF_FIELDS_MAP.put("bl_page", "Blog");
+		PROF_FIELDS_MAP.put("cam", "CAM Specialities");
+		PROF_FIELDS_MAP.put("certifications", "Certifications");
 	}
 
 	/**

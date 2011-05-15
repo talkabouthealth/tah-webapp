@@ -5,6 +5,11 @@
 
 #{set profInfo = talker.profInfo /}
 
+#{if talkerType.equals("Complementary Care Expert")}
+	#{profile/field type: 'text', des: 'CAM Specialties', name: 'cam', talkerType: talkerType, profInfo: profInfo /}
+	#{profile/field type: 'text', des: 'Certifications', name: 'certifications', talkerType: talkerType, profInfo: profInfo /}
+#{/if}
+
 #{ifnot talkerType.equals("Complementary Care Expert") }
 #{profile/field type: 'select', des: 'Credentials', name: 'credentials', talkerType: talkerType, profInfo: profInfo /}
 #{/ifnot}
@@ -186,7 +191,13 @@
 	#{profile/field type: 'text', des: 'Twitter page', name: 'tw_page', talkerType: talkerType, profInfo: profInfo /}
 	#{profile/field type: 'text', des: 'Facebook page', name: 'fb_page', talkerType: talkerType, profInfo: profInfo /}
 	#{profile/field type: 'text', des: 'LinkedIn page', name: 'li_page', talkerType: talkerType, profInfo: profInfo /}
-	#{profile/field type: 'text', des: 'Blog page', name: 'bl_page', talkerType: talkerType, profInfo: profInfo /}		
+	#{profile/field type: 'text', des: 'Blog page', name: 'bl_page', talkerType: talkerType, profInfo: profInfo /}
+	#{if talkerType.equals("Complementary Care Expert")}
+	#{profile/field type: 'text', des: 'Practice name', name: 'pract_name', talkerType: talkerType, profInfo: profInfo /}
+	#{profile/field type: 'text', des: 'Practice address line 1', name: 'pract_adr1', talkerType: talkerType, profInfo: profInfo /}
+	#{profile/field type: 'text', des: 'Practice address line 2', name: 'pract_adr2', talkerType: talkerType, profInfo: profInfo /}
+	#{profile/field type: 'text', des: 'Practice phone number', name: 'pract_phone', talkerType: talkerType, profInfo: profInfo /}
+	#{/if}		
 	
 	<div class="personalmain">
 		<div class="personaltextarea"><span class="blacktext14">City</span></div>
