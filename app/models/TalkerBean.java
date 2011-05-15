@@ -202,13 +202,7 @@ public class TalkerBean implements Serializable {
 	private int nfreq;
 	//when?
 	private int ntime;
-	//fields for complementary care expert
-	private String cam;
-    private String certifications; 
-    private String practiceName; 
-    private String practicePhoneNumber;
-    private String PracticeAddress;
-    
+	
 	private List<ThankYouBean> thankYouList;
 	private List<TalkerBean> followingList;
 	private List<TalkerBean> followerList;
@@ -638,15 +632,7 @@ public class TalkerBean implements Serializable {
 	public boolean isProf() {
 		return PROFESSIONAL_CONNECTIONS_LIST.contains(connection);
 	}
-	/**
-	 * Is this talker Complementary care expert?
-	 * @return
-	 *//*
-	public boolean isComplementaryCareExpert() {
-		return this.isProf() && PROFESSIONAL_CONNECTIONS_LIST.get(5).equals(connection);
-		
-	}
-	*/
+	
 	public boolean isOrg() {
 		return ORGANIZATIONS_CONNECTIONS_LIST.contains(connection);
 	}
@@ -1004,35 +990,4 @@ public class TalkerBean implements Serializable {
 	public void setOtherCtype(List<String> otherCtype) {
 		this.otherCtype = otherCtype;
 	}
-	public String getCam() {
-		return cam;
-	}
-	public void setCam(String cam) {
-		this.cam = cam;
-	}
-	public String getCertifications() {
-		return certifications;
-	}
-	public void setCertifications(String certifications) {
-		this.certifications = certifications;
-	}
-	public String getPracticeName() {
-		return practiceName;
-	}
-	public void setPracticeName(String practiceName) {
-		this.practiceName = practiceName;
-	}
-	public String getPracticePhoneNumber() {
-		return practicePhoneNumber;
-	}
-	public void setPracticePhoneNumber(String practicePhoneNumber) {
-		this.practicePhoneNumber = practicePhoneNumber;
-	}
-	public String getPracticeAddress() {
-		return PracticeAddress;
-	}
-	public void setPracticeAddress(String practiceAddress) {
-		PracticeAddress = practiceAddress;
-	}
-	
 }	
