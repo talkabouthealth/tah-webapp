@@ -37,7 +37,7 @@
 	<div class="personaltextfield">
 		<select class="personalfields" id="talker.gender" name="talker.gender">
 			<option value=""></option>
-			#{list items:['Male', 'Female'], as:'gender'}
+			#{list items:['Male', 'Female','Other'], as:'gender'}
 		  		<option value="${gender.charAt(0)}" 
 			    #{if talker.gender?.equals(""+gender.charAt(0)) } selected #{/if} 
 			    >${gender}</option>
