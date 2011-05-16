@@ -23,7 +23,6 @@ public class ServiceAccountBean implements DBModel {
 	private static final Map<String, String> FACEBOOK_SETTINGS_NAMES; 
 	
 	static {
-		//TODO: later - better to use enumeration?
 		TWITTER_SETTINGS_NAMES = new LinkedHashMap<String, String>();
 		TWITTER_SETTINGS_NAMES.put("NOTIFY", "Notify me of relevant questions and live chats via Twitter direct message.");
 		TWITTER_SETTINGS_NAMES.put("NOTIFY_ON_ANSWER", "Notify me when an answer is posted to a conversation I follow.");

@@ -75,6 +75,12 @@
 				if (editText) {
 					editText = editText.replace(/<br>/g, '\n');
 					editText = editText.replace(/<BR>/g, '\n');
+
+					//'more' link adds html code, before editing we need to remove it
+					//<a class="more_0">... more</a> <span class="hiddenText_1" style="display:none">...</span>
+					editText = editText.replace(/<a class="more.*?<\/a>/g, '');
+					editText = editText.replace(/<span[^>]*>/g, '');
+					editText = editText.replace(/<\/span>/g, '');
 					
 					//remove links html code before editing
 					editText = editText.replace(/<a[^>]*>/g, '');

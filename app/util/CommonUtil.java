@@ -444,14 +444,13 @@ public class CommonUtil {
 			for (String talker : allTalkers) {
 				//case insensitive
 				text = text.replaceAll("(?i)@("+talker+")", 
-						"<a href=\"http://talkabouthealth.com/$1\">@&$1</a>");
+						"<a href=\"http://talkabouthealth.com/"+talker+"\">@&$1</a>");
 			}
 		}
 		text = text.replaceAll(">#&", ">#").replaceAll(">@&", ">@");	
 		return text;
 	}
 
-	//TODO: fix 'more' JS for displaying HTML text
 	public static String prepareTwitterThought(String htmlText) {
 		htmlText = CommonUtil.linkify(htmlText);
 		
@@ -471,7 +470,6 @@ public class CommonUtil {
 		}
 		
 		//delinkify because previously we store links in db
-		//TODO: update db?
 		text = text.replaceAll("<a[^>]*>", "");
 		text = text.replaceAll("</a>", "");
 		
