@@ -70,8 +70,19 @@
 				            			#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
 				            		#{/if}
 				            	#{/list}
+				            					            	
 				            </div>
+				          <div class="thnksarea">
+				          #{if nextEnabled}
+				         <span class="bluetext"> <a href="@{Explore.browseMembers('new')}">More</a></span>
+				           #{/if}
+				           #{ifnot nextEnabled}
+				         <span class="redtext"> More </span> 
+				          #{/ifnot}
+				          </div>
+			        	
 			        	</div>
+			        	
 			        	</div>
 			        
 			        	<div id="tab3" class="tab_content">

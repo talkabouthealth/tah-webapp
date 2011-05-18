@@ -1,9 +1,12 @@
 import java.util.List;
 import java.util.Random;
 
+import javassist.bytecode.Descriptor.Iterator;
+
 import org.junit.*;
 
 import controllers.Application;
+import controllers.Explore;
 
 import dao.TalkerDAO;
 import play.Logger;
@@ -29,7 +32,7 @@ public class ApplicationTest extends FunctionalTest {
 	public void setUp() {
 	    Fixtures.deleteAll();
 	}
-	
+	// @Test
     public void testThatIndexPageWorks() {
         Response response = GET("/");
         assertIsOk(response);
@@ -38,7 +41,7 @@ public class ApplicationTest extends FunctionalTest {
     }
    
     
-    @Test
+   // @Test
     public void testRegisterUser(){
     	for(int i=0;i<NUM_USERS;i++){
     		TalkerBean talker=this.createRandomTalker(i);
@@ -49,7 +52,7 @@ public class ApplicationTest extends FunctionalTest {
     	}
     }
     
-    @Test
+    //@Test
     public void testLoadAllTalkers(){
     	List<TalkerBean> allTalkers=TalkerDAO.loadAllTalkers();
     	this.assertNotNull(allTalkers);
@@ -58,7 +61,24 @@ public class ApplicationTest extends FunctionalTest {
     	}
     	
     }
-    
+    @Test 
+    public void testGetActiveTalkers(){
+    	System.out.println("ActiveTalkers:");
+    	List<List<TalkerBean>> activeTalkers=Explore.getActiveTalkers();
+    	for (java.util.Iterator<List<TalkerBean>> it=activeTalkers.iterator(); it.hasNext();){
+    		System.out.println(it.next());
+    	}
+    	
+    }
+    @Test 
+    public void testGetNewTalkers(){
+    	System.out.println("NewTalkers:");
+    	List<List<TalkerBean>> newTalkers=Explore.getNewTalkers();
+    	for (java.util.Iterator<List<TalkerBean>> it=newTalkers.iterator(); it.hasNext();){
+    		System.out.println(it.next());
+    	}
+    	
+    }
     private TalkerBean createRandomTalker(int index){
     	TalkerBean talker=new TalkerBean();
     	talker.setUserName(CommonUtil.generateRandomUserName(true));
