@@ -12,15 +12,16 @@ import play.data.validation.Valid;
 import play.mvc.*;
 import play.mvc.Before;
 import play.mvc.Http.*;
+import util.CommonUtil;
 import logic.TalkerLogic;
 import models.*;
 
 public class ApplicationTest extends FunctionalTest {
-	private static final String USER_ID="ID_";
+	/*private static final String USER_ID="ID_";
 	private static final String USER_NAME="member";
 	private static final String USER_PASSWORD="pass";
 	private static final String USER_EMAIL="fake_email";
-	private static final String EMAIL_SUFFIX= "@aim.com";
+	private static final String EMAIL_SUFFIX= "@aim.com";*/
 	private static final int NUM_USERS=12;
 	private static Random r= new Random();
 	
@@ -60,15 +61,15 @@ public class ApplicationTest extends FunctionalTest {
     
     private TalkerBean createRandomTalker(int index){
     	TalkerBean talker=new TalkerBean();
-    	talker.setUserName(USER_NAME+index);
-    	talker.setPassword(USER_PASSWORD+index);
-    	talker.setEmail(USER_EMAIL+index+EMAIL_SUFFIX);
+    	talker.setUserName(CommonUtil.generateRandomUserName(true));
+    	talker.setPassword(CommonUtil.generateRandomPassword());
+    	talker.setEmail(CommonUtil.generateRandomEmail(true));
     	talker.setConnection(TalkerBean.CONNECTIONS_ARRAY[r.nextInt(TalkerBean.CONNECTIONS_ARRAY.length)]);
     	return talker;
     	
     }
     
-    private void deleteAllTestUsers(){
+   /* private void deleteAllTestUsers(){
     	List<TalkerBean> allTalkers=TalkerDAO.loadAllTalkers();
     	for (TalkerBean t : allTalkers){
     		if(t.getUserName().startsWith(USER_NAME) &&
@@ -77,7 +78,7 @@ public class ApplicationTest extends FunctionalTest {
     			
     		}
     	}
-    }
+    }*/
    
     
 }
