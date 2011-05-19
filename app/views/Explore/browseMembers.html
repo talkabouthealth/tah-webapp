@@ -54,6 +54,14 @@
 				            		#{/if}
 				            	#{/list}
 				            </div>
+				             <div class="thnksarea">
+				          #{if nextActiveEnabled}
+				         <span class="bluetext2"> <a href="@{Explore.browseMembers('active')}">More</a></span>
+				           #{/if}
+				           #{ifnot nextActiveEnabled}
+				         <span class="greytext"> More </span> 
+				          #{/ifnot}
+				          </div>
 			        	</div>
 			        	</div>
 			        
@@ -73,11 +81,11 @@
 				            					            	
 				            </div>
 				          <div class="thnksarea">
-				          #{if nextEnabled}
-				         <span class="bluetext"> <a href="@{Explore.browseMembers('new')}">More</a></span>
+				          #{if nextNewEnabled}
+				         <span class="bluetext2"> <a href="@{Explore.browseMembers('new')}">More</a></span>
 				           #{/if}
-				           #{ifnot nextEnabled}
-				         <span class="redtext"> More </span> 
+				           #{ifnot nextNewEnabled}
+				         <span class="greytext"> More </span> 
 				          #{/ifnot}
 				          </div>
 			        	

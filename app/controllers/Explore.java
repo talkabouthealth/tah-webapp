@@ -62,7 +62,9 @@ public class Explore extends Controller {
 		ALL
 		
 	};
-	static boolean next=true;
+	static boolean nextActive=true;
+	static boolean nextNew=true;
+	static boolean nextAll=true;
 	static List<TalkerBean> activeTalkers;
 	static List<TalkerBean> newTalkers;
 	static List<TalkerBean> allTalkers;
@@ -186,10 +188,12 @@ public class Explore extends Controller {
 		if (action == null || action.equals("browsemembers")) {
 			action = "active";
 		}
-	  String nextEnabled= (next==true)?"true":null;
-	  System.out.println("nextEnabled: "+nextEnabled);
+	  String nextActiveEnabled= (nextActive==true)?"true":null;
+	  String nextNewEnabled= (nextNew==true)?"true":null;
+	  String nextAllEnabled= (nextAll==true)?"true":null;
+	  
 		render(currentTalker, action, activeTalkers, newTalkers, results,
-				members,nextEnabled);
+				members,nextActiveEnabled,nextNewEnabled,nextAllEnabled);
 	}
 	
 	private static Set<TalkerBean> nextTalkers(MEMBERS_TYPE mem_type){
@@ -198,32 +202,42 @@ public class Explore extends Controller {
 		case ACTIVE :
 			if(active_it.hasNext())
 				nextTalkers=active_it.next();
+			
 			else{
 				nextTalkers=activeTalkers;	
-				next=false;
+				nextActive=false;
 				break;
 			}
 			activeTalkers=nextTalkers;
+			if(!active_it.hasNext()){
+				nextActive=false;
+			}
 			break;
 		case NEW :
 			if(new_it.hasNext())
 				nextTalkers=new_it.next();
 			else{
 				nextTalkers=newTalkers;	
-			   next=false;
+			   nextNew=false;
 			   break;
 		}
 			newTalkers=nextTalkers;
+			if(!new_it.hasNext()){
+				nextNew=false;
+			}
 			break;
 		case ALL :
 			if(all_it.hasNext())
 				nextTalkers=all_it.next();
 			else{
 				nextTalkers=allTalkers;	
-			    next=false;
+			    nextAll=false;
 			    break;
 		}
 			allTalkers=nextTalkers;
+			if(!all_it.hasNext()){
+				nextAll=false;
+			}
 			break;
 			
 		}
