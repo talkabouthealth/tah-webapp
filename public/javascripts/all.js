@@ -503,6 +503,37 @@ function loadMoreFeed(type, talkerName) {
 	return false;
 }
 
+//used for paging in different talker members
+function loadMoreTalker(type) {
+	var lastActionId = $("#"+type+"List").children().last().attr("id");
+	
+	//replace More button with loading image
+	var moreBtn = $("#"+type+"Btn");
+	$("#ajaxLoading").appendTo(moreBtn.parent()).show();
+	moreBtn.hide();
+
+	//public static void conversationFeedAjax(String afterActionId) {
+	$.get("/explore/ajaxLoadTalkers", { talkerType: type},
+			function(data) {
+				$("#ajaxLoading").hide();
+		
+				//show more button if it isn't the end of a feed
+				/*var feedSize = $(data).find(".joinpic").size();
+				if (feedSize >= feedsPerPage) {
+					moreBtn.show();
+				}*/
+				
+				$(data).appendTo($("#"+type+"List"));
+				//alert(data);
+				//for new items
+				$('.inline-edit').inlineEdit( { hover: ''} );
+				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
+			}
+		);
+	
+	return false;
+}
+
 //for comments/replies in feed
 function showReplyForm(commentId) {
 	$(".reply"+commentId+" .inline_display").hide();

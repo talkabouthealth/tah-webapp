@@ -26,7 +26,6 @@ import play.Logger;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
-
 import logic.FeedsLogic;
 import logic.TalkerLogic;
 import logic.TopicLogic;
@@ -56,21 +55,20 @@ import dao.TopicDAO;
 public class Explore extends Controller {
 
 	
-	enum  MEMBERS_TYPE {
+	enum  TalkerType {
 		ACTIVE,
 		NEW,
 		ALL
 		
 	};
-	static boolean nextActive=true;
-	static boolean nextNew=true;
-	static boolean nextAll=true;
-	static List<TalkerBean> activeTalkers;
-	static List<TalkerBean> newTalkers;
-	static List<TalkerBean> allTalkers;
+	static final int TALKERS_PER_PAGE=12;
+		
 	static Iterator<List<TalkerBean>> active_it=getActiveTalkers().iterator();
 	static Iterator<List<TalkerBean>> new_it=getNewTalkers().iterator();
 	static Iterator<List<TalkerBean>> all_it=getAllTalkers().iterator();
+	public static Set<TalkerBean> activeTalkers= new HashSet();//=active_it.next();
+	public static Set<TalkerBean> newTalkers=new HashSet();//=new_it.next();
+	public static Set<TalkerBean> allActiveTalkers=new HashSet();//=all_it.next();
 	
 	@Before
 	static void prepareParams() {
@@ -124,17 +122,13 @@ public class Explore extends Controller {
 		// Active talkers on this day
 		Calendar oneWeekBeforeNow = Calendar.getInstance();
 		oneWeekBeforeNow.add(Calendar.DAY_OF_MONTH, -7);
-		//if(newTalkersItr==null && activeTalkersItr == null){
 		
-		//activeTalkersItr=getActiveTalkers().listIterator(index);
-	    //newTalkersItr=getNewTalkers().listIterator(index);
-		//}
-		Set<TalkerBean> activeTalkers = nextTalkers(MEMBERS_TYPE.ACTIVE);
-
-
-		Set<TalkerBean> newTalkers =nextTalkers(MEMBERS_TYPE.NEW);
-			//ApplicationDAO.getNewTalkers();// 
-		//;
+		Set<TalkerBean> newTalkers=new HashSet(getNewTalkers().get(0));
+		 
+		Set<TalkerBean> activeTalkers=new HashSet(getActiveTalkers().get(0));
+		
+		Set<TalkerBean> allActiveTalkers=new HashSet(getAllTalkers().get(0));
+		
 
 		// check if search is performed now
 		String query = params.get("query");
@@ -172,7 +166,7 @@ public class Explore extends Controller {
 		memberTypes.put("Family & Friends",
 				Arrays.asList("Family member", "Friend"));
 
-		Set<TalkerBean> allActiveTalkers = nextTalkers(MEMBERS_TYPE.ALL);
+		//Set<TalkerBean> allActiveTalkers = nextTalkers(MEMBERS_TYPE.ALL);
 			
 		// re-structure members by connection type
 		for (TalkerBean talker : allActiveTalkers) {
@@ -188,62 +182,34 @@ public class Explore extends Controller {
 		if (action == null || action.equals("browsemembers")) {
 			action = "active";
 		}
-	  String nextActiveEnabled= (nextActive==true)?"true":null;
-	  String nextNewEnabled= (nextNew==true)?"true":null;
-	  String nextAllEnabled= (nextAll==true)?"true":null;
-	  
+	 
 		render(currentTalker, action, activeTalkers, newTalkers, results,
-				members,nextActiveEnabled,nextNewEnabled,nextAllEnabled);
+				members);
 	}
 	
-	private static Set<TalkerBean> nextTalkers(MEMBERS_TYPE mem_type){
-		List<TalkerBean> nextTalkers=null;
-		switch( mem_type){
-		case ACTIVE :
+	public static void ajaxLoadTalkers(String talkerType){
+		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+		Set<TalkerBean> nextTalkers=null;
+		if("activeTalker".equals(talkerType)){
 			if(active_it.hasNext())
-				nextTalkers=active_it.next();
+				activeTalkers.addAll(active_it.next());
+			nextTalkers=activeTalkers;
+		}
 			
-			else{
-				nextTalkers=activeTalkers;	
-				nextActive=false;
-				break;
-			}
-			activeTalkers=nextTalkers;
-			if(!active_it.hasNext()){
-				nextActive=false;
-			}
-			break;
-		case NEW :
+		if("newTalker".equals(talkerType)){
 			if(new_it.hasNext())
-				nextTalkers=new_it.next();
-			else{
-				nextTalkers=newTalkers;	
-			   nextNew=false;
-			   break;
+				newTalkers.addAll(new_it.next());
+			nextTalkers=newTalkers;	
 		}
-			newTalkers=nextTalkers;
-			if(!new_it.hasNext()){
-				nextNew=false;
-			}
-			break;
-		case ALL :
+			
+		if("allTalker".equals(talkerType)){
 			if(all_it.hasNext())
-				nextTalkers=all_it.next();
-			else{
-				nextTalkers=allTalkers;	
-			    nextAll=false;
-			    break;
+				allActiveTalkers.addAll(all_it.next());
+			nextTalkers=allActiveTalkers;	
 		}
-			allTalkers=nextTalkers;
-			if(!all_it.hasNext()){
-				nextAll=false;
-			}
-			break;
-			
-		}
-			System.out.println(nextTalkers);
-			
-		return new HashSet(nextTalkers);
+					
+			render (currentTalker,nextTalkers);
+						
 	}
 	public static List<List<TalkerBean>> getActiveTalkers() {
 		// Active talkers on this day
@@ -251,22 +217,22 @@ public class Explore extends Controller {
 		oneWeekBeforeNow.add(Calendar.DAY_OF_MONTH, -7);
 		Set<TalkerBean> activeTalkers = ApplicationDAO
 				.getActiveTalkers(oneWeekBeforeNow.getTime());
-		return CommonUtil.partition(new ArrayList<TalkerBean>(activeTalkers), 12);
+		return CommonUtil.partition(new ArrayList<TalkerBean>(activeTalkers), TALKERS_PER_PAGE);
 
 	}
 	
 	public static List<List<TalkerBean>> getAllTalkers() {
 		
 		Set<TalkerBean> activeTalkers = ApplicationDAO.getActiveTalkers(null);
-		return CommonUtil.partition(new ArrayList<TalkerBean>(activeTalkers), 12);
+		return CommonUtil.partition(new ArrayList<TalkerBean>(activeTalkers), TALKERS_PER_PAGE);
 
 	}
 	
 	public static List<List<TalkerBean>> getNewTalkers() {
 		
 		Set<TalkerBean> newTalkers = ApplicationDAO.getNewTalkers();
-		List<List<TalkerBean>> res= CommonUtil.partition(new ArrayList<TalkerBean>(newTalkers), 12);
-		System.out.println(res.size());
+		List<List<TalkerBean>> res= CommonUtil.partition(new ArrayList<TalkerBean>(newTalkers), TALKERS_PER_PAGE);
+		//System.out.println(res.size());
 		return res;
 
 	}
