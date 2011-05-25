@@ -7,7 +7,6 @@ import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -71,13 +70,6 @@ import models.actions.Action.ActionType;
 import models.actions.PreloadAction;
 
 public class TalkerLogic {
-	
-	enum  TALKER_TYPE {
-		ACTIVE,
-		NEW,
-		ALL
-		
-	};
 	
 	/**
 	 * Describes steps required for profile completion.
@@ -235,7 +227,7 @@ public class TalkerLogic {
 	 */
 	public static List<String> getFieldsData(String fieldName, String talkerType) {
 		String key = fieldName+"|"+talkerType;
-		//System.out.println(key+": "+fieldsDataMap.get(key));
+		System.out.println(key+": "+fieldsDataMap.get(key));
 		if (fieldsDataMap.containsKey(key)) {
 			return fieldsDataMap.get(key);
 		}
@@ -932,25 +924,7 @@ public class TalkerLogic {
 		onSignup(talker, session);
 	}
 	
-	public static Set<TalkerBean> loadTalkers(TALKER_TYPE type){
-		Set<TalkerBean> talkers=null;
-		switch( type ){
-		case ACTIVE:
-			// Active talkers on this day
-			Calendar oneWeekBeforeNow = Calendar.getInstance();
-			oneWeekBeforeNow.add(Calendar.DAY_OF_MONTH, -7);
-			talkers = ApplicationDAO
-					.getActiveTalkers(oneWeekBeforeNow.getTime());
-			break;
-		case NEW : 
-			talkers = ApplicationDAO.getNewTalkers();
-			break;
-		case ALL : 
-			talkers = ApplicationDAO.getActiveTalkers(null);
-			break;
-		}
-		return talkers;
-	}
+	
 	/* 
 	 * Temporary methods for caching
 	 * If it works well, we'll clean up and refactor them.
