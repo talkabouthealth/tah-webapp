@@ -1,0 +1,6 @@
+#{ extends 'main.html' /}
+#{list items: nextTalkers, as: 'talker' }
+				            		#{if currentTalker || talker.hasSomePublicInfo()}
+				            			#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
+				            		#{/if}
+				            	#{/list}

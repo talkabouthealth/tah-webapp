@@ -993,4 +993,9 @@ public class TalkerBean implements Serializable {
 	public void setOtherCtype(List<String> otherCtype) {
 		this.otherCtype = otherCtype;
 	}
+	@Override
+	public String toString() {
+		return  userName;
+	}
+	
 }	

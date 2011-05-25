@@ -424,6 +424,21 @@ public class TalkerDAO {
 		DBObject talkerDBObject = talkersColl.findOne(query);
 		return (talkerDBObject == null);
 	}
+	/**
+	 * Checks userName and original userName (deactivated users)
+	 * @param email
+	 * @return
+	 */
+	public static boolean isEmailUnique(String email) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		
+		DBObject emailQuery = BasicDBObjectBuilder.start()
+			.add("email", email)
+			.get();	
+		
+		DBObject talkerDBObject = talkersColl.findOne(emailQuery);
+		return (talkerDBObject == null);
+	}
 	
 	/**
 	 * Load several talkers specified by ids

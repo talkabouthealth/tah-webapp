@@ -47,13 +47,29 @@
 					            	<span class="blacktext25">Active Users</span> 
 					            </div>
 				            </div>
-				            <div class="thnksarea">
+				            <div class="thnksarea" id="activeTalkerList">
 				            	#{list items: activeTalkers, as: 'talker' }
 				            		#{if currentTalker || talker.hasSomePublicInfo()}
 				            			#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
 				            		#{/if}
 				            	#{/list}
+				            	
 				            </div>
+				            #{if activeTalkers.size() == controllers.Explore.TALKERS_PER_PAGE }
+											<div class="replytommentbox" id="activeTalkerBtn">
+					                          <input type="submit" src="images/seemore.jpg" 
+					                          	onclick="return loadMoreTalker('activeTalker');" value=" " class="seemorecom" />
+					                        </div>
+										#{/if}
+				                        <div class="cb"></div>
+				            <!--  <div class="thnksarea">
+				          #{if nextActiveEnabled}
+				         <span class="bluetext2"> <a href="@{Explore.browseMembers('active')}">More</a></span>
+				           #{/if}
+				           #{ifnot nextActiveEnabled}
+				         <span class="greytext"> More </span> 
+				          #{/ifnot}
+				          </div> -->
 			        	</div>
 			        	</div>
 			        
@@ -64,14 +80,32 @@
 					            	<span class="blacktext25">New Users</span> 
 					            </div>
 				            </div>
-				            <div class="thnksarea">
+				            <div class="thnksarea" id="newTalkerList">
 				            	#{list items: newTalkers, as: 'talker' }
 				            		#{if currentTalker || talker.hasSomePublicInfo()}
 				            			#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
 				            		#{/if}
 				            	#{/list}
+				            	 				            	
 				            </div>
+				            
+											<div class="replytommentbox" id="newTalkerBtn">
+					                          <input type="submit" src="images/seemore.jpg" 
+					                          	onclick="return loadMoreTalker('newTalker');" value=" " class="seemorecom" />
+					                        </div>
+										
+				                        <div class="cb"></div>
+				         <!--  <div class="thnksarea">
+				          #{if nextNewEnabled}
+				         <span class="bluetext2"> <a href="@{Explore.browseMembers('new')}">More</a></span>
+				           #{/if}
+				           #{ifnot nextNewEnabled}
+				         <span class="greytext"> More </span> 
+				          #{/ifnot}
+				          </div> -->
+			        	
 			        	</div>
+			        	
 			        	</div>
 			        
 			        	<div id="tab3" class="tab_content">

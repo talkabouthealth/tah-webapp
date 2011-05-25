@@ -245,7 +245,27 @@ public class Application extends Controller {
 //        	validation.isTrue(otherTalker == null).message("imaccount.exists");
 //        }
 	}
-
+    public static boolean registerUser(@Valid TalkerBean talker) {
+    	
+		validateTalker(talker);
+        if (validation.hasErrors()) {
+          
+            return false;
+        }
+        
+        TalkerLogic.prepareTalkerForSignup(talker);
+              
+        boolean okSave = TalkerDAO.save(talker);
+        if (!okSave) {
+        	
+        	Logger.error("Error during signup. User: "+talker.getEmail());      	
+        	
+        	return false;
+		}
+        Logger.error("successfull signup of User: "+talker.getEmail());
+        return true;
+     
+    }
 	/* ----------------- Contact Us ------------------------- */
 	public static void contactus() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
