@@ -227,7 +227,7 @@ public class TalkerLogic {
 	 */
 	public static List<String> getFieldsData(String fieldName, String talkerType) {
 		String key = fieldName+"|"+talkerType;
-		System.out.println(key+": "+fieldsDataMap.get(key));
+		//System.out.println(key+": "+fieldsDataMap.get(key));
 		if (fieldsDataMap.containsKey(key)) {
 			return fieldsDataMap.get(key);
 		}

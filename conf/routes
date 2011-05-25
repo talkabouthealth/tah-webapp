@@ -22,6 +22,7 @@ GET		/verify/{verifyCode}					Application.verifyEmail
 *		/profile/privacysettings				Profile.preferences
 
 GET		/explore/members						Explore.browseMembers(action:'active')
+GET		/explore/experts						Explore.browseMembers(action:'experts')
 *		/search/members							Explore.browseMembers(action:'search')
 GET		/community/breast-cancer				Community.viewCommunity
 

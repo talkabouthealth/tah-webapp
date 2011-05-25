@@ -378,10 +378,12 @@
 			                    <div class="topicborder"></div>
 			                    <div class="profilebiotxt">${talker.bio.nl2br()}</div>
 							#{/if}
-							
+														 
+					                
 							#{if talker.isProf() && talker.isAllowed(models.PrivacySetting.PrivacyType.PROFESSIONAL_INFO, currentTalker)}
 								#{ifnot talker.connection.equals("Physician")}
 									<br/>
+									
 									#{if talker.city}
 					                    <div class="profiletxtCantant">
 					                      <div class="profileCantanttxt1">

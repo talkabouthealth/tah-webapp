@@ -41,7 +41,7 @@ public class FieldsDataImporter {
 		currentList.add("");
 		while ((line = br.readLine()) != null) {
 			line = line.trim();
-			System.out.println(line);
+			//System.out.println(line);
 			if (line.length() == 0) {
 				if (currentField != null) {
 					fieldsDataMap.put(currentField, currentList);
