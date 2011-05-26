@@ -49,8 +49,6 @@ public class ThoughtsFromServicesJob extends Job {
 					postsList = FacebookUtil.importPosts(serviceAccount, serviceAccount.getLastPostId());
 				}
 				
-				System.out.println(">>"+postsList.size());
-
 				if (postsList.size() > 0) {
 		    		Collections.sort(postsList);
 			    	for (ServicePost post : postsList) {
@@ -77,10 +75,5 @@ public class ThoughtsFromServicesJob extends Job {
 		    	}
 			}
 		}
-	}
-
-	private String prepareText(ServiceType type, String text) {
-		String htmlText = CommonUtil.linkify(text);
-		return htmlText;
 	}
 }

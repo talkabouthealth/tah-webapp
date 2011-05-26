@@ -7,12 +7,19 @@
  *
  * Revision: $Id: jquery.truncatable.js 2009-08-20 $
  *
+ * Upd: updated for handling also html text
  */
 
 (function($){$.fn.truncatable=function(options){var defaults={limit:100,more:'...',less:false,hideText:'[read less]'};
 var options=$.extend(defaults,options);
 return this.each(function(num){
-	var stringLength=$(this).html().length;
+	//get size of only plain text, we don't need html tags
+	var plainText = $(this).html().replace(/<a[^>]*>/g, '');
+	plainText = plainText.replace(/<\/a>/g, '');
+	
+	//var stringLength=$(this).html().length;
+	var stringLength=plainText.length;
+	
 	if(stringLength>defaults.limit){
 		var splitText=$(this).html().substr(defaults.limit);
 		var splitPoint=splitText.substr(0,1);

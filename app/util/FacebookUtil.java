@@ -52,11 +52,16 @@ public class FacebookUtil {
 	}
 	
 	public static List<ServicePost> importPosts(ServiceAccountBean fbAccount, String sinceId) {
-		//TODO: later - implement sinceId use?
 		List<ServicePost> postsList = new ArrayList<ServicePost>();
 		try {
+			String params = "&limit=500";
+			if (sinceId != null) {
+				//if sinceId not null - we don't need to load all posts, just the latest ones;
+				//few hours would be enough, but to be sure we check all from last week
+				params = params + "&since=last%%20week";
+			}
 			HttpResponse res = WS.url(
-					"https://graph.facebook.com/me/posts?access_token=%s&limit=500", 
+					"https://graph.facebook.com/me/posts?access_token=%s"+params, 
 					URLEncoder.encode(fbAccount.getToken(), "UTF-8")).get();
 			
 			BasicDBObject data = (BasicDBObject)JSON.parse(res.getString());
