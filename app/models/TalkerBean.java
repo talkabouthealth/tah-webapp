@@ -667,6 +667,9 @@ public class TalkerBean implements Serializable {
 		else if ("M".equals(gender)) {
 			return "Male";
 		}
+		else if ("O".equals(gender)) {
+			return "Other";
+		}
 		else {
 			return null;
 		}

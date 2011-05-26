@@ -71,7 +71,7 @@ public class ApplicationUpdatesJob extends Job {
 		 * 
 		 * 
 		 */
-		
+		System.out.println("importing data..");
 		//Fields data for Edit Profile
 		FieldsDataImporter.importData("fields.dat");
 		

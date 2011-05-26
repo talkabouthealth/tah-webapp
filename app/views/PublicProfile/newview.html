@@ -251,7 +251,8 @@
 						                      </div>
 							                </div>
 						                #{/if}
-					                #{/elseif}					                
+					                #{/elseif}	
+					                				                
 					                #{elseif field.equals("pract_adr") && talker.isOrg()}
 					                	#{if talker.profInfo.get("pract_adr1") || talker.profInfo.get("pract_adr2") || talker.profInfo.get("pract_city") || talker.profInfo.get("pract_state") || talker.profInfo.get("pract_zip")}					                
 						                <div class="profiletxtCantant">
@@ -377,10 +378,12 @@
 			                    <div class="topicborder"></div>
 			                    <div class="profilebiotxt">${talker.bio.nl2br()}</div>
 							#{/if}
-							
+														 
+					                
 							#{if talker.isProf() && talker.isAllowed(models.PrivacySetting.PrivacyType.PROFESSIONAL_INFO, currentTalker)}
 								#{ifnot talker.connection.equals("Physician")}
 									<br/>
+									
 									#{if talker.city}
 					                    <div class="profiletxtCantant">
 					                      <div class="profileCantanttxt1">

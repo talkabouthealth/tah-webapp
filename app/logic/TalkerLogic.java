@@ -157,6 +157,8 @@ public class TalkerLogic {
 		PROF_FIELDS_MAP.put("licenses", "Licenses");
 		PROF_FIELDS_MAP.put("prim_specialty", "Primary specialty");
 		PROF_FIELDS_MAP.put("sec_specialty", "Secondary specialty");
+		PROF_FIELDS_MAP.put("cam", "CAM Specialities");
+		PROF_FIELDS_MAP.put("certifications", "Certifications");
 		PROF_FIELDS_MAP.put("states_lic", "State Licenses");
 		PROF_FIELDS_MAP.put("specialty", "Specialty");
 		PROF_FIELDS_MAP.put("languages", "Languages");
@@ -187,6 +189,7 @@ public class TalkerLogic {
 		PROF_FIELDS_MAP.put("tw_page", "Twitter");		
 		PROF_FIELDS_MAP.put("li_page", "LinkedIn");
 		PROF_FIELDS_MAP.put("bl_page", "Blog");
+		
 	}
 
 	/**
@@ -224,6 +227,7 @@ public class TalkerLogic {
 	 */
 	public static List<String> getFieldsData(String fieldName, String talkerType) {
 		String key = fieldName+"|"+talkerType;
+		//System.out.println(key+": "+fieldsDataMap.get(key));
 		if (fieldsDataMap.containsKey(key)) {
 			return fieldsDataMap.get(key);
 		}
@@ -231,6 +235,7 @@ public class TalkerLogic {
 			key = fieldName+"|all";
 			return fieldsDataMap.get(key);
 		}
+		
 	}
 	
 	/**
