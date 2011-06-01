@@ -35,4 +35,7 @@ public class Static extends Controller {
     public static void howyoucanhelp() {
     	render();
     }    
+    public static void expertbenefits() {
+    	render();
+    }    
 }
