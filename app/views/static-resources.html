@@ -1,0 +1,21 @@
+#{extends 'main.html' /}
+
+</head>
+<body>
+	#{include 'header.html' /}
+		
+		<div id="bottom_container">
+			<div id="innerbanner"></div>
+			<div id="innermain">
+				<div id="innermiddlearea">
+					<div id="signupleft">
+						<span class="blacktextgrey20">#{get 'pageHeader' /}</span><br/>
+						#{doLayout /}
+					</div>
+					<div id="signupright">
+						#{rightmenu-resources /}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
