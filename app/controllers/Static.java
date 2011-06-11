@@ -96,6 +96,9 @@ public class Static extends Controller {
     } 
    public static void workshops() {
     	render();
-    } 
+   } 
+   public static void partnerbenefits() {
+    	render();
+   } 
 
 }
