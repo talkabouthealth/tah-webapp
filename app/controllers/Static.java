@@ -91,5 +91,11 @@ public class Static extends Controller {
    public static void resources_youngsurvivors() {
     	render();
     } 
+   public static void resources_inflammatory() {
+    	render();
+    } 
+   public static void workshops() {
+    	render();
+    } 
 
 }

@@ -338,6 +338,7 @@ a.pinktext16:hover {text-decoration: none; color: #eb1d90;}
 .pinktext18 {font-family: arial; font-size: 18px; font-weight: bold; text-decoration: none; color: #eb1d90;}
 a.pinktext18:hover {text-decoration: none; color: #eb1d90;}
 
+.blacktext20{font-family: arial; font-size: 20px; font-weight: bold; text-decoration: none; color: #000000; line-height:20px;}
 .blacktext18{font-family: arial; font-size: 18px; font-weight: bold; text-decoration: none; color: #000000; line-height:20px;}
 a.blacktext18:hover {text-decoration: none; color: #000000;}
 .blacktext14 {font-family: arial; font-size: 14px; font-weight: normal; text-decoration: none; color: #000000; line-height:20px;}
