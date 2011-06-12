@@ -10,6 +10,7 @@ body {
 	font-family: arial; font-size: 25px;}
 
 form { padding:0px; margin:0px;}
+a img { border: none; }
 #top_container { width:972px; margin-left:auto; margin-right:auto; font-size:1px}
 #bottom_container { width:972px; margin-left:auto; margin-right:auto;}
 #top { float:left; width:972px; padding:0px; margin:0px; height:73px; }

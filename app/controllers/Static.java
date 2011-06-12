@@ -100,5 +100,8 @@ public class Static extends Controller {
    public static void partnerbenefits() {
     	render();
    } 
+   public static void partners() {
+    	render();
+   } 
 
 }
