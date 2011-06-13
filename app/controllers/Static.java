@@ -31,7 +31,7 @@ public class Static extends Controller {
     public static void expertbenefits() {
     	render();
     }    
-    public static void resources_careerlegal() {
+    public static void resources_career_legal() {
     	render();
     }    
     public static void resources_beauty() {
@@ -40,16 +40,16 @@ public class Static extends Controller {
     public static void resources_chemotherapy() {
     	render();
     }
-    public static void resources_clinicaltrials() {
+    public static void resources_clinical_trials() {
     	render();
     }    
-    public static void resources_emotionalsupport() {
+    public static void resources_emotional_support() {
     	render();
     }    
     public static void resources_ethnicity() {
     	render();
     }    
-    public static void resources_familychildren() {
+    public static void resources_family_children() {
     	render();
     }    
     public static void resources_finances() {
@@ -58,37 +58,43 @@ public class Static extends Controller {
     public static void resources_gender() {
     	render();
     }    
-    public static void resources_generalhealth() {
+    public static void resources_general_cancer() {
     	render();
     }    
-    public static void resources_healthfitnessnutrition() {
+    public static void resources_nutrition() {
     	render();
     }    
-    public static void resources_intimacysexuality() {
+    public static void resources_fitness() {
+    	render();
+    }    
+    public static void resources_retreats() {
+    	render();
+    }    
+    public static void resources_intimacy_sexuality() {
     	render();
     }    
    public static void resources_lgbt() {
     	render();
     }    
-   public static void resources_newlydiagnosed() {
+   public static void resources_newly_diagnosed() {
     	render();
     } 
-   public static void resources_patientadvocacy() {
+   public static void resources_patient_advocacy() {
     	render();
     } 
    public static void resources_prevention() {
     	render();
     } 
-   public static void resources_reconstructivesurgery() {
+   public static void resources_reconstructive_surgery() {
     	render();
     } 
    public static void resources_reproductive() {
     	render();
     } 
-   public static void resources_triplenegative() {
+   public static void resources_triple_negative() {
     	render();
     } 
-   public static void resources_youngsurvivors() {
+   public static void resources_young_survivors() {
     	render();
     } 
    public static void resources_inflammatory() {
@@ -97,11 +103,26 @@ public class Static extends Controller {
    public static void workshops() {
     	render();
    } 
-   public static void partnerbenefits() {
+   public static void partner_benefits() {
     	render();
    } 
    public static void partners() {
     	render();
    } 
+   public static void resources_caregivers() {
+    	render();
+   }
+   public static void resources_online_cancer_communities() {
+    	render();
+   }
+   public static void resources_general_breast_cancer() {
+    	render();
+   }
+   public static void resources_metastatic_breast_cancer() {
+    	render();
+   }
+   public static void resources_complementary_alternative() {
+    	render();
+   }
 
 }
