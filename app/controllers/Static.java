@@ -28,7 +28,7 @@ public class Static extends Controller {
     public static void howyoucanhelp() {
     	render();
     }    
-    public static void expertbenefits() {
+    public static void expert_benefits() {
     	render();
     }    
     public static void resources_career_legal() {
