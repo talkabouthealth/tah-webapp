@@ -444,7 +444,7 @@
 	#{/if}
 	
 	#{if recommendedConvos}
-	<div class="topipsts">
+	<!--<div class="topipsts">
    		<div class="mtrighttxt1">Recommended Questions</div>
    		<div id="recommendedTopics">
    			#{list items: recommendedConvos, as: 'convo'}
@@ -465,10 +465,10 @@
 			#{/list} 
    		</div>
    		<div class="topicborder"></div>
-	</div>
+	</div>-->
 	#{/if}	
 	#{include 'Upcoming_Workshops.html' /}
-	
+	#{common/popularTopics popularTopics: popularTopics /}
 	<div class="topipsts">
 	     <div class="mtrighttxt1">Share TalkAboutHealth</div>
 	     <div class="topixtext"> Invite friends to join the Community </div>
@@ -486,7 +486,6 @@
 	</div>
 
 	#{include 'tahHowYouCanHelp.html' /}
-	#{common/popularTopics popularTopics: popularTopics /}
 	
 	<div class="mtop"></div>
 	<div class="cb"></div>
