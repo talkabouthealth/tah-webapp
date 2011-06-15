@@ -319,7 +319,10 @@
                 
                 #{set currentPage = 'topicPage' /}
                 #{include 'tahShare.html' /}
-                #{include 'shareWidgets.html' /}
+		#{include 'Upcoming_Workshops.html' /}
+		#{common/popularTopics popularTopics: popularTopics /}
+		#{include 'tahHowYouCanHelp.html' /}
+	        #{include 'shareWidgets.html' /}
                 
                 *{
                 <div class="topipsts">
