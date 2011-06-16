@@ -28,7 +28,7 @@ public class Static extends Controller {
     public static void howyoucanhelp() {
     	render();
     }    
-    public static void expert_benefits() {
+    public static void medical_professional_network() {
     	render();
     }    
     public static void resources_career_legal() {
@@ -103,10 +103,10 @@ public class Static extends Controller {
    public static void workshops() {
     	render();
    } 
-   public static void partner_benefits() {
+   public static void become_a_partner() {
     	render();
    } 
-   public static void partners() {
+   public static void partner_network() {
     	render();
    } 
    public static void resources_caregivers() {
