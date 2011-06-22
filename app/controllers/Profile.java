@@ -599,6 +599,7 @@ public class Profile extends Controller {
 		Date diagnoseDate = CommonUtil.parseDate(talkerDisease.getDiagnoseMonth(), 1, talkerDisease.getDiagnoseYear());
 		talkerDisease.setDiagnoseDate(diagnoseDate);
 		
+        /*
 		//Automatically follow topics based on HealthInfo
 		List<TopicBean> recommendedTopics = TalkerLogic.getTopicsByHealthInfo(talkerDisease);
 		if (!recommendedTopics.isEmpty()) {
@@ -607,7 +608,7 @@ public class Profile extends Controller {
 			}
 			CommonUtil.updateTalker(talker, session);
 		}
-		
+		*/
 		//Save or update
 		TalkerDiseaseDAO.saveTalkerDisease(talkerDisease);
 		
