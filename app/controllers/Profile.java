@@ -75,6 +75,7 @@ import dao.TalkerDAO;
 import dao.TalkerDiseaseDAO;
 import dao.ConversationDAO;
 import dao.TopicDAO;
+import java.util.Random;
 
 /**
  * Different profile related actions - profile info, health, notifications, privacy
@@ -279,7 +280,8 @@ public class Profile extends Controller {
 	public static void image() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		String userName = talker.getUserName();
-		render(userName);
+                int num = new Random().nextInt();
+              	render(userName, num);
 	}
 	
 	/**
