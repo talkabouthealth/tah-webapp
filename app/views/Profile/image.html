@@ -19,7 +19,7 @@
             $('#userpicture').remove();
             $.ajaxFileUpload({
                 url:'@{Profile.uploadImage()}',
-                secureuri:false,
+                secureuri:true,
                 fileElementId:'imageFile',
                 data:{submitAction: val},
                 success: function (){
