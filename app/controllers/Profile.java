@@ -75,6 +75,7 @@ import dao.TalkerDAO;
 import dao.TalkerDiseaseDAO;
 import dao.ConversationDAO;
 import dao.TopicDAO;
+import java.util.Random;
 
 /**
  * Different profile related actions - profile info, health, notifications, privacy
@@ -279,7 +280,8 @@ public class Profile extends Controller {
 	public static void image() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		String userName = talker.getUserName();
-		render(userName);
+                int num = new Random().nextInt();
+              	render(userName, num);
 	}
 	
 	/**
@@ -599,6 +601,7 @@ public class Profile extends Controller {
 		Date diagnoseDate = CommonUtil.parseDate(talkerDisease.getDiagnoseMonth(), 1, talkerDisease.getDiagnoseYear());
 		talkerDisease.setDiagnoseDate(diagnoseDate);
 		
+        /*
 		//Automatically follow topics based on HealthInfo
 		List<TopicBean> recommendedTopics = TalkerLogic.getTopicsByHealthInfo(talkerDisease);
 		if (!recommendedTopics.isEmpty()) {
@@ -607,7 +610,7 @@ public class Profile extends Controller {
 			}
 			CommonUtil.updateTalker(talker, session);
 		}
-		
+		*/
 		//Save or update
 		TalkerDiseaseDAO.saveTalkerDisease(talkerDisease);
 		

@@ -6,6 +6,35 @@
 			margin: 10px;
 		}	
 	</style>
+        <script type="text/javascript" src="/public/javascripts/ajaxfileupload.js"></script>
+        <script type="text/javascript">
+	function ajaxFileUpload(val) {
+            $("#loading").ajaxStart(function(){
+                    $(this).show();
+            })
+            .ajaxComplete(function(){
+                    $(this).hide();
+                    $('#userpicture').show();
+            });
+            $('#userpicture').remove();
+            $.ajaxFileUpload({
+                url:'@{Profile.uploadImage()}',
+                secureuri:false,
+                fileElementId:'imageFile',
+                data:{submitAction: val},
+                success: function (){
+                    var body = $($('iframe').get(0).contentWindow.document.body);
+                    var newimg = $('#userpicture', body).clone();
+                    newimg.hide();
+                    $('#loading').after(newimg);
+                },
+                error: function () {
+                    alert('error');
+                }
+            });
+            return false;
+	}
+	</script>	
 </head>
 <body>
 	#{include 'header.html' /}
@@ -19,12 +48,12 @@
 			<div id="notifactionbox">
 				<div class="notifactionboxtop"></div>
 				<div class="notifactionboxmid">
-					<img id="userpicture" src="@{Image.show(userName)}" width="100" height="100" />
-					<h3>Actions:</h3>
-					<input type="file" id="imageFile" name="imageFile" />
-					<input id="submitAction" name="submitAction" type="submit" value="Upload" />
-					<br/><br/>
-					<input id="submitAction" name="submitAction" type="submit" value="Remove current image" />
+                                    <img id="loading" src="/public/images/loading.gif" style="padding: 34px; float: left; margin: 10px; display:none;" />
+                                    <img id="userpicture" src="@{Image.show(userName)}?${num}" width="100" height="100" /> 
+                                    <h3>Actions:</h3>
+                                    <input type="file" id="imageFile" name="imageFile" onchange="return ajaxFileUpload('Upload');" />
+                                    <br/><br/>
+                                    <input type="submit" id="submitAction" name="submitAction" value="Remove current image" onclick="return ajaxFileUpload('Remove current image');" />
 				</div>
 				<div class="notifactionboxbot"></div>
 			</div>
