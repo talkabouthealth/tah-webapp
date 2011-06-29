@@ -18,11 +18,23 @@
 	}
         var checkFrame = function(){
             try{
-                $('#uploadframe').get(0).contentWindow.document;
-                setTimeout(checkFrame, 100);
-                
+                var size = $('#userpicture', $('#uploadframe').get(0).contentWindow.document.body).size();
+                if (size == 0) {
+                    setTimeout(checkFrame, 100);
+                }
+                else {
+                    var imageurl = '@{Image.show(userName)}';
+                    imageurl+= '?' + new Date().getTime();    
+                    $('#userpicture').attr("src", imageurl);
+                    $('#userpicture').load(function(){
+                        $("#loading").hide();
+                        $('#userpicture').show();
+                    });
+                    $('#uploadframe').remove();
+                }  
             }
             catch(e){
+                
                 var imageurl = '@{Image.show(userName)}';
                 imageurl+= '?' + new Date().getTime();    
                 $('#userpicture').attr("src", imageurl);
@@ -31,6 +43,7 @@
                     $('#userpicture').show();
                 });
                 $('#uploadframe').remove();
+                
             }
         };
         
