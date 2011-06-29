@@ -6,34 +6,35 @@
 			margin: 10px;
 		}	
 	</style>
-        <script type="text/javascript" src="/public/javascripts/ajaxfileupload.js"></script>
         <script type="text/javascript">
-	function ajaxFileUpload(val) {
-            $("#loading").ajaxStart(function(){
-                    $(this).show();
-            })
-            .ajaxComplete(function(){
-                    $(this).hide();
-                    $('#userpicture').show();
-            });
-            $('#userpicture').remove();
-            $.ajaxFileUpload({
-                url:'@{Profile.uploadImage()}',
-                secureuri:true,
-                fileElementId:'imageFile',
-                data:{submitAction: val},
-                success: function (){
-                    var body = $($('iframe').get(0).contentWindow.document.body);
-                    var newimg = $('#userpicture', body).clone();
-                    newimg.hide();
-                    $('#loading').after(newimg);
-                },
-                error: function () {
-                    alert('error');
-                }
-            });
-            return false;
+        if (window.top )    
+	function ajaxFileUpload(value) {
+            $('<iframe id="uploadframe" name="uploadframe" src="" style="position:absolute; top:-9999px; left:-9999px"></iframe>').appendTo(document.body);
+            setTimeout(checkFrame, 100);    
+            $('#submitAction').val(value);
+            $('#uploadimageform').attr('target', 'uploadframe');
+            $('#uploadimageform').submit();
+            $("#loading").show();
+            $('#userpicture').hide();
 	}
+        var checkFrame = function(){
+            try{
+                $('#uploadframe').get(0).contentWindow.document;
+                setTimeout(checkFrame, 100);
+                
+            }
+            catch(e){
+                var imageurl = '@{Image.show(userName)}';
+                imageurl+= '?' + new Date().getTime();    
+                $('#userpicture').attr("src", imageurl);
+                $('#userpicture').load(function(){
+                    $("#loading").hide();
+                    $('#userpicture').show();
+                });
+                $('#uploadframe').remove();
+            }
+        };
+        
 	</script>	
 </head>
 <body>
@@ -41,7 +42,7 @@
 
 	<div id="innerbanner"></div>
 	<form id="uploadimageform" name="uploadimageform" enctype="multipart/form-data"
-		action="@{Profile.uploadImage()}" method="POST" />
+              action="@{Profile.uploadImage()}" method="POST">
 	<div id="innermain">
 		<div class="blacktext2" id="innerheading">Upload Picture</div>
 		<div id="innermiddlearea">
@@ -50,13 +51,17 @@
 				<div class="notifactionboxmid">
                                     <img id="loading" src="/public/images/loading.gif" style="padding: 34px; float: left; margin: 10px; display:none;" />
                                     <img id="userpicture" src="@{Image.show(userName)}?${num}" width="100" height="100" /> 
+                                     
                                     <h3>Actions:</h3>
                                     <input type="file" id="imageFile" name="imageFile" onchange="return ajaxFileUpload('Upload');" />
                                     <br/><br/>
-                                    <input type="submit" id="submitAction" name="submitAction" value="Remove current image" onclick="return ajaxFileUpload('Remove current image');" />
+                                    <input type="button" value="Remove current image" onclick="return ajaxFileUpload('Remove current image');" />
+                                    <input type="hidden" id="submitAction" name="submitAction" />
 				</div>
 				<div class="notifactionboxbot"></div>
 			</div>
 		</div>
 	</div>
+           
 	</form>
+        
