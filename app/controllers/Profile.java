@@ -58,6 +58,7 @@ import play.data.validation.Error;
 import play.data.validation.Valid;
 import play.i18n.Messages;
 import play.mvc.Controller;
+import play.mvc.Router;
 import play.mvc.Router.ActionDefinition;
 import play.mvc.With;
 import play.templates.JavaExtensions;
@@ -309,9 +310,7 @@ public class Profile extends Controller {
 				Logger.error(e, "Error converting image!");
 			}
 		}
-		
-		image();
-        return;
+                renderText("image uploaded");
 	}
 	
 	/* -------------- Preferences (Privacy)  ------------------------ */
