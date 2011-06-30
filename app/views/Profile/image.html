@@ -7,19 +7,21 @@
 		}	
 	</style>
         <script type="text/javascript">  
+        
 	function ajaxFileUpload(value) {
-            $('<iframe id="uploadframe" name="uploadframe" src="" style="position:absolute; top:-9999px; left:-9999px"></iframe>').appendTo(document.body);
-            setTimeout(checkFrame, 100);    
+            var framename = 'frame' + new Date().getTime();
+            $('<iframe id='+ framename +' name=' + framename + ' src="" style="position:absolute; top:-9999px; left:-9999px"></iframe>').appendTo(document.body); 
             $('#submitAction').val(value);
-            $('#uploadimageform').attr('target', 'uploadframe');
+            $('#uploadimageform').attr('target', framename);
             $('#uploadimageform').submit();
             $("#loading").show();
             $('#userpicture').hide();
+            setTimeout(checkFrame, 100);
 	}
         var checkFrame = function(){
-            try{
-                var size = $('#userpicture', $('#uploadframe').get(0).contentWindow.document.body).size();
-                if (size == 0) {
+            try{    
+                var text = $($('iframe').get(0).contentWindow.document.body).text();
+                if (text == '') {
                     setTimeout(checkFrame, 100);
                 }
                 else {
@@ -29,21 +31,20 @@
                     $('#userpicture').load(function(){
                         $("#loading").hide();
                         $('#userpicture').show();
+                        $('iframe').remove();
                     });
-                    $('#uploadframe').remove();
+                    
                 }  
             }
             catch(e){
-                
                 var imageurl = '@{Image.show(userName)}';
                 imageurl+= '?' + new Date().getTime();    
                 $('#userpicture').attr("src", imageurl);
                 $('#userpicture').load(function(){
                     $("#loading").hide();
                     $('#userpicture').show();
+                    $('iframe').remove();
                 });
-                $('#uploadframe').remove();
-                
             }
         };
         
