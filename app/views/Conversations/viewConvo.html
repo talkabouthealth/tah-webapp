@@ -409,7 +409,7 @@
 												<div class="inline_full">
 													<div class="targetedh7">
 														<h1 class="inline_view" style="display: inline;">${convo.topic}</h1>
-														#{if talker }
+														#{if talker && (talker.admin || talker.userName == convo.talker.userName) }
 															<span class="editit2" style="float: none;">
 																<a href="#" class="inline_editlink">Edit</a>
 															</span>
@@ -445,14 +445,14 @@
 										<div class="suggestxt inline_display">
 											<div class="inline_full" style="display: ${convo.details ? 'block' : 'none'}">
 												<h2 class="inline_view" style="display: inline;">${convo.details?.nl2br()}</h2>
-												#{if talker }
+												#{if talker && (talker.admin || talker.userName == convo.talker.userName) }
 													<span class="editit2" style="float: none;">
 														<a href="#" class="inline_editlink">Edit</a>
 													</span>
 												#{/if}
 											</div>
 											<div class="inline_empty" style="display: ${!convo.details ? 'block' : 'none'}">
-												#{if talker }
+												#{if talker && (talker.admin || talker.userName == convo.talker.userName) }
 													<div class="targetenew">
 														<a class="inline_addlink" 
 															href="#">Add Question Details (Context or Background Info)</a>
@@ -490,7 +490,7 @@
 													#{/list}
                         						</div>
 											</div>
-											#{if talker }
+											#{if talker && (talker.admin || talker.userName == convo.talker.userName) }
 												<div class="editdiv">
 													<div class="editit" style="padding-top:10px;">
 														<a href="#" class="inline_editlink">Edit</a>
@@ -846,7 +846,7 @@
 							<div class="inline_display">
 								<div class="Staticsh1" style="float:left; padding:10px 0 0 0;">Similar Questions</div>
 								<div class="inline_full" style="display: ${(convo.relatedConvos || relatedConvos) ? 'block' : 'none'}">
-									#{if talker }
+									#{if talker && (talker.admin || talker.userName == convo.talker.userName) }
 										<div class="editdiv">
 											<div class="editit" style="padding-top:10px;">
 												<a href="#" class="inline_editlink">Edit</a>
