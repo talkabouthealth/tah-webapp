@@ -429,7 +429,7 @@ public class ConversationBean implements Comparable<ConversationBean> {
 	 */
 	public String getTwitterShareText() {
 		String sampleTwitterURL = "http://t.co/3tkmYZN";
-		String shareText = TwitterUtil.prepareTwit("TalkAboutHealth Q&A: <PARAM> -"+sampleTwitterURL, getTopic());
+		String shareText = TwitterUtil.prepareTwit("<PARAM> via @TalkAboutHealth " + sampleTwitterURL, getTopic());
 		//remove Twitter url, it will be added by Twitter
 		return shareText.substring(0, shareText.length()-sampleTwitterURL.length());
 	}
