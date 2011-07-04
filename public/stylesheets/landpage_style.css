@@ -619,7 +619,7 @@ width:180px;
 height:20px;
 float:left;
 font:Arial, Helvetica, sans-serif;
-color:#3484d4;
+color:#494848;
 font-size:12px;
 font-weight:bold;
 padding-top:8px;
@@ -632,7 +632,7 @@ width:180px;
 height:60px;
 float:left;
 font:Arial, Helvetica, sans-serif;
-color:#000;
+color:#494848;
 font-size:12px;
 padding-left:5px;
 padding-right:5px;
@@ -725,10 +725,10 @@ margin-top:-5px;
 	float:left;
 	font-family: "Trebuchet MS";
 	color: #403c3e;
-	width:190px;
+	/* width:240px;*/
 	height:100px;
-	padding:5px 5px 5px 5px;
-	margin-left:8px;
+	/* padding:5px 5px 5px 5px; */
+	/*margin-left:8px;*/
 	font-size: 11px;
 }
 
@@ -1220,6 +1220,7 @@ width: 969px;
 .style1 {color: #1c57a1}
 .style2 {color: #549f53}
 .style3 {color: #d74993}
+.styleblack {color: #000000}
 .show{ display:none;background-color:#000000;height:50px;width:200px;text-align:center;padding-top:5px;font-weight:600;margin-top:9px;z-index:99;font-size:18px;margin-left:-210px;}
 .show1{ display:none;background-color:#000000;height:50px;width:200px;text-align:center;padding-top:5px;font-weight:600;margin-top:9px;z-index:99;font-size:18px;margin-left:-211px;}
 .show2{display:none;background-color:#000000;height:50px;width:200px;text-align:center;padding-top:5px;font-weight:600;margin-top:9px;z-index:99;font-size:18px;margin-left:-211px;}
@@ -1232,6 +1233,8 @@ width: 969px;
 .show9{display:none;background-color:#000000;height:50px;width:200px;text-align:center;padding-top:5px;font-weight:600;margin-top:9px;z-index:99;font-size:18px;margin-left:-211px;}
 .show10{display:none;background-color:#000000;height:50px;width:200px;text-align:center;padding-top:5px;font-weight:600;margin-top:9px;z-index:99;font-size:18px;margin-left:-211px;;}
 .show11{display:none;background-color:#000000;height:50px;width:200px;text-align:center;padding-top:5px;font-weight:600;margin-top:9px;z-index:99;font-size:18px;margin-left:-211px;}
+.bluetext12 {font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none; color: #1550a4; line-height:20px;}
+a.bluetext12:hover {text-decoration: underline; color: #1550a4;}
 .text{
 width:144px; float:left;padding-left:8px;
 font-weight:bold;

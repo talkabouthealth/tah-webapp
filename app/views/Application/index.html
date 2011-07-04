@@ -67,13 +67,13 @@
                                 <li class="lisep"> </li>
                                 <li><a href="@{Static.howitworks()}">How it works</a></li>
                                 <li class="lisep"> </li>
-                                <li><a href="#">Recent Questions</a></li>
+                                <li><a href="@{Explore.conversations('feed')}">Recent Questions</a></li>
                                 <li class="lisep"> </li>
                                 <li><a href="@{Explore.browseTopics()}">Topics</a></li>
                                 <li class="lisep"> </li>
                                 <li><a href="http://blog.talkabouthealth.com">Blog</a></li>
                                 <li class="lisep"> </li>
-                                <li><a href="#">Who are we?</a></li>
+                                <li><a href="@{Static.aboutus()}">Who are we?</a></li>
                             </ul>
                         </div>
                         <!--nav-->
@@ -191,17 +191,17 @@
                         </div><div class="callout_bg03"><div class="callout_text03">Yes, the benefits of<br />
                                 yoga are multiple ...</div><div class="callout_pic01"><img src="/public/images/img_02.jpg" width="42" height="42" /></div>
                         </div></div>
-                    <div class="callout_bottem">View more...</div>
+                    <a href="@{Explore.conversations('feed')}"><div class="callout_bottem">View more answers...</div></a>
                 </div>
             </div>
             <div class="callout_box01"><div class="callout_inner">
                     <div class="callout_top01"><div class="callout_text01">Patients &amp; Caregivers</div>
                     </div>
-                    <div class="callout_center"><div class="callout_text04"><span class="style1">Meet</span> others just like you</div>
+                    <div class="callout_center"><div class="callout_text04"><span class="style1">Meet</span> others like you</div>
                         <div class="callout_text04"><span class="style2">Learn</span> from survivors</div>
                         <div class="callout_text04"><span class="style3">Share</span> your experiences</div>
                     </div>
-                    <div class="callout_bottem">Find your answers now</div>
+                    <a href="@{Explore.searchConversations()}"><div class="callout_bottem">Find your answers now</div></a>
                 </div></div>
             <div class="callout_box01"><div class="callout_inner">
                     <div class="callout_top02">
@@ -211,15 +211,14 @@
                         <div class="callout_text04"><span class="style2">Help</span> the right people</div>
                         <div class="callout_text04"><span class="style3">Reach</span> more patients</div>
                     </div>
-                    <div class="callout_bottem">Start sharing today</div>
+                    <a href="@{Static.medical_professional_network()}"><div class="callout_bottem">Medical Professional Network</div><a/>
                 </div></div><div class="callout_box01"><div class="callout_inner">
-                    <div class="callout_top03"><div class="callout_text01">TAH News &amp; Updates</div>
+                    <div class="callout_top03"><div class="callout_text01">Workshops &amp; Events</div>
                     </div>
-                    <div class="callout_center"><div class="callout_text05">Friday 6/10 @1pm-2pm EST</div>
-                        <div class="callout_text06">Nancy Singleton, patient navigator at
-                            New York Presbyterian logs in LIVE to answer your questions.</div>
+                    <div class="callout_center"><div class="callout_text05">July 12th, 12PM ET</div>
+                        <div class="callout_text06">Ask The Experts: Legal Advice by Cancer Legal Resource Center</div>
                     </div>
-                    <div class="callout_bottem">View more...</div>
+                    <a href="@{Static.workshops()}"><div class="callout_bottem">More events</div></a>
                 </div></div>
 
         </div>
@@ -245,14 +244,16 @@
     </div>
     <div class="partner">
         <div class="partnertext">
-            Partners
+            <a href="@{Static.partner_network()}">Partners<a/> <a href="@{Static.become_a_partner()}"><span class="bluetext12">(Become a partner)</span></a>
         </div>
     </div>
     <div id="footercover">
         <div class="footercover2">
-
-
-            <div class="footer_icon"><img src="/public/images/blogo.jpg" width="200" height="100"  border="0" style="margin-left:32px;"/></div><div class="footer_icon"><img src="/public/images/cancer.jpg" width="150" height="44" style="margin-top:15px;margin-left:5px;"  border="0"/></div><div class="footer_icon"><img src="/public/images/cfa.jpg" width="150" height="80"  border="0" style="margin-left:-15px;"/></div><div class="footer_icon"><img src="/public/images/clrc.jpg" width="150" height="94"  border="0" style="margin-left:-15px;"/></div><div class="footer_icon"><img src="/public/images/paf.jpg" width="150" height="100"  border="0" style="margin-left:-8px;"/></div>
+        	<div class="footer_icon"><img src="/public/images/logos/AOW_small.png" border="0" style="margin-top:10px;margin-left:32px;"/></div>
+		<div class="footer_icon"><img src="/public/images/logos/cancer.png" style="margin-top:25px;margin-left:15px;"  border="0"/></div>
+		<div class="footer_icon"><img src="/public/images/logos/cfa.png" border="0" style="margin-top:10px;margin-left:10px;"/></div>
+		<div class="footer_icon"><img src="/public/images/logos/clrc.png" border="0" style="margin-left:0px;"/></div>
+		<div class="footer_icon"><img src="/public/images/logos/logo-paf.png" border="0" style="margin-top:10px;margin-left:20px;"/></div>
 
             <!--footerleft-->
 
