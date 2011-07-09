@@ -124,5 +124,8 @@ public class Static extends Controller {
    public static void resources_complementary_alternative() {
     	render();
    }
+   public static void resources_general_health_care() {
+    	render();
+   }
 
 }
