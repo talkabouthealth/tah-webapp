@@ -16,79 +16,61 @@ MS
 PhD
 
 ---credentials|Psychologist
-DDiv
-DMin
-DO
-DrPH
-DSW
-EdD
-EdM
+DMFT
+LP
+LPsy
+LSW
 MA/MS
-MAHS
-MC
-MDiv
-MEd
-MPH
-MPS
-MSc
-MSEd
-MSN
-MSS
-MSSW
+MSC
 MSW
-PhD
-PsyaD
 PsyD
-ScD
+PhD
+
+---credentials|Professional Therapist
+DMFT
+LP
+LPsy
+LSW
+MA/MS
+MSC
+MSW
+PsyD
+PhD
 
 
 ---credentials|Social worker
-DDiv
-DMin
-DO
-DrPH
-DSW
-EdD
-EdM
-MA/MS
-MAHS
-MC
-MDiv
-MEd
-MPH
-MPS
-MSc
-MSEd
-MSN
-MSS
-MSSW
-MSW
-PhD
-PsyaD
-PsyD
-ScD
-
----licenses|Psychologist
-ANP
-APRN
-ATR
-CASAC
-CRC
 DMFT
-LCSW
-LDAC
-LMFT
-LMHC
-LMSW
 LP
-LPA
-LPC
-LPC-BE
 LPsy
 LSW
-MFT
-MHNP
-PMHNP
+MA/MS
+MSC
+MSW
+PsyD
+PhD
+
+---licenses|Psychologist
+CASAC
+CRC
+LMFT
+LCSW
+LMSW
+LMHC
+LP
+LPC
+LPC-BE
+
+
+---licenses|Professional Therapist
+CASAC
+CRC
+LMFT
+LCSW
+LMSW
+LMHC
+LP
+LPC
+LPC-BE
 
 ---prim_specialty|Physician
 Allergy and Immunology
@@ -501,7 +483,7 @@ Oncology
 Pharmacotherapy
 Psychiatric
 
----specialty|Psychologist
+---specialty|Psychologist 
 Child and adolescent
 Family and relationship counseling
 Forensic
@@ -512,3 +494,13 @@ School
 Specific disorder (e.g. trauma, addiction, eating, sleep, sex, clinical depression, anxiety, or phobias)
 Sport
 
+---specialty|Professional Therapist
+Child and adolescent
+Family and relationship counseling
+Forensic
+Health
+Neuropsychological disorders
+Organization and business
+School
+Specific disorder (e.g. trauma, addiction, eating, sleep, sex, clinical depression, anxiety, or phobias)
+Sport

@@ -22,11 +22,19 @@
 	#{profile/field type: 'select', des: 'Licenses', name: 'licenses', talkerType: talkerType, profInfo: profInfo /}
 #{/if}
 
+#{if talkerType.equals("Professional Therapist")}
+	#{profile/field type: 'select', des: 'Licenses', name: 'licenses', talkerType: talkerType, profInfo: profInfo /}
+#{/if}
+
 #{ifnot talkerType.equals("Researcher")}
 	#{profile/field type: 'text_multiple', des: 'What states are you licensed in?', name: 'states_lic', talkerType: talkerType, profInfo: profInfo /}
 #{/ifnot}
 
 #{if talkerType.equals("Nurse") || talkerType.equals("Pharmacist") || talkerType.equals("Psychologist")}
+	#{profile/field type: 'select', des: 'Specialty', name: 'specialty', talkerType: talkerType, profInfo: profInfo /}
+#{/if}
+
+#{if talkerType.equals("Nurse") || talkerType.equals("Pharmacist") || talkerType.equals("Professional Therapist")}
 	#{profile/field type: 'select', des: 'Specialty', name: 'specialty', talkerType: talkerType, profInfo: profInfo /}
 #{/if}
 
@@ -92,6 +100,9 @@
 	#{profile/field type: 'text_multiple', des: 'Pharmacy school', name: 'pharm_school', talkerType: talkerType, profInfo: profInfo /}
 #{/if}
 #{if talkerType.equals("Psychologist") || talkerType.equals("Researcher")}
+	#{profile/field type: 'text_multiple', des: 'School / University', name: 'school_uni', talkerType: talkerType, profInfo: profInfo /}
+#{/if}
+#{if talkerType.equals("Professional Therapist") || talkerType.equals("Researcher")}
 	#{profile/field type: 'text_multiple', des: 'School / University', name: 'school_uni', talkerType: talkerType, profInfo: profInfo /}
 #{/if}
 

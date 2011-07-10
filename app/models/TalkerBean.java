@@ -51,7 +51,7 @@ public class TalkerBean implements Serializable {
 		"Survivor (5 - 10 years)","Survivor (10 - 20 years)","Survivor (Greater than 20 years)",
 		"Parent", "Caregiver", "Family member", "Friend", 
 		//"professionals"
-		"Physician", "Pharmacist", "Nurse", "Psychologist", "Social worker", "Complementary Care Expert","Researcher", 
+		"Physician", "Pharmacist", "Nurse", "Psychologist","Professional Therapist", "Social worker", "Complementary Care Expert","Researcher", 
 		"Organization","Support Group",
 		 "other"
 	};
@@ -60,7 +60,7 @@ public class TalkerBean implements Serializable {
 	);
 	// only professionals in this list
 	public static final List<String> PROFESSIONAL_CONNECTIONS_LIST = Arrays.asList(
-		"Physician", "Pharmacist", "Nurse", "Psychologist", "Social worker","Complementary Care Expert","Researcher", "Organization","Support Group"
+		"Physician", "Pharmacist", "Nurse", "Psychologist","Professional Therapist", "Social worker","Complementary Care Expert","Researcher", "Organization","Support Group"
 	);
 	// only organizations in this list
 	public static final List<String> ORGANIZATIONS_CONNECTIONS_LIST = Arrays.asList(
