@@ -54,7 +54,8 @@ public class Topics extends Controller {
     	notFoundIfNull(topic);
 
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		render(talker, topic);
+    	boolean newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
+		render(talker, topic,newsLetterFlag);
     }
 	
 	/**

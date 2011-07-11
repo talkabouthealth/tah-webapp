@@ -42,6 +42,7 @@ import util.TwitterUtil;
 import util.EmailUtil.EmailTemplate;
 import util.ValidateData;
 import dao.ActionDAO;
+import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.TalkerDAO;
 import dao.ConversationDAO;
@@ -86,9 +87,11 @@ public class Home extends Controller {
 		}
 		session.remove("justloggedin");
 		
+		boolean newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
+		
 		render("@newhome", talker, emailVerification,
 				liveConversations, convoFeed, communityFeed, mentions, showNotificationAccounts,
-				recommendedTopics, similarMembers, experts, recommendedConvos);
+				recommendedTopics, similarMembers, experts, recommendedConvos,newsLetterFlag);
     }
     
     private static boolean prepareNotificationPanel(Session session, TalkerBean talker) {
@@ -122,7 +125,7 @@ public class Home extends Controller {
 		render(talker, convoFeed, communityFeed);
     }
 	
-	//TODO
+
 	public static void feedAjaxUpdate(String feedType,String beforeActionId,String talkerName,String isheader) {
     	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
     	
@@ -136,7 +139,7 @@ public class Home extends Controller {
     		_feedItems = FeedsLogic.updateFeed(FeedType.COMMUNITY,beforeActionId,null,loggedIn);
     	}
     	else {
-    		TalkerBean profileTalker = TalkerDAO.getByUserName(talkerName);
+   		TalkerBean profileTalker = TalkerDAO.getByUserName(talkerName);
     		if (profileTalker != null) {
         		_feedItems = FeedsLogic.updateFeed(FeedType.TALKER,beforeActionId,profileTalker,true);
     		}
@@ -167,7 +170,6 @@ public class Home extends Controller {
     			_feedItems = FeedsLogic.getTalkerFeed(profileTalker, afterActionId);
     		}
     	}
-    	
     	render("tags/feed/feedList.html", _feedItems, _talker);
     }
     

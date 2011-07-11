@@ -177,6 +177,48 @@
 		</div>
 		<div class="cb"></div>
 	#{/if}
+	<!-- New Changes Added -->
+	#{if currentTalker == null }
+	<div class="topipsts">
+		<div class="mtrighttxt1">Breast cancer questions and answers.<br /></div>
+		<div class="latextCover latextr" style="font-size: 14px;">Personalized, helpful, and accurate health information.</div>
+		<div id="joinnowbutton" style="margin: 5px 0px; padding-left: 50px; width: 145px;">
+			<a href="@{Application.signup()}">
+				<img src="/public/images/joinnow.jpg" alt="" width="135" height="44" border="0"/>
+			</a>
+		</div>
+		<div style="margin: 5px 0px; padding-left: 37px; width: 220px;">
+			<a href="#" onclick="return openFacebook();">
+				<img src="/public/images/joinfb.jpg" alt="Facebook" width="77" height="27" border="0" />
+			</a>
+			<a href="#" onclick="return openTwitter();" style="margin-left: 5px;">
+				<img src="/public/images/jointw.jpg" alt="Twitter" width="77" height="27" border="0" />
+			</a>
+		</div>
+		<div class="latextCover latextr" style="font-size: 14px;">
+			<a href="@{Static.howitworks()}">how it works&raquo;</a>&nbsp;&nbsp;
+			<a href="@{Static.communityguidelines()}">guidelines&raquo;</a>
+		</div>
+		<div class="topicborder"></div>
+	</div>
+	#{include '/newsletter_signup.html' /}
+	<div class="topipsts">
+	     <div class="mtrighttxt1">Share TalkAboutHealth</div>
+	     <div class="topixtext"> Invite friends to join the Community </div>
+	     <!--topixtext-->
+	     <div class="membersarea" style="height: auto;">
+			#{ share/buttons /}
+			#{if currentPage?.equals("home") }
+				<br/>
+				#{ share/fblike currentURL: 'www.facebook.com/talkabouthealth' /}
+			#{/if}
+	     </div>
+	     <!--membersarea-->
+	     <br />
+	     <div class="topicborder"></div>
+	</div>
+	#{/if}
+	<!-- New Changes Added -->
 </div>
 
 <div id="boxes">
@@ -185,6 +227,7 @@
 	#{ popups/thankyou /}
 	#{ popups/thoughtComment /}
 	
+	#{ popups/profileJoinNow /}
 	#{popups/startConvo page: 'profileRight', target: talker /}
 </div>
 <div id="mask"></div>

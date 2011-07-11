@@ -6389,3 +6389,13 @@ text-align:center;
 margin-top:10px;
 margin-bottom:5px;		
 }
+
+.profile_join_now a{
+	font-size: 22px;
+	color: #2b9e58; /*#116823;*/
+	font-weight: bold;
+}
+
+.profile_join_now a:hover {
+	color: #0286BC;
+}

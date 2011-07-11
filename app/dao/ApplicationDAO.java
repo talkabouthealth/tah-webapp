@@ -34,6 +34,7 @@ public class ApplicationDAO {
 	public static final String UPDATES_EMAIL_COLLECTION = "emails";
 	public static final String NAMES_COLLECTION = "names";
 	public static final String WAITING_COLLECTION = "waiting";
+	public static final String NEWSLETTER_COLLECTION = "newsletter";
 	
 	/**
 	 * Save login record.
@@ -231,5 +232,32 @@ public class ApplicationDAO {
 		}
 		return waitingInfo;
 	}
-}
 
+	/* ----------------- Newsletter Signup action --------------- */
+	
+	public static void addToNewsLetter(String email) {
+
+		DBCollection waitingColl = getCollection(NEWSLETTER_COLLECTION);
+
+		DBObject waitingDBObject = BasicDBObjectBuilder.start()
+			.add("email", email)
+			.get();
+		waitingColl.save(waitingDBObject);
+	}
+	
+	/**
+	 * Checks if given email already exists or reserved for newsletter.
+	 */
+	public static boolean isEmailExists(String userName) {
+		if (userName != null) {
+			userName = userName.toLowerCase();
+		}
+		if (Application.RESERVED_WORDS.contains(userName)) {
+			return true;
+		}
+		
+		DBCollection namesColl = getCollection(NEWSLETTER_COLLECTION);
+		DBObject query = new BasicDBObject("email", userName);
+		return namesColl.findOne(query) != null;
+	}
+}

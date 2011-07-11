@@ -35,6 +35,7 @@ public class EmailUtil {
 		CONTACTUS,
 		FLAGGED,
 		VERIFICATION,
+		WELCOME_NEWSLETTER,
 		
 		NOTIFICATION_THANKYOU,
 		NOTIFICATION_FOLLOWER,
@@ -76,10 +77,17 @@ public class EmailUtil {
 		if (toEmail == null) {
 			return false;
 		}
+
+		/*
+		Date : 29-Jun-2011
+		Removed the email verification code and sending email's to all user email's
+		*/
+		/*
 		if (verify && !isVerifiedEmail(toEmail)) {
 			return false;
 		}
-		
+		*/
+
 		TriggerMailClient client;
 		try {
 			client = new TriggerMailClient(SAILTHRU_APIKEY, SAILTHRU_SECRET);
@@ -88,7 +96,7 @@ public class EmailUtil {
 			Logger.error(e, "Couldn't send email");
 			return false;
 		}
-		
+
 		return true;
 	}
 

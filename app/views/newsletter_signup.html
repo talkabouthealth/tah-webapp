@@ -1,0 +1,60 @@
+#{if !newsLetterFlag }
+<script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
+   <script type="text/javascript">
+   <!--
+	$(document).ready(function() {
+		var newsLetterOptions = { success: setNewsLetterMessage }; 
+		$('#newsletter').submit(function() {
+			$("#newsletter").ajaxSubmit(newsLetterOptions); 
+			return false;
+		});
+	});
+   //Show subscribe result in widget itself
+	function setNewsLetterMessage(responseText, statusText, xhr, $form)  {
+		if (responseText.indexOf("Error:") === 0) {
+	   		var errorText = responseText.replace("Error:", "");
+	   		$("#newsletterMessage").css("color","#ff0000");
+	   		$("#newsletterMessage").html(errorText); 
+	   		$("#newsletterMessage").fadeIn(100);
+	   		closeTimeout = setTimeout(function() { $("#newsletterMessage").fadeOut(200) }, 4000);
+	   	} else {
+	   		$("#newsletter").fadeOut(200);
+	   		$("#newsletterMessage").css("color","#2E8B57");
+	   		$("#newsletterMessage").html(responseText);
+	   		$("#newsletterMessage").fadeIn(100);
+	   		closeTimeout = setTimeout(function() { $("#newsletterblock").fadeOut(200) }, 4000);
+	   	}
+	}
+	-->
+</script>
+   <div class="topipsts" id="newsletterblock">
+     <div class="mtrighttxt1">Subscribe To Our Newsletter!</div>
+		<span class="blacktextgrey8"><br /></span>	        
+		<span class="blacktextgrey14">
+			Upcoming events, best blog posts, latest news, and featured organizations and experts.
+			<br/>
+		</span>
+		<span class="blacktextgrey6"><br /></span>
+	    <span id="newsletterMessage" class="success" style="display:none;">Thanks for subscribing to newsletter.</span>
+			#{form @Application.subscribeNewsletter(), id:'newsletter'  }
+			 What's your email<br/>
+			#{if session.username }
+				<input name="email" id="email" type="text" value="${talker.email}" size="27" />
+			#{/if}
+			#{else}
+				<input name="email" id="email" type="text" value="" size="27"/>
+			#{/else}
+			<br/>
+			<div style="padding-left: 50px;">
+				<input class="signupbutton" type="submit" value="Subscribe Now" style="cursor: pointer;margin-bottom: 10px;margin-top: 10px;padding:0px;font-weight: bold;font-size: 15px;height: 35px;"/>
+			</div>
+			<!--
+			 -- Old Code --
+			Just Press [Enter] Key 
+			<div class="signupbutton"><input type="submit" value="Subscribe Now" /></div>
+			 -->
+			#{/form}
+		<span class="blacktextgrey6"><br /></span>	        
+    </div>
+	<div class="topicborder"></div>
+#{/if}

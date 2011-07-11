@@ -34,7 +34,19 @@
 				$("#newConvoTitle").val($("#"+type+"Text").val());
 			}
 			showPopup("#startDialog", 350);
-   		}		
+   		}
+   		
+   		function showJoinNowDialog() {
+			$("#profileJoinNow").show();
+
+			var convoTitle = $("#"+type+"Text").val();
+			if (convoTitle !== "" 
+					&& convoTitle !== "Post a question and we will notify the right members to answer."
+					&& convoTitle !== "Start a live chat by sharing the topic you would like to discuss. Your peers will join within minutes." ) {
+				$("#profileJoinNow").val($("#"+type+"Text").val());
+			}
+			showPopup("#startDialog", 350);
+   		}	
 	</script>
 		
 <div id="managtopic1">
@@ -113,7 +125,13 @@
 						      <div class="cb"></div>
 						</div> 
                   	#{/if}
-                  
+                  	
+                  	<!-- New Changes Added -->
+                  	#{if currentTalker == null }
+                  	<div class="profile_join_now"><a href="#" onclick="return showPopup('#profileJoinNow', 400);">Join now to ask ${talker.name} questions!</a></div>
+                  	#{/if}
+                  	<!-- New Changes Added -->
+                  	
                     <div class="pph1Cover">
                       <div class="pph1">
                       		${talker.name} 
@@ -155,7 +173,28 @@
                       </td>
                     </tr>
                     </table>
-                    
+                    <!-- New Changes Added -->
+                    #{if currentTalker == null }
+                  	<div id="postQuestionTabContent" class="topTabContent" style="display:block">	
+                  		<div style="float:left;">                  		    
+                  			<div class="Profileperson">Ask ${talker.name} a question:</div>
+							<input type="text" id="postQuestionText" class="edititinputx inline_text greyarea" 
+								onKeyUp=" $('#postQuestionTextSize').html($(this).val().length);"
+								maxlength="160"
+								onfocus="clearTextArea('postQuestionText', 'Post a question and we will notify the right members to answer.');"
+								style="width:627px; height: 35px; margin: 0px; padding: 3px;" cols="4" rows="4" 
+								value="Post a question and we will notify the right members to answer." />							
+						</div>
+						<div style="float: right; padding-top: 5px;">
+							<span id="postQuestionTextSize" style="font-size: 16px; float: left;">0</span>
+							#{ convo/ccInputs type: "Question", setting: "POST_ON_CONVO" /}
+							<input type="button" onclick="return showPopup('#profileJoinNow', 400);"
+								id="postQuestionBtn" value="" />
+						</div>
+						<div style="clear:both"></div>
+                  	</div>
+                  	#{/if}
+                  	<!-- New Changes Added -->
                     #{if currentTalker != null }
                   	<div id="postQuestionTabContent" class="topTabContent" style="display:block">	
                   		<div style="float:left;">                  		    
