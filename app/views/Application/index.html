@@ -16,8 +16,8 @@
     <meta property="og:description" content="${pageDescription}"/>
 
 
-    <title>TalkAboutHealth - Real-time health support</title>
-    <meta name="description" content="${pageDescription ? pageDescription : 'Real-time support for your health issues'}" /> 
+    <title>TalkAboutHealth - Breast Cancer Questions and Answers. Personalized, helpful, and accurate health information.</title>
+    <meta name="description" content="${pageDescription ? pageDescription : 'Breast Cancer Questions and Answers.  Personalized, helpful, and accurate health answers. We are a welcoming and caring community who have come together to meet, share, and learn with each other. We welcome patients, families, caregivers, survivors, professionals, and organizations. Everyone is encouraged to share their unique knowledge and experiences. The more we share, the more lives we improve and save.'}" /> 
     <meta name="keywords" content="${pageKeywords ? pageKeywords : 'support, health, talk'}" /> 
 
     <link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
@@ -213,12 +213,15 @@
                     </div>
                     <a href="@{Static.medical_professional_network()}"><div class="callout_bottem">Medical Professional Network</div><a/>
                 </div></div><div class="callout_box01"><div class="callout_inner">
-                    <div class="callout_top03"><div class="callout_text01">Workshops &amp; Events</div>
+                    <div class="callout_top03"><div class="callout_text01">Expert Workshops</div>
                     </div>
-                    <div class="callout_center"><div class="callout_text05">July 12th, 12PM ET</div>
-                        <div class="callout_text06">Ask The Experts: Legal Advice by Cancer Legal Resource Center</div>
+                    <div class="callout_center">
+			<div class="callout_text05">Preventing Medical Errors, Mon. July 18th<br /><br /></div>
+                        <div class="callout_text06"><br/>Martine Ehrenclou, Author<br />
+				<a href="@{ViewDispatcher.view("MartineEhrenclou")}" target="_blank">Join now to ask Martine questions!</a>
+			</div>
                     </div>
-                    <a href="@{Static.workshops()}"><div class="callout_bottem">More events</div></a>
+                    <a href="@{Static.workshops()}"><div class="callout_bottem">More workshops</div></a>
                 </div></div>
 
         </div>
