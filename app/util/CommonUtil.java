@@ -435,16 +435,20 @@ public class CommonUtil {
 				if (topicEntry.getKey().length() == 0) {
 					continue;
 				}
-                                String key  = topicEntry.getKey().replace("(", "\\(");
-                                key = key.replace(")", "\\)");
+                                String key = topicEntry.getKey();
+                                key  = key.replaceAll("\\(", "\\\\(");
+                                key = key.replaceAll("\\)", "\\\\)");
 				//case insensitive
+                                
                                 /*
 				text = text.replaceAll("(?i)#("+topicEntry.getKey()+")", 
 						"<a href=\"http://talkabouthealth.com/"+topicEntry.getValue()+"\">#&$1</a>");
-                                 
-                                 */
+                                */ 
+                                
+                                
                                 text = text.replaceAll("(?i)#("+key+")", 
 						"<a href=\"http://talkabouthealth.com/"+topicEntry.getValue()+"\">#&$1</a>");
+                                
                                 
 			}
 		}
