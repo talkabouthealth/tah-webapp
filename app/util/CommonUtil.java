@@ -435,9 +435,7 @@ public class CommonUtil {
 				if (topicEntry.getKey().length() == 0) {
 					continue;
 				}
-                                String key = topicEntry.getKey();
-                                key  = key.replaceAll("\\(", "\\\\(");
-                                key = key.replaceAll("\\)", "\\\\)");
+                                String key = ValidateData.escapeText(topicEntry.getKey());
 				//case insensitive
                                 
                                 /*
@@ -455,6 +453,7 @@ public class CommonUtil {
 		if (text.contains("@")) {
 			for (String talker : allTalkers) {
 				//case insensitive
+                                talker = ValidateData.escapeText(talker);
 				text = text.replaceAll("(?i)@("+talker+")", 
 						"<a href=\"http://talkabouthealth.com/"+talker+"\">@&$1</a>");
 			}
