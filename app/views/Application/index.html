@@ -195,32 +195,45 @@
                 </div>
             </div>
             <div class="callout_box01"><div class="callout_inner">
-                    <div class="callout_top01"><div class="callout_text01">Patients &amp; Caregivers</div>
+                    <div class="callout_top01"><div class="callout_text01">Highlighted Survivors</div>
                     </div>
-                    <div class="callout_center"><div class="callout_text04"><span class="style1">Meet</span> others like you</div>
-                        <div class="callout_text04"><span class="style2">Learn</span> from survivors</div>
-                        <div class="callout_text04"><span class="style3">Share</span> your experiences</div>
-                    </div>
+
+                    <div class="callout_center">
+				<a href="@{ViewDispatcher.view("DebbieWWGN")}"><div class="callout_pic01"><img src="/public/images/DebbieWWGN.gif" width="42" height="42" border="0"/></div></a>
+                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("DebbieWWGN")}">Debbie</a></strong> (3 yr. survivor, Stage 0 - DCIS)</div>
+				<div class="callout_pic01"><a href="@{ViewDispatcher.view("regrounding")}"><img src="/public/images/regrounding.gif" width="42" height="42" border="0"/></a></div>
+                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("regrounding")}">Lori</a></strong> (10 yr. survivor, Stage IIB, ER+, PR+)</div>
+		    </div>
+
                     <a href="@{Explore.searchConversations()}"><div class="callout_bottem">Find your answers now</div></a>
                 </div></div>
-            <div class="callout_box01"><div class="callout_inner">
+            <div class="callout_box01">
+		<div class="callout_inner">
                     <div class="callout_top02">
-                        <div class="callout_text01">Experts &amp; Providers</div>
-                    </div>
-                    <div class="callout_center"><div class="callout_text04"><span class="style1">Share</span> your knowledge</div>
-                        <div class="callout_text04"><span class="style2">Help</span> the right people</div>
-                        <div class="callout_text04"><span class="style3">Reach</span> more patients</div>
-                    </div>
-                    <a href="@{Static.medical_professional_network()}"><div class="callout_bottem">Medical Professional Network</div><a/>
-                </div></div><div class="callout_box01"><div class="callout_inner">
-                    <div class="callout_top03"><div class="callout_text01">Expert Workshops</div>
+                        <div class="callout_text01">Featured Experts</div>
                     </div>
                     <div class="callout_center">
-			<div class="callout_text05">Breast  Surgery, Tues. July 26th<br /><br /></div>
-                        <div class="callout_text06"><br/>Deanna Attai, MD<br />
-				<a href="@{ViewDispatcher.view("Dr.Crystal.ND")}" target="_blank">Join now to ask Dr. Attai questions!</a>
-			</div>
+				<a href="@{ViewDispatcher.view("LenFarberMD")}"><div class="callout_pic01"><img src="/public/images/LenFarberMD.gif" width="42" height="42" border="0"/></div></a>
+                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("LenFarberMD")}">Len Farber, MD</a></strong> (Rad. Oncology Expert)</div>
+				<div class="callout_pic01"><a href="@{ViewDispatcher.view("drchrysopoulo")}"><img src="/public/images/drchrysopoulo.jpg" width="42" height="42" border="0"/></a></div>
+                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("drchrysopoulo")}">Minas Chrysopoulo, MD</a></strong> (Breast Recon. Expert)</div>
+		    </div>
+		    <a href="@{Static.medical_professional_network()}"><div class="callout_bottem">Medical Professional Network</div></a>
+                 </div>
+	    </div>
+
+
+		
+		<div class="callout_box01"><div class="callout_inner">
+                    <div class="callout_top03"><div class="callout_text01">Expert Workshops</div>
                     </div>
+
+                    <div class="callout_center">
+				<a href="@{ViewDispatcher.view("DrAttai")}"><div class="callout_pic01"><img src="/public/images/drattai.jpg" width="42" height="42" border="0"/></div></a>
+                            	<div class="callout_text02"><strong>Breast  Surgery</strong>, Tues. July 26th, <a href="@{ViewDispatcher.view("DrAttai")}">Dr. Attai</a></div>
+				<div class="callout_pic01"><a href="@{ViewDispatcher.view("naturalbreastrecon")}"><img src="/public/images/naturalbreastrecon.gif" width="42" height="42" border="0"/></a></div>
+                            	<div class="callout_text02"><strong>Breast Reconstruction</strong>, Thurs. July 28th,<a href="@{ViewDispatcher.view("naturalbreastrecon")}"> Center for Natural Breast Recon.</a></div>
+		    </div>
                     <a href="@{Static.workshops()}"><div class="callout_bottem">More workshops</div></a>
                 </div></div>
 

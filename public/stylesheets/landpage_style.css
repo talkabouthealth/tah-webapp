@@ -585,7 +585,11 @@ background-repeat: no-repeat;
 .callout_pic01{
 width:42px;
 height:42px;
-float:left;}
+float:left;
+border-style:none;
+border:0;
+}
+
 .callout_text02{
 width:145px;
 padding-left:10px;
@@ -596,9 +600,8 @@ color:#727273;
 font-size:12px;
 text-align: left;
 padding-top:5px;
-
-
 }
+
 .callout_text04{
 width:200px;
 height:20px;
@@ -616,7 +619,7 @@ padding-right:5px;
 
 .callout_text05{
 width:180px;
-height:20px;
+<!--height:20px;-->
 float:left;
 font:Arial, Helvetica, sans-serif;
 color:#494848;
