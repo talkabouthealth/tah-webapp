@@ -1,17 +1,29 @@
 package controllers;
 
+import static util.DBUtil.getCollection;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import models.EmailListBean;
+import models.NewsLetterBean;
 import models.TalkerBean;
+import models.TopicBean;
 
 import play.mvc.Controller;
 import play.mvc.With;
+import util.EmailUtil;
 import util.NotificationUtils;
 
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.sailthru.TriggerMailClient;
 import com.tah.im.IMNotifier;
 import com.tah.im.singleton.OnlineUsersSingleton;
 
@@ -130,5 +142,46 @@ public class Dashboard extends Controller {
 			}
 		}
 		return professionalTalkers;
+	}
+	
+	/**
+	 * send Email To SailThrou
+	 */
+	public static void sendEmailToSailThrou(){
+		/*
+			- TAH Newsletter
+			- TAH Member Verified Emails
+			- TAH Member Unverified Emails
+			- Patients - not done
+			- Experts - not done
+			- Organizations - not done
+		 * */
+		String NEWSLETTER_COLLECTION = "newsletter";
+		DBCollection newsLetterCol = getCollection(NEWSLETTER_COLLECTION);
+		List<DBObject> newsletterDBList = null;
+		newsletterDBList = newsLetterCol.find().toArray();
+		ArrayList<EmailListBean> newsLetterList = new ArrayList<EmailListBean>();
+		EmailListBean  emailListBean;
+		NewsLetterBean newsLetterBean;
+		for (DBObject newsletterDBObject : newsletterDBList) {
+			newsLetterBean = new NewsLetterBean();
+			newsLetterBean.parseBasicFromDB(newsletterDBObject);
+			emailListBean = new EmailListBean("TAH Newsletter",newsLetterBean.getEmail());
+			newsLetterList.add(emailListBean);
+		}
+
+		List<TalkerBean> talkerBeans = TalkerDAO.loadAllTalkers();
+		for (Iterator iterator = talkerBeans.iterator(); iterator.hasNext();) {
+			TalkerBean talkerBean = (TalkerBean) iterator.next();
+			if(talkerBean.getVerifyCode() != null) {
+				emailListBean = new EmailListBean("TAH Member Unverified Emails",talkerBean.getEmail());
+			}else{
+				emailListBean = new EmailListBean("TAH Member Verified Emails",talkerBean.getEmail());
+			}
+			newsLetterList.add(emailListBean);
+		}
+
+		EmailUtil.setEmail(newsLetterList);
+		index();
 	}
 }
