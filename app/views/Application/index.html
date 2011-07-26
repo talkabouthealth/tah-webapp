@@ -183,7 +183,7 @@
         <div class="callout_box_center">
             <div class="callout_box01">
                 <div class="callout_inner">
-                    <div class="callout_top"><div class="callout_text01">Ask your question</div>
+                    <div class="callout_top"><div class="callout_text01">Find your answers</div>
                     </div>
                     <div class="callout_center"><div class="callout_bg02"><div class="callout_pic01"><img src="/public/images/img_01.jpg" width="42" height="42" /></div>
                             <div class="callout_text02">Can yoga help with <br />
@@ -195,45 +195,32 @@
                 </div>
             </div>
             <div class="callout_box01"><div class="callout_inner">
-                    <div class="callout_top01"><div class="callout_text01">Highlighted Survivors</div>
+                    <div class="callout_top01"><div class="callout_text01">Patients &amp; Caregivers</div>
                     </div>
-
-                    <div class="callout_center">
-				<a href="@{ViewDispatcher.view("LaurieA")}"><div class="callout_pic01"><img src="/public/images/LaurieA.gif" width="42" height="42" border="0"/></div></a>
-                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("LaurieA")}">Laurie</a></strong> (3 yr. survivor, Stage 1, ER+, PR-, Her2+)</div>
-				<div class="callout_pic01"><a href="@{ViewDispatcher.view("knutter1")}"><img src="/public/images/knutter1.gif" width="42" height="42" border="0"/></a></div>
-                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("knutter1")}">Karen</a></strong> (3 yr. survivor, Phyllodes Tumor)</div>
-		    </div>
-
-                    <a href="@{Explore.browseMembers('active')}"><div class="callout_bottem">More Members</div></a>
+                    <div class="callout_center"><div class="callout_text04"><span class="style1">Meet</span> others like you</div>
+                        <div class="callout_text04"><span class="style2">Learn</span> from survivors</div>
+                        <div class="callout_text04"><span class="style3">Share</span> your experiences</div>
+                    </div>
+                    <a href="@{Explore.searchConversations()}"><div class="callout_bottem">Find your answers now</div></a>
                 </div></div>
-            <div class="callout_box01">
-		<div class="callout_inner">
+            <div class="callout_box01"><div class="callout_inner">
                     <div class="callout_top02">
-                        <div class="callout_text01">Featured Experts</div>
+                        <div class="callout_text01">Experts &amp; Providers</div>
                     </div>
-                    <div class="callout_center">
-				<a href="@{ViewDispatcher.view("LenFarberMD")}"><div class="callout_pic01"><img src="/public/images/LenFarberMD.gif" width="42" height="42" border="0"/></div></a>
-                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("LenFarberMD")}">Len Farber, MD</a></strong> (Rad. Oncology Expert)</div>
-				<div class="callout_pic01"><a href="@{ViewDispatcher.view("drchrysopoulo")}"><img src="/public/images/drchrysopoulo.jpg" width="42" height="42" border="0"/></a></div>
-                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("drchrysopoulo")}">Minas Chrysopoulo, MD</a></strong> (Breast Recon. Expert)</div>
-		    </div>
-		    <a href="@{Static.medical_professionals()}"><div class="callout_bottem">More Medical Professionals</div></a>
-                 </div>
-	    </div>
-
-
-		
-		<div class="callout_box01"><div class="callout_inner">
+                    <div class="callout_center"><div class="callout_text04"><span class="style1">Share</span> your knowledge</div>
+                        <div class="callout_text04"><span class="style2">Help</span> the right people</div>
+                        <div class="callout_text04"><span class="style3">Reach</span> more patients</div>
+                    </div>
+                    <a href="@{Static.medical_professional_network()}"><div class="callout_bottem">Medical Professional Network</div><a/>
+                </div></div><div class="callout_box01"><div class="callout_inner">
                     <div class="callout_top03"><div class="callout_text01">Expert Workshops</div>
                     </div>
-
                     <div class="callout_center">
-				<a href="@{ViewDispatcher.view("DrAttai")}"><div class="callout_pic01"><img src="/public/images/drattai.jpg" width="42" height="42" border="0"/></div></a>
-                            	<div class="callout_text02"><strong>Breast  Surgery</strong>, Tues. July 26th, <a href="@{ViewDispatcher.view("DrAttai")}">Dr. Attai</a></div>
-				<div class="callout_pic01"><a href="@{ViewDispatcher.view("naturalbreastrecon")}"><img src="/public/images/naturalbreastrecon.gif" width="42" height="42" border="0"/></a></div>
-                            	<div class="callout_text02"><strong>Breast Reconstruction</strong>, Thurs. July 28th,<a href="@{ViewDispatcher.view("naturalbreastrecon")}"> Center for Natural Breast Recon.</a></div>
-		    </div>
+			<div class="callout_text05">Preventing Medical Errors, Mon. July 18th<br /><br /></div>
+                        <div class="callout_text06"><br/>Martine Ehrenclou, Author<br />
+				<a href="@{ViewDispatcher.view("MartineEhrenclou")}" target="_blank">Join now to ask Martine questions!</a>
+			</div>
+                    </div>
                     <a href="@{Static.workshops()}"><div class="callout_bottem">More workshops</div></a>
                 </div></div>
 
@@ -282,21 +269,32 @@
         </div>
     </div>
     <!--footercover-->
-    <!--==================================Footer Ends=================================-->
-<!-- begin Google Analytics -->
-	<script type="text/javascript">
-	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-	</script>
-	<script type="text/javascript">
-	try {
-	var pageTracker = _gat._getTracker("UA-13005583-1");
-	pageTracker._trackPageview();
-	} catch(err) {}</script>
-<!-- end Google Analytics -->
-
-</body>
-</html>
+    <!--===================================================================-->
+<div id="footerarea">
+		<div id="footer">
+			<div id="footerleft">
+				<div id="footericons">Find us on Facebook and Twitter 
+					<a href="http://www.facebook.com/pages/TalkAboutHealth/123999230963635?ref=sgm" >
+						<img src="/public/images/facebookfooter.gif" width="17" height="17" border="0" />
+					</a>
+					<a href="http://twitter.com/talkabouthealth">
+						<img src="/public/images/twitterfooter.gif" width="17" height="17" border="0" />
+					</a>
+				</div>
+				<a href="http://blog.talkabouthealth.com" class="footerlink">| Blog |</a>
+				<a href="@{Static.faq()}" class="footerlink"> Faq |</a>
+				<a href="@{Application.contactus()}" class="footerlink"> Contact Us |</a>
+				<a href="@{Static.aboutus()}" class="footerlink"> About Us |</a>
+				<a href="@{Static.privacy()}" class="footerlink"> Privacy Policy |</a>
+				<a href="@{Static.tos()}" class="footerlink" style="margin-right:173px;"> Terms of Service</a>
+                                <span style="font-size: 11px; color: #403c3e; font-family:arial">&copy; 2010</span>
+			</div>
+			<div id="footerright">
+                           
+				<img src="/public/images/logo_footer.jpg" width="178" height="28" alt="" />
+			</div>
+		</div>
+	</div>
 
 <script type="text/javascript" language="javascript">
     function showimage()
@@ -351,10 +349,8 @@
         document.getElementById('show4').style.display='none';
     }
     function showimage5()
-    {
-    
+    {    
         document.getElementById('show5').style.display='block';
-	
     }
     function showimg6()
     {
@@ -425,4 +421,10 @@
 
 </script>
 
+
+
+	#{ common/googleAnalytics /}
+
+</body>
+</html>
 

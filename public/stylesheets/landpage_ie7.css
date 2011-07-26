@@ -685,6 +685,83 @@ font-weight: bold;
 }
 
 /*------------------------------------ body content end--------------------------------*/
+/*======================================= Footer Global ====================================*/
+#footerarea {
+	float:left;
+	width:100%;
+	height:72px;
+	background:url(../images/bordergraphic.gif) repeat-x;
+	padding-bottom:15px;
+        padding-top:350px;
+}
+/*#footerarea { float:left; width:100%; height:119px; border-top:1px dotted #cccccc; }*/
+#footer {
+	width:972px;
+	padding-top:10px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+#footerleft {
+	float:left;
+	width:777px;
+	height:25px;
+	line-height:15px;
+}
+#footerright {
+	float:left;
+	width:175px;
+        line-height:15px;
+        font-size: 8px;
+	color: #403c3e;
+	font-family:arial;
+}
+#footericons {
+	float:left;
+	width:210px;
+	color:#403c3e;
+	font-size:11px;
+}
+.footerlink {
+	
+	font-size: 11px;
+	color: #403c3e;
+	font-family:arial;
+	text-decoration: none;
+   
+}
+a.footerlink:link {
+	
+	font-size: 11px;
+	color: #403c3e;
+	font-family:arial;
+	text-decoration: none;
+  
+}
+a.footerlink:active {
+	
+	font-size: 11px;
+	color: #403c3e;
+	font-family:arial;
+	text-decoration: none;
+
+}
+a.footerlink:visited {
+
+	font-size: 11px;
+	color: #403c3e;
+	font-family:arial;
+	text-decoration: none;
+
+}
+a.footerlink:hover {
+	
+	font-size: 11px;
+	color: #403c3e;
+	font-family:arial;
+	text-decoration: underline;
+
+}
 
 #footercover {
 border-top:1.5px dashed #999;
@@ -692,28 +769,9 @@ border-top:1.5px dashed #999;
 	
 	width:1050px;
 	height:120px;
-	margin-left:116px;
-}
-
-
-
-.footerleft01 {
-	float:left;
-	padding-top:10px;
-	font-family: "Trebuchet MS";
-	color: #403c3e;
-	width:220px;
-	height:25px;
-	font-size: 11px;
-}
-
-.footerleft-text {
-	float:left;
-	font-family: "Trebuchet MS";
-	color: #403c3e;
-	width:160px;
-	height:20px;
-	font-size: 11px;
+margin:0 auto;
+padding-top:20px;
+	
 }
 
 .footer_icon {
@@ -721,29 +779,15 @@ margin-top:-5px;
 	float:left;
 	font-family: "Trebuchet MS";
 	color: #403c3e;
-	width:190px;
+	/* width:240px;*/
 	height:100px;
-	padding:5px 5px 5px 5px;
-	margin-left:8px;
+	/* padding:5px 5px 5px 5px; */
+	/*margin-left:8px;*/
 	font-size: 11px;
 }
 
-.footerleft a {
-	color: #403c3e;
-	padding-left:2px;
-	padding-right:2px;
-	text-decoration:none;
-}
-.footerleft a:hover {
-	color: #403c3e;
-	text-decoration:underline;
-}
-.footerright {
-	font-family: "Trebuchet MS";
-	color: #403c3e;
-	font-size: 11px;
-	float:right;
-}
+
+
 /*-----------------------------sub inbox----------------------------------*/
 #bg2 {
 	background:url(../images/bg2.jpg);
