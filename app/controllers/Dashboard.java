@@ -3,6 +3,7 @@ package controllers;
 import static util.DBUtil.getCollection;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Iterator;
@@ -169,18 +170,36 @@ public class Dashboard extends Controller {
 			emailListBean = new EmailListBean("TAH Newsletter",newsLetterBean.getEmail());
 			newsLetterList.add(emailListBean);
 		}
-
+		
+		List<String> pationtList = Arrays.asList("Just Diagnosed","Current Patient","Former Patients");
+		List<String> expertList = TalkerBean.PROFESSIONAL_CONNECTIONS_LIST;
+		List<String> orgList = TalkerBean.ORGANIZATIONS_CONNECTIONS_LIST;
+		
 		List<TalkerBean> talkerBeans = TalkerDAO.loadAllTalkers();
 		for (Iterator iterator = talkerBeans.iterator(); iterator.hasNext();) {
 			TalkerBean talkerBean = (TalkerBean) iterator.next();
-			if(talkerBean.getVerifyCode() != null) {
+			if (talkerBean.getVerifyCode() != null) {
 				emailListBean = new EmailListBean("TAH Member Unverified Emails",talkerBean.getEmail());
-			}else{
+			} else {
 				emailListBean = new EmailListBean("TAH Member Verified Emails",talkerBean.getEmail());
 			}
 			newsLetterList.add(emailListBean);
+			
+			if(pationtList.contains(talkerBean.getConnection())){
+				emailListBean = new EmailListBean("Patients",talkerBean.getEmail());
+				newsLetterList.add(emailListBean);
+			}
+			
+			if(expertList.contains(talkerBean.getConnection())){
+				emailListBean = new EmailListBean("Experts",talkerBean.getEmail());
+				newsLetterList.add(emailListBean);
+			}
+			
+			if(orgList.contains(talkerBean.getConnection())){
+				emailListBean = new EmailListBean("Organizations",talkerBean.getEmail());
+				newsLetterList.add(emailListBean);
+			}
 		}
-
 		EmailUtil.setEmail(newsLetterList);
 		index();
 	}

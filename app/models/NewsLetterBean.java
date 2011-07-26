@@ -2,6 +2,11 @@ package models;
 
 import static util.DBUtil.createRef;
 import static util.DBUtil.getBoolean;
+import static util.DBUtil.getString;
+
+import java.util.Date;
+
+import util.DBUtil;
 
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
@@ -15,6 +20,9 @@ import com.mongodb.DBRef;
  */
 public class NewsLetterBean implements DBModel {
 	
+	public NewsLetterBean() {
+	}
+
 	private String email;
 	
 	public NewsLetterBean(String value) {
@@ -56,9 +64,15 @@ public class NewsLetterBean implements DBModel {
 		}
 		return email.hashCode();
 	}
-	
-	
+
 	public String getEmail() { return email; }
+
 	public void setEmail(String email) { this.email = email; }
-	
+
+	public void parseBasicFromDB(DBObject newsLetterDBObject) {
+		if (newsLetterDBObject == null) {
+			return;
+		}
+		setEmail(getString(newsLetterDBObject, "email"));
+	}
 }
