@@ -34,8 +34,11 @@ import org.apache.lucene.analysis.cn.ChineseTokenizer;
 import org.bson.types.ObjectId;
 
 import play.Logger;
+import play.mvc.Scope.Session;
 
 import util.DBUtil;
+import util.EmailUtil;
+import util.EmailUtil.EmailTemplate;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -86,6 +89,15 @@ public class TalkerDAO {
 				.get();
 
 		talkersColl.save(talkerDBObject);
+		/* Date : 27 June 2011
+		 * Added subscribe to newsletter feature. Here added user's name used by user while registration
+		 * */
+		if(talker.isNewsletter()){
+			ApplicationDAO.addToNewsLetter(talker.getEmail());
+			Map<String, String> vars = new HashMap<String, String>();
+    		vars.put("username", talker.getUserName());
+        	EmailUtil.sendEmail(EmailTemplate.WELCOME_NEWSLETTER, talker.getEmail(), vars, null, false);
+		}
 		
 		talker.setId(talkerDBObject.get("_id").toString());
 		return true;

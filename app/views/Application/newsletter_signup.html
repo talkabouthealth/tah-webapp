@@ -1,0 +1,65 @@
+#{extends 'main.html' /}
+<script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
+   <script type="text/javascript">
+   <!--
+	$(document).ready(function() {
+		var newsLetterOptions = { success: setNewsLetterMessage }; 
+		$('#newsletter').submit(function() {
+			$("#newsletter").ajaxSubmit(newsLetterOptions); 
+			return false;
+		});
+	});
+
+   //Show subscribe result in widget itself
+	function setNewsLetterMessage(responseText, statusText, xhr, $form)  {
+		if (responseText.indexOf("Error:") === 0) {
+	   		var errorText = responseText.replace("Error:", "");
+	   		$("#newsletterMessage").css("color","#ff0000");
+	   		$("#newsletterMessage").html(errorText); 
+	   		$("#newsletterMessage").fadeIn(100);
+	   		closeTimeout = setTimeout(function() { $("#newsletterMessage").fadeOut(200) }, 4000);
+	   	} else {
+	   		$("#newsletter").fadeOut(200);
+	   		$("#newsletterMessage").css("color","#2E8B57");
+	   		$("#newsletterMessage").html(responseText);
+	   		$("#newsletterMessage").fadeIn(100);
+	   	}
+	}
+	-->
+</script>
+</head>
+<body>
+ 	#{include 'header.html' /}
+	<div id="innerbanner"></div>
+	<div id="bottom_container">
+		<div class="blacktext2" id="innerheading">Subscribe to Newsletter</div>
+		<div id="signupleft">
+   			<div class="topipsts" id="newsletterblock">
+     			<div class="mtrighttxt1">Subscribe To Our Newsletter!</div>
+				<span class="blacktextgrey8"><br /></span>	        
+				<span class="blacktextgrey14">Upcoming events, best blog posts, latest news, and featured organizations and experts.<br/></span>
+				<span class="blacktextgrey6"><br /></span>
+			    <span id="newsletterMessage" class="success" style="display:none;">Thanks for subscribing to newsletter.</span>
+				#{if !newsLetterFlag }
+					#{form @Application.subscribeNewsletter(), id:'newsletter'  }
+						<span style="font-size:12px;">What's your email</span><br/>
+						#{if session.username && talker != null}
+							<input name="email" id="email" type="text" value="${talker.email}" size="27" />
+						#{/if}
+						#{else}
+							<input name="email" id="email" type="text" value="" size="27"/>
+						#{/else}
+						<br/>
+						<div style="padding-left: 50px;">
+							<input class="signupbutton" type="submit" value="Subscribe Now" style="cursor: pointer;margin-bottom: 10px;margin-top: 10px;padding:0px;font-weight: bold;font-size: 15px;height: 35px;"/>
+						</div>
+					#{/form}
+				#{/if}	
+				#{else}
+					<span id="newsletterMessage" class="success">You are already subscribed. Thank you for subscribing!</span>
+				#{/else}
+				<span class="blacktextgrey6"><br /></span>
+			</div>
+		</div>
+   		<div id="signupright">#{rightmenu /}</div>
+	</div>

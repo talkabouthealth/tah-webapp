@@ -63,14 +63,16 @@ public class Explore extends Controller {
 	
 	public static void openQuestions() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	boolean newsLetterFlag = false;
     	if (talker != null) {
     		TalkerLogic.preloadTalkerInfo(talker);
+    		newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
     	}
-    	
+
     	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics();
 		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions();
 		
-		render(talker, openQuestions, popularTopics);
+		render(talker, openQuestions, popularTopics,newsLetterFlag);
     }
     
     public static void liveTalks() {
@@ -89,14 +91,16 @@ public class Explore extends Controller {
     
     public static void browseTopics() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	boolean newsLetterFlag = false;
     	if (talker != null) {
     		TalkerLogic.preloadTalkerInfo(talker);
+    		newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
     	}
     	
     	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics();
     	Set<TopicBean> topicsTree = TopicLogic.getAllTopicsTree();
     	
-    	render(topicsTree, talker, popularTopics);
+    	render(topicsTree, talker, popularTopics, newsLetterFlag);
     }
     
     public static void browseMembers(String action) throws Throwable {

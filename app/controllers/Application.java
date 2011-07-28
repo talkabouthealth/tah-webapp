@@ -32,6 +32,7 @@ import models.TalkerBean.EmailSetting;
 import play.Logger;
 import play.Play;
 import play.data.validation.Email;
+import play.data.validation.Error;
 import play.data.validation.Required;
 import play.data.validation.Valid;
 import play.i18n.Messages;
@@ -354,5 +355,53 @@ public class Application extends Controller {
 		EmailUtil.sendEmail(EmailTemplate.WELCOME_WAITINGLIST, email, vars, null, false);
     	
     	renderText("ok");
+    }
+    
+
+    /* ----------------- Signup Newsletter ------------------------- */
+    public static void newsletter_signup() {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		boolean newsLetterFlag = false;
+		String email = null;
+		if(talker != null){
+			email = talker.getEmail();
+			newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
+		}
+		render(talker,email,newsLetterFlag);
+    }
+
+    /*	Date : 24 Jun 2011
+	 *	Updated signup to newsletter feature.
+	 * */
+    public static void subscribeNewsletter(@Email String email) {
+    	validation.required(email).message("Email is required");
+    	if (validation.hasErrors()) {
+    	    params.flash();
+            Error error = validation.errors().get(0);
+			renderText("Error:" + error.message());
+        }else if(ApplicationDAO.isEmailExists(email)){
+        	params.flash();
+        	/*Date : 24 Jun 2011
+        	 * Sent success message to user if already signed up. This will not add duplicate record in database.
+        	 * */
+        	//renderText("Error:" + Messages.get("email.exists"));
+        	/* Date : 27 Jun 2011
+        	 * send welcome Newsletter email 
+        	 * Also Added user name extracted from the email of user is not registred
+        	 * */
+        	Map<String, String> vars = new HashMap<String, String>();
+        	String parsedUsername = email.substring(0, email.indexOf("@"));
+    		vars.put("username", parsedUsername);
+        	EmailUtil.sendEmail(EmailTemplate.WELCOME_NEWSLETTER, email, vars, null, false);
+        	renderText("Thank you for subscribing!");
+        }else{
+        	params.flash();
+	    	ApplicationDAO.addToNewsLetter(email);
+	    	Map<String, String> vars = new HashMap<String, String>();
+        	String parsedUsername = email.substring(0, email.indexOf("@"));
+    		vars.put("username", parsedUsername);
+	    	EmailUtil.sendEmail(EmailTemplate.WELCOME_NEWSLETTER, email, vars, null, false);
+	    	renderText("Thank you for subscribing!");
+        }
     }
 }

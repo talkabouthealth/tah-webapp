@@ -1,14 +1,18 @@
 package util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import play.Logger;
 
 import models.ConversationBean;
 import models.EmailBean;
+import models.EmailListBean;
 import models.TalkerBean;
 
+import com.sailthru.EmailStatus;
 import com.sailthru.TriggerMailClient;
 
 import dao.TalkerDAO;
@@ -35,6 +39,7 @@ public class EmailUtil {
 		CONTACTUS,
 		FLAGGED,
 		VERIFICATION,
+		WELCOME_NEWSLETTER,
 		
 		NOTIFICATION_THANKYOU,
 		NOTIFICATION_FOLLOWER,
@@ -76,10 +81,17 @@ public class EmailUtil {
 		if (toEmail == null) {
 			return false;
 		}
+
+		/*
+		Date : 29-Jun-2011
+		Removed the email verification code and sending email's to all user email's
+		*/
+		/*
 		if (verify && !isVerifiedEmail(toEmail)) {
 			return false;
 		}
-		
+		*/
+
 		TriggerMailClient client;
 		try {
 			client = new TriggerMailClient(SAILTHRU_APIKEY, SAILTHRU_SECRET);
@@ -88,10 +100,38 @@ public class EmailUtil {
 			Logger.error(e, "Couldn't send email");
 			return false;
 		}
-		
+
 		return true;
 	}
 
+	/**
+	 * 
+	 * @param listName
+	 * @param emailList
+	 * @return
+	 */
+	public static boolean setEmail(ArrayList<EmailListBean> emailList){
+		boolean returnFlag = true;
+		TriggerMailClient client;
+		try {
+			client = new TriggerMailClient(SAILTHRU_APIKEY, SAILTHRU_SECRET);
+			EmailListBean email;
+			Map<String, Boolean> lists;
+			if(emailList != null && emailList.size() > 0){
+				for (Iterator iterator = emailList.iterator(); iterator.hasNext();) {
+					email = (EmailListBean) iterator.next();
+					lists = new HashMap<String, Boolean>();
+					lists.put(email.getListName(), true);
+					client.setEmail(email.getEmail(), true, false, false, null, lists, null);
+				}
+			}
+		} catch (Exception e) {
+			Logger.error(e, "Couldn't send email");
+			return false;
+		}
+		return returnFlag;
+	}
+	
 	/**
 	 * Checks if given email was verified by talker
 	 * @param email
@@ -102,18 +142,15 @@ public class EmailUtil {
 		if (talker == null) {
 			return false;
 		}
-		
+
 		//verified talker has empty Verify Code
 		if (talker.getEmail().equals(email)) {
 			//primary email
 			return talker.getVerifyCode() == null;
-		}
-		else {
+		} else {
 			//non-primary
 			EmailBean emailBean = talker.findNonPrimaryEmail(email, null);
 			return emailBean.getVerifyCode() == null;
 		}
 	}
-	
 }
-
