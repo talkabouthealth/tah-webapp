@@ -83,7 +83,7 @@ public class EmailListJob extends Job {
 				newsLetterList.add(emailListBean);
 			}
 		}
-		//return EmailUtil.setEmail(newsLetterList);
+		return EmailUtil.setEmail(newsLetterList);
 		return true;
 	}
 }

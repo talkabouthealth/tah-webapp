@@ -19,6 +19,7 @@ import models.CommentBean;
 import models.DiseaseBean;
 import models.HealthItemBean;
 import models.PrivacySetting.PrivacyType;
+import models.PrivacySetting.PrivacyValue;
 import models.TalkerBean;
 import models.TalkerDiseaseBean;
 import models.ConversationBean;
@@ -57,11 +58,31 @@ public class ViewDispatcher extends Controller {
 	}
 	
 	public static void view(String name) throws Throwable {
-		//first try user
+
 		TalkerBean talker = TalkerDAO.getByURLName(name);
+		boolean showTalker = false;
+		boolean showAnom = false;
 		if (talker != null) {
+			if(Security.isConnected()){
+				showTalker = true;
+			} else if(PrivacyValue.PUBLIC.equals(talker.getPrivacyValue(PrivacyType.PROFILE_INFO))){
+				if(!name.equals(talker.getAnonymousName()) && !PrivacyValue.PUBLIC.equals(talker.getPrivacyValue(PrivacyType.USERNAME))){
+					showTalker = false;
+					showAnom = true;
+				}else{
+					showTalker = true;
+				}
+			}
+		}
+		if ( showTalker ){
 			showTalker(talker);
 			return;
+		} else {
+			if(showAnom){
+				redirect("/" + talker.getAnonymousName());
+			} else {
+				redirect("/login");
+			}
 		}
 		
 		//next - question or conversation
@@ -108,7 +129,8 @@ public class ViewDispatcher extends Controller {
 		}
 		
 		//nothing was found
-		notFound();
+		notFound("The page you requested was not found.");
+		//todo();
 	}
 
 	/**
