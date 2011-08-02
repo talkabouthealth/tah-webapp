@@ -73,17 +73,18 @@ public class ViewDispatcher extends Controller {
 					showTalker = true;
 				}
 			}
-		}
-		if ( showTalker ){
-			showTalker(talker);
-			return;
-		} else {
-			if(showAnom){
-				redirect("/" + talker.getAnonymousName());
+			if ( showTalker ){
+				showTalker(talker);
+				return;
 			} else {
-				redirect("/login");
+				if(showAnom){
+					redirect("/" + talker.getAnonymousName());
+				} else {
+					redirect("/login");
+				}
 			}
 		}
+		
 		
 		//next - question or conversation
 		ConversationBean convo = ConversationDAO.getByURL(name);

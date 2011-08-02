@@ -40,6 +40,7 @@ public class EmailListJob extends Job {
 		- Experts - not done
 		- Organizations - not done
 		 * */
+		System.out.println("Job : Email list population on sailthrou");
 		String NEWSLETTER_COLLECTION = "newsletter";
 		DBCollection newsLetterCol = getCollection(NEWSLETTER_COLLECTION);
 		List<DBObject> newsletterDBList = null;
@@ -50,7 +51,8 @@ public class EmailListJob extends Job {
 		for (DBObject newsletterDBObject : newsletterDBList) {
 			newsLetterBean = new NewsLetterBean();
 			newsLetterBean.parseBasicFromDB(newsletterDBObject);
-			emailListBean = new EmailListBean("TAH Newsletter",newsLetterBean.getEmail());
+			emailListBean = new EmailListBean("TAH-Newsletter",newsLetterBean.getEmail());
+			System.out.println("Job : TAH Newsletter : " + newsLetterBean.getEmail());
 			newsLetterList.add(emailListBean);
 		}
 		
@@ -62,28 +64,34 @@ public class EmailListJob extends Job {
 		for (Iterator iterator = talkerBeans.iterator(); iterator.hasNext();) {
 			TalkerBean talkerBean = (TalkerBean) iterator.next();
 			if (talkerBean.getVerifyCode() != null) {
-				emailListBean = new EmailListBean("TAH Member Unverified Emails",talkerBean.getEmail());
+				emailListBean = new EmailListBean("TAH-Member-Unverified-Emails",talkerBean.getEmail());
+				System.out.println("Job : TAH Member Unverified Emails : " + talkerBean.getEmail());
+				newsLetterList.add(emailListBean);
 			} else {
-				emailListBean = new EmailListBean("TAH Member Verified Emails",talkerBean.getEmail());
+				emailListBean = new EmailListBean("TAH-Member-Verified-Emails",talkerBean.getEmail());
+				System.out.println("Job : TAH Member Verified Emails : " + talkerBean.getEmail());
+				newsLetterList.add(emailListBean);
 			}
-			newsLetterList.add(emailListBean);
 			
 			if(pationtList.contains(talkerBean.getConnection())){
 				emailListBean = new EmailListBean("Patients",talkerBean.getEmail());
+				System.out.println("Job : Patients : " + talkerBean.getEmail());
 				newsLetterList.add(emailListBean);
 			}
 			
 			if(expertList.contains(talkerBean.getConnection())){
 				emailListBean = new EmailListBean("Experts",talkerBean.getEmail());
+				System.out.println("Job : Experts : " + talkerBean.getEmail());
 				newsLetterList.add(emailListBean);
 			}
 			
 			if(orgList.contains(talkerBean.getConnection())){
 				emailListBean = new EmailListBean("Organizations",talkerBean.getEmail());
+				System.out.println("Job : Organizations : " + talkerBean.getEmail());
 				newsLetterList.add(emailListBean);
 			}
 		}
 		return EmailUtil.setEmail(newsLetterList);
-		return true;
+		//return true;
 	}
 }
