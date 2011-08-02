@@ -3,59 +3,58 @@
 # ~~~~
 
 # Modules
-*		/										module:secure
+*	/                                       module:secure
 
 GET     /                                       Application.index
 GET     /signup/?                               Application.signup
-POST    /register/?	                            Application.register
+POST    /register/?	                        Application.register
 GET     /forgotpassword/?                       Application.forgotPassword
-POST    /sendnewpassword/?						Application.sendNewPassword
-GET     /contactus/?							Application.contactus
-POST    /contactus/?							Application.sendContactEmail
-GET		/updatesemail/?							Application.updatesEmail
-POST	/updatesemail/?							Application.saveUpdatesEmail
-GET		/verify/{verifyCode}					Application.verifyEmail
-GET     /newsletter/?                           Application.newsletter_signup
+POST    /sendnewpassword/?			Application.sendNewPassword
+GET     /contactus/?				Application.contactus
+POST    /contactus/?				Application.sendContactEmail
+GET	/updatesemail/?				Application.updatesEmail
+POST	/updatesemail/?				Application.saveUpdatesEmail
+GET	/verify/{verifyCode}			Application.verifyEmail
 
-*		/profile/profileinfo					Profile.edit
-*		/profile/healthinfo						Profile.healthDetails
-*		/profile/notificationsettings			Profile.notifications
-*		/profile/privacysettings				Profile.preferences
+*	/profile/profileinfo			Profile.edit
+*	/profile/healthinfo			Profile.healthDetails
+*	/profile/notificationsettings		Profile.notifications
+*	/profile/privacysettings		Profile.preferences
 
-GET		/explore/members						Explore.browseMembers(action:'active')
-GET		/explore/experts						Explore.browseMembers(action:'experts')
-*		/search/members							Explore.browseMembers(action:'search')
-GET		/community/breast-cancer				Community.viewCommunity
+GET	/explore/members			Explore.browseMembers(action:'active')
+GET	/explore/experts			Explore.browseMembers(action:'experts')
+*	/search/members				Explore.browseMembers(action:'search')
+GET	/community/breast-cancer		Community.viewCommunity
 
-*		/search									Search.allSearch
+*	/search					Search.allSearch
 
-*		/search/conversations					Explore.searchConversations
-GET		/openquestions/?						Explore.openQuestions
-GET		/livechats/?							Explore.liveTalks
-GET		/explore/topics/?						Explore.browseTopics
-GET		/explore/conversationfeed/?				Explore.conversations(action:'feed')
-GET		/explore/popular/?						Explore.conversations(action:'popular')
+*	/search/conversations			Explore.searchConversations
+GET	/openquestions/?			Explore.openQuestions
+GET	/livechats/?				Explore.liveTalks
+GET	/explore/topics/?			Explore.browseTopics
+GET	/explore/conversationfeed/?		Explore.conversations(action:'feed')
+GET	/explore/popular/?			Explore.conversations(action:'popular')
 
-GET		/home/?									Home.index
-GET		/conversationfeed/?						Home.conversationFeed
-GET		/dashboard/?							Dashboard.index
-GET		/chat/{convoId}							Talk.talkApp
-GET		/chat/?									Talk.talkApp
-GET		/image/{userName}						Image.show
+GET	/home/?					Home.index
+GET	/conversationfeed/?			Home.conversationFeed
+GET	/dashboard/?				Dashboard.index
+GET	/chat/{convoId}				Talk.talkApp
+GET	/chat/?					Talk.talkApp
+GET	/image/{userName}			Image.show
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
 
-GET		/{name}/?								ViewDispatcher.view
-GET		/{name}/manage							Topics.manage
+GET	/{name}/?				ViewDispatcher.view
+GET	/{name}/manage				Topics.manage
 
-GET		/{userName}/thoughts					PublicProfile.thoughts
-GET		/{userName}/answers						PublicProfile.answers
-GET		/{userName}/thankyous					PublicProfile.userBasedActions(action:'thankyous')
-GET		/{userName}/following					PublicProfile.userBasedActions(action:'following')
-GET		/{userName}/followers					PublicProfile.userBasedActions(action:'followers')
-GET		/{userName}/conversations				PublicProfile.conversations
-GET		/{userName}/topics						PublicProfile.topicsFollowing
+GET	/{userName}/thoughts			PublicProfile.thoughts
+GET	/{userName}/answers			PublicProfile.answers
+GET	/{userName}/thankyous			PublicProfile.userBasedActions(action:'thankyous')
+GET	/{userName}/following			PublicProfile.userBasedActions(action:'following')
+GET	/{userName}/followers			PublicProfile.userBasedActions(action:'followers')
+GET	/{userName}/conversations		PublicProfile.conversations
+GET	/{userName}/topics			PublicProfile.topicsFollowing
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}

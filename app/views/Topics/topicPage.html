@@ -193,6 +193,7 @@
 									#{/if}
 								</div>
 						          </div>
+                                                            #{include 'socialNetworkShare.html' /}
 							<div class='inline_form'>
 								<div style="padding-top:10px;">
 							        <textarea id="summaryinput" class="edititinputx inline_text" 
@@ -318,14 +319,11 @@
                 </div>
                 
                 #{set currentPage = 'topicPage' /}
-                <!-- Date : 1 Jul 2011 Added newsletter widget on the page -->
-                #{include 'newsletter_signup.html' /}
-                #{include 'tahShare.html' /}
-				#{include 'Upcoming_Workshops.html' /}
-				#{common/popularTopics popularTopics: popularTopics /}
-				#{include 'tahHowYouCanHelp.html' /}
-	        	#{include 'shareWidgets.html' /}
-	        	
+		#{include 'Upcoming_Workshops.html' /}
+		#{common/popularTopics popularTopics: popularTopics /}
+		#{include 'tahHowYouCanHelp.html' /}
+	        #{include 'shareWidgets.html' /}
+                
                 *{
                 <div class="topipsts">
                   <div class="mtrighttxt1">Top Answerers</div>
