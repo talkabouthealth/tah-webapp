@@ -122,7 +122,12 @@ public class EmailUtil {
 					email = (EmailListBean) iterator.next();
 					lists = new HashMap<String, Boolean>();
 					lists.put(email.getListName(), true);
-					client.setEmail(email.getEmail(), true, false, false, null, lists, null);
+//					client.setEmail(email.getEmail(), true, false, false, null, lists, null);
+					try {
+						client.setEmail(email.getEmail(), false, false, false, null, lists, null);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		} catch (Exception e) {
