@@ -527,7 +527,7 @@
 									    </div>
 									</div>
 								</div>
-                                   #{include 'socialNetworkShare.html' /}
+
                       
                       			#{if talker }
 									<div class="tagtxts">
@@ -595,8 +595,6 @@
 								<div class="cb"></div>
 							</div> <!--topic-->
 							
-							<div class="topicborder" style="margin-top: 10px;"></div>
-                    		<div class="topicborder" style="margin-bottom: 5px;"></div>
 							
 							#{if convo.helpfulAnswers?.size > 1}
                     		<div class="topic inline-edit" id="summaryEdit">
@@ -699,7 +697,11 @@
 	                    			</div>
                     		</div>
                     		#{/if}
-                    		
+                    		<div class="topicborder" style="margin-bottom: 5px;margin-top: 5px;"></div>
+ 		#{include 'socialNetworkShare.html' /}
+							<div class="topicborder" style="margin-top: 10px;"></div>
+                    		<div class="topicborder" style="margin-bottom: 5px;"></div>
+
                      		<div class="topic" style="margin-bottom: 15px;">
                      			<a id="answers"></a>
                      			<div class="answerh1">Answers <span class="style2">(${convo.comments.size()})</span></div>
