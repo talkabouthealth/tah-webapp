@@ -644,25 +644,20 @@ public class TalkerLogic {
 	
 	public static void getRecommendedTalkers(TalkerBean talker, List<TalkerBean> similarMembers,
 			List<TalkerBean> experts) {
-		List<TalkerBean> allMembers = loadAllTalkersFromCache();
-		for (TalkerBean member : allMembers) {
-			  if (member.isSuspended() || member.isDeactivated() || member.isAdmin()) {
-				  continue;
-			  }
-			  if (talker.equals(member) || talker.getFollowingList().contains(member)) {
-				  continue;
-			  }
-			  
-			  if (member.isProf() && experts.size() < 3) {
-				  experts.add(member);
-			  }
-			  if (!member.isProf() && similarMembers.size() < 3) {
-				  similarMembers.add(member);
-			  }
+		Set<TalkerBean> allExperts = ApplicationDAO.getTalkersInOrder(talker,true);
+		for (TalkerBean member : allExperts) {
+			experts.add(member);
+			if (experts.size() == 3) {
+				break;
+			}
+		}
 
-			  if (experts.size() == 3 && similarMembers.size() == 3) {
-				  break;
-			  }
+		Set<TalkerBean> allMembers = ApplicationDAO.getTalkersInOrder(talker,false);
+		for (TalkerBean member : allMembers) {
+			similarMembers.add(member);
+			if (similarMembers.size() == 3) {
+				break;
+			}
 		}
 	}
 	

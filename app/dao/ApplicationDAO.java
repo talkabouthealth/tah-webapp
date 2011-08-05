@@ -18,11 +18,13 @@ import play.templates.JavaExtensions;
 
 import util.DBUtil;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import com.mongodb.QueryOperators;
 
 import controllers.Application;
 
@@ -129,12 +131,52 @@ public class ApplicationDAO {
 		return newTalkers;
 	}
 	
+	
+	/**
+	 * New users/Experts - users signed up or logged in date descending order
+	 * Using to 20 users only for the list on profile page for recommendations.
+	 */
+	public static Set<TalkerBean> getTalkersInOrder(TalkerBean talkerBean,boolean memberFlag) {
+		DBCollection loginsColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
+		List<String> list = TalkerBean.PROFESSIONAL_CONNECTIONS_LIST;
+		BasicDBList basicDBList = new BasicDBList();
+
+		for (String element : list) {
+			basicDBList.add(element);
+		}
+		DBObject query = null;
+		if(memberFlag){
+			query = BasicDBObjectBuilder.start()
+						.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList )).get();
+		}else{
+			query = BasicDBObjectBuilder.start()
+			.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList )).get();
+		}
+		
+		DBObject fields = TalkerDAO.getBasicTalkerFields();
+		List<DBObject> talkersDBList = 
+			loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).limit(20).toArray();
+		
+		Set<TalkerBean> newTalkers = new LinkedHashSet<TalkerBean>();
+		for (DBObject talkerDBObject : talkersDBList) {
+			TalkerBean talker = new TalkerBean();
+			talker.setId(getString(talkerDBObject, "_id"));
+			if (!newTalkers.contains(talker)) {
+				talker.parseBasicFromDB(talkerDBObject);
+				if (!(talker.isSuspended() || talker.isDeactivated() || talker.isAdmin() || talkerBean.equals(talker) || talkerBean.getFollowingList().contains(talker))){
+					newTalkers.add(talker);
+				}
+			}
+		}
+		return newTalkers;
+	}
+	
 	/**
 	 * Checks if given userName already exists or reserved.
 	 */
 	public static boolean isURLNameExists(String userName) {
 		if (userName != null) {
-			userName = userName.toLowerCase();
+			userName = userName.toLowerCase(); 
 		}
 		if (Application.RESERVED_WORDS.contains(userName)) {
 			return true;
