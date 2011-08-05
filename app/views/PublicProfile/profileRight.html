@@ -176,8 +176,6 @@
 			#{/list}
 		</div>
 		<div class="cb"></div>
-		
-		
 	#{/if}
 	<!-- New Changes Added -->
 	#{if currentTalker == null }
@@ -203,8 +201,6 @@
 		</div>
 		<div class="topicborder"></div>
 	</div>
-	
-	#{/if}
 	#{include '/newsletter_signup.html' /}
 	<div class="topipsts">
 	     <div class="mtrighttxt1">Share TalkAboutHealth</div>
@@ -212,23 +208,25 @@
 	     <!--topixtext-->
 	     <div class="membersarea" style="height: auto;">
 			#{ share/buttons /}
-			<br/>
-			#{ share/fblike currentURL: 'www.facebook.com/talkabouthealth' /}
+			#{if currentPage?.equals("home") }
+				<br/>
+				#{ share/fblike currentURL: 'www.facebook.com/talkabouthealth' /}
+			#{/if}
 	     </div>
 	     <!--membersarea-->
 	     <br />
 	     <div class="topicborder"></div>
 	</div>
+	#{/if}
 	<!-- New Changes Added -->
 </div>
 
 <div id="boxes">
 	<div id="dialog" class="window"></div>
-
+	
 	#{ popups/thankyou /}
 	#{ popups/thoughtComment /}
-	#{ popups/shareEmail page: 'profileRight', target: talker, shareType:'TalkAboutHealth'  /}
-	#{ popups/startConvo page: 'profileRight', target: talker /}
-	#{ popups/profileJoinNow page: 'profileRight', target: talker /}
+	
+	#{popups/startConvo page: 'profileRight', target: talker /}
 </div>
 <div id="mask"></div>
