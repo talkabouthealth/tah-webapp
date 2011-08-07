@@ -560,7 +560,7 @@ a.blacktext25:hover {text-decoration: none; color: #000000;}
 .headingarea2 { float:left; width:923px; padding-bottom:10px; height:33px; line-height:33px; border-bottom:1px dashed #c2c2c2;}
 .thnksarea {float:left; width:893px; padding-top:10px; padding-left:30px; }
 
-.thnksfollowing { float:left; width:289px; padding-right:8px; padding-bottom:28px; }
+.thnksfollowing { float:left; width:289px; padding-right:8px; padding-bottom:28px; min-height: 150px; }
 .thnksfollowingimg { float:left; width:80px; padding-right:10px;}
 .thnksfollowingtext { float:left; width:199px; }
 .thnksbottom {float:left; width:893px; padding-left:30px; padding-top:10px; height:33px; line-height:33px; border-top:1px dashed #c2c2c2;}
