@@ -164,6 +164,7 @@ public class ConversationDAO {
 	
 	//----------------------- Query methods ------------------------
 	public static ConversationBean getById(String convoId) {
+		
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("_id", new ObjectId(convoId));
@@ -172,9 +173,19 @@ public class ConversationDAO {
 		return parseConvoFromDBObject(convoDBObject, false);
 	}
 	
+	public static ConversationBean getByIdBasicQuestion(String convoId) {
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+
+		DBObject fields = getBasicConversationFields();
+		DBObject query = new BasicDBObject("_id", new ObjectId(convoId));
+		DBObject convoDBObject = convosColl.findOne(query, fields);
+		
+		return parseConvoFromDBObject(convoDBObject, true);
+	}
+	
 	public static ConversationBean getByIdBasic(String convoId) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
-		
+
 		DBObject fields = getBasicConversationFields();
 		
 		DBObject query = new BasicDBObject("_id", new ObjectId(convoId));
