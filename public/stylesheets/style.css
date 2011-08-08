@@ -3828,7 +3828,7 @@ a.popup_black10s:hover {
 }
 .profileCantanttxt1 {
 	float:left;
-	width:300px;
+	width:640px;
 }
 .profileCantanttxt1 a {
 	text-decoration:none;
@@ -3872,11 +3872,11 @@ a.popup_black10s:hover {
 	font-weight:bold;
 }
 .Profilepersonsub {
-	color: #4b4b4b
+	color: #4b4b4b;
 }
 .Profilepersonsub1 {
 	padding-left:15px;
-	color: #4b4b4b
+	color: #4b4b4b;
 }
 .ProfileHealth {
 	padding-top:20px;
