@@ -32,6 +32,7 @@ import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.ConversationDAO;
+import dao.QuestionDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
 import play.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer;
