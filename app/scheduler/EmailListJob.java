@@ -22,7 +22,7 @@ import util.EmailUtil;
 //@On("0 * 14 * * ?")
 //@Every("1m")]
 
-@OnApplicationStart
+//@OnApplicationStart
 @Every("12h")
 public class EmailListJob extends Job {
 

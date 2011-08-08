@@ -168,7 +168,12 @@ public class NotificationUtils {
 			}
 			else if (emailSetting == EmailSetting.CONVO_PERSONAL && vars.get("convo") != null) {
 				//Personal question
-				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_PERSONAL_QUESTION, talker.getEmail(), vars, null, true);
+				/*
+				 * Sending mail to support email rather than user for any new question
+				 * */
+				//EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_PERSONAL_QUESTION, talker.getEmail(), vars, null, true);
+				//EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_PERSONAL_QUESTION, "aawte.umesh@avibha.com", vars, null, true);
+				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_PERSONAL_QUESTION, EmailUtil.SUPPORT_EMAIL, vars, null, true);
 			}			
 			else {
 				EmailUtil.sendEmail(emailSetting.getEmailTemplate(), talker.getEmail(), vars, null, true);

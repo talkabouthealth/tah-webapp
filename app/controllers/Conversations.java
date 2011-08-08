@@ -108,6 +108,7 @@ public class Conversations extends Controller {
 				vars.put("convo", description);
 				vars.put("convo_url",convoURL);
     			
+    				QuestionDAO.saveQuestionNotification(targetTalker.getId(), convo.getId());
 				NotificationUtils.sendEmailNotification(EmailSetting.CONVO_PERSONAL,targetTalker, vars);    			
     		}
     	}

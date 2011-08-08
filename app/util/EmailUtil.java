@@ -126,7 +126,7 @@ public class EmailUtil {
 					try {
 						client.setEmail(email.getEmail(), false, false, false, null, lists, null);
 					} catch (Exception e) {
-						e.printStackTrace();
+						//e.printStackTrace();
 					}
 				}
 			}

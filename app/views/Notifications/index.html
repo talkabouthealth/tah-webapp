@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+	<meta name="author" content="Talkmi" /> 
+	<meta name="keywords" content="support, health, talk" /> 
+	<meta name="description" content="real-time support for your health issues" /> 
+	<meta name="robots" content="all" /> 
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Dashboard</title>
+	
+	<link href="@{'/public/stylesheets/style.css'}" rel="stylesheet" type="text/css" />
+	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
+	<script type="text/javascript" src="@{'/public/javascripts/jquery-1.4.2.min.js'}" ></script>
+
+	<style type="text/css">
+		body {
+			margin: 20px;
+			width: auto;
+			font-size: 14px;
+		}
+		#notificationbar {
+			border: #000000 dashed 1px;
+			margin-top: 3px;
+			padding: 10px;
+		}
+	</style>
+</head>
+<body>
+		<table width="100%">
+			<tr>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Home.index()}">Home</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="#" id="automaticNotificationLink">Turn ${ automaticNotification ? 'off' : 'on' } Automatic Notification</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Dashboard.sendEmailToSailThrou()}">Update Email List</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/notification">Notifications</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Secure.logout()}">Logout</a></td>
+				<td style="width: 100%;">&nbsp;</td>
+			</tr>
+		</table>
+		 
+		<form method = "post" action = "@{Dashboard.notification()}" >
+			<table style="width: 100%">
+				<tr>
+					<td valign = "top" width="50%">
+						<div>
+							<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+								<tr>
+									<th style="padding:3px;" >Question List</th>   
+								</tr>
+									<tr>
+										<td>
+										<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">
+											
+												#{if list != null}
+												<tr>
+												<th>Question</th>
+												<th>Description</th>
+												<th>To Expert</th>
+												<th>Moderated</th>
+												<th></th>
+											</tr>
+													#{list items: list, as: 'topicInfo' }
+													<tr>
+														<td>${topicInfo.convos.topic}</td>
+														<td>${topicInfo.convos.details}</td>
+														<td>${topicInfo.talker.userName} (${topicInfo.talker.email})</td>
+														#{if topicInfo.flag}
+														<td>Yes</td>
+														<td></td>
+														#{/if}
+														#{else}
+														<td>No</td>
+														<td><a href="/dashboard/notification?id=${topicInfo.id}">Moderate & Send</a></td>
+														#{/else}
+													</tr>
+													#{/list}
+													#{/if}
+													#{else}
+														<tr><td>To</td><td>${bean.talker.userName} (${bean.talker.email})
+															<input type="hidden" name="id" value="${bean.id}" />
+														</td></tr>
+														<tr><td>Message</td><td>${bean.convos.topic}</td></tr>
+														<tr><td>Details</td><td><textarea rows="10" cols="100" name="details">${bean.convos.details}</textarea> </td></tr>
+														<tr><td colspan="2"><button type="submit" value="do" >Modrate & Notify</button>
+														<a href="/dashboard/notification">Back</a>
+														</td></tr>
+													#{/else}
+										</table>
+										</td>   
+									</tr>
+							</table>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</form>
+		#{ common/googleAnalytics /}
+	</body>
+</html>
