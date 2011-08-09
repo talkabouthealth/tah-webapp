@@ -1028,11 +1028,17 @@ a.footerlink:hover {
 .jointxtlink2 a {
 	text-decoration:none;
 	color: #067fc3;
+        width: 200px;
+        
 }
 .jointxtlink2 a {
 	text-decoration:underline;
 	color: #067fc3;
+        width: 200px;
+        word-wrap: break-word;     
 }
+
+
 .joinbox {
 	clear:both;
 	padding-top:10px;
