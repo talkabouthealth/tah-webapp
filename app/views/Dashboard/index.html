@@ -137,9 +137,12 @@
 <body>
 		<table width="100%">
 			<tr>
-				<td style="width:200px;"><a href="#" id="automaticNotificationLink">Turn ${ automaticNotification ? 'off' : 'on' } Automatic Notification</a></td>
-				<td style="width:20%;"><a href="@{Dashboard.sendEmailToSailThrou()}">Update Email List</a></td>
-				<td style="text-align:right;"><a href="@{Secure.logout()}">Logout</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Home.index()}">Home</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="#" id="automaticNotificationLink">Turn ${ automaticNotification ? 'off' : 'on' } Automatic Notification</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Dashboard.sendEmailToSailThrou()}">Update Email List</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/notification">Notifications</a></td>
+				<td style="padding-right:20px;" nowrap><a href="@{Secure.logout()}">Logout</a></td>
+				<td style="width: 100%;">&nbsp;</td>
 			</tr>
 		</table>
 		<div id="notificationbar">
