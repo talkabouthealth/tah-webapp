@@ -15,6 +15,8 @@ POST    /contactus/?				Application.sendContactEmail
 GET	/updatesemail/?				Application.updatesEmail
 POST	/updatesemail/?				Application.saveUpdatesEmail
 GET	/verify/{verifyCode}			Application.verifyEmail
+GET     /newsletter/?                           Application.newsletter_signup
+*	/posterror				Application.postError
 
 *	/profile/profileinfo			Profile.edit
 *	/profile/healthinfo			Profile.healthDetails

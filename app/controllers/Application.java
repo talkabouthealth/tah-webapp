@@ -18,6 +18,7 @@ import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.PropertyConfigurator;
+import org.jboss.netty.handler.codec.http.HttpHeaders;
 
 import logic.TalkerLogic;
 import models.EmailBean;
@@ -37,6 +38,7 @@ import play.data.validation.Required;
 import play.data.validation.Valid;
 import play.i18n.Messages;
 import play.mvc.Controller;
+import play.mvc.Http.Header;
 import play.mvc.With;
 import play.mvc.Scope.Session;
 import util.CommonUtil;
@@ -403,5 +405,27 @@ public class Application extends Controller {
 	    	EmailUtil.sendEmail(EmailTemplate.WELCOME_NEWSLETTER, email, vars, null, false);
 	    	renderText("Thank you for subscribing!");
         }
+    }
+    
+    public static void postError(){
+    	String path = request.headers.get("referer").value();
+    	String remoteAddress = request.remoteAddress;
+    	Date date = request.date;
+
+    	String moredetails = "Error 404: Page not found<br/><br/> There is page not found error occure on site.<br/>Path : " 
+			+ path + "<br/>Remote Address : " + remoteAddress + "<br/> Request Date : " 
+			+ date.toString() + "<br/><br/>";
+
+    	TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+    	if (currentTalker != null) {
+    		moredetails += "User Online : " +  currentTalker.getUserName() + "<br/>";
+    		moredetails += "User Email : " +  currentTalker.getEmail() + "<br/>";
+    		moredetails += "User Url : " +  CommonUtil.generateAbsoluteURL("ViewDispatcher.view","name",currentTalker.getAnonymousName()) + "<br/>";
+    	}
+    	Map<String, String> vars = new HashMap<String, String>();
+    	vars.put("other_talker", "admin");
+    	vars.put("message_text", moredetails);
+    	EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, EmailUtil.SUPPORT_EMAIL, vars, null, false);
+    	renderText("We have sent this error to admin");
     }
 }
