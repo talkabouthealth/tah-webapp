@@ -180,7 +180,7 @@ public class TalkerLogic {
 		PROF_FIELDS_MAP.put("other_affiliation", "Hospital or other affiliation");
 		PROF_FIELDS_MAP.put("pract_name", "Practice name");
 		PROF_FIELDS_MAP.put("pract_adr", "Practice address");
-		PROF_FIELDS_MAP.put("pract_email", "Practice email");		
+		//PROF_FIELDS_MAP.put("pract_email", "Practice email");		
 		PROF_FIELDS_MAP.put("pract_phone", "Practice phone number");
 		PROF_FIELDS_MAP.put("web", "Web page");
 		PROF_FIELDS_MAP.put("vitals", "Vitals.com page");

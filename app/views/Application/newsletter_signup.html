@@ -32,17 +32,16 @@
  	#{include 'header.html' /}
 	<div id="innerbanner"></div>
 	<div id="bottom_container">
-		<div class="blacktext2" id="innerheading">Subscribe to Newsletter</div>
+		<div class="blacktext2" id="innerheading">Subscribe To Our Weekly Newsletter!</div>
 		<div id="signupleft">
    			<div class="topipsts" id="newsletterblock">
-     			<div class="mtrighttxt1">Subscribe To Our Newsletter!</div>
+     			<div class="mtrighttxt1">Free newsletter of upcoming events, best blog posts, latest news, and featured organizations and experts.</div>
 				<span class="blacktextgrey8"><br /></span>	        
-				<span class="blacktextgrey14">Upcoming events, best blog posts, latest news, and featured organizations and experts.<br/></span>
 				<span class="blacktextgrey6"><br /></span>
 			    <span id="newsletterMessage" class="success" style="display:none;">Thanks for subscribing to newsletter.</span>
 				#{if !newsLetterFlag }
 					#{form @Application.subscribeNewsletter(), id:'newsletter'  }
-						<span style="font-size:12px;">What's your email</span><br/>
+						<span style="font-size:12px;">Your email:</span><br/>
 						#{if session.username && talker != null}
 							<input name="email" id="email" type="text" value="${talker.email}" size="27" />
 						#{/if}

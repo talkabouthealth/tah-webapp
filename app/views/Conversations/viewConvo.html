@@ -527,6 +527,7 @@
 									    </div>
 									</div>
 								</div>
+
                       
                       			#{if talker }
 									<div class="tagtxts">
@@ -594,8 +595,12 @@
 								<div class="cb"></div>
 							</div> <!--topic-->
 							
+
+                    		<div class="topicborder" style="margin-bottom: 5px;margin-top: 5px;"></div>
+ 		#{include 'socialNetworkShare.html' /}
 							<div class="topicborder" style="margin-top: 10px;"></div>
                     		<div class="topicborder" style="margin-bottom: 5px;"></div>
+
 							
 							#{if convo.helpfulAnswers?.size > 1}
                     		<div class="topic inline-edit" id="summaryEdit">
@@ -653,7 +658,7 @@
 	                    				<div class="csbot"></div>
 	                    			</div>
                     			</div>
-                    			<div class="cscover inline_form">
+					<div class="cscover inline_form">
 	                    				<div class="cstop">
 						                   <div>
 						 						<div class="cstoptext" id="hidit3">Answer Summary</div>
@@ -698,7 +703,7 @@
 	                    			</div>
                     		</div>
                     		#{/if}
-                    		
+
                      		<div class="topic" style="margin-bottom: 15px;">
                      			<a id="answers"></a>
                      			<div class="answerh1">Answers <span class="style2">(${convo.comments.size()})</span></div>
@@ -957,13 +962,11 @@
 					</div><!--topipsts-->
 					
 					#{set currentPage = 'conversationSummary' /}
-					<!-- Date : 1 Jul 2011 Added newsletter widget on the page -->
-                	#{include 'newsletter_signup.html' /}
-					#{include 'tahShare.html' /}
 					#{include 'Upcoming_Workshops.html' /}
 					#{common/popularTopics popularTopics: popularTopics /}
 					#{include 'tahHowYouCanHelp.html' /}
-                	#{include 'shareWidgets.html' /}
+					#{include 'shareWidgets.html' /}
+				               
                 	<div class="cb"></div>
 				</div>
             	<div class="cb"></div>

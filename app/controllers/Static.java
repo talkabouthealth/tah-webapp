@@ -127,5 +127,8 @@ public class Static extends Controller {
    public static void resources_general_health_care() {
     	render();
    }
+   public static void medical_professionals() {
+    	render();
+   }
 
 }
