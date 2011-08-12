@@ -29,24 +29,26 @@ public class Notifications extends Controller{
 			List<NotificationBean> list = QuestionDAO.loadAllQuestions();
 			render(list);
 		}else if(details != null){
-
 			NotificationBean bean = QuestionDAO.loadNotification(id);
 			bean.setFlag(true);
-			
 			String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", bean.getConvos().getMainURL());
 			Map<String, String> vars = new HashMap<String, String>();
-			vars.put("other_talker", bean.getTalker().getUserName());
-			vars.put("convo", details);
-			vars.put("convo_url",convoURL);
 
-			EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_PERSONAL_QUESTION, bean.getTalker().getEmail(), vars, null, true); 
-			
+			if(!"REMOVE".equals(details)){
+				vars.put("other_talker", bean.getTalker().getUserName());
+				vars.put("question", bean.getConvos().getTopic());
+				vars.put("details", details);
+				vars.put("convo_url",convoURL);
+
+				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_PERSONAL_QUESTION_MODERATED, bean.getTalker().getEmail(), vars, null, true); 
+			}
 			QuestionDAO.updateNotification(bean);
-			
+
 			//After all
 			List<NotificationBean> list = QuestionDAO.loadAllQuestions();
 			render(list);
-		}else{	
+
+		} else {
 			NotificationBean bean = QuestionDAO.loadNotification(id);
 			render(bean);
 		}
