@@ -53,6 +53,8 @@ public class EmailUtil {
 		NOTIFICATION_CONVO_REPLY,
 		NOTIFICATION_CONVO_SUMMARY,
 		NOTIFICATION_PERSONAL_QUESTION,
+		NOTIFICATION_PERSONAL_QUESTION_MODERATED,
+		
 		
 		DAY_EMAIL_VERIFICATION_FOLLOWUP,
 		WEEK_EMAIL_VERIFICATION_FOLLOWUP
@@ -122,15 +124,17 @@ public class EmailUtil {
 					email = (EmailListBean) iterator.next();
 					lists = new HashMap<String, Boolean>();
 					lists.put(email.getListName(), true);
-//					client.setEmail(email.getEmail(), true, false, false, null, lists, null);
 					try {
 						client.setEmail(email.getEmail(), false, false, false, null, lists, null);
 					} catch (Exception e) {
 						//e.printStackTrace();
 					}
 				}
+			}else{
+				System.out.println("List is empty");
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			Logger.error(e, "Couldn't send email");
 			return false;
 		}
