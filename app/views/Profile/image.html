@@ -4,7 +4,29 @@
 		#userpicture {
 			float: left;
 			margin: 10px;
-		}	
+		}
+                .ui-dialog-title {
+                    font-family: Verdana;
+                    font-size: 12px;
+                }
+                .ui-dialog-titlebar-close {
+                    display: none;
+                }
+                .ui-dialog-content {
+                    font-family: Verdana;
+                    font-size: 10px;
+                }
+                .ui-dialog .ui-dialog-buttonpane {
+                    padding:0.2em;
+                }
+                .ui-dialog .ui-dialog-buttonpane button {
+                    padding: 0.1 em;
+                    margin: 0.1em;
+                }
+                .ui-button-text {
+                    font-family: Verdana;
+                    font-size: 12px;
+                }
 	</style>
         <script type="text/javascript">  
         
@@ -16,38 +38,72 @@
             $('#uploadimageform').submit();
             $("#loading").show();
             $('#userpicture').hide();
-            setTimeout(checkFrame, 100);
+            var curtime = new Date().getTime();
+            if ($.browser.safari) {
+                checkResponse(curtime);
+            }
+            else {
+                setTimeout('checkResponse(' + curtime + ')', 1000);
+            }
 	}
-        var checkFrame = function(){
-            try{    
-                var text = $($('iframe').get(0).contentWindow.document.body).text();
-                if (text == '') {
-                    setTimeout(checkFrame, 100);
+        var checkResponse = function(time) {
+            console.log(time);
+            var listAction = #{jsAction @Profile.imageStatus() /}
+            $.get(listAction(), function(data){
+                if (data == 'incomplete') {
+                    if (new Date().getTime() - time > 5000) {
+                       $("#image_msg").html("Error Uploading File. Please try again."); 
+                       $("#loading").hide();
+                       $('#userpicture').show();
+                       $('iframe').remove();
+                       $('#image_msg').dialog("open");
+                    }   
+                    else {
+                        setTimeout('checkResponse(' + time + ')', 1000);
+                    }
                 }
                 else {
+                    var msg;
+                    if (data == 'error') {
+                        $("#image_msg").html('<p>Error uploading file. Please make sure size of file is under 50KB and type of file is jpg, png, gif</p>');
+                        
+                    }
+                    else {
+                        $('#image_msg').html('<p>Picture uploaded successfully. It may take a couple of minutes to appear on all of the pages.</p>');
+                        
+                    }
                     var imageurl = '@{Image.show(userName)}';
                     imageurl+= '?' + new Date().getTime();    
                     $('#userpicture').attr("src", imageurl);
+                    
                     $('#userpicture').load(function(){
                         $("#loading").hide();
                         $('#userpicture').show();
                         $('iframe').remove();
+                        $('#image_msg').dialog("open");
+                        
+                        $('#userpicture').unbind();
                     });
-                    
-                }  
-            }
-            catch(e){
-                var imageurl = '@{Image.show(userName)}';
-                imageurl+= '?' + new Date().getTime();    
-                $('#userpicture').attr("src", imageurl);
-                $('#userpicture').load(function(){
-                    $("#loading").hide();
-                    $('#userpicture').show();
-                    $('iframe').remove();
-                });
-            }
+               }
+               
+            }, "text");
         };
-        
+        $(window).load(function(){
+            $("#image_msg").dialog({
+            autoOpen: false, 
+            modal: true, 
+            resizable: false,
+            draggable: false,
+            title: 'Upload Status', 
+            buttons:[
+                {
+                    text: "OK",
+                    click:function(){
+                        $(this).dialog("close");
+                    }
+                }
+        ] });
+        });
 	</script>	
 </head>
 <body>
@@ -78,3 +134,8 @@
            
 	</form>
         
+        <div id="image_msg">
+            
+        </div>
+        
+       
