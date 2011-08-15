@@ -435,14 +435,25 @@ public class CommonUtil {
 				if (topicEntry.getKey().length() == 0) {
 					continue;
 				}
+                                String key = ValidateData.escapeText(topicEntry.getKey());
 				//case insensitive
+                                
+                                /*
 				text = text.replaceAll("(?i)#("+topicEntry.getKey()+")", 
 						"<a href=\"http://talkabouthealth.com/"+topicEntry.getValue()+"\">#&$1</a>");
+                                */ 
+                                
+                                
+                                text = text.replaceAll("(?i)#("+key+")", 
+						"<a href=\"http://talkabouthealth.com/"+topicEntry.getValue()+"\">#&$1</a>");
+                                
+                                
 			}
 		}
 		if (text.contains("@")) {
 			for (String talker : allTalkers) {
 				//case insensitive
+                                talker = ValidateData.escapeText(talker);
 				text = text.replaceAll("(?i)@("+talker+")", 
 						"<a href=\"http://talkabouthealth.com/"+talker+"\">@&$1</a>");
 			}

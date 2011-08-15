@@ -28,4 +28,10 @@ public class ValidateData {
 		}
 		return false;
 	}
+        public static String escapeText(String text) {
+            text = text.replaceAll("\\(", "\\\\(").replaceAll("\\)", "\\\\)");
+            text = text.replaceAll("\\{", "\\\\{").replaceAll("\\}", "\\\\}");
+            text = text.replaceAll("\\[", "\\\\[").replaceAll("\\]", "\\\\]");
+            return text;
+        }
 }
