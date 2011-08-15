@@ -47,7 +47,6 @@
             }
 	}
         var checkResponse = function(time) {
-            console.log(time);
             var listAction = #{jsAction @Profile.imageStatus() /}
             $.get(listAction(), function(data){
                 if (data == 'incomplete') {
