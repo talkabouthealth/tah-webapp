@@ -111,17 +111,6 @@
 									value="${flash['talker.password']}" />
 							</div>
 						</div>
-						<div class="signupmain">
-							<div class="signuptextarea"><span class="blacktext14">Please type the code bellow</span></div>
-							<div ><img src="@{Application.captcha(randomID)}" /></div>
-						</div>
-						<div class="signupmain">
-							<div class="signuptextarea"><span class="blacktext14"></span></div>
-							<div class="personaltextfield"><input class="personalfields" type="text" name="code" id="code" value="" />
-						   		 <input type="hidden" name="randomID" value="${randomID}" />
-							</div>
-						</div>
-						
 						*{
 						
 						***** Hidden fields (for now) *******
@@ -224,7 +213,7 @@
 						
 						<div id="checkboxarea2" style="padding-top: 10px;  font-weight: bold; color: #000000;">
 							<input id="privacyagree" name="privacyagree" 
-								type="checkbox" checked="checked" #{if flash['privacyagree']} checked #{/if} /> 
+								type="checkbox" #{if flash['privacyagree']} checked #{/if} /> 
 							By signing up I agree to the TalkAboutHealth 
 							<a href="#" 
 								onclick="window.open('@{Static.tos()}', 'TermsOfService','width=1000,height=550,resizable=1,scrollbars=1');" 
@@ -238,7 +227,7 @@
 						</div>
 						<div id="checkboxarea2" style="padding-top: 22px;">
 							<input id="talker.newsletter" name="talker.newsletter" 
-								type="checkbox" checked="checked" #{if flash['talker.newsletter']} checked #{/if} /> 
+								type="checkbox" #{if flash['talker.newsletter']} checked #{/if} /> 
 							Sign me up for the TalkAboutHealth newsletter
 						</div>
 						<div class="signupbutton"  style="padding-top: 20px;">

@@ -1,6 +1,5 @@
 package controllers;
 
-import java.awt.Font;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
@@ -32,15 +31,12 @@ import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean;
 import models.TalkerBean.EmailSetting;
 import play.Logger;
-import play.cache.*;
 import play.Play;
 import play.data.validation.Email;
 import play.data.validation.Error;
 import play.data.validation.Required;
 import play.data.validation.Valid;
 import play.i18n.Messages;
-import play.libs.Codec;
-import play.libs.Images;
 import play.mvc.Controller;
 import play.mvc.Http.Header;
 import play.mvc.With;
@@ -49,6 +45,7 @@ import util.CommonUtil;
 import util.EmailUtil;
 import util.TwitterUtil;
 import util.EmailUtil.EmailTemplate;
+import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.ConversationDAO;
@@ -141,18 +138,11 @@ public class Application extends Controller {
     		additionalSettings = ServiceAccountBean.settingsNamesByType(type);
     	}
     	
-		
-        String randomID = Codec.UUID();
-        
-
-        
-    	render(additionalSettings,randomID);
+    	render(additionalSettings);
     }
     
-    public static void register(@Valid TalkerBean talker,String code, String randomID) {
+    public static void register(@Valid TalkerBean talker) {
     	String privacyAgreeString = params.get("privacyagree");
-    	
-    	validation.equals( code, Cache.get(randomID)).message("Invalid code. Please type it again");
     	
     	validation.isTrue("on".equalsIgnoreCase(privacyAgreeString))
     		.message("Please agree to the TalkAboutHealth Terms of Service and Privacy Policy.");
@@ -438,16 +428,5 @@ public class Application extends Controller {
     	vars.put("message_text", moredetails);
     	EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, EmailUtil.SUPPORT_EMAIL, vars, null, false);
     	renderText("We have sent this error to admin");
-    }
-    
-    public static void captcha(String id) {
-        Images.Captcha captcha = Images.captcha();
-        java.awt.Font font = new Font(java.awt.Font.SERIF , 0, 40);
-        List list = new ArrayList<java.awt.Font>();
-        list.add(font);
-        captcha.fonts = list ;
-        String code = captcha.getText("#0C68B3");
-        Cache.set(id, code);
-        renderBinary(captcha);
     }
 }
