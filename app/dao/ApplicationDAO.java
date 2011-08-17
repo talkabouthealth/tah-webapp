@@ -37,6 +37,7 @@ public class ApplicationDAO {
 	public static final String NAMES_COLLECTION = "names";
 	public static final String WAITING_COLLECTION = "waiting";
 	public static final String NEWSLETTER_COLLECTION = "newsletter";
+	public static final String IPLIST_COLLECTION = "iplist";
 	
 	/**
 	 * Save login record.
@@ -146,8 +147,13 @@ public class ApplicationDAO {
 		}
 		DBObject query = null;
 		if(memberFlag){
+			/**
+			 * Date : 16 Aug 2011
+			 * Added condition for checking for connection verification
+			 */
 			query = BasicDBObjectBuilder.start()
-						.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList )).get();
+						.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList ))
+						.add("connection_verified",true).get();
 		}else{
 			query = BasicDBObjectBuilder.start()
 			.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList )).get();
@@ -175,8 +181,12 @@ public class ApplicationDAO {
 	 * Checks if given userName already exists or reserved.
 	 */
 	public static boolean isURLNameExists(String userName) {
+		//String uNameL = userName;
+		//String uNameU = userName;
 		if (userName != null) {
 			userName = userName.toLowerCase(); 
+			//uNameL = userName.toLowerCase();
+			//uNameU = userName.toUpperCase();
 		}
 		if (Application.RESERVED_WORDS.contains(userName)) {
 			return true;
@@ -184,6 +194,8 @@ public class ApplicationDAO {
 		
 		DBCollection namesColl = getCollection(NAMES_COLLECTION);
 		DBObject query = new BasicDBObject("name", userName);
+		//query.put("name", uNameL);
+		//query.put("name", uNameU);
 		return namesColl.findOne(query) != null;
 	}
 	
@@ -301,5 +313,34 @@ public class ApplicationDAO {
 		DBCollection namesColl = getCollection(NEWSLETTER_COLLECTION);
 		DBObject query = new BasicDBObject("email", userName);
 		return namesColl.findOne(query) != null;
+	}
+	
+	/**
+	 * Check if the ip address is available in the iplist database table.
+	 * @param ip
+	 * @param duration
+	 * @return boolean
+	 */
+	public static boolean isIpUsed(String ip, int duration){
+		DBCollection namesColl = getCollection(IPLIST_COLLECTION);
+		Calendar dayBeforeNow = Calendar.getInstance();
+		dayBeforeNow.add(Calendar.DAY_OF_MONTH, duration);
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start().add("ipaddr", ip).add("time", new BasicDBObject("$gt", dayBeforeNow.getTime()));
+		return namesColl.findOne(queryBuilder.get()) == null;
+	}
+	
+	/**
+	 * Add user ip in the iplist database table. 
+	 * @param ip
+	 * @return boolean
+	 */
+	public static boolean addUserIp(String ip){
+		DBCollection namesColl = getCollection(IPLIST_COLLECTION);
+		DBObject userIpDBObject = BasicDBObjectBuilder.start()
+		.add("ipaddr", ip)
+		.add("time", Calendar.getInstance().getTime())
+		.get();
+		namesColl.save(userIpDBObject);
+		return true;
 	}
 }
