@@ -25,7 +25,12 @@ public class ImageUtil {
 		int srcHeight = bsrc.getHeight();
 		int scaleToWidth = 0;
 		int scaleToHeight = 0;
-		if (srcHeight > srcWidth) {
+                
+                if (srcWidth <= width && srcHeight <= height) {
+                    width = srcWidth;
+                    height = srcHeight;
+                }
+                if (srcHeight > srcWidth) {
 			scaleToWidth = width;
 			scaleToHeight = (srcHeight*width)/srcWidth;
 		}
