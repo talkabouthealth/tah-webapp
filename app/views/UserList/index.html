@@ -27,6 +27,17 @@
 			padding: 10px;
 		}
 	</style>
+	
+	<script>
+
+		function savePassword(id){
+			var newPassword = document.getElementById('passwordEdit_'+id).innerHTML;
+			var userForm = document.getElementById('userForm');
+			userForm.action = "/dashboard/userlist?id="+id+"&password="+newPassword+"&action=passwordEdit";
+			userForm.submit();
+		}
+		
+	</script>
 </head>
 <body>
 		<table width="100%">
@@ -36,59 +47,60 @@
 				<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Dashboard.sendEmailToSailThrou()}">Update Email List</a></td>
 				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/notification">Notifications</a></td>
 				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/userlist">Users</a></td>
-				<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Secure.logout()}">Logout</a></td>
+				<td style="padding-right:20px;" nowrap><a href="@{Secure.logout()}">Logout</a></td>
 				<td style="width: 100%;">&nbsp;</td>
 			</tr>
 		</table>
 		 
-		<form method = "post" action = "@{Dashboard.notification()}" >
+		<form method = "post" action = "" id="userForm">
 			<table style="width: 100%">
 				<tr>
 					<td valign = "top" width="50%">
 						<div>
 							<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
 								<tr>
-									<th style="padding:3px;" >Question List</th>   
+									<th style="padding:3px;" >Users List</th>   
 								</tr>
 									<tr>
 										<td>
 										<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">
 											
 												#{if list != null}
-												<tr>
-												<th>Question</th>
-												<th>Description</th>
-												<th>To Expert</th>
-												<th>Moderated</th>
-												<th></th>
-											</tr>
-													#{list items: list, as: 'topicInfo' }
 													<tr>
-														<td>${topicInfo.convos.topic}</td>
-														<td>${topicInfo.convos.details}</td>
-														<td>${topicInfo.talker.userName} (${topicInfo.talker.email})</td>
-														#{if topicInfo.flag}
-														<td>Yes</td>
-														<td></td>
-														#{/if}
-														#{else}
-														<td>No</td>
-														<td><a href="/dashboard/notification?id=${topicInfo.id}">Moderate & Send</a></td>
-														<td><a href="/dashboard/notification?id=${topicInfo.id}&details=REMOVE">Remove</a></td>
-														#{/else}
+														<th>User Name</th>
+														<th>Email</th>
+														<th>Connection</th>
 													</tr>
+													#{list items: list, as: 'userInfo' }
+														<tr>
+															<td>${userInfo.userName}</td>
+															<td>${userInfo.email}</td>
+															<td>${userInfo.connection}</td>
+															<td>
+																<a href="/dashboard/userlist?id=${userInfo.id}&action=passwordEditDisplay">Change Password</a>
+															</td>
+														</tr>
 													#{/list}
-													#{/if}
-													#{else}
-														<tr><td>To</td><td>${bean.talker.userName} (${bean.talker.email})
-															<input type="hidden" name="id" value="${bean.id}" />
-														</td></tr>
-														<tr><td>Message</td><td>${bean.convos.topic}</td></tr>
-														<tr><td>Details</td><td><textarea rows="10" cols="100" name="details">${bean.convos.details}</textarea> </td></tr>
-														<tr><td colspan="2"><button type="submit" value="do" >Modrate & Notify</button>
-														<a href="/dashboard/notification">Back</a>
-														</td></tr>
-													#{/else}
+												#{/if}
+												#{else}
+													<tr>
+														<td>User Name</td>
+														<td>${bean.userName}</td>
+													</tr>
+													<tr>
+														<td>Email</td>
+														<td>${bean.email}</td>
+													</tr>
+													<tr>
+														<td>New Password</td>
+														<td><font color="red"><b id="passwordEdit_${bean.id}">${bean.password}</b></font></td>
+													</tr>
+													<tr><td colspan="2" align="center">
+														<a href="javascript:savePassword('${bean.id}');">Save & Send</a>&nbsp;&nbsp;&nbsp;
+														<a href="/dashboard/userlist">Back</a>
+														</td>
+													</tr>
+												#{/else}
 										</table>
 										</td>   
 									</tr>

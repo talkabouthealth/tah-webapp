@@ -17,6 +17,7 @@ POST	/updatesemail/?							Application.saveUpdatesEmail
 GET		/verify/{verifyCode}					Application.verifyEmail
 GET     /newsletter/?                           Application.newsletter_signup
 *		/posterror								Application.postError
+GET     /captcha                                Application.captcha
 
 
 *		/profile/profileinfo					Profile.edit
@@ -42,6 +43,7 @@ GET		/home/?									Home.index
 GET		/conversationfeed/?						Home.conversationFeed
 GET		/dashboard/?							Dashboard.index
 *		/dashboard/notification					Notifications.index
+*		/dashboard/userlist						UserList.index
 GET		/chat/{convoId}							Talk.talkApp
 GET		/chat/?									Talk.talkApp
 GET		/image/{userName}						Image.show

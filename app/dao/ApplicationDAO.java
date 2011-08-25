@@ -139,6 +139,7 @@ public class ApplicationDAO {
 	 */
 	public static Set<TalkerBean> getTalkersInOrder(TalkerBean talkerBean,boolean memberFlag) {
 		DBCollection loginsColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
+		DBCollection loginHistoryCollection = getCollection(LOGIN_HISTORY_COLLECTION);
 		List<String> list = TalkerBean.PROFESSIONAL_CONNECTIONS_LIST;
 		BasicDBList basicDBList = new BasicDBList();
 
@@ -164,13 +165,18 @@ public class ApplicationDAO {
 			loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).limit(20).toArray();
 		
 		Set<TalkerBean> newTalkers = new LinkedHashSet<TalkerBean>();
+		
 		for (DBObject talkerDBObject : talkersDBList) {
 			TalkerBean talker = new TalkerBean();
 			talker.setId(getString(talkerDBObject, "_id"));
 			if (!newTalkers.contains(talker)) {
 				talker.parseBasicFromDB(talkerDBObject);
 				if (!(talker.isSuspended() || talker.isDeactivated() || talker.isAdmin() || talkerBean.equals(talker) || talkerBean.getFollowingList().contains(talker))){
-					newTalkers.add(talker);
+					DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talker.getId());
+					query = BasicDBObjectBuilder.start().add("uid", talkerRef).get();
+					List<DBObject> loginTime= loginHistoryCollection.find(query).toArray();
+					if(loginTime.size()>=2)
+						newTalkers.add(talker);
 				}
 			}
 		}
@@ -324,7 +330,7 @@ public class ApplicationDAO {
 	public static boolean isIpUsed(String ip, int duration){
 		DBCollection namesColl = getCollection(IPLIST_COLLECTION);
 		Calendar dayBeforeNow = Calendar.getInstance();
-		dayBeforeNow.add(Calendar.DAY_OF_MONTH, duration);
+		dayBeforeNow.add(Calendar.HOUR_OF_DAY, duration);
 		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start().add("ipaddr", ip).add("time", new BasicDBObject("$gt", dayBeforeNow.getTime()));
 		return namesColl.findOne(queryBuilder.get()) == null;
 	}

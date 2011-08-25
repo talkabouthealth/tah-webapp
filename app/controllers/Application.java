@@ -1,5 +1,6 @@
 package controllers;
 
+import java.awt.Font;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
@@ -20,6 +21,8 @@ import org.apache.log4j.PatternLayout;
 import org.apache.log4j.PropertyConfigurator;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
 
+import controllers.LoggerController;
+
 import logic.TalkerLogic;
 import models.EmailBean;
 import models.IMAccountBean;
@@ -32,11 +35,14 @@ import models.TalkerBean;
 import models.TalkerBean.EmailSetting;
 import play.Logger;
 import play.Play;
+import play.cache.Cache;
 import play.data.validation.Email;
 import play.data.validation.Error;
 import play.data.validation.Required;
 import play.data.validation.Valid;
 import play.i18n.Messages;
+import play.libs.Codec;
+import play.libs.Images;
 import play.mvc.Controller;
 import play.mvc.Http.Header;
 import play.mvc.With;
@@ -129,7 +135,8 @@ public class Application extends Controller {
     /* ------- Sign Up --------- */
     public static void signup() {
     	params.flash();
-    	
+    	String remoteAddress = request.remoteAddress;
+    	int duration = -6;
     	//prepare additional settings for FB or Twitter
     	String from = flash.get("from");
     	Map<String, String> additionalSettings = null;
@@ -137,11 +144,25 @@ public class Application extends Controller {
     		ServiceType type = ServiceAccountBean.parseServiceType(from);
     		additionalSettings = ServiceAccountBean.settingsNamesByType(type);
     	}
-    	
-    	render(additionalSettings);
+    	if(!ApplicationDAO.isIpUsed(remoteAddress,duration)){
+    		flash("captcha", "true");
+    	}
+    	String randomID = Codec.UUID();
+    	render(additionalSettings,randomID);
     }
     
-    public static void register(@Valid TalkerBean talker) {
+    public static void register(@Valid TalkerBean talker,String code, String randomID) {
+    	
+    	/**
+    	 * Added ip address verification code. 
+    	 */
+    	int duration = -6;
+    	String remoteAddress = request.remoteAddress;
+    	
+    	if(!ApplicationDAO.isIpUsed(remoteAddress,duration)){
+    		validation.equals( code, Cache.get(randomID)).message("Invalid code. Please type it again");
+    	}
+    	
     	String privacyAgreeString = params.get("privacyagree");
     	
     	validation.isTrue("on".equalsIgnoreCase(privacyAgreeString))
@@ -167,13 +188,20 @@ public class Application extends Controller {
         
         boolean okSave = TalkerDAO.save(talker);
         if (!okSave) {
+
         	params.flash();
             validation.keep();
         	flash.error("Sorry, unknown error. Please contact support.");
         	Logger.error("Error during signup. User: "+talker.getEmail());
-        	
+
         	signup();
         	return;
+		} else {
+			/* Date : 16 Aug 2011
+    		 * Added code to save user IP address for ip validation while registration
+    		 * Using addUserIp method in ApplicationDAO class
+    		 */
+    		ApplicationDAO.addUserIp(remoteAddress);
 		}
 
         TalkerLogic.onSignup(talker, session);
@@ -428,5 +456,16 @@ public class Application extends Controller {
     	vars.put("message_text", moredetails);
     	EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, EmailUtil.SUPPORT_EMAIL, vars, null, false);
     	renderText("We have sent this error to admin");
+    }
+    
+    public static void captcha(String id) {
+        Images.Captcha captcha = Images.captcha();
+        java.awt.Font font = new Font(java.awt.Font.SERIF , 0, 40);
+        List list = new ArrayList<java.awt.Font>();
+        list.add(font);
+        captcha.fonts = list ;
+        String code = captcha.getText("#0C68B3");
+        Cache.set(id, code);
+        renderBinary(captcha);
     }
 }

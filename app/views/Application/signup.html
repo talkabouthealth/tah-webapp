@@ -111,6 +111,18 @@
 									value="${flash['talker.password']}" />
 							</div>
 						</div>
+						#{if flash.captcha }
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">Please type the code bellow</span></div>
+							<div ><img src="@{Application.captcha(randomID)}" /></div>
+						</div>
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14"></span></div>
+							<div class="personaltextfield"><input class="personalfields" type="text" name="code" id="code" value="" />
+						   		 <input type="hidden" name="randomID" value="${randomID}" />
+							</div>
+						</div>
+						#{/if}
 						*{
 						
 						***** Hidden fields (for now) *******
