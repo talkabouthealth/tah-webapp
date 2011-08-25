@@ -14,7 +14,7 @@ import play.mvc.Controller;
 
 public class Image extends Controller {
 	
-	public static final File DEFAULT_IMAGE_FILE = Play.getFile("public/images/img1.gif");
+	public static final File DEFAULT_IMAGE_FILE = Play.getFile("public/images/avatar.png");
 	
 	/**
 	 * Renders image of given talker (or returns default image)
@@ -30,7 +30,5 @@ public class Image extends Controller {
 		else {
 			renderBinary(new ByteArrayInputStream(imageArray));
 		}
-		
 	}
-	
 }
