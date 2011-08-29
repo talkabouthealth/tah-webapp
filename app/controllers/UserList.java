@@ -16,7 +16,10 @@ import util.EmailUtil;
 import util.EmailUtil.EmailTemplate;
 
 public class UserList extends Controller{
-	public static void index(String id, String password, String action) {
+	
+	public static final String ADMIN = "admin";
+	
+	public static void index(String id, String password, String action, String searchString) {
 		
 		if(action != null && action.equalsIgnoreCase("passwordEditDisplay")){
 			if(id != null && !id.equals("")){
@@ -29,8 +32,8 @@ public class UserList extends Controller{
 		}else if(action != null && action.equalsIgnoreCase("passwordEdit")){
 			TalkerBean bean = TalkerDAO.getById(id);
 			if(password != null && !password.equals("")){
-				password = CommonUtil.hashPassword(password);
-				UserListDAO.updatePassword(id, password);
+				String hashPassword = CommonUtil.hashPassword(password);
+				UserListDAO.updatePassword(id, hashPassword);
 			}
 			
 			//Updated password send to user
@@ -40,10 +43,31 @@ public class UserList extends Controller{
 			EmailUtil.sendEmail(EmailTemplate.FORGOT_PASSWORD, bean.getEmail(), vars, null, false);
 			
 			List<TalkerBean> list = TalkerDAO.loadAllTalkers(true);
+			//removing admin from user list
+			for(int index = 0; index < list.size(); index++){
+				if(list.get(index).getUserName().equalsIgnoreCase(ADMIN)){
+					list.remove(index);
+				}
+			}
+			render(list);
+		}else if(action != null && action.equalsIgnoreCase("searchUser")){
+			List<TalkerBean> list = TalkerDAO.searchTalkers(searchString);
+			for(int index = 0; index < list.size(); index++){
+				if(list.get(index).getUserName().equalsIgnoreCase(ADMIN)){
+					list.remove(index);
+				}
+			}
 			render(list);
 		}else{
 			List<TalkerBean> list = TalkerDAO.loadAllTalkers(true);
+			//removing admin from user list
+			for(int index = 0; index < list.size(); index++){
+				if(list.get(index).getUserName().equalsIgnoreCase(ADMIN)){
+					list.remove(index);
+				}
+			}
 			render(list);
 		}
 	}
+	
 }

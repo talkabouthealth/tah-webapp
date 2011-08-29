@@ -221,8 +221,8 @@ public class TalkerDAO {
 		talkersColl.ensureIndex(new BasicDBObject("uname", 1));
 		talkersColl.ensureIndex(new BasicDBObject("anon_name", 1));
 		
-		DBObject usernameQuery = new BasicDBObject("uname", urlName);
-		DBObject anonymousQuery = new BasicDBObject("anon_name", urlName);
+		DBObject usernameQuery = new BasicDBObject("uname", Pattern.compile(urlName , Pattern.CASE_INSENSITIVE));
+		DBObject anonymousQuery = new BasicDBObject("anon_name", Pattern.compile(urlName , Pattern.CASE_INSENSITIVE));
 		DBObject query = new BasicDBObject("$or", Arrays.asList(usernameQuery, anonymousQuery));
 		DBObject talkerDBObject = talkersColl.findOne(query);
 		

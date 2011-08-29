@@ -37,6 +37,12 @@
 			userForm.submit();
 		}
 		
+		function searchUser(){
+			var searchUserName = document.getElementById('searchBy').value;
+			var userForm = document.getElementById('userForm');
+			userForm.action = "/dashboard/userlist?id=''&password=''&action=searchUser&searchString="+searchUserName;
+			userForm.submit();
+		}
 	</script>
 </head>
 <body>
@@ -67,6 +73,13 @@
 											
 												#{if list != null}
 													<tr>
+														<th style="padding:3px;" colspan="3">User Name : 
+														<input type="text" name="searchBy" id="searchBy" />
+														<input type="button" name="Search" value="Search" onclick="searchUser();"></input></th>
+														<th><a href="/dashboard/userlist">See All Users</a></th>
+													</tr>
+													#{if list.size > 0}
+														<tr>
 														<th>User Name</th>
 														<th>Email</th>
 														<th>Connection</th>
@@ -81,6 +94,12 @@
 															</td>
 														</tr>
 													#{/list}
+													#{/if}
+													#{else}
+														<tr>
+															<td colspan="4" align="center">No record found.</td>
+														</tr>
+													#{/else}
 												#{/if}
 												#{else}
 													<tr>
