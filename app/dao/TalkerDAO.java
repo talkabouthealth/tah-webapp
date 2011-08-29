@@ -670,5 +670,29 @@ public class TalkerDAO {
 			.get();
 		return fields;
 	}
+	
+	/**
+	 * Load talkers by user name
+	 * @param String
+	 * @return
+	 */
+	public static List<TalkerBean> searchTalkers(String searchString) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+
+		Pattern userNamePattern = Pattern.compile(searchString, Pattern.CASE_INSENSITIVE);
+		BasicDBObject query = new BasicDBObject("uname",  userNamePattern );
+
+		List<DBObject> talkersDBObjectList = null;
+		talkersDBObjectList = talkersColl.find(query).toArray();
+		
+		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
+		for (DBObject talkerDBObject : talkersDBObjectList) {
+			TalkerBean talker = new TalkerBean();
+			talker.parseFromDB(talkerDBObject);
+			talkerList.add(talker);
+		}
+		
+		return talkerList;
+	}
 }
 
