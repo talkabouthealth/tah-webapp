@@ -159,7 +159,7 @@ public class TopicLogic {
 	/**
 	 * Loads the most popular 20 topics, based on number of questions.
 	 */
-	public static List<TopicBean> loadPopularTopics() {
+	public static List<TopicBean> loadPopularTopics(int limit) {
 		List<TopicBean> popularTopics = new ArrayList<TopicBean>();
 		for (TopicBean topic : TalkerLogic.loadAllTopicsFromCache()) {
 			if (topic.getConversations() == null) {
@@ -175,8 +175,9 @@ public class TopicLogic {
 				return o2.getConversations().size() - o1.getConversations().size();
 			}		
 		});
-		if (popularTopics.size() > 20) {
-			popularTopics = popularTopics.subList(0, 20);
+
+		if (popularTopics.size() > limit) {
+			popularTopics = popularTopics.subList(0, limit);
 		}
 		return popularTopics;
 	}

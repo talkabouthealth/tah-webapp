@@ -753,3 +753,23 @@ let's close the popup and have a notification at the top of the screen that says
 
 	return false;
 }
+
+
+/* --------------- Topics ---------------- */
+//used for paging in topics on topic listing page
+function loadMoreTopics() {
+	var lastActionId = $("#topipsts").children().last().attr("id");
+
+	var moreBtn = $("#moreTopicBtn");
+	$("#ajaxLoading").appendTo(moreBtn).show();
+	var topicCount = $("#currentTopicCount").val();
+	$.get("/explore/topicAjaxLoad", {'topicCount':topicCount},
+		function(data) {
+			$("#ajaxLoading").hide();
+			$(data).appendTo($("#topipsts"));
+			if(jQuery.trim(data) == 'No'){
+				$("#moreId").hide();
+			}
+		}
+	);
+}

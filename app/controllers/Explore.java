@@ -68,8 +68,8 @@ public class Explore extends Controller {
     		TalkerLogic.preloadTalkerInfo(talker);
     		newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
     	}
-
-    	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics();
+    	int limit = session.get("topicCount")==null?20:Integer.parseInt(session.get("topicCount"));
+    	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics(limit);
 		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions();
 		
 		render(talker, openQuestions, popularTopics,newsLetterFlag);
@@ -82,7 +82,8 @@ public class Explore extends Controller {
     		TalkerLogic.preloadTalkerInfo(talker);
     	}
     	else {
-    		popularTopics = TopicLogic.loadPopularTopics();
+    		int limit = session.get("topicCount")==null?20:Integer.parseInt(session.get("topicCount"));
+    		popularTopics = TopicLogic.loadPopularTopics(limit);
     	}
     	
     	List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
@@ -91,16 +92,61 @@ public class Explore extends Controller {
     
     public static void browseTopics() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	int limit = 20;
+    	//In case you want to save the populated list
+    	//session.get("topicCount")==null?20:Integer.parseInt(session.get("topicCount"));
+    	session.put("topicCount", limit);
     	boolean newsLetterFlag = false;
+    	
     	if (talker != null) {
     		TalkerLogic.preloadTalkerInfo(talker);
     		newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
     	}
-    	
-    	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics();
+
+    	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics(limit);
+
     	Set<TopicBean> topicsTree = TopicLogic.getAllTopicsTree();
+
+    	render(topicsTree, talker, popularTopics, newsLetterFlag, limit);
+    }
+    
+    /**
+     * Load topic aJax list for more link on the topic page
+     * @param topicCount
+     */
+    public static void topicAjaxLoad(){
+    	List<TopicBean> _popularTopics = new ArrayList<TopicBean>();
+		for (TopicBean topic : TalkerLogic.loadAllTopicsFromCache()) {
+			if (topic.getConversations() == null) {
+				topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
+			}
+			_popularTopics.add(topic);
+		}
+		
+		//sort by number of questions
+		Collections.sort(_popularTopics, new Comparator<TopicBean>() {
+			@Override
+			public int compare(TopicBean o1, TopicBean o2) {
+				return o2.getConversations().size() - o1.getConversations().size();
+			}		
+		});
+		
+    	int limit = 5;
+    	int topicCount = session.get("topicCount")==null?20:Integer.parseInt(session.get("topicCount"));
+    	limit = topicCount + limit;
+        if (_popularTopics.size() > limit) {
+        	_popularTopics = _popularTopics.subList(topicCount, limit);
+        }else{
+        	_popularTopics = null;
+        }
+
+        //For testing to limit on 40 count list
+        //if(limit > 40)
+    	//  _popularTopics = null; 
     	
-    	render(topicsTree, talker, popularTopics, newsLetterFlag);
+    	boolean more = true;
+    	session.put("topicCount", limit);
+    	render("tags/common/popularTopics.html", _popularTopics,more,limit);
     }
     
     public static void browseMembers(String action) throws Throwable {
@@ -189,7 +235,8 @@ public class Explore extends Controller {
 		
 		List<TopicBean> popularTopics = null;
     	if (talker == null) {
-    		popularTopics = TopicLogic.loadPopularTopics();
+    		int limit = session.get("topicCount")==null?20:Integer.parseInt(session.get("topicCount"));
+    		popularTopics = TopicLogic.loadPopularTopics(limit);
     	}
     	
 		//"Popular Conversations" - ordered by page views

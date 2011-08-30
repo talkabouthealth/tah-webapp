@@ -1,12 +1,28 @@
-#{if _popularTopics}
-	<div class="topipsts">		
-		<div class="mtrighttxt1" style="padding-bottom: 5px;">Popular Topics</div>
-		#{list items: _popularTopics, as: 'topic'}
-			<div id="${topic.id}" class="topbox1" style="margin-top: 0px;">
-				<a style="color:#0286BC;" href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a>
-				&nbsp;&nbsp;${topic.conversations?.size()} question(s)
-		   	</div>
-		#{/list} 
-		<div class="topicborder"></div>
-	</div>
+#{if more == true}
+	#{if _popularTopics}
+			#{list items: _popularTopics, as: 'topic'}
+				<div id="${topic.id}" class="topbox1" style="margin-top: 0px;">
+					<a style="color:#0286BC;" href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a>
+					&nbsp;&nbsp;${topic.conversations?.size()} question(s)
+			   	</div>
+			#{/list}
+	#{/if}#{else}No#{/else}
 #{/if}
+#{else}
+	#{if _popularTopics}
+		<div class="topipsts" id="topipsts">
+			<div class="mtrighttxt1" style="padding-bottom: 5px;">Popular Topics</div>
+			#{list items: _popularTopics, as: 'topic'}
+				<div id="${topic.id}" class="topbox1" style="margin-top: 0px;">
+					<a style="color:#0286BC;" href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a>
+					&nbsp;&nbsp;${topic.conversations?.size()} question(s)
+			   	</div>
+			#{/list}
+		</div>
+		<div id="moreId" class="topbox1" style="margin-top: 0px;">
+		<div id="moreTopicBtn"></div>
+		<a style="color:#0286BC;" href="javaScript:loadMoreTopics();"><strong>More</strong></a>
+		</div>
+		<div class="topicborder"></div>
+	#{/if}
+#{/else}
