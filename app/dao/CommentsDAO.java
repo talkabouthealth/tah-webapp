@@ -41,6 +41,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import util.ValidateData;
 
 /*
  	We store profile comments in separate collection, as "child lists" tree.
@@ -569,6 +570,7 @@ public class CommentsDAO {
 		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
 		
 		String topicTitle = topic.getTitle().replaceAll(" ", "");
+                topicTitle = ValidateData.escapeText(topicTitle);
 		Pattern mentionRegex = Pattern.compile("#"+topicTitle+"[^\\w]*", Pattern.CASE_INSENSITIVE);
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("text", mentionRegex)
