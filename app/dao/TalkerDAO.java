@@ -235,8 +235,8 @@ public class TalkerDAO {
 			for (DBObject talkerDBObject : talkersDBObjectList) {
 				TalkerBean talkerTemp = new TalkerBean();
 				talkerTemp.parseFromDB(talkerDBObject);
-				if((talkerTemp.getUserName() != null && talkerTemp.getUserName().toLowerCase().equals(urlName.toLowerCase())) || (talkerTemp.getAnonymousName() != null &&  talkerTemp.getAnonymousName()
-						.toLowerCase().equals(urlName.toLowerCase()))){
+				if(!talkerTemp.isSuspended() && ((talkerTemp.getUserName() != null && talkerTemp.getUserName().toLowerCase().equals(urlName.toLowerCase())) || (talkerTemp.getAnonymousName() != null &&  talkerTemp.getAnonymousName()
+						.toLowerCase().equals(urlName.toLowerCase())))){
 					talker = talkerTemp;
 				}
 			}
