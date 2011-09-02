@@ -216,20 +216,31 @@ public class TalkerDAO {
 	 * Get by userName or anonymous name
 	 */
 	public static TalkerBean getByURLName(String urlName) {
+		
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
-		talkersColl.ensureIndex(new BasicDBObject("uname", 1));
-		talkersColl.ensureIndex(new BasicDBObject("anon_name", 1));
+		//talkersColl.ensureIndex(new BasicDBObject("uname", 1));
+		//talkersColl.ensureIndex(new BasicDBObject("anon_name", 1));
 		
 		DBObject usernameQuery = new BasicDBObject("uname", Pattern.compile(urlName , Pattern.CASE_INSENSITIVE));
 		DBObject anonymousQuery = new BasicDBObject("anon_name", Pattern.compile(urlName , Pattern.CASE_INSENSITIVE));
+		//DBObject usernameQuery = new BasicDBObject("uname", urlName );
+		//DBObject anonymousQuery = new BasicDBObject("anon_name", urlName);
 		DBObject query = new BasicDBObject("$or", Arrays.asList(usernameQuery, anonymousQuery));
-		DBObject talkerDBObject = talkersColl.findOne(query);
+		
+		List<DBObject> talkersDBObjectList = talkersColl.find(query).toArray();
 		
 		TalkerBean talker = null;
-		if (talkerDBObject != null) {
-			talker = new TalkerBean();
-			talker.parseFromDB(talkerDBObject);
+		if(talkersDBObjectList != null){
+			for (DBObject talkerDBObject : talkersDBObjectList) {
+				TalkerBean talkerTemp = new TalkerBean();
+				talkerTemp.parseFromDB(talkerDBObject);
+				System.out.println("Name : " + talkerTemp.getName());
+				if((talkerTemp.getUserName() != null && talkerTemp.getUserName().toLowerCase().equals(urlName.toLowerCase())) || (talkerTemp.getAnonymousName() != null &&  talkerTemp.getAnonymousName()
+						.toLowerCase().equals(urlName.toLowerCase()))){
+					talker = talkerTemp;
+				}
+			}
 		}
 		return talker;
 	}
