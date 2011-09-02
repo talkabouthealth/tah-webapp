@@ -169,6 +169,7 @@ public class SearchUtil {
 			throws ParseException {
 		QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
 		parser.setAllowLeadingWildcard(true);
+                term = ValidateData.escapeText(term);
 		String searchTerm = term;
 		if (term != null && term.length() > 0) {
 			//if term contains only one word (or part) - use wildcard search

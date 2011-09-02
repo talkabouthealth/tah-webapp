@@ -23,6 +23,7 @@ public class Image extends Controller {
 		byte[] imageArray = TalkerDAO.loadTalkerImage(userName, Security.connected());
 		
 		response.setHeader("Content-Type", "image/gif");
+                response.setHeader("Cache-Control", "no-cache");
 		if (imageArray == null) {
 			//render default
 			renderBinary(DEFAULT_IMAGE_FILE);

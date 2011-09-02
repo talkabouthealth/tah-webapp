@@ -284,33 +284,72 @@ public class Profile extends Controller {
                 int num = new Random().nextInt();
               	render(userName, num);
 	}
-	
+	public static void imageStatus() {
+            String status = "incomplete";
+            if (session.contains("image_upload")) {
+                if (session.get("image_upload").equalsIgnoreCase("complete")){    
+                    status = "complete";
+                    session.put("image_upload", "invalid");
+                }
+                else if (session.get("image_upload").equalsIgnoreCase("error")) {
+                    status = "error";
+                    session.put("image_upload", "invalid");
+                }
+                else if (session.get("image_upload").equalsIgnoreCase("default")) {
+                    status = "default";
+                    session.put("image_upload", "invalid");
+                    
+                }
+                else {
+                    status = "invalid";
+                }
+                
+            }
+            renderText(status);
+            
+        }
 	/**
 	 * Delete current or upload new image
 	 * @param submitAction 'Remove current image' or 'Upload'
 	 */
 	public static void uploadImage(String submitAction, File imageFile) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
 		if ("Remove current image".equals(submitAction)) {
 			TalkerDAO.updateTalkerImage(talker, null);
 		}
 		else if (imageFile != null) {
-			try {
-				if (imageFile.length() < 10000) {
-					//less then 10kb
-					TalkerDAO.updateTalkerImage(talker, FileUtils.readFileToByteArray(imageFile));
-				}
-				else {
-					BufferedImage bsrc = ImageIO.read(imageFile);
-					ByteArrayOutputStream baos = ImageUtil.createThumbnail(bsrc);
-		        	TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
-				}
-			} catch (IOException e) {
-				Logger.error(e, "Error converting image!");
-			}
+                    String fileName = imageFile.getName();
+                    String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
+                    if (fileExt.equalsIgnoreCase("png") || fileExt.equalsIgnoreCase("jpg") || fileExt.equalsIgnoreCase("jpeg") || fileExt.equalsIgnoreCase("gif")) {
+                        if (imageFile.length() > 2000000) {
+                           Logger.debug("Image Size: " + imageFile.length());
+                           session.put("image_upload", "error");
+                           renderText("invalid file size"); 
+                        }
+                        else {
+                            try {
+                                BufferedImage bsrc = ImageIO.read(imageFile);
+                                ByteArrayOutputStream baos = ImageUtil.createThumbnail(bsrc);
+                                TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
+
+                            } catch (IOException e) {
+                                    TalkerDAO.updateTalkerImage(talker, null);
+                                    Logger.error(e, "Error converting image!");
+                                    session.put("image_upload", "error");
+                                    renderText("error converting image"); 
+                            }
+                            session.put("image_upload", "complete");
+                            renderText("image uploaded"); 
+                        }
+                    }
+                    else {
+                        Logger.debug("Invalid File Type: " + fileName);
+                        session.put("image_upload", "error");
+                        renderText("invalid file type"); 
+                    }
 		}
-                renderText("image uploaded");
+                session.put("image_upload", "default");
+                renderText("default image uploaded"); 
 	}
 	
 	/* -------------- Preferences (Privacy)  ------------------------ */
