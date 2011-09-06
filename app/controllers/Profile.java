@@ -456,7 +456,9 @@ public class Profile extends Controller {
 	/* ------------------ Email notifications ------------------ */
 	public static void emailSettingsSave(TalkerBean talker) {
 		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);
-
+		if(talker == null){
+			talker = sessionTalker;
+		}
 		Map<String, String> paramsMap = params.allSimple();
 		EnumSet<EmailSetting> emailSettings = EnumSet.noneOf(EmailSetting.class);
 		for (String paramName : paramsMap.keySet()) {

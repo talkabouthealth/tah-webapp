@@ -1,5 +1,7 @@
 package controllers;
 
+import static util.DBUtil.createRef;
+import static util.DBUtil.getCollection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -9,6 +11,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
 
 import logic.ConversationLogic;
 import logic.TopicLogic;
@@ -232,6 +238,7 @@ public class Conversations extends Controller {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	
     	String nextAction = null;
+    	ConversationBean convo = ConversationDAO.getById(convoId);
     	if (talker.getFollowingConvosList().contains(convoId)) {
     		//unfollow
     		talker.getFollowingConvosList().remove(convoId);
@@ -241,6 +248,12 @@ public class Conversations extends Controller {
     		talker.getFollowingConvosList().add(convoId);
     		ActionDAO.saveAction(new FollowConvoAction(talker, new ConversationBean(convoId)));
     		nextAction = "unfollow";
+    		//Code for sending mail if setting available in email setting
+    		TalkerBean mailSendtalker = TalkerDAO.getByEmail(convo.getTalker().getEmail());
+    		Map<String, String> vars = new HashMap<String, String>();
+    		vars.put("username", mailSendtalker.getUserName());
+    		if(mailSendtalker.getEmailSettings().toString().contains("NEW_FOLLOWER"))
+    			EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_FOLLOWER, mailSendtalker.getEmail(), vars, null, false);
     	}
     	
     	CommonUtil.updateTalker(talker, session);

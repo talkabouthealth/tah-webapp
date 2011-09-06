@@ -63,6 +63,8 @@ public class Actions extends Controller {
 		TalkerDAO.saveThankYou(thankYouBean);
 		
 		ActionDAO.saveAction(new GiveThanksAction(fromTalker, toTalker));
+		TalkerBean mailSendtalker = TalkerDAO.getByEmail(toTalker.getEmail());
+		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_THANKYOU"))
 		NotificationUtils.emailNotifyOnThankYou(fromTalker, toTalker, thankYouBean);
 		
 		ThankYouBean _thankYou = thankYouBean;

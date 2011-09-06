@@ -212,6 +212,8 @@ public class ConversationLogic {
 		if (comment.isAnswer()) {
 			for (TalkerBean follower : convo.getFollowers()) {
 	    		if (!follower.equals(talker)) { //do not send notification to himself
+	    			TalkerBean mailSendtalker = TalkerDAO.getByEmail(follower.getEmail());
+		    		if(mailSendtalker.getEmailSettings().toString().contains("CONVO_COMMENT"))
 	        		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_COMMENT, follower, vars);
 	        		
 	        		//check Twitter/FB/IM
@@ -253,6 +255,8 @@ public class ConversationLogic {
 		else {
 			//for replies - send to author of answer and question.
 			if (!talker.equals(convo.getTalker())) {
+				TalkerBean mailSendtalker = TalkerDAO.getByEmail(convo.getTalker().getEmail());
+	    		if(mailSendtalker.getEmailSettings().toString().contains("CONVO_COMMENT"))
         		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_COMMENT, convo.getTalker(), vars);
     		}
 			
@@ -277,6 +281,8 @@ public class ConversationLogic {
 			// distribute emails to all, do not send to yourself + question author (sent above)
 			for(TalkerBean thistalker : participants) {
 				if(!thistalker.equals(talker) && !thistalker.equals(convo.getTalker())) {
+					TalkerBean mailSendtalker = TalkerDAO.getByEmail(thistalker.getEmail());
+		    		if(mailSendtalker.getEmailSettings().toString().contains("CONVO_COMMENT"))
 	        		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_COMMENT, thistalker, vars);
 				}
 			}	

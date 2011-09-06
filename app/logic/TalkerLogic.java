@@ -516,6 +516,8 @@ public class TalkerLogic {
 				Map<String, String> vars = new HashMap<String, String>();
 				vars.put("other_talker", talker.getUserName());
 				vars.put("comment_text", CommonUtil.commentToHTML(comment));
+			TalkerBean mailSendtalker = TalkerDAO.getByEmail(profileTalker.getEmail());
+	    		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_COMMENT"))
 				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
 						profileTalker, vars);
 			}
@@ -550,6 +552,8 @@ public class TalkerLogic {
 			for(TalkerBean thisTalker : allTalkersHere) {
 				if(!thisTalker.equals(talker) && !thisTalker.equals(profileTalker) && 
 						!thisTalker.equals(thought.getFromTalker())) {
+				TalkerBean mailSendtalker = TalkerDAO.getByEmail(profileTalker.getEmail());
+		    		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_COMMENT"))
 					NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
 							thisTalker, vars);
 				}
@@ -557,12 +561,16 @@ public class TalkerLogic {
 					
 			// fix bug of double email sending to thread owner & parent author; parent author here
 			if (!talker.equals(thought.getFromTalker()) && !profileTalker.equals(thought.getFromTalker())) {
+				TalkerBean mailSendtalker = TalkerDAO.getByEmail(profileTalker.getEmail());
+	    		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_COMMENT"))
 				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
 						thought.getFromTalker(), vars);
 			}
 			
 			// thread owner
 			if (!talker.equals(profileTalker)) {
+				TalkerBean mailSendtalker = TalkerDAO.getByEmail(profileTalker.getEmail());
+	    		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_COMMENT"))
 				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
 						profileTalker, vars);
 			}

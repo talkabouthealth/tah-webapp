@@ -252,6 +252,8 @@ public class NotificationUtils {
 		String convoTalkURL = CommonUtil.generateAbsoluteURL("Talk.talkApp", "convoId", convo.getTid());
 		vars.put("convo_talk_url", convoTalkURL);
     	for (TalkerBean follower : convo.getFollowers()) {
+    		TalkerBean mailSendtalker = TalkerDAO.getByEmail(follower.getEmail());
+    		if(mailSendtalker.getEmailSettings().toString().contains("CONVO_RESTART"))
     		sendEmailNotification(EmailSetting.CONVO_RESTART, follower, vars);
     	}
 	}
@@ -268,6 +270,8 @@ public class NotificationUtils {
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
 		vars.put("convo_url", convoURL);
 		for (TalkerBean follower : convo.getFollowers()) {
+		TalkerBean mailSendtalker = TalkerDAO.getByEmail(follower.getEmail());
+    		if(mailSendtalker.getEmailSettings().toString().contains("CONVO_SUMMARY"))
 			sendEmailNotification(EmailSetting.CONVO_SUMMARY, follower, vars);
 		}
 	}
