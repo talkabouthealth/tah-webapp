@@ -11,15 +11,22 @@ import dao.UserListDAO;
 import models.NotificationBean;
 import models.TalkerBean;
 import play.mvc.Controller;
+import play.mvc.With;
 import util.CommonUtil;
 import util.EmailUtil;
 import util.EmailUtil.EmailTemplate;
 
+@With( { Secure.class, LoggerController.class } )
 public class UserList extends Controller{
 	
 	public static final String ADMIN = "admin";
 	
 	public static void index(String id, String password, String action, String searchString) {
+		
+		//check admin user 
+		if(!session.get("username").equalsIgnoreCase(ADMIN)){
+			redirect("/home");
+		}
 		
 		if(action != null && action.equalsIgnoreCase("passwordEditDisplay")){
 			if(id != null && !id.equals("")){

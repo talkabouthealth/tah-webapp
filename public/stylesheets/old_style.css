@@ -280,7 +280,8 @@ margin-bottom:5px;
 #footer { width:972px; padding-top:10px; margin-left:auto; margin-right:auto;}
 #footerleft {float:left; width:720px; height:25px; line-height:25px;}
 #footerright {float:right; width:250px;}
-#footericons {float:left; width:210px;  color:#403c3e; font-size:11px;}
+#footericons {float:left; width:210px;  color:#403c3e; font-size:11px;    height: 40px;
+    width: 220px; padding-right: 25px;}
 
 .footerlink {font-weight: normal; font-size: 11px; color: #403c3e; font-family:arial; text-decoration: none;}
 a.footerlink:link {font-weight: normal; font-size: 11px; color: #403c3e; font-family:arial; text-decoration: none;}

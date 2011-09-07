@@ -16,14 +16,24 @@ import models.TalkerBean.EmailSetting;
 import dao.ConversationDAO;
 import dao.QuestionDAO;
 import play.mvc.Controller;
+import play.mvc.With;
 import util.CommonUtil;
 import util.EmailUtil;
 import util.NotificationUtils;
 import util.EmailUtil.EmailTemplate;
 
+@With( { Secure.class, LoggerController.class } )
 public class Notifications extends Controller{
 	
+	public static final String ADMIN = "admin";
+	
 	public static void index(String id, String details) {
+		
+		//check admin user 
+		if(!session.get("username").equalsIgnoreCase(ADMIN)){
+			redirect("/home");
+		}
+		
 		//topicsList
 		if(id == null){
 			List<NotificationBean> list = QuestionDAO.loadAllQuestions();

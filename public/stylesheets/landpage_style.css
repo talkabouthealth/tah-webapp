@@ -708,7 +708,7 @@ a {
     float:left;
     width:777px;
     height:25px;
-    line-height:15px;
+    line-height:25px;  font-size: 11px;
 }
 #footerright {
     float:left;
@@ -722,7 +722,8 @@ a {
     float:left;
     width:210px;
     color:#403c3e;
-    font-size:11px;
+    font-size:11px;    height: 40px;
+    width: 220px; padding-right: 25px;
 }
 .footerlink {
 

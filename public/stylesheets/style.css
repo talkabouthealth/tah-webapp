@@ -970,7 +970,8 @@ ul li.comLink { padding-top: 1px }
 	float:left;
 	width:210px;
 	color:#403c3e;
-	font-size:11px;
+	font-size:11px;    height: 40px;
+    width: 220px; padding-right: 25px;
 }
 .footerlink {
 	font-weight: normal;
