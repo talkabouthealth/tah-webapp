@@ -2,31 +2,23 @@
 	<style type="text/css">
 		#innermiddlearea { padding-top: 10px }
 		.seeall { padding-top: 20px }
-		
-		/* Hide images in talker's feed */
 		.joinpic { display: none; }
 	</style>
-	
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
 		var feedsPerPage = ${logic.FeedsLogic.TALKERFEEDS_PER_PAGE};
-	
 		$(document).ready(function() {
 			$('.inline-edit').inlineEdit( { hover: ''} );
 		});
-		
    		function showSaveDialog(type) {
    	   		if (type === 'startChat') {
    	   			$("#newConvoTypeConvo").attr("checked", "checked");
-   	   		}
-   	   		else {
+   	   		}else {
    	   			$("#newConvoTypeQuestion").attr("checked", "checked");
    	   		}
-			
 			$("#newConvoForm").show();
 			$("#newQuestionConfirm").hide();
 			$("#newTalkConfirm").hide();
-
 			var convoTitle = $("#"+type+"Text").val();
 			if (convoTitle !== "" 
 					&& convoTitle !== "Post a question and we will notify the right members to answer."
@@ -34,9 +26,9 @@
 				$("#newConvoTitle").val($("#"+type+"Text").val());
 			}
 			showPopup("#startDialog", 350);
-   		}		
+   		}
+function joinNow(){ showPopup("#profileJoinNow", 350); }	
 	</script>
-		
 <div id="managtopic1">
   <div id="managtopic">
   	#{include 'header.html' /}
@@ -46,11 +38,9 @@
           <div id="innermiddlearea">
             <div id="mtcover">
               <div id="mtleft">
-
-
-			  <div class="profileCatant">
-                  <div class="mtcontent">
-                  	#{if notProvidedInfo }
+                 <div class="profileCatant">
+		 #{if !currentTalker}<div class="profile_join_now"><a href="@{Application.signup()}">Join now to ask ${talker.name} questions</a></div>#{/if}
+                	#{if notProvidedInfo }
                   		<div id="provideInfoHelp" class="helpInfo">
 						      <div class="popboxWraper">
 						        <div class="popbox2">
@@ -62,29 +52,18 @@
 								  	<strong>Notice:</strong>
 								  	#{if talker.isProf() }
 								    	You have not provided Personal Info. 
-									  	You may provide this information using the 
-									  	<a href="@{Profile.edit()}">Edit Profile</a> page. 
-									  	<br/>
-									  	<br/>
-									  	Your Personal Info will never be viewable by the public.
+								  	You may provide this information using the <a href="@{Profile.edit()}">Edit Profile</a> page.<br/><br/>Your Personal Info will never be viewable by the public.
 								    #{/if}
 								    #{else}
 								    	You have not provided Personal Info or Health Info. 
 									  	You may provide this information using the 
-									  	<a href="@{Profile.edit()}">Edit Profile</a> and 
-									  	<a href="@{Profile.healthDetails()}">Edit Health Info</a> pages. 
-									  	<br/>
-									  	<br/>
-									  	Your Personal Info and Health Info will never be viewable by the public.
+									  	<a href="@{Profile.edit()}">Edit Profile</a> and <a href="@{Profile.healthDetails()}">Edit Health Info</a> pages. <br/><br/>Your Personal Info and Health Info will never be viewable by the public.
 								    #{/else}
-								  	
-								  	<br/>
-								  	<br/>
+								  	<br/><br/>
 						          </div>
 						          <div class="cb"></div>
 						        </div>
 						        <!--popbox2-->
-						
 						      </div>
 						      <div class="cb"></div>
 						</div> 
@@ -102,22 +81,18 @@
 								  	Some of your profile information is private and no one else may view it. 
 								  	You may share your profile information with the TalkAboutHealth Community 
 								  	by changing your <a href="@{Profile.preferences()}">Privacy Settings</a>.
-								  	<br/>
-								  	<br/>
+								  	<br/><br/>
 						          </div>
 						          <div class="cb"></div>
 						        </div>
 						        <!--popbox2-->
-						
 						      </div>
 						      <div class="cb"></div>
 						</div> 
                   	#{/if}
-                  
                     <div class="pph1Cover">
                       <div class="pph1">
-                      		${talker.name} 
-                      		#{talker/talkerInfo talker: talker /}
+                      		${talker.name} #{talker/talkerInfo talker: talker /}
                       </div>
                     </div>
                     <!--pph1Cover-->
@@ -126,64 +101,56 @@
                       <td class="profileCantanttxt1"><strong>Community:</strong> Breast Cancer</td>
                       <td class="profileCantanttxt2">
                       	<strong>Thank You's:</strong>
-                      	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.name, 'thankyous')}">
-							${talker.thankYouList.size()}
-						</a>
-					  </td>
+                      	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.name, 'thankyous')}">${talker.thankYouList.size()}</a>
+		      </td>
                     </tr>
                     <!--profiletxtCantant-->
                     <tr>
                       <td class="profileCantanttxt1"><strong>Member Since:&nbsp;</strong>${talker.regDate.format('MMM. yyyy')}</td>
                       <td class="profileCantanttxt2">
                       	<strong>Top Answers:&nbsp;</strong>
-                      	<a style="text-decoration: none" 
-                      		href="@{PublicProfile.answers(talker.name)}">${numOfTopAnswers}</a>
+                      	<a style="text-decoration: none" href="@{PublicProfile.answers(talker.name)}">${numOfTopAnswers}</a>
                       </td>
                     </tr>
-                    
                     <!--profiletxtCantant-->
                     <tr>
                       <td class="profileCantanttxt1">
                       	<strong>Questions:&nbsp;</strong>
-                      	<a style="text-decoration: none" 
-                      		href="@{PublicProfile.conversations(talker.name)}">${numOfStartedConvos}</a>
+                      	<a style="text-decoration: none" href="@{PublicProfile.conversations(talker.name)}">${numOfStartedConvos}</a>
                       </td>                      
                       <td class="profileCantanttxt2">
                       	<strong>Answers:&nbsp;</strong>
-                      	<a style="text-decoration: none" 
-                      		href="@{PublicProfile.answers(talker.name)}">${numOfAnswers}</a>
+                      	<a style="text-decoration: none" href="@{PublicProfile.answers(talker.name)}">${numOfAnswers}</a>
                       </td>
                     </tr>
                     </table>
-                    
-                    #{if currentTalker != null }
-                  	<div id="postQuestionTabContent" class="topTabContent" style="display:block">	
-                  		<div style="float:left;">                  		    
-                  			<div class="Profileperson">Ask ${talker.name} a question:</div>
-							<input type="text" id="postQuestionText" class="edititinputx inline_text greyarea" 
-								onKeyUp=" $('#postQuestionTextSize').html($(this).val().length);"
-								maxlength="160"
-								onfocus="clearTextArea('postQuestionText', 'Post a question and we will notify the right members to answer.');"
-								style="width:627px; height: 35px; margin: 0px; padding: 3px;" cols="4" rows="4" 
-								value="Post a question and we will notify the right members to answer." />							
-						</div>
-						<div style="float: right; padding-top: 5px;">
-							<span id="postQuestionTextSize" style="font-size: 16px; float: left;">0</span>
-							#{ convo/ccInputs type: "Question", setting: "POST_ON_CONVO" /}
-							<input type="button" onclick="return showSaveDialog('postQuestion');" 
-								id="postQuestionBtn" value="" />
-						</div>
-						<div style="clear:both"></div>
-                  	</div>
-                  	#{/if}
-                  	                    
+			<div id="postQuestionTabContent" class="topTabContent" style="display:block">	
+	                  		<div style="float:left;">                  		    
+	                  			<div class="Profileperson">Ask ${talker.name} a question:</div>
+	                  			#{if currentTalker}
+								<input type="text" id="postQuestionText" class="edititinputx inline_text greyarea" 
+									onKeyUp=" $('#postQuestionTextSize').html($(this).val().length);"
+									onfocus="clearTextArea('postQuestionText', 'Post a question and we will notify the right members to answer.');" maxlength="160" style="width:627px; height: 35px; margin: 0px; padding: 3px;" 
+									value="Post a question and we will notify the right members to answer." />
+									#{/if}
+								#{else}
+									<input type="text" id="postQuestionText" class="edititinputx inline_text greyarea"
+									maxlength="160" onfocus="joinNow();" style="width:627px; height: 35px; margin: 0px; padding: 3px;" value="Post a question and we will notify the right members to answer." />
+								#{/else}
+							</div>
+							<div style="float: right; padding-top: 5px;">
+								<span id="postQuestionTextSize" style="font-size: 16px; float: left;">0</span>
+								#{ convo/ccInputs type: "Question", setting: "POST_ON_CONVO" /}
+								#{if currentTalker}<input type="button" onclick="return showSaveDialog('postQuestion');" id="postQuestionBtn" value="" />#{/if}
+								#{else}<input type="button" onclick="joinNow();" id="postQuestionBtn" value="" />#{/else}
+							</div>
+							<div style="clear:both"></div>
+	                </div>
                     <!--profiletxtCantant-->
 							#{if talker.isProf() && talker.isAllowed(models.PrivacySetting.PrivacyType.PROFESSIONAL_INFO, currentTalker)}
 								#{if talker.isOrg()}
-								<div class="profilebio">Organization Info</div>
-			                    <div class="topicborder"></div>
-								#{/if}				
-										
+								<div class="profilebio">Organization Info</div><div class="topicborder"></div>
+								#{/if}
 								#{if talker.profStatement}
 									#{ifnot talker.isOrg()}
 									<div class="profilebio">Professional Statement</div>
@@ -191,7 +158,7 @@
 									#{/ifnot}
 				                    <div class="profilebiotxt">${talker.profStatement.replaceAll("(http://[^\"\'\n ]+)", "<a href=\"\$1\" target=_blank>\$1</a>").nl2br()}</div>
 								#{/if}
-								
+
 								#{if talker.isOrg()}
 								#{/if}							
 								#{elseif talker.isProf()}
@@ -694,25 +661,19 @@
 			<b>${talker.name}</b> has chosen to have all or some of their profile information private or only viewable by the community.</div>
 	#{/if}
 #{/else}
-                    
                   </div>
                   <!--profileCatant-->
                   <div class="cb"></div>
                 </div>
-              
-
 			  </div>
             	<!--mtleft-->
-            
             	#{ set currentPage = 'publicProfile' /}
             	#{ include 'PublicProfile/profileRight.html' /}
-            
             <!--mtright-->
             <div class="cb"></div>
           </div>
           <!--mtcover-->
           <div class="cb"></div>
-
         </div>
         <div id="signupright"></div>
       </div>

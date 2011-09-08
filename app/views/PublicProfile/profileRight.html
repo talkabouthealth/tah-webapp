@@ -1,7 +1,6 @@
 <script type="text/javascript">
 		//for ThankYou and Comment popups
 		selectedTalkerId = '${talker.id}';
-	 
    		$(document).ready(function() {
    			$("#thankYouUser").html('${talker.userName}');
    			$("#commentUser").html('${talker.userName}');
@@ -11,8 +10,7 @@
 				var moreBtn = $("#followActionImageBtn");
 				$("#ajaxLoading").appendTo(moreBtn.parent()).show();
 				moreBtn.hide();
-   			    
-   	   			$.post("@{Actions.followTalker()}", 
+   			    $.post("@{Actions.followTalker()}", 
    	  				{ followingId: '${talker.id}'},
    	  				function(data) {
    	  					$("#followActionlink").html(data);
@@ -41,17 +39,14 @@
     #{/if}
 	<div style="padding-left: 10px; padding-top: 10px;">
 		#{if session.username.equals(talker.userName) }
-     		Welcome 
-           	<a href="@{ViewDispatcher.view(talker.userName)}"><strong>${talker.userName}</strong></a>!
+     		Welcome <a href="@{ViewDispatcher.view(talker.userName)}"><strong>${talker.userName}</strong></a>!
      	#{/if}
      	#{else}
      		<a href="@{ViewDispatcher.view(talker.name)}"><strong>${talker.name}'s</strong></a> Profile
      	#{/else}
     </div>
 	<div class="followpicbox" style="padding-top: 3px;">
-		<div class="followpic" style="width: 110px; height: 110px;">
-			<img src="@{Image.show(talker.name)}" width="110" height="110"/>
-		</div>
+		<div class="followpic" style="width: 110px; height: 110px;"><img src="@{Image.show(talker.name)}" width="110" height="110"/></div>
 		#{if currentTalker}
 			<div class="foloowpictext" style="width: 110px;">
 				#{ifnot talker.userName.equals(currentTalker.userName) }
@@ -213,6 +208,7 @@
 				#{ share/fblike currentURL: 'www.facebook.com/talkabouthealth' /}
 			#{/if}
 	     </div>
+	     #{ share/fblike currentURL: 'www.facebook.com/talkabouthealth' /}
 	     <!--membersarea-->
 	     <br />
 	     <div class="topicborder"></div>
@@ -220,13 +216,11 @@
 	#{/if}
 	<!-- New Changes Added -->
 </div>
-
 <div id="boxes">
 	<div id="dialog" class="window"></div>
-	
 	#{ popups/thankyou /}
 	#{ popups/thoughtComment /}
-	
+	#{ popups/profileJoinNow /}
 	#{popups/startConvo page: 'profileRight', target: talker /}
 </div>
 <div id="mask"></div>
