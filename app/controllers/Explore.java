@@ -1,10 +1,13 @@
 package controllers;
 
+import static util.DBUtil.getCollection;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -17,7 +20,10 @@ import java.util.Map.Entry;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.bson.types.ObjectId;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
@@ -240,11 +246,41 @@ public class Explore extends Controller {
     	}
     	
 		//"Popular Conversations" - ordered by page views
-		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations();
+		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations(null);
+		//Set<Action> popularConvos = FeedsLogic.getPopularConvoFeed(null);
 		
 		if (action == null) {
 			action = "feed";
 		}
 		render(action, communityFeed, popularConvos, popularTopics);
 	}
+	
+	/**
+	 * Used by "More" button in different feeds without logged in.
+	 * @param afterActionId load actions after given action
+	 */
+    public static void feedAjaxLoad(String feedType, String afterActionId, String talkerName) {
+    	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
+    	boolean loggedIn = (_talker != null);
+    	Set<Action> _feedItems = null;
+    	List<ConversationBean> popularConvos = null;
+    	if ("convoFeed".equalsIgnoreCase(feedType)) {
+    		_feedItems = FeedsLogic.getConvoFeed(_talker, afterActionId);
+    	}else if ("communityFeed".equalsIgnoreCase(feedType)) {
+    		_feedItems = FeedsLogic.getCommunityFeed(afterActionId, loggedIn);
+    	}else if ("popularConvo".equalsIgnoreCase(feedType)){
+    		popularConvos = ConversationDAO.loadPopularConversations(afterActionId);
+    	}else {
+    		TalkerBean profileTalker = TalkerDAO.getByUserName(talkerName);
+    		if (profileTalker != null) {
+    			_feedItems = FeedsLogic.getTalkerFeed(profileTalker, afterActionId);
+    		}
+    	}
+    	if(feedType.equalsIgnoreCase("popularConvo")){
+    		render("tags/convo/convoList.html", popularConvos);
+    	}else{
+    		render("tags/feed/feedList.html", _feedItems, _talker);
+    	}
+    }
+    
 }

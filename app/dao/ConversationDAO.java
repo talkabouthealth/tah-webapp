@@ -316,15 +316,33 @@ public class ConversationDAO {
 	/**
 	 * Popularity is based on number of views.
 	 */
-	public static List<ConversationBean> loadPopularConversations() {
+	public static List<ConversationBean> loadPopularConversations(String convoId) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		convosColl.ensureIndex(new BasicDBObject("views", -1));
 		
+		//added for paging
+		int views = 0;
+		if (convoId != null) {
+			views = getViews(convoId);
+		}
+		
 		DBObject fields = getBasicConversationFields();
 		
-		DBObject query = BasicDBObjectBuilder.start()
+		//checking for views 
+		BasicDBObjectBuilder queryBuilder =  BasicDBObjectBuilder.start()
+		.add("deleted", new BasicDBObject("$ne", true));
+	
+		if (views != 0) {
+			queryBuilder.add("views", new BasicDBObject("$lte", views));
+		}
+	
+		DBObject query = queryBuilder.get();
+	
+		/*DBObject query = BasicDBObjectBuilder.start()
 			.add("deleted", new BasicDBObject("$ne", true))
-			.get();
+			.get();*/
+		
+		
 		List<DBObject> convosDBList = 
 			convosColl.find(query, fields).sort(new BasicDBObject("views", -1)).limit(20).toArray();
 		
@@ -335,7 +353,19 @@ public class ConversationDAO {
 			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
 	    	convosList.add(convo);
 		}
+		
 		return convosList;
+	}
+	
+	public static int getViews(String convoId) {
+		DBCollection activitiesColl = getCollection(CONVERSATIONS_COLLECTION);
+
+		DBObject query = new BasicDBObject("_id", new ObjectId(convoId));
+		DBObject actionDBObject = activitiesColl.findOne(query);
+		if (actionDBObject != null) {
+			return (Integer)actionDBObject.get("views");
+		}
+		return 0;
 	}
 	
 	/**
@@ -360,7 +390,19 @@ public class ConversationDAO {
 		for (DBObject convoDBObject : convosDBList) {
 			ConversationBean convo = new ConversationBean();
 			convo.parseBasicFromDB(convoDBObject);
-			convo.setComments(CommentsDAO.loadConvoAnswers(convo.getId()));
+			
+			//For displaying answers sequence wise
+			List<CommentBean> answerList = CommentsDAO.loadConvoAnswers(convo.getId());
+			List<CommentBean> commentList = answerList;
+			for(int index = 0; index < answerList.size(); index++){
+				CommentBean commentBean= answerList.get(index);
+				if(commentBean.getText().contains(convo.getTopic())){
+					commentList.remove(index);
+					commentList.add(0, commentBean);
+				}
+			}
+			
+			convo.setComments(commentList);
 	    	convosList.add(convo);
 		}
 		return convosList;
