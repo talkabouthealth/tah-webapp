@@ -41,16 +41,26 @@ public class Notifications extends Controller{
 		}else if(details != null){
 			NotificationBean bean = QuestionDAO.loadNotification(id);
 			bean.setFlag(true);
+			details = details.trim();
 			String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", bean.getConvos().getMainURL());
 			Map<String, String> vars = new HashMap<String, String>();
-
 			if(!"REMOVE".equals(details)){
-				vars.put("other_talker", bean.getTalker().getUserName());
-				vars.put("question", bean.getConvos().getTopic());
-				vars.put("details", details);
-				vars.put("convo_url",convoURL);
+				if("".equals(details)){
+					/* other_talker * convo  * convo_url  */
+					vars.put("other_talker", bean.getTalker().getUserName());
+					vars.put("convo", bean.getConvos().getTopic());
+					vars.put("convo_url",convoURL);
 
-				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_PERSONAL_QUESTION_MODERATED, bean.getTalker().getEmail(), vars, null, true); 
+					EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_PERSONAL_QUESTION, bean.getTalker().getEmail(), vars, null, true);					
+				}else{
+					System.out.println("Data : " + details);
+					vars.put("other_talker", bean.getTalker().getUserName());
+					vars.put("question", bean.getConvos().getTopic());
+					vars.put("details", details);
+					vars.put("convo_url",convoURL);
+
+					EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_PERSONAL_QUESTION_MODERATED, bean.getTalker().getEmail(), vars, null, true);	
+				}
 			}
 			QuestionDAO.updateNotification(bean);
 

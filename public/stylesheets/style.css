@@ -832,7 +832,7 @@ ul li.comLink { padding-top: 1px }
 	color:#0286BC;
 	display:block;
 	float:left;
-	padding-top:5px;
+	padding-top:7px;
 }
 .canclelz a {
 	color:#0286BC;
@@ -2862,7 +2862,7 @@ width:auto;
 .replysub {
 	clear:both;
 	padding-bottom:10px;
-	padding-left:17px;
+	padding-left:10px;
 }
 .replytopsub {
 	background:url(../images/replytopsub.jpg);
@@ -2933,16 +2933,22 @@ width:auto;
 	padding-bottom:10px;
 }
 .repcominput {
-	background:url(../images/repcominput.jpg);
+	/*background:url(../images/repcominput.jpg);*/
+	background:url(../images/replyinput.jpg);
 	float:left;
 	border:0;
 	background-repeat:no-repeat;
 	color:#656565;
-	height:51px;
+	
 	margin-right:10px;
 	padding-left:6px;
 	padding-top:3px;
-	width:277px;
+	width:566px;
+	height:69px;
+	max-height: 69px;
+	max-width: 566px;
+ 	min-height: 69px;
+    	min-width: 566px;
 }
 .repcomtxtarea {
 	width:278px;
@@ -2953,8 +2959,8 @@ width:auto;
 	color:#656565;
 }
 .repcommstextbox {
-	float:left;
-	padding-top:17px;
+	float:right;
+	padding-top:5px;
 }
 .repcomsubmits {
 	float:left;
@@ -2973,8 +2979,8 @@ width:auto;
 }
 .repcommbox22 {
 	clear:both;
-	padding-top:10px;
-	padding-left:11px;
+	padding-top:5px;
+	padding-left:0px;
 }
 .repcomflag {
 	float:left;
