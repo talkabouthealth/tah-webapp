@@ -47,14 +47,15 @@ public class Notifications extends Controller{
 			if(!"REMOVE".equals(details)){
 				if("".equals(details)){
 					/* other_talker * convo  * convo_url  */
-					vars.put("other_talker", bean.getTalker().getUserName());
+					//vars.put("other_talker", bean.getTalker().getUserName());
+					vars.put("other_talker", bean.getConvos().getTalker().getUserName());
 					vars.put("convo", bean.getConvos().getTopic());
 					vars.put("convo_url",convoURL);
 
 					EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_PERSONAL_QUESTION, bean.getTalker().getEmail(), vars, null, true);					
 				}else{
-					System.out.println("Data : " + details);
-					vars.put("other_talker", bean.getTalker().getUserName());
+					//vars.put("other_talker", bean.getTalker().getUserName());
+					vars.put("other_talker", bean.getConvos().getTalker().getUserName());
 					vars.put("question", bean.getConvos().getTopic());
 					vars.put("details", details);
 					vars.put("convo_url",convoURL);
