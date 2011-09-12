@@ -4,7 +4,9 @@
 
 #{extends 'Topics/topicPage.html' /}
 #{set currentPage = 'viewTopic' /}
-
+<script type="text/javascript">
+		var feedsPerPage = ${logic.FeedsLogic.TALKERFEEDS_PER_PAGE};
+</script>
 <br/>
 <div class="newTabCover">
   <div class="newActiveTab"><a href="#" id="latestActivity" class="tabLink">Latest Activity</a></div>
@@ -19,29 +21,49 @@
 	<div id="latestActivityContent" class="tabContent">	
 		#{list items: activities, as: 'activity'}
 			#{feed/feedActivity activity: activity, talker: talker /}
-		#{/list}     
+		#{/list}
 	</div>
+	#{if activities.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
+		<div class="replytommentbox" id="latestActivityBtn">
+				<input type="button" src="images/seemore.jpg" onclick="return loadMoreTopicsFeed('latestActivity','${topic.mainURL}');" 
+				value=" " class="seemorecom" />
+		</div>
+	#{/if}
 	<div id="openQuestionsContent" class="tabContent" style="display: none;">
-		#{list items: topic.conversations, as: 'convo' }
-			#{if convo.opened}
-				#{convo/convoListItem convo: convo, talker: talker /}
-			#{/if}
-		#{/list}	
-	</div>
-	<div id="popularConvosContent" class="tabContent" style="display: none;">
-		#{list items: popularConvos, as: 'convo' }
+		#{list items: openConvosSaved, as: 'convo' }
 			#{convo/convoListItem convo: convo, talker: talker /}
 		#{/list}	
 	</div>
+	#{if openConvosSaved.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
+	<div class="replytommentbox" id="openQuestionsBtn" style="display: none;">
+				<input type="button" src="images/seemore.jpg" onclick="return loadMoreTopicsFeed('openQuestions','${topic.mainURL}');" 
+				value=" " class="seemorecom" />
+	</div>
+	#{/if}
+	<div id="popularConvosContent" class="tabContent" style="display: none;">
+		#{list items: popularConvos, as: 'convo' }
+			#{convo/convoListItem convo: convo, talker: talker /}
+		#{/list}
+	</div>
+	#{if popularConvos.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
+	<div class="replytommentbox" id="popularConvosBtn" style="display: none;">
+				<input type="button" src="images/seemore.jpg" onclick="return loadMoreTopicsFeed('popularConvos','${topic.mainURL}');" 
+				value=" " class="seemorecom" />
+	</div>
+	#{/if}
 	<div id="thoughtsContent" class="tabContent" style="display: none;">
 		#{list items: topicMentions, as: 'activity'}
 			#{feed/feedActivity activity: activity, talker: talker /}
 		#{/list}
 	</div>
+	#{if topicMentions.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
+	<div class="replytommentbox" id="thoughtsBtn" style="display: none;">
+				<input type="button" src="images/seemore.jpg" onclick="return loadMoreTopicsFeed('thoughts','${topic.mainURL}');" 
+				value=" " class="seemorecom" />
+	</div>
+	#{/if}
 	*{
-		<div id="trendingConvosContent" class="tabContent" style="display: none;">
-				
-		</div>
+		<div id="trendingConvosContent" class="tabContent" style="display: none;"></div>
 	 }*
 </div>
 

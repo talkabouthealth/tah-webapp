@@ -663,11 +663,15 @@ function initNewTabs() {
 		
 		var id = $(this).attr("id");
 		$(".tabContent").hide();
+		$(".replytommentbox").hide();
 		$("#"+id+"Content").fadeIn();
+		
 		$("#"+id+"Notifications").addClass("morenotification");
+		
+		//Code to show hide respective buttons also
+		$("#"+id+"Btn").fadeIn();
 		return false;
 	});
-	
 }
 
 //for javascript pagination
@@ -800,4 +804,29 @@ function loadMoreTopics() {
 			}
 		}
 	);
+}
+
+/* --------------- Feeds ---------------- */
+//used for paging in different feeds
+function loadMoreTopicsFeed(type,title) {
+	var lastActionId = $("#"+type+"Content").children().last().attr("id");
+	//replace More button with loading image
+	var moreBtn = $("#"+type+"Btn");
+	$("#ajaxLoading").appendTo(moreBtn.parent()).show();
+	moreBtn.hide();
+	$.get("/topics/topicAjaxLoad", {"feedType": type, "afterActionId": lastActionId, "title":title },
+			function(data) {
+				$("#ajaxLoading").hide();
+				//show more button if it isn't the end of a feed
+				var feedSize = $(data).find(".joinpic").size();
+				if (feedSize >= feedsPerPage) {
+					moreBtn.show();
+				}
+				$(data).appendTo($("#"+type+"Content"));
+				//for new items
+				$('.inline-edit').inlineEdit( { hover: ''} );
+				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
+			}
+	);
+	return false;
 }

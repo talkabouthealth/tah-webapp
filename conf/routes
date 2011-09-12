@@ -48,6 +48,9 @@ GET		/chat/{convoId}							Talk.talkApp
 GET		/chat/?									Talk.talkApp
 GET		/image/{userName}						Image.show
 
+# Map's public ajax request
+GET		/topics/topicAjaxLoad					ViewDispatcher.topicAjaxLoad
+
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
 
