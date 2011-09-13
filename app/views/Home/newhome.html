@@ -330,6 +330,7 @@ function checkFeed(type,talkerName) {
 }	
 setInterval("checkFeed('communityFeed');",60000);
 setInterval("checkFeed('convoFeed');",60000);
+setInterval("checkFeed('mentions','${talker.userName}');",60000);
  
 function updateFeed(type,talkerName) {
 	update_retrieving=1;
@@ -396,14 +397,14 @@ function updateFeed(type,talkerName) {
                   	<div id="postQuestionTabContent" class="topTabContent">	
                   		<div style="float:left;">
 							<input type="text" id="postQuestionText" class="edititinputx inline_text greyarea" 
-								onKeyUp=" $('#postQuestionTextSize').html($(this).val().length);"
+								onKeyUp="$('#postQuestionTextSize').html($(this).val().length);"
 								maxlength="160"
 								onfocus="clearTextArea('postQuestionText', 'Post a question and we will notify the right members to answer.');"
 								style="width:627px; height: 35px; margin: 0px; padding: 3px;" cols="4" rows="4" 
 								value="Post a question and we will notify the right members to answer." />							
 						</div>
 						<div style="float: right; padding-top: 5px;">
-							<span id="postQuestionTextSize" style="font-size: 16px; float: left;">0</span>
+							<span id="postQuestionTextSize" style="font-size: 16px; float: left; max-width: 300px;">0</span>
 							#{ convo/ccInputs type: "Question", setting: "POST_ON_CONVO" /}
 							<input type="button" onclick="return showSaveDialog('postQuestion');" 
 								id="postQuestionBtn" value="" />
@@ -537,6 +538,9 @@ function updateFeed(type,talkerName) {
 								</div>
 								<div id="mentionsTabContent" class="tabContent" style="display: none;">	
 									<div class="topic">
+										<a href=# id="mentionsNotifications" class="morenotification" style='display:none' onClick="updateFeed('mentions','${talker.userName}'); return false;" >
+					                        0 new items
+					                    </a>	
 				                        <div id="mentionsList">
 					                    	#{list items: mentions, as: 'talkerMention'}
 												#{feed/feedActivity activity: talkerMention, talker: talker, parentList: 'mentionsList' /}

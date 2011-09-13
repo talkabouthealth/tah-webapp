@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -26,6 +27,8 @@ import models.TalkerDiseaseBean;
 import models.TopicBean;
 import models.ServiceAccountBean.ServiceType;
 import models.actions.Action;
+import models.actions.PersonalProfileCommentAction;
+import models.actions.PreloadAction;
 import models.actions.Action.ActionType;
 import play.Logger;
 import play.cache.Cache;
@@ -137,15 +140,27 @@ public class Home extends Controller {
     	}
     	else if ("communityFeed".equalsIgnoreCase(feedType)) {
     		_feedItems = FeedsLogic.updateFeed(FeedType.COMMUNITY,beforeActionId,null,loggedIn);
-    	}
-    	else {
+    	}else if ("mentions".equalsIgnoreCase(feedType)) {
+    		TalkerBean profileTalker = TalkerDAO.getByUserName(talkerName);
+    		if (profileTalker != null) {
+    			List<Action> mentionList = CommentsDAO.getTalkerMentions(profileTalker,beforeActionId);
+    			if(mentionList!=null){
+    				_feedItems = new LinkedHashSet<Action>();
+        			for (Action action : mentionList) {
+        				PersonalProfileCommentAction preAction = (PersonalProfileCommentAction)action;
+        				_feedItems.add(preAction);
+        			}
+    			}
+    		}
+    	}else {
    		TalkerBean profileTalker = TalkerDAO.getByUserName(talkerName);
     		if (profileTalker != null) {
         		_feedItems = FeedsLogic.updateFeed(FeedType.TALKER,beforeActionId,profileTalker,true);
     		}
     	}
-    	
-    	int counter = _feedItems.size();
+    	int counter = 0;
+    	if(_feedItems != null)
+    		counter = _feedItems.size();
     	if(isheader.equals("1")) render("tags/feed/feedCounter.html",counter); else render("tags/feed/feedList.html", _feedItems, _talker);		
 	}
 

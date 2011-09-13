@@ -512,21 +512,29 @@ public class CommentsDAO {
 	 * @param talker
 	 * @return
 	 */
-	public static List<Action> getTalkerMentions(TalkerBean talker) {
+	public static List<Action> getTalkerMentions(TalkerBean talker, String nextActionId) {
+		Date firstActionTime = null;
+		if (nextActionId != null) {
+			firstActionTime = getProfileCommentTime(nextActionId);
+		}
+		
 		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
 		
 		Pattern mentionRegex = Pattern.compile("@"+talker.getUserName()+"[^\\w]*", Pattern.CASE_INSENSITIVE);
-		DBObject query = BasicDBObjectBuilder.start()
+		BasicDBObjectBuilder queryBuilder =  BasicDBObjectBuilder.start()
 			.add("text", mentionRegex)
-			.add("deleted", new BasicDBObject("$ne", true))
-			.get();
-		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+			.add("deleted", new BasicDBObject("$ne", true));
+		if (firstActionTime != null) {
+			queryBuilder.add("time", new BasicDBObject("$gt", firstActionTime));
+		}
+		DBObject query = queryBuilder.get();
+		List<DBObject> commentsList = null;
+		commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
 		List<Action> talkerMentions = new ArrayList<Action>();
 		for (DBObject commentDBObject : commentsList) {
 			CommentBean commentBean = new CommentBean();
 			commentBean.parseFromDB(commentDBObject);
-			
 			PersonalProfileCommentAction thoughtAction = new PersonalProfileCommentAction(
 					talker, talker, commentBean, null, ActionType.PERSONAL_PROFILE_COMMENT);
 			thoughtAction.setID(commentBean.getId());
@@ -536,12 +544,15 @@ public class CommentsDAO {
 		
 		//add answers also
 		commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
-		
-		query = BasicDBObjectBuilder.start()
+		queryBuilder =  BasicDBObjectBuilder.start()
 			.add("text", mentionRegex)
 			.add("answer", true)
-			.add("deleted", new BasicDBObject("$ne", true))
-			.get();
+			.add("deleted", new BasicDBObject("$ne", true));
+		if (firstActionTime != null) {
+			queryBuilder.add("time", new BasicDBObject("$gt", firstActionTime));
+		}
+		
+		query = queryBuilder.get();
 		commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
 		for (DBObject commentDBObject : commentsList) {
@@ -589,5 +600,16 @@ public class CommentsDAO {
 			topicMentions.add(thoughtAction);
 		}
 		return topicMentions;
+	}
+	
+	public static Date getProfileCommentTime(String id) {
+		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
+
+		DBObject query = new BasicDBObject("_id", new ObjectId(id));
+		DBObject actionDBObject = commentsColl.findOne(query);
+		if (actionDBObject != null) {
+			return (Date)actionDBObject.get("time");
+		}
+		return null;
 	}
 }
