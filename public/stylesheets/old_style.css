@@ -697,3 +697,60 @@ a.visited { font-weight:bold;font-family: arial; font-size: 11px;text-decoration
 .ui-menu .ui-menu-item a span b {
 	color: #000000;
 }
+.line {
+    border-bottom: 1px dashed; 
+    color: #848A85; 
+    font-weight: bold;
+    margin-top: 8px;
+}
+.blacktextgrey15{
+	color: #848A85;
+    font-family: Helvetica;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 18px;
+    text-decoration: none;
+}
+.blacktextgrey15_1{
+	color: #646664;
+    font-family: Helvetica;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 18px;
+    text-decoration: none;
+}
+.blacktextgrey15 a {
+    background-repeat: no-repeat;
+    color: #0286BC;
+    text-decoration: none;
+}
+.mtrighttxt1u{
+    font-size: 16px;
+    font-family: "Myriad Pro","Myriad Pro Cond",Arial,Helvetica,sans-serif;
+    font-weight: bold;
+    padding-bottom: 3px;
+    padding-top: 10px;
+    text-align: left;
+    color: #646664;
+}
+.talkinfo{
+	color: #565656;
+	font-family: "Myriad Pro","Myriad Pro Cond",Arial,Helvetica,sans-serif;
+    font-size: 10px;
+    font-weight: normal;
+    text-align: left;
+}
+.topbox1{
+	color: #848A85;
+    font-family: Helvetica;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 14px;
+    text-decoration: none;
+}
+
+.topbox1 a{
+    background-repeat: no-repeat;
+    color: #0286BC;
+    text-decoration: none;
+}

@@ -287,6 +287,30 @@
   			return false;
    		}
 
+   		function saveAnswer(parentId) {
+   	   		var commentText = $("#replytextPopup"+parentId).val();
+   			$("#saveAnswerImagePopup"+parentId).show();
+   			
+   			$.post("@{Conversations.saveAnswerOrReply()}", 
+  				{ convoId: '${convo.id}', parentId: parentId, text: commentText},
+  				function(html) {
+  					hideAll();
+  					$("#replyform"+parentId).before($(html));
+  					$("#saveAnswerImagePopup"+parentId).hide();
+
+  					//user can post only one answer per convo
+  					if (parentId === '') {
+  	  					$("#answerFormDiv").hide();
+  	  					$("#noAnswerTextPopup").show();
+  					}
+
+  					$('.inline-edit').inlineEdit(
+				  		{ hover: '', saveFunction: saveData, updateFunction: updateData}
+				  	);
+  				}
+  			);
+  			return false;
+   		}
    		function deleteAnswer(answerId) {
    	   		var confirmDel = confirm("Are you sure want to delete this answer/reply?");
    	   		if (confirmDel) {
@@ -364,6 +388,10 @@
 	   		}
 	   		
    	   		return false;
+   		}
+
+   		function addAnswer(){
+   	   		showPopup("#addAnswer", 350);
    		}
 	</script>
 </head>
@@ -723,21 +751,6 @@
                       		
                         
 							<div class="topic" id="replyform"><br />
-								#{if talker }
-									<div id="answerFormDiv" style="display: ${userHasAnswer ? 'none' : 'block'};">
-										<div class="topicborder" style="margin-top: 7px;"></div>
-										<div class="answerh1">Add Answer</div>
-										<textarea name="textarea" id="replytext" class="answerinput" style="width: 617px; height: 150px;"
-											onclick="if (this.value === 'Add New Answer') this.value='';">Add New Answer</textarea><br />
-										<input type="submit" onclick="return saveAnswerOrReply('');" 
-											src="/public/images/addcomments.jpg" class="addcomments" value=" " />
-										<div id="saveAnswerImage" class="ajaxLoading" 
-											style="float: right; margin-right: 15px; margin-top: 20px;"></div>
-									</div>
-									<div id="noAnswerText" style="display: ${!userHasAnswer ? 'none' : 'block'};">
-										Only one answer per conversation per user. You may edit your answer though.
-									</div>
-								#{/if}
 								
 								#{if session.username && convo.messages}
 									<div class="answerh2 style1 style2">Conversation</div>
@@ -812,9 +825,11 @@
 					<div width=100%>
 						#{if talker.followingConvosList?.contains(convo.id) }
 							<a href="#" id="followConvoBtn" class="followingConvoBtn"></a>
+							<a href="#" id="answerBtn" class="answerBtn" onclick="addAnswer();"></a>
 						#{/if}
 						#{else}
 							<a href="#" id="followConvoBtn" class="followConvoBtn"></a>
+							<a href="#" id="answerBtn" class="answerBtn" onclick="addAnswer();"></a>
 						#{/else}
 					</div>
 						<!-- REFACTOR REMOVE LIVE CHAT OPTION
@@ -984,7 +999,7 @@
 	
 	#{ popups/flag /}
 	#{ popups/thankyou /}
-	
+	#{ popups/addAnswer /}
 	#{popups/startConvo page: "conversationSummary" /}
 	
 	#{if talker}

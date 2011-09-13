@@ -3,6 +3,14 @@
    <script type="text/javascript">
    <!--
 	$(document).ready(function() {
+
+		//check cookie value of newsletter for displaying
+		if(getCookie('newsLetter')=='hide'){
+			document.getElementById('newsLetter').style.display = 'none';
+		}else{
+			document.getElementById('newsLetter').style.display = '';
+		}
+				
 		var newsLetterOptions = { success: setNewsLetterMessage }; 
 		$('#newsletter').submit(function() {
 			$("#newsletter").ajaxSubmit(newsLetterOptions); 
@@ -25,28 +33,69 @@
 	   		closeTimeout = setTimeout(function() { $("#newsletterblock").fadeOut(200) }, 4000);
 	   	}
 	}
+
+	function changeEmail(){
+		var email = document.getElementById("email").value;
+		if(email == 'Email Address'){
+			document.getElementById("email").value = "";
+		}else if(email == ''){
+			document.getElementById("email").value = "Email Address";
+		}
+	}
+
+	function emailValue(){
+		var email = document.getElementById("email").value;
+		if(email == 'Email Address'){
+			document.getElementById("email").value = "";
+		}
+	}
+
+	function closeDiv(){
+		setCookie('newsLetter','hide',1);
+		document.getElementById('newsLetter').style.display = 'none';
+	}
+
+	function setCookie(c_name,value,exdays){
+		var exdate=new Date();
+		exdate.setDate(exdate.getDate() + exdays);
+		var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString()) +";path=/;";
+		document.cookie=c_name + "=" + c_value;
+	}
+
+	function getCookie(c_name){
+		var i,x,y,ARRcookies=document.cookie.split(";");
+		for (i=0;i<ARRcookies.length;i++){
+		  x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+		  y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+		  x=x.replace(/^\s+|\s+$/g,"");
+		  if (x==c_name){
+		    	return unescape(y);
+		  }
+		}
+	}
 	-->
 </script>
-   <div class="topipsts" id="newsletterblock">
-     <div class="mtrighttxt1">Subscribe To Our Newsletter!</div>
+	<div id="newsLetter" style="display: none;">
+	<div class="mtrighttxt2" id="newsletterblock" style="height: 176px;padding-left: 32px;padding-top: 43px;width: 218px;">
+	<div style="margin-top: -25px; margin-left: 190px;" id="closeDiv"><a href="javascript:closeDiv();" title="Close">x</a></div>
+     <div class="blacktextgrey15_1">Join Our Newsletter</div>
 		<span class="blacktextgrey8"><br /></span>	        
-		<span class="blacktextgrey14">
+		<span class="talkinfo" style="font-size: 11px;line-height: 2;">
 			Upcoming events, best blog posts, latest news, and featured organizations and experts.
 			<br/>
 		</span>
 		<span class="blacktextgrey6"><br /></span>
 	    <span id="newsletterMessage" class="success" style="display:none;">Thanks for subscribing to newsletter.</span>
 			#{form @Application.subscribeNewsletter(), id:'newsletter'  }
-			 What's your email<br/>
 			#{if session.username }
-				<input name="email" id="email" type="text" value="${talker.email}" size="27" />
+				<input name="email" id="email" class="email" type="text" value="${talker.email}" size="17" />
 			#{/if}
 			#{else}
-				<input name="email" id="email" type="text" value="" size="27"/>
+				<input name="email" id="email" class="email" type="text" value="Email Address" size="17"  onclick="javascript:changeEmail();" onblur="javascript:changeEmail();"/>
 			#{/else}
 			<br/>
-			<div style="padding-left: 50px;">
-				<input class="signupbutton" type="submit" value="Subscribe Now" style="cursor: pointer;margin-bottom: 10px;margin-top: 10px;padding:0px;font-weight: bold;font-size: 15px;height: 35px;"/>
+			<div style="padding-top: 5px;">
+				<input class="newsignupbutton" type="submit" value=""/>
 			</div>
 			<!--
 			 -- Old Code --
@@ -54,7 +103,8 @@
 			<div class="signupbutton"><input type="submit" value="Subscribe Now" /></div>
 			 -->
 			#{/form}
-		<span class="blacktextgrey6"><br /></span>	        
+		<span class="blacktextgrey6"><br /></span>	 
     </div>
-	<div class="topicborder"></div>
+    <div class="topicborder" style="margin-top: 15px;"></div>  
+    </div>
 #{/if}
