@@ -69,7 +69,7 @@ public class Home extends Controller {
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
     	
     	//find mentions (@<username> in the thoughts)
-    	List<Action> mentions = CommentsDAO.getTalkerMentions(talker);
+    	List<Action> mentions = CommentsDAO.getTalkerMentions(talker,null);
     	
     	boolean showNotificationAccounts = prepareNotificationPanel(session, talker);
 		TalkerLogic.preloadTalkerInfo(talker);
