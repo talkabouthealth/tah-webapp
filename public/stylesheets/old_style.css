@@ -555,13 +555,13 @@ a.blkq13:hover {text-decoration: none; color: #000000;}
 a.pinktext25:hover {text-decoration: none; color: #ec2b98;}
 .blacktext25 {font-family: arial; font-size: 25px; font-weight: normal; text-decoration: none; color: #000000; }
 a.blacktext25:hover {text-decoration: none; color: #000000;}
-.headingarea { float:left; width:893px; padding-left:30px; padding-bottom:10px; height:33px; line-height:33px; border-bottom:1px dashed #c2c2c2;}
+.headingarea { float:left; width:893px; padding-left:30px; padding-bottom:10px; height:33px; /*line-height:33px;*/ border-bottom:1px dashed #c2c2c2;}
 .tabheading {float:left; width:540px; vertical-align:middle; }
 .seemore {float:right;}
 .headingarea2 { float:left; width:923px; padding-bottom:10px; height:33px; line-height:33px; border-bottom:1px dashed #c2c2c2;}
 .thnksarea {float:left; width:893px; padding-top:10px; padding-left:30px; }
 
-.thnksfollowing { float:left; width:289px; padding-right:8px; padding-bottom:28px; min-height: 150px; }
+.thnksfollowing { float:left; width:289px; padding-right:8px; padding-bottom:28px; }
 .thnksfollowingimg { float:left; width:80px; padding-right:10px;}
 .thnksfollowingtext { float:left; width:199px; }
 .thnksbottom {float:left; width:893px; padding-left:30px; padding-top:10px; height:33px; line-height:33px; border-top:1px dashed #c2c2c2;}
@@ -736,7 +736,7 @@ a.visited { font-weight:bold;font-family: arial; font-size: 11px;text-decoration
 .talkinfo{
 	color: #565656;
 	font-family: "Myriad Pro","Myriad Pro Cond",Arial,Helvetica,sans-serif;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: normal;
     text-align: left;
 }

@@ -706,6 +706,11 @@ a {
 }
 .topipsts {
 	clear:both;
+	  color: #646664;
+}
+.topipsts a{
+	
+	  color: #0286BC;
 }
 #targetedtherapy {
 	background:#FFF;
@@ -1029,17 +1034,11 @@ a.footerlink:hover {
 .jointxtlink2 a {
 	text-decoration:none;
 	color: #067fc3;
-        width: 200px;
-        
 }
 .jointxtlink2 a {
 	text-decoration:underline;
 	color: #067fc3;
-        width: 200px;
-        word-wrap: break-word;     
 }
-
-
 .joinbox {
 	clear:both;
 	padding-top:10px;
@@ -1267,16 +1266,20 @@ a.footerlink:hover {
 }
 .mtrighttxt1 {
 	font-size:16px;
-	color:#000000;
+	/*color:#000000;*/
 	font-weight:bold;
 	padding-top:10px;
 	padding-bottom:3px;
 	text-align:left;
+	color: #646664;
+    font-family: "Myriad Pro","Myriad Pro Cond",Arial,Helvetica,sans-serif;
 }
 .topixtext {
 	clear:both;
 	padding-top:4px;
 	padding-bottom:3px;
+		color: #848A85;
+    font-family: Helvetica;
 }
 .thanktxtr {
 	width:100px;
@@ -1284,7 +1287,7 @@ a.footerlink:hover {
 }
 .tellustext {
 	clear:both;
-	color:#000000;
+	color:#848A85;
 }
 .tellustext1 {
 	clear:both;
@@ -1301,12 +1304,21 @@ a.footerlink:hover {
 }
 .trendingtext {
 	float:left;
-	padding-left:5px;
+	padding-left:0px;
 	width:110px;
 	font-size:12px;
 	font-family:Arial, Helvetica, sans-serif;
 	color:#0286bc;
 }
+.topictrendingtext {
+	float:left;
+	padding-top:5px;
+	width:180px;
+	font-size:12px;
+	font-family:Arial, Helvetica, sans-serif;
+	color:#0286bc;
+}
+
 .topbox {
 	clear:both;
 	padding-top:3px;
@@ -1316,7 +1328,7 @@ a.footerlink:hover {
 	clear:both;
 	padding-top:3px;
 	padding-bottom:3px;
-	margin-top:10px;
+	margin-top:5px;
 }
 .topleftimg {
 	float:left;
@@ -1659,7 +1671,7 @@ a.footerlink:hover {
 .topiptext2 {
 	width:auto;
 	float:left;
-	color:#000;
+	color:#646664;
 }
 .topiptext2 a {
 	color:#000;
@@ -1764,6 +1776,7 @@ As Community page copied from Home page . So this is using most of home page css
 
 .thanktxt {
 	padding-top:1px;
+	color:#646664;
 }
 .thanktxtl {
 	width:115px;
@@ -1771,7 +1784,7 @@ As Community page copied from Home page . So this is using most of home page css
 }
 .thanktxtblack {
 	width:auto;
-	color:#000000;
+	color:#646664;
 	float:left;
 	margin-left:5px;
 }
@@ -2949,6 +2962,7 @@ width:auto;
 	max-width: 566px;
  	min-height: 69px;
     	min-width: 566px;
+	
 }
 .repcomtxtarea {
 	width:278px;
@@ -4590,6 +4604,10 @@ a.product, a.cat_close, a.cat_open {
 	padding-top:3px;
 	font-size:12px;
 	padding-bottom:6px;
+	color : #646664;
+}
+.profilecompletiontxt a{
+    color: #0286BC;
 }
 .followingbox {
 	clear:both;
@@ -5300,7 +5318,7 @@ ul.tabs li {
 	margin: 0;
 	padding: 0;
 	height: 34px;
-	line-height: 34px;
+	/*line-height: 34px;*/
 	margin-left:5px;
 	color:#000000;
 	border-left: none;
@@ -5313,7 +5331,7 @@ ul.tabs li a {
 	float: left;
 	text-decoration: none;	
 	display: block;	
-	padding: 0 7px;
+	padding: 8px 7px 0;
 	font-size:14px;
 	font-family:Arial;
 	font-weight:bold;
@@ -6426,9 +6444,9 @@ margin-bottom:5px;
 	background: url(../images/email_box.png) no-repeat;
 	border: medium none;
     height: 26px;
-    margin-top: 2px;
-    padding-left: 33px;
-    width: 165px;
+    margin-top: 0px;
+    padding-left: 26px;
+    width: 166px;
 }
 .newsignupbutton{
 	float:left;  

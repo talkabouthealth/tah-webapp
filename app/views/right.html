@@ -232,7 +232,7 @@
              <div class="tellustext">
              	So we can send you updates for your conversations.
              	<br/><br/>
-             	<span style="font-size: 12px;">
+             	<span class="blacktextgrey15">
              		<a href="#" title="${talker.email}" 
              			onclick="return sendVerificationLink(this);">Resend verification email.</a>
              		<span id="verificationResendResult" class="blacktext12"></span>
@@ -425,7 +425,7 @@
    			#{list items: recommendedTopics, as: 'topic'}
    				<div id="${topic.id}" class="topbox1">
 			       <div class="topr" style="width: 100%;">
-			         <div class="trendingtext">
+			         <div class="topictrendingtext">
 			           	<a style="color:#0286BC;" href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a>
 			         </div>
 			         <div id="topicFollowDiv${topic.id}" class="follow" style='margin-left:175px;'>
