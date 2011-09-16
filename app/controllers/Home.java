@@ -74,11 +74,10 @@ public class Home extends Controller {
     	boolean showNotificationAccounts = prepareNotificationPanel(session, talker);
 		TalkerLogic.preloadTalkerInfo(talker);
 		
-		List<TopicBean> recommendedTopics = TalkerLogic.getRecommendedTopics(talker);
+		List<TopicBean> recommendedTopics = TalkerLogic.getRecommendedTopics(talker,null);
 		
-		List<TalkerBean> similarMembers = new ArrayList<TalkerBean>();
-		List<TalkerBean> experts = new ArrayList<TalkerBean>();
-		TalkerLogic.getRecommendedTalkers(talker, similarMembers, experts);
+		List<TalkerBean> similarMembers = TalkerLogic.getRecommendedTalkers(talker,"USR");
+		List<TalkerBean> experts = TalkerLogic.getRecommendedTalkers(talker,"EXP");
 	
 		List<ConversationBean> recommendedConvos = TalkerLogic.getRecommendedConvos(talker);
 		
@@ -171,21 +170,26 @@ public class Home extends Controller {
     public static void feedAjaxLoad(String feedType, String afterActionId, String talkerName) {
     	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
     	boolean loggedIn = (_talker != null);
-    	
     	Set<Action> _feedItems = null;
+    	List<TalkerBean> _similarMembers = null;
     	if ("convoFeed".equalsIgnoreCase(feedType)) {
     		_feedItems = FeedsLogic.getConvoFeed(_talker, afterActionId);
-    	}
-    	else if ("communityFeed".equalsIgnoreCase(feedType)) {
+    		render("tags/feed/feedList.html", _feedItems, _talker);
+    	} else if ("communityFeed".equalsIgnoreCase(feedType)) {
     		_feedItems = FeedsLogic.getCommunityFeed(afterActionId, loggedIn);
-    	}
-    	else {
+    	} else if("USR".equalsIgnoreCase(feedType) || "EXP".equalsIgnoreCase(feedType)){
+    		_similarMembers = TalkerLogic.getRecommendedTalkers(_talker,feedType);
+    		render("tags/profile/similarMemberList.html", _similarMembers);
+    	} else if("TOPIC".equals(feedType)){
+    		List<TopicBean> _recommendedTopics = TalkerLogic.getRecommendedTopics(_talker,afterActionId);
+    		render("tags/topicList.html", _recommendedTopics);
+    	} else {
     		TalkerBean profileTalker = TalkerDAO.getByUserName(talkerName);
     		if (profileTalker != null) {
     			_feedItems = FeedsLogic.getTalkerFeed(profileTalker, afterActionId);
     		}
+    		render("tags/feed/feedList.html", _feedItems, _talker);
     	}
-    	render("tags/feed/feedList.html", _feedItems, _talker);
     }
     
     /* ---------------- Invitations ----------------- */

@@ -52,7 +52,7 @@ public class SearchUtil {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"talker");
 		
 		Analyzer analyzer = new StandardAnalyzer();
-		Query searchQuery = prepareSearchQuery(query, new String[] {"uname", "bio"}, analyzer);
+		Query searchQuery = prepareSearchQuery(query, new String[] {"uname","fname","lname","bio"}, analyzer);
 		Hits hits = is.search(searchQuery);
 		
 		List<TalkerBean> results = new ArrayList<TalkerBean>();
@@ -61,9 +61,9 @@ public class SearchUtil {
 
 			TalkerBean talker = TalkerDAO.getById(doc.get("id"));
 			results.add(talker);
-			if (i == 7) {
-				break;
-			}
+			//if (i == 7) {
+			//	break;
+			//}
 		}
 		is.close();
 		return results;
@@ -169,8 +169,10 @@ public class SearchUtil {
 			throws ParseException {
 		QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
 		parser.setAllowLeadingWildcard(true);
-                term = ValidateData.escapeText(term);
-		String searchTerm = term;
+		/* Updated to show all users if no search term entered. 
+		 * Good to have change
+		 * */
+		String searchTerm = "*";// + term;
 		if (term != null && term.length() > 0) {
 			//if term contains only one word (or part) - use wildcard search
 			if (term.split(" ").length == 1) {

@@ -345,36 +345,12 @@
    #{if similarMembers}
    <div class="topipsts">
      <div class="mtrighttxt1">Similar Members</div>
-     
-     #{list items: similarMembers, as: 'member'}
-		<div id="${member.id}" class="topbox1">
-	       <div class="topleftimg">
-	       	#{talker/talkerImageLink size: 39, userName: member.userName /}
-	       </div>
-	       <div class="topr">
-	         <div class="trendingtext comname">
-	           	<a href="@{ViewDispatcher.view(member.userName)}">
-		     		<strong>${member.userName}</strong>
-		     	</a>
-		        <span class="blacktext12">
-					#{talker/talkerInfo talker: member /}
-				</span>
-	         </div>
-	         <div id="memberFollowDiv${member.id}" class="follow" style='margin-left:125px;'>
-	           <input type="submit" rel="${member.id}" class="followers followMemberLink" value=" " />
-	         </div>
-	         <div id="memberUnfollowDiv${member.id}" class="follow" style="display: none; text-align: right;">
-	           Followed!
-	         </div>
-	       </div>
-	      
-	       <div class="cb"></div>
-	   </div>
-	#{/list} 
+     <div>
+     	<div id="USRList" >#{ profile/similarMemberList similarMembers: similarMembers /}</div>
+  	 </div>
 	 <div class="topbox1" >
-	       <a href="@{Explore.browseMembers('active')}">
-		     <strong>See more</strong>
-		    </a>
+		[<a href="@{Explore.browseMembers('active')}"><strong>View all</strong></a>]
+		[<a href="javascript:refreshMembers('USR');"><strong>Refresh</strong></a>] 
     </div>
 	<div class="topicborder"></div>
    </div>
@@ -383,36 +359,12 @@
    #{if experts}
    <div class="topipsts">
      <div class="mtrighttxt1">Recommended Experts</div>
-     
-     #{list items: experts, as: 'member'}
-		<div id="${member.id}" class="topbox1">
-	       <div class="topleftimg">
-	       	#{talker/talkerImageLink size: 39, userName: member.userName /}
-	       </div>
-	       <div class="topr">
-	         <div class="trendingtext comname">
-	           	<a href="@{ViewDispatcher.view(member.userName)}">
-		     		<strong>${member.userName}</strong>
-		     	</a>
-		        <span class="blacktext12">
-					#{talker/talkerInfo talker: member /}
-				</span>
-	         </div>
-	         <div id="memberFollowDiv${member.id}" class="follow" style='margin-left:125px;'>
-	           <input type="submit" rel="${member.id}" class="followers followMemberLink" value=" " />
-	         </div>
-	         <div id="memberUnfollowDiv${member.id}" class="follow" style="display: none; text-align: right;">
-	           Followed!
-	         </div>
-	       </div>
-	      
-	       <div class="cb"></div>
-	   </div>
-	#{/list} 
+     <div>
+     	<div id="EXPList">#{ profile/similarMemberList similarMembers: experts /}</div>
+  	 </div>
 	 <div class="topbox1" >
-	       <a href="/explore/experts">
-		     <strong>See more</strong>
-		   </a>
+	       [<a href="/explore/experts"><strong>View all</strong></a>]
+	       [<a href="javascript:refreshMembers('EXP');" id="EXPbtn"><strong>Refresh</strong></a>] 
 	 </div>
 	<div class="topicborder"></div>
    </div>
@@ -422,22 +374,11 @@
    <div class="topipsts">
    		<div class="mtrighttxt1">Topics For You</div>
    		<div id="recommendedTopics">
-   			#{list items: recommendedTopics, as: 'topic'}
-   				<div id="${topic.id}" class="topbox1">
-			       <div class="topr" style="width: 100%;">
-			         <div class="topictrendingtext">
-			           	<a style="color:#0286BC;" href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a>
-			         </div>
-			         <div id="topicFollowDiv${topic.id}" class="follow" style='margin-left:175px;'>
-			           <input type="submit" rel="${topic.id}" class="followers followTopicLink" value=" " />
-			         </div>
-			         <div id="topicUnfollowDiv${topic.id}" class="follow" style="display: none; text-align: right;">
-			           Followed!
-			         </div>
-			       </div>
-			       <div class="cb"></div>
-			   </div>
-			#{/list} 
+	     	<div id="TOPICList">#{ topicList recommendedTopics: recommendedTopics /}</div>
+   		</div>
+   		<div class="topbox1">
+	       [<a href="/explore/topics"><strong>View all</strong></a>]
+	       [<a href="javascript:refreshMembers('TOPIC');" id="TOPICbtn"><strong>Refresh</strong></a>] 
    		</div>
    		<div class="topicborder"></div>
 	</div>
@@ -495,6 +436,7 @@
 #{/if}
 #{else}
 	#{include 'tahInfo.html' /}
+	
 	#{include 'Upcoming_Workshops.html' /}
 	<!-- New Changes Added -->
 	#{include 'newsletter_signup.html' /}

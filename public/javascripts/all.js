@@ -786,7 +786,6 @@ let's close the popup and have a notification at the top of the screen that says
 	return false;
 }
 
-
 /* --------------- Topics ---------------- */
 //used for paging in topics on topic listing page
 function loadMoreTopics() {
@@ -829,4 +828,21 @@ function loadMoreTopicsFeed(type,title) {
 			}
 	);
 	return false;
+}
+
+function refreshMembers(type,elm){
+	var lastActionId = '';
+	var moreBtn = $("#"+type+"List");
+	if(type == 'TOPIC'){
+		lastActionId = $(moreBtn).children().last().attr("id");
+	}
+	$("#ajaxLoading").appendTo(moreBtn.parent()).show();
+	moreBtn.hide();
+	$.get("/home/feedAjaxLoad", {afterActionId: lastActionId, feedType: type, talkerName: ''},
+			function(data) {
+				$("#"+type+"List").html(data);
+				$("#ajaxLoading").hide();
+				moreBtn.show();
+			}
+	);
 }

@@ -619,7 +619,7 @@ public class TalkerLogic {
 	
 	/* -------------------------- Recommendations ---------------------- */
 	
-	public static List<TopicBean> getRecommendedTopics(TalkerBean talker) {
+	public static List<TopicBean> getRecommendedTopics(TalkerBean talker, String afterActionId) {
 		List<TopicBean> loadedTopics = new ArrayList<TopicBean>();
 		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();
 		
@@ -633,23 +633,54 @@ public class TalkerLogic {
 			//display most popular Topics based on views
 			loadedTopics = new ArrayList<TopicBean>(loadAllTopicsFromCache());
 		}
-		
+		int position = 0;
+		boolean addPos = true;
 		for (TopicBean topic : loadedTopics) {
 			//not following and not default
 			if (!talker.getFollowingTopicsList().contains(topic)) {
 				if (! (topic.getTitle().equals(ConversationLogic.DEFAULT_QUESTION_TOPIC) 
 						|| topic.getTitle().equals(ConversationLogic.DEFAULT_TALK_TOPIC)) ) {
+					if(afterActionId != null && afterActionId.equals(topic.getId())){
+						position++;
+						addPos = false;
+					}else{
+						if(afterActionId != null && addPos){ position++; }
+					}
 					recommendedTopics.add(topic);
 				}
 			}
-			if (recommendedTopics.size() == 3) {
-				break;
-			}
 		}
-		
+		if(recommendedTopics.size() < position + 5){
+			position = 0;
+		}
+		recommendedTopics = recommendedTopics.subList(position, position + 5);
 		return recommendedTopics;
 	}
 	
+	public static ArrayList<TalkerBean> getRecommendedTalkers(TalkerBean talker,String type){
+		ArrayList<TalkerBean> recommendedMembers = new ArrayList<TalkerBean>();
+		
+		if("EXP".equals(type)){
+			Set<TalkerBean> allExperts = ApplicationDAO.getTalkersInOrder(talker,true);
+			for (TalkerBean member : allExperts) {
+				recommendedMembers.add(member);
+				if (recommendedMembers.size() == 3) {
+					break;
+				}
+			}
+		}else if("USR".equals(type)){
+			Set<TalkerBean> allMembers = ApplicationDAO.getTalkersInOrder(talker,false);
+			for (TalkerBean member : allMembers) {
+				recommendedMembers.add(member);
+				if (recommendedMembers.size() == 3) {
+					break;
+				}
+			}
+		}
+		return recommendedMembers;
+	}
+	
+	@Deprecated
 	public static void getRecommendedTalkers(TalkerBean talker, List<TalkerBean> similarMembers,
 			List<TalkerBean> experts) {
 		Set<TalkerBean> allExperts = ApplicationDAO.getTalkersInOrder(talker,true);

@@ -98,7 +98,7 @@ public class Explore extends Controller {
     
     public static void browseTopics() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	int limit = 20;
+    	int limit = FeedsLogic.FEEDS_PER_PAGE;
     	//In case you want to save the populated list
     	//session.get("topicCount")==null?20:Integer.parseInt(session.get("topicCount"));
     	session.put("topicCount", limit);
@@ -138,7 +138,7 @@ public class Explore extends Controller {
 		});
 		
     	int limit = 5;
-    	int topicCount = session.get("topicCount")==null?20:Integer.parseInt(session.get("topicCount"));
+    	int topicCount = session.get("topicCount")==null?FeedsLogic.FEEDS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
     	limit = topicCount + limit;
         if (_popularTopics.size() > limit) {
         	_popularTopics = _popularTopics.subList(topicCount, limit);
@@ -160,7 +160,8 @@ public class Explore extends Controller {
 
 		//Active talkers on this day
 		Calendar oneWeekBeforeNow = Calendar.getInstance();
-		oneWeekBeforeNow.add(Calendar.DAY_OF_MONTH, -7);
+		//oneWeekBeforeNow.add(Calendar.DAY_OF_MONTH, -7);
+		oneWeekBeforeNow.add(Calendar.WEEK_OF_YEAR, -2);
 		Set<TalkerBean> activeTalkers = ApplicationDAO.getActiveTalkers(oneWeekBeforeNow.getTime());
 		Set<TalkerBean> newTalkers = ApplicationDAO.getNewTalkers();
 		
@@ -195,7 +196,8 @@ public class Explore extends Controller {
 		memberTypes.put("Caregivers", Arrays.asList("Caregiver"));
 		memberTypes.put("Family & Friends", Arrays.asList("Family member", "Friend"));
 		
-		Set<TalkerBean> allActiveTalkers = ApplicationDAO.getActiveTalkers(null);
+		//Set<TalkerBean> allActiveTalkers = ApplicationDAO.getActiveTalkers(null);
+		List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalkers(true);
 		//re-structure members by connection type
 		for (TalkerBean talker : allActiveTalkers) {
 			for (Entry<String, List<String>> memberTypeEntry : memberTypes.entrySet()) {
@@ -241,13 +243,12 @@ public class Explore extends Controller {
 		
 		List<TopicBean> popularTopics = null;
     	if (talker == null) {
-    		int limit = session.get("topicCount")==null?20:Integer.parseInt(session.get("topicCount"));
+    		int limit = session.get("topicCount")==null?FeedsLogic.FEEDS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
     		popularTopics = TopicLogic.loadPopularTopics(limit);
     	}
     	
 		//"Popular Conversations" - ordered by page views
-		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations(null);
-		//Set<Action> popularConvos = FeedsLogic.getPopularConvoFeed(null);
+		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations();
 		
 		if (action == null) {
 			action = "feed";
