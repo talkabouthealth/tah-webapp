@@ -275,6 +275,7 @@
 
   					//user can post only one answer per convo
   					if (parentId === '') {
+  						$("#answerBtn").hide();
   	  					$("#answerFormDiv").hide();
   	  					$("#noAnswerText").show();
   					}
@@ -300,8 +301,9 @@
 
   					//user can post only one answer per convo
   					if (parentId === '') {
+  						$("#answerBtn").hide();
   	  					$("#answerFormDiv").hide();
-  	  					$("#noAnswerTextPopup").show();
+  	  					$("#noAnswerText").show();
   					}
 
   					$('.inline-edit').inlineEdit(
@@ -840,11 +842,11 @@
 					<div width=100%>
 						#{if talker.followingConvosList?.contains(convo.id) }
 							<a href="#" id="followConvoBtn" class="followingConvoBtn"></a>
-							<a href="#" id="answerBtn" class="answerBtn" onclick="addAnswer();"></a>
+							<a href="#" id="answerBtn" class="answerBtn" onclick="addAnswer();" style="display: ${userHasAnswer ? 'none' : 'block'};"></a>
 						#{/if}
 						#{else}
 							<a href="#" id="followConvoBtn" class="followConvoBtn"></a>
-							<a href="#" id="answerBtn" class="answerBtn" onclick="addAnswer();"></a>
+							<a href="#" id="answerBtn" class="answerBtn" onclick="addAnswer();" style="display: ${userHasAnswer ? 'none' : 'block'};"></a>
 						#{/else}
 					</div>
 						<!-- REFACTOR REMOVE LIVE CHAT OPTION

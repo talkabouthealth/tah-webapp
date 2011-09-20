@@ -3853,6 +3853,19 @@ a.popup_black10s:hover {
 	padding-top:7px;
 	padding-bottom:7px;
 }
+.profileCantanttxtLeft {
+	float:left;
+	width:300px;
+}
+.profileCantanttxtLeft a {
+	text-decoration:none;
+	color:#0286bc;
+	padding-left:1px;
+}
+.profileCantanttxtLeft a:hover {
+	text-decoration:underline;
+	color:#0286bc;
+}
 .profileCantanttxt1 {
 	float:left;
 	width:640px;

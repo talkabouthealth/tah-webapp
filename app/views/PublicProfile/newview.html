@@ -98,7 +98,7 @@ function joinNow(){ showPopup("#profileJoinNow", 350); }
                     <!--pph1Cover-->
                     <table class="profiletxtCantant">
                     <tr>
-                      <td class="profileCantanttxt1"><strong>Community:</strong> Breast Cancer</td>
+                      <td class="profileCantanttxtLeft"><strong>Community:</strong> Breast Cancer</td>
                       <td class="profileCantanttxt2">
                       	<strong>Thank You's:</strong>
                       	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.name, 'thankyous')}">${talker.thankYouList.size()}</a>
@@ -106,7 +106,7 @@ function joinNow(){ showPopup("#profileJoinNow", 350); }
                     </tr>
                     <!--profiletxtCantant-->
                     <tr>
-                      <td class="profileCantanttxt1"><strong>Member Since:&nbsp;</strong>${talker.regDate.format('MMM. yyyy')}</td>
+                      <td class="profileCantanttxtLeft"><strong>Member Since:&nbsp;</strong>${talker.regDate.format('MMM. yyyy')}</td>
                       <td class="profileCantanttxt2">
                       	<strong>Top Answers:&nbsp;</strong>
                       	<a style="text-decoration: none" href="@{PublicProfile.answers(talker.name)}">${numOfTopAnswers}</a>
@@ -114,7 +114,7 @@ function joinNow(){ showPopup("#profileJoinNow", 350); }
                     </tr>
                     <!--profiletxtCantant-->
                     <tr>
-                      <td class="profileCantanttxt1">
+                      <td class="profileCantanttxtLeft">
                       	<strong>Questions:&nbsp;</strong>
                       	<a style="text-decoration: none" href="@{PublicProfile.conversations(talker.name)}">${numOfStartedConvos}</a>
                       </td>                      

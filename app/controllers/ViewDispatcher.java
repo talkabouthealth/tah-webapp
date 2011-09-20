@@ -218,8 +218,6 @@ public class ViewDispatcher extends Controller {
 		ConversationDAO.incrementConvoViews(convo.getId());
 		Date latestActivityTime = ActionDAO.getConvoLatestActivity(convo);
 		
-		boolean userHasAnswer = convo.hasUserAnswer(talker);
-		
 		//For displaying answers sequence wise
 		List<CommentBean> answerList = CommentsDAO.loadConvoAnswersTree(convo.getId());
 		List<CommentBean> commentList = answerList;
@@ -234,6 +232,9 @@ public class ViewDispatcher extends Controller {
 		
 		convo.setComments(commentList);
 		convo.setReplies(CommentsDAO.loadConvoReplies(convo.getId()));
+		
+		boolean userHasAnswer = convo.hasUserAnswer(talker);
+		
 		List<ConversationBean> relatedConvos = null;
 		try {
 			relatedConvos = SearchUtil.getRelatedConvos(convo);
