@@ -61,6 +61,10 @@ public class Actions extends Controller {
 		thankYouBean.setFromTalker(fromTalker);
 		thankYouBean.setTo(toTalkerId);
 		TalkerDAO.saveThankYou(thankYouBean);
+
+		//Used For save thank you as a conversation feed
+		note = "Thank you @"+toTalker.getUserName()+" '"+note +"'";
+		saveProfileComment(null,null,note,note,"thankyou",false,false);
 		
 		ActionDAO.saveAction(new GiveThanksAction(fromTalker, toTalker));
 		TalkerBean mailSendtalker = TalkerDAO.getByEmail(toTalker.getEmail());
@@ -144,8 +148,9 @@ public class Actions extends Controller {
     		Action _activity = new PersonalProfileCommentAction(_talker, _talker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT);
     		_activity.setID(comment.getActionId());
     		render("tags/feed/feedActivity.html", _talker, _activity);
-		}
-		else {
+		}else if(from != null && from.equals("thankyou")){
+			
+		}else {
 			List<CommentBean> _commentsList = Arrays.asList(comment);
 			int _level = (comment.getParentId() == null ? 1 : 2);
 			boolean _showDelete = false;
