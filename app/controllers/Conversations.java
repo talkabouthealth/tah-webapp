@@ -503,7 +503,7 @@ public class Conversations extends Controller {
     		CommentsDAO.updateConvoComment(answer);
     		
     		//set question as Unanswered question
-    		/* List<CommentBean> answerList= CommentsDAO.loadConvoAnswers(answer.getConvoId());
+    		List<CommentBean> answerList= CommentsDAO.loadConvoAnswers(answer.getConvoId());
     		int count = 0;
     		if(answerList != null)
     			count = answerList.size();
@@ -512,7 +512,7 @@ public class Conversations extends Controller {
 	    		convo.setOpened(true);
 	    		ConversationDAO.updateConvo(convo);
     		}
-    		*/
+    		
     		//remove related actions
     		ActionDAO.deleteActionsByAnswer(answer);
     	}
