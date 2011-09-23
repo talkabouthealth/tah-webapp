@@ -650,10 +650,21 @@ public class TalkerLogic {
 				}
 			}
 		}
-		if(recommendedTopics.size() < position + 5){
-			position = 0;
+		if(recommendedTopics != null){
+			int limit = position + 5;
+			if(position < recommendedTopics.size() && limit >  recommendedTopics.size()){
+				limit = recommendedTopics.size();
+				recommendedTopics = recommendedTopics.subList(position, limit);
+			}else if(limit >  recommendedTopics.size()){
+				position = 0;
+				limit = 5;
+				if(recommendedTopics.size() < limit)
+					limit = recommendedTopics.size();
+				recommendedTopics = recommendedTopics.subList(position, limit);
+			} else{
+				recommendedTopics = recommendedTopics.subList(position, limit);
+			}
 		}
-		recommendedTopics = recommendedTopics.subList(position, position + 5);
 		return recommendedTopics;
 	}
 	
