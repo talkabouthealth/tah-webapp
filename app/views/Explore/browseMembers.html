@@ -46,7 +46,7 @@
 					            	<span class="blacktext25">Active Users</span> 
 					            </div>
 				            </div>
-				            <div class="thnksarea">
+				            <div class="thnksarea" id="activeTab">
 				            	#{list items: activeTalkers, as: 'talker' }
 				            		#{if currentTalker || talker.name != null}
 				            			#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
@@ -54,6 +54,11 @@
 				            	#{/list}
 				            </div>
 			        	</div>
+			        	#{if activeTalkers.size() == logic.TalkerLogic.TALKERS_PER_PAGE }
+								<div align="center" id="activeBtn" style=" clear: both;">
+			                          <input type="submit" src="images/seemore.jpg" onclick="return loadMoreUser('active');" value=" " class="seemorecom" />
+		                        </div>
+							#{/if}
 			        	</div>
 			        
 			        	<div id="tab2" class="tab_content">
@@ -63,7 +68,7 @@
 					            	<span class="blacktext25">New Users</span> 
 					            </div>
 				            </div>
-				            <div class="thnksarea">
+				            <div class="thnksarea" id="newTab">
 				            	#{list items: newTalkers, as: 'talker' }
 				            		#{if currentTalker || talker.name != null}
 				            			#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
@@ -71,6 +76,11 @@
 				            	#{/list}
 				            </div>
 			        	</div>
+			        	#{if newTalkers.size() == logic.TalkerLogic.TALKERS_PER_PAGE }
+							<div align="center" id="newBtn" style=" clear: both;">
+			                	<input type="submit" src="images/seemore.jpg" onclick="return loadMoreUser('new');" value=" " class="seemorecom" />
+							</div>
+						#{/if}
 			        	</div>
 			        
 			        	<div id="tab3" class="tab_content">
@@ -90,11 +100,9 @@
 			        	<div>
 				        	<div class="headingarea">
 					            <div class="tabheading">
-					            	<span class="blacktext25">Search</span> 
-					            </div>
-				            </div>
-				            <div class="thnksarea">
-				            	<form name="searchForm" action="@{Explore.browseMembers('search')}" method="POST">
+					            <form name="searchForm" action="@{Explore.browseMembers('search')}" method="POST">
+					            	<span class="blacktext25" style="float: left; padding-top: 3px;margin-right: 10px;">Search</span> 
+					            	
 									<div id="searcharea">
 										<input name="query" type="text" class="search"  value="${flash.query ? flash.query : 'Search Members'}" 
 											onclick="if (this.value == 'Search Members') this.value=''" onblur=""/>
@@ -105,22 +113,37 @@
 										</a>
 									</div>
 								</form>
-								
+					            </div>
+				            </div>
+				            <div class="thnksarea">
 								#{if results }
-									<div style="font-size: 14px; clear: left; padding-top: 10px">	
+									<div style="font-size: 14px; clear: left; padding-top: 10px" id="searchTab">	
 										#{list items:results, as: 'talker'}
 											#{if currentTalker || talker.name != null}
 						            			#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
 						            		#{/if}
 										#{/list}
 									</div>
+									#{if results.size() == logic.TalkerLogic.TALKERS_PER_PAGE }
+										<div align="center" id="searchBtn" style=" clear: both;">
+						                	<input type="submit" src="images/seemore.jpg" onclick="return loadMoreUser('search');" value=" " class="seemorecom" />
+										</div>
+									#{/if}
 								#{/if}
 								#{elseif flash.query}
+									<br/><br/><br/>
 									<div style="font-size: 14px; clear: left; padding-top: 10px">
 										Sorry. No results match the query.
 									</div>
 									<br/><br/><br/>
 								#{/elseif}
+								#{else}
+									<br/><br/><br/>
+									<div style="font-size: 14px; clear: left; padding-top: 10px">
+										Type in your search term and get is.
+									</div>
+									<br/><br/><br/>
+								#{/else}
 				            </div>
 			        	</div>
     					</div>
@@ -133,7 +156,7 @@
 							            	<span class="blacktext25">${memberType}</span> 
 							            </div>
 						            </div>
-						            <div class="thnksarea">
+						            <div class="thnksarea" id="${memberType.replaceAll(" ", "-").replaceAll("&", "and")}Tab">
 						            	#{list items: members.get(memberType), as: 'talker' }
 						            		#{if currentTalker || talker.name != null}
 						            			#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
@@ -141,6 +164,11 @@
 						            	#{/list}
 						            </div>
 					        	</div>
+								#{if members.get(memberType).size() == logic.TalkerLogic.TALKERS_PER_PAGE }
+									<div align="center" style=" clear: both;" id="${memberType.replaceAll(" ", "-").replaceAll("&", "and")}Btn">
+					                	<input type="submit" src="images/seemore.jpg" onclick="return loadMoreUser('${memberType.replaceAll(" ", "-").replaceAll("&", "and")}');" value=" " class="seemorecom" />
+									</div>
+								#{/if}
 					        </div>
 			            #{/list}
     				</div>

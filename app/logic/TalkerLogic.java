@@ -142,6 +142,9 @@ public class TalkerLogic {
 		}
 	}
 	
+	//Talker count to display on browse member page per page
+	public static final int TALKERS_PER_PAGE = 12; 
+	
 	//Field choices (options in <select>) for different fields/profiles(i.e. Nurse, etc)
 	private static Map<String, List<String>> fieldsDataMap;
 	

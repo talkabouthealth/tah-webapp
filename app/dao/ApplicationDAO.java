@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,6 +13,8 @@ import java.util.Set;
 import models.TalkerBean;
 
 import org.bson.types.ObjectId;
+import org.codehaus.groovy.util.StringUtil;
+import org.h2.util.StringUtils;
 
 import play.Logger;
 import play.templates.JavaExtensions;
@@ -66,7 +69,7 @@ public class ApplicationDAO {
 	/**
 	 * Active users - users logged in after given time (or 1 month by default)
 	 */
-	public static Set<TalkerBean> getActiveTalkers(Date afterTime) {
+	public static List<TalkerBean> getActiveTalkers(Date afterTime) {
 		DBCollection loginsColl = getCollection(LOGIN_HISTORY_COLLECTION);
 		
 		loginsColl.ensureIndex(new BasicDBObject("log_time", 1));
@@ -77,13 +80,10 @@ public class ApplicationDAO {
 			afterTime = monthBeforeNow.getTime();
 		}
 		
-		DBObject query = BasicDBObjectBuilder.start()
-			.add("log_time", new BasicDBObject("$gt", afterTime))
-			.get();
-		List<DBObject> loginsDBList = 
-			loginsColl.find(query).sort(new BasicDBObject("log_time", -1)).toArray();
+		DBObject query = BasicDBObjectBuilder.start().add("log_time", new BasicDBObject("$gt", afterTime)).get();
+		List<DBObject> loginsDBList = loginsColl.find(query).sort(new BasicDBObject("log_time", -1)).toArray();
 		
-		Set<TalkerBean> activeTalkers = new LinkedHashSet<TalkerBean>();
+		List<TalkerBean> activeTalkers = new ArrayList<TalkerBean>();
 		for (DBObject loginDBObject : loginsDBList) {
 			DBRef talkerDBRef = (DBRef)loginDBObject.get("uid");
 			TalkerBean talker = new TalkerBean();
@@ -95,29 +95,26 @@ public class ApplicationDAO {
 				}
 			}
 		}
-		
 		return activeTalkers;
 	}
 	
 	/**
 	 * New users - users signed up in last 2 weeks
 	 */
-	public static Set<TalkerBean> getNewTalkers() {
+	public static List<TalkerBean> getNewTalkers() {
+		//{"_id":{$gt : ObjectId("4e6efaff36882ba357358498")}}
 		DBCollection loginsColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
 		
 		Calendar twoWeeksBeforeNow = Calendar.getInstance();
 		twoWeeksBeforeNow.add(Calendar.WEEK_OF_YEAR, -2);
-		
-		DBObject query = BasicDBObjectBuilder.start()
-			.add("timestamp", new BasicDBObject("$gt", twoWeeksBeforeNow.getTime()))
-			.get();
-		
+		DBObject query = null;
+		query = BasicDBObjectBuilder.start().add("timestamp", new BasicDBObject("$gt", twoWeeksBeforeNow.getTime())).get();
+
 		DBObject fields = TalkerDAO.getBasicTalkerFields();
 		
-		List<DBObject> talkersDBList = 
-			loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).toArray();
+		List<DBObject> talkersDBList = loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).toArray();
 		
-		Set<TalkerBean> newTalkers = new LinkedHashSet<TalkerBean>();
+		List<TalkerBean> newTalkers = new ArrayList<TalkerBean>();
 		for (DBObject talkerDBObject : talkersDBList) {
 			TalkerBean talker = new TalkerBean();
 			talker.setId(getString(talkerDBObject, "_id"));
@@ -148,22 +145,15 @@ public class ApplicationDAO {
 		}
 		DBObject query = null;
 		if(memberFlag){
-			/**
-			 * Date : 16 Aug 2011
-			 * Added condition for checking for connection verification
-			 */
 			query = BasicDBObjectBuilder.start()
 						.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList ))
 						.add("connection_verified",true).get();
 		}else{
-			query = BasicDBObjectBuilder.start()
-			.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList )).get();
+			query = BasicDBObjectBuilder.start().add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList )).get();
 		}
 		
 		DBObject fields = TalkerDAO.getBasicTalkerFields();
-		List<DBObject> talkersDBList = 
-			loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).limit(20).toArray();
-		
+		List<DBObject> talkersDBList = loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).limit(20).toArray();
 		Set<TalkerBean> newTalkers = new LinkedHashSet<TalkerBean>();
 		
 		for (DBObject talkerDBObject : talkersDBList) {

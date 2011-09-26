@@ -60,7 +60,9 @@ public class SearchUtil {
 			Document doc = hits.doc(i);
 
 			TalkerBean talker = TalkerDAO.getById(doc.get("id"));
-			results.add(talker);
+			if(talker.getName() != null)
+				results.add(talker);
+			//TO DO : Must need to remove to show more users. 
 			//if (i == 7) {
 			//	break;
 			//}
