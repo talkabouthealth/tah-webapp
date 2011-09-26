@@ -250,7 +250,7 @@ public class Explore extends Controller {
     	}
     	
 		//"Popular Conversations" - ordered by page views
-		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations();
+		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations(null);
 		
 		if (action == null) {
 			action = "feed";
