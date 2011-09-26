@@ -1,25 +1,20 @@
 package dao;
 
+import static util.DBUtil.createRef;
+import static util.DBUtil.getCollection;
+import static util.DBUtil.getString;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import models.TalkerBean;
-
-import org.bson.types.ObjectId;
-import org.codehaus.groovy.util.StringUtil;
-import org.h2.util.StringUtils;
-
-import play.Logger;
 import play.templates.JavaExtensions;
-
-import util.DBUtil;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -30,8 +25,6 @@ import com.mongodb.DBRef;
 import com.mongodb.QueryOperators;
 
 import controllers.Application;
-
-import static util.DBUtil.*;
 
 public class ApplicationDAO {
 	
