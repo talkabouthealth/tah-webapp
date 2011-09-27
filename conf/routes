@@ -44,6 +44,7 @@ GET		/conversationfeed/?						Home.conversationFeed
 GET		/dashboard/?							Dashboard.index
 *		/dashboard/notification					Notifications.index
 *		/dashboard/userlist						UserList.index
+*		/dashboard/answernotification			AnswerNotification.index
 GET		/chat/{convoId}							Talk.talkApp
 GET		/chat/?									Talk.talkApp
 GET		/image/{userName}						Image.show
