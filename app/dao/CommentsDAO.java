@@ -41,7 +41,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-import util.ValidateData;
+
+import controllers.AnswerNotification;
 
 /*
  	We store profile comments in separate collection, as "child lists" tree.
@@ -325,6 +326,8 @@ public class CommentsDAO {
 			.add("not_helpful", answer.isNotHelpful())
 			.add("not_helpful_votes", setToDB(answer.getNotHelpfulVotes()))
 			
+			.add("moderate", answer.getModerate())
+			
 			.get();
 		
 		DBObject answerId = new BasicDBObject("_id", new ObjectId(answer.getId()));
@@ -581,7 +584,6 @@ public class CommentsDAO {
 		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
 		
 		String topicTitle = topic.getTitle().replaceAll(" ", "");
-                topicTitle = ValidateData.escapeText(topicTitle);
 		Pattern mentionRegex = Pattern.compile("#"+topicTitle+"[^\\w]*", Pattern.CASE_INSENSITIVE);
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("text", mentionRegex)
@@ -612,4 +614,5 @@ public class CommentsDAO {
 		}
 		return null;
 	}
+	
 }

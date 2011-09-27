@@ -5,8 +5,10 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -29,6 +31,7 @@ import play.mvc.With;
 import logic.FeedsLogic;
 import logic.TalkerLogic;
 import logic.TopicLogic;
+import models.CommentBean;
 import models.ConversationBean;
 import models.ServiceAccountBean;
 import models.PrivacySetting.PrivacyType;
@@ -47,6 +50,7 @@ import util.jobs.EmailReminderJob;
 import util.jobs.ThoughtsFromServicesJob;
 import dao.ActionDAO;
 import dao.ApplicationDAO;
+import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
@@ -245,12 +249,58 @@ public class Explore extends Controller {
 		
 		List<TopicBean> popularTopics = null;
     	if (talker == null) {
-    		int limit = session.get("topicCount")==null?FeedsLogic.FEEDS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
+    		int limit = session.get("topicCount")==null?20:Integer.parseInt(session.get("topicCount"));
     		popularTopics = TopicLogic.loadPopularTopics(limit);
     	}
     	
+    	//For removing answer from feed list which have moderate no moderate value or value as "Delete Answer"
+		Iterator<Action> communityFeedIter = communityFeed.iterator();
+		 while (communityFeedIter.hasNext()) {
+			 Action actionIterator = communityFeedIter.next();
+			 if(actionIterator != null && actionIterator.getConvo() != null){
+				 List<CommentBean> commentBeanList = actionIterator.getConvo().getComments();
+				 for(int index = 0; index < commentBeanList.size(); index++){
+					 CommentBean commentBean = commentBeanList.get(index);
+					 CommentBean comment =  CommentsDAO.getConvoCommentById(commentBean.getId());
+					 if(comment != null && comment.getModerate() != null  && !comment.getFromTalker().equals(talker)){
+						 if(comment.getModerate().equalsIgnoreCase(AnswerNotification.DELETE_ANSWER)){
+							 commentBeanList.remove(index);
+							 actionIterator.getConvo().setComments(commentBeanList);
+						 }else if(comment.getModerate().equalsIgnoreCase("null")){
+							 commentBeanList.remove(index);
+							 actionIterator.getConvo().setComments(commentBeanList);
+						 }
+					 }else{
+						 commentBeanList.remove(index);
+						 actionIterator.getConvo().setComments(commentBeanList);
+					 }
+					
+				 }
+			 }
+		 }
+		 
 		//"Popular Conversations" - ordered by page views
 		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations(null);
+		
+		//For removing answer from feed list which have moderate value as "Delete Answer"
+		for(int index = 0; index < popularConvos.size(); index++){
+			 ConversationBean conversationBean = popularConvos.get(index);
+			 List<CommentBean> answerList = CommentsDAO.loadConvoAnswersTree(conversationBean.getId());
+			 for(int index1 = 0; index1 < answerList.size(); index1++){
+				 CommentBean commentBean = answerList.get(index1);
+				 if(commentBean != null && commentBean.getModerate() != null  && !commentBean.getFromTalker().equals(talker)){
+					 if(commentBean.getModerate().equalsIgnoreCase(AnswerNotification.DELETE_ANSWER)){
+						 answerList.remove(index1);
+					 }else if(commentBean.getModerate().equalsIgnoreCase("null")){
+						 answerList.remove(index1);
+					 }
+				 }else{
+					 answerList.remove(index1);
+				 }
+				 conversationBean.setComments(answerList);
+			 }
+		 }
+		//Set<Action> popularConvos = FeedsLogic.getPopularConvoFeed(null);
 		
 		if (action == null) {
 			action = "feed";

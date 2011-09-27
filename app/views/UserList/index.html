@@ -13,6 +13,7 @@
 	
 	<link href="@{'/public/stylesheets/style.css'}" rel="stylesheet" type="text/css" />
 	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
+	<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/play-pagination.css'}"/> 
 	<script type="text/javascript" src="@{'/public/javascripts/jquery-1.4.2.min.js'}" ></script>
 
 	<style type="text/css">
@@ -36,7 +37,7 @@
 			userForm.action = "/dashboard/userlist?id="+id+"&password="+newPassword+"&action=passwordEdit";
 			userForm.submit();
 		}
-		
+
 		function searchUser(){
 			var searchUserName = document.getElementById('searchBy').value;
 			var userForm = document.getElementById('userForm');
@@ -53,6 +54,8 @@
 				<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Dashboard.sendEmailToSailThrou()}">Update Email List</a></td>
 				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/notification">Notifications</a></td>
 				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/userlist">Users</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/answernotification">Answer Notifications</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/questionnotification">Question Notifications</a></td>
 				<td style="padding-right:20px;" nowrap><a href="@{Secure.logout()}">Logout</a></td>
 				<td style="width: 100%;">&nbsp;</td>
 			</tr>
@@ -65,35 +68,39 @@
 						<div>
 							<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
 								<tr>
-									<th style="padding:3px;" >Users List</th>   
+									<th style="padding:3px;" colspan="2">Users List</th>   
 								</tr>
+								#{if list != null}
 									<tr>
-										<td>
-										<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">
+										<th style="padding:3px;">User Name : 
+										<input type="text" name="searchBy" id="searchBy" />
+										<input type="button" name="Search" value="Search" onclick="searchUser();"></input>
+										<a href="/dashboard/userlist" style="float: right;">See All Users</a></th>
+									</tr>
+								#{/if}
+									<tr>
+										<td  colspan="2">
+										<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;" width="100%">
 											
 												#{if list != null}
-													<tr>
-														<th style="padding:3px;" colspan="3">User Name : 
-														<input type="text" name="searchBy" id="searchBy" />
-														<input type="button" name="Search" value="Search" onclick="searchUser();"></input></th>
-														<th><a href="/dashboard/userlist">See All Users</a></th>
-													</tr>
 													#{if list.size > 0}
 														<tr>
-														<th>User Name</th>
-														<th>Email</th>
-														<th>Connection</th>
-													</tr>
-													#{list items: list, as: 'userInfo' }
-														<tr>
-															<td>${userInfo.userName}</td>
-															<td>${userInfo.email}</td>
-															<td>${userInfo.connection}</td>
-															<td>
-																<a href="/dashboard/userlist?id=${userInfo.id}&action=passwordEditDisplay">Change Password</a>
-															</td>
+															<th>User Name</th>
+															<th>Email</th>
+															<th>Connection</th>
 														</tr>
-													#{/list}
+														#{paginate.list items: list, as: 'userInfo' }
+															<tr>
+																<td>${userInfo.userName}</td>
+																<td>${userInfo.email}</td>
+																<td>${userInfo.connection}</td>
+																<td>
+																	<a href="/dashboard/userlist?id=${userInfo.id}&action=passwordEditDisplay">Change Password</a>
+																</td>
+															</tr>
+														#{/paginate.list}
+														#{paginate.controls items:list /} 
+														
 													#{/if}
 													#{else}
 														<tr>

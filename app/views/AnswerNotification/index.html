@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+	<meta name="author" content="Talkmi" /> 
+	<meta name="keywords" content="support, health, talk" /> 
+	<meta name="description" content="real-time support for your health issues" /> 
+	<meta name="robots" content="all" /> 
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Answer Notifications</title>
+	
+	<link href="@{'/public/stylesheets/style.css'}" rel="stylesheet" type="text/css" />
+	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
+	<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/play-pagination.css'}"/> 
+	<script type="text/javascript" src="@{'/public/javascripts/jquery-1.4.2.min.js'}" ></script>
+
+	<style type="text/css">
+		body {
+			margin: 20px;
+			width: auto;
+			font-size: 14px;
+		}
+		#notificationbar {
+			border: #000000 dashed 1px;
+			margin-top: 3px;
+			padding: 10px;
+		}
+	</style>
+	
+	<script>
+
+		function getAnswers(id){
+			var answerNotificationForm = document.getElementById('answerNotificationForm');
+			answerNotificationForm.action = "/dashboard/answernotification?id="+id+"&action=getAnswers";
+			answerNotificationForm.submit();
+		}
+
+		function setModerate(id,moderate){
+			var answerNotificationForm = document.getElementById('answerNotificationForm');
+			answerNotificationForm.action = "/dashboard/answernotification?id="+id+"&action=moderateAnswer&moderate="+moderate;
+			answerNotificationForm.submit();
+		}
+
+	</script>
+</head>
+<body>
+		<table width="100%">
+			<tr>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Home.index()}">Home</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="#" id="automaticNotificationLink">Turn ${ automaticNotification ? 'off' : 'on' } Automatic Notification</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Dashboard.sendEmailToSailThrou()}">Update Email List</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/notification">Notifications</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/userlist">Users</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/answernotification">Answer Notifications</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/questionnotification">Question Notifications</a></td>
+				<td style="padding-right:20px;" nowrap><a href="@{Secure.logout()}">Logout</a></td>
+				<td style="width: 100%;">&nbsp;</td>
+			</tr>
+		</table>
+		 
+		<form method = "post" action = "" id="answerNotificationForm">
+			<table style="width: 100%">
+				<tr>
+					<td valign = "top" width="50%">
+						<div>
+									<h4 style="margin-bottom: 10px;">Answer Notification</h4>
+									<table border="1" cellpadding="5" cellspacing="5" style="border-collapse: collapse; margin-top: 2px;" width="100%">
+										
+											#{if list != null}
+												#{if list.size > 0}
+													<tr>
+														<th colspan="2">Question List</th>
+													</tr>
+													#{paginate.list items: list, as: 'convoInfo' }
+														<tr>
+															<td>${convoInfo.topic}</td>
+															<td><input type="button" value="Moderate" onclick="getAnswers('${convoInfo.id}')"></input></td>
+														</tr>
+													#{/paginate.list}
+													#{paginate.controls items:list /} 
+													
+												#{/if}
+												#{else}
+													<tr>
+														<td colspan="4" align="center">No record found.</td>
+													</tr>
+												#{/else}
+											#{/if}
+											#{if commentList != null}
+												#{if commentList.size > 0}
+													<tr>
+														<th colspan="3">Question : ${question} </th>
+													</tr>
+													<tr>
+														<th>User Name</th>
+														<th>Answer</th>
+														<th>Moderate</th>
+													</tr>
+													#{list items: commentList, as: 'convoCommentInfo' }
+														<tr>
+															<td>${convoCommentInfo.fromTalker.userName}</td>
+															<td>${convoCommentInfo.text}</td>
+															<td>
+																<select onchange="setModerate('${convoCommentInfo.id}',this.value);" id="moderate" name="convoCommentInfo.moderate">
+																	<option value=''>Select</option>
+															  		#{list items:models.CommentBean.MODERATE_ARRAY, as:'moderate'}
+																	    <option value="${moderate}"
+																	    #{if moderate.equals(convoCommentInfo.moderate) } selected #{/if} 
+																	    >${moderate}</option>
+																	#{/list}
+																</select>
+															</td>
+														</tr>
+													#{/list}
+												#{/if}
+												#{else}
+													<tr>
+														<td colspan="4" align="center">No record found.</td>
+													</tr>
+												#{/else}
+												<tr>
+													<td colspan="3" align="center">
+														<a href="/dashboard/answernotification">Back</a>
+													</td>
+												</tr>
+											#{/if}
+									</table>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</form>
+		#{ common/googleAnalytics /}
+	</body>
+</html>
