@@ -8,15 +8,18 @@
      	</a>
         <span class="blacktext12">
 			#{talker/talkerInfo talker: _talker /}
-		</span><br/>
+		</span>
         #{ifnot _talker.isPrivate(models.PrivacySetting.PrivacyType.PROFILE_INFO) }
+        #{if _talker.bio}
+        <br/>
         	<span class="greytext12 moretext">
-				${_talker.bio?.nl2br()}
+				${_talker.bio}
 			</span>
-			<br/>
+			#{/if}
         #{/ifnot}
-        <span class="bluetext12">
+       <br/>
         	#{if _currentTalker}
+        	 <span class="bluetext12">
 	        	#{ifnot _currentTalker?.equals(_talker) }
 				 	<a class="bluetext12" href="#" onclick="return followTalker(this, '${_talker.id}');">
 					${ _currentTalker?.followingList?.contains(_talker) ? 'Unfollow' : 'Follow'}
@@ -28,7 +31,7 @@
 				 	 | <a href="#" onclick="return showPopupForm('thankYou', '${_talker.id}', '${_talker.userName}');" 
 				 	 		class="bluetext12 thankYouLink">Thank</a>
 				#{/ifnot}
+	        </span>
 			#{/if}
-        </span>
 	</div>
 </div>

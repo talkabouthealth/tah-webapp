@@ -866,7 +866,7 @@ function loadMoreUser(type){
 					$("#"+type+"Btn").hide();
 			}else{
 				$(data).appendTo($("#"+type+"Tab"));
-				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
+				$('.moretext').truncatable({ limit: 70, more: '... more', less: false, hideText: '...less' });
 				moreBtn.show();
 				$("#ajaxLoading").hide();
 			}
