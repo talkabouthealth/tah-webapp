@@ -1,10 +1,12 @@
 package dao;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import static util.DBUtil.*;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -615,4 +617,27 @@ public class CommentsDAO {
 		return null;
 	}
 	
+	/**
+	 * Load all not-deleted answers for given conversation,
+	 * answers have only id.
+	 */
+	public static List<CommentBean> loadAllConvoAnswers(Date date) {
+		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("time", new BasicDBObject("$gt", date))
+			.add("deleted", new BasicDBObject("$ne", true))
+			.add("answer", true)
+			.get();
+		List<DBObject> commentsList = commentsColl.find(query).toArray();
+		
+		List<CommentBean> answersList = new ArrayList<CommentBean>();
+		
+		for (DBObject answerDBObject : commentsList) {
+			CommentBean answer = new CommentBean();
+			answer.parseFromDB(answerDBObject);
+			answersList.add(answer);
+		}
+		return answersList;
+	}
 }

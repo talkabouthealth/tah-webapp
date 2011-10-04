@@ -29,7 +29,7 @@
 		}
 	</style>
 	
-	<script>
+	<script type="text/javascript">
 
 		function getAnswers(id){
 			var answerNotificationForm = document.getElementById('answerNotificationForm');
@@ -43,6 +43,26 @@
 			answerNotificationForm.submit();
 		}
 
+		function checkFeed(type,talkerName) {
+			
+			$.get("/answernotification/feedAjaxUpdate", {feedType: type, talkerName: talkerName,isheader:1},
+					function(data) {
+						if(parseInt(data)>0) {
+							$("#"+type+"Notifications").show();
+							$("#"+type+"Notifications").html(data + " new answers");
+							$("#"+type+"Notifications").addClass("morenotification");  
+						} else {
+							$("#"+type+"Notifications").hide();
+							$("#"+type+"Notifications").html("No new answers");
+							$("#"+type+"Notifications").addClass("morenotification");
+						}				
+					}
+				);	
+		}	
+		
+		setInterval("checkFeed('answer');",60000);
+
+		
 	</script>
 </head>
 <body>
@@ -54,20 +74,27 @@
 				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/notification">Notifications</a></td>
 				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/userlist">Users</a></td>
 				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/answernotification">Answer Notifications</a></td>
-				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/questionnotification">Question Notifications</a></td>
 				<td style="padding-right:20px;" nowrap><a href="@{Secure.logout()}">Logout</a></td>
 				<td style="width: 100%;">&nbsp;</td>
 			</tr>
 		</table>
 		 
 		<form method = "post" action = "" id="answerNotificationForm">
-			<table style="width: 100%">
+			<table style="width: 100%" cellspacing="10">
+				<tr>
+					<td colspan="2" align="center" style="margin-top: 5px;">
+						<a href=# id="answerNotifications" class="morenotification" style='display:none' onclick="window.location.reload();" >
+		                       0 new answers
+		                   </a>	
+					</td>
+				</tr>
 				<tr>
 					<td valign = "top" width="50%">
 						<div>
 									<h4 style="margin-bottom: 10px;">Answer Notification</h4>
 									<table border="1" cellpadding="5" cellspacing="5" style="border-collapse: collapse; margin-top: 2px;" width="100%">
-										
+											
+											<div id="answerList">
 											#{if list != null}
 												#{if list.size > 0}
 													<tr>
@@ -75,7 +102,9 @@
 													</tr>
 													#{paginate.list items: list, as: 'convoInfo' }
 														<tr>
-															<td>${convoInfo.topic}</td>
+															<td>
+																${convoInfo.topic}
+															</td>
 															<td><input type="button" value="Moderate" onclick="getAnswers('${convoInfo.id}')"></input></td>
 														</tr>
 													#{/paginate.list}
@@ -88,6 +117,7 @@
 													</tr>
 												#{/else}
 											#{/if}
+											</div>
 											#{if commentList != null}
 												#{if commentList.size > 0}
 													<tr>

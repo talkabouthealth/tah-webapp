@@ -252,7 +252,8 @@ public class ConversationLogic {
 	    		}
 	    	}
 			
-			
+			//Mail send to admin@talkabouthealth.com when new answer is added
+			EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_CONVO_ANSWER, EmailUtil.ADMIN_EMAIL, vars, null, true);
 		}
 		else {
 			//for replies - send to author of answer and question.

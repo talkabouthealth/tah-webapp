@@ -26,6 +26,7 @@ public class EmailUtil {
 	
 	public static final String SUPPORT_EMAIL = "support@talkabouthealth.com";
 	public static final String MURRAY_EMAIL = "murrayjones@gmail.com";
+	public static final String ADMIN_EMAIL = "admin@talkabouthealth.com";
 	
 	/**
 	 * Names are the same (only uppercase) as templates' names on http://sailthru.com/

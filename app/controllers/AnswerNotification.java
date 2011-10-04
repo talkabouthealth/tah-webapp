@@ -1,14 +1,22 @@
 package controllers;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import logic.FeedsLogic;
+import logic.FeedsLogic.FeedType;
 import models.CommentBean;
 import models.ConversationBean;
 import models.TalkerBean;
+import models.actions.Action;
 import models.actions.AnswerConvoAction;
+import models.actions.PersonalProfileCommentAction;
 import models.actions.Action.ActionType;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -84,5 +92,29 @@ public class AnswerNotification extends Controller {
 			render(commentList,question);
 		}
 	}
-
+	
+	/**
+	 * 
+	 * @param feedType
+	 * @param beforeActionId
+	 * @param talkerName
+	 * @param isheader
+	 */
+	public static void feedAjaxUpdate(String feedType,String beforeActionId,String talkerName,String isheader) {
+    	int counter = 0;
+    	//Get records added in last minute
+    	Calendar date = Calendar.getInstance();
+		date.setTime(new Date());
+		date.set(Calendar.SECOND, -60);
+		
+    	List<CommentBean> answerList = CommentsDAO.loadAllConvoAnswers(date.getTime());
+    	if(answerList != null){
+	    	counter = answerList.size();
+    	}
+    	
+    	if(counter > 0){
+    		render("tags/feed/answerFeedCounter.html",counter);
+    	}
+    	
+	}
 }
