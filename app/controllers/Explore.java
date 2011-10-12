@@ -197,7 +197,8 @@ public class Explore extends Controller {
 		memberTypes.put("Family & Friends", Arrays.asList("Family member", "Friend"));
 		
 		//Set<TalkerBean> allActiveTalkers = ApplicationDAO.getActiveTalkers(null);
-		List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalkers(true);
+		//List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalkers(true);
+		List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalker(true);
 		//re-structure members by connection type
 		for (TalkerBean talker : allActiveTalkers) {
 			for (Entry<String, List<String>> memberTypeEntry : memberTypes.entrySet()) {
