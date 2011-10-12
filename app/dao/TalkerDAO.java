@@ -510,7 +510,35 @@ public class TalkerDAO {
 		return loadAllTalkers(false);
 	}
 
+	/*Changes for loading all talkers with no suspened flag*/
+	public static List<TalkerBean> loadAllTalker(boolean basicInfo){
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		talkersColl.ensureIndex(new BasicDBObject("uname", 1));
 		
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start().add("suspended", false);
+		
+		List<DBObject> talkersDBObjectList = null;
+		if (basicInfo) {
+			DBObject fields = getBasicTalkerFields();
+			talkersDBObjectList = talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1)).toArray();
+		} else {
+			talkersDBObjectList = talkersColl.find(queryBuilder.get()).sort(new BasicDBObject("uname", 1)).toArray();
+		}
+		
+		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
+		for (DBObject talkerDBObject : talkersDBObjectList) {
+			TalkerBean talker = new TalkerBean();
+			if (basicInfo) {
+				talker.parseBasicFromDB(talkerDBObject);
+			}
+			else {
+				talker.parseFromDB(talkerDBObject);
+			}
+			talkerList.add(talker);
+		}
+		return talkerList;
+	}
+	
 	// --------------------- Other ---------------------------
 	
 	public static List<TalkerBean> loadTalkersForDashboard() {
