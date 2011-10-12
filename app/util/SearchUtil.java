@@ -172,7 +172,10 @@ public class SearchUtil {
 		/* Updated to show all users if no search term entered. 
 		 * Good to have change
 		 * */
-		String searchTerm = "*";// + term;
+		String searchTerm = "";
+		if (term != null) {
+			searchTerm = term;
+		}
 		if (term != null && term.length() > 0) {
 			//if term contains only one word (or part) - use wildcard search
 			if (term.split(" ").length == 1) {
