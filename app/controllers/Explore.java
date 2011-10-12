@@ -201,7 +201,8 @@ public class Explore extends Controller {
 		memberTypes.put("Family & Friends", Arrays.asList("Family member", "Friend"));
 		
 		//Set<TalkerBean> allActiveTalkers = ApplicationDAO.getActiveTalkers(null);
-		List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalkers(true);
+		//List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalkers(true);
+		List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalker(true);
 		//re-structure members by connection type
 		for (TalkerBean talker : allActiveTalkers) {
 			for (Entry<String, List<String>> memberTypeEntry : memberTypes.entrySet()) {
@@ -346,8 +347,8 @@ public class Explore extends Controller {
 				memberTypeEntry = Arrays.asList("Family member", "Friend");
 				
 			activeTalkers = new ArrayList<TalkerBean>();
-			List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalkers(true);
-		 
+			//List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalkers(true);
+			List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalker(true);
 			for (TalkerBean talker : allActiveTalkers) {
 				if (memberTypeEntry.contains(talker.getConnection()) && talker.getName() != null) {
 					activeTalkers.add(talker);
