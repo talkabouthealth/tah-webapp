@@ -108,6 +108,15 @@ public class CommentBean extends MessageBean {
 	
 	private String actionID;
 	
+	//For question text
+	private String question;
+	//For moderate answer notification
+	private String moderate;
+	
+	public static final String[] MODERATE_ARRAY = new String[] {
+		"Approve Answer","Delete Answer","Not Helpful","Ignore"
+	};
+	
 	public void setActionId(String id) { this.actionID = id; }
 	public String getActionId() { return this.actionID; }
 	
@@ -151,6 +160,8 @@ public class CommentBean extends MessageBean {
 		setVotes(parseSet(Vote.class, commentDBObject, "votes"));
 		setNotHelpful(getBoolean(commentDBObject, "not_helpful"));
 		setNotHelpfulVotes(parseSet(Vote.class, commentDBObject, "not_helpful_votes"));
+		
+		setModerate(getString(commentDBObject, "moderate"));
 	}
 	
 	/**
@@ -243,5 +254,17 @@ public class CommentBean extends MessageBean {
 	}
 	public void setFromId(String fromId) {
 		this.fromId = fromId;
+	}
+	public String getQuestion() {
+		return question;
+	}
+	public void setQuestion(String question) {
+		this.question = question;
+	}
+	public String getModerate() {
+		return moderate;
+	}
+	public void setModerate(String moderate) {
+		this.moderate = moderate;
 	}
 }

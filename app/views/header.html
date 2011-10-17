@@ -67,8 +67,8 @@
 		makeAutocomplete("#topSearchBox", "all");
 
 		//truncates big text - used for feeds, long answers, descriptions, etc.
-		$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
-		$('.moretext2').truncatable({ limit: 220, more: '... more', less: true, hideText: '' });
+		$('.moretext').truncatable({ limit: 70, more: '... more', less: true, hideText: '...less' });
+		$('.moretext2').truncatable({ limit: 220, more: '... more', less: false, hideText: '' });
 		
 
 		//close button in popups
@@ -132,6 +132,7 @@
 				                  <li><a href="@{Dashboard.manageAccounts()}">Manage Accounts</a></li>
 				                  <li><a href="@{Dashboard.verifyProfessionals()}">Verify Professionals</a></li>
 				                  <li><a href="@{UserList.index()}">Users</a></li>
+				                  <li><a href="@{UpdateQuestion.updateQuestionStatus()}">Question Recovery</a></li>
 				                </ul>
 				            </li>
 				            <li class="separator">|</li>

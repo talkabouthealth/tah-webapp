@@ -730,6 +730,20 @@ public class ConversationDAO {
 		convosColl.update(convoId, new BasicDBObject("$set", messageObj));
 	}
 	
+	/**
+	 * Get conversation  by id.
+	 */
+	public static ConversationBean getConvoById(String convoId) {
+		DBCollection convoColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		DBObject query = new BasicDBObject("_id", new ObjectId(convoId));
+		DBObject answerDBObject = convoColl.findOne(query);
+		
+		ConversationBean conversation = new ConversationBean();
+		conversation.parseFromDB(answerDBObject);
+		return conversation;
+	}
+	
 	public static void main(String[] args) {
 		deleteChatMessage("4cc94ac5b8682ba9efeba5f2", 0);
 		

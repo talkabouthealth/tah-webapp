@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import controllers.AnswerNotification;
+
 import models.CommentBean;
 import models.TalkerBean;
 import models.PrivacySetting.PrivacyType;
@@ -121,8 +123,13 @@ public class TemplateExtensions extends JavaExtensions {
 		return false;
 	}
 	
-	public static Object printThoughtOrAnswer(CommentBean thoughtOrAnswer) {
-		String htmlText = CommonUtil.commentToHTML(thoughtOrAnswer);
+	public static Object printThoughtOrAnswer(CommentBean thoughtOrAnswer,String userName) {
+		String htmlText = "";
+		if(thoughtOrAnswer.getModerate() != null && !thoughtOrAnswer.getModerate().equalsIgnoreCase(AnswerNotification.DELETE_ANSWER)){
+			htmlText = CommonUtil.commentToHTML(thoughtOrAnswer);
+		}else if(thoughtOrAnswer.getFromTalker().getUserName().equalsIgnoreCase(userName)){
+			htmlText = CommonUtil.commentToHTML(thoughtOrAnswer);
+		}
 		return JavaExtensions.raw(htmlText);
 	}
 

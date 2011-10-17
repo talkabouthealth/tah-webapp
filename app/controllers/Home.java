@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
@@ -19,11 +20,13 @@ import logic.ConversationLogic;
 import logic.FeedsLogic;
 import logic.TalkerLogic;
 import logic.FeedsLogic.FeedType;
+import models.CommentBean;
 import models.IMAccountBean;
 import models.ServiceAccountBean;
 import models.TalkerBean;
 import models.ConversationBean;
 import models.TalkerDiseaseBean;
+import models.ThankYouBean;
 import models.TopicBean;
 import models.ServiceAccountBean.ServiceType;
 import models.actions.Action;
@@ -68,6 +71,60 @@ public class Home extends Controller {
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
     	
+		Iterator<Action> communityFeedIter = communityFeed.iterator();
+		 while (communityFeedIter.hasNext()) {
+			 Action actionIterator = communityFeedIter.next();
+			 if(actionIterator != null && actionIterator.getConvo() != null){
+				 List<CommentBean> commentBeanList = actionIterator.getConvo().getComments();
+				 for(int index = 0; index < commentBeanList.size(); index++){
+					 CommentBean commentBean = commentBeanList.get(index);
+					 CommentBean comment =  CommentsDAO.getConvoCommentById(commentBean.getId());
+					 if(comment != null && comment.getModerate() != null && !comment.getFromTalker().equals(talker)){
+						 if(comment.getModerate().equalsIgnoreCase(AnswerNotification.DELETE_ANSWER)){
+							 commentBeanList.remove(index);
+							 actionIterator.getConvo().setComments(commentBeanList);
+						 }else if(comment.getModerate().equalsIgnoreCase("null")){
+							 commentBeanList.remove(index);
+							 actionIterator.getConvo().setComments(commentBeanList);
+						 }
+					 }else {
+						 if(actionIterator.getTalker().getActivityList()!=null){
+							 int count = actionIterator.getTalker().getActivityList().size();
+							 actionIterator.getTalker().getActivityList().remove(count);
+						 }
+						 commentBeanList.remove(index);
+						 actionIterator.getConvo().setComments(commentBeanList);
+					 }
+				 }
+			 }
+		 }
+		 
+		//For removing answer from feed list which have moderate no moderate value or value as "Delete Answer"
+			Iterator<Action> convoFeedIter = convoFeed.iterator();
+			 while (convoFeedIter.hasNext()) {
+				 Action actionIterator = convoFeedIter.next();
+				 if(actionIterator != null && actionIterator.getConvo() != null){
+					 List<CommentBean> commentBeanList = actionIterator.getConvo().getComments();
+					 for(int index = 0; index < commentBeanList.size(); index++){
+						 CommentBean commentBean = commentBeanList.get(index);
+						 CommentBean comment =  CommentsDAO.getConvoCommentById(commentBean.getId());
+						 if(comment != null && comment.getModerate() != null  && !comment.getFromTalker().equals(talker)){
+							 if(comment.getModerate().equalsIgnoreCase(AnswerNotification.DELETE_ANSWER)){
+								 commentBeanList.remove(index);
+								 actionIterator.getConvo().setComments(commentBeanList);
+							 }else if(comment.getModerate().equalsIgnoreCase("null")){
+								 commentBeanList.remove(index);
+								 actionIterator.getConvo().setComments(commentBeanList);
+							 }
+						 }else{
+							 commentBeanList.remove(index);
+							 actionIterator.getConvo().setComments(commentBeanList);
+						 }
+						
+					 }
+				 }
+			 }
+			 
     	//find mentions (@<username> in the thoughts)
     	List<Action> mentions = CommentsDAO.getTalkerMentions(talker,null);
     	

@@ -846,3 +846,41 @@ function refreshMembers(type,elm){
 			}
 	);
 }
+
+function loadMoreUser(type){
+	var lastActionId = '';
+	var moreBtn = $("#"+type+"Tab");
+	lastActionId = $(moreBtn).children().last().attr("id");
+	var searchTerm = '';
+	//For search page only
+	if(type == 'search'){
+		searchTerm  = document.searchForm.query.value;
+	}
+	$("#ajaxLoading").prependTo($("#"+type+"Btn")).show();
+	//Useful for the special charactors in the string
+	var typeParam = replaceAll(type,"-"," ");
+	typeParam = replaceAll(typeParam,"and","&");
+	$.get("/explore/ajaxLoadMoreUser", {afterActionId: lastActionId, feedType: typeParam, searchTerm : searchTerm},
+		function(data) {
+			if(data == ''){
+					$("#"+type+"Btn").hide();
+			}else{
+				$(data).appendTo($("#"+type+"Tab"));
+				$('.moretext').truncatable({ limit: 70, more: '... more', less: false, hideText: '...less' });
+				moreBtn.show();
+				$("#ajaxLoading").hide();
+			}
+		}
+	);
+	return false;
+}
+
+function replaceAll(strText,oldParam,newParam){
+	var strReplaceAll = strText;
+	var intIndexOfMatch = strReplaceAll.indexOf( oldParam );
+	while (intIndexOfMatch != -1){
+		strReplaceAll = strReplaceAll.replace( oldParam, newParam )
+		intIndexOfMatch = strReplaceAll.indexOf( oldParam );
+	}
+	return strReplaceAll;
+}
