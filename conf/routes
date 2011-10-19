@@ -38,6 +38,7 @@ GET		/livechats/?							Explore.liveTalks
 GET		/explore/topics/?						Explore.browseTopics
 GET		/explore/conversationfeed/?				Explore.conversations(action:'feed')
 GET		/explore/popular/?						Explore.conversations(action:'popular')
+GET		/explore/feedAjaxLoad					Explore.feedAjaxLoad
 
 GET		/home/?									Home.index
 GET		/conversationfeed/?						Home.conversationFeed
@@ -45,6 +46,7 @@ GET		/dashboard/?							Dashboard.index
 *		/dashboard/notification					Notifications.index
 *		/dashboard/userlist						UserList.index
 *		/dashboard/answernotification			AnswerNotification.index
+*		/dashboard/questionnotification			AnonQuestionNotification.index
 *		/answernotification/feedAjaxUpdate		AnswerNotification.feedAjaxUpdate
 GET		/chat/{convoId}							Talk.talkApp
 GET		/chat/?									Talk.talkApp

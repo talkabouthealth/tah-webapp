@@ -76,18 +76,20 @@
 		                      <div class="joinborder"></div>
 		                      <!--mtinputbox-->
 		                      <div class="cb"></div>
-		                      <div class="topic" id="popularConvoList">
-		                        #{list items: popularConvos, as: 'convo' }
-									#{convo/convoListItem convo: convo, talker: talker /}
-								#{/list}
-		                      </div>
-		                      #{if popularConvos.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
-									<div class="replytommentbox" id="popularConvoBtn">
-			                          <input type="submit" src="images/seemore.jpg" 
-			                          	onclick="return loadMoreFeedWithoutLogin('popularConvo');" value=" " class="seemorecom" />
-			                        </div>
-								#{/if}
-								<div class="cb"></div>
+		                      <div class="topic" >
+			                      <div id="popularConvoList">
+			                        #{list items: popularConvos, as: 'convo' }
+										#{convo/convoListItem convo: convo, talker: talker /}
+									#{/list}
+			                      </div>
+			                      #{if popularConvos.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+										<div class="replytommentbox" id="popularConvosBtn">
+				                          <input type="submit" src="images/seemore.jpg" 
+				                          	onclick="return loadMoreFeedWithoutLogin('popularConvo');" value=" " class="seemorecom" />
+				                        </div>
+									#{/if}
+									<div class="cb"></div>
+								</div>
 		                      <!--newpageCover-->
 		                      <div class="cb"></div>
 		                    </div> 

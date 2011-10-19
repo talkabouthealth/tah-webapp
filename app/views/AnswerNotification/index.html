@@ -96,19 +96,28 @@
 											
 											<div id="answerList">
 											#{if list != null}
+											#{list items:1..convoCount, as:'i'}
+												#{if page == i+""}
+												<a href="answernotification?page=${i}" style="font-weight:bold;">${i}</a>
+												#{/if}
+												#{else}
+												<a href="answernotification?page=${i}">${i}</a>
+												#{/else}
+											    
+											#{/list}
 												#{if list.size > 0}
 													<tr>
 														<th colspan="2">Question List</th>
 													</tr>
-													#{paginate.list items: list, as: 'convoInfo' }
+													#{list items: list, as: 'convoInfo'}
+													
 														<tr>
 															<td>
 																${convoInfo.topic}
 															</td>
 															<td><input type="button" value="Moderate" onclick="getAnswers('${convoInfo.id}')"></input></td>
 														</tr>
-													#{/paginate.list}
-													#{paginate.controls items:list /} 
+													 #{/list}
 													
 												#{/if}
 												#{else}

@@ -113,8 +113,12 @@ public class TemplateExtensions extends JavaExtensions {
 	 */
 	public static boolean isAllowed(TalkerBean talker, PrivacyType privacyType, TalkerBean currentTalker) {
 		PrivacyValue privacyValue = talker.getPrivacyValue(privacyType);
-		
-		if (privacyValue == PrivacyValue.PUBLIC || talker.equals(currentTalker)) {
+		if(currentTalker == null){
+			if (privacyValue == PrivacyValue.PUBLIC )
+				return true;
+			else
+				return false;
+		}else if (privacyValue == PrivacyValue.PUBLIC || talker.equals(currentTalker)) {
 			return true;
 		}
 		if (privacyValue == PrivacyValue.COMMUNITY && currentTalker != null) {
@@ -125,9 +129,15 @@ public class TemplateExtensions extends JavaExtensions {
 	
 	public static Object printThoughtOrAnswer(CommentBean thoughtOrAnswer,String userName) {
 		String htmlText = "";
-		if(thoughtOrAnswer.getModerate() != null && !thoughtOrAnswer.getModerate().equalsIgnoreCase(AnswerNotification.DELETE_ANSWER)){
-			htmlText = CommonUtil.commentToHTML(thoughtOrAnswer);
+		
+		if(thoughtOrAnswer.getModerate() != null && thoughtOrAnswer.getModerate().equalsIgnoreCase(AnswerNotification.DELETE_ANSWER)){
+		}else if(thoughtOrAnswer.getModerate() != null && thoughtOrAnswer.getModerate().equals("")){
+			
 		}else if(thoughtOrAnswer.getFromTalker().getUserName().equalsIgnoreCase(userName)){
+			htmlText = CommonUtil.commentToHTML(thoughtOrAnswer);
+		}else if(thoughtOrAnswer.getModerate() != null){
+			htmlText = CommonUtil.commentToHTML(thoughtOrAnswer);
+		}else{
 			htmlText = CommonUtil.commentToHTML(thoughtOrAnswer);
 		}
 		return JavaExtensions.raw(htmlText);

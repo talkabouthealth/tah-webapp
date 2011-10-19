@@ -64,8 +64,16 @@
 					<div id="signupleftarea">
 						<div class="signupmain">
 							<div class="signuptextarea"><span class="blacktext14">Health Community</span></div>
-							<div class="signuptextarea">
-								<span class="blacktext14">Breast Cancer</span>
+							<div class="personaltextfield">
+								<select size="1" name="talker.category" class="personalfields" id="talker.category">
+							  		<option selected value=''></option>
+							  		#{list items:diseaseList , as: 'disease'}
+									    <option value="${disease.name}"
+									    #{if connection.equals(flash['talker.category']) } selected #{/if} 
+									    >${disease.name}</option>
+									#{/list}
+								</select>
+								<!-- <span class="blacktext14">Breast Cancer</span>  -->
 							</div>
 							<div class="signtag" style="margin-top: -5px">
 								<span class="textgreylight12">More Health communities coming soon. 

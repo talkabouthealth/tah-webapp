@@ -87,8 +87,8 @@
 				<div class="blacktext2" id="innerheading" >
 					<a href="@{ViewDispatcher.view(talker.name)}" class="bluetext20" >${talker.name}'s</a> 
 						Questions</div>
-				<div id="innermiddlearea" style="width: 600px;">
-					<div class="tabbed_box" id="tabbed_box_1" style="width: 600px;">
+				<div id="innermiddlearea" style="width: 650px;">
+					<div class="tabbed_box" id="tabbed_box_1" style="width: 650px;">
 		    			<div class="tabbed_area">
 					        <ul class="tabs" style="padding-left: 0px;">
 					            <li><a href="#tab1"><span>Questions Asked (${numOfStartedConvos})</span></a></li>
@@ -101,7 +101,7 @@
 					       		<div id="tab1" class="tab_content">
 					       			#{if talker.isAllowed(models.PrivacySetting.PrivacyType.QUESTIONS_STARTED, currentTalker) }
 					       				<h3>Questions Asked (${numOfStartedConvos})</h3>
-							       		<div id="questionsAskedList" class="activitiestext">
+							       		<div id="questionsAskedList" class="activitiestext" style="width:640px;">
 							       			#{if startedConvosFeed.size() == 0}
 												<span class="blacktext14">
 													#{if talker.equals(currentTalker)}
@@ -131,7 +131,7 @@
 		    					<div id="tab2" class="tab_content">
 		    						#{if talker.isAllowed(models.PrivacySetting.PrivacyType.CHATS_JOINED, currentTalker) }
 							       		<h3>Chats Joined (${joinedConvosFeed.size()})</h3>
-							       		<div id="chatsJoinedList" class="activitiestext">
+							       		<div id="chatsJoinedList" class="activitiestext" style="width:640px;">
 							       			#{if joinedConvosFeed.size() == 0}
 												<span class="blacktext14">
 													#{if talker.equals(currentTalker)}
@@ -158,7 +158,7 @@
 		    					<div id="tab3" class="tab_content">
 		    						#{if talker.isAllowed(models.PrivacySetting.PrivacyType.QUESTIONS_FOLLOWING, currentTalker) }
 							       		<h3>Questions Following (${numOfFollowingConvos})</h3>
-							       		<div id="questionsFollowingList" class="activitiestext">
+							       		<div id="questionsFollowingList" class="activitiestext" style="width:640px;">
 							       			#{if followingConvosFeed.size() == 0}
 												<span class="blacktext14">
 													#{if talker.equals(currentTalker)}

@@ -474,7 +474,12 @@ function updateFeed(type,talkerName) {
 							  	<a href="#" id="convoFeed" class="tabLink">Your Conversation Feed</a>
 							  </div>
 							  <div class="newActiveTab">
-							  	<a href="#" id="communityFeed" class="tabLink">Breast Cancer Community Feed</a>
+							  	<a href="#" id="communityFeed" class="tabLink">
+							  		#{if talker != null}${talker.category}
+							  		#{/if}
+							  		#{else}Breast Cancer#{/else}
+							  		 Community Feed
+							  	</a>
 							  </div>
 							  <div class="newTab">
 							  	<a href="#" id="mentionsTab" class="tabLink">@mentions</a>
@@ -484,7 +489,7 @@ function updateFeed(type,talkerName) {
 							<div class="cb"></div>
 							<div>
 								<div id="convoFeedContent" class="tabContent" 
-										style="display: ${convoFeed.size() < 20 ? 'none' : 'block'};">	
+										style="display:none;">	
 									<div class="topic">
 				                      <div class="cb"></div>
 				                      <div class="topic">
@@ -512,7 +517,7 @@ function updateFeed(type,talkerName) {
 				                    </div> 
 								</div>
 								<div id="communityFeedContent" class="tabContent" 
-										style="display: ${convoFeed.size() < 20 ? 'block' : 'none'};">	
+										style="display: block;">	
 									<div class="topic">
 				                      <div class="cb"></div>
 				                      <div class="topic" id='comfeed'>

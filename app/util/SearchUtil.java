@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import logic.FeedsLogic;
 import models.CommentBean;
 import models.ConversationBean;
 import models.TalkerBean;
@@ -48,19 +49,21 @@ public class SearchUtil {
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public static List<TalkerBean> searchTalker(String query) throws CorruptIndexException, IOException, ParseException {
+	public static List<TalkerBean> searchTalker(String query, TalkerBean talkerBean) throws CorruptIndexException, IOException, ParseException {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"talker");
 		
 		Analyzer analyzer = new StandardAnalyzer();
 		Query searchQuery = prepareSearchQuery(query, new String[] {"uname","fname","lname","bio"}, analyzer);
 		Hits hits = is.search(searchQuery);
 		
+		List<String> cat = FeedsLogic.getCancerType(talkerBean);
+		
 		List<TalkerBean> results = new ArrayList<TalkerBean>();
 		for (int i = 0; i < hits.length(); i++) {
 			Document doc = hits.doc(i);
 
 			TalkerBean talker = TalkerDAO.getById(doc.get("id"));
-			if(talker.getName() != null)
+			if(talker.getName() != null && cat.contains(talker.getCategory()))
 				results.add(talker);
 			//TO DO : Must need to remove to show more users. 
 			//if (i == 7) {
@@ -81,13 +84,15 @@ public class SearchUtil {
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public static List<ConversationBean> searchConvo(String query, int numOfResults) throws CorruptIndexException, IOException, ParseException {
+	public static List<ConversationBean> searchConvo(String query, int numOfResults, TalkerBean talker) throws CorruptIndexException, IOException, ParseException {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"conversations");
 		
 		//prepare query to search
 		Analyzer analyzer = new StandardAnalyzer();
 		Query searchQuery = prepareSearchQuery(query, new String[] {"title", "answers"}, analyzer);
 		Hits hits = is.search(searchQuery);
+		
+		List<String> cat = FeedsLogic.getCancerType(talker);
 		
 		List<ConversationBean> results = new ArrayList<ConversationBean>();
 		for (int i = 0; i < hits.length(); i++) {
@@ -115,7 +120,8 @@ public class SearchUtil {
 			String fr = highlighter.getBestFragment(analyzer, "answers", answersString.toString());
 			convo.setSearchFragment(fr);
 			
-			results.add(convo);
+			if(cat.contains(convo.getCategory()))
+				results.add(convo);
 			if (results.size() == numOfResults) {
 				break;
 			}
@@ -130,7 +136,7 @@ public class SearchUtil {
 	/**
 	 * Returns 3 conversations related to given.
 	 */
-	public static List<ConversationBean> getRelatedConvos(ConversationBean searchedConvo) throws Exception {
+	public static List<ConversationBean> getRelatedConvos(TalkerBean talker,ConversationBean searchedConvo) throws Exception {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"conversations");
 		
 		//Possible implementation?
@@ -147,7 +153,8 @@ public class SearchUtil {
 		Analyzer analyzer = new StandardAnalyzer();
 		Query searchQuery = prepareSearchQuery(queryText, new String[] {"title"}, analyzer);
 		Hits hits = is.search(searchQuery);
-
+		
+		List<String> cat = FeedsLogic.getCancerType(talker);
 		List<ConversationBean> results = new ArrayList<ConversationBean>();
 		for (int i = 0; i < hits.length(); i++) {
 			Document doc = hits.doc(i);
@@ -157,7 +164,8 @@ public class SearchUtil {
 				continue;
 			}
 			ConversationBean convo = ConversationDAO.getById(convoId);
-			results.add(convo);
+			if(cat.contains(convo.getTalker().getCategory()))
+				results.add(convo);
 			if (results.size() == 3) {
 				break;
 			}
@@ -181,7 +189,7 @@ public class SearchUtil {
 		if (term != null && term.length() > 0) {
 			//if term contains only one word (or part) - use wildcard search
 			if (term.split(" ").length == 1) {
-				searchTerm = "*"+term+"*";
+				searchTerm = term+"*";
 			}
 		}
 		Query searchQuery = parser.parse(searchTerm);
