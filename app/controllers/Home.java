@@ -69,10 +69,10 @@ public class Home extends Controller {
 
     	long start = System.currentTimeMillis();
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
-    	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
-    	
-		Iterator<Action> communityFeedIter = communityFeed.iterator();
-		 while (communityFeedIter.hasNext()) {
+    	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
+
+    	Iterator<Action> communityFeedIter = communityFeed.iterator();
+		while (communityFeedIter.hasNext()) {
 			 Action actionIterator = communityFeedIter.next();
 			 if(actionIterator != null && actionIterator.getConvo() != null){
 				 List<CommentBean> commentBeanList = actionIterator.getConvo().getComments();
@@ -178,7 +178,7 @@ public class Home extends Controller {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
     	Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
-    	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true);
+    	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
 		TalkerLogic.preloadTalkerInfo(talker);
 		
 		render(talker, convoFeed, communityFeed);
@@ -195,7 +195,7 @@ public class Home extends Controller {
     		_feedItems = FeedsLogic.updateFeed(FeedType.CONVERSATION,beforeActionId,_talker,true);
     	}
     	else if ("communityFeed".equalsIgnoreCase(feedType)) {
-    		_feedItems = FeedsLogic.updateFeed(FeedType.COMMUNITY,beforeActionId,null,loggedIn);
+    		_feedItems = FeedsLogic.updateFeed(FeedType.COMMUNITY,beforeActionId,_talker,loggedIn);
     	}else if ("mentions".equalsIgnoreCase(feedType)) {
     		TalkerBean profileTalker = TalkerDAO.getByUserName(talkerName);
     		if (profileTalker != null) {
@@ -229,15 +229,20 @@ public class Home extends Controller {
     	boolean loggedIn = (_talker != null);
     	Set<Action> _feedItems = null;
     	List<TalkerBean> _similarMembers = null;
+    	List<ConversationBean> popularConvos = null;
     	if ("convoFeed".equalsIgnoreCase(feedType)) {
     		_feedItems = FeedsLogic.getConvoFeed(_talker, afterActionId);
     		render("tags/feed/feedList.html", _feedItems, _talker);
     	} else if ("communityFeed".equalsIgnoreCase(feedType)) {
-    		_feedItems = FeedsLogic.getCommunityFeed(afterActionId, loggedIn);
-    	} else if("USR".equalsIgnoreCase(feedType) || "EXP".equalsIgnoreCase(feedType)){
+    		_feedItems = FeedsLogic.getCommunityFeed(afterActionId, loggedIn, _talker);
+    		render("tags/feed/feedList.html", _feedItems, _talker);
+    	} else if ("popularConvo".equalsIgnoreCase(feedType)){
+    	     popularConvos = ConversationDAO.loadPopularConversations(afterActionId);
+    	     render("tags/convo/convoList.html", popularConvos);
+        } else if("USR".equalsIgnoreCase(feedType) || "EXP".equalsIgnoreCase(feedType)){
     		_similarMembers = TalkerLogic.getRecommendedTalkers(_talker,feedType);
     		render("tags/profile/similarMemberList.html", _similarMembers);
-    	} else if("TOPIC".equals(feedType)){
+    	} else if("TOPIC".equals(feedType)) {
     		List<TopicBean> _recommendedTopics = TalkerLogic.getRecommendedTopics(_talker,afterActionId);
     		render("tags/topicList.html", _recommendedTopics);
     	} else {

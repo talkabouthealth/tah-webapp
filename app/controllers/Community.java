@@ -51,7 +51,7 @@ public class Community extends Controller {
 		}
 		
 		List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
-		Set<Action> communityConvoFeed = FeedsLogic.getCommunityFeed(null, (talker != null));
+		Set<Action> communityConvoFeed = FeedsLogic.getCommunityFeed(null, (talker != null), talker);
 		
 		render(talker, liveTalks, communityConvoFeed, communityMembers);
 	}

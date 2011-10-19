@@ -40,28 +40,58 @@ public class AnswerNotification extends Controller {
 	public static final String APPROVE_ANSWER = "Approve Answer";
 	public static final String DELETE_ANSWER = "Delete Answer";
 	
-	public static void index(String id, String action, String moderate) {
+	public static void index(String id, String action, String moderate,String page) {
 		
 		//check admin user 
 		if(!session.get("username").equalsIgnoreCase(ADMIN)){
 			redirect("/home");
 		}
 		String question = "";
-		
 		if(action == null){
-			List<ConversationBean> listTemp = AnswerNotificationDAO.getConvos();
-			List<ConversationBean> list = new ArrayList();
-			for(int index = 0; index < listTemp.size(); index++){
-				List<CommentBean> commentList= AnswerNotificationDAO.getConvoComments(listTemp.get(index).getId());
-				if(commentList.size() > 0){
-					list.add(listTemp.get(index));
-				}
+			
+			page = page==null?"1":page;
+			int pageNo = Integer.parseInt(page) - 1;
+			int convoCount= session.get("convoCount") == null ? 0 : Integer.parseInt(session.get("convoCount").toString());
+			if(convoCount == 0){
+				convoCount = AnswerNotificationDAO.getAllConvoCount();
+				if (convoCount > 0)
+					session.put("convoCount", convoCount);
 			}
-			render(list);
+			
+			//check if list is available in session then get it from session otherwise from db
+			List<ConversationBean> tempList = Cache.get("questionList") == null ? AnswerNotificationDAO.getConvos() : (List<ConversationBean>) Cache.get("questionList");
+			if(tempList.size()>0)
+				Cache.set("questionList", tempList);
+			List<ConversationBean> list = new ArrayList<ConversationBean>();
+			
+			int count = AnswerNotificationDAO.CONVO_PER_PAGE * (pageNo+1);
+			
+			int prevCount = AnswerNotificationDAO.CONVO_PER_PAGE * pageNo;
+			if(pageNo >1 && tempList.size() > count){
+				count = tempList.size();
+			}
+			int condition = (count > prevCount+20 ? prevCount+20 : count);
+			if(condition > tempList.size())
+				condition = tempList.size();
+			
+			System.out.println(prevCount + " to " + condition);
+			for(int index = prevCount ; index < condition; index++){
+				ConversationBean convo = tempList.get(index);
+				list.add(convo);
+			}
+						
+			int flt = convoCount % AnswerNotificationDAO.CONVO_PER_PAGE;
+			convoCount = convoCount / AnswerNotificationDAO.CONVO_PER_PAGE;
+			if(flt > 0)
+				convoCount++;
+			
+			render(list,convoCount,page);
+			
 		}else if(action != null && action.equalsIgnoreCase("getAnswers")){
-			List<CommentBean> answerList = CommentsDAO.loadConvoAnswersTree(id);
+			List<CommentBean> answerList = CommentsDAO.loadAllConvoAnswers(id);
 			List<CommentBean> commentList= answerList;
 			if(commentList != null && commentList.size()>0){
+				
 				ConversationBean convo = ConversationDAO.getById(commentList.get(0).getConvoId());
 				question = convo.getTopic();
 			}
@@ -80,7 +110,7 @@ public class AnswerNotification extends Controller {
 				}
 			}
 			CommentsDAO.updateConvoComment(comment);
-			List<CommentBean> answerList = CommentsDAO.loadConvoAnswersTree(comment.getConvoId());
+			List<CommentBean> answerList = CommentsDAO.loadAllConvoAnswers(comment.getConvoId());
 			List<CommentBean> commentList= answerList;
 			if(commentList != null && commentList.size()>0){
 				ConversationBean convo = ConversationDAO.getById(commentList.get(0).getConvoId());
@@ -115,6 +145,5 @@ public class AnswerNotification extends Controller {
     	if(counter > 0){
     		render("tags/feed/answerFeedCounter.html",counter);
     	}
-    	
 	}
 }

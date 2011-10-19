@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import logic.ConversationLogic;
+import logic.FeedsLogic;
 import logic.TalkerLogic;
 import logic.TopicLogic;
 import models.TalkerBean;
@@ -25,6 +26,10 @@ import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.RangeFilter;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.Searcher;
+import org.apache.lucene.search.TopDocs;
 
 import dao.ConversationDAO;
 import dao.TopicDAO;
@@ -41,6 +46,9 @@ public class Search extends Controller {
 	 * @param term String entered by user
 	 */
 	public static void ajaxSearch(String term) throws Exception {
+		
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
 		List<String> allowedTypes = Arrays.asList("User", "Conversation", "Question", "Topic");
 		List<Map<String, String>> results = makeSearch(term, allowedTypes, null);
 		
@@ -98,11 +106,15 @@ public class Search extends Controller {
 		
 		Analyzer analyzer = new StandardAnalyzer();
 		Query searchQuery = SearchUtil.prepareSearchQuery(term, new String[] {"uname", "title"}, analyzer);
-		Hits hits = is.search(searchQuery);
+		 
+		//Hits hits = is.search(searchQuery);
 		
+		TopDocs hits = is.search(searchQuery, null, 10);
+		ScoreDoc [] docs = hits.scoreDocs;
+
 		List<Map<String, String>> results = new ArrayList<Map<String, String>>();
-		for (int i = 0; i < hits.length(); i++) {
-			Document doc = hits.doc(i);
+		for (int i = 0; i <docs.length ; i++) {
+			Document doc = is.doc(docs[i].doc);
 			
 			//filter by id or type
 			String type = doc.get("type");
@@ -144,12 +156,13 @@ public class Search extends Controller {
 	}
 	
 	public static void allSearch(String query) throws Exception {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		List<TopicBean> topicResults = null;
 		List<Action> convoResults = null;
 		if (query != null) {
 			topicResults = topicsSearch(query);
 			convoResults = 
-				ConversationLogic.convosToFeed(SearchUtil.searchConvo(query, 5));
+				ConversationLogic.convosToFeed(SearchUtil.searchConvo(query, 5,talker));
 		}
 		
 		render(topicResults, convoResults);

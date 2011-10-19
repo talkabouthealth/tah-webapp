@@ -24,6 +24,7 @@ import org.jboss.netty.handler.codec.http.HttpHeaders;
 import controllers.LoggerController;
 
 import logic.TalkerLogic;
+import models.DiseaseBean;
 import models.EmailBean;
 import models.IMAccountBean;
 import models.PrivacySetting;
@@ -55,6 +56,7 @@ import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.ConversationDAO;
+import dao.DiseaseDAO;
 import dao.TalkerDAO;
 
 /**
@@ -140,6 +142,8 @@ public class Application extends Controller {
     	//prepare additional settings for FB or Twitter
     	String from = flash.get("from");
     	Map<String, String> additionalSettings = null;
+    	List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
+
     	if (from != null) {
     		ServiceType type = ServiceAccountBean.parseServiceType(from);
     		additionalSettings = ServiceAccountBean.settingsNamesByType(type);
@@ -148,7 +152,7 @@ public class Application extends Controller {
     		flash("captcha", "true");
     	}
     	String randomID = Codec.UUID();
-    	render(additionalSettings,randomID);
+    	render(additionalSettings,randomID,diseaseList);
     }
     
     public static void register(@Valid TalkerBean talker,String code, String randomID) {

@@ -74,7 +74,7 @@ public class Explore extends Controller {
     	}
     	int limit = session.get("topicCount")==null?20:Integer.parseInt(session.get("topicCount"));
     	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics(limit);
-		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions();
+		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions(talker);
 		
 		render(talker, openQuestions, popularTopics,newsLetterFlag);
     }
@@ -152,18 +152,35 @@ public class Explore extends Controller {
     public static void browseMembers(String action) throws Throwable {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 
+		List<String> cat = FeedsLogic.getCancerType(currentTalker);
+		
 		//Active talkers on this day
 		// Displaying members active since last 2 week's rather than 1 week
 		Calendar oneWeekBeforeNow = Calendar.getInstance();
 		oneWeekBeforeNow.add(Calendar.WEEK_OF_YEAR, -2);
 		
 		
-		List<TalkerBean> activeTalkers =  ApplicationDAO.getActiveTalkers(oneWeekBeforeNow.getTime());
+		List<TalkerBean> activeTalkers1 =  ApplicationDAO.getActiveTalkers(oneWeekBeforeNow.getTime());
+		
+		List<TalkerBean> activeTalkers = new ArrayList<TalkerBean>();
+		for(TalkerBean talkerBean : activeTalkers1){
+			if(cat.contains(talkerBean.getCategory())){
+				activeTalkers.add(talkerBean);
+			}
+		}
+		
 		if(activeTalkers != null && activeTalkers.size() > TalkerLogic.TALKERS_PER_PAGE)
 			activeTalkers = activeTalkers.subList(0, TalkerLogic.TALKERS_PER_PAGE);
 		
-		List<TalkerBean> newTalkers = ApplicationDAO.getNewTalkers();
+		List<TalkerBean> newTalkers1 = ApplicationDAO.getNewTalkers();
 
+		List<TalkerBean> newTalkers = new ArrayList<TalkerBean>();
+		for(TalkerBean talkerBean : newTalkers1){
+			if(cat.contains(talkerBean.getCategory())){
+				newTalkers.add(talkerBean);
+			}
+		}
+		
 		if(newTalkers != null && newTalkers.size() > TalkerLogic.TALKERS_PER_PAGE)
 			newTalkers = newTalkers.subList(0,TalkerLogic.TALKERS_PER_PAGE); 
 
@@ -173,7 +190,7 @@ public class Explore extends Controller {
 		if (query != null) {
 			params.flash("query");
 			try {
-				results = SearchUtil.searchTalker(query);
+				results = SearchUtil.searchTalker(query,currentTalker);
 				if(results != null && results.size() > TalkerLogic.TALKERS_PER_PAGE)
 					results = results.subList(0, TalkerLogic.TALKERS_PER_PAGE);
 			}
@@ -201,8 +218,7 @@ public class Explore extends Controller {
 		memberTypes.put("Family & Friends", Arrays.asList("Family member", "Friend"));
 		
 		//Set<TalkerBean> allActiveTalkers = ApplicationDAO.getActiveTalkers(null);
-		//List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalkers(true);
-		List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalker(true);
+		List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalkers(true,currentTalker);
 		//re-structure members by connection type
 		for (TalkerBean talker : allActiveTalkers) {
 			for (Entry<String, List<String>> memberTypeEntry : memberTypes.entrySet()) {
@@ -230,7 +246,7 @@ public class Explore extends Controller {
 		if (query != null) {
 			params.flash("query");
 			try {
-				results = SearchUtil.searchConvo(query, 10);
+				results = SearchUtil.searchConvo(query, 10, talker);
 			}
 			catch (Exception e) {
 				Logger.error(e, "Search Conversations error");
@@ -246,7 +262,7 @@ public class Explore extends Controller {
 	public static void conversations(String action) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		boolean loggedIn = (talker != null);
-		Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, loggedIn);
+		Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, loggedIn, talker);
 		
 		List<TopicBean> popularTopics = null;
     	if (talker == null) {
@@ -309,6 +325,40 @@ public class Explore extends Controller {
 		render(action, communityFeed, popularConvos, popularTopics);
 	}
 	
+	/**
+	 * Used by "More" button in different feeds.
+	 * @param afterActionId load actions after given action
+	 */
+    public static void feedAjaxLoad(String feedType, String afterActionId, String talkerName) {
+    	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
+    	boolean loggedIn = (_talker != null);
+    	Set<Action> _feedItems = null;
+    	List<TalkerBean> _similarMembers = null;
+    	List<ConversationBean> popularConvos = null;
+    	if ("convoFeed".equalsIgnoreCase(feedType)) {
+    		_feedItems = FeedsLogic.getConvoFeed(_talker, afterActionId);
+    		render("tags/feed/feedList.html", _feedItems, _talker);
+    	} else if ("communityFeed".equalsIgnoreCase(feedType)) {
+    		_feedItems = FeedsLogic.getCommunityFeed(afterActionId, loggedIn, _talker);
+    		render("tags/feed/feedList.html", _feedItems, _talker);
+    	} else if ("popularConvo".equalsIgnoreCase(feedType)){
+    	     popularConvos = ConversationDAO.loadPopularConversations(afterActionId);
+    	     render("tags/convo/convoList.html", popularConvos);
+        } else if("USR".equalsIgnoreCase(feedType) || "EXP".equalsIgnoreCase(feedType)){
+    		_similarMembers = TalkerLogic.getRecommendedTalkers(_talker,feedType);
+    		render("tags/profile/similarMemberList.html", _similarMembers);
+    	} else if("TOPIC".equals(feedType)) {
+    		List<TopicBean> _recommendedTopics = TalkerLogic.getRecommendedTopics(_talker,afterActionId);
+    		render("tags/topicList.html", _recommendedTopics);
+    	} else {
+    		TalkerBean profileTalker = TalkerDAO.getByUserName(talkerName);
+    		if (profileTalker != null) {
+    			_feedItems = FeedsLogic.getTalkerFeed(profileTalker, afterActionId);
+    		}
+    		render("tags/feed/feedList.html", _feedItems, _talker);
+    	}
+    }
+    
 	public static void ajaxLoadMoreUser(String feedType, String afterActionId,String searchTerm){
 		System.out.println(feedType);
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
@@ -322,14 +372,10 @@ public class Explore extends Controller {
 		} else if("new".equals(feedType)) {
 			activeTalkers = ApplicationDAO.getNewTalkers();
 		} else if("search".equals(feedType)) {
-			System.out.println(searchTerm);
-			if (searchTerm != null) {
-				try {
-					activeTalkers = SearchUtil.searchTalker(searchTerm);
-				}
-				catch (Exception e) {
+			try {
+				activeTalkers = SearchUtil.searchTalker(searchTerm,currentTalker);
+			} catch (Exception e) {
 					Logger.error(e, "Talker search on Browser Members page.");
-				}
 			}
 		} else {
 			List<String> memberTypeEntry = null;
@@ -348,7 +394,8 @@ public class Explore extends Controller {
 				
 			activeTalkers = new ArrayList<TalkerBean>();
 			//List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalkers(true);
-			List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalker(true);
+			//List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalker(true);
+			List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalkers(true,currentTalker);
 			for (TalkerBean talker : allActiveTalkers) {
 				if (memberTypeEntry.contains(talker.getConnection()) && talker.getName() != null) {
 					activeTalkers.add(talker);

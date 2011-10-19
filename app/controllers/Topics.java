@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import logic.FeedsLogic;
 import logic.TopicLogic;
 import models.CommentBean;
 import models.TalkerBean;
