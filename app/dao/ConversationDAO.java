@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import logic.FeedsLogic;
 import logic.TalkerLogic;
 import models.CommentBean;
 import models.MessageBean;
@@ -96,6 +97,7 @@ public class ConversationDAO {
 			
 			.add("bitly", convo.getBitly())
 			.add("bitly_chat", convo.getBitlyChat())
+			.add("category", convo.getCategory())
 			.get();
 
 		//Only with SAFE WriteConcern we receive exception on duplicate key
@@ -411,15 +413,18 @@ public class ConversationDAO {
 	/**
 	 * Opened Questions - not answered, which are marked with 'opened' flag.
 	 */
-	public static List<ConversationBean> getOpenQuestions() {
+	public static List<ConversationBean> getOpenQuestions(TalkerBean talker) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		List<String> cat = FeedsLogic.getCancerType(talker);
 		
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("opened", true)
 			.add("deleted", new BasicDBObject("$ne", true))
+			.add("category", new BasicDBObject("$in", cat))
 			.get();
-		List<DBObject> convosDBList = 
-			convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
+		//System.out.println(query.toString());
+		List<DBObject> convosDBList = convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
 		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
@@ -460,19 +465,21 @@ public class ConversationDAO {
 			firstConvoTime = convo.getCreationDate();
 		}
 		
+		List<String> cat = FeedsLogic.getCancerType(TalkerDAO.getById(talkerId));
+		
 		convosColl.ensureIndex(new BasicDBObject("cr_date", 1));
 		
 		DBObject fields = getBasicConversationFields();
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start()
 			.add("uid", talkerRef)
+			.add("category", new BasicDBObject("$in", cat) )
 			.add("deleted", new BasicDBObject("$ne", true));
 		if (firstConvoTime != null) {
 			queryBuilder.add("cr_date", new BasicDBObject("$lt", firstConvoTime));
 		}
-			
-		DBCursor dbCursor = 
-			convosColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("cr_date", -1));
+
+		DBCursor dbCursor = convosColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("cr_date", -1));
 		if (numOfConversations != -1) {
 			dbCursor = dbCursor.limit(numOfConversations);
 		}
@@ -696,9 +703,8 @@ public class ConversationDAO {
 		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
-			ConversationBean convo = 
-				TalkerLogic.loadConvoFromCache(convoDBObject.get("_id").toString());
-//			convo.parseBasicFromDB(convoDBObject);
+			ConversationBean convo = TalkerLogic.loadConvoFromCache(convoDBObject.get("_id").toString());
+			//convo.parseBasicFromDB(convoDBObject);
 			convosList.add(convo);
 		}
 		return convosList;

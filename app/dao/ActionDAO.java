@@ -166,6 +166,9 @@ public class ActionDAO {
 								.get()
 						))
 			.add("type", new BasicDBObject("$in", actionTypes));
+		List<String> cat = FeedsLogic.getCancerType(talker);
+		queryBuilder.add("category", new BasicDBObject("$in", cat) );
+		
 		if (firstActionTime != null) {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
 		}
@@ -178,7 +181,7 @@ public class ActionDAO {
 	 * Community Conversation Feed
 	 * @param nextActionId Id of last action from previous load (used for paging)
 	 */
-	public static List<Action> loadCommunityFeed(String nextActionId, boolean loggedIn) {
+	public static List<Action> loadCommunityFeed(String nextActionId, boolean loggedIn,TalkerBean talker) {
 		//list of needed actions for this Feed
 		Set<String> actionTypes = new HashSet<String>();
 		for (ActionType actionType : COMMUNITY_CONVO_FEED_ACTIONS) {
@@ -194,7 +197,7 @@ public class ActionDAO {
 		if (nextActionId != null) {
 			firstActionTime = getActionTime(nextActionId);
 		}
-		
+
 		//load actions for this criterias
 		BasicDBObjectBuilder queryBuilder = 
 			BasicDBObjectBuilder.start()
@@ -202,8 +205,11 @@ public class ActionDAO {
 		if (firstActionTime != null) {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
 		}
-		DBObject query = queryBuilder.get();
+		List<String> cat = FeedsLogic.getCancerType(talker);
+		queryBuilder.add("category", new BasicDBObject("$in", cat) );
+			
 		
+		DBObject query = queryBuilder.get();
 		return loadPreloadActions(query);
 	}
 	
@@ -240,11 +246,13 @@ public class ActionDAO {
 	 * Topic Feed - latest actions connected with this topic
 	 * @param nextActionId Id of last action from previous load (used for paging)
 	 */
-	public static List<Action> loadLatestByTopic(TopicBean topic, String nextActionId) {
+	public static List<Action> loadLatestByTopic(TalkerBean talker, TopicBean topic, String nextActionId) {
 		Date firstActionTime = null;
 		if (nextActionId != null) {
 			firstActionTime = getActionTime(nextActionId);
 		}
+		
+		List<String> cat = FeedsLogic.getCancerType(talker);
 		
 		//list of needed actions for this Feed
 		Set<String> actionTypes = new HashSet<String>();
@@ -256,6 +264,7 @@ public class ActionDAO {
 		BasicDBObjectBuilder queryBuilder = 
 			BasicDBObjectBuilder.start()
 				.add("type", new BasicDBObject("$in", actionTypes))
+				.add("category", new BasicDBObject("$in", cat) )
 				.add("convoId", new BasicDBObject("$in", convosDBSet));
 		if (firstActionTime != null) {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
@@ -276,8 +285,7 @@ public class ActionDAO {
 		
 		activitiesColl.ensureIndex(new BasicDBObject("time", 1));
 		
-		DBCursor dbCursor = 
-			activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(FeedsLogic.ACTIONS_PRELOAD);
+		DBCursor dbCursor =	activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(FeedsLogic.ACTIONS_PRELOAD);
 		
 		List<Action> activitiesList = new ArrayList<Action>();
 		while (dbCursor.hasNext()) {
@@ -344,8 +352,9 @@ public class ActionDAO {
 		}
 	}
 	
-	public static void saveAction(Action action) {
-		String actionID = ActionDAO.saveActionGetId(action);
+	public static String saveAction(Action action) {
+		return ActionDAO.saveActionGetId(action);
+		//return actionID;
 	}
 	
 	public static String saveActionGetId(Action action) {

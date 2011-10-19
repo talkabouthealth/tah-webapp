@@ -6,6 +6,7 @@ import static util.DBUtil.getString;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import logic.FeedsLogic;
 import models.TalkerBean;
 import play.templates.JavaExtensions;
 
@@ -81,9 +83,9 @@ public class ApplicationDAO {
 			DBRef talkerDBRef = (DBRef)loginDBObject.get("uid");
 			TalkerBean talker = new TalkerBean();
 			talker.setId(talkerDBRef.getId().toString());
-			if (!activeTalkers.contains(talker)) {
+			if (talker != null &&  !activeTalkers.contains(talker)) {
 				talker = TalkerDAO.parseTalker(talkerDBRef);
-				if (!talker.isSuspended() && !talker.isDeactivated()) {
+				if (talker != null &&  !talker.isSuspended() && !talker.isDeactivated()) {
 					activeTalkers.add(talker);
 				}
 			}
@@ -122,33 +124,82 @@ public class ApplicationDAO {
 		return newTalkers;
 	}
 	
-	
+	public static List<TalkerBean> getRecommendedTalker(boolean memberFlag){
+		List<TalkerBean> newTalkers = new ArrayList<TalkerBean>();
+		
+		//TODO
+		DBCollection loginsColl = getCollection(LOGIN_HISTORY_COLLECTION);
+		loginsColl.ensureIndex(new BasicDBObject("log_time", 1));
+
+		Calendar oneWeekBeforeNow = Calendar.getInstance();
+		oneWeekBeforeNow.add(Calendar.WEEK_OF_YEAR, -2);
+		Date afterTime = oneWeekBeforeNow.getTime();
+		
+		if (afterTime == null) {
+			Calendar monthBeforeNow = Calendar.getInstance();
+			monthBeforeNow.add(Calendar.DAY_OF_MONTH, -30);
+			afterTime = monthBeforeNow.getTime();
+		}
+
+		DBObject query = BasicDBObjectBuilder.start().add("log_time", new BasicDBObject("$gt", afterTime)).get();
+		List<DBObject> loginsDBList = loginsColl.find(query).sort(new BasicDBObject("log_time", -1)).toArray();
+		List<String> list = TalkerBean.PROFESSIONAL_CONNECTIONS_LIST;
+
+		for (DBObject loginDBObject : loginsDBList) {
+			DBRef talkerDBRef = (DBRef)loginDBObject.get("uid");
+			TalkerBean talker = new TalkerBean();
+			talker.setId(talkerDBRef.getId().toString());
+			if (talker != null &&  !newTalkers.contains(talker)) {
+				talker = TalkerDAO.parseTalker(talkerDBRef);
+				if (talker != null &&  !talker.isSuspended() && !talker.isDeactivated() && !talker.isAdmin()) {
+					if(memberFlag){
+						if(list.contains(talker.getConnection()) && talker.isConnectionVerified()){
+							newTalkers.add(talker);
+						}
+					}else{
+						if(!list.contains(talker.getConnection())){
+							newTalkers.add(talker);	
+						}
+					}
+				}
+			}
+		}
+		//TODO
+		return newTalkers;
+	}
+
 	/**
 	 * New users/Experts - users signed up or logged in date descending order
 	 * Using to 20 users only for the list on profile page for recommendations.
 	 */
-	public static Set<TalkerBean> getTalkersInOrder(TalkerBean talkerBean,boolean memberFlag) {
+	public static List<TalkerBean> getTalkersInOrder(TalkerBean talkerBean,boolean memberFlag) {
 		DBCollection loginsColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
 		DBCollection loginHistoryCollection = getCollection(LOGIN_HISTORY_COLLECTION);
 		List<String> list = TalkerBean.PROFESSIONAL_CONNECTIONS_LIST;
 		BasicDBList basicDBList = new BasicDBList();
 
+		List<String> cat = FeedsLogic.getCancerType(talkerBean);
+		
 		for (String element : list) {
 			basicDBList.add(element);
 		}
 		DBObject query = null;
 		if(memberFlag){
 			query = BasicDBObjectBuilder.start()
-						.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList ))
-						.add("connection_verified",true).get();
+				.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList ))
+				.add("category", new BasicDBObject("$in", cat) )
+				.add("connection_verified",true)
+				.get();
 		}else{
-			query = BasicDBObjectBuilder.start().add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList )).get();
+			query = BasicDBObjectBuilder.start()
+				.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList ))
+				.add("category", new BasicDBObject("$in", cat) )
+				.get();
 		}
 		
 		DBObject fields = TalkerDAO.getBasicTalkerFields();
-		List<DBObject> talkersDBList = loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).limit(20).toArray();
-		Set<TalkerBean> newTalkers = new LinkedHashSet<TalkerBean>();
-		
+		List<DBObject> talkersDBList = loginsColl.find(query, fields).toArray();
+		List<TalkerBean> newTalkers = new ArrayList<TalkerBean>();
 		for (DBObject talkerDBObject : talkersDBList) {
 			TalkerBean talker = new TalkerBean();
 			talker.setId(getString(talkerDBObject, "_id"));
@@ -158,11 +209,16 @@ public class ApplicationDAO {
 					DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talker.getId());
 					query = BasicDBObjectBuilder.start().add("uid", talkerRef).get();
 					List<DBObject> loginTime= loginHistoryCollection.find(query).toArray();
-					if(loginTime.size()>=2)
+					if(loginTime.size()>=2){
+						DBObject logTimeObj = loginTime.get(0);
+						talker.setRegDate((Date)logTimeObj.get("log_time"));
 						newTalkers.add(talker);
+					}
 				}
 			}
 		}
+		
+		//Collections.sort(newTalkers, new TalkerBean());
 		return newTalkers;
 	}
 	

@@ -71,5 +71,17 @@ public class DiseaseDAO {
 		return disease;
 	}
 	
+	public static List<DiseaseBean> getDeiseaseList(){
+		List<DiseaseBean> diseaseList = new ArrayList<DiseaseBean>();
+		DBCollection diseasesColl = getCollection(DISEASES_COLLECTION);
+		List<DBObject>  diseaseDBList = diseasesColl.find().toArray();
+
+		for (DBObject diseaseDBObject : diseaseDBList) {
+			DiseaseBean diseaseBean = new DiseaseBean();
+			diseaseBean.parseBasicFromDB(diseaseDBObject);
+			diseaseList.add(diseaseBean);
+		}
+		return diseaseList;
+	}
 }
 

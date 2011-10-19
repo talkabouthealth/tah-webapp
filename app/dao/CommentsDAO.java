@@ -617,6 +617,7 @@ public class CommentsDAO {
 		return null;
 	}
 	
+
 	/**
 	 * Load all not-deleted answers for given conversation,
 	 * answers have only id.
@@ -638,6 +639,32 @@ public class CommentsDAO {
 			answer.parseFromDB(answerDBObject);
 			answersList.add(answer);
 		}
+		return answersList;
+	}
+	
+	/**
+	 * Loads all answers and replies for given conversation.
+	 */
+	public static List<CommentBean> loadAllConvoAnswers(String convoId) {
+		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		
+		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId);
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("convo", convoRef)
+			.get();
+		List<DBObject> commentsList = commentsColl.find(query).toArray();
+		
+		List<CommentBean> answersList = new ArrayList<CommentBean>();
+		//comments without parent (top in hierarchy)
+		for (DBObject answerDBObject : commentsList) {
+			CommentBean answer = new CommentBean();
+			answer.parseFromDB(answerDBObject);
+			if(answer.isDeleted() == true){
+				answer.setModerate(AnswerNotification.DELETE_ANSWER);
+			}
+			answersList.add(answer);
+		}
+		
 		return answersList;
 	}
 }

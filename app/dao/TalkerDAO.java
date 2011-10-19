@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import logic.FeedsLogic;
 import logic.TalkerLogic;
 import models.CommentBean;
 import models.EmailBean;
@@ -36,6 +37,7 @@ import org.bson.types.ObjectId;
 import play.Logger;
 import play.mvc.Scope.Session;
 
+import util.CommonUtil;
 import util.DBUtil;
 import util.EmailUtil;
 import util.EmailUtil.EmailTemplate;
@@ -67,7 +69,7 @@ public class TalkerDAO {
 				.add("verify_code", talker.getVerifyCode())
 				.add("dob", talker.getDob())
 				.add("timestamp",  Calendar.getInstance().getTime())
-				
+				.add("category", talker.getCategory())
 				.add("connection", talker.getConnection())
 				.add("connection_verified", talker.isConnectionVerified())
 				
@@ -473,20 +475,20 @@ public class TalkerDAO {
 		
 		return talkerList;
 	}	
-	/**
-	 * Load all (deactivated and suspended also) talkers.
-	 * @param basicInfo Load full or only basic info
-	 * @return
-	 */
-	public static List<TalkerBean> loadAllTalkers(boolean basicInfo) {
+	
+	public static List<TalkerBean> loadAllTalkers(boolean basicInfo,TalkerBean currentTalker){
+		
+		List<String> cat = FeedsLogic.getCancerType(currentTalker);
+		
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
-
 		talkersColl.ensureIndex(new BasicDBObject("uname", 1));
+		
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start().add("category", new BasicDBObject("$in", cat) ).add("suspended", false);
 		
 		List<DBObject> talkersDBObjectList = null;
 		if (basicInfo) {
 			DBObject fields = getBasicTalkerFields();
-			talkersDBObjectList = talkersColl.find(null, fields).sort(new BasicDBObject("uname", 1)).toArray();
+			talkersDBObjectList = talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1)).toArray();
 		}
 		else {
 			talkersDBObjectList = talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
@@ -503,7 +505,6 @@ public class TalkerDAO {
 			}
 			talkerList.add(talker);
 		}
-		
 		return talkerList;
 	}
 	public static List<TalkerBean> loadAllTalkers() {
@@ -539,6 +540,41 @@ public class TalkerDAO {
 		return talkerList;
 	}
 	
+	/**
+	 * Load all (deactivated and suspended also) talkers.
+	 * @param basicInfo Load full or only basic info
+	 * @return
+	 */
+	public static List<TalkerBean> loadAllTalkers(boolean basicInfo) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+
+		talkersColl.ensureIndex(new BasicDBObject("uname", 1));
+		
+		List<DBObject> talkersDBObjectList = null;
+		if (basicInfo) {
+			DBObject fields = getBasicTalkerFields();
+			talkersDBObjectList = talkersColl.find(null, fields).sort(new BasicDBObject("uname", 1)).toArray();
+		} else {
+			talkersDBObjectList = talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
+		}
+
+		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
+		for (DBObject talkerDBObject : talkersDBObjectList) {
+			TalkerBean talker = new TalkerBean();
+			if (basicInfo) {
+				talker.parseBasicFromDB(talkerDBObject);
+			}
+			else {
+				talker.parseFromDB(talkerDBObject);
+			}
+			talkerList.add(talker);
+		}
+		
+		return talkerList;
+	}
+
+	//db.talkers.find().skip(50).limit(20);
+		
 	// --------------------- Other ---------------------------
 	
 	public static List<TalkerBean> loadTalkersForDashboard() {
@@ -670,8 +706,7 @@ public class TalkerDAO {
 		
 		List<TalkerBean> followerList = new ArrayList<TalkerBean>();
 		for (DBObject followerDBObject : followerDBList) {
-			TalkerBean followerTalker = 
-				TalkerLogic.loadTalkerFromCache(followerDBObject.get("_id").toString());
+			TalkerBean followerTalker = TalkerLogic.loadTalkerFromCache(followerDBObject.get("_id").toString());
 			followerList.add(followerTalker);
 		}
 		

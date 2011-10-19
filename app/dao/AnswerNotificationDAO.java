@@ -31,24 +31,46 @@ public class AnswerNotificationDAO {
 
 	public static final String CONVO_COMMENTS_COLLECTION = "convocomments";
 	public static final String CONVOS_COLLECTION = "convos";
+	public static final int CONVO_PER_PAGE = 20;
 	
-	
+	public static int getAllConvoCount(){
+		int convoCount = 0;
+		DBCollection convoColl = getCollection(CONVOS_COLLECTION);
+		DBCollection commentColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		DBObject query = BasicDBObjectBuilder.start().get();
+		DBCursor convo = convoColl.find(query);
+		while(convo.hasNext()) {
+			ConversationBean conversationBean = new ConversationBean();
+			conversationBean.parseFromDB(convo.next());
+			DBRef convoRef = createRef(CONVOS_COLLECTION, conversationBean.getId());
+			DBObject query1 = BasicDBObjectBuilder.start()
+				.add("convo", convoRef)
+				.get();
+			DBCursor name = commentColl.find(query1);
+			if(name.size()>0)
+				convoCount++;
+		}
+		return convoCount; 
+		
+	}
 	/**
 	 * Retrieve all questions
 	 * @return List<ConversationBean> list of replies in ConversationBean form
 	 */
-	public static List<ConversationBean> getConvos() {
+	public static List<ConversationBean> getConvos() {//int convoCount,int pageNo
 		DBCollection convoColl = getCollection(CONVOS_COLLECTION);
 		
 		DBObject query = BasicDBObjectBuilder.start().get();
-		DBCursor cur = convoColl.find(query).sort(new BasicDBObject("cr_date", -1));
-
-		List<ConversationBean> result = new ArrayList<ConversationBean>();
 		
+		DBCursor cur = convoColl.find(query).sort(new BasicDBObject("cr_date", -1));
+		List<ConversationBean> result = new ArrayList<ConversationBean>();
 		while(cur.hasNext()) {
 			ConversationBean conversationBean = new ConversationBean();
 			conversationBean.parseFromDB(cur.next());
-			result.add(conversationBean);
+			
+			List<CommentBean> commentList = getConvoComments(conversationBean.getId());
+			if(commentList.size() > 0)
+				result.add(conversationBean);
 		}
 		return result;
 	}
@@ -62,7 +84,9 @@ public class AnswerNotificationDAO {
 		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
 		DBRef convoRef = createRef(CONVOS_COLLECTION, convoId);
 		
-		DBObject query = new BasicDBObject("convo", convoRef);
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("convo", convoRef)
+			.get();
 		DBCursor cur = commentsColl.find(query);
 		
 		List<CommentBean> result = new ArrayList<CommentBean>();
