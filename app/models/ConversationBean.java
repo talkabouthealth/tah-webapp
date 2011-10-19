@@ -99,6 +99,9 @@ public class ConversationBean implements Comparable<ConversationBean> {
 	//action id
 	private String actionID;
 	
+	//Added new field for saving cancer category.
+	private String category;
+	
 	public void setActionID(String actionID) { this.actionID = actionID; }
 	public String getActionID() { return this.actionID; }
 	
@@ -116,6 +119,9 @@ public class ConversationBean implements Comparable<ConversationBean> {
     	setMainURL((String)convoDBObject.get("main_url"));
     	setOldNames(parseSet(URLName.class, convoDBObject, "old_names"));
     	setViews(getInt(convoDBObject, "views"));
+    	
+    	//Added convo category
+    	setCategory((String)convoDBObject.get("category"));
     	
     	//"merged_with"
     	DBRef mergedWithRef = (DBRef)convoDBObject.get("merged_with");
@@ -341,7 +347,6 @@ public class ConversationBean implements Comparable<ConversationBean> {
 				filteredAnswers.add(answer);
 			}
 		}
-		
 		return filteredAnswers;
 	}
 	
@@ -571,5 +576,11 @@ public class ConversationBean implements Comparable<ConversationBean> {
 	}
 	public void setFollowupConvos(Set<ConversationBean> followupConvos) {
 		this.followupConvos = followupConvos;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
 	}
 }

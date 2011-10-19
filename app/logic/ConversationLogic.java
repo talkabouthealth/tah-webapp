@@ -96,7 +96,10 @@ public class ConversationLogic {
 		convo.setOpened(true);
 		String topicURL = ApplicationDAO.createURLName(title);
 		convo.setMainURL(topicURL);
-
+		
+		//Added convo category
+		convo.setCategory(talker.getCategory());
+		
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
 		convo.setBitly(BitlyUtil.shortLink(convoURL));
 		
@@ -185,11 +188,11 @@ public class ConversationLogic {
 		
 		//actions
 		CommentBean answer = null;
-		if (parentId == null) {
-			//Comment out because answer details save in activity when answer is approve.
+		//if (parentId == null) {
 			//ActionDAO.saveAction(new AnswerConvoAction(talker, convo, comment, null, ActionType.ANSWER_CONVO));
-		}
-		else {
+		//}
+		//else {
+		if (parentId != null) {
 			answer = CommentsDAO.getConvoCommentById(parentId);
 			ActionDAO.saveAction(new AnswerConvoAction(talker, convo, answer, comment, ActionType.REPLY_CONVO));
 		}
@@ -212,11 +215,9 @@ public class ConversationLogic {
 		if (comment.isAnswer()) {
 			for (TalkerBean follower : convo.getFollowers()) {
 	    		if (!follower.equals(talker)) { //do not send notification to himself
-	    			
-	    			//Mail send to follower when Answer is approve by admin
-	    			/*TalkerBean mailSendtalker = TalkerDAO.getByEmail(follower.getEmail());
+	    			TalkerBean mailSendtalker = TalkerDAO.getByEmail(follower.getEmail());
 		    		if(mailSendtalker.getEmailSettings().toString().contains("CONVO_COMMENT"))
-		    			NotificationUtils.sendEmailNotification(EmailSetting.CONVO_COMMENT, follower, vars);*/
+		    			NotificationUtils.sendEmailNotification(EmailSetting.CONVO_COMMENT, follower, vars);
 	        		
 	        		//check Twitter/FB/IM
 	        		for (ServiceAccountBean serviceAccount : follower.getServiceAccounts()) {

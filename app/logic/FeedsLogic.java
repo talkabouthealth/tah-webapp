@@ -35,16 +35,16 @@ public class FeedsLogic {
 		return loadFeed(FeedType.CONVERSATION, afterActionId, talker, null, true, FEEDS_PER_PAGE);
 	}
 	
-	public static Set<Action> getCommunityFeed(String afterActionId, boolean loggedIn) {
-		return loadFeed(FeedType.COMMUNITY, afterActionId, null, null, loggedIn, FEEDS_PER_PAGE);
+	public static Set<Action> getCommunityFeed(String afterActionId, boolean loggedIn,TalkerBean talker) {
+		return loadFeed(FeedType.COMMUNITY, afterActionId, talker, null, loggedIn, FEEDS_PER_PAGE);
 	}
 	
 	public static Set<Action> getTalkerFeed(TalkerBean talker, String afterActionId) {
 		return loadFeed(FeedType.TALKER, afterActionId, talker, null, true, TALKERFEEDS_PER_PAGE);
 	}
 	
-	public static Set<Action> getTopicFeed(TopicBean topic, String afterActionId) {
-		return loadFeed(FeedType.TOPIC, afterActionId, null, topic, true, FEEDS_PER_PAGE);
+	public static Set<Action> getTopicFeed(TalkerBean talker,TopicBean topic, String afterActionId) {
+		return loadFeed(FeedType.TOPIC, afterActionId, talker, topic, true, FEEDS_PER_PAGE);
 	}
 	
 	// TODO request update for feed
@@ -64,15 +64,19 @@ public class FeedsLogic {
 					feedActions = ActionDAO.loadConvoFeed(talker, nextActionId);
 					break;
 				case COMMUNITY: 
-					feedActions = ActionDAO.loadCommunityFeed(nextActionId, loggedIn);
+					feedActions = ActionDAO.loadCommunityFeed(nextActionId, loggedIn,talker);
 					break;
 				case TALKER: 
 					feedActions = ActionDAO.loadTalkerFeed(talker.getId(), nextActionId);
 					break;
 				case TOPIC: 
-					feedActions = ActionDAO.loadLatestByTopic(topic, nextActionId);
+					feedActions = ActionDAO.loadLatestByTopic(talker,topic, nextActionId);
 					break;
 			}
+			if(feedActions == null)
+				break;
+			if(feedActions != null && feedActions.isEmpty())
+				break;
 			
 			boolean canAdd = true;
 			for (Action action : feedActions) {
@@ -105,15 +109,14 @@ public class FeedsLogic {
 			}
 			
 			//id for next preload from db
-			nextActionId = feedActions.get(feedActions.size()-1).getId();
+			if(feedActions != null && feedActions.size() > 0)
+				nextActionId = feedActions.get(feedActions.size()-1).getId();
 			
 			//exit if no more actions to preload or feed is big enough for this page
 			if (nextActionId.equals(beforeActionId) || !canAdd || feedActions.size() < ACTIONS_PRELOAD || feed.size() >= 100) {
 				break;
 			}
-						
 		}
-		
 		return feed;
 	}	
 	
@@ -144,13 +147,13 @@ public class FeedsLogic {
 					feedActions = ActionDAO.loadConvoFeed(talker, nextActionId);
 					break;
 				case COMMUNITY: 
-					feedActions = ActionDAO.loadCommunityFeed(nextActionId, loggedIn);
+					feedActions = ActionDAO.loadCommunityFeed(nextActionId, loggedIn,talker);
 					break;
 				case TALKER: 
 					feedActions = ActionDAO.loadTalkerFeed(talker.getId(), nextActionId);
 					break;
 				case TOPIC: 
-					feedActions = ActionDAO.loadLatestByTopic(topic, nextActionId);
+					feedActions = ActionDAO.loadLatestByTopic(talker,topic, nextActionId);
 					break;
 			}
 			
@@ -220,4 +223,23 @@ public class FeedsLogic {
 		return canAdd;
 	}
 	
+	public static List<String> getCancerType(TalkerBean talker){
+		String cancerType = "Breast Cancer";
+		List<String> cat = new ArrayList<String>(2);
+		if (talker != null) {
+			if(talker.getCategory() == null){
+				cat.add(null);
+				cat.add(cancerType);
+			} else if(cancerType.equals(talker.getCategory())) {
+				cat.add(null);
+				cat.add(cancerType);
+			} else{
+				cat.add(talker.getCategory());
+			}
+		} else {
+			cat.add(null);
+			cat.add(cancerType);
+		}
+		return cat;
+	}
 }

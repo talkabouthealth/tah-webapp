@@ -141,6 +141,9 @@ public class TalkerLogic {
 			return stepNote;
 		}
 	}
+
+	//Talker count to display on browse member page per page
+	public static final int TALKERS_PER_PAGE = 12; 
 	
 	//Field choices (options in <select>) for different fields/profiles(i.e. Nurse, etc)
 	private static Map<String, List<String>> fieldsDataMap;
@@ -672,7 +675,7 @@ public class TalkerLogic {
 		ArrayList<TalkerBean> recommendedMembers = new ArrayList<TalkerBean>();
 		
 		if("EXP".equals(type)){
-			Set<TalkerBean> allExperts = ApplicationDAO.getTalkersInOrder(talker,true);
+			List<TalkerBean> allExperts = ApplicationDAO.getTalkersInOrder(talker,true);
 			for (TalkerBean member : allExperts) {
 				recommendedMembers.add(member);
 				if (recommendedMembers.size() == 3) {
@@ -680,7 +683,7 @@ public class TalkerLogic {
 				}
 			}
 		}else if("USR".equals(type)){
-			Set<TalkerBean> allMembers = ApplicationDAO.getTalkersInOrder(talker,false);
+			List<TalkerBean> allMembers = ApplicationDAO.getTalkersInOrder(talker,false);
 			for (TalkerBean member : allMembers) {
 				recommendedMembers.add(member);
 				if (recommendedMembers.size() == 3) {
@@ -691,10 +694,10 @@ public class TalkerLogic {
 		return recommendedMembers;
 	}
 	
-	@Deprecated
+	
 	public static void getRecommendedTalkers(TalkerBean talker, List<TalkerBean> similarMembers,
 			List<TalkerBean> experts) {
-		Set<TalkerBean> allExperts = ApplicationDAO.getTalkersInOrder(talker,true);
+		List<TalkerBean> allExperts = ApplicationDAO.getTalkersInOrder(talker,true);
 		for (TalkerBean member : allExperts) {
 			experts.add(member);
 			if (experts.size() == 3) {
@@ -702,7 +705,7 @@ public class TalkerLogic {
 			}
 		}
 
-		Set<TalkerBean> allMembers = ApplicationDAO.getTalkersInOrder(talker,false);
+		List<TalkerBean> allMembers = ApplicationDAO.getTalkersInOrder(talker,false);
 		for (TalkerBean member : allMembers) {
 			similarMembers.add(member);
 			if (similarMembers.size() == 3) {
@@ -725,12 +728,14 @@ public class TalkerLogic {
 //			allConvos.addAll(ConversationDAO.loadConversationsByTopic(topic.getId()));
 //		}
 		allConvos.addAll(loadPopularConversations());
+		List<String> cat = FeedsLogic.getCancerType(talker);
 		
 		for (ConversationBean convo : allConvos) {
 			if (talker.getFollowingConvosList().contains(convo.getId())) {
 				continue;
 			}
-			recommendedConvos.add(convo);
+			if(cat.contains(convo.getCategory()))
+				recommendedConvos.add(convo);
 			if (recommendedConvos.size() == 3) {
 				break;
 			}
@@ -996,12 +1001,13 @@ public class TalkerLogic {
 	
 	public static TalkerBean loadTalkerFromCache(String talkerId) {
 		List<TalkerBean> allTalkers = loadAllTalkersFromCache();
-		for (TalkerBean t : allTalkers) {
-			if (t.getId().equals(talkerId)) {
-				return t;
+		if(allTalkers != null){
+			for (TalkerBean t : allTalkers) {
+				if (t.getId().equals(talkerId)) {
+					return t;
+				}
 			}
 		}
-		
 		return TalkerDAO.parseTalker(talkerId);
 	}
 	

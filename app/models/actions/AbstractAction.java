@@ -113,6 +113,7 @@ public abstract class AbstractAction implements Action {
 				.add("uid", talkerRef)
 				.add("type", type.toString())
 				.add("time", time)
+				.add("category", talker.getCategory())
 				.get();
 		
 		if (hasConvo()) {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -263,6 +264,7 @@ public class TalkerBean implements Serializable {
 		setEmail((String)talkerDBObject.get("email"));
 		setEmails(parseSet(EmailBean.class, talkerDBObject, "emails"));
 		setVerifyCode((String)talkerDBObject.get("verify_code"));
+		setCategory((String)talkerDBObject.get("category"));
 		
 		setOriginalUserName((String)talkerDBObject.get("orig_uname"));
 		setDeactivated(getBoolean(talkerDBObject, "deactivated")); 
@@ -774,7 +776,12 @@ public class TalkerBean implements Serializable {
 	public String getMaritalStatus() { return maritalStatus; }
 	public void setMaritalStatus(String maritalStatus) { this.maritalStatus = maritalStatus; }
 
-	public String getCategory() { return category; }
+	public String getCategory() { 
+		if(category == null){
+			return "Breast Cancer";//Breast Cancer
+		}
+		return category;
+	}
 	public void setCategory(String category) { this.category = category; }
 
 	public String getCity() {

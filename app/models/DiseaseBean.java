@@ -1,11 +1,16 @@
 package models;
 
+import static util.DBUtil.getString;
+
 import java.util.List;
 import java.util.Set;
+
+import com.mongodb.DBObject;
 
 
 public class DiseaseBean {
 	
+	private String id;
 	private String name;
 	private List<DiseaseQuestion> questions;
 	
@@ -52,5 +57,15 @@ public class DiseaseBean {
 	
 	public List<DiseaseQuestion> getQuestions() { return questions; }
 	public void setQuestions(List<DiseaseQuestion> questions) { this.questions = questions; }
+	
+	public String getId() { return id; }
+	public void setId(String id) { this.id = id; }
 
+	public void parseBasicFromDB(DBObject diseaseDBObject) {
+		if (diseaseDBObject == null) {
+			return;
+		}
+		setId(getString(diseaseDBObject, "_id"));
+		setName((String)diseaseDBObject.get("name"));
+	}
 }
