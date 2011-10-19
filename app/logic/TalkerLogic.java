@@ -1067,4 +1067,17 @@ public class TalkerLogic {
 		}
 		return healthItemsMap;
 	}
+}	public static Map<String, HealthItemBean> loadHealthItemsFromCache(String diseaseName) {
+		Map<String, HealthItemBean> healthItemsMap = (Map<String, HealthItemBean>) Cache.get("healthItemsMap");
+		if (healthItemsMap == null) {
+			healthItemsMap = new HashMap<String, HealthItemBean>();
+			for (String itemName : new String[] {"symptoms", "tests", 
+					"procedures", "treatments", "sideeffects"}) {
+				HealthItemBean healthItem = HealthItemDAO.getHealthItemByName(itemName, diseaseName);
+				healthItemsMap.put(itemName, healthItem);
+			}
+			Cache.set("healthItemsMap", healthItemsMap, "30d");
+		}
+		return healthItemsMap;
+	}
 }

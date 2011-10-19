@@ -1,10 +1,12 @@
 package dao;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import static util.DBUtil.*;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -41,7 +43,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-import util.ValidateData;
+
+import controllers.AnswerNotification;
 
 /*
  	We store profile comments in separate collection, as "child lists" tree.
@@ -325,6 +328,8 @@ public class CommentsDAO {
 			.add("not_helpful", answer.isNotHelpful())
 			.add("not_helpful_votes", setToDB(answer.getNotHelpfulVotes()))
 			
+			.add("moderate", answer.getModerate())
+			
 			.get();
 		
 		DBObject answerId = new BasicDBObject("_id", new ObjectId(answer.getId()));
@@ -581,7 +586,6 @@ public class CommentsDAO {
 		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
 		
 		String topicTitle = topic.getTitle().replaceAll(" ", "");
-                topicTitle = ValidateData.escapeText(topicTitle);
 		Pattern mentionRegex = Pattern.compile("#"+topicTitle+"[^\\w]*", Pattern.CASE_INSENSITIVE);
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("text", mentionRegex)
@@ -611,5 +615,29 @@ public class CommentsDAO {
 			return (Date)actionDBObject.get("time");
 		}
 		return null;
+	}
+	
+	/**
+	 * Load all not-deleted answers for given conversation,
+	 * answers have only id.
+	 */
+	public static List<CommentBean> loadAllConvoAnswers(Date date) {
+		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("time", new BasicDBObject("$gt", date))
+			.add("deleted", new BasicDBObject("$ne", true))
+			.add("answer", true)
+			.get();
+		List<DBObject> commentsList = commentsColl.find(query).toArray();
+		
+		List<CommentBean> answersList = new ArrayList<CommentBean>();
+		
+		for (DBObject answerDBObject : commentsList) {
+			CommentBean answer = new CommentBean();
+			answer.parseFromDB(answerDBObject);
+			answersList.add(answer);
+		}
+		return answersList;
 	}
 }

@@ -502,6 +502,17 @@ public class Conversations extends Controller {
     		answer.setDeleted(true);
     		CommentsDAO.updateConvoComment(answer);
     		
+    		//set question as Unanswered question
+    		List<CommentBean> answerList= CommentsDAO.loadConvoAnswers(answer.getConvoId());
+    		int count = 0;
+    		if(answerList != null)
+    			count = answerList.size();
+    		if(count <= 0){
+	    		ConversationBean convo = ConversationDAO.getConvoById(answer.getConvoId());
+	    		convo.setOpened(true);
+	    		ConversationDAO.updateConvo(convo);
+    		}
+    		
     		//remove related actions
     		ActionDAO.deleteActionsByAnswer(answer);
     	}

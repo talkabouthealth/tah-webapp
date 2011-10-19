@@ -14,7 +14,7 @@
 				${_activity.reply.text}
 			#{/if}
 			#{elseif _activity.answer}
-			${_activity.answer.printThoughtOrAnswer()}
+			${_activity.answer.printThoughtOrAnswer(session.username)}
 			#{/elseif}
 		</div>
 		

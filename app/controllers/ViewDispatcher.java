@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,6 @@ public class ViewDispatcher extends Controller {
 	}
 	
 	public static void view(String name) throws Throwable {
-
 		TalkerBean talker = TalkerDAO.getByURLName(name);
 		boolean showTalker = false;
 		boolean showAnom = false;
@@ -192,6 +192,35 @@ public class ViewDispatcher extends Controller {
 		
 		Set<Action> talkerFeed = FeedsLogic.getTalkerFeed(talker, null);
 		
+		//For removing answer from feed list which have moderate no moderate value or value as "Delete Answer"
+		Iterator<Action> talkerFeedIter = talkerFeed.iterator();
+		 while (talkerFeedIter.hasNext()) {
+			 Action actionIterator = talkerFeedIter.next();
+			 if(actionIterator != null && actionIterator.getConvo() != null){
+				 List<CommentBean> commentBeanList = actionIterator.getConvo().getComments();
+				 for(int index = 0; index < commentBeanList.size(); index++){
+					 CommentBean commentBean = commentBeanList.get(index);
+					 CommentBean comment =  CommentsDAO.getConvoCommentById(commentBean.getId());
+					 if(comment != null && comment.getModerate() != null && comment.getFromTalker().equals(talker)){
+						 if(comment.getModerate().equalsIgnoreCase(AnswerNotification.DELETE_ANSWER)){
+							 commentBeanList.remove(index);
+							 actionIterator.getConvo().setComments(commentBeanList);
+						 }else if(comment.getModerate().equalsIgnoreCase("null")){
+							 commentBeanList.remove(index);
+							 actionIterator.getConvo().setComments(commentBeanList);
+						 }
+					 }else {
+						 if(actionIterator.getTalker().getActivityList()!=null){
+							 int count = actionIterator.getTalker().getActivityList().size();
+							 actionIterator.getTalker().getActivityList().remove(count);
+						 }
+						 commentBeanList.remove(index);
+						 actionIterator.getConvo().setComments(commentBeanList);
+					 }
+				 }
+			 }
+		 }
+		
 		List<Action> answersFeed = new ArrayList<Action>();
 		int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeed, false);
 		int numOfAnswers = answersFeed.size();
@@ -205,6 +234,7 @@ public class ViewDispatcher extends Controller {
 				currentTalker, talkerFeed,
 				notProvidedInfo, notViewableInfo,
 				numOfAnswers, numOfTopAnswers, numOfStartedConvos,newsLetterFlag);
+		
 	}
 	
 	private static void showConvo(ConversationBean convo) {
@@ -214,7 +244,6 @@ public class ViewDispatcher extends Controller {
 			talker = CommonUtil.loadCachedTalker(session);
 			newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
 		}
-		
 		ConversationDAO.incrementConvoViews(convo.getId());
 		Date latestActivityTime = ActionDAO.getConvoLatestActivity(convo);
 		
@@ -222,11 +251,17 @@ public class ViewDispatcher extends Controller {
 		List<CommentBean> answerList = CommentsDAO.loadConvoAnswersTree(convo.getId());
 		List<CommentBean> commentList = answerList;
 		//For getting answers in top position which have question text
+		//For removing answer from question page which have moderate no moderate value or value as "Delete Answer" .
 		for(int index = 0; index < answerList.size(); index++){
 			CommentBean commentBean= answerList.get(index);
-			if(commentBean.getText().toLowerCase().contains(convo.getTopic().toLowerCase())){ 
+			if(commentBean.getModerate() == null && !commentBean.getFromTalker().equals(talker)){
 				commentList.remove(index);
-				commentList.add(0, commentBean);
+			}else if(commentBean.getModerate() != null){
+				 if(commentBean.getModerate().equalsIgnoreCase(AnswerNotification.DELETE_ANSWER)){
+					 commentList.remove(index);
+				 }else if(commentBean.getModerate().equalsIgnoreCase("null")){
+					 commentList.remove(index);
+				 }
 			}
 		}
 		
