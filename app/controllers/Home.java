@@ -177,6 +177,7 @@ public class Home extends Controller {
     		render("tags/feed/feedList.html", _feedItems, _talker);
     	} else if ("communityFeed".equalsIgnoreCase(feedType)) {
     		_feedItems = FeedsLogic.getCommunityFeed(afterActionId, loggedIn);
+    		render("tags/feed/feedList.html", _feedItems, _talker);
     	} else if("USR".equalsIgnoreCase(feedType) || "EXP".equalsIgnoreCase(feedType)){
     		_similarMembers = TalkerLogic.getRecommendedTalkers(_talker,feedType);
     		render("tags/profile/similarMemberList.html", _similarMembers);
