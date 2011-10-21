@@ -272,7 +272,8 @@ public class Explore extends Controller {
     	
     	//For removing answer from feed list which have moderate no moderate value or value as "Delete Answer"
 		Iterator<Action> communityFeedIter = communityFeed.iterator();
-		 while (communityFeedIter.hasNext()) {
+		/* 
+		while (communityFeedIter.hasNext()) {
 			 Action actionIterator = communityFeedIter.next();
 			 if(actionIterator != null && actionIterator.getConvo() != null){
 				 List<CommentBean> commentBeanList = actionIterator.getConvo().getComments();
@@ -295,6 +296,7 @@ public class Explore extends Controller {
 				 }
 			 }
 		 }
+		 */
 		 
 		//"Popular Conversations" - ordered by page views
 		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations(null);

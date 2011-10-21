@@ -72,7 +72,7 @@ public class Home extends Controller {
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
 
     	Iterator<Action> communityFeedIter = communityFeed.iterator();
-		while (communityFeedIter.hasNext()) {
+		/*while (communityFeedIter.hasNext()) {
 			 Action actionIterator = communityFeedIter.next();
 			 if(actionIterator != null && actionIterator.getConvo() != null){
 				 List<CommentBean> commentBeanList = actionIterator.getConvo().getComments();
@@ -124,7 +124,7 @@ public class Home extends Controller {
 					 }
 				 }
 			 }
-			 
+		*/
     	//find mentions (@<username> in the thoughts)
     	List<Action> mentions = CommentsDAO.getTalkerMentions(talker,null);
     	

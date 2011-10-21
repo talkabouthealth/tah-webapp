@@ -174,6 +174,7 @@ public class ConversationLogic {
 		
 		String id = CommentsDAO.saveConvoComment(comment);
 		comment.setId(id);
+		
 		if (convo.isOpened()) {
 			convo.setOpened(false);
 			ConversationDAO.updateConvo(convo);
@@ -188,11 +189,9 @@ public class ConversationLogic {
 		
 		//actions
 		CommentBean answer = null;
-		//if (parentId == null) {
-			//ActionDAO.saveAction(new AnswerConvoAction(talker, convo, comment, null, ActionType.ANSWER_CONVO));
-		//}
-		//else {
-		if (parentId != null) {
+		if (parentId == null) {
+			ActionDAO.saveAction(new AnswerConvoAction(talker, convo, comment, null, ActionType.ANSWER_CONVO));
+		} else {
 			answer = CommentsDAO.getConvoCommentById(parentId);
 			ActionDAO.saveAction(new AnswerConvoAction(talker, convo, answer, comment, ActionType.REPLY_CONVO));
 		}

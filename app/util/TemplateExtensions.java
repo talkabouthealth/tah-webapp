@@ -128,8 +128,7 @@ public class TemplateExtensions extends JavaExtensions {
 	}
 	
 	public static Object printThoughtOrAnswer(CommentBean thoughtOrAnswer,String userName) {
-		String htmlText = "";
-		
+		/*String htmlText = "";
 		if(thoughtOrAnswer.getModerate() != null && thoughtOrAnswer.getModerate().equalsIgnoreCase(AnswerNotification.DELETE_ANSWER)){
 		}else if(thoughtOrAnswer.getModerate() != null && thoughtOrAnswer.getModerate().equals("")){
 			
@@ -140,6 +139,9 @@ public class TemplateExtensions extends JavaExtensions {
 		}else{
 			htmlText = CommonUtil.commentToHTML(thoughtOrAnswer);
 		}
+		return JavaExtensions.raw(htmlText);
+		 */
+		String htmlText = CommonUtil.commentToHTML(thoughtOrAnswer);
 		return JavaExtensions.raw(htmlText);
 	}
 

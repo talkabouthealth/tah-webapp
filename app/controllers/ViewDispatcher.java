@@ -195,7 +195,7 @@ public class ViewDispatcher extends Controller {
 		
 		//For removing answer from feed list which have moderate no moderate value or value as "Delete Answer"
 		Iterator<Action> talkerFeedIter = talkerFeed.iterator();
-		 while (talkerFeedIter.hasNext()) {
+		/* while (talkerFeedIter.hasNext()) {
 			 Action actionIterator = talkerFeedIter.next();
 			 if(actionIterator != null && actionIterator.getConvo() != null){
 				 List<CommentBean> commentBeanList = actionIterator.getConvo().getComments();
@@ -221,6 +221,7 @@ public class ViewDispatcher extends Controller {
 				 }
 			 }
 		 }
+		*/
 		
 		List<Action> answersFeed = new ArrayList<Action>();
 		int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeed, false);
@@ -253,7 +254,7 @@ public class ViewDispatcher extends Controller {
 		List<CommentBean> commentList = answerList;
 		//For getting answers in top position which have question text
 		//For removing answer from question page which have moderate no moderate value or value as "Delete Answer" .
-		for(int index = 0; index < answerList.size(); index++){
+		/*for(int index = 0; index < answerList.size(); index++){
 			CommentBean commentBean= answerList.get(index);
 			if(commentBean.getModerate() == null && !commentBean.getFromTalker().equals(talker)){
 				commentList.remove(index);
@@ -264,7 +265,7 @@ public class ViewDispatcher extends Controller {
 					 commentList.remove(index);
 				 }
 			}
-		}
+		}*/
 		
 		convo.setComments(commentList);
 		convo.setReplies(CommentsDAO.loadConvoReplies(convo.getId()));
