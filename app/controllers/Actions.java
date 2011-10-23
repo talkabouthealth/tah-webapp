@@ -63,8 +63,8 @@ public class Actions extends Controller {
 		TalkerDAO.saveThankYou(thankYouBean);
 
 		//Used For save thank you as a conversation feed
-		note = "Thank you @"+toTalker.getUserName()+" '"+note +"'";
-		saveProfileComment(null,null,note,note,"thankyou",false,false);
+		//note = "Thank you @"+toTalker.getUserName()+" '"+note +"'";
+		//saveProfileComment(null,null,note,note,"thankyou",false,false);
 		
 		ActionDAO.saveAction(new GiveThanksAction(fromTalker, toTalker));
 		TalkerBean mailSendtalker = TalkerDAO.getByEmail(toTalker.getEmail());
