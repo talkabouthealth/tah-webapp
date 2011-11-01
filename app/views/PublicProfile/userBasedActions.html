@@ -1,5 +1,6 @@
 #{ extends 'main.html' /}
 
+	<script type="text/javascript" src="../../public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript"> 	 
 		//maps actions to tabs
 		var perPage = 16;
@@ -10,6 +11,7 @@
 			}
 		
    		$(document).ready(function() {
+
    			//default action
 			var activeTab = tabs["${action}"];
 			initOldTabs(activeTab);
@@ -28,7 +30,12 @@
 	   	   	   		$("#thankYou"+thankYouId).remove();
 
 	   	   	  		$.post("@{Actions.deleteThankYou()}", 
-	    				{ talkerId: "${talker.id}", thankYouId: thankYouId }	    				
+	    				{ talkerId: "${talker.id}", thankYouId: thankYouId },
+	    				function(html) {
+	      					//put new thank you item in the list
+	      					//$(html).prependTo($(".tabContent"));
+	      					window.location.reload();
+	      				}   				
 	    			);
 	   	   		}
 	   	   		return false;
@@ -37,6 +44,8 @@
 			prepareList("thankyous");
 			prepareList("following");
 			prepareList("follower");
+
+			$('.inline-edit').inlineEdit({ hover: ''});
 
 			$('.moreThankYouText').truncatable({ limit: 80, more: '... more', less: true, hideText: '' }); 
    		});
@@ -47,10 +56,11 @@
    			$("#thankYouNote").val("");
 
    			$.post("@{Actions.createThankYou()}", 
-  				{ toTalkerId: '${talker.id}', note: noteText, tagFile: 'publicprofile/thanksThankYou'},
+  				{ toTalkerId: '${talker.id}', note: noteText, tagFile: 'userBasedActions'},
   				function(html) {
   					//put new thank you item in the list
-  					$(html).prependTo($(".thnksarea2"));
+  					//$(html).prependTo($(".tabContent"));
+  					window.location.reload();
   				}
   			);
 
@@ -64,7 +74,7 @@
 		}
 		#signupleftarea, #thankyoulist { width: auto; } 
 		.profiletext2 { width:250px; }
-		.headingarea, .thnksarea2, .thnksarea, .thnksbottom { width: 610px !important; }
+		.headingarea, .thnksarea2, .tabContent, .thnksarea, .thnksbottom { width: 610px !important; }
 	</style>
 </head>
 <body>
@@ -112,7 +122,8 @@
 									</li> 
 								</ul>
 							</div>
-				            <div id="thankyousList" class="thnksarea2">
+							
+				            <!--<div id="thankyousList" class="thnksarea2">
 				            	#{if talker.isAllowed(models.PrivacySetting.PrivacyType.THANKYOUS, currentTalker) }
 									#{list items:talker.thankYouList, as:'thankYou'}
 										#{ publicprofile/thanksThankYou thankYou: thankYou, talker: talker, currentTalker: currentTalker /}
@@ -123,6 +134,14 @@
 								#{/else}
 				            </div>
 				            
+				            --><div id="thankYouTabContent" class="tabContent" >	
+									<div class="topic">
+									  <!-- Thank You List -->
+				                       #{include 'tags/publicprofile/thankYouTree.html' /}    
+									</div>
+								</div>
+							</div>            
+							
 	                        <input id="thankyousMoreBtn" type="submit" value="" class="seemorecom" 
 	                        	style="margin-left: 50px; display: none;" onclick="return showMore('thankyous');"  />
 								

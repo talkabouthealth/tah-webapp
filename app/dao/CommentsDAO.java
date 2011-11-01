@@ -617,7 +617,30 @@ public class CommentsDAO {
 		return null;
 	}
 	
-
+	public static List<Action> getProfileComments(String id, TalkerBean profile){
+		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
+		
+		DBRef fromTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, profile.getId());
+		
+		DBObject query = BasicDBObjectBuilder.start()
+		//.add("profile", fromTalkerRef)
+		.add("rootid", id)
+		.add("deleted", new BasicDBObject("$ne", true))
+		.get();
+		
+		List<Action> personalProfileList = new ArrayList<Action>();
+		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		for (DBObject commentDBObject : commentsList) {
+			CommentBean commentBean = new CommentBean();
+			commentBean.parseFromDB(commentDBObject);
+			Action thankYouAction = new PersonalProfileCommentAction(commentBean.getFromTalker(),
+					commentBean.getFromTalker(), commentBean, null, ActionType.PERSONAL_PROFILE_COMMENT);
+			thankYouAction.setID(commentBean.getId());
+			personalProfileList.add(thankYouAction);
+		}
+		return personalProfileList;
+	}
+	
 	/**
 	 * Load all not-deleted answers for given conversation,
 	 * answers have only id.

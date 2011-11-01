@@ -57,6 +57,7 @@ import models.PrivacySetting;
 import models.ServiceAccountBean;
 import models.TalkerBean;
 import models.TalkerDiseaseBean;
+import models.ThankYouBean;
 import models.TopicBean;
 import models.ConversationBean.ConvoType;
 import models.PrivacySetting.PrivacyType;
@@ -439,11 +440,11 @@ public class TalkerLogic {
 	 * @return
 	 */
 	public static CommentBean saveProfileComment(TalkerBean talker, String profileTalkerId, 
-			String parentId, String text, String cleanText, String from, String fromId, Boolean ccTwitter, Boolean ccFacebook) {
+			String parentId, String text, String cleanText, String from, String fromId, Boolean ccTwitter, Boolean ccFacebook,String parentList) {
+		
 		//find profile talker by parent thought or given talker id
 		// also retrieve thread's rootid from parent comment
 		String rootId = "";
-		
 		if (parentId != null && parentId.length() != 0) {
 			CommentBean parentAnswer = CommentsDAO.getProfileCommentById(parentId);
 			if (parentAnswer != null) {
@@ -519,7 +520,7 @@ public class TalkerLogic {
 				Map<String, String> vars = new HashMap<String, String>();
 				vars.put("other_talker", talker.getUserName());
 				vars.put("comment_text", CommonUtil.commentToHTML(comment));
-			TalkerBean mailSendtalker = TalkerDAO.getByEmail(profileTalker.getEmail());
+				TalkerBean mailSendtalker = TalkerDAO.getByEmail(profileTalker.getEmail());
 	    		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_COMMENT"))
 				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
 						profileTalker, vars);
@@ -550,32 +551,49 @@ public class TalkerLogic {
 				TalkerBean thisTalker = thisComment.getFromTalker();
 				allTalkersHere.add(thisTalker);
 			}
-
-			// * shoot emails -- here
-			for(TalkerBean thisTalker : allTalkersHere) {
-				if(!thisTalker.equals(talker) && !thisTalker.equals(profileTalker) && 
-						!thisTalker.equals(thought.getFromTalker())) {
-				TalkerBean mailSendtalker = TalkerDAO.getByEmail(profileTalker.getEmail());
+			
+			if(parentList != null && !parentList.equalsIgnoreCase("thankYouList")){
+				// * shoot emails -- here
+				for(TalkerBean thisTalker : allTalkersHere) {
+					if(!thisTalker.equals(talker) && !thisTalker.equals(profileTalker) && 
+							!thisTalker.equals(thought.getFromTalker())) {
+						TalkerBean mailSendtalker = TalkerDAO.getByEmail(profileTalker.getEmail());
+			    		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_COMMENT"))
+						NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
+								thisTalker, vars);
+					}
+				}
+						
+				// fix bug of double email sending to thread owner & parent author; parent author here
+				if (!talker.equals(thought.getFromTalker()) && !profileTalker.equals(thought.getFromTalker())) {
+					TalkerBean mailSendtalker = TalkerDAO.getByEmail(profileTalker.getEmail());
 		    		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_COMMENT"))
 					NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
-							thisTalker, vars);
+							thought.getFromTalker(), vars);
 				}
-			}
-					
-			// fix bug of double email sending to thread owner & parent author; parent author here
-			if (!talker.equals(thought.getFromTalker()) && !profileTalker.equals(thought.getFromTalker())) {
-				TalkerBean mailSendtalker = TalkerDAO.getByEmail(profileTalker.getEmail());
-	    		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_COMMENT"))
-				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
-						thought.getFromTalker(), vars);
-			}
-			
-			// thread owner
-			if (!talker.equals(profileTalker)) {
-				TalkerBean mailSendtalker = TalkerDAO.getByEmail(profileTalker.getEmail());
-	    		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_COMMENT"))
-				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
-						profileTalker, vars);
+				
+				// thread owner
+				if (!talker.equals(profileTalker)) {
+					TalkerBean mailSendtalker = TalkerDAO.getByEmail(profileTalker.getEmail());
+		    		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_COMMENT"))
+					NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
+							profileTalker, vars);
+				}
+			}else{
+				//Set mail to user who gives the thank you
+				TalkerBean talkerBean = TalkerDAO.getByThankYouId(rootId);
+				List<ThankYouBean> list = talkerBean.getThankYouList();
+				if(list != null){
+					for(int index = 0 ; index < list.size(); index++){
+						ThankYouBean thanYou = list.get(index);
+						if(thanYou.getId().equalsIgnoreCase(rootId)){
+							TalkerBean mailSendtalker = TalkerDAO.getByEmail(thanYou.getFromTalker().getEmail());
+				    		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_COMMENT"))
+							NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
+									thanYou.getFromTalker(), vars);
+						}
+					}
+				}
 			}
 		}
 		
@@ -1072,5 +1090,23 @@ public class TalkerLogic {
 			Cache.set("healthItemsMap", healthItemsMap, "30d");
 		}
 		return healthItemsMap;
+	}
+	
+	/**
+	 * Save thank You.
+	 * Set newly created id to given comment object.
+	 */
+	public static void saveThankYouProfile(ThankYouBean thankYouBean) {
+		DBCollection commentsColl = getCollection(CommentsDAO.CONVO_COMMENTS_COLLECTION);
+		
+		//DBRef profileTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, thankYouBean.getTo());
+		DBRef fromTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, thankYouBean.getFromTalker().getId());
+		
+		DBObject commentObject = BasicDBObjectBuilder.start()
+			.add("from", fromTalkerRef)
+			.add("text", thankYouBean.getNote())
+			.add("time", thankYouBean.getTime())
+			.get();
+		commentsColl.save(commentObject);
 	}
 }

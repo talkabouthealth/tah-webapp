@@ -119,7 +119,7 @@ public class Conversations extends Controller {
 				NotificationUtils.sendEmailNotification(EmailSetting.CONVO_PERSONAL,targetTalker, vars);    			
     		}
     	}
-    	
+
     	renderConvoData(fromPage, talker, convo);
     }
 
@@ -243,24 +243,22 @@ public class Conversations extends Controller {
     		//unfollow
     		talker.getFollowingConvosList().remove(convoId);
     		nextAction = "follow";
-    	}
-    	else {
+    	} else {
     		talker.getFollowingConvosList().add(convoId);
     		ActionDAO.saveAction(new FollowConvoAction(talker, new ConversationBean(convoId)));
     		nextAction = "unfollow";
     		//Code for sending mail if setting available in email setting
     		TalkerBean mailSendtalker = TalkerDAO.getByEmail(convo.getTalker().getEmail());
     		Map<String, String> vars = new HashMap<String, String>();
-    		vars.put("username", mailSendtalker.getUserName());
+    		vars.put("other_talker", mailSendtalker.getUserName());
     		if(mailSendtalker.getEmailSettings().toString().contains("NEW_FOLLOWER"))
     			EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_FOLLOWER, mailSendtalker.getEmail(), vars, null, false);
     	}
-    	
+
     	CommonUtil.updateTalker(talker, session);
     	renderText(nextAction);
     }
-    
-    
+
     /* ---------------- Conversation Summary page actions ------------------ */
     
     /**

@@ -174,7 +174,11 @@ public class NotificationUtils {
 				//EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_PERSONAL_QUESTION, talker.getEmail(), vars, null, true);
 				//EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_PERSONAL_QUESTION, "aawte.umesh@avibha.com", vars, null, true);
 				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_PERSONAL_QUESTION, EmailUtil.SUPPORT_EMAIL, vars, null, true);
-			}			
+			}	
+			else if(emailSetting == EmailSetting.RECEIVE_THANKYOU && vars.get("reply_text") != null){
+				//Receive thank you
+				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_THANKYOU, talker.getEmail(), vars, null, true);
+			}
 			else {
 				EmailUtil.sendEmail(emailSetting.getEmailTemplate(), talker.getEmail(), vars, null, true);
 			}
@@ -254,7 +258,7 @@ public class NotificationUtils {
     	for (TalkerBean follower : convo.getFollowers()) {
     		TalkerBean mailSendtalker = TalkerDAO.getByEmail(follower.getEmail());
     		if(mailSendtalker.getEmailSettings().toString().contains("CONVO_RESTART"))
-    		sendEmailNotification(EmailSetting.CONVO_RESTART, follower, vars);
+    			sendEmailNotification(EmailSetting.CONVO_RESTART, follower, vars);
     	}
 	}
 	
@@ -270,9 +274,9 @@ public class NotificationUtils {
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
 		vars.put("convo_url", convoURL);
 		for (TalkerBean follower : convo.getFollowers()) {
-		TalkerBean mailSendtalker = TalkerDAO.getByEmail(follower.getEmail());
+			TalkerBean mailSendtalker = TalkerDAO.getByEmail(follower.getEmail());
     		if(mailSendtalker.getEmailSettings().toString().contains("CONVO_SUMMARY"))
-			sendEmailNotification(EmailSetting.CONVO_SUMMARY, follower, vars);
+    			sendEmailNotification(EmailSetting.CONVO_SUMMARY, follower, vars);
 		}
 	}
 	

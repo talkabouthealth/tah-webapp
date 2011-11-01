@@ -250,12 +250,11 @@ function sendProfileComment() {
 }
 
 //saveProfileComment(String profileTalkerId, String parentId, String text)
-function saveProfileComment(parentId, parentList) {
+function saveProfileComment(parentId, parentList, userName) {
 	var parentListId = "";
 	if (parentList) {
 		parentListId = "#"+parentList+" ";
 	}
-	
 	var commentText = $(parentListId+".replytext"+parentId).val();
 //	alert(parentListId+".replytext"+parentId);
 //	alert(commentText);
@@ -267,7 +266,7 @@ function saveProfileComment(parentId, parentList) {
 	linkedText = commentText;
 
 	$.post("/actions/saveProfileComment", 
-		{ parentId: parentId, text: linkedText},
+		{ parentId: parentId, text: linkedText,  parentList: parentList},
 		function(html) {
 			$("#firstcommentmessage").hide();
 			$(parentListId+".saveThoughtImage"+parentId).hide();
@@ -512,6 +511,14 @@ function showReplyForm(commentId) {
 }
 function showAllReplies(commentId) {
 	$(".comment"+commentId+" .comreply").fadeIn();
+	return false;
+}
+
+function showAllThankYouReplies(commentId) {
+	var elements = document.getElementsByClassName("comment"+commentId+" comreply");
+	for(var i = 0;i < elements.length;i++){ 
+		elements[i].style.display = '';
+	}
 	return false;
 }
 

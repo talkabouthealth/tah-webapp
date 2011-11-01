@@ -20,6 +20,7 @@ import models.TalkerBean;
 import models.TalkerDiseaseBean;
 import models.ConversationBean;
 import models.TalkerTopicInfo;
+import models.ThankYouBean;
 import models.TopicBean;
 import models.CommentBean.Vote;
 import models.actions.Action;
@@ -61,7 +62,15 @@ public class PublicProfile extends Controller {
 		
 		TalkerLogic.preloadTalkerInfo(talker);
 		
-		render(talker, currentTalker, action, from);
+		//For getting thank you's list
+		TalkerLogic.preloadTalkerInfo(talker);
+		List<ThankYouBean> thankyouList = talker.getThankYouList();
+		for(ThankYouBean thankYouBean : thankyouList){
+			List<Action> profileComments = CommentsDAO.getProfileComments(thankYouBean.getId(),talker);
+			thankYouBean.setProfileComments(profileComments);
+		}
+		
+		render(talker, currentTalker, action, from, thankyouList);
 	}
 	
 	public static void thoughts(String userName) {

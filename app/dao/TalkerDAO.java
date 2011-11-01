@@ -767,5 +767,26 @@ public class TalkerDAO {
 		
 		return talkerList;
 	}
+	
+	/**
+	 * Get talker by thank you id
+	 * @param id
+	 * @return TalkerBean
+	 */
+	public static TalkerBean getByThankYouId(String id) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("thankyous.id", id)
+			.get();
+		
+		DBObject talkerDBObject = talkersColl.findOne(query);
+		
+		if (talkerDBObject == null) {
+			return null;
+		}
+		TalkerBean talker = new TalkerBean();
+		talker.parseFromDB(talkerDBObject);
+		return talker;
+	}
 }
 

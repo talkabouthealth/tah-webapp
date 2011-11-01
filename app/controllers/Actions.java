@@ -64,17 +64,20 @@ public class Actions extends Controller {
 
 		//Used For save thank you as a conversation feed
 		//note = "Thank you @"+toTalker.getUserName()+" '"+note +"'";
-		//saveProfileComment(null,null,note,note,"thankyou",false,false);
-		
+		 
+		@SuppressWarnings("unused")
+		boolean flag = false;
+		try{
+			flag = saveProfileThankYouComment(null,null,note,note,"thankyou",false,false,null);
+		}catch (Throwable e) {
+			e.printStackTrace();
+		}
 		ActionDAO.saveAction(new GiveThanksAction(fromTalker, toTalker));
 		TalkerBean mailSendtalker = TalkerDAO.getByEmail(toTalker.getEmail());
-		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_THANKYOU"))
-		NotificationUtils.emailNotifyOnThankYou(fromTalker, toTalker, thankYouBean);
-		
-		ThankYouBean _thankYou = thankYouBean;
-		TalkerBean _currentTalker = fromTalker;
-		TalkerBean _talker = toTalker;
-		render("tags/publicprofile/thanksThankYou.html", _thankYou, _talker, _currentTalker);
+		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_THANKYOU")){
+			NotificationUtils.emailNotifyOnThankYou(fromTalker, toTalker, thankYouBean);
+		}
+		redirect("/"+toTalker.getUserName()+"/thankyous");
 	}
 
 	/**
@@ -136,10 +139,10 @@ public class Actions extends Controller {
 	 * @param from page where request was made
 	 */
 	public static void saveProfileComment(String profileTalkerId, String parentId, 
-			String text, String cleanText, String from, Boolean ccTwitter, Boolean ccFacebook) {
+			String text, String cleanText, String from, Boolean ccTwitter, Boolean ccFacebook, String parentList) {
 		CommentBean comment = 
 			TalkerLogic.saveProfileComment(CommonUtil.loadCachedTalker(session), 
-					profileTalkerId, parentId, text, cleanText, null, null, ccTwitter, ccFacebook);
+					profileTalkerId, parentId, text, cleanText, null, null, ccTwitter, ccFacebook,parentList);
 		notFoundIfNull(comment);
 		
 		if (from != null && from.equals("home")) {
@@ -148,8 +151,7 @@ public class Actions extends Controller {
     		Action _activity = new PersonalProfileCommentAction(_talker, _talker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT);
     		_activity.setID(comment.getActionId());
     		render("tags/feed/feedActivity.html", _talker, _activity);
-		}else if(from != null && from.equals("thankyou")){
-			
+		//}else if(from != null && from.equals("thankyou")){
 		}else {
 			List<CommentBean> _commentsList = Arrays.asList(comment);
 			int _level = (comment.getParentId() == null ? 1 : 2);
@@ -197,7 +199,7 @@ public class Actions extends Controller {
     	notFoundIfNull(comment);
     	
     	//only author can update
-    	if (!talker.getId().equals(comment.getProfileTalkerId())) {
+    	if (!talker.getId().equals(comment.getProfileTalkerId()) && !talker.getId().equals(comment.getFromTalker().getId())) {
     		forbidden();
     		return;
     	}
@@ -220,6 +222,25 @@ public class Actions extends Controller {
     	renderText(newText);
     }
 	
-	
-	
+	/**
+	 * Save thank you in the given profile
+	 * @param profileTalkerId
+	 * @param parentId Id of the parent thought (for replies) or null
+	 * @param text
+	 * @param cleanText Text of comment without html (used for links)
+	 * @param from page where request was made
+	 * @param ccTwitter
+	 * @param ccFacebook
+	 * @param
+	 */
+	public static boolean saveProfileThankYouComment(String profileTalkerId, String parentId,String text, String cleanText, String from, 
+			Boolean ccTwitter, Boolean ccFacebook, String parentList) throws Throwable {
+		CommentBean comment = 
+			TalkerLogic.saveProfileComment(CommonUtil.loadCachedTalker(session), 
+					profileTalkerId, parentId, text, cleanText, from, null, ccTwitter, ccFacebook,parentList);
+		notFoundIfNull(comment);
+		
+		return true;
+		
+	}
 }

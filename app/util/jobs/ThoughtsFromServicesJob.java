@@ -65,7 +65,7 @@ public class ThoughtsFromServicesJob extends Job {
 			    			String htmlText = post.getText();
 			    			TalkerLogic.saveProfileComment(talker, talker.getId(), null, 
 									htmlText, post.getText(), 
-									serviceAccount.getType().toString(), post.getId(), null, null);
+									serviceAccount.getType().toString(), post.getId(), null, null,null);
 			    		}
 					}
 			    	

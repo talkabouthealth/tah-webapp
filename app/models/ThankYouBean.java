@@ -1,6 +1,8 @@
 package models;
 
 import java.util.Date;
+import java.util.List;
+import models.actions.Action;
 
 public class ThankYouBean implements Comparable<ThankYouBean> {
 	
@@ -12,6 +14,8 @@ public class ThankYouBean implements Comparable<ThankYouBean> {
 	private String from;
 	private String to;
 	private TalkerBean fromTalker;
+	
+	private List<Action> profileComments;
 	
 	public int compareTo(ThankYouBean o) {
 		//reverse order
@@ -40,4 +44,12 @@ public class ThankYouBean implements Comparable<ThankYouBean> {
 	
 	public String getTo() { return to; }
 	public void setTo(String to) { this.to = to; }
+	
+	public List<Action> getProfileComments() {
+		return profileComments;
+	}
+	public void setProfileComments(List<Action> profileComments) {
+		this.profileComments = profileComments;
+	}
+	
 }

@@ -173,11 +173,15 @@ public class Search extends Controller {
 		
 		Analyzer analyzer = new StandardAnalyzer();
 		Query searchQuery = SearchUtil.prepareSearchQuery(query, new String[] {"title"}, analyzer);
-		Hits hits = is.search(searchQuery);
+		//Hits hits = is.search(searchQuery);
+		
+		TopDocs hits = is.search(searchQuery, null, 5);
+		ScoreDoc [] docs = hits.scoreDocs;
+		
 		
 		List<TopicBean> results = new ArrayList<TopicBean>();
-		for (int i = 0; i < hits.length(); i++) {
-			Document doc = hits.doc(i);
+		for (int i = 0; i < docs.length; i++) {
+			Document doc = is.doc(docs[i].doc);
 			
 			//get only topics
 			String type = doc.get("type");
@@ -192,9 +196,9 @@ public class Search extends Controller {
 	    	topic.setFollowers(TopicDAO.getTopicFollowers(topic));
 			results.add(topic);
 			
-			if (results.size() == 3) {
+			/*if (results.size() == 3) {
 				break;
-			}
+			}*/
 		}
 		is.close();
 		return results;
