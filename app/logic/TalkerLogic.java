@@ -1,5 +1,6 @@
 package logic;
 
+import static util.DBUtil.createRef;
 import static util.DBUtil.getCollection;
 
 import java.awt.image.BufferedImage;
