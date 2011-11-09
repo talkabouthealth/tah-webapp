@@ -137,6 +137,12 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 	private String addAccount(Session session, String accessToken,
 			String accountId, String userEmail) {
 		TalkerBean anotherTalker = TalkerDAO.getByAccount(ServiceType.FACEBOOK, accountId);
+		TalkerBean anotherNewTalker = TalkerDAO.getByEmail(userEmail);
+		if (anotherNewTalker != null) {
+			TalkerBean checkUNameTalker = TalkerDAO.getByUserName(anotherNewTalker.getUserName());
+			if(checkUNameTalker != null)
+				return "/publicProfile/loginDetails";
+		}
 		if (anotherTalker != null) {
 			//this account is already connected by another user
 			return "/profile/notificationsettings?err=notunique&from="+ServiceType.FACEBOOK.toString();
@@ -167,6 +173,13 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 	private String loginOrSignupWithAccount(Session session,
 			String accessToken, String accountId, String userEmail) {
 		TalkerBean talker = TalkerDAO.getByAccount(ServiceType.FACEBOOK, accountId);
+		TalkerBean anotherNewTalker = TalkerDAO.getByEmail(userEmail);
+		if (anotherNewTalker != null) {
+			TalkerBean checkUNameTalker = TalkerDAO.getByUserName(anotherNewTalker.getUserName());
+			if(checkUNameTalker != null){
+				return "/publicProfile/loginDetails";
+			}
+		}
 		Logger.info("Loading FB account: <%s>, Result: "+talker, accountId);
 		if (talker != null) {
 			if (talker.isSuspended()) {

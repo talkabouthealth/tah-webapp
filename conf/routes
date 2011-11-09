@@ -25,6 +25,8 @@ GET     /captcha                                Application.captcha
 *		/profile/notificationsettings			Profile.notifications
 *		/profile/privacysettings				Profile.preferences
 
+*		/publicProfile/loginDetails				PublicProfile.loginDetails
+
 GET		/explore/members						Explore.browseMembers(action:'active')
 GET		/explore/experts						Explore.browseMembers(action:'experts')
 *		/search/members							Explore.browseMembers(action:'search')

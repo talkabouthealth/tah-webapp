@@ -44,6 +44,11 @@
 							&{flash.error}
 						</p>
 					#{/if}
+					#{if flash.err}
+						<p class="error">
+							&{flash.err}
+						</p>
+					#{/if}
 					<input type="hidden" name="url" value="${flash.url}" />
 					<h1>Username or Email</h1>
 					<div class="fieldarea">
