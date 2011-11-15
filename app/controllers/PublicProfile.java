@@ -210,11 +210,4 @@ public class PublicProfile extends Controller {
     	render("tags/publicprofile/recommendedTopicsList.html", _recommendedTopics, _talker);
     }
 	
-	public static void loginDetails() {
-		//check possible parameters after adding Twitter/Facebook accounts
-		flash.put("err", "Sorry, this username already in use.");
-		flash.put("from", params.get("from"));
-		
-		redirect("/login");
-	}
 }
