@@ -149,12 +149,6 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 	private String addAccount(Session session, String screenName,
 			String accountId) {
 		TalkerBean anotherTalker = TalkerDAO.getByAccount(ServiceType.TWITTER, accountId);
-		TalkerBean anotherNewTalker = TalkerDAO.getByUserName(screenName);
-		
-		
-		if (anotherNewTalker != null) {
-			return "/profile/login?err=notunique";
-		}
 		if (anotherTalker != null) {
 			//this account is already connected by another user
 			return "/profile/notificationsettings?err=notunique&from="+ServiceType.TWITTER.toString();
@@ -188,11 +182,6 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 	private String loginOrSignupWithAccount(Session session, String screenName,
 			String accountId) {
 		TalkerBean talker = TalkerDAO.getByAccount(ServiceType.TWITTER, accountId);
-		TalkerBean anotherNewTalker = TalkerDAO.getByUserName(screenName);
-		
-		if (anotherNewTalker != null) {
-			return "/publicProfile/loginDetails";
-		}else{
 		if (talker != null) {
 			if (talker.isSuspended()) {
 				return "/application/suspendedAccount";
@@ -223,7 +212,6 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			
 			//redirect to TOS and PP confirmation
 		    return "/application/tosAccept";
-			}
 		}
 	}
 

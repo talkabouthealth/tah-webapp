@@ -20,7 +20,6 @@ import models.TalkerBean;
 import models.TalkerDiseaseBean;
 import models.ConversationBean;
 import models.TalkerTopicInfo;
-import models.ThankYouBean;
 import models.TopicBean;
 import models.CommentBean.Vote;
 import models.actions.Action;
@@ -62,15 +61,7 @@ public class PublicProfile extends Controller {
 		
 		TalkerLogic.preloadTalkerInfo(talker);
 		
-		//For getting thank you's list
-		TalkerLogic.preloadTalkerInfo(talker);
-		List<ThankYouBean> thankyouList = talker.getThankYouList();
-		for(ThankYouBean thankYouBean : thankyouList){
-			List<Action> profileComments = CommentsDAO.getProfileComments(thankYouBean.getId(),talker);
-			thankYouBean.setProfileComments(profileComments);
-		}
-		
-		render(talker, currentTalker, action, from, thankyouList);
+		render(talker, currentTalker, action, from);
 	}
 	
 	public static void thoughts(String userName) {
@@ -210,11 +201,4 @@ public class PublicProfile extends Controller {
     	render("tags/publicprofile/recommendedTopicsList.html", _recommendedTopics, _talker);
     }
 	
-	public static void loginDetails() {
-		//check possible parameters after adding Twitter/Facebook accounts
-		flash.put("err", "Sorry, this username already in use.");
-		flash.put("from", params.get("from"));
-		
-		redirect("/login");
-	}
 }
