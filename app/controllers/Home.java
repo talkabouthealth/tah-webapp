@@ -71,6 +71,15 @@ public class Home extends Controller {
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
 
+    	//Code added for display Ovarian Cancer tab for admin
+    	Set<Action> overianCancerCommunityFeed = null;
+    	if(talker.getUserName().equalsIgnoreCase("admin")){
+    		String category = talker.getCategory();
+    		talker.setCategory("Ovarian Cancer");
+    		overianCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
+    		talker.setCategory(category);
+    	}
+    	
     	Iterator<Action> communityFeedIter = communityFeed.iterator();
 		/*while (communityFeedIter.hasNext()) {
 			 Action actionIterator = communityFeedIter.next();
@@ -150,7 +159,7 @@ public class Home extends Controller {
 		
 		render("@newhome", talker, emailVerification,
 				liveConversations, convoFeed, communityFeed, mentions, showNotificationAccounts,
-				recommendedTopics, similarMembers, experts, recommendedConvos,newsLetterFlag);
+				recommendedTopics, similarMembers, experts, recommendedConvos,newsLetterFlag,overianCancerCommunityFeed);
     }
     
     private static boolean prepareNotificationPanel(Session session, TalkerBean talker) {

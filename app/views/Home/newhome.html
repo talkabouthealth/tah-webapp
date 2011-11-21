@@ -475,12 +475,26 @@ function updateFeed(type,talkerName) {
 							  </div>
 							  <div class="newActiveTab">
 							  	<a href="#" id="communityFeed" class="tabLink">
-							  		#{if talker != null}${talker.category}
+							  		#{if talker != null}
+							  			#{if talker.userName == 'admin'}
+							  				Breast Cancer
+							  			#{/if}
+							  			#{else}
+							  				${talker.category}
+							  			#{/else}
 							  		#{/if}
 							  		#{else}Breast Cancer#{/else}
 							  		 Community Feed
 							  	</a>
 							  </div>
+							  
+							  #{if talker != null}
+							  	#{if talker.userName == 'admin'}
+								  <div class="newTab">
+								  	<a href="#" id="ovarianCancerCommunityFeed" class="tabLink">Ovarian Cancer Community Feed</a>
+								  </div>
+								#{/if}
+							  #{/if}
 							  <div class="newTab">
 							  	<a href="#" id="mentionsTab" class="tabLink">@mentions</a>
 							  </div>
@@ -541,6 +555,33 @@ function updateFeed(type,talkerName) {
 				                      <div class="cb"></div>
 				                    </div> 
 								</div>
+								#{if overianCancerCommunityFeed != null}
+										<div id="ovarianCancerCommunityFeedContent" class="tabContent" 
+												style="display: none;">	
+											<div class="topic">
+						                      <div class="cb"></div>
+						                      <div class="topic" id='comfeed'>
+						                        <a href=# id="ovarianCancerCommunityFeedNotifications" class="morenotification" style='display:none' onClick="updateFeed('communityFeed'); return false;" >
+						                        0 new items
+						                        </a>
+						                        <div id="ovarianCancerCommunityFeedList">
+							                    	#{list items: overianCancerCommunityFeed, as: 'activity'}
+														#{feed/feedActivity activity: activity, talker: talker, parentList: 'ovarianCancerCommunityFeedContent' /}
+													#{/list}
+												</div>
+												#{if overianCancerCommunityFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+													<div class="replytommentbox" id="ovarianCancerCommunityFeedBtn">
+							                          <input type="submit" src="images/seemore.jpg" 
+							                          	onclick="return loadMoreFeed('ovarianCancerCommunityFeed');" value=" " class="seemorecom" />
+							                        </div>
+												#{/if}
+						                        <div class="cb"></div>
+						                      </div>
+						                      <!--newpageCover-->
+						                      <div class="cb"></div>
+						                    </div> 
+										</div>
+								#{/if}
 								<div id="mentionsTabContent" class="tabContent" style="display: none;">	
 									<div class="topic">
 										<a href=# id="mentionsNotifications" class="morenotification" style='display:none' onClick="updateFeed('mentions','${talker.userName}'); return false;" >
