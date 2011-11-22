@@ -30,7 +30,8 @@ public class TopicAddedAction extends AbstractAction {
 		
 		//Conversation added to topic Breast Cancer
 		result.append("Conversation added to topic ");
-		result.append(topic());
+		//result.append(topic());
+		result.append(convoTopics());
 		
 		return result.toString();
 	}
