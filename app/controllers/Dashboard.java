@@ -167,7 +167,7 @@ public class Dashboard extends Controller {
 		for (DBObject newsletterDBObject : newsletterDBList) {
 			newsLetterBean = new NewsLetterBean();
 			newsLetterBean.parseBasicFromDB(newsletterDBObject);
-			emailListBean = new EmailListBean("TAH Newsletter",newsLetterBean.getEmail());
+			emailListBean = new EmailListBean("TAH-Newsletter",newsLetterBean.getEmail());
 			newsLetterList.add(emailListBean);
 		}
 		
@@ -176,12 +176,12 @@ public class Dashboard extends Controller {
 		List<String> orgList = TalkerBean.ORGANIZATIONS_CONNECTIONS_LIST;
 		
 		List<TalkerBean> talkerBeans = TalkerDAO.loadAllTalkers();
-		for (Iterator iterator = talkerBeans.iterator(); iterator.hasNext();) {
+		for (Iterator<TalkerBean> iterator = talkerBeans.iterator(); iterator.hasNext();) {
 			TalkerBean talkerBean = (TalkerBean) iterator.next();
 			if (talkerBean.getVerifyCode() != null) {
-				emailListBean = new EmailListBean("TAH Member Unverified Emails",talkerBean.getEmail());
+				emailListBean = new EmailListBean("TAH-Member-Unverified-Emails",talkerBean.getEmail());
 			} else {
-				emailListBean = new EmailListBean("TAH Member Verified Emails",talkerBean.getEmail());
+				emailListBean = new EmailListBean("TAH-Member-Verified-Emails",talkerBean.getEmail());
 			}
 			newsLetterList.add(emailListBean);
 			
@@ -200,6 +200,7 @@ public class Dashboard extends Controller {
 				newsLetterList.add(emailListBean);
 			}
 		}
+
 		EmailUtil.setEmail(newsLetterList);
 		index();
 	}
