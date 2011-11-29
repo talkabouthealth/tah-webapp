@@ -45,14 +45,11 @@ import play.i18n.Messages;
 import play.libs.Codec;
 import play.libs.Images;
 import play.mvc.Controller;
-import play.mvc.Http.Header;
 import play.mvc.With;
-import play.mvc.Scope.Session;
 import util.CommonUtil;
 import util.EmailUtil;
 import util.TwitterUtil;
 import util.EmailUtil.EmailTemplate;
-import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.ConversationDAO;
@@ -136,7 +133,7 @@ public class Application extends Controller {
     
     /* ------- Sign Up --------- */
     public static void signup() {
-    	params.flash();
+    	//params.flash();
     	String remoteAddress = request.remoteAddress;
     	int duration = -6;
     	//prepare additional settings for FB or Twitter
@@ -251,15 +248,31 @@ public class Application extends Controller {
     }
 
     private static void validateTalker(TalkerBean talker) {
-		if (!validation.hasError("talker.userName")) {
-			boolean nameNotExists = !ApplicationDAO.isURLNameExists(talker.getUserName());
+    	
+    	boolean nameNotExists = false;
+    	if (!validation.hasError("talker.userName")) {
+    		nameNotExists = !ApplicationDAO.isURLNameExists(talker.getUserName());
 			validation.isTrue(nameNotExists).message("username.exists");
 		}
 		if (!validation.hasError("talker.email")) {
 			TalkerBean otherTalker = TalkerDAO.getByEmail(talker.getEmail());
 			validation.isTrue(otherTalker == null).message("email.exists");
 		}
-		
+		 
+    	if(talker.getCategory() == null){
+			validation.required(talker.getCategory()).message("category.notselected");
+		} else if(talker.getCategory().trim().equals("")) {
+			validation.required(talker.getCategory()).message("category.notselected");
+		} else if(talker.getCategory().trim().equals("select")) {
+			nameNotExists = true;
+			validation.isTrue(nameNotExists).message("category.notselected");
+		}
+
+    	if(talker.getConnection() == null){
+    		validation.required(talker.getConnection()).message("connection.notselected");
+    	} else if(talker.getConnection().trim().equals("")) {
+			validation.required(talker.getConnection()).message("connection.notselected");
+		}
 		// Validation for old fields (used earlier) - might be useful later
 //		Date dateOfBirth = CommonUtil.parseDate(talker.getDobMonth(), talker.getDobDay(), talker.getDobYear());
 //		if (dateOfBirth != null) {

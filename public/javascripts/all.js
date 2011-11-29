@@ -659,7 +659,9 @@ function initOldTabs(activeTabName) {
 		
 		//find the rel attribute value to identify the active tab + content
 		var activeTab = $(this).find("a").attr("href"); 
+		var type = $(this).find("a").attr("id");
 		$(activeTab).fadeIn();
+		loadMoreUser(type,'b');
 		return false;
 	});
 }
@@ -854,38 +856,67 @@ function refreshMembers(type,elm){
 	);
 }
 
-function loadMoreUser(type){
+function loadMoreUser(type,from){
+
 	var lastActionId = '';
 	var moreBtn = $("#"+type+"Tab");
-	lastActionId = $(moreBtn).children().last().attr("id");
+	if(from && from == 'b'){
+		lastActionId = '';
+	}else{
+		lastActionId = $(moreBtn).children().last().attr("id");
+	}
+
 	var searchTerm = '';
 	//For search page only
 	if(type == 'search'){
 		searchTerm  = document.searchForm.query.value;
 	}
-	$("#ajaxLoading").prependTo($("#"+type+"Btn")).show();
-	//Useful for the special charactors in the string
+
+	var typeObj = type.replaceAll(' ', '-');
+	typeObj = typeObj.replaceAll('&', 'and');
+	$("#ajaxLoading").appendTo($("#"+typeObj+"TabFirst")).show();
+
 	var typeParam = replaceAll(type,"-"," ");
 	typeParam = replaceAll(typeParam,"and","&");
+
+	//Useful for the special charactors in the string
 	$.get("/explore/ajaxLoadMoreUser", {afterActionId: lastActionId, feedType: typeParam, searchTerm : searchTerm},
 		function(data) {
-			if(data == ''){
-					$("#"+type+"Btn").hide();
-			}else{
-				$(data).appendTo($("#"+type+"Tab"));
-				$('.moretext').truncatable({ limit: 70, more: '... more', less: false, hideText: '...less' });
-				moreBtn.show();
-				$("#ajaxLoading").hide();
-			}
+			populateMemberArea(data,type,from);
 		}
 	);
+	 
 	return false;
+}
+
+String.prototype.replaceAll=function(s1, s2) {return this.split(s1).join(s2)}
+
+function populateMemberArea(data,type,from){
+	type = type.replaceAll(' ', '-');
+	type = type.replaceAll('&', 'and');
+	if(from && from == 'b'){
+		$("#"+type+"TabFirst").html("");
+		$(data).appendTo($("#"+type+"TabFirst"));
+		$('.moretext').truncatable({ limit: 70, more: '... more', less: false, hideText: '...less' });
+		$("#ajaxLoading").hide();
+	}else{
+		var moreBtn = $("#"+type+"Tab");
+		$(data).appendTo($("#"+type+"Tab"));
+		$('.moretext').truncatable({ limit: 70, more: '... more', less: false, hideText: '...less' });
+		if(data == ""){
+			$("#"+type+"Btn").hide();
+		}else{
+			moreBtn.show();
+		}
+		$("#ajaxLoading").hide();
+	}
+	
 }
 
 function replaceAll(strText,oldParam,newParam){
 	var strReplaceAll = strText;
 	var intIndexOfMatch = strReplaceAll.indexOf( oldParam );
-	while (intIndexOfMatch != -1){
+	while (intIndexOfMatch != -1) {
 		strReplaceAll = strReplaceAll.replace( oldParam, newParam )
 		intIndexOfMatch = strReplaceAll.indexOf( oldParam );
 	}

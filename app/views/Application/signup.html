@@ -66,13 +66,16 @@
 							<div class="signuptextarea"><span class="blacktext14">Health Community</span></div>
 							<div class="personaltextfield">
 								<select size="1" name="talker.category" class="personalfields" id="talker.category">
-							  		<option selected value=''></option>
+							  		 <!-- <option value="" selected="selected">Select community</option>  -->  
 							  		#{list items:diseaseList , as: 'disease'}
 									    <option value="${disease.name}"
-									    #{if connection.equals(flash['talker.category']) } selected #{/if} 
+									   #{if disease.name.equals(flash['talker.category']) } selected #{/if}
+									   #{elseif disease.name.equals("Breast Cancer") } selected #{/elseif}
 									    >${disease.name}</option>
 									#{/list}
 								</select>
+								  
+							  		
 								<!-- <span class="blacktext14">Breast Cancer</span>  -->
 							</div>
 							<div class="signtag" style="margin-top: -5px">

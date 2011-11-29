@@ -523,7 +523,9 @@ public class TalkerBean implements Serializable {
 		String loggedinUsername = Session.current().get("username");
 		
 		PrivacyValue privacyValue = getPrivacyValue(PrivacyType.USERNAME);
-		if (privacyValue == PrivacyValue.PUBLIC || loggedinUsername != null) {
+		if (privacyValue == PrivacyValue.PUBLIC ){
+			return getUserName();
+		}else if ( loggedinUsername != null ){
 			return getUserName();
 		}
 		return getAnonymousName();
@@ -779,8 +781,10 @@ public class TalkerBean implements Serializable {
 	public String getCategory() { 
 		if(category == null){
 			return "Breast Cancer";//Breast Cancer
-		}
-		return category;
+		}//else if(category.trim().equals(""))
+		//	return "Breast Cancer";//Breast Cancer
+		else
+			return category;
 	}
 	public void setCategory(String category) { this.category = category; }
 

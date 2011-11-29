@@ -187,7 +187,7 @@ public class Explore extends Controller {
 		//check if search is performed now
 		String query = params.get("query");
 		List<TalkerBean> results = null;
-		if (query != null) {
+		/*if (query != null) {
 			params.flash("query");
 			try {
 				results = SearchUtil.searchTalker(query,currentTalker);
@@ -197,17 +197,21 @@ public class Explore extends Controller {
 			catch (Exception e) {
 				Logger.error(e, "Talker search on Browser Members page.");
 			}
-		}
+		}*/
 
 		//Move members to particular tabs based on member's connection
 		Map<String, Set<TalkerBean>> members = new LinkedHashMap<String, Set<TalkerBean>>();
 		members.put("Experts", new LinkedHashSet<TalkerBean>());
 		members.put("Patients", new LinkedHashSet<TalkerBean>());
 		members.put("Former Patients", new LinkedHashSet<TalkerBean>());
-		members.put("Parents", new LinkedHashSet<TalkerBean>());
-		members.put("Caregivers", new LinkedHashSet<TalkerBean>());
+		//members.put("Parents", new LinkedHashSet<TalkerBean>());
+		//members.put("Caregivers", new LinkedHashSet<TalkerBean>());
 		members.put("Family & Friends", new LinkedHashSet<TalkerBean>());
+		members.put("Breast Cancer", new LinkedHashSet<TalkerBean>());
+		members.put("Ovarian Cancer", new LinkedHashSet<TalkerBean>());
+
 		
+		/*
 		//match tabs with possible connections
 		Map<String, List<String>> memberTypes = new LinkedHashMap<String, List<String>>();
 		memberTypes.put("Experts", TalkerBean.PROFESSIONAL_CONNECTIONS_LIST);
@@ -220,6 +224,7 @@ public class Explore extends Controller {
 		//Set<TalkerBean> allActiveTalkers = ApplicationDAO.getActiveTalkers(null);
 		List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalkers(true,currentTalker);
 		//re-structure members by connection type
+		
 		for (TalkerBean talker : allActiveTalkers) {
 			for (Entry<String, List<String>> memberTypeEntry : memberTypes.entrySet()) {
 				if (memberTypeEntry.getValue().contains(talker.getConnection()) && talker.getName() != null) {
@@ -229,7 +234,9 @@ public class Explore extends Controller {
 				}
 			}
 		}
-
+*/
+			
+				
 		//default tab is 'active'
 		if (action == null || action.equals("browsemembers")) {
 			action = "active";
@@ -362,15 +369,13 @@ public class Explore extends Controller {
     }
     
 	public static void ajaxLoadMoreUser(String feedType, String afterActionId,String searchTerm){
-		System.out.println(feedType);
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		List<TalkerBean> activeTalkers = null;
-		
+		boolean loadFlag = false;
 		if ("active".equals(feedType)) {
 			Calendar twoWeekBeforeNow = Calendar.getInstance();
 			twoWeekBeforeNow.add(Calendar.WEEK_OF_YEAR, -2);
 			activeTalkers =  ApplicationDAO.getActiveTalkers(twoWeekBeforeNow.getTime());
-
 		} else if("new".equals(feedType)) {
 			activeTalkers = ApplicationDAO.getNewTalkers();
 		} else if("search".equals(feedType)) {
@@ -387,42 +392,61 @@ public class Explore extends Controller {
 				memberTypeEntry = Arrays.asList("Just Diagnosed","Current Patient");
 			else if("Former Patients".equals(feedType))
 				memberTypeEntry = Arrays.asList("Survivor (1 year)","Survivor (2 - 5 years)","Survivor (5 - 10 years)","Survivor (10 - 20 years)","Survivor (Greater than 20 years)");
-			else if("Parents".equals(feedType))
+			/*else if("Parents".equals(feedType))
 				memberTypeEntry = Arrays.asList("Parent");
 			else if("Caregivers".equals(feedType))
-				memberTypeEntry = Arrays.asList("Caregiver");
+				memberTypeEntry = Arrays.asList("Caregiver");*/
 			else if("Family & Friends".equals(feedType))
-				memberTypeEntry = Arrays.asList("Family member", "Friend");
-				
+				memberTypeEntry = Arrays.asList("Family member", "Friend","Parent","Caregiver");
+			else if("Breast Cancer".equals(feedType)){
+				memberTypeEntry = Arrays.asList(null,"Breast Cancer");
+				loadFlag = true;
+			}else if("Ovarian Cancer".equals(feedType)){ //Ovarian Cancer  
+				memberTypeEntry = Arrays.asList("ovarian cancer","Ovarian Cancer"); //Ovarian Cancer
+				loadFlag = true;
+			}
+			List<TalkerBean> allActiveTalkers = null;
 			activeTalkers = new ArrayList<TalkerBean>();
-			//List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalkers(true);
-			//List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalker(true);
-			List<TalkerBean> allActiveTalkers = TalkerDAO.loadAllTalkers(true,currentTalker);
-			for (TalkerBean talker : allActiveTalkers) {
-				if (memberTypeEntry.contains(talker.getConnection()) && talker.getName() != null) {
-					activeTalkers.add(talker);
+			if(loadFlag){
+				allActiveTalkers = TalkerDAO.loadAllTalkersByCategory(true,memberTypeEntry);
+				for (TalkerBean talker : allActiveTalkers) {
+					if (talker.getName() != null)
+						activeTalkers.add(talker);
+				}
+			} else {
+				allActiveTalkers = TalkerDAO.loadAllTalkers(true,currentTalker);
+				for (TalkerBean talker : allActiveTalkers) {
+					if (memberTypeEntry.contains(talker.getConnection()) && talker.getName() != null) 
+						activeTalkers.add(talker);
 				}
 			}
 		}
 
 		int talkerCounter = 1;
-		if(activeTalkers != null){
-			for (TalkerBean talkerBean : activeTalkers) {
-				if(afterActionId.equals(talkerBean.getId()))
-					break;
-				else
-					talkerCounter++;
-			}
+		if(activeTalkers != null) {
+			if(afterActionId != null && !afterActionId.equals("")) {
+				for (TalkerBean talkerBean : activeTalkers) {
+					if(afterActionId.equals(talkerBean.getId()))
+						break;
+					else
+						talkerCounter++;
+				}
+			}else
+				talkerCounter = 0;
 			int limit = talkerCounter + TalkerLogic.TALKERS_PER_PAGE;
-			if(talkerCounter < activeTalkers.size() && limit >  activeTalkers.size()){
+			if(talkerCounter < activeTalkers.size() && limit >  activeTalkers.size()) {
 				limit = activeTalkers.size();
 				activeTalkers = activeTalkers.subList(talkerCounter, limit);
-			}else if(limit >  activeTalkers.size()){
+			} else if(limit >  activeTalkers.size()) {
 				activeTalkers = null;
-			} else{
+			} else {
 				activeTalkers = activeTalkers.subList(talkerCounter, limit);
 			}
-			render("tags/talker/talkerList.html", activeTalkers,currentTalker);
+			
+			if(afterActionId != null && !afterActionId.equals("")) 
+				render("tags/talker/talkerList.html", activeTalkers,currentTalker,feedType);
+			else
+				render("tags/talker/actionTalkerList.html", activeTalkers,currentTalker,feedType);
 		} else {
 			renderText("Error");
 		}
