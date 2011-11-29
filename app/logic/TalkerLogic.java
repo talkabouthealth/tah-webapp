@@ -176,6 +176,8 @@ public class TalkerLogic {
 		PROF_FIELDS_MAP.put("med_school", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Medical school");
 		PROF_FIELDS_MAP.put("residency", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Residency");
 		PROF_FIELDS_MAP.put("internship", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Internship");
+		//fellowship
+		PROF_FIELDS_MAP.put("fellowship", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fellowship");
 		PROF_FIELDS_MAP.put("board_certs", "Board certifications");
 		PROF_FIELDS_MAP.put("memberships", "Professional memberships");
 		PROF_FIELDS_MAP.put("expertise", "Areas of expertise");

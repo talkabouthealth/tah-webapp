@@ -72,7 +72,7 @@ public class Explore extends Controller {
     		TalkerLogic.preloadTalkerInfo(talker);
     		newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
     	}
-    	int limit = session.get("topicCount")==null?20:Integer.parseInt(session.get("topicCount"));
+    	int limit = session.get("topicCount")==null?TopicLogic.TOPICS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
     	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics(limit);
 		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions(talker);
 		
@@ -86,7 +86,7 @@ public class Explore extends Controller {
     		TalkerLogic.preloadTalkerInfo(talker);
     	}
     	else {
-    		int limit = session.get("topicCount")==null?20:Integer.parseInt(session.get("topicCount"));
+    		int limit = session.get("topicCount")==null?TopicLogic.TOPICS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
     		popularTopics = TopicLogic.loadPopularTopics(limit);
     	}
     	
@@ -99,7 +99,7 @@ public class Explore extends Controller {
     	int limit = FeedsLogic.FEEDS_PER_PAGE;
     	//In case you want to save the populated list
     	//session.get("topicCount")==null?20:Integer.parseInt(session.get("topicCount"));
-    	session.put("topicCount", limit);
+    	session.put("topicCount", TopicLogic.TOPICS_PER_PAGE);
     	boolean newsLetterFlag = false;
     	
     	if (talker != null) {
@@ -107,7 +107,7 @@ public class Explore extends Controller {
     		newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
     	}
 
-    	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics(limit);
+    	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics(TopicLogic.TOPICS_PER_PAGE);
 
     	Set<TopicBean> topicsTree = TopicLogic.getAllTopicsTree();
 
@@ -140,7 +140,7 @@ public class Explore extends Controller {
     	limit = topicCount + limit;
         if (_popularTopics.size() > limit) {
         	_popularTopics = _popularTopics.subList(topicCount, limit);
-        }else{
+        } else {
         	_popularTopics = null;
         }
 
@@ -273,7 +273,7 @@ public class Explore extends Controller {
 		
 		List<TopicBean> popularTopics = null;
     	if (talker == null) {
-    		int limit = session.get("topicCount")==null?20:Integer.parseInt(session.get("topicCount"));
+    		int limit = session.get("topicCount")==null?TopicLogic.TOPICS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
     		popularTopics = TopicLogic.loadPopularTopics(limit);
     	}
     	

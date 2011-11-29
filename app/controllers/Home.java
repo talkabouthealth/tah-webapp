@@ -19,6 +19,7 @@ import com.mongodb.DBRef;
 import logic.ConversationLogic;
 import logic.FeedsLogic;
 import logic.TalkerLogic;
+import logic.TopicLogic;
 import logic.FeedsLogic.FeedType;
 import models.CommentBean;
 import models.IMAccountBean;
@@ -140,8 +141,34 @@ public class Home extends Controller {
     	boolean showNotificationAccounts = prepareNotificationPanel(session, talker);
 		TalkerLogic.preloadTalkerInfo(talker);
 		
-		List<TopicBean> recommendedTopics = TalkerLogic.getRecommendedTopics(talker,null);
+		//Commented Topics for you section
+		//List<TopicBean> recommendedTopics = TalkerLogic.getRecommendedTopics(talker);
 		
+		//Code for Popular Topics section
+		List<TopicBean> popularTopics = new ArrayList<TopicBean>();
+		for (TopicBean topic : TalkerLogic.loadAllTopicsFromCache()) {
+			if (topic.getConversations() == null) {
+				topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
+			}
+			popularTopics.add(topic);
+		}
+		//sort by number of questions
+		Collections.sort(popularTopics, new Comparator<TopicBean>() {
+			@Override
+			public int compare(TopicBean o1, TopicBean o2) {
+				return o2.getConversations().size() - o1.getConversations().size();
+			}		
+		});
+    	//int limit = 10;
+    	int topicCount = session.get("topicCount")==null?TopicLogic.TOPICS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
+    	//limit = topicCount + limit;
+        if (popularTopics.size() > topicCount) {
+        	popularTopics = popularTopics.subList(topicCount, topicCount);
+        }else{
+        	popularTopics = null;
+        }
+        session.put("topicCount", topicCount);
+
 		List<TalkerBean> similarMembers = TalkerLogic.getRecommendedTalkers(talker,"USR");
 		List<TalkerBean> experts = TalkerLogic.getRecommendedTalkers(talker,"EXP");
 	
@@ -159,7 +186,7 @@ public class Home extends Controller {
 		
 		render("@newhome", talker, emailVerification,
 				liveConversations, convoFeed, communityFeed, mentions, showNotificationAccounts,
-				recommendedTopics, similarMembers, experts, recommendedConvos,newsLetterFlag,overianCancerCommunityFeed);
+				popularTopics,similarMembers, experts, recommendedConvos,newsLetterFlag);//recommendedTopics
     }
     
     private static boolean prepareNotificationPanel(Session session, TalkerBean talker) {

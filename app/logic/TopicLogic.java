@@ -26,6 +26,7 @@ import dao.TopicDAO;
 
 public class TopicLogic {
 	
+	public static final int TOPICS_PER_PAGE = 10;
 	/**
 	 * Default parent topic
 	 */

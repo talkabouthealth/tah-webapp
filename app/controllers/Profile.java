@@ -124,7 +124,7 @@ public class Profile extends Controller {
 		if (!StringUtils.equals(oldTalker.getBio(), talker.getBio())) {
 			ActionDAO.saveAction(new UpdateProfileAction(oldTalker, ActionType.UPDATE_BIO));
 		}
-		ActionDAO.saveAction(new UpdateProfileAction(oldTalker, ActionType.UPDATE_PERSONAL));
+		String temp = ActionDAO.saveAction(new UpdateProfileAction(oldTalker, ActionType.UPDATE_PERSONAL));
 		
 		
 		//------- save updated info to the talker
