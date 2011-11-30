@@ -145,7 +145,7 @@ public class Home extends Controller {
 		//List<TopicBean> recommendedTopics = TalkerLogic.getRecommendedTopics(talker);
 		
 		//Code for Popular Topics section
-		List<TopicBean> popularTopics = new ArrayList<TopicBean>();
+		/*List<TopicBean> popularTopics = new ArrayList<TopicBean>();
 		for (TopicBean topic : TalkerLogic.loadAllTopicsFromCache()) {
 			if (topic.getConversations() == null) {
 				topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
@@ -159,18 +159,21 @@ public class Home extends Controller {
 				return o2.getConversations().size() - o1.getConversations().size();
 			}		
 		});
-    	//int limit = 10;
-    	int topicCount = session.get("topicCount")==null?TopicLogic.TOPICS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
-    	//limit = topicCount + limit;
+
+    	
+
         if (popularTopics.size() > topicCount) {
         	popularTopics = popularTopics.subList(topicCount, topicCount);
         }else{
         	popularTopics = null;
-        }
-        session.put("topicCount", topicCount);
+        }*/
+		//int topicCount = session.get("topicCount")==null?TopicLogic.TOPICS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
+    	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics(TopicLogic.TOPICS_PER_PAGE);
 
-		List<TalkerBean> similarMembers = TalkerLogic.getRecommendedTalkers(talker,"USR");
-		List<TalkerBean> experts = TalkerLogic.getRecommendedTalkers(talker,"EXP");
+        session.put("topicCount", TopicLogic.TOPICS_PER_PAGE);
+
+		List<TalkerBean> similarMembers = TalkerLogic.getRecommendedTalkers(talker,"USR",null);
+		List<TalkerBean> experts = TalkerLogic.getRecommendedTalkers(talker,"EXP",null);
 	
 		List<ConversationBean> recommendedConvos = TalkerLogic.getRecommendedConvos(talker);
 		
@@ -276,7 +279,7 @@ public class Home extends Controller {
     	     popularConvos = ConversationDAO.loadPopularConversations(afterActionId);
     	     render("tags/convo/convoList.html", popularConvos);
         } else if("USR".equalsIgnoreCase(feedType) || "EXP".equalsIgnoreCase(feedType)){
-    		_similarMembers = TalkerLogic.getRecommendedTalkers(_talker,feedType);
+    		_similarMembers = TalkerLogic.getRecommendedTalkers(_talker,feedType,afterActionId);
     		render("tags/profile/similarMemberList.html", _similarMembers);
     	} else if("TOPIC".equals(feedType)) {
     		List<TopicBean> _recommendedTopics = TalkerLogic.getRecommendedTopics(_talker,afterActionId);

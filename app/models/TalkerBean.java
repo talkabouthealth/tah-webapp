@@ -109,8 +109,9 @@ public class TalkerBean implements Serializable {
 		CONVO_SUMMARY ("Send me an email when a Answer Summary is edited or updated for a Question I follow.", 
 				EmailTemplate.NOTIFICATION_CONVO_SUMMARY),
 		CONVO_PERSONAL ("",
-				EmailTemplate.NOTIFICATION_PERSONAL_QUESTION);
-		
+				EmailTemplate.NOTIFICATION_PERSONAL_QUESTION),
+		REPLY_TO_THANKYOU ("",EmailTemplate.NOTIFICATION_REPLY_TO_THANKYOU);
+
 		
 		private final String description;
 		private final EmailTemplate emailTemplate;

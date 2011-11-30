@@ -128,10 +128,11 @@ public class CommentsDAO {
 		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
 
 		commentsColl.ensureIndex(new BasicDBObject("time", 1));
-		
+		//Added from_Service to hide thank you from the thoughts page. #21378031
 		DBRef profileTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("profile", profileTalkerRef)
+			.add("from_service", new BasicDBObject("$ne", "thankyou"))
 			.get();
 		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		

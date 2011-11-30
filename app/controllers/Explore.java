@@ -354,7 +354,7 @@ public class Explore extends Controller {
     	     popularConvos = ConversationDAO.loadPopularConversations(afterActionId);
     	     render("tags/convo/convoList.html", popularConvos);
         } else if("USR".equalsIgnoreCase(feedType) || "EXP".equalsIgnoreCase(feedType)){
-    		_similarMembers = TalkerLogic.getRecommendedTalkers(_talker,feedType);
+    		_similarMembers = TalkerLogic.getRecommendedTalkers(_talker,feedType,afterActionId);
     		render("tags/profile/similarMemberList.html", _similarMembers);
     	} else if("TOPIC".equals(feedType)) {
     		List<TopicBean> _recommendedTopics = TalkerLogic.getRecommendedTopics(_talker,afterActionId);

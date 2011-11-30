@@ -842,9 +842,10 @@ function loadMoreTopicsFeed(type,title) {
 function refreshMembers(type,elm){
 	var lastActionId = '';
 	var moreBtn = $("#"+type+"List");
-	if(type == 'TOPIC'){
+	lastActionId = $(moreBtn).children().last().attr("id");
+	/*if(type == 'TOPIC'){
 		lastActionId = $(moreBtn).children().last().attr("id");
-	}
+	}*/
 	$("#ajaxLoading").appendTo(moreBtn.parent()).show();
 	moreBtn.hide();
 	$.get("/home/feedAjaxLoad", {afterActionId: lastActionId, feedType: type, talkerName: ''},

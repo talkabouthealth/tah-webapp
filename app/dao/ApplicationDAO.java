@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bson.types.ObjectId;
+
 import logic.FeedsLogic;
 import models.TalkerBean;
 import play.templates.JavaExtensions;
@@ -172,9 +174,8 @@ public class ApplicationDAO {
 	 * New users/Experts - users signed up or logged in date descending order
 	 * Using to 20 users only for the list on profile page for recommendations.
 	 */
-	public static List<TalkerBean> getTalkersInOrder(TalkerBean talkerBean,boolean memberFlag) {
+	public static List<TalkerBean> getTalkersInOrder(TalkerBean talkerBean,boolean memberFlag,String afterActionId) {
 		DBCollection loginsColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
-		DBCollection loginHistoryCollection = getCollection(LOGIN_HISTORY_COLLECTION);
 		List<String> list = TalkerBean.PROFESSIONAL_CONNECTIONS_LIST;
 		BasicDBList basicDBList = new BasicDBList();
 
@@ -184,21 +185,77 @@ public class ApplicationDAO {
 			basicDBList.add(element);
 		}
 		DBObject query = null;
-		if(memberFlag){
-			query = BasicDBObjectBuilder.start()
-				.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList ))
-				.add("category", new BasicDBObject("$in", cat) )
-				.add("connection_verified",true)
-				.get();
+		
+		//Using when refresh members
+		if(afterActionId != null){
+			Date date = getCreationDate(afterActionId);
+			if(memberFlag){
+				query = BasicDBObjectBuilder.start()
+					.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList ))
+					.add("category", new BasicDBObject("$in", cat) )
+					.add("timestamp", new BasicDBObject("$lt", date) )
+					.add("connection_verified",true)
+					.get();
+			}else{
+				query = BasicDBObjectBuilder.start()
+					.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList ))
+					.add("category", new BasicDBObject("$in", cat) )
+					.add("timestamp", new BasicDBObject("$lt", date)  )
+					.get();
+			}
 		}else{
-			query = BasicDBObjectBuilder.start()
-				.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList ))
-				.add("category", new BasicDBObject("$in", cat) )
-				.get();
+			if(memberFlag){
+				query = BasicDBObjectBuilder.start()
+					.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList ))
+					.add("category", new BasicDBObject("$in", cat) )
+					.add("connection_verified",true)
+					.get();
+			}else{
+				query = BasicDBObjectBuilder.start()
+					.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList ))
+					.add("category", new BasicDBObject("$in", cat) )
+					.get();
+			}
 		}
 		
 		DBObject fields = TalkerDAO.getBasicTalkerFields();
-		List<DBObject> talkersDBList = loginsColl.find(query, fields).toArray();
+		List<DBObject> talkersDBList = loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).toArray();
+			
+		List<TalkerBean> newTalkers = getTalkers(talkersDBList,talkerBean);
+		
+		//If member size is zero then again displays members from latest date
+		if(newTalkers.size()==0){
+			if(memberFlag){
+				query = BasicDBObjectBuilder.start()
+					.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList ))
+					.add("category", new BasicDBObject("$in", cat) )
+					.add("connection_verified",true)
+					.get();
+			}else{
+				query = BasicDBObjectBuilder.start()
+					.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList ))
+					.add("category", new BasicDBObject("$in", cat) )
+					.get();
+			}
+			fields = TalkerDAO.getBasicTalkerFields();
+			talkersDBList = loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).toArray();
+			
+			newTalkers = getTalkers(talkersDBList,talkerBean);
+		}
+		
+		//Collections.sort(newTalkers, new TalkerBean());
+		return newTalkers;
+	}
+	
+	/**
+	 * Method used for getting talkers which is login at least two times.
+	 * @param talkersDBList
+	 * @param talkerBean
+	 * @return
+	 */
+	public static List<TalkerBean> getTalkers(List<DBObject> talkersDBList, TalkerBean talkerBean){
+		DBCollection loginHistoryCollection = getCollection(LOGIN_HISTORY_COLLECTION);
+		DBObject query = null;
 		List<TalkerBean> newTalkers = new ArrayList<TalkerBean>();
 		for (DBObject talkerDBObject : talkersDBList) {
 			TalkerBean talker = new TalkerBean();
@@ -387,5 +444,21 @@ public class ApplicationDAO {
 		.get();
 		namesColl.save(userIpDBObject);
 		return true;
+	}
+	
+	/**
+	 * Used for check a/c creation date of user
+	 * @param actionId
+	 * @return
+	 */
+	public static Date getCreationDate(String actionId){
+		DBCollection activitiesColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
+
+		DBObject query = new BasicDBObject("_id", new ObjectId(actionId));
+		DBObject actionDBObject = activitiesColl.findOne(query);
+		if (actionDBObject != null) {
+			return (Date)actionDBObject.get("timestamp");
+		}
+		return null;
 	}
 }
