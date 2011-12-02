@@ -136,6 +136,10 @@ public class TalkerBean implements Serializable {
 	@Required @Email private String email;
 	//code for email verification
 	private String verifyCode;	
+	
+	//Added filed for old verification code
+	private String oldVerifyCode;
+	
 	//not-primary emails
 	private Set<EmailBean> emails;
 	
@@ -265,6 +269,7 @@ public class TalkerBean implements Serializable {
 		setEmail((String)talkerDBObject.get("email"));
 		setEmails(parseSet(EmailBean.class, talkerDBObject, "emails"));
 		setVerifyCode((String)talkerDBObject.get("verify_code"));
+		setOldVerifyCode((String)talkerDBObject.get("old_verify_code"));
 		setCategory((String)talkerDBObject.get("category"));
 		
 		setOriginalUserName((String)talkerDBObject.get("orig_uname"));
@@ -884,6 +889,9 @@ public class TalkerBean implements Serializable {
 	
 	public String getVerifyCode() { return verifyCode; }
 	public void setVerifyCode(String verifyCode) { this.verifyCode = verifyCode; }
+	
+	public String getOldVerifyCode() { return oldVerifyCode; }
+	public void setOldVerifyCode(String oldVerifyCode) { this.oldVerifyCode = oldVerifyCode; }
 	
 	public Date getRegDate() { return regDate; }
 	public void setRegDate(Date regDate) { this.regDate = regDate; }

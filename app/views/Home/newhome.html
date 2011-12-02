@@ -471,7 +471,9 @@ function updateFeed(type,talkerName) {
 	                    <div class="newpageCover">  
 							<div class="newTabCover">
 							  <div class="newTab">
-							  	<a href="#" id="convoFeed" class="tabLink">Your Conversation Feed</a>
+							  	<!-- <a href="#" id="convoFeed" class="tabLink">Your Conversation Feed</a>  -->
+							  	<a href="#" id="convoFeed" class="tabLink">Your conversations</a>
+							  	
 							  </div>
 							  <div class="newActiveTab">
 							  	<a href="#" id="communityFeed" class="tabLink">
@@ -484,14 +486,14 @@ function updateFeed(type,talkerName) {
 							  			#{/else}
 							  		#{/if}
 							  		#{else}Breast Cancer#{/else}
-							  		 Community Feed
+							  		 <!-- Community Feed  -->
 							  	</a>
 							  </div>
 							  
 							  #{if talker != null}
 							  	#{if talker.userName == 'admin'}
 								  <div class="newTab">
-								  	<a href="#" id="ovarianCancerCommunityFeed" class="tabLink">Ovarian Cancer Community Feed</a>
+								  	<a href="#" id="ovarianCancerCommunityFeed" class="tabLink">Ovarian Cancer</a> <!--  Community Feed -->
 								  </div>
 								#{/if}
 							  #{/if}

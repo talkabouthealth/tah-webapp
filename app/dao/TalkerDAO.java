@@ -115,6 +115,7 @@ public class TalkerDAO {
 			.add("pass", talker.getPassword())
 			.add("email", talker.getEmail())
 			.add("verify_code", talker.getVerifyCode())
+			.add("old_verify_code", talker.getOldVerifyCode())
 			.add("emails", setToDB(talker.getEmails()))
 			
 			.add("orig_uname", talker.getOriginalUserName())
@@ -294,6 +295,14 @@ public class TalkerDAO {
 			}
 		}
 		
+		return talker;
+	}
+	
+	/**
+	 * Get by Old verify code of main or non-primary emails
+	 */
+	public static TalkerBean getByOldVerifyCode(String verifyCode) {
+		TalkerBean talker = getByField("old_verify_code", verifyCode);
 		return talker;
 	}
 	

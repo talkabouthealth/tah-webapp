@@ -358,34 +358,56 @@ public class Application extends Controller {
     public static void verifyEmail(String verifyCode) throws Throwable {
 		notFoundIfNull(verifyCode);
 		TalkerBean talker = TalkerDAO.getByVerifyCode(verifyCode);
-		notFoundIfNull(talker);
 		
-		if (verifyCode.equals(talker.getVerifyCode())) {
-			//primary email
-			talker.setVerifyCode(null);
-		}
-		else {
-			//clear verify code for non-primary email
-			EmailBean emailBean = talker.findNonPrimaryEmail(null, verifyCode);
-			emailBean.setVerifyCode(null);
-		}
-		
-		if (Security.isConnected()) {
-			CommonUtil.updateTalker(talker, session);
-			if (talker.isProf()) {
-				Profile.edit(true);
+		if(talker == null){
+			talker = TalkerDAO.getByOldVerifyCode(verifyCode);
+			notFoundIfNull(talker);
+			if (verifyCode.equals(talker.getOldVerifyCode())) {
+				if (Security.isConnected()) {
+					CommonUtil.updateTalker(talker, session);
+					if (talker.isProf()) {
+						Profile.edit(true);
+					}
+					else {
+						Profile.healthDetails(true);
+					}
+				} else {
+					TalkerDAO.updateTalker(talker);
+					//not-authenticated users we redirect to special login page
+					flash.put("verifiedEmail", true);
+					Secure.login();
+				}
+			}else{
+				notFound();
 			}
-			else {
-				Profile.healthDetails(true);
+		}else{
+			if (verifyCode.equals(talker.getVerifyCode())) {
+				//primary email
+				talker.setVerifyCode(null);
+				System.out.println("Setting Old: " + verifyCode);
+				talker.setOldVerifyCode(verifyCode);
+				System.out.println("Set Old: " + talker.getOldVerifyCode());
+			} else {
+				//clear verify code for non-primary email
+				EmailBean emailBean = talker.findNonPrimaryEmail(null, verifyCode);
+				emailBean.setVerifyCode(null);
+				talker.setOldVerifyCode(verifyCode);
 			}
-
-		}
-		else {
-			TalkerDAO.updateTalker(talker);
-			
-			//not-authenticated users we redirect to special login page
-			flash.put("verifiedEmail", true);
-			Secure.login();
+				
+			if (Security.isConnected()) {
+				CommonUtil.updateTalker(talker, session);
+				if (talker.isProf()) {
+					Profile.edit(true);
+				}
+				else {
+					Profile.healthDetails(true);
+				}
+			} else {
+				TalkerDAO.updateTalker(talker);
+				//not-authenticated users we redirect to special login page
+				flash.put("verifiedEmail", true);
+				Secure.login();
+			}
 		}
 	}
     
