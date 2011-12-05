@@ -151,7 +151,7 @@ public class NotificationUtils {
 			TalkerBean talker, Map<String, String> vars) {	
 
 		// always send notification for personal questions %-/
-		if (emailSetting == EmailSetting.CONVO_PERSONAL || talker.getEmailSettings().contains(emailSetting)) {
+		if (emailSetting == EmailSetting.CONVO_PERSONAL || emailSetting == EmailSetting.REPLY_TO_THANKYOU || talker.getEmailSettings().contains(emailSetting)) {
 			vars.put("username", talker.getUserName());
 			
 			if (emailSetting == EmailSetting.CONVO_COMMENT && vars.get("reply_text") != null) {
@@ -178,6 +178,10 @@ public class NotificationUtils {
 			else if(emailSetting == EmailSetting.RECEIVE_THANKYOU && vars.get("reply_text") != null){
 				//Receive thank you
 				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_THANKYOU, talker.getEmail(), vars, null, true);
+			}
+			else if(emailSetting == EmailSetting.REPLY_TO_THANKYOU && vars.get("reply_text") != null){
+				//Reply to thank you
+				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_REPLY_TO_THANKYOU, talker.getEmail(), vars, null, true);
 			}
 			else {
 				EmailUtil.sendEmail(emailSetting.getEmailTemplate(), talker.getEmail(), vars, null, true);

@@ -19,6 +19,7 @@ import com.mongodb.DBRef;
 import logic.ConversationLogic;
 import logic.FeedsLogic;
 import logic.TalkerLogic;
+import logic.TopicLogic;
 import logic.FeedsLogic.FeedType;
 import models.CommentBean;
 import models.IMAccountBean;
@@ -71,6 +72,15 @@ public class Home extends Controller {
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
 
+    	//Code added for display Ovarian Cancer tab for admin
+    	Set<Action> overianCancerCommunityFeed = null;
+    	if(talker.getUserName().equalsIgnoreCase("admin")){
+    		String category = talker.getCategory();
+    		talker.setCategory("Ovarian Cancer");
+    		overianCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
+    		talker.setCategory(category);
+    	}
+    	
     	Iterator<Action> communityFeedIter = communityFeed.iterator();
 		/*while (communityFeedIter.hasNext()) {
 			 Action actionIterator = communityFeedIter.next();
@@ -131,10 +141,39 @@ public class Home extends Controller {
     	boolean showNotificationAccounts = prepareNotificationPanel(session, talker);
 		TalkerLogic.preloadTalkerInfo(talker);
 		
-		List<TopicBean> recommendedTopics = TalkerLogic.getRecommendedTopics(talker,null);
+		//Commented Topics for you section
+		//List<TopicBean> recommendedTopics = TalkerLogic.getRecommendedTopics(talker);
 		
-		List<TalkerBean> similarMembers = TalkerLogic.getRecommendedTalkers(talker,"USR");
-		List<TalkerBean> experts = TalkerLogic.getRecommendedTalkers(talker,"EXP");
+		//Code for Popular Topics section
+		/*List<TopicBean> popularTopics = new ArrayList<TopicBean>();
+		for (TopicBean topic : TalkerLogic.loadAllTopicsFromCache()) {
+			if (topic.getConversations() == null) {
+				topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
+			}
+			popularTopics.add(topic);
+		}
+		//sort by number of questions
+		Collections.sort(popularTopics, new Comparator<TopicBean>() {
+			@Override
+			public int compare(TopicBean o1, TopicBean o2) {
+				return o2.getConversations().size() - o1.getConversations().size();
+			}		
+		});
+
+    	
+
+        if (popularTopics.size() > topicCount) {
+        	popularTopics = popularTopics.subList(topicCount, topicCount);
+        }else{
+        	popularTopics = null;
+        }*/
+		//int topicCount = session.get("topicCount")==null?TopicLogic.TOPICS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
+    	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics(TopicLogic.TOPICS_PER_PAGE);
+
+        session.put("topicCount", TopicLogic.TOPICS_PER_PAGE);
+
+		List<TalkerBean> similarMembers = TalkerLogic.getRecommendedTalkers(talker,"USR",null);
+		List<TalkerBean> experts = TalkerLogic.getRecommendedTalkers(talker,"EXP",null);
 	
 		List<ConversationBean> recommendedConvos = TalkerLogic.getRecommendedConvos(talker);
 		
@@ -150,7 +189,7 @@ public class Home extends Controller {
 		
 		render("@newhome", talker, emailVerification,
 				liveConversations, convoFeed, communityFeed, mentions, showNotificationAccounts,
-				recommendedTopics, similarMembers, experts, recommendedConvos,newsLetterFlag);
+				popularTopics,similarMembers, experts, recommendedConvos,newsLetterFlag);//recommendedTopics
     }
     
     private static boolean prepareNotificationPanel(Session session, TalkerBean talker) {
@@ -240,7 +279,7 @@ public class Home extends Controller {
     	     popularConvos = ConversationDAO.loadPopularConversations(afterActionId);
     	     render("tags/convo/convoList.html", popularConvos);
         } else if("USR".equalsIgnoreCase(feedType) || "EXP".equalsIgnoreCase(feedType)){
-    		_similarMembers = TalkerLogic.getRecommendedTalkers(_talker,feedType);
+    		_similarMembers = TalkerLogic.getRecommendedTalkers(_talker,feedType,afterActionId);
     		render("tags/profile/similarMemberList.html", _similarMembers);
     	} else if("TOPIC".equals(feedType)) {
     		List<TopicBean> _recommendedTopics = TalkerLogic.getRecommendedTopics(_talker,afterActionId);

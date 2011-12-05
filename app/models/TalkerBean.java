@@ -109,8 +109,9 @@ public class TalkerBean implements Serializable {
 		CONVO_SUMMARY ("Send me an email when a Answer Summary is edited or updated for a Question I follow.", 
 				EmailTemplate.NOTIFICATION_CONVO_SUMMARY),
 		CONVO_PERSONAL ("",
-				EmailTemplate.NOTIFICATION_PERSONAL_QUESTION);
-		
+				EmailTemplate.NOTIFICATION_PERSONAL_QUESTION),
+		REPLY_TO_THANKYOU ("",EmailTemplate.NOTIFICATION_REPLY_TO_THANKYOU);
+
 		
 		private final String description;
 		private final EmailTemplate emailTemplate;
@@ -135,6 +136,10 @@ public class TalkerBean implements Serializable {
 	@Required @Email private String email;
 	//code for email verification
 	private String verifyCode;	
+	
+	//Added filed for old verification code
+	private String oldVerifyCode;
+	
 	//not-primary emails
 	private Set<EmailBean> emails;
 	
@@ -264,6 +269,7 @@ public class TalkerBean implements Serializable {
 		setEmail((String)talkerDBObject.get("email"));
 		setEmails(parseSet(EmailBean.class, talkerDBObject, "emails"));
 		setVerifyCode((String)talkerDBObject.get("verify_code"));
+		setOldVerifyCode((String)talkerDBObject.get("old_verify_code"));
 		setCategory((String)talkerDBObject.get("category"));
 		
 		setOriginalUserName((String)talkerDBObject.get("orig_uname"));
@@ -523,7 +529,9 @@ public class TalkerBean implements Serializable {
 		String loggedinUsername = Session.current().get("username");
 		
 		PrivacyValue privacyValue = getPrivacyValue(PrivacyType.USERNAME);
-		if (privacyValue == PrivacyValue.PUBLIC || loggedinUsername != null) {
+		if (privacyValue == PrivacyValue.PUBLIC ){
+			return getUserName();
+		}else if ( loggedinUsername != null ){
 			return getUserName();
 		}
 		return getAnonymousName();
@@ -779,8 +787,10 @@ public class TalkerBean implements Serializable {
 	public String getCategory() { 
 		if(category == null){
 			return "Breast Cancer";//Breast Cancer
-		}
-		return category;
+		}//else if(category.trim().equals(""))
+		//	return "Breast Cancer";//Breast Cancer
+		else
+			return category;
 	}
 	public void setCategory(String category) { this.category = category; }
 
@@ -879,6 +889,9 @@ public class TalkerBean implements Serializable {
 	
 	public String getVerifyCode() { return verifyCode; }
 	public void setVerifyCode(String verifyCode) { this.verifyCode = verifyCode; }
+	
+	public String getOldVerifyCode() { return oldVerifyCode; }
+	public void setOldVerifyCode(String oldVerifyCode) { this.oldVerifyCode = oldVerifyCode; }
 	
 	public Date getRegDate() { return regDate; }
 	public void setRegDate(Date regDate) { this.regDate = regDate; }

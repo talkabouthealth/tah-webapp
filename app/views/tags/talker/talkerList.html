@@ -1,5 +1,3 @@
 #{list items: activeTalkers, as: 'talker' }
-	#{if currentTalker || talker.name != null}
 		#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
-	#{/if}
 #{/list}

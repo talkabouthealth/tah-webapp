@@ -45,14 +45,11 @@ import play.i18n.Messages;
 import play.libs.Codec;
 import play.libs.Images;
 import play.mvc.Controller;
-import play.mvc.Http.Header;
 import play.mvc.With;
-import play.mvc.Scope.Session;
 import util.CommonUtil;
 import util.EmailUtil;
 import util.TwitterUtil;
 import util.EmailUtil.EmailTemplate;
-import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.ConversationDAO;
@@ -136,7 +133,7 @@ public class Application extends Controller {
     
     /* ------- Sign Up --------- */
     public static void signup() {
-    	params.flash();
+    	//params.flash();
     	String remoteAddress = request.remoteAddress;
     	int duration = -6;
     	//prepare additional settings for FB or Twitter
@@ -251,15 +248,31 @@ public class Application extends Controller {
     }
 
     private static void validateTalker(TalkerBean talker) {
-		if (!validation.hasError("talker.userName")) {
-			boolean nameNotExists = !ApplicationDAO.isURLNameExists(talker.getUserName());
+    	
+    	boolean nameNotExists = false;
+    	if (!validation.hasError("talker.userName")) {
+    		nameNotExists = !ApplicationDAO.isURLNameExists(talker.getUserName());
 			validation.isTrue(nameNotExists).message("username.exists");
 		}
 		if (!validation.hasError("talker.email")) {
 			TalkerBean otherTalker = TalkerDAO.getByEmail(talker.getEmail());
 			validation.isTrue(otherTalker == null).message("email.exists");
 		}
-		
+		 
+    	if(talker.getCategory() == null){
+			validation.required(talker.getCategory()).message("category.notselected");
+		} else if(talker.getCategory().trim().equals("")) {
+			validation.required(talker.getCategory()).message("category.notselected");
+		} else if(talker.getCategory().trim().equals("select")) {
+			nameNotExists = true;
+			validation.isTrue(nameNotExists).message("category.notselected");
+		}
+
+    	if(talker.getConnection() == null){
+    		validation.required(talker.getConnection()).message("connection.notselected");
+    	} else if(talker.getConnection().trim().equals("")) {
+			validation.required(talker.getConnection()).message("connection.notselected");
+		}
 		// Validation for old fields (used earlier) - might be useful later
 //		Date dateOfBirth = CommonUtil.parseDate(talker.getDobMonth(), talker.getDobDay(), talker.getDobYear());
 //		if (dateOfBirth != null) {
@@ -345,34 +358,56 @@ public class Application extends Controller {
     public static void verifyEmail(String verifyCode) throws Throwable {
 		notFoundIfNull(verifyCode);
 		TalkerBean talker = TalkerDAO.getByVerifyCode(verifyCode);
-		notFoundIfNull(talker);
 		
-		if (verifyCode.equals(talker.getVerifyCode())) {
-			//primary email
-			talker.setVerifyCode(null);
-		}
-		else {
-			//clear verify code for non-primary email
-			EmailBean emailBean = talker.findNonPrimaryEmail(null, verifyCode);
-			emailBean.setVerifyCode(null);
-		}
-		
-		if (Security.isConnected()) {
-			CommonUtil.updateTalker(talker, session);
-			if (talker.isProf()) {
-				Profile.edit(true);
+		if(talker == null){
+			talker = TalkerDAO.getByOldVerifyCode(verifyCode);
+			notFoundIfNull(talker);
+			if (verifyCode.equals(talker.getOldVerifyCode())) {
+				if (Security.isConnected()) {
+					CommonUtil.updateTalker(talker, session);
+					if (talker.isProf()) {
+						Profile.edit(true);
+					}
+					else {
+						Profile.healthDetails(true);
+					}
+				} else {
+					TalkerDAO.updateTalker(talker);
+					//not-authenticated users we redirect to special login page
+					flash.put("verifiedEmail", true);
+					Secure.login();
+				}
+			}else{
+				notFound();
 			}
-			else {
-				Profile.healthDetails(true);
+		}else{
+			if (verifyCode.equals(talker.getVerifyCode())) {
+				//primary email
+				talker.setVerifyCode(null);
+				System.out.println("Setting Old: " + verifyCode);
+				talker.setOldVerifyCode(verifyCode);
+				System.out.println("Set Old: " + talker.getOldVerifyCode());
+			} else {
+				//clear verify code for non-primary email
+				EmailBean emailBean = talker.findNonPrimaryEmail(null, verifyCode);
+				emailBean.setVerifyCode(null);
+				talker.setOldVerifyCode(verifyCode);
 			}
-
-		}
-		else {
-			TalkerDAO.updateTalker(talker);
-			
-			//not-authenticated users we redirect to special login page
-			flash.put("verifiedEmail", true);
-			Secure.login();
+				
+			if (Security.isConnected()) {
+				CommonUtil.updateTalker(talker, session);
+				if (talker.isProf()) {
+					Profile.edit(true);
+				}
+				else {
+					Profile.healthDetails(true);
+				}
+			} else {
+				TalkerDAO.updateTalker(talker);
+				//not-authenticated users we redirect to special login page
+				flash.put("verifiedEmail", true);
+				Secure.login();
+			}
 		}
 	}
     

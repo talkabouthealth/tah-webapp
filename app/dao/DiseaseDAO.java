@@ -46,6 +46,10 @@ public class DiseaseDAO {
 	public static DiseaseBean getByName(String diseaseName) {
 		DBCollection diseasesColl = getCollection(DISEASES_COLLECTION);
 		
+		if(diseaseName == null )
+			diseaseName = "Breast Cancer";
+		else if(diseaseName.equals(""))
+			diseaseName = "Breast Cancer";
 		DBObject query = new BasicDBObject("name", diseaseName);
 		DBObject diseaseDBObject = diseasesColl.findOne(query);
 		

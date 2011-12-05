@@ -11,6 +11,8 @@ validation.invalid=Incorrect date format
 username.empty = Please enter correct username.
 username.exists = Username is already taken. Please enter a different username.
 username.reserved = Username is reserved. Please enter a different username.
+category.notselected = Please select a Health Community.
+connection.notselected = Please select whether you are a patient, caregiver, physician, etc.
 
 email.exists = Email is already registered. Please enter a different email.
 email.nosuchemail = Sorry, there are no user with this email in our database.

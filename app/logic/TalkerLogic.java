@@ -176,6 +176,8 @@ public class TalkerLogic {
 		PROF_FIELDS_MAP.put("med_school", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Medical school");
 		PROF_FIELDS_MAP.put("residency", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Residency");
 		PROF_FIELDS_MAP.put("internship", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Internship");
+		//fellowship
+		PROF_FIELDS_MAP.put("fellowship", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fellowship");
 		PROF_FIELDS_MAP.put("board_certs", "Board certifications");
 		PROF_FIELDS_MAP.put("memberships", "Professional memberships");
 		PROF_FIELDS_MAP.put("expertise", "Areas of expertise");
@@ -483,6 +485,9 @@ public class TalkerLogic {
 		comment.setText(text);
 		comment.setTime(new Date());
 		comment.setFrom(from);
+		if(parentList != null && !parentList.equals("") && parentList.equalsIgnoreCase("thankYouList")){
+			comment.setFrom("thankyou");
+		}
 		comment.setFromId(fromId);
 		comment.setRootId(rootId);
 		CommentsDAO.saveProfileComment(comment);
@@ -590,7 +595,7 @@ public class TalkerLogic {
 						if(thanYou.getId().equalsIgnoreCase(rootId)){
 							TalkerBean mailSendtalker = TalkerDAO.getByEmail(thanYou.getFromTalker().getEmail());
 				    		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_COMMENT"))
-							NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
+							NotificationUtils.sendEmailNotification(EmailSetting.REPLY_TO_THANKYOU, 
 									thanYou.getFromTalker(), vars);
 						}
 					}
@@ -690,11 +695,11 @@ public class TalkerLogic {
 		return recommendedTopics;
 	}
 	
-	public static ArrayList<TalkerBean> getRecommendedTalkers(TalkerBean talker,String type){
+	public static ArrayList<TalkerBean> getRecommendedTalkers(TalkerBean talker,String type, String afterActionId){
 		ArrayList<TalkerBean> recommendedMembers = new ArrayList<TalkerBean>();
 		
 		if("EXP".equals(type)){
-			List<TalkerBean> allExperts = ApplicationDAO.getTalkersInOrder(talker,true);
+			List<TalkerBean> allExperts = ApplicationDAO.getTalkersInOrder(talker,true,afterActionId);
 			for (TalkerBean member : allExperts) {
 				recommendedMembers.add(member);
 				if (recommendedMembers.size() == 3) {
@@ -702,7 +707,7 @@ public class TalkerLogic {
 				}
 			}
 		}else if("USR".equals(type)){
-			List<TalkerBean> allMembers = ApplicationDAO.getTalkersInOrder(talker,false);
+			List<TalkerBean> allMembers = ApplicationDAO.getTalkersInOrder(talker,false,afterActionId);
 			for (TalkerBean member : allMembers) {
 				recommendedMembers.add(member);
 				if (recommendedMembers.size() == 3) {
@@ -716,7 +721,7 @@ public class TalkerLogic {
 	
 	public static void getRecommendedTalkers(TalkerBean talker, List<TalkerBean> similarMembers,
 			List<TalkerBean> experts) {
-		List<TalkerBean> allExperts = ApplicationDAO.getTalkersInOrder(talker,true);
+		List<TalkerBean> allExperts = ApplicationDAO.getTalkersInOrder(talker,true,null);
 		for (TalkerBean member : allExperts) {
 			experts.add(member);
 			if (experts.size() == 3) {
@@ -724,7 +729,7 @@ public class TalkerLogic {
 			}
 		}
 
-		List<TalkerBean> allMembers = ApplicationDAO.getTalkersInOrder(talker,false);
+		List<TalkerBean> allMembers = ApplicationDAO.getTalkersInOrder(talker,false,null);
 		for (TalkerBean member : allMembers) {
 			similarMembers.add(member);
 			if (similarMembers.size() == 3) {

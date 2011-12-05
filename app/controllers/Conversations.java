@@ -343,7 +343,7 @@ public class Conversations extends Controller {
         	    	convo.getTopics().add(topic);
         	    	ConversationDAO.updateConvo(convo);
         	    	
-        	    	ActionDAO.saveAction(new TopicAddedAction(talker, convo, topic));
+        	    	//ActionDAO.saveAction(new TopicAddedAction(talker, convo, topic));
         	    	
         	    	htmlToRender.append(
     	    			"<a class=\"topicTitle\" href=\""+topic.getMainURL()+"\">"+topic.getTitle()+"</a>&nbsp;" +

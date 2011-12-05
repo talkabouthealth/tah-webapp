@@ -35,7 +35,7 @@
 			            <li><a href="#tab2"><span>New</span></a></li>
 			            <li><a href="#tab4"><span>Search</span></a></li>
 			            #{list items: members.keySet(), as: 'memberType'}
-			            	<li><a href="#tab${memberType_index+4}"><span>${memberType}</span></a></li>
+			            	<li><a href="#tab${memberType_index+4}" id="${memberType}"><span>${memberType}</span></a></li>
 			            #{/list}
 			        </ul>
 			        <div class="tab_container">
@@ -156,21 +156,22 @@
 							            	<span class="blacktext25">${memberType}</span> 
 							            </div>
 						            </div>
-						            <div class="thnksarea" id="${memberType.replaceAll(" ", "-").replaceAll("&", "and")}Tab">
+						           </div>
+									<div class="thnksarea" id="${memberType.replaceAll(" ", "-").replaceAll("&", "and")}TabFirst">
 						            	#{list items: members.get(memberType), as: 'talker' }
 						            		#{if currentTalker || talker.name != null}
 						            			#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
 						            		#{/if}
 						            	#{/list}
-						            </div>
-					        	</div>
-								#{if members.get(memberType).size() == logic.TalkerLogic.TALKERS_PER_PAGE }
-									<div align="center" style=" clear: both;" id="${memberType.replaceAll(" ", "-").replaceAll("&", "and")}Btn">
-					                	<input type="submit" src="images/seemore.jpg" onclick="return loadMoreUser('${memberType.replaceAll(" ", "-").replaceAll("&", "and")}');" value=" " class="seemorecom" />
 									</div>
-								#{/if}
+									 #{if  members.get(memberType).length == logic.TalkerLogic.TALKERS_PER_PAGE }
+										<div align="center" style=" clear: both;" id="${memberType.replaceAll(" ", "-").replaceAll("&", "and")}Btn">
+						                	<input type="submit" src="images/seemore.jpg" onclick="return loadMoreUser('${memberType.replaceAll(" ", "-").replaceAll("&", "and")}');" value=" " class="seemorecom" />
+										</div>
+									#{/if}
 					        </div>
 			            #{/list}
+			           
     				</div>
     			</div>
 			</div>

@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -72,7 +73,7 @@ public class TalkerDAO {
 				.add("category", talker.getCategory())
 				.add("connection", talker.getConnection())
 				.add("connection_verified", talker.isConnectionVerified())
-				
+				.add("suspended",false)
 				.add("nfreq", talker.getNfreq())
 				.add("ntime", talker.getNtime())
 				.add("ctype", talker.getCtype())
@@ -114,6 +115,7 @@ public class TalkerDAO {
 			.add("pass", talker.getPassword())
 			.add("email", talker.getEmail())
 			.add("verify_code", talker.getVerifyCode())
+			.add("old_verify_code", talker.getOldVerifyCode())
 			.add("emails", setToDB(talker.getEmails()))
 			
 			.add("orig_uname", talker.getOriginalUserName())
@@ -297,6 +299,14 @@ public class TalkerDAO {
 	}
 	
 	/**
+	 * Get by Old verify code of main or non-primary emails
+	 */
+	public static TalkerBean getByOldVerifyCode(String verifyCode) {
+		TalkerBean talker = getByField("old_verify_code", verifyCode);
+		return talker;
+	}
+	
+	/**
 	 * Get talker by:
 	 * - username/password;
 	 * - email/password;
@@ -476,6 +486,34 @@ public class TalkerDAO {
 		return talkerList;
 	}	
 	
+	public static List<TalkerBean> loadAllTalkersByCategory(boolean basicInfo,List<String> categoryList){
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		talkersColl.ensureIndex(new BasicDBObject("uname", 1));
+		
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start().add("category", new BasicDBObject("$in", categoryList) ).add("suspended", false);
+
+		List<DBObject> talkersDBObjectList = null;
+		if (basicInfo) {
+			DBObject fields = getBasicTalkerFields();
+			talkersDBObjectList = talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1)).toArray();
+		} else {
+			talkersDBObjectList = talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
+		}
+
+		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
+		for (DBObject talkerDBObject : talkersDBObjectList) {
+			TalkerBean talker = new TalkerBean();
+			if (basicInfo) {
+				talker.parseBasicFromDB(talkerDBObject);
+				System.out.println("Talker Name : " + talker.getName());
+			} else {
+				talker.parseFromDB(talkerDBObject);
+			}
+			talkerList.add(talker);
+		}
+		return talkerList;
+	}
+	
 	public static List<TalkerBean> loadAllTalkers(boolean basicInfo,TalkerBean currentTalker){
 		
 		List<String> cat = FeedsLogic.getCancerType(currentTalker);
@@ -638,7 +676,10 @@ public class TalkerDAO {
 			}
 		}
 		
-		return (byte[])talkerDBObject.get("img");
+		if (talkerDBObject.get("img") == null) 
+			return null;
+		else
+			return (byte[])talkerDBObject.get("img");
 	}
 	
 	/**
