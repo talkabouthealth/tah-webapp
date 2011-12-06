@@ -149,6 +149,12 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 	private String addAccount(Session session, String screenName,
 			String accountId) {
 		TalkerBean anotherTalker = TalkerDAO.getByAccount(ServiceType.TWITTER, accountId);
+		TalkerBean anotherNewTalker = TalkerDAO.getByUserName(screenName);
+		
+		
+		if (anotherNewTalker != null) {
+			return "/profile/notificationsettings?err=notunique&from="+ServiceType.TWITTER.toString();
+		}
 		if (anotherTalker != null) {
 			//this account is already connected by another user
 			return "/profile/notificationsettings?err=notunique&from="+ServiceType.TWITTER.toString();
@@ -182,37 +188,44 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 	private String loginOrSignupWithAccount(Session session, String screenName,
 			String accountId) {
 		TalkerBean talker = TalkerDAO.getByAccount(ServiceType.TWITTER, accountId);
-		if (talker != null) {
-			if (talker.isSuspended()) {
-				return "/application/suspendedAccount";
-			}
-			if (talker.isDeactivated()) {
-				talker.setDeactivated(false);
+		/*TalkerBean anotherNewTalker = TalkerDAO.getByUserName(screenName);
+		
+		if (anotherNewTalker != null) {
+			return "/publicProfile/loginDetails";
+		}else{*/
+			if (talker != null) {
+				if (talker.isSuspended()) {
+					return "/application/suspendedAccount";
+				}
+				if (talker.isDeactivated()) {
+					talker.setDeactivated(false);
+					CommonUtil.updateTalker(talker, session);
+				}
+				
+				ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
+				twitterAccount.setToken(consumer.getToken());
+				twitterAccount.setTokenSecret(consumer.getTokenSecret());
+				Logger.info(twitterAccount.toString());
 				CommonUtil.updateTalker(talker, session);
+				
+				//manual login
+				ApplicationDAO.saveLogin(talker.getId(), "twitter");
+				session.put("username", talker.getUserName());
+				session.put("justloggedin", true);
+				
+				return "/home";
 			}
-			
-			ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);
-			twitterAccount.setToken(consumer.getToken());
-			twitterAccount.setTokenSecret(consumer.getTokenSecret());
-			Logger.info(twitterAccount.toString());
-			CommonUtil.updateTalker(talker, session);
-			
-			//manual login
-			ApplicationDAO.saveLogin(talker.getId(), "twitter");
-			session.put("username", talker.getUserName());
-			session.put("justloggedin", true);
-			
-			return "/home";
-		}
-		else {
-			session.put("serviceType", ServiceType.TWITTER);
-			session.put("screenName", screenName);
-			session.put("userEmail", null);
-			session.put("accountId", accountId);
-			
-			//redirect to TOS and PP confirmation
-		    return "/application/tosAccept";
-		}
+			else {
+				
+				session.put("serviceType", ServiceType.TWITTER);
+				session.put("screenName", screenName);
+				session.put("userEmail", null);
+				session.put("accountId", accountId);
+				
+				//redirect to TOS and PP confirmation
+			    return "/application/tosAccept";
+			}
+		//}
 	}
 
 }
