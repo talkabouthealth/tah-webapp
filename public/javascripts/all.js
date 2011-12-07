@@ -311,6 +311,8 @@ function makeAutocomplete(id, type, parentTopic) {
 	}
 	else if (type === "topic") {
 		url = "/search/ajaxTopicSearch";
+	}else if(type === "user") {
+		url = "/search/ajaxUserSearch";
 	}
 	
 	var cache = {};

@@ -187,7 +187,7 @@ public class Explore extends Controller {
 		//check if search is performed now
 		String query = params.get("query");
 		List<TalkerBean> results = null;
-		/*if (query != null) {
+		if (query != null) {
 			params.flash("query");
 			try {
 				results = SearchUtil.searchTalker(query,currentTalker);
@@ -197,7 +197,7 @@ public class Explore extends Controller {
 			catch (Exception e) {
 				Logger.error(e, "Talker search on Browser Members page.");
 			}
-		}*/
+		}
 
 		//Move members to particular tabs based on member's connection
 		Map<String, Set<TalkerBean>> members = new LinkedHashMap<String, Set<TalkerBean>>();

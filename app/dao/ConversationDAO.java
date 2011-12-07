@@ -157,6 +157,8 @@ public class ConversationDAO {
 			
 			.add("from", convo.getFrom())
 			.add("from_id", convo.getFromId())
+			
+			.add("question_state", convo.getQuestionState())
 			.get();
 		
 		DBObject convoId = new BasicDBObject("_id", new ObjectId(convo.getId()));

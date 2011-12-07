@@ -1,17 +1,10 @@
 package models;
 
-import static util.DBUtil.getDB;
-import static util.DBUtil.getString;
-
-import java.util.Set;
-
-import org.bson.types.ObjectId;
-
 import logic.TalkerLogic;
 
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-
+import java.util.Date;
 import dao.ConversationDAO;
 
 public class NotificationBean implements DBModel{
@@ -31,6 +24,7 @@ public class NotificationBean implements DBModel{
 		setUid(dbObject.get("uid").toString());
 		setConvoid(dbObject.get("_id")==null?"":dbObject.get("_id").toString());
 		setTalker(TalkerLogic.loadTalkerFromCache(dbObject, "uid"));
+		setTime((Date)dbObject.get("time"));
 		DBRef convoRef = (DBRef)dbObject.get("convoid");
 		setConvos(ConversationDAO.getByIdBasicQuestion(convoRef.getId().toString()));
 		setFlag(Boolean.parseBoolean(dbObject.get("flag").toString()));
@@ -93,6 +87,14 @@ public class NotificationBean implements DBModel{
 		this.convos = convos;
 	}
 
+	public Date getTime() {
+		return time;
+	}
+
+	public void setTime(Date time) {
+		this.time = time;
+	}
+
 	private String id;
 	private String uid;
 	private String convoid;
@@ -100,5 +102,6 @@ public class NotificationBean implements DBModel{
 	private String type;
 	private TalkerBean talker;
 	private ConversationBean convos;
+	private Date time;
 
 }

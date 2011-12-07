@@ -93,6 +93,18 @@ public class Search extends Controller {
 	}
 	
 	/**
+	 * Back-end for user autocomplete
+	 * @param term
+	 */
+	public static void ajaxUserSearch(String term) throws Exception {
+		
+		List<String> allowedTypes = Arrays.asList("User");
+		List<Map<String, String>> results = null;
+		results = makeSearch(term, allowedTypes, null);
+		renderJSON(results);
+	}
+	
+	/**
 	 * Performs search in 'autocomplete' index
 	 * @param term
 	 * @param allowedTypes Types of items to search, e.g. 'User', 'Conversation', 'Topic', etc.

@@ -1,11 +1,14 @@
 package dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import logic.TalkerLogic;
+import models.ConversationBean;
 import models.NotificationBean;
 import models.TalkerBean;
 import models.actions.Action.ActionType;
@@ -19,6 +22,9 @@ import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import com.tah.im.model.Notification;
+
+import controllers.Notifications;
 
 import static util.DBUtil.*;
 
@@ -63,11 +69,64 @@ public class QuestionDAO {
 		return notificationBean;
 	}
 	
-	public static boolean updateNotification(NotificationBean notificationBean){
+	public static boolean updateNotification(ConversationBean convo){
 		boolean updateFlag = true;
-		DBCollection notificationsColl = getCollection(QUESTION_COLLECTION);
+		/*DBCollection notificationsColl = getCollection(QUESTION_COLLECTION);
 		DBObject query = new BasicDBObject("_id", new ObjectId(notificationBean.getId()));
-		notificationsColl.update(query,new BasicDBObject("$set", new BasicDBObject("flag", "true")), false, true);
-		return updateFlag; 
+		notificationsColl.update(query,new BasicDBObject("$set", new BasicDBObject("flag", "true")), false, true);*/
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+			 
+		DBObject convoObject = BasicDBObjectBuilder.start()
+			.add("removedByadmin", convo.isRemovedByadmin())
+			.add("adminComments", convo.getAdminComments())
+			.get();
+			
+		DBObject convoId = new BasicDBObject("_id", new ObjectId(convo.getId()));
+		convosColl.update(convoId, new BasicDBObject("$set", convoObject));
+		return updateFlag;
 	}
+	
+	public static List<ConversationBean> loadAllQuestion() {
+		List<ConversationBean> list = new ArrayList<ConversationBean>();
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+
+		List<DBObject> convosDBList = null;
+
+		DBObject query = BasicDBObjectBuilder.start().add("$or", 
+			Arrays.asList(
+					new BasicDBObject("removedByadmin", null),
+					new BasicDBObject("removedByadmin", false)
+				)
+		)
+		.get();
+		
+		DBObject fields = ConversationDAO.getBasicConversationFields();
+		convosDBList = convosColl.find(query, fields).sort(new BasicDBObject("cr_date", -1)).limit(10).toArray();
+		ConversationBean conversationBean = null;
+		for (DBObject convoDBObject : convosDBList) {
+			conversationBean = ConversationDAO.parseConvoFromDBObject(convoDBObject, true);
+			conversationBean.setNotifedTalker(getNotification(conversationBean.getId()));
+			conversationBean.setAdminComments(convoDBObject.get("adminComments")==null?"":convoDBObject.get("adminComments").toString());
+			if(conversationBean.isDeleted())
+				conversationBean.setQuestionState(Notifications.HIDDEN);
+			list.add(conversationBean);
+		}
+		return list;
+	}
+	
+	public static TalkerBean getNotification(String convoId) {
+		TalkerBean bean = null;
+		DBRef convoRef = new DBRef(getDB(), "convos", new ObjectId(convoId));
+		DBObject query = new BasicDBObject("convoid", convoRef);
+		DBCollection notificationsColl = getCollection(QUESTION_COLLECTION);
+		NotificationBean notificationBean = new NotificationBean();
+		DBObject dbObject = notificationsColl.findOne(query);
+		if(dbObject != null){
+			notificationBean.parseDBObject(dbObject);
+			bean = TalkerLogic.loadTalkerFromCache(dbObject, "uid");
+		}
+		return bean;
+	}
+	
+	public static final String CONVERSATIONS_COLLECTION = "convos";
 }

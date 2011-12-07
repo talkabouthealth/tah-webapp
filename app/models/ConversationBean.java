@@ -102,6 +102,38 @@ public class ConversationBean implements Comparable<ConversationBean> {
 	//Added new field for saving cancer category.
 	private String category;
 	
+	//More fields for the admin moderate new question feature
+	//Added to save the expert to be notifed.
+	private boolean removedByadmin;
+	private TalkerBean notifedTalker;
+	private String adminComments;
+
+	private String questionState;
+	
+	public static final String[] QUESTION_STATE = new String[] {
+		"Active","Waiting","Hidden"
+	};
+	
+	public TalkerBean getNotifedTalker() {
+		return notifedTalker;
+	}
+	public void setNotifedTalker(TalkerBean notifedTalker) {
+		this.notifedTalker = notifedTalker;
+	}
+
+	public boolean isRemovedByadmin() {
+		return removedByadmin;
+	}
+	public void setRemovedByadmin(boolean removedByadmin) {
+		this.removedByadmin = removedByadmin;
+	}
+	
+	public String getAdminComments() {
+		return adminComments;
+	}
+	public void setAdminComments(String adminComments) {
+		this.adminComments = adminComments;
+	}
 	public void setActionID(String actionID) { this.actionID = actionID; }
 	public String getActionID() { return this.actionID; }
 	
@@ -137,6 +169,8 @@ public class ConversationBean implements Comparable<ConversationBean> {
     	
     	setFrom((String)convoDBObject.get("from"));
     	setFromId((String)convoDBObject.get("from_id"));
+    	
+    	setQuestionState((String)convoDBObject.get("question_state"));
     	
     	String type = (String)convoDBObject.get("type");
     	if (type != null) {
@@ -583,4 +617,11 @@ public class ConversationBean implements Comparable<ConversationBean> {
 	public void setCategory(String category) {
 		this.category = category;
 	}
+	public String getQuestionState() {
+		return questionState;
+	}
+	public void setQuestionState(String questionState) {
+		this.questionState = questionState;
+	}
+	
 }

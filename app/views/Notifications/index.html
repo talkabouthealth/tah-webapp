@@ -9,17 +9,90 @@
 	<meta name="description" content="real-time support for your health issues" /> 
 	<meta name="robots" content="all" /> 
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Dashboard</title>
+	<title>Dashboard : Moderate new Question</title>
 	
 	<link href="@{'/public/stylesheets/style.css'}" rel="stylesheet" type="text/css" />
 	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
+	<link type="text/css" href="/public/stylesheets/smoothness/jquery-ui-1.8.14.custom.css" rel="stylesheet" />	
 	<script type="text/javascript" src="@{'/public/javascripts/jquery-1.4.2.min.js'}" ></script>
+    <script type="text/javascript" src="/public/javascripts/jquery-ui-1.8.14.custom.min.js"></script>
+	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
+	<script type="text/javascript" src="/public/javascripts/all.js" ></script>
+	<script type="text/javascript"><!--
+	
+	saveNote = function(convoId) {
+		var note = $("#note_"+convoId).val();
+		$.post("/dashboard/notification", 
+				{ id: convoId, details: note },
+				function(data) {
+					//alert(data);
+				}
+			);
+		return false;
+	}
+	notifyExpert = function(convoId) {
 
+		var note = $("#note_"+convoId).val();
+		var expertName = $("#userName"+convoId).val();
+		$.post("/dashboard/notification", 
+				{ id: convoId, details: "NOTIFY", expertName: expertName, note: note  },
+					function(data) {
+						document.getElementById("notifyUser"+convoId).innerHTML = "";
+						document.getElementById("notifyUser"+convoId).innerHTML = expertName +" notified!";
+				}
+			);
+		return false;
+		
+	}
+
+	$(document).ready(function(){
+		$("#userName")
+		.focus(function() {
+			$("#userName").autocomplete( "search" );
+		})
+		
+
+		$("#userNameHelp")
+		.focus(function() {
+			$(this).hide();
+			$("#userName").show().focus();
+		})
+		
+		makeAutocomplete("#userName", "user");
+	});
+
+	setAutocomplete = function(convoId) {
+		$("#userName"+convoId).focus(function() {
+			$("#userName"+convoId).autocomplete( "search" );
+		});
+		
+
+		$("#userNameHelp"+convoId).focus(function() {
+			$(this).hide();
+			$("#userName"+convoId).show().focus();
+		});
+		
+		makeAutocomplete("#userName"+convoId, "user");
+	}
+
+	changeState = function(convoId, state){
+		if(state == "Select")
+			state = "";
+		$.post("/dashboard/notification", 
+				{ id: convoId, details: "CHANGE_STATE", state: state},
+					function(data) {
+						//alert(data);
+				}
+			);
+		return false;
+	}
+	
+	--></script>
 	<style type="text/css">
 		body {
 			margin: 20px;
 			width: auto;
-			font-size: 14px;
+			font-size: 12px;
 		}
 		#notificationbar {
 			border: #000000 dashed 1px;
@@ -50,31 +123,72 @@
 								</tr>
 									<tr>
 										<td>
-										<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">
+										<table border="1" cellpadding="2" cellspacing="0" style="border-collapse: collapse;">
 											
 												#{if list != null}
 												<tr>
-												<th>Question</th>
-												<th>Description</th>
-												<th>To Expert</th>
-												<th>Moderated</th>
-												<th></th>
+											 
+												<th nowrap="nowrap">Last modified</th>
+												<th nowrap="nowrap">Question</th>
+												<th nowrap="nowrap">Question Details</th>
+												<th nowrap="nowrap">Notes from moderator</th>
+												<th nowrap="nowrap">To Expert</th>
+												<th nowrap="nowrap">Notify Expert</th>
+												<th nowrap="nowrap">State of Question</th>
+												<!-- <th nowrap="nowrap">Moderated</th> 
+												<th nowrap="nowrap">Moderate & Notify</th> -->
+												<th nowrap="nowrap">Remove from list</th>
+												
 											</tr>
-													#{list items: list, as: 'topicInfo' }
+													
+													#{list items: list, as: 'convo' }
 													<tr>
-														<td>${topicInfo.convos.topic}</td>
-														<td>${topicInfo.convos.details}</td>
-														<td>${topicInfo.talker.userName} (${topicInfo.talker.email})</td>
-														#{if topicInfo.flag}
+														
+														<td nowrap="nowrap"> ${convo.creationDate?.format('MM/dd/yyyy, HH:MM ')} </td> 
+														<td><a href="/${convo.mainURL}" target="_new">${convo.topic}</a></td>
+														<td>${convo.details}</td>
+														<td nowrap="nowrap">
+															<table cellpadding="0" cellspacing="0"><tr><td><textarea id="note_${convo.id}" cols="25" rows="3">${convo.adminComments}</textarea>
+															</td><td><button onclick="return saveNote('${convo.id}');">Save</button>
+															</td></tr></table> 
+														</td>
+														<td>
+															#{if convo.notifedTalker != null }
+															${convo.notifedTalker.userName} (${convo.notifedTalker.email})
+															#{/if}
+														</td>
+														<td nowrap="nowrap">
+															<div id="notifyUser${convo.id}">
+																<table cellpadding="0" cellspacing="0">
+																	<tr><td><!--<input type="text" size="15" id="exp_${convo.id}"/>
+																	 --><input id="userNameHelp${convo.id}" type="text" size="15"/>
+		             												 <input type="text" size="15" style="display: none;" id="userName${convo.id}" />
+																	</td><td><button onclick="return notifyExpert('${convo.id}');">Notify</button>
+																	</td></tr>
+																</table>
+															</div> 
+														</td>
+														<!-- # { if topicInfo . flag}
 														<td>Yes</td>
 														<td></td>
-														#{/if}
-														#{else}
-														<td>No</td>
-														<td><a href="/dashboard/notification?id=${topicInfo.id}">Moderate & Send</a></td>
-														<td><a href="/dashboard/notification?id=${topicInfo.id}&details=REMOVE">Remove</a></td>
-														#{/else}
+														# { / i f }
+														# { e lse }
+														<td>No</td> -->
+														<!-- <td><a href="/dashboard/notification?id=$ { t opicInfo . id }">Moderate & Send</a></td> -->
+														<td>
+															<select onchange="changeState('${convo.id}',this.value);">
+																#{list items:models.ConversationBean.QUESTION_STATE, as:'state'}
+																    <option value="${state}"
+																    #{if state.equals(convo.questionState) } selected #{/if} 
+																    >${state}</option>
+																#{/list}
+															</select>
+														</td>
+														<td><a href="/dashboard/notification?id=${convo.id}&details=REMOVE">Remove</a></td>
+														
+														<!--  # { / else }-->
 													</tr>
+													<script>setAutocomplete('${convo.id}');</script>
 													#{/list}
 													#{/if}
 													#{else}
