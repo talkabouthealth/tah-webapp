@@ -110,10 +110,13 @@ public class ConversationBean implements Comparable<ConversationBean> {
 
 	private String questionState;
 	
-	public static final String[] QUESTION_STATE = new String[] {
+	public static final String[] QUESTION_STATE_ARRAY = new String[] {
 		"Active","Waiting","Hidden"
 	};
-	
+
+	private Date modifiedDate;
+	private String displayDate;
+		
 	public TalkerBean getNotifedTalker() {
 		return notifedTalker;
 	}
@@ -187,6 +190,8 @@ public class ConversationBean implements Comparable<ConversationBean> {
     	parseTopics((Collection<DBRef>)convoDBObject.get("topics"));  
     	//author talker
     	setTalker(TalkerLogic.loadTalkerFromCache(convoDBObject, "uid"));
+    	setModifiedDate((Date)convoDBObject.get("modified_date"));
+    	setQuestionState((String)convoDBObject.get("question_state"));
 	}
 	
 	public void parseFromDB(DBObject convoDBObject) {
@@ -622,6 +627,18 @@ public class ConversationBean implements Comparable<ConversationBean> {
 	}
 	public void setQuestionState(String questionState) {
 		this.questionState = questionState;
+	}
+	public String getDisplayDate() {
+		return displayDate;
+	}
+	public void setDisplayDate(String displayDate) {
+		this.displayDate = displayDate;
+	}
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
 	}
 	
 }

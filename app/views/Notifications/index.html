@@ -107,6 +107,7 @@
 				<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Home.index()}">Home</a></td>
 				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/notification">Moderate New Questions</a></td>
 				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/userlist">Users</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="/questionrecovery">Question Recovery</a></td>
 				<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Secure.logout()}">Logout</a></td>
 				<td style="width: 100%;">&nbsp;</td>
 			</tr>
@@ -177,7 +178,7 @@
 														<!-- <td><a href="/dashboard/notification?id=$ { t opicInfo . id }">Moderate & Send</a></td> -->
 														<td>
 															<select onchange="changeState('${convo.id}',this.value);">
-																#{list items:models.ConversationBean.QUESTION_STATE, as:'state'}
+																#{list items:models.ConversationBean.QUESTION_STATE_ARRAY, as:'state'}
 																    <option value="${state}"
 																    #{if state.equals(convo.questionState) } selected #{/if} 
 																    >${state}</option>

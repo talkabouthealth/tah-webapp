@@ -42,6 +42,8 @@ import com.mongodb.DBRef;
 import com.mongodb.MongoException;
 import com.mongodb.WriteConcern;
 
+import controllers.AnswerNotification;
+
 import static util.DBUtil.*;
 
 public class ConversationDAO {
@@ -158,6 +160,7 @@ public class ConversationDAO {
 			.add("from", convo.getFrom())
 			.add("from_id", convo.getFromId())
 			
+			.add("modified_date", new Date())
 			.add("question_state", convo.getQuestionState())
 			.get();
 		
@@ -701,7 +704,7 @@ public class ConversationDAO {
 			.add("topics", topicRef)
 			.add("deleted", new BasicDBObject("$ne", true))
 			.get();
-		List<DBObject> convosDBList = convosColl.find(query, new BasicDBObject("_id", 1)).toArray();
+		List<DBObject> convosDBList = convosColl.find(query, new BasicDBObject("_id", 1)).sort(new BasicDBObject("cr_date", -1)).toArray();
 		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
@@ -790,5 +793,65 @@ public class ConversationDAO {
 //				new BasicDBObject(operation, new BasicDBObject("talkers", talkerDBObject)));
 //	}
 
+/**
+	 * Load conversations for mobile application
+	 */
+	public static List<ConversationBean> loadConversationsForMob(String convoId) {
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		convosColl.ensureIndex(new BasicDBObject("cr_date", 1));
+		
+		Date firstActionTime = null;
+		if (convoId != null) {
+			firstActionTime = getConvos(convoId);
+		}
+		
+		DBObject fields = getBasicConversationFields();
+		
+		//checking for views 
+		BasicDBObjectBuilder queryBuilder =  BasicDBObjectBuilder.start()
+		.add("deleted", new BasicDBObject("$ne", true));
+		
+		if (firstActionTime != null) {
+			queryBuilder.add("cr_date", new BasicDBObject("$lt", firstActionTime));
+		}
+	
+		DBObject query = queryBuilder.get();
+	
+		
+		List<DBObject> convosDBList = 
+			convosColl.find(query, fields).sort(new BasicDBObject("cr_date", -1)).limit(20).toArray();
+		
+		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
+		for (DBObject convoDBObject : convosDBList) {
+			ConversationBean convo = new ConversationBean();
+			convo.parseBasicFromDB(convoDBObject);
+			List<CommentBean> comments = CommentsDAO.loadConvoAnswers(convo.getId());
+			List<CommentBean> convoComments = new ArrayList<CommentBean>();
+			for(int index=0; index<comments.size();index++){
+				CommentBean comment = CommentsDAO.getConvoCommentById(comments.get(index).getId());
+				if(comment != null && comment.getModerate() != null){
+					if(comment.getModerate().equalsIgnoreCase(AnswerNotification.APPROVE_ANSWER) || comment.getModerate().equalsIgnoreCase(AnswerNotification.NOT_HELPFUL)
+							|| comment.getModerate().equals("") || comment.getModerate().equalsIgnoreCase("Ignore")){
+						convoComments.add(comment);
+					}
+				}
+			}
+			convo.setComments(convoComments);
+	    	convosList.add(convo);
+		}
+		
+		return convosList;
+	}
+	
+	public static Date getConvos(String convoId) {
+		DBCollection activitiesColl = getCollection(CONVERSATIONS_COLLECTION);
+
+		DBObject query = new BasicDBObject("_id", new ObjectId(convoId));
+		DBObject actionDBObject = activitiesColl.findOne(query);
+		if (actionDBObject != null) {
+			return (Date)actionDBObject.get("cr_date");
+		}
+		return null;
+	}
 }
 

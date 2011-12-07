@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+	<meta name="author" content="Talkmi" /> 
+	<meta name="keywords" content="support, health, talk" /> 
+	<meta name="description" content="real-time support for your health issues" /> 
+	<meta name="robots" content="all" /> 
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Question Recovery</title>
+	
+	<link href="@{'/public/stylesheets/style.css'}" rel="stylesheet" type="text/css" />
+	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
+	<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/play-pagination.css'}"/> 
+	<script type="text/javascript" src="@{'/public/javascripts/jquery-1.4.2.min.js'}" ></script>
+
+	<style type="text/css">
+		body {
+			margin: 20px;
+			width: auto;
+			font-size: 14px;
+		}
+		#notificationbar {
+			border: #000000 dashed 1px;
+			margin-top: 3px;
+			padding: 10px;
+		}
+	</style>
+	
+	<script type="text/javascript">
+
+		function getAnswers(id){
+			var answerNotificationForm = document.getElementById('answerNotificationForm');
+			answerNotificationForm.action = "/dashboard/answernotification?id="+id+"&action=getAnswers";
+			answerNotificationForm.submit();
+		}
+
+		function setQuestionState(id,state){
+			var questionRecoveryForm = document.getElementById('questionRecoveryForm');
+			questionRecoveryForm.action = "/questionrecovery?id="+id+"&action=changeState&state="+state;
+			questionRecoveryForm.submit();
+		}
+
+		function checkFeed(type,talkerName) {
+			
+			$.get("/answernotification/feedAjaxUpdate", {feedType: type, talkerName: talkerName,isheader:1},
+					function(data) {
+						if(parseInt(data)>0) {
+							$("#"+type+"Notifications").show();
+							$("#"+type+"Notifications").html(data + " new answers");
+							$("#"+type+"Notifications").addClass("morenotification");  
+						} else {
+							$("#"+type+"Notifications").hide();
+							$("#"+type+"Notifications").html("No new answers");
+							$("#"+type+"Notifications").addClass("morenotification");
+						}				
+					}
+				);	
+		}	
+		
+		setInterval("checkFeed('answer');",60000);
+
+		
+	</script>
+</head>
+<body>
+		<table width="100%">
+			<tr>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Home.index()}">Home</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/notification">Moderate New Questions</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/userlist">Users</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="/questionrecovery">Question Recovery</a></td>
+				<td style="padding-right:20px;" nowrap><a href="@{Secure.logout()}">Logout</a></td>
+				<td style="width: 100%;">&nbsp;</td>
+			</tr>
+		</table>
+		 
+		<form method = "post" action = "" id="questionRecoveryForm">
+			<table style="width: 100%" cellspacing="10">
+				<tr>
+					<td valign = "top" width="50%">
+						<div>
+									<h4 style="margin-bottom: 10px;">Recover Questions</h4>
+									<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; margin-top: 2px;" width="100%">
+											
+											#{if list != null}
+													#{if list.size > 0}
+														<tr>
+															<th>Last Modified</th>
+															<th>Question</th>
+															<th nowrap="nowrap">State of Question</th>
+														</tr>
+														#{paginate.list items: list, as: 'convo' }
+															<tr>
+																<td nowrap="nowrap">${convo.displayDate}</td>
+																<td> <a href="${convo.mainURL}" target="_blank"> ${convo.topic} </a></td>
+																<td>
+																	<select onchange="setQuestionState('${convo.id}',this.value);" id="questionState" name="convo.questionState">
+																  		#{list items:models.ConversationBean.QUESTION_STATE_ARRAY, as:'state'}
+																		    <option value="${state}"
+																		    #{if state.equals(convo.questionState) } selected #{/if} 
+																		    >${state}</option>
+																		#{/list}
+																	</select>
+																</td>
+															</tr>
+														#{/paginate.list}
+														#{paginate.controls items:list /} 
+														
+													#{/if}
+													#{else}
+														<tr>
+															<td colspan="4" align="center">No record found.</td>
+														</tr>
+													#{/else}
+												#{/if}
+									</table>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</form>
+		#{ common/googleAnalytics /}
+	</body>
+</html>

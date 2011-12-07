@@ -11,6 +11,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.bson.types.ObjectId;
+
+import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -215,7 +219,33 @@ public class Conversations extends Controller {
     	}
 
     	convo.setDeleted(true);
+    	convo.setQuestionState(QuestionRecovery.HIDDEN);
     	ConversationDAO.updateConvo(convo);
+    	
+    	//remove related actions
+    	ActionDAO.deleteActionsByConvo(convo);
+    	
+    	renderText("ok");
+    }
+    
+    /**
+     * Remove conversation from collection
+     */
+    public static void remove(String convoId) {
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
+    	ConversationBean convo = ConversationDAO.getById(convoId);
+    	notFoundIfNull(convo);
+    	
+    	//only admin or author can do this
+    	if ( !(talker.isAdmin() || convo.getTalker().equals(talker)) ) {
+    		forbidden();
+    		return;
+    	}
+
+    	//remove from database
+    	DBObject convoObject = new BasicDBObject("_id", new ObjectId(convo.getId()));
+    	convosColl.remove(convoObject);
     	
     	//remove related actions
     	ActionDAO.deleteActionsByConvo(convo);

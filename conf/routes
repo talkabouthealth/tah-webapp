@@ -31,6 +31,7 @@ GET		/explore/experts						Explore.browseMembers(action:'experts')
 GET		/community/breast-cancer				Community.viewCommunity
 
 *		/search									Search.allSearch
+*		/searchAjaxLoad							Search.allSearchAjaxLoad
 
 *		/search/conversations					Explore.searchConversations
 GET		/openquestions/?						Explore.openQuestions
@@ -47,6 +48,7 @@ GET		/dashboard/?							Dashboard.index
 *		/dashboard/userlist						UserList.index
 *		/dashboard/answernotification			AnswerNotification.index
 *		/dashboard/questionnotification			AnonQuestionNotification.index
+*		/questionrecovery				QuestionRecovery.index
 *		/answernotification/feedAjaxUpdate		AnswerNotification.feedAjaxUpdate
 GET		/chat/{convoId}							Talk.talkApp
 GET		/chat/?									Talk.talkApp
