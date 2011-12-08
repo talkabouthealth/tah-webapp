@@ -13,7 +13,6 @@
 	
 	<link href="@{'/public/stylesheets/style.css'}" rel="stylesheet" type="text/css" />
 	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
-	<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/play-pagination.css'}"/> 
 	<script type="text/javascript" src="@{'/public/javascripts/jquery-1.4.2.min.js'}" ></script>
 
 	<style type="text/css">
@@ -82,20 +81,21 @@
 				<tr>
 					<td valign = "top" width="50%">
 						<div>
-									<h4 style="margin-bottom: 10px;">Recover Questions</h4>
-									<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; margin-top: 2px;" width="100%">
-											
+									<table border="1" cellpadding="5" cellspacing="5" style="border-collapse: collapse; margin-top: 2px;" width="100%">
+											<tr>
+												<th style="padding:3px;" colspan="3">Recover Questions</th>   
+											</tr>	
 											#{if list != null}
 													#{if list.size > 0}
 														<tr>
 															<th>Last Modified</th>
 															<th>Question</th>
-															<th nowrap="nowrap">State of Question</th>
+															<th>State of Question</th>
 														</tr>
-														#{paginate.list items: list, as: 'convo' }
+														#{list items: list, as: 'convo' }
 															<tr>
-																<td nowrap="nowrap">${convo.displayDate}</td>
-																<td> <a href="${convo.mainURL}" target="_blank"> ${convo.topic} </a></td>
+																<td>${convo.displayDate}</td>
+																<td style="color: blue;"> <a href="${convo.mainURL}" target="_blank"> ${convo.topic} </a></td>
 																<td>
 																	<select onchange="setQuestionState('${convo.id}',this.value);" id="questionState" name="convo.questionState">
 																  		#{list items:models.ConversationBean.QUESTION_STATE_ARRAY, as:'state'}
@@ -106,9 +106,7 @@
 																	</select>
 																</td>
 															</tr>
-														#{/paginate.list}
-														#{paginate.controls items:list /} 
-														
+														#{/list}
 													#{/if}
 													#{else}
 														<tr>

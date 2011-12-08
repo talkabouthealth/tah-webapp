@@ -61,13 +61,15 @@ public class Notifications extends Controller{
 					//vars.put("other_talker", bean.getTalker().getUserName());
 					vars.put("other_talker", bean.getTalker().getUserName());
 					vars.put("convo", bean.getTopic());
+					//vars.put("details", bean.getDetails());
 					vars.put("convo_url",convoURL);
 					EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_PERSONAL_QUESTION, expertEmail, vars, null, true);					
 				} else {
 					//vars.put("other_talker", bean.getTalker().getUserName());
 					vars.put("other_talker", bean.getTalker().getUserName());
 					vars.put("question", bean.getTopic());
-					vars.put("details", note);
+					vars.put("details", bean.getDetails());
+					vars.put("note", note);
 					vars.put("convo_url",convoURL);
 					EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_PERSONAL_QUESTION_MODERATED, expertEmail, vars, null, true);	
 				}

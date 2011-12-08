@@ -25,6 +25,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
+import controllers.QuestionRecovery;
+
 import dao.ConversationDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
@@ -623,7 +625,7 @@ public class ConversationBean implements Comparable<ConversationBean> {
 		this.category = category;
 	}
 	public String getQuestionState() {
-		return questionState;
+		return questionState==null?QuestionRecovery.ACTIVE:questionState;
 	}
 	public void setQuestionState(String questionState) {
 		this.questionState = questionState;

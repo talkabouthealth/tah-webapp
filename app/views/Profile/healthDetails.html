@@ -201,7 +201,7 @@
 								&nbsp;  &nbsp;  &nbsp;&nbsp;  &nbsp;  &nbsp;
 								<select size="1"  name="talkerDisease.symptomYear" class="textarea2" id="talkerDisease.symptomYear">
 							  		<option value='0'>Year</option>
-							  		#{list items:2010..1950, as:'i'}
+							  		#{list items:java.util.Calendar.getInstance().get(Calendar.YEAR)..1950, as:'i'}
 									    <option value="${i}"
 									    *{ TODO: use of deprecated getYear() ? }*
 									    #{if talkerDisease?.symptomDate?.year == i - 1900 } selected #{/if} 
@@ -225,7 +225,7 @@
 								&nbsp;  &nbsp;  &nbsp;&nbsp;  &nbsp;  &nbsp;
 								<select size="1"  name="talkerDisease.diagnoseYear" class="textarea2" id="talkerDisease.diagnoseYear">
 							  		<option value='0'>Year</option>
-							  		#{list items:2010..1950, as:'i'}
+							  		#{list items:java.util.Calendar.getInstance().get(Calendar.YEAR)..1950, as:'i'}
 									    <option value="${i}"
 									    #{if talkerDisease?.diagnoseDate?.year == i - 1900 } selected #{/if} 
 									    >${i}</option>
