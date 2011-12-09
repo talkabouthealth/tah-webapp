@@ -134,7 +134,7 @@
 								</div>
 							#{/if}
 							#{else}
-								#{if question.name.equals("hrbenigh1")}
+								<!--#{if question.name.equals("hrbenigh1")}
 								<div class="generalsubhead">Benigh Breast Conditions</div>
 								#{/if}
 								<div class="generaltextarea2">
@@ -164,14 +164,14 @@
 								  		#{ profile/otherField name:'rareforms', values: talkerDisease?.otherHealthItems /}
 									</div>
 								</div>
-								#{/if}
+								#{/if}-->
 							#{/else}
 						</div>
 						#{/if}
 						#{/list}
 						
 						#{ifnot talker.connection.equals("High Risk Individual")}
-						<div class="signupmain">
+						<!--<div class="signupmain">
 							<a name="symptoms"></a>
 							<div class="generaltextarea">
 								<span class="blacktext16"><strong>Is it recurrent?</strong></span>
@@ -186,12 +186,12 @@
 								</select>
 							</div>
 						</div>
-						<div class="signupmain">
+						--> <div class="signupmain">
 							<div class="generaltextarea">
 								<span class="blacktext16"><strong>When did the first symptom appear?</strong></span>
 							</div>
 							<div class="personaltextfield">
-								<select size="1"  name="talkerDisease.symptomMonth" id="talkerDisease.symptomMonth" class="textarea2">
+								<select size="1"  name="talkerDisease.symptomMonth" id="talkerDisease.symptomMonth" class="textarea2" style="position: absolute;margin-left: 25px;">
 #{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
     <option value="${i_index-1}" 
     #{if talkerDisease?.symptomDate?.month == i_index-2 } selected #{/if} 
@@ -199,7 +199,7 @@
 #{/list}
 								</select>
 								&nbsp;  &nbsp;  &nbsp;&nbsp;  &nbsp;  &nbsp;
-								<select size="1"  name="talkerDisease.symptomYear" class="textarea2" id="talkerDisease.symptomYear">
+								<select size="1"  name="talkerDisease.symptomYear" class="textarea2"  style="position: absolute; margin-left: 110px;" id="talkerDisease.symptomYear">
 							  		<option value='0'>Year</option>
 							  		#{list items:java.util.Calendar.getInstance().get(Calendar.YEAR)..1950, as:'i'}
 									    <option value="${i}"
@@ -215,7 +215,7 @@
 								<span class="blacktext16"><strong>When were you first diagnosed?</strong></span>
 							</div>
 							<div class="personaltextfield">
-								<select size="1"  name="talkerDisease.diagnoseMonth" id="talkerDisease.diagnoseMonth" class="textarea2">
+								<select size="1"  name="talkerDisease.diagnoseMonth" id="talkerDisease.diagnoseMonth" class="textarea2" style="position: absolute;margin-left: 25px;">
 #{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
     <option value="${i_index-1}" 
     #{if talkerDisease?.diagnoseDate?.month == i_index-2 } selected #{/if} 
@@ -223,7 +223,7 @@
 #{/list}
 								</select>
 								&nbsp;  &nbsp;  &nbsp;&nbsp;  &nbsp;  &nbsp;
-								<select size="1"  name="talkerDisease.diagnoseYear" class="textarea2" id="talkerDisease.diagnoseYear">
+								<select size="1"  name="talkerDisease.diagnoseYear" class="textarea2"  style="position: absolute; margin-left: 110px;"  id="talkerDisease.diagnoseYear">
 							  		<option value='0'>Year</option>
 							  		#{list items:java.util.Calendar.getInstance().get(Calendar.YEAR)..1950, as:'i'}
 									    <option value="${i}"
@@ -234,7 +234,7 @@
 							</div>
 						</div>
 						
-						<div class="signupmain">
+						<!--<div class="signupmain">
  							<div class="generaltextarea2">
  								<span class="blacktext16"><strong>What were the initial symptoms you experienced?</strong></span>
  							</div>
@@ -247,7 +247,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="signupmain"></div>
+						--><div class="signupmain"></div>
 						#{/ifnot}
 					</div>
 				</div>

@@ -505,7 +505,6 @@ public class TalkerDAO {
 			TalkerBean talker = new TalkerBean();
 			if (basicInfo) {
 				talker.parseBasicFromDB(talkerDBObject);
-				System.out.println("Talker Name : " + talker.getName());
 			} else {
 				talker.parseFromDB(talkerDBObject);
 			}

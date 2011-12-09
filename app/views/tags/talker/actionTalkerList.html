@@ -1,4 +1,7 @@
 <div class="thnksarea" id="${feedType.replaceAll(" ", "-").replaceAll("&", "and")}Tab">
+#{if activeTalkers == null}
+No record found
+#{/if}
 #{list items: activeTalkers, as: 'talker' }
 	#{if currentTalker || talker.name != null}
 		#{talker/talkerInList talker: talker, currentTalker: currentTalker /}

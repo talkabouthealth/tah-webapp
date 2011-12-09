@@ -33,6 +33,7 @@ import logic.TalkerLogic;
 import logic.TopicLogic;
 import models.CommentBean;
 import models.ConversationBean;
+import models.DiseaseBean;
 import models.ServiceAccountBean;
 import models.PrivacySetting.PrivacyType;
 import models.ServiceAccountBean.ServiceType;
@@ -52,6 +53,7 @@ import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.ConversationDAO;
+import dao.DiseaseDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
 
@@ -207,8 +209,13 @@ public class Explore extends Controller {
 		//members.put("Parents", new LinkedHashSet<TalkerBean>());
 		//members.put("Caregivers", new LinkedHashSet<TalkerBean>());
 		members.put("Family & Friends", new LinkedHashSet<TalkerBean>());
-		members.put("Breast Cancer", new LinkedHashSet<TalkerBean>());
-		members.put("Ovarian Cancer", new LinkedHashSet<TalkerBean>());
+		
+		List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
+		for (DiseaseBean diseaseBean : diseaseList) {
+			members.put(diseaseBean.getName() , new LinkedHashSet<TalkerBean>());	
+		}
+		//members.put("Breast Cancer", new LinkedHashSet<TalkerBean>());
+		//members.put("Ovarian Cancer", new LinkedHashSet<TalkerBean>());
 
 		
 		/*
@@ -401,8 +408,8 @@ public class Explore extends Controller {
 			else if("Breast Cancer".equals(feedType)){
 				memberTypeEntry = Arrays.asList(null,"Breast Cancer");
 				loadFlag = true;
-			}else if("Ovarian Cancer".equals(feedType)){ //Ovarian Cancer  
-				memberTypeEntry = Arrays.asList("ovarian cancer","Ovarian Cancer"); //Ovarian Cancer
+			} else {  //if("Ovarian Cancer".equals(feedType)){ //Ovarian Cancer  
+				memberTypeEntry = Arrays.asList(feedType); //Ovarian Cancer
 				loadFlag = true;
 			}
 			List<TalkerBean> allActiveTalkers = null;
