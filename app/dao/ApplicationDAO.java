@@ -179,7 +179,8 @@ public class ApplicationDAO {
 		List<String> list = TalkerBean.PROFESSIONAL_CONNECTIONS_LIST;
 		BasicDBList basicDBList = new BasicDBList();
 
-		List<String> cat = FeedsLogic.getCancerType(talkerBean);
+		//Commented code to display all category users in similar members and experts
+		//List<String> cat = FeedsLogic.getCancerType(talkerBean);
 		
 		for (String element : list) {
 			basicDBList.add(element);
@@ -192,14 +193,14 @@ public class ApplicationDAO {
 			if(memberFlag){
 				query = BasicDBObjectBuilder.start()
 					.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList ))
-					.add("category", new BasicDBObject("$in", cat) )
+					//.add("category", new BasicDBObject("$in", cat) )
 					.add("timestamp", new BasicDBObject("$lt", date) )
 					.add("connection_verified",true)
 					.get();
 			}else{
 				query = BasicDBObjectBuilder.start()
 					.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList ))
-					.add("category", new BasicDBObject("$in", cat) )
+					//.add("category", new BasicDBObject("$in", cat) )
 					.add("timestamp", new BasicDBObject("$lt", date)  )
 					.get();
 			}
@@ -207,13 +208,13 @@ public class ApplicationDAO {
 			if(memberFlag){
 				query = BasicDBObjectBuilder.start()
 					.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList ))
-					.add("category", new BasicDBObject("$in", cat) )
+					//.add("category", new BasicDBObject("$in", cat) )
 					.add("connection_verified",true)
 					.get();
 			}else{
 				query = BasicDBObjectBuilder.start()
 					.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList ))
-					.add("category", new BasicDBObject("$in", cat) )
+					//.add("category", new BasicDBObject("$in", cat) )
 					.get();
 			}
 		}
@@ -228,13 +229,13 @@ public class ApplicationDAO {
 			if(memberFlag){
 				query = BasicDBObjectBuilder.start()
 					.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList ))
-					.add("category", new BasicDBObject("$in", cat) )
+					//.add("category", new BasicDBObject("$in", cat) )
 					.add("connection_verified",true)
 					.get();
 			}else{
 				query = BasicDBObjectBuilder.start()
 					.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList ))
-					.add("category", new BasicDBObject("$in", cat) )
+					//.add("category", new BasicDBObject("$in", cat) )
 					.get();
 			}
 			fields = TalkerDAO.getBasicTalkerFields();
