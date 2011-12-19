@@ -166,10 +166,12 @@ public class Explore extends Controller {
 		
 		List<TalkerBean> activeTalkers = new ArrayList<TalkerBean>();
 		for(TalkerBean talkerBean : activeTalkers1){
-			if(cat.contains(talkerBean.getCategory())){
+			//Commented code to display all category users in members page
+			//if(cat.contains(talkerBean.getCategory())){
 				activeTalkers.add(talkerBean);
-			}
+			//}
 		}
+		
 		
 		if(activeTalkers != null && activeTalkers.size() > TalkerLogic.TALKERS_PER_PAGE)
 			activeTalkers = activeTalkers.subList(0, TalkerLogic.TALKERS_PER_PAGE);
@@ -178,9 +180,10 @@ public class Explore extends Controller {
 
 		List<TalkerBean> newTalkers = new ArrayList<TalkerBean>();
 		for(TalkerBean talkerBean : newTalkers1){
-			if(cat.contains(talkerBean.getCategory())){
+			//Commented code to display all category users in members page
+			//if(cat.contains(talkerBean.getCategory())){
 				newTalkers.add(talkerBean);
-			}
+			//}
 		}
 		
 		if(newTalkers != null && newTalkers.size() > TalkerLogic.TALKERS_PER_PAGE)
@@ -200,7 +203,9 @@ public class Explore extends Controller {
 				Logger.error(e, "Talker search on Browser Members page.");
 			}
 		}
-
+		
+		
+		
 		//Move members to particular tabs based on member's connection
 		Map<String, Set<TalkerBean>> members = new LinkedHashMap<String, Set<TalkerBean>>();
 		members.put("Experts", new LinkedHashSet<TalkerBean>());
@@ -242,8 +247,7 @@ public class Explore extends Controller {
 			}
 		}
 */
-			
-				
+
 		//default tab is 'active'
 		if (action == null || action.equals("browsemembers")) {
 			action = "active";
@@ -412,6 +416,7 @@ public class Explore extends Controller {
 				memberTypeEntry = Arrays.asList(feedType); //Ovarian Cancer
 				loadFlag = true;
 			}
+			
 			List<TalkerBean> allActiveTalkers = null;
 			activeTalkers = new ArrayList<TalkerBean>();
 			if(loadFlag){

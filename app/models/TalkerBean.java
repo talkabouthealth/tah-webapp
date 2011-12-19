@@ -233,6 +233,9 @@ public class TalkerBean implements Serializable {
 	private Date latestNotification;
 	private long numOfNotifications;
 	
+	//For supporting multiple categories to talker.
+	private String[] otherCategories;
+	
 	public TalkerBean(){}
 	public TalkerBean(String id) {
 		this.id = id;
@@ -337,6 +340,11 @@ public class TalkerBean implements Serializable {
 		parseFollowingTopics((Collection<DBRef>)talkerDBObject.get("following_topics"));
 		parseTopicsInfo((Collection<DBObject>)talkerDBObject.get("topics_info"));
 		setAnswerList(CommentsDAO.getTalkerAnswers(getId(), null));
+		
+		Collection<String> otherCategories = (Collection<String>)talkerDBObject.get("otherCategories");
+		if (otherCategories != null) {
+			setOtherCategories(otherCategories.toArray(new String[]{}));
+		}
 	}
 	
 	public void parseThankYous(Collection<DBObject> thankYouDBList) {

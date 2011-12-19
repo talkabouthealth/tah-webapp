@@ -27,8 +27,39 @@
 				window.location = "/profile/profileinfo";
 			}
 		);
-		
 		return false;
+	}
+
+	changeCommunity = function(elem){
+		var newCommunity = $(elem).val();
+		alert(newCommunity);
+		$.post("@{Profile.addCommunity()}", 
+			{value: newCommunity,op:'add'},
+			function(data) {
+				window.location = "/profile/profileinfo";
+			}
+		);
+		return false;
+	}
+
+	removeCommunity = function(value){
+		
+		alert(value);
+		$.post("@{Profile.addCommunity()}", 
+			{value: value,op:'rm'},
+			function(data) {
+				window.location = "/profile/profileinfo";
+			}
+		);
+	}
+	
+	getAllCategories = function(){
+		$.get("/profile/categoryList", {},
+			function(data) {
+				$(data).appendTo($("#newCategory"));
+				$("#newCategory").show();
+			}
+		);
 	}
 </script>
 </head>
@@ -118,7 +149,8 @@
 					
 					<div class="personalmain">
 						<div class="personaltextarea" style="padding-top: 0px;">
-							<span class="blacktext14">Patient, Physician, Caregiver, etc.</span></div>
+							<span class="blacktext14">Patient, Physician, Caregiver, etc.</span>
+						</div>
 						<div class="personaltextfield">
 							<select size="1" name="talker.connection" class="personalfields" 
 								onchange="return changeConnection(this);"
@@ -135,7 +167,41 @@
 							</select>
 						</div>
 					</div>
-					
+					<!-- For Health Community -->
+					<div class="personalmain" style="padding-bottom: 5px;">
+						<div class="personaltextarea" style="padding-top: 0px;">
+							<span class="blacktext14">Health Community</span>
+						</div>
+						<div style="padding-left:5px; float: left;">
+						<span class="blacktext14">${talker.category}</span>
+						#{list talker.otherCategories, as:'otherCat'}
+						<br/>
+							<span class="blacktext14">${otherCat}</span>&nbsp;&nbsp;<a href="javaScript:removeCommunity('${otherCat}');" style="font-weight:bold;">X</a>
+						#{/list}
+							<!-- <select size="1" name="talker.connection" class="personalfields" 
+								onchange="return changeCommunity(this);"
+								id="talker.connection">
+						  		<option selected value=''></option>
+						  		#{list items:diseaseList, as:'disease'}
+								    <option value="${disease.name}"
+								    #{if disease.name.equals(talker.category) } selected #{/if} 
+								    >${disease.name}</option>
+								#{/list}
+							</select>
+							  -->
+						</div>
+					</div>
+					<div class="personalmain" id="newCategory" style="display: none;">
+					</div>
+					<div class="personalmain" style="padding-bottom: 0px;">
+						<div class="personaltextarea" style="padding-top: 0px;">
+							 
+						</div>
+						<div>
+							 
+							<span class="blacktext14"><a href="javaScript:getAllCategories()">Join another community</a></span>
+						</div>
+					</div>
 					#{if talker.isOrg()}
 						#{include 'Profile/editfieldsOrganization.html' /}
 					#{/if}

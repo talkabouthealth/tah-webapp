@@ -63,7 +63,9 @@ public class SearchUtil {
 			Document doc = hits.doc(i);
 
 			TalkerBean talker = TalkerDAO.getById(doc.get("id"));
-			if(talker.getName() != null && cat.contains(talker.getCategory()))
+			
+			//Commented code to display all category users in members page
+			//if(talker.getName() != null && cat.contains(talker.getCategory()))
 				results.add(talker);
 			//TO DO : Must need to remove to show more users. 
 			//if (i == 7) {

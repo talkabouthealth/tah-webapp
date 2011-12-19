@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -87,8 +88,8 @@ public class Profile extends Controller {
     public static void edit(boolean verifiedEmail) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		TalkerLogic.preloadTalkerInfo(talker, "profile");
-		
-    	render(talker, verifiedEmail);
+		List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
+    	render(talker, verifiedEmail,diseaseList);
     }
 	
 	public static void save(@Valid TalkerBean talker) {
@@ -255,6 +256,39 @@ public class Profile extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		talker.setConnection(value);
 		talker.setConnectionVerified(false);
+		CommonUtil.updateTalker(talker, session);
+		
+		//used for menu displaying
+		if (talker.isProf()) {
+			session.put("prof", "true");
+		}
+		else {
+			session.remove("prof");
+		}
+		renderText("ok");
+	}
+	
+	/**
+	 * Change connection of authenticated talker
+	 * @param value
+	 */
+	public static void addCommunity(String value,String op) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		String [] oc = talker.getOtherCategories();
+		Collection<String> otherCategories = new ArrayList<String>();
+		if(oc != null){
+			for (String string : oc) {
+				otherCategories.add(string);
+			}
+		}
+		if(op.equals("add")){
+			otherCategories.add(value);
+		}else if(op.equals("rm")){
+			otherCategories.remove(value);
+		}
+		if (otherCategories != null) {
+			talker.setOtherCategories(otherCategories.toArray(new String[]{}));
+		}
 		CommonUtil.updateTalker(talker, session);
 		
 		//used for menu displaying
@@ -611,10 +645,12 @@ public class Profile extends Controller {
 		TalkerLogic.preloadTalkerInfo(talker, "health");
 		
 		//For now we have only one disease - Breast Cancer
-		final String diseaseName = "Breast Cancer";
-		DiseaseBean disease = DiseaseDAO.getByName(diseaseName);
+		//For now onwards it will show talker disease specifications
+		final String diseaseName =  talker.getCategory();//"Breast Cancer";
+
 		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
-		
+		DiseaseBean disease = DiseaseDAO.getByName(talker.getCategory());
+
 		//Load all healthItems for this disease
 		Map<String, HealthItemBean> healthItemsMap = new HashMap<String, HealthItemBean>();
 		for (String itemName : new String[] {"symptoms", "tests", 
@@ -749,5 +785,12 @@ public class Profile extends Controller {
 		talker.getHiddenHelps().add(type);
 		CommonUtil.updateTalker(talker, session);
 		renderText("ok");
+	}
+	
+	public static void categoryList(){
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
+		render("tags/profile/healthCommunity.html", diseaseList,talker);
+		///tags/profile/healthCommunity.html
 	}
 }

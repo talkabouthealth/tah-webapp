@@ -1,0 +1,9 @@
+<div class="personaltextarea" style="padding-top: 0px;"></div>
+<div class="personaltextfield">
+	<select size="1" name="talker.connection" class="personalfields" onchange="return changeCommunity(this);" id="talker.connection">
+  		<option selected value=''></option>
+  		#{list items:diseaseList, as:'disease'}
+		    <option value="${disease.name}">${disease.name}</option>
+		#{/list}
+	</select>
+</div>

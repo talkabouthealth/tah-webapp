@@ -306,6 +306,40 @@ public class ActionDAO {
 		return null;
 	}
 	
+	/**
+	 * All Cancer Feed
+	 * @param nextActionId Id of last action from previous load (used for paging)
+	 */
+	public static List<Action> loadAllCancerFeed(String nextActionId, boolean loggedIn,TalkerBean talker) {
+		//list of needed actions for this Feed
+		Set<String> actionTypes = new HashSet<String>();
+		for (ActionType actionType : COMMUNITY_CONVO_FEED_ACTIONS) {
+			actionTypes.add(actionType.toString());
+		}
+		if (!loggedIn) {
+			//not logged in users can't see Thoughts
+			actionTypes.remove(ActionType.PERSONAL_PROFILE_COMMENT.toString());
+		}
+		
+		//for paging
+		Date firstActionTime = null;
+		if (nextActionId != null) {
+			firstActionTime = getActionTime(nextActionId);
+		}
+
+		//load actions for this criterias
+		BasicDBObjectBuilder queryBuilder = 
+			BasicDBObjectBuilder.start()
+				.add("type", new BasicDBObject("$in", actionTypes));
+		if (firstActionTime != null) {
+			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
+		}
+		List<String> cat = FeedsLogic.getCancerType(talker);
+		
+		DBObject query = queryBuilder.get();
+		return loadPreloadActions(query);
+	}
+	
 	
 	/**
 	 * Parses given DBObject to Action object

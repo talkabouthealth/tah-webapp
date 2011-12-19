@@ -22,6 +22,7 @@ import logic.TalkerLogic;
 import logic.TopicLogic;
 import logic.FeedsLogic.FeedType;
 import models.CommentBean;
+import models.DiseaseBean;
 import models.IMAccountBean;
 import models.ServiceAccountBean;
 import models.TalkerBean;
@@ -51,6 +52,7 @@ import util.ValidateData;
 import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
+import dao.DiseaseDAO;
 import dao.TalkerDAO;
 import dao.ConversationDAO;
 import dao.TalkerDiseaseDAO;
@@ -72,15 +74,49 @@ public class Home extends Controller {
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
 
+    	//Code added for display all cancer tab to admin
+    	Set<Action> allFeed = FeedsLogic.getAllCancerFeed(null, true,talker);
+    	
     	//Code added for display Ovarian Cancer tab for admin
-    	Set<Action> overianCancerCommunityFeed = null;
+    	/*Set<Action> overianCancerCommunityFeed = null;
     	if(talker.getUserName().equalsIgnoreCase("admin")){
     		String category = talker.getCategory();
     		talker.setCategory("Ovarian Cancer");
     		overianCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
     		talker.setCategory(category);
-    	}
+    	}*/
     	
+    	//Code added for display all diseases tabs to admin
+    	Map<String, Set<Action>> allDiseaseList = new LinkedHashMap<String, Set<Action>>();
+    	List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
+    	Set<Action> multipleCancerCommunityFeed = null;
+		if(diseaseList != null && diseaseList.size() > 0){
+			for(int index = 0 ; index < diseaseList.size(); index++){
+				String category = talker.getCategory();
+	    		talker.setCategory(diseaseList.get(index).getName());
+	    		multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
+	    		if(multipleCancerCommunityFeed != null && multipleCancerCommunityFeed.size() > 0)
+	    			allDiseaseList.put(diseaseList.get(index).getName().replaceAll(" ", "_"),multipleCancerCommunityFeed);
+	    		talker.setCategory(category);
+			}
+			
+		}
+		
+		//Code added for display other categories
+		/*if(talker.getOtherCategories() != null){
+			System.out.println("-------------Length--------------"+talker.getOtherCategories().length);
+			for(int index1 = 0; index1 < talker.getOtherCategories().length; index1++){
+				    String category = talker.getCategory();
+				 	System.out.println(talker.getOtherCategories()[index1]);
+				 	talker.setCategory(talker.getOtherCategories()[index1]);
+		    		multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
+		    		if(multipleCancerCommunityFeed != null && multipleCancerCommunityFeed.size() > 0)
+		    			allDiseaseList.put(talker.getOtherCategories()[index1].replaceAll(" ", "_"),multipleCancerCommunityFeed);
+		    		talker.setCategory(category);
+			}
+		}*/
+		
+    	System.out.println("-------------allDiseaseList.size()--------"+allDiseaseList.size());
     	Iterator<Action> communityFeedIter = communityFeed.iterator();
 		/*while (communityFeedIter.hasNext()) {
 			 Action actionIterator = communityFeedIter.next();
@@ -189,7 +225,7 @@ public class Home extends Controller {
 		
 		render("@newhome", talker, emailVerification,
 				liveConversations, convoFeed, communityFeed, mentions, showNotificationAccounts,
-				popularTopics,similarMembers, experts, recommendedConvos,newsLetterFlag);//recommendedTopics
+				popularTopics,similarMembers, experts, recommendedConvos,newsLetterFlag,allDiseaseList,allFeed);//recommendedTopics
     }
     
     private static boolean prepareNotificationPanel(Session session, TalkerBean talker) {
@@ -284,7 +320,10 @@ public class Home extends Controller {
     	} else if("TOPIC".equals(feedType)) {
     		List<TopicBean> _recommendedTopics = TalkerLogic.getRecommendedTopics(_talker,afterActionId);
     		render("tags/topicList.html", _recommendedTopics);
-    	} else {
+    	} else if("allFeed".equals(feedType)) {
+    		_feedItems = FeedsLogic.getAllCancerFeed(afterActionId, loggedIn, _talker);
+    		render("tags/feed/feedList.html", _feedItems, _talker);
+    	}else {
     		TalkerBean profileTalker = TalkerDAO.getByUserName(talkerName);
     		if (profileTalker != null) {
     			_feedItems = FeedsLogic.getTalkerFeed(profileTalker, afterActionId);

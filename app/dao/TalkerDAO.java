@@ -166,6 +166,7 @@ public class TalkerDAO {
 			.add("following_convos", talker.getFollowingConvosList())
 			.add("following_topics", talker.followingTopicsToList())
 			.add("topics_info", talker.topicsInfoToDB())
+			.add("otherCategories", talker.getOtherCategories())
 			.get();
 		
 		DBObject talkerId = new BasicDBObject("_id", new ObjectId(talker.getId()));

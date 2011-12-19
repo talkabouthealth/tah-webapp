@@ -21,7 +21,7 @@ import models.actions.PreloadAction;
 public class FeedsLogic {
 	
 	public enum FeedType {
-		CONVERSATION, COMMUNITY, TALKER, TOPIC
+		CONVERSATION, COMMUNITY, TALKER, TOPIC, ALL_CANCER
 	}
 	
 	//Actions per page for Talker Feed and all other feeds
@@ -45,6 +45,10 @@ public class FeedsLogic {
 	
 	public static Set<Action> getTopicFeed(TalkerBean talker,TopicBean topic, String afterActionId) {
 		return loadFeed(FeedType.TOPIC, afterActionId, talker, topic, true, FEEDS_PER_PAGE);
+	}
+	
+	public static Set<Action> getAllCancerFeed(String afterActionId, boolean loggedIn,TalkerBean talker) {
+		return loadFeed(FeedType.ALL_CANCER, afterActionId, talker, null, loggedIn, FEEDS_PER_PAGE);
 	}
 	
 	// TODO request update for feed
@@ -71,6 +75,9 @@ public class FeedsLogic {
 					break;
 				case TOPIC: 
 					feedActions = ActionDAO.loadLatestByTopic(talker,topic, nextActionId);
+					break;
+				case ALL_CANCER: 
+					feedActions = ActionDAO.loadAllCancerFeed(nextActionId, loggedIn,talker);
 					break;
 			}
 			if(feedActions == null)
@@ -154,6 +161,9 @@ public class FeedsLogic {
 					break;
 				case TOPIC: 
 					feedActions = ActionDAO.loadLatestByTopic(talker,topic, nextActionId);
+					break;
+				case ALL_CANCER: 
+					feedActions = ActionDAO.loadAllCancerFeed(nextActionId, loggedIn,talker);
 					break;
 			}
 			
