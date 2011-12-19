@@ -1021,4 +1021,10 @@ public class TalkerBean implements Serializable {
 	public void setOtherCtype(List<String> otherCtype) {
 		this.otherCtype = otherCtype;
 	}
+	public String[] getOtherCategories() {
+		return otherCategories;
+	}
+	public void setOtherCategories(String[] otherCategories) {
+		this.otherCategories = otherCategories;
+	}
 }	
