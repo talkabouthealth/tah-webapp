@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -276,12 +277,15 @@ public class Profile extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		String [] oc = talker.getOtherCategories();
 		Collection<String> otherCategories = new ArrayList<String>();
+		boolean added=false;
 		if(oc != null){
 			for (String string : oc) {
+				if(string.equals(value) || value.equals(talker.getCategory()))
+					added =  true;	
 				otherCategories.add(string);
 			}
 		}
-		if(op.equals("add")){
+		if(op.equals("add") && !added){
 			otherCategories.add(value);
 		}else if(op.equals("rm")){
 			otherCategories.remove(value);
@@ -298,7 +302,10 @@ public class Profile extends Controller {
 		else {
 			session.remove("prof");
 		}
-		renderText("ok");
+		if(added)
+			renderText("Already added.");
+		else
+			renderText("ok");
 	}
 	
 	public static void changeInsuranceAccepted(List<String> insuranceAccepted) {
@@ -781,7 +788,6 @@ public class Profile extends Controller {
 	
 	public static void hideHelpInfo(String type) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
 		talker.getHiddenHelps().add(type);
 		CommonUtil.updateTalker(talker, session);
 		renderText("ok");
@@ -790,7 +796,24 @@ public class Profile extends Controller {
 	public static void categoryList(){
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
+		DiseaseBean bean12 = null;
+		List<String> arrayList = Arrays.asList(talker.getOtherCategories());
+		System.out.println(arrayList);
+		String name= "";
+		for(int i = 0 ;i < diseaseList.size();i++){
+			bean12 = diseaseList.get(i);
+			name = bean12.getName();
+			if(bean12.getName().equals(talker.getCategory()))
+				diseaseList.remove(bean12);
+				 
+			/*}else if(arrayList.contains(name)){
+				System.out.println("In Other: " + name);
+				diseaseList.remove(bean12);	
+			}else{
+				System.out.println("In List : "+ bean12.getName());
+			}*/
+		}
+
 		render("tags/profile/healthCommunity.html", diseaseList,talker);
-		///tags/profile/healthCommunity.html
 	}
 }

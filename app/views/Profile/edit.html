@@ -32,19 +32,24 @@
 
 	changeCommunity = function(elem){
 		var newCommunity = $(elem).val();
-		alert(newCommunity);
-		$.post("@{Profile.addCommunity()}", 
-			{value: newCommunity,op:'add'},
-			function(data) {
-				window.location = "/profile/profileinfo";
-			}
-		);
+		if(newCommunity == ''){
+			alert('Please select health community');
+		}else{
+			$.post("@{Profile.addCommunity()}", 
+				{value: newCommunity,op:'add'},
+				function(data) {
+					if(data == 'ok'){
+						window.location = "/profile/profileinfo";
+					}else{
+						alert(data);
+					}
+				}
+			);
+		}
 		return false;
 	}
 
 	removeCommunity = function(value){
-		
-		alert(value);
 		$.post("@{Profile.addCommunity()}", 
 			{value: value,op:'rm'},
 			function(data) {
