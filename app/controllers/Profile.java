@@ -796,23 +796,21 @@ public class Profile extends Controller {
 	public static void categoryList(){
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
-		DiseaseBean bean12 = null;
+		/*DiseaseBean bean12 = null;
 		List<String> arrayList = Arrays.asList(talker.getOtherCategories());
-		System.out.println(arrayList);
 		String name= "";
 		for(int i = 0 ;i < diseaseList.size();i++){
 			bean12 = diseaseList.get(i);
 			name = bean12.getName();
 			if(bean12.getName().equals(talker.getCategory()))
 				diseaseList.remove(bean12);
-				 
-			/*}else if(arrayList.contains(name)){
+			}else if(arrayList.contains(name)){
 				System.out.println("In Other: " + name);
 				diseaseList.remove(bean12);	
 			}else{
 				System.out.println("In List : "+ bean12.getName());
-			}*/
-		}
+			}
+		}*/
 
 		render("tags/profile/healthCommunity.html", diseaseList,talker);
 	}
