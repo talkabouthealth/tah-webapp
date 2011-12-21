@@ -507,11 +507,9 @@ function updateFeed(type,talkerName) {
 												  </div>
 											#{/if}	
 											#{else}
-											  	#{if talker.category == cancerType.replaceAll("_", " ")}
 											  		<div class="newTab">
 													  	<a href="#" id="${cancerType}CommunityFeed" class="tabLink">${cancerType.replaceAll("_", " ")}</a> <!--  Community Feed -->
 													  </div>
-											  	#{/if}
 								 	 		#{/else}
 							            #{/list}
 						            #{/if}
@@ -613,7 +611,6 @@ function updateFeed(type,talkerName) {
 													<div class="cb"></div>
 												#{/if}
 												#{else}
-												  	#{if talker.category == cancerType.replaceAll("_", " ")}
 												  		<div id="${cancerType}CommunityFeedList">
 								                        	#{list items: allDiseaseList.get(cancerType), as: 'cancerCommunityFeed' }
 										                    	#{list items: cancerCommunityFeed, as: 'activity'}
@@ -630,7 +627,6 @@ function updateFeed(type,talkerName) {
 															#{/if}
 														#{/if}
 													<div class="cb"></div>
-												  	#{/if}
 												  	
 								 	 			#{/else}
 						                      </div>

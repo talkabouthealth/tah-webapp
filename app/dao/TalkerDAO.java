@@ -491,7 +491,16 @@ public class TalkerDAO {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		talkersColl.ensureIndex(new BasicDBObject("uname", 1));
 		
-		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start().add("category", new BasicDBObject("$in", categoryList) ).add("suspended", false);
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start()
+			//.add("category", new BasicDBObject("$in", categoryList) )
+			.add("suspended", false)
+			//.add("otherCategories", new BasicDBObject("$in", categoryList) )
+			.add("$or", 
+				Arrays.asList(
+						new BasicDBObject("category", new BasicDBObject("$in", categoryList)),
+						new BasicDBObject("otherCategories", new BasicDBObject("$in", categoryList))
+					)
+			);
 
 		List<DBObject> talkersDBObjectList = null;
 		if (basicInfo) {

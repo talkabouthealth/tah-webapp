@@ -416,7 +416,6 @@ public class Explore extends Controller {
 				memberTypeEntry = Arrays.asList(feedType); //Ovarian Cancer
 				loadFlag = true;
 			}
-			
 			List<TalkerBean> allActiveTalkers = null;
 			activeTalkers = new ArrayList<TalkerBean>();
 			if(loadFlag){

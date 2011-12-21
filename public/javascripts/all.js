@@ -98,6 +98,9 @@ function saveConvo(page) {
 	//var topics = $("#newConvoTopics").val();
 	var topics = '';
 	
+	var questionCategory = $("#newConvoDisease").val();
+	
+	
 	//if new question if follow-up - we save id of parent convo
 	var parentConvoId = "";
 	if (page === "conversationSummary") {
@@ -130,7 +133,7 @@ function saveConvo(page) {
 	$("#convoCreateImage").show();
 	$.post("/conversations/create", 
 			{ type: type, title: title, details: details, topics: topics, fromPage: page, 
-				parentConvoId: parentConvoId, ccTwitter: ccTwitter, ccFacebook: ccFacebook},
+				parentConvoId: parentConvoId, ccTwitter: ccTwitter, ccFacebook: ccFacebook, questionCategory: questionCategory},
 			function(data) {
 				$("#convoCreateImage").hide();
 				if (type === "CONVERSATION") {

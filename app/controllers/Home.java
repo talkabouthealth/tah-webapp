@@ -95,28 +95,35 @@ public class Home extends Controller {
 				String category = talker.getCategory();
 	    		talker.setCategory(diseaseList.get(index).getName());
 	    		multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
-	    		if(multipleCancerCommunityFeed != null && multipleCancerCommunityFeed.size() > 0)
-	    			allDiseaseList.put(diseaseList.get(index).getName().replaceAll(" ", "_"),multipleCancerCommunityFeed);
+	    		//if(multipleCancerCommunityFeed != null && multipleCancerCommunityFeed.size() > 0)
+    			if(talker.getUserName().equalsIgnoreCase("admin"))
+    				allDiseaseList.put(diseaseList.get(index).getName().replaceAll(" ", "_"),multipleCancerCommunityFeed);
+    			else
+    				if(category.equalsIgnoreCase(diseaseList.get(index).getName()))
+    					allDiseaseList.put(diseaseList.get(index).getName().replaceAll(" ", "_"),multipleCancerCommunityFeed);
 	    		talker.setCategory(category);
 			}
-			
+		}
+		//Code added for display other categories
+		if(diseaseList != null && diseaseList.size() > 0){
+			for(int index = 0 ; index < diseaseList.size(); index++){
+				if(talker.getOtherCategories() != null){
+					for(int index1 = 0; index1 < talker.getOtherCategories().length; index1++){
+						    String category = talker.getCategory();
+						 	talker.setCategory(talker.getOtherCategories()[index1]);
+				    		multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
+				    		//if(multipleCancerCommunityFeed != null && multipleCancerCommunityFeed.size() > 0)
+			    			if(talker.getUserName().equalsIgnoreCase("admin"))
+			    				allDiseaseList.put(diseaseList.get(index).getName().replaceAll(" ", "_"),multipleCancerCommunityFeed);
+			    			else
+			    				if(talker.getOtherCategories()[index1].equalsIgnoreCase(diseaseList.get(index).getName()))
+			    					allDiseaseList.put(diseaseList.get(index).getName().replaceAll(" ", "_"),multipleCancerCommunityFeed);
+				    		talker.setCategory(category);
+					}
+				}
+			}
 		}
 		
-		//Code added for display other categories
-		/*if(talker.getOtherCategories() != null){
-			System.out.println("-------------Length--------------"+talker.getOtherCategories().length);
-			for(int index1 = 0; index1 < talker.getOtherCategories().length; index1++){
-				    String category = talker.getCategory();
-				 	System.out.println(talker.getOtherCategories()[index1]);
-				 	talker.setCategory(talker.getOtherCategories()[index1]);
-		    		multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
-		    		if(multipleCancerCommunityFeed != null && multipleCancerCommunityFeed.size() > 0)
-		    			allDiseaseList.put(talker.getOtherCategories()[index1].replaceAll(" ", "_"),multipleCancerCommunityFeed);
-		    		talker.setCategory(category);
-			}
-		}*/
-		
-    	System.out.println("-------------allDiseaseList.size()--------"+allDiseaseList.size());
     	Iterator<Action> communityFeedIter = communityFeed.iterator();
 		/*while (communityFeedIter.hasNext()) {
 			 Action actionIterator = communityFeedIter.next();

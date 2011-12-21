@@ -67,7 +67,7 @@ public class ConversationLogic {
 	 */
 	public static ConversationBean createConvo(ConvoType type, String title, 
 			TalkerBean talker, String details, Set<TopicBean> topicsSet, 
-			boolean notifyTalkers, ConversationBean parentConvo, Boolean ccTwitter, Boolean ccFacebook) {
+			boolean notifyTalkers, ConversationBean parentConvo, Boolean ccTwitter, Boolean ccFacebook, String questionCategory) {
 		
 		if (topicsSet == null) {
 			topicsSet = new HashSet<TopicBean>();
@@ -98,7 +98,8 @@ public class ConversationLogic {
 		convo.setMainURL(topicURL);
 		
 		//Added convo category
-		convo.setCategory(talker.getCategory());
+		//convo.setCategory(talker.getCategory());
+		convo.setCategory(questionCategory);
 		
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
 		convo.setBitly(BitlyUtil.shortLink(convoURL));
@@ -109,8 +110,11 @@ public class ConversationLogic {
 		convo.setBitlyChat(BitlyUtil.shortLink(convoChatURL));
 		ConversationDAO.updateConvo(convo);
 		
+		String category = talker.getCategory();
+		talker.setCategory(questionCategory);
 		String actionID = ActionDAO.saveActionGetId(new StartConvoAction(talker, convo, ActionType.START_CONVO));
 		convo.setActionID(actionID);
+		talker.setCategory(category);
 		
 		if (notifyTalkers) {
 			//send notifications if Automatic Notifications is On

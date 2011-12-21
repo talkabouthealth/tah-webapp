@@ -78,7 +78,7 @@ public class Conversations extends Controller {
 	 * @param fromPage page where request was made
 	 */
 	public static void create(String type, String title, String details, String topics, 
-			String fromPage, String parentConvoId, Boolean ccTwitter, Boolean ccFacebook) {
+			String fromPage, String parentConvoId, Boolean ccTwitter, Boolean ccFacebook, String questionCategory) {
 
 		String targetId="";
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
@@ -103,7 +103,7 @@ public class Conversations extends Controller {
     	boolean notifyTalkers = (convoType == ConvoType.QUESTION);
     	ConversationBean convo = 
     		ConversationLogic.createConvo(convoType, title, talker, details, 
-    				topicsSet, notifyTalkers, parentConvo, ccTwitter, ccFacebook);
+    				topicsSet, notifyTalkers, parentConvo, ccTwitter, ccFacebook, questionCategory);
     	
     	CommonUtil.updateTalker(talker, session);
     	

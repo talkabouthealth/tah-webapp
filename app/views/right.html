@@ -456,7 +456,7 @@
 <div id="boxes">
   <div id="dialog" class="window"> </div>
   
-  #{popups/startConvo page: currentPage /}
+  #{popups/startConvo page: currentPage, talker: talker /}
   
   #{if talker}
   	#{popups/emailDialogs talker: talker /}
