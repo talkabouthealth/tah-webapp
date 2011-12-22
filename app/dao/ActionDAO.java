@@ -206,7 +206,8 @@ public class ActionDAO {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
 		}
 		List<String> cat = FeedsLogic.getCancerType(talker);
-		queryBuilder.add("category", new BasicDBObject("$in", cat) );
+		if(!cat.contains("All Cancer"))
+			queryBuilder.add("category", new BasicDBObject("$in", cat) );
 			
 		
 		DBObject query = queryBuilder.get();

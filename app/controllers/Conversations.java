@@ -275,7 +275,7 @@ public class Conversations extends Controller {
     		nextAction = "follow";
     	} else {
     		talker.getFollowingConvosList().add(convoId);
-    		ActionDAO.saveAction(new FollowConvoAction(talker, new ConversationBean(convoId)));
+    		//ActionDAO.saveAction(new FollowConvoAction(talker, new ConversationBean(convoId)));
     		nextAction = "unfollow";
     		//Code for sending mail if setting available in email setting
     		TalkerBean mailSendtalker = TalkerDAO.getByEmail(convo.getTalker().getEmail());
