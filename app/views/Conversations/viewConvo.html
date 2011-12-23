@@ -113,41 +113,34 @@
 			$(this).prev().remove();
 			var disease = $(this).attr("rel");
 			$(this).remove();
-
 			$.post("@{Conversations.updateField()}", 
 					{ convoId : '${convo.id}', name: 'disease', value: disease, todo: 'remove'},
 					function() {
 						$("#diseasesList").html($("#diseasesEditList").html());
 					}
 				);
-
 			return false;
 		});
 		//Delete conversation from Related/Follow-Up conversations
 		$(".deleteConvoLink").live("click", function() {
 			var deleteConvoId = $(this).attr("rel");
 			$(this).parent().remove();
-
 			var name = "";
 			if ($(this).hasClass("relatedConvos")) {
 				name = "relatedConvos";
-			}
-			else {
+			} else {
 	   			name = "followupConvos";
 			}
-
 			$.post("@{Conversations.updateField()}", 
 				{ convoId : '${convo.id}', name: name, value: deleteConvoId, todo: 'remove'},
 				function(html) {
 					if (name === "relatedConvos") {
 						$("#relatedConvosList").html($("#relatedConvosEditList").html());
-	   	   			}
-	   	   			else {
+	   	   			} else {
 	   	   				$("#followupConvosList").html($("#followupConvosEditList").html());
 	   	   			}
 				}
 			);
-			
 			return false;
 		});
 		$("#mergeConvosBtn").click(function() {
@@ -155,7 +148,6 @@
 				var confirmMerge = confirm("Are you sure you want to merge the following question: "+selectedConvoURL);
 	   	   		if (confirmMerge) {
 	   	   			showStatus("Merging...");
-				
 	   	   	  		$.post("@{Conversations.mergeConvos()}", 
 	    				{ convoId : '${convo.id}', convoToMergeURL : selectedConvoURL},
 	    				function(html) {
@@ -163,8 +155,7 @@
 	    				}
 	    			);
 	   	   		}
-			}
-			else {
+			} else {
 	   			alert("Please select correct conversation");
 			}
 			return false;
@@ -183,9 +174,7 @@
 		makeAutocomplete("#convoToMerge", "convoedit");
 		makeDiseaseAutocomplete("#diseaseInput");
 	});
-	/**
-	* Called after inline editing of title/details/summary/etc.
-	*/
+	/** Called after inline editing of title/details/summary/etc. */
 	function saveData(dataType, newValue) {
 		if (dataType === 'titleEdit') {
 			$.post("@{Conversations.updateField()}", 
@@ -223,12 +212,10 @@
 				{ convoId : '${convo.id}', name: 'relatedConvos', value: newValue, todo: 'add'},
 				function(html) {
 					$(html).appendTo($("#relatedConvosEditList"));
-
 					$("#relatedConvosList").html($("#relatedConvosEditList").html());
 				}
 			);
-		}
-		else if (dataType === 'followupConvosEdit') {
+		} else if (dataType === 'followupConvosEdit') {
 			$.post("@{Conversations.updateField()}", 
 				{ convoId : '${convo.id}', name: 'followupConvos', value: newValue, todo: 'add'},
 				function(html) {
@@ -237,8 +224,7 @@
 					$("#followupConvosList").html($("#followupConvosEditList").html());
 				}
 			);
-		}
-		else if (dataType === 'topicsEdit') {
+		} else if (dataType === 'topicsEdit') {
 			//possible comma-separated topics
 			$.post("@{Conversations.updateField()}", 
 				{ convoId : '${convo.id}', name: 'topic', value: newValue, todo: 'add'},
@@ -248,8 +234,7 @@
 					$("#topicsList").html($("#topicsEditList").html());
 				}
 			);
-		}
-		else if (dataType === 'diseaseEdit') {
+		} else if (dataType === 'diseaseEdit') {
 			//possible comma-separated diseases
 			$.post("@{Conversations.updateField()}", 
 				{ convoId : '${convo.id}', name: 'disease', value: newValue, todo: 'add'},
@@ -266,8 +251,6 @@
 		var commentText = $("#replytext"+parentId).val();
 		$("#replytext"+parentId).val("");
 		$("#saveAnswerImage"+parentId).show();
-		//commentText = linkify(commentText);
-
 		$.post("@{Conversations.saveAnswerOrReply()}", 
 			{ convoId: '${convo.id}', parentId: parentId, text: commentText},
 			function(html) {
@@ -313,9 +296,7 @@
 		if (confirmDel) {
 	  		$.post("@{Conversations.updateAnswer()}", 
 				{ answerId: answerId, todo: 'undelete', newText: ''},
-				function(html) {
-					window.location.reload(true);
-				}
+				function(html) { window.location.reload(true);	}
 			);
 		}
 		return false;
@@ -324,12 +305,9 @@
 		var confirmDel = confirm("Are you sure want to delete this answer/reply?");
 		if (confirmDel) {
 	   		$("#comment"+answerId).remove();
-
 	  		$.post("@{Conversations.updateAnswer()}", 
 				{ answerId: answerId, todo: 'delete', newText: ''},
-				function(html) {
-					window.location.reload(true);
-				}
+				function(html) { window.location.reload(true); }
 			);
 		}
 		return false;
@@ -344,7 +322,6 @@
 		}
 		return false;
 	}
-
 	function deleteConvo() {
 		var confirmDel = confirm("Are you sure want to delete this conversation?");
 		if (confirmDel) {
@@ -601,14 +578,9 @@
 									    </div>
 									</div>
 								</div>
-                      
                       			#{if talker }
 									<div class="tagtxts">
-										<!-- REFACTOR REMOVE LIVE CHAT OPTION
-				                    	<a href="#" class="restartConvoLink">Re-start chat</a> |
-				                    	-->  
 				                    	<a href="#" id="postFollowupLink">Post follow-up question</a> |  
-				                    	
 				                    	<a href="#" onclick="$('#convoreplies').toggle(); return false;"
 		                        			#{if convo.replies.size() == 0}
 		                        				>Reply</a>
@@ -645,7 +617,6 @@
 									#{list items: convo.replies, as: 'convoReply'}
 										#{convo/convoReply reply: convoReply, talker: talker /}
 									#{/list}
-									
 									#{if talker}
 										<div id="convoReplyForm" style="clear:both">
 											<div id="saveConvoReplyImage" class="ajaxLoading" ></div>
@@ -664,17 +635,12 @@
 					                    </div><!--Blankdivsub-->
 									#{/if}
 								</div>
-								
 								<div class="cb"></div>
 							</div> <!--topic-->
-							
-
                     		<div class="topicborder" style="margin-bottom: 5px;margin-top: 5px;"></div>
  		#{include 'socialNetworkShare.html' /}
 							<div class="topicborder" style="margin-top: 10px;"></div>
                     		<div class="topicborder" style="margin-bottom: 5px;"></div>
-
-							
 							#{if convo.helpfulAnswers?.size > 1}
                     		<div class="topic inline-edit" id="summaryEdit">
                     			<div class="inline_display">
@@ -782,10 +748,7 @@
                      			<div class="answerh1">Answers <span class="style2">(${convo.comments.size()})</span></div>
                       			<div class="topicborder"></div>
                       		</div>
-                      		
                       		#{convo/convoCommentsTree commentsList: convo.helpfulAnswers, level: 1, talker: talker /}
-                      		
-                      		
                       		#{set deletedAnswers = convo.deletedAnswers /}
                       		#{if deletedAnswers.size() != 0 }
                       			<a href="#" onclick="$('#deletedAnswers').show(); return false;"
@@ -795,7 +758,6 @@
 	                      		</div>	
 	                      		<br/><br/>
                       		#{/if}
-                      		
                       		#{set notHelpfulAnswers = convo.notHelpfulAnswers /}
                       		#{if notHelpfulAnswers.size() != 0 }
                       			<a href="#" onclick="$('#notHelpfulAnswers').show(); return false;"
@@ -804,8 +766,6 @@
 	                      			#{convo/convoCommentsTree commentsList: notHelpfulAnswers, level: 1, talker: talker /}
 	                      		</div>	
                       		#{/if}
-                      		
-                        
 							<div class="topic" id="replyform"><br />
 								#{if talker }
 									<div id="answerFormDiv" style="display: ${userHasAnswer ? 'none' : 'block'};">
@@ -826,14 +786,9 @@
 								#{if session.username && convo.messages}
 									<div class="answerh2 style1 style2">Conversation</div>
 									<div class="topicborder"></div>
-									
 									<div class="tagtxts">
-										<!-- REFACTOR REMOVE LIVE CHAT OPTION
-										<a href="#" class="restartConvoLink">Re-start chat</a> |
-										-->  
 										<a href="#" class="flagConvoLink">Flag As Inappropriate</a>
 									</div>
-									
 									<div class="talkerCover">
 										<div class="talkertop">Talkers</div>
 										<div class="talkermid">
@@ -843,7 +798,6 @@
 													${member}&nbsp;&nbsp;&nbsp;
 												#{/list}
 											</div>
-											
 											#{list items: convo.messages, as: 'message'}
 												<div id="chatMessage${message.index}" class="talkertxt1">
 													<span class="uzername">
@@ -863,8 +817,6 @@
 								#{/if}
 							    <div class="cb"></div>
 							</div>
-							
-							
 							#{if talker?.isAdmin() }
 								<div class="topic">
 			                      <div class="topich1">Merge conversation</div>
@@ -878,14 +830,12 @@
 			                      <div class="cb"></div>
 			                    </div>
 							#{/if}
-
 							#{ notLoggedNotice /}
 							<span style="color: red; font-weight: bold;">
 								<br/><br/>
 								Note: All content on this site is informational and not a substitute for professional medical advice. 
 								Always seek the advice of your physician or other qualified health provider with questions regarding your health.
 							</span>
-			
 							<div class="cb"></div>
 						</div>
 						<div class="cb"></div>
@@ -903,17 +853,12 @@
 							<a href="#" id="answerBtn" class="answerBtn" onclick="addAnswer();" style="display: ${userHasAnswer ? 'none' : 'block'};"></a>
 						#{/else}
 					</div>
-						<!-- REFACTOR REMOVE LIVE CHAT OPTION
-						<input type="button" class="restartConvoLink restartChatBtn" value="" />
-						-->
-						
 						<div class="cb"></div>
 				    	<div class="topicborder" style="margin-top: 10px;"></div>
 					#{/if}
 					#{else}
 						#{include 'tahInfo.html' /}
 					#{/else}
-				    
 					<div class="topipsts">
 						<div class="Statics">
 							<div class="Staticsh1">Question Statistics</div>
@@ -931,7 +876,6 @@
 						</div>
 						<div class="cb"></div>
 					</div><!--topipsts-->
-					
 					<div class="topipsts">
 						<div class='inline-edit' id="relatedConvosEdit" style="padding-bottom: 3px;">
 							<div class="inline_display">
@@ -987,11 +931,9 @@
 								</div>
 							</div>
 						</div>
-						
 						<div class="topicborder"></div>
 						<div class="cb"></div>
 					</div><!--topipsts-->
-					
 					<div class="topipsts">
 						<div class="inline-edit" id="followupConvosEdit" style="padding-bottom: 3px;">
 							<div class="inline_display">
@@ -1068,7 +1010,6 @@
 	#{popups/startConvo page: "conversationSummary" /}
 	#{if talker}
 		#{set twitterAccount = talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
-		
 *{ 
 	Tags should be in one line because of the bug:
 	https://bugs.launchpad.net/play/+bug/579936
