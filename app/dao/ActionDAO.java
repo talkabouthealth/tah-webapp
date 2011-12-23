@@ -210,14 +210,16 @@ public class ActionDAO {
 		cat.add(ConversationBean.ALL_CANCER);
 		
 		//queryBuilder.add("category", new BasicDBObject("$in", cat) );
-		
-		queryBuilder.add("$or", 
+		if(talker.getOtherCategories() == null){
+			queryBuilder.add("category", new BasicDBObject("$in", cat) );
+		}else{
+			queryBuilder.add("$or", 
 				Arrays.asList(
 						new BasicDBObject("category", new BasicDBObject("$in", cat)),
 						new BasicDBObject("other_disease_categories", new BasicDBObject("$in", talker.getOtherCategories()))
 					)
 			);
-			
+		}
 		
 		DBObject query = queryBuilder.get();
 		return loadPreloadActions(query);
@@ -298,12 +300,13 @@ public class ActionDAO {
 		DBCursor dbCursor =	activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(FeedsLogic.ACTIONS_PRELOAD);
 		
 		List<Action> activitiesList = new ArrayList<Action>();
-		if(dbCursor != null && dbCursor.size() > 0){
-			while (dbCursor.hasNext()) {
+		if(dbCursor != null && dbCursor.hasNext()){
+			do {
 				Action action = new PreloadAction(dbCursor.next());
 				activitiesList.add(action);
-			}
+			} while (dbCursor.hasNext());
 		}
+		
 		return activitiesList;
 	}
 	
