@@ -1,5 +1,4 @@
 #{list items: _commentsList, as: 'comment' }
-#{ifnot comment.deleted}
 	<div id="comment${comment.id}" class="topic" 
 			style="padding-bottom:5px; ${_level == 1 ? 'margin-left:-40px;' : ''} ">
     	<div class="answerCover">
@@ -89,7 +88,7 @@
 		                        		
 				                        #{if session.username?.equals(comment.fromTalker.userName) ||
 				                        		session.username?.equals("admin") }
-				                        	<li><a href="#" onclick="return deleteAnswer('${comment.id}');">Delete</a></li>
+				                        	<li><a href="#" onclick="return undeleteAnswer('${comment.id}');">Undelete</a></li>
 				                        	<li>&nbsp;|&nbsp;</li>
 				                        #{/if}
 				                  		#{if session.username && !session.username?.equals(comment.fromTalker.userName)}
@@ -183,7 +182,7 @@
 			                        	</li>
 				                        #{if session.username?.equals(comment.fromTalker.userName) ||
 				                        		session.username?.equals("admin") }
-				                        	<li class="comLink"><a href="#" onclick="return deleteAnswer('${comment.id}');">Delete</a></li>
+				                        	<li class="comLink"><a href="#" onclick="return undeleteAnswer('${comment.id}');">Undelete</a></li>
 				                        #{/if}
 				                  		#{if session.username && !session.username?.equals(comment.fromTalker.userName)}
 			<li class="comLink"><a href="#" 
@@ -210,5 +209,4 @@
 		</div>
 		<div class="cb"></div>
 	</div>  
-#{/ifnot}     
 #{/list}

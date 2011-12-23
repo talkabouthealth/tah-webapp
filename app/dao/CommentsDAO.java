@@ -486,9 +486,9 @@ public class CommentsDAO {
 			commentBean.parseFromDB(commentDBObject);
 			commentsCacheMap.put(commentBean.getId(), commentBean);
 			
-			if (!commentBean.isDeleted()) {
+			//if (!commentBean.isDeleted()) {
 				topCommentsList.add(commentBean);
-			}
+			//}
 		}
 		
 		for (DBObject commentDBObject : commentsList) {
@@ -500,9 +500,9 @@ public class CommentsDAO {
 			List<String> childrenIdsList = getStringList(commentDBObject, "children");
 			for (String childId : childrenIdsList) {
 				CommentBean childrenCommentBean = commentsCacheMap.get(childId);
-				if (!childrenCommentBean.isDeleted()) {
+				//if (!childrenCommentBean.isDeleted()) {
 					childrenList.add(childrenCommentBean);
-				}
+				//}
 				
 				//remove replies from the list of answers/thoughts
 				topCommentsList.remove(childrenCommentBean);

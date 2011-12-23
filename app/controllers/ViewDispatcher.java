@@ -251,6 +251,22 @@ public class ViewDispatcher extends Controller {
 		
 		//For displaying answers sequence wise
 		List<CommentBean> answerList = CommentsDAO.loadConvoAnswersTree(convo.getId());
+		
+		if (Security.isConnected()) {
+			if(!talker.isAdmin()){
+				for(int index = 0; index < answerList.size(); index++){
+					CommentBean commentBean= answerList.get(index);
+					if(commentBean.isDeleted())
+						answerList.remove(index);
+				}
+			}
+		}else{
+			for(int index = 0; index < answerList.size(); index++){
+				CommentBean commentBean= answerList.get(index);
+				if(commentBean.isDeleted())
+					answerList.remove(index);
+			}
+		}
 		List<CommentBean> commentList = answerList;
 		//For getting answers in top position which have question text
 		//For removing answer from question page which have moderate no moderate value or value as "Delete Answer" .

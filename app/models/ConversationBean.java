@@ -103,6 +103,8 @@ public class ConversationBean implements Comparable<ConversationBean> {
 	
 	//Added new field for saving cancer category.
 	private String category;
+	private String[] otherDiseaseCategories;
+	public static final String ALL_CANCER = "All Cancer";
 	
 	//More fields for the admin moderate new question feature
 	//Added to save the expert to be notifed.
@@ -159,6 +161,11 @@ public class ConversationBean implements Comparable<ConversationBean> {
     	
     	//Added convo category
     	setCategory((String)convoDBObject.get("category"));
+    	//setOtherDiseaseCategories((String[])convoDBObject.get("other_disease_categories"));
+    	Collection<String> otherDiseaseCategories = (Collection<String>)convoDBObject.get("other_disease_categories");
+		if (otherDiseaseCategories != null) {
+			setOtherDiseaseCategories(otherDiseaseCategories.toArray(new String[]{}));
+		}
     	
     	//"merged_with"
     	DBRef mergedWithRef = (DBRef)convoDBObject.get("merged_with");
@@ -385,6 +392,16 @@ public class ConversationBean implements Comparable<ConversationBean> {
 		for (CommentBean answer : getComments()) {
 			if ((notHelpful && answer.isNotHelpful())
 					|| (!notHelpful && !answer.isNotHelpful())) {
+				filteredAnswers.add(answer);
+			}
+		}
+		return filteredAnswers;
+	}
+	
+	public List<CommentBean> getDeletedAnswers(){
+		List<CommentBean> filteredAnswers = new ArrayList<CommentBean>();
+		for (CommentBean answer : getComments()) {
+			if (answer.isDeleted()) {
 				filteredAnswers.add(answer);
 			}
 		}
@@ -642,5 +659,10 @@ public class ConversationBean implements Comparable<ConversationBean> {
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
-	
+	public String[] getOtherDiseaseCategories() {
+		return otherDiseaseCategories;
+	}
+	public void setOtherDiseaseCategories(String[] otherDiseaseCategories) {
+		this.otherDiseaseCategories = otherDiseaseCategories;
+	}
 }

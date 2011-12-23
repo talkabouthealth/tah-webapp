@@ -162,6 +162,8 @@ public class ConversationDAO {
 			
 			.add("modified_date", new Date())
 			.add("question_state", convo.getQuestionState())
+			
+			.add("other_disease_categories", convo.getOtherDiseaseCategories())
 			.get();
 		
 		DBObject convoId = new BasicDBObject("_id", new ObjectId(convo.getId()));

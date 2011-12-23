@@ -82,6 +82,8 @@ public class Conversations extends Controller {
 
 		String targetId="";
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	if(questionCategory == null || questionCategory != null && questionCategory.equals(""))
+    		questionCategory = talker.getCategory();
 		
     	// if passed a targeted question from profiles, parentConvoId contains talkerId of target user
 		if(fromPage.equals("profileRight")) {
@@ -427,6 +429,65 @@ public class Conversations extends Controller {
     	    	ConversationDAO.updateConvo(convo);
     		}
     	}
+    	else if(name.equalsIgnoreCase("disease")){
+    		String todo = params.get("todo");
+    		if (todo.equalsIgnoreCase("add")) {
+				//possible comma-separated list of topics
+				String[] valueArr = value.split(",\\s*");
+				StringBuilder htmlToRender = new StringBuilder();
+				
+				List<String> diseaseList = new ArrayList<String>();
+				if(convo.getOtherDiseaseCategories() != null){
+					for(int index = 0; index < convo.getOtherDiseaseCategories().length; index++){
+						diseaseList.add(convo.getOtherDiseaseCategories()[index]);
+					}
+				}
+				for (String diseaseName : valueArr) {
+					if (diseaseName == null || diseaseName.trim().length() == 0) {
+						continue;
+					}
+					diseaseName = JavaExtensions.capitalizeWords(diseaseName);
+					diseaseList.add(diseaseName);
+					htmlToRender.append(
+	    	    			"<a class=\"topicTitle\" href=\"#\">"+diseaseName+"</a>&nbsp;" +
+	    	    			"<a class=\"deleteTopicLink\" href=\"#\" rel=\""+diseaseName+"\">X</a>"
+	        	    	);
+				}
+				try{
+					String[] diseaseArr = new String[diseaseList.size()];
+					for(int index = 0; index < diseaseList.size(); index++){
+						diseaseArr[index] = diseaseList.get(index);
+					}
+					convo.setOtherDiseaseCategories(diseaseArr);
+				}catch (Exception e) {
+					e.printStackTrace();
+				}
+		    	ActionDAO.deleteActionsByConvo(convo);
+		    	String actionID = ActionDAO.saveActionGetId(new StartConvoAction(talker, convo, ActionType.START_CONVO));
+				convo.setActionID(actionID);
+				ConversationDAO.updateConvo(convo);
+				
+				renderText(htmlToRender.toString());
+    		}
+    		else if (todo.equalsIgnoreCase("remove")) {
+    			List<String> diseaseList = new ArrayList<String>();
+    			if(convo.getOtherDiseaseCategories() != null){
+					for(int index = 0; index < convo.getOtherDiseaseCategories().length; index++){
+						if(!convo.getOtherDiseaseCategories()[index].equalsIgnoreCase(value))
+							diseaseList.add(convo.getOtherDiseaseCategories()[index]);
+					}
+    			}
+				String[] diseaseArr = new String[diseaseList.size()];
+				for(int index = 0; index < diseaseList.size(); index++){
+					diseaseArr[index] = diseaseList.get(index);
+				}
+				convo.setOtherDiseaseCategories(diseaseArr);
+				ActionDAO.deleteActionsByConvo(convo);
+		    	String actionID = ActionDAO.saveActionGetId(new StartConvoAction(talker, convo, ActionType.START_CONVO));
+				convo.setActionID(actionID);
+				ConversationDAO.updateConvo(convo);
+    		}
+    	}
     }
 
 
@@ -543,8 +604,24 @@ public class Conversations extends Controller {
     		
     		//remove related actions
     		ActionDAO.deleteActionsByAnswer(answer);
-    	}
-    	else if (todo.equalsIgnoreCase("setNotHelpful")) {
+    	} else if(todo.equalsIgnoreCase("undelete")){
+    		answer.setDeleted(false);
+    		CommentsDAO.updateConvoComment(answer);
+    		
+    		//set question as Unanswered question
+    		List<CommentBean> answerList= CommentsDAO.loadConvoAnswers(answer.getConvoId());
+    		int count = 0;
+    		if(answerList != null)
+    			count = answerList.size();
+    		if(count <= 0){
+	    		ConversationBean convo = ConversationDAO.getConvoById(answer.getConvoId());
+	    		convo.setOpened(true);
+	    		ConversationDAO.updateConvo(convo);
+    		}
+    		
+    		//remove related actions
+    		ActionDAO.deleteActionsByAnswer(answer);
+    	} else if (todo.equalsIgnoreCase("setNotHelpful")) {
     		Vote notHelpfulVote = new Vote(talker, false);
     		
     		Vote oldVote = answer.getVoteByTalker(talker, answer.getNotHelpfulVotes());

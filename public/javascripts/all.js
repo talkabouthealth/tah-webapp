@@ -100,7 +100,6 @@ function saveConvo(page) {
 	
 	var questionCategory = $("#newConvoDisease").val();
 	
-	
 	//if new question if follow-up - we save id of parent convo
 	var parentConvoId = "";
 	if (page === "conversationSummary") {
@@ -422,6 +421,66 @@ function makeTopicsAutocomplete(id, parent) {
 			.appendTo( ul );
 	};
 }
+
+//Autocompete for disease - allows adding multiple disease (separated by space)
+function makeDiseaseAutocomplete(id, parent) {
+	if ($(id).size() === 0) {
+		return;
+	}
+	
+	var cache = {};
+	$(id).autocomplete({
+		minLength: 1,
+		source: function(request, response) {
+			var currentTerm = extractLast( request.term );
+			
+			if ( currentTerm in cache ) {
+				response( cache[ currentTerm ] );
+				return;
+			}
+			
+			$.ajax({
+				url: "/search/ajaxDiseaseSearch",
+				dataType: "json",
+				data: { term : currentTerm},
+				success: function( data ) {
+					cache[ currentTerm ] = data;
+					response( data );
+				}
+			});
+		},
+		search: function() {
+			// custom minLength
+			var term = extractLast( this.value );
+			if ( term.length < 1 ) {
+				return false;
+			}
+		},
+		focus: function() {
+			// prevent value inserted on focus
+			return false;
+		},
+		select: function( event, ui ) {
+			var terms = split( this.value );
+			// remove the current input
+			terms.pop();
+			// add the selected item
+			terms.push( ui.item.value );
+			// add placeholder to get the comma-and-space at the end
+			terms.push( "" );
+			this.value = terms.join( ", " );
+			$(this).change();
+			return false;
+		}
+	})
+	.data( "autocomplete" )._renderItem = function( ul, item ) {
+		return $( "<li></li>" )
+			.data( "item.autocomplete", item )
+			.append( "<a>" + item.label + "&nbsp;<span>" + item.type + "</span></a>" )
+			.appendTo( ul );
+	};
+}
+
 function split( val ) {
 	return val.split( /,\s*/ );
 }

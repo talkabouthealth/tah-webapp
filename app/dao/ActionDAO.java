@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -206,8 +207,16 @@ public class ActionDAO {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
 		}
 		List<String> cat = FeedsLogic.getCancerType(talker);
-		if(!cat.contains("All Cancer"))
-			queryBuilder.add("category", new BasicDBObject("$in", cat) );
+		cat.add(ConversationBean.ALL_CANCER);
+		
+		//queryBuilder.add("category", new BasicDBObject("$in", cat) );
+		
+		queryBuilder.add("$or", 
+				Arrays.asList(
+						new BasicDBObject("category", new BasicDBObject("$in", cat)),
+						new BasicDBObject("other_disease_categories", new BasicDBObject("$in", talker.getOtherCategories()))
+					)
+			);
 			
 		
 		DBObject query = queryBuilder.get();

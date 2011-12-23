@@ -114,6 +114,7 @@ public abstract class AbstractAction implements Action {
 				.add("type", type.toString())
 				.add("time", time)
 				.add("category", talker.getCategory())
+				.add("other_disease_categories", convo.getOtherDiseaseCategories())
 				.get();
 		
 		if (hasConvo()) {

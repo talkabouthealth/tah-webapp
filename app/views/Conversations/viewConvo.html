@@ -16,6 +16,9 @@
 		.deleteTopicLink { margin-right: 10px }
 		#topicsList, #topicsEditList { float: left }
 		#topicsList .deleteTopicLink { display: none; }
+		.deleteDiseaseLink { margin-right: 10px }
+		#diseasesList, #diseasesEditList { float: left }
+		#diseasesList .deleteDiseaseLink { display: none; }
 		
 		/* Convo title and description */
 		h1 {
@@ -129,6 +132,22 @@
    	   			return false;
    			});
 
+   			//Delete disease from other diseases
+   			$(".deleteDiseaseLink").live("click", function() {
+   	   			$(this).prev().remove();
+   	   			var disease = $(this).attr("rel");
+   	   			$(this).remove();
+
+   	   			$.post("@{Conversations.updateField()}", 
+	   					{ convoId : '${convo.id}', name: 'disease', value: disease, todo: 'remove'},
+	   					function() {
+	   						$("#diseasesList").html($("#diseasesEditList").html());
+	   					}
+	   				);
+
+   	   			return false;
+   			});
+
 			//Delete conversation from Related/Follow-Up conversations
    			$(".deleteConvoLink").live("click", function() {
    				var deleteConvoId = $(this).attr("rel");
@@ -189,6 +208,7 @@
    			makeAutocomplete("#relatedConvosInput", "convoedit");
    			makeAutocomplete("#followupConvosInput", "convoedit");
    			makeAutocomplete("#convoToMerge", "convoedit");
+   			makeDiseaseAutocomplete("#diseaseInput");
 		});
 
 		/**
@@ -258,6 +278,17 @@
    					}
    				);
 			}
+			else if (dataType === 'diseaseEdit') {
+				//possible comma-separated diseases
+				$.post("@{Conversations.updateField()}", 
+   					{ convoId : '${convo.id}', name: 'disease', value: newValue, todo: 'add'},
+   					function(html) {
+   						$(html).appendTo($("#diseasesEditList"));
+
+   	   					$("#diseasesList").html($("#diseasesEditList").html());
+   					}
+   				);
+			}
 		}
 
    		//public static void saveAnswerOrReply(String topicId, String parentId, String text) {
@@ -313,6 +344,21 @@
   			);
   			return false;
    		}
+   		undeleteAnswer = function(answerId){
+   	   		var confirmDel = confirm("Are you sure want to undelete this answer");
+   	   		if (confirmDel) {
+   	   	  		$.post("@{Conversations.updateAnswer()}", 
+    				{ answerId: answerId, todo: 'undelete', newText: ''},
+    				function(html) {
+        				alert(html);
+        				window.location.reload(true);
+    	  				//...
+    				}
+    			);
+   	   		}
+   	   		return false;
+   		}
+   		
    		function deleteAnswer(answerId) {
    	   		var confirmDel = confirm("Are you sure want to delete this answer/reply?");
    	   		if (confirmDel) {
@@ -321,6 +367,7 @@
    	   	  		$.post("@{Conversations.updateAnswer()}", 
     				{ answerId: answerId, todo: 'delete', newText: ''},
     				function(html) {
+    					window.location.reload(true);
     	  				//...
     				}
     			);
@@ -558,6 +605,57 @@
 									</div>
 								</div>
 
+								<div class='inline-edit' id="diseaseEdit">
+									<div class="suggestxt inline_display">
+										<div class="inline_full" style="display: ${convo.topics ? 'block' : 'none'}">
+											<div style="display: block; float: left; width: auto;" class="topictxt">
+                        						<div style="float: left;">Diseases: </div>
+                        						<div id="diseasesList">
+													<a class="topicTitle" href="#">${convo.category}</a>
+													#{list items: convo.otherDiseaseCategories, as: 'category'}
+														<a class="topicTitle" href="#">${category}</a>
+													#{/list}
+														
+                        						</div>
+											</div>
+											#{if talker && (talker.admin || talker.userName == convo.talker.userName) }
+												<div class="editdiv">
+													<div class="editit" style="padding-top:10px;">
+														<a href="#" class="inline_editlink">Edit</a>
+													</div>
+												</div>
+											#{/if}
+										</div>
+										<div class="inline_empty" style="display: ${!convo.topics ? 'block' : 'none'}">
+											#{if talker }
+												<div class="targetenew">
+													<a class="inline_addlink" href="#">Add Disease</a>
+												</div>
+											#{/if}
+										</div>
+						            </div>
+									<div class='inline_form'>
+										<div style="display: block; float: left; width: auto;" class="topictxt">
+                       						<div style="float: left;">Diseases: </div>
+                       						<div id="diseasesEditList">
+                       							<a class="topicTitle" href="#">${convo.category}</a>
+                        						#{list items: convo.otherDiseaseCategories, as: 'category'}
+													<a class="topicTitle" href="#">${category}</a>
+													<a class="deleteDiseaseLink" href="#" rel="${category}">X</a>
+												#{/list}
+                       						</div>
+										</div>
+										<div class="addcomCover" style="width:400px;">
+											<input type="text" id="diseaseInput" 
+												class="addcominput inline_text"  value="" style="float:left; width:215px;"/>
+						                   	<input type="submit" value=" " id="addTopicBtn" 
+						                   		class="addcomsubmit inline_add" style="float:left; width:80;"  />
+									        <div class="canclebtnz" style="float:left; width:auto;">
+									          	<a class="cancel" href="#">Done</a>
+									        </div> 
+									    </div>
+									</div>
+								</div>
                       
                       			#{if talker }
 									<div class="tagtxts">
@@ -741,6 +839,17 @@
                       		</div>
                       		
                       		#{convo/convoCommentsTree commentsList: convo.helpfulAnswers, level: 1, talker: talker /}
+                      		
+                      		
+                      		#{set deletedAnswers = convo.deletedAnswers /}
+                      		#{if deletedAnswers.size() != 0 }
+                      			<a href="#" onclick="$('#deletedAnswers').show(); return false;"
+                      				>View ${deletedAnswers.size()} Answer(s) Deleted</a>
+	                      		<div id="deletedAnswers" style="display: none; margin-top: 3px;">
+	                      			#{convo/convoDeletedCommentsTree commentsList: deletedAnswers, level: 1, talker: talker /}
+	                      		</div>	
+	                      		<br/><br/>
+                      		#{/if}
                       		
                       		#{set notHelpfulAnswers = convo.notHelpfulAnswers /}
                       		#{if notHelpfulAnswers.size() != 0 }

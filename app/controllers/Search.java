@@ -7,37 +7,28 @@ import java.util.List;
 import java.util.Map;
 
 import logic.ConversationLogic;
-import logic.FeedsLogic;
-import logic.TalkerLogic;
 import logic.TopicLogic;
+import models.ConversationBean;
+import models.DiseaseBean;
 import models.TalkerBean;
 import models.TopicBean;
 import models.actions.Action;
-import models.actions.Action.ActionType;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.queryParser.MultiFieldQueryParser;
-import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.RangeFilter;
 import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.Searcher;
 import org.apache.lucene.search.TopDocs;
 
-import dao.ConversationDAO;
-import dao.TopicDAO;
-
 import play.mvc.Controller;
-import play.mvc.With;
 import util.CommonUtil;
 import util.SearchUtil;
+import dao.ConversationDAO;
+import dao.DiseaseDAO;
+import dao.TalkerDAO;
+import dao.TopicDAO;
 
 public class Search extends Controller {
 	
@@ -102,6 +93,26 @@ public class Search extends Controller {
 		List<Map<String, String>> results = null;
 		results = makeSearch(term, allowedTypes, null);
 		renderJSON(results);
+	}
+	
+	/**
+	 * Back-end for disease autocomplete
+	 * @param term
+	 * @param parent If not null - search topic only in children of the 'parent'
+	 */
+	public static void ajaxDiseaseSearch(String term) throws Exception {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		String[] diseaseArr = new String[14];
+		diseaseArr = talker.getOtherCategories();
+		List<String> diseaseList = new ArrayList<String>();
+		if(diseaseArr != null){
+			for(int index = 0; index < diseaseArr.length; index++){
+				diseaseList.add(diseaseArr[index]);
+			}
+		}
+		diseaseList.add(talker.getCategory());
+		diseaseList.add(ConversationBean.ALL_CANCER);
+		renderJSON(diseaseList);
 	}
 	
 	/**
