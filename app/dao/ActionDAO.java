@@ -298,9 +298,11 @@ public class ActionDAO {
 		DBCursor dbCursor =	activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(FeedsLogic.ACTIONS_PRELOAD);
 		
 		List<Action> activitiesList = new ArrayList<Action>();
-		while (dbCursor.hasNext()) {
-			Action action = new PreloadAction(dbCursor.next());
-			activitiesList.add(action);
+		if(dbCursor != null && dbCursor.size() > 0){
+			while (dbCursor.hasNext()) {
+				Action action = new PreloadAction(dbCursor.next());
+				activitiesList.add(action);
+			}
 		}
 		return activitiesList;
 	}
