@@ -1,6 +1,5 @@
 #{set pageType = 'profile' /}
 #{extends 'main.html' /}
-	<style type="text/css"> #innermiddlearea { padding-top: 10px } .seeall { padding-top: 20px } /* Hide images in talker's feed */ .joinpic { display: none; } </style>
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">  var feedsPerPage = ${logic.FeedsLogic.TALKERFEEDS_PER_PAGE}; </script>
 	<script type="text/javascript" src="/public/javascripts/newview.js" ></script>
@@ -585,10 +584,6 @@
                     	</div>
 					#{/if}
 					<div class="cb"></div>
-*{
-	If the user has not made all of their information public, let's display the following text at the bottom of their profile:
-	"member310 has chosen to have all or some of their profile information private or only viewable by the community."
-}*
 #{if talker.isProf()}					
 	#{if !talker.isAllowed(models.PrivacySetting.PrivacyType.USERNAME, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_IMAGE, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_INFO, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.PROFESSIONAL_INFO, currentTalker) }
 		<div style="padding-top: 50px; clear: both;">

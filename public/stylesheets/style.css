@@ -6489,3 +6489,5 @@ margin-bottom:5px;
 	margin-top: 10px;
 	display: block;
 }
+
+#innermiddlearea { padding-top: 10px } .seeall { padding-top: 20px } /* Hide images in talker's feed */ .joinpic { display: none; }
