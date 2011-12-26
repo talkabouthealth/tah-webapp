@@ -104,7 +104,7 @@ public class ConversationBean implements Comparable<ConversationBean> {
 	//Added new field for saving cancer category.
 	private String category;
 	private String[] otherDiseaseCategories;
-	public static final String ALL_CANCER = "All Cancer";
+	public static final String ALL_CANCERS = "All Cancers";
 	
 	//More fields for the admin moderate new question feature
 	//Added to save the expert to be notifed.

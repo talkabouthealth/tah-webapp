@@ -111,7 +111,7 @@ public class Search extends Controller {
 			}
 		}
 		diseaseList.add(talker.getCategory());
-		diseaseList.add(ConversationBean.ALL_CANCER);
+		diseaseList.add(ConversationBean.ALL_CANCERS);
 		renderJSON(diseaseList);
 	}
 	
