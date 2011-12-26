@@ -48,9 +48,7 @@
 						            <div class="close" onclick="return hideHelpInfo('viewableInfo', false);"><img src="/public/images/close.jpg" alt="Close" /></div>
 						          </div>
 						          <div class="note"><strong>Notice:</strong>
-								  	Some of your profile information is private and no one else may view it. 
-								  	You may share your profile information with the TalkAboutHealth Community 
-								  	by changing your <a href="@{Profile.preferences()}">Privacy Settings</a>.
+								  	Some of your profile information is private and no one else may view it. You may share your profile information with the TalkAboutHealth Community by changing your <a href="@{Profile.preferences()}">Privacy Settings</a>.
 								  	<br/><br/>
 						          </div>
 						          <div class="cb"></div>
@@ -64,8 +62,7 @@
                       		${talker.name} 
                       		#{talker/talkerInfo talker: talker /}
                       </div>
-                    </div>
-                    <!--pph1Cover-->
+                    </div><!--pph1Cover-->
                     <table class="profiletxtCantant">
                     <tr>
                     	 #{if talker.otherCategories != null}
@@ -86,20 +83,17 @@
                       <td class="profileCantanttxtLeft"><strong>Member Since:&nbsp;</strong>${talker.regDate.format('MMM. yyyy')}</td>
                       <td class="profileCantanttxt2">
                       	<strong>Top Answers:&nbsp;</strong>
-                      	<a style="text-decoration: none" 
-                      		href="@{PublicProfile.answers(talker.name)}">${numOfTopAnswers}</a>
+                      	<a style="text-decoration: none" href="@{PublicProfile.answers(talker.name)}">${numOfTopAnswers}</a>
                       </td>
                     </tr><!--profiletxtCantant-->
                     <tr>
                       <td class="profileCantanttxtLeft">
                       	<strong>Questions:&nbsp;</strong>
-                      	<a style="text-decoration: none" 
-                      		href="@{PublicProfile.conversations(talker.name)}">${numOfStartedConvos}</a>
+                      	<a style="text-decoration: none" href="@{PublicProfile.conversations(talker.name)}">${numOfStartedConvos}</a>
                       </td>                      
                       <td class="profileCantanttxt2">
                       	<strong>Answers:&nbsp;</strong>
-                      	<a style="text-decoration: none" 
-                      		href="@{PublicProfile.answers(talker.name)}">${numOfAnswers}</a>
+                      	<a style="text-decoration: none" href="@{PublicProfile.answers(talker.name)}">${numOfAnswers}</a>
                       </td>
                     </tr>
                     </table>
@@ -126,8 +120,7 @@
 								#{else}<input type="button" onclick="joinNow();" id="postQuestionBtn" value="" />#{/else}
 							</div>
 							<div style="clear:both"></div>
-	                  	</div>
-                    <!--profiletxtCantant-->
+	                  	</div><!--profiletxtCantant-->
 							#{if talker.isProf() && talker.isAllowed(models.PrivacySetting.PrivacyType.PROFESSIONAL_INFO, currentTalker)}
 								#{if talker.isOrg()}
 								<div class="profilebio">Organization Info</div>
@@ -152,9 +145,7 @@
 			                    	#{if field.equals("gender")}
 				                    	#{if talker.fullGender}
 						                    <div class="profiletxtCantant">
-						                    	<div class="profileCantanttxt1">
-							                      	<strong>Gender:</strong> <span class="Profilepersonsub">${talker.fullGender}</span>
-							                    </div>
+						                    	<div class="profileCantanttxt1"><strong>Gender:</strong> <span class="Profilepersonsub">${talker.fullGender}</span></div>
 							                </div>
 						                #{/if}
 					                #{/if}
