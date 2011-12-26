@@ -1,24 +1,18 @@
 #{extends 'main.html' /}
-
 <style>
 	#innerpersonalarea { padding-top: 10px }
-	
 	#mtright { margin-top:-50px; }
 	#signupright { margin-right:43px; }
 </style>
-
 <script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		makeTopicsAutocomplete("#talkerkeywords");
-
 		addAjaxForm("#updateprofile");
 		addAjaxForm("#changeInsuranceForm");
 	});
 
-	/*
-		When user changes connection we reload page to update fields	
-	*/
+	/* When user changes connection we reload page to update fields */
 	function changeConnection(elem) {
 		var newConnection = $(elem).val();
 		$.post("@{Profile.changeConnection()}", 
@@ -29,7 +23,6 @@
 		);
 		return false;
 	}
-
 	changeCommunity = function(elem){
 		var newCommunity = $(elem).val();
 		if(newCommunity == ''){
@@ -183,27 +176,14 @@
 						<br/>
 							<span class="blacktext14">${otherCat} &nbsp;&nbsp;<a href="javaScript:removeCommunity('${otherCat}');" style="font-weight:bold;font-size:12px;">X</a></span>
 						#{/list}
-							<!-- <select size="1" name="talker.connection" class="personalfields" 
-								onchange="return changeCommunity(this);"
-								id="talker.connection">
-						  		<option selected value=''></option>
-						  		#{list items:diseaseList, as:'disease'}
-								    <option value="${disease.name}"
-								    #{if disease.name.equals(talker.category) } selected #{/if} 
-								    >${disease.name}</option>
-								#{/list}
-							</select>
-							  -->
-						</div>
+					</div>
 					</div>
 					<div class="personalmain" id="newCategory" style="display: none;">
 					</div>
 					<div class="personalmain" style="padding-bottom: 0px;">
 						<div class="personaltextarea" style="padding-top: 0px;">
-							 
 						</div>
 						<div>
-							 
 							<span class="blacktext14"><a href="javaScript:getAllCategories()">Join another community</a></span>
 						</div>
 					</div>
@@ -216,8 +196,6 @@
 					#{else}
 						#{include 'Profile/editfields.html' /}					
 					#{/else}
-					
-					
 				</div>
 				<div id="personalright">
 					<div id="personalrightimg">
@@ -228,7 +206,6 @@
 					</div>
 				</div>
 			#{/form}
-			
 			#{if talker.connection?.equals("Physician")}
 				<div id="personalleft1" style="padding-left: 0px; padding-top: 20px;">
 					<a name="insuranceform"></a>
@@ -276,13 +253,10 @@
 					 	Or go to the <a href="@{Home.index()}">Home</a> page.
 					</div>
 				#{/if}
-			
 			</div>
-			
 			#{ set currentPage = 'publicProfile' /}
 			#{ set currentTalker = talker /}
             #{ include 'PublicProfile/profileRight.html' /}
-			
 			<div id="signupright">
 				<div class="personalinfosignrightbox">
 					<div class="personalinfosignrighttop"></div>
