@@ -1,15 +1,8 @@
 #{set pageType = 'profile' /}
 #{extends 'main.html' /}
-	<style type="text/css">
-		#innermiddlearea { padding-top: 10px }
-		.seeall { padding-top: 20px }
-		/* Hide images in talker's feed */
-		.joinpic { display: none; }
-	</style>
+	<style type="text/css"> #innermiddlearea { padding-top: 10px } .seeall { padding-top: 20px } /* Hide images in talker's feed */ .joinpic { display: none; } </style>
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
-	<script type="text/javascript">
-		var feedsPerPage = ${logic.FeedsLogic.TALKERFEEDS_PER_PAGE};
-	</script>
+	<script type="text/javascript">  var feedsPerPage = ${logic.FeedsLogic.TALKERFEEDS_PER_PAGE}; </script>
 	<script type="text/javascript" src="/public/javascripts/newview.js" ></script>
   <div id="managtopic">
   	#{include 'header.html' /}
@@ -27,36 +20,22 @@
 						      <div class="popboxWraper">
 						        <div class="popbox2">
 						          <div class="closecover" style="clear: none; float: right;">
-						            <div class="close" onclick="return hideHelpInfo('provideInfo', false);">
-						            	<img src="/public/images/close.jpg" alt="Close" /></div>
-						          </div>
-						          <div class="note">
-								  	<strong>Notice:</strong>
+						            <div class="close" onclick="return hideHelpInfo('provideInfo', false);"><img src="/public/images/close.jpg" alt="Close" /></div></div>
+						          <div class="note"><strong>Notice:</strong>
 								  	#{if talker.isProf() }
-								    	You have not provided Personal Info. 
-									  	You may provide this information using the 
+								    	You have not provided Personal Info. You may provide this information using the 
 									  	<a href="@{Profile.edit()}">Edit Profile</a> page. 
-									  	<br/>
-									  	<br/>
-									  	Your Personal Info will never be viewable by the public.
+									  	<br/><br/> Your Personal Info will never be viewable by the public.
 								    #{/if}
 								    #{else}
-								    	You have not provided Personal Info or Health Info. 
-									  	You may provide this information using the 
-									  	<a href="@{Profile.edit()}">Edit Profile</a> and 
-									  	<a href="@{Profile.healthDetails()}">Edit Health Info</a> pages. 
-									  	<br/>
-									  	<br/>
-									  	Your Personal Info and Health Info will never be viewable by the public.
+								    	You have not provided Personal Info or Health Info. You may provide this information using the 
+									  	<a href="@{Profile.edit()}">Edit Profile</a> and <a href="@{Profile.healthDetails()}">Edit Health Info</a> pages. 
+									  	<br/><br/>Your Personal Info and Health Info will never be viewable by the public.
 								    #{/else}
-								  	
-								  	<br/>
-								  	<br/>
+								  	<br/><br/>
 						          </div>
 						          <div class="cb"></div>
-						        </div>
-						        <!--popbox2-->
-						
+						        </div><!--popbox2-->
 						      </div>
 						      <div class="cb"></div>
 						</div> 
@@ -66,21 +45,16 @@
 						      <div class="popboxWraper">
 						        <div class="popbox2">
 						          <div class="closecover" style="clear: none; float: right;">
-						            <div class="close" onclick="return hideHelpInfo('viewableInfo', false);">
-						            	<img src="/public/images/close.jpg" alt="Close" /></div>
+						            <div class="close" onclick="return hideHelpInfo('viewableInfo', false);"><img src="/public/images/close.jpg" alt="Close" /></div>
 						          </div>
-						          <div class="note">
-								  	<strong>Notice:</strong>
+						          <div class="note"><strong>Notice:</strong>
 								  	Some of your profile information is private and no one else may view it. 
 								  	You may share your profile information with the TalkAboutHealth Community 
 								  	by changing your <a href="@{Profile.preferences()}">Privacy Settings</a>.
-								  	<br/>
-								  	<br/>
+								  	<br/><br/>
 						          </div>
 						          <div class="cb"></div>
-						        </div>
-						        <!--popbox2-->
-						
+						        </div><!--popbox2-->
 						      </div>
 						      <div class="cb"></div>
 						</div> 
@@ -107,8 +81,7 @@
 							${talker.thankYouList.size()}
 						</a>
 					  </td>
-                    </tr>
-                    <!--profiletxtCantant-->
+                    </tr><!--profiletxtCantant-->
                     <tr>
                       <td class="profileCantanttxtLeft"><strong>Member Since:&nbsp;</strong>${talker.regDate.format('MMM. yyyy')}</td>
                       <td class="profileCantanttxt2">
@@ -116,8 +89,7 @@
                       	<a style="text-decoration: none" 
                       		href="@{PublicProfile.answers(talker.name)}">${numOfTopAnswers}</a>
                       </td>
-                    </tr>
-                    <!--profiletxtCantant-->
+                    </tr><!--profiletxtCantant-->
                     <tr>
                       <td class="profileCantanttxtLeft">
                       	<strong>Questions:&nbsp;</strong>
@@ -161,7 +133,6 @@
 								<div class="profilebio">Organization Info</div>
 			                    <div class="topicborder"></div>
 								#{/if}				
-										
 								#{if talker.profStatement}
 									#{ifnot talker.isOrg()}
 									<div class="profilebio">Professional Statement</div>
@@ -172,18 +143,11 @@
 								#{if talker.isOrg()}
 								#{/if}							
 								#{elseif talker.isProf()}
-								<div class="Profileperson">								
-								Professional Info
-								</div>
-			                    <div class="topicborder"></div>						
+									<div class="Profileperson">Professional Info</div><div class="topicborder"></div>						
 								#{/elseif}
 								#{else}
-								<div class="Profileperson">								
-								Profile Info
-								</div>
-			                    <div class="topicborder"></div>								
+									<div class="Profileperson">Profile Info</div><div class="topicborder"></div>								
 								#{/else}
-			                    
 			                    #{list items: logic.TalkerLogic.PROF_FIELDS_MAP.keySet(), as: 'field'}
 			                    	#{if field.equals("gender")}
 				                    	#{if talker.fullGender}
@@ -197,9 +161,7 @@
 					                #{elseif field.equals("age")}
 				                    	#{if talker.age}
 						                    <div class="profiletxtCantant">
-						                      <div class="profileCantanttxt1">
-						                      	<strong>Age:</strong> <span class="Profilepersonsub">${talker.age}</span>
-						                      </div>
+						                      <div class="profileCantanttxt1"><strong>Age:</strong> <span class="Profilepersonsub">${talker.age}</span></div>
 						                    </div>
 					                    #{/if}
 					                #{/elseif}
@@ -209,8 +171,7 @@
 						                    	<div class="profileCantanttxt1">
 						                      	<strong>Webpage:</strong> 
 						                      	<span class="Profilepersonsub">
-						                      		<a href="${talker.webpage.startsWith('http') ? talker.webpage : 'http://'+talker.webpage}"
-						                      			target="_blank">${talker.webpage}</a>
+						                      		<a href="${talker.webpage.startsWith('http') ? talker.webpage : 'http://'+talker.webpage}" target="_blank">${talker.webpage}</a>
 						                      	</span>
 						                      </div>
 							                </div>
@@ -248,9 +209,7 @@
 						                <div class="profiletxtCantant">
 					                    	<div class="profileCantanttxt1">
 					                      	<strong>Contact phone:</strong>
-					                      	<span class="Profilepersonsub">
-					                      		${talker.profInfo.get("pract_phone")}
-					                      	</span>
+					                      	<span class="Profilepersonsub">${talker.profInfo.get("pract_phone")}</span>
 					                      </div>
 						                </div>
 						                #{/if}
@@ -336,8 +295,7 @@
 			                    #{/list}
 			                    #{if talker.insuranceAccepted?.size() > 0 }
 			                    	<div class="profiletxtCantant">
-										<div class="profileCantanttxt1">
-											<br/>
+										<div class="profileCantanttxt1"><br/>
 			                      			<strong>Insurance accepted:</strong> <br/>
 			                      			#{list items: talker.insuranceAccepted, as: 'insurance' }
 			                      				${insurance}<br/>
@@ -355,7 +313,6 @@
 							#{if talker.isProf() && talker.isAllowed(models.PrivacySetting.PrivacyType.PROFESSIONAL_INFO, currentTalker)}
 								#{ifnot talker.connection.equals("Physician")}
 									<br/>
-									
 									#{if talker.city}
 					                    <div class="profiletxtCantant">
 					                      <div class="profileCantanttxt1">
@@ -551,7 +508,6 @@
 											</li>
 										#{/elseif}
 									#{/list}
-									
 									#{if talkerDisease.symptomDate}
 										<li class="blacktext12"><b>Date of first symptom</b>: 
 											<span class="blacktext">${talkerDisease.symptomDate?.format('MM/dd/yyyy')}</span>
@@ -654,21 +610,17 @@
 			<b>${talker.name}</b> has chosen to have all or some of their profile information private or only viewable by the community.</div>
 	#{/if}
 #{/else}
-                  </div>
-                  <!--profileCatant-->
+                  </div><!--profileCatant-->
                   <div class="cb"></div>
                 </div>
-			  </div>
-            	<!--mtleft-->
+			  </div><!--mtleft-->
             	#{ set currentPage = 'publicProfile' /}
             	#{ include 'PublicProfile/profileRight.html' /}
-            <!--mtright-->
-            <div class="cb"></div>
-          </div>
-          <!--mtcover-->
-          <div class="cb"></div>
-        </div>
-        <div id="signupright"></div>
-      </div>
-    </div>
+            <!--mtright--><div class="cb"></div>
+          </div><!--mtcover-->
+         <div class="cb"></div>
+       </div>
+     <div id="signupright"></div>
+     </div>
    </div>
+</div>
