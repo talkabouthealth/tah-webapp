@@ -94,8 +94,14 @@
                     <!--pph1Cover-->
                     <table class="profiletxtCantant">
                     <tr>
-                      <td class="profileCantanttxtLeft"><strong>Community:</strong> ${talker.category}</td>
-                      <td class="profileCantanttxt2">
+                    	 #{if talker.otherCategories != null}
+		                      <td class="profileCantanttxtLeft"><strong>Communities:</strong> 
+		                      ${talker.category}#{list items: talker.otherCategories, as: 'cancerType'}, ${cancerType}#{/list}</td>
+	                    #{/if}
+	                    #{else}
+	                    	<td class="profileCantanttxtLeft"><strong>Community:</strong> ${talker.category}</td>
+	                    #{/else}
+	                     <td class="profileCantanttxt2">
                       	<strong>Thank You's:</strong>
                       	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.name, 'thankyous')}">
 							${talker.thankYouList.size()}
