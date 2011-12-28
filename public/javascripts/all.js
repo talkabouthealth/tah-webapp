@@ -423,7 +423,7 @@ function makeTopicsAutocomplete(id, parent) {
 }
 
 //Autocompete for disease - allows adding multiple disease (separated by space)
-function makeDiseaseAutocomplete(id, parent) {
+function makeDiseaseAutocomplete(id, convoId) {
 	if ($(id).size() === 0) {
 		return;
 	}
@@ -442,7 +442,7 @@ function makeDiseaseAutocomplete(id, parent) {
 			$.ajax({
 				url: "/search/ajaxDiseaseSearch",
 				dataType: "json",
-				data: { term : currentTerm},
+				data: { term : currentTerm, convoId: convoId},
 				success: function( data ) {
 					cache[ currentTerm ] = data;
 					response( data );
@@ -476,7 +476,7 @@ function makeDiseaseAutocomplete(id, parent) {
 	.data( "autocomplete" )._renderItem = function( ul, item ) {
 		return $( "<li></li>" )
 			.data( "item.autocomplete", item )
-			.append( "<a>" + item.label + "&nbsp;<span>" + item.type + "</span></a>" )
+			.append( "<a>" + item.label + "&nbsp;</a>" )
 			.appendTo( ul );
 	};
 }
