@@ -63,11 +63,7 @@
 	   				);
    				return false;
    			});
-			$(".flagAnswerLink").live("click", function() {
-				flagType = "answer";
-				flagId = $(this).attr("rel");
-				showPopup("#flagPopup", 200);
-			});
+			
 			//Delete topic from topics (tags)
    			$(".deleteTopicLink").live("click", function() {
    	   			$(this).prev().remove();
@@ -132,43 +128,19 @@
    	   			}
 				return false;
 			});
-   			$("#postFollowupLink").click(function() {
-				return showStartConvoDialog("question");
-			});
-   			$('.inline-edit').inlineEdit(
-		  		{ hover: '', saveFunction: saveData, updateFunction: updateData}
-		  	);
-   			makeTopicsAutocomplete("#topicInput");
-   			makeAutocomplete("#relatedConvosInput", "convoedit");
-   			makeAutocomplete("#followupConvosInput", "convoedit");
-   			makeAutocomplete("#convoToMerge", "convoedit");
-   			makeDiseaseAutocomplete("#diseaseInput",'${convo.id}');
+   			startWindow();
 		});
-
 		/** Called after inline editing of title/details/summary/etc. */
 		function saveData(dataType, newValue) {
 			if (dataType === 'titleEdit') {
-				$.post("@{Conversations.updateField()}", 
-   					{ convoId : '${convo.id}', name: 'title', value: newValue},
-   					function() {}
-   				);
+				$.post("@{Conversations.updateField()}", { convoId : '${convo.id}', name: 'title', value: newValue},function() {});
 			} else if (dataType === 'detailsEdit') {
-				$.post("@{Conversations.updateField()}", 
-   					{ convoId : '${convo.id}', name: 'details', value: newValue},
-   					function() {}
-   				);
+				$.post("@{Conversations.updateField()}", { convoId : '${convo.id}', name: 'details', value: newValue},function() {});
 			} else if (dataType === 'summaryEdit') {
-				$.post("@{Conversations.updateField()}", 
-   					{ convoId : '${convo.id}', name: 'summary', value: newValue},
-   					function() {}
-   				);
+				$.post("@{Conversations.updateField()}", { convoId : '${convo.id}', name: 'summary', value: newValue},function() {});
 			} else if (dataType.indexOf('answerEdit') == 0) {
 				var answerId = dataType.substring(10);
-				
-	   	   		$.post("@{Conversations.updateAnswer()}", 
-	  				{ answerId: answerId, todo: 'update', newText: newValue},
-	  				function(html) {}
-	  			);
+	   	   		$.post("@{Conversations.updateAnswer()}",{ answerId: answerId, todo: 'update', newText: newValue},function(html) {});
 			}
 		}
 		/** Called after editing lists - topics, related/follow-up conversations */
@@ -189,8 +161,7 @@
    	   					$("#followupConvosList").html($("#followupConvosEditList").html());
    					}
    				);
-			} else if (dataType === 'topicsEdit') {
-				//possible comma-separated topics
+			} else if (dataType === 'topicsEdit') { //possible comma-separated topics
 				$.post("@{Conversations.updateField()}", 
    					{ convoId : '${convo.id}', name: 'topic', value: newValue, todo: 'add'},
    					function(html) {
@@ -198,8 +169,7 @@
    	   					$("#topicsList").html($("#topicsEditList").html());
    					}
    				);
-			} else if (dataType === 'diseaseEdit') {
-				//possible comma-separated diseases
+			} else if (dataType === 'diseaseEdit') { //possible comma-separated diseases
 				$.post("@{Conversations.updateField()}", 
    					{ convoId : '${convo.id}', name: 'disease', value: newValue, todo: 'add'},
    					function(html) {
@@ -218,8 +188,7 @@
   				{ convoId: '${convo.id}', parentId: parentId, text: commentText},
   				function(html) {
   					$("#replyform"+parentId).before($(html));
-  					$("#saveAnswerImage"+parentId).hide();
-  					//user can post only one answer per convo
+  					$("#saveAnswerImage"+parentId).hide();//user can post only one answer per convo
   					if (parentId === '') {
   						$("#answerBtn").hide();
   	  					$("#answerFormDiv").hide();
@@ -239,8 +208,8 @@
   				function(html) {
   					hideAll();
   					$("#replyform"+parentId).before($(html));
-  					$("#saveAnswerImagePopup"+parentId).hide();
-  					//user can post only one answer per convo
+  					$("#saveAnswerImagePopup"+parentId).hide();//user can post only one answer per convo
+  					
   					if (parentId === '') {
   						$("#answerBtn").hide();
   	  					$("#answerFormDiv").hide();
@@ -251,27 +220,11 @@
   			);
   			return false;
    		}
-   		undeleteAnswer = function(answerId){
-   			var confirmDel = confirm("Are you sure want to undelete this answer");
-   			if (confirmDel) {
-   			$.post("@{Conversations.updateAnswer()}",
-   			{ answerId: answerId, todo: 'undelete', newText: ''},
-   			function(html) { window.location.reload(true); }
-   			);
-   			}
-   			return false;
-   			}
-   		function deleteAnswer(answerId) {
-   	   		var confirmDel = confirm("Are you sure want to delete this answer/reply?");
-   	   		if (confirmDel) {
-   	   	   		$("#comment"+answerId).remove();
-
-   	   	  		$.post("@{Conversations.updateAnswer()}", 
-    				{ answerId: answerId, todo: 'delete', newText: ''},
-    				function(html) { }
-    			);
-   	   		}
-   	   		return false;
+   		undeleteAnswerMain = function(answerId){
+   			$.post("@{Conversations.updateAnswer()}",{ answerId: answerId, todo: 'undelete', newText: ''},function(html) { window.location.reload(true); });
+		}
+   		function deleteAnswerMain(answerId) {
+   			$.post("@{Conversations.updateAnswer()}", { answerId: answerId, todo: 'delete', newText: ''},function(html) { window.location.reload(true); });
    		}
    		function markNotHelpful(answerId) {
    	   		var confirmDel = confirm("Are you sure you want to mark this answer as 'Not Helpful?'");
