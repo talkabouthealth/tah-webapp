@@ -296,7 +296,7 @@ public class ActionDAO {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
 		activitiesColl.ensureIndex(new BasicDBObject("time", 1));
-		DBCursor dbCursor =	activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(10);
+		DBCursor dbCursor =	activitiesColl.find(query).sort(new BasicDBObject("time", -1));//.limit(10);
 		
 		List<Action> activitiesList = new ArrayList<Action>();
 		if(dbCursor != null && dbCursor.hasNext()){
