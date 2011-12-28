@@ -143,8 +143,7 @@
 	   	   		$.post("@{Conversations.updateAnswer()}",{ answerId: answerId, todo: 'update', newText: newValue},function(html) {});
 			}
 		}
-		/** Called after editing lists - topics, related/follow-up conversations */
-		function updateData(dataType, newValue) {
+		function updateData(dataType, newValue) {/** Called after editing lists - topics, related/follow-up conversations */
 			if (dataType === 'relatedConvosEdit') {
 				$.post("@{Conversations.updateField()}", 
    					{ convoId : '${convo.id}', name: 'relatedConvos', value: newValue, todo: 'add'},
@@ -178,8 +177,7 @@
    					}
    				);
 			}
-		}
-   		//public static void saveAnswerOrReply(String topicId, String parentId, String text) {
+		} //public static void saveAnswerOrReply(String topicId, String parentId, String text) {
    		function saveAnswerOrReply(parentId) {
    	   		var commentText = $("#replytext"+parentId).val();
    			$("#replytext"+parentId).val("");
@@ -199,21 +197,16 @@
   			);
   			return false;
    		}
-
    		function saveAnswer(parentId) {
    	   		var commentText = $("#replytextPopup"+parentId).val();
    			$("#saveAnswerImagePopup"+parentId).show();
-   			$.post("@{Conversations.saveAnswerOrReply()}", 
-  				{ convoId: '${convo.id}', parentId: parentId, text: commentText},
+   			$.post("@{Conversations.saveAnswerOrReply()}", { convoId: '${convo.id}', parentId: parentId, text: commentText},
   				function(html) {
   					hideAll();
   					$("#replyform"+parentId).before($(html));
   					$("#saveAnswerImagePopup"+parentId).hide();//user can post only one answer per convo
-  					
   					if (parentId === '') {
-  						$("#answerBtn").hide();
-  	  					$("#answerFormDiv").hide();
-  	  					$("#noAnswerText").show();
+  						$("#answerBtn").hide();	$("#answerFormDiv").hide();	$("#noAnswerText").show();
   					}
   					$('.inline-edit').inlineEdit( { hover: '', saveFunction: saveData, updateFunction: updateData} );
   				}
@@ -226,55 +219,28 @@
    		function deleteAnswerMain(answerId) {
    			$.post("@{Conversations.updateAnswer()}", { answerId: answerId, todo: 'delete', newText: ''},function(html) { window.location.reload(true); });
    		}
-   		function markNotHelpful(answerId) {
-   	   		var confirmDel = confirm("Are you sure you want to mark this answer as 'Not Helpful?'");
-   	   		if (confirmDel) {
-   	   	  		$.post("@{Conversations.updateAnswer()}", 
-    				{ answerId: answerId, todo: 'setNotHelpful', newText: ''},
-    				function(html) { }
-    			);
-   	   		}
-   	   		return false;
+   		function markNotHelpfulMain(answerId) {
+   			$.post("@{Conversations.updateAnswer()}", { answerId: answerId, todo: 'setNotHelpful', newText: ''},function(html) { });
    		}
-   		function deleteConvo() {
-   	   		var confirmDel = confirm("Are you sure want to delete this conversation?");
-   	   		if (confirmDel) {
-   	   	  		$.post("@{Conversations.delete()}", 
-    				{ convoId : '${convo.id}'},
-    				function (html) { document.location = "/home"; }
-    			);
-   	   		}
-   	   		return false;
-   		}
-   		//------------ Convo replies ---------------
+   		function deleteConvoMain() {
+   			$.post("@{Conversations.delete()}", { convoId : '${convo.id}'}, function (html) { document.location = "/home"; } );
+   		}		//------------ Convo replies ---------------
    		function saveConvoReply() {
    	   		var replyText = $("#convoReplyText").val();
    	   		$("#convoReplyText").val("");
    			$("#saveConvoReplyImage").show();
-
-		$.post("@{Conversations.saveConvoReply()}", 
+			$.post("@{Conversations.saveConvoReply()}", 
 			{ convoId: '${convo.id}', text: replyText},
-			function(html) {
+				function(html) {
 				$("#convoReplyForm").before($(html));
 				$("#saveConvoReplyImage").hide();
-				$('.inline-edit').inlineEdit(
-			  		{ hover: '', saveFunction: saveData, updateFunction: updateData}
-			  	);
+				$('.inline-edit').inlineEdit({ hover: '', saveFunction: saveData, updateFunction: updateData});
 			}
 		);
 		return false;
 	}
-	//used by admin
-	function deleteChatMessage(index) {
-		var confirmDel = confirm("Are you sure want to delete this message?");
-		if (confirmDel) {
-	   		$("#chatMessage"+index).remove();
-	   	  	$.post("@{Conversations.deleteChatMessage()}", 
-				{ convoId : '${convo.id}', index: index},
-				function (html) { }
-			);
-		}
-		return false;
+	function deleteChatMessageMain(index) {//used by admin
+		$.post("@{Conversations.deleteChatMessage()}",{ convoId : '${convo.id}', index: index},function (html) { });
 	}
 	</script>
 </head>
@@ -290,7 +256,6 @@
 					<div class="mtcontent">
 						<div id="targetedtherapy">
 							<div class="suggescover">
-							
 #{if talker && !talker?.hiddenHelps?.contains('convo')}
 <div id="convoHelp" class="helpInfo">
       <div class="popboxWraper">
