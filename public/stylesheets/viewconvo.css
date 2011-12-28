@@ -1,0 +1,15 @@
+body { font-size: 14px; }
+#innermiddlearea { padding-top: 10px }
+.inline_full .deleteConvoLink { display: none; }
+.topicTitle { margin-left: 10px; }
+.deleteTopicLink { margin-right: 10px }
+#topicsList, #topicsEditList { float: left }
+#topicsList .deleteTopicLink { display: none; }
+.deleteDiseaseLink { margin-right: 10px }
+#diseasesList, #diseasesEditList { float: left }
+#diseasesList .deleteDiseaseLink { display: none; }
+/* Convo title and description */
+h1 { color:#000000;font-family:arial;font-size:20px;text-decoration:none; }
+h2 { color:#4B4B4B;font-family:Arial;font-size:14px;font-weight: normal; }
+/* for popups */
+.popboxflagzx { top: 0px; left: 0px }
