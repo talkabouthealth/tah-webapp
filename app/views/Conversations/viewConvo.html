@@ -5,12 +5,13 @@
 #{extends 'main.html' /}
 <link href="/public/stylesheets/viewconvo.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
+<script type="text/javascript" src="/public/javascripts/viewconvo.js" ></script>
 <script type="text/javascript">
 		var tid = "${convo.tid}";
 		var currentConvoId = "${convo.id}";
 		$(document).ready(function() {
 			var share = "${params.share}";
-			$("#followConvoBtn").click(function() {//replace More button with loading image
+			$("#followConvoBtn").click(function() {
 				var moreBtn = this;
 				$("#ajaxLoading").appendTo(moreBtn.parentNode).show();
 				moreBtn.style.display='none';
@@ -83,7 +84,7 @@
    				);
    				return false;
    			});
-   			startWindow();
+   			startWindow(share);
 		});
 		function mergeConvoOp(selectedConvoURL){
 	   	  		$.post("@{Conversations.mergeConvos()}",{ convoId :'${convo.id}', convoToMergeURL : selectedConvoURL}, function(html) { window.location.reload(); });
