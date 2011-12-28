@@ -96,22 +96,56 @@ public class Search extends Controller {
 	}
 	
 	/**
-	 * Back-end for disease autocomplete
+	 * Back-end for disease auto-complete
 	 * @param term
-	 * @param parent If not null - search topic only in children of the 'parent'
+	 * @param convoId
 	 */
-	public static void ajaxDiseaseSearch(String term) throws Exception {
+	public static void ajaxDiseaseSearch(String term, String convoId) throws Exception {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		ConversationBean convo = ConversationDAO.getConvoById(convoId);
 		String[] diseaseArr = new String[14];
-		diseaseArr = talker.getOtherCategories();
+		if(talker.getUserName().equalsIgnoreCase("admin")){
+			if(convo != null)
+				diseaseArr = convo.getTalker().getOtherCategories();
+		}else{
+			diseaseArr = talker.getOtherCategories();
+		}
+		
 		List<String> diseaseList = new ArrayList<String>();
 		if(diseaseArr != null){
 			for(int index = 0; index < diseaseArr.length; index++){
-				diseaseList.add(diseaseArr[index]);
+				if(term == null)
+					diseaseList.add(diseaseArr[index]);
+				else
+					if(diseaseArr[index].toLowerCase().contains(term))
+						diseaseList.add(diseaseArr[index]);
 			}
 		}
-		diseaseList.add(talker.getCategory());
-		diseaseList.add(ConversationBean.ALL_CANCERS);
+		
+		//Add talker category in list. If user is admin user then add the convo talkers category
+		if(term == null){
+			if(talker.getUserName().equalsIgnoreCase("admin"))
+				diseaseList.add(convo.getTalker().getCategory());
+			else
+				diseaseList.add(talker.getCategory());
+		}else{
+			if(talker.getUserName().equalsIgnoreCase("admin")){
+				if(convo.getTalker().getCategory().toLowerCase().contains(term))
+					diseaseList.add(convo.getTalker().getCategory());
+			}else{
+				if(talker.getCategory().toLowerCase().contains(term))
+				    diseaseList.add(talker.getCategory());
+			}
+		}
+		
+		//Add All Cancer in category
+		if(term == null)
+			diseaseList.add(ConversationBean.ALL_CANCERS);
+		else{
+			if(ConversationBean.ALL_CANCERS.toLowerCase().contains(term))
+				diseaseList.add(ConversationBean.ALL_CANCERS);
+		}
+		
 		renderJSON(diseaseList);
 	}
 	

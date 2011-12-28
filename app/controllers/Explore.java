@@ -413,6 +413,7 @@ public class Explore extends Controller {
 				memberTypeEntry = Arrays.asList(null,"Breast Cancer");
 				loadFlag = true;
 			} else {  //if("Ovarian Cancer".equals(feedType)){ //Ovarian Cancer  
+				feedType = feedType.replaceAll("&", "and");
 				memberTypeEntry = Arrays.asList(feedType); //Ovarian Cancer
 				loadFlag = true;
 			}

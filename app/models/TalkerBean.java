@@ -294,6 +294,11 @@ public class TalkerBean implements Serializable {
 		parseEmailSettings(getStringList(talkerDBObject, "email_settings"));
 		setPrivacySettings(parseSet(PrivacySetting.class, talkerDBObject, "privacy_settings"));
 		
+		Collection<String> otherCategories = (Collection<String>)talkerDBObject.get("otherCategories");
+		if (otherCategories != null) {
+			setOtherCategories(otherCategories.toArray(new String[]{}));
+		}
+		
 		Collection<DBObject> thankYousCollection = (Collection<DBObject>)talkerDBObject.get("thankyous");
 		setNumOfThankYous(thankYousCollection == null ? 0 : thankYousCollection.size());
 	}

@@ -110,15 +110,14 @@ public abstract class AbstractAction implements Action {
 	public DBObject toDBObject() {
 		DBRef talkerRef = new DBRef(DBUtil.getDB(), TalkerDAO.TALKERS_COLLECTION, new ObjectId(talker.getId()));
 		DBObject dbObject = BasicDBObjectBuilder.start()
-				.add("uid", talkerRef)
-				.add("type", type.toString())
-				.add("time", time)
-				.add("category", talker.getCategory())
-				.add("other_disease_categories", convo.getOtherDiseaseCategories())
-				.get();
-		
+							.add("uid", talkerRef)
+							.add("type", type.toString())
+							.add("time", time)
+							.add("category", talker.getCategory()).get();
+
 		if (hasConvo()) {
 			addConvo(dbObject, convo);
+			dbObject.put("other_disease_categories", convo.getOtherDiseaseCategories());
 		}
 		if (hasTopic()) {
 			addTopic(dbObject, topic);

@@ -212,6 +212,7 @@ public class ConversationBean implements Comparable<ConversationBean> {
 		parseRelatedConvos((Collection<DBRef>)convoDBObject.get("related_convos"));
 		parseFollowupConvos((Collection<DBRef>)convoDBObject.get("followup_convos"));
     	parseChatMessages((Collection<DBObject>)convoDBObject.get("messages"));
+    	setTalker(TalkerLogic.loadTalkerFromCache(convoDBObject, "uid"));
     	setFollowers(ConversationDAO.getConversationFollowers(getId()));
 	}
 	
