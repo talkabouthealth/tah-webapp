@@ -37,3 +37,25 @@ function deleteAnswer(answerId) {
   	}
   	return false;
 }
+function markNotHelpful(answerId) {
+  		var confirmDel = confirm("Are you sure you want to mark this answer as 'Not Helpful?'");
+  		if (confirmDel) {
+  			markNotHelpfulMain(answerId);
+  		}
+  		return false;
+}
+function deleteConvo() {
+  		var confirmDel = confirm("Are you sure want to delete this conversation?");
+  		if (confirmDel) {
+  			deleteConvoMain();
+  		}
+  		return false;
+}
+function deleteChatMessage(index) {
+	var confirmDel = confirm("Are you sure want to delete this message?");
+	if (confirmDel) {
+   		$("#chatMessage"+index).remove();
+   		deleteChatMessageMain(index);
+	}
+	return false;
+}
