@@ -1,4 +1,4 @@
-function startWindow(){
+function startWindow(share){
 	if (share === "twitter") {
 		showPopup("#shareTwitterDialog", 350);
 	} else if (share === "facebook") {
@@ -51,7 +51,7 @@ function startWindow(){
    	makeAutocomplete("#followupConvosInput", "convoedit");
    	makeAutocomplete("#convoToMerge", "convoedit");
    	makeDiseaseAutocomplete("#diseaseInput",currentConvoId);
-});
+}
 function addAnswer(){
 	showPopup("#addAnswer", 350);
 }
