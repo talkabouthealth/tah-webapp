@@ -210,17 +210,20 @@ public class ActionDAO {
 		cat.add(ConversationBean.ALL_CANCERS);
 		
 		//queryBuilder.add("category", new BasicDBObject("$in", cat) );
-		if(talker.getOtherCategories() == null){
+		if(talker == null) {
 			queryBuilder.add("category", new BasicDBObject("$in", cat) );
-		}else{
-			queryBuilder.add("$or", 
-				Arrays.asList(
-						new BasicDBObject("category", new BasicDBObject("$in", cat)),
-						new BasicDBObject("other_disease_categories", new BasicDBObject("$in", talker.getOtherCategories()))
-					)
-			);
+		} else {
+			if(talker.getOtherCategories() == null){
+				queryBuilder.add("category", new BasicDBObject("$in", cat) );
+			} else {
+				queryBuilder.add("$or", 
+					Arrays.asList(
+							new BasicDBObject("category", new BasicDBObject("$in", cat)),
+							new BasicDBObject("other_disease_categories", new BasicDBObject("$in", talker.getOtherCategories()))
+						)
+				);
+			}	
 		}
-		
 		DBObject query = queryBuilder.get();
 		return loadPreloadActions(query);
 	}
@@ -342,9 +345,7 @@ public class ActionDAO {
 		}
 
 		//load actions for this criterias
-		BasicDBObjectBuilder queryBuilder = 
-			BasicDBObjectBuilder.start()
-				.add("type", new BasicDBObject("$in", actionTypes));
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start().add("type", new BasicDBObject("$in", actionTypes));
 		if (firstActionTime != null) {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
 		}
