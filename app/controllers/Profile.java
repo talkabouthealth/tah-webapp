@@ -663,7 +663,9 @@ public class Profile extends Controller {
 		for (String itemName : new String[] {"symptoms", "tests", 
 				"procedures", "treatments", "sideeffects"}) {
 			HealthItemBean healthItem = HealthItemDAO.getHealthItemByName(itemName, diseaseName);
-			healthItemsMap.put(itemName, healthItem);
+			if(healthItem != null)
+				if(healthItem.getChildren() != null && healthItem.getChildren().size() > 0)
+					healthItemsMap.put(itemName, healthItem);
 		}
 		
 		render(talker, talkerDisease, disease, healthItemsMap, verifiedEmail);
@@ -672,7 +674,9 @@ public class Profile extends Controller {
 	public static void saveHealthDetails(TalkerDiseaseBean talkerDisease, String section) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-		final String diseaseName = "Breast Cancer";
+		try{
+		final String diseaseName = talker.getCategory();
+		
 		DiseaseBean disease = DiseaseDAO.getByName(diseaseName);
 		
 		parseHealthQuestions(disease, talkerDisease);
@@ -698,6 +702,9 @@ public class Profile extends Controller {
 		TalkerDiseaseDAO.saveTalkerDisease(talkerDisease);
 		
 		ActionDAO.saveAction(new UpdateProfileAction(talker, ActionType.UPDATE_HEALTH));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		renderText("ok");
 	}
 	
@@ -708,13 +715,18 @@ public class Profile extends Controller {
 	 */
 	private static void parseHealthQuestions(DiseaseBean disease, TalkerDiseaseBean talkerDisease) {
 		Map<String, String[]> paramsMap = params.all();
-		
 		Map<String, List<String>> healthInfo = new HashMap<String, List<String>>();
-		for (DiseaseQuestion question : disease.getQuestions()) {
-			String[] values = paramsMap.get(question.getName());
-			if (values != null && values[0].length() != 0) {
-				healthInfo.put(question.getName(), Arrays.asList(values));
+		try{
+			for(int index = 0; index < disease.getQuestions().size(); index++){
+				DiseaseQuestion question = disease.getQuestions().get(index);
+				String[] values = paramsMap.get(question.getName());
+				
+				if (values != null && values[0].length() != 0) {
+					healthInfo.put(question.getName(), Arrays.asList(values));
+				}
 			}
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
 		talkerDisease.setHealthInfo(healthInfo);
 	}

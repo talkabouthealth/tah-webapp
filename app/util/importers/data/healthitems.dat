@@ -1,3 +1,4 @@
+---Breast Cancer
 --symptoms
 -Empty
 Lump in breast
@@ -57,21 +58,42 @@ Prophylactic Mastectomy
 -Chemotherapy
 Abraxane (paclitaxel)
 Adriamycin (doxorubicin)
-carboplatin (Paraplatin)
+Aldesleukin (Proleukin)
+Carboplatin (Paraplatin)
+Carmustine (BiCNU)
+Cisplatin (Platinol, Platinol-AQ)
+Crizotinib (Xalkori)
+Cyclophosphamide (Cytoxan)Erlotinib Hydrochloride (Tarceva)
 Cytoxan (cyclophosphamide)
-daunorubic (Cerubidine, DaunoXome)
+Daunorubic (Cerubidine, DaunoXome)
+Dacarbazine (DTIC-Dome)
+Docetaxel (Taxotere)
 Doxil (doxorubicin)
+Doxorubicin (Adriamycin Rubex)
 Ellence (epirubicin)
-fluorouracil (Adrucil)
+Etoposide Phosphate (Toposar VePesid)
+Fluorouracil (Adrucil)
+Fotemustine (Muphoran)
 Gemzar (gemcitabine)
-lxempra (ixabepilone)
-methotrexate (Amethoprerin, Mexate, Folex)
-mitoxantrone (Navantrone)
+Ifosfamide (Ifex) {(Mesna (Mesnex) prevention of hemorrhagic cystitis induced by Ifosfamide}
+Iressa (Gefitinib)
+Ipilimumab (Yervoy)
+Irinotecan (Camptosar)
+Lomustine (CeeNU)
+Lxempra (ixabepilone)
+Methotrexate (Amethoprerin, Mexate, Folex)
+Mitoxantrone (Navantrone)
 Navelbine (vinorelbine)
+Paclitaxel (Taxol)
+Pemetrexed (Alimta)
 Taxol (paclitaxel)
 Taxotere (docetaxel)
-thiotepa (Thioplex)
+Temozolomide (Methazolastone, Temodar)
+Thiotepa (Thioplex)
+Topotecan Hydrochloride (Hycamtin)
+Vinblastine (Velban, Velsar)
 vincristine (Oncovin, Vinacasar PES, Vincrex)
+Vinorelbine (Navelbine)
 Xeloda (capecitabine)
 -Hormonal Therapy
 Aromasin (exemestane)
@@ -87,6 +109,549 @@ Avastin (bevacizumab)
 -Radiation Therapy
 External radiation
 Internal radiation
+
+--sideeffects
+Abdominal pain
+Addiction
+Allergic reactions
+Anemia
+Anxiety
+Appetite changes
+Armpit discomfort
+Back pain
+Bleeding and bruising
+Blood clots and phlebitis
+Bone and joint pain
+Breating problems
+Navelbine (vinorelbine)
+Burning at radiation site
+Chest pain
+Cold and flu symptoms
+Constipation
+Coughing
+Dhydration
+Delayed wound healing
+Depression
+Diarrhea
+Dizzyness
+Dry mouth
+Dry skin
+Electrolyte imbalance
+Endmetriosis
+Fainting
+Fatigue
+Fertility issues
+Fever
+Gas (Flatulence)
+Hair loss and Changes
+Hand-Foot Syndrome (HFS)
+Headaches
+Hearing problems
+Heart problems
+Heartburn or GERD
+Hematoma (Blood Build-up)
+High Blood Pressure
+High cholesterol
+Hot flashes
+Infection
+Injection site reaction
+Insomnia (Trouble Sleeping)
+Itching
+Joint pain (arthralgia)
+Kidney problems
+Leg cramps
+Liver Problems (Hepatotoxicity)
+Loss of Libido
+Low Blood Pressure (Hypotension)
+Lung problems
+Lymphedema
+Memory loss
+Menopause and Menopausal
+Symptoms
+Mood Swings
+Mouth and Throat Sores (Myalgias)
+Nail Changes
+Nausea
+Neuropathy
+Nose bleeds
+Numbness
+Osteonecrosis of the Jaw
+Osteoporosis (Bone Loss)
+Pain
+Phantom Breast Pain
+Post-Traumatic Stress Disorder (PTSD)
+Rash
+Runny nose
+Scar Tissue Formation
+Seroma (FLuid Build-up)
+Skin discoloration
+Skin Sensitivity
+Sore Throat
+Swallowing Problems
+Sweating
+Swelling
+Tast and smell changes
+Urinary Tract Infection
+Urine Discoloration
+Vaginial Discharge
+Vaginal Dryness
+Vision and Eye Problems
+Vomiting
+Weakness
+Weight changes
+
+---Ovarian Cancer
+--symptoms
+-Empty
+Unusual vaginal bleeding or discharge from your vagina
+Pain in the pelvic or abdominal area or lower abdomen
+Pressure or pain in the abdomen, pelvis, back, or legs
+Back pain that is unexplained and gets worse
+A swollen or bloated abdomen
+Feeling full quickly while eating
+A change in your bathroom habits, such as having to pass urine very badly or very often
+Heavy feeling in pelvis
+Weight gain or loss
+Gas, nausea, vomiting, indigestion, constipation, diarrhea, or loss of appetite
+Feeling tired all the time
+Shortness of breath
+
+--tests
+-Empty
+Physical exam
+Pelvic exam
+Complete blood cell count 
+Blood chemistries
+Pregnancy test (serum HCG)
+Ultrasound
+Transvaginal ultrasound (sonography)
+Cat Scan (CT) of the pelvis or abdomen.
+MRI of the pelvis or abdomen
+Chest x-ray.
+Bone scan
+Barium enema x-ray (lower intestine).
+Colonoscopy
+Tumor Marker CA-125
+Estradiol
+Genetic tests for the KRAS-variant
+BRACA-1 / BRACA-2 Screen
+
+--procedures
+-Empty
+Biopsy of tissue or fluid in abdomen
+Lymph node removal
+Laparoscopy
+Laparotomy
+Hysterectomy
+Bilateral salpingo-oophorectomy 
+Partial or complete removal of the omentum
+Debulking or optimal cytoreduction 
+
+--treatments
+-Chemotherapy
+Abraxane (paclitaxel)
+Adriamycin (doxorubicin)
+Altretamine (Hexalen)
+Bleomycin (Blenoxane)
+Carboplatin (Paraplatin)
+Cisplatin (Platinol)
+Cytoxan (cyclophosphamide)
+Cyclophosphamide (Cytoxan)
+Daunorubic (Cerubidine, DaunoXome)
+Dactinomycin (Cosmegen)
+Doxil (doxorubicin)
+Ellence (epirubicin)
+Etoposide (Eposin)
+fluorouracil (Adrucil)
+Gemzar (gemcitabine)
+Ifosfamide (Ifex)
+Lxempra (ixabepilone)
+Methotrexate (Amethoprerin, Mexate, Folex)
+Mitoxantrone (Navantrone)
+Melphalan (Alkeran)
+Navelbine (vinorelbine)
+Oxaliplatin (Eloxatin)
+Pemetrexed (Alimta)
+Paxil (Paroxetine)
+Taxol (paclitaxel)
+Taxotere (docetaxel)
+Thiotepa (Thioplex)
+Topotecan (Hycamtin)
+Trinotecan (Irinotecan)
+Vincristine (Oncovin, Vinacasar PES, Vincrex)
+Xeloda (capecitabine)
+-Hormonal Therapy
+Aromasin (exemestane)
+Evista (raloxifene)
+Fareston (toremifene)
+Faslodex (fulvestrant)
+Femara (letrozole)
+Letrozole (Femara)
+Tamoxifen
+-Targeted Therapy
+Avastin (bevacizumab)
+Bevacizumab (Avastin)
+Farletuzumab (Morphotek)
+Herceptin (trastuzumab)
+Lapatinib (Tykerb)
+Trastuzumab (Herceptin)
+Tykerb (lapatinib)
+-Radiation Therapy
+External radiation
+Internal radiation
+
+--sideeffects
+Abdominal pain
+Addiction
+Allergic reactions
+Anemia
+Anxiety
+Appetite changes
+Armpit discomfort
+Back pain
+Bleeding and bruising
+Blood clots and phlebitis
+Bone and joint pain
+Breating problems
+Navelbine (vinorelbine)
+Burning at radiation site
+Chest pain
+Cold and flu symptoms
+Constipation
+Coughing
+Dhydration
+Delayed wound healing
+Depression
+Diarrhea
+Dizzyness
+Dry mouth
+Dry skin
+Electrolyte imbalance
+Endmetriosis
+Fainting
+Fatigue
+Fertility issues
+Fever
+Gas (Flatulence)
+Hair loss and Changes
+Hand-Foot Syndrome (HFS)
+Headaches
+Hearing problems
+Heart problems
+Heartburn or GERD
+Hematoma (Blood Build-up)
+High Blood Pressure
+High cholesterol
+Hot flashes
+Infection
+Injection site reaction
+Insomnia (Trouble Sleeping)
+Itching
+Joint pain (arthralgia)
+Kidney problems
+Leg cramps
+Liver Problems (Hepatotoxicity)
+Loss of Libido
+Low Blood Pressure (Hypotension)
+Lung problems
+Lymphedema
+Memory loss
+Menopause and Menopausal
+Symptoms
+Mood Swings
+Mouth and Throat Sores (Myalgias)
+Nail Changes
+Nausea
+Neuropathy
+Nose bleeds
+Numbness
+Osteonecrosis of the Jaw
+Osteoporosis (Bone Loss)
+Pain
+Phantom Breast Pain
+Post-Traumatic Stress Disorder (PTSD)
+Rash
+Runny nose
+Scar Tissue Formation
+Seroma (FLuid Build-up)
+Skin discoloration
+Skin Sensitivity
+Sore Throat
+Swallowing Problems
+Sweating
+Swelling
+Tast and smell changes
+Urinary Tract Infection
+Urine Discoloration
+Vaginial Discharge
+Vaginal Dryness
+Vision and Eye Problems
+Vomiting
+Weakness
+Weight changes
+
+---Melanoma
+--symptoms
+-Empty
+Change in an existing mole
+Development of a new, unusual-looking growth on skin or areas of body
+
+--tests
+-Empty
+Skin exams at home
+Skin exams by a trained professional
+First diagnosed using ABCDE (Asymmetry, Border, Color, Dimension, Evolution)
+Punch biopsy
+Excisional biopsy
+Incisional biopsy
+Wide local excision (surgical procedure to remove some of the normal tissue surrounding the area where melanoma was found to check for cancer cells)
+Chest x-ray
+CT scan (CAT scan)
+MRI  (magnetic resonance imaging)
+PET scan (positron emission tomography scan)
+Laboratory tests of blood and urine
+Blood chemistry test
+LDH test (blood is checked for an enzyme called lactate dehydrogenase)
+S-100 protein marker
+
+--procedures
+-Empty
+Simple incision
+Wide local excision
+Lymphadenectomy
+Sentinel lymph node biopsy
+Amputation
+Skin grafting
+Lymph node mapping
+
+--treatments
+-Chemotherapy
+Aldesleukin (Proleukin)
+Carmustine (BiCNU)
+Cisplatin (Platinol)
+Dacarbazine (DTIC-Dome)
+Docetaxel (Taxotere)
+Fotemustine (Muphoran)
+lomustine (CeeNU)
+Ipilimumab (Yervoy)
+Paclitaxel (Taxol)
+Temozolomide (Methazolastone, Temodar) 
+Vinblastine (Velban, Velsar)
+-Targeted Therapy
+Vemurafenib (Zelboraf)
+-Biological Therapy (immunotherapy)
+Interleukin-2 (Proleukin)
+Interferon alpha-2b (Roferon-A)
+Peginterferon (Sylatron)
+-Radiation Therapy
+External radiation
+Internal radiation
+-Vaccine Therapy
+Yes
+No
+
+--sideeffects
+Abdominal pain
+Addiction
+Allergic reactions
+Anemia
+Anxiety
+Appetite changes
+Armpit discomfort
+Back pain
+Bleeding and bruising
+Blood clots and phlebitis
+Bone and joint pain
+Breating problems
+Navelbine (vinorelbine)
+Burning at radiation site
+Chest pain
+Cold and flu symptoms
+Constipation
+Coughing
+Dhydration
+Delayed wound healing
+Depression
+Diarrhea
+Dizzyness
+Dry mouth
+Dry skin
+Electrolyte imbalance
+Endmetriosis
+Fainting
+Fatigue
+Fertility issues
+Fever
+Gas (Flatulence)
+Hair loss and Changes
+Hand-Foot Syndrome (HFS)
+Headaches
+Hearing problems
+Heart problems
+Heartburn or GERD
+Hematoma (Blood Build-up)
+High Blood Pressure
+High cholesterol
+Hot flashes
+Infection
+Injection site reaction
+Insomnia (Trouble Sleeping)
+Itching
+Joint pain (arthralgia)
+Kidney problems
+Leg cramps
+Liver Problems (Hepatotoxicity)
+Loss of Libido
+Low Blood Pressure (Hypotension)
+Lung problems
+Lymphedema
+Memory loss
+Menopause and Menopausal
+Symptoms
+Mood Swings
+Mouth and Throat Sores (Myalgias)
+Nail Changes
+Nausea
+Neuropathy
+Nose bleeds
+Numbness
+Osteonecrosis of the Jaw
+Osteoporosis (Bone Loss)
+Pain
+Phantom Breast Pain
+Post-Traumatic Stress Disorder (PTSD)
+Rash
+Runny nose
+Scar Tissue Formation
+Seroma (FLuid Build-up)
+Skin discoloration
+Skin Sensitivity
+Sore Throat
+Swallowing Problems
+Sweating
+Swelling
+Tast and smell changes
+Urinary Tract Infection
+Urine Discoloration
+Vaginial Discharge
+Vaginal Dryness
+Vision and Eye Problems
+Vomiting
+Weakness
+Weight changes
+
+---Lung Cancer
+--symptoms
+-Empty
+Chest pain
+Chest discomfort.
+Shortness of breath
+Facial swelling
+Fever
+Hoarseness or changing voice
+Swallowing difficulty
+Weakness
+Cough that doesn't go away
+Coughing up blood; Streaks of blood in sputum (mucus coughed up from the lungs) Bloody sputum (phlegm)
+Fatigue feeling tired
+Losing weight without trying; Weight loss for no known reason.
+Loss of appetite
+Wheezing
+Trouble breathing..
+Bone pain or tenderness
+Eyelid drooping
+Facial paralysis
+Joint pain
+Nail problems
+Shoulder pain
+Swelling of the face or arms
+
+--tests
+-Empty
+Physical exam and history
+Complete blood count (CBC)
+Laboratory tests: medical procedures that test samples of tissue, blood, urine
+Chest x-ray
+CT Scan (Cat Scan)
+PET Scan (positron emission tomography scan)
+Sputum Test (cytology)
+Fine-needle aspiration (FNA) biopsy of the lung
+Bronchoscopy
+Thoracoscopy
+Thoracentesis
+Light and electron microscopy
+Immunohistochemistry study
+MRI (magnetic resonance imaging)
+Radionuclide bone scan
+Endoscopic ultrasound 
+Mediastinoscopy with biopsy
+Open lung biopsy
+Pleural biopsy
+Video-assisted thoracoscopy
+Low-dose helical CT
+
+--procedures
+-Empty
+Prophylactic cranial irradiation
+Wedge resection 
+Segmental resection 
+Lobectomy 
+Pneumonectomy 
+Laser therapy
+Photodynamic therapy
+Cryotherapy
+Radiofrequency ablation (RFA)
+
+--treatments
+-Radiation Therapy
+External radiation
+Internal radiation
+-Chemotherapy
+Abraxane (paclitaxel)
+Adriamycin (doxorubicin)
+Aldesleukin (Proleukin)
+Carboplatin (Paraplatin)
+Carmustine (BiCNU)
+Cisplatin (Platinol, Platinol-AQ)
+Crizotinib (Xalkori)
+Cyclophosphamide (Cytoxan)Erlotinib Hydrochloride (Tarceva)
+Cytoxan (cyclophosphamide)
+Daunorubic (Cerubidine, DaunoXome)
+Dacarbazine (DTIC-Dome)
+Docetaxel (Taxotere)
+Doxil (doxorubicin)
+Doxorubicin (Adriamycin Rubex)
+Ellence (epirubicin)
+Etoposide Phosphate (Toposar VePesid)
+Fluorouracil (Adrucil)
+Fotemustine (Muphoran)
+Gemzar (gemcitabine)
+Ifosfamide (Ifex) {(Mesna (Mesnex) prevention of hemorrhagic cystitis induced by Ifosfamide}
+Iressa (Gefitinib)
+Ipilimumab (Yervoy)
+Irinotecan (Camptosar)
+Lomustine (CeeNU)
+Lxempra (ixabepilone)
+Methotrexate (Amethoprerin, Mexate, Folex)
+Mitoxantrone (Navantrone)
+Navelbine (vinorelbine)
+Paclitaxel (Taxol)
+Pemetrexed (Alimta)
+Taxol (paclitaxel)
+Taxotere (docetaxel)
+Temozolomide (Methazolastone, Temodar)
+Thiotepa (Thioplex)
+Topotecan Hydrochloride (Hycamtin)
+Vinblastine (Velban, Velsar)
+vincristine (Oncovin, Vinacasar PES, Vincrex)
+Vinorelbine (Navelbine)
+Xeloda (capecitabine)
+-Targeted Therapy
+Bevacizumab (Avastin). 
+Erlotinib (Tarceva). .
+Crizotinib (Xalkori)
+Gefitinib   (Iressa®) 
+Ipilimumab (Yervoy) 
 
 --sideeffects
 Abdominal pain

@@ -1,9 +1,10 @@
 package dao;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import static util.DBUtil.createRef;
+import static util.DBUtil.getCollection;
+import static util.DBUtil.getString;
+
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,15 +14,11 @@ import models.HealthItemBean;
 
 import org.bson.types.ObjectId;
 
-import util.DBUtil;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
-
-import static util.DBUtil.*;
 
 public class HealthItemDAO {
 	
@@ -67,9 +64,20 @@ public class HealthItemDAO {
 	 */
 	public static HealthItemBean getHealthItemByName(String name, String diseaseId) {
 		DBCollection healthItemsColl = getCollection(HEALTH_ITEMS_COLLECTION);
-		
 		//get root health item by name
-		DBObject query = new BasicDBObject("name", name);
+		DBObject query = null;
+		if(diseaseId != null){
+			String id = DiseaseDAO.getDiseaseByName(diseaseId);
+			DBRef diseaseRef = createRef(DiseaseDAO.DISEASES_COLLECTION, id);
+			query = BasicDBObjectBuilder.start()
+				.add("name",name)
+				.add("dis_id", diseaseRef)
+				.get();
+		}else{
+			query = BasicDBObjectBuilder.start()
+				.add("name",name)
+				.get();
+		}
 		DBObject healthItemDBObject = healthItemsColl.findOne(query);
 		if (healthItemDBObject == null) {
 			return null;

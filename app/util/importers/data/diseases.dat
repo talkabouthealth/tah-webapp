@@ -15,6 +15,9 @@ choices;estrogen receptor positive (ER+);estrogen receptor negative (ER-);proges
 her2;Is the breast cancer HER2+?;HER2+;select;;;
 choices;no;yes;;;;
 ;;;;;;
+GeneticRisk;Genetic Risk;Genetic Risk;multiselect;;;
+choices;BRCA1;BRCA2;ATM;CDH1;TP53 (Li-Fraumeni syndrome);CHEK2;MLH1;MSH2;Peutz-Jeghers syndrome (STK11 mutations);PTEN gene (Cowden’s disease);;;;
+;;;;;;
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
@@ -55,19 +58,34 @@ choices;1;2;3;4;;
 ;;;;;;
 Disease;Lung Cancer;;;;;
 ;;;;;;
-stage;Stage of disease;Stage of disease;select;;;
-choices;Stage I;Stage II;Stage III;Stage IV
+type;Type of lung cancer;Type of lung cancer;select;;;
+choices;Small Cell Lung Cancer (SCLC);Non-Small Cell Lung Cancer (NSCLC)
 ;;;;;;
-tumorgrade;Tumor grade;Tumor grade;select;;;
-choices;1;2;3;4;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Occult (hidden) stage;Stage 0 (carcinoma in situ);Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+invasive;Is the cancer invasive or non-invasive?;Invasive/Non-invasive;select;;;
+choices;Invasive;Non-invasive;;;;
+;;;;;;
+beginpart;Where did the cancer begin?;Cancer started in;select;;;
+choices;Lining of the bronchial tubes (NSCLC - squamous cell carcinoma / epidermoid carcinoma);Glands of the lungs (NSCLC - adenocarcinoma);Near the lungs' air sacs (NSCLC - bronchioalveolar carcinoma);Near the surface, or outer edges, of the lungs (NSCLC - large-cell undifferentiated carcinoma);Breathing tubes (SCLC);;;
+;;;;;;
+GeneticRisk;Genetic Risk;Genetic Risk;multiselect;;;
+choices;EGFR;EML4-ALK;P53;BRAF;RAS;KRAS;Nuclear Factor I/B (NFIB);Nicotine metabolic gene (CYP2A6);Nicotinic gene cluster (CHRNA5-A3-B3);;;;
 ;;;;;;
 Disease;Melanoma;;;;;
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
-choices;Stage I;Stage II;Stage III;Stage IV
+choices;Stage 0 (Melanoma in Situ);Stage I;Stage II;Stage III;Stage IV
 ;;;;;;
-tumorgrade;Tumor grade;Tumor grade;select;;;
-choices;1;2;3;4;;
+invasive;Is the cancer invasive or non-invasive?;Invasive/Non-invasive;select;;;
+choices;Invasive;Non-invasive;;;;
+;;;;;;
+beginpart;Where did the cancer begin?;Cancer started in;select;;;
+choices;Skin;Brain;Digestive Tract;Eyes;Mouth;Spinal cord;Urinary Tract;Vagina;;;
+;;;;;;
+GeneticRisk;Genetic Risk;Genetic Risk;multiselect;;;
+choices;Braf V600E;Melanocortin-1 receptor (MC1R) gene;INK4a/p16 gene (16INK4a/MTS1/CDKN2 gene);CDKN2A;CDK4;Gene 5 (MDA5) (Melanoma-Differentiation-Associated Gene 5);HBOC gene (BRCA2);Chromosome 1 (1p22);Xeroderma pigmentosum (XP);;;;
 ;;;;;;
 Disease;Non-Hodgkin Lymphoma;;;;;
 ;;;;;;
@@ -82,8 +100,20 @@ Disease;Ovarian Cancer;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
 ;;;;;;
+invasive;Is the cancer invasive or non-invasive?;Invasive/Non-invasive;select;;;
+choices;Invasive;Non-invasive;;;;
+;;;;;;
+beginpart;Where did the cancer begin?;Cancer started in;select;;;
+choices;Surface of the ovary (epithelial ovarian tumor);Egg producing cells within the body of the ovary (germ cell ovarian tumors);Connective tissue that holds the ovary together (sex cord stromal ovarian cancers);;;
+;;;;;;
+GeneticRisk;Genetic Risk;Genetic Risk;multiselect;;;
+choices;BRCA1;BRCA2;TP53 (Li-Fraumeni syndrome);NF1;RB1;CDK12;Lynch II Syndrome (HNPCC - Hereditary nonpolyposis colon cancer);Peutz-Jeghers syndrome (STK11 mutations);Gorlin syndrome (Nevoid basal cell carcinoma syndrome (NBCCS);PTEN gene (Cowden’s disease);MUTYH (associated polyposis)  ;;;;
+;;;;;;
 tumorgrade;Tumor grade;Tumor grade;select;;;
-choices;1;2;3;4;;
+choices;GX;G1;G2;G3;G4;;
+;;;;;;
+lymphnodes;Level of lymph node involvement;Lymph nodes;select;;;
+choices;Inguinal lymph node;Periaortic lymph node;;
 ;;;;;;
 Disease;Pancreatic Cancer;;;;;
 ;;;;;;

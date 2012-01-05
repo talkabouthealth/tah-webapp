@@ -1,16 +1,11 @@
 package util.importers;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.lang.reflect.Type;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import util.CommonUtil;
-
-import com.google.gson.GsonBuilder;
-
+import dao.DiseaseDAO;
 import dao.HealthItemDAO;
 
 import models.HealthItemBean;
@@ -48,6 +43,9 @@ public class HealthItemsImporter {
 	public static void importHealthItems(String fileName) throws Exception {
 		BufferedReader br = CommonUtil.createImportReader(fileName);
 		String line = null;
+		String diseaseName = null;
+		String diseaseId = null;
+		String old_diseaseName = null;
 		
 		HealthItemBean topLevel = null;
 		Set<HealthItemBean> topLevelChildren = null;
@@ -55,14 +53,28 @@ public class HealthItemsImporter {
 		Set<HealthItemBean> subLevelChildren = null;
 		while ((line = br.readLine()) != null) {
 			line = line.trim();
-			
 			if (line.length() == 0) {
 				continue;
 			}
-			
-			if (line.startsWith("--")) {
+			if (line.startsWith("---")) {
+				diseaseName = null;
+				diseaseName = line.substring(3);
+				if(old_diseaseName != null && !old_diseaseName.equalsIgnoreCase(diseaseName)){
+					if (topLevel != null) 
+						if(diseaseId != null)
+							HealthItemDAO.saveTree(topLevel, null, diseaseId);
+				}
+				diseaseId = null;
+				topLevel = null;
+				topLevelChildren = null;
+				subLevel = null;
+				subLevelChildren = null;
+					
+				old_diseaseName = diseaseName;
+				diseaseId = DiseaseDAO.getDiseaseByName(diseaseName);
+			}else if (line.startsWith("--")) {
 				if (topLevel != null) {
-					HealthItemDAO.saveTree(topLevel, null, DEFAULT_DISEASE_ID);
+					HealthItemDAO.saveTree(topLevel, null, diseaseId);
 				}
 				topLevel = new HealthItemBean(line.substring(2));
 				topLevelChildren = new LinkedHashSet<HealthItemBean>();
@@ -90,7 +102,10 @@ public class HealthItemsImporter {
 		}
 		
 		if (topLevel != null) {
-			HealthItemDAO.saveTree(topLevel, null, DEFAULT_DISEASE_ID);
+			if(diseaseId != null)
+				HealthItemDAO.saveTree(topLevel, null, diseaseId);
+			else
+				HealthItemDAO.saveTree(topLevel, null, DEFAULT_DISEASE_ID);
 		}
 	}
 

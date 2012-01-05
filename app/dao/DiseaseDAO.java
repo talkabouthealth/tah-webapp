@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 
 import models.DiseaseBean;
+import models.TalkerBean;
 import models.DiseaseBean.DiseaseQuestion;
 
 import com.mongodb.BasicDBObject;
@@ -86,6 +87,20 @@ public class DiseaseDAO {
 			diseaseList.add(diseaseBean);
 		}
 		return diseaseList;
+	}
+	
+	public static String getDiseaseByName(String diseaseName){
+		
+		DBCollection diseasesColl = getCollection(DISEASES_COLLECTION);
+		
+		DBObject query = new BasicDBObject("name", diseaseName);
+		DBObject diseaseDBObject = diseasesColl.findOne(query);
+		
+		if (diseaseDBObject == null) {
+			return null;
+		}else {
+			return diseaseDBObject.get("_id").toString();
+		}
 	}
 }
 
