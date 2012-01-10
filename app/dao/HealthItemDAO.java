@@ -130,7 +130,7 @@ public class HealthItemDAO {
 		}
 		for (DBObject childrenDBObject : childrenList) {
 			HealthItemBean childHealthItem = loadHealthItem(healthItemsColl, 
-					childrenDBObject.get("_id").toString(), (String)childrenDBObject.get("name"), false);
+					childrenDBObject.get("_id").toString(), (String)childrenDBObject.get("name"), true);
 			childrenSet.add(childHealthItem);
 		}
 		healthItem.setChildren(childrenSet);	
