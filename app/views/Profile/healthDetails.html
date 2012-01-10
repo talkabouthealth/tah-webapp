@@ -141,16 +141,18 @@
 											<span class="blacktext16"><strong>${question.text}</strong></span>
 									</div>
 									<div class="generalcheck">
-										#{list items:question.choices, as:'choice' }
-										<div class="healthitemCol1" style="width:285px;">
-											<input name='${question.name}' type='checkbox' value="${choice}" id="${choice}"
-											#{if talkerDisease?.healthInfo?.GeneticRisk?.contains(choice) }
-												checked='checked'
-											#{/if}
-											/>
-											&nbsp;<span class="blacktext14">${choice}</span>
-										</div>
-									#{/list}
+											#{list items:question.choices, as:'choice' }
+												<div class="healthitemCol1" style="width:285px;display: inline-block; vertical-align: top;float: none;">
+												
+													<input name='${question.name}' type='checkbox' value="${choice}" id="${choice}"
+													#{if talkerDisease?.healthInfo?.GeneticRisk?.contains(choice) }
+														checked='checked'
+													#{/if}
+													/>
+													&nbsp;<span class="blacktext14">${choice}</span>
+													
+												</div>
+											#{/list}
 									</div>
 								</div>							
 								#{/if}

@@ -49,7 +49,25 @@
    		   				}
 	   				);
    				return false;
-   			}); //Delete topic from topics (tags)
+   			}); 
+			
+				//Delete topic from topics (tags)
+   			$(".deleteTopicLink").live("click", function() {
+   	   			$(this).prev().remove();
+   	   			var topicId = $(this).attr("rel");
+   	   			$(this).remove();
+
+   	   			$.post("@{Conversations.updateField()}", 
+	   					{ convoId : '${convo.id}', name: 'topic', value: topicId, todo: 'remove'},
+	   					function() {
+	   						$("#topicsList").html($("#topicsEditList").html());
+	   					}
+	   				);
+
+   	   			return false;
+   			});
+
+   			//Delete disease from other diseases
    			$(".deleteDiseaseLink").live("click", function() {
    	   			$(this).prev().remove();
    	   			var disease = $(this).attr("rel");
@@ -364,7 +382,7 @@
 
 		<div class='inline-edit' id="diseaseEdit">
 			<div class="suggestxt inline_display">
-				<div class="inline_full" style="display: ${convo.topics ? 'block' : 'none'}">
+				<div class="inline_full" style="display: ${convo.category ? 'block' : 'none'}">
 					<div style="display: block; float: left; width: auto;" class="topictxt">
                   						<div style="float: left;">Diseases: </div>
                   						<div id="diseasesList">
@@ -383,7 +401,7 @@
 						</div>
 					#{/if}
 				</div>
-				<div class="inline_empty" style="display: ${!convo.topics ? 'block' : 'none'}">
+				<div class="inline_empty" style="display: ${!convo.category ? 'block' : 'none'}">
 					#{if talker }
 						<div class="targetenew">
 							<a class="inline_addlink" href="#">Add Disease</a>

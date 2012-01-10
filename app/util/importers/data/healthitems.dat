@@ -205,31 +205,31 @@ Weight changes
 -Empty
 Unusual vaginal bleeding or discharge from your vagina
 Pain in the pelvic or abdominal area or lower abdomen
+A swollen or bloated abdomen
 Pressure or pain in the abdomen, pelvis, back, or legs
 Back pain that is unexplained and gets worse
-A swollen or bloated abdomen
-Feeling full quickly while eating
 A change in your bathroom habits, such as having to pass urine very badly or very often
 Heavy feeling in pelvis
 Weight gain or loss
 Gas, nausea, vomiting, indigestion, constipation, diarrhea, or loss of appetite
 Feeling tired all the time
 Shortness of breath
+Feeling full quickly while eating
 
 --tests
 -Empty
 Physical exam
 Pelvic exam
-Complete blood cell count 
+Complete blood cell count
 Blood chemistries
 Pregnancy test (serum HCG)
 Ultrasound
 Transvaginal ultrasound (sonography)
 Cat Scan (CT) of the pelvis or abdomen.
 MRI of the pelvis or abdomen
-Chest x-ray.
+Chest x-ray
 Bone scan
-Barium enema x-ray (lower intestine).
+Barium enema x-ray (lower intestine)
 Colonoscopy
 Tumor Marker CA-125
 Estradiol
@@ -243,51 +243,33 @@ Lymph node removal
 Laparoscopy
 Laparotomy
 Hysterectomy
-Bilateral salpingo-oophorectomy 
+Bilateral salpingo-oophorectomy
 Partial or complete removal of the omentum
 Debulking or optimal cytoreduction 
 
 --treatments
 -Chemotherapy
-Abraxane (paclitaxel)
-Adriamycin (doxorubicin)
 Altretamine (Hexalen)
 Bleomycin (Blenoxane)
-Carboplatin (Paraplatin)
 Cisplatin (Platinol)
-Cytoxan (cyclophosphamide)
 Cyclophosphamide (Cytoxan)
-Daunorubic (Cerubidine, DaunoXome)
 Dactinomycin (Cosmegen)
-Doxil (doxorubicin)
-Ellence (epirubicin)
 Etoposide (Eposin)
-fluorouracil (Adrucil)
-Gemzar (gemcitabine)
 Ifosfamide (Ifex)
-Lxempra (ixabepilone)
-Methotrexate (Amethoprerin, Mexate, Folex)
-Mitoxantrone (Navantrone)
 Melphalan (Alkeran)
-Navelbine (vinorelbine)
 Oxaliplatin (Eloxatin)
 Pemetrexed (Alimta)
 Paxil (Paroxetine)
-Taxol (paclitaxel)
-Taxotere (docetaxel)
-Thiotepa (Thioplex)
 Topotecan (Hycamtin)
 Trinotecan (Irinotecan)
-Vincristine (Oncovin, Vinacasar PES, Vincrex)
-Xeloda (capecitabine)
 -Hormonal Therapy
-Aromasin (exemestane)
+Letrozole (Femara)
+Exemestane (Aromasin)
+Letrozole (Femara)
+Tamoxifen
 Evista (raloxifene)
 Fareston (toremifene)
 Faslodex (fulvestrant)
-Femara (letrozole)
-Letrozole (Femara)
-Tamoxifen
 -Targeted Therapy
 Avastin (bevacizumab)
 Bevacizumab (Avastin)
@@ -426,19 +408,18 @@ Lymph node mapping
 
 --treatments
 -Chemotherapy
-Aldesleukin (Proleukin)
 Carmustine (BiCNU)
 Cisplatin (Platinol)
 Dacarbazine (DTIC-Dome)
 Docetaxel (Taxotere)
 Fotemustine (Muphoran)
 lomustine (CeeNU)
-Ipilimumab (Yervoy)
 Paclitaxel (Taxol)
 Temozolomide (Methazolastone, Temodar) 
 Vinblastine (Velban, Velsar)
 -Targeted Therapy
 Vemurafenib (Zelboraf)
+Ipilimumab (Yervoy)
 -Biological Therapy (immunotherapy)
 Interleukin-2 (Proleukin)
 Interferon alpha-2b (Roferon-A)
@@ -603,55 +584,37 @@ Cryotherapy
 Radiofrequency ablation (RFA)
 
 --treatments
--Radiation Therapy
-External radiation
-Internal radiation
 -Chemotherapy
-Abraxane (paclitaxel)
-Adriamycin (doxorubicin)
-Aldesleukin (Proleukin)
-Carboplatin (Paraplatin)
 Carmustine (BiCNU)
+Carboplatin (Paraplatin)
 Cisplatin (Platinol, Platinol-AQ)
-Crizotinib (Xalkori)
-Cyclophosphamide (Cytoxan)Erlotinib Hydrochloride (Tarceva)
-Cytoxan (cyclophosphamide)
-Daunorubic (Cerubidine, DaunoXome)
 Dacarbazine (DTIC-Dome)
 Docetaxel (Taxotere)
-Doxil (doxorubicin)
 Doxorubicin (Adriamycin Rubex)
-Ellence (epirubicin)
+Crizotinib (Xalkori)
+Cyclophosphamide (Cytoxan)Erlotinib Hydrochloride (Tarceva)
 Etoposide Phosphate (Toposar VePesid)
-Fluorouracil (Adrucil)
-Fotemustine (Muphoran)
-Gemzar (gemcitabine)
 Ifosfamide (Ifex) {(Mesna (Mesnex) prevention of hemorrhagic cystitis induced by Ifosfamide}
 Iressa (Gefitinib)
-Ipilimumab (Yervoy)
 Irinotecan (Camptosar)
-Lomustine (CeeNU)
-Lxempra (ixabepilone)
-Methotrexate (Amethoprerin, Mexate, Folex)
-Mitoxantrone (Navantrone)
-Navelbine (vinorelbine)
+Gemzar (Gemcitabine Hydrochloride
+lomustine (CeeNU)
+Methotrexate (Abitrexate, Folex, Folex PFS, Mexate AQ, Mexate)
 Paclitaxel (Taxol)
 Pemetrexed (Alimta)
-Taxol (paclitaxel)
-Taxotere (docetaxel)
 Temozolomide (Methazolastone, Temodar)
-Thiotepa (Thioplex)
 Topotecan Hydrochloride (Hycamtin)
 Vinblastine (Velban, Velsar)
-vincristine (Oncovin, Vinacasar PES, Vincrex)
+Vincristine (Vincasar)
 Vinorelbine (Navelbine)
-Xeloda (capecitabine)
 -Targeted Therapy
 Bevacizumab (Avastin). 
 Erlotinib (Tarceva). .
 Crizotinib (Xalkori)
-Gefitinib   (Iressa®) 
-Ipilimumab (Yervoy) 
+Gefitinib   (Iressa®)
+-Radiation Therapy
+External radiation
+Internal radiation
 
 --sideeffects
 Abdominal pain
