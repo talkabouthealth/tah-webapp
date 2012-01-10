@@ -400,11 +400,11 @@ S-100 protein marker
 -Empty
 Simple incision
 Wide local excision
-Lymphadenectomy
-Sentinel lymph node biopsy
-Amputation
-Skin grafting
 Lymph node mapping
+Sentinel lymph node biopsy
+Lymphadenectomy
+Skin grafting
+Amputation
 
 --treatments
 -Chemotherapy
@@ -573,15 +573,15 @@ Low-dose helical CT
 
 --procedures
 -Empty
-Prophylactic cranial irradiation
+Pneumonectomy 
 Wedge resection 
 Segmental resection 
 Lobectomy 
-Pneumonectomy 
 Laser therapy
 Photodynamic therapy
 Cryotherapy
 Radiofrequency ablation (RFA)
+Prophylactic cranial irradiation
 
 --treatments
 -Chemotherapy
