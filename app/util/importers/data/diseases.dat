@@ -16,7 +16,7 @@ her2;Is the breast cancer HER2+?;HER2+;select;;;
 choices;no;yes;;;;
 ;;;;;;
 GeneticRisk;Genetic Risk;Genetic Risk;multiselect;;;
-choices;BRCA1;MLH1;BRCA2;MSH2;ATM;CHEK2;CDH1;Peutz-Jeghers syndrome (STK11 mutations);TP53 (Li-Fraumeni syndrome);PTEN gene (Cowden’s disease);;;;
+choices;BRCA1;CHEK2;BRCA2;MLH1;ATM;MSH2;CDH1;Peutz-Jeghers syndrome (STK11 mutations);TP53 (Li-Fraumeni syndrome);PTEN gene (Cowden’s disease);;;;
 ;;;;;;
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
