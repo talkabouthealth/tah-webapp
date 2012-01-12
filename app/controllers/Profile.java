@@ -86,6 +86,8 @@ import java.util.Random;
 @With(Secure.class)
 public class Profile extends Controller {
 
+	public static final String GENETICRISK = "GeneticRisk";
+	
     public static void edit(boolean verifiedEmail) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		TalkerLogic.preloadTalkerInfo(talker, "profile");
@@ -702,6 +704,7 @@ public class Profile extends Controller {
 		TalkerDiseaseDAO.saveTalkerDisease(talkerDisease);
 		
 		ActionDAO.saveAction(new UpdateProfileAction(talker, ActionType.UPDATE_HEALTH));
+		Cache.replace("healthItemsMap", null);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -715,18 +718,13 @@ public class Profile extends Controller {
 	 */
 	private static void parseHealthQuestions(DiseaseBean disease, TalkerDiseaseBean talkerDisease) {
 		Map<String, String[]> paramsMap = params.all();
+		
 		Map<String, List<String>> healthInfo = new HashMap<String, List<String>>();
-		try{
-			for(int index = 0; index < disease.getQuestions().size(); index++){
-				DiseaseQuestion question = disease.getQuestions().get(index);
-				String[] values = paramsMap.get(question.getName());
-				
-				if (values != null && values[0].length() != 0) {
-					healthInfo.put(question.getName(), Arrays.asList(values));
-				}
+		for (DiseaseQuestion question : disease.getQuestions()) {
+			String[] values = paramsMap.get(question.getName());
+			if (values != null && values[0].length() != 0) {
+				healthInfo.put(question.getName(), Arrays.asList(values));
 			}
-		}catch (Exception e) {
-			e.printStackTrace();
 		}
 		talkerDisease.setHealthInfo(healthInfo);
 	}

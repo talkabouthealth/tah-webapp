@@ -11,12 +11,18 @@
 		#{ profile/healthItemsTree healthItem: item, checkedItems: _checkedItems /}
 	#{/if}
 	#{else}
-		<div class="healthitemCol${currentNum}">
+		<div class="healthitemCol${currentNum}" #{if item.name.equals("Vaccine Therapy")} style="margin-left: -5px;" #{/if}>
 			<input name='healthitem${item.id}' type='checkbox'
 			#{if _checkedItems?.contains(item.id) }
 				checked='checked'
 			#{/if}
-			/>&nbsp; <span class="blacktext14">${item.name}</span>
+			/>&nbsp;
+			#{if item.name.equals("Vaccine Therapy")}
+				<span class="blacktext14" style="font-weight: bold; font-size: 15px;">${item.name}</span>
+			#{/if}
+			#{else}
+				<span class="blacktext14">${item.name}</span>
+			#{/else}
 		</div>
 	#{/else}
 #{/list}
