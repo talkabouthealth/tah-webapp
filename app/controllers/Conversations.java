@@ -462,10 +462,9 @@ public class Conversations extends Controller {
 				}catch (Exception e) {
 					e.printStackTrace();
 				}
-				//Comment out because update is not displayed on main feed
-				/*ActionDAO.deleteActionsByConvo(convo);
+		    	ActionDAO.deleteActionsByConvo(convo);
 		    	String actionID = ActionDAO.saveActionGetId(new StartConvoAction(talker, convo, ActionType.START_CONVO));
-				convo.setActionID(actionID);*/
+				convo.setActionID(actionID);
 				ConversationDAO.updateConvo(convo);
 				
 				renderText(htmlToRender.toString());
@@ -483,10 +482,9 @@ public class Conversations extends Controller {
 					diseaseArr[index] = diseaseList.get(index);
 				}
 				convo.setOtherDiseaseCategories(diseaseArr);
-				//Comment out because update is not displayed on main feed
-				/*ActionDAO.deleteActionsByConvo(convo);
+				ActionDAO.deleteActionsByConvo(convo);
 		    	String actionID = ActionDAO.saveActionGetId(new StartConvoAction(talker, convo, ActionType.START_CONVO));
-				convo.setActionID(actionID);*/	
+				convo.setActionID(actionID);
 				ConversationDAO.updateConvo(convo);
     		}
     	}
