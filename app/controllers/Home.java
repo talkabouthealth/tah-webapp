@@ -70,147 +70,67 @@ public class Home extends Controller {
     	Logger.info("Home: ---"+talker.getUserName()+"---");
     	List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
 
-    	long start = System.currentTimeMillis();
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
     	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
 
     	//Code added for display all cancer tab to admin
     	Set<Action> allFeed = FeedsLogic.getAllCancerFeed(null, true,talker);
     	
-    	//Code added for display Ovarian Cancer tab for admin
-    	/*Set<Action> overianCancerCommunityFeed = null;
-    	if(talker.getUserName().equalsIgnoreCase("admin")){
-    		String category = talker.getCategory();
-    		talker.setCategory("Ovarian Cancer");
-    		overianCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
-    		talker.setCategory(category);
-    	}*/
-    	
     	//Code added for display all diseases tabs to admin
     	Map<String, Set<Action>> allDiseaseList = new LinkedHashMap<String, Set<Action>>();
     	List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
     	Set<Action> multipleCancerCommunityFeed = null;
-		if(diseaseList != null && diseaseList.size() > 0){
+    	
+    	List<String> talkerCategories = new ArrayList<String>();
+    	talkerCategories.add(talker.getCategory());
+    	if(talker.getOtherCategories() != null){
+    		for (int i = 0; i < talker.getOtherCategories().length; i++) {
+    			talkerCategories.add(talker.getOtherCategories()[i]);
+    		}
+    	}
+    	String talkerCat = talker.getCategory();
+    	for (String talkerCategory : talkerCategories) {
+    		talker.setCategory(talkerCategory);
+    		System.out.println("For : " + talkerCategory);
+    		multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
+    		//for(int index = 0 ; index < diseaseList.size(); index++){
+    		//	if(talkerCategory.equalsIgnoreCase(diseaseList.get(index).getName()))
+					allDiseaseList.put(talkerCategory.replaceAll(" ", "_"),multipleCancerCommunityFeed);
+    		//}
+		}
+    	talker.setCategory(talkerCat);
+		/*if(diseaseList != null && diseaseList.size() > 0){
 			for(int index = 0 ; index < diseaseList.size(); index++){
 				String category = talker.getCategory();
 	    		talker.setCategory(diseaseList.get(index).getName());
 	    		multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
-	    		//if(multipleCancerCommunityFeed != null && multipleCancerCommunityFeed.size() > 0)
-    			if(talker.getUserName().equalsIgnoreCase("admin"))
-    				allDiseaseList.put(diseaseList.get(index).getName().replaceAll(" ", "_"),multipleCancerCommunityFeed);
-    			else
-    				if(category.equalsIgnoreCase(diseaseList.get(index).getName()))
-    					allDiseaseList.put(diseaseList.get(index).getName().replaceAll(" ", "_"),multipleCancerCommunityFeed);
-	    		talker.setCategory(category);
+   				if(category.equalsIgnoreCase(diseaseList.get(index).getName()))
+   					allDiseaseList.put(diseaseList.get(index).getName().replaceAll(" ", "_"),multipleCancerCommunityFeed);
+    			talker.setCategory(category);
 			}
 		}
+		
 		//Code added for display other categories
 		if(diseaseList != null && diseaseList.size() > 0){
 			for(int index = 0 ; index < diseaseList.size(); index++){
 				if(talker.getOtherCategories() != null){
 					for(int index1 = 0; index1 < talker.getOtherCategories().length; index1++){
-						    String category = talker.getCategory();
-						 	talker.setCategory(talker.getOtherCategories()[index1]);
-				    		multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
-				    		//if(multipleCancerCommunityFeed != null && multipleCancerCommunityFeed.size() > 0)
-			    			if(talker.getUserName().equalsIgnoreCase("admin"))
-			    				allDiseaseList.put(diseaseList.get(index).getName().replaceAll(" ", "_"),multipleCancerCommunityFeed);
-			    			else
-			    				if(talker.getOtherCategories()[index1].equalsIgnoreCase(diseaseList.get(index).getName()))
-			    					allDiseaseList.put(diseaseList.get(index).getName().replaceAll(" ", "_"),multipleCancerCommunityFeed);
-				    		talker.setCategory(category);
+					    String category = talker.getCategory();
+					 	talker.setCategory(talker.getOtherCategories()[index1]);
+			    		multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
+	    				if(talker.getOtherCategories()[index1].equalsIgnoreCase(diseaseList.get(index).getName()))
+	    					allDiseaseList.put(diseaseList.get(index).getName().replaceAll(" ", "_"),multipleCancerCommunityFeed);
+		    			talker.setCategory(category);
 					}
 				}
 			}
-		}
-		
-    	Iterator<Action> communityFeedIter = communityFeed.iterator();
-		/*while (communityFeedIter.hasNext()) {
-			 Action actionIterator = communityFeedIter.next();
-			 if(actionIterator != null && actionIterator.getConvo() != null){
-				 List<CommentBean> commentBeanList = actionIterator.getConvo().getComments();
-				 for(int index = 0; index < commentBeanList.size(); index++){
-					 CommentBean commentBean = commentBeanList.get(index);
-					 CommentBean comment =  CommentsDAO.getConvoCommentById(commentBean.getId());
-					 if(comment != null && comment.getModerate() != null && !comment.getFromTalker().equals(talker)){
-						 if(comment.getModerate().equalsIgnoreCase(AnswerNotification.DELETE_ANSWER)){
-							 commentBeanList.remove(index);
-							 actionIterator.getConvo().setComments(commentBeanList);
-						 }else if(comment.getModerate().equalsIgnoreCase("null")){
-							 commentBeanList.remove(index);
-							 actionIterator.getConvo().setComments(commentBeanList);
-						 }
-					 }else {
-						 if(actionIterator.getTalker().getActivityList()!=null){
-							 int count = actionIterator.getTalker().getActivityList().size();
-							 actionIterator.getTalker().getActivityList().remove(count);
-						 }
-						 commentBeanList.remove(index);
-						 actionIterator.getConvo().setComments(commentBeanList);
-					 }
-				 }
-			 }
-		 }
-		 
-		//For removing answer from feed list which have moderate no moderate value or value as "Delete Answer"
-			Iterator<Action> convoFeedIter = convoFeed.iterator();
-			 while (convoFeedIter.hasNext()) {
-				 Action actionIterator = convoFeedIter.next();
-				 if(actionIterator != null && actionIterator.getConvo() != null){
-					 List<CommentBean> commentBeanList = actionIterator.getConvo().getComments();
-					 for(int index = 0; index < commentBeanList.size(); index++){
-						 CommentBean commentBean = commentBeanList.get(index);
-						 CommentBean comment =  CommentsDAO.getConvoCommentById(commentBean.getId());
-						 if(comment != null && comment.getModerate() != null  && !comment.getFromTalker().equals(talker)){
-							 if(comment.getModerate().equalsIgnoreCase(AnswerNotification.DELETE_ANSWER)){
-								 commentBeanList.remove(index);
-								 actionIterator.getConvo().setComments(commentBeanList);
-							 }else if(comment.getModerate().equalsIgnoreCase("null")){
-								 commentBeanList.remove(index);
-								 actionIterator.getConvo().setComments(commentBeanList);
-							 }
-						 }else{
-							 commentBeanList.remove(index);
-							 actionIterator.getConvo().setComments(commentBeanList);
-						 }
-						
-					 }
-				 }
-			 }
-		*/
-    	//find mentions (@<username> in the thoughts)
+		}*/
+
     	List<Action> mentions = CommentsDAO.getTalkerMentions(talker,null);
     	
     	boolean showNotificationAccounts = prepareNotificationPanel(session, talker);
 		TalkerLogic.preloadTalkerInfo(talker);
 		
-		//Commented Topics for you section
-		//List<TopicBean> recommendedTopics = TalkerLogic.getRecommendedTopics(talker);
-		
-		//Code for Popular Topics section
-		/*List<TopicBean> popularTopics = new ArrayList<TopicBean>();
-		for (TopicBean topic : TalkerLogic.loadAllTopicsFromCache()) {
-			if (topic.getConversations() == null) {
-				topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
-			}
-			popularTopics.add(topic);
-		}
-		//sort by number of questions
-		Collections.sort(popularTopics, new Comparator<TopicBean>() {
-			@Override
-			public int compare(TopicBean o1, TopicBean o2) {
-				return o2.getConversations().size() - o1.getConversations().size();
-			}		
-		});
-
-    	
-
-        if (popularTopics.size() > topicCount) {
-        	popularTopics = popularTopics.subList(topicCount, topicCount);
-        }else{
-        	popularTopics = null;
-        }*/
-		//int topicCount = session.get("topicCount")==null?TopicLogic.TOPICS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
     	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics(TopicLogic.TOPICS_PER_PAGE);
 
         session.put("topicCount", TopicLogic.TOPICS_PER_PAGE);
@@ -219,8 +139,6 @@ public class Home extends Controller {
 		List<TalkerBean> experts = TalkerLogic.getRecommendedTalkers(talker,"EXP",null);
 	
 		List<ConversationBean> recommendedConvos = TalkerLogic.getRecommendedConvos(talker);
-		
-		Logger.info("F1:"+ (System.currentTimeMillis() - start));
 		
 		boolean emailVerification = false;
 		if (session.contains("justloggedin") && talker.getVerifyCode() != null) {

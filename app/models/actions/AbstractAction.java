@@ -112,12 +112,14 @@ public abstract class AbstractAction implements Action {
 		DBObject dbObject = BasicDBObjectBuilder.start()
 							.add("uid", talkerRef)
 							.add("type", type.toString())
-							.add("time", time)
-							.add("category", talker.getCategory()).get();
+							.add("time", time).get();
 
 		if (hasConvo()) {
 			addConvo(dbObject, convo);
 			dbObject.put("other_disease_categories", convo.getOtherDiseaseCategories());
+			dbObject.put("category", convo.getCategory());
+		}else{
+			dbObject.put("category", talker.getCategory());
 		}
 		if (hasTopic()) {
 			addTopic(dbObject, topic);

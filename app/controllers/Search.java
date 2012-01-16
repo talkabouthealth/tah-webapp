@@ -104,12 +104,8 @@ public class Search extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		ConversationBean convo = ConversationDAO.getConvoById(convoId);
 		String[] diseaseArr = new String[14];
-		if(talker.getUserName().equalsIgnoreCase("admin")){
-			if(convo != null)
-				diseaseArr = convo.getTalker().getOtherCategories();
-		}else{
-			diseaseArr = talker.getOtherCategories();
-		}
+		
+		diseaseArr = talker.getOtherCategories();
 		
 		List<String> diseaseList = new ArrayList<String>();
 		if(diseaseArr != null){
@@ -124,18 +120,10 @@ public class Search extends Controller {
 		
 		//Add talker category in list. If user is admin user then add the convo talkers category
 		if(term == null){
-			if(talker.getUserName().equalsIgnoreCase("admin"))
-				diseaseList.add(convo.getTalker().getCategory());
-			else
-				diseaseList.add(talker.getCategory());
+			diseaseList.add(talker.getCategory());
 		}else{
-			if(talker.getUserName().equalsIgnoreCase("admin")){
-				if(convo.getTalker().getCategory().toLowerCase().contains(term))
-					diseaseList.add(convo.getTalker().getCategory());
-			}else{
-				if(talker.getCategory().toLowerCase().contains(term))
-				    diseaseList.add(talker.getCategory());
-			}
+			if(talker.getCategory().toLowerCase().contains(term))
+			    diseaseList.add(talker.getCategory());
 		}
 		
 		//Add All Cancer in category

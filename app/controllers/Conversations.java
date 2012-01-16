@@ -446,7 +446,7 @@ public class Conversations extends Controller {
 					if (diseaseName == null || diseaseName.trim().length() == 0) {
 						continue;
 					}
-					diseaseName = JavaExtensions.capitalizeWords(diseaseName);
+					//diseaseName = JavaExtensions.capitalizeWords(diseaseName);
 					diseaseList.add(diseaseName);
 					htmlToRender.append(
 	    	    			"<a class=\"topicTitle\" href=\"#\">"+diseaseName+"</a>&nbsp;" +
@@ -770,3 +770,4 @@ public class Conversations extends Controller {
 		renderText("ok");
     }
 }
+

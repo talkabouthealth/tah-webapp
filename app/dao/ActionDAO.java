@@ -24,6 +24,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import com.mongodb.QueryBuilder;
 
 import logic.FeedsLogic;
 import models.CommentBean;
@@ -167,8 +168,8 @@ public class ActionDAO {
 								.get()
 						))
 			.add("type", new BasicDBObject("$in", actionTypes));
-		List<String> cat = FeedsLogic.getCancerType(talker);
-		queryBuilder.add("category", new BasicDBObject("$in", cat) );
+		//List<String> cat = FeedsLogic.getCancerType(talker);
+		//queryBuilder.add("category", new BasicDBObject("$in", cat) );
 		
 		if (firstActionTime != null) {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
@@ -216,10 +217,18 @@ public class ActionDAO {
 			if(talker.getOtherCategories() == null){
 				queryBuilder.add("category", new BasicDBObject("$in", cat) );
 			} else {
+				List<String> otherCat = new ArrayList<String>();
+				otherCat.add(talker.getCategory());// = cat;
+				//for (int i = 0; i < talker.getOtherCategories().length; i++) {
+					//otherCat.add(talker.getOtherCategories()[i]);
+					//cat.add(talker.getOtherCategories()[i]);
+				//}
+				otherCat.add(ConversationBean.ALL_CANCERS);
+				
 				queryBuilder.add("$or", 
 					Arrays.asList(
-							new BasicDBObject("category", new BasicDBObject("$in", cat)),
-							new BasicDBObject("other_disease_categories", new BasicDBObject("$in", talker.getOtherCategories()))
+							new BasicDBObject("other_disease_categories", new BasicDBObject("$in", otherCat)),
+							new BasicDBObject("category", new BasicDBObject("$in", cat))
 						)
 				);
 			}	
