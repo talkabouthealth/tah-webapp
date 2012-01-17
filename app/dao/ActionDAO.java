@@ -25,6 +25,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.QueryBuilder;
+import com.mongodb.WriteResult;
 
 import logic.FeedsLogic;
 import models.CommentBean;
@@ -541,5 +542,22 @@ public class ActionDAO {
 		activitiesColl.update(query,
 				new BasicDBObject("$set", new BasicDBObject("convoId", newConvoRef)), false, true);
 	}
+	
+	/**
+	 * Updates all actions with one conversation to use another convo.
+	 * (Used during merging)
+	 * 
+	 * @param convo
+	 * @param newConvo
+	 */
+	public static void updateActionsConvoDiseases(ConversationBean convo) {
+		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 
+		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getId());
+		DBObject query = new BasicDBObject("convoId", convoRef);
+
+		DBObject convoObject = BasicDBObjectBuilder.start().add("other_disease_categories", convo.getOtherDiseaseCategories()).get();
+		WriteResult result =  activitiesColl.update(query,new BasicDBObject("$set", convoObject), true, true);
+		//System.out.println(result);
+	}
 }

@@ -462,14 +462,15 @@ public class Conversations extends Controller {
 				}catch (Exception e) {
 					e.printStackTrace();
 				}
-		    	ActionDAO.deleteActionsByConvo(convo);
-		    	String actionID = ActionDAO.saveActionGetId(new StartConvoAction(talker, convo, ActionType.START_CONVO));
-				convo.setActionID(actionID);
+		    	/*ActionDAO.deleteActionsByConvo(convo);
+				ActionDAO.deleteActionsByConvoType(convo);
+				TalkerBean convoTalker = convo.getTalker();
+		    	String actionID = ActionDAO.saveActionGetId(new StartConvoAction(convoTalker, convo, ActionType.UPDATE_CONVO));
+				convo.setActionID(actionID);*/
+				ActionDAO.updateActionsConvoDiseases(convo);
 				ConversationDAO.updateConvo(convo);
-				
 				renderText(htmlToRender.toString());
-    		}
-    		else if (todo.equalsIgnoreCase("remove")) {
+    		} else if (todo.equalsIgnoreCase("remove")) {
     			List<String> diseaseList = new ArrayList<String>();
     			if(convo.getOtherDiseaseCategories() != null){
 					for(int index = 0; index < convo.getOtherDiseaseCategories().length; index++){
@@ -482,9 +483,12 @@ public class Conversations extends Controller {
 					diseaseArr[index] = diseaseList.get(index);
 				}
 				convo.setOtherDiseaseCategories(diseaseArr);
-				ActionDAO.deleteActionsByConvo(convo);
-		    	String actionID = ActionDAO.saveActionGetId(new StartConvoAction(talker, convo, ActionType.START_CONVO));
-				convo.setActionID(actionID);
+				/*ActionDAO.deleteActionsByConvo(convo);
+				TalkerBean convoTalker = convo.getTalker();
+				ActionDAO.deleteActionsByConvoType(convo);
+		    	String actionID = ActionDAO.saveActionGetId(new StartConvoAction(convoTalker, convo, ActionType.UPDATE_CONVO));
+				convo.setActionID(actionID);*/
+				ActionDAO.updateActionsConvoDiseases(convo);
 				ConversationDAO.updateConvo(convo);
     		}
     	}
