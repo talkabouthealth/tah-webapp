@@ -115,27 +115,8 @@
 						</div>
 						#{if talker.category.equals("Breast Cancer") || talker.category.equals("Ovarian Cancer") || talker.category.equals("Melanoma") || talker.category.equals("Lung Cancer")}
 							#{list items:disease.questions, as:'question'}
-							#{if (talker.connection.equals("High Risk Individual") && talker.isHighRiskQ(question.name)) || (!talker.connection.equals("High Risk Individual") && !talker.isHighRiskQ(question.name))} 
-								<div class="signupmain">
-								#{if question.type == models.DiseaseBean.DiseaseQuestion.DiseaseQuestionType.SELECT}
-									<div class="generaltextarea">
-										<span class="blacktext16"><strong>${question.text}</strong></span>
-									</div>
-									<div class="personaltextfield">
-										<select name="${question.name}" class="personalfields">
-											<option value=""></option>
-											#{list items:question.choices, as:'choice' }
-												<option value="${choice}" 
-											    	#{if talkerDisease?.healthInfo?.get(question.name)?.contains(choice) } 
-											    		selected 
-											    	#{/if}
-											    >${choice}</option>
-											#{/list}
-										</select>
-									</div>
-								#{/if}
-								#{else}
-								#{if question.name.equals("GeneticRisk")}
+							
+							#{if question.name.equals("GeneticRisk")}
 								<div class="signupmain">
 									<div class="generaltextarea">
 											<span class="blacktext16"><strong>${question.text}</strong></span>
@@ -156,6 +137,28 @@
 									</div>
 								</div>							
 								#{/if}
+								
+							#{if (talker.connection.equals("High Risk Individual") && talker.isHighRiskQ(question.name)) || (!talker.connection.equals("High Risk Individual") && !talker.isHighRiskQ(question.name))} 
+								<div class="signupmain">
+								#{if question.type == models.DiseaseBean.DiseaseQuestion.DiseaseQuestionType.SELECT}
+									<div class="generaltextarea">
+										<span class="blacktext16"><strong>${question.text}</strong></span>
+									</div>
+									<div class="personaltextfield">
+										<select name="${question.name}" class="personalfields">
+											<option value=""></option>
+											#{list items:question.choices, as:'choice' }
+												<option value="${choice}" 
+											    	#{if talkerDisease?.healthInfo?.get(question.name)?.contains(choice) } 
+											    		selected 
+											    	#{/if}
+											    >${choice}</option>
+											#{/list}
+										</select>
+									</div>
+								#{/if}
+								#{else}
+								
 									#{if question.name.equals("hrbenigh1")}
 									<div class="generalsubhead">Benigh Breast Conditions</div>
 									#{/if}
