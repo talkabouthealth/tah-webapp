@@ -414,6 +414,8 @@ public class Explore extends Controller {
 				loadFlag = true;
 			} else {  //if("Ovarian Cancer".equals(feedType)){ //Ovarian Cancer  
 				feedType = feedType.replaceAll("&", "and");
+				if("Non Hodgkin Lymphoma".equals(feedType))
+					feedType = "Non-Hodgkin Lymphoma";
 				memberTypeEntry = Arrays.asList(feedType); //Ovarian Cancer
 				loadFlag = true;
 			}

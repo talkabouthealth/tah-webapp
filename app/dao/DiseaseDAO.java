@@ -7,6 +7,10 @@ import static util.DBUtil.getStringSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.bson.BSONObject;
 
 import models.DiseaseBean;
 import models.TalkerBean;
@@ -79,7 +83,8 @@ public class DiseaseDAO {
 	public static List<DiseaseBean> getDeiseaseList(){
 		List<DiseaseBean> diseaseList = new ArrayList<DiseaseBean>();
 		DBCollection diseasesColl = getCollection(DISEASES_COLLECTION);
-		List<DBObject>  diseaseDBList = diseasesColl.find().toArray();
+		DBObject sortCond = new BasicDBObject("name", 1);
+		List<DBObject>  diseaseDBList = diseasesColl.find().sort(sortCond).toArray();
 
 		for (DBObject diseaseDBObject : diseaseDBList) {
 			DiseaseBean diseaseBean = new DiseaseBean();
