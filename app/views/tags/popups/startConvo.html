@@ -58,23 +58,24 @@
             </div>
           </div>
           -->
-          #{if _talker != null && _talker.otherCategories != null}
+			#{if _talker != null }
 	          <div class="askheadingCover">
 	            <div class="asktext2"><b>Disease:</b> What disease is this question related to?</div>
 	          </div>
 	          <div class="askheadingCover">
 	            <div class="personaltextfield">
-	            
 	              <select id="newConvoDisease" class="personalfields" style="background-color: #FFFFFF;">
-	              	<option>All Cancers</option>
 	              	<option selected="selected">${_talker.category}</option>
-	              	#{list items: _talker.otherCategories, as: 'cancerType'}
-	              	<option>${cancerType}</option>
-	              	 #{/list}
+          			#{if _talker.otherCategories != null}
+		              	#{list items: _talker.otherCategories, as: 'cancerType'}
+		              	<option>${cancerType}</option>
+		              	 #{/list}
+					#{/if}
+					<option>All Cancers</option>     	 
 	              </select>
 	            </div>
 	          </div>
-	      #{/if}
+			#{/if}
           <div class="popsubmitcovar">
             <div class="notetext" style="color: #000; width: 500px;">
             	<b>Notes:</b> <br/>

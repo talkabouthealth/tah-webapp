@@ -75,56 +75,24 @@ public class Home extends Controller {
 
     	//Code added for display all cancer tab to admin
     	Set<Action> allFeed = FeedsLogic.getAllCancerFeed(null, true,talker);
-    	
+
     	//Code added for display all diseases tabs to admin
     	Map<String, Set<Action>> allDiseaseList = new LinkedHashMap<String, Set<Action>>();
-    	List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
     	Set<Action> multipleCancerCommunityFeed = null;
-    	
+
     	List<String> talkerCategories = new ArrayList<String>();
     	talkerCategories.add(talker.getCategory());
-    	if(talker.getOtherCategories() != null){
-    		for (int i = 0; i < talker.getOtherCategories().length; i++) {
+    	if(talker.getOtherCategories() != null) {
+    		for (int i = 0; i < talker.getOtherCategories().length; i++)
     			talkerCategories.add(talker.getOtherCategories()[i]);
-    		}
     	}
     	String talkerCat = talker.getCategory();
     	for (String talkerCategory : talkerCategories) {
     		talker.setCategory(talkerCategory);
-    		System.out.println("For : " + talkerCategory);
     		multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
-    		//for(int index = 0 ; index < diseaseList.size(); index++){
-    		//	if(talkerCategory.equalsIgnoreCase(diseaseList.get(index).getName()))
-					allDiseaseList.put(talkerCategory.replaceAll(" ", "_"),multipleCancerCommunityFeed);
-    		//}
+			allDiseaseList.put(talkerCategory.replaceAll(" ", "_"),multipleCancerCommunityFeed);
 		}
     	talker.setCategory(talkerCat);
-		/*if(diseaseList != null && diseaseList.size() > 0){
-			for(int index = 0 ; index < diseaseList.size(); index++){
-				String category = talker.getCategory();
-	    		talker.setCategory(diseaseList.get(index).getName());
-	    		multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
-   				if(category.equalsIgnoreCase(diseaseList.get(index).getName()))
-   					allDiseaseList.put(diseaseList.get(index).getName().replaceAll(" ", "_"),multipleCancerCommunityFeed);
-    			talker.setCategory(category);
-			}
-		}
-		
-		//Code added for display other categories
-		if(diseaseList != null && diseaseList.size() > 0){
-			for(int index = 0 ; index < diseaseList.size(); index++){
-				if(talker.getOtherCategories() != null){
-					for(int index1 = 0; index1 < talker.getOtherCategories().length; index1++){
-					    String category = talker.getCategory();
-					 	talker.setCategory(talker.getOtherCategories()[index1]);
-			    		multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
-	    				if(talker.getOtherCategories()[index1].equalsIgnoreCase(diseaseList.get(index).getName()))
-	    					allDiseaseList.put(diseaseList.get(index).getName().replaceAll(" ", "_"),multipleCancerCommunityFeed);
-		    			talker.setCategory(category);
-					}
-				}
-			}
-		}*/
 
     	List<Action> mentions = CommentsDAO.getTalkerMentions(talker,null);
     	
@@ -137,14 +105,13 @@ public class Home extends Controller {
 
 		List<TalkerBean> similarMembers = TalkerLogic.getRecommendedTalkers(talker,"USR",null);
 		List<TalkerBean> experts = TalkerLogic.getRecommendedTalkers(talker,"EXP",null);
-	
 		List<ConversationBean> recommendedConvos = TalkerLogic.getRecommendedConvos(talker);
 		
 		boolean emailVerification = false;
 		if (session.contains("justloggedin") && talker.getVerifyCode() != null) {
 			emailVerification = true;
+			session.remove("justloggedin");
 		}
-		session.remove("justloggedin");
 		
 		boolean newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
 		
