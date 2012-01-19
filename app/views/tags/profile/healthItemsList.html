@@ -1,3 +1,4 @@
+#{if item != null}
 #{list items: _healthItem.children, as: 'item' }
 	#{if item.children?.size() > 0 }
 		#{ profile/healthItemsList healthItem: item, talkerDisease: _talkerDisease /}
@@ -8,3 +9,4 @@
 		#{/if}
 	#{/else}
 #{/list}
+#{/if}

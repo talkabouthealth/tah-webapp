@@ -74,21 +74,22 @@ public class FacebookUtil {
 			//2011-02-09T17:02:27+0000
 			Locale.setDefault(Locale.US);
 			DateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-			
-			for (Object objectData : dataList) {
-				BasicDBObject postData = (BasicDBObject)objectData;
-				
-				ServicePost post = new ServicePost();
-				post.setId(postData.getString("id"));
-				post.setText(postData.getString("message"));
-				
-				BasicDBObject userData = (BasicDBObject)postData.get("from");
-				post.setUserId(userData.getString("id"));
-				
-				String timeString = postData.getString("created_time");
-				post.setTime(timeFormat.parse(timeString));
-				
-				postsList.add(post);
+			if(dataList != null && !dataList.isEmpty()){
+				for (Object objectData : dataList) {
+					BasicDBObject postData = (BasicDBObject)objectData;
+					
+					ServicePost post = new ServicePost();
+					post.setId(postData.getString("id"));
+					post.setText(postData.getString("message"));
+					
+					BasicDBObject userData = (BasicDBObject)postData.get("from");
+					post.setUserId(userData.getString("id"));
+					
+					String timeString = postData.getString("created_time");
+					post.setTime(timeFormat.parse(timeString));
+					
+					postsList.add(post);
+				}
 			}
 		} catch (Exception e) {
 			Logger.error(e, "Wasn't able to import Facebook posts");
