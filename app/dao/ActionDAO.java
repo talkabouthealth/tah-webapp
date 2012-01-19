@@ -359,7 +359,7 @@ public class ActionDAO {
 		if (firstActionTime != null) {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
 		}
-		List<String> cat = FeedsLogic.getCancerType(talker);
+		//List<String> cat = FeedsLogic.getCancerType(talker);
 		
 		DBObject query = queryBuilder.get();
 		return loadPreloadActions(query);

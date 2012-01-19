@@ -71,7 +71,8 @@ public class Home extends Controller {
     	List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
 
 		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
-    	Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
+		// Removing community feed as it is useless in new feed.
+    	//Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
 
     	//Code added for display all cancer tab to admin
     	Set<Action> allFeed = FeedsLogic.getAllCancerFeed(null, true,talker);
@@ -80,18 +81,20 @@ public class Home extends Controller {
     	Map<String, Set<Action>> allDiseaseList = new LinkedHashMap<String, Set<Action>>();
     	Set<Action> multipleCancerCommunityFeed = null;
 
-    	List<String> talkerCategories = new ArrayList<String>();
-    	talkerCategories.add(talker.getCategory());
-    	if(talker.getOtherCategories() != null) {
-    		for (int i = 0; i < talker.getOtherCategories().length; i++)
-    			talkerCategories.add(talker.getOtherCategories()[i]);
-    	}
+    	//List<String> talkerCategories = new ArrayList<String>();
+    	//talkerCategories.add(talker.getCategory());
+
     	String talkerCat = talker.getCategory();
-    	for (String talkerCategory : talkerCategories) {
-    		talker.setCategory(talkerCategory);
-    		multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
-			allDiseaseList.put(talkerCategory.replaceAll(" ", "_"),multipleCancerCommunityFeed);
-		}
+    	multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
+		allDiseaseList.put(talkerCat.replaceAll(" ", "_"),multipleCancerCommunityFeed);
+		
+    	if(talker.getOtherCategories() != null) {
+    		for (int i = 0; i < talker.getOtherCategories().length; i++) {
+    			talker.setCategory(talker.getOtherCategories()[i]);
+    			multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
+    			allDiseaseList.put(talker.getOtherCategories()[i].replaceAll(" ", "_"),multipleCancerCommunityFeed);
+    		}
+    	}
     	talker.setCategory(talkerCat);
 
     	List<Action> mentions = CommentsDAO.getTalkerMentions(talker,null);
@@ -99,13 +102,13 @@ public class Home extends Controller {
     	boolean showNotificationAccounts = prepareNotificationPanel(session, talker);
 		TalkerLogic.preloadTalkerInfo(talker);
 		
-    	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics(TopicLogic.TOPICS_PER_PAGE);
+    	//List<TopicBean> popularTopics = TopicLogic.loadPopularTopics(TopicLogic.TOPICS_PER_PAGE);
 
         session.put("topicCount", TopicLogic.TOPICS_PER_PAGE);
 
-		List<TalkerBean> similarMembers = TalkerLogic.getRecommendedTalkers(talker,"USR",null);
-		List<TalkerBean> experts = TalkerLogic.getRecommendedTalkers(talker,"EXP",null);
-		List<ConversationBean> recommendedConvos = TalkerLogic.getRecommendedConvos(talker);
+		//List<TalkerBean> similarMembers = TalkerLogic.getRecommendedTalkers(talker,"USR",null);
+		//List<TalkerBean> experts = TalkerLogic.getRecommendedTalkers(talker,"EXP",null);
+		//List<ConversationBean> recommendedConvos = TalkerLogic.getRecommendedConvos(talker);
 		
 		boolean emailVerification = false;
 		if (session.contains("justloggedin") && talker.getVerifyCode() != null) {
@@ -115,9 +118,11 @@ public class Home extends Controller {
 		
 		boolean newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
 		
-		render("@newhome", talker, emailVerification,
+		render("@newhome", talker, emailVerification,liveConversations, convoFeed, mentions, showNotificationAccounts,
+		newsLetterFlag,allDiseaseList,allFeed); //similarMembers, experts, recommendedConvos , popularTopics
+		/*render("@newhome", talker, emailVerification,
 				liveConversations, convoFeed, communityFeed, mentions, showNotificationAccounts,
-				popularTopics,similarMembers, experts, recommendedConvos,newsLetterFlag,allDiseaseList,allFeed);//recommendedTopics
+				popularTopics,similarMembers, experts, recommendedConvos,newsLetterFlag,allDiseaseList,allFeed);*///recommendedTopics
     }
     
     private static boolean prepareNotificationPanel(Session session, TalkerBean talker) {
@@ -224,6 +229,14 @@ public class Home extends Controller {
     	}
     }
     
+    /**
+     * Loads popular topics
+     */
+    public static void feedPopularTopics() {
+    	List<TopicBean> _popularTopics = TopicLogic.loadPopularTopics(TopicLogic.TOPICS_PER_PAGE);
+    	render("tags/common/popularTopics.html", _popularTopics,false,TopicLogic.TOPICS_PER_PAGE);
+    	///tah-dev/app/views/tags/common/popularTopics.html
+    }
     /* ---------------- Invitations ----------------- */
     public static void invitations() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);

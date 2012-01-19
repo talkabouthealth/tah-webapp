@@ -341,12 +341,11 @@
               </div>
 	#{/if}
 
-
-   #{if similarMembers}
-   <div class="topipsts">
+   <!-- For similar Members widget -->
+   <div class="topipsts" id="similarMembersCnt" style="display:none;">
      <div class="mtrighttxt1">Similar Members</div>
      <div>
-     	<div id="USRList" >#{ profile/similarMemberList similarMembers: similarMembers /}</div>
+     	<div id="USRList"></div>
   	 </div>
 	 <div class="topbox1" >
 		[<a href="@{Explore.browseMembers('active')}"><strong>View all</strong></a>]
@@ -354,13 +353,12 @@
     </div>
 	<div class="topicborder"></div>
    </div>
-   #{/if}
    
-   #{if experts}
-   <div class="topipsts">
+   <!-- For experts widget -->
+   <div class="topipsts" id="expertsCnt" style="display:none;">
      <div class="mtrighttxt1">Recommended Experts</div>
      <div>
-     	<div id="EXPList">#{ profile/similarMemberList similarMembers: experts /}</div>
+     	<div id="EXPList"></div>
   	 </div>
 	 <div class="topbox1" >
 	       [<a href="/explore/experts"><strong>View all</strong></a>]
@@ -368,7 +366,7 @@
 	 </div>
 	<div class="topicborder"></div>
    </div>
-   #{/if}
+   
    
    #{if recommendedTopics}
    <div class="topipsts">
@@ -384,8 +382,9 @@
 	</div>
 	#{/if}
 	
-	#{if recommendedConvos}
-	<!--<div class="topipsts">
+	
+	<!-- #{if recommendedConvos}
+	<div class="topipsts">
    		<div class="mtrighttxt1">Recommended Questions</div>
    		<div id="recommendedTopics">
    			#{list items: recommendedConvos, as: 'convo'}
@@ -406,11 +405,14 @@
 			#{/list} 
    		</div>
    		<div class="topicborder"></div>
-	</div>-->
-	#{/if}	
+	</div>
+	#{/if}
+	-->
+		
 	#{include 'Upcoming_Workshops.html' /}
 	<!-- New Changes Added -->
-	#{common/popularTopics popularTopics: popularTopics /}
+	<div id="popularTopicsCnt" style="display:none;"></div>
+	<!-- #{common/popularTopics popularTopics: popularTopics /}  -->
 	<!-- New Changes Added -->
 	#{include 'newsletter_signup.html' /}
 	#{include 'SHARE_telephone_support.html' /}
@@ -442,7 +444,8 @@
 	
 	#{include 'Upcoming_Workshops.html' /}
 	<!-- New Changes Added -->
-	#{common/popularTopics popularTopics: popularTopics /}
+	<div id="popularTopicsCnt" style="display:none;"></div>
+	<!-- #{common/popularTopics popularTopics: popularTopics /}  -->
 	<!-- New Changes Added -->
 	#{include 'newsletter_signup.html' /}
 	#{include 'SHARE_telephone_support.html' /}
