@@ -102,7 +102,7 @@ public class Search extends Controller {
 	 */
 	public static void ajaxDiseaseSearch(String term, String convoId) throws Exception {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		ConversationBean convo = ConversationDAO.getConvoById(convoId);
+		//ConversationBean convo = ConversationDAO.getConvoById(convoId);
 		String[] diseaseArr = new String[14];
 		
 		diseaseArr = talker.getOtherCategories();

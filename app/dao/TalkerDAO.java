@@ -587,6 +587,34 @@ public class TalkerDAO {
 		return talkerList;
 	}
 	
+	/*Changes for loading all talkers with no suspened flag*/
+	public static List<TalkerBean> loadAllActiveTalker(boolean basicInfo) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		talkersColl.ensureIndex(new BasicDBObject("uname", 1));
+		
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start().add("suspended", false).add("service_accounts", new BasicDBObject("$type", 3));
+		List<DBObject> talkersDBObjectList = null;
+		if (basicInfo) {
+			DBObject fields = getBasicTalkerFields();
+			talkersDBObjectList = talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1)).toArray();
+		} else {
+			talkersDBObjectList = talkersColl.find(queryBuilder.get()).sort(new BasicDBObject("uname", 1)).toArray();
+		}
+		
+		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
+		for (DBObject talkerDBObject : talkersDBObjectList) {
+			TalkerBean talker = new TalkerBean();
+			if (basicInfo) {
+				talker.parseBasicFromDB(talkerDBObject);
+			}
+			else {
+				talker.parseFromDB(talkerDBObject);
+			}
+			talkerList.add(talker);
+		}
+		return talkerList;
+	}
+	
 	/**
 	 * Load all (deactivated and suspended also) talkers.
 	 * @param basicInfo Load full or only basic info

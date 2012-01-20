@@ -79,20 +79,21 @@ public class Home extends Controller {
 
     	//Code added for display all diseases tabs to admin
     	Map<String, Set<Action>> allDiseaseList = new LinkedHashMap<String, Set<Action>>();
-    	Set<Action> multipleCancerCommunityFeed = null;
+    	//Set<Action> multipleCancerCommunityFeed = null;
 
     	//List<String> talkerCategories = new ArrayList<String>();
     	//talkerCategories.add(talker.getCategory());
 
     	String talkerCat = talker.getCategory();
-    	multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
-		allDiseaseList.put(talkerCat.replaceAll(" ", "_"),multipleCancerCommunityFeed);
+    	//multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
+		//allDiseaseList.put(talkerCat.replaceAll(" ", "_"),multipleCancerCommunityFeed);
+    	allDiseaseList.put(talkerCat.replaceAll(" ", "_"),null);
 		
     	if(talker.getOtherCategories() != null) {
     		for (int i = 0; i < talker.getOtherCategories().length; i++) {
     			talker.setCategory(talker.getOtherCategories()[i]);
-    			multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
-    			allDiseaseList.put(talker.getOtherCategories()[i].replaceAll(" ", "_"),multipleCancerCommunityFeed);
+    			//multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
+    			allDiseaseList.put(talker.getOtherCategories()[i].replaceAll(" ", "_"),null);
     		}
     	}
     	talker.setCategory(talkerCat);
@@ -323,4 +324,20 @@ public class Home extends Controller {
 		renderText("Ok");
     }
 
+    /**
+     * Loading specific cancer type feed using ajax
+     * @param cancerType
+     */
+    public static void loadCancerFeed(String cancerType){
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	Set<Action> multipleCancerCommunityFeed = null;
+    	Map<String, Set<Action>> allDiseaseList = new LinkedHashMap<String, Set<Action>>();
+    	String talkerCat = talker.getCategory();
+    	cancerType = cancerType.replaceAll("_", " ");
+    	talker.setCategory(cancerType);
+    	multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
+		allDiseaseList.put(talker.getCategory().replaceAll(" ", "_"),multipleCancerCommunityFeed);
+		talker.setCategory(talkerCat);
+		render("tags/feed/allCancerFeed.html", allDiseaseList, cancerType);
+    }
 }

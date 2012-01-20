@@ -26,12 +26,17 @@ import dao.TalkerDAO;
  * Imports new thoughts from Twitter/Facebook for users with checked "SHARE_TO_THOUGHTS" option.
  *
  */
-@Every("10min")
+@Every("50min")
 public class ThoughtsFromServicesJob extends Job {
 	
 	@Override
 	public void doJob() throws Exception {
-		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
+		List<TalkerBean> talkerList = TalkerDAO.loadAllActiveTalker(false);
+		List<ServicePost> postsList = new ArrayList<ServicePost>();
+		CommentBean thought;
+		boolean isDuplicate;
+		String lastPostId;
+		for (TalkerBean talker : talkerList) {
 			if (talker.isSuspended() || talker.isDeactivated()) {
 				continue;
 			}
@@ -40,8 +45,7 @@ public class ThoughtsFromServicesJob extends Job {
 				if (!serviceAccount.isTrue("SHARE_TO_THOUGHTS")) {
 					continue;
 				}
-				
-				List<ServicePost> postsList = new ArrayList<ServicePost>();
+
 				if (serviceAccount.getType() == ServiceType.TWITTER) {
 			    	postsList = TwitterUtil.importTweets(serviceAccount, serviceAccount.getLastPostId());
 				}
@@ -53,23 +57,22 @@ public class ThoughtsFromServicesJob extends Job {
 		    		Collections.sort(postsList);
 			    	for (ServicePost post : postsList) {
 			    		//check if we've already imported it
-			    		CommentBean thought = 
-			    			CommentsDAO.getThoughtByFromInfo(serviceAccount.getType().toString(), post.getId());
+			    		thought = CommentsDAO.getThoughtByFromInfo(serviceAccount.getType().toString(), post.getId());
 			    		
 			    		// check duplicates by full-text + sender + some-days-back, and reject if found 
-			    		boolean isDuplicate = CommentsDAO.getThoughtDuplicates(talker.getId(),post.getText(),3);
+			    		isDuplicate = CommentsDAO.getThoughtDuplicates(talker.getId(),post.getText(),3);
 			    		
 			    		if (thought == null && !isDuplicate) {
 			    			//Now we do no store html tags in the db
-//			    			String htmlText = prepareText(serviceAccount.getType(), post.getText());
-			    			String htmlText = post.getText();
+			    			//String htmlText = prepareText(serviceAccount.getType(), post.getText());
+			    			//String htmlText = post.getText();
 			    			TalkerLogic.saveProfileComment(talker, talker.getId(), null, 
-									htmlText, post.getText(), 
+			    					post.getText(), post.getText(), 
 									serviceAccount.getType().toString(), post.getId(), null, null,null);
 			    		}
 					}
 			    	
-			    	String lastPostId = postsList.get(postsList.size()-1).getId();
+			    	lastPostId = postsList.get(postsList.size()-1).getId();
 			    	serviceAccount.setLastPostId(lastPostId);
 			    	TalkerDAO.updateTalker(talker);
 		    	}

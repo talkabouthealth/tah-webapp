@@ -2,7 +2,7 @@ eval(function(p,a,c,k,e,r){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a
 
 var update_retrieving = 0;
 $(document).ready(function() {
-	initNewTabs();
+	initHomeTabs();
 	//start convo tabs
 	$(".topTabLink").click(function() {
 			$(".activeTopTab").removeClass("activeTopTab").addClass("topTab"); //Remove any "active" class
@@ -126,4 +126,35 @@ function loadPopularTopics() {
 			}
 		}
 	);
+}
+
+function initHomeTabs() {
+	$(".tabLink").click(function() {
+		$(".newActiveTab").removeClass("newActiveTab").addClass("newTab");
+		$(this).parent().removeClass("newTab").addClass("newActiveTab");
+		
+		var id = $(this).attr("id");
+		var cancerType = id.substring(0,id.lastIndexOf("CommunityFeed"));
+		
+		if(cancerType != ""){
+			$(".tabContent").hide();
+			$.get("/home/loadCancerFeed", {cancerType: cancerType},
+					function(data) {
+						$("#cancerFeed").html(data);
+						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
+						$('.moretext2').truncatable({ limit: 220, more: '... more', less: true, hideText: '' });
+					}
+				);	
+		}
+		
+		$(".tabContent").hide();
+		$(".replytommentbox").hide();
+		$("#"+id+"Content").fadeIn();
+		
+		$("#"+id+"Notifications").addClass("morenotification");
+		
+		//Code to show hide respective buttons also
+		$("#"+id+"Btn").fadeIn();
+		return false;
+	});
 }

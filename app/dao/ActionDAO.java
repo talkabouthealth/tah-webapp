@@ -211,28 +211,22 @@ public class ActionDAO {
 		List<String> cat = FeedsLogic.getCancerType(talker);
 		cat.add(ConversationBean.ALL_CANCERS);
 		
-		//queryBuilder.add("category", new BasicDBObject("$in", cat) );
 		if(talker == null) {
 			queryBuilder.add("category", new BasicDBObject("$in", cat) );
 		} else {
-			if(talker.getOtherCategories() == null){
+			if(talker.getOtherCategories() == null) {
 				queryBuilder.add("category", new BasicDBObject("$in", cat) );
 			} else {
 				List<String> otherCat = new ArrayList<String>();
 				otherCat.add(talker.getCategory());// = cat;
-				//for (int i = 0; i < talker.getOtherCategories().length; i++) {
-					//otherCat.add(talker.getOtherCategories()[i]);
-					//cat.add(talker.getOtherCategories()[i]);
-				//}
 				otherCat.add(ConversationBean.ALL_CANCERS);
-				
 				queryBuilder.add("$or", 
 					Arrays.asList(
 							new BasicDBObject("other_disease_categories", new BasicDBObject("$in", otherCat)),
 							new BasicDBObject("category", new BasicDBObject("$in", cat))
 						)
 				);
-			}	
+			}
 		}
 		DBObject query = queryBuilder.get();
 		return loadPreloadActions(query);

@@ -1,0 +1,32 @@
+#{if allDiseaseList != null}
+	#{list items: allDiseaseList.keySet(), as: 'cancerType'}
+          	 <div id="${cancerType}CommunityFeedContent" class="tabContent">	
+				<div class="topic">
+	                    <div class="cb"></div>
+	                    <div class="topic" id='comfeed'>
+	                      <a href=# id="${cancerType}CommunityFeedNotifications" class="morenotification" style='display:none' onClick="updateFeed('communityFeed'); return false;" >
+	                      0 new items
+	                      </a>
+	                    	<div id="${cancerType}CommunityFeedList">
+		                       	#{list items: allDiseaseList.get(cancerType), as: 'cancerCommunityFeed' }
+			                    	#{list items: cancerCommunityFeed, as: 'activity'}
+										#{feed/feedActivity activity: activity, talker: talker, parentList: 'cancerCommunityFeedContent' /}
+									#{/list}
+								#{/list}
+							</div>
+							#{if allDiseaseList.get(cancerType) != null}
+								#{if allDiseaseList.get(cancerType).size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+									<div class="replytommentbox" id="${cancerType}CommunityFeedBtn">
+			                          <input type="submit" src="images/seemore.jpg" 
+			                          	onclick="return loadMoreFeed('${cancerType}CommunityFeed');" value=" " class="seemorecom" />
+			                        </div>
+								#{/if}
+							#{/if}
+							<div class="cb"></div>
+                    	</div>
+                    <!--newpageCover-->
+                    <div class="cb"></div>
+                  </div> 
+		</div>
+          #{/list}
+#{/if}
