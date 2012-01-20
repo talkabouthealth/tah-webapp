@@ -135,11 +135,12 @@ function initHomeTabs() {
 		
 		var id = $(this).attr("id");
 		var cancerType = id.substring(0,id.lastIndexOf("CommunityFeed"));
-		
+		$("#ajaxLoading").appendTo($("#cancerFeed")).show();
 		if(cancerType != ""){
 			$(".tabContent").hide();
 			$.get("/home/loadCancerFeed", {cancerType: cancerType},
 					function(data) {
+						$("#ajaxLoading").hide();
 						$("#cancerFeed").html(data);
 						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
 						$('.moretext2').truncatable({ limit: 220, more: '... more', less: true, hideText: '' });
