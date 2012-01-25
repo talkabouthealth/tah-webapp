@@ -81,8 +81,7 @@ public class Application extends Controller {
     	if (Security.isConnected()) {
     		//redirect to Home page if user is logged in
     		Home.index();
-    	}
-    	else {
+    	} else {
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
     		int numberOfLiveChats = ConversationDAO.getLiveConversations().size();
     		int numberOfQuestions = ConversationDAO.getNumberOfConversations();
