@@ -19,7 +19,7 @@ public interface Action {
 		START_CONVO,
 		RESTART_CONVO,
 		JOIN_CONVO,
-		
+		UPDATE_CONVO,
 		ANSWER_CONVO,
 		REPLY_CONVO,
 		

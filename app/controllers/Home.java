@@ -203,13 +203,19 @@ public class Home extends Controller {
     	Set<Action> _feedItems = null;
     	List<TalkerBean> _similarMembers = null;
     	List<ConversationBean> popularConvos = null;
-    	if ("convoFeed".equalsIgnoreCase(feedType)) {
+    	if (feedType != null && feedType.contains("CommunityFeed")) {
+    		int index = feedType.indexOf("CommunityFeed");
+    		String cancerType = feedType.substring(0, index);
+    		cancerType = cancerType.replaceAll("_", " ");
+    		String category = _talker.getCategory();
+		 	_talker.setCategory(cancerType);
+     		_feedItems = FeedsLogic.getCommunityFeed(afterActionId, loggedIn, _talker);
+     		_talker.setCategory(category);
+     		render("tags/feed/feedList.html", _feedItems, _talker);
+     	}else if ("convoFeed".equalsIgnoreCase(feedType)) {
     		_feedItems = FeedsLogic.getConvoFeed(_talker, afterActionId);
     		render("tags/feed/feedList.html", _feedItems, _talker);
-    	} else if ("communityFeed".equalsIgnoreCase(feedType)) {
-    		_feedItems = FeedsLogic.getCommunityFeed(afterActionId, loggedIn, _talker);
-    		render("tags/feed/feedList.html", _feedItems, _talker);
-    	} else if ("popularConvo".equalsIgnoreCase(feedType)){
+    	} else if ("popularConvo".equalsIgnoreCase(feedType)) {
     	     popularConvos = ConversationDAO.loadPopularConversations(afterActionId);
     	     render("tags/convo/convoList.html", popularConvos);
         } else if("USR".equalsIgnoreCase(feedType) || "EXP".equalsIgnoreCase(feedType)){
@@ -221,7 +227,7 @@ public class Home extends Controller {
     	} else if("allFeed".equals(feedType)) {
     		_feedItems = FeedsLogic.getAllCancerFeed(afterActionId, loggedIn, _talker);
     		render("tags/feed/feedList.html", _feedItems, _talker);
-    	}else {
+    	} else {
     		TalkerBean profileTalker = TalkerDAO.getByUserName(talkerName);
     		if (profileTalker != null) {
     			_feedItems = FeedsLogic.getTalkerFeed(profileTalker, afterActionId);

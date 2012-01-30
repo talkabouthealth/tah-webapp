@@ -546,12 +546,11 @@ function loadMoreFeed(type, talkerName) {
 	
 	//Code added for multiple cancer types
 	var feedType = "";
-	if(type.search("allFeed")){
+	if(type == "allFeed"){
 		feedType = "allFeed"
 	}else{
 		feedType = type;
 	}
-
 	//public static void conversationFeedAjax(String afterActionId) {
 	$.get("/home/feedAjaxLoad", {afterActionId: lastActionId, feedType: feedType, talkerName: talkerName},
 			function(data) {
@@ -562,7 +561,6 @@ function loadMoreFeed(type, talkerName) {
 				if (feedSize >= feedsPerPage) {
 					moreBtn.show();
 				}
-
 				$(data).appendTo($("#"+type+"List"));
 				
 				//for new items
@@ -930,6 +928,7 @@ function refreshMembers(type,elm){
 }
 
 function loadMoreUser(type,from){
+	
 
 	var lastActionId = '';
 	var moreBtn = $("#"+type+"Tab");

@@ -309,7 +309,7 @@ public class ViewDispatcher extends Controller {
 		
 		TopicDAO.incrementTopicViews(topic.getId());
 		
-		List<String> cat = FeedsLogic.getCancerType(talker);
+		//List<String> cat = FeedsLogic.getCancerType(talker);
 		
 		//Need to get specific count of feeds first
 		//FeedsLogic.FEEDS_PER_PAGE
@@ -321,7 +321,7 @@ public class ViewDispatcher extends Controller {
 		List<ConversationBean> openConvosSaved = new ArrayList<ConversationBean>();
 		for (ConversationBean conversationBean : openConvos) {
 			//added for check cancer type
-			if(conversationBean.isOpened() && cat.contains(conversationBean.getCategory())){
+			if(conversationBean.isOpened()){ //&& cat.contains(conversationBean.getCategory())
 				openConvosSaved.add(conversationBean);
 			}
 			if(openConvosSaved.size() >= FeedsLogic.FEEDS_PER_PAGE)
@@ -333,9 +333,9 @@ public class ViewDispatcher extends Controller {
 		List<ConversationBean> popularConvos = new ArrayList<ConversationBean>();
 		//added for check cancer type
 		for (ConversationBean conversationBean : popularConvos1) {
-			if(cat.contains(conversationBean.getCategory())){
+			//if(cat.contains(conversationBean.getCategory())){
 				popularConvos.add(conversationBean);
-			}
+			//}
 		}
 		Collections.sort(popularConvos);
 		//Added code for adding pagination to the popular topic section on topic page
@@ -352,9 +352,9 @@ public class ViewDispatcher extends Controller {
 		List<Action> topicMentions = new ArrayList<Action>();
 		//added for check cancer type
 		for (Action action : topicMentions1) {
-			if(cat.contains(action.getTalker().getCategory())){
+			//if(cat.contains(action.getTalker().getCategory())){
 				topicMentions.add(action);
-			}
+			//}
 		}
 		if(topicMentions.size() >= FeedsLogic.FEEDS_PER_PAGE){
 			topicMentions = topicMentions.subList(0, FeedsLogic.FEEDS_PER_PAGE);	

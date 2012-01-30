@@ -194,8 +194,25 @@ public class SearchUtil {
 				searchTerm = term+"*";
 			}
 		}
+		
+		if(searchTerm != null && !searchTerm.equals(""))
+			searchTerm = escapeString(searchTerm);
+		
 		Query searchQuery = parser.parse(searchTerm);
 		return searchQuery;
+	}
+	
+	private static String escapeString(String searchTerm){
+		if(searchTerm.contains("(")) searchTerm = searchTerm.replace("(", "\\(");
+		if(searchTerm.contains(")")) searchTerm = searchTerm.replace(")", "\\)");
+		if(searchTerm.contains("[")) searchTerm = searchTerm.replace("[", "\\[");
+		if(searchTerm.contains("]")) searchTerm = searchTerm.replace("]", "\\]");
+		if(searchTerm.contains("{")) searchTerm = searchTerm.replace("{", "\\{");
+		if(searchTerm.contains("}")) searchTerm = searchTerm.replace("}", "\\}");
+		if(searchTerm.contains("^")) searchTerm = searchTerm.replace("^", "\\^");
+		if(searchTerm.contains(" ")) searchTerm = searchTerm.replace(" ", "\\ ");
+		if(searchTerm.contains(":")) searchTerm = searchTerm.replace(":", "\\:");
+		return(searchTerm);
 	}
 	
 }

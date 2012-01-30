@@ -283,7 +283,7 @@ public class ActionDAO {
 		BasicDBObjectBuilder queryBuilder = 
 			BasicDBObjectBuilder.start()
 				.add("type", new BasicDBObject("$in", actionTypes))
-				.add("category", new BasicDBObject("$in", cat) )
+				//.add("category", new BasicDBObject("$in", cat) )
 				.add("convoId", new BasicDBObject("$in", convosDBSet));
 		if (firstActionTime != null) {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
@@ -373,6 +373,7 @@ public class ActionDAO {
 		switch (type) {
 			case START_CONVO:
 			case RESTART_CONVO:
+			case UPDATE_CONVO:
 				return new StartConvoAction(dbObject);
 			case JOIN_CONVO:
 				return new JoinConvoAction(dbObject);
