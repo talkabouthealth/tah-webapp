@@ -1,6 +1,9 @@
 #{ extends 'main.html' /}
 
 	<script type="text/javascript"> 	 
+	var feedsPerPage = 10;
+	var totalCount = ${totalCount};
+	
 		$(document).ready(function() {
 			makeAutocomplete("#allSearchBox", "all");
 
@@ -69,11 +72,17 @@
 			                <div class="resulttopics">Questions</div>
 			                <div class="topicborder"></div>
 		                  	
-						  	<div class="activitiestext">
+						  	<div class="activitiestext" id="convoList">
 			                  	#{list items: convoResults, as: 'convoResult'}
 			                  		#{feed/feedActivity activity: convoResult, talker: talker /}
 			                  	#{/list}
 							</div>
+		                  #{/if}
+		                  #{if convoResults.size() == 10 }
+		                  		<div class="replytommentbox" id="convoFeedBtn">
+		                          <input type="submit" src="images/seemore.jpg" 
+		                          	onclick="return makeFullSearchAjaxLoad('#allSearchBox');" value=" " class="seemorecom" />
+		                        </div>
 		                  #{/if}
 		                  
 		                  <div class="cb" style="padding: 25px 0px"></div>

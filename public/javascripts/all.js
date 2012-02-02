@@ -994,3 +994,36 @@ function replaceAll(strText,oldParam,newParam){
 	}
 	return strReplaceAll;
 }
+
+//Used for displaying search result
+function makeFullSearchAjaxLoad(inputId) {
+	
+	var limit =  $(".joinpic").size() + 10;
+	var query = $(inputId).val();
+	if (query === '') {
+		alert("Please enter search query");
+		return false;
+	}
+	var moreBtn = $("#convoFeedBtn");
+	$("#ajaxLoading").appendTo(moreBtn.parent()).show();
+	moreBtn.hide();
+	
+	$.get("/searchAjaxLoad", {"query": query, "limit": limit},
+			function(data) {
+				$("#ajaxLoading").hide();
+		
+				//show more button if it isn't the end of a feed
+				var feedSize = $(data).find(".joinpic").size();
+				if (feedSize >= feedsPerPage && limit < totalCount) {
+					moreBtn.show();
+				}
+				$("#convoList").html("");
+				$(data).appendTo($("#convoList"));
+				//for new items
+				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+			}
+		);
+	
+	return false;
+}
+

@@ -17,6 +17,7 @@ import models.actions.Action;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -201,16 +202,36 @@ public class Search extends Controller {
 	}
 	
 	public static void allSearch(String query) throws Exception {
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		TalkerBean _talker = CommonUtil.loadCachedTalker(session);
+		int limit=10;
+		int totalCount = 0;
 		List<TopicBean> topicResults = null;
 		List<Action> convoResults = null;
 		if (query != null) {
 			topicResults = topicsSearch(query);
+			totalCount = SearchUtil.searchConvo(query,200000,_talker) == null ? 0 : SearchUtil.searchConvo(query,200000,_talker).size();
+			List<ConversationBean> convoList = SearchUtil.searchConvo(query,limit,_talker);
 			convoResults = 
-				ConversationLogic.convosToFeed(SearchUtil.searchConvo(query, 5,talker));
+				ConversationLogic.convosToFeed(convoList);
+		}
+		render(topicResults, convoResults, totalCount);
+	}
+	
+	public static void allSearchAjaxLoad(String query,int limit) throws Exception {
+		
+		TalkerBean _talker = CommonUtil.loadCachedTalker(session);
+		if(limit==0)
+			limit=10;
+		List<Action> convoResults = null;
+		if (query != null) {
+			List<ConversationBean> convoList = SearchUtil.searchConvo(query,limit,_talker);
+			convoResults = 
+				ConversationLogic.convosToFeed(convoList);
 		}
 		
-		render(topicResults, convoResults);
+		List<Action> _feedItems = convoResults;
+		
+		render("tags/feed/feedList.html", _feedItems, _talker);
 	}
 	
 	private static List<TopicBean> topicsSearch(String query) throws Exception {
