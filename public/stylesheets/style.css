@@ -5926,12 +5926,12 @@ border-bottom:1px solid #8b8b8b;
 .inboxbtn
 {
 float:left;
-background:url(../images/innbox.jpg);
+/*background:url(../images/innbox.jpg);*/
 width:73px;
 padding-top:7px;
 margin-left:5px;
 text-align:center;
-margin-top:6px;
+/*margin-top:6px;*/
 height:22px;
 font-size:13px;
 color:#000000;
@@ -5948,12 +5948,9 @@ color:#000000;
 text-decoration:underline;
 }
 .Archive
-
 {
 float:left;
-background:url(../images/Archive.jpg);
 width:73px;
-padding-top:7px;
 margin-left:5px;
 text-align:center;
 height:22px;
@@ -5983,7 +5980,6 @@ font-size:13px;
 height:20px;
 margin-left:120px;
 margin-right:3px;
-padding-top:5px;
 text-align:center;
 width:95px;
 }
@@ -6046,9 +6042,7 @@ padding-top:7px;
 
 {
 float:left;
-background:url(../images/Archivebtn.jpg);
 width:68px;
-padding-top:6px;
 text-align:center;
 height:21px;
 margin-right:2px;
@@ -6071,9 +6065,7 @@ text-decoration:underline;
 
 {
 float:left;
-background:url(../images/Markasunread.jpg);
 width:109px;
-padding-top:6px;
 text-align:center;
 height:21px;
 margin-right:2px;
@@ -6095,9 +6087,7 @@ text-decoration:underline;
 .inboxprev
 {
 float:left;
-background:url(../images/inboxprev.jpg);
 width:52px;
-padding-top:4px;
 text-align:center;
 height:17px;
 margin-right:2px;
@@ -6120,9 +6110,7 @@ text-decoration:underline;
 .inboxnext
 {
 float:left;
-background:url(../images/inboxprev.jpg);
 width:52px;
-padding-top:4px;
 text-align:center;
 height:17px;
 margin-right:2px;
@@ -6215,6 +6203,7 @@ width:390px;
 font-weight:bold;
 color:#0680c5;
 float:left;
+font-size: 12px;
 }
 .inboxclose
 {
@@ -6457,9 +6446,9 @@ margin-bottom:5px;
 	background: url(../images/email_box.png) no-repeat;
 	border: medium none;
     height: 26px;
-    margin-top: 0px;
-    padding-left: 26px;
-    width: 166px;
+    margin-top: 2px;
+    padding-left: 33px;
+    width: 165px;
 }
 .newsignupbutton{
 	float:left;  

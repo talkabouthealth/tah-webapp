@@ -1,0 +1,38 @@
+<div class="inboxCover">
+   <div class="inboxbtn">
+   		<a href="/message/inbox">
+   			#{if fromPage.equals("inbox")}
+   				<img src="/public/images/innbox.jpg" border="0" alt="Inbox" />
+   			#{/if}
+   			#{else}
+   				<img src="/public/images/innbox1.jpg" border="0" alt="Inbox" />
+   			#{/else}
+   		</a>
+   </div>
+   <div class="Archive">
+   		<a href="/message/archive">
+   			#{if fromPage.equals("archive")}
+   				<img src="/public/images/Archive1.jpg" border="0" alt="Archive" />
+   			#{/if}
+   			#{else}
+   				<img src="/public/images/Archive.jpg" border="0" alt="Archive" />
+   			#{/else}
+   		</a>
+   </div>
+   <div class="Archive">
+   		<a href="/message/sentmail">
+   			#{if fromPage.equals("sentmail")}
+   				<img src="/public/images/sentmail1.jpg" border="0" alt="sentmail"/>
+   			#{/if}
+   			#{else}
+   				<img src="/public/images/sentmail.jpg" border="0" alt="sentmail"/>
+   			#{/else}
+   		</a>
+   </div>
+   <div class="NewMessage"><a href="javascript:setNewMessageDiv();"><img src="/public/images/NewMessages.jpg" border="0" alt="New Message" /></a></div>
+   <div class="InboxSearch">
+     <input type="submit" class="inboxsubimt" src="images/inboxsubimt.jpg" value=" " onclick="return mailSearch('#searchMessage');"/>
+     <input id="searchMessageHelp" type="text" value="Search, Messages"  class="inboxsearchinput"/>
+	 <input type="text" class="inboxsearchinput"  style="display: none;" id="searchMessage" />
+   </div>
+ </div>

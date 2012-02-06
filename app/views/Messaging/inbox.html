@@ -1,0 +1,263 @@
+#{extends 'main.html' /}
+
+<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/play-pagination.css'}"/> 
+<script type="text/javascript">
+
+
+$(document).ready(function(){
+
+	/*$("#searchMessage")
+	.focus(function() {
+		$("#searchMessage").autocomplete( "search" );
+	})
+	.keydown(function(c) {
+				if (c.keyCode === 13) {
+					mailSearch("#searchMessage","");
+					return false;
+				}
+			});
+	*/
+
+	$("#searchMessageHelp")
+	.focus(function() {
+		$(this).hide();
+		$("#searchMessage").show().focus();
+	})
+	
+	makeAutocomplete("#searchMessage", "message");
+	
+	$("#userNameHelp")
+	.focus(function() {
+		$(this).hide();
+		$("#userName").show().focus();
+	})
+	
+	makeAutocomplete("#userName", "user");
+
+	
+});
+
+function makeFullSearch(inputId) {
+	alert(inputId);
+	var query = $(inputId).val();
+	if (query === '') {
+		alert("Please enter search query");
+		return false;
+	}
+	var url = "/search?query="+query;
+	document.location = url;
+}
+
+function sendMessage(){
+	var user= document.getElementById("userName").value;
+	var subject = document.getElementById("subject").value;
+	var message = document.getElementById("message").value;
+	var isValid = true;
+	if(user == ""){
+		isValid = false;
+		alert("Please enter the user");
+	}else if(subject == ""){
+		isValid = false;
+		alert("Please enter the subject");
+	}else if(message == ""){
+		isValid = false;
+		alert("Please enter the message");
+	}
+	if(isValid == true){
+		var messageForm = document.getElementById('messageForm');
+		messageForm.action = "/message/sentmail?user="+user+"&subject="+subject+"&message="+message+"&action=sendMessage";
+		messageForm.submit();
+	}
+}
+
+function doAction(action) {
+
+	var path = window.location.href;
+	var  selectedMessageIdsList = new Array();
+	var selectedMessageIds = document.mailForm.selectedMessageIds;
+
+	if(selectedMessageIds.length){
+		with(document.mailForm) {
+			for(var i = 0; i < selectedMessageIds.length; i++){
+				if(selectedMessageIds[i].checked) {
+					selectedMessageIdsList.push(selectedMessageIds[i].value);
+				}
+			}
+		}
+	}else{
+		selectedMessageIdsList.push(document.mailForm.selectedMessageIds.value);
+	}
+
+	$.get("/message/doaction", {selectedMessageIds: selectedMessageIdsList, actionState: action, page: ${page}, path: path},
+			function(data) {
+				$("#inboxMessageList").empty();
+				$("#inboxMessageList").html(data);
+			}
+		);	
+}	
+
+function deleteMessage(id){
+	var endPage=document.getElementById("endPageHidden").value-1;
+	var listsize=document.getElementById("listSize").value;
+	if(listsize==1){
+		var startPage;
+		if(endPage!=0){
+		    if(endPage>=5)
+		      startPage=endPage-4;
+		    else
+		        startPage=1;
+		    var html="<input type='hidden' value='"+${endPage}+"' id='endPageHidden'/>";
+			for(var i=startPage;i<endPage;i++){
+				html=html+"<a href='inbox?page="+i+"' style='font-weight:normal;text-decoration: none;'>"+i+"</a>";
+			}
+			html=html+"<a href='inbox?page="+endPage+"' style='font-weight:bold;text-decoration: underline;'>"+endPage+"</a>";
+			$("#divForPaging1").html(html);
+			$("#divForPaging2").html(html);
+		}else{
+			$("#divForPaging1").html("");
+			$("#divForPaging2").html("");
+		}
+	}
+
+	
+	var path = window.location.href;
+	var  selectedMessageIdsList = new Array();
+	selectedMessageIdsList.push(id);
+	$.get("/message/doaction", {selectedMessageIds: selectedMessageIdsList, actionState: 'DELETE', page: ${page}, path: path},
+			function(data) {
+				$("#inboxMessageList").empty();
+				$("#inboxMessageList").html(data);
+			}
+		);
+}
+
+function setNewMessageDiv(){
+	document.getElementById("divForNewMessage").style.display  = 'block';
+	document.getElementById("msgList").style.display = 'none'; 
+}
+function cancelMessage(){
+	document.getElementById("divForNewMessage").style.display  = 'none';
+	document.getElementById("msgList").style.display = 'block';
+}
+</script>
+<style type="text/css">
+<!--
+.display {
+	width:1px;
+	height:1px;
+}
+.style3 {
+	color: #555555
+}
+-->
+</style>
+<div id="bg2">
+  <div id="waperhome">
+    #{include 'header.html' /}
+    <!--headerHome-->
+    <!--======================================header Ends======================================-->
+    <div id="ContentHome">
+      <div id="bodysubpge" style="margin-top: 30px;">
+       
+        #{include 'Messaging/messageHeader.html' /}
+        <!--inboxCover-->
+        <div id="msgList">
+        #{if messageList != null}
+        	
+	        <div class="ArchiveCover">
+	        	#{include 'Messaging/messageSubHeader.html' /}
+	          
+	          #{if size > 0}
+		          #{if pages > 1}
+			          <div class="inboxprev"><a href="inbox?page=${prevPage}"><img src="/public/images/Previous.jpg" alt="Previous" border="0" /></a></div>
+			          <div class="inboxtextpre">
+				        	<div id="divForPaging1">
+						     <input type="hidden" value="${endPage}" id="endPageHidden"/>
+						          #{list items:startPage..endPage, as:'i'}
+										#{if page == i+""}
+										<a href="inbox?page=${i}" style="font-weight:bold; text-decoration: underline;">${i}</a>
+										#{/if}
+										#{else}
+										<a href="inbox?page=${i}" style="font-weight:normal;text-decoration: none;">${i}</a>
+										#{/else}
+						          
+						          #{/list}
+			          		</div> 
+			          </div>
+			          <div class="inboxnext" id="nextid"><a href="inbox?page=${nextPage}" ><img src="/public/images/next.jpg" alt="next" border="0" /></a></div>
+		           #{/if}
+	           #{/if}
+	        </div>
+	        <!--ArchiveCover-->
+	        
+	        <div id="inboxDiv">
+		       	<form name="mailForm" action="" method="POST">
+		       		<input type="hidden" name="actionState"/>
+					#{if messageList.size > 0}
+						<div id="inboxMessageList">
+						    <input type="hidden" id="listSize" value="${messageList.size}">
+							#{list items: messageList, as: 'messageList'}
+								#{Messaging/inboxMessage messageList: messageList, page: page, talker: talker/}
+							#{/list}
+						</div>
+					#{/if}
+					#{else}
+						<div class="KenCover">
+							<div class="kansubtxt">
+							No messages in inbox
+							</div>
+						</div>
+					#{/else}
+				</form>
+				
+	         </div> 
+	         
+	       
+	        
+	    <!--KenCover-->
+        <div class="KenCovernex">
+        	#{if size > 0}
+	        	#{if pages > 1}
+	          		  <div class="inboxprev"><a href="inbox?page=${prevPage}"><img src="/public/images/Previous.jpg" alt="Previous" border="0" /></a></div>
+			          <div class="inboxtextpre">
+				          <div id="divForPaging2">
+				          #{list items:startPage..endPage, as:'i'}
+								#{if page == i+""}
+								<a href="inbox?page=${i}" style="font-weight:bold; text-decoration: underline;">${i}</a>
+								#{/if}
+								#{else}
+								<a href="inbox?page=${i}" style="font-weight:normal;text-decoration: none;">${i}</a>
+								#{/else}
+				          
+				          #{/list}
+				          </div>
+			          </div>
+		          	  <div class="inboxnext"><a href="inbox?page=${nextPage}"><img src="/public/images/next.jpg" alt="next" border="0" /></a></div>
+		          #{/if}
+		    #{/if}
+        </div>
+        #{/if}
+        <!--KenCovernex-->
+		</div><!--inbox div end here -->
+        
+        <div id="divForNewMessage" style="display: none;">
+         #{ include 'Messaging/newMessage.html' /}
+		 </div>
+      </div>
+      <!--bodysubpge-->
+      <div id="mtright" style="padding-left:30px; padding-top: 10px;"> <br />
+      #{ include 'PublicProfile/messagingRight.html' /}
+        
+        <div class="cb"></div>
+      </div>
+      <!--mtright-->
+      <div class="cb"></div>
+    </div>
+    <!--Content-->
+    <!--======================================Content Ends=============================-->
+    <div class="cb"></div>
+  </div>
+  <!--waperhome-->
+</div>
+<br/><br/>
+<!--==================================Footer Ends=================================-->

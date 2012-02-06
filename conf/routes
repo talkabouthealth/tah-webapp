@@ -32,6 +32,7 @@ GET		/community/breast-cancer				Community.viewCommunity
 
 *		/search									Search.allSearch
 *		/searchAjaxLoad							Search.allSearchAjaxLoad
+*		/search/messageSearch					Search.messageSearch
 
 *		/search/conversations					Explore.searchConversations
 GET		/openquestions/?						Explore.openQuestions
@@ -70,6 +71,12 @@ GET		/{userName}/following					PublicProfile.userBasedActions(action:'following'
 GET		/{userName}/followers					PublicProfile.userBasedActions(action:'followers')
 GET		/{userName}/conversations				PublicProfile.conversations
 GET		/{userName}/topics						PublicProfile.topicsFollowing
+
+*		/message/inbox							Messaging.inbox
+*		/message/email							Messaging.email
+*		/message/sentmail						Messaging.sentMail
+*		/message/doaction						Messaging.doAction
+*		/message/archive						Messaging.archive
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}

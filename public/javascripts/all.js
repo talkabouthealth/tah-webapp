@@ -315,6 +315,8 @@ function makeAutocomplete(id, type, parentTopic) {
 		url = "/search/ajaxTopicSearch";
 	}else if(type === "user") {
 		url = "/search/ajaxUserSearch";
+	}else if(type === "message"){
+		url = "/search/ajaxMessageSearch";
 	}
 	
 	var cache = {};
@@ -322,9 +324,24 @@ function makeAutocomplete(id, type, parentTopic) {
 		minLength: 1,
 		source: function(request, response) {
 			//get list of items from cache or from Ajax request
-			if ( request.term in cache ) {
-				response( cache[ request.term ] );
+			
+			var term = ""
+			if(type === "user") {
+				var newTerm=extractLast( request.term )
+				
+				if ( newTerm in cache ) {
+					response(cache[ newTerm ]);
+								
 				return;
+				}
+				request.term = newTerm;
+			}else{
+		
+				if ( request.term in cache ) {
+					response( cache[ request.term ] );
+					return;
+				}
+				request.term = request.term;
 			}
 			//used when we need autocomplete of subtopics
 			request.parent = parentTopic;
@@ -333,10 +350,14 @@ function makeAutocomplete(id, type, parentTopic) {
 				dataType: "json",
 				data: request,
 				success: function( data ) {
-					cache[ request.term ] = data;
+					cache[ term ] = data;
 					response( data );
 				}
 			});
+		},
+		focus: function() {
+			// prevent value inserted on focus
+			return false;
 		},
 		select: function(event, ui) {
 			if (type === "all" || type === "convo") {
@@ -346,7 +367,24 @@ function makeAutocomplete(id, type, parentTopic) {
 					url = "/search?query="+ui.item.value;
 				}
 				document.location = url;
+			}else if (type === "message"){
+				mailSearch("#searchMessage",ui.item.value);
 			}
+			else if (type === "user"){
+				var terms = split( this.value );
+				
+				// remove the current input
+				terms.pop();
+				// add the selected item
+				terms.push( ui.item.value );
+				// add placeholder to get the comma-and-space at the end
+				terms.push( "" );
+				this.value = terms.join( ", " );
+				
+				$(this).change();
+				$(this).focus();
+				return false;
+			}	
 			else {
 				$(id).val(ui.item.value);
 				selectedConvoURL = ui.item.url;
@@ -1020,10 +1058,69 @@ function makeFullSearchAjaxLoad(inputId) {
 				$("#convoList").html("");
 				$(data).appendTo($("#convoList"));
 				//for new items
-				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
 			}
 		);
 	
 	return false;
 }
 
+//saveProfileComment(String profileTalkerId, String parentId, String text)
+function saveProfileThankYouComment(parentId, parentList, userName) {
+	alert("saveProfileThankYouComment");
+	var parentListId = "";
+	if (parentList) {
+		parentListId = "#"+parentList+" ";
+	}
+	var commentText = $(parentListId+".replytext"+parentId).val();
+//	alert(parentListId+".replytext"+parentId);
+//	alert(commentText);
+	$(parentListId+".saveThoughtImage"+parentId).show();
+	$(parentListId+".replytext"+parentId).val("");
+	
+	//YURIY: FIX FOR URLS IN REPLIES NOT BEING TRANSLATED -- SPENT 2h TO HUNT THIS DOWN %-/
+	//linkedText = linkify(commentText);
+	linkedText = commentText;
+
+	$.post("/actions/saveProfileThankYouReply", 
+		{ parentId: parentId, text: linkedText,  parentList: parentList, from: "thankyou"},
+		function(html) {
+			$("#firstcommentmessage").hide();
+			$(parentListId+".saveThoughtImage"+parentId).hide();
+			//put comment in the tree
+			if (parentId == '') {
+				//add as first element in the top
+				$(html).prependTo($(".commentsarea"));
+
+				//add inline edit for new comment
+				$('.inline-edit').inlineEdit( { hover: ''} );
+			}
+			else {
+				//add as last element in subtree
+				$(parentListId+".reply"+parentId).before($(html));
+			}
+		}
+	);
+	return false;
+}
+
+//search mail
+function mailSearch(inputId, value){
+	var limit =  $(".joinpic").size() + 10;
+	var query = "";
+	if(value == ""){
+		query = $(inputId).val();
+	}else{
+		query = value;
+	}
+	if (query === '') {
+		alert("Please enter search query");
+		return false;
+	}
+	$.get("/search/messageSearch", {"mailSubject": query},
+			function(data) {
+				var url = "/message/email?id="+data;
+				document.location = url;
+			}
+		);
+}

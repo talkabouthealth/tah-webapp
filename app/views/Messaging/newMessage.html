@@ -1,0 +1,31 @@
+<div class="NewmssageCover" id="newMessageDiv">
+  <form method = "post" action = "" id="messageForm">
+   <div class="newsmessageTop">New Message </div>
+   <div class="newsmessageMid">
+     <div class="nmessage">
+       <div class="newmsgtext">To (username):</div>
+       <input id="userNameHelp" type="text" class="nmessageinput"/>
+       <input type="text" class="nmessageinput"  style="display: none;" id="userName" />
+     </div>
+     <!--nmessage-->
+     <div class="nmessage">
+       <div class="newmsgtext">Subject:</div>
+       <input type="text" class="nmessageinput" id="subject"/>
+     </div>
+     <!--nmessage-->
+     <div class="nmessage">
+       <div class="newmsgtext">Message:</div>
+       <textarea class="inputtxtarea" id="message" style="width: 484px;"></textarea>
+     </div>
+     <!--nmessage-->
+     <div class="nmessage1">
+       <div class="inboxcancel"><a href="#">Cancel</a></div>
+       <input type="button" class="inboxsend" src="images/inboxsend.jpg" value=" " onclick="sendMessage();"/>
+     </div>
+     <!--nmessage-->
+     <div class="cb"></div>
+   </div>
+   <!--newsmessageMid-->
+   <div class="newsmessagebot"> </div>
+  </form>
+</div>

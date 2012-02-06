@@ -4,10 +4,11 @@ import java.io.IOException;
 import java.util.List;
 
 import models.CommentBean;
-import models.PrivacySetting.PrivacyType;
-import models.TalkerBean;
 import models.ConversationBean;
+import models.MessageBean;
+import models.TalkerBean;
 import models.TopicBean;
+import models.PrivacySetting.PrivacyType;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -17,6 +18,8 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.LockObtainFailedException;
 
 import dao.CommentsDAO;
+import dao.ConversationDAO;
+import dao.MessagingDAO;
 import dao.TalkerDAO;
 import dao.ConversationDAO;
 import dao.TopicDAO;
@@ -104,6 +107,19 @@ public class SearchIndexerJob extends Job {
 				doc.add(new Field("title", topic.getTitle(), Field.Store.YES, Field.Index.TOKENIZED));
 				doc.add(new Field("type", "Topic", Field.Store.YES, Field.Index.NO));
 				doc.add(new Field("url", topic.getMainURL(), Field.Store.YES, Field.Index.NO));
+				autocompleteIndexWriter.addDocument(doc);
+			}
+			
+			for (MessageBean message : MessagingDAO.loadAllMessages()) {
+				if (message.isDeleteFlag() || message.getRootId().equals(null)) {
+					continue;
+				}
+				
+				Document doc = new Document();
+				doc.add(new Field("id", message.getId(), Field.Store.YES, Field.Index.NO));
+				doc.add(new Field("title", message.getSubject(), Field.Store.YES, Field.Index.TOKENIZED));
+				doc.add(new Field("type", "Message", Field.Store.YES, Field.Index.NO));
+				doc.add(new Field("rootid",message.getRootId(), Field.Store.YES, Field.Index.NO));
 				autocompleteIndexWriter.addDocument(doc);
 			}
 		}
