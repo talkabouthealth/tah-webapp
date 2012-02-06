@@ -159,11 +159,11 @@ function setImage(obj,name,divId){
 }
 -->
 </style>
-<div id="bg2">
   <div id="waperhome">
     #{include 'header.html' /}
     <!--headerHome-->
     <!--======================================header Ends======================================-->
+    <div class="haderbanner"><div id="innerbanner"></div></div>
     <div id="ContentHome">
       <div id="bodysubpge" style="margin-top: 30px;">
         #{include 'Messaging/messageHeader.html' /}
@@ -173,12 +173,12 @@ function setImage(obj,name,divId){
 	        <div class="ArchiveCover">
 	           #{include 'Messaging/messageSubHeader.html' /}
 	           #{if size > 0}
+	           		<input type="hidden" value="${endPage}" id="endPageHidden"/>
 		           #{if pages > 1}
 		          		  <div class="inboxprev"><a href="sentmail?page=${prevPage}"><img src="/public/images/Previous.jpg" alt="Previous" border="0" /></a></div>
 				          <div class="inboxtextpre">
 					         
 					         <div id="divForPaging1">
-							     <input type="hidden" value="${endPage}" id="endPageHidden"/>
 					          #{list items:startPage..endPage, as:'i'}
 									#{if page == i+""}
 									<a href="sentmail?page=${i}" style="font-weight:bold; text-decoration: underline;">${i}</a>
@@ -202,6 +202,9 @@ function setImage(obj,name,divId){
 					#{if sentMessageList.size > 0}
 						<div id="sentMailMessageList">
 							  <input type="hidden" id="listSize" value="${sentMessageList.size}">
+							  #{if flash.contains("error") }
+									<p class="errorMsg">${flash.error}</p>
+								#{/if}
 							#{list items: sentMessageList, as: 'messageList'}
 								#{Messaging/sentMessage messageList: messageList, page: page/}
 							#{/list}
@@ -261,7 +264,7 @@ function setImage(obj,name,divId){
     <!--======================================Content Ends=============================-->
     <div class="cb"></div>
   </div>
+ 	  </div>
   <!--waperhome-->
-</div>
 <br/><br/>
 <!--==================================Footer Ends=================================-->

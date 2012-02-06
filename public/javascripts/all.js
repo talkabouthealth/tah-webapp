@@ -1108,7 +1108,7 @@ function saveProfileThankYouComment(parentId, parentList, userName) {
 function mailSearch(inputId, value){
 	var limit =  $(".joinpic").size() + 10;
 	var query = "";
-	if(value == ""){
+	if(value == "" || value == undefined){
 		query = $(inputId).val();
 	}else{
 		query = value;

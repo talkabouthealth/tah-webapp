@@ -2,8 +2,22 @@
 #{list items: _messageList, as: 'messageInfo' }
 	<div class="KenCover">
 		<input type="checkbox" name="selectedMessageIds" class="radioibox" value="${messageInfo.id}"/>
-         <div class="kanpic">#{talker/talkerImageLink size: 40, userName: messageInfo.toTalker.userName /}</div>
-         <div class="Kantxt"><a href="@{ViewDispatcher.view(messageInfo.toTalker.userName)}">${messageInfo.toTalker.userName}</a><br />
+         
+         <div class="kanpic"  id="${messageInfo.id}">#{talker/talkerImageLink size: 40, userName: messageInfo.toTalker.userName /}</div>
+        
+         <div class="Kantxt">
+             <a href="@{ViewDispatcher.view(messageInfo.toTalker.userName)}" onmouseover="setImage(this,'${messageInfo.toTalker.userName}','${messageInfo.id}')">${messageInfo.toTalker.userName}</a>
+            
+            #{list items: messageInfo.toTalers, as: 'totalkers'}
+               ,<a href="@{ViewDispatcher.view(totalkers)}" onmouseover="setImage(this,'${totalkers}','${messageInfo.id}')">${totalkers}</a>
+             	#{if totalkers_index==2}
+             	 ...
+             	%{break;}%
+             	#{/if}
+             	
+             #{/list}
+         
+         <br />
            <span class="Kandate"> ${messageInfo.displayDate}</span> </div>
          #{if messageInfo.readFlagSender == true}
          		<div class="kansubtxt" style="font-weight: lighter; font-size: 20;"><a href="@{Messaging.email(messageInfo.id,'','',_page,'sentmail')}">${messageInfo.subject}</a><br />

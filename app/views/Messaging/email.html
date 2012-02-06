@@ -60,72 +60,77 @@
 }
 -->
 </style>
-<div id="bg2">
   <div id="waperhome">
     #{include 'header.html' /}
     <!--headerHome-->
     <!--======================================header Ends======================================-->
+    <div class="haderbanner"><div id="innerbanner"></div></div>
     <div id="ContentHome">
       <div id="bodysubpge"  style="margin-top: 30px; margin-bottom: 10px;">
         #{include 'Messaging/messageHeader.html' /}
         <!--inboxCover-->
-         <div id="msgList">
-         <div class="ArchiveCover2">
-         <div style="display: block">  #{include 'Messaging/messageSubHeader.html' /} </div>
-         
-          <div class="subiectline" style="padding-top: 15px;">${userMessage.subject}</div>
-          </div>
-          
-	         <div style="margin: 10px 0 10px 20px;" class="Kantxt"> 
-	        	<label style="margin-left: -22px; font-size: 13px; font-weight: bold;">To :</label>
-	              <a href="@{ViewDispatcher.view(userMessage.toTalker.userName)}" >${userMessage.toTalker.userName}</a>,
-	              #{list items: userMessage.toTalers, as: 'totalkers' }
-	                <a href="@{ViewDispatcher.view(totalkers)}" >${totalkers}</a>,
-	              #{/list}
-	          </div>  
-             
-             
-        <!--ArchiveCover2-->
-        <div class="KenCoveremail" style="border: none; height: auto;">
-          <div class="kanpic1">#{talker/talkerImageLink size: 40, userName: userMessage.fromTalker.userName /}</div>
-          <div class="Kantxtemail"><a href="@{ViewDispatcher.view(userMessage.fromTalker.userName)}">${userMessage.fromTalker.userName}</a><br />
-            <span class="Kandate"> ${userMessage.displayDate}</span>
-            <p>${userMessage.text}</p>
-          </div>
-        </div>
-        
-         
-        
-       		 #{if messageList != null}
-				#{if messageList.size > 0}
-				<div class="subiectline" style="padding-top: 15px; padding-bottom: 15px;">Reply - </div>	
-					#{list items: messageList, as: 'messageInfo' }
-					<div class="KenCoveremail" style="border-bottom: 1px solid #DBDBDB; height: auto;">
-				          <div class="kanpic1" style="margin-top: 10px;">#{talker/talkerImageLink size: 40, userName: messageInfo.fromTalker.userName /}</div>
-				          <div class="Kantxtemail" style="width: 525px;margin-top: 10px;"><a href="@{ViewDispatcher.view(userMessage.fromTalker.userName)}">${messageInfo.fromTalker.userName}</a><br />
-				            <span class="Kandate"> ${messageInfo.displayDate}</span>
-				            <p>${messageInfo.text}</p>
-				          </div>
-				    </div>
-			         #{/list}
-				#{/if}
-			#{/if}
-        
-        
-        <div class="eamilreplyCover">
-          <form method = "post" action = "" id="emailForm">
-	          <div class="eamilreply">
-	            <div class="nmessagetxt">Reply:</div>
-	             <textarea class="replyinput" style=" height: 70px;" id="replyText"></textarea>
+        #{if flash.contains("error") }
+			<p class="errorMsg">${flash.error}</p>
+		#{/if}
+		#{else}
+	         <div id="msgList">
+	         <div class="ArchiveCover2">
+	         <div style="display: block">  #{include 'Messaging/messageSubHeader.html' /} </div>
+	         
+	          <div class="subiectline" style="padding-top: 15px;">${userMessage.subject}</div>
 	          </div>
-	          <!--nmessage-->
-	          <div class="cb"></div>
-	          <div class="repltext2"><a href="/message/${fromPage}?page=${_page}">Back to messages</a></div>
-	          <input type="submit" class="emailrepsubit" src="images/emailrepsubit.jpg" value=" " onClick="sendReply('${userMessage.id}');"/>
-          </form>
-        </div>
-        
-         </div>
+	          
+		         <div style="margin: 10px 0 10px 20px;" class="Kantxt"> 
+		        	<label style="margin-left: -22px; font-size: 13px; font-weight: bold;">To :</label>
+		              <a href="@{ViewDispatcher.view(userMessage.toTalker.userName)}" >${userMessage.toTalker.userName}</a>,
+		              #{list items: userMessage.toTalers, as: 'totalkers' }
+		                <a href="@{ViewDispatcher.view(totalkers)}" >${totalkers}</a>,
+		              #{/list}
+		          </div>  
+	             
+	             
+	        <!--ArchiveCover2-->
+	        <div class="KenCoveremail" style="border: none; height: auto;">
+	          <div class="kanpic1">#{talker/talkerImageLink size: 40, userName: userMessage.fromTalker.userName /}</div>
+	          <div class="Kantxtemail"><a href="@{ViewDispatcher.view(userMessage.fromTalker.userName)}">${userMessage.fromTalker.userName}</a><br />
+	            <span class="Kandate"> ${userMessage.displayDate}</span>
+	            <p>${userMessage.text}</p>
+	          </div>
+	        </div>
+	        
+	         
+	        
+	       		 #{if messageList != null}
+					#{if messageList.size > 0}
+					<div class="subiectline" style="padding-top: 15px; padding-bottom: 15px;">Reply - </div>	
+						#{list items: messageList, as: 'messageInfo' }
+						<div class="KenCoveremail" style="border-bottom: 1px solid #DBDBDB; height: auto;">
+					          <div class="kanpic1" style="margin-top: 10px;">#{talker/talkerImageLink size: 40, userName: messageInfo.fromTalker.userName /}</div>
+					          <div class="Kantxtemail" style="width: 525px;margin-top: 10px;"><a href="@{ViewDispatcher.view(userMessage.fromTalker.userName)}">${messageInfo.fromTalker.userName}</a><br />
+					            <span class="Kandate"> ${messageInfo.displayDate}</span>
+					            <p>${messageInfo.text}</p>
+					          </div>
+					    </div>
+				         #{/list}
+					#{/if}
+				#{/if}
+	        
+	        
+	        <div class="eamilreplyCover">
+	          <form method = "post" action = "" id="emailForm">
+		          <div class="eamilreply">
+		            <div class="nmessagetxt">Reply:</div>
+		             <textarea class="replyinput" style=" height: 70px;" id="replyText"></textarea>
+		          </div>
+		          <!--nmessage-->
+		          <div class="cb"></div>
+		          <div class="repltext2"><a href="/message/${fromPage}?page=${_page}">Back to messages</a></div>
+		          <input type="submit" class="emailrepsubit" src="images/emailrepsubit.jpg" value=" " onClick="sendReply('${userMessage.id}');"/>
+	          </form>
+	        </div>
+	        
+	         </div>
+         #{/else}
         <div id="divForNewMessage" style="display: none;">
          #{ include 'Messaging/newMessage.html' /}
 		 </div>
@@ -143,8 +148,8 @@
     <!--======================================Content Ends=============================-->
     <div class="cb"></div>
   </div>
+    </div>
   <!--waperhome-->
-</div>
 
 
 <!--footercover-->

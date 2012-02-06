@@ -130,11 +130,11 @@ function cancelMessage(){
 }
 -->
 </style>
-<div id="bg2">
   <div id="waperhome">
     #{include 'header.html' /}
     <!--headerHome-->
     <!--======================================header Ends======================================-->
+    <div class="haderbanner"><div id="innerbanner"></div></div>
     <div id="ContentHome">
       <div id="bodysubpge" style="margin-top: 30px;">
        
@@ -147,11 +147,12 @@ function cancelMessage(){
 	        	#{include 'Messaging/messageSubHeader.html' /}
 	          
 	          #{if size > 0}
+	          		<input type="hidden" value="${endPage}" id="endPageHidden"/>
 		          #{if pages > 1}
 			          <div class="inboxprev"><a href="archive?page=${prevPage}"><img src="/public/images/Previous.jpg" alt="Previous" border="0" /></a></div>
 			          <div class="inboxtextpre">
 			          <div id="divForPaging1">
-						     <input type="hidden" value="${endPage}" id="endPageHidden"/>
+						     
 				          #{list items:startPage..endPage, as:'i'}
 								#{if page == i+""}
 								<a href="archive?page=${i}" style="font-weight:bold; text-decoration: underline;">${i}</a>
@@ -237,7 +238,7 @@ function cancelMessage(){
     <!--======================================Content Ends=============================-->
     <div class="cb"></div>
   </div>
+    </div>
   <!--waperhome-->
-</div>
 <br/><br/>
 <!--==================================Footer Ends=================================-->

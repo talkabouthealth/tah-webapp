@@ -22,6 +22,7 @@ import models.MessageBean;
 import models.TalkerBean;
 import play.mvc.Controller;
 import play.mvc.With;
+import play.mvc.Scope.Flash;
 import util.CommonUtil;
 
 @With(Secure.class)
@@ -29,9 +30,6 @@ public class Messaging  extends Controller {
 
 	public static final int CONVO_PER_PAGE = 10;
 	
-	
-	String fromTalkId;
-		
 	public static void inbox(String action, String user, String subject, String message, String page){
 		//--------------For Paging-----------------------
 		int startPage=0;	//initially start page is 0
@@ -92,7 +90,7 @@ public class Messaging  extends Controller {
 					endPage = endPage + 1;
 			}			
 		}
-			
+		
 		//increasing start and end page
 		if(Integer.parseInt(page)>endPage){
 			startPage=startPage+1;
@@ -102,17 +100,15 @@ public class Messaging  extends Controller {
 			endPage=endPage-1;
 		}
 		
-		if( Integer.parseInt(page) > CONVO_PER_PAGE &&  Integer.parseInt(page) <= pages){
+		if( Integer.parseInt(page) > CONVO_PER_PAGE/2 &&  Integer.parseInt(page) <= pages){
 			endPage= Integer.parseInt(page);
-			startPage=Integer.parseInt(page)-CONVO_PER_PAGE +1;
+			startPage=Integer.parseInt(page)-CONVO_PER_PAGE/2 + 1;
 		}
 		
 		int prevPage =  Integer.parseInt(page) - 1 == 0 ? 1 : Integer.parseInt(page) - 1;
 		int nextPage = 	Integer.parseInt(page)  == pages ? pages : Integer.parseInt(page) + 1;		
 		int size = messageList == null ? 0 : messageList.size();
 		String fromPage = "inbox";
-		
-		System.out.println("size------->>>>>>>>"+messageList.size());
 		
 		render(talker,talkerList,messageList,pages,page,prevPage,nextPage,size,startPage,endPage,fromPage);
 	}
@@ -135,7 +131,11 @@ public class Messaging  extends Controller {
 			    for(int i=0;i<usrArray.length;i++){
 			    	
 			    	if(!usrArray[i].trim().equals("")){
-			    		TalkerBean toTalker = TalkerDAO.getByUserName(usrArray[i].trim());
+			    		TalkerBean toTalker = new TalkerBean();
+			    		if(usrArray[i].contains("@"))
+			    			toTalker = TalkerDAO.getByEmail(usrArray[i].trim());
+			    		else
+			    			toTalker = TalkerDAO.getByUserName(usrArray[i].trim());
 						if(toTalker != null){
 							MessageBean messageBean = new MessageBean();
 							messageBean.setFromTalkerId(talker.getId());
@@ -155,6 +155,8 @@ public class Messaging  extends Controller {
 							    messageBean.setDummyId(dummyId); 	  
 							    MessagingDAO.saveMessage(messageBean);
 							}   
+						}else{
+							flash.error("Sorry, The address '" + usrArray[i].trim() +"' in the 'To' field was not recognized. Please make sure that all addresses are properly formed.");
 						}
 			    	}
 			    
@@ -209,9 +211,9 @@ public class Messaging  extends Controller {
 			startPage=startPage-1;		//decreasing start and end page
 			endPage=endPage-1;
 		}
-		if( Integer.parseInt(page) > CONVO_PER_PAGE &&  Integer.parseInt(page) <= pages){
+		if( Integer.parseInt(page) > CONVO_PER_PAGE/2 &&  Integer.parseInt(page) <= pages){
 			endPage= Integer.parseInt(page);
-			startPage=Integer.parseInt(page)-CONVO_PER_PAGE-1;
+			startPage=Integer.parseInt(page)-CONVO_PER_PAGE/2 + 1;
 		}		
 		int prevPage =  Integer.parseInt(page) - 1 == 0 ? 1 : Integer.parseInt(page) - 1;
 		int nextPage = Integer.parseInt(page)  == pages ? pages : Integer.parseInt(page) + 1;
@@ -225,11 +227,14 @@ public class Messaging  extends Controller {
 	
 	public static void email(String id, String action, String replyText, String _page, String fromPage){
 		
-		System.out.println("-----------action-------------"+action);
-				
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);		
 		MessageBean userMessage = null;
-		userMessage = MessagingDAO.getMessageById(id);
+		
+		if(id == null || (id != null && id.equals(""))){
+			flash.error("Sorry, This message does not exist...");
+		}else{
+			userMessage = MessagingDAO.getMessageById(id);
+		}
 		
 		if(fromPage != null && fromPage.equalsIgnoreCase("inbox"))
 			userMessage.setReadFlag(true);
@@ -244,7 +249,8 @@ public class Messaging  extends Controller {
 				userMessage.setReadFlagSender(true);
 		}
 		
-		MessagingDAO.updateMessage(userMessage);
+		if(userMessage != null)
+			MessagingDAO.updateMessage(userMessage);
 		
 		if(action != null && action.equalsIgnoreCase("sendReply")){
 			
@@ -254,9 +260,8 @@ public class Messaging  extends Controller {
 			messageBean.setToTalkerId(userMessage.getFromTalkerId());
 			messageBean.setSubject(userMessage.getSubject());
 			messageBean.setText(replyText);
-			//messageBean.setTime(new Date());
 			
-			//*******************for updating new time*******************
+			//for updating new time
 			
 			if(userMessage!=null && userMessage.getId()!=null)
 			{
@@ -264,13 +269,10 @@ public class Messaging  extends Controller {
 				MessagingDAO.updateMessage(userMessage);
 			}
 			
-			//------------------------------------code------------------------------------
-			
 		    if(userMessage.getRootId().trim().equals("")){
 				messageBean.setRootId(id);    //assign "id" of message to "rootid" of all reply's
 				
 				if(userMessage.isReplied()==false) {
-					System.out.println("----------In reply false--------------");
 					if(userMessage.getToTalkerId().equals(talker.getId()))
 					userMessage.setReplied(true);
 					userMessage.setTime(new Date());
@@ -312,15 +314,13 @@ public class Messaging  extends Controller {
 		
 		if(fromPage == null || (fromPage != null && fromPage.equals("")))
 			fromPage = "inbox";
-		userMessage.setToTalers(MessagingDAO.getToTalkerNamesByMessageId(userMessage.getId()));
+		if(userMessage != null)
+			userMessage.setToTalers(MessagingDAO.getToTalkerNamesByMessageId(userMessage.getId()));
 		render(talker,talkerList,userMessage,messageList,_page,fromPage);
 	}
 	
 	public static void doAction(List<String> selectedMessageIds, String actionState, String page, String path){
 		
-		System.out.println("\n---------------------------In doAction---------------------\n");
-		
-		System.out.println("----------------From path-------------"+path);
 		List<MessageBean> messages = MessagingDAO.loadAllMessages();
 		selectedMessageIds = (selectedMessageIds == null ? Collections.EMPTY_LIST : selectedMessageIds);
 		TalkerBean _talker = CommonUtil.loadCachedTalker(session);
@@ -378,11 +378,9 @@ public class Messaging  extends Controller {
 		//Render inbox page 
 		
 		_talker.setFollowerList(TalkerDAO.loadFollowers(_talker.getId()));
-		List<TalkerBean> talkerList = TalkerDAO.loadAllTalkers(); 
 		int pageNo = Integer.parseInt(page) - 1;
 		List<MessageBean> _messageList = null;
 		if(path != null && path.contains("inbox")){
-			System.out.println("---------------In inbox----------------");
 			 _messageList = MessagingDAO.getInboxMessagesById(_talker.getId(),pageNo);
 			 if((!page.equals("1")) && (_messageList.size()==0)){
 				 page=Integer.toString(pageNo);
@@ -390,7 +388,6 @@ public class Messaging  extends Controller {
 				 _messageList=MessagingDAO.getInboxMessagesById(_talker.getId(),pageNo);
 			 }
 		}else if(path != null && path.contains("archive")){
-			System.out.println("---------------In archieve----------------");
 			_messageList = MessagingDAO.getArchiveMessagesById(_talker.getId(),pageNo);
 			if((!page.equals("1")) && (_messageList.size()==0)){
 				 page=Integer.toString(pageNo);
@@ -399,7 +396,6 @@ public class Messaging  extends Controller {
 			 }
 			
 		}else if(path != null && path.contains("sentmail")){
-			System.out.println("---------------In sentmail----------------");
 			_messageList = MessagingDAO.getSentMailMessagesById(_talker.getId(),pageNo);
 			if((!page.equals("1")) && (_messageList.size()==0)){
 				 page=Integer.toString(pageNo);
@@ -522,9 +518,9 @@ public class Messaging  extends Controller {
 		}
 		System.out.println("page:"+page);
 		System.out.println("totcount:"+totalCount +"-"+endPage);
-		if( Integer.parseInt(page) > CONVO_PER_PAGE &&  Integer.parseInt(page) <= pages){
+		if( Integer.parseInt(page) > CONVO_PER_PAGE/2 &&  Integer.parseInt(page) <= pages){
 			endPage= Integer.parseInt(page);
-			startPage=Integer.parseInt(page)-CONVO_PER_PAGE+1;
+			startPage=Integer.parseInt(page)-CONVO_PER_PAGE/2 + 1;
 		}		
 		
 		int prevPage =  Integer.parseInt(page) - 1 == 0 ? 1 : Integer.parseInt(page) - 1;
@@ -538,7 +534,6 @@ public class Messaging  extends Controller {
 
 	}
 	public static void talkerImageLink(int size,String userName){
-		System.out.println("in talker image link ............................................");
 		int _size=size;
 		String _userName=userName;
 		render("tags/talker/talkerImageLink.html",_size,_userName);
