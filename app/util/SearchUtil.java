@@ -94,7 +94,7 @@ public class SearchUtil {
 		Query searchQuery = prepareSearchQuery(query, new String[] {"title", "answers"}, analyzer);
 		Hits hits = is.search(searchQuery);
 		
-		List<String> cat = FeedsLogic.getCancerType(talker);
+		//List<String> cat = FeedsLogic.getCancerType(talker);
 		
 		List<ConversationBean> results = new ArrayList<ConversationBean>();
 		for (int i = 0; i < hits.length(); i++) {
@@ -122,7 +122,7 @@ public class SearchUtil {
 			String fr = highlighter.getBestFragment(analyzer, "answers", answersString.toString());
 			convo.setSearchFragment(fr);
 			
-			if(cat.contains(convo.getCategory()))
+			//if(cat.contains(convo.getCategory()) || cat.contains(convo.getOtherDiseaseCategories()))
 				results.add(convo);
 			if (results.size() == numOfResults) {
 				break;
@@ -156,7 +156,7 @@ public class SearchUtil {
 		Query searchQuery = prepareSearchQuery(queryText, new String[] {"title"}, analyzer);
 		Hits hits = is.search(searchQuery);
 		
-		List<String> cat = FeedsLogic.getCancerType(talker);
+		//List<String> cat = FeedsLogic.getCancerType(talker);
 		List<ConversationBean> results = new ArrayList<ConversationBean>();
 		for (int i = 0; i < hits.length(); i++) {
 			Document doc = hits.doc(i);
@@ -166,7 +166,7 @@ public class SearchUtil {
 				continue;
 			}
 			ConversationBean convo = ConversationDAO.getById(convoId);
-			if(cat.contains(convo.getTalker().getCategory()))
+			//if(cat.contains(convo.getTalker().getCategory()))
 				results.add(convo);
 			if (results.size() == 3) {
 				break;
@@ -179,6 +179,10 @@ public class SearchUtil {
 	
 	public static Query prepareSearchQuery(String term, String[] fields, Analyzer analyzer)
 			throws ParseException {
+
+		if(term != null && !term.equals(""))
+			term = escapeString(term);
+		
 		QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
 		parser.setAllowLeadingWildcard(true);
 		/* Updated to show all users if no search term entered. 
@@ -191,12 +195,9 @@ public class SearchUtil {
 		if (term != null && term.length() > 0) {
 			//if term contains only one word (or part) - use wildcard search
 			if (term.split(" ").length == 1) {
-				searchTerm = term+"*";
+				searchTerm = "*"+term+"*";
 			}
 		}
-		
-		if(searchTerm != null && !searchTerm.equals(""))
-			searchTerm = escapeString(searchTerm);
 		
 		Query searchQuery = parser.parse(searchTerm);
 		return searchQuery;

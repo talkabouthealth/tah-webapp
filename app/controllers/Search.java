@@ -141,6 +141,18 @@ public class Search extends Controller {
 		
 		renderJSON(diseaseList);
 	}
+     
+	 /**
+	 * Back-end for message autocomplete
+	 * @param term
+	 */
+	public static void ajaxMessageSearch(String term) throws Exception {
+		
+		List<String> allowedTypes = Arrays.asList("Message");
+		List<Map<String, String>> results = null;
+		results = makeSearch(term, allowedTypes, null);
+		renderJSON(results);
+	}
 	
 	/**
 	 * Performs search in 'autocomplete' index
@@ -281,7 +293,6 @@ public class Search extends Controller {
 	
 	public static void messageSearch(String mailSubject){
 		String result = "";
-		System.out.println("Mail Subject : "+mailSubject);
 		MessageBean message = MessagingDAO.getMessageBySubject(mailSubject);
 		if(message != null){
 			System.out.println("Message : "+message.getId() + " - " +message.getSubject());
