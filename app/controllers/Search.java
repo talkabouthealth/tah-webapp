@@ -1,5 +1,7 @@
 package controllers;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,6 +12,7 @@ import logic.ConversationLogic;
 import logic.TopicLogic;
 import models.ConversationBean;
 import models.DiseaseBean;
+import models.MessageBean;
 import models.TalkerBean;
 import models.TopicBean;
 import models.actions.Action;
@@ -27,6 +30,7 @@ import play.mvc.Controller;
 import util.CommonUtil;
 import util.SearchUtil;
 import dao.ConversationDAO;
+import dao.MessagingDAO;
 import dao.DiseaseDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
@@ -167,6 +171,11 @@ public class Search extends Controller {
 			if (!allowedTypes.contains(type)) {
 				continue;
 			}
+
+			if(type.equals("Message"))
+				if(!(doc.get("rootid")).equals(""))
+					continue;
+			
 			String id = doc.get("id");
 			if (id != null && filterIds != null) {
 				if (!filterIds.contains(id)) {
@@ -270,4 +279,15 @@ public class Search extends Controller {
 		return results;
 	}
 	
+	public static void messageSearch(String mailSubject){
+		String result = "";
+		System.out.println("Mail Subject : "+mailSubject);
+		MessageBean message = MessagingDAO.getMessageBySubject(mailSubject);
+		if(message != null){
+			System.out.println("Message : "+message.getId() + " - " +message.getSubject());
+			
+			result = message.getId();
+		}
+		renderText(result);
+	}
 }
