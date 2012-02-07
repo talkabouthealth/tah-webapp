@@ -47,7 +47,28 @@
 		document.getElementById("divForNewMessage").style.display  = 'none';
 		document.getElementById("msgList").style.display = 'block';
 	}
-	function doAction(){};
+
+	
+	function doAction(action){
+
+		//alert('${fromPage}');
+		
+		var path = '${fromPage}'+'emailPage';
+		var  selectedMessageIds = new Array();
+		//var selectedMessageIds = document.mailForm.selectedMessageIds;
+		selectedMessageIds.push('${userMessage.id}');
+		$.get("/message/doaction", {selectedMessageIds: selectedMessageIds, actionState: action, page: ${_page}, path: path}
+		,function(data){
+			if(action=='ARCHIEVE')
+			window.location.href="/message/archive";
+			if(action=='MARK_AS_UNREAD')
+			window.location.href="/message/"+'${fromPage}';
+			if(action=='DELETE')	
+			window.location.href="/message/"+'${fromPage}';
+			}
+		);
+        
+	}
 </script>
 <style type="text/css">
 <!--

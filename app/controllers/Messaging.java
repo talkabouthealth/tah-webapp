@@ -434,12 +434,16 @@ public class Messaging  extends Controller {
 		}
 		String _page = page;
 		int _listsize=_messageList.size();
-		if(path != null && path.contains("inbox"))
-			render("tags/Messaging/inboxMessage.html", _messageList,_page,_talker,_listsize);
-		else if(path != null && path.contains("archive"))
-			render("tags/Messaging/archiveMessage.html", _messageList,_page,_talker,_listsize);
-		else if(path != null && path.contains("sentmail"))
-			render("tags/Messaging/sentMessage.html", _messageList,_page,_listsize);
+		
+		if(path.contains("emailPage")){
+		}else{
+			if(path != null && path.contains("inbox"))
+				render("tags/Messaging/inboxMessage.html", _messageList,_page,_talker,_listsize);
+			else if(path != null && path.contains("archive"))
+				render("tags/Messaging/archiveMessage.html", _messageList,_page,_talker,_listsize);
+			else if(path != null && path.contains("sentmail"))
+				render("tags/Messaging/sentMessage.html", _messageList,_page,_listsize);
+		}
 	}
 	
 	public static void archive(String action, String user, String subject, String message,String page){

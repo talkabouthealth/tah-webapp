@@ -165,19 +165,22 @@ public class Search extends Controller {
 	private static List<Map<String, String>> makeSearch(String term, 
 			List<String> allowedTypes, List<String> filterIds) throws Exception {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
-		
+				
 		Analyzer analyzer = new StandardAnalyzer();
 		Query searchQuery = SearchUtil.prepareSearchQuery(term, new String[] {"uname", "title"}, analyzer);
-		 
-		//Hits hits = is.search(searchQuery);
 		
-		TopDocs hits = is.search(searchQuery, null, 10);
+		Hits hits = is.search(searchQuery);
+		
+		/*TopDocs hits = is.search(searchQuery, null, 10);
 		ScoreDoc [] docs = hits.scoreDocs;
-
-		List<Map<String, String>> results = new ArrayList<Map<String, String>>();
 		for (int i = 0; i <docs.length ; i++) {
-			Document doc = is.doc(docs[i].doc);
+			Document doc = is.doc(docs[i].doc);*/
+		
+		List<Map<String, String>> results = new ArrayList<Map<String, String>>();
+		for (int i = 0; i < hits.length(); i++) {
+			Document doc = hits.doc(i);
 			
+						
 			//filter by id or type
 			String type = doc.get("type");
 			if (!allowedTypes.contains(type)) {
@@ -260,15 +263,11 @@ public class Search extends Controller {
 		
 		Analyzer analyzer = new StandardAnalyzer();
 		Query searchQuery = SearchUtil.prepareSearchQuery(query, new String[] {"title"}, analyzer);
-		//Hits hits = is.search(searchQuery);
-		
-		TopDocs hits = is.search(searchQuery, null, 5);
-		ScoreDoc [] docs = hits.scoreDocs;
-		
+		Hits hits = is.search(searchQuery);
 		
 		List<TopicBean> results = new ArrayList<TopicBean>();
-		for (int i = 0; i < docs.length; i++) {
-			Document doc = is.doc(docs[i].doc);
+		for (int i = 0; i < hits.length(); i++) {
+			Document doc = hits.doc(i);
 			
 			//get only topics
 			String type = doc.get("type");
