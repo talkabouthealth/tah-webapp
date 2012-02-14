@@ -70,13 +70,16 @@ public class Explore extends Controller {
 	public static void openQuestions() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	boolean newsLetterFlag = false;
+    	List<ConversationBean> openQuestions = null;
     	if (talker != null) {
     		TalkerLogic.preloadTalkerInfo(talker);
     		newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
-    	}
+    		openQuestions = ConversationDAO.getOpenQuestions(talker,true);
+    	}else
+    		openQuestions = ConversationDAO.getOpenQuestions(talker,false);
     	int limit = session.get("topicCount")==null?TopicLogic.TOPICS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
     	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics(limit);
-		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions(talker);
+		
 		
 		render(talker, openQuestions, popularTopics,newsLetterFlag);
     }
