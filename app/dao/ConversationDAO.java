@@ -7,6 +7,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import java.util.Set;
 import logic.FeedsLogic;
 import logic.TalkerLogic;
 import models.CommentBean;
+import models.DiseaseBean;
 import models.MessageBean;
 import models.TalkerBean;
 import models.ConversationBean;
@@ -312,6 +314,47 @@ public class ConversationDAO {
 		return loadAllConversations(false);
 	}
 	
+	
+	/**
+	 * last updated convos for indexer
+	 * 
+	 * @return convolist
+	 */
+	
+	public static List<ConversationBean> loadUpdatedConversations(int limit) {
+		boolean basicInfo=false;
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		convosColl.ensureIndex(new BasicDBObject("cr_date", 1));
+		
+		Calendar cal= Calendar.getInstance();
+		cal.add(Calendar.MINUTE, -limit);
+		Date date=cal.getTime();
+		BasicDBObject time = new BasicDBObject("$gt", date);
+		
+		DBObject query = BasicDBObjectBuilder.start()
+		.add("cr_date", time)
+		.get();
+		
+		List<DBObject> convosDBList = null;
+		if (basicInfo) {
+			DBObject fields = getBasicConversationFields();
+			convosDBList = 
+				convosColl.find(query, fields).sort(new BasicDBObject("cr_date", -1)).toArray();
+		}
+		else {
+			convosDBList = 
+				convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
+		}
+		
+		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
+		for (DBObject convoDBObject : convosDBList) {
+	    	convosList.add(parseConvoFromDBObject(convoDBObject, basicInfo));
+		}
+		return convosList;
+	}
+	
+	
+	
 	/**
 	 * Get number of all conversations in this community
 	 */
@@ -420,10 +463,19 @@ public class ConversationDAO {
 	/**
 	 * Opened Questions - not answered, which are marked with 'opened' flag.
 	 */
-	public static List<ConversationBean> getOpenQuestions(TalkerBean talker) {
+	public static List<ConversationBean> getOpenQuestions(TalkerBean talker, boolean loggedIn) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
-		
-		List<String> cat = FeedsLogic.getCancerType(talker);
+		System.out.println("loggedIn : "+loggedIn);
+		List<String> cat = new ArrayList<String>();
+		if(loggedIn){
+			cat = FeedsLogic.getCancerType(talker);
+		}else{
+			List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
+			cat.add(null);
+			for(DiseaseBean diseaBean : diseaseList){
+				cat.add(diseaBean.getName()); 
+			}
+		}
 		
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("opened", true)
@@ -855,5 +907,99 @@ public class ConversationDAO {
 		}
 		return null;
 	}
+	
+	
+	/**
+	 * Load conversations as per popularity and which have answers
+	 * @param type
+	 * @param convoId
+	 * @return List<ConversationBean>
+	 */
+	public static List<ConversationBean> loadPopularAnswers(String type,String convoId){
+		
+		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
+		convosColl.ensureIndex(new BasicDBObject("views", -1));
+		
+		//added for paging
+		int views = 0;
+		if (convoId != null) {
+			views = ConversationDAO.getViews(convoId);
+		}
+		
+		DBObject fields = getBasicConversationFields();
+		
+		//checking for views 
+		BasicDBObjectBuilder queryBuilder =  BasicDBObjectBuilder.start()
+		.add("deleted", new BasicDBObject("$ne", true));
+	
+		if (views != 0) {
+			queryBuilder.add("views", new BasicDBObject("$lt", views));
+		}
+		
+		DBObject query = queryBuilder.get();
+	
+		List<DBObject> convosDBList = 
+			convosColl.find(query, fields).sort(new BasicDBObject("views", -1)).toArray();
+		
+		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
+		for (DBObject convoDBObject : convosDBList) {
+			ConversationBean convo = new ConversationBean();
+			convo.parseBasicFromDB(convoDBObject);
+			convo.setComments(loadAllAnswers(convo.getId()));
+			if(convo.getComments() != null && convo.getComments().size() > 0){
+				List<CommentBean> commentList = convo.getComments();
+				if(commentList != null && commentList.size() > 0){
+					for(CommentBean comment :commentList){
+						CommentBean commentBean = CommentsDAO.getConvoCommentById(comment.getId());
+						if(commentBean != null){
+							if(type != null && type.equalsIgnoreCase("expert")){
+								//Add only those questions which have expert's answers
+								if(commentBean.getFromTalker().isProf()){
+									if(convosList.size() < 20)
+										convosList.add(convo);
+									break;
+								}
+							}else{
+								//Add questions which have answers
+								if(convosList.size() < 20)
+									convosList.add(convo);
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return convosList;
+		
+	}
+
+	/**
+	 * Load all not-deleted answers for given conversation,
+	 * answers have only id.
+	 * @param convoId
+	 * @return List<CommentBean>
+	 */
+	public static List<CommentBean> loadAllAnswers(String convoId) {
+		DBCollection commentsColl = getCollection(CommentsDAO.CONVO_COMMENTS_COLLECTION);
+		
+		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId);
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("convo", convoRef)
+			.add("deleted", new BasicDBObject("$ne", true))
+			.add("answer", true)
+			.get();
+		List<DBObject> commentsList = commentsColl.find(query).toArray();
+		
+		List<CommentBean> answersList = new ArrayList<CommentBean>();
+		for (DBObject answerDBObject : commentsList) {
+			CommentBean answer = new CommentBean();
+			answer.parseFromDB(answerDBObject);
+			answersList.add(answer);
+		}
+		return answersList;
+	}
+
 }
 

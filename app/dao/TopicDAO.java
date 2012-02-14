@@ -4,6 +4,7 @@ import static util.DBUtil.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -211,6 +212,63 @@ public class TopicDAO {
 	}
 	public static Set<TopicBean> loadAllTopics() {
 		return loadAllTopics(false);
+	}
+	
+	
+	/**
+	 * 
+	 * @param timelimit
+	 * @return
+	 */
+	public static Set<TopicBean> loadUpdatedTopics(int limit) {
+		boolean onlyBasicInfo=false;
+		
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
+		topicsColl.ensureIndex(new BasicDBObject("views", 1));
+
+		
+		
+		Calendar cal= Calendar.getInstance();
+		cal.add(Calendar.MINUTE, -limit);
+		Date date=cal.getTime();
+		BasicDBObject time = new BasicDBObject("$gt", date);
+		
+		DBObject query =BasicDBObjectBuilder.start()
+		.add("cr_date", time)
+		.add("deleted",new BasicDBObject("$ne", true))
+		.get();
+		
+		List<DBObject> topicsDBList = null;
+		
+		if (onlyBasicInfo) {
+			DBObject fields = BasicDBObjectBuilder.start()
+				.add("title", 1)
+				.add("fixed", 1)
+				.add("deleted", 1)
+				.add("main_url", 1)
+				.add("bitly", 1)
+				.add("views", 1)
+				.add("cr_date", 1)
+				.get();
+			
+			topicsDBList = topicsColl.find(query, fields).sort(new BasicDBObject("views", -1)).toArray();
+		}
+		else {
+			topicsDBList = topicsColl.find(query).sort(new BasicDBObject("views", -1)).toArray();
+		}
+		
+		Set<TopicBean> topicsSet = new LinkedHashSet<TopicBean>();
+		for (DBObject topicDBObject : topicsDBList) {
+			TopicBean topic = new TopicBean();
+			if (onlyBasicInfo) {
+				topic.parseBasicFromDB(topicDBObject);
+			}
+			else {
+				topic.parseFromDB(topicDBObject);
+			}
+			topicsSet.add(topic);
+		}
+		return topicsSet;
 	}
 	
 	

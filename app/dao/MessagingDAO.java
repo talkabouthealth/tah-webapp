@@ -1,7 +1,4 @@
 package dao;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import static util.DBUtil.createRef;
 import static util.DBUtil.getCollection;
 
@@ -11,17 +8,24 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import models.MessageBean;
+
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 import org.bson.types.ObjectId;
 
 import play.Logger;
-
-import models.MessageBean;
-import models.TalkerBean;
+import util.SearchUtil;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.MongoException;
@@ -31,6 +35,7 @@ import controllers.Messaging;
 public class MessagingDAO {
 
 	public static final String MESSAGES_COLLECTION = "messages";
+	private static final boolean IndexDeletionPolicy = false;
 	/**
 	 * Save messages
 	 * @param messageBean
@@ -83,7 +88,6 @@ public class MessagingDAO {
 	
 	public static List<MessageBean> getInboxMessagesById(String id, int pageNo){
 				
-		System.out.println("-----------id-------------"+id);
 		DBCollection messagesColl = getCollection(MESSAGES_COLLECTION);		
 		DBRef totalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, id);	
 		
@@ -102,8 +106,6 @@ public class MessagingDAO {
 		.add("archieve_flag", new BasicDBObject("$ne", true))
 		.get();
 				
-		//System.out.println("\nQuery1---------------------"+query1);
-				
 		DBObject querylist = new BasicDBObject("$or", 		//"OR" CONDITION FOR query and query1
 				Arrays.asList(query1,query)
 			);
@@ -111,7 +113,6 @@ public class MessagingDAO {
 		pageNo = pageNo * Messaging.CONVO_PER_PAGE;
 		
 		List<DBObject> messageDBObjectList = messagesColl.find(querylist).skip(pageNo).limit(Messaging.CONVO_PER_PAGE).sort(new BasicDBObject("time", -1)).toArray();
-		//System.out.println("messagedbobjlist:::-----"+messageDBObjectList);
 	    
 		List<MessageBean> messageList = new ArrayList<MessageBean>();
 		for (DBObject messageDBObject : messageDBObjectList) {
@@ -119,7 +120,6 @@ public class MessagingDAO {
 			message.parseFromDB(messageDBObject);
 			messageList.add(message);
 		}		
-		//System.out.println("\n\n MessageList----->>>>>>"+messageList);		
 		return messageList;		
 	}	
 	/**
@@ -154,7 +154,6 @@ public class MessagingDAO {
 				Arrays.asList(query1,query)
 			);
 		List<DBObject> messageDBObjectList1 = messagesColl.find(querylist).toArray();
-		System.out.println("total sent messages ..............................................:"+messageDBObjectList1.size());
 		pageNo = pageNo * Messaging.CONVO_PER_PAGE;
 		List<DBObject> messageDBObjectList = messagesColl.find(querylist).skip(pageNo).limit(Messaging.CONVO_PER_PAGE).sort(new BasicDBObject("time", -1)).toArray();
 		
@@ -167,6 +166,11 @@ public class MessagingDAO {
 		return messageList;
 	}
 	
+	/**
+	 * Method use for displaying multiple talkers name in sentmail list
+	 * @param messageId
+	 * @return List<String>
+	 */
 	public static List<String> getToTalkerNamesByMessageId(String messageId){
 		DBCollection messagesColl = getCollection(MESSAGES_COLLECTION);
 
@@ -178,14 +182,12 @@ public class MessagingDAO {
 		//DBObject query = new BasicDBObject("_id", new ObjectId(messageId));
 		
 		List<DBObject> messageDBObjectList = messagesColl.find(query).toArray();
-		System.out.println("Db object lis size  ..................................:"+messageDBObjectList.size());
 		List<String> toTalkerList = new ArrayList<String>();
 		for (DBObject messageDBObject : messageDBObjectList) {
 			MessageBean message = new MessageBean();
 			message.parseFromDB(messageDBObject);
 			toTalkerList.add((message.getToTalker()).getUserName());
 		}
-		//System.out.println("in get Talker nams ..................................:"+toTalkerList.size());
 		return toTalkerList;
 	}
 	
@@ -246,18 +248,9 @@ public class MessagingDAO {
 	 */
 	public static List<MessageBean> getMessageReplies(String id){
 		
-		//System.out.println("rootid>>>>>>>>>>>>"+id);
-		
 		DBCollection messagesColl = getCollection(MESSAGES_COLLECTION);
 		DBObject query = new BasicDBObject("rootid",id);
 		
-		/*DBObject replyQuery = BasicDBObjectBuilder.start()
-		.add("uname", usernameOrEmailRegex)
-		.add("pass", passwordRegex)
-		.get();
-		
-		List<DBObject> replyMsg=messagesColl.find(replyQuery).toArray();*/
-						
 		List<DBObject> messagesDBList = messagesColl.find(query).toArray();
 		List<MessageBean> replyList = new ArrayList<MessageBean>();
 		
@@ -281,11 +274,6 @@ public class MessagingDAO {
 		
 		DBRef totalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, id);
 
-		/*DBObject query = BasicDBObjectBuilder.start()
-			.add("toTalker", totalkerRef)			
-			.add("delete_flag", new BasicDBObject("$ne", true))
-			.add("archieve_flag", new BasicDBObject("$ne", true))
-			.get();*/
 		DBObject query = BasicDBObjectBuilder.start()
 		.add("toTalker", totalkerRef)
 		.add("rootid", "")
@@ -300,8 +288,6 @@ public class MessagingDAO {
 		.add("delete_flag", new BasicDBObject("$ne", true))
 		.add("archieve_flag", new BasicDBObject("$ne", true))
 		.get();
-				
-		//System.out.println("\nQuery1---------------------"+query1);
 				
 		DBObject querylist = new BasicDBObject("$or", 		//"OR" CONDITION FOR query and query1
 				Arrays.asList(query,query1)
@@ -511,5 +497,54 @@ public class MessagingDAO {
 			return messBean;
 		}
 		
+	}
+	
+	/**
+	 * Method used for populating indexes for auto-complete
+	 * @param id
+	 * @throws Exception
+	 */
+	public static void populateMessageIndex(String id) throws Exception{
+		Directory directory = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"messageAutocomplete");
+		IndexWriter autocompleteMessageIndexWriter = null;
+		if(IndexReader.indexExists(directory)){
+			autocompleteMessageIndexWriter = new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"messageAutocomplete", new StandardAnalyzer(), false);
+		}else{
+			autocompleteMessageIndexWriter = new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"messageAutocomplete", new StandardAnalyzer(), true);
+		}
+		
+		MessageBean message = null;
+		message = getMessageById(id);
+		if(message != null){
+			if (message.isDeleteFlag() != true || !message.getRootId().equals(null)) {
+				Document doc = new Document();
+				doc.add(new Field("id", message.getId(), Field.Store.YES, Field.Index.NO));
+				doc.add(new Field("title", message.getSubject(), Field.Store.YES, Field.Index.TOKENIZED));
+				doc.add(new Field("type", "Message", Field.Store.YES, Field.Index.NO));
+				doc.add(new Field("rootid",message.getRootId(), Field.Store.YES, Field.Index.NO));
+				doc.add(new Field("fromTalker", message.getFromTalkerId(), Field.Store.YES, Field.Index.NO));
+				doc.add(new Field("toTalker", message.getToTalkerId(), Field.Store.YES, Field.Index.NO));
+				autocompleteMessageIndexWriter.addDocument(doc);
+			}
+		}
+		autocompleteMessageIndexWriter.close();
+	}
+	
+	/**
+	 * Method used for deleting index from auto-complete
+	 * @param id
+	 * @throws Exception
+	 */
+	public static void deleteMessageIndex(String title) throws Exception{
+		Directory directory = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"messageAutocomplete");
+		IndexReader autocompleteMessageIndexReader = IndexReader.open(directory);
+		Term term = new Term("title",title);
+		try{
+			int deleted = autocompleteMessageIndexReader.deleteDocuments(term);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		autocompleteMessageIndexReader.close();
 	}
 }

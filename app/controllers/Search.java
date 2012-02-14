@@ -1,7 +1,5 @@
 package controllers;
 
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,8 +28,8 @@ import play.mvc.Controller;
 import util.CommonUtil;
 import util.SearchUtil;
 import dao.ConversationDAO;
-import dao.MessagingDAO;
 import dao.DiseaseDAO;
+import dao.MessagingDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
 
@@ -42,7 +40,6 @@ public class Search extends Controller {
 	 * @param term String entered by user
 	 */
 	public static void ajaxSearch(String term) throws Exception {
-		
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 		List<String> allowedTypes = Arrays.asList("User", "Conversation", "Question", "Topic");
@@ -165,7 +162,7 @@ public class Search extends Controller {
 	private static List<Map<String, String>> makeSearch(String term, 
 			List<String> allowedTypes, List<String> filterIds) throws Exception {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
-				
+		
 		Analyzer analyzer = new StandardAnalyzer();
 		Query searchQuery = SearchUtil.prepareSearchQuery(term, new String[] {"uname", "title"}, analyzer);
 		
@@ -186,11 +183,6 @@ public class Search extends Controller {
 			if (!allowedTypes.contains(type)) {
 				continue;
 			}
-
-			if(type.equals("Message"))
-				if(!(doc.get("rootid")).equals(""))
-					continue;
-			
 			String id = doc.get("id");
 			if (id != null && filterIds != null) {
 				if (!filterIds.contains(id)) {
@@ -211,6 +203,72 @@ public class Search extends Controller {
 				label = doc.get("title");
 				url = "/"+doc.get("url");
 			}
+			result.put("label", label.replaceAll(term, "<b>"+term+"</b>"));
+			result.put("value", label);
+			result.put("url", url);
+			result.put("type", type);
+			results.add(result);
+			
+			if (results.size() == 10) {
+				break;
+			}
+		}
+		is.close();
+		return results;
+	}
+	
+	private static List<Map<String, String>> makeMessageSearch(String term, 
+			List<String> allowedTypes, List<String> filterIds) throws Exception {
+		
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"messageAutocomplete");
+				
+		Analyzer analyzer = new StandardAnalyzer();
+		Query searchQuery = SearchUtil.prepareSearchQuery(term, new String[] {"title"}, analyzer);
+		
+		Hits hits = is.search(searchQuery);
+		
+		List<Map<String, String>> results = new ArrayList<Map<String, String>>();
+		for (int i = 0; i < hits.length(); i++) {
+			Document doc = hits.doc(i);
+			
+						
+			//filter by id or type
+			String type = doc.get("type");
+			if (!allowedTypes.contains(type)) {
+				continue;
+			}
+
+			if(type.equals("Message")){
+				if(!(doc.get("rootid")).equals(""))
+					continue;
+				
+				String fromTalkerId = doc.get("fromTalker");
+				String toTalkerid = doc.get("toTalker");
+				
+				if(talker.getId().equals(fromTalkerId) || talker.getId().equals(toTalkerid)){
+				}else{
+					continue;
+				}
+			}
+			
+			String id = doc.get("id");
+			if (id != null && filterIds != null) {
+				if (!filterIds.contains(id)) {
+					continue;
+				}
+			}
+			
+			Map<String, String> result = new HashMap<String, String>();
+			
+			//prepare url and label for different types
+			String label = null;
+			String url = null;
+			
+			label = doc.get("title");
+			url = "/"+doc.get("url");
+			
 			result.put("label", label.replaceAll(term, "<b>"+term+"</b>"));
 			result.put("value", label);
 			result.put("url", url);
@@ -263,11 +321,15 @@ public class Search extends Controller {
 		
 		Analyzer analyzer = new StandardAnalyzer();
 		Query searchQuery = SearchUtil.prepareSearchQuery(query, new String[] {"title"}, analyzer);
-		Hits hits = is.search(searchQuery);
+		//Hits hits = is.search(searchQuery);
+		
+		TopDocs hits = is.search(searchQuery, null, 5);
+		ScoreDoc [] docs = hits.scoreDocs;
+		
 		
 		List<TopicBean> results = new ArrayList<TopicBean>();
-		for (int i = 0; i < hits.length(); i++) {
-			Document doc = hits.doc(i);
+		for (int i = 0; i < docs.length; i++) {
+			Document doc = is.doc(docs[i].doc);
 			
 			//get only topics
 			String type = doc.get("type");

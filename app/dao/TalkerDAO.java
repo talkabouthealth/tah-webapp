@@ -648,6 +648,58 @@ public class TalkerDAO {
 		return talkerList;
 	}
 
+	
+	/**
+	 * load talker who create from last minute 
+	 * for search indexer
+	 */
+	
+	
+	public static List<TalkerBean> loadUpdatedTalker(int limit) {
+		boolean basicInfo=false;
+		
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+
+		talkersColl.ensureIndex(new BasicDBObject("uname", 1));
+		
+		Calendar cal= Calendar.getInstance();
+		cal.add(Calendar.MINUTE, -limit);
+		Date date=cal.getTime();
+		BasicDBObject time = new BasicDBObject("$gt", date);
+		
+		DBObject query = BasicDBObjectBuilder.start()
+		.add("timestamp", time)
+		.get();
+	
+		List<DBObject> talkersDBObjectList = null;
+		if (basicInfo) {
+			DBObject fields = getBasicTalkerFields();
+			talkersDBObjectList = talkersColl.find(query, fields).sort(new BasicDBObject("uname", 1)).toArray();
+		} else {
+			talkersDBObjectList = talkersColl.find(query).sort(new BasicDBObject("uname", 1)).toArray();
+		}
+
+		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
+		
+		for (DBObject talkerDBObject : talkersDBObjectList) {
+			TalkerBean talker = new TalkerBean();
+			if (basicInfo) {
+				talker.parseBasicFromDB(talkerDBObject);
+			}
+			else {
+				talker.parseFromDB(talkerDBObject);
+			}
+			talkerList.add(talker);
+		}
+		
+		return talkerList;
+	}
+	
+	
+	
+	
+	
+	
 	//db.talkers.find().skip(50).limit(20);
 		
 	// --------------------- Other ---------------------------

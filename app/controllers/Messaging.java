@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.*;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,6 +14,11 @@ import java.util.TimeZone;
 
 import javax.persistence.criteria.CriteriaBuilder.In;
 
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.store.LockObtainFailedException;
+
 import com.tah.im.model.UserMessage;
 
 import dao.AnswerNotificationDAO;
@@ -20,10 +26,14 @@ import dao.MessagingDAO;
 import dao.TalkerDAO;
 import models.MessageBean;
 import models.TalkerBean;
+import play.cache.Cache;
 import play.mvc.Controller;
+import play.mvc.Scope;
 import play.mvc.With;
 import play.mvc.Scope.Flash;
+import play.mvc.Scope.Session;
 import util.CommonUtil;
+import util.SearchUtil;
 
 @With(Secure.class)
 public class Messaging  extends Controller {
@@ -129,9 +139,8 @@ public class Messaging  extends Controller {
 			    String[] usrArray = user.split(",");	//comma separated user
 			    String dummyId="";
 			    for(int i=0;i<usrArray.length;i++){
-			    	
 			    	if(!usrArray[i].trim().equals("")){
-			    		TalkerBean toTalker = new TalkerBean();
+						TalkerBean toTalker = new TalkerBean();
 			    		if(usrArray[i].contains("@"))
 			    			toTalker = TalkerDAO.getByEmail(usrArray[i].trim());
 			    		else
@@ -149,17 +158,26 @@ public class Messaging  extends Controller {
 							messageBean.setReplied(false);
 							if(i==0){
 								messageBean.setDummyId(dummyId);
-					    		dummyId=MessagingDAO.saveMessage(messageBean);	
+					    		dummyId=MessagingDAO.saveMessage(messageBean);
+					    		try{
+					    			MessagingDAO.populateMessageIndex(dummyId);
+					    		}catch(Exception e){
+					    			e.printStackTrace();
+					    		}
 					    	}
 							else{
 							    messageBean.setDummyId(dummyId); 	  
-							    MessagingDAO.saveMessage(messageBean);
+							    String messageId = MessagingDAO.saveMessage(messageBean);
+							    try{
+							    	MessagingDAO.populateMessageIndex(messageId);
+					    		}catch(Exception e){
+					    			e.printStackTrace();
+					    		}
 							}   
 						}else{
 							flash.error("Sorry, The address '" + usrArray[i].trim() +"' in the 'To' field was not recognized. Please make sure that all addresses are properly formed.");
 						}
 			    	}
-			    
 			    }
 			}
 		}
@@ -229,6 +247,8 @@ public class Messaging  extends Controller {
 		
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);		
 		MessageBean userMessage = null;
+		if(_page == null || (_page != null && _page.equals("")))
+			_page = "1";
 		
 		if(id == null || (id != null && id.equals(""))){
 			flash.error("Sorry, This message does not exist...");
@@ -360,6 +380,12 @@ public class Messaging  extends Controller {
 							messageBean.setDeleteFlagSender(true);
 					   }
 					MessagingDAO.updateMessage(messageBean);
+					try{
+						if(messageBean.isDeleteFlag() == true && messageBean.isDeleteFlagSender() == true)
+							MessagingDAO.deleteMessageIndex(messageBean.getSubject());
+					}catch(Exception e){
+						e.printStackTrace();
+					}
 				}
 			}
 		}else if(actionState.equalsIgnoreCase("ARCHIEVE")){
