@@ -465,7 +465,6 @@ public class ConversationDAO {
 	 */
 	public static List<ConversationBean> getOpenQuestions(TalkerBean talker, boolean loggedIn) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
-		System.out.println("loggedIn : "+loggedIn);
 		List<String> cat = new ArrayList<String>();
 		if(loggedIn){
 			cat = FeedsLogic.getCancerType(talker);

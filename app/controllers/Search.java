@@ -147,7 +147,7 @@ public class Search extends Controller {
 		
 		List<String> allowedTypes = Arrays.asList("Message");
 		List<Map<String, String>> results = null;
-		results = makeSearch(term, allowedTypes, null);
+		results = makeMessageSearch(term, allowedTypes, null);
 		renderJSON(results);
 	}
 	
