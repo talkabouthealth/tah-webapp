@@ -11,13 +11,10 @@ import models.PrivacySetting.PrivacyType;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 
-import play.jobs.Every;
 import play.jobs.Job;
+import play.jobs.OnApplicationStart;
 import util.SearchUtil;
 import dao.CommentsDAO;
 import dao.ConversationDAO;
@@ -28,43 +25,19 @@ import dao.TopicDAO;
  * Updates all search indexes
  *
  */
-@Every("10min")
+@OnApplicationStart
 public class SearchIndexerJob extends Job {
-	
-	int timeLimit=10;
-	@SuppressWarnings("null")
+
 	@Override
 	public void doJob() throws Exception {
+		IndexWriter talkerIndexWriter = new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"talker", new StandardAnalyzer(), true);
+		IndexWriter convoIndexWriter = new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"conversations", new StandardAnalyzer(), true);
+		IndexWriter autocompleteIndexWriter = 
+			new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"autocomplete", new StandardAnalyzer(), true);
 		
-		IndexWriter talkerIndexWriter=null;
-		IndexWriter convoIndexWriter=null;
-		IndexWriter autocompleteIndexWriter=null;
-		Directory directory=null;
-		
-		 directory = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"talker");	
-		
-		 if(IndexReader.indexExists(directory))
-			 talkerIndexWriter = new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"talker", new StandardAnalyzer(), false);
-		 else
-			 talkerIndexWriter = new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"talker", new StandardAnalyzer(), true);
-		
-		 
-		 directory = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"conversations");	
-		 if(IndexReader.indexExists(directory))
-			 convoIndexWriter = new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"conversations", new StandardAnalyzer(), false);
-		 else
-			 convoIndexWriter = new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"conversations", new StandardAnalyzer(), true);
-		 
-		 
-		 
-		 directory = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");	
-		 if(IndexReader.indexExists(directory))
-			 autocompleteIndexWriter = new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"autocomplete", new StandardAnalyzer(), false);
-		 else
-			 autocompleteIndexWriter = new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"autocomplete", new StandardAnalyzer(), true);
-		
+		System.out.println("----------In SearchIndexerJob------------");
 		try {
-			for (TalkerBean talker : TalkerDAO.loadUpdatedTalker(timeLimit)) {
+			for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
 				  if (talker.isSuspended()) {
 					  continue;
 				  }
@@ -85,7 +58,7 @@ public class SearchIndexerJob extends Job {
 				  autocompleteIndexWriter.addDocument(doc);
 			}
 			
-			for (ConversationBean convo : ConversationDAO.loadUpdatedConversations(timeLimit)) {
+			for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
 	//			possibly weight titles, conversation details, summaries, and answers more than the archived real-time conversations?
 				if (convo.isDeleted()) {
 					continue;
@@ -117,7 +90,7 @@ public class SearchIndexerJob extends Job {
 				autocompleteIndexWriter.addDocument(doc);
 			}
 			
-			for (TopicBean topic : TopicDAO.loadUpdatedTopics(timeLimit)) {
+			for (TopicBean topic : TopicDAO.loadAllTopics()) {
 				if (topic.isDeleted()) {
 					continue;
 				}
@@ -129,6 +102,7 @@ public class SearchIndexerJob extends Job {
 				doc.add(new Field("url", topic.getMainURL(), Field.Store.YES, Field.Index.NO));
 				autocompleteIndexWriter.addDocument(doc);
 			}
+			
 		}
 		finally {
 			talkerIndexWriter.close();

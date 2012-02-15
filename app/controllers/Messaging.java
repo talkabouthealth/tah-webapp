@@ -67,12 +67,22 @@ public class Messaging  extends Controller {
 				message1.setDisplayDate(format.format(date));
 				
 				//for displaying 1st line of message
-				String messageDisp = message1.getText();
-				if(messageDisp != null && messageDisp.length() > 50){
-					messageDisp = messageDisp.substring(0, 50);
-					messageDisp = messageDisp + "...";
+				String messageDisp = "";
+				if(message1.isReplied()){
+					messageDisp = MessagingDAO.getMessageText(message1.getId());
+					if(messageDisp != null && messageDisp.length() > 50){
+						messageDisp = messageDisp.substring(0, 50);
+						messageDisp = messageDisp + "...";
+					}
+					message1.setDisplayMessage(messageDisp);
+				}else{
+					messageDisp = message1.getText();
+					if(messageDisp != null && messageDisp.length() > 50){
+						messageDisp = messageDisp.substring(0, 50);
+						messageDisp = messageDisp + "...";
+					}
+					message1.setDisplayMessage(messageDisp);
 				}
-				message1.setDisplayMessage(messageDisp);
 				
 				//message1.setFromTalker(fromTalker);
 				messageList.set(index, message1);
@@ -124,122 +134,140 @@ public class Messaging  extends Controller {
 	}
 	
 	public static void sentMail(String action, String user, String subject, String message,String page){
-				
-		//--------------For Paging------------------------------
-		int startPage=0;	//initially start page is 0
-		int endPage=0;		//initially end page is 0
-		
+			
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		page = (page == null || (page != null && page.equals(""))) ? "1" : page;	
-		int pageNo = Integer.parseInt(page) - 1;
-		int convoCount = MessagingDAO.getAllSentMessageCount(talker.getId());
-				
+		
 		if(action != null && action.equalsIgnoreCase("sendMessage")){
 			if(user != null){
 			    String[] usrArray = user.split(",");	//comma separated user
 			    String dummyId="";
-			    for(int i=0;i<usrArray.length;i++){
-			    	if(!usrArray[i].trim().equals("")){
-						TalkerBean toTalker = new TalkerBean();
-			    		if(usrArray[i].contains("@"))
-			    			toTalker = TalkerDAO.getByEmail(usrArray[i].trim());
-			    		else
-			    			toTalker = TalkerDAO.getByUserName(usrArray[i].trim());
-						if(toTalker != null){
-							MessageBean messageBean = new MessageBean();
-							messageBean.setFromTalkerId(talker.getId());
-							messageBean.setToTalkerId(toTalker.getId());
-							messageBean.setSubject(subject);
-							messageBean.setText(message);
-							messageBean.setRootId("");
-							messageBean.setReadFlagSender(false);
-							messageBean.setDeleteFlagSender(false);
-							messageBean.setArchieveFlagSender(false);
-							messageBean.setReplied(false);
-							if(i==0){
-								messageBean.setDummyId(dummyId);
-					    		dummyId=MessagingDAO.saveMessage(messageBean);
-					    		try{
-					    			MessagingDAO.populateMessageIndex(dummyId);
-					    		}catch(Exception e){
-					    			e.printStackTrace();
-					    		}
-					    	}
-							else{
-							    messageBean.setDummyId(dummyId); 	  
-							    String messageId = MessagingDAO.saveMessage(messageBean);
-							    try{
-							    	MessagingDAO.populateMessageIndex(messageId);
-					    		}catch(Exception e){
-					    			e.printStackTrace();
-					    		}
-							}   
-						}else{
-							flash.error("Sorry, The address '" + usrArray[i].trim() +"' in the 'To' field was not recognized. Please make sure that all addresses are properly formed.");
-						}
+			    TalkerBean[] talkerArray = new TalkerBean[usrArray.length];
+			    for(int index=0; index<usrArray.length; index++){
+			    	if(!usrArray[index].trim().equals("")){
+						TalkerBean toTalker = null;
+						// Checking user name is valid or not
+			    		toTalker = TalkerDAO.getByUserName(usrArray[index].trim());
+						if(toTalker != null)
+							talkerArray[index] = toTalker;
+						else
+							flash.error("Sorry, The address '" + usrArray[index].trim() +"' in the 'To' field was not recognized. Please make sure that all addresses are properly formed.");
 			    	}
 			    }
-			}
-		}
-		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-		List<TalkerBean> talkerList = TalkerDAO.loadAllTalkers(); 
-		List<MessageBean> sentMessageList = MessagingDAO.getSentMailMessagesById(talker.getId(), pageNo);
-		for(int index = 0; index < sentMessageList.size(); index++){
-			MessageBean message1 = sentMessageList.get(index);
-			TalkerBean totalker = TalkerDAO.getById(message1.getToTalkerId());
-			//for displaying date
-					Date date = message1.getTime();
-					DateFormat format = new SimpleDateFormat("MMM,dd, hh:mm aaa");
-					message1.setDisplayDate(format.format(date));
-					//for displaying 1st line of message
-					String messageDisp = message1.getText();
-					if(messageDisp != null && messageDisp.length() > 50){
-						messageDisp = messageDisp.substring(0, 50);
-						messageDisp = messageDisp + "...";
-					}
-			List<String> toTalkerNames=MessagingDAO.getToTalkerNamesByMessageId(message1.getId());
-			message1.setToTalers(toTalkerNames);
-			
-			message1.setDisplayMessage(messageDisp);
-			message1.setToTalker(totalker);
-			sentMessageList.set(index, message1);
-		}
-		int totalCount=convoCount;		//adding convocount into totalcount
-		int pages = convoCount / CONVO_PER_PAGE;
-		if(convoCount%CONVO_PER_PAGE > 0){
-			pages=pages+1;				//for adding one page
-		}
-				
-		if(startPage==0){
-			startPage=1;
+			    
+			    for(int index=0; index<talkerArray.length; index++){
+					TalkerBean toTalker = talkerArray[index];
 					
-			if(totalCount/CONVO_PER_PAGE >= CONVO_PER_PAGE)
-				endPage=CONVO_PER_PAGE;					//Condition for 5 page limit
-			else{
-				endPage = totalCount / CONVO_PER_PAGE;	//if page less than 5
-				if(totalCount % CONVO_PER_PAGE > 0)
-					endPage = endPage + 1;
-			}			
-		}		
-		//increasing start and end page
-		if(Integer.parseInt(page)>endPage){
-			startPage=startPage+1;
-			endPage=endPage+1;
-		}else if(Integer.parseInt(page)<startPage){ 
-			startPage=startPage-1;		//decreasing start and end page
-			endPage=endPage-1;
+					if(toTalker != null){
+						MessageBean messageBean = new MessageBean();
+						messageBean.setFromTalkerId(talker.getId());
+						messageBean.setToTalkerId(toTalker.getId());
+						messageBean.setSubject(subject);
+						messageBean.setText(message);
+						messageBean.setRootId("");
+						messageBean.setReadFlagSender(false);
+						messageBean.setDeleteFlagSender(false);
+						messageBean.setArchieveFlagSender(false);
+						messageBean.setReplied(false);
+						if(index == 0){
+							messageBean.setDummyId(dummyId);
+				    		dummyId=MessagingDAO.saveMessage(messageBean);
+				    		try{
+				    			MessagingDAO.populateMessageIndex(dummyId);
+				    		}catch(Exception e){
+				    			e.printStackTrace();
+				    		}
+				    	}
+						else{
+						    messageBean.setDummyId(dummyId); 	  
+						    String messageId = MessagingDAO.saveMessage(messageBean);
+						    try{
+						    	MessagingDAO.populateMessageIndex(messageId);
+				    		}catch(Exception e){
+				    			e.printStackTrace();
+				    		}
+						}   
+					}
+		    	}
+			}
+			redirect("/message/inbox");
+		}else{
+			//--------------For Paging------------------------------
+			int startPage=0;	//initially start page is 0
+			int endPage=0;		//initially end page is 0
+			
+			page = (page == null || (page != null && page.equals(""))) ? "1" : page;	
+			int pageNo = Integer.parseInt(page) - 1;
+			int convoCount = MessagingDAO.getAllSentMessageCount(talker.getId());
+			
+			talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+			List<TalkerBean> talkerList = TalkerDAO.loadAllTalkers(); 
+			List<MessageBean> sentMessageList = MessagingDAO.getSentMailMessagesById(talker.getId(), pageNo);
+			for(int index = 0; index < sentMessageList.size(); index++){
+				MessageBean message1 = sentMessageList.get(index);
+				TalkerBean totalker = TalkerDAO.getById(message1.getToTalkerId());
+				//for displaying date
+						Date date = message1.getTime();
+						DateFormat format = new SimpleDateFormat("MMM,dd, hh:mm aaa");
+						message1.setDisplayDate(format.format(date));
+						//for displaying 1st line of message
+						//for displaying 1st line of message
+						String messageDisp = "";
+						if(message1.isReplied()){
+							messageDisp = MessagingDAO.getMessageText(message1.getId());
+							if(messageDisp != null && messageDisp.length() > 50){
+								messageDisp = messageDisp.substring(0, 50);
+								messageDisp = messageDisp + "...";
+							}
+						}else{
+							messageDisp = message1.getText();
+							if(messageDisp != null && messageDisp.length() > 50){
+								messageDisp = messageDisp.substring(0, 50);
+								messageDisp = messageDisp + "...";
+							}
+						}
+				List<String> toTalkerNames=MessagingDAO.getToTalkerNamesByMessageId(message1.getId());
+				message1.setToTalers(toTalkerNames);
+				
+				message1.setDisplayMessage(messageDisp);
+				message1.setToTalker(totalker);
+				sentMessageList.set(index, message1);
+			}
+			int totalCount=convoCount;		//adding convocount into totalcount
+			int pages = convoCount / CONVO_PER_PAGE;
+			if(convoCount%CONVO_PER_PAGE > 0){
+				pages=pages+1;				//for adding one page
+			}
+					
+			if(startPage==0){
+				startPage=1;
+						
+				if(totalCount/CONVO_PER_PAGE >= CONVO_PER_PAGE)
+					endPage=CONVO_PER_PAGE;					//Condition for 5 page limit
+				else{
+					endPage = totalCount / CONVO_PER_PAGE;	//if page less than 5
+					if(totalCount % CONVO_PER_PAGE > 0)
+						endPage = endPage + 1;
+				}			
+			}		
+			//increasing start and end page
+			if(Integer.parseInt(page)>endPage){
+				startPage=startPage+1;
+				endPage=endPage+1;
+			}else if(Integer.parseInt(page)<startPage){ 
+				startPage=startPage-1;		//decreasing start and end page
+				endPage=endPage-1;
+			}
+			if( Integer.parseInt(page) > CONVO_PER_PAGE/2 &&  Integer.parseInt(page) <= pages){
+				endPage= Integer.parseInt(page);
+				startPage=Integer.parseInt(page)-CONVO_PER_PAGE/2 + 1;
+			}		
+			int prevPage =  Integer.parseInt(page) - 1 == 0 ? 1 : Integer.parseInt(page) - 1;
+			int nextPage = Integer.parseInt(page)  == pages ? pages : Integer.parseInt(page) + 1;
+			int size = sentMessageList == null ? 0 : sentMessageList.size();
+	
+			String fromPage = "sentmail";
+			render(talker,talkerList,sentMessageList,pages,page,prevPage,nextPage,size,startPage,endPage,fromPage);
 		}
-		if( Integer.parseInt(page) > CONVO_PER_PAGE/2 &&  Integer.parseInt(page) <= pages){
-			endPage= Integer.parseInt(page);
-			startPage=Integer.parseInt(page)-CONVO_PER_PAGE/2 + 1;
-		}		
-		int prevPage =  Integer.parseInt(page) - 1 == 0 ? 1 : Integer.parseInt(page) - 1;
-		int nextPage = Integer.parseInt(page)  == pages ? pages : Integer.parseInt(page) + 1;
-		int size = sentMessageList == null ? 0 : sentMessageList.size();
-
-		String fromPage = "sentmail";
-		
-		render(talker,talkerList,sentMessageList,pages,page,prevPage,nextPage,size,startPage,endPage,fromPage);
 	}
 	
 	
@@ -447,12 +475,22 @@ public class Messaging  extends Controller {
 				message1.setDisplayDate(format.format(date));
 				
 				//for displaying 1st line of message
-				String messageDisp = message1.getText();
-				if(messageDisp != null && messageDisp.length() > 50){
-					messageDisp = messageDisp.substring(0, 50);
-					messageDisp = messageDisp + "...";
+				String messageDisp = "";
+				if(message1.isReplied()){
+					messageDisp = MessagingDAO.getMessageText(message1.getId());
+					if(messageDisp != null && messageDisp.length() > 50){
+						messageDisp = messageDisp.substring(0, 50);
+						messageDisp = messageDisp + "...";
+					}
+					message1.setDisplayMessage(messageDisp);
+				}else{
+					messageDisp = message1.getText();
+					if(messageDisp != null && messageDisp.length() > 50){
+						messageDisp = messageDisp.substring(0, 50);
+						messageDisp = messageDisp + "...";
+					}
+					message1.setDisplayMessage(messageDisp);
 				}
-				message1.setDisplayMessage(messageDisp);
 				
 				message1.setFromTalker(fromTalker);
 				_messageList.set(index, message1);
@@ -506,12 +544,22 @@ public class Messaging  extends Controller {
 				message1.setDisplayDate(format.format(date));
 				
 				//for displaying 1st line of message
-				String messageDisp = message1.getText();
-				if(messageDisp != null && messageDisp.length() > 50){
-					messageDisp = messageDisp.substring(0, 50);
-					messageDisp = messageDisp + "...";
+				String messageDisp = "";
+				if(message1.isReplied()){
+					messageDisp = MessagingDAO.getMessageText(message1.getId());
+					if(messageDisp != null && messageDisp.length() > 50){
+						messageDisp = messageDisp.substring(0, 50);
+						messageDisp = messageDisp + "...";
+					}
+					message1.setDisplayMessage(messageDisp);
+				}else{
+					messageDisp = message1.getText();
+					if(messageDisp != null && messageDisp.length() > 50){
+						messageDisp = messageDisp.substring(0, 50);
+						messageDisp = messageDisp + "...";
+					}
+					message1.setDisplayMessage(messageDisp);
 				}
-				message1.setDisplayMessage(messageDisp);
 				
 				message1.setFromTalker(fromTalker);
 				messageList.set(index, message1);

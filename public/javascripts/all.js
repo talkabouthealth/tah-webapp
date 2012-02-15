@@ -388,8 +388,7 @@ function makeAutocomplete(id, type, parentTopic) {
 			else {
 				$(id).val(ui.item.value);
 				selectedConvoURL = ui.item.url;
-			}
-			
+			}			
 			return false;
 		}
 	})
@@ -603,7 +602,7 @@ function loadMoreFeed(type, talkerName) {
 				
 				//for new items
 				$('.inline-edit').inlineEdit( { hover: ''} );
-				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
+				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
 			}
 		);
 	
@@ -652,8 +651,8 @@ function loadMoreFeedWithoutLogin(type, talkerName) {
 				$(data).appendTo($("#"+type+"List"));
 				//for new items
 				$('.inline-edit').inlineEdit( { hover: ''} );
-				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
-			}
+				$('.moretext').truncatable({ limit: 70, more: '... more', less: true, hideText: '...less' });
+ 			}
 		);
 	
 	return false;
@@ -941,7 +940,7 @@ function loadMoreTopicsFeed(type,title) {
 				$(data).appendTo($("#"+type+"Content"));
 				//for new items
 				$('.inline-edit').inlineEdit( { hover: ''} );
-				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
+				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
 			}
 	);
 	return false;
@@ -1007,12 +1006,12 @@ function populateMemberArea(data,type,from){
 	if(from && from == 'b'){
 		$("#"+type+"TabFirst").html("");
 		$(data).appendTo($("#"+type+"TabFirst"));
-		$('.moretext').truncatable({ limit: 70, more: '... more', less: false, hideText: '...less' });
+		$('.moretext').truncatable({ limit: 70, more: '... more', less: true, hideText: '...less' });
 		$("#ajaxLoading").hide();
 	}else{
 		var moreBtn = $("#"+type+"Tab");
 		$(data).appendTo($("#"+type+"Tab"));
-		$('.moretext').truncatable({ limit: 70, more: '... more', less: false, hideText: '...less' });
+		$('.moretext').truncatable({ limit: 70, more: '... more', less: true, hideText: '...less' });
 		if(data == ""){
 			$("#"+type+"Btn").hide();
 		}else{
@@ -1058,7 +1057,7 @@ function makeFullSearchAjaxLoad(inputId) {
 				$("#convoList").html("");
 				$(data).appendTo($("#convoList"));
 				//for new items
-				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
+				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
 			}
 		);
 	
@@ -1123,4 +1122,33 @@ function mailSearch(inputId, value){
 				document.location = url;
 			}
 		);
+}
+
+//used for paging in question feed for mobile
+function loadMoreFeedMob(type) {
+	var lastActionId = $("#"+type+"List").children().last().attr("id");
+	//replace More button with loading image
+	var moreBtn = $("#"+type+"Btn");
+	$("#ajaxLoading").appendTo(moreBtn.parent()).show();
+	moreBtn.hide();
+
+	//public static void conversationFeedAjax(String afterActionId) {
+	$.get("/m/feedAjaxLoad", {afterActionId: lastActionId, feedType: type},
+			function(data) {
+				$("#ajaxLoading").hide();
+		
+				//show more button if it isn't the end of a feed
+				var feedSize = $(data).find(".joinpic").size();
+				if (feedSize >= feedsPerPage) {
+					moreBtn.show();
+				}
+				
+				$(data).appendTo($("#"+type+"List"));
+				//for new items
+				$('.inline-edit').inlineEdit( { hover: ''} );
+				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
+			}
+		);
+	
+	return false;
 }

@@ -78,8 +78,12 @@ function doAction(action) {
 
 	$.get("/message/doaction", {selectedMessageIds: selectedMessageIdsList, actionState: action, page: ${page}, path: path},
 			function(data) {
-				$("#sentMailMessageList").empty();
-				$("#sentMailMessageList").html(data);
+				if(action == "ARCHIEVE"){
+					window.location.href = "/message/inbox";
+				}else{
+					$("#sentMailMessageList").empty();
+					$("#sentMailMessageList").html(data);
+				}
 			}
 		);	
 }	
@@ -175,7 +179,7 @@ function setImage(obj,name,divId){
 	           #{if size > 0}
 	           		<input type="hidden" value="${endPage}" id="endPageHidden"/>
 		           #{if pages > 1}
-		          		  <div class="inboxprev"><a href="sentmail?page=${prevPage}"><img src="/public/images/Previous.jpg" alt="Previous" border="0" /></a></div>
+		          		  <div class="inboxprev" style="margin-left: 150px;"><a href="sentmail?page=${prevPage}"><img src="/public/images/Previous.jpg" alt="Previous" border="0" /></a></div>
 				          <div class="inboxtextpre">
 					         
 					         <div id="divForPaging1">
@@ -202,9 +206,6 @@ function setImage(obj,name,divId){
 					#{if sentMessageList.size > 0}
 						<div id="sentMailMessageList">
 							  <input type="hidden" id="listSize" value="${sentMessageList.size}">
-							  #{if flash.contains("error") }
-									<p class="errorMsg">${flash.error}</p>
-								#{/if}
 							#{list items: sentMessageList, as: 'messageList'}
 								#{Messaging/sentMessage messageList: messageList, page: page/}
 							#{/list}

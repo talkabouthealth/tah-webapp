@@ -12,16 +12,8 @@
 						mailSearch("#searchMessage","");
 						return false;
 					}
-				});*/
-
-				$("#searchMessageHelp")
-				.focus(function() {
-					$(this).hide();
-					$("#searchMessage").show().focus();
-				})
-				
-				makeAutocomplete("#searchMessage", "message");
-		
+				});
+		*/
 	
 		$("#searchMessageHelp")
 		.focus(function() {
@@ -30,6 +22,16 @@
 		})
 		
 		makeAutocomplete("#searchMessage", "message");
+		
+		$("#userNameHelp")
+		.focus(function() {
+			$(this).hide();
+			$("#userName").show().focus();
+		})
+		
+		makeAutocomplete("#userName", "user");
+	
+		
 	});
 
 	function sendReply(id){
@@ -60,7 +62,7 @@
 		$.get("/message/doaction", {selectedMessageIds: selectedMessageIds, actionState: action, page: ${_page}, path: path}
 		,function(data){
 			if(action=='ARCHIEVE')
-			window.location.href="/message/archive";
+			window.location.href="/message/inbox";
 			if(action=='MARK_AS_UNREAD')
 			window.location.href="/message/"+'${fromPage}';
 			if(action=='DELETE')	
@@ -68,6 +70,37 @@
 			}
 		);
         
+	}
+
+	function setNewMessageDiv(){
+		document.getElementById("divForNewMessage").style.display  = 'block';
+		document.getElementById("msgList").style.display = 'none'; 
+	}
+	function cancelMessage(){
+		document.getElementById("divForNewMessage").style.display  = 'none';
+		document.getElementById("msgList").style.display = 'block';
+	}
+
+	function sendMessage(){
+		var user= document.getElementById("userName").value;
+		var subject = document.getElementById("subject").value;
+		var message = document.getElementById("message").value;
+		var isValid = true;
+		if(user == ""){
+			isValid = false;
+			alert("Please enter the user");
+		}else if(subject == ""){
+			isValid = false;
+			alert("Please enter the subject");
+		}else if(message == ""){
+			isValid = false;
+			alert("Please enter the message");
+		}
+		if(isValid == true){
+			var messageForm = document.getElementById('messageForm');
+			messageForm.action = "/message/sentmail?user="+user+"&subject="+subject+"&message="+message+"&action=sendMessage";
+			messageForm.submit();
+		}
 	}
 </script>
 <style type="text/css">

@@ -547,4 +547,37 @@ public class MessagingDAO {
 		}
 		autocompleteMessageIndexReader.close();
 	}
+	
+	/**
+	 * Method use for getting message by message id
+	 * @param id
+	 * @return MessageBean
+	 */
+	public static MessageBean getMessageByRootId(String id){
+		DBCollection messagesColl = getCollection(MESSAGES_COLLECTION);
+		DBObject query = new BasicDBObject("rootid", id);
+		
+		List<DBObject> messageDBObjectList = messagesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		for (DBObject messageDBObject : messageDBObjectList) {
+			MessageBean messageBean = new MessageBean();
+			messageBean.parseFromDB(messageDBObject);
+			return messageBean;
+		}
+		
+		return null;
+		
+	}
+	
+	/**
+	 * Method used for displaying replied text in inbox list.
+	 * @param id
+	 * @return String
+	 */
+	public static String getMessageText(String id){
+		MessageBean message = getMessageByRootId(id);
+		if(message != null)
+			return message.getText();
+		else
+			return "";
+	}
 }
