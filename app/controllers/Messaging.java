@@ -27,7 +27,7 @@ public class Messaging  extends Controller {
 		
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-		List<TalkerBean> talkerList = TalkerDAO.loadAllTalkers(); 
+		List<TalkerBean> talkerList = null;//TalkerDAO.loadAllTalkers(); 
 		
 		page = (page == null || (page != null && page.equals(""))) ? "1" : page;	
 		//no of pages
@@ -39,13 +39,7 @@ public class Messaging  extends Controller {
 		if(messageList != null){
 			for(int index = 0; index < messageList.size(); index++){
 				MessageBean message1 = messageList.get(index);
-				//TalkerBean fromTalker = TalkerDAO.getById(message1.getFromTalkerId());
-				
-				//for displaying date
-				Date date = message1.getTime();
-				DateFormat format = new SimpleDateFormat("MMM,dd, hh:mm aaa");
-				message1.setDisplayDate(format.format(date));
-				
+			
 				//for displaying 1st line of message
 				String messageDisp = "";
 				List<MessageBean> replyMessageList = null;
@@ -69,8 +63,6 @@ public class Messaging  extends Controller {
 					}
 					message1.setDisplayMessage(messageDisp);
 				}
-				
-				//message1.setFromTalker(fromTalker);
 				messageList.set(index, message1);
 			}
 		}
@@ -187,16 +179,16 @@ public class Messaging  extends Controller {
 			int convoCount = MessagingDAO.getAllSentMessageCount(talker.getId());
 			
 			talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-			List<TalkerBean> talkerList = TalkerDAO.loadAllTalkers(); 
+			List<TalkerBean> talkerList = null;//TalkerDAO.loadAllTalkers(); 
 			List<MessageBean> sentMessageList = MessagingDAO.getSentMailMessagesById(talker.getId(), pageNo);
 			for(int index = 0; index < sentMessageList.size(); index++){
 				MessageBean message1 = sentMessageList.get(index);
 				TalkerBean totalker = TalkerDAO.getById(message1.getToTalkerId());
 				
 				//for displaying date
-				Date date = message1.getTime();
-				DateFormat format = new SimpleDateFormat("MMM,dd, hh:mm aaa");
-				message1.setDisplayDate(format.format(date));
+				//Date date = message1.getTime();
+				//DateFormat format = new SimpleDateFormat("MMM,dd, hh:mm aaa");
+				//message1.setDisplayDate(format.format(date));
 				
 				//for displaying 1st line of message
 				String messageDisp = "";
@@ -353,9 +345,9 @@ public class Messaging  extends Controller {
 			TalkerBean fromTalker = TalkerDAO.getById(userMessage.getFromTalkerId());
 			userMessage.setFromTalker(fromTalker);
 			//for displaying date
-			Date date = userMessage.getTime();
-			DateFormat format = new SimpleDateFormat("MMM,dd, hh:mm aaa");
-			userMessage.setDisplayDate(format.format(date));			
+			//Date date = userMessage.getTime();
+			//DateFormat format = new SimpleDateFormat("MMM,dd, hh:mm aaa");
+			//userMessage.setDisplayDate(format.format(date));			
 			//MessageBean userReplyMessage
 		}
 		
@@ -373,7 +365,7 @@ public class Messaging  extends Controller {
 		}
 		
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-		List<TalkerBean> talkerList = TalkerDAO.loadAllTalkers();
+		List<TalkerBean> talkerList = null;//TalkerDAO.loadAllTalkers();
 		
 		if(fromPage == null || (fromPage != null && fromPage.equals("")))
 			fromPage = "inbox";
@@ -497,9 +489,9 @@ public class Messaging  extends Controller {
 						message1.setToTalker(fromTalker);
 				}
 				//for displaying date
-				Date date = message1.getTime();
-				DateFormat format = new SimpleDateFormat("MMM,dd, hh:mm aaa");
-				message1.setDisplayDate(format.format(date));
+				//Date date = message1.getTime();
+				//DateFormat format = new SimpleDateFormat("MMM,dd, hh:mm aaa");
+				//message1.setDisplayDate(format.format(date));
 				
 				//for displaying 1st line of message
 				String messageDisp = "";
@@ -560,7 +552,7 @@ public class Messaging  extends Controller {
 		//System.out.println("pageno:"+pageNo);
 									
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-		List<TalkerBean> talkerList = TalkerDAO.loadAllTalkers(); 
+		List<TalkerBean> talkerList = null;//TalkerDAO.loadAllTalkers(); 
 		page = page==null?"1":page;
 
 		int convoCount = MessagingDAO.getArchiveMessageCount(talker.getId());
@@ -572,9 +564,9 @@ public class Messaging  extends Controller {
 				TalkerBean fromTalker = TalkerDAO.getById(message1.getFromTalkerId());
 				
 				//for displaying date
-				Date date = message1.getTime();
-				DateFormat format = new SimpleDateFormat("MMM,dd, hh:mm aaa");
-				message1.setDisplayDate(format.format(date));
+				//Date date = message1.getTime();
+				//DateFormat format = new SimpleDateFormat("MMM,dd, hh:mm aaa");
+				//message1.setDisplayDate(format.format(date));
 				
 				//for displaying 1st line of message
 				String messageDisp = "";
@@ -633,8 +625,7 @@ public class Messaging  extends Controller {
 			startPage=startPage-1;		//decreasing start and end page
 			endPage=endPage-1;
 		}
-		System.out.println("page:"+page);
-		System.out.println("totcount:"+totalCount +"-"+endPage);
+
 		if( Integer.parseInt(page) > CONVO_PER_PAGE/2 &&  Integer.parseInt(page) <= pages){
 			endPage= Integer.parseInt(page);
 			startPage=Integer.parseInt(page)-CONVO_PER_PAGE/2 + 1;

@@ -5,6 +5,8 @@ import static util.DBUtil.getInt;
 import static util.DBUtil.getStringList;
 import static util.DBUtil.getStringSet;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +21,7 @@ import com.mongodb.DBObject;
 
 public class MessageBean implements Comparable{
 	
+	private static DateFormat format = new SimpleDateFormat("MMM,dd, hh:mm aaa");
 	protected String id;
 	//author of the message
 	private TalkerBean fromTalker;
@@ -112,7 +115,9 @@ public class MessageBean implements Comparable{
 	public String getToTalkerId() { return toTalkerId; }
 	public void setToTalkerId(String toTalkerId) { this.toTalkerId = toTalkerId; }
 	
-	public String getDisplayDate() { return displayDate; }
+	public String getDisplayDate() {
+		return format.format(getTime()); 
+	}
 	public void setDisplayDate(String displayDate) { this.displayDate = displayDate; }
 	
 	public String getDisplayMessage() { return displayMessage; }
