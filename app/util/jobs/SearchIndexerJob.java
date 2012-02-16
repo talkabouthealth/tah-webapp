@@ -13,6 +13,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
 
+import play.jobs.Every;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import util.SearchUtil;
@@ -43,7 +44,7 @@ public class SearchIndexerJob extends Job {
 				  }
 				  
 				  Document doc = new Document();
-				  doc.add(new Field("id", talker.getId(), Field.Store.YES, Field.Index.NO));
+				  doc.add(new Field("id", talker.getId(), Field.Store.YES, Field.Index.TOKENIZED));
 				  doc.add(new Field("uname", talker.getUserName(), Field.Store.YES, Field.Index.TOKENIZED));
 				  if (!talker.isPrivate(PrivacyType.PROFILE_INFO) && talker.getBio() != null) {
 					  doc.add(new Field("bio", talker.getBio(), Field.Store.YES,
@@ -53,6 +54,7 @@ public class SearchIndexerJob extends Job {
 				  
 				  //for autocomplete
 				  doc = new Document();
+				  doc.add(new Field("id", talker.getId(), Field.Store.YES, Field.Index.TOKENIZED));
 				  doc.add(new Field("uname", talker.getUserName(), Field.Store.YES, Field.Index.TOKENIZED));
 				  doc.add(new Field("type", "User", Field.Store.YES, Field.Index.NO));
 				  autocompleteIndexWriter.addDocument(doc);
@@ -65,7 +67,7 @@ public class SearchIndexerJob extends Job {
 				}
 				
 				Document doc = new Document();
-				doc.add(new Field("id", convo.getId(), Field.Store.YES, Field.Index.NO));
+				doc.add(new Field("id", convo.getId(), Field.Store.YES, Field.Index.TOKENIZED));
 				doc.add(new Field("title", convo.getTopic(), Field.Store.YES, Field.Index.TOKENIZED));
 				
 				//add an answer, reply, or live conversation text ?
@@ -82,6 +84,7 @@ public class SearchIndexerJob extends Job {
 						
 				//for autocomplete
 				doc = new Document();
+				doc.add(new Field("id", convo.getId(), Field.Store.YES, Field.Index.TOKENIZED));
 				doc.add(new Field("title", convo.getTopic(), Field.Store.YES, Field.Index.TOKENIZED));
 				doc.add(new Field("type", "Conversation", Field.Store.YES, Field.Index.NO));
 				if (convo.getMainURL() != null) {

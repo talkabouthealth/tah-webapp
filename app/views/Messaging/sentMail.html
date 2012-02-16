@@ -53,7 +53,6 @@ function sendMessage(){
 	}
 	if(isValid == true){
 		var messageForm = document.getElementById('messageForm');
-		messageForm.action = "/message/sentmail?user="+user+"&subject="+subject+"&message="+message+"&action=sendMessage";
 		messageForm.submit();
 	}
 }

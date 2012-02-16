@@ -1,39 +1,19 @@
 package controllers;
 
-import java.util.*;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.StringTokenizer;
-import java.util.TimeZone;
 
-import javax.persistence.criteria.CriteriaBuilder.In;
-
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.store.LockObtainFailedException;
-
-import com.tah.im.model.UserMessage;
-
-import dao.AnswerNotificationDAO;
-import dao.MessagingDAO;
-import dao.TalkerDAO;
 import models.MessageBean;
 import models.TalkerBean;
-import play.cache.Cache;
 import play.mvc.Controller;
-import play.mvc.Scope;
 import play.mvc.With;
-import play.mvc.Scope.Flash;
-import play.mvc.Scope.Session;
 import util.CommonUtil;
-import util.SearchUtil;
+import dao.MessagingDAO;
+import dao.TalkerDAO;
 
 @With(Secure.class)
 public class Messaging  extends Controller {
@@ -68,13 +48,19 @@ public class Messaging  extends Controller {
 				
 				//for displaying 1st line of message
 				String messageDisp = "";
+				List<MessageBean> replyMessageList = null;
 				if(message1.isReplied()){
-					messageDisp = MessagingDAO.getMessageText(message1.getId());
-					if(messageDisp != null && messageDisp.length() > 50){
-						messageDisp = messageDisp.substring(0, 50);
-						messageDisp = messageDisp + "...";
+					replyMessageList = MessagingDAO.getMessageByRootId(message1.getId());
+					if(replyMessageList != null && replyMessageList.size() > 0){
+						messageDisp = replyMessageList.get(0).getText();
+						if(messageDisp != null && messageDisp.length() > 50){
+							messageDisp = messageDisp.substring(0, 50);
+							messageDisp = messageDisp + "...";
+						}
+						message1.setDisplayMessage(messageDisp);
+						if(message1.isReadFlag())
+							message1.setReadFlag(replyMessageList.get(0).isReadFlag());
 					}
-					message1.setDisplayMessage(messageDisp);
 				}else{
 					messageDisp = message1.getText();
 					if(messageDisp != null && messageDisp.length() > 50){
@@ -150,7 +136,8 @@ public class Messaging  extends Controller {
 						if(toTalker != null)
 							talkerArray[index] = toTalker;
 						else
-							flash.error("Sorry, The address '" + usrArray[index].trim() +"' in the 'To' field was not recognized. Please make sure that all addresses are properly formed.");
+							flash.put("errMsg", "Sorry, The address '" + usrArray[index].trim() +"' in the 'To' field was not recognized. Please make sure that all addresses are properly formed.");
+							//flash.error("Sorry, The address '" + usrArray[index].trim() +"' in the 'To' field was not recognized. Please make sure that all addresses are properly formed.");
 			    	}
 			    }
 			    
@@ -205,26 +192,36 @@ public class Messaging  extends Controller {
 			for(int index = 0; index < sentMessageList.size(); index++){
 				MessageBean message1 = sentMessageList.get(index);
 				TalkerBean totalker = TalkerDAO.getById(message1.getToTalkerId());
+				
 				//for displaying date
-						Date date = message1.getTime();
-						DateFormat format = new SimpleDateFormat("MMM,dd, hh:mm aaa");
-						message1.setDisplayDate(format.format(date));
-						//for displaying 1st line of message
-						//for displaying 1st line of message
-						String messageDisp = "";
-						if(message1.isReplied()){
-							messageDisp = MessagingDAO.getMessageText(message1.getId());
-							if(messageDisp != null && messageDisp.length() > 50){
-								messageDisp = messageDisp.substring(0, 50);
-								messageDisp = messageDisp + "...";
-							}
-						}else{
-							messageDisp = message1.getText();
-							if(messageDisp != null && messageDisp.length() > 50){
-								messageDisp = messageDisp.substring(0, 50);
-								messageDisp = messageDisp + "...";
-							}
+				Date date = message1.getTime();
+				DateFormat format = new SimpleDateFormat("MMM,dd, hh:mm aaa");
+				message1.setDisplayDate(format.format(date));
+				
+				//for displaying 1st line of message
+				String messageDisp = "";
+				List<MessageBean> replyMessageList = null;
+				if(message1.isReplied()){
+					replyMessageList = MessagingDAO.getMessageByRootId(message1.getId());
+					if(replyMessageList != null && replyMessageList.size() > 0){
+						messageDisp = replyMessageList.get(0).getText();
+						if(messageDisp != null && messageDisp.length() > 50){
+							messageDisp = messageDisp.substring(0, 50);
+							messageDisp = messageDisp + "...";
 						}
+						message1.setDisplayMessage(messageDisp);
+						if(message1.isReadFlag())
+							message1.setReadFlag(replyMessageList.get(0).isReadFlag());
+					}
+				}else{
+					messageDisp = message1.getText();
+					if(messageDisp != null && messageDisp.length() > 50){
+						messageDisp = messageDisp.substring(0, 50);
+						messageDisp = messageDisp + "...";
+					}
+					message1.setDisplayMessage(messageDisp);
+				}
+				
 				List<String> toTalkerNames=MessagingDAO.getToTalkerNamesByMessageId(message1.getId());
 				message1.setToTalers(toTalkerNames);
 				
@@ -284,9 +281,19 @@ public class Messaging  extends Controller {
 			userMessage = MessagingDAO.getMessageById(id);
 		}
 		
-		if(fromPage != null && fromPage.equalsIgnoreCase("inbox"))
-			userMessage.setReadFlag(true);
-		else if(fromPage != null && fromPage.equalsIgnoreCase("sentmail"))
+		if(fromPage != null && fromPage.equalsIgnoreCase("inbox")){
+			if(talker.getUserName().equalsIgnoreCase(userMessage.getFromTalker().getUserName()))
+				userMessage.setReadFlagSender(true);
+			else if(talker.getUserName().equalsIgnoreCase(userMessage.getToTalker().getUserName()))
+				userMessage.setReadFlag(true);
+			List<MessageBean> replyMessageList = null;
+			replyMessageList = MessagingDAO.getMessageByRootId(userMessage.getId());
+			for(int index = 0; index < replyMessageList.size(); index++){
+				MessageBean message = replyMessageList.get(index);
+				message.setReadFlag(true);
+				MessagingDAO.updateMessage(message);
+			}
+		}else if(fromPage != null && fromPage.equalsIgnoreCase("sentmail"))
 			userMessage.setReadFlagSender(true);
 		else if(fromPage !=null && fromPage.equalsIgnoreCase("archive")){
 			String totalker =  userMessage.getToTalkerId();
@@ -308,6 +315,11 @@ public class Messaging  extends Controller {
 			messageBean.setToTalkerId(userMessage.getFromTalkerId());
 			messageBean.setSubject(userMessage.getSubject());
 			messageBean.setText(replyText);
+			messageBean.setReadFlag(false);
+			messageBean.setReadFlagSender(false);
+			messageBean.setDeleteFlag(false);
+			messageBean.setDeleteFlagSender(false);
+			
 			
 			//for updating new time
 			
@@ -324,9 +336,12 @@ public class Messaging  extends Controller {
 					if(userMessage.getToTalkerId().equals(talker.getId()))
 					userMessage.setReplied(true);
 					userMessage.setTime(new Date());
-					userMessage.setReadFlag(false);
-					MessagingDAO.updateMessage(userMessage);
-				}				
+				}	
+				userMessage.setReadFlag(false);
+				userMessage.setReadFlagSender(false);
+				userMessage.setDeleteFlag(false);
+				userMessage.setDeleteFlagSender(false);
+				MessagingDAO.updateMessage(userMessage);
 			}
 			else{
 				messageBean.setRootId(userMessage.getRootId());
@@ -364,7 +379,13 @@ public class Messaging  extends Controller {
 			fromPage = "inbox";
 		if(userMessage != null)
 			userMessage.setToTalers(MessagingDAO.getToTalkerNamesByMessageId(userMessage.getId()));
-		render(talker,talkerList,userMessage,messageList,_page,fromPage);
+		
+		if(action != null && action.equalsIgnoreCase("sendReply")){
+			List<MessageBean> _messageList = messageList;
+			render("tags/Messaging/replyMessage.html", _messageList);
+		}else
+			render(talker,talkerList,userMessage,messageList,_page,fromPage);
+		
 	}
 	
 	public static void doAction(List<String> selectedMessageIds, String actionState, String page, String path){
@@ -377,11 +398,13 @@ public class Messaging  extends Controller {
 		if(actionState.equalsIgnoreCase("MARK_AS_UNREAD")){
 			for (MessageBean messageBean : messages) {
 				if (selectedMessageIds.contains(messageBean.getId())) {
-					if(path != null && path.contains("inbox"))
-						messageBean.setReadFlag(false);
-					else if(path != null && path.contains("sentmail"))
+					
+					if(_talker.getUserName().equalsIgnoreCase(messageBean.getFromTalker().getUserName()))
 						messageBean.setReadFlagSender(false);
-					else if(path != null && path.contains("archive")){
+					else if(_talker.getUserName().equalsIgnoreCase(messageBean.getToTalker().getUserName()))
+						messageBean.setReadFlag(false);
+					
+					if(path != null && path.contains("archive")){
 						String totalker =  messageBean.getToTalkerId();
 						
 						if(_talker.getId().equals(totalker))
@@ -395,11 +418,13 @@ public class Messaging  extends Controller {
 		}else if(actionState.equalsIgnoreCase("DELETE")){
 			for (MessageBean messageBean : messages) {
 				if (selectedMessageIds.contains(messageBean.getId())) {
-					if(path != null && path.contains("inbox"))
-						messageBean.setDeleteFlag(true);
-					else if(path != null && path.contains("sentmail"))
+					
+					if(_talker.getUserName().equalsIgnoreCase(messageBean.getFromTalker().getUserName()))
 						messageBean.setDeleteFlagSender(true);
-					else if(path != null && path.contains("archive")){
+					else if(_talker.getUserName().equalsIgnoreCase(messageBean.getToTalker().getUserName()))
+						messageBean.setDeleteFlag(true);
+					
+					if(path != null && path.contains("archive")){
 						String totalker =  messageBean.getToTalkerId();
 						
 						if(_talker.getId().equals(totalker))
@@ -410,7 +435,7 @@ public class Messaging  extends Controller {
 					MessagingDAO.updateMessage(messageBean);
 					try{
 						if(messageBean.isDeleteFlag() == true && messageBean.isDeleteFlagSender() == true)
-							MessagingDAO.deleteMessageIndex(messageBean.getSubject());
+							MessagingDAO.deleteMessageIndex(messageBean.getId());
 					}catch(Exception e){
 						e.printStackTrace();
 					}
@@ -419,10 +444,12 @@ public class Messaging  extends Controller {
 		}else if(actionState.equalsIgnoreCase("ARCHIEVE")){
 			for (MessageBean messageBean : messages) {
 				if (selectedMessageIds.contains(messageBean.getId())) {
-					if(path != null && path.contains("inbox"))
-						messageBean.setArchieveFlag(true);
-					else if(path != null && path.contains("sentmail"))
+					
+					if(_talker.getUserName().equalsIgnoreCase(messageBean.getFromTalker().getUserName()))
 						messageBean.setArchieveFlagSender(true);
+					else if(_talker.getUserName().equalsIgnoreCase(messageBean.getToTalker().getUserName()))
+						messageBean.setArchieveFlag(true);
+					
 					MessagingDAO.updateMessage(messageBean);
 					
 				}
@@ -476,13 +503,19 @@ public class Messaging  extends Controller {
 				
 				//for displaying 1st line of message
 				String messageDisp = "";
+				List<MessageBean> replyMessageList = null;
 				if(message1.isReplied()){
-					messageDisp = MessagingDAO.getMessageText(message1.getId());
-					if(messageDisp != null && messageDisp.length() > 50){
-						messageDisp = messageDisp.substring(0, 50);
-						messageDisp = messageDisp + "...";
+					replyMessageList = MessagingDAO.getMessageByRootId(message1.getId());
+					if(replyMessageList != null && replyMessageList.size() > 0){
+						messageDisp = replyMessageList.get(0).getText();
+						if(messageDisp != null && messageDisp.length() > 50){
+							messageDisp = messageDisp.substring(0, 50);
+							messageDisp = messageDisp + "...";
+						}
+						message1.setDisplayMessage(messageDisp);
+						if(message1.isReadFlag())
+							message1.setReadFlag(replyMessageList.get(0).isReadFlag());
 					}
-					message1.setDisplayMessage(messageDisp);
 				}else{
 					messageDisp = message1.getText();
 					if(messageDisp != null && messageDisp.length() > 50){
@@ -545,13 +578,19 @@ public class Messaging  extends Controller {
 				
 				//for displaying 1st line of message
 				String messageDisp = "";
+				List<MessageBean> replyMessageList = null;
 				if(message1.isReplied()){
-					messageDisp = MessagingDAO.getMessageText(message1.getId());
-					if(messageDisp != null && messageDisp.length() > 50){
-						messageDisp = messageDisp.substring(0, 50);
-						messageDisp = messageDisp + "...";
+					replyMessageList = MessagingDAO.getMessageByRootId(message1.getId());
+					if(replyMessageList != null && replyMessageList.size() > 0){
+						messageDisp = replyMessageList.get(0).getText();
+						if(messageDisp != null && messageDisp.length() > 50){
+							messageDisp = messageDisp.substring(0, 50);
+							messageDisp = messageDisp + "...";
+						}
+						message1.setDisplayMessage(messageDisp);
+						if(message1.isReadFlag())
+							message1.setReadFlag(replyMessageList.get(0).isReadFlag());
 					}
-					message1.setDisplayMessage(messageDisp);
 				}else{
 					messageDisp = message1.getText();
 					if(messageDisp != null && messageDisp.length() > 50){

@@ -37,8 +37,18 @@
 	function sendReply(id){
 		var replyText = document.getElementById("replyText").value;
 		var emailForm = document.getElementById('emailForm');
-		emailForm.action = "/message/email?id="+id+"&action=sendReply&fromPage=${fromPage}&replyText="+replyText;
-		emailForm.submit();
+		document.getElementById('sendReplyForm').style.display = 'none';
+		var div = $("#showLoading");
+		$("#ajaxLoading").prependTo(div).show();
+		$.get("/message/email", {id: id, action: 'sendReply', fromPage: '${fromPage}', replyText: replyText}
+		,function(data){
+			$("#replyMsgList").empty();
+			$("#replyMsgList").html(data);
+			$("#ajaxLoading").hide();
+			document.getElementById('sendReplyForm').style.display = 'block';
+			document.getElementById('replyText').value = "";
+			}
+		);
 	}
 
 	function setNewMessageDiv(){
@@ -52,12 +62,8 @@
 
 	
 	function doAction(action){
-
-		//alert('${fromPage}');
-		
 		var path = '${fromPage}'+'emailPage';
 		var  selectedMessageIds = new Array();
-		//var selectedMessageIds = document.mailForm.selectedMessageIds;
 		selectedMessageIds.push('${userMessage.id}');
 		$.get("/message/doaction", {selectedMessageIds: selectedMessageIds, actionState: action, page: ${_page}, path: path}
 		,function(data){
@@ -112,6 +118,15 @@
 .style3 {
 	color: #555555
 }
+.ajaxLoading {
+		display: none;
+		background-image: url(/public/images/ajax-loader.gif);
+		background-repeat:no-repeat;
+		width: 15px;
+		height: 15px;
+		margin: 10px auto;
+		padding-top: 10px;
+	}
 -->
 </style>
   <div id="waperhome">
@@ -152,25 +167,13 @@
 	          </div>
 	        </div>
 	        
-	         
-	        
-	       		 #{if messageList != null}
-					#{if messageList.size > 0}
-					<div class="subiectline" style="padding-top: 15px; padding-bottom: 15px;">Reply - </div>	
-						#{list items: messageList, as: 'messageInfo' }
-						<div class="KenCoveremail" style="border-bottom: 1px solid #DBDBDB; height: auto;">
-					          <div class="kanpic1" style="margin-top: 10px;">#{talker/talkerImageLink size: 40, userName: messageInfo.fromTalker.userName /}</div>
-					          <div class="Kantxtemail" style="width: 525px;margin-top: 10px;"><a href="@{ViewDispatcher.view(userMessage.fromTalker.userName)}">${messageInfo.fromTalker.userName}</a><br />
-					            <span class="Kandate"> ${messageInfo.displayDate}</span>
-					            <p>${messageInfo.text}</p>
-					          </div>
-					    </div>
-				         #{/list}
-					#{/if}
-				#{/if}
-	        
-	        
-	        <div class="eamilreplyCover">
+	        <div id="replyMsgList">
+				#{Messaging/replyMessage messageList: messageList/}
+	        </div>
+		        
+		    <div id="showLoading"  style="clear: both;padding-top: 10px; "> </div>
+		    
+	        <div class="eamilreplyCover" id="sendReplyForm">
 	          <form method = "post" action = "" id="emailForm">
 		          <div class="eamilreply">
 		            <div class="nmessagetxt">Reply:</div>
@@ -179,7 +182,7 @@
 		          <!--nmessage-->
 		          <div class="cb"></div>
 		          <div class="repltext2"><a href="/message/${fromPage}?page=${_page}">Back to messages</a></div>
-		          <input type="submit" class="emailrepsubit" src="images/emailrepsubit.jpg" value=" " onClick="sendReply('${userMessage.id}');"/>
+		          <input type="button" class="emailrepsubit" src="images/emailrepsubit.jpg" value=" " onClick="sendReply('${userMessage.id}');"/>
 	          </form>
 	        </div>
 	        

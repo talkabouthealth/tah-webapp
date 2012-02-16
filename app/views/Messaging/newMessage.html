@@ -1,21 +1,22 @@
 <div class="NewmssageCover" id="newMessageDiv">
-  <form method = "post" action = "" id="messageForm">
+  <form method = "post" action = "/message/sentmail" id="messageForm">
+  	<input type="hidden" name="action" value="sendMessage">
    <div class="newsmessageTop">New Message </div>
    <div class="newsmessageMid">
      <div class="nmessage">
        <div class="newmsgtext">To (username):</div>
        <input id="userNameHelp" type="text" class="nmessageinput"/>
-       <input type="text" class="nmessageinput"  style="display: none;" id="userName" />
+       <input type="text" class="nmessageinput"  style="display: none;" id="userName" name="user"/>
      </div>
      <!--nmessage-->
      <div class="nmessage">
        <div class="newmsgtext">Subject:</div>
-       <input type="text" class="nmessageinput" id="subject"/>
+       <input type="text" class="nmessageinput" id="subject" name="subject"/>
      </div>
      <!--nmessage-->
      <div class="nmessage">
        <div class="newmsgtext">Message:</div>
-       <textarea class="inputtxtarea" id="message" style="width: 484px;"></textarea>
+       <textarea class="inputtxtarea" id="message" style="width: 484px;" name="message"></textarea>
      </div>
      <!--nmessage-->
      <div class="nmessage1">

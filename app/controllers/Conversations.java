@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 import org.bson.types.ObjectId;
 
 import com.mongodb.BasicDBObject;
@@ -61,6 +65,7 @@ import util.BitlyUtil;
 import util.CommonUtil;
 import util.EmailUtil;
 import util.NotificationUtils;
+import util.SearchUtil;
 import util.EmailUtil.EmailTemplate;
 
 /**
@@ -223,12 +228,45 @@ public class Conversations extends Controller {
     	convo.setDeleted(true);
     	convo.setQuestionState(QuestionRecovery.HIDDEN);
     	ConversationDAO.updateConvo(convo);
-    	
+    	try{
+    	deleteConvoIndex(convo.getId());
+    	}catch (Exception e) {
+			e.printStackTrace();
+		}
     	//remove related actions
     	ActionDAO.deleteActionsByConvo(convo);
     	
     	renderText("ok");
     }
+    
+    
+    
+    
+    /**
+     * Delete Conversations from Search Index
+     * @param convoid
+     * @throws Exception
+     */
+    private static void deleteConvoIndex (String convoid)throws Exception {
+    	Directory directory = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
+    	Directory directory1 = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"conversations");
+    	IndexReader autocompleteConvoIndexReader = IndexReader.open(directory);
+    	IndexReader convoIndexReader = IndexReader.open(directory1);
+    	Term term = new Term("id",convoid);
+    	try{
+			convoIndexReader.deleteDocuments(term);
+			autocompleteConvoIndexReader.deleteDocuments(term);
+			convoIndexReader.flush();
+			autocompleteConvoIndexReader.flush();
+			convoIndexReader.close();
+			autocompleteConvoIndexReader.close();
+			
+		}catch(Exception e){
+			System.out.println("exception is here "+e);
+			e.printStackTrace();
+		}
+    }
+    
     
     /**
      * Remove conversation from collection

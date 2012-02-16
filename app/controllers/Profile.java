@@ -53,6 +53,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 
 import play.Logger;
 import play.Play;
@@ -791,11 +795,45 @@ public class Profile extends Controller {
 		TalkerDAO.updateTalker(talker);
 		
 		try {
+			deleteTalkerIndex(talker.getId());
 			Secure.logout();
 		} catch (Throwable e) {
 			Logger.error("Logout error", e);
 		}
-	}
+    }
+	
+	
+		/**
+		 * delete Talker From SearchIndex 
+		 * @param talkerId
+		 * @throws Exception
+		 */
+		private static void deleteTalkerIndex(String talkerId)throws Exception{
+				System.out.println("in talker Delete Index");
+				Directory directory = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
+		    	Directory directory1 = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"talker");
+		    	IndexReader autocompletetalkerIndexReader = IndexReader.open(directory);
+		    	IndexReader talkerIndexReader = IndexReader.open(directory1);
+		    	Term term = new Term("id",talkerId);
+		    	try{
+					int i=talkerIndexReader.deleteDocuments(term);
+					int j=autocompletetalkerIndexReader.deleteDocuments(term);
+					System.out.println("talke index delete"+i);
+					System.out.println("talker index deleted"+j);
+					
+					talkerIndexReader.flush();
+					autocompletetalkerIndexReader.flush();
+					talkerIndexReader.close();
+					autocompletetalkerIndexReader.close();
+					
+				}catch(Exception e){
+					System.out.println("exception is here "+e);
+					e.printStackTrace();
+				}
+				
+	    }
+	
+	
 	
 	public static void hideHelpInfo(String type) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);

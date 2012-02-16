@@ -65,7 +65,6 @@ function sendMessage(){
 	}
 	if(isValid == true){
 		var messageForm = document.getElementById('messageForm');
-		messageForm.action = "/message/sentmail?user="+user+"&subject="+subject+"&message="+message+"&action=sendMessage";
 		messageForm.submit();
 	}
 }
@@ -93,8 +92,8 @@ function doAction(action) {
 				if(action == "ARCHIEVE"){
 					window.location.href = "/message/inbox";
 				}else{
-					$("#sentMailMessageList").empty();
-					$("#sentMailMessageList").html(data);
+					$("#inboxMessageList").empty();
+					$("#inboxMessageList").html(data);
 				}
 			}
 		);	
@@ -196,15 +195,15 @@ function cancelMessage(){
 	        <div id="inboxDiv">
 		       	<form name="mailForm" action="" method="POST">
 		       		<input type="hidden" name="actionState"/>
+		       		 #{if flash.errMsg }
+						<div id="errMsg" style ="border: 1px solid #8BBDDA; margin :5px 5px 5px 5px;">
+							<p style="float:right; margin :5px 5px 5px 5px;"><a href="#" onclick="javascript : document.getElementById('errMsg').style.display = 'none';"><font size ="3">X</font></a></p>
+							<p class="errorMsg">${flash.errMsg}</p> 
+						</div>
+					#{/if}
 					#{if messageList.size > 0}
 						<div id="inboxMessageList">
 						    <input type="hidden" id="listSize" value="${messageList.size}">
-						     #{if flash.contains("error") }
-						     	<div id="errMsg" style ="border: 1px solid #8BBDDA; margin :5px 5px 5px 5px;">
-									<p style="float:right; margin :5px 5px 5px 5px;"><a href="#" onclick="javascript : document.getElementById('errMsg').style.display = 'none';"><font size ="3">X</font></a></p>
-									<p class="errorMsg">${flash.error}</p> 
-								</div>
-							#{/if}
 							#{list items: messageList, as: 'messageList'}
 								#{Messaging/inboxMessage messageList: messageList, page: page, talker: talker/}
 							#{/list}
@@ -218,11 +217,7 @@ function cancelMessage(){
 						</div>
 					#{/else}
 				</form>
-				
 	         </div> 
-	         
-	       
-	        
 	    <!--KenCover-->
         <div class="KenCovernex">
         	#{if size > 0}

@@ -16,11 +16,16 @@ import models.EmailListBean;
 import models.NewsLetterBean;
 import models.TalkerBean;
 import models.TopicBean;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 
 import play.mvc.Controller;
 import play.mvc.With;
 import util.EmailUtil;
 import util.NotificationUtils;
+import util.SearchUtil;
 
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -99,14 +104,51 @@ public class Dashboard extends Controller {
 		for (TalkerBean talker : talkers) {
 			if (selectedTalkerIds.contains(talker.getId())) {
 				talker.setSuspended(true);
+				try{
+					deleteTalkerIndex(talker.getId());
+				}catch (Exception e) {
+					// TODO: handle exception
+				}
 			}
 			else {
 				talker.setSuspended(false);
 			}
-			TalkerDAO.updateTalker(talker);
+			try{
+				TalkerDAO.updateTalker(talker);	
+			}catch (Exception e) {
+				// TODO: handle exception
+			}
+			
+		}
+		manageAccounts();
+	}
+	
+	/**
+	 * delete the talker foe Search Incex
+	 * @param talkerId
+	 * @throws Exception
+	 */
+	
+	private static void deleteTalkerIndex(String talkerId)throws Exception{
+		
+		Directory directory = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
+    	Directory directory1 = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"talker");
+    	IndexReader autocompletetalkerIndexReader = IndexReader.open(directory);
+    	IndexReader talkerIndexReader = IndexReader.open(directory1);
+    	Term term = new Term("id",talkerId);
+    	try{
+			talkerIndexReader.deleteDocuments(term);
+			autocompletetalkerIndexReader.deleteDocuments(term);
+			talkerIndexReader.flush();
+			autocompletetalkerIndexReader.flush();
+			talkerIndexReader.close();
+			autocompletetalkerIndexReader.close();
+			
+		}catch(Exception e){
+			System.out.println("exception is here "+e);
+			e.printStackTrace();
 		}
 		
-		manageAccounts();
 	}
 	
 	// --------------- Verify Professionals ------------------

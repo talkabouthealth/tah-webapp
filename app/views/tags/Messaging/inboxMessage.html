@@ -19,9 +19,12 @@
          	<div class="Kantxt"><a href="@{ViewDispatcher.view(messageInfo.fromTalker.userName)}">${messageInfo.fromTalker.userName}</a><br />
            	<span class="Kandate"> ${messageInfo.displayDate}</span> </div>
 		#{/else}
-         #{if messageInfo.readFlag == true}
+         #{if _talker.userName.equals(messageInfo.toTalker.userName) && messageInfo.readFlag == true}
          		<div class="kansubtxt" style="font-weight: lighter; font-size: 20;"><a href="@{Messaging.email(messageInfo.id,'','',_page,'inbox')}">${messageInfo.subject}</a><br />
          #{/if}
+         #{elseif  _talker.userName.equals(messageInfo.fromTalker.userName) && messageInfo.readFlagSender == true}
+         		<div class="kansubtxt" style="font-weight: lighter; font-size: 20;"><a href="@{Messaging.email(messageInfo.id,'','',_page,'inbox')}">${messageInfo.subject}</a><br />
+         #{/elseif}
          #{else}
          	 <div class="kansubtxt"><a href="@{Messaging.email(messageInfo.id,'','',_page,'inbox')}">${messageInfo.subject}</a><br />
          #{/else}

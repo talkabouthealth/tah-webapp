@@ -31,7 +31,7 @@ int limit=10;
 			for (TalkerBean talker : TalkerDAO.loadUpdatedTalker(limit)) {
 				  
 				  Document doc = new Document();
-				  doc.add(new Field("id", talker.getId(), Field.Store.YES, Field.Index.NO));
+				  doc.add(new Field("id", talker.getId(), Field.Store.YES, Field.Index.TOKENIZED));
 				  doc.add(new Field("uname", talker.getUserName(), Field.Store.YES, Field.Index.TOKENIZED));
 				  if (!talker.isPrivate(PrivacyType.PROFILE_INFO) && talker.getBio() != null) {
 					  doc.add(new Field("bio", talker.getBio(), Field.Store.YES,
@@ -41,6 +41,7 @@ int limit=10;
 				  
 				  //for autocomplete
 				  doc = new Document();
+				  doc.add(new Field("id", talker.getId(), Field.Store.YES, Field.Index.TOKENIZED));
 				  doc.add(new Field("uname", talker.getUserName(), Field.Store.YES, Field.Index.TOKENIZED));
 				  doc.add(new Field("type", "User", Field.Store.YES, Field.Index.NO));
 				  autocompleteIndexWriter.addDocument(doc);

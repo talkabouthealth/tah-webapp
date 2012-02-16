@@ -46,8 +46,6 @@ public class MessagingDAO {
 		DBRef fromtalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, messageBean.getFromTalkerId());
 		DBRef toTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, messageBean.getToTalkerId());
 		
-		System.out.println("----------replied flag----------"+messageBean.isReplied());
-		
 		DBObject messageDBObject = BasicDBObjectBuilder.start()
 				.add("fromTalker", fromtalkerRef)
 				.add("toTalker", toTalkerRef)
@@ -102,8 +100,8 @@ public class MessagingDAO {
 		.add("fromTalker", totalkerRef)
 		.add("replied",true)
 		.add("rootid", "")
-		.add("delete_flag", new BasicDBObject("$ne", true))
-		.add("archieve_flag", new BasicDBObject("$ne", true))
+		.add("delete_flag_sender", new BasicDBObject("$ne", true))
+		.add("archieve_flag_sender", new BasicDBObject("$ne", true))
 		.get();
 				
 		DBObject querylist = new BasicDBObject("$or", 		//"OR" CONDITION FOR query and query1
@@ -285,8 +283,8 @@ public class MessagingDAO {
 		.add("fromTalker", totalkerRef)
 		.add("replied",true)
 		.add("rootid", "")
-		.add("delete_flag", new BasicDBObject("$ne", true))
-		.add("archieve_flag", new BasicDBObject("$ne", true))
+		.add("delete_flag_sender", new BasicDBObject("$ne", true))
+		.add("archieve_flag_sender", new BasicDBObject("$ne", true))
 		.get();
 				
 		DBObject querylist = new BasicDBObject("$or", 		//"OR" CONDITION FOR query and query1
@@ -518,7 +516,7 @@ public class MessagingDAO {
 		if(message != null){
 			if (message.isDeleteFlag() != true || !message.getRootId().equals(null)) {
 				Document doc = new Document();
-				doc.add(new Field("id", message.getId(), Field.Store.YES, Field.Index.NO));
+				doc.add(new Field("id", message.getId(), Field.Store.YES, Field.Index.TOKENIZED));
 				doc.add(new Field("title", message.getSubject(), Field.Store.YES, Field.Index.TOKENIZED));
 				doc.add(new Field("type", "Message", Field.Store.YES, Field.Index.NO));
 				doc.add(new Field("rootid",message.getRootId(), Field.Store.YES, Field.Index.NO));
@@ -535,12 +533,12 @@ public class MessagingDAO {
 	 * @param id
 	 * @throws Exception
 	 */
-	public static void deleteMessageIndex(String title) throws Exception{
+	public static void deleteMessageIndex(String id) throws Exception{
 		Directory directory = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"messageAutocomplete");
 		IndexReader autocompleteMessageIndexReader = IndexReader.open(directory);
-		Term term = new Term("title",title);
+		Term term = new Term("id",id);
 		try{
-			int deleted = autocompleteMessageIndexReader.deleteDocuments(term);
+			autocompleteMessageIndexReader.deleteDocuments(term);
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -551,33 +549,20 @@ public class MessagingDAO {
 	/**
 	 * Method use for getting message by message id
 	 * @param id
-	 * @return MessageBean
+	 * @return List<MessageBean>
 	 */
-	public static MessageBean getMessageByRootId(String id){
+	public static List<MessageBean> getMessageByRootId(String id){
 		DBCollection messagesColl = getCollection(MESSAGES_COLLECTION);
 		DBObject query = new BasicDBObject("rootid", id);
 		
+		List<MessageBean> messageList = new ArrayList<MessageBean>();
 		List<DBObject> messageDBObjectList = messagesColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		for (DBObject messageDBObject : messageDBObjectList) {
 			MessageBean messageBean = new MessageBean();
 			messageBean.parseFromDB(messageDBObject);
-			return messageBean;
+			messageList.add(messageBean);
 		}
-		
-		return null;
-		
+		return messageList;
 	}
 	
-	/**
-	 * Method used for displaying replied text in inbox list.
-	 * @param id
-	 * @return String
-	 */
-	public static String getMessageText(String id){
-		MessageBean message = getMessageByRootId(id);
-		if(message != null)
-			return message.getText();
-		else
-			return "";
-	}
 }

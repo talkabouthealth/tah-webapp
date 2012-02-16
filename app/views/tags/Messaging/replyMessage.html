@@ -1,0 +1,14 @@
+ #{if _messageList != null}
+	#{if _messageList.size > 0}
+	<div class="subiectline" style="padding-top: 15px; padding-bottom: 15px;">Reply - </div>	
+		#{list items: _messageList, as: 'messageInfo' }
+		<div class="KenCoveremail" style="border-bottom: 1px solid #DBDBDB; height: auto;" >
+	          <div class="kanpic1" style="margin-top: 10px;">#{talker/talkerImageLink size: 40, userName: messageInfo.fromTalker.userName /}</div>
+	          <div class="Kantxtemail" style="width: 525px;margin-top: 10px;"><a href="@{ViewDispatcher.view(messageInfo.fromTalker.userName)}">${messageInfo.fromTalker.userName}</a><br />
+	            <span class="Kandate"> ${messageInfo.displayDate}</span>
+	            <p>${messageInfo.text}</p>
+	          </div>
+	    </div>
+         #{/list}
+	#{/if}
+#{/if}
