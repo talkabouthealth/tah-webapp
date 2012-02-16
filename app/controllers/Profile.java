@@ -71,6 +71,7 @@ import play.mvc.With;
 import play.templates.JavaExtensions;
 import util.CommonUtil;
 import util.EmailUtil;
+import util.SearchUtil;
 import util.TwitterUtil;
 import util.EmailUtil.EmailTemplate;
 import util.ImageUtil;
