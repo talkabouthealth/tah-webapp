@@ -314,8 +314,8 @@ public class MessagingDAO {
 		.add("toTalker", fromtalkerRef)
 		.add("replied", true)
 		.add("rootid", "")
-		.add("delete_flag", new BasicDBObject("$ne", true))
-		.add("archieve_flag", new BasicDBObject("$ne", true))
+		.add("delete_flag_sender", new BasicDBObject("$ne", true))
+		.add("archieve_flag_sender", new BasicDBObject("$ne", true))
 		.get();
 		
 		
@@ -564,5 +564,30 @@ public class MessagingDAO {
 		}
 		return messageList;
 	}
+	
+	/**
+	 * Return the No of unread Message in Inbox 
+	 * @param talkerId
+	 * @return messageCount
+	 */
+	public static int getUnreadMessageCount(String talkerId){
+		
+		int messageCount;
+		DBCollection messagesColl = getCollection(MESSAGES_COLLECTION);
+		DBRef totalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
+
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("toTalker", totalkerRef)
+			.add("rootid", "")
+			.add("delete_flag", new BasicDBObject("$ne", true))
+			.add("archieve_flag", new BasicDBObject("$ne", true))
+			.add("read_flag", new BasicDBObject("$ne", true))
+			.get();		
+	
+		messageCount = messagesColl.find(query).count();		
+		
+		return messageCount;
+	}
+
 	
 }

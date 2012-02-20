@@ -94,6 +94,9 @@ function doAction(action) {
 				}else{
 					$("#inboxMessageList").empty();
 					$("#inboxMessageList").html(data);
+					var unreadCount=document.getElementById("hidInboxCount").value;		
+					unreadCountText="Inbox ("+unreadCount+")";	
+				    $("#inboxLink").html("<a class='' href='@{Messaging.inbox()}' id='inboxLink' title='You have "+unreadCount+" unread messages'><b>"+unreadCountText+"</b></a>");	
 				}
 			}
 		);	
@@ -130,6 +133,10 @@ function deleteMessage(id){
 			function(data) {
 				$("#inboxMessageList").empty();
 				$("#inboxMessageList").html(data);
+				var unreadCount=document.getElementById("hidInboxCount").value;		
+				unreadCount="Inbox ("+unreadCount+")";	
+			    $("#inboxLink").html("<b>"+unreadCount+"</b>");	
+				
 			}
 		);
 }
@@ -193,10 +200,10 @@ function cancelMessage(){
 	        <!--ArchiveCover-->
 	        
 	        <div id="inboxDiv">
-		       	<form name="mailForm" action="" method="POST">
+	        	<form name="mailForm" action="" method="POST">
 		       		<input type="hidden" name="actionState"/>
 		       		 #{if flash.errMsg }
-						<div id="errMsg" style ="border: 1px solid #8BBDDA; margin :5px 5px 5px 5px;">
+				     	<div id="errMsg" style ="border: 1px solid #8BBDDA; margin :5px 5px 5px 5px;">
 							<p style="float:right; margin :5px 5px 5px 5px;"><a href="#" onclick="javascript : document.getElementById('errMsg').style.display = 'none';"><font size ="3">X</font></a></p>
 							<p class="errorMsg">${flash.errMsg}</p> 
 						</div>

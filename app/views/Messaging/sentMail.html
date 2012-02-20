@@ -131,24 +131,15 @@ function cancelMessage(){
 	document.getElementById("msgList").style.display = 'block';
 }
 function setImage(obj,name,divId){
-	
-
 	var src="/image/";
 	src=src+name;
-	$.get("imageLink",{size: 40, userName: name},
+	$.get("/Messaging/talkerImageLink",{size: 40, userName: name},
 			function(data){
 				var id="#"+divId		
 				 $(id).empty();
 				 $(id).html(data);
 			}
 	);
-	
-	/*$("#divForImage").html=;
-
-
-	<a href="@{ViewDispatcher.view(_userName)}" title="${_userName}">
-	<img src="@{Image.show(_userName)}" width="${_size}" height="${_size}" border="0" id="imageId" />
-    </a> */
 }
 </script>
 <style type="text/css">

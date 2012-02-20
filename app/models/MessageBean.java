@@ -120,8 +120,15 @@ public class MessageBean implements Comparable{
 	}
 	public void setDisplayDate(String displayDate) { this.displayDate = displayDate; }
 	
-	public String getDisplayMessage() { return displayMessage; }
-	public void setDisplayMessage(String displayMessage) { this.displayMessage = displayMessage; }
+	public String getDisplayMessage() {
+		if(displayMessage != null && displayMessage.length() > 50){
+			return displayMessage.substring(0, 50) + "...";
+		}
+		return displayMessage; 
+	}
+	public void setDisplayMessage(String displayMessage) {
+		this.displayMessage = displayMessage; 
+	}
 	
 	public String getRootId() {	return rootId; }
 	public void setRootId(String rootId) { this.rootId = rootId; }

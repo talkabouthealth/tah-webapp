@@ -5438,7 +5438,8 @@ margin:0 auto;
 {
 width:957px;
 height:87px;
-background:url(../images/headerhome.jpg);
+background: url("../images/headerhome.jpg") no-repeat scroll left bottom transparent;
+/*background:url(../images/headerhome.jpg);*/
 background-repeat:no-repeat;
 background-position:left bottom;
 }
@@ -5980,6 +5981,7 @@ font-size:13px;
 height:20px;
 margin-left:120px;
 margin-right:3px;
+margin-top: 6px;
 text-align:center;
 width:95px;
 }
@@ -5999,6 +6001,7 @@ text-decoration:underline;
 { 
 width:205px;
 float:left;
+margin-top: 6px;
  }
 .inboxsearchinput
 {
@@ -6025,9 +6028,9 @@ cursor:pointer;
 .ArchiveCover
 {
 clear:both;
-padding-top:7px;
+padding-top:11px;
 height:38px;
-padding-left:15px;
+padding-left:5px;
 border-bottom:1px solid #8b8b8b;
 }
 .ArchiveCover2

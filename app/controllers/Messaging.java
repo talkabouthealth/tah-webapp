@@ -5,13 +5,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import models.MessageBean;
 import models.TalkerBean;
+import models.TalkerBean.EmailSetting;
 import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
+import util.EmailUtil;
+import util.NotificationUtils;
+import util.EmailUtil.EmailTemplate;
 import dao.MessagingDAO;
 import dao.TalkerDAO;
 
@@ -27,41 +33,27 @@ public class Messaging  extends Controller {
 		
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-		List<TalkerBean> talkerList = null;//TalkerDAO.loadAllTalkers(); 
 		
 		page = (page == null || (page != null && page.equals(""))) ? "1" : page;	
 		//no of pages
 		int pageNo = Integer.parseInt(page) - 1;
-		int convoCount= MessagingDAO.getInboxMessagesCount(talker.getId());
+		int convoCount = MessagingDAO.getInboxMessagesCount(talker.getId());
 		
 		List<MessageBean> messageList = MessagingDAO.getInboxMessagesById(talker.getId(),pageNo);
-		
 		if(messageList != null){
-			for(int index = 0; index < messageList.size(); index++){
+			for(int index = 0; index < messageList.size(); index++) {
 				MessageBean message1 = messageList.get(index);
-			
 				//for displaying 1st line of message
-				String messageDisp = "";
 				List<MessageBean> replyMessageList = null;
-				if(message1.isReplied()){
+				if(message1.isReplied()) {
 					replyMessageList = MessagingDAO.getMessageByRootId(message1.getId());
 					if(replyMessageList != null && replyMessageList.size() > 0){
-						messageDisp = replyMessageList.get(0).getText();
-						if(messageDisp != null && messageDisp.length() > 50){
-							messageDisp = messageDisp.substring(0, 50);
-							messageDisp = messageDisp + "...";
-						}
-						message1.setDisplayMessage(messageDisp);
+						message1.setDisplayMessage(replyMessageList.get(0).getText());
 						if(message1.isReadFlag())
 							message1.setReadFlag(replyMessageList.get(0).isReadFlag());
 					}
-				}else{
-					messageDisp = message1.getText();
-					if(messageDisp != null && messageDisp.length() > 50){
-						messageDisp = messageDisp.substring(0, 50);
-						messageDisp = messageDisp + "...";
-					}
-					message1.setDisplayMessage(messageDisp);
+				} else {
+					message1.setDisplayMessage( message1.getText());
 				}
 				messageList.set(index, message1);
 			}
@@ -108,7 +100,9 @@ public class Messaging  extends Controller {
 		int size = messageList == null ? 0 : messageList.size();
 		String fromPage = "inbox";
 		
-		render(talker,talkerList,messageList,pages,page,prevPage,nextPage,size,startPage,endPage,fromPage);
+		session.put("inboxUnreadCount",MessagingDAO.getUnreadMessageCount(talker.getId()));
+		
+		render(talker,messageList,pages,page,prevPage,nextPage,size,startPage,endPage,fromPage);
 	}
 	
 	public static void sentMail(String action, String user, String subject, String message,String page){
@@ -150,6 +144,18 @@ public class Messaging  extends Controller {
 						if(index == 0){
 							messageBean.setDummyId(dummyId);
 				    		dummyId=MessagingDAO.saveMessage(messageBean);
+				    		
+				    		//sending mail to talker for direct message
+				    		Map<String, String> vars = new HashMap<String, String>();
+				    		vars.put("other_talker", talker.getUserName());
+				    		vars.put("message_text", messageBean.getText());
+				    		if(toTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
+				    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, toTalker, vars);
+				    		}
+				    		//NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT_MESSAGE, toTalker, vars);
+				    		EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, EmailUtil.ADMIN_EMAIL, vars, null, false);
+				    		
+				    		//creating index for message
 				    		try{
 				    			MessagingDAO.populateMessageIndex(dummyId);
 				    		}catch(Exception e){
@@ -159,6 +165,17 @@ public class Messaging  extends Controller {
 						else{
 						    messageBean.setDummyId(dummyId); 	  
 						    String messageId = MessagingDAO.saveMessage(messageBean);
+						    
+						    //sending mail to talker for direct message
+						    Map<String, String> vars = new HashMap<String, String>();
+				    		vars.put("other_talker", talker.getUserName());
+				    		vars.put("message_text", messageBean.getText());
+				    		if(toTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
+				    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, toTalker, vars);
+				    		}
+				    		EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, EmailUtil.ADMIN_EMAIL, vars, null, false);
+				    		
+				    		//creating index for message
 						    try{
 						    	MessagingDAO.populateMessageIndex(messageId);
 				    		}catch(Exception e){
@@ -179,7 +196,6 @@ public class Messaging  extends Controller {
 			int convoCount = MessagingDAO.getAllSentMessageCount(talker.getId());
 			
 			talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-			List<TalkerBean> talkerList = null;//TalkerDAO.loadAllTalkers(); 
 			List<MessageBean> sentMessageList = MessagingDAO.getSentMailMessagesById(talker.getId(), pageNo);
 			for(int index = 0; index < sentMessageList.size(); index++){
 				MessageBean message1 = sentMessageList.get(index);
@@ -197,20 +213,12 @@ public class Messaging  extends Controller {
 					replyMessageList = MessagingDAO.getMessageByRootId(message1.getId());
 					if(replyMessageList != null && replyMessageList.size() > 0){
 						messageDisp = replyMessageList.get(0).getText();
-						if(messageDisp != null && messageDisp.length() > 50){
-							messageDisp = messageDisp.substring(0, 50);
-							messageDisp = messageDisp + "...";
-						}
 						message1.setDisplayMessage(messageDisp);
 						if(message1.isReadFlag())
 							message1.setReadFlag(replyMessageList.get(0).isReadFlag());
 					}
 				}else{
 					messageDisp = message1.getText();
-					if(messageDisp != null && messageDisp.length() > 50){
-						messageDisp = messageDisp.substring(0, 50);
-						messageDisp = messageDisp + "...";
-					}
 					message1.setDisplayMessage(messageDisp);
 				}
 				
@@ -255,7 +263,7 @@ public class Messaging  extends Controller {
 			int size = sentMessageList == null ? 0 : sentMessageList.size();
 	
 			String fromPage = "sentmail";
-			render(talker,talkerList,sentMessageList,pages,page,prevPage,nextPage,size,startPage,endPage,fromPage);
+			render(talker,sentMessageList,pages,page,prevPage,nextPage,size,startPage,endPage,fromPage);
 		}
 	}
 	
@@ -339,6 +347,23 @@ public class Messaging  extends Controller {
 				messageBean.setRootId(userMessage.getRootId());
 			}		    			
 			MessagingDAO.saveMessage(messageBean);
+			
+			//sending mail to talker for direct message
+			TalkerBean fromTalker = TalkerDAO.getById(userMessage.getFromTalkerId());
+			TalkerBean toTalker = TalkerDAO.getById(userMessage.getToTalkerId());
+		    Map<String, String> vars = new HashMap<String, String>();
+    		vars.put("other_talker", talker.getUserName());
+    		vars.put("message_text", messageBean.getText());
+    		
+    		if(fromTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
+    			if(!talker.getUserName().equalsIgnoreCase(fromTalker.getUserName()))
+    				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, fromTalker, vars);
+    		}
+    		if(toTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
+    			if(!talker.getUserName().equalsIgnoreCase(toTalker.getUserName()))
+    				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, toTalker, vars);
+    		}
+    		EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, EmailUtil.ADMIN_EMAIL, vars, null, false);
 	    }
 		
 		if(userMessage != null){
@@ -365,18 +390,19 @@ public class Messaging  extends Controller {
 		}
 		
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-		List<TalkerBean> talkerList = null;//TalkerDAO.loadAllTalkers();
 		
 		if(fromPage == null || (fromPage != null && fromPage.equals("")))
 			fromPage = "inbox";
 		if(userMessage != null)
 			userMessage.setToTalers(MessagingDAO.getToTalkerNamesByMessageId(userMessage.getId()));
 		
+		session.put("inboxUnreadCount",MessagingDAO.getUnreadMessageCount(talker.getId()));
+		
 		if(action != null && action.equalsIgnoreCase("sendReply")){
 			List<MessageBean> _messageList = messageList;
 			render("tags/Messaging/replyMessage.html", _messageList);
 		}else
-			render(talker,talkerList,userMessage,messageList,_page,fromPage);
+			render(talker,userMessage,messageList,_page,fromPage);
 		
 	}
 	
@@ -385,7 +411,7 @@ public class Messaging  extends Controller {
 		List<MessageBean> messages = MessagingDAO.loadAllMessages();
 		selectedMessageIds = (selectedMessageIds == null ? Collections.EMPTY_LIST : selectedMessageIds);
 		TalkerBean _talker = CommonUtil.loadCachedTalker(session);
-		
+		 
 		//Code for message set as unread
 		if(actionState.equalsIgnoreCase("MARK_AS_UNREAD")){
 			for (MessageBean messageBean : messages) {
@@ -500,20 +526,12 @@ public class Messaging  extends Controller {
 					replyMessageList = MessagingDAO.getMessageByRootId(message1.getId());
 					if(replyMessageList != null && replyMessageList.size() > 0){
 						messageDisp = replyMessageList.get(0).getText();
-						if(messageDisp != null && messageDisp.length() > 50){
-							messageDisp = messageDisp.substring(0, 50);
-							messageDisp = messageDisp + "...";
-						}
 						message1.setDisplayMessage(messageDisp);
 						if(message1.isReadFlag())
 							message1.setReadFlag(replyMessageList.get(0).isReadFlag());
 					}
 				}else{
 					messageDisp = message1.getText();
-					if(messageDisp != null && messageDisp.length() > 50){
-						messageDisp = messageDisp.substring(0, 50);
-						messageDisp = messageDisp + "...";
-					}
 					message1.setDisplayMessage(messageDisp);
 				}
 				
@@ -524,6 +542,7 @@ public class Messaging  extends Controller {
 		String _page = page;
 		int _listsize=_messageList.size();
 		
+		session.put("inboxUnreadCount",MessagingDAO.getUnreadMessageCount(_talker.getId()));
 		if(path.contains("emailPage")){
 		}else{
 			if(path != null && path.contains("inbox"))
@@ -552,7 +571,6 @@ public class Messaging  extends Controller {
 		//System.out.println("pageno:"+pageNo);
 									
 		talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-		List<TalkerBean> talkerList = null;//TalkerDAO.loadAllTalkers(); 
 		page = page==null?"1":page;
 
 		int convoCount = MessagingDAO.getArchiveMessageCount(talker.getId());
@@ -563,11 +581,6 @@ public class Messaging  extends Controller {
 				MessageBean message1 = messageList.get(index);
 				TalkerBean fromTalker = TalkerDAO.getById(message1.getFromTalkerId());
 				
-				//for displaying date
-				//Date date = message1.getTime();
-				//DateFormat format = new SimpleDateFormat("MMM,dd, hh:mm aaa");
-				//message1.setDisplayDate(format.format(date));
-				
 				//for displaying 1st line of message
 				String messageDisp = "";
 				List<MessageBean> replyMessageList = null;
@@ -575,20 +588,12 @@ public class Messaging  extends Controller {
 					replyMessageList = MessagingDAO.getMessageByRootId(message1.getId());
 					if(replyMessageList != null && replyMessageList.size() > 0){
 						messageDisp = replyMessageList.get(0).getText();
-						if(messageDisp != null && messageDisp.length() > 50){
-							messageDisp = messageDisp.substring(0, 50);
-							messageDisp = messageDisp + "...";
-						}
 						message1.setDisplayMessage(messageDisp);
 						if(message1.isReadFlag())
 							message1.setReadFlag(replyMessageList.get(0).isReadFlag());
 					}
 				}else{
 					messageDisp = message1.getText();
-					if(messageDisp != null && messageDisp.length() > 50){
-						messageDisp = messageDisp.substring(0, 50);
-						messageDisp = messageDisp + "...";
-					}
 					message1.setDisplayMessage(messageDisp);
 				}
 				
@@ -638,7 +643,7 @@ public class Messaging  extends Controller {
 		
 		String fromPage = "archive";
 		//render(talker,talkerList,messageList,convoCount,page,prevPage,nextPage,size);
-		render(talker,talkerList,messageList,pages,page,prevPage,nextPage,size,startPage,endPage,fromPage);
+		render(talker,messageList,pages,page,prevPage,nextPage,size,startPage,endPage,fromPage);
 
 	}
 	public static void talkerImageLink(int size,String userName){

@@ -53,6 +53,7 @@ import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.DiseaseDAO;
+import dao.MessagingDAO;
 import dao.TalkerDAO;
 import dao.ConversationDAO;
 import dao.TalkerDiseaseDAO;
@@ -107,6 +108,8 @@ public class Home extends Controller {
 
         session.put("topicCount", TopicLogic.TOPICS_PER_PAGE);
 
+        session.put("inboxUnreadCount", MessagingDAO.getUnreadMessageCount(talker.getId()));
+        
 		//List<TalkerBean> similarMembers = TalkerLogic.getRecommendedTalkers(talker,"USR",null);
 		//List<TalkerBean> experts = TalkerLogic.getRecommendedTalkers(talker,"EXP",null);
 		//List<ConversationBean> recommendedConvos = TalkerLogic.getRecommendedConvos(talker);
@@ -166,9 +169,10 @@ public class Home extends Controller {
     	Set<Action> _feedItems = null;
     	if ("convoFeed".equalsIgnoreCase(feedType)) {
     		_feedItems = FeedsLogic.updateFeed(FeedType.CONVERSATION,beforeActionId,_talker,true);
-    	}
-    	else if ("communityFeed".equalsIgnoreCase(feedType)) {
+    	}else if ("communityFeed".equalsIgnoreCase(feedType)) {
     		_feedItems = FeedsLogic.updateFeed(FeedType.COMMUNITY,beforeActionId,_talker,loggedIn);
+    	}else if ("allFeed".equalsIgnoreCase(feedType)) {
+    		_feedItems = FeedsLogic.updateFeed(FeedType.ALL_CANCER,beforeActionId,_talker,loggedIn);
     	}else if ("mentions".equalsIgnoreCase(feedType)) {
     		TalkerBean profileTalker = TalkerDAO.getByUserName(talkerName);
     		if (profileTalker != null) {

@@ -33,4 +33,4 @@
          <div class="inboxclose"><a href="javascript:deleteMessage('${messageInfo.id}');" title="Delete"><img src="/public/images/inboxclose.jpg" alt="inboxclose" border="0" /></a></div>
     </div>
 #{/list}
-		
+<input type="hidden" value="${session.inboxUnreadCount}" id="hidInboxCount"/>

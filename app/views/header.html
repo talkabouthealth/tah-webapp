@@ -68,7 +68,7 @@
 
 		//truncates big text - used for feeds, long answers, descriptions, etc.
 		$('.moretext').truncatable({ limit: 70, more: '... more', less: true, hideText: '...less' });
-		$('.moretext2').truncatable({ limit: 220, more: '... more', less: false, hideText: '' });
+		$('.moretext2').truncatable({ limit: 220, more: '... more', less: true, hideText: '...less' });
 		
 
 		//close button in popups
@@ -84,6 +84,7 @@
 		
 		if (trim(query) === '') {
 			alert("Please enter search query");
+			$(inputId).focus();
 			return false;
 		}
 		query = encodeURIComponent(trim(query));
@@ -145,7 +146,18 @@
 				            <li class="separator">|</li>
 					  #{/if}
 					  <li style="margin-right: 5px;">
-		                <a class="" href="@{Messaging.inbox()}">Inbox</a>
+		                <div  id="inboxLink">
+		               		 #{if !session.inboxUnreadCount.equals("0")}
+		               		 	<a class="" href="@{Messaging.inbox()}" title="You have ${session.inboxUnreadCount} unread messages">
+		               		 		<b>Inbox(${session.inboxUnreadCount})</b>
+		               		 	</a>
+		                	 #{/if}
+		                	 #{else}
+		                	 	<a class="" href="@{Messaging.inbox()}" id="inboxLink">
+		                	 		Inbox
+		                	 	</a>
+		                	 #{/else}
+		                </div>
 		              </li>
 		              <li class="separator">|</li>
 		              <li style="margin-right: 5px;">
@@ -188,7 +200,7 @@
 	                    <input id="topSearchHelp" type="text" class="topserchz iebox"
 	                    	style="color: #aaaaaa;" value="Search answers and topics"
 	                    	/>
-	                    <input id="topSearchBox" type="text" class="topserchz iebox" style="display: none;"/>
+	                    <input id="topSearchBox" type="text" class="topserchz iebox" style="display: none;z-index: 2;"/>
 	                  </div>
 	                  <div class="topsubmitsz">
 	                    <input id="topSearchText" type="submit" onclick="return makeFullSearch('#topSearchBox');" 

@@ -102,12 +102,12 @@ public class ConversationLogic {
 		convo.setCategory(questionCategory);
 		
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
-		convo.setBitly(BitlyUtil.shortLink(convoURL));
+		convo.setBitly("");//BitlyUtil.shortLink(convoURL)
 		
 		ConversationDAO.save(convo);
 		
 		String convoChatURL = CommonUtil.generateAbsoluteURL("Talk.talkApp", "convoId", convo.getTid());
-		convo.setBitlyChat(BitlyUtil.shortLink(convoChatURL));
+		convo.setBitlyChat("");//BitlyUtil.shortLink(convoChatURL)
 		ConversationDAO.updateConvo(convo);
 		
 		String category = talker.getCategory();
@@ -266,6 +266,9 @@ public class ConversationLogic {
 	    		if(mailSendtalker.getEmailSettings().toString().contains("CONVO_COMMENT"))
         		NotificationUtils.sendEmailNotification(EmailSetting.CONVO_COMMENT, convo.getTalker(), vars);
     		}
+			
+			//Mail send to admin@talkabouthealth.com when new answer is added
+			EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_CONVO_REPLY_TO_ANSWER, EmailUtil.ADMIN_EMAIL, vars, null, true);
 			
 			// we are going to change this to send emails to all reply authors of the same answer
 			//if (!talker.equals(answer.getFromTalker()) && !convo.getTalker().equals(answer.getFromTalker())) {

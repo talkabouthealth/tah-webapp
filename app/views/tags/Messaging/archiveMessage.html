@@ -19,7 +19,7 @@
          	<div class="Kantxt"><a href="@{ViewDispatcher.view(messageInfo.fromTalker.userName)}">${messageInfo.fromTalker.userName}</a><br />
            	<span class="Kandate"> ${messageInfo.displayDate}</span> </div>
 		#{/else}
-         #{if messageInfo.readFlag == true}
+         #{if messageInfo.readFlag == true || messageInfo.readFlagSender==true}
          		<div class="kansubtxt" style="font-weight: lighter; font-size: 20;"><a href="@{Messaging.email(messageInfo.id,'','',_page,'archive')}">${messageInfo.subject}</a><br />
          #{/if}
          #{else}

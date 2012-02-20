@@ -164,7 +164,7 @@ public class Search extends Controller {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
 		
 		Analyzer analyzer = new StandardAnalyzer();
-		Query searchQuery = SearchUtil.prepareSearchQuery(term, new String[] {"uname", "title"}, analyzer);
+		Query searchQuery = SearchUtil.prepareSearchQuery(term, new String[] {"uname", "title"}, analyzer, true);
 		
 		Hits hits = is.search(searchQuery);
 		
@@ -225,7 +225,7 @@ public class Search extends Controller {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"messageAutocomplete");
 				
 		Analyzer analyzer = new StandardAnalyzer();
-		Query searchQuery = SearchUtil.prepareSearchQuery(term, new String[] {"title"}, analyzer);
+		Query searchQuery = SearchUtil.prepareSearchQuery(term, new String[] {"title"}, analyzer, true);
 		
 		Hits hits = is.search(searchQuery);
 		
@@ -320,7 +320,7 @@ public class Search extends Controller {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
 		
 		Analyzer analyzer = new StandardAnalyzer();
-		Query searchQuery = SearchUtil.prepareSearchQuery(query, new String[] {"title"}, analyzer);
+		Query searchQuery = SearchUtil.prepareSearchQuery(query, new String[] {"title"}, analyzer, true);
 		//Hits hits = is.search(searchQuery);
 		
 		TopDocs hits = is.search(searchQuery, null, 5);

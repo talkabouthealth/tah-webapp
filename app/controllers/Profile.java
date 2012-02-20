@@ -810,7 +810,6 @@ public class Profile extends Controller {
 		 * @throws Exception
 		 */
 		private static void deleteTalkerIndex(String talkerId)throws Exception{
-				System.out.println("in talker Delete Index");
 				Directory directory = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
 		    	Directory directory1 = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"talker");
 		    	IndexReader autocompletetalkerIndexReader = IndexReader.open(directory);

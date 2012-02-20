@@ -53,7 +53,7 @@ public class SearchUtil {
 		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"talker");
 		
 		Analyzer analyzer = new StandardAnalyzer();
-		Query searchQuery = prepareSearchQuery(query, new String[] {"uname","fname","lname","bio"}, analyzer);
+		Query searchQuery = prepareSearchQuery(query, new String[] {"uname","fname","lname","bio"}, analyzer, true);
 		Hits hits = is.search(searchQuery);
 		
 		List<String> cat = FeedsLogic.getCancerType(talkerBean);
@@ -91,7 +91,7 @@ public class SearchUtil {
 		
 		//prepare query to search
 		Analyzer analyzer = new StandardAnalyzer();
-		Query searchQuery = prepareSearchQuery(query, new String[] {"title", "answers"}, analyzer);
+		Query searchQuery = prepareSearchQuery(query, new String[] {"title", "answers"}, analyzer, true);
 		Hits hits = is.search(searchQuery);
 		
 		//List<String> cat = FeedsLogic.getCancerType(talker);
@@ -151,9 +151,9 @@ public class SearchUtil {
 		//remove bad characters (special for search)
 		String queryText = searchedConvo.getTopic();
 		queryText = queryText.replaceAll("[\\W_]", " ");
-		
 		Analyzer analyzer = new StandardAnalyzer();
-		Query searchQuery = prepareSearchQuery(queryText, new String[] {"title"}, analyzer);
+		Query searchQuery = prepareSearchQuery(queryText, new String[] {"title"}, analyzer, false);
+		
 		Hits hits = is.search(searchQuery);
 		
 		//List<String> cat = FeedsLogic.getCancerType(talker);
@@ -177,11 +177,13 @@ public class SearchUtil {
 		return results;
 	}
 	
-	public static Query prepareSearchQuery(String term, String[] fields, Analyzer analyzer)
+	public static Query prepareSearchQuery(String term, String[] fields, Analyzer analyzer,boolean check)
 			throws ParseException {
 
-		if(term != null && !term.equals(""))
-			term = escapeString(term);
+		if(check){
+			if(term != null && !term.equals(""))
+				term = escapeString(term);
+		}
 		
 		QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
 		parser.setAllowLeadingWildcard(true);
