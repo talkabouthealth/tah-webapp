@@ -584,7 +584,20 @@ public class MessagingDAO {
 			.add("read_flag", new BasicDBObject("$ne", true))
 			.get();		
 	
-		messageCount = messagesColl.find(query).count();		
+		DBObject query1 = BasicDBObjectBuilder.start()
+			.add("fromTalker", totalkerRef)
+			.add("replied",true)
+			.add("rootid", "")
+			.add("delete_flag_sender", new BasicDBObject("$ne", true))
+			.add("archieve_flag_sender", new BasicDBObject("$ne", true))
+			.add("read_flag_sender", new BasicDBObject("$ne", true))
+			.get();
+				
+		DBObject querylist = new BasicDBObject("$or", 		//"OR" CONDITION FOR query and query1
+				Arrays.asList(query1,query)
+			);
+		
+		messageCount = messagesColl.find(querylist).count();		
 		
 		return messageCount;
 	}
