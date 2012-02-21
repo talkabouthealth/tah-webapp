@@ -401,8 +401,13 @@ public class Messaging  extends Controller {
 		if(action != null && action.equalsIgnoreCase("sendReply")){
 			List<MessageBean> _messageList = messageList;
 			render("tags/Messaging/replyMessage.html", _messageList);
-		}else
-			render(talker,userMessage,messageList,_page,fromPage);
+		}else{
+			if(userMessage == null){
+				flash.put("errMsg", "No messages matched your search. You can broaden your search to look in 'Messages'.");
+				redirect("/message/inbox");
+			}else
+				render(talker,userMessage,messageList,_page,fromPage);
+		}
 		
 	}
 	
