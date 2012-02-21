@@ -130,5 +130,8 @@ public class Static extends Controller {
    public static void medical_professionals() {
     	render();
    }
+   public static void past_workshops() {
+    	render();
+   }
 
 }
