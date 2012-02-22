@@ -1,6 +1,6 @@
 #{set currentNum = 1 /}
+#{if _healthItem != null}
 #{list items: _healthItem.children, as: 'item' }
-    #{if item.children != null}
 		#{if item.children?.size() > 0 }
 			*{ 
 				We use 'Empty' item for ordering items.
@@ -26,5 +26,5 @@
 				#{/else}
 			</div>
 		#{/else}
-	#{/if}	
 #{/list}
+#{/if}
