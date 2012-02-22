@@ -1,28 +1,30 @@
 #{set currentNum = 1 /}
 #{list items: _healthItem.children, as: 'item' }
-	#{if item.children?.size() > 0 }
-		*{ 
-			We use 'Empty' item for ordering items.
-			Items with parent as top item ("tests", "procedures") should have 'Empty' as parent
-		}*
-		#{ifnot item.name.equals("Empty") }
-			<div class="healthitemCol${currentNum}"><span class="blacktext14"><strong>${item.name}</strong></span></div>
-		#{/ifnot}
-		#{ profile/healthItemsTree healthItem: item, checkedItems: _checkedItems /}
-	#{/if}
-	#{else}
-		<div class="healthitemCol${currentNum}" #{if item.name.equals("Vaccine Therapy")} style="margin-left: -5px;" #{/if}>
-			<input name='healthitem${item.id}' type='checkbox'
-			#{if _checkedItems?.contains(item.id) }
-				checked='checked'
-			#{/if}
-			/>&nbsp;
-			#{if item.name.equals("Vaccine Therapy")}
-				<span class="blacktext14" style="font-weight: bold; font-size: 15px;">${item.name}</span>
-			#{/if}
-			#{else}
-				<span class="blacktext14">${item.name}</span>
-			#{/else}
-		</div>
-	#{/else}
+    #{if item.children != null}
+		#{if item.children?.size() > 0 }
+			*{ 
+				We use 'Empty' item for ordering items.
+				Items with parent as top item ("tests", "procedures") should have 'Empty' as parent
+			}*
+			#{ifnot item.name.equals("Empty") }
+				<div class="healthitemCol${currentNum}"><span class="blacktext14"><strong>${item.name}</strong></span></div>
+			#{/ifnot}
+			#{ profile/healthItemsTree healthItem: item, checkedItems: _checkedItems /}
+		#{/if}
+		#{else}
+			<div class="healthitemCol${currentNum}" #{if item.name.equals("Vaccine Therapy")} style="margin-left: -5px;" #{/if}>
+				<input name='healthitem${item.id}' type='checkbox'
+				#{if _checkedItems?.contains(item.id) }
+					checked='checked'
+				#{/if}
+				/>&nbsp;
+				#{if item.name.equals("Vaccine Therapy")}
+					<span class="blacktext14" style="font-weight: bold; font-size: 15px;">${item.name}</span>
+				#{/if}
+				#{else}
+					<span class="blacktext14">${item.name}</span>
+				#{/else}
+			</div>
+		#{/else}
+	#{/if}	
 #{/list}

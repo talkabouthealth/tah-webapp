@@ -149,7 +149,7 @@ public class Messaging  extends Controller {
 				    		Map<String, String> vars = new HashMap<String, String>();
 				    		vars.put("other_talker", talker.getUserName());
 				    		vars.put("message_text", messageBean.getText());
-				    		vars.put("message_id", messageBean.getId());
+				    		vars.put("message_id", dummyId);
 				    		if(toTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
 				    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, toTalker, vars);
 				    		}
@@ -162,8 +162,7 @@ public class Messaging  extends Controller {
 				    		}catch(Exception e){
 				    			e.printStackTrace();
 				    		}
-				    	}
-						else{
+				    	}else{
 						    messageBean.setDummyId(dummyId); 	  
 						    String messageId = MessagingDAO.saveMessage(messageBean);
 						    
@@ -171,7 +170,7 @@ public class Messaging  extends Controller {
 						    Map<String, String> vars = new HashMap<String, String>();
 				    		vars.put("other_talker", talker.getUserName());
 				    		vars.put("message_text", messageBean.getText());
-				    		vars.put("message_id", messageBean.getId());
+				    		vars.put("message_id", messageId);
 				    		if(toTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
 				    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, toTalker, vars);
 				    		}
@@ -358,7 +357,7 @@ public class Messaging  extends Controller {
 		    Map<String, String> vars = new HashMap<String, String>();
     		vars.put("other_talker", talker.getUserName());
     		vars.put("message_text", messageBean.getText());
-    		vars.put("message_id", messageBean.getId());
+    		vars.put("message_id", userMessage.getId());
     		
     		if(fromTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
     			if(!talker.getUserName().equalsIgnoreCase(fromTalker.getUserName()))
