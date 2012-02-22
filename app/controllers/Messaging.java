@@ -149,6 +149,7 @@ public class Messaging  extends Controller {
 				    		Map<String, String> vars = new HashMap<String, String>();
 				    		vars.put("other_talker", talker.getUserName());
 				    		vars.put("message_text", messageBean.getText());
+				    		vars.put("message_id", messageBean.getId());
 				    		if(toTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
 				    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, toTalker, vars);
 				    		}
@@ -170,6 +171,7 @@ public class Messaging  extends Controller {
 						    Map<String, String> vars = new HashMap<String, String>();
 				    		vars.put("other_talker", talker.getUserName());
 				    		vars.put("message_text", messageBean.getText());
+				    		vars.put("message_id", messageBean.getId());
 				    		if(toTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
 				    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, toTalker, vars);
 				    		}
@@ -269,7 +271,6 @@ public class Messaging  extends Controller {
 	
 	
 	public static void email(String id, String action, String replyText, String _page, String fromPage){
-		
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);		
 		MessageBean userMessage = null;
 		if(_page == null || (_page != null && _page.equals("")))
@@ -282,7 +283,10 @@ public class Messaging  extends Controller {
 		}
 		
 		if(fromPage != null && fromPage.equalsIgnoreCase("inbox")){
-			if(talker.getUserName().equalsIgnoreCase(userMessage.getFromTalker().getUserName()))
+			if(talker.getUserName().equalsIgnoreCase(userMessage.getFromTalker().getUserName()) && talker.getUserName().equalsIgnoreCase(userMessage.getToTalker().getUserName())){
+				userMessage.setReadFlagSender(true);
+				userMessage.setReadFlag(true);
+			}else if(talker.getUserName().equalsIgnoreCase(userMessage.getFromTalker().getUserName()))
 				userMessage.setReadFlagSender(true);
 			else if(talker.getUserName().equalsIgnoreCase(userMessage.getToTalker().getUserName()))
 				userMessage.setReadFlag(true);
@@ -354,6 +358,7 @@ public class Messaging  extends Controller {
 		    Map<String, String> vars = new HashMap<String, String>();
     		vars.put("other_talker", talker.getUserName());
     		vars.put("message_text", messageBean.getText());
+    		vars.put("message_id", messageBean.getId());
     		
     		if(fromTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
     			if(!talker.getUserName().equalsIgnoreCase(fromTalker.getUserName()))
@@ -421,8 +426,10 @@ public class Messaging  extends Controller {
 		if(actionState.equalsIgnoreCase("MARK_AS_UNREAD")){
 			for (MessageBean messageBean : messages) {
 				if (selectedMessageIds.contains(messageBean.getId())) {
-					
-					if(_talker.getUserName().equalsIgnoreCase(messageBean.getFromTalker().getUserName()))
+					if(_talker.getUserName().equalsIgnoreCase(messageBean.getFromTalker().getUserName()) && _talker.getUserName().equalsIgnoreCase(messageBean.getToTalker().getUserName())){
+						messageBean.setReadFlagSender(false);
+						messageBean.setReadFlag(false);
+					}else if(_talker.getUserName().equalsIgnoreCase(messageBean.getFromTalker().getUserName()))
 						messageBean.setReadFlagSender(false);
 					else if(_talker.getUserName().equalsIgnoreCase(messageBean.getToTalker().getUserName()))
 						messageBean.setReadFlag(false);

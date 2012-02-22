@@ -82,9 +82,10 @@ public class ApplicationUpdatesJob extends Job {
 		if (DBUtil.isCollectionEmpty(DiseaseDAO.DISEASES_COLLECTION)) {
 			DiseaseImporter.importDiseases("diseases.dat");
 		}
-		if (DBUtil.isCollectionEmpty(HealthItemDAO.HEALTH_ITEMS_COLLECTION)) {
+		//commented if because every time it updates the record in table.
+		//if (DBUtil.isCollectionEmpty(HealthItemDAO.HEALTH_ITEMS_COLLECTION)) {
 			HealthItemsImporter.importHealthItems("healthitems.dat");
-		}
+		//}
 		if (DBUtil.isCollectionEmpty(TopicDAO.TOPICS_COLLECTION)) {
 			TopicsImporter.importTopics("topics.dat");
 		}

@@ -56,13 +56,17 @@ public class HealthItemsImporter {
 			if (line.length() == 0) {
 				continue;
 			}
-			if (line.startsWith("---")) {
+			if (line.substring(line.lastIndexOf("||")+2,line.lastIndexOf("||")+2+3).equals("---")) {
 				diseaseName = null;
-				diseaseName = line.substring(3);
+				
+				diseaseName = line.substring(line.lastIndexOf("||")+2+3);
+		
 				if(old_diseaseName != null && !old_diseaseName.equalsIgnoreCase(diseaseName)){
 					if (topLevel != null) 
-						if(diseaseId != null)
+						if(diseaseId != null){
 							HealthItemDAO.saveTree(topLevel, null, diseaseId);
+							
+						}		
 				}
 				diseaseId = null;
 				topLevel = null;
@@ -72,26 +76,35 @@ public class HealthItemsImporter {
 					
 				old_diseaseName = diseaseName;
 				diseaseId = DiseaseDAO.getDiseaseByName(diseaseName);
-			}else if (line.startsWith("--")) {
+				//System.out.println("-----------------------------diseaseName  and id  ---------:"+diseaseName +"--"+diseaseId);
+			
+			}else if (line.substring(line.lastIndexOf("||")+2,line.lastIndexOf("||")+2+2).equals("--")) {
 				if (topLevel != null) {
 					HealthItemDAO.saveTree(topLevel, null, diseaseId);
 				}
-				topLevel = new HealthItemBean(line.substring(2));
+				topLevel = new HealthItemBean(line.substring(line.lastIndexOf("||")+2+2));
+				
+				topLevel.setDatFileId(line.substring(0,line.lastIndexOf("||")));
+				
 				topLevelChildren = new LinkedHashSet<HealthItemBean>();
 				topLevel.setChildren(topLevelChildren);
 				
 				subLevel = null;
 				subLevelChildren = null;
 			}
-			else if (line.startsWith("-")) {
-				subLevel = new HealthItemBean(line.substring(1));
+			else if (line.substring(line.lastIndexOf("||")+2,line.lastIndexOf("||")+2+1).equals("-")) {
+				
+				subLevel = new HealthItemBean(line.substring(line.lastIndexOf("||")+2+1));
+				subLevel.setDatFileId(line.substring(0,line.lastIndexOf("||")));
 				topLevelChildren.add(subLevel);
 				
 				subLevelChildren = new LinkedHashSet<HealthItemBean>();
 				subLevel.setChildren(subLevelChildren);
 			}
 			else {
-				HealthItemBean healthItem = new HealthItemBean(line);
+				HealthItemBean healthItem = new HealthItemBean(line.substring(line.lastIndexOf("||")+2));
+				healthItem.setDatFileId(line.substring(0,line.lastIndexOf("||")));
+				
 				if (subLevelChildren == null) {
 					topLevelChildren.add(healthItem);
 				}

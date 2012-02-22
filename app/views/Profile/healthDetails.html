@@ -113,7 +113,7 @@
 							</div>							
 							#{/else}							
 						</div>
-						#{if talker.category.equals("Breast Cancer") || talker.category.equals("Ovarian Cancer") || talker.category.equals("Melanoma") || talker.category.equals("Lung Cancer")}
+						#{if talker.category.equals("Breast Cancer") || talker.category.equals("Ovarian Cancer") || talker.category.equals("Melanoma") || talker.category.equals("Lung Cancer") || talker.category.equals("Colon and Rectal Cancer") || talker.category.equals("Cervical Cancer") || talker.category.equals("Uterine and Corpus Cancer")}
 							#{list items:disease.questions, as:'question'}
 							
 							#{if question.name.equals("GeneticRisk")}
@@ -127,6 +127,50 @@
 												
 													<input name='${question.name}' type='checkbox' value="${choice}" id="${choice}"
 													#{if talkerDisease?.healthInfo?.GeneticRisk?.contains(choice) }
+														checked='checked'
+													#{/if}
+													/>
+													&nbsp;<span class="blacktext14">${choice}</span>
+													
+												</div>
+											#{/list}
+									</div>
+								</div>							
+								#{/if}
+								
+							#{if question.name.equals("TypesOfBreastCancer")}
+								<div class="signupmain">
+									<div class="generaltextarea">
+											<span class="blacktext16"><strong>${question.text}</strong></span>
+									</div>
+									<div class="generalcheck">
+											#{list items:question.choices, as:'choice' }
+												<div class="healthitemCol1" style="width:285px;display: inline-block; vertical-align: top;float: none;">
+												
+													<input name='${question.name}' type='checkbox' value="${choice}" id="${choice}"
+													#{if talkerDisease?.healthInfo?.TypesOfBreastCancer?.contains(choice) }
+														checked='checked'
+													#{/if}
+													/>
+													&nbsp;<span class="blacktext14">${choice}</span>
+													
+												</div>
+											#{/list}
+									</div>
+								</div>							
+								#{/if}
+								
+							#{if question.name.equals("RiskFactors")}
+								<div class="signupmain">
+									<div class="generaltextarea">
+											<span class="blacktext16"><strong>${question.text}</strong></span>
+									</div>
+									<div class="generalcheck">
+											#{list items:question.choices, as:'choice' }
+												<div class="healthitemCol1" style="display: inline-block; vertical-align: top;float: none;">
+												
+													<input name='${question.name}' type='checkbox' value="${choice}" id="${choice}"
+													#{if talkerDisease?.healthInfo?.RiskFactors?.contains(choice) }
 														checked='checked'
 													#{/if}
 													/>
@@ -221,11 +265,11 @@
 							</div>
 							<div class="personaltextfield">
 								<select size="1"  name="talkerDisease.symptomMonth" id="talkerDisease.symptomMonth" class="textarea2" style="position: absolute;margin-left: 25px;">
-#{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
-    <option value="${i_index-1}" 
-    #{if talkerDisease?.symptomDate?.month == i_index-2 } selected #{/if} 
-    >${i}</option>
-#{/list}
+									#{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
+									    <option value="${i_index-1}" 
+									    #{if talkerDisease?.symptomDate?.month == i_index-2 } selected #{/if} 
+									    >${i}</option>
+									#{/list}
 								</select>
 								&nbsp;  &nbsp;  &nbsp;&nbsp;  &nbsp;  &nbsp;
 								<select size="1"  name="talkerDisease.symptomYear" class="textarea2"  style="position: absolute; margin-left: 110px;" id="talkerDisease.symptomYear">
@@ -245,11 +289,11 @@
 							</div>
 							<div class="personaltextfield">
 								<select size="1"  name="talkerDisease.diagnoseMonth" id="talkerDisease.diagnoseMonth" class="textarea2" style="position: absolute;margin-left: 25px;">
-#{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
-    <option value="${i_index-1}" 
-    #{if talkerDisease?.diagnoseDate?.month == i_index-2 } selected #{/if} 
-    >${i}</option>
-#{/list}
+									#{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
+									    <option value="${i_index-1}" 
+									    #{if talkerDisease?.diagnoseDate?.month == i_index-2 } selected #{/if} 
+									    >${i}</option>
+									#{/list}
 								</select>
 								&nbsp;  &nbsp;  &nbsp;&nbsp;  &nbsp;  &nbsp;
 								<select size="1"  name="talkerDisease.diagnoseYear" class="textarea2"  style="position: absolute; margin-left: 110px;"  id="talkerDisease.diagnoseYear">
@@ -263,7 +307,7 @@
 							</div>
 						</div>
 						
-						#{if talker.category.equals("Breast Cancer") || talker.category.equals("Ovarian Cancer") || talker.category.equals("Melanoma") || talker.category.equals("Lung Cancer")}
+						#{if talker.category.equals("Breast Cancer") || talker.category.equals("Ovarian Cancer") || talker.category.equals("Melanoma") || talker.category.equals("Lung Cancer")  || talker.category.equals("Colon and Rectal Cancer") || talker.category.equals("Cervical Cancer") || talker.category.equals("Uterine and Corpus Cancer")}
 							<div class="signupmain">
 	 							<div class="generaltextarea2">
 	 								<span class="blacktext16"><strong>What were the initial symptoms you experienced?</strong></span>

@@ -1,705 +1,927 @@
----Breast Cancer
---symptoms
--Empty
-Lump in breast
-Discharge(fluid) from the nipple
-Change in size or shape of breast
-Scaly, red, or swollen skin on the breast, nipple, or areola
-Nipple turned inward into breast
-Dimpling or puckering in skin of breast
+p1||---Breast Cancer
+p1h1||--symptoms
+p1h1t1||-Empty
+p1h1t1e1||Lump in breast
+p1h1t1e2||Discharge(fluid) from the nipple
+p1h1t1e3||Change in size or shape of breast
+p1h1t1e4||Scaly, red, or swollen skin on the breast, nipple, or areola
+p1h1t1e5||Nipple turned inward into breast
+p1h1t1e6||Dimpling or puckering in skin of breast
 
---tests
--Screening
-Mammogram
-Breast physical exam
-Ductal lavage
-BRACA-1 / BRACA-2
--Monitor and recurrence
-CA15-3 / CA27.29
-Oncotype DX
-DNA Ploidy
-MammaPrint (Agendia)
-Ki-67 Antigen
--Diagnosis
-Breast biopsy
-Blood cell counts
-Blood chemistries
-Blood marker tests
-Bone scan
-Breast magnetic resonance imaging(MRI)
-Breast ultrasound
-Breast x-ray
-Computerized tomography(CT) scan
-Estrogen Receptor/Progensterone Recepto
-FISH Test(Fluorescence in Situ Hybridization)
-Her 2/neu
-IHC Tests(ImmunoHistoChemisty)
-Positron emission tomography(PET) scan
-SPoT-Light HER2 CISH
+p1h2||--tests
+p1h2t1||-Screening
+p1h2t1e1||Mammogram
+p1h2t1e2||Breast physical exam
+p1h2t1e3||Ductal lavage
+p1h2t1e4||BRACA-1 / BRACA-2
+p1h2t1e5||HALO
+p1h2t1e6||BREVAGen
+p1h2t2||-Monitor and recurrence
+p1h2t2e1||CA15-3 / CA27.29
+p1h2t2e2||Oncotype DX
+p1h2t2e3||DNA Ploidy
+p1h2t2e4||MammaPrint (Agendia)
+p1h2t2e5||Ki-67 Antigen
+p1h2t3||-Diagnosis
+p1h2t3e1||Breast biopsy
+p1h2t3e2||Blood cell counts
+p1h2t3e3||Blood chemistries
+p1h2t3e4||Blood marker tests
+p1h2t3e5||Bone scan
+p1h2t3e6||Breast MRI (magnetic resonance imaging)
+p1h2t3e7||Breast ultrasound
+p1h2t3e8||Breast x-ray
+p1h2t3e9||Computerized tomography(CT) scan
+p1h2t3e10||Estrogen Receptor/Progensterone Recepto
+p1h2t3e11||FISH Test(Fluorescence in Situ Hybridization)
+p1h2t3e12||Her 2/neu
+p1h2t3e13||IHC Tests(ImmunoHistoChemisty)
+p1h2t3e14||Positron emission tomography(PET) scan
+p1h2t3e15||SPoT-Light HER2 CISH
 
---procedures
--Empty
-Lumpectomy
-Sentinel lymph node dissection or biopsy
-Axillary lymph node dissection or biopsy
-Cryotherapy
--Breast Reconstruction
-One stage immediate reconstruction
-Two stage reconstruction
-Tissue flaps
--Mastectomies
-Partial or Segmental Mastectomy
-Simple or Total Mastectomy
-Modified Radical Mastectomy
-Radical Mastectomy
-Prophylactic Mastectomy
+p1h3||--procedures
+p1h3t1||-Empty
+p1h3t1e1||Lumpectomy
+p1h3t1e2||Mastectomy
+p1h3t1e3||Sentinel lymph node dissection or biopsy
+p1h3t1e4||Axillary lymph node dissection or biopsy
+p1h3t1e5||Cryotherapy
+p1h3t2||-Breast Reconstruction
+p1h3t2e1||Immediate Breast Reconstruction
+p1h3t2e2||Delayed Breast Reconstruction
+p1h3t2e3||Silicon Implants
+p1h3t2e4||Saline Implants
+p1h3t2e5||DIEP Flap
+p1h3t2e6||GAP Flap
+p1h3t2e7||TUG Flap 
+p1h3t2e8||TRAM Flap
+p1h3t2e9||SIEA Flap
+p1h3t2e10||Perforator Flaps
+p1h3t2e11||Latissimus Dorsi Flap
 
---treatments
--Chemotherapy
-Abraxane (paclitaxel)
-Adriamycin (doxorubicin)
-Aldesleukin (Proleukin)
-Carboplatin (Paraplatin)
-Carmustine (BiCNU)
-Cisplatin (Platinol, Platinol-AQ)
-Crizotinib (Xalkori)
-Cyclophosphamide (Cytoxan)Erlotinib Hydrochloride (Tarceva)
-Cytoxan (cyclophosphamide)
-Daunorubic (Cerubidine, DaunoXome)
-Dacarbazine (DTIC-Dome)
-Docetaxel (Taxotere)
-Doxil (doxorubicin)
-Doxorubicin (Adriamycin Rubex)
-Ellence (epirubicin)
-Etoposide Phosphate (Toposar VePesid)
-Fluorouracil (Adrucil)
-Fotemustine (Muphoran)
-Gemzar (gemcitabine)
-Ifosfamide (Ifex) {(Mesna (Mesnex) prevention of hemorrhagic cystitis induced by Ifosfamide}
-Iressa (Gefitinib)
-Ipilimumab (Yervoy)
-Irinotecan (Camptosar)
-Lomustine (CeeNU)
-Lxempra (ixabepilone)
-Methotrexate (Amethoprerin, Mexate, Folex)
-Mitoxantrone (Navantrone)
-Navelbine (vinorelbine)
-Paclitaxel (Taxol)
-Pemetrexed (Alimta)
-Taxol (paclitaxel)
-Taxotere (docetaxel)
-Temozolomide (Methazolastone, Temodar)
-Thiotepa (Thioplex)
-Topotecan Hydrochloride (Hycamtin)
-Vinblastine (Velban, Velsar)
-vincristine (Oncovin, Vinacasar PES, Vincrex)
-Vinorelbine (Navelbine)
-Xeloda (capecitabine)
--Hormonal Therapy
-Aromasin (exemestane)
-Femara (letrozole)
-tamoxifen
-Evista (raloxifene)
-Fareston (toremifene)
-Faslodex (fulvestrant)
--Targeted Therapy
-Herceptin (trastuzumab)
-Tykerb (lapatinib)
-Avastin (bevacizumab)
--Radiation Therapy
-External radiation
-Internal radiation
+p1h4||--treatments
+p1h4t1||-Chemotherapy
+p1h4t1e1||Abraxane (Paclitaxol)
+p1h4t1e2||Aldesleukin (Proleukin)
+p1h4t1e3||Carboplatin (Paraplatin)
+p1h4t1e4||Carmustine (BiCNU)
+p1h4t1e5||Cisplatin (Platinol, Platinol-AQ)
+p1h4t1e6||Crizotinib (Xalkori)
+p1h4t1e7||Cyclophosphamide (Cytoxan)Erlotinib Hydrochloride (Tarceva)
+p1h4t1e8||Cytoxan (cyclophosphamide)
+p1h4t1e9||Daunorubic (Cerubidine, DaunoXome)
+p1h4t1e10||Dacarbazine (DTIC-Dome)
+p1h4t1e11||Docetaxel (Taxotere)
+p1h4t1e12||Doxil (Doxorubicin)
+p1h4t1e13||Doxorubicin (Adriamycin, Rubex)
+p1h4t1e14||Ellence (Epirubicin)
+p1h4t1e15||Etoposide Phosphate (Toposar VePesid)
+p1h4t1e16||Fluorouracil (Adrucil)
+p1h4t1e17||Fotemustine (Muphoran)
+p1h4t1e18||Gemzar (gemcitabine)
+p1h4t1e19||Ifosfamide (Ifex) {(Mesna (Mesnex) prevention of hemorrhagic cystitis induced by Ifosfamide}
+p1h4t1e20||Iressa (Gefitinib)
+p1h4t1e21||Ipilimumab (Yervoy)
+p1h4t1e22||Irinotecan (Camptosar)
+p1h4t1e23||Lomustine (CeeNU)
+p1h4t1e24||Lxempra (Ixabepilone)
+p1h4t1e25||Methotrexate (Amethoprerin, Mexate, Folex)
+p1h4t1e26||Mitoxantrone (Navantrone)
+p1h4t1e27||Navelbine (Vinorelbine)
+p1h4t1e28||Paclitaxel (Taxol)
+p1h4t1e29||Pemetrexed (Alimta)
+p1h4t1e30||Taxotere (Docetaxel)
+p1h4t1e31||Temozolomide (Methazolastone, Temodar)
+p1h4t1e32||Thiotepa (Thioplex)
+p1h4t1e33||Topotecan Hydrochloride (Hycamtin)
+p1h4t1e34||Vinblastine (Velban, Velsar)
+p1h4t1e35||vincristine (Oncovin, Vinacasar PES, Vincrex)
+p1h4t1e36||Vinorelbine (Navelbine)
+p1h4t1e37||Xeloda (Capecitabine)
+p1h4t2||-Hormonal Therapy
+p1h4t2e1||Aromasin (Exemestane)
+p1h4t2e2||Femara (letrozole)
+p1h4t2e3||tamoxifen
+p1h4t2e4||Evista (raloxifene)
+p1h4t2e5||Fareston (toremifene)
+p1h4t2e6||Faslodex (fulvestrant)
+p1h4t3||-Targeted Therapy
+p1h4t3e1||Herceptin (trastuzumab)
+p1h4t3e2||Tykerb (lapatinib)
+p1h4t3e3||Avastin (bevacizumab)
+p1h4t4||-Radiation Therapy
+p1h4t4e1||External Radiation (External Beam Therapy – EBT)
+p1h4t4e2||Intensity-modulated radiation therapy (IMRT)
+p1h4t4e3||Internal Radiation (Interstitial Therapy / Brachytherapy)
 
---sideeffects
-Abdominal pain
-Addiction
-Allergic reactions
-Anemia
-Anxiety
-Appetite changes
-Armpit discomfort
-Back pain
-Bleeding and bruising
-Blood clots and phlebitis
-Bone and joint pain
-Breating problems
-Navelbine (vinorelbine)
-Burning at radiation site
-Chest pain
-Cold and flu symptoms
-Constipation
-Coughing
-Dhydration
-Delayed wound healing
-Depression
-Diarrhea
-Dizzyness
-Dry mouth
-Dry skin
-Electrolyte imbalance
-Endmetriosis
-Fainting
-Fatigue
-Fertility issues
-Fever
-Gas (Flatulence)
-Hair loss and Changes
-Hand-Foot Syndrome (HFS)
-Headaches
-Hearing problems
-Heart problems
-Heartburn or GERD
-Hematoma (Blood Build-up)
-High Blood Pressure
-High cholesterol
-Hot flashes
-Infection
-Injection site reaction
-Insomnia (Trouble Sleeping)
-Itching
-Joint pain (arthralgia)
-Kidney problems
-Leg cramps
-Liver Problems (Hepatotoxicity)
-Loss of Libido
-Low Blood Pressure (Hypotension)
-Lung problems
-Lymphedema
-Memory loss
-Menopause and Menopausal
-Symptoms
-Mood Swings
-Mouth and Throat Sores (Myalgias)
-Nail Changes
-Nausea
-Neuropathy
-Nose bleeds
-Numbness
-Osteonecrosis of the Jaw
-Osteoporosis (Bone Loss)
-Pain
-Phantom Breast Pain
-Post-Traumatic Stress Disorder (PTSD)
-Rash
-Runny nose
-Scar Tissue Formation
-Seroma (FLuid Build-up)
-Skin discoloration
-Skin Sensitivity
-Sore Throat
-Swallowing Problems
-Sweating
-Swelling
-Tast and smell changes
-Urinary Tract Infection
-Urine Discoloration
-Vaginial Discharge
-Vaginal Dryness
-Vision and Eye Problems
-Vomiting
-Weakness
-Weight changes
+p1h5||--sideeffects
+p1h5t4e1||Abdominal pain
+p1h5t4e2||Addiction
+p1h5t4e3||Allergic reactions
+p1h5t4e4||Anemia
+p1h5t4e5||Anxiety
+p1h5t4e6||Appetite changes
+p1h5t4e7||Armpit discomfort
+p1h5t4e8||Back pain
+p1h5t4e9||Bleeding and bruising
+p1h5t4e10||Blood clots and phlebitis
+p1h5t4e11||Bone and joint pain
+p1h5t4e12||Breathing problems
+p1h5t4e13||Navelbine (vinorelbine)
+p1h5t4e14||Burning at radiation site
+p1h5t4e15||Chest pain
+p1h5t4e16||Cold and flu symptoms
+p1h5t4e17||Constipation
+p1h5t4e18||Coughing
+p1h5t4e19||Dhydration
+p1h5t4e20||Delayed wound healing
+p1h5t4e21||Depression
+p1h5t4e22||Diarrhea
+p1h5t4e23||Dizzyness
+p1h5t4e24||Dry mouth
+p1h5t4e25||Dry skin
+p1h5t4e26||Electrolyte imbalance
+p1h5t4e27||Endmetriosis
+p1h5t4e28||Fainting
+p1h5t4e29||Fatigue
+p1h5t4e30||Fertility issues
+p1h5t4e31||Fever
+p1h5t4e32||Gas (Flatulence)
+p1h5t4e33||Hair loss and Changes
+p1h5t4e34||Hand-Foot Syndrome (HFS)
+p1h5t4e35||Headaches
+p1h5t4e36||Hearing problems
+p1h5t4e37||Heart problems
+p1h5t4e38||Heartburn or GERD
+p1h5t4e39||Hematoma (Blood Build-up)
+p1h5t4e40||High Blood Pressure
+p1h5t4e41||High cholesterol
+p1h5t4e42||Hot flashes
+p1h5t4e43||Infection
+p1h5t4e44||Injection site reaction
+p1h5t4e45||Insomnia (Trouble Sleeping)
+p1h5t4e46||Itching
+p1h5t4e47||Joint pain (arthralgia)
+p1h5t4e48||Kidney problems
+p1h5t4e49||Leg cramps
+p1h5t4e50||Liver Problems (Hepatotoxicity)
+p1h5t4e51||Loss of Libido
+p1h5t4e52||Low Blood Pressure (Hypotension)
+p1h5t4e53||Lung problems
+p1h5t4e54||Lymphedema
+p1h5t4e55||Memory loss
+p1h5t4e56||Menopause & menopausal
+p1h5t4e57||Symptoms
+p1h5t4e58||Mood Swings
+p1h5t4e59||Mouth and Throat Sores (Myalgias)
+p1h5t4e60||Nail Changes
+p1h5t4e61||Nausea
+p1h5t4e62||Neuropathy
+p1h5t4e63||Nose bleeds
+p1h5t4e64||Numbness
+p1h5t4e65||Osteonecrosis of the Jaw
+p1h5t4e66||Osteoporosis (Bone Loss)
+p1h5t4e67||Pain
+p1h5t4e68||Phantom Breast Pain
+p1h5t4e69||Post-Traumatic Stress Disorder (PTSD)
+p1h5t4e70||Rash
+p1h5t4e71||Runny nose
+p1h5t4e72||Scar Tissue Formation
+p1h5t4e73||Seroma (FLuid Build-up)
+p1h5t4e74||Skin discoloration
+p1h5t4e75||Skin Sensitivity
+p1h5t4e76||Sore Throat
+p1h5t4e77||Swallowing Problems
+p1h5t4e78||Sweating
+p1h5t4e79||Swelling
+p1h5t4e80||Tast and smell changes
+p1h5t4e81||Urinary Tract Infection
+p1h5t4e82||Urine Discoloration
+p1h5t4e83||Vaginial Discharge
+p1h5t4e84||Vaginal Dryness
+p1h5t4e85||Vision and Eye Problems
+p1h5t4e86||Vomiting
+p1h5t4e87||Weakness
+p1h5t4e88||Weight changes
 
----Ovarian Cancer
---symptoms
--Empty
-Unusual vaginal bleeding or discharge from your vagina
-Pain in the pelvic or abdominal area or lower abdomen
-A swollen or bloated abdomen
-Pressure or pain in the abdomen, pelvis, back, or legs
-Back pain that is unexplained and gets worse
-A change in your bathroom habits, such as having to pass urine very badly or very often
-Heavy feeling in pelvis
-Weight gain or loss
-Gas, nausea, vomiting, indigestion, constipation, diarrhea, or loss of appetite
-Feeling tired all the time
-Shortness of breath
-Feeling full quickly while eating
+p2||---Ovarian Cancer
+p2h1||--symptoms
+p2h1t1||-Empty
+p2h1t1e1||Unusual vaginal bleeding or discharge from your vagina
+p2h1t1e2||Pain in the pelvic or abdominal area or lower abdomen
+p2h1t1e3||A swollen or bloated abdomen
+p2h1t1e4||Pressure or pain in the abdomen, pelvis, back, or legs
+p2h1t1e5||Back pain that is unexplained and gets worse
+p2h1t1e6||A change in your bathroom habits, such as having to pass urine very badly or very often
+p2h1t1e7||Heavy feeling in pelvis
+p2h1t1e8||Weight gain or loss
+p2h1t1e9||Gas, nausea, vomiting, indigestion, constipation, diarrhea, or loss of appetite
+p2h1t1e10||Feeling tired all the time
+p2h1t1e11||Shortness of breath
+p2h1t1e12||Feeling full quickly while eating
 
---tests
--Empty
-Physical exam
-Pelvic exam
-Complete blood cell count
-Blood chemistries
-Pregnancy test (serum HCG)
-Ultrasound
-Transvaginal ultrasound (sonography)
-Cat Scan (CT) of the pelvis or abdomen.
-MRI of the pelvis or abdomen
-Chest x-ray
-Bone scan
-Barium enema x-ray (lower intestine)
-Colonoscopy
-Tumor Marker CA-125
-Estradiol
-Genetic tests for the KRAS-variant
-BRACA-1 / BRACA-2 Screen
+p2h2||--tests
+p2h2t1||-Empty
+p2h2t1e1||Physical exam
+p2h2t1e2||Pelvic exam
+p2h2t1e3||Complete blood cell count
+p2h2t1e4||Blood chemistries
+p2h2t1e5||Pregnancy test (serum HCG)
+p2h2t1e6||Ultrasound
+p2h2t1e7||Transvaginal ultrasound (sonography)
+p2h2t1e8||Cat Scan (CT) of the pelvis or abdomen.
+p2h2t1e9||MRI of the pelvis or abdomen
+p2h2t1e10||Chest x-ray
+p2h2t1e11||Bone scan
+p2h2t1e12||Barium enema x-ray (lower intestine)
+p2h2t1e13||Colonoscopy
+p2h2t1e14||Tumor Marker CA-125
+p2h2t1e15||Estradiol
+p2h2t1e16||Genetic tests for the KRAS-variant
+p2h2t1e17||BRACA-1 / BRACA-2 Screen
 
---procedures
--Empty
-Biopsy of tissue or fluid in abdomen
-Lymph node removal
-Laparoscopy
-Laparotomy
-Hysterectomy
-Bilateral salpingo-oophorectomy
-Partial or complete removal of the omentum
-Debulking or optimal cytoreduction 
+p2h3||--procedures
+p2h3t1||-Empty
+p2h3t1e1||Biopsy of tissue or fluid in abdomen
+p2h3t1e2||Lymph node removal
+p2h3t1e3||Laparoscopy
+p2h3t1e4||Laparotomy
+p2h3t1e5||Hysterectomy
+p2h3t1e6||Bilateral salpingo-oophorectomy
+p2h3t1e7||Partial or complete removal of the omentum
+p2h3t1e8||Debulking or optimal cytoreduction 
 
---treatments
--Chemotherapy
-Altretamine (Hexalen)
-Bleomycin (Blenoxane)
-Cisplatin (Platinol)
-Cyclophosphamide (Cytoxan)
-Dactinomycin (Cosmegen)
-Etoposide (Eposin)
-Ifosfamide (Ifex)
-Melphalan (Alkeran)
-Oxaliplatin (Eloxatin)
-Pemetrexed (Alimta)
-Paxil (Paroxetine)
-Topotecan (Hycamtin)
-Trinotecan (Irinotecan)
--Hormonal Therapy
-Letrozole (Femara)
-Exemestane (Aromasin)
-Letrozole (Femara)
-Tamoxifen
-Evista (raloxifene)
-Fareston (toremifene)
-Faslodex (fulvestrant)
--Targeted Therapy
-Avastin (bevacizumab)
-Bevacizumab (Avastin)
-Farletuzumab (Morphotek)
-Herceptin (trastuzumab)
-Lapatinib (Tykerb)
-Trastuzumab (Herceptin)
-Tykerb (lapatinib)
--Radiation Therapy
-External radiation
-Internal radiation
+p2h4||--treatments
+p2h4t1||-Chemotherapy
+p2h4t1e1||Altretamine (Hexalen)
+p2h4t1e2||Bleomycin (Blenoxane)
+p2h4t1e3||Cisplatin (Platinol)
+p2h4t1e4||Cyclophosphamide (Cytoxan)
+p2h4t1e5||Dactinomycin (Cosmegen)
+p2h4t1e6||Etoposide (Eposin)
+p2h4t1e7||Ifosfamide (Ifex)
+p2h4t1e8||Melphalan (Alkeran)
+p2h4t1e9||Oxaliplatin (Eloxatin)
+p2h4t1e10||Pemetrexed (Alimta)
+p2h4t1e11||Paxil (Paroxetine)
+p2h4t1e12||Topotecan (Hycamtin)
+p2h4t1e13||Trinotecan (Irinotecan)
+p2h4t2||-Hormonal Therapy
+p2h4t2e1||Letrozole (Femara)
+p2h4t2e2||Exemestane (Aromasin)
+p2h4t2e3||Letrozole (Femara)
+p2h4t2e4||Tamoxifen
+p2h4t2e5||Evista (raloxifene)
+p2h4t2e6||Fareston (toremifene)
+p2h4t2e7||Faslodex (fulvestrant)
+p2h4t3||-Targeted Therapy
+p2h4t3e1||Avastin (bevacizumab)
+p2h4t3e2||Bevacizumab (Avastin)
+p2h4t3e3||Farletuzumab (Morphotek)
+p2h4t3e4||Herceptin (trastuzumab)
+p2h4t3e5||Lapatinib (Tykerb)
+p2h4t3e6||Trastuzumab (Herceptin)
+p2h4t3e7||Tykerb (lapatinib)
+p2h4t4||-Radiation Therapy
+p2h4t4e1||External radiation
+p2h4t4e2||Internal radiation
 
---sideeffects
-Abdominal pain
-Addiction
-Allergic reactions
-Anemia
-Anxiety
-Appetite changes
-Armpit discomfort
-Back pain
-Bleeding and bruising
-Blood clots and phlebitis
-Bone and joint pain
-Breating problems
-Navelbine (vinorelbine)
-Burning at radiation site
-Chest pain
-Cold and flu symptoms
-Constipation
-Coughing
-Dhydration
-Delayed wound healing
-Depression
-Diarrhea
-Dizzyness
-Dry mouth
-Dry skin
-Electrolyte imbalance
-Endmetriosis
-Fainting
-Fatigue
-Fertility issues
-Fever
-Gas (Flatulence)
-Hair loss and Changes
-Hand-Foot Syndrome (HFS)
-Headaches
-Hearing problems
-Heart problems
-Heartburn or GERD
-Hematoma (Blood Build-up)
-High Blood Pressure
-High cholesterol
-Hot flashes
-Infection
-Injection site reaction
-Insomnia (Trouble Sleeping)
-Itching
-Joint pain (arthralgia)
-Kidney problems
-Leg cramps
-Liver Problems (Hepatotoxicity)
-Loss of Libido
-Low Blood Pressure (Hypotension)
-Lung problems
-Lymphedema
-Memory loss
-Menopause and Menopausal
-Symptoms
-Mood Swings
-Mouth and Throat Sores (Myalgias)
-Nail Changes
-Nausea
-Neuropathy
-Nose bleeds
-Numbness
-Osteonecrosis of the Jaw
-Osteoporosis (Bone Loss)
-Pain
-Phantom Breast Pain
-Post-Traumatic Stress Disorder (PTSD)
-Rash
-Runny nose
-Scar Tissue Formation
-Seroma (FLuid Build-up)
-Skin discoloration
-Skin Sensitivity
-Sore Throat
-Swallowing Problems
-Sweating
-Swelling
-Tast and smell changes
-Urinary Tract Infection
-Urine Discoloration
-Vaginial Discharge
-Vaginal Dryness
-Vision and Eye Problems
-Vomiting
-Weakness
-Weight changes
+p2h5||--sideeffects
+p2h5t4e1||Abdominal pain
+p2h5t4e2||Addiction
+p2h5t4e3||Allergic reactions
+p2h5t4e4||Anemia
+p2h5t4e5||Anxiety
+p2h5t4e6||Appetite changes
+p2h5t4e7||Armpit discomfort
+p2h5t4e8||Back pain
+p2h5t4e9||Bleeding and bruising
+p2h5t4e10||Blood clots and phlebitis
+p2h5t4e11||Bone and joint pain
+p2h5t4e12||Breathing problems
+p2h5t4e13||Navelbine (vinorelbine)
+p2h5t4e14||Burning at radiation site
+p2h5t4e15||Chest pain
+p2h5t4e16||Cold and flu symptoms
+p2h5t4e17||Constipation
+p2h5t4e18||Coughing
+p2h5t4e19||Dhydration
+p2h5t4e20||Delayed wound healing
+p2h5t4e21||Depression
+p2h5t4e22||Diarrhea
+p2h5t4e23||Dizzyness
+p2h5t4e24||Dry mouth
+p2h5t4e25||Dry skin
+p2h5t4e26||Electrolyte imbalance
+p2h5t4e27||Endmetriosis
+p2h5t4e28||Fainting
+p2h5t4e29||Fatigue
+p2h5t4e30||Fertility issues
+p2h5t4e31||Fever
+p2h5t4e32||Gas (Flatulence)
+p2h5t4e33||Hair loss and Changes
+p2h5t4e34||Hand-Foot Syndrome (HFS)
+p2h5t4e35||Headaches
+p2h5t4e36||Hearing problems
+p2h5t4e37||Heart problems
+p2h5t4e38||Heartburn or GERD
+p2h5t4e39||Hematoma (Blood Build-up)
+p2h5t4e40||High Blood Pressure
+p2h5t4e41||High cholesterol
+p2h5t4e42||Hot flashes
+p2h5t4e43||Infection
+p2h5t4e44||Injection site reaction
+p2h5t4e45||Insomnia (Trouble Sleeping)
+p2h5t4e46||Itching
+p2h5t4e47||Joint pain (arthralgia)
+p2h5t4e48||Kidney problems
+p2h5t4e49||Leg cramps
+p2h5t4e50||Liver Problems (Hepatotoxicity)
+p2h5t4e51||Loss of Libido
+p2h5t4e52||Low Blood Pressure (Hypotension)
+p2h5t4e53||Lung problems
+p2h5t4e54||Lymphedema
+p2h5t4e55||Memory loss
+p2h5t4e56||Menopause & menopausal
+p2h5t4e57||Symptoms
+p2h5t4e58||Mood Swings
+p2h5t4e59||Mouth and Throat Sores (Myalgias)
+p2h5t4e60||Nail Changes
+p2h5t4e61||Nausea
+p2h5t4e62||Neuropathy
+p2h5t4e63||Nose bleeds
+p2h5t4e64||Numbness
+p2h5t4e65||Osteonecrosis of the Jaw
+p2h5t4e66||Osteoporosis (Bone Loss)
+p2h5t4e67||Pain
+p2h5t4e68||Phantom Breast Pain
+p2h5t4e69||Post-Traumatic Stress Disorder (PTSD)
+p2h5t4e70||Rash
+p2h5t4e71||Runny nose
+p2h5t4e72||Scar Tissue Formation
+p2h5t4e73||Seroma (FLuid Build-up)
+p2h5t4e74||Skin discoloration
+p2h5t4e75||Skin Sensitivity
+p2h5t4e76||Sore Throat
+p2h5t4e77||Swallowing Problems
+p2h5t4e78||Sweating
+p2h5t4e79||Swelling
+p2h5t4e80||Tast and smell changes
+p2h5t4e81||Urinary Tract Infection
+p2h5t4e82||Urine Discoloration
+p2h5t4e83||Vaginial Discharge
+p2h5t4e84||Vaginal Dryness
+p2h5t4e85||Vision and Eye Problems
+p2h5t4e86||Vomiting
+p2h5t4e87||Weakness
+p2h5t4e88||Weight changes
 
----Melanoma
---symptoms
--Empty
-Change in an existing mole
-Development of a new, unusual-looking growth on skin or areas of body
+p3||---Melanoma
+p3h1||--symptoms
+p3h1t1||-Empty
+p3h1t1e1||Change in an existing mole
+p3h1t1e2||Development of a new, unusual-looking growth on skin or areas of body
 
---tests
--Empty
-Skin exams at home
-Skin exams by a trained professional
-First diagnosed using ABCDE (Asymmetry, Border, Color, Dimension, Evolution)
-Punch biopsy
-Excisional biopsy
-Incisional biopsy
-Wide local excision (surgical procedure to remove some of the normal tissue surrounding the area where melanoma was found to check for cancer cells)
-Chest x-ray
-CT scan (CAT scan)
-MRI  (magnetic resonance imaging)
-PET scan (positron emission tomography scan)
-Laboratory tests of blood and urine
-Blood chemistry test
-LDH test (blood is checked for an enzyme called lactate dehydrogenase)
-S-100 protein marker
+p3h2||--tests
+p3h2t1||-Empty
+p3h2t1e1||Skin exams at home
+p3h2t1e2||Skin exams by a trained professional
+p3h2t1e3||First diagnosed using ABCDE (Asymmetry, Border, Color, Dimension, Evolution)
+p3h2t1e4||Punch biopsy
+p3h2t1e5||Excisional biopsy
+p3h2t1e6||Incisional biopsy
+p3h2t1e7||Wide local excision (surgical procedure to remove some of the normal tissue surrounding the area where melanoma was found to check for cancer cells)
+p3h2t1e8||Chest x-ray
+p3h2t1e9||CT scan (CAT scan)
+p3h2t1e10||MRI  (magnetic resonance imaging)
+p3h2t1e11||PET scan (positron emission tomography scan)
+p3h2t1e12||Laboratory tests of blood and urine
+p3h2t1e13||Blood chemistry test
+p3h2t1e14||LDH test (blood is checked for an enzyme called lactate dehydrogenase)
+p3h2t1e15||S-100 protein marker
 
---procedures
--Empty
-Simple incision
-Wide local excision
-Lymph node mapping
-Sentinel lymph node biopsy
-Lymphadenectomy
-Skin grafting
-Amputation
+p3h3||--procedures
+p3h3t1||-Empty
+p3h3t1e1||Simple incision
+p3h3t1e2||Wide local excision
+p3h3t1e3||Lymph node mapping
+p3h3t1e4||Sentinel lymph node biopsy
+p3h3t1e5||Lymphadenectomy
+p3h3t1e6||Skin grafting
+p3h3t1e7||Amputation
 
---treatments
--Chemotherapy
-Carmustine (BiCNU)
-Cisplatin (Platinol)
-Dacarbazine (DTIC-Dome)
-Docetaxel (Taxotere)
-Fotemustine (Muphoran)
-lomustine (CeeNU)
-Paclitaxel (Taxol)
-Temozolomide (Methazolastone, Temodar) 
-Vinblastine (Velban, Velsar)
--Targeted Therapy
-Vemurafenib (Zelboraf)
-Ipilimumab (Yervoy)
--Biological Therapy (immunotherapy)
-Interleukin-2 (Proleukin)
-Interferon alpha-2b (Roferon-A)
-Peginterferon (Sylatron)
--Radiation Therapy
-External radiation
-Internal radiation
--Vaccine Therapy
+p3h4||--treatments
+p3h4t1||-Chemotherapy
+p3h4t1e1||Carmustine (BiCNU)
+p3h4t1e2||Cisplatin (Platinol)
+p3h4t1e3||Dacarbazine (DTIC-Dome)
+p3h4t1e4||Docetaxel (Taxotere)
+p3h4t1e5||Fotemustine (Muphoran)
+p3h4t1e6||lomustine (CeeNU)
+p3h4t1e7||Paclitaxel (Taxol)
+p3h4t1e8||Temozolomide (Methazolastone, Temodar) 
+p3h4t1e9||Vinblastine (Velban, Velsar)
+p3h4t2||-Targeted Therapy
+p3h4t2e1||Vemurafenib (Zelboraf)
+p3h4t2e2||Ipilimumab (Yervoy)
+p3h4t3||-Biological Therapy (immunotherapy)
+p3h4t3e1||Interleukin-2 (Proleukin)
+p3h4t3e2||Interferon alpha-2b (Roferon-A)
+p3h4t3e3||Peginterferon (Sylatron)
+p3h4t4||-Radiation Therapy
+p3h4t4e1||External radiation
+p3h4t4e2||Internal radiation
+p3h4t5||-Vaccine Therapy
 
---sideeffects
-Abdominal pain
-Addiction
-Allergic reactions
-Anemia
-Anxiety
-Appetite changes
-Armpit discomfort
-Back pain
-Bleeding and bruising
-Blood clots and phlebitis
-Bone and joint pain
-Breating problems
-Navelbine (vinorelbine)
-Burning at radiation site
-Chest pain
-Cold and flu symptoms
-Constipation
-Coughing
-Dhydration
-Delayed wound healing
-Depression
-Diarrhea
-Dizzyness
-Dry mouth
-Dry skin
-Electrolyte imbalance
-Endmetriosis
-Fainting
-Fatigue
-Fertility issues
-Fever
-Gas (Flatulence)
-Hair loss and Changes
-Hand-Foot Syndrome (HFS)
-Headaches
-Hearing problems
-Heart problems
-Heartburn or GERD
-Hematoma (Blood Build-up)
-High Blood Pressure
-High cholesterol
-Hot flashes
-Infection
-Injection site reaction
-Insomnia (Trouble Sleeping)
-Itching
-Joint pain (arthralgia)
-Kidney problems
-Leg cramps
-Liver Problems (Hepatotoxicity)
-Loss of Libido
-Low Blood Pressure (Hypotension)
-Lung problems
-Lymphedema
-Memory loss
-Menopause and Menopausal
-Symptoms
-Mood Swings
-Mouth and Throat Sores (Myalgias)
-Nail Changes
-Nausea
-Neuropathy
-Nose bleeds
-Numbness
-Osteonecrosis of the Jaw
-Osteoporosis (Bone Loss)
-Pain
-Phantom Breast Pain
-Post-Traumatic Stress Disorder (PTSD)
-Rash
-Runny nose
-Scar Tissue Formation
-Seroma (FLuid Build-up)
-Skin discoloration
-Skin Sensitivity
-Sore Throat
-Swallowing Problems
-Sweating
-Swelling
-Tast and smell changes
-Urinary Tract Infection
-Urine Discoloration
-Vaginial Discharge
-Vaginal Dryness
-Vision and Eye Problems
-Vomiting
-Weakness
-Weight changes
+p3h5||--sideeffects
+p3h5t5e1||Abdominal pain
+p3h5t5e2||Addiction
+p3h5t5e3||Allergic reactions
+p3h5t5e4||Anemia
+p3h5t5e5||Anxiety
+p3h5t5e6||Appetite changes
+p3h5t5e7||Armpit discomfort
+p3h5t5e8||Back pain
+p3h5t5e9||Bleeding and bruising
+p3h5t5e10||Blood clots and phlebitis
+p3h5t5e11||Bone and joint pain
+p3h5t5e12||Breathing problems
+p3h5t5e13||Navelbine (vinorelbine)
+p3h5t5e14||Burning at radiation site
+p3h5t5e15||Chest pain
+p3h5t5e16||Cold and flu symptoms
+p3h5t5e17||Constipation
+p3h5t5e18||Coughing
+p3h5t5e19||Dhydration
+p3h5t5e20||Delayed wound healing
+p3h5t5e21||Depression
+p3h5t5e22||Diarrhea
+p3h5t5e23||Dizzyness
+p3h5t5e24||Dry mouth
+p3h5t5e25||Dry skin
+p3h5t5e26||Electrolyte imbalance
+p3h5t5e27||Endmetriosis
+p3h5t5e28||Fainting
+p3h5t5e29||Fatigue
+p3h5t5e30||Fertility issues
+p3h5t5e31||Fever
+p3h5t5e32||Gas (Flatulence)
+p3h5t5e33||Hair loss and Changes
+p3h5t5e34||Hand-Foot Syndrome (HFS)
+p3h5t5e35||Headaches
+p3h5t5e36||Hearing problems
+p3h5t5e37||Heart problems
+p3h5t5e38||Heartburn or GERD
+p3h5t5e39||Hematoma (Blood Build-up)
+p3h5t5e40||High Blood Pressure
+p3h5t5e41||High cholesterol
+p3h5t5e42||Hot flashes
+p3h5t5e43||Infection
+p3h5t5e44||Injection site reaction
+p3h5t5e45||Insomnia (Trouble Sleeping)
+p3h5t5e46||Itching
+p3h5t5e47||Joint pain (arthralgia)
+p3h5t5e48||Kidney problems
+p3h5t5e49||Leg cramps
+p3h5t5e50||Liver Problems (Hepatotoxicity)
+p3h5t5e51||Loss of Libido
+p3h5t5e52||Low Blood Pressure (Hypotension)
+p3h5t5e53||Lung problems
+p3h5t5e54||Lymphedema
+p3h5t5e55||Memory loss
+p3h5t5e56||Menopause & menopausal
+p3h5t5e57||Symptoms
+p3h5t5e58||Mood Swings
+p3h5t5e59||Mouth and Throat Sores (Myalgias)
+p3h5t5e60||Nail Changes
+p3h5t5e61||Nausea
+p3h5t5e62||Neuropathy
+p3h5t5e63||Nose bleeds
+p3h5t5e64||Numbness
+p3h5t5e65||Osteonecrosis of the Jaw
+p3h5t5e66||Osteoporosis (Bone Loss)
+p3h5t5e67||Pain
+p3h5t5e68||Phantom Breast Pain
+p3h5t5e69||Post-Traumatic Stress Disorder (PTSD)
+p3h5t5e70||Rash
+p3h5t5e71||Runny nose
+p3h5t5e72||Scar Tissue Formation
+p3h5t5e73||Seroma (FLuid Build-up)
+p3h5t5e74||Skin discoloration
+p3h5t5e75||Skin Sensitivity
+p3h5t5e76||Sore Throat
+p3h5t5e77||Swallowing Problems
+p3h5t5e78||Sweating
+p3h5t5e79||Swelling
+p3h5t5e80||Tast and smell changes
+p3h5t5e81||Urinary Tract Infection
+p3h5t5e82||Urine Discoloration
+p3h5t5e83||Vaginial Discharge
+p3h5t5e84||Vaginal Dryness
+p3h5t5e85||Vision and Eye Problems
+p3h5t5e86||Vomiting
+p3h5t5e87||Weakness
+p3h5t5e88||Weight changes
 
----Lung Cancer
---symptoms
--Empty
-Chest pain
-Chest discomfort.
-Shortness of breath
-Facial swelling
-Fever
-Hoarseness or changing voice
-Swallowing difficulty
-Weakness
-Cough that doesn't go away
-Coughing up blood; Streaks of blood in sputum (mucus coughed up from the lungs) Bloody sputum (phlegm)
-Fatigue feeling tired
-Losing weight without trying; Weight loss for no known reason.
-Loss of appetite
-Wheezing
-Trouble breathing..
-Bone pain or tenderness
-Eyelid drooping
-Facial paralysis
-Joint pain
-Nail problems
-Shoulder pain
-Swelling of the face or arms
+p4||---Lung Cancer
+p4h1||--symptoms
+p4h1t1||-Empty
+p4h1t1e1||Chest pain
+p4h1t1e2||Chest discomfort.
+p4h1t1e3||Shortness of breath
+p4h1t1e4||Facial swelling
+p4h1t1e5||Fever
+p4h1t1e6||Hoarseness or changing voice
+p4h1t1e7||Swallowing difficulty
+p4h1t1e8||Weakness
+p4h1t1e9||Cough that doesn't go away
+p4h1t1e10||Coughing up blood; Streaks of blood in sputum (mucus coughed up from the lungs) Bloody sputum (phlegm)
+p4h1t1e11||Fatigue feeling tired
+p4h1t1e12||Losing weight without trying; Weight loss for no known reason.
+p4h1t1e13||Loss of appetite
+p4h1t1e14||Wheezing
+p4h1t1e15||Trouble breathing..
+p4h1t1e16||Bone pain or tenderness
+p4h1t1e17||Eyelid drooping
+p4h1t1e18||Facial paralysis
+p4h1t1e19||Joint pain
+p4h1t1e20||Nail problems
+p4h1t1e21||Shoulder pain
+p4h1t1e22||Swelling of the face or arms
 
---tests
--Empty
-Physical exam and history
-Complete blood count (CBC)
-Laboratory tests: medical procedures that test samples of tissue, blood, urine
-Chest x-ray
-CT Scan (Cat Scan)
-PET Scan (positron emission tomography scan)
-Sputum Test (cytology)
-Fine-needle aspiration (FNA) biopsy of the lung
-Bronchoscopy
-Thoracoscopy
-Thoracentesis
-Light and electron microscopy
-Immunohistochemistry study
-MRI (magnetic resonance imaging)
-Radionuclide bone scan
-Endoscopic ultrasound 
-Mediastinoscopy with biopsy
-Open lung biopsy
-Pleural biopsy
-Video-assisted thoracoscopy
-Low-dose helical CT
+p4h2||--tests
+p4h2t1||-Empty
+p4h2t1e1||Physical exam and history
+p4h2t1e2||Complete blood count (CBC)
+p4h2t1e3||Laboratory tests: medical procedures that test samples of tissue, blood, urine
+p4h2t1e4||Chest x-ray
+p4h2t1e5||CT Scan (Cat Scan)
+p4h2t1e6||PET Scan (positron emission tomography scan)
+p4h2t1e7||Sputum Test (cytology)
+p4h2t1e8||Fine-needle aspiration (FNA) biopsy of the lung
+p4h2t1e9||Bronchoscopy
+p4h2t1e10||Thoracoscopy
+p4h2t1e11||Thoracentesis
+p4h2t1e12||Light and electron microscopy
+p4h2t1e13||Immunohistochemistry study
+p4h2t1e14||MRI (magnetic resonance imaging)
+p4h2t1e15||Radionuclide bone scan
+p4h2t1e16||Endoscopic ultrasound 
+p4h2t1e17||Mediastinoscopy with biopsy
+p4h2t1e18||Open lung biopsy
+p4h2t1e19||Pleural biopsy
+p4h2t1e20||Video-assisted thoracoscopy
+p4h2t1e21||Low-dose helical CT
 
---procedures
--Empty
-Pneumonectomy 
-Wedge resection 
-Segmental resection 
-Lobectomy 
-Laser therapy
-Photodynamic therapy
-Cryotherapy
-Radiofrequency ablation (RFA)
-Prophylactic cranial irradiation
+p4h3||--procedures
+p4h3t1||-Empty
+p4h3t1e1||Pneumonectomy 
+p4h3t1e2||Wedge resection 
+p4h3t1e3||Segmental resection 
+p4h3t1e4||Lobectomy 
+p4h3t1e5||Laser therapy
+p4h3t1e6||Photodynamic therapy
+p4h3t1e7||Cryotherapy
+p4h3t1e8||Radiofrequency ablation (RFA)
+p4h3t1e9||Prophylactic cranial irradiation
 
---treatments
--Chemotherapy
-Carmustine (BiCNU)
-Carboplatin (Paraplatin)
-Cisplatin (Platinol, Platinol-AQ)
-Dacarbazine (DTIC-Dome)
-Docetaxel (Taxotere)
-Doxorubicin (Adriamycin Rubex)
-Crizotinib (Xalkori)
-Cyclophosphamide (Cytoxan)Erlotinib Hydrochloride (Tarceva)
-Etoposide Phosphate (Toposar VePesid)
-Ifosfamide (Ifex) {(Mesna (Mesnex) prevention of hemorrhagic cystitis induced by Ifosfamide}
-Iressa (Gefitinib)
-Irinotecan (Camptosar)
-Gemzar (Gemcitabine Hydrochloride
-lomustine (CeeNU)
-Methotrexate (Abitrexate, Folex, Folex PFS, Mexate AQ, Mexate)
-Paclitaxel (Taxol)
-Pemetrexed (Alimta)
-Temozolomide (Methazolastone, Temodar)
-Topotecan Hydrochloride (Hycamtin)
-Vinblastine (Velban, Velsar)
-Vincristine (Vincasar)
-Vinorelbine (Navelbine)
--Targeted Therapy
-Bevacizumab (Avastin). 
-Erlotinib (Tarceva). .
-Crizotinib (Xalkori)
-Gefitinib   (Iressa®)
--Radiation Therapy
-External radiation
-Internal radiation
+p4h4||--treatments
+p4h4t1||-Chemotherapy
+p4h4t1e1||Carmustine (BiCNU)
+p4h4t1e2||Carboplatin (Paraplatin)
+p4h4t1e3||Cisplatin (Platinol, Platinol-AQ)
+p4h4t1e4||Dacarbazine (DTIC-Dome)
+p4h4t1e5||Docetaxel (Taxotere)
+p4h4t1e6||Doxorubicin (Adriamycin Rubex)
+p4h4t1e7||Crizotinib (Xalkori)
+p4h4t1e8||Cyclophosphamide (Cytoxan)Erlotinib Hydrochloride (Tarceva)
+p4h4t1e9||Etoposide Phosphate (Toposar VePesid)
+p4h4t1e10||Ifosfamide (Ifex) {(Mesna (Mesnex) prevention of hemorrhagic cystitis induced by Ifosfamide}
+p4h4t1e11||Iressa (Gefitinib)
+p4h4t1e12||Irinotecan (Camptosar)
+p4h4t1e13||Gemzar (Gemcitabine Hydrochloride
+p4h4t1e14||lomustine (CeeNU)
+p4h4t1e15||Methotrexate (Abitrexate, Folex, Folex PFS, Mexate AQ, Mexate)
+p4h4t1e16||Paclitaxel (Taxol)
+p4h4t1e17||Pemetrexed (Alimta)
+p4h4t1e18||Temozolomide (Methazolastone, Temodar)
+p4h4t1e19||Topotecan Hydrochloride (Hycamtin)
+p4h4t1e20||Vinblastine (Velban, Velsar)
+p4h4t1e21||Vincristine (Vincasar)
+p4h4t1e22||Vinorelbine (Navelbine)
+p4h4t2||-Targeted Therapy
+p4h4t2e1||Bevacizumab (Avastin). 
+p4h4t2e2||Erlotinib (Tarceva). .
+p4h4t2e3||Crizotinib (Xalkori)
+p4h4t2e4||Gefitinib   (IressaÂ®)
+p4h4t3||-Radiation Therapy
+p4h4t3e1||External radiation
+p4h4t3e2||Internal radiation
 
---sideeffects
-Abdominal pain
-Addiction
-Allergic reactions
-Anemia
-Anxiety
-Appetite changes
-Armpit discomfort
-Back pain
-Bleeding and bruising
-Blood clots and phlebitis
-Bone and joint pain
-Breating problems
-Navelbine (vinorelbine)
-Burning at radiation site
-Chest pain
-Cold and flu symptoms
-Constipation
-Coughing
-Dhydration
-Delayed wound healing
-Depression
-Diarrhea
-Dizzyness
-Dry mouth
-Dry skin
-Electrolyte imbalance
-Endmetriosis
-Fainting
-Fatigue
-Fertility issues
-Fever
-Gas (Flatulence)
-Hair loss and Changes
-Hand-Foot Syndrome (HFS)
-Headaches
-Hearing problems
-Heart problems
-Heartburn or GERD
-Hematoma (Blood Build-up)
-High Blood Pressure
-High cholesterol
-Hot flashes
-Infection
-Injection site reaction
-Insomnia (Trouble Sleeping)
-Itching
-Joint pain (arthralgia)
-Kidney problems
-Leg cramps
-Liver Problems (Hepatotoxicity)
-Loss of Libido
-Low Blood Pressure (Hypotension)
-Lung problems
-Lymphedema
-Memory loss
-Menopause and Menopausal
-Symptoms
-Mood Swings
-Mouth and Throat Sores (Myalgias)
-Nail Changes
-Nausea
-Neuropathy
-Nose bleeds
-Numbness
-Osteonecrosis of the Jaw
-Osteoporosis (Bone Loss)
-Pain
-Phantom Breast Pain
-Post-Traumatic Stress Disorder (PTSD)
-Rash
-Runny nose
-Scar Tissue Formation
-Seroma (FLuid Build-up)
-Skin discoloration
-Skin Sensitivity
-Sore Throat
-Swallowing Problems
-Sweating
-Swelling
-Tast and smell changes
-Urinary Tract Infection
-Urine Discoloration
-Vaginial Discharge
-Vaginal Dryness
-Vision and Eye Problems
-Vomiting
-Weakness
-Weight changes
+p4h5||--sideeffects
+p4h5t3e1||Abdominal pain
+p4h5t3e2||Addiction
+p4h5t3e3||Allergic reactions
+p4h5t3e4||Anemia
+p4h5t3e5||Anxiety
+p4h5t3e6||Appetite changes
+p4h5t3e7||Armpit discomfort
+p4h5t3e8||Back pain
+p4h5t3e9||Bleeding and bruising
+p4h5t3e10||Blood clots and phlebitis
+p4h5t3e11||Bone and joint pain
+p4h5t3e12||Breathing problems
+p4h5t3e13||Navelbine (vinorelbine)
+p4h5t3e14||Burning at radiation site
+p4h5t3e15||Chest pain
+p4h5t3e16||Cold and flu symptoms
+p4h5t3e17||Constipation
+p4h5t3e18||Coughing
+p4h5t3e19||Dhydration
+p4h5t3e20||Delayed wound healing
+p4h5t3e21||Depression
+p4h5t3e22||Diarrhea
+p4h5t3e23||Dizzyness
+p4h5t3e24||Dry mouth
+p4h5t3e25||Dry skin
+p4h5t3e26||Electrolyte imbalance
+p4h5t3e27||Endmetriosis
+p4h5t3e28||Fainting
+p4h5t3e29||Fatigue
+p4h5t3e30||Fertility issues
+p4h5t3e31||Fever
+p4h5t3e32||Gas (Flatulence)
+p4h5t3e33||Hair loss and Changes
+p4h5t3e34||Hand-Foot Syndrome (HFS)
+p4h5t3e35||Headaches
+p4h5t3e36||Hearing problems
+p4h5t3e37||Heart problems
+p4h5t3e38||Heartburn or GERD
+p4h5t3e39||Hematoma (Blood Build-up)
+p4h5t3e40||High Blood Pressure
+p4h5t3e41||High cholesterol
+p4h5t3e42||Hot flashes
+p4h5t3e43||Infection
+p4h5t3e44||Injection site reaction
+p4h5t3e45||Insomnia (Trouble Sleeping)
+p4h5t3e46||Itching
+p4h5t3e47||Joint pain (arthralgia)
+p4h5t3e48||Kidney problems
+p4h5t3e49||Leg cramps
+p4h5t3e50||Liver Problems (Hepatotoxicity)
+p4h5t3e51||Loss of Libido
+p4h5t3e52||Low Blood Pressure (Hypotension)
+p4h5t3e53||Lung problems
+p4h5t3e54||Lymphedema
+p4h5t3e55||Memory loss
+p4h5t3e56||Menopause & menopausal
+p4h5t3e57||Symptoms
+p4h5t3e58||Mood Swings
+p4h5t3e59||Mouth and Throat Sores (Myalgias)
+p4h5t3e60||Nail Changes
+p4h5t3e61||Nausea
+p4h5t3e62||Neuropathy
+p4h5t3e63||Nose bleeds
+p4h5t3e64||Numbness
+p4h5t3e65||Osteonecrosis of the Jaw
+p4h5t3e66||Osteoporosis (Bone Loss)
+p4h5t3e67||Pain
+p4h5t3e68||Phantom Breast Pain
+p4h5t3e69||Post-Traumatic Stress Disorder (PTSD)
+p4h5t3e70||Rash
+p4h5t3e71||Runny nose
+p4h5t3e72||Scar Tissue Formation
+p4h5t3e73||Seroma (FLuid Build-up)
+p4h5t3e74||Skin discoloration
+p4h5t3e75||Skin Sensitivity
+p4h5t3e76||Sore Throat
+p4h5t3e77||Swallowing Problems
+p4h5t3e78||Sweating
+p4h5t3e79||Swelling
+p4h5t3e80||Tast and smell changes
+p4h5t3e81||Urinary Tract Infection
+p4h5t3e82||Urine Discoloration
+p4h5t3e83||Vaginial Discharge
+p4h5t3e84||Vaginal Dryness
+p4h5t3e85||Vision and Eye Problems
+p4h5t3e86||Vomiting
+p4h5t3e87||Weakness
+p4h5t3e88||Weight changes
+
+p5||---Colon and Rectal Cancer
+p5h1||--symptoms
+p5h1t1||-Empty
+p5h1t1e1||Change in bowel habits.
+p5h1t1e2||Diarrhea
+p5h1t1e3||Constipation
+p5h1t1e4||Feeling that the bowel does not empty completely
+p5h1t1e5||Stools that are narrower or have a different shape than usual
+p5h1t1e6||Painful bowel movements
+p5h1t1e7||General abdominal discomfort (frequent gas pains, bloating, fullness, or cramps)
+p5h1t1e8||Change in appetite
+p5h1t1e9||Losing weight for no known reason
+p5h1t1e10||Feeling tired
+p5h1t1e11||Having nausea or vomiting
+p5h1t1e12||Bloody stools (bright red or very dark black)
+
+p5h2||--tests
+p5h2t1||-Screening
+p5h2t1e1||Fecal occult blood test (FOBT)
+p5h2t1e2||Sigmoidoscopy
+p5h2t1e3||Colonoscopy
+p5h2t1e4||Biopsy
+p5h2t1e5||Reverse-transcription polymerase chain reaction (RT-PCR) test
+p5h2t1e6||Immunohistochemistry study
+p5h2t1e7||Carcinoembryonic antigen (CEA) assay
+p5h2t1e8||Double-contrast barium enema
+p5h2t1e9||Digital rectal exam
+p5h2t1e10||Virtual colonoscopy
+p5h2t2||-Diagnosis
+p5h2t2e1||Personal and family medical history
+p5h2t2e2||Physical exam
+p5h2t2e3||Blood tests may include a complete blood count (CBC) and organ-function tests
+p5h2t2e4||Endorectal ultrasound
+p5h2t2e5||Chest x-ray
+p5h2t2e6||CT scan
+p5h2t2e7||MRI (magnetic resonance imaging)
+p5h2t2e8||PET scan (positron emission tomography scan)
+
+p5h3||--procedures
+p5h3t1||-Empty
+p5h3t1e1||Polypectomy (Colonoscopy)
+p5h3t1e2||Laparoscopy (local excision)
+p5h3t1e3||Resection
+p5h3t1e4||Lymph node biopsy 
+p5h3t1e5||Lymph node removal
+p5h3t1e6||Anastomosis  
+p5h3t1e7||Not a permanent colostomy
+p5h3t1e8||Permanent colostomy
+p5h3t1e9||Radiofrequency ablation
+p5h3t1e10||Cryosurgery
+p5h3t1e11||Total pelvic exenteration
+
+p5h4||--treatments
+p5h4t1||-Chemotherapy
+p5h4t1e1||5-Fluorouracil (5-FU, Adrucil)
+p5h4t1e2||Capecitabine (Xeloda)
+p5h4t1e3||Irinotecan (Camptosar)
+p5h4t1e4||Oxaliplatin (Eloxatin)
+p5h4t1e5||Cisplatin (Platinol)
+p5h4t2||-Other Medications
+p5h4t2e1||Leucovorin (Wellcovorin)
+p5h4t3||-Targeted Therapy
+p5h4t3e1||Bevacizumab (Avastin)
+p5h4t3e2||Panitumumab (Vectibix)
+p5h4t3e3||Cetuximab (Erbitux)
+p5h4t4||-Biological therapy (immunotherapy)
+p5h4t4e1||Levamisole (Ergamisol)
+p5h4t5||-Radiation
+p5h4t5e1||External Radiation
+p5h4t5e2||Internal Radiation
+p5h4t5e3||Intraoperative radiation therapy (IORT)
+
+p6||---Cervical Cancer
+p6h1||--symptoms
+p6h1t1||-Empty
+p6h1t1e1||Vaginal bleeding that is abnormal
+p6h1t1e2||Bleeding that occurs between periods 
+p6h1t1e3||Vaginal bleeding after sexual intercourse or when something comes in contact with cervix, douching, or a pelvic exam
+p6h1t1e4||A change in your menstrual cycle that isn’t explainable.  Menstrual periods that last longer and are heavier than before
+p6h1t1e5||Bleeding after going through menopause
+p6h1t1e6||Increased vaginal discharge
+p6h1t1e7||Vaginal discharge that is tinged with blood and is pale, watery, pink, brown, bloody, or foul smelling
+p6h1t1e8||Pelvic pain
+p6h1t1e9||Pain during intercourse
+p6h1t1e10||Pain in  abdomen, back, or back of the legs
+p6h1t1e11||Pain or pressure in the pelvic area
+p6h1t1e12||Swelling in the abdomen
+p6h1t1e13||Blood in the stool or urine
+p6h1t1e14||Difficulty or pain when urinating
+p6h1t1e15||Weight loss
+p6h1t1e16||Feeling tired
+
+p6h2||--tests
+p6h2t1||-Empty
+p6h2t1e1||Pap test
+p6h2t1e2||HPV DNA test
+p6h2t1e3||Pelvic exam
+p6h2t1e4||Colposcopy
+p6h2t1e5||Biopsy
+p6h2t1e6||Punch Biopsy
+p6h2t1e7||Loop electrosurgical excision procedure (LEEP)
+p6h2t1e8||Endocervical curettage
+p6h2t1e9||Conization
+p6h2t1e10||Fine-needle aspiration (FNA) biopsy
+p6h2t1e11||Complete medical & personal history
+p6h2t1e12||Chest x-rays
+p6h2t1e13||CAT scan
+p6h2t1e14||MRI (Magnetic resonance imaging scans)
+p6h2t1e15||PET scan
+p6h2t1e16||Complete blood cell count (CBC)
+p6h2t1e17||Laboratory tests
+p6h2t1e18||Intravenous pyelogram
+p6h2t1e19||Lymphangiogram
+p6h2t1e20||Ultrasound exam
+p6h2t1e21||Cystoscopy
+p6h2t1e22||Proctoscopy
+
+p6h3||--procedures
+p6h3t1||-Empty
+p6h3t1e1||Radical trachelectomy
+p6h3t1e2||Total hysterectomy
+p6h3t1e3||Radical hysterectomy
+p6h3t1e4||Modified radical hysterectomy
+p6h3t1e5||Bilateral salpingo-oophorectomy
+p6h3t1e6||Lymph nodes removal
+p6h3t1e7||Pelvic exenteration
+p6h3t1e8||Cryosurgery
+p6h3t1e9||Laser surgery
+p6h3t1e10||Pelvic lymph node dissection
+p6h3t1e11||Lymphadenectomy
+
+p6h4||--treatments
+p6h4t1||-Chemotherapy
+p6h4t1e1||Cisplatin (Platinol)
+p6h4t1e2||Bleomycin (Blenoxand)
+p6h4t1e3||Topotecan (Hycamtin)
+p6h4t1e4||Fluorouracil (5-FU)
+p6h4t1e5||Cyclophosphamide 
+p6h4t1e6||Mitomycin (Mutamycin)
+p6h4t1e7||Paclitaxel (Taxol, Onxol)
+p6h4t1e8||Ifosfamide (Ifex)
+p6h4t1e9||Carboplatin (Paraplatin).
+p6h4t1e10||Docetaxel (Taxotere).
+p6h4t1e11||Epirubicin (Ellence)
+p6h4t1e12||Gemcitabine (Gemzar)
+p6h4t1e13||Vinorelbine (Navelbine)
+p6h4t2||-Radiation
+p6h4t2e1||External Radiation
+p6h4t2e2||Internal Radiation
+p6h4t2e3||Chemoradiation
+p6h4t3||-Targeted Therapy
+p6h4t3e1||Bevacizumab (Avastin)
+p6h4t4||-Vaccines
+p6h4t4e1||Recombinant Human Papillomavirus (HPV) Bivalent Vaccine (Cervarix)
+p6h4t4e2||Recombinant Human Papillomavirus (HPV) Quadrivalent Vaccine (Gardasil)
+
+p7||---Uterine and Corpus Cancer
+p7h1||--symptoms
+p7h1t1||-Empty
+p7h1t1e1||Unusual vaginal bleeding, spotting, or discharge vaginal bleeding (in a post-menopausal woman)
+p7h1t1e2||Abnormal bleeding (including bleeding in between periods, or heavier/longer lasting menstrual bleeding)
+p7h1t1e3||Abnormal vaginal discharge
+p7h1t1e4||Pain in  abdomen or back of the legs
+p7h1t1e5||Pain or pressure in the pelvic area
+p7h1t1e6||Swelling in the abdomen
+p7h1t1e7||Blood in the stool or urine
+p7h1t1e8||Difficulty or pain when urinating
+p7h1t1e9||Pain during sexual intercourse
+p7h1t1e10||Weight loss
+
+p7h2||--tests
+p7h2t1||-Empty
+p7h2t1e1||Medical history and physical exam
+p7h2t1e2||Pelvic Exam
+p7h2t1e3||Pap test
+p7h2t1e4||Transvaginal ultrasound
+p7h2t1e5||Hysteroscopy
+p7h2t1e6||Dilation and curettage (D&C)
+p7h2t1e7||Chest Xray
+p7h2t1e8||Computed tomography (CT or CAT) scan
+p7h2t1e9||Endometrial biopsy
+p7h2t1e10||Dilation and curettage (D&C)
+p7h2t1e11||Magnetic resonance imaging (MRI) scans
+p7h2t1e12||Positron emission tomography scan
+p7h2t1e13||Complete blood count (CBC)
+p7h2t1e14||Laboratory tests
+p7h2t1e15||CA 125 blood test
+
+p7h3||--procedures
+p7h3t1||-Empty
+p7h3t1e1||Total Abdomenal Hysterectomy
+p7h3t1e2||Radical Abdomenal Hysterectomy
+p7h3t1e3||Bilateral salpingo-oophorectomy
+p7h3t1e4||Lymphadenectomy
+p7h3t1e5||Pelvic and para-aortic lymph node dissection
+p7h3t1e6||Laparoscopic lymph node sampling
+p7h3t1e7||Pelvic washing
+p7h3t1e8||Omentectomy
+p7h3t1e9||Peritoneal biopsies
+p7h3t1e10||Tumor debulking
+
+p7h4||--treatments
+p7h4t1||-Chemotherapy
+p7h4t1e1||Doxorubicin (Adriamycin, Rubex)
+p7h4t1e2||Cisplatin (Platinol)
+p7h4t1e3||Topotecan (Hycamtin).
+p7h4t1e4||Ifosfamide (Ifex)
+p7h4t1e5||Cyclophosphamide (Cytoxan)
+p7h4t1e6||Gemcitabine (Gemzar)
+p7h4t2||-Hormonal therapy
+p7h4t2e1||Medroxyprogesterone acetate (Provera)
+p7h4t2e2||Megestrol (Megace)
+p7h4t2e3||Tamoxifen, an anti-estrogen drug tor remove estrogen that is still made in fat tissue. en.
+p7h4t2e4||Aromatase inhibitors:  letrozole (Femara), anastrozole (Arimidex), and exemestane (Aromasin)
+p7h4t3||-Radiation
+p7h4t3e1||External Radiation
+p7h4t3e2||Internal Radiation (brachytherapy)

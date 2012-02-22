@@ -182,8 +182,10 @@ public class NotificationUtils {
 			else if(emailSetting == EmailSetting.REPLY_TO_THANKYOU && vars.get("reply_text") != null){
 				//Reply to thank you
 				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_REPLY_TO_THANKYOU, talker.getEmail(), vars, null, true);
-			}
-			else {
+			}else if(emailSetting == EmailSetting.RECEIVE_DIRECT && vars.get("message_text") != null){
+				//Receive direct message
+				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, talker.getEmail(), vars, null, false);
+			}else {
 				EmailUtil.sendEmail(emailSetting.getEmailTemplate(), talker.getEmail(), vars, null, true);
 			}
 		}
@@ -205,6 +207,8 @@ public class NotificationUtils {
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
 		vars.put("convo_url", convoURL);
    		sendEmailNotification(EmailSetting.CONVO_COMMENT, convo.getTalker(), vars);
+   		//Send mail to admin@talkabouthealth.com
+   		EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_CONVO_REPLY_TO_ANSWER,  EmailUtil.ADMIN_EMAIL, vars, null, true);
 	}
 	
 	/**
@@ -222,6 +226,8 @@ public class NotificationUtils {
 		String convoURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", convo.getMainURL());
 		vars.put("convo_url", convoURL);
    		sendEmailNotification(EmailSetting.CONVO_COMMENT, toTalker, vars);
+   		//Send mail to admin@talkabouthealth.com
+   		EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_CONVO_REPLY_TO_ANSWER,  EmailUtil.ADMIN_EMAIL, vars, null, true);
 	}
 	
 	/**

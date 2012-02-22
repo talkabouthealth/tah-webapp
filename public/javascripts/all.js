@@ -1146,7 +1146,7 @@ function loadMoreFeedMob(type) {
 				$(data).appendTo($("#"+type+"List"));
 				//for new items
 				$('.inline-edit').inlineEdit( { hover: ''} );
-				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
+				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
 			}
 		);
 	

@@ -38,11 +38,27 @@ public class HealthItemDAO {
 			.add("dis_id", diseaseRef)
 			.add("par_id", parentRef)
 			.add("name", healthItem.getName())
+			.add("datfileid",healthItem.getDatFileId())
 			.get();
 
 		healthItemsColl.save(healthItemObject);
 		return getString(healthItemObject, "_id");
 	}
+	
+	public static String checkDatFileId(String datfileid){
+		 
+	     DBCollection healthItemColl = getCollection(HEALTH_ITEMS_COLLECTION);
+		 DBObject query = new BasicDBObject("datfileid",datfileid);
+
+	     DBObject healthDBobj = healthItemColl.findOne(query,new BasicDBObject("_id",1));
+		  
+		if(healthDBobj!=null)   
+		 return getString(healthDBobj,"_id");
+	    else
+	     return null;
+	    
+	}
+	
 	
 	public static void update(HealthItemBean healthItem) {
 		DBCollection healthItemsColl = getCollection(HEALTH_ITEMS_COLLECTION);
@@ -143,7 +159,12 @@ public class HealthItemDAO {
 	 */
 	public static void saveTree(HealthItemBean healthItem, String parentId, String diseaseId) {
 		healthItem.setDiseaseId(diseaseId);
-		String currentId = HealthItemDAO.save(healthItem, parentId);
+		
+		String currentId=checkDatFileId(healthItem.getDatFileId());
+		
+		if(currentId==null){
+	      currentId= HealthItemDAO.save(healthItem, parentId);
+		}  
 		
 		Set<HealthItemBean> childs = healthItem.getChildren();
 		if (childs != null) {

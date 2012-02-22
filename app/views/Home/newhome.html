@@ -219,8 +219,8 @@ function updateFeed(type,talkerName) {
 			$(data).prependTo($("#"+type+"List"));
 			// for new items
 			$('.inline-edit').inlineEdit( { hover: ''} );
-			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
-			$('.moretext2').truncatable({ limit: 220, more: '... more', less: true, hideText: '' });
+			$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+			$('.moretext2').truncatable({ limit: 220, more: '... more', less: true, hideText: '...less' });
 			update_retrieving=0;
 	});			
 }	

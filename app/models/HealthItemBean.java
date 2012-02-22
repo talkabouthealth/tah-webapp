@@ -12,6 +12,7 @@ public class HealthItemBean implements Comparable<HealthItemBean> {
 	private String diseaseId;
 	private String name;
 	private Set<HealthItemBean> children;
+	private String datFileId;
 	
 	public HealthItemBean(String id, String name) {
 		super();
@@ -38,5 +39,9 @@ public class HealthItemBean implements Comparable<HealthItemBean> {
 
 	public String getDiseaseId() { return diseaseId; }
 	public void setDiseaseId(String diseaseId) { this.diseaseId = diseaseId; }
+
+	public String getDatFileId() { return datFileId; }
+	public void setDatFileId(String datFileId) { this.datFileId = datFileId; }
+	
 }
 
