@@ -780,6 +780,96 @@ p5h4t5e1||External Radiation
 p5h4t5e2||Internal Radiation
 p5h4t5e3||Intraoperative radiation therapy (IORT)
 
+p5h5||--sideeffects
+p5h5t5e1||Abdominal pain
+p5h5t5e2||Addiction
+p5h5t5e3||Allergic reactions
+p5h5t5e4||Anemia
+p5h5t5e5||Anxiety
+p5h5t5e6||Appetite changes
+p5h5t5e7||Armpit discomfort
+p5h5t5e8||Back pain
+p5h5t5e9||Bleeding and bruising
+p5h5t5e10||Blood clots and phlebitis
+p5h5t5e11||Bone and joint pain
+p5h5t5e12||Breating problems
+p5h5t5e13||Navelbine (vinorelbine)
+p5h5t5e14||Burning at radiation site
+p5h5t5e15||Chest pain
+p5h5t5e16||Cold and flu symptoms
+p5h5t5e17||Constipation
+p5h5t5e18||Coughing
+p5h5t5e19||Dhydration
+p5h5t5e20||Delayed wound healing
+p5h5t5e21||Depression
+p5h5t5e22||Diarrhea
+p5h5t5e23||Dizzyness
+p5h5t5e24||Dry mouth
+p5h5t5e25||Dry skin
+p5h5t5e26||Electrolyte imbalance
+p5h5t5e27||Endmetriosis
+p5h5t5e28||Fainting
+p5h5t5e29||Fatigue
+p5h5t5e30||Fertility issues
+p5h5t5e31||Fever
+p5h5t5e32||Gas (Flatulence)
+p5h5t5e33||Hair loss and Changes
+p5h5t5e34||Hand-Foot Syndrome (HFS)
+p5h5t5e35||Headaches
+p5h5t5e36||Hearing problems
+p5h5t5e37||Heart problems
+p5h5t5e38||Heartburn or GERD
+p5h5t5e39||Hematoma (Blood Build-up)
+p5h5t5e40||High Blood Pressure
+p5h5t5e41||High cholesterol
+p5h5t5e42||Hot flashes
+p5h5t5e43||Infection
+p5h5t5e44||Injection site reaction
+p5h5t5e45||Insomnia (Trouble Sleeping)
+p5h5t5e46||Itching
+p5h5t5e47||Joint pain (arthralgia)
+p5h5t5e48||Kidney problems
+p5h5t5e49||Leg cramps
+p5h5t5e50||Liver Problems (Hepatotoxicity)
+p5h5t5e51||Loss of Libido
+p5h5t5e52||Low Blood Pressure (Hypotension)
+p5h5t5e53||Lung problems
+p5h5t5e54||Lymphedema
+p5h5t5e55||Memory loss
+p5h5t5e56||Menopause and Menopausal
+p5h5t5e57||Symptoms
+p5h5t5e58||Mood Swings
+p5h5t5e59||Mouth and Throat Sores (Myalgias)
+p5h5t5e60||Nail Changes
+p5h5t5e61||Nausea
+p5h5t5e62||Neuropathy
+p5h5t5e63||Nose bleeds
+p5h5t5e64||Numbness
+p5h5t5e65||Osteonecrosis of the Jaw
+p5h5t5e66||Osteoporosis (Bone Loss)
+p5h5t5e67||Pain
+p5h5t5e68||Phantom Breast Pain
+p5h5t5e69||Post-Traumatic Stress Disorder (PTSD)
+p5h5t5e70||Rash
+p5h5t5e71||Runny nose
+p5h5t5e72||Scar Tissue Formation
+p5h5t5e73||Seroma (FLuid Build-up)
+p5h5t5e74||Skin discoloration
+p5h5t5e75||Skin Sensitivity
+p5h5t5e76||Sore Throat
+p5h5t5e77||Swallowing Problems
+p5h5t5e78||Sweating
+p5h5t5e79||Swelling
+p5h5t5e80||Tast and smell changes
+p5h5t5e81||Urinary Tract Infection
+p5h5t5e82||Urine Discoloration
+p5h5t5e83||Vaginial Discharge
+p5h5t5e84||Vaginal Dryness
+p5h5t5e85||Vision and Eye Problems
+p5h5t5e86||Vomiting
+p5h5t5e87||Weakness
+p5h5t5e88||Weight changes
+
 p6||---Cervical Cancer
 p6h1||--symptoms
 p6h1t1||-Empty
@@ -864,6 +954,96 @@ p6h4t4||-Vaccines
 p6h4t4e1||Recombinant Human Papillomavirus (HPV) Bivalent Vaccine (Cervarix)
 p6h4t4e2||Recombinant Human Papillomavirus (HPV) Quadrivalent Vaccine (Gardasil)
 
+p6h5||--sideeffects
+p6h5t4e1||Abdominal pain
+p6h5t4e2||Addiction
+p6h5t4e3||Allergic reactions
+p6h5t4e4||Anemia
+p6h5t4e5||Anxiety
+p6h5t4e6||Appetite changes
+p6h5t4e7||Armpit discomfort
+p6h5t4e8||Back pain
+p6h5t4e9||Bleeding and bruising
+p6h5t4e10||Blood clots and phlebitis
+p6h5t4e11||Bone and joint pain
+p6h5t4e12||Breating problems
+p6h5t4e13||Navelbine (vinorelbine)
+p6h5t4e14||Burning at radiation site
+p6h5t4e15||Chest pain
+p6h5t4e16||Cold and flu symptoms
+p6h5t4e17||Constipation
+p6h5t4e18||Coughing
+p6h5t4e19||Dhydration
+p6h5t4e20||Delayed wound healing
+p6h5t4e21||Depression
+p6h5t4e22||Diarrhea
+p6h5t4e23||Dizzyness
+p6h5t4e24||Dry mouth
+p6h5t4e25||Dry skin
+p6h5t4e26||Electrolyte imbalance
+p6h5t4e27||Endmetriosis
+p6h5t4e28||Fainting
+p6h5t4e29||Fatigue
+p6h5t4e30||Fertility issues
+p6h5t4e31||Fever
+p6h5t4e32||Gas (Flatulence)
+p6h5t4e33||Hair loss and Changes
+p6h5t4e34||Hand-Foot Syndrome (HFS)
+p6h5t4e35||Headaches
+p6h5t4e36||Hearing problems
+p6h5t4e37||Heart problems
+p6h5t4e38||Heartburn or GERD
+p6h5t4e39||Hematoma (Blood Build-up)
+p6h5t4e40||High Blood Pressure
+p6h5t4e41||High cholesterol
+p6h5t4e42||Hot flashes
+p6h5t4e43||Infection
+p6h5t4e44||Injection site reaction
+p6h5t4e45||Insomnia (Trouble Sleeping)
+p6h5t4e46||Itching
+p6h5t4e47||Joint pain (arthralgia)
+p6h5t4e48||Kidney problems
+p6h5t4e49||Leg cramps
+p6h5t4e50||Liver Problems (Hepatotoxicity)
+p6h5t4e51||Loss of Libido
+p6h5t4e52||Low Blood Pressure (Hypotension)
+p6h5t4e53||Lung problems
+p6h5t4e54||Lymphedema
+p6h5t4e55||Memory loss
+p6h5t4e56||Menopause and Menopausal
+p6h5t4e57||Symptoms
+p6h5t4e58||Mood Swings
+p6h5t4e59||Mouth and Throat Sores (Myalgias)
+p6h5t4e60||Nail Changes
+p6h5t4e61||Nausea
+p6h5t4e62||Neuropathy
+p6h5t4e63||Nose bleeds
+p6h5t4e64||Numbness
+p6h5t4e65||Osteonecrosis of the Jaw
+p6h5t4e66||Osteoporosis (Bone Loss)
+p6h5t4e67||Pain
+p6h5t4e68||Phantom Breast Pain
+p6h5t4e69||Post-Traumatic Stress Disorder (PTSD)
+p6h5t4e70||Rash
+p6h5t4e71||Runny nose
+p6h5t4e72||Scar Tissue Formation
+p6h5t4e73||Seroma (FLuid Build-up)
+p6h5t4e74||Skin discoloration
+p6h5t4e75||Skin Sensitivity
+p6h5t4e76||Sore Throat
+p6h5t4e77||Swallowing Problems
+p6h5t4e78||Sweating
+p6h5t4e79||Swelling
+p6h5t4e80||Tast and smell changes
+p6h5t4e81||Urinary Tract Infection
+p6h5t4e82||Urine Discoloration
+p6h5t4e83||Vaginial Discharge
+p6h5t4e84||Vaginal Dryness
+p6h5t4e85||Vision and Eye Problems
+p6h5t4e86||Vomiting
+p6h5t4e87||Weakness
+p6h5t4e88||Weight changes
+
 p7||---Uterine and Corpus Cancer
 p7h1||--symptoms
 p7h1t1||-Empty
@@ -925,3 +1105,93 @@ p7h4t2e4||Aromatase inhibitors:  letrozole (Femara), anastrozole (Arimidex), and
 p7h4t3||-Radiation
 p7h4t3e1||External Radiation
 p7h4t3e2||Internal Radiation (brachytherapy)
+
+p7h5||--sideeffects
+p7h5t3e1||Abdominal pain
+p7h5t3e2||Addiction
+p7h5t3e3||Allergic reactions
+p7h5t3e4||Anemia
+p7h5t3e5||Anxiety
+p7h5t3e6||Appetite changes
+p7h5t3e7||Armpit discomfort
+p7h5t3e8||Back pain
+p7h5t3e9||Bleeding and bruising
+p7h5t3e10||Blood clots and phlebitis
+p7h5t3e11||Bone and joint pain
+p7h5t3e12||Breating problems
+p7h5t3e13||Navelbine (vinorelbine)
+p7h5t3e14||Burning at radiation site
+p7h5t3e15||Chest pain
+p7h5t3e16||Cold and flu symptoms
+p7h5t3e17||Constipation
+p7h5t3e18||Coughing
+p7h5t3e19||Dhydration
+p7h5t3e20||Delayed wound healing
+p7h5t3e21||Depression
+p7h5t3e22||Diarrhea
+p7h5t3e23||Dizzyness
+p7h5t3e24||Dry mouth
+p7h5t3e25||Dry skin
+p7h5t3e26||Electrolyte imbalance
+p7h5t3e27||Endmetriosis
+p7h5t3e28||Fainting
+p7h5t3e29||Fatigue
+p7h5t3e30||Fertility issues
+p7h5t3e31||Fever
+p7h5t3e32||Gas (Flatulence)
+p7h5t3e33||Hair loss and Changes
+p7h5t3e34||Hand-Foot Syndrome (HFS)
+p7h5t3e35||Headaches
+p7h5t3e36||Hearing problems
+p7h5t3e37||Heart problems
+p7h5t3e38||Heartburn or GERD
+p7h5t3e39||Hematoma (Blood Build-up)
+p7h5t3e40||High Blood Pressure
+p7h5t3e41||High cholesterol
+p7h5t3e42||Hot flashes
+p7h5t3e43||Infection
+p7h5t3e44||Injection site reaction
+p7h5t3e45||Insomnia (Trouble Sleeping)
+p7h5t3e46||Itching
+p7h5t3e47||Joint pain (arthralgia)
+p7h5t3e48||Kidney problems
+p7h5t3e49||Leg cramps
+p7h5t3e50||Liver Problems (Hepatotoxicity)
+p7h5t3e51||Loss of Libido
+p7h5t3e52||Low Blood Pressure (Hypotension)
+p7h5t3e53||Lung problems
+p7h5t3e54||Lymphedema
+p7h5t3e55||Memory loss
+p7h5t3e56||Menopause and Menopausal
+p7h5t3e57||Symptoms
+p7h5t3e58||Mood Swings
+p7h5t3e59||Mouth and Throat Sores (Myalgias)
+p7h5t3e60||Nail Changes
+p7h5t3e61||Nausea
+p7h5t3e62||Neuropathy
+p7h5t3e63||Nose bleeds
+p7h5t3e64||Numbness
+p7h5t3e65||Osteonecrosis of the Jaw
+p7h5t3e66||Osteoporosis (Bone Loss)
+p7h5t3e67||Pain
+p7h5t3e68||Phantom Breast Pain
+p7h5t3e69||Post-Traumatic Stress Disorder (PTSD)
+p7h5t3e70||Rash
+p7h5t3e71||Runny nose
+p7h5t3e72||Scar Tissue Formation
+p7h5t3e73||Seroma (FLuid Build-up)
+p7h5t3e74||Skin discoloration
+p7h5t3e75||Skin Sensitivity
+p7h5t3e76||Sore Throat
+p7h5t3e77||Swallowing Problems
+p7h5t3e78||Sweating
+p7h5t3e79||Swelling
+p7h5t3e80||Tast and smell changes
+p7h5t3e81||Urinary Tract Infection
+p7h5t3e82||Urine Discoloration
+p7h5t3e83||Vaginial Discharge
+p7h5t3e84||Vaginal Dryness
+p7h5t3e85||Vision and Eye Problems
+p7h5t3e86||Vomiting
+p7h5t3e87||Weakness
+p7h5t3e88||Weight changes

@@ -117,13 +117,14 @@
 							#{list items:disease.questions, as:'question'}
 							
 							#{if question.name.equals("GeneticRisk")}
+								
 								<div class="signupmain">
 									<div class="generaltextarea">
 											<span class="blacktext16"><strong>${question.text}</strong></span>
 									</div>
 									<div class="generalcheck">
 											#{list items:question.choices, as:'choice' }
-												<div class="healthitemCol1" style="width:285px;display: inline-block; vertical-align: top;float: none;">
+												<div class="healthitemCol1" style="display: inline-block; vertical-align: top;float: none;">
 												
 													<input name='${question.name}' type='checkbox' value="${choice}" id="${choice}"
 													#{if talkerDisease?.healthInfo?.GeneticRisk?.contains(choice) }
@@ -131,7 +132,6 @@
 													#{/if}
 													/>
 													&nbsp;<span class="blacktext14">${choice}</span>
-													
 												</div>
 											#{/list}
 									</div>
@@ -139,28 +139,28 @@
 								#{/if}
 								
 							#{if question.name.equals("TypesOfBreastCancer")}
+									
 								<div class="signupmain">
 									<div class="generaltextarea">
 											<span class="blacktext16"><strong>${question.text}</strong></span>
 									</div>
-									<div class="generalcheck">
-											#{list items:question.choices, as:'choice' }
-												<div class="healthitemCol1" style="width:285px;display: inline-block; vertical-align: top;float: none;">
-												
-													<input name='${question.name}' type='checkbox' value="${choice}" id="${choice}"
-													#{if talkerDisease?.healthInfo?.TypesOfBreastCancer?.contains(choice) }
-														checked='checked'
-													#{/if}
-													/>
-													&nbsp;<span class="blacktext14">${choice}</span>
-													
-												</div>
-											#{/list}
-									</div>
+								   <div class="generalcheck" >
+										#{list items:question.choices, as:'choice' }
+											  <div class="healthitemCol1" style="display: inline-block; vertical-align: top;float: none;">
+												<input name='${question.name}' type='checkbox' value="${choice}" id="${choice}"
+												#{if talkerDisease?.healthInfo?.TypesOfBreastCancer?.contains(choice) }
+													checked='checked'
+												#{/if}
+												/>
+												&nbsp;<span class="blacktext14">${choice}</span>
+											  </div>
+										#{/list}
+								   </div>
 								</div>							
 								#{/if}
 								
 							#{if question.name.equals("RiskFactors")}
+								
 								<div class="signupmain">
 									<div class="generaltextarea">
 											<span class="blacktext16"><strong>${question.text}</strong></span>
@@ -179,8 +179,30 @@
 												</div>
 											#{/list}
 									</div>
-								</div>							
+								</div>
 								#{/if}
+								
+								#{if question.name.equals("history")}
+								<div class="signupmain">
+									<div class="generaltextarea">
+											<span class="blacktext16"><strong>${question.text}</strong></span>
+									</div>
+									<div class="generalcheck">
+											#{list items:question.choices, as:'choice' }
+												<div class="healthitemCol1" style=" display: inline-block; vertical-align: top;float: none;">
+												
+													<input name='${question.name}' type='checkbox' value="${choice}" id="${choice}"
+													#{if talkerDisease?.healthInfo?.history?.contains(choice) }
+														checked='checked'
+													#{/if}
+													/>
+													&nbsp;<span class="blacktext14">${choice}</span>
+													
+												</div>
+											#{/list}
+									</div>
+								</div>							
+							#{/if}
 								
 							#{if (talker.connection.equals("High Risk Individual") && talker.isHighRiskQ(question.name)) || (!talker.connection.equals("High Risk Individual") && !talker.isHighRiskQ(question.name))} 
 								<div class="signupmain">

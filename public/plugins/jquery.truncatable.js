@@ -15,7 +15,7 @@
 		var options=$.extend(defaults,options);
 		return this.each(function(num){
 			//get size of only plain text, we don't need html tags
-			if(($(this).html()).search(">...more")==-1){
+			if(($(this).html()).search(">... more")==-1){
 				var plainText = $(this).html().replace(/<a[^>]*>/g, '');
 				plainText = plainText.replace(/<\/a>/g, '');
 				var stringLength=plainText.length;
