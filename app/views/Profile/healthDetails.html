@@ -113,12 +113,32 @@
 							</div>							
 							#{/else}							
 						</div>
-						#{if talker.category.equals("Breast Cancer") || talker.category.equals("Ovarian Cancer") || talker.category.equals("Melanoma") || talker.category.equals("Lung Cancer") || talker.category.equals("Colon and Rectal Cancer") || talker.category.equals("Cervical Cancer") || talker.category.equals("Uterine and Corpus Cancer")}
-							#{list items:disease.questions, as:'question'}
-							
-							#{if question.name.equals("GeneticRisk")}
+							#{if talker.category.equals("Breast Cancer") || talker.category.equals("Ovarian Cancer") || talker.category.equals("Melanoma") || talker.category.equals("Lung Cancer") || talker.category.equals("Colon and Rectal Cancer") || talker.category.equals("Cervical Cancer") || talker.category.equals("Uterine and Corpus Cancer")}
+								#{list items:disease.questions, as:'question'}
 								
-								<div class="signupmain">
+								#{if question.name.equals("GeneticRisk")}
+									<div class="signupmain" style="padding-bottom: 0px;">
+										<div class="generaltextarea">
+												<span class="blacktext16"><strong>${question.text}</strong></span>
+										</div>
+										<div class="generalcheck">
+												#{list items:question.choices, as:'choice' }
+													<div class="healthitemCol1" style="display: inline-block; vertical-align: top;float: none;">
+													
+														<input name='${question.name}' type='checkbox' value="${choice}" id="${choice}"
+														#{if talkerDisease?.healthInfo?.GeneticRisk?.contains(choice) }
+															checked='checked'
+														#{/if}
+														/>
+														&nbsp;<span class="blacktext14">${choice}</span>
+														
+													</div>
+												#{/list}
+										</div>
+									</div>							
+							#{/if}
+							#{if question.name.equals("TypesOfCancer")}
+								<div class="signupmain"  style="padding-bottom: 0px;">
 									<div class="generaltextarea">
 											<span class="blacktext16"><strong>${question.text}</strong></span>
 									</div>
@@ -127,83 +147,41 @@
 												<div class="healthitemCol1" style="display: inline-block; vertical-align: top;float: none;">
 												
 													<input name='${question.name}' type='checkbox' value="${choice}" id="${choice}"
-													#{if talkerDisease?.healthInfo?.GeneticRisk?.contains(choice) }
+													#{if talkerDisease?.healthInfo?.TypesOfCancer?.contains(choice) }
 														checked='checked'
 													#{/if}
 													/>
 													&nbsp;<span class="blacktext14">${choice}</span>
+													
 												</div>
 											#{/list}
 									</div>
 								</div>							
-								#{/if}
-								
-							#{if question.name.equals("TypesOfBreastCancer")}
-									
-								<div class="signupmain">
-									<div class="generaltextarea">
-											<span class="blacktext16"><strong>${question.text}</strong></span>
-									</div>
-								   <div class="generalcheck" >
-										#{list items:question.choices, as:'choice' }
-											  <div class="healthitemCol1" style="display: inline-block; vertical-align: top;float: none;">
-												<input name='${question.name}' type='checkbox' value="${choice}" id="${choice}"
-												#{if talkerDisease?.healthInfo?.TypesOfBreastCancer?.contains(choice) }
-													checked='checked'
-												#{/if}
-												/>
-												&nbsp;<span class="blacktext14">${choice}</span>
-											  </div>
-										#{/list}
-								   </div>
-								</div>							
-								#{/if}
-								
+							#{/if}	
 							#{if question.name.equals("RiskFactors")}
-								
-								<div class="signupmain">
+								<div class="signupmain"  style="padding-bottom: 0px;">
 									<div class="generaltextarea">
 											<span class="blacktext16"><strong>${question.text}</strong></span>
 									</div>
 									<div class="generalcheck">
 											#{list items:question.choices, as:'choice' }
 												<div class="healthitemCol1" style="display: inline-block; vertical-align: top;float: none;">
-												
-													<input name='${question.name}' type='checkbox' value="${choice}" id="${choice}"
-													#{if talkerDisease?.healthInfo?.RiskFactors?.contains(choice) }
-														checked='checked'
+													#{if choice.equals("Reproductive and menstrual history")}
+														&nbsp;<span class="blacktext14"><b>&nbsp;${choice}</b></span>
 													#{/if}
-													/>
-													&nbsp;<span class="blacktext14">${choice}</span>
-													
-												</div>
-											#{/list}
-									</div>
-								</div>
-								#{/if}
-								
-								#{if question.name.equals("history")}
-								<div class="signupmain">
-									<div class="generaltextarea">
-											<span class="blacktext16"><strong>${question.text}</strong></span>
-									</div>
-									<div class="generalcheck">
-											#{list items:question.choices, as:'choice' }
-												<div class="healthitemCol1" style=" display: inline-block; vertical-align: top;float: none;">
-												
-													<input name='${question.name}' type='checkbox' value="${choice}" id="${choice}"
-													#{if talkerDisease?.healthInfo?.history?.contains(choice) }
-														checked='checked'
-													#{/if}
-													/>
-													&nbsp;<span class="blacktext14">${choice}</span>
-													
+													#{else}
+														<input name='${question.name}' type='checkbox' value="${choice}" id="${choice}"
+														#{if talkerDisease?.healthInfo?.RiskFactors?.contains(choice) }
+															checked='checked'
+														#{/if}
+														/>
+														&nbsp;<span class="blacktext14">${choice}</span>
+													#{/else}
 												</div>
 											#{/list}
 									</div>
 								</div>							
 							#{/if}
-								
 							#{if (talker.connection.equals("High Risk Individual") && talker.isHighRiskQ(question.name)) || (!talker.connection.equals("High Risk Individual") && !talker.isHighRiskQ(question.name))} 
 								<div class="signupmain">
 								#{if question.type == models.DiseaseBean.DiseaseQuestion.DiseaseQuestionType.SELECT}

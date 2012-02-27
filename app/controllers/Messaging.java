@@ -118,7 +118,7 @@ public class Messaging  extends Controller {
 			    	if(!usrArray[index].trim().equals("")){
 						TalkerBean toTalker = null;
 						// Checking user name is valid or not
-			    		toTalker = TalkerDAO.getByUserName(usrArray[index].trim());
+			    		toTalker = TalkerDAO.getByUserNameIgnoreCase(usrArray[index].trim());
 						if(toTalker != null)
 							talkerArray[index] = toTalker;
 						else

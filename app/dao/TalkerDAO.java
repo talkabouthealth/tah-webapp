@@ -918,5 +918,22 @@ public class TalkerDAO {
 		talker.parseFromDB(talkerDBObject);
 		return talker;
 	}
+	/**
+	 * Loads a talker by userName by ignoring case
+	 */
+	public static TalkerBean getByUserNameIgnoreCase(String userName) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		DBObject query = new BasicDBObject("uname", Pattern.compile(userName.toString() , Pattern.CASE_INSENSITIVE));
+		DBObject talkerDBObject = talkersColl.findOne(query, new BasicDBObject("img", 0));
+		
+		if (talkerDBObject == null) {
+			return null;
+		}
+		else {
+			TalkerBean talker = new TalkerBean();
+			talker.parseFromDB(talkerDBObject);
+			return talker;
+		}
+	}
 }
 
