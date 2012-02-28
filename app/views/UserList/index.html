@@ -44,6 +44,17 @@
 			userForm.action = "/dashboard/userlist?id=''&password=''&action=searchUser&searchString="+searchUserName;
 			userForm.submit();
 		}
+
+		function loginAsAnotherUser(userName){
+			var userForm = document.getElementById('userForm');
+			//confirm("'admin' user is logout internally and '"+userName+"' user is logged in. Are you login as '"+userName+"' user?")
+			var confirmAlert = confirm("Are you sure to login as '"+userName+"' user?")
+			if (confirmAlert==true){
+				userForm.action = "/Userlist/loginAsAnotherUser?userName="+userName;
+				userForm.submit();
+			}else{
+			}
+		}
 	</script>
 </head>
 <body>
@@ -85,6 +96,8 @@
 															<th>User Name</th>
 															<th>Email</th>
 															<th>Connection</th>
+															<th></th>
+															<th></th>
 														</tr>
 														#{paginate.list items: list, as: 'userInfo' }
 															<tr>
@@ -93,6 +106,9 @@
 																<td>${userInfo.connection}</td>
 																<td>
 																	<a href="/dashboard/userlist?id=${userInfo.id}&action=passwordEditDisplay">Change Password</a>
+																</td>
+																<td>
+																	<a href="javascript:loginAsAnotherUser('${userInfo.userName}');">Login as user</a>
 																</td>
 															</tr>
 														#{/paginate.list}

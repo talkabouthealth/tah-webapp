@@ -22,6 +22,13 @@ public class Security extends Secure.Security {
     	return talker != null;
     }
     
+    static boolean authenticate(String usernameOrEmail, String password, boolean isHash) {
+    	if(!isHash)
+    		return authenticate(usernameOrEmail, CommonUtil.hashPassword(password));
+    	else
+    		return authenticate(usernameOrEmail, password);
+    }
+    
     /**
      * Check if authenticated user has given profile (i.e. role)
      */

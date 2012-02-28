@@ -77,4 +77,25 @@ public class UserList extends Controller{
 		}
 	}
 	
+	/**
+	 * Use for login as another user from admin. 
+	 * @param userName
+	 * @throws Throwable
+	 */
+	public static void loginAsAnotherUser(String userName) throws Throwable{
+		
+		if(userName != null && !userName.equals("")){
+			TalkerBean talkerBean = TalkerDAO.getByUserName(userName);
+			if(talkerBean != null){
+				Cache.clear();
+		        session.clear();
+		        response.removeCookie("rememberme");
+				Security.authenticate(userName, talkerBean.getPassword(),true);
+				session.put("username", talkerBean.getUserName());
+				Application.index();
+			}
+		}
+		
+	}
+	
 }
