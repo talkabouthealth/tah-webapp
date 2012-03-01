@@ -5,6 +5,7 @@ import java.util.List;
 import play.Logger;
 import play.jobs.Every;
 import play.jobs.Job;
+import play.jobs.OnApplicationStart;
 
 import dao.ConversationDAO;
 import dao.TalkerDAO;
@@ -22,7 +23,7 @@ import util.TwitterUtil;
  * Checks Twitter every minute for possible convo creations (tweets with 'talkabouthealth' and '?')
  *
  */
-@Every("10min")
+@OnApplicationStart
 public class ConvoFromTwitterJob extends Job {
 	
 	@Override

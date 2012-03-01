@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import play.jobs.Every;
 import play.jobs.Job;
+import play.jobs.OnApplicationStart;
 
 import logic.TalkerLogic;
 import models.CommentBean;
@@ -26,7 +27,7 @@ import dao.TalkerDAO;
  * Imports new thoughts from Twitter/Facebook for users with checked "SHARE_TO_THOUGHTS" option.
  *
  */
-@Every("50min")
+@OnApplicationStart
 public class ThoughtsFromServicesJob extends Job {
 	
 	@Override
