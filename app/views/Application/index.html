@@ -15,7 +15,6 @@
     <meta property="og:site_name" content="TalkAbouthealth" />
     <meta property="og:description" content="${pageDescription}"/>
 
-
     <title>TalkAboutHealth - Breast Cancer Questions and Answers. Personalized, helpful, and accurate health information.</title>
     <meta name="description" content="${pageDescription ? pageDescription : 'Breast Cancer Questions and Answers.  Personalized, helpful, and accurate health answers. We are a welcoming and caring community who have come together to meet, share, and learn with each other. We welcome patients, families, caregivers, survivors, professionals, and organizations. Everyone is encouraged to share their unique knowledge and experiences. The more we share, the more lives we improve and save.'}" /> 
     <meta name="keywords" content="${pageKeywords ? pageKeywords : 'support, health, talk'}" /> 
@@ -52,7 +51,9 @@
     <div id="bg">
         <div id="waperhome">
             <div id="headerHome">
-                <div class="logohome"><img src="/public/images/mainlogo.png" width="322" height="66" /><div style="padding-left: 50px; margin-top: -10px; font-size: small;"><font color="#20488E">You're</font><font color="#559759"> not</font><font color="#D84A94"> alone </font><font color="#A7A8AA"> ${numberOfMembers} Members | ${numberOfAnswers} Answers </font></div></div>
+                <div class="logohome"><img src="/public/images/mainlogo.png" width="322" height="66" />
+			<div style="padding-left: 50px; margin-top: -10px; font-size: small;"><font color="#20488E">You're</font><font color="#559759"> not</font><font color="#D84A94"> alone </font><font color="#A7A8AA"> ${numberOfMembers} Members | ${numberOfAnswers} Answers </font></div>
+		</div>
                 <!--searchCoverhome-->
                 <div class="headerright">
                     <div class="topmenuhome">
@@ -199,10 +200,10 @@
                     </div>
 
                     <div class="callout_center">
-				<a href="@{ViewDispatcher.view("Britta")}"><div class="callout_pic01"><img src="/public/images/Britta.gif" width="42" height="42" border="0"/></div></a>
-                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("Britta")}">Britta</a></strong> (Author and Hodgkins Disease Survivor)</div>
-				<div class="callout_pic01"><a href="@{ViewDispatcher.view("IBCnurse")}"><img src="/public/images/IBCnurse.gif" width="42" height="42" border="0"/></a></div>
-                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("IBCnurse")}">Ginny</a></strong> (17 yr survivor, Inflammatory Breast Cancer)</div>
+				<a href="@{ViewDispatcher.view("rachelpappas5")}"><div class="callout_pic01"><img src="/public/images/rachelpappas5.gif" width="42" height="42" border="0"/></div></a>
+                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("rachelpappas5")}">Rachel</a></strong> (2 yr survivor, Breast Cancer)</div>
+				<div class="callout_pic01"><a href="@{ViewDispatcher.view("DeeAnne_Barker")}"><img src="/public/images/DeeAnne_Barker.gif" width="42" height="42" border="0"/></a></div>
+                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("DeeAnne_Barker")}">Dee Anne</a></strong> (20 yr survivor, Breast Cancer)</div>
 		    </div>
 
                     <a href="@{Explore.browseMembers('active')}"><div class="callout_bottem">More Members</div></a>
@@ -213,10 +214,10 @@
                         <div class="callout_text01">Experts &amp; Providers</div>
                     </div>
 		                    <div class="callout_center">
-				<div class="callout_pic01"><a href="@{ViewDispatcher.view("Kathie-AnnJosephMDMPH")}"><img src="/public/images/Kathie-AnnJosephMDMPH.gif" width="42" height="42" border="0"/></a></div>
-                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("Kathie-AnnJosephMDMPH")}">Kathie-Ann Joseph, MD, MPH</a></strong> <br />Breast Surgeon</div>
-				<div class="callout_pic01"><a href="@{ViewDispatcher.view("dianeradfordmd")}"><img src="/public/images/dradford.jpg" width="42" height="42" border="0"/></a></div>
-                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("dianeradfordmd")}">Diane Radford, MD</a></strong> Breast Surgeon</div>
+				<div class="callout_pic01"><a href="@{ViewDispatcher.view("AnnWax")}"><img src="/public/images/annwax.gif" width="42" height="42" border="0"/></a></div>
+                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("AnnWax")}">Ann Wax, RN</a></strong> <br />Oncology Nurse</div>
+				<div class="callout_pic01"><a href="@{ViewDispatcher.view("DeborahAxelrodMD")}"><img src="/public/images/DeborahAxelrodMD.gif" width="42" height="42" border="0"/></a></div>
+                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("DeborahAxelrodMD")}">Deborah Axelrod, MD</a></strong> Breast Surgeon</div>
 		    </div>
 		    <a href="@{Static.medical_professionals()}"><div class="callout_bottem">More Medical Professionals</div></a>
                  </div>
@@ -226,10 +227,10 @@
                     <div class="callout_top03"><div class="callout_text01">Expert Workshops</div>
                     </div>
                     <div class="callout_center">
-				<a href="@{ViewDispatcher.view("DrKathleenTRuddy")}"><div class="callout_pic01"><img src="/public/images/kruddymd.jpg" width="42" height="42" border="0"/></div></a>
-                            	<div class="callout_text02"><strong>Breast Surgery</strong>, Tues., Nov. 8th <a href="@{ViewDispatcher.view("DrKathleenTRuddy")}">Dr. Ruddy</a></div>
-				<a href="@{ViewDispatcher.view("CancerQuest")}"><div class="callout_pic01"><img src="/public/images/gregg-orloff.jpg" width="42" height="42" border="0"/></div></a>
-                            	<div class="callout_text02"><strong>Cancer Biology</strong>, Tues., Nov. 15th <a href="@{ViewDispatcher.view("CancerQuest")}">Gregg Orloff, PhD</a></div>
+				<a href="@{ViewDispatcher.view("EvanLipsonMD")}"><div class="callout_pic01"><img src="/public/images/EvanLipsonMD.gif" width="42" height="42" border="0"/></div></a>
+                            	<div class="callout_text02"><strong>Melanoma Oncology</strong>, Mon., Feb. 27th <a href="@{ViewDispatcher.view("EvanLipsonMD")}">Evan Lipson, MD</a></div>
+				<a href="@{ViewDispatcher.view("MattKatz")}"><div class="callout_pic01"><img src="/public/images/mkatz.jpg" width="42" height="42" border="0"/></div></a>
+                            	<div class="callout_text02"><strong>Radiation Oncology</strong>, Tues., Feb. 28th <a href="@{ViewDispatcher.view("MattKatz")}">Matt Katz, MD</a></div>
 		    </div>
                     <a href="@{Static.workshops()}"><div class="callout_bottem">More workshops</div></a>
                 </div></div>
