@@ -923,7 +923,7 @@ public class TalkerDAO {
 	 */
 	public static TalkerBean getByUserNameIgnoreCase(String userName) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
-		DBObject query = new BasicDBObject("uname", Pattern.compile(userName.toString() , Pattern.CASE_INSENSITIVE));
+		DBObject query = new BasicDBObject("uname", Pattern.compile("^"+userName+"$" , Pattern.CASE_INSENSITIVE));
 		DBObject talkerDBObject = talkersColl.findOne(query, new BasicDBObject("img", 0));
 		
 		if (talkerDBObject == null) {

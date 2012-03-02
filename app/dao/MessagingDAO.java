@@ -480,7 +480,7 @@ public class MessagingDAO {
 		DBCollection messagesColl = getCollection(MESSAGES_COLLECTION);
 		DBObject query = null;
 		try{
-			query = new BasicDBObject("subject", Pattern.compile(messageSubject , Pattern.CASE_INSENSITIVE));
+			query = new BasicDBObject("subject",messageSubject);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
