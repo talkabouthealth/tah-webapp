@@ -145,7 +145,7 @@ public class Messaging  extends Controller {
 							messageBean.setDummyId(dummyId);
 				    		dummyId=MessagingDAO.saveMessage(messageBean);
 				    		
-				    		//sending mail to talker for direct message
+				    		//sending mail to talker whom direct message is send
 				    		Map<String, String> vars = new HashMap<String, String>();
 				    		vars.put("other_talker", talker.getUserName());
 				    		vars.put("message_text", messageBean.getText());
@@ -153,6 +153,11 @@ public class Messaging  extends Controller {
 				    		if(toTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
 				    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, toTalker, vars);
 				    		}
+				    		//sending mail to talker who send the direct message
+				    		if(talker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
+				    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, talker, vars);
+				    		}
+
 				    		//NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT_MESSAGE, toTalker, vars);
 				    		EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, EmailUtil.ADMIN_EMAIL, vars, null, false);
 				    		
@@ -174,6 +179,12 @@ public class Messaging  extends Controller {
 				    		if(toTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
 				    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, toTalker, vars);
 				    		}
+				    		//sending mail to talker who send the direct message
+				    		if(talker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
+				    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, talker, vars);
+				    		}
+
+				    		//NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT_MESSAGE, toTalker, vars);
 				    		EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, EmailUtil.ADMIN_EMAIL, vars, null, false);
 				    		
 				    		//creating index for message
@@ -360,13 +371,13 @@ public class Messaging  extends Controller {
     		vars.put("message_id", userMessage.getId());
     		
     		if(fromTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
-    			if(!talker.getUserName().equalsIgnoreCase(fromTalker.getUserName()))
-    				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, fromTalker, vars);
+    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, fromTalker, vars);
     		}
     		if(toTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
-    			if(!talker.getUserName().equalsIgnoreCase(toTalker.getUserName()))
-    				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, toTalker, vars);
+    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, toTalker, vars);
     		}
+
+    		//NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT_MESSAGE, toTalker, vars);
     		EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, EmailUtil.ADMIN_EMAIL, vars, null, false);
 	    }
 		
