@@ -49,11 +49,14 @@ public class Messaging  extends Controller {
 					replyMessageList = MessagingDAO.getMessageByRootId(message1.getId());
 					if(replyMessageList != null && replyMessageList.size() > 0){
 						message1.setDisplayMessage(replyMessageList.get(0).getText());
-						if(message1.isReadFlag())
-							message1.setReadFlag(replyMessageList.get(0).isReadFlag());
 					}
 				} else {
-					message1.setDisplayMessage( message1.getText());
+					replyMessageList = MessagingDAO.getMessageByRootId(message1.getId());
+					if(replyMessageList != null && replyMessageList.size() > 0){
+						message1.setDisplayMessage(replyMessageList.get(0).getText());
+					}else{
+						message1.setDisplayMessage( message1.getText());
+					}
 				}
 				messageList.set(index, message1);
 			}
@@ -153,13 +156,10 @@ public class Messaging  extends Controller {
 				    		if(toTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
 				    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, toTalker, vars);
 				    		}
-				    		//sending mail to talker who send the direct message
-				    		if(talker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
-				    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, talker, vars);
-				    		}
-
-				    		//NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT_MESSAGE, toTalker, vars);
-				    		EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, EmailUtil.ADMIN_EMAIL, vars, null, false);
+				    		
+				    		//sending mail to admin
+				    		//EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, EmailUtil.ADMIN_EMAIL, vars, null, false);
+				    		EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, EmailUtil.SUPPORT_EMAIL, vars, null, false);
 				    		
 				    		//creating index for message
 				    		try{
@@ -179,13 +179,9 @@ public class Messaging  extends Controller {
 				    		if(toTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
 				    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, toTalker, vars);
 				    		}
-				    		//sending mail to talker who send the direct message
-				    		if(talker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
-				    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, talker, vars);
-				    		}
-
-				    		//NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT_MESSAGE, toTalker, vars);
-				    		EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, EmailUtil.ADMIN_EMAIL, vars, null, false);
+				    		//sending mail to admin
+				    		//EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, EmailUtil.ADMIN_EMAIL, vars, null, false);
+				    		EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, EmailUtil.SUPPORT_EMAIL, vars, null, false);
 				    		
 				    		//creating index for message
 						    try{
@@ -250,8 +246,8 @@ public class Messaging  extends Controller {
 			if(startPage==0){
 				startPage=1;
 						
-				if(totalCount/CONVO_PER_PAGE >= CONVO_PER_PAGE)
-					endPage=CONVO_PER_PAGE;					//Condition for 5 page limit
+				if(totalCount/CONVO_PER_PAGE >= CONVO_PER_PAGE/2)
+					endPage=CONVO_PER_PAGE/2;					//Condition for 5 page limit
 				else{
 					endPage = totalCount / CONVO_PER_PAGE;	//if page less than 5
 					if(totalCount % CONVO_PER_PAGE > 0)
@@ -324,9 +320,12 @@ public class Messaging  extends Controller {
 		if(action != null && action.equalsIgnoreCase("sendReply")){
 			
 			MessageBean messageBean = new MessageBean();
-			messageBean.setFromTalkerId(talker.getId());		
-						
-			messageBean.setToTalkerId(userMessage.getFromTalkerId());
+			messageBean.setFromTalkerId(talker.getId());
+			if(talker.getUserName().equals(userMessage.getToTalker().getUserName())){
+				messageBean.setToTalkerId(userMessage.getFromTalkerId());
+			}else if(talker.getUserName().equals(userMessage.getFromTalker().getUserName())){
+				messageBean.setToTalkerId(userMessage.getToTalkerId());
+			}
 			messageBean.setSubject(userMessage.getSubject());
 			messageBean.setText(replyText);
 			messageBean.setReadFlag(false);
@@ -351,8 +350,13 @@ public class Messaging  extends Controller {
 					userMessage.setReplied(true);
 					userMessage.setTime(new Date());
 				}	
-				userMessage.setReadFlag(false);
-				userMessage.setReadFlagSender(false);
+				//userMessage.setReadFlag(false);
+				//userMessage.setReadFlagSender(false);
+				if(userMessage.getToTalkerId().equals(talker.getId())){
+					userMessage.setReadFlagSender(false);
+				}else{
+					userMessage.setReadFlag(false);
+				}
 				userMessage.setDeleteFlag(false);
 				userMessage.setDeleteFlagSender(false);
 				MessagingDAO.updateMessage(userMessage);
@@ -371,14 +375,17 @@ public class Messaging  extends Controller {
     		vars.put("message_id", userMessage.getId());
     		
     		if(fromTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
-    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, fromTalker, vars);
+    			if(!talker.getUserName().equalsIgnoreCase(fromTalker.getUserName()))
+    				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, fromTalker, vars);
     		}
     		if(toTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
-    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, toTalker, vars);
+    			if(!talker.getUserName().equalsIgnoreCase(toTalker.getUserName()))
+    				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, toTalker, vars);
     		}
 
-    		//NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT_MESSAGE, toTalker, vars);
-    		EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, EmailUtil.ADMIN_EMAIL, vars, null, false);
+    		//sending mail to admin
+    		//EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, EmailUtil.ADMIN_EMAIL, vars, null, false);
+    		EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, EmailUtil.SUPPORT_EMAIL, vars, null, false);
 	    }
 		
 		if(userMessage != null){
@@ -635,8 +642,8 @@ public class Messaging  extends Controller {
 		if(startPage==0){
 			startPage=1;
 					
-			if(totalCount/CONVO_PER_PAGE >= CONVO_PER_PAGE)
-				endPage=CONVO_PER_PAGE;					//Condition for 5 page limit
+			if(totalCount/CONVO_PER_PAGE >= CONVO_PER_PAGE/2)
+				endPage=CONVO_PER_PAGE/2;					//Condition for 5 page limit
 			else{
 				endPage = totalCount / CONVO_PER_PAGE;	//if page less than 5
 				if(totalCount % CONVO_PER_PAGE > 0)
