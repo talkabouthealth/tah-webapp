@@ -1,0 +1,102 @@
+#{extends 'main.html' /}
+
+	<style>
+	</style>
+
+	<!-- scripts -->
+	<script type="text/javascript">
+		function checkForm() {
+			$("#loginform").submit();
+		}
+
+		$(document).ready(function() {
+			$('.textfields').keypress(function(e){
+				if (e.which == 13) {
+					$("#loginform").submit();
+
+			       e.preventDefault();
+				   return false;
+			    }
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<div id="top_container">
+		<div id="top">
+			#{ common/logo /}
+		</div>
+		<div id="innerbanner"></div>
+		<div id="innermain">
+			#{if flash.verifiedEmail}
+				<div class="blacktext2" id="innerheading" style="font-weight: normal;">Congratulations! Email verified.</div>
+				<div style="font-size: 18px;">Sign in below to be matched with others and get immediate answers and support.</div>
+			#{/if}
+			#{else}
+				<div class="blacktext2" id="innerheading">Login to your Account</div>
+			#{/else}
+			<div id="innermiddlearea">
+				<div id="loginarea">
+				#{form @authenticate() , id: 'loginform'} 
+					#{if flash.error}
+						<p class="error">
+							&{flash.error}
+						</p>
+					#{/if}
+<<<<<<< HEAD
+=======
+
+>>>>>>> 63828c6ed9a5b990ab4bd1b77cbde8199a32d2e8
+					<input type="hidden" name="url" value="${flash.url}" />
+					<h1>Username or Email</h1>
+					<div class="fieldarea">
+						<div class="fieldarealeft"></div>
+						<div class="fieldareamid">
+							<input type="text" name="username" id="username" 
+								class="textfields" value="${ play.mode == play.Play.Mode.DEV ? 'kangaroo' : flash.username}" tabindex="1" />
+						</div>
+						<div class="fieldarearight"></div>
+					</div>
+					<h1>Password</h1>
+					<div class="fieldarea">
+						<div class="fieldarealeft"></div>
+						<div class="fieldareamid">
+							<input name="password"  type="password" class="textfields" id="password" 
+								onclick="this.value=''" value="${ play.mode == play.Play.Mode.DEV ? '123456' : '' }" tabindex="2" /></div>
+						<div class="fieldarearight"></div>
+						<div class="checkboxarea">
+							<input type="checkbox" name="remember" id="remember" 
+								class="checkboxclass" value="true" ${flash.remember ? 'checked="true"' : ''} />Remember me
+						</div>
+						<div class="forgotpassword"><a href="@{Application.forgotpassword()}" class="bluetext12">Forgot password?</a></div>
+					</div>
+					<div class="signupbutton">
+						<a tabindex="3" onclick="checkForm()" href="#">
+							<img src="/public/images/signinbutton.gif" border="0" width="126" height="46" />
+						</a>
+					</div>
+					<div class="newusersignup">
+						Not a User ? <br>
+						<a href="@{Application.signup()}" class="bluetext14">Create your account</a>
+					</div>
+				#{/form}
+				</div>
+				
+				<div id="rightarea">
+					Or Sign in with one-click
+					<div class="socialicons">
+						<ul class="socialicons1">
+							<li><a href="#" onclick="openFacebook()">
+									<img src="/public/images/signinfacebook.gif" width="150" height="22" border="0" />
+							</a></li>
+							<li><a href="#" onclick="openTwitter()">
+									<img src="/public/images/signintwitter.gif" width="150" height="22" border="0" />
+							</a></li>
+							<!-- <li><a href="#"><img src="images/signingoogle.gif" width="150" height="22" border="0" /></a></li> -->
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
