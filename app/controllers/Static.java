@@ -133,5 +133,8 @@ public class Static extends Controller {
    public static void past_workshops() {
     	render();
    }
+   public static void trained_peer_support_program() {
+    	render();
+   }
 
 }

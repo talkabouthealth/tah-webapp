@@ -68,13 +68,13 @@
                                 <li class="lisep"> </li>
                                 <li><a href="@{Static.howitworks()}">How it works</a></li>
                                 <li class="lisep"> </li>
-                                <li><a href="@{Explore.conversations('feed')}">Recent Questions</a></li>
+                                <li><a href="@{Explore.conversations('feed')}">Questions</a></li>
                                 <li class="lisep"> </li>
                                 <li><a href="@{Explore.browseTopics()}">Topics</a></li>
                                 <li class="lisep"> </li>
-                                <li><a href="http://blog.talkabouthealth.com">Blog</a></li>
+                                <li><a href="@{Static.trained_peer_support_program()}">Peer Support</a></li>
                                 <li class="lisep"> </li>
-                                <li><a href="@{Static.aboutus()}">Who are we?</a></li>
+                                <li><a href="@{Static.aboutus()}">About us</a></li>
                             </ul>
                         </div>
                         <!--nav-->
@@ -184,15 +184,17 @@
         <div class="callout_box_center">
             <div class="callout_box01">
                 <div class="callout_inner">
-                    <div class="callout_top"><div class="callout_text01">Find your answers</div>
+                    <div class="callout_top"><div class="callout_text01">Trained Peer Support</div>
                     </div>
-                    <div class="callout_center"><div class="callout_bg02"><div class="callout_pic01"><img src="/public/images/img_01.jpg" width="42" height="42" /></div>
-                            <div class="callout_text02">Can yoga help with <br />
-                                breast cancer recovery?</div>
-                        </div><div class="callout_bg03"><div class="callout_text03">Yes, the benefits of<br />
-                                yoga are multiple ...</div><div class="callout_pic01"><img src="/public/images/img_02.jpg" width="42" height="42" /></div>
-                        </div></div>
-                    <a href="@{Explore.conversations('feed')}"><div class="callout_bottem">View more answers...</div></a>
+                    <div class="callout_center">
+				<a href="@{ViewDispatcher.view("Viva")}"><div class="callout_pic01"><img src="/public/images/Viva.gif" width="42" height="42" border="0"/></div></a>
+                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("Viva")}">Viva</a></strong> (SHARE trained peer supporter and survivor)</div>
+				<div class="callout_pic01"><a href="@{ViewDispatcher.view("Melissa")}"><img src="/public/images/Melissa.gif" width="42" height="42" border="0"/></a></div>
+                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("Melissa")}">Melissa</a></strong> (SHARE trained peer supporter and survivor)</div>
+		    </div>
+
+
+                    <a href="@{Static.trained_peer_support_program()}"><div class="callout_bottem">Trained Support Program</div></a>
                 </div>
             </div>
             <div class="callout_box01"><div class="callout_inner">
@@ -227,7 +229,7 @@
                     <div class="callout_top03"><div class="callout_text01">Expert Workshops</div>
                     </div>
                     <div class="callout_center">
-				<a href="@{ViewDispatcher.view("DeborahAxelrodMD")}"><div class="callout_pic01"><img src="/public/images/EvanLipsonMD.gif" width="42" height="42" border="0"/></div></a>
+				<a href="@{ViewDispatcher.view("DeborahAxelrodMD")}"><div class="callout_pic01"><img src="/public/images/DeborahAxelrodMD	.gif" width="42" height="42" border="0"/></div></a>
                             	<div class="callout_text02"><strong>Breast Surgery</strong>, Mon., Mar. 5th <a href="@{ViewDispatcher.view("DeborahAxelrodMD")}">Deborah Axelrod, MD</a></div>
 				<a href="@{ViewDispatcher.view("StevenTuckerMD")}"><div class="callout_pic01"><img src="/public/images/mkatz.jpg" width="42" height="42" border="0"/></div></a>
                             	<div class="callout_text02"><strong>Oncology</strong>, Tues., Mar. 6th <a href="@{ViewDispatcher.view("StevenTuckerMD")}">Steven Tucker, MD</a></div>
