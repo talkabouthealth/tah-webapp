@@ -211,7 +211,7 @@ public class Explore extends Controller {
 		
 		//Move members to particular tabs based on member's connection
 		Map<String, Set<TalkerBean>> members = new LinkedHashMap<String, Set<TalkerBean>>();
-		members.put("Experts", new LinkedHashSet<TalkerBean>());
+		members.put("Professionals", new LinkedHashSet<TalkerBean>());
 		members.put("Patients", new LinkedHashSet<TalkerBean>());
 		members.put("Former Patients", new LinkedHashSet<TalkerBean>());
 		//members.put("Parents", new LinkedHashSet<TalkerBean>());
@@ -400,7 +400,7 @@ public class Explore extends Controller {
 			}
 		} else {
 			List<String> memberTypeEntry = null;
-			if("Experts".equals(feedType))
+			if("Professionals".equals(feedType))
 				memberTypeEntry = TalkerBean.PROFESSIONAL_CONNECTIONS_LIST;
 			else if("Patients".equals(feedType))
 				memberTypeEntry = Arrays.asList("Just Diagnosed","Current Patient");
