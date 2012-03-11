@@ -76,16 +76,17 @@
                     </tr><!--profiletxtCantant-->
                     <tr>
                       <td class="profileCantanttxtLeft"><strong>Member Since:&nbsp;</strong>${talker.regDate.format('MMM. yyyy')}</td>
-                      <td class="profileCantanttxt2">
+                  	<td class="profileCantanttxtLeft">
+                      	<strong>&nbsp;Questions:&nbsp;</strong>
+                      	<a style="text-decoration: none" href="@{PublicProfile.conversations(talker.name)}">${numOfStartedConvos}</a>
+                      </td>   
+		<!--    <td class="profileCantanttxt2">
                       	<strong>Top Answers:&nbsp;</strong>
                       	<a style="text-decoration: none" href="@{PublicProfile.answers(talker.name)}">${numOfTopAnswers}</a>
-                      </td>
+                      </td>-->
                     </tr><!--profiletxtCantant-->
                     <tr>
-                      <td class="profileCantanttxtLeft">
-                      	<strong>Questions:&nbsp;</strong>
-                      	<a style="text-decoration: none" href="@{PublicProfile.conversations(talker.name)}">${numOfStartedConvos}</a>
-                      </td>                      
+                                       
                       <td class="profileCantanttxt2">
                       	<strong>Answers:&nbsp;</strong>
                       	<a style="text-decoration: none" href="@{PublicProfile.answers(talker.name)}">${numOfAnswers}</a>
