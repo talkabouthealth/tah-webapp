@@ -716,7 +716,7 @@
 				<div class="Statics">
 					<div class="Staticsh1">Question Statistics</div>
 					<p style="color:#000000">
-						<strong>Latest Activity:</strong> ${latestActivityTime?.format('MM / dd / yyyy')} <br />
+						<!--<strong>Latest Activity:</strong> ${latestActivityTime?.format('MM / dd / yyyy')} <br />-->
 						<strong>Views:</strong> ${convo.views}<br />
 						<strong>Followed By:</strong> ${convo.followers?.size()} members<br/>
 						#{if talker}
@@ -782,13 +782,13 @@
 							<input type="submit" class="inline_add" 
 								value="Add" style="margin-left: 7px;" />
 						</div>
-					</div>
+					</div><br/>
 				</div>
 				<div class="topicborder"></div>
 				<div class="cb"></div>
 			</div><!--topipsts-->
 			<div class="topipsts">
-				<div class="inline-edit" id="followupConvosEdit" style="padding-bottom: 3px;">
+				<!--<div class="inline-edit" id="followupConvosEdit" style="padding-bottom: 3px;">
 					<div class="inline_display">
 						<div class="Staticsh1" style="float:left; padding:10px 0 0 0;">Follow-up Questions</div>
 						<div class="inline_full" style="display: ${convo.followupConvos ? 'block' : 'none'}">
@@ -808,7 +808,7 @@
 								<div class="targetenew"> <a class="inline_addlink" href="#">Add a new follow up question</a> </div>
 							#{/if}
 						</div>
-		            </div>
+		            		</div>
 					<div class='inline_form'>
 						<div class="Staticsh1" style="float:left; padding:10px 0 0 0;">Follow-up Questions</div>
 						<div style="float:left; font-size: 14px;">Add a follow up question</div>
@@ -832,11 +832,12 @@
 					</div>
 				</div>
 				<div class="topicborder"></div>
-				<div class="cb"></div>
+				<div class="cb"></div>-->
 			</div><!--topipsts-->
 			#{set currentPage = 'conversationSummary' /}
 			#{include 'Upcoming_Workshops.html' /}
 			#{common/popularTopics popularTopics: popularTopics /}
+			#{include 'SHARE_trained_peer_support.html' /}
 			#{include 'SHARE_telephone_support.html' /}
 			#{include 'tahHowYouCanHelp.html' /}
 			#{include 'shareWidgets.html' /}

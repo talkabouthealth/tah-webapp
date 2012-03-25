@@ -94,6 +94,8 @@ a img { border: none; }
 .search { float:left; width:199px; height:22px; padding-top:5px;padding-bottom:6px;border-bottom:1px solid #c9c9c9;  border-top:1px solid #c9c9c9; border-left:0px solid #ffffff; border-right:0px solid #ffffff;  }
 #searcharea { float:left; width:199px; background:url(../images/searchleft.gif) no-repeat left; padding-left:6px; height:35px; }
 #searchright {float:left; width:34px;  height:35px;}
+
+
 #innermid { float:left; width:683px; border-left: 1px solid #c9c9c9; border-right: 1px solid #c9c9c9;  }
 .area { float:left; padding:10px; width:663px; border-bottom:1px dashed #c9c9c9;}
 .arealeft2 {float:left; padding-right:15px; width:71px; text-align:center;}
@@ -361,7 +363,8 @@ a.blacktext12:hover {text-decoration: none; color: #000000;}
 .textgreylight12 {font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none; color: #7c7c7c; line-height:16px;}
 a.blacktextgrey18:hover {text-decoration: none; color: #434242;}
 .greytext {font-family: arial; font-size: 11px; font-weight: bold; text-decoration: none; color: #434242;}
-a.blacktextgrey14:hover {text-decoration: none; color: #434242;}
+a.blacktextgrey14 { color:#434242; text-decoration:none;}
+a.blacktextgrey14:hover {text-decoration: underline; color: #434242;}
 .greytext {font-family: arial; font-size: 11px; font-weight: bold; text-decoration: none; color: #434242;}
 a.greytext:hover {text-decoration: none; color: #434242;}
 .bluetext2 {font-family: arial; font-size: 11px; font-weight: bold; text-decoration: none; color: #1550a4;}
@@ -723,6 +726,10 @@ a.visited { font-weight:bold;font-family: arial; font-size: 11px;text-decoration
     background-repeat: no-repeat;
     color: #0286BC;
     text-decoration: none;
+}
+.blacktextgrey15 a:hover {
+	color:#0286BC;
+	text-decoration:underline;
 }
 .mtrighttxt1u{
     font-size: 16px;
