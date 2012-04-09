@@ -210,7 +210,7 @@ public class Explore extends Controller {
 		
 		//Move members to particular tabs based on member's connection
 		Map<String, Set<TalkerBean>> members = new LinkedHashMap<String, Set<TalkerBean>>();
-		members.put("Professionals", new LinkedHashSet<TalkerBean>());
+		members.put("Experts", new LinkedHashSet<TalkerBean>());
 		members.put("Patients", new LinkedHashSet<TalkerBean>());
 		members.put("Former Patients", new LinkedHashSet<TalkerBean>());
 		//members.put("Parents", new LinkedHashSet<TalkerBean>());
@@ -422,7 +422,7 @@ public class Explore extends Controller {
 			}
 		} else {
 			List<String> memberTypeEntry = null;
-			if("Professionals".equals(feedType))
+			if("Experts".equals(feedType))
 				memberTypeEntry = TalkerBean.PROFESSIONAL_CONNECTIONS_LIST;
 			else if("Patients".equals(feedType))
 				memberTypeEntry = Arrays.asList("Just Diagnosed","Current Patient");
@@ -489,5 +489,27 @@ public class Explore extends Controller {
 		} else {
 			renderText("Error");
 		}
+	}
+    /**
+	 * Page to displaying topics information
+	 * 
+	 */
+	public static void topics() {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
+		List<DiseaseBean> diseaseList1 = null;
+		List<DiseaseBean> diseaseList2 = null;
+		List<DiseaseBean> diseaseList3 = null;
+		int size = 0;
+  		if(diseaseList != null && diseaseList.size() > 0){
+  			int mod = diseaseList.size()%3;
+      		size = diseaseList.size()/3;
+      		if(mod > 0)
+      			size = size + 1;
+      		diseaseList1 = diseaseList.subList(0, size);
+      		diseaseList2 = diseaseList.subList(size, size + size);
+      		diseaseList3 = diseaseList.subList(size + size, diseaseList.size());
+  		}
+		render(talker,diseaseList1,diseaseList2,diseaseList3);
 	}
 }

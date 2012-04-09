@@ -664,7 +664,7 @@ public class Profile extends Controller {
 		//For now onwards it will show talker disease specifications
 		final String diseaseName =  talker.getCategory();//"Breast Cancer";
 
-		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
+		List<TalkerDiseaseBean> talkerDiseaseList = TalkerDiseaseDAO.getListByTalkerId(talker.getId());
 		DiseaseBean disease = DiseaseDAO.getByName(talker.getCategory());
 
 		//Load all healthItems for this disease
@@ -673,10 +673,20 @@ public class Profile extends Controller {
 				"procedures", "treatments", "sideeffects"}) {
 			HealthItemBean healthItem = HealthItemDAO.getHealthItemByName(itemName, diseaseName);
 			if(healthItem != null)
-				if(healthItem.getChildren() != null && healthItem.getChildren().size() > 0)
+				if(healthItem.getChildren() != null && healthItem.getChildren().size() > 0){
 					healthItemsMap.put(itemName, healthItem);
+				}
 		}
+		TalkerDiseaseBean talkerDisease = new TalkerDiseaseBean();
 		
+		if(talkerDiseaseList != null){
+			for(TalkerDiseaseBean diseaseBean : talkerDiseaseList){
+				if(diseaseBean != null && diseaseBean.getDiseaseName().equalsIgnoreCase(talker.getCategory())){
+					talkerDisease = diseaseBean;
+				}
+			}
+		}
+		talkerDisease.setHealthItemsMap(healthItemsMap);
 		render(talker, talkerDisease, disease, healthItemsMap, verifiedEmail);
 	}
 
@@ -697,6 +707,9 @@ public class Profile extends Controller {
 		Date diagnoseDate = CommonUtil.parseDate(talkerDisease.getDiagnoseMonth(), 1, talkerDisease.getDiagnoseYear());
 		talkerDisease.setDiagnoseDate(diagnoseDate);
 		
+		
+		talkerDisease.setDiseaseName(talker.getCategory());
+		talkerDisease.setDefault(true);
         /*
 		//Automatically follow topics based on HealthInfo
 		List<TopicBean> recommendedTopics = TalkerLogic.getTopicsByHealthInfo(talkerDisease);
@@ -708,7 +721,7 @@ public class Profile extends Controller {
 		}
 		*/
 		//Save or update
-		TalkerDiseaseDAO.saveTalkerDisease(talkerDisease);
+		TalkerDiseaseDAO.saveTalkerDisease(talkerDisease, talker.getId());
 		
 		ActionDAO.saveAction(new UpdateProfileAction(talker, ActionType.UPDATE_HEALTH));
 		Cache.replace("healthItemsMap", null);
@@ -843,7 +856,7 @@ public class Profile extends Controller {
 		renderText("ok");
 	}
 	
-	public static void categoryList(){
+	public static void categoryList(String community){
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
 		/*DiseaseBean bean12 = null;
@@ -862,6 +875,32 @@ public class Profile extends Controller {
 			}
 		}*/
 
-		render("tags/profile/healthCommunity.html", diseaseList,talker);
+		render("tags/profile/healthCommunity.html", diseaseList,talker,community);
+	}
+	
+	/**
+	 * Update talkers health community
+	 * @param community
+	 */
+	public static void updateHealthCommunity(String community, String operation){
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		DiseaseBean diseaseBean = DiseaseDAO.getByName(community);
+		if(diseaseBean != null){
+			if(operation != null && operation.equalsIgnoreCase("ADD"))
+				talker.setCategory(diseaseBean.getName());
+			else if(operation != null && operation.equalsIgnoreCase("REMOVE")){
+				talker.setCategory(null);
+				if(talker.getOtherCategories() != null && talker.getOtherCategories().length > 0){
+					String category = talker.getOtherCategories()[0];
+					String[] otherCategories = new String[talker.getOtherCategories().length-1];
+					for(int index = 1 ; index < talker.getOtherCategories().length; index++)
+						otherCategories[index-1] = talker.getOtherCategories()[index];
+					talker.setOtherCategories(otherCategories);
+					talker.setCategory(category);
+				}
+			}
+			TalkerDAO.updateTalker(talker);
+		}
+		renderText("Ok");
 	}
 }

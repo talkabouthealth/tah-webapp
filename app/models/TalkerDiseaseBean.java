@@ -22,6 +22,9 @@ public class TalkerDiseaseBean {
 	
 	private String healthBio;
 	
+	private String diseaseName;
+	private boolean isDefault;
+	
 	private Date symptomDate;
 	private int symptomMonth;
 	private int symptomYear;
@@ -85,11 +88,15 @@ public class TalkerDiseaseBean {
 	public String getHealthBio() { return healthBio; }
 	public void setHealthBio(String healthBio) { this.healthBio = healthBio; }
 	
+	public String getDiseaseName() { return diseaseName; }
+	public void setDiseaseName(String diseaseName) { this.diseaseName = diseaseName; }
+
+	public boolean isDefault() { return isDefault; }
+	public void setDefault(boolean isDefault) { this.isDefault = isDefault; }
+
 	private boolean isNestedNotEmpty(HealthItemBean healthItem, TalkerDiseaseBean talkerDisease) {
 		boolean flag=false;
-		
 		if(healthItem == null) return false;
-		
 		for(HealthItemBean item : healthItem.getChildren()) {
 			if(item.getChildren().size()>0) {
 				flag = isNestedNotEmpty(item,talkerDisease);
@@ -99,12 +106,12 @@ public class TalkerDiseaseBean {
 			}
 			if(flag) return true;
 		}
-
 		return flag;
 	}
 	
 
 	public boolean isEmpty(String submap) {
+		
 		// if there is no health-items-map -- probably nothing, return Empty
 		if(healthItemsMap==null) return true;
 		
