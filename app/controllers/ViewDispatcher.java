@@ -235,11 +235,15 @@ public class ViewDispatcher extends Controller {
 		List<Action> answersFeed = new ArrayList<Action>();
 		int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeed, false);
 		int numOfAnswers = answersFeed.size();
+		answersFeed.clear();
 		
 		if(talkerDisease != null) {
 			talkerDisease.setHealthItemsMap(healthItemsMap);
 			talkerDisease.setDiseaseQuestions(disease);
 		}
+		
+		if(currentTalker != null)
+			session.put("inboxUnreadCount", MessagingDAO.getUnreadMessageCount(currentTalker.getId()));
 		
 		render("PublicProfile/newview.html", talker, disease, talkerDisease, healthItemsMap, 
 				currentTalker, talkerFeed,
