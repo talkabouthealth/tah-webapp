@@ -165,30 +165,33 @@ public class TalkerDiseaseDAO {
 		}
 		
 		TalkerDiseaseBean talkerDisease = new TalkerDiseaseBean();
-		talkerDisease.setUid(talkerId);
-		talkerDisease.setRecurrent((String)diseaseDBObject.get("recur"));
-		talkerDisease.setSymptomDate((Date)diseaseDBObject.get("symp_date"));
-		talkerDisease.setDiagnoseDate((Date)diseaseDBObject.get("diag_date"));
-		talkerDisease.setHealthBio((String)diseaseDBObject.get("health_bio"));
-		
-		DBObject healthInfoDBObject = (DBObject)diseaseDBObject.get("health_info");
-		if (healthInfoDBObject != null) {
-			talkerDisease.setHealthInfo(healthInfoDBObject.toMap());
-		}
-		
-		talkerDisease.setHealthItems(getStringSet(diseaseDBObject, "healthitems"));
-		
-		Collection<DBObject> otherItemsList = (Collection<DBObject>)diseaseDBObject.get("other_healthitems");
-		if (otherItemsList != null) {
-			Map<String, List<String>> otherHealthItems = new HashMap<String, List<String>>();
+		try{
+			talkerDisease.setUid(talkerId);
+			talkerDisease.setRecurrent((String)diseaseDBObject.get("recur") == null ? "" : (String)diseaseDBObject.get("recur"));
+			talkerDisease.setSymptomDate((Date)diseaseDBObject.get("symp_date"));
+			talkerDisease.setDiagnoseDate((Date)diseaseDBObject.get("diag_date"));
+			talkerDisease.setHealthBio((String)diseaseDBObject.get("health_bio") == null ? "" : (String)diseaseDBObject.get("health_bio"));
 			
-			for (DBObject otherDBObject : otherItemsList) {
-				String otherName = (String)otherDBObject.get("name");
-				otherHealthItems.put(otherName, getStringList(otherDBObject, "values"));
+			DBObject healthInfoDBObject = (DBObject)diseaseDBObject.get("health_info");
+			if (healthInfoDBObject != null) {
+				talkerDisease.setHealthInfo(healthInfoDBObject.toMap());
 			}
-			talkerDisease.setOtherHealthItems(otherHealthItems);
+			
+			talkerDisease.setHealthItems(getStringSet(diseaseDBObject, "healthitems"));
+			
+			Collection<DBObject> otherItemsList = (Collection<DBObject>)diseaseDBObject.get("other_healthitems");
+			if (otherItemsList != null) {
+				Map<String, List<String>> otherHealthItems = new HashMap<String, List<String>>();
+				
+				for (DBObject otherDBObject : otherItemsList) {
+					String otherName = (String)otherDBObject.get("name");
+					otherHealthItems.put(otherName, getStringList(otherDBObject, "values"));
+				}
+				talkerDisease.setOtherHealthItems(otherHealthItems);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
-		
 		return talkerDisease;
 	}
 	

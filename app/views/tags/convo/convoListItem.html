@@ -1,10 +1,20 @@
 <div class="joinbox" id="${_convo.id}">
 	<div class="joinpic">
-		#{talker/talkerImageLink size: 48, userName: _convo.talker.name /}
+		#{if _convo.comments != null && _convo.comments.size() > 0}
+			#{talker/talkerImageLink size: 48, userName: _convo.comments.get(0).fromTalker.name /}
+		#{/if}
+		#{else}
+			#{talker/talkerImageLink size: 48, userName: _convo.talker.name /}
+		#{/else}
 	</div>
 	<div class="jointxtbox">
 		<div class="jointextstop">
 			<a href="@{ViewDispatcher.view(_convo.mainURL)}">${_convo.topic}</a>
+		</div>
+		<div class="jointxtlink2 moretext">
+			#{if _convo.comments != null && _convo.comments.size() > 0}
+				${_convo.comments.get(0).text.raw()}
+			#{/if}
 		</div>
 		<div class="joinztextlink">
 			<!-- <span>3 members speaking</span> |  --> 
@@ -27,13 +37,30 @@
 				#{/else}
 			#{/else}
 			
-			<span>Started ${_convo.creationDate.since()}</span>
+			<span>
+			#{if _convo.comments != null && _convo.comments.size() > 0}
+				${_convo.comments.get(0).time.since()}
+			#{/if}
+			#{else}
+				${_convo.creationDate.since()}
+			#{/else}
+			</span>
 		</div>
 		<div class="jointxtlink1">
-			Conversation by 
-			#{talker/talkerLink talker: _convo.talker /}
+			New answer by 
+			#{if _convo.comments != null && _convo.comments.size() > 0}
+				#{talker/talkerLink talker: _convo.comments.get(0).fromTalker /}
+			#{/if}
+			#{else}
+				#{talker/talkerLink talker: _convo.talker /}
+			#{/else}
 			<span class="blacktext12">
-				#{talker/talkerInfo talker: _convo.talker /}
+				#{if _convo.comments != null && _convo.comments.size() > 0}
+					#{talker/talkerInfo talker: _convo.comments.get(0).fromTalker /}
+				#{/if}
+				#{else}
+					#{talker/talkerLink talker: _convo.talker /}
+				#{/else}
 			</span>
 		</div>
 		<div class="jointxtlink2"></div>
