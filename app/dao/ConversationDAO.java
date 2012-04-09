@@ -165,6 +165,7 @@ public class ConversationDAO {
 			.add("modified_date", new Date())
 			.add("question_state", convo.getQuestionState())
 			
+			.add("category", convo.getCategory())
 			.add("other_disease_categories", convo.getOtherDiseaseCategories())
 			.get();
 		

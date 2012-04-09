@@ -69,6 +69,7 @@ public class Explore extends Controller {
 	
 	public static void openQuestions() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
+    	boolean loggedIn = (talker != null);
     	boolean newsLetterFlag = false;
     	
     	if (talker != null) {
