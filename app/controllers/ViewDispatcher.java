@@ -155,13 +155,21 @@ public class ViewDispatcher extends Controller {
 		
 		final String diseaseName = talker.getCategory();
 		DiseaseBean disease = DiseaseDAO.getByName(diseaseName);
-		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
+		List<TalkerDiseaseBean> talkerDiseaseList = TalkerDiseaseDAO.getListByTalkerId(talker.getId());
+		TalkerDiseaseBean talkerDisease = null;
+		if(talkerDiseaseList != null){
+			for(TalkerDiseaseBean diseaseBean : talkerDiseaseList){
+				if(diseaseBean != null && diseaseBean.getDiseaseName().equalsIgnoreCase(talker.getCategory())){
+					talkerDisease = diseaseBean;
+				}
+			}
+		}
 		if (talkerDisease != null) {
 			talkerDisease.setName(diseaseName);
 		}
 
 		//Load all healthItems for this disease
-		Map<String, HealthItemBean> healthItemsMap = TalkerLogic.loadHealthItemsFromCache(diseaseName);
+		Map<String, HealthItemBean> healthItemsMap = TalkerLogic.loadHealthItemsFromCache(diseaseName , false);
 		
 		int numOfStartedConvos = ConversationDAO.getNumOfStartedConvos(talker.getId());
 		

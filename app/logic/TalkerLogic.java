@@ -1086,8 +1086,10 @@ public class TalkerLogic {
 		return allTopics;
 	}
 	
-	public static Map<String, HealthItemBean> loadHealthItemsFromCache(String diseaseName) {
-		Map<String, HealthItemBean> healthItemsMap = (Map<String, HealthItemBean>) Cache.get("healthItemsMap");
+	public static Map<String, HealthItemBean> loadHealthItemsFromCache(String diseaseName, boolean loadCache) {
+		Map<String, HealthItemBean> healthItemsMap = null;
+		if(loadCache)
+			healthItemsMap = (Map<String, HealthItemBean>) Cache.get("healthItemsMap");
 		if (healthItemsMap == null) {
 			healthItemsMap = new HashMap<String, HealthItemBean>();
 			for (String itemName : new String[] {"symptoms", "tests", 
