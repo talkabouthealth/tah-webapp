@@ -1,58 +1,41 @@
 package dao;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import static util.DBUtil.createRef;
+import static util.DBUtil.getBoolean;
+import static util.DBUtil.getCollection;
+import static util.DBUtil.parseSet;
+import static util.DBUtil.setToDB;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import logic.FeedsLogic;
 import logic.TalkerLogic;
-import models.CommentBean;
-import models.EmailBean;
 import models.IMAccountBean;
 import models.PrivacySetting;
+import models.TalkerBean;
+import models.ThankYouBean;
 import models.PrivacySetting.PrivacyType;
 import models.PrivacySetting.PrivacyValue;
 import models.ServiceAccountBean.ServiceType;
-import models.TalkerBean;
-import models.ThankYouBean;
-import models.ConversationBean;
-import models.actions.Action;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.lucene.analysis.cn.ChineseTokenizer;
 import org.bson.types.ObjectId;
 
-import play.Logger;
-import play.mvc.Scope.Session;
-
-import util.CommonUtil;
-import util.DBUtil;
 import util.EmailUtil;
 import util.EmailUtil.EmailTemplate;
 
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.QueryBuilder;
-
-import static util.DBUtil.*;
 
 public class TalkerDAO {
 	
@@ -70,7 +53,7 @@ public class TalkerDAO {
 				.add("verify_code", talker.getVerifyCode())
 				.add("dob", talker.getDob())
 				.add("timestamp",  Calendar.getInstance().getTime())
-				.add("category", talker.getCategory())
+				.add("category", talker.getCategory() == null ? null : talker.getCategory().equals("") ? null : talker.getCategory())
 				.add("connection", talker.getConnection())
 				.add("connection_verified", talker.isConnectionVerified())
 				.add("suspended",false)
@@ -923,8 +906,8 @@ public class TalkerDAO {
 	 */
 	public static TalkerBean getByUserNameIgnoreCase(String userName) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
-		DBObject query = new BasicDBObject("uname", Pattern.compile("^"+userName+"$" , Pattern.CASE_INSENSITIVE));
-		DBObject talkerDBObject = talkersColl.findOne(query, new BasicDBObject("img", 0));
+		DBObject query = new BasicDBObject("uname",Pattern.compile("^"+userName+"$" , Pattern.CASE_INSENSITIVE));
+		DBObject talkerDBObject = talkersColl.findOne(query);
 		
 		if (talkerDBObject == null) {
 			return null;

@@ -13,6 +13,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.bson.types.ObjectId;
 
@@ -438,7 +439,7 @@ public class ApplicationDAO {
 		}
 		
 		DBCollection namesColl = getCollection(NEWSLETTER_COLLECTION);
-		DBObject query = new BasicDBObject("email", userName);
+		DBObject query = new BasicDBObject("email", Pattern.compile("^"+userName+"$" , Pattern.CASE_INSENSITIVE));
 		return namesColl.findOne(query) != null;
 	}
 	

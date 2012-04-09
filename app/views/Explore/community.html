@@ -1,0 +1,71 @@
+#{extends 'main.html' /}
+	<style type="text/css">
+		#innermiddlearea { padding-top: 10px }
+	</style>
+	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
+	<script type="text/javascript">
+		var feedsPerPage = ${logic.FeedsLogic.FEEDS_PER_PAGE};
+	</script>
+		
+<div id="managtopic1">
+  <div id="managtopic">
+  	#{include 'header.html' /}
+  	<div id="bottom_container">
+      	<div class="haderbanner"><div id="innerbanner"></div></div>
+        <div id="targetedtherapy">
+
+          <div id="innermiddlearea">
+            <div id="mtcover">
+              <div id="mtleft">
+                <div class="mtcontent">
+                  <div class="topipcWraper">
+					<div class="cb"></div>
+						<div class="topic">
+	                      <div class="newpage1">${cancerType} Questions and Answers</div>
+	
+	                      <div class="cb"></div>
+	                      <div class="joinborder"></div>
+	                      <div class="cb"></div>
+	                      <div class="topic">
+	                        <div id="communityFeedList">
+		                    	#{list items: communityFeed, as: 'activity'}
+									#{feed/feedActivity activity: activity, talker: talker /}
+								#{/list}
+							</div>
+							
+								#{if communityFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+									<div class="replytommentbox" id="recentConvoBtn">
+			                          <input type="submit" src="images/seemore.jpg" 
+			                          	onclick="return loadMoreCommunityFeed('communityFeed', '${cancerType}');" value=" " class="seemorecom" />
+			                        </div>
+								#{/if}
+							
+	                        <div class="cb"></div>
+	                      </div>
+	                      <!--newpageCover-->
+	                      <div class="cb"></div>
+	                    </div> 
+                    <div class="cb"></div>
+                  <!--topipcWraper-->
+
+                  <div class="cb"></div>
+                </div>
+                <!--mtcontent-->
+                
+                <div class="cb"></div>
+              </div>
+              <!--mtleft-->
+              
+              <div class="cb"></div>
+          </div>
+          <!--mtcover-->
+            #{ include 'right.html' /}
+          <div class="cb"></div>
+
+        </div>
+        <div id="signupright"></div>
+      </div>
+    </div>
+  </div>
+<!-- Mask to cover the whole screen -->
+<div id="mask"></div>    

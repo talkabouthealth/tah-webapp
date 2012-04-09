@@ -37,7 +37,8 @@ GET		/community/breast-cancer				Community.viewCommunity
 *		/search/conversations					Explore.searchConversations
 GET		/openquestions/?						Explore.openQuestions
 GET		/livechats/?							Explore.liveTalks
-GET		/explore/topics/?						Explore.browseTopics
+
+
 GET		/explore/conversationfeed/?				Explore.conversations(action:'feed')
 GET		/explore/popular/?						Explore.conversations(action:'popular')
 GET		/explore/expert/?						Explore.conversations(action:'expert')
@@ -45,6 +46,8 @@ GET		/explore/open/?							Explore.conversations(action:'open')
 GET		/explore/feedAjaxLoad					Explore.feedAjaxLoad
 GET		/explore/ajaxLoadMoreUser				Explore.ajaxLoadMoreUser
 GET		/explore/communityFeedAjaxLoad			Explore.communityFeedAjaxLoad
+GET		/explore/topics							Explore.topics
+GET		/explore/{cancerType}					Explore.community
 
 GET		/home/?									Home.index
 GET		/conversationfeed/?						Home.conversationFeed

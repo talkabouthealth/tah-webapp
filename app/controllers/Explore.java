@@ -490,6 +490,93 @@ public class Explore extends Controller {
 			renderText("Error");
 		}
 	}
+	/**
+	 * Page with conversations feed of particular disease
+	 * @param cancerType
+	 */
+	public static void community(String cancerType) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		boolean loggedIn = (talker != null);
+		Set<Action> communityFeed = null;
+		boolean newsLetterFlag=false;
+		boolean rewardLetterFlag=false;
+		if(talker != null){
+			
+			talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
+			 newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
+		}
+		if(cancerType == null || (cancerType != null && cancerType.equals("")))
+			cancerType = "Breast Cancer";
+		else
+			cancerType = cancerType.replaceAll("_", " ");
+		
+		if(cancerType.equalsIgnoreCase("All Cancers")){
+			communityFeed = FeedsLogic.getAllCancerFeed(null, loggedIn, talker);
+		}else{
+			boolean isValid = false;
+			List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
+			for(int index = 0; index < diseaseList.size(); index++){
+				if(diseaseList.get(index).getName().equalsIgnoreCase(cancerType)){
+					isValid = true;
+					cancerType = diseaseList.get(index).getName();
+					break;
+				}
+			}
+			if(isValid){
+				if(talker != null){
+					String category = talker.getCategory();
+					talker.setCategory(cancerType);
+					String[] otherCategories = talker.getOtherCategories();
+					String[] otherCat = new String[1];
+					otherCat[0] = cancerType;
+					talker.setOtherCategories(otherCat);
+					communityFeed = FeedsLogic.getCommunityFeed(null, loggedIn, talker);
+					talker.setCategory(category);
+					talker.setOtherCategories(otherCategories);
+				}else{
+					talker = new TalkerBean();
+					talker.setCategory(cancerType);
+					String[] otherCat = new String[1];
+					otherCat[0] = cancerType;
+					talker.setOtherCategories(otherCat);
+					communityFeed = FeedsLogic.getCommunityFeed(null, loggedIn, talker);
+					talker = null;
+				}
+			}else{
+				notFound("The page you requested was not found.");
+			}
+		}
+				render(communityFeed, cancerType,talker,rewardLetterFlag,newsLetterFlag);
+	}
+	
+	/**
+	 * Used by "More" button in community feeds.
+	 * @param afterActionId load actions after given action
+	 */
+    public static void communityFeedAjaxLoad( String afterActionId, String feedType, String cancerType) {
+    	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
+    	boolean loggedIn = (_talker != null);
+    	Set<Action> _feedItems = null;
+    	if (feedType != null && feedType.equals("communityFeed")) {
+    		
+    		if(_talker != null){
+				String category = _talker.getCategory();
+				_talker.setCategory(cancerType);
+				_feedItems = FeedsLogic.getCommunityFeed(afterActionId, loggedIn, _talker);
+				_talker.setCategory(category);
+			}else{
+				_talker = new TalkerBean();
+				_talker.setCategory(cancerType);
+				_talker.setOtherCategories(new String[0]);
+				_feedItems = FeedsLogic.getCommunityFeed(afterActionId, loggedIn, _talker);
+				_talker = null;
+			}
+     		render("tags/feed/feedList.html", _feedItems, _talker);
+     	} else if(feedType != null && feedType.equals("allFeed")) {
+    		_feedItems = FeedsLogic.getAllCancerFeed(afterActionId, loggedIn, _talker);
+    		render("tags/feed/feedList.html", _feedItems, _talker);
+    	}
+    }
     /**
 	 * Page to displaying topics information
 	 * 
