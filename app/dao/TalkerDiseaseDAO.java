@@ -167,10 +167,10 @@ public class TalkerDiseaseDAO {
 		TalkerDiseaseBean talkerDisease = new TalkerDiseaseBean();
 		try{
 			talkerDisease.setUid(talkerId);
-			talkerDisease.setRecurrent((String)diseaseDBObject.get("recur") == null ? "" : (String)diseaseDBObject.get("recur"));
+			talkerDisease.setRecurrent((String)diseaseDBObject.get("recur"));
 			talkerDisease.setSymptomDate((Date)diseaseDBObject.get("symp_date"));
 			talkerDisease.setDiagnoseDate((Date)diseaseDBObject.get("diag_date"));
-			talkerDisease.setHealthBio((String)diseaseDBObject.get("health_bio") == null ? "" : (String)diseaseDBObject.get("health_bio"));
+			talkerDisease.setHealthBio((String)diseaseDBObject.get("health_bio"));
 			
 			DBObject healthInfoDBObject = (DBObject)diseaseDBObject.get("health_info");
 			if (healthInfoDBObject != null) {
