@@ -244,6 +244,7 @@ public abstract class AbstractAction implements Action {
 				}
 			}
 			comment.setChildren(childrenList);
+			childrenIdsList.clear();
 		}
     	return comment;
 	}

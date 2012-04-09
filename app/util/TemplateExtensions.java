@@ -144,5 +144,22 @@ public class TemplateExtensions extends JavaExtensions {
 		String htmlText = CommonUtil.commentToHTML(thoughtOrAnswer);
 		return JavaExtensions.raw(htmlText);
 	}
-
+	
+	public static Object printMessage(MessageBean message,String userName) {
+		String text = message.getText();
+		if (text == null) {
+			return "";
+		}
+		String htmlText = text;
+		htmlText = htmlText.replace("\n", "<br/>");
+		return JavaExtensions.raw(htmlText);
+	}
+	
+	public static Object convertToURL(String text) {
+		if (text == null) {
+			return "";
+		}
+		text = text.replaceAll(" ", "_");
+		return text;
+	}
 }

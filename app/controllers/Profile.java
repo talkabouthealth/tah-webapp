@@ -302,6 +302,7 @@ public class Profile extends Controller {
 			talker.setOtherCategories(otherCategories.toArray(new String[]{}));
 		}
 		CommonUtil.updateTalker(talker, session);
+		otherCategories.clear();
 		
 		//used for menu displaying
 		if (talker.isProf()) {

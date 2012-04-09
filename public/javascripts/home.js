@@ -136,16 +136,16 @@ function initHomeTabs() {
 		var id = $(this).attr("id");
 		var cancerType = id.substring(0,id.lastIndexOf("CommunityFeed"));
 		//$("#cancerFeed").html("");
-		$("#ajaxLoading").appendTo($("#cancerFeed")).show();
 		if(cancerType != ""){
+			$("#ajaxLoading").appendTo($("#cancerFeed")).show();
 			$(".tabContent").hide();
 			$.get("/home/loadCancerFeed", {cancerType: cancerType},
 					function(data) {
 						
 						$("#cancerFeed").html(data);
 						
-						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '' });
-						$('.moretext2').truncatable({ limit: 220, more: '... more', less: true, hideText: '' });
+						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+						$('.moretext2').truncatable({ limit: 220, more: '... more', less: true, hideText: '...less' });
 						//$("#ajaxLoading").hide();
 					}
 				);	

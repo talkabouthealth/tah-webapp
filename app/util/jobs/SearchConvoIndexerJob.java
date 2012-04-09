@@ -18,7 +18,7 @@ import play.jobs.Job;
 
 import util.SearchUtil;
 
-@Every("13min")
+//@Every("10min")
 public class SearchConvoIndexerJob extends Job{
 	int limit=10;
 	@Override

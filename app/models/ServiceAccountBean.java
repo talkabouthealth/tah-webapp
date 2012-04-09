@@ -55,6 +55,9 @@ public class ServiceAccountBean implements DBModel {
 	//checked settings
 	private Map<String, String> settings;
 	
+	public ServiceAccountBean(){
+		
+	}
 	public ServiceAccountBean(String id, String userName, ServiceType type) {
 		this.id = id;
 		this.userName = userName;

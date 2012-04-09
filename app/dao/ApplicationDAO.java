@@ -122,7 +122,7 @@ public class ApplicationDAO {
 				}
 			}
 		}
-		
+		talkersDBList.clear();
 		return newTalkers;
 	}
 	
@@ -174,7 +174,7 @@ public class ApplicationDAO {
 	 * New users/Experts - users signed up or logged in date descending order
 	 * Using to 20 users only for the list on profile page for recommendations.
 	 */
-	public static List<TalkerBean> getTalkersInOrder(TalkerBean talkerBean,boolean memberFlag,String afterActionId) {
+	public static List<TalkerBean> getTalkersInOrder(TalkerBean talkerBean,boolean memberFlag,String afterActionId,List<TalkerBean> newTalkers) {
 		DBCollection loginsColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
 		List<String> list = TalkerBean.PROFESSIONAL_CONNECTIONS_LIST;
 		BasicDBList basicDBList = new BasicDBList();
@@ -196,55 +196,79 @@ public class ApplicationDAO {
 					//.add("category", new BasicDBObject("$in", cat) )
 					.add("timestamp", new BasicDBObject("$lt", date) )
 					.add("connection_verified",true)
+					.add("deactivated", new BasicDBObject("$ne", true))
+					.add("suspended",new BasicDBObject("$ne", true))
+					.add("uname",new BasicDBObject("$ne", "admin"))
+					.add("_id",new BasicDBObject("$ne",talkerBean.getId()))
 					.get();
 			}else{
 				query = BasicDBObjectBuilder.start()
-					.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList ))
-					//.add("category", new BasicDBObject("$in", cat) )
-					.add("timestamp", new BasicDBObject("$lt", date)  )
-					.get();
+				.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList ))
+				//.add("category", new BasicDBObject("$in", cat) )
+				.add("timestamp", new BasicDBObject("$lt", date) )
+				.add("deactivated", new BasicDBObject("$ne", true))
+				.add("suspended",new BasicDBObject("$ne", true))
+				.add("uname",new BasicDBObject("$ne", "admin"))
+				.add("_id",new BasicDBObject("$ne",talkerBean.getId()))
+				.get();
 			}
 		}else{
 			if(memberFlag){
 				query = BasicDBObjectBuilder.start()
 					.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList ))
 					//.add("category", new BasicDBObject("$in", cat) )
+					.add("deactivated", new BasicDBObject("$ne", true))
+					.add("suspended",new BasicDBObject("$ne", true))
+					.add("uname",new BasicDBObject("$ne", "admin"))
+					.add("_id",new BasicDBObject("$ne",talkerBean.getId()))
 					.add("connection_verified",true)
 					.get();
 			}else{
 				query = BasicDBObjectBuilder.start()
 					.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList ))
+					.add("deactivated", new BasicDBObject("$ne", true))
+					.add("suspended",new BasicDBObject("$ne", true))
+					.add("uname",new BasicDBObject("$ne", "admin"))
+					.add("_id",new BasicDBObject("$ne",talkerBean.getId()))
 					//.add("category", new BasicDBObject("$in", cat) )
 					.get();
 			}
 		}
 		
 		DBObject fields = TalkerDAO.getBasicTalkerFields();
-		List<DBObject> talkersDBList = loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).toArray();
+		List<DBObject> talkersDBList = loginsColl.find(query, fields).limit(20).sort(new BasicDBObject("timestamp", -1)).toArray();
 			
-		List<TalkerBean> newTalkers = getTalkers(talkersDBList,talkerBean);
-		
+		 newTalkers.addAll(getTalkers(talkersDBList,talkerBean));
+		/*
 		//If member size is zero then again displays members from latest date
 		if(newTalkers.size()==0){
-			if(memberFlag){
-				query = BasicDBObjectBuilder.start()
-					.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList ))
-					//.add("category", new BasicDBObject("$in", cat) )
-					.add("connection_verified",true)
-					.get();
-			}else{
-				query = BasicDBObjectBuilder.start()
-					.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList ))
-					//.add("category", new BasicDBObject("$in", cat) )
-					.get();
-			}
+						if(memberFlag){
+							query = BasicDBObjectBuilder.start()
+								.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList ))
+								//.add("category", new BasicDBObject("$in", cat) )
+								.add("connection_verified",true)
+								.get();
+						}else{
+							query = BasicDBObjectBuilder.start()
+								.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList ))
+								//.add("category", new BasicDBObject("$in", cat) )
+								.get();
+						}
+						
 			fields = TalkerDAO.getBasicTalkerFields();
-			talkersDBList = loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).toArray();
+			talkersDBList = loginsColl.find(query, fields).limit(3).sort(new BasicDBObject("timestamp", -1)).toArray();
 			
-			newTalkers = getTalkers(talkersDBList,talkerBean);
-		}
+			newTalkers.addAll(getTalkers(talkersDBList,talkerBean));
+		}*/
 		
 		//Collections.sort(newTalkers, new TalkerBean());
+		if(newTalkers.size()<3){
+			  afterActionId=talkersDBList.get(talkersDBList.size()-1).get("_id").toString();
+			  newTalkers.addAll(getTalkersInOrder(talkerBean,memberFlag,afterActionId,newTalkers));
+		}else{
+			return newTalkers;
+		}
+		
 		return newTalkers;
 	}
 	
@@ -263,7 +287,7 @@ public class ApplicationDAO {
 			talker.setId(getString(talkerDBObject, "_id"));
 			if (!newTalkers.contains(talker)) {
 				talker.parseBasicFromDB(talkerDBObject);
-				if (!(talker.isSuspended() || talker.isDeactivated() || talker.isAdmin() || talkerBean.equals(talker) || talkerBean.getFollowingList().contains(talker))){
+				if (!(talkerBean.getFollowingList().contains(talker))){
 					DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talker.getId());
 					query = BasicDBObjectBuilder.start().add("uid", talkerRef).get();
 					List<DBObject> loginTime= loginHistoryCollection.find(query).toArray();

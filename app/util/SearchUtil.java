@@ -205,7 +205,7 @@ public class SearchUtil {
 		return searchQuery;
 	}
 	
-	private static String escapeString(String searchTerm){
+	public static String escapeString(String searchTerm){
 		if(searchTerm.contains("(")) searchTerm = searchTerm.replace("(", "\\(");
 		if(searchTerm.contains(")")) searchTerm = searchTerm.replace(")", "\\)");
 		if(searchTerm.contains("[")) searchTerm = searchTerm.replace("[", "\\[");
@@ -219,6 +219,8 @@ public class SearchUtil {
 		if(searchTerm.contains("*")) searchTerm = searchTerm.replace("*", "\\*");
 		if(searchTerm.contains("?")) searchTerm = searchTerm.replace("?", "\\?");
 		if(searchTerm.contains("!")) searchTerm = searchTerm.replace("!", "\\!");
+		if(searchTerm.contains("#")) searchTerm = searchTerm.replace("#", "\\#");
+		if(searchTerm.contains("\"")) searchTerm = searchTerm.replace("\"", "\\\"");
 		return(searchTerm);
 	}
 	

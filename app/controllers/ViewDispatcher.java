@@ -327,6 +327,7 @@ public class ViewDispatcher extends Controller {
 			if(openConvosSaved.size() >= FeedsLogic.FEEDS_PER_PAGE)
 				break;
 		}
+		openConvos.clear();
 		
 		//- "Popular Conversations" - topic conversations ordered by page views
 		List<ConversationBean> popularConvos1 = new ArrayList<ConversationBean>(topic.getConversations());
@@ -337,6 +338,7 @@ public class ViewDispatcher extends Controller {
 				popularConvos.add(conversationBean);
 			//}
 		}
+		popularConvos1.clear();
 		Collections.sort(popularConvos);
 		//Added code for adding pagination to the popular topic section on topic page
 		if(popularConvos.size() >= FeedsLogic.FEEDS_PER_PAGE){
@@ -356,9 +358,13 @@ public class ViewDispatcher extends Controller {
 				topicMentions.add(action);
 			//}
 		}
+		topicMentions1.clear();
 		if(topicMentions.size() >= FeedsLogic.FEEDS_PER_PAGE){
 			topicMentions = topicMentions.subList(0, FeedsLogic.FEEDS_PER_PAGE);	
 		}
+		
+		if(talker != null)
+			session.put("inboxUnreadCount", MessagingDAO.getUnreadMessageCount(talker.getId()));
 		
 		render("Topics/viewTopic.html", talker, topic, activities, openConvosSaved,
 				popularConvos, trendingConvos, topicMentions,newsLetterFlag);

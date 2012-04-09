@@ -6,12 +6,21 @@
 	<script type="text/javascript">
 		var feedsPerPage = ${logic.FeedsLogic.FEEDS_PER_PAGE};
 		var action = '${action}';
-	
+
+		var popularConvo=0;
+		var recentConvo=1;
+		var expertConvo=0;
+		var openConvo=0;
+		
 		$(document).ready(function() {
-			initNewTabs();
+			initTabs();
 
    			if (action === 'popular') {
-   	   			$("#popularConvos").click();
+   	   			$("#popularConvo").click();
+   			}else if (action === 'expert') {
+   	   			$("#expertConvo").click();
+   			}else if (action === 'open') {
+   	   			$("#openConvo").click();
    			}
 
 			$(".flagConvoLink").click(function() {
@@ -20,6 +29,44 @@
 				showPopup("#flagPopup", 200);
 			});
 		});
+		
+		function initTabs(){
+			$(".tabLink").click(function() {
+				$(".newActiveTab").removeClass("newActiveTab").addClass("newTab");
+				$(this).parent().removeClass("newTab").addClass("newActiveTab");
+				
+				var id = $(this).attr("id");
+				$(".tabContent").hide();
+				$(".replytommentbox").hide();
+				
+				if(id=='popularConvo' && popularConvo==0 ){
+					$.get("/Explore/ajaxFeedUpdate",{ type : 'popularConvo' },function(data){
+						popularConvo=1;
+						$("#"+id+"Div").html(data);
+				    });	
+				}else if(id=='expertConvo' && expertConvo==0){
+					$.get("/Explore/ajaxFeedUpdate",{ type : 'expertConvo' },function(data){
+						expertConvo=1;
+						$("#"+id+"Div").html(data);
+					});
+				}else if(id=='openConvo' && openConvo ==0){
+					$.get("/Explore/ajaxFeedUpdate",{ type : 'openConvo' },function(data){
+						openConvo=1;
+						$("#"+id+"Div").html(data);
+					});
+				}
+				
+				$("#"+id+"Content").fadeIn();
+				
+				$("#"+id+"Notifications").addClass("morenotification");
+				
+				//Code to show hide respective buttons also
+				$("#"+id+"Btn").fadeIn();
+				
+				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+				return false;
+			});
+		}
 	</script>
 		
 <div id="managtopic1">
@@ -35,30 +82,31 @@
                 <div class="mtcontent">
                   <div class="topipcWraper">
                   	<div class="newTabCover">
-					  <div class="newActiveTab"><a href="#" id="convoFeed" class="tabLink">Community Conversation Feed</a></div>
-					  <div class="newTab"><a href="#" id="popularConvos" class="tabLink">Popular Questions</a></div>
+					  <div class="newActiveTab"><a href="#" id="recentConvo" class="tabLink">Recent Questions</a></div>
+					  <div class="newTab"><a href="#" id="expertConvo" class="tabLink">Expert Answers</a></div>
+					  <div class="newTab"><a href="#" id="popularConvo" class="tabLink">Popular Answers</a></div>
+					  <div class="newTab"><a href="#" id="openConvo" class="tabLink">Unanswered Questions</a></div>
 					  <div class="laborder"></div>
 					</div>
 					<div class="cb"></div>
 					<div>
-						<div id="convoFeedContent" class="tabContent">	
+						<div id="recentConvoContent" class="tabContent">	
 							<div class="topic">
-		                      <div class="newpage1">Community Conversation Feed</div>
-		
+		                      <div class="newpage1">Recent Questions</div>
 		                      <div class="cb"></div>
 		                      <div class="joinborder"></div>
 		                      <div class="cb"></div>
 		                      <div class="topic">
-		                        <div id="communityFeedList">
-			                    	#{list items: communityFeed, as: 'activity'}
+		                        <div id="recentConvoList">
+			                    	#{list items: recentConvo, as: 'activity'}
 										#{feed/feedActivity activity: activity, talker: talker /}
 									#{/list}
 								</div>
 								
-									#{if communityFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
-										<div class="replytommentbox" id="communityFeedBtn">
+									#{if recentConvo.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+										<div class="replytommentbox" id="recentConvoBtn">
 				                          <input type="submit" src="images/seemore.jpg" 
-				                          	onclick="return loadMoreFeedWithoutLogin('communityFeed');" value=" " class="seemorecom" />
+				                          	onclick="return loadMoreFeedWithoutLogin('recentConvo');" value=" " class="seemorecom" />
 				                        </div>
 									#{/if}
 								
@@ -68,26 +116,58 @@
 		                      <div class="cb"></div>
 		                    </div> 
 						</div>
-						<div id="popularConvosContent" class="tabContent" style="display: none;">
+						<div id="expertConvoContent" class="tabContent" style="display: none;">
 							<div class="topic">
-		                      <div class="newpage1">Popular Questions</div>
+		                      <div class="newpage1">Expert Answers</div>
 		
 		                      <div class="cb"></div>
 		                      <div class="joinborder"></div>
 		                      <!--mtinputbox-->
 		                      <div class="cb"></div>
 		                      <div class="topic" >
-			                      <div id="popularConvoList">
-			                        #{list items: popularConvos, as: 'convo' }
-										#{convo/convoListItem convo: convo, talker: talker /}
-									#{/list}
+		                      <div id="expertConvoDiv"> 
+			                      <div id="expertConvoList">
 			                      </div>
-			                      #{if popularConvos.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
-										<div class="replytommentbox" id="popularConvosBtn">
-				                          <input type="submit" src="images/seemore.jpg" 
-				                          	onclick="return loadMoreFeedWithoutLogin('popularConvo');" value=" " class="seemorecom" />
-				                        </div>
-									#{/if}
+			                   </div>	
+									<div class="cb"></div>
+								</div>
+		                      <!--newpageCover-->
+		                      <div class="cb"></div>
+		                    </div> 
+						</div>
+						<div id="popularConvoContent" class="tabContent" style="display: none;">
+							<div class="topic">
+		                      <div class="newpage1">Popular Answers</div>
+		
+		                      <div class="cb"></div>
+		                      <div class="joinborder"></div>
+		                      <!--mtinputbox-->
+		                      <div class="cb"></div>
+		                      <div class="topic" >
+			                  <div id="popularConvoDiv">    
+			                      <div id="popularConvoList">
+			                      </div>
+			                    </div>  
+									<div class="cb"></div>
+								</div>
+		                      <!--newpageCover-->
+		                      <div class="cb"></div>
+		                    </div> 
+						</div>
+						
+						<div id="openConvoContent" class="tabContent" style="display: none;">
+							<div class="topic">
+		                      <div class="newpage1">Unanswered Questions </div>
+		
+		                      <div class="cb"></div>
+		                      <div class="joinborder"></div>
+		                      <!--mtinputbox-->
+		                      <div class="cb"></div>
+		                      <div class="topic" >
+							  <div id="openConvoDiv">		                      
+			                      <div id="openConvoList">
+			                      </div>
+			                  </div>
 									<div class="cb"></div>
 								</div>
 		                      <!--newpageCover-->

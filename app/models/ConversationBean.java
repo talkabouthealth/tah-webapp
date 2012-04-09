@@ -260,6 +260,7 @@ public class ConversationBean implements Comparable<ConversationBean> {
     	}
     	setMembers(members);
     	setMessages(messages);
+    	messages.clear();
 	}
 	
 	private void parseSumContributors(Collection<DBRef> contributorsDBList) {
@@ -483,6 +484,7 @@ public class ConversationBean implements Comparable<ConversationBean> {
 				topicsTitles.add(topic.getTitle());
 			}
 			pageKeywords = TemplateExtensions.toCommaString(topicsTitles, null);
+			topicsTitles.clear();
 		}
 		return pageKeywords;
 	}

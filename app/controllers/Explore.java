@@ -74,14 +74,13 @@ public class Explore extends Controller {
     	if (talker != null) {
     		TalkerLogic.preloadTalkerInfo(talker);
     		newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
-    		openQuestions = ConversationDAO.getOpenQuestions(talker,true);
-    	}else
-    		openQuestions = ConversationDAO.getOpenQuestions(talker,false);
+    		rewardLetterFlag=ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
+    	}
     	int limit = session.get("topicCount")==null?TopicLogic.TOPICS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
     	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics(limit);
+		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions(talker,loggedIn);
 		
-		
-		render(talker, openQuestions, popularTopics,newsLetterFlag);
+		render(talker, openQuestions, popularTopics,newsLetterFlag,rewardLetterFlag);
     }
     
     public static void liveTalks() {
@@ -283,7 +282,7 @@ public class Explore extends Controller {
 	public static void conversations(String action) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		boolean loggedIn = (talker != null);
-		Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, loggedIn, talker);
+		Set<Action> recentConvo = FeedsLogic.getAllCancerFeed(null, loggedIn, talker);
 		
 		List<TopicBean> popularTopics = null;
     	if (talker == null) {
@@ -292,7 +291,7 @@ public class Explore extends Controller {
     	}
     	
     	//For removing answer from feed list which have moderate no moderate value or value as "Delete Answer"
-		Iterator<Action> communityFeedIter = communityFeed.iterator();
+		//Iterator<Action> recentConvosIter = recentConvos.iterator();
 		/* 
 		while (communityFeedIter.hasNext()) {
 			 Action actionIterator = communityFeedIter.next();
@@ -320,11 +319,13 @@ public class Explore extends Controller {
 		 */
 		 
 		//"Popular Conversations" - ordered by page views
-		List<ConversationBean> popularConvos = ConversationDAO.loadPopularConversations(null);
+    	
+    	
+		//List<ConversationBean> popularConvo = ConversationDAO.loadPopularAnswers("popular",null);
 		
 		//For removing answer from feed list which have moderate value as "Delete Answer"
-		for(int index = 0; index < popularConvos.size(); index++){
-			 ConversationBean conversationBean = popularConvos.get(index);
+		/*for(int index = 0; index < popularConvo.size(); index++){
+			 ConversationBean conversationBean = popularConvo.get(index);
 			 List<CommentBean> answerList = CommentsDAO.loadConvoAnswersTree(conversationBean.getId());
 			 for(int index1 = 0; index1 < answerList.size(); index1++){
 				 CommentBean commentBean = answerList.get(index1);
@@ -339,15 +340,30 @@ public class Explore extends Controller {
 				 }
 				 conversationBean.setComments(answerList);
 			 }
-		 }
+		 }*/
 		//Set<Action> popularConvos = FeedsLogic.getPopularConvoFeed(null);
 		
 		if (action == null) {
 			action = "feed";
 		}
-		render(action, communityFeed, popularConvos, popularTopics);
+		render(action, recentConvo, popularTopics);
 	}
-	
+	public static void ajaxFeedUpdate(String type){
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		boolean loggedIn = (talker != null);
+		
+		if(type.equals("popularConvo")){
+			List<ConversationBean> popularConvo = ConversationDAO.loadPopularAnswers("popular",null);
+			render("Explore/feedList.html",popularConvo, type);
+		}if(type.equals("expertConvo")){
+			System.out.println("expert Convo.........:");
+			List<ConversationBean> expertConvo = ConversationDAO.loadPopularAnswers("expert",null);
+			render("Explore/feedList.html",expertConvo, type);
+		}if(type.equals("openConvo")){
+			List<ConversationBean> openConvo = ConversationDAO.getOpenQuestions(talker,loggedIn);
+			render("Explore/feedList.html",openConvo, type);
+		}
+	}
 	/**
 	 * Used by "More" button in different feeds.
 	 * @param afterActionId load actions after given action
@@ -365,9 +381,15 @@ public class Explore extends Controller {
     		_feedItems = FeedsLogic.getCommunityFeed(afterActionId, loggedIn, _talker);
     		render("tags/feed/feedList.html", _feedItems, _talker);
     	} else if ("popularConvo".equalsIgnoreCase(feedType)){
-    	     popularConvos = ConversationDAO.loadPopularConversations(afterActionId);
+    	     popularConvos = ConversationDAO.loadPopularAnswers("popular",afterActionId);
     	     render("tags/convo/convoList.html", popularConvos);
-        } else if("USR".equalsIgnoreCase(feedType) || "EXP".equalsIgnoreCase(feedType)){
+        }else if ("recentConvo".equalsIgnoreCase(feedType)){
+        	_feedItems = FeedsLogic.getAllCancerFeed(afterActionId, loggedIn, _talker);
+    		render("tags/feed/feedList.html", _feedItems, _talker);
+	    }else if ("expertConvo".equalsIgnoreCase(feedType)){
+	   	     popularConvos = ConversationDAO.loadPopularAnswers("expert",afterActionId);
+		     render("tags/convo/convoList.html", popularConvos);
+	    }else if("USR".equalsIgnoreCase(feedType) || "EXP".equalsIgnoreCase(feedType)){
     		_similarMembers = TalkerLogic.getRecommendedTalkers(_talker,feedType,afterActionId);
     		render("tags/profile/similarMemberList.html", _similarMembers);
     	} else if("TOPIC".equals(feedType)) {
@@ -412,14 +434,14 @@ public class Explore extends Controller {
 				memberTypeEntry = Arrays.asList("Caregiver");*/
 			else if("Family & Friends".equals(feedType))
 				memberTypeEntry = Arrays.asList("Family member", "Friend","Parent","Caregiver");
-			else if("Breast Cancer".equals(feedType)){
+			/*else if("Breast Cancer".equals(feedType)){
 				memberTypeEntry = Arrays.asList(null,"Breast Cancer");
 				loadFlag = true;
-			} else {  //if("Ovarian Cancer".equals(feedType)){ //Ovarian Cancer  
+			}*/ else {  //if("Ovarian Cancer".equals(feedType)){ //Ovarian Cancer  
 				feedType = feedType.replaceAll("&", "and");
 				if("Non Hodgkin Lymphoma".equals(feedType))
 					feedType = "Non-Hodgkin Lymphoma";
-				memberTypeEntry = Arrays.asList(feedType); //Ovarian Cancer
+				memberTypeEntry = Arrays.asList(feedType);
 				loadFlag = true;
 			}
 			List<TalkerBean> allActiveTalkers = null;

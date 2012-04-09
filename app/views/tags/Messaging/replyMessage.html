@@ -6,7 +6,7 @@
 	          <div class="kanpic1" style="margin-top: 10px;">#{talker/talkerImageLink size: 40, userName: messageInfo.fromTalker.userName /}</div>
 	          <div class="Kantxtemail" style="width: 525px;margin-top: 10px;"><a href="@{ViewDispatcher.view(messageInfo.fromTalker.userName)}">${messageInfo.fromTalker.userName}</a><br />
 	            <span class="Kandate"> ${messageInfo.displayDate}</span>
-	            <p>${messageInfo.text}</p>
+	            <p>${messageInfo.printMessage(session.username)}</p>
 	          </div>
 	    </div>
          #{/list}

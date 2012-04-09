@@ -2,6 +2,20 @@
 <link href="/public/stylesheets/home.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="/public/javascripts/home.js" ></script>
 <script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
+<script type="text/javascript" src="/public/plugins/widget.js" ></script>
+<script type="text/javascript" src="/public/plugins/SmoothDivScroll.js"></script>
+<link href="/public/stylesheets/smoothDivScroll.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+		#makeMeScrollable div.scrollWrapper
+		{
+			width: 556px;
+		}
+		#makeMeScrollable div.scrollingHotSpotRight{
+		left: 606px;
+		}
+	body { font-family:arial;font-size:11px; }
+		
+</style>
 <script type="text/javascript">
 var username = "${talker.userName}";
 var feedsPerPage = ${logic.FeedsLogic.FEEDS_PER_PAGE};
@@ -326,31 +340,28 @@ function updateFeed(type,talkerName) {
 					  #{/if}
 	                    <div class="newpageCover">  
 							<div class="newTabCover">
-							<div id='mycustomscroll2' class='flexcroll' style="margin-bottom: 15px;">
-    						<div class='fixedwidth'>
-							  <div class="newTab">
+							<div id="makeMeScrollable">
+				 			<div class="newTab" style="width: auto;">
 							  	<!-- <a href="#" id="convoFeed" class="tabLink">Your Conversation Feed</a>  -->
-							  	<a href="#" id="convoFeed" class="tabLink">Your conversations</a>
+							      <a href="#" id="convoFeed" class="tabLink">Your conversations</a>
 							  </div>
-							  <div class="newActiveTab">
+							  <div class="newActiveTab" style="width: auto;">
 							  	<a href="#" id="allFeed" class="tabLink">All Cancers</a>
-							  </div>						  
+							  </div>		
 							  #{if talker != null}
 							  		#{if allDiseaseList != null}
 								  		#{list items: allDiseaseList.keySet(), as: 'cancerType'}
-									  		<div class="newTab">
+									  	<div class="newTab" style="width: auto;">
 										  	<a href="#" id="${cancerType}CommunityFeed" class="tabLink">${cancerType.replaceAll("_", " ")}</a> <!--  Community Feed -->
-										  </div>
+										</div>
 							            #{/list}
 						            #{/if}
 							  #{/if}
 							  
-							  <div class="newTab">
+							  <div class="newTab" style="width: auto;">
 							  	<a href="#" id="mentionsTab" class="tabLink">@mentions</a>
 							  </div>
-							  <div class="laborder"></div>
-							</div>
-							</div>
+						</div>
 							</div>
 							<div class="cb"></div>
 							<div style="margin-top: 50px;">

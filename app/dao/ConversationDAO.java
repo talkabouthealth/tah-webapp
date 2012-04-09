@@ -490,6 +490,7 @@ public class ConversationDAO {
 			convo.parseBasicFromDB(convoDBObject);
 	    	convosList.add(convo);
 		}
+		cat.clear();
 		return convosList;
 	}
 	
@@ -739,6 +740,8 @@ public class ConversationDAO {
 		DBObject query = new BasicDBObject("topics", new BasicDBObject("$in", allTopics));
 		List<DBObject> convosDBList = convosColl.find(query, fields).toArray();
 		
+		allTopics.clear();
+		
 		for (DBObject convoDBObject : convosDBList) {
 			convosDBSet.add(createRef(ConversationDAO.CONVERSATIONS_COLLECTION, getString(convoDBObject, "_id")));
 		}
@@ -891,6 +894,7 @@ public class ConversationDAO {
 			}
 			convo.setComments(convoComments);
 	    	convosList.add(convo);
+	    	convoComments.clear();
 		}
 		
 		return convosList;

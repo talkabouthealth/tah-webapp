@@ -100,11 +100,15 @@ public class DBUtil {
 		return value.toString();
 	}
 	public static int getInt(DBObject dbObject, String name) {
-		Integer value = (Integer)dbObject.get(name);
-		if (value == null) {
+		try{
+			Integer value = (Integer)dbObject.get(name);
+			if (value == null) {
+				return 0;
+			}
+			return value.intValue();
+		} catch(Exception e) {
 			return 0;
 		}
-		return value.intValue();
 	}
 	public static boolean getBoolean(DBObject dbObject, String name) {
 		Boolean value = (Boolean)dbObject.get(name);

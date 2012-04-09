@@ -1,7 +1,13 @@
 #{ extends 'main.html' /}
-<script type="text/javascript" src="/public/javascripts/scroller.js"></script>
+
+<script type="text/javascript" src="/public/plugins/widget.js" ></script>
+<script type="text/javascript" src="/public/plugins/SmoothDivScroll.js"></script>
+<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js"></script>
+<link href="/public/stylesheets/smoothDivScroll.css" rel="stylesheet" type="text/css" />
+
+
 <script type="text/javascript"> 	 
-	//maps actions to tabs
+//maps actions to tabs
 	var tabs = {
    		"active" : "tab1",
    		"new" : "tab2",
@@ -15,36 +21,41 @@
 		initOldTabs(activeTab);
 	});
 </script>
-<style>
-body { font-family:arial;font-size:11px; }
-#mycustomscroll2 { width: 925px; height: 35px; overflow: auto; position: relative; background-color: #FFF; margin: 0.1em auto; padding: 15px 0px;z-index:0; }
-.fixedwidth { width: 2645px; height: auto; position: relative; color: black; padding: 1px; }
-.scrollgeneric { line-height: 1px; font-size: 1px; position: absolute; top: 0; left: 0; }
-.hscrollerbase { height: 10px; background-color: white; }
-.hscrollerbar { height: 10px; background-color: #233F92; }
-.scrollerjogbox { width: 10px; height: 10px; top: auto; left: auto; bottom: 0px; right: 0px; background-color: #233F92; }
-</style>
+
+<style type="text/css">
+
+		#makeMeScrollable div.scrollWrapper
+		{
+			width: 870px;
+		}
+		#makeMeScrollable div.scrollingHotSpotRight{
+			left: 922px;
+		}
+	body { font-family:arial;font-size:11px; }
+	</style>
 </head>
 <body>
 	#{include 'header.html' /}
 	<div id="innerbanner"></div>
 	<div id="innermain" style="padding-left:0px;">
 		<div class="blacktext2" id="innerheading">Browse Members</div>
+               
+               
 		<div id="innermiddlearea">
 			<div class="tabbed_box" id="tabbed_box_1">
     			<div class="tabbed_area" style="padding-left:0px;">
-    				<div id='mycustomscroll2' class='flexcroll'>
-    				<div class='fixedwidth'>
-	    				<ul class="tabs" style="padding-right:10px;">
-				        	<li><a href="#tab1"><span>Active</span></a></li>
-				            <li><a href="#tab2"><span>New</span></a></li>
-				            <li><a href="#tab4"><span>Search</span></a></li>
-				            #{list items: members.keySet(), as: 'memberType'}
-				            	<li><a href="#tab${memberType_index+4}" id="${memberType}"><span>${memberType}</span></a></li>
-				            #{/list}
-				        </ul>
-				        </div>
-			        </div>
+    			
+    								<div id="makeMeScrollable">
+    											<ul class="tabs" style="padding-right:10px;white-space: nowrap; width: auto;" >
+											        	<li style="display: inline;width: auto;"><a href="#tab1" style=""><span>Active</span></a></li>
+											            <li style="display: inline;width: auto;"><a href="#tab2" style=""><span>New</span></a></li>
+											            <li style="display: inline;width: auto;"><a href="#tab4" style=""><span>Search</span></a></li>
+											            #{list items: members.keySet(), as: 'memberType'}
+											            	<li style="display: inline;width: auto;"><a style="" href="#tab${memberType_index+4}" id="${memberType}"><span >${memberType}</span></a></li>
+											            #{/list}
+											        </ul>
+    								</div>	
+    								
 			        <div class="tab_container">
 				        <div id="tab1" class="tab_content">
 			   			<div>

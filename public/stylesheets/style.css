@@ -892,7 +892,7 @@ ul li.comLink { padding-top: 1px }
 	top:0;
 	z-index:9000;
 	display:none;
-	background-color:#e6e6e6;
+	background-color: #FFFFFF
 }
 /*-----------------Popups Global (common popup css)------------------------------*/
 #mask1 {
@@ -1608,12 +1608,12 @@ a.footerlink:hover {
 	padding-left:4px;
 }
 .mtrighttxt1 a {
-	color:#0286BC;
+	color:#000000;
 	text-decoration:none;
 }
 .mtrighttxt1 a:hover {
-	color:#0286BC;
-	text-decoration:underline;
+	color:#000000;
+	text-decoration:none;
 }
 .membersarea {
 	clear:both;
@@ -5323,44 +5323,55 @@ ul.tabs {
 	list-style: none;
 	height: 34px;
 	padding-left:10px;
-	border-bottom: 1px solid #d3d3d3;
 	color:#000000;
 	width: 100%;
+	border-bottom: 1px solid #d3d3d3;
 }
+
+
 ul.tabs li {
-	float: left;
+	
 	margin: 0;
 	padding: 0;
 	height: 34px;
 	/*line-height: 34px;*/
 	margin-left:5px;
 	color:#000000;
-	border-left: none;
+	
 	margin-bottom: -1px;
 	background: #f5f5f5;
 	overflow: hidden;
 	position: relative;
 }
 ul.tabs li a {
-	float: left;
+	display :inline-table;
 	text-decoration: none;	
-	display: block;	
 	padding: 8px 7px 0;
 	font-size:14px;
 	font-family:Arial;
 	font-weight:bold;
 	color:#1550a4;
-	height:34px;
 	border: 1px solid #d3d3d3;
 	outline: none;
+	height: 25px;
+}
+ul.tabs li.active a {
+	display :inline-table;
+	text-decoration: none;	
+	padding: 8px 7px 0;
+	font-size:14px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#1550a4;
+	border-bottom: 1px solid #ffffff;
+	outline: none;
+	height: 25px;
 }
 ul.tabs li a:hover {
-	float: left;
 	background: #f5f5f5;
 	color:#000;
-}	
+}
 ul.tabs li.active, ul.tabs li.active span {
-	float: left;
 	background: #fff;
 	color:#000000;
 	font-size:14px;
@@ -5371,7 +5382,6 @@ ul.tabs li.active, ul.tabs li.active span {
 	
 }
 ul.tabs li.active, ul.tabs li.active span: {
-	float: left;
 	background: #fff;
 	color:#000000;
 	font-size:14px;
@@ -5386,6 +5396,7 @@ ul.tabs li.active, ul.tabs li.active span: {
 	clear: both;
 	float: left; 
 	width: 100%;
+	margin-top: 15px;
 }
 .tab_content {
 	float:left;

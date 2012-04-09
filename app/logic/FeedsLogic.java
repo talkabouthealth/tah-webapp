@@ -15,8 +15,10 @@ import models.ConversationBean;
 import models.TalkerBean;
 import models.TopicBean;
 import models.actions.Action;
-import models.actions.Action.ActionType;
 import models.actions.PreloadAction;
+import models.actions.Action.ActionType;
+import dao.ActionDAO;
+import dao.ConversationDAO;
 
 public class FeedsLogic {
 	
@@ -29,7 +31,7 @@ public class FeedsLogic {
 	public static final int FEEDS_PER_PAGE = 20;
 	
 	//Number of actions to preload from DB (later filtered)
-	public static final int ACTIONS_PRELOAD = 200;
+	public static final int ACTIONS_PRELOAD = 50;
 	
 	public static Set<Action> getConvoFeed(TalkerBean talker, String afterActionId) {
 		return loadFeed(FeedType.CONVERSATION, afterActionId, talker, null, true, FEEDS_PER_PAGE);
@@ -145,10 +147,10 @@ public class FeedsLogic {
 		//conversations that are already added to the feed
 		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();
 		
-		String nextActionId = null;
-		boolean canAdd = (afterActionId == null);
+		String nextActionId = afterActionId;
+		boolean canAdd = true;
+		List<Action> feedActions = new ArrayList<Action>();
 		while (true) {
-			List<Action> feedActions = new ArrayList<Action>();
 			switch (feedType) {
 				case CONVERSATION: 
 					feedActions = ActionDAO.loadConvoFeed(talker, nextActionId);
@@ -168,7 +170,7 @@ public class FeedsLogic {
 			}
 			
 			canAdd = filter(feed, feedActions, 
-					addedConvos, afterActionId, canAdd, feedsPerPage);
+					addedConvos, afterActionId, canAdd, feedsPerPage,feedType);
 			
 			//exit if no more actions to preload or feed is big enough for this page
 			if (feedActions.size() < ACTIONS_PRELOAD || feed.size() >= feedsPerPage) {
@@ -195,16 +197,33 @@ public class FeedsLogic {
 	 */
 	private static boolean filter(Set<Action> feed, 
 			List<Action> feedActions, Set<ConversationBean> addedConvos, 
-			String afterActionId, boolean canAdd, int feedSize) {
-		
+			String afterActionId, boolean canAdd, int feedSize, FeedType feedType) {
+		boolean isAdd = true;
 		for (Action action : feedActions) {
 			ConversationBean actionConvo = action.getConvo();
 			//check repeated conversations
 			if (actionConvo != null) {
 				if (!addedConvos.contains(actionConvo)) {
+					switch (feedType) {
+						case ALL_CANCER: 
+							ConversationBean convo = ConversationDAO.getById(actionConvo.getId());
+							if(convo.getCategory() == null){
+								if (convo.getOtherDiseaseCategories() != null && convo.getOtherDiseaseCategories().length > 0)
+									isAdd = true;
+								else
+									isAdd = false;
+							}else{
+								if (convo.getCategory().equals(""))
+									isAdd = false;
+								else
+									isAdd = true;
+							}
+							break;
+					}
 					if (canAdd) {
 						PreloadAction preAction = (PreloadAction)action;
-						feed.add(preAction.getFullAction());
+						if(isAdd)
+							feed.add(preAction.getFullAction());
 					}
 					addedConvos.add(actionConvo);
 				}

@@ -88,11 +88,15 @@
 		<div id="innermiddlearea" style="width: 600px;">
 			<div class="tabbed_box" id="tabbed_box_1" style="width: 600px;">
     			<div class="tabbed_area">
-			        <ul class="tabs">
-			            <li><a href="#tab2"><span>Thank you's (${talker.thankYouList.size()})</span></a></li>
-			            <li><a href="#tab3"><span>Following (${talker.followingList.size()})</span></a></li>
-			            <li><a href="#tab4"><span>Followers (${talker.followerList.size()})</span></a></li>
-			        </ul>
+			        
+			        <div id="makeMeScrollable">
+					       <ul class="tabs" style="padding-right:10px;white-space: nowrap; width: 100%;">
+					            <li style="display: inline;width: auto;"><a href="#tab2"><span>Thank you's (${talker.thankYouList.size()})</span></a></li>
+					            <li style="display: inline;width: auto;"><a href="#tab3"><span>Following (${talker.followingList.size()})</span></a></li>
+					            <li style="display: inline;width: auto;"><a href="#tab4"><span>Followers (${talker.followerList.size()})</span></a></li>
+					        </ul> 
+			        </div>
+			        
 			        <div class="tab_container">
 			       		<div id="tab2" class="tab_content">
 				        <div>

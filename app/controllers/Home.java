@@ -88,7 +88,8 @@ public class Home extends Controller {
     	String talkerCat = talker.getCategory();
     	//multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
 		//allDiseaseList.put(talkerCat.replaceAll(" ", "_"),multipleCancerCommunityFeed);
-    	allDiseaseList.put(talkerCat.replaceAll(" ", "_"),null);
+    	if(talkerCat != null)
+    		allDiseaseList.put(talkerCat.replaceAll(" ", "_"),null);
 		
     	if(talker.getOtherCategories() != null) {
     		for (int i = 0; i < talker.getOtherCategories().length; i++) {

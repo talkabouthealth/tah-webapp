@@ -495,4 +495,21 @@ public class CommonUtil {
 		htmlText = htmlText.replace("\n", "<br/>");
 		return htmlText;
 	}
+	
+	public static String messageToHTML(String text) {
+		if (text == null) {
+			return "";
+		}
+		
+		//delinkify because previously we store links in db
+		text = text.replaceAll("<a[^>]*>", "");
+		text = text.replaceAll("</a>", "");
+		
+		String htmlText = text;
+				
+		htmlText = htmlText.replace("\n", "<br/>");
+		
+		return htmlText;
+	}
+	
 }

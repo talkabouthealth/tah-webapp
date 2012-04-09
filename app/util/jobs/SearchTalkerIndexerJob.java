@@ -16,7 +16,7 @@ import play.jobs.Job;
 
 import util.SearchUtil;
 
-@Every("10min")
+//@Every("10min")
 public class SearchTalkerIndexerJob extends Job{
 int limit=10;
 

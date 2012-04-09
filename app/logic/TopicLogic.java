@@ -92,6 +92,7 @@ public class TopicLogic {
 		for (DBRef topicRef : allTopics) {
 			topicsTree.add(topicRef.getId().toString());
 		}
+		allTopics.clear();
 		return topicsTree;
 	}
 	
@@ -153,7 +154,7 @@ public class TopicLogic {
 				break;
 			}
 		}
-		
+		loadedTopics.clear();
 		return recommendedTopics;
 	}
 

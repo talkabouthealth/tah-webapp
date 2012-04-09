@@ -208,9 +208,12 @@ public class ActionDAO {
 		if (firstActionTime != null) {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
 		}
-		List<String> cat = FeedsLogic.getCancerType(talker);
-		cat.add(ConversationBean.ALL_CANCERS);
 		
+		//getDeiseaseList
+		
+		List<String> cat=new ArrayList<String>();
+		cat = FeedsLogic.getCancerType(talker);
+		cat.add(ConversationBean.ALL_CANCERS);
 		if(talker == null) {
 			queryBuilder.add("category", new BasicDBObject("$in", cat) );
 		} else {
@@ -303,7 +306,7 @@ public class ActionDAO {
 		DBCollection activitiesColl = getCollection(ACTIVITIES_COLLECTION);
 		
 		activitiesColl.ensureIndex(new BasicDBObject("time", 1));
-		DBCursor dbCursor =	activitiesColl.find(query).sort(new BasicDBObject("time", -1));//.limit(10);
+		DBCursor dbCursor =	activitiesColl.find(query).sort(new BasicDBObject("time", -1)).limit(FeedsLogic.ACTIONS_PRELOAD);
 		
 		List<Action> activitiesList = new ArrayList<Action>();
 		if(dbCursor != null && dbCursor.hasNext()){

@@ -51,6 +51,10 @@ public class PrivacySetting implements DBModel {
 	private PrivacyType type;
 	private PrivacyValue value;
 	
+	public PrivacySetting(){
+		
+	}
+	
 	public PrivacySetting(PrivacyType type, PrivacyValue value) {
 		this.type = type;
 		this.value = value;

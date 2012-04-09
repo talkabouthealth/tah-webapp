@@ -139,6 +139,7 @@ public class EmailUtil {
 			Logger.error(e, "Couldn't send email");
 			return false;
 		}
+		emailList.clear();
 		return returnFlag;
 	}
 	

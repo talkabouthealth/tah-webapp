@@ -18,6 +18,9 @@ public class IMAccountBean implements DBModel {
 	private String userName;
 	private String service;
 	
+	public IMAccountBean(){
+		
+	}
 	public IMAccountBean(String userName, String service) {
 		this.userName = userName;
 		this.service = service;

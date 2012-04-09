@@ -192,6 +192,7 @@ a img { border: none; }
 .signdown { float:left; width:590px; }
 .signdown h4 { float:left; width:590px; height:20px; line-height:20px; padding:0px; margin:0px; font-weight: normal; font-size: 14px; color: #545454; font-family:arial; text-decoration: none;}
 #checkboxarea2 {float:left; width:590px; height:20px; padding-top:30px; font-weight: normal; font-size: 14px; color: #545454; font-family:arial; text-decoration: none; }
+#checkboxarea3 {float:left; width:590px; height:20px; padding-top:10px; font-weight: normal; font-size: 14px; color: #545454; font-family:arial; text-decoration: none; font-weight: bold; color: #000}
 #alreadyuser { float:left; width:300px; height:54px; line-height:54px; }
 #signfieldsright { float:left; width:285px; padding-left:5px; }
 #usertext { float:left; width:285px;  padding-top:15px; }
@@ -349,6 +350,8 @@ a.blacktext18:hover {text-decoration: none; color: #000000;}
 a.blacktext14:hover {text-decoration: none; color: #000000;}
 .blacktext16 {font-family: arial; font-size: 16px; font-weight: normal; text-decoration: none; color: #000000; line-height:20px;}
 a.blacktext16:hover {text-decoration: none; color: #000000;}
+.blacktext17 {font-family: arial; font-size: 14px; font-weight: normal; text-decoration: none; color: #000000; line-height:20px;}
+a.blacktext17:hover {text-decoration: none; color: #000000;}
 
 .blacktext12 {font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none; color: #000000; line-height:20px;}
 a.blacktext12:hover {text-decoration: none; color: #000000;}
@@ -363,8 +366,7 @@ a.blacktext12:hover {text-decoration: none; color: #000000;}
 .textgreylight12 {font-family: arial; font-size: 12px; font-weight: normal; text-decoration: none; color: #7c7c7c; line-height:16px;}
 a.blacktextgrey18:hover {text-decoration: none; color: #434242;}
 .greytext {font-family: arial; font-size: 11px; font-weight: bold; text-decoration: none; color: #434242;}
-a.blacktextgrey14 { color:#434242; text-decoration:none;}
-a.blacktextgrey14:hover {text-decoration: underline; color: #434242;}
+a.blacktextgrey14:hover {text-decoration: none; color: #434242;}
 .greytext {font-family: arial; font-size: 11px; font-weight: bold; text-decoration: none; color: #434242;}
 a.greytext:hover {text-decoration: none; color: #434242;}
 .bluetext2 {font-family: arial; font-size: 11px; font-weight: bold; text-decoration: none; color: #1550a4;}
@@ -562,7 +564,7 @@ a.blacktext25:hover {text-decoration: none; color: #000000;}
 .tabheading {float:left; width:540px; vertical-align:middle; }
 .seemore {float:right;}
 .headingarea2 { float:left; width:923px; padding-bottom:10px; height:33px; line-height:33px; border-bottom:1px dashed #c2c2c2;}
-.thnksarea {float:left; width:893px; padding-top:10px; padding-left:30px; }
+.thnksarea {float:left; width:893px; padding-top:10px; padding-left:30px;font-size: 15px; }
 
 .thnksfollowing { float:left; width:289px; padding-right:8px; padding-bottom:28px; }
 .thnksfollowingimg { float:left; width:80px; padding-right:10px;}
@@ -726,10 +728,6 @@ a.visited { font-weight:bold;font-family: arial; font-size: 11px;text-decoration
     background-repeat: no-repeat;
     color: #0286BC;
     text-decoration: none;
-}
-.blacktextgrey15 a:hover {
-	color:#0286BC;
-	text-decoration:underline;
 }
 .mtrighttxt1u{
     font-size: 16px;

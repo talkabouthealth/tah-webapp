@@ -677,21 +677,22 @@ public class TalkerLogic {
 				}
 			}
 		}
-                if(recommendedTopics != null){
-                    int limit = position + 5;
-                    if(position < recommendedTopics.size() && limit > recommendedTopics.size()){
-                        limit = recommendedTopics.size();
-                        recommendedTopics = recommendedTopics.subList(position, limit);
-                    }else if(limit > recommendedTopics.size()){
-                         position = 0;
-                         limit = 5;
-                         if(recommendedTopics.size() < limit)
-                             limit = recommendedTopics.size();
-                         recommendedTopics = recommendedTopics.subList(position, limit);
-                    } else{
-                         recommendedTopics = recommendedTopics.subList(position, limit);
-                    }
-                }		
+		loadedTopics.clear();
+        if(recommendedTopics != null){
+            int limit = position + 5;
+            if(position < recommendedTopics.size() && limit > recommendedTopics.size()){
+                limit = recommendedTopics.size();
+                recommendedTopics = recommendedTopics.subList(position, limit);
+            }else if(limit > recommendedTopics.size()){
+                 position = 0;
+                 limit = 5;
+                 if(recommendedTopics.size() < limit)
+                     limit = recommendedTopics.size();
+                 recommendedTopics = recommendedTopics.subList(position, limit);
+            } else{
+                 recommendedTopics = recommendedTopics.subList(position, limit);
+            }
+        }		
 		return recommendedTopics;
 	}
 	
@@ -699,7 +700,7 @@ public class TalkerLogic {
 		ArrayList<TalkerBean> recommendedMembers = new ArrayList<TalkerBean>();
 		
 		if("EXP".equals(type)){
-			List<TalkerBean> allExperts = ApplicationDAO.getTalkersInOrder(talker,true,afterActionId);
+			List<TalkerBean> allExperts = ApplicationDAO.getTalkersInOrder(talker,true,afterActionId,new ArrayList<TalkerBean>());
 			for (TalkerBean member : allExperts) {
 				recommendedMembers.add(member);
 				if (recommendedMembers.size() == 3) {
@@ -707,7 +708,7 @@ public class TalkerLogic {
 				}
 			}
 		}else if("USR".equals(type)){
-			List<TalkerBean> allMembers = ApplicationDAO.getTalkersInOrder(talker,false,afterActionId);
+			List<TalkerBean> allMembers = ApplicationDAO.getTalkersInOrder(talker,false,afterActionId,new ArrayList<TalkerBean>());
 			for (TalkerBean member : allMembers) {
 				recommendedMembers.add(member);
 				if (recommendedMembers.size() == 3) {
@@ -721,7 +722,7 @@ public class TalkerLogic {
 	
 	public static void getRecommendedTalkers(TalkerBean talker, List<TalkerBean> similarMembers,
 			List<TalkerBean> experts) {
-		List<TalkerBean> allExperts = ApplicationDAO.getTalkersInOrder(talker,true,null);
+		List<TalkerBean> allExperts = ApplicationDAO.getTalkersInOrder(talker,true,null,new ArrayList<TalkerBean>());
 		for (TalkerBean member : allExperts) {
 			experts.add(member);
 			if (experts.size() == 3) {
@@ -729,7 +730,7 @@ public class TalkerLogic {
 			}
 		}
 
-		List<TalkerBean> allMembers = ApplicationDAO.getTalkersInOrder(talker,false,null);
+		List<TalkerBean> allMembers = ApplicationDAO.getTalkersInOrder(talker,false,null,new ArrayList<TalkerBean>());
 		for (TalkerBean member : allMembers) {
 			similarMembers.add(member);
 			if (similarMembers.size() == 3) {
@@ -752,18 +753,19 @@ public class TalkerLogic {
 //			allConvos.addAll(ConversationDAO.loadConversationsByTopic(topic.getId()));
 //		}
 		allConvos.addAll(loadPopularConversations());
-		List<String> cat = FeedsLogic.getCancerType(talker);
+		//List<String> cat = FeedsLogic.getCancerType(talker);
 		
 		for (ConversationBean convo : allConvos) {
 			if (talker.getFollowingConvosList().contains(convo.getId())) {
 				continue;
 			}
-			if(cat.contains(convo.getCategory()))
+			//if(cat.contains(convo.getCategory()))
 				recommendedConvos.add(convo);
 			if (recommendedConvos.size() == 3) {
 				break;
 			}
 		}
+		allConvos.clear();
 		
 		return recommendedConvos;
 	}
@@ -846,7 +848,7 @@ public class TalkerLogic {
 				}
 			}
 		}
-		
+		topicNames.clear();
 		return recommendedTopics;
 	}
 	

@@ -1152,3 +1152,39 @@ function loadMoreFeedMob(type) {
 	
 	return false;
 }
+//used for paging in community feeds
+function loadMoreCommunityFeed(type, cancerType) {
+	var lastActionId = $("#"+type+"List").children().last().attr("id");
+	
+	//replace More button with loading image
+	var moreBtn = $("#"+type+"Btn");
+	$("#ajaxLoading").appendTo(moreBtn.parent()).show();
+	moreBtn.hide();
+	
+	//Code added for multiple cancer types
+	var feedType = "";
+	if(cancerType == "All Cancers"){
+		feedType = "allFeed"
+	}else{
+		feedType = type;
+	}
+	//public static void conversationFeedAjax(String afterActionId) {
+	$.get("/explore/communityFeedAjaxLoad", {afterActionId: lastActionId, feedType: feedType, cancerType: cancerType},
+			function(data) {
+				$("#ajaxLoading").hide();
+				
+				//show more button if it isn't the end of a feed
+				var feedSize = $(data).find(".joinpic").size();
+				if (feedSize >= feedsPerPage) {
+					moreBtn.show();
+				}
+				$(data).appendTo($("#"+type+"List"));
+				
+				//for new items
+				$('.inline-edit').inlineEdit( { hover: ''} );
+				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+			}
+		);
+	
+	return false;
+}
