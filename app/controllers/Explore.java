@@ -74,13 +74,12 @@ public class Explore extends Controller {
     	if (talker != null) {
     		TalkerLogic.preloadTalkerInfo(talker);
     		newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
-    		rewardLetterFlag=ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
     	}
     	int limit = session.get("topicCount")==null?TopicLogic.TOPICS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
     	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics(limit);
 		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions(talker,loggedIn);
 		
-		render(talker, openQuestions, popularTopics,newsLetterFlag,rewardLetterFlag);
+		render(talker, openQuestions, popularTopics,newsLetterFlag);
     }
     
     public static void liveTalks() {
