@@ -33,6 +33,7 @@ import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.DiseaseDAO;
 import dao.HealthItemDAO;
+import dao.MessagingDAO;
 import dao.TalkerDAO;
 import dao.TalkerDiseaseDAO;
 import dao.ConversationDAO;
