@@ -70,7 +70,7 @@ public class Explore extends Controller {
 	public static void openQuestions() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	boolean newsLetterFlag = false;
-    	List<ConversationBean> openQuestions = null;
+    	
     	if (talker != null) {
     		TalkerLogic.preloadTalkerInfo(talker);
     		newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
