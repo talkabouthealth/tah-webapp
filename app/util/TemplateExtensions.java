@@ -7,6 +7,7 @@ import java.util.List;
 import controllers.AnswerNotification;
 
 import models.CommentBean;
+import models.MessageBean;
 import models.TalkerBean;
 import models.PrivacySetting.PrivacyType;
 import models.PrivacySetting.PrivacyValue;

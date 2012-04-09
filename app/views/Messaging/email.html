@@ -35,7 +35,7 @@
 	});
 
 	function sendReply(id){
-		var replyText = document.getElementById("replyText").value;
+		var replyText =  $("#replyText"+"").val();
 		var emailForm = document.getElementById('emailForm');
 		document.getElementById('sendReplyForm').style.display = 'none';
 		var div = $("#showLoading");
@@ -151,9 +151,9 @@
 	          
 		         <div style="margin: 10px 0 10px 20px;" class="Kantxt"> 
 		        	<label style="margin-left: -22px; font-size: 13px; font-weight: bold;">To :</label>
-		              <a href="@{ViewDispatcher.view(userMessage.toTalker.userName)}" >${userMessage.toTalker.userName}</a>,
+		              <a href="@{ViewDispatcher.view(userMessage.toTalker.userName)}" >${userMessage.toTalker.userName}</a>
 		              #{list items: userMessage.toTalers, as: 'totalkers' }
-		                <a href="@{ViewDispatcher.view(totalkers)}" >${totalkers}</a>,
+		                , <a href="@{ViewDispatcher.view(totalkers)}" >${totalkers}</a>
 		              #{/list}
 		          </div>  
 	             
@@ -163,7 +163,7 @@
 	          <div class="kanpic1">#{talker/talkerImageLink size: 40, userName: userMessage.fromTalker.userName /}</div>
 	          <div class="Kantxtemail"><a href="@{ViewDispatcher.view(userMessage.fromTalker.userName)}">${userMessage.fromTalker.userName}</a><br />
 	            <span class="Kandate"> ${userMessage.displayDate}</span>
-	            <p>${userMessage.text}</p>
+	            <p>${userMessage.printMessage(session.username)}</p>
 	          </div>
 	        </div>
 	        

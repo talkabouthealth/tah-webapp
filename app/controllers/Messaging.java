@@ -108,10 +108,10 @@ public class Messaging  extends Controller {
 		render(talker,messageList,pages,page,prevPage,nextPage,size,startPage,endPage,fromPage);
 	}
 	
-	public static void sentMail(String action, String user, String subject, String message,String page){
-			
+	public static void sentMail(String action, String user, String subject, String message,String page, String fromPage){
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
+		message = CommonUtil.linkify(message);
 		if(action != null && action.equalsIgnoreCase("sendMessage")){
 			if(user != null){
 			    String[] usrArray = user.split(",");	//comma separated user
@@ -151,7 +151,7 @@ public class Messaging  extends Controller {
 				    		//sending mail to talker whom direct message is send
 				    		Map<String, String> vars = new HashMap<String, String>();
 				    		vars.put("other_talker", talker.getUserName());
-				    		vars.put("message_text", messageBean.getText());
+				    		vars.put("message_text", CommonUtil.messageToHTML(messageBean.getText()));
 				    		vars.put("message_id", dummyId);
 				    		if(toTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
 				    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, toTalker, vars);
@@ -174,7 +174,7 @@ public class Messaging  extends Controller {
 						    //sending mail to talker for direct message
 						    Map<String, String> vars = new HashMap<String, String>();
 				    		vars.put("other_talker", talker.getUserName());
-				    		vars.put("message_text", messageBean.getText());
+				    		vars.put("message_text", CommonUtil.messageToHTML(messageBean.getText()));
 				    		vars.put("message_id", messageId);
 				    		if(toTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){
 				    			NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_DIRECT, toTalker, vars);
@@ -192,8 +192,15 @@ public class Messaging  extends Controller {
 						}   
 					}
 		    	}
+			    user = usrArray[0];
 			}
-			redirect("/message/inbox");
+			
+			
+				
+			if(fromPage != null && fromPage.equalsIgnoreCase("profile"))
+				redirect("/"+user);
+			else
+				redirect("/message/inbox");
 		}else{
 			//--------------For Paging------------------------------
 			int startPage=0;	//initially start page is 0
@@ -270,7 +277,7 @@ public class Messaging  extends Controller {
 			int nextPage = Integer.parseInt(page)  == pages ? pages : Integer.parseInt(page) + 1;
 			int size = sentMessageList == null ? 0 : sentMessageList.size();
 	
-			String fromPage = "sentmail";
+			fromPage = "sentmail";
 			render(talker,sentMessageList,pages,page,prevPage,nextPage,size,startPage,endPage,fromPage);
 		}
 	}
@@ -279,13 +286,19 @@ public class Messaging  extends Controller {
 	public static void email(String id, String action, String replyText, String _page, String fromPage){
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);		
 		MessageBean userMessage = null;
+		replyText = CommonUtil.linkify(replyText);
 		if(_page == null || (_page != null && _page.equals("")))
 			_page = "1";
 		
 		if(id == null || (id != null && id.equals(""))){
-			flash.error("Sorry, This message does not exist...");
+			flash.put("errMsg", "No messages matched your search. You can broaden your search to look in 'Messages'.");
+			redirect("/message/inbox");
 		}else{
 			userMessage = MessagingDAO.getMessageById(id);
+			if(!talker.getId().equals(userMessage.getFromTalkerId()) && !talker.getId().equals(userMessage.getToTalkerId())){
+				flash.put("errMsg", "Sorry, This message does not exist.");
+				redirect("/message/inbox");
+			}
 		}
 		
 		if(fromPage != null && fromPage.equalsIgnoreCase("inbox")){
@@ -371,7 +384,7 @@ public class Messaging  extends Controller {
 			TalkerBean toTalker = TalkerDAO.getById(userMessage.getToTalkerId());
 		    Map<String, String> vars = new HashMap<String, String>();
     		vars.put("other_talker", talker.getUserName());
-    		vars.put("message_text", messageBean.getText());
+    		vars.put("message_text", CommonUtil.messageToHTML(messageBean.getText()));
     		vars.put("message_id", userMessage.getId());
     		
     		if(fromTalker.getEmailSettings().toString().contains("RECEIVE_DIRECT")){

@@ -1,6 +1,14 @@
+<script  type="text/javascript">
+function converToHtml(val){
+	 var commentText = $("#oldMessage"+val).val();
+	 document.getElementById("message").value = commentText;
+}
+</script>
+
 <div class="NewmssageCover" id="newMessageDiv">
   <form method = "post" action = "/message/sentmail" id="messageForm">
   	<input type="hidden" name="action" value="sendMessage">
+  	<textarea  name="message" id="message" cols="0" rows="0" style="display: none;"> </textarea>
    <div class="newsmessageTop">New Message </div>
    <div class="newsmessageMid">
      <div class="nmessage">
@@ -16,7 +24,7 @@
      <!--nmessage-->
      <div class="nmessage">
        <div class="newmsgtext">Message:</div>
-       <textarea class="inputtxtarea" id="message" style="width: 484px;" name="message"></textarea>
+       <textarea class="inputtxtarea" id="oldMessage" style="width: 484px;" name="oldMessage" onchange="converToHtml('');"></textarea>
      </div>
      <!--nmessage-->
      <div class="nmessage1">
