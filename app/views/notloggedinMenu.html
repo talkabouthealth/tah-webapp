@@ -1,13 +1,14 @@
 <ul id="nav">
   <li class="explore"> <a href="#" class="menu4">Questions</a>
     <ul>
-      <li><a href="@{Explore.conversations('feed')}">Community Questions</a></li>
-      <li><a href="@{Explore.conversations('popular')}">Popular Questions</a></li>
+      <li><a href="@{Explore.conversations('feed')}">Recent Questions</a></li>
+      <li><a href="@{Explore.conversations('expert')}">Expert Answers</a></li>
+      <li><a href="@{Explore.conversations('popular')}">Popular Answers</a></li>
       <!-- <li class="gap"><a href="@{Explore.liveTalks()}">Live Chats</a></li>-->
-      <li><a href="@{Explore.openQuestions()}">Unanswered Questions</a></li>
+      <li><a href="@{Explore.conversations('open')}">Unanswered Questions</a></li>
       <li class="gap"><a href="@{Explore.searchConversations()}">Search</a></li>
     </ul>
   </li>
-  <li><a href="@{Explore.browseTopics()}">Topics</a></li>
+  <li><a href="@{Explore.topics()}">Topics</a></li>
   <li><a href="@{Explore.browseMembers('active')}">Members</a></li>
 </ul>
