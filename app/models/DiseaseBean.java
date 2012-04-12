@@ -13,6 +13,8 @@ public class DiseaseBean {
 	private String id;
 	private String name;
 	private List<DiseaseQuestion> questions;
+	private String fileId;
+	private String updateFlag;
 	
 	/**
 	 * Represent question related to some disease.
@@ -67,5 +69,21 @@ public class DiseaseBean {
 		}
 		setId(getString(diseaseDBObject, "_id"));
 		setName((String)diseaseDBObject.get("name"));
+		setFileId((String)diseaseDBObject.get("fileid"));
 	}
+	
+	public String getFileId() {
+		return fileId;
+	}
+	public void setFileId(String fileId) {
+		this.fileId = fileId;
+	}
+	
+	public String getUpdateFlag() {
+		return updateFlag;
+	}
+	public void setUpdateFlag(String updateFlag) {
+		this.updateFlag = updateFlag;
+	}
+
 }
