@@ -425,7 +425,15 @@ public class TalkerLogic {
 	}
 
 	public static boolean talkerHasNoHealthInfo(TalkerBean talker) {
-		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
+		List<TalkerDiseaseBean> talkerDiseaseList = TalkerDiseaseDAO.getListByTalkerId(talker.getId());
+		TalkerDiseaseBean talkerDisease = null;
+		if(talkerDiseaseList != null){
+			for(TalkerDiseaseBean diseaseBean : talkerDiseaseList){
+				if(diseaseBean != null && diseaseBean.getDiseaseName().equalsIgnoreCase(talker.getCategory())){
+					talkerDisease = diseaseBean;
+				}
+			}
+		}
 		return (talkerDisease == null && !talker.isProf());
 	}
 	
@@ -651,7 +659,15 @@ public class TalkerLogic {
 		List<TopicBean> recommendedTopics = new ArrayList<TopicBean>();
 		
 		//try topics based on HealthInfo
-		TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
+		List<TalkerDiseaseBean> talkerDiseaseList = TalkerDiseaseDAO.getListByTalkerId(talker.getId());
+		TalkerDiseaseBean talkerDisease = null;
+		if(talkerDiseaseList != null){
+			for(TalkerDiseaseBean diseaseBean : talkerDiseaseList){
+				if(diseaseBean != null && diseaseBean.getDiseaseName().equalsIgnoreCase(talker.getCategory())){
+					talkerDisease = diseaseBean;
+				}
+			}
+		}
 		
 		if (!talker.isProf() && talkerDisease != null) {
 			loadedTopics = TalkerLogic.getTopicsByHealthInfo(talkerDisease);

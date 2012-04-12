@@ -1,5 +1,6 @@
 package util.jobs;
 
+import java.util.Date;
 import java.util.List;
 
 import models.CommentBean;
@@ -18,17 +19,15 @@ import play.jobs.Job;
 
 import util.SearchUtil;
 
-//@Every("10min")
-public class SearchConvoIndexerJob extends Job{
-	int limit=10;
-	@Override
-	public void doJob() throws Exception {
-		
+public class SearchConvoIndexerJob{
+	
+	public static void main(String[] args) throws Throwable {
+		int limit=10;
 		IndexWriter convoIndexWriter=null;
 		IndexWriter autocompleteIndexWriter=null;
-		
-		convoIndexWriter = new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"conversations", new StandardAnalyzer(), false);
-		autocompleteIndexWriter = new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"autocomplete", new StandardAnalyzer(), false);
+		System.out.println("SearchConvoIndexerJob Started::::"+ new Date());
+		convoIndexWriter = new IndexWriter("/data/searchindex/conversations", new StandardAnalyzer(), false);
+		autocompleteIndexWriter = new IndexWriter("/data/searchindex/autocomplete", new StandardAnalyzer(), false);
 			 
 		 try{
 			 for (ConversationBean convo : ConversationDAO.loadUpdatedConversations(limit)) {
@@ -62,14 +61,16 @@ public class SearchConvoIndexerJob extends Job{
 			}
 		 }
 		 finally{
-				convoIndexWriter.close();
-				autocompleteIndexWriter.close();
+			convoIndexWriter.close();
+			autocompleteIndexWriter.close();
+			System.out.println("SearchConvoIndexerJob Completed::::"+ new Date());
+			SearchConvoIndexerJob convoJob = new SearchConvoIndexerJob();
+			convoJob.finalize();
 		 }
-			 
 	}
 	
-	public static void main(String[] args) throws Exception {
-		new SearchConvoIndexerJob().doJob();
+	protected void finalize() throws Throwable {
+		super.finalize();
 	}
 	
 }

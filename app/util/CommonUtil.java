@@ -45,6 +45,7 @@ import logic.TopicLogic;
 import models.CommentBean;
 import models.ConversationBean;
 import models.IMAccountBean;
+import models.MessageBean;
 import models.PrivacySetting;
 import models.TalkerBean;
 import models.TopicBean;
@@ -283,12 +284,19 @@ public class CommonUtil {
 		}
 		else {
 			talkerName = talker.getAnonymousName();
+			//Check for anonymous user
+			if(talkerName == null)
+				talkerName = talker.getUserName();
 		}
 		
 		StringBuilder html = new StringBuilder();
 		String url = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", talkerName);
 		html.append("<a href='"+url+"'>"+talkerName+"</a>");
+		
 		String additionalInfo = "";
+		
+		String talkerConnection="";
+		
 		if (talker.isProf()) {
 			if (talker.getConnection().equals("Physician") && talker.getProfInfo().get("prim_specialty") != null) {
 				additionalInfo = " - "+talker.getProfInfo().get("prim_specialty");
@@ -300,7 +308,14 @@ public class CommonUtil {
 				additionalInfo += " <span class=\"red12\">(not verified)</span>";
 			}
 		}
-		html.append(" ("+talker.getConnection()+additionalInfo+")");
+		
+		if(talker.getConnection()!=null){
+			talkerConnection=talker.getConnection();
+		}
+		
+		if(talkerConnection!="" || additionalInfo!=""){
+			html.append(" ("+talkerConnection+additionalInfo+")");	
+		}
 		return html.toString();
 	}
 	
@@ -311,27 +326,29 @@ public class CommonUtil {
 	public static String topicsToHTML(ConversationBean convo) {
 		StringBuilder topicsHTML = new StringBuilder();
 		
-		Set<TopicBean> convoTopics = convo.getTopics();
-		if (convoTopics.size() == 1) {
-			String topicTitle = convoTopics.iterator().next().getTitle();
-			if (topicTitle.equals(ConversationLogic.DEFAULT_QUESTION_TOPIC)
-					|| topicTitle.equals(ConversationLogic.DEFAULT_TALK_TOPIC)) {
-				//do not show default topic
-				return "";
+		if(convo != null){
+			Set<TopicBean> convoTopics = convo.getTopics();
+			if (convoTopics.size() == 1) {
+				String topicTitle = convoTopics.iterator().next().getTitle();
+				if (topicTitle.equals(ConversationLogic.DEFAULT_QUESTION_TOPIC)
+						|| topicTitle.equals(ConversationLogic.DEFAULT_TALK_TOPIC)) {
+					//do not show default topic
+					return "";
+				}
 			}
-		}
-		
-		for (TopicBean topic : convoTopics) {
-			String topicURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", topic.getMainURL());
-			String topicLink = "<a href='"+topicURL+"'>"+topic.getTitle()+"</a>";
-
-			topicsHTML.append(topicLink);
-			topicsHTML.append(", ");
-		}
-		int len = topicsHTML.length();
-		if (len != 0) {
-			topicsHTML.delete(len-2, len);
-			topicsHTML.insert(0, " in topic(s) ");
+			
+			for (TopicBean topic : convoTopics) {
+				String topicURL = CommonUtil.generateAbsoluteURL("ViewDispatcher.view", "name", topic.getMainURL());
+				String topicLink = "<a href='"+topicURL+"'>"+topic.getTitle()+"</a>";
+	
+				topicsHTML.append(topicLink);
+				topicsHTML.append(", ");
+			}
+			int len = topicsHTML.length();
+			if (len != 0) {
+				topicsHTML.delete(len-2, len);
+				topicsHTML.insert(0, " in topic(s) ");
+			}
 		}
 		return topicsHTML.toString();
 	}

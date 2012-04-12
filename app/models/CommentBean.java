@@ -30,6 +30,9 @@ public class CommentBean extends MessageBean {
 		private TalkerBean talker;
 		private boolean up;
 		
+		public Vote() {
+		}
+		
 		public Vote(TalkerBean talker, boolean up) {
 			this.talker = talker;
 			this.up = up;
@@ -162,6 +165,32 @@ public class CommentBean extends MessageBean {
 		setNotHelpfulVotes(parseSet(Vote.class, commentDBObject, "not_helpful_votes"));
 		
 		setModerate(getString(commentDBObject, "moderate"));
+	}
+	
+	
+	public void parseBasicFromDB(DBObject commentDBObject) {
+		if (commentDBObject == null) {
+			return;
+		}
+
+		setId(getString(commentDBObject, "_id"));
+		setText((String)commentDBObject.get("text"));
+		setOldTexts(getStringSet(commentDBObject, "old_texts"));
+		setTime((Date)commentDBObject.get("time"));
+		
+		setDeleted(getBoolean(commentDBObject, "deleted"));
+		setAnswer(getBoolean(commentDBObject, "answer"));
+		setConvoReply(getBoolean(commentDBObject, "convoreply"));
+		
+		DBRef convoRef = (DBRef)commentDBObject.get("convo");
+		if (convoRef != null) {
+			setConvoId(convoRef.getId().toString());
+		}
+		
+		// Add root-id character
+		setRootId((String)commentDBObject.get("rootid"));
+		
+		
 	}
 	
 	/**

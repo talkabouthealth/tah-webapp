@@ -1,27 +1,21 @@
 package util.importers;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import util.CommonUtil;
-
-import com.google.gson.GsonBuilder;
-
-import dao.DiseaseDAO;
-
 import models.DiseaseBean;
-import models.HealthItemBean;
 import models.DiseaseBean.DiseaseQuestion;
 import models.DiseaseBean.DiseaseQuestion.DiseaseQuestionType;
+import play.Play;
+import util.CommonUtil;
+import dao.DiseaseDAO;
 
 /**
  * Importer for diseases info and related questions.
@@ -44,19 +38,26 @@ public class DiseaseImporter {
 	}
 	
 	public static void importDiseases(String fileName) throws Exception {
+		
 		BufferedReader br = CommonUtil.createImportReader(fileName);
+		
+	
+		String buffer="";
 		String line = null;
+		List<String> fileids=new ArrayList<String>();
 		
 		DiseaseBean disease = null;
 		DiseaseQuestion currentQuestion = null;
 		while ((line = br.readLine()) != null && line.length() != 0) {
 			line = line.trim();
+			buffer=buffer+line+"\n";
 			String[] lineArr = line.split(";");
 			
 			if (lineArr.length == 0) {
 				continue;
 			}
 			else if (lineArr[0].equalsIgnoreCase("Disease")) {
+				
 				if (disease != null) {
 					//save disease to DB
 					DiseaseDAO.save(disease);
@@ -64,6 +65,9 @@ public class DiseaseImporter {
 				}
 				disease = new DiseaseBean();
 				disease.setName(lineArr[1]);
+				disease.setFileId(lineArr[6]);
+				disease.setUpdateFlag(lineArr[7]);
+				fileids.add(lineArr[6]);
 				disease.setQuestions(new ArrayList<DiseaseQuestion>());
 			}
 			else if (lineArr[0].equalsIgnoreCase("choices")) {
@@ -100,6 +104,17 @@ public class DiseaseImporter {
 			DiseaseDAO.save(disease);
 			disease = null;
 		}
+		 br.close();
+		
+		 buffer=buffer.replaceAll("true","false");
+		 buffer=buffer.replaceAll("insert","false");
+		 
+		  FileWriter fstream = new FileWriter("/opt/tah-webapp/app/util/importers/data/"+fileName);
+		  BufferedWriter out = new BufferedWriter(fstream);
+		  out.write(buffer);
+		  out.close();
+		  DiseaseDAO.removeDisease(fileids);
+		  
 	}
 
 }

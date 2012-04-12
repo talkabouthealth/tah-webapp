@@ -1,6 +1,8 @@
 package util.jobs;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import models.CommentBean;
 import models.ConversationBean;
@@ -26,19 +28,17 @@ import dao.TopicDAO;
  * Updates all search indexes
  *
  */
-@OnApplicationStart
-public class SearchIndexerJob extends Job {
+public class SearchIndexerJob extends Throwable{
 
-	@Override
-	public void doJob() throws Exception {
-		IndexWriter talkerIndexWriter = new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"talker", new StandardAnalyzer(), true);
-		IndexWriter convoIndexWriter = new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"conversations", new StandardAnalyzer(), true);
-		IndexWriter autocompleteIndexWriter = 
-			new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"autocomplete", new StandardAnalyzer(), true);
+	public static void main(String[] args) throws Throwable {
+		System.out.println("SearchIndexerJob Started::::"+ new Date());
+		IndexWriter talkerIndexWriter = new IndexWriter("/data/searchindex/talker", new StandardAnalyzer(), true);
+		IndexWriter convoIndexWriter = new IndexWriter("/data/searchindex/conversations", new StandardAnalyzer(), true);
+		IndexWriter autocompleteIndexWriter = new IndexWriter("/data/searchindex/autocomplete", new StandardAnalyzer(), true);
 		
-		System.out.println("----------In SearchIndexerJob------------");
 		try {
-			for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
+			List<TalkerBean> allTalkers = TalkerDAO.loadAllTalkers(true);
+			for (TalkerBean talker : allTalkers) {
 				  if (talker.isSuspended()) {
 					  continue;
 				  }
@@ -59,8 +59,9 @@ public class SearchIndexerJob extends Job {
 				  doc.add(new Field("type", "User", Field.Store.YES, Field.Index.NO));
 				  autocompleteIndexWriter.addDocument(doc);
 			}
-			
-			for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
+			allTalkers.clear();
+			List<ConversationBean> allConvos = ConversationDAO.getAllConvosForScheduler();
+			for (ConversationBean convo : allConvos) {
 	//			possibly weight titles, conversation details, summaries, and answers more than the archived real-time conversations?
 				if (convo.isDeleted()) {
 					continue;
@@ -71,7 +72,7 @@ public class SearchIndexerJob extends Job {
 				doc.add(new Field("title", convo.getTopic(), Field.Store.YES, Field.Index.TOKENIZED));
 				
 				//add an answer, reply, or live conversation text ?
-				List<CommentBean> answersList = CommentsDAO.loadConvoAnswersTree(convo.getId());
+				List<CommentBean> answersList = CommentsDAO.loadConvoAnswersTreeForScheduler(convo.getId());
 				StringBuilder answersString = new StringBuilder();
 				for (CommentBean answer : answersList) {
 					if (!answer.isDeleted()) {
@@ -92,8 +93,9 @@ public class SearchIndexerJob extends Job {
 				}
 				autocompleteIndexWriter.addDocument(doc);
 			}
-			
-			for (TopicBean topic : TopicDAO.loadAllTopics()) {
+			allConvos.clear();
+			Set<TopicBean> allTopics = TopicDAO.loadAllTopics(true);
+			for (TopicBean topic : allTopics) {
 				if (topic.isDeleted()) {
 					continue;
 				}
@@ -105,23 +107,20 @@ public class SearchIndexerJob extends Job {
 				doc.add(new Field("url", topic.getMainURL(), Field.Store.YES, Field.Index.NO));
 				autocompleteIndexWriter.addDocument(doc);
 			}
-			
+			allTopics.clear();
 		}
 		finally {
 			talkerIndexWriter.close();
 			convoIndexWriter.close();
 			autocompleteIndexWriter.close();
+			System.out.println("SearchIndexerJob Completed::::"+new Date());
+			SearchIndexerJob serachJob = new SearchIndexerJob();
+			serachJob.finalize();
 		}
 		
-		/*//Temporary logging
-		Logger.info("------------Mem Info------------");
-		Runtime rt = Runtime.getRuntime();
-		Logger.info("   Free: "+rt.freeMemory()/1024+", Total: "+rt.totalMemory()/1024);
-		rt.gc();*/
 	}
 	
-	public static void main(String[] args) throws Exception {
-		new SearchIndexerJob().doJob();
+	protected void finalize() throws Throwable {
+		super.finalize();
 	}
-
 }

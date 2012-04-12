@@ -1,33 +1,34 @@
 package util.jobs;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import dao.ApplicationDAO;
-import dao.CommentsDAO;
-import dao.ConversationDAO;
-import dao.TalkerDAO;
 import models.ConversationBean;
 import models.TalkerBean;
 import play.jobs.Job;
 import play.jobs.On;
-import util.CommonUtil;
+import play.jobs.OnApplicationStart;
 import util.EmailUtil;
 import util.EmailUtil.EmailTemplate;
+import dao.CommentsDAO;
+import dao.ConversationDAO;
+import dao.TalkerDAO;
  
 /**
  * Reminds users to verify email after 1 day or 1 week after signup.
  * Runs every day at noon.
  *
  */
-@On("0 0 12 * * ?")
-public class EmailReminderJob extends Job {
+
+public class EmailReminderJob{
 		
-	@Override
-	public void doJob() throws Exception {
-		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
+	public static void main(String[] args) throws Throwable {
+		System.out.println("EmailReminderJob Started::::"+ new Date());
+		List<TalkerBean> talkersList = TalkerDAO.loadAllTalkers(true);
+		for (TalkerBean talker : talkersList) {
 			if (talker.getVerifyCode() != null) {
 				Calendar now = Calendar.getInstance();
 				Calendar signupDate = Calendar.getInstance();
@@ -38,12 +39,12 @@ public class EmailReminderJob extends Job {
 				
 				if (sameYear && (daysDiff == 1 || daysDiff == 7)) {
 					//load different talkers info
-					int numOfFollowers = TalkerDAO.loadFollowers(talker.getId()).size();
+					int numOfFollowers = TalkerDAO.getFollowersCount(talker.getId());
 					//number of answers to the questions started by talker
 					int numOfAnswers = 0;
-					List<ConversationBean> startedConvos = ConversationDAO.getStartedConvos(talker.getId(), null, -1);
-					for (ConversationBean convo : startedConvos) {
-						numOfAnswers += CommentsDAO.loadConvoAnswers(convo.getId()).size();
+					List<String> startedConvos = ConversationDAO.getStartedConvosForEmailReminderJob(talker.getId());
+					for (String convoId : startedConvos) {
+						numOfAnswers += CommentsDAO.getConvoAnswersCount(convoId);
 					}
 					
 					Map<String, String> vars = new HashMap<String, String>();
@@ -52,15 +53,32 @@ public class EmailReminderJob extends Job {
 					vars.put("username", talker.getUserName());
 					vars.put("verify_code", talker.getVerifyCode()+"");
 					if (daysDiff == 1) {
-						EmailUtil.sendEmail(EmailTemplate.DAY_EMAIL_VERIFICATION_FOLLOWUP, talker.getEmail(), vars, null, false);
+						try{
+							EmailUtil.sendEmail(EmailTemplate.DAY_EMAIL_VERIFICATION_FOLLOWUP, talker.getEmail(), vars, null, false);
+						}catch (Exception e) {
+							e.printStackTrace();
+						}
+						System.out.println("Send day email verification followup to "+talker.getEmail());
 					}
 					else {
-						EmailUtil.sendEmail(EmailTemplate.WEEK_EMAIL_VERIFICATION_FOLLOWUP, talker.getEmail(), vars, null, false);
+						try{
+							EmailUtil.sendEmail(EmailTemplate.WEEK_EMAIL_VERIFICATION_FOLLOWUP, talker.getEmail(), vars, null, false);
+						}catch (Exception e) {
+							e.printStackTrace();
+						}
+						System.out.println("Send week email verification followup to "+talker.getEmail());
 					}
 					
 				}
 			}
 		}
+		System.out.println("EmailReminderJob Completed::::"+ new Date());
+		EmailReminderJob emailJob = new EmailReminderJob();
+		emailJob.finalize();
 	}
-
+	
+	protected void finalize() throws Throwable {
+		super.finalize();
+	}
+	
 }

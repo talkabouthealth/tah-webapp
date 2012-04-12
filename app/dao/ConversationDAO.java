@@ -1,6 +1,11 @@
 package dao;
 
 import groovy.util.ObjectGraphBuilder.DefaultReferenceResolver;
+import static util.DBUtil.createRef;
+import static util.DBUtil.getBoolean;
+import static util.DBUtil.getCollection;
+import static util.DBUtil.getString;
+import static util.DBUtil.setToDB;
 
 import java.awt.image.DataBufferByte;
 import java.text.DateFormat;
@@ -21,6 +26,7 @@ import java.util.Set;
 import logic.FeedsLogic;
 import logic.TalkerLogic;
 import models.CommentBean;
+import models.ConversationBean;
 import models.DiseaseBean;
 import models.MessageBean;
 import models.TalkerBean;
@@ -1003,6 +1009,81 @@ public class ConversationDAO {
 			answersList.add(answer);
 		}
 		return answersList;
+	}
+	/**
+	 * @param talkerId
+	 * @param nextConvoId Id of the last convo from the previous page
+	 * @param numOfConversations Number of convos to load (-1 for all)
+	 * @return
+	 */
+	public static List<String> getStartedConvosForEmailReminderJob(String talkerId) {
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		DBObject fields = BasicDBObjectBuilder.start()
+			.add("_id", 1)
+			.get();
+		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start()
+			.add("uid", talkerRef)
+			.add("deleted", new BasicDBObject("$ne", true));
+
+		List<DBObject> convoList  = convosColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("cr_date", -1)).toArray();
+		String id = "";
+		List<String> convoIdList = new ArrayList<String>();
+		for(DBObject dbObj : convoList){
+			id = dbObj.get("_id").toString();
+			if(!id.equals(""))
+				convoIdList.add(id);
+		}
+		return convoIdList;
+	}
+	
+	/**
+	 * Method used for getting conversations for indexer job
+	 * @return
+	 */
+	public static List<ConversationBean> getAllConvosForScheduler() {
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		DBObject fields = BasicDBObjectBuilder.start()
+			.add("_id", 1)
+			.add("topic", 1)
+			.add("main_url", 1)
+			.add("deleted", 1)
+			.add("bitly", 1)
+			.add("bitly_chat", 1)
+			.get();
+
+		BasicDBObject basicDBObject = new BasicDBObject("_id", new BasicDBObject("$ne", ""));
+		List<DBObject> convoList  = convosColl.find(basicDBObject,fields).sort(new BasicDBObject("cr_date", -1)).toArray();
+		ConversationBean convo = null;
+		List<ConversationBean> conversationList = new ArrayList<ConversationBean>();
+		for(DBObject convoDBObject : convoList){
+			convo = new ConversationBean();
+			convo.setId(convoDBObject.get("_id").toString());
+			convo.setTopic((String)convoDBObject.get("topic"));
+			convo.setMainURL((String)convoDBObject.get("main_url"));
+			convo.setDeleted(getBoolean(convoDBObject, "deleted"));
+			convo.setBitly((String)convoDBObject.get("bitly"));
+			convo.setBitlyChat((String)convoDBObject.get("bitly_chat"));
+			conversationList.add(convo);
+		}
+		return conversationList;
+	}
+	
+	/**
+	 * Updated the conversation 
+	 * @param convo
+	 */
+	public static void updateConvoForScheduler(ConversationBean convo,String name,String value){
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		DBObject convoObject = BasicDBObjectBuilder.start()
+		.add(name, value)
+		.get();
+		
+		DBObject convoId = new BasicDBObject("_id", new ObjectId(convo.getId()));
+		convosColl.update(convoId, new BasicDBObject("$set", convoObject),false,true);
 	}
 
 }

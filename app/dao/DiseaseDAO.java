@@ -11,10 +11,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bson.BSONObject;
-
+import models.ConversationBean;
 import models.DiseaseBean;
 import models.TalkerBean;
+import models.TalkerDiseaseBean;
 import models.DiseaseBean.DiseaseQuestion;
+
+import org.bson.types.ObjectId;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
@@ -27,25 +30,44 @@ public class DiseaseDAO {
 	
 	public static void save(DiseaseBean disease) {
 		DBCollection diseasesColl = getCollection(DISEASES_COLLECTION);
-		
-		List<DBObject> questionsDBList = new ArrayList<DBObject>();
-		for (DiseaseQuestion question : disease.getQuestions()) {
-			DBObject questionDBObject = BasicDBObjectBuilder.start()
-				.add("name", question.getName())
-				.add("type", question.getType().toString())
-				.add("display_name", question.getDisplayName())
-				.add("text", question.getText())
-				.add("choices", question.getChoices())
+		if(!disease.getUpdateFlag().equals("false")){	
+			List<DBObject> questionsDBList = new ArrayList<DBObject>();
+			for (DiseaseQuestion question : disease.getQuestions()) {
+				DBObject questionDBObject = BasicDBObjectBuilder.start()
+					.add("name", question.getName())
+					.add("type", question.getType().toString())
+					.add("display_name", question.getDisplayName())
+					.add("text", question.getText())
+					.add("choices", question.getChoices())
+					.get();
+				questionsDBList.add(questionDBObject);
+			}
+			DBObject diseaseObject = BasicDBObjectBuilder.start()
+				.add("name", disease.getName())
+				.add("questions", questionsDBList)
+				.add("fileid",disease.getFileId())
 				.get();
-			questionsDBList.add(questionDBObject);
+			if(disease.getUpdateFlag().equals("true")){
+				
+				DBObject query = new BasicDBObject("fileid", disease.getFileId());
+				DBObject diseobj = diseasesColl.findOne(query);//, new BasicDBObject("_id", 0));
+				
+				if(diseobj==null)
+					diseasesColl.save(diseaseObject);
+				else{
+					String oldDiseaseName = getDiseaseNameByFileId(disease.getFileId());
+					String diseId=diseobj.get("_id").toString();
+					DBObject id = new BasicDBObject("_id", new ObjectId(diseId));
+					diseasesColl.update(id, new BasicDBObject("$set", diseaseObject));
+					if(!oldDiseaseName.equalsIgnoreCase(disease.getName()))
+						updateDiseaseName(oldDiseaseName,disease.getName());
+				}
+				
+			}else{
+			 diseasesColl.save(diseaseObject);
+			}
+			
 		}
-		
-		DBObject diseaseObject = BasicDBObjectBuilder.start()
-			.add("name", disease.getName())
-			.add("questions", questionsDBList)
-			.get();
-
-		diseasesColl.save(diseaseObject);
 	}
 	
 	public static DiseaseBean getByName(String diseaseName) {
@@ -106,6 +128,132 @@ public class DiseaseDAO {
 		}else {
 			return diseaseDBObject.get("_id").toString();
 		}
+	}
+	
+	public static List<DBObject> loadAllFileIds(){
+		DBCollection diseasesColl = getCollection(DISEASES_COLLECTION);
+		DBObject obj = BasicDBObjectBuilder.start()
+		.get();
+		List<DBObject> diseobj=diseasesColl.find(obj,new BasicDBObject("fileid","")).toArray();
+		return diseobj;
+	}
+	
+	public static void removeDisease(List<String> fileids){
+		List<DBObject> diseobj=loadAllFileIds();
+		DBCollection diseasesColl = getCollection(DISEASES_COLLECTION);
+		for(DBObject obj:diseobj){
+			String id=obj.get("fileid").toString();
+			
+			if(!fileids.contains(id)){
+				diseasesColl.remove(obj);
+			}
+		}
+	}
+	
+	/**
+	 * Method added for change the diseaseName
+	 * @param oldName
+	 * @param newName
+	 */
+	private static void updateDiseaseName(String oldName, String newName){
+		List<TalkerBean> talkersList = TalkerDAO.loadAllTalkers(); 
+		if(talkersList != null && talkersList.size() > 0){
+			for(int index = 0; index < talkersList.size(); index++){
+				TalkerBean talker = talkersList.get(index);
+				if(talker != null){
+					//update talker category
+					String category = talker.getCategory();
+					if(category != null && !category.equals("")){
+						if(category.equalsIgnoreCase(oldName)){
+							category = newName;
+							talker.setCategory(category);
+						}
+					}
+					
+					//update talker other categories
+					String[] otherCategories = talker.getOtherCategories();
+					if(otherCategories != null && otherCategories.length > 0){
+						for(int i = 0; i < otherCategories.length; i++){
+							String otherCat = otherCategories[i];
+							if(otherCat.equalsIgnoreCase(oldName)){
+								otherCat = newName;
+								otherCategories[i] = otherCat;
+								talker.setOtherCategories(otherCategories);
+							}
+						}
+					}
+					
+					//update talkers disease information
+					List<TalkerDiseaseBean> talkerDiseaseList = TalkerDiseaseDAO.getListByTalkerId(talker.getId());
+					if(talkerDiseaseList != null && talkerDiseaseList.size() > 0){
+						for(int i = 0; i < talkerDiseaseList.size(); i++){
+							TalkerDiseaseBean talkerDiseaseBean = talkerDiseaseList.get(i);
+							if(talkerDiseaseBean != null){
+								String diseaseName = talkerDiseaseBean.getDiseaseName();
+								if(diseaseName.equalsIgnoreCase(oldName)){
+									diseaseName = newName;
+									talkerDiseaseBean.setDiseaseName(diseaseName);
+									TalkerDiseaseDAO.saveTalkerDisease(talkerDiseaseBean, talker.getId());
+								}
+							}
+						}
+						
+					}
+					
+					TalkerDAO.updateTalker(talker);
+				}
+			}
+		}
+		
+		List<ConversationBean> convoList = ConversationDAO.loadAllConversations();
+		if(convoList != null && convoList.size() > 0){
+			for(int index = 0; index < convoList.size(); index++){
+				ConversationBean convo = convoList.get(index);
+				if(convo != null){
+					//update talker category
+					String category = convo.getCategory();
+					if(category != null && !category.equals("")){
+						if(category.equalsIgnoreCase(oldName)){
+							category = newName;
+							convo.setCategory(category);
+						}
+					}
+					
+					//update talker other categories
+					String[] otherCategories = convo.getOtherDiseaseCategories();
+					if(otherCategories != null && otherCategories.length > 0){
+						for(int i = 0; i < otherCategories.length; i++){
+							String otherCat = otherCategories[i];
+							if(otherCat.equalsIgnoreCase(oldName)){
+								otherCat = newName;
+								otherCategories[i] = otherCat;
+								convo.setOtherDiseaseCategories(otherCategories);
+							}
+						}
+					}
+					
+					ConversationDAO.updateConvo(convo);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Method added for get disease name by fileId
+	 * @param fileId
+	 * @return String
+	 */
+	public static String getDiseaseNameByFileId(String fileId) {
+		DBCollection diseasesColl = getCollection(DISEASES_COLLECTION);
+		
+		DBObject query = new BasicDBObject("fileid", fileId);
+		DBObject diseaseDBObject = diseasesColl.findOne(query);
+		
+		if (diseaseDBObject == null) {
+			return null;
+		}
+		String diseaseName = (String)diseaseDBObject.get("name");
+		return diseaseName;
 	}
 }
 

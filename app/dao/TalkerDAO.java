@@ -918,5 +918,36 @@ public class TalkerDAO {
 			return talker;
 		}
 	}
+	
+	/**
+	 * Load no of followers for particular user.
+	 * @param talkerId
+	 * @return int
+	 */
+	public static int getFollowersCount(String talkerId){
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		DBRef followingTalkerRef = createRef(TALKERS_COLLECTION, talkerId);
+		BasicDBObject query = new BasicDBObject("following", followingTalkerRef);
+		return talkersColl.find(query, new BasicDBObject("_id", 1)).count();
+	}
+	
+	/**
+	 * Loads a talker by particular field
+	 */
+	public static TalkerBean getByFieldBasicInfo(String fieldName, Object fieldValue) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		
+		DBObject query = new BasicDBObject(fieldName, fieldValue);
+		DBObject talkerDBObject = talkersColl.findOne(query, new BasicDBObject("img", 0));
+		
+		if (talkerDBObject == null) {
+			return null;
+		}
+		else {
+			TalkerBean talker = new TalkerBean();
+			talker.parseBasicFromDB(talkerDBObject);
+			return talker;
+		}
+	}
 }
 

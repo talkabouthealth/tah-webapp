@@ -373,4 +373,21 @@ public class TopicDAO {
 		return recentTopics;
 	}
 	
+	/**
+	 * Updates the topic
+	 * @param topic
+	 */
+	public static void updateTopicbyId(TopicBean topic,String name, String value){
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
+		
+		DBObject topicObject = BasicDBObjectBuilder.start()
+		.add(name, value)
+		.get();
+		
+		DBObject topicId = new BasicDBObject("_id", topic.getId());
+		topicsColl.update(topicId, new BasicDBObject("$set", topicObject),false,true);
+		
+	}
+
+	
 }

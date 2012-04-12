@@ -1,6 +1,11 @@
 package dao;
 
 import java.text.SimpleDateFormat;
+import static util.DBUtil.createRef;
+import static util.DBUtil.getCollection;
+import static util.DBUtil.getString;
+import static util.DBUtil.getStringList;
+import static util.DBUtil.setToDB;
 import java.util.ArrayList;
 
 import static util.DBUtil.*;
@@ -691,4 +696,102 @@ public class CommentsDAO {
 		
 		return answersList;
 	}
+	/**
+	 * Load no of answers for conversation.
+	 * @param convoId
+	 * @return int
+	 */
+	public static int getConvoAnswersCount(String convoId){
+		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId);
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("convo", convoRef)
+			.add("deleted", new BasicDBObject("$ne", true))
+			.add("answer", true)
+			.get();
+		
+		BasicDBObject bd=new BasicDBObject();
+		bd.append("-id",1);
+		bd.append("from", 1);
+		bd.append("text", 1);
+		
+		return commentsColl.find(query, bd).count();
+	}
+	
+	/**
+	 * Loads full tree of answers and replies for given conversation.
+	 */
+	public static List<CommentBean> loadConvoAnswersTreeForScheduler(String convoId) {
+		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		
+		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convoId);
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("convo", convoRef)
+			.add("convoreply", new BasicDBObject("$ne", true))
+			.add("vote_score", new BasicDBObject("$ne", 0))
+			.get();
+		
+		BasicDBObject orderby=new BasicDBObject();
+		orderby.put("vote_score", -1);
+		orderby.put("time", 1);
+		
+		List<DBObject> commentsList = commentsColl.find(query).sort(orderby).toArray();
+		
+		
+		query=BasicDBObjectBuilder.start()
+		.add("convo", convoRef)
+		.add("convoreply", new BasicDBObject("$ne", true))
+		.add("vote_score", 0)
+		.get();
+		commentsList.addAll(commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray());
+		
+		List<CommentBean> topCommentsList = parseCommentsTreeForScheduler(commentsList);
+		return topCommentsList;
+	}
+	
+	
+	/**
+	 * Transforms list of comments/replies to tree of comments/replies
+	 */
+	private static List<CommentBean> parseCommentsTreeForScheduler(List<DBObject> commentsList) {
+		List<CommentBean> topCommentsList = new ArrayList<CommentBean>();
+		
+		//temp map for resolving children
+		Map<String, CommentBean> commentsCacheMap = new HashMap<String, CommentBean>();
+		for (DBObject commentDBObject : commentsList) {
+			CommentBean commentBean = new CommentBean();
+			commentBean.parseBasicFromDB(commentDBObject);
+			commentsCacheMap.put(commentBean.getId(), commentBean);
+			
+			//if (!commentBean.isDeleted()) {
+				topCommentsList.add(commentBean);
+			//}
+			
+			CommonUtil.commentToHTML(commentBean);
+		}
+		
+		for (DBObject commentDBObject : commentsList) {
+			String commentId = getString(commentDBObject, "_id");
+			CommentBean commentBean = commentsCacheMap.get(commentId);
+			
+			//save children
+			List<CommentBean> childrenList = new ArrayList<CommentBean>();
+			List<String> childrenIdsList = getStringList(commentDBObject, "children");
+			for (String childId : childrenIdsList) {
+				CommentBean childrenCommentBean = commentsCacheMap.get(childId);
+				//if (!childrenCommentBean.isDeleted()) {
+					childrenList.add(childrenCommentBean);
+				//}
+				
+				//remove replies from the list of answers/thoughts
+				topCommentsList.remove(childrenCommentBean);
+			}
+			commentBean.setChildren(childrenList);
+			childrenList.clear();
+			CommonUtil.commentToHTML(commentBean);
+		}
+		
+		return topCommentsList;
+	}
+
 }

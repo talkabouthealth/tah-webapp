@@ -1,49 +1,18 @@
 package util.jobs;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Date;
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
 
-import oauth.signpost.OAuthConsumer;
-import oauth.signpost.basic.DefaultOAuthConsumer;
-
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.bson.types.ObjectId;
+import org.eclipse.jdt.internal.codeassist.ThrownExceptionFinder;
 
 import logic.TalkerLogic;
-import logic.TopicLogic;
-import models.CommentBean;
-import models.IMAccountBean;
-import models.PrivacySetting;
-import models.PrivacySetting.PrivacyType;
-import models.PrivacySetting.PrivacyValue;
-import models.ServiceAccountBean;
-import models.TalkerBean;
 import models.ConversationBean;
-import models.ServiceAccountBean.ServiceType;
-import models.TalkerBean.EmailSetting;
-import models.ThankYouBean;
+import models.TalkerBean;
 import models.TopicBean;
-
-import dao.ApplicationDAO;
-import dao.CommentsDAO;
-import dao.DiseaseDAO;
-import dao.HealthItemDAO;
-import dao.TalkerDAO;
-import dao.ConversationDAO;
-import dao.TopicDAO;
-
-import play.Logger;
-import play.Play;
+import models.TalkerBean.EmailSetting;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import util.BitlyUtil;
@@ -55,22 +24,24 @@ import util.importers.HealthItems2Topics;
 import util.importers.HealthItemsImporter;
 import util.importers.HealthItemsUpdater;
 import util.importers.TopicsImporter;
-import util.oauth.TwitterOAuthProvider;
+import dao.ApplicationDAO;
+import dao.ConversationDAO;
+import dao.TalkerDAO;
+import dao.TopicDAO;
 
 /**
  * Job for preparing db and app for work.
  * Also is used for different updates in db when deploying new features.
  * 
  */
-@OnApplicationStart
-public class ApplicationUpdatesJob extends Job {
+public class ApplicationUpdatesJob {
 	
-	public void doJob() throws Exception {
+	public static void main(String[] args) throws Throwable {
 		/**
 		 * For deploy
 		 * 
-		 * 
 		 */
+		System.out.println("ApplicationUpdatesJob Started::::"+ new Date());
 		System.out.println("importing data..");
 		//Fields data for Edit Profile
 		FieldsDataImporter.importData("fields.dat");
@@ -79,12 +50,12 @@ public class ApplicationUpdatesJob extends Job {
 		HealthItems2Topics.importData("healthitems2topics.dat");
 		
 		//Create collections if missing
-		if (DBUtil.isCollectionEmpty(DiseaseDAO.DISEASES_COLLECTION)) {
+		//if (DBUtil.isCollectionEmpty(DiseaseDAO.DISEASES_COLLECTION)) {
 			DiseaseImporter.importDiseases("diseases.dat");
-		}
+		//}
 		//commented if because every time it updates the record in table.
 		//if (DBUtil.isCollectionEmpty(HealthItemDAO.HEALTH_ITEMS_COLLECTION)) {
-			HealthItemsImporter.importHealthItems("healthitems.dat");
+			HealthItemsImporter.importHealthItems("healthitems1.dat");
 		//}
 		if (DBUtil.isCollectionEmpty(TopicDAO.TOPICS_COLLECTION)) {
 			TopicsImporter.importTopics("topics.dat");
@@ -92,36 +63,45 @@ public class ApplicationUpdatesJob extends Job {
 		
 		//Talkers/Topics/Convos should have different names, stored in 'names' collection
 		if (DBUtil.isCollectionEmpty(ApplicationDAO.NAMES_COLLECTION)) {
-			for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
+			
+			List<TalkerBean> talkersList = TalkerDAO.loadAllTalkers();
+			for (TalkerBean talker : talkersList) {
 				ApplicationDAO.createURLName(talker.getUserName(), true);
 			}
+			talkersList.clear();
 			
-			for (TopicBean topic : TopicDAO.loadAllTopics()) {
+			Set<TopicBean> topicList = TopicDAO.loadAllTopics(true);
+			for (TopicBean topic : topicList) {
 				String urlName = ApplicationDAO.createURLName(topic.getTitle());
 				topic.setMainURL(urlName);
-				TopicDAO.updateTopic(topic);
+				TopicDAO.updateTopicbyId(topic,"main_url",topic.getMainURL());
 			}
+			topicList.clear();
 			
-			for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
+			List <ConversationBean> convolist=ConversationDAO.getAllConvosForScheduler();
+			for (ConversationBean convo : convolist) {
 				String urlName = ApplicationDAO.createURLName(convo.getTopic());
 				convo.setMainURL(urlName);
-				ConversationDAO.updateConvo(convo);
+				ConversationDAO.updateConvoForScheduler(convo,"main_url",convo.getMainURL());
 			}
+			convolist.clear();
 		}
 		
 		addAdminUser();
 		
 		// Updates for different items
 		HealthItemsUpdater.updateHealthItems("healthitemsupd.dat");
-		
+		System.out.println("ApplicationUpdatesJob Completed::::"+ new Date());
 //		createBitlyLinks();
+		ApplicationUpdatesJob appUpdateJob = new ApplicationUpdatesJob();
+		appUpdateJob.finalize();
     }
 
 	/**
 	 * Add admin user if missing
 	 */
-	private void addAdminUser() {
-		TalkerBean admin = TalkerDAO.getByUserName("admin");
+	private static void addAdminUser() {
+		TalkerBean admin = TalkerDAO.getByFieldBasicInfo("uname", "admin");
 		if (admin == null) {
 			admin = new TalkerBean();
 			admin.setUserName("admin");
@@ -146,37 +126,37 @@ public class ApplicationUpdatesJob extends Job {
 	/**
 	 * Create BitLy links for convos, chat and topics
 	 */
-	private void createBitlyLinks() {
+	private static void createBitlyLinks() {
 		Executors.newSingleThreadExecutor().execute(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					//timeout between API requests
 					final int BITLY_TIMEOUT = 60*1000;
-					for (ConversationBean convo : ConversationDAO.loadAllConversations()) {
+					for (ConversationBean convo : ConversationDAO.getAllConvosForScheduler()) {
 						if (convo.getBitly() == null || convo.getBitly().equals("RATE_LIMIT_EXCEEDE")) {
 							String convoURL = "http://talkabouthealth.com/"+convo.getMainURL();
 							convo.setBitly(BitlyUtil.shortLink(convoURL));
 							Thread.sleep(BITLY_TIMEOUT);
 							
-							ConversationDAO.updateConvo(convo);
+							ConversationDAO.updateConvoForScheduler(convo,"bitly", convo.getBitly());
 						}
 						if (convo.getBitlyChat() == null || convo.getBitlyChat().equals("RATE_LIMIT_EXCEEDE")) {
 							String convoChatURL = "http://talkabouthealth.com/chat/"+convo.getTid();
 							convo.setBitlyChat(BitlyUtil.shortLink(convoChatURL));
 							Thread.sleep(BITLY_TIMEOUT);
 							
-							ConversationDAO.updateConvo(convo);
+							ConversationDAO.updateConvoForScheduler(convo,"bitly_chat", convo.getBitlyChat());
 						}
 					}
 					
-					for (TopicBean topic : TopicDAO.loadAllTopics()) {
+					for (TopicBean topic : TopicDAO.loadAllTopics(true)) {
 						if (topic.getBitly() == null || topic.getBitly().equals("RATE_LIMIT_EXCEEDE")) {
 							String topicURL = "http://talkabouthealth.com/"+topic.getMainURL();
 							topic.setBitly(BitlyUtil.shortLink(topicURL));
 							Thread.sleep(BITLY_TIMEOUT);
 							
-							TopicDAO.updateTopic(topic);
+							TopicDAO.updateTopicbyId(topic,"bitly",topic.getBitly());
 						}
 					}
 				}
@@ -185,5 +165,9 @@ public class ApplicationUpdatesJob extends Job {
 				}
 			}
 		});
+	}
+	
+	protected void finalize() throws Throwable {
+		super.finalize();
 	}
 }

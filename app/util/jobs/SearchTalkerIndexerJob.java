@@ -1,6 +1,8 @@
 package util.jobs;
 
 
+import java.util.Date;
+
 import models.TalkerBean;
 import models.PrivacySetting.PrivacyType;
 
@@ -16,18 +18,15 @@ import play.jobs.Job;
 
 import util.SearchUtil;
 
-//@Every("10min")
 public class SearchTalkerIndexerJob extends Job{
-int limit=10;
-
-	@Override
-	public void doJob() throws Exception {
-	 
+	public static void main(String[] args) throws Throwable {
+		int limit=10;
 		IndexWriter talkerIndexWriter=null;
 		IndexWriter autocompleteIndexWriter=null;
-		 talkerIndexWriter = new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"talker", new StandardAnalyzer(), false);
-	  	 autocompleteIndexWriter = new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"autocomplete", new StandardAnalyzer(), false);
-	   try {
+		System.out.println("SearchTalkerIndexerJob Started::::"+ new Date());
+		talkerIndexWriter = new IndexWriter("/data/searchindex/talker", new StandardAnalyzer(), false);
+	  	autocompleteIndexWriter = new IndexWriter("/data/searchindex/autocomplete", new StandardAnalyzer(), false);
+	  	try {
 			for (TalkerBean talker : TalkerDAO.loadUpdatedTalker(limit)) {
 				  
 				  Document doc = new Document();
@@ -46,16 +45,18 @@ int limit=10;
 				  doc.add(new Field("type", "User", Field.Store.YES, Field.Index.NO));
 				  autocompleteIndexWriter.addDocument(doc);
 			}
-	   }
+	  	}
 		finally {
-					talkerIndexWriter.close();
-					autocompleteIndexWriter.close();
+			talkerIndexWriter.close();
+			autocompleteIndexWriter.close();
+			System.out.println("SearchTalkerIndexerJob Completed::::"+ new Date());
+			SearchTalkerIndexerJob talkerJob = new SearchTalkerIndexerJob();
+			talkerJob.finalize();
 	   }
-	
 	}
 	
-	public static void main(String[] args) throws Exception {
-		new SearchTalkerIndexerJob().doJob();
+	protected void finalize() throws Throwable {
+		super.finalize();
 	}
 	 
 }
