@@ -506,4 +506,9 @@ public class Application extends Controller {
         Cache.set(id, code);
         renderBinary(captcha);
     }
+    
+    public static void reloadTalkersHealthInfo(){
+    	TalkerDiseaseDAO.convertDBObjectToDBList();
+    	redirect("/home");
+    }
 }
