@@ -109,7 +109,7 @@ public class DiseaseImporter {
 		 buffer=buffer.replaceAll("true","false");
 		 buffer=buffer.replaceAll("insert","false");
 		 
-		  FileWriter fstream = new FileWriter("/opt/tah-webapp/app/util/importers/data/"+fileName);
+		  FileWriter fstream = new FileWriter("/opt/tah-webapp/tmpClasses/classes/util/importers/data/"+fileName);
 		  BufferedWriter out = new BufferedWriter(fstream);
 		  out.write(buffer);
 		  out.close();

@@ -98,7 +98,6 @@ public class DiseaseDAO {
 			questions.add(quest);
 		}
 		disease.setQuestions(questions);
-		questions.clear();
 		return disease;
 	}
 	
