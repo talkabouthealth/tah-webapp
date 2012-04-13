@@ -55,6 +55,7 @@ import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.DiseaseDAO;
 import dao.TalkerDAO;
+import dao.TalkerDiseaseDAO;
 
 /**
  * Operations for not-authenticated talkers:
