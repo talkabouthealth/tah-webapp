@@ -75,7 +75,7 @@ $(document).ready(function() {
 	makeAutocomplete("#startChatText", "convo");
 	$('.inline-edit').inlineEdit( { hover: ''} );
 	
-	setInterval("checkFeed('communityFeed');",60000);
+	setInterval("checkFeed('allFeed');",60000);
 	setInterval("checkFeed('convoFeed');",60000);
 	setInterval("checkFeed('mentions','${talker.userName}');",60000);
 	loadSimilarMember('USR',"#similarMembersCnt");
