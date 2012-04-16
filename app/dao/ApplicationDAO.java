@@ -264,8 +264,11 @@ public class ApplicationDAO {
 		
 		//Collections.sort(newTalkers, new TalkerBean());
 		if(newTalkers.size()<3){
-			  afterActionId=talkersDBList.get(talkersDBList.size()-1).get("_id").toString();
-			  newTalkers.addAll(getTalkersInOrder(talkerBean,memberFlag,afterActionId,newTalkers));
+			if(talkersDBList.size()>0)
+				afterActionId=talkersDBList.get(talkersDBList.size()-1).get("_id").toString();
+			else
+				afterActionId = null;
+			 newTalkers.addAll(getTalkersInOrder(talkerBean,memberFlag,afterActionId,newTalkers));
 		}else{
 			return newTalkers;
 		}
@@ -288,7 +291,7 @@ public class ApplicationDAO {
 			talker.setId(getString(talkerDBObject, "_id"));
 			if (!newTalkers.contains(talker)) {
 				talker.parseBasicFromDB(talkerDBObject);
-				if (!(talkerBean.getFollowingList().contains(talker))){
+				if (!(talkerBean.getFollowingList().contains(talker)) && !talkerBean.equals(talker)){
 					DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talker.getId());
 					query = BasicDBObjectBuilder.start().add("uid", talkerRef).get();
 					List<DBObject> loginTime= loginHistoryCollection.find(query).toArray();
