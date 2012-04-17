@@ -419,20 +419,24 @@ public class CommonUtil {
 		return emailsToSend;
 	}
 	
+	public static Set<String> loadTalkers(){
+		Set<String> allTalkers = new TreeSet<String>(
+				new StringLengthComparator());
+		for (TalkerBean talker : TalkerDAO.loadAllTalkers(true)) {
+			allTalkers.add(talker.getUserName());
+		}
+		return allTalkers;
+	}
 	
-	//-------------------------------------------------------------------------
-	//TODO: test code for linkifying, update later
-	private static Map<String, String> allTopics = new TreeMap<String, String>(new StringLengthComparator());
-	private static Set<String> allTalkers = new TreeSet<String>(new StringLengthComparator());
-	static {
+	public static Map<String, String> loadTopics(){
+		Map<String, String> allTopics = new TreeMap<String, String>(new StringLengthComparator());
 		for (TopicBean topic : TopicDAO.loadAllTopics(true)) {
 			String topicTitle = topic.getTitle().replaceAll(" ", "");
 			allTopics.put(topicTitle, topic.getMainURL());
 		}
-		for (TalkerBean talker : TalkerDAO.loadAllTalkers(true)) {
-			allTalkers.add(talker.getUserName());
-		}
+		return allTopics;
 	}
+	
 	private static class StringLengthComparator implements Comparator<String> {
 		@Override
 		public int compare(String o1, String o2) {
@@ -448,34 +452,41 @@ public class CommonUtil {
 	public static String prepareThoughtOrAnswer(String text) {
 		text = CommonUtil.linkify(text);
 		if (text.contains("#")) {
-			for (Entry<String, String> topicEntry : allTopics.entrySet()) {
+			Map<String, String> allTopics = loadTopics();
+			Iterator it = allTopics.entrySet().iterator();
+
+			//for(int index =0 ; index < allTopics.size(); index++){
+			while (it.hasNext()) {
+				Entry<String, String> topicEntry =(Map.Entry)it.next();
 				if (topicEntry.getKey().length() == 0) {
 					continue;
 				}
-                                String key = ValidateData.escapeText(topicEntry.getKey());
-				//case insensitive
-                                
-                                /*
-				text = text.replaceAll("(?i)#("+topicEntry.getKey()+")", 
-						"<a href=\"http://talkabouthealth.com/"+topicEntry.getValue()+"\">#&$1</a>");
-                                */ 
-                                
-                                
-                                text = text.replaceAll("(?i)#("+key+")", 
-						"<a href=\"http://talkabouthealth.com/"+topicEntry.getValue()+"\">#&$1</a>");
-                                
-                                
+				String key = ValidateData.escapeText(topicEntry.getKey());
+				// case insensitive
+
+				/*
+				 * text = text.replaceAll("(?i)#("+topicEntry.getKey()+")",
+				 * "<a href=\"http://talkabouthealth.com/"
+				 * +topicEntry.getValue()+"\">#&$1</a>");
+				 */
+
+				text = text.replaceAll("(?i)#(" + key + ")",
+						"<a href=\"http://talkabouthealth.com/"
+								+ topicEntry.getValue() + "\">#&$1</a>");
+				it.remove();
 			}
 		}
 		if (text.contains("@")) {
+			Set<String> allTalkers =  loadTalkers();
 			for (String talker : allTalkers) {
-				//case insensitive
-                                talker = ValidateData.escapeText(talker);
-				text = text.replaceAll("(?i)@("+talker+")", 
-						"<a href=\"http://talkabouthealth.com/"+talker+"\">@&$1</a>");
+				// case insensitive
+				talker = ValidateData.escapeText(talker);
+				text = text.replaceAll("(?i)@(" + talker + ")",
+						"<a href=\"http://talkabouthealth.com/" + talker
+								+ "\">@&$1</a>");
 			}
 		}
-		text = text.replaceAll(">#&", ">#").replaceAll(">@&", ">@");	
+		text = text.replaceAll(">#&", ">#").replaceAll(">@&", ">@");
 		return text;
 	}
 
