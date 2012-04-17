@@ -45,6 +45,7 @@ GET		/explore/expert/?						Explore.conversations(action:'expert')
 GET		/explore/open/?							Explore.conversations(action:'open')
 GET		/explore/feedAjaxLoad					Explore.feedAjaxLoad
 GET		/explore/ajaxLoadMoreUser				Explore.ajaxLoadMoreUser
+GET		/explore/topicAjaxLoad					Explore.topicAjaxLoad
 GET		/explore/communityFeedAjaxLoad			Explore.communityFeedAjaxLoad
 GET		/explore/topics							Explore.topics
 GET		/explore/{cancerType}					Explore.community
