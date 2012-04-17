@@ -178,7 +178,7 @@ public class ApplicationDAO {
 	 * Using to 20 users only for the list on profile page for recommendations.
 	 */
 	public static List<DBObject> loadTalkers(TalkerBean talkerBean,boolean memberFlag,String afterActionId) {
-
+		System.out.println("load talkers ;;;;");
 		DBCollection loginsColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
 		List<String> list = TalkerBean.PROFESSIONAL_CONNECTIONS_LIST;
 		BasicDBList basicDBList = new BasicDBList();
