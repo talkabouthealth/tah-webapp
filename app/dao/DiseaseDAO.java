@@ -48,13 +48,13 @@ public class DiseaseDAO {
 				.add("fileid",disease.getFileId())
 				.get();
 			if(disease.getUpdateFlag().equals("true")){
-				
+				System.out.println("Updating diseases::::::");
 				DBObject query = new BasicDBObject("fileid", disease.getFileId());
 				DBObject diseobj = diseasesColl.findOne(query);//, new BasicDBObject("_id", 0));
 				
-				if(diseobj==null)
+				if(diseobj==null){
 					diseasesColl.save(diseaseObject);
-				else{
+				}else{
 					String oldDiseaseName = getDiseaseNameByFileId(disease.getFileId());
 					String diseId=diseobj.get("_id").toString();
 					DBObject id = new BasicDBObject("_id", new ObjectId(diseId));
@@ -64,10 +64,22 @@ public class DiseaseDAO {
 				}
 				
 			}else{
+				System.out.println("Inserting diseases::::::");
 			 diseasesColl.save(diseaseObject);
 			}
 			
 		}
+	}
+	
+	public static void update(String id,String fileid){
+		
+		DBCollection diseasesColl = getCollection(DISEASES_COLLECTION);
+		DBObject diseaseObject = BasicDBObjectBuilder.start()
+		.add("fileid", fileid)
+		.get();
+		
+		DBObject disease = new BasicDBObject("_id", new ObjectId(id));
+		diseasesColl.update(disease, new BasicDBObject("$set", diseaseObject));
 	}
 	
 	public static DiseaseBean getByName(String diseaseName) {
@@ -155,7 +167,7 @@ public class DiseaseDAO {
 	 * @param newName
 	 */
 	private static void updateDiseaseName(String oldName, String newName){
-		List<TalkerBean> talkersList = TalkerDAO.loadAllTalkers(); 
+		List<TalkerBean> talkersList = TalkerDAO.loadAllTalkers(true); 
 		if(talkersList != null && talkersList.size() > 0){
 			for(int index = 0; index < talkersList.size(); index++){
 				TalkerBean talker = talkersList.get(index);
@@ -204,7 +216,7 @@ public class DiseaseDAO {
 			}
 		}
 		
-		List<ConversationBean> convoList = ConversationDAO.loadAllConversations();
+		List<ConversationBean> convoList = ConversationDAO.getAllConvosForScheduler();
 		if(convoList != null && convoList.size() > 0){
 			for(int index = 0; index < convoList.size(); index++){
 				ConversationBean convo = convoList.get(index);

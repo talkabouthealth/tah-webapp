@@ -2,6 +2,8 @@ package controllers;
 
 import static util.DBUtil.createRef;
 import static util.DBUtil.getCollection;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -247,11 +249,17 @@ public class Conversations extends Controller {
      * @param convoid
      * @throws Exception
      */
-    private static void deleteConvoIndex (String convoid)throws Exception {
-    	Directory directory = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
-    	Directory directory1 = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"conversations");
-    	IndexReader autocompleteConvoIndexReader = IndexReader.open(directory);
-    	IndexReader convoIndexReader = IndexReader.open(directory1);
+    @SuppressWarnings("deprecation")
+	private static void deleteConvoIndex (String convoid)throws Exception {
+    	
+    	File autoCompleteIndexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
+ 		Directory autoCompleteIndexDir = FSDirectory.open(autoCompleteIndexerFile);
+ 		
+ 		File conversationsIndexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"conversations");
+ 		Directory conversationsIndexDir = FSDirectory.open(conversationsIndexerFile);
+ 		
+    	IndexReader autocompleteConvoIndexReader = IndexReader.open(autoCompleteIndexDir, false);
+    	IndexReader convoIndexReader = IndexReader.open(conversationsIndexDir, false);
     	Term term = new Term("id",convoid);
     	try{
 			convoIndexReader.deleteDocuments(term);
@@ -265,6 +273,11 @@ public class Conversations extends Controller {
 			System.out.println("exception is here "+e);
 			e.printStackTrace();
 		}
+		
+		convoIndexReader.close();
+		autocompleteConvoIndexReader.close();
+		conversationsIndexDir.close();
+		autoCompleteIndexDir.close();
     }
     
     

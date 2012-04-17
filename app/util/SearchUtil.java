@@ -1,8 +1,8 @@
 package util;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import logic.FeedsLogic;
@@ -11,24 +11,25 @@ import models.ConversationBean;
 import models.TalkerBean;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.CachingTokenFilter;
-import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.highlight.Fragmenter;
 import org.apache.lucene.search.highlight.Highlighter;
 import org.apache.lucene.search.highlight.QueryScorer;
 import org.apache.lucene.search.highlight.Scorer;
 import org.apache.lucene.search.highlight.SimpleFragmenter;
-import org.apache.lucene.search.highlight.TokenSources;
-import org.apache.lucene.search.spans.SpanScorer;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 
 import play.Play;
 import dao.CommentsDAO;
@@ -50,18 +51,21 @@ public class SearchUtil {
 	 * @throws ParseException
 	 */
 	public static List<TalkerBean> searchTalker(String query, TalkerBean talkerBean) throws CorruptIndexException, IOException, ParseException {
-		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"talker");
-		
-		Analyzer analyzer = new StandardAnalyzer();
+		File indexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"talker");
+ 		Directory indexDir = FSDirectory.open(indexerFile);
+ 		IndexReader indexReader = IndexReader.open(indexDir);
+		IndexSearcher is = new IndexSearcher(indexReader);
+		//prepare query to search
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
 		Query searchQuery = prepareSearchQuery(query, new String[] {"uname","fname","lname","bio"}, analyzer, true);
-		Hits hits = is.search(searchQuery);
+		TopDocs hits = is.search(searchQuery, 10);
+		ScoreDoc [] docs = hits.scoreDocs;
 		
 		List<String> cat = FeedsLogic.getCancerType(talkerBean);
 		
 		List<TalkerBean> results = new ArrayList<TalkerBean>();
-		for (int i = 0; i < hits.length(); i++) {
-			Document doc = hits.doc(i);
-
+		for (int i = 0; i < docs.length ; i++) {
+			Document doc = is.doc(docs[i].doc);
 			TalkerBean talker = TalkerDAO.getById(doc.get("id"));
 			
 			//Commented code to display all category users in members page
@@ -72,6 +76,8 @@ public class SearchUtil {
 			//	break;
 			//}
 		}
+		indexReader.close();
+		indexDir.close();
 		is.close();
 		return results;
 	}
@@ -87,18 +93,34 @@ public class SearchUtil {
 	 * @throws ParseException
 	 */
 	public static List<ConversationBean> searchConvo(String query, int numOfResults, TalkerBean talker) throws CorruptIndexException, IOException, ParseException {
-		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"conversations");
-		
+		File indexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"conversations");
+ 		Directory indexDir = FSDirectory.open(indexerFile);
+ 		IndexReader indexReader = IndexReader.open(indexDir);
+		IndexSearcher is = new IndexSearcher(indexReader);
 		//prepare query to search
-		Analyzer analyzer = new StandardAnalyzer();
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
 		Query searchQuery = prepareSearchQuery(query, new String[] {"title", "answers"}, analyzer, true);
-		Hits hits = is.search(searchQuery);
-		
+		TopDocs hits = is.search(searchQuery, 10);
+		ScoreDoc [] docs = hits.scoreDocs;
 		//List<String> cat = FeedsLogic.getCancerType(talker);
 		
+		/*if(talker.getOtherCategories() != null && talker.getOtherCategories().length > 0){
+			for(int index = 0; index < talker.getOtherCategories().length; index++)
+				cat.add(talker.getOtherCategories()[index]);
+		}*/
+
+		/*	List<String> cat = new ArrayList<String>();
+    	boolean loggedIn = (talker != null);
+    	 
+    	  if(loggedIn)
+			 cat = FeedsLogic.getCancerType(talker);
+			else{
+			 cat= FeedsLogic.getTypeForAnonymousUser();
+			}*/
+			
 		List<ConversationBean> results = new ArrayList<ConversationBean>();
-		for (int i = 0; i < hits.length(); i++) {
-			Document doc = hits.doc(i);
+		for (int i = 0; i < docs.length ; i++) {
+			Document doc = is.doc(docs[i].doc);
 			
 			String convoId = doc.get("id");
 			ConversationBean convo = ConversationDAO.getById(convoId);
@@ -128,7 +150,8 @@ public class SearchUtil {
 				break;
 			}
 		}
-		
+		indexReader.close();
+		indexDir.close();
 		is.close();
 		return results;
 	}
@@ -139,7 +162,12 @@ public class SearchUtil {
 	 * Returns 3 conversations related to given.
 	 */
 	public static List<ConversationBean> getRelatedConvos(TalkerBean talker,ConversationBean searchedConvo) throws Exception {
-		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"conversations");
+		File indexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"conversations");
+ 		Directory indexDir = FSDirectory.open(indexerFile);
+ 		IndexReader indexReader = IndexReader.open(indexDir);
+		IndexSearcher is = new IndexSearcher(indexReader);
+		//prepare query to search
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
 		
 		//Possible implementation?
 //		MoreLikeThis mlt = new MoreLikeThis(is.getIndexReader());
@@ -151,15 +179,15 @@ public class SearchUtil {
 		//remove bad characters (special for search)
 		String queryText = searchedConvo.getTopic();
 		queryText = queryText.replaceAll("[\\W_]", " ");
-		Analyzer analyzer = new StandardAnalyzer();
 		Query searchQuery = prepareSearchQuery(queryText, new String[] {"title"}, analyzer, false);
 		
-		Hits hits = is.search(searchQuery);
+		TopDocs hits = is.search(searchQuery, 10);
+		ScoreDoc [] docs = hits.scoreDocs;
 		
 		//List<String> cat = FeedsLogic.getCancerType(talker);
 		List<ConversationBean> results = new ArrayList<ConversationBean>();
-		for (int i = 0; i < hits.length(); i++) {
-			Document doc = hits.doc(i);
+		for (int i = 0; i < docs.length ; i++) {
+			Document doc = is.doc(docs[i].doc);
 			
 			String convoId = doc.get("id");
 			if (searchedConvo.getId().equals(convoId)) {
@@ -173,6 +201,8 @@ public class SearchUtil {
 			}
 		}
 		
+		indexReader.close();
+		indexDir.close();
 		is.close();
 		return results;
 	}
@@ -185,7 +215,7 @@ public class SearchUtil {
 				term = escapeString(term);
 		}
 		
-		QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
+		QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36,fields, analyzer);
 		parser.setAllowLeadingWildcard(true);
 		/* Updated to show all users if no search term entered. 
 		 * Good to have change

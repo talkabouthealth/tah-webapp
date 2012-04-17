@@ -1,5 +1,6 @@
 package controllers;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,7 +10,6 @@ import java.util.Map;
 import logic.ConversationLogic;
 import logic.TopicLogic;
 import models.ConversationBean;
-import models.DiseaseBean;
 import models.MessageBean;
 import models.TalkerBean;
 import models.TopicBean;
@@ -18,19 +18,21 @@ import models.actions.Action;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.search.Hits;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 
 import play.mvc.Controller;
 import util.CommonUtil;
 import util.SearchUtil;
 import dao.ConversationDAO;
-import dao.DiseaseDAO;
 import dao.MessagingDAO;
-import dao.TalkerDAO;
 import dao.TopicDAO;
 
 public class Search extends Controller {
@@ -98,6 +100,18 @@ public class Search extends Controller {
 	}
 	
 	/**
+	 * Back-end for message autocomplete
+	 * @param term
+	 */
+	public static void ajaxMessageSearch(String term) throws Exception {
+		
+		List<String> allowedTypes = Arrays.asList("Message");
+		List<Map<String, String>> results = null;
+		results = makeMessageSearch(term, allowedTypes, null);
+		renderJSON(results);
+	}
+	
+	/**
 	 * Back-end for disease auto-complete
 	 * @param term
 	 * @param convoId
@@ -124,7 +138,7 @@ public class Search extends Controller {
 		if(term == null){
 			diseaseList.add(talker.getCategory());
 		}else{
-			if(talker.getCategory().toLowerCase().contains(term))
+			if(talker.getCategory() != null && talker.getCategory().toLowerCase().contains(term))
 			    diseaseList.add(talker.getCategory());
 		}
 		
@@ -138,18 +152,6 @@ public class Search extends Controller {
 		
 		renderJSON(diseaseList);
 	}
-     
-	 /**
-	 * Back-end for message autocomplete
-	 * @param term
-	 */
-	public static void ajaxMessageSearch(String term) throws Exception {
-		
-		List<String> allowedTypes = Arrays.asList("Message");
-		List<Map<String, String>> results = null;
-		results = makeMessageSearch(term, allowedTypes, null);
-		renderJSON(results);
-	}
 	
 	/**
 	 * Performs search in 'autocomplete' index
@@ -161,12 +163,17 @@ public class Search extends Controller {
 	 */
 	private static List<Map<String, String>> makeSearch(String term, 
 			List<String> allowedTypes, List<String> filterIds) throws Exception {
-		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
 		
-		Analyzer analyzer = new StandardAnalyzer();
+		File indexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
+ 		Directory indexDir = FSDirectory.open(indexerFile);
+ 		IndexReader indexReader = IndexReader.open(indexDir);
+		IndexSearcher is = new IndexSearcher(indexReader);
+		
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
 		Query searchQuery = SearchUtil.prepareSearchQuery(term, new String[] {"uname", "title"}, analyzer, true);
 		
-		Hits hits = is.search(searchQuery);
+		TopDocs hits = is.search(searchQuery, 10);
+		ScoreDoc [] docs = hits.scoreDocs;
 		
 		/*TopDocs hits = is.search(searchQuery, null, 10);
 		ScoreDoc [] docs = hits.scoreDocs;
@@ -174,8 +181,9 @@ public class Search extends Controller {
 			Document doc = is.doc(docs[i].doc);*/
 		
 		List<Map<String, String>> results = new ArrayList<Map<String, String>>();
-		for (int i = 0; i < hits.length(); i++) {
-			Document doc = hits.doc(i);
+		for (int i = 0; i <docs.length ; i++) {
+			Document doc = is.doc(docs[i].doc);
+		
 			
 						
 			//filter by id or type
@@ -222,16 +230,20 @@ public class Search extends Controller {
 		
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
-		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"messageAutocomplete");
-				
-		Analyzer analyzer = new StandardAnalyzer();
+		File indexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"messageAutocomplete");
+ 		Directory indexDir = FSDirectory.open(indexerFile);
+ 		IndexReader indexReader = IndexReader.open(indexDir);
+		IndexSearcher is = new IndexSearcher(indexReader);
+		
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
 		Query searchQuery = SearchUtil.prepareSearchQuery(term, new String[] {"title"}, analyzer, true);
 		
-		Hits hits = is.search(searchQuery);
+		TopDocs hits = is.search(searchQuery, 10);
+		ScoreDoc [] docs = hits.scoreDocs;
 		
 		List<Map<String, String>> results = new ArrayList<Map<String, String>>();
-		for (int i = 0; i < hits.length(); i++) {
-			Document doc = hits.doc(i);
+		for (int i = 0; i < docs.length; i++) {
+			Document doc = is.doc(docs[i].doc);
 			
 						
 			//filter by id or type
@@ -289,7 +301,7 @@ public class Search extends Controller {
 		int totalCount = 0;
 		List<TopicBean> topicResults = null;
 		List<Action> convoResults = null;
-		if (query != null) {
+		if (query != null && !query.trim().equals("")) {
 			topicResults = topicsSearch(query);
 			totalCount = SearchUtil.searchConvo(query,200000,_talker) == null ? 0 : SearchUtil.searchConvo(query,200000,_talker).size();
 			List<ConversationBean> convoList = SearchUtil.searchConvo(query,limit,_talker);
@@ -317,10 +329,13 @@ public class Search extends Controller {
 	}
 	
 	private static List<TopicBean> topicsSearch(String query) throws Exception {
-		IndexSearcher is = new IndexSearcher(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
+		File indexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
+ 		Directory indexDir = FSDirectory.open(indexerFile);
+ 		IndexReader indexReader = IndexReader.open(indexDir);
+		IndexSearcher is = new IndexSearcher(indexReader);
 		
-		Analyzer analyzer = new StandardAnalyzer();
-		Query searchQuery = SearchUtil.prepareSearchQuery(query, new String[] {"title"}, analyzer, true);
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
+		Query searchQuery = SearchUtil.prepareSearchQuery(query, new String[] {"title"}, analyzer, false);
 		//Hits hits = is.search(searchQuery);
 		
 		TopDocs hits = is.search(searchQuery, null, 5);

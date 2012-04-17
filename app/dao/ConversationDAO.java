@@ -1052,6 +1052,8 @@ public class ConversationDAO {
 			.add("deleted", 1)
 			.add("bitly", 1)
 			.add("bitly_chat", 1)
+			.add("category", 1)
+			.add("other_disease_categories", 1)
 			.get();
 
 		BasicDBObject basicDBObject = new BasicDBObject("_id", new BasicDBObject("$ne", ""));
@@ -1066,6 +1068,11 @@ public class ConversationDAO {
 			convo.setDeleted(getBoolean(convoDBObject, "deleted"));
 			convo.setBitly((String)convoDBObject.get("bitly"));
 			convo.setBitlyChat((String)convoDBObject.get("bitly_chat"));
+			convo.setCategory((String)convoDBObject.get("category"));
+	    	Collection<String> otherDiseaseCategories = (Collection<String>)convoDBObject.get("other_disease_categories");
+			if (otherDiseaseCategories != null) {
+				convo.setOtherDiseaseCategories(otherDiseaseCategories.toArray(new String[]{}));
+			}
 			conversationList.add(convo);
 		}
 		return conversationList;

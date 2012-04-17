@@ -175,7 +175,8 @@ public class ApplicationDAO {
 	 * New users/Experts - users signed up or logged in date descending order
 	 * Using to 20 users only for the list on profile page for recommendations.
 	 */
-	public static List<TalkerBean> getTalkersInOrder(TalkerBean talkerBean,boolean memberFlag,String afterActionId,List<TalkerBean> newTalkers) {
+	public static List<DBObject> loadTalkers(TalkerBean talkerBean,boolean memberFlag,String afterActionId) {
+
 		DBCollection loginsColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
 		List<String> list = TalkerBean.PROFESSIONAL_CONNECTIONS_LIST;
 		BasicDBList basicDBList = new BasicDBList();
@@ -237,44 +238,34 @@ public class ApplicationDAO {
 		}
 		
 		DBObject fields = TalkerDAO.getBasicTalkerFields();
-		List<DBObject> talkersDBList = loginsColl.find(query, fields).limit(20).sort(new BasicDBObject("timestamp", -1)).toArray();
-			
-		 newTalkers.addAll(getTalkers(talkersDBList,talkerBean));
-		/*
-		//If member size is zero then again displays members from latest date
-		if(newTalkers.size()==0){
-						if(memberFlag){
-							query = BasicDBObjectBuilder.start()
-								.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList ))
-								//.add("category", new BasicDBObject("$in", cat) )
-								.add("connection_verified",true)
-								.get();
-						}else{
-							query = BasicDBObjectBuilder.start()
-								.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList ))
-								//.add("category", new BasicDBObject("$in", cat) )
-								.get();
-						}
-						
-			fields = TalkerDAO.getBasicTalkerFields();
-			talkersDBList = loginsColl.find(query, fields).limit(3).sort(new BasicDBObject("timestamp", -1)).toArray();
-			
-			newTalkers.addAll(getTalkers(talkersDBList,talkerBean));
-		}*/
+		List<DBObject> talkersDBList = loginsColl.find(query, fields).limit(10).sort(new BasicDBObject("timestamp", -1)).toArray();
 		
-		//Collections.sort(newTalkers, new TalkerBean());
-		if(newTalkers.size()<3){
-			if(talkersDBList.size()>0)
+		return talkersDBList;
+	}
+	
+	/**
+	 * 
+	 * 
+	 */
+	public static List<TalkerBean> getTalkersInOrder(TalkerBean talkerBean,boolean memberFlag,String afterActionId){
+		List<TalkerBean> talkerList=new ArrayList<TalkerBean>();
+		
+		List<DBObject> talkersDBList=new ArrayList<DBObject>();
+		while(true){
+			 talkersDBList=loadTalkers(talkerBean,memberFlag,afterActionId);
+			talkerList.addAll(getTalkers(talkersDBList,talkerBean,talkerList.size()));
+			
+			if(talkerList.size()>=TALKERS_PER_PAGE) 
+			break;
+			
+			if(talkersDBList.size()==10)
 				afterActionId=talkersDBList.get(talkersDBList.size()-1).get("_id").toString();
 			else
-				afterActionId = null;
-			 newTalkers.addAll(getTalkersInOrder(talkerBean,memberFlag,afterActionId,newTalkers));
-		}else{
-			return newTalkers;
+				afterActionId=null;
 		}
-		
-		return newTalkers;
+		return talkerList;
 	}
+
 	
 	/**
 	 * Method used for getting talkers which is login at least two times.
@@ -282,7 +273,7 @@ public class ApplicationDAO {
 	 * @param talkerBean
 	 * @return
 	 */
-	public static List<TalkerBean> getTalkers(List<DBObject> talkersDBList, TalkerBean talkerBean){
+	public static List<TalkerBean> getTalkers(List<DBObject> talkersDBList, TalkerBean talkerBean,int size){
 		DBCollection loginHistoryCollection = getCollection(LOGIN_HISTORY_COLLECTION);
 		DBObject query = null;
 		List<TalkerBean> newTalkers = new ArrayList<TalkerBean>();
@@ -299,6 +290,10 @@ public class ApplicationDAO {
 						DBObject logTimeObj = loginTime.get(0);
 						talker.setRegDate((Date)logTimeObj.get("log_time"));
 						newTalkers.add(talker);
+						size++;
+						if(size>=TALKERS_PER_PAGE)
+							break;
+
 					}
 				}
 			}

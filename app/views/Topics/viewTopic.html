@@ -31,7 +31,7 @@
 	#{/if}
 	<div id="openQuestionsContent" class="tabContent" style="display: none;">
 		#{list items: openConvosSaved, as: 'convo' }
-			#{convo/convoListItem convo: convo, talker: talker /}
+			#{convo/convoListItemTopic convo: convo, talker: talker /}
 		#{/list}	
 	</div>
 	#{if openConvosSaved.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
@@ -42,7 +42,7 @@
 	#{/if}
 	<div id="popularConvosContent" class="tabContent" style="display: none;">
 		#{list items: popularConvos, as: 'convo' }
-			#{convo/convoListItem convo: convo, talker: talker /}
+			#{convo/convoListItemTopic convo: convo, talker: talker /}
 		#{/list}
 	</div>
 	#{if popularConvos.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }

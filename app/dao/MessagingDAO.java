@@ -2,6 +2,7 @@ package dao;
 import static util.DBUtil.createRef;
 import static util.DBUtil.getCollection;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -16,8 +17,10 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 import org.bson.types.ObjectId;
 
 import play.Logger;
@@ -502,13 +505,15 @@ public class MessagingDAO {
 	 * @param id
 	 * @throws Exception
 	 */
+	@SuppressWarnings("deprecation")
 	public static void populateMessageIndex(String id) throws Exception{
-		Directory directory = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"messageAutocomplete");
+		File messageAutocompleteIndexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"messageAutocomplete");
+ 		Directory messageAutocompleteIndexDir = FSDirectory.open(messageAutocompleteIndexerFile);
 		IndexWriter autocompleteMessageIndexWriter = null;
-		if(IndexReader.indexExists(directory)){
-			autocompleteMessageIndexWriter = new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"messageAutocomplete", new StandardAnalyzer(), false);
+		if(IndexReader.indexExists(messageAutocompleteIndexDir)){
+			autocompleteMessageIndexWriter = new IndexWriter(messageAutocompleteIndexDir, new StandardAnalyzer(Version.LUCENE_36), false,MaxFieldLength.UNLIMITED) ; 
 		}else{
-			autocompleteMessageIndexWriter = new IndexWriter(SearchUtil.SEARCH_INDEX_PATH+"messageAutocomplete", new StandardAnalyzer(), true);
+			autocompleteMessageIndexWriter = new IndexWriter(messageAutocompleteIndexDir, new StandardAnalyzer(Version.LUCENE_36), true,MaxFieldLength.UNLIMITED) ; 
 		}
 		
 		MessageBean message = null;
@@ -516,8 +521,8 @@ public class MessagingDAO {
 		if(message != null){
 			if (message.isDeleteFlag() != true || !message.getRootId().equals(null)) {
 				Document doc = new Document();
-				doc.add(new Field("id", message.getId(), Field.Store.YES, Field.Index.TOKENIZED));
-				doc.add(new Field("title", message.getSubject(), Field.Store.YES, Field.Index.TOKENIZED));
+				doc.add(new Field("id", message.getId(), Field.Store.YES, Field.Index.ANALYZED));
+				doc.add(new Field("title", message.getSubject(), Field.Store.YES, Field.Index.ANALYZED));
 				doc.add(new Field("type", "Message", Field.Store.YES, Field.Index.NO));
 				doc.add(new Field("rootid",message.getRootId(), Field.Store.YES, Field.Index.NO));
 				doc.add(new Field("fromTalker", message.getFromTalkerId(), Field.Store.YES, Field.Index.NO));
@@ -533,9 +538,11 @@ public class MessagingDAO {
 	 * @param id
 	 * @throws Exception
 	 */
+	@SuppressWarnings("deprecation")
 	public static void deleteMessageIndex(String id) throws Exception{
-		Directory directory = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"messageAutocomplete");
-		IndexReader autocompleteMessageIndexReader = IndexReader.open(directory);
+		File messageAutocompleteIndexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"messageAutocomplete");
+ 		Directory messageAutocompleteIndexDir = FSDirectory.open(messageAutocompleteIndexerFile);
+		IndexReader autocompleteMessageIndexReader = IndexReader.open(messageAutocompleteIndexDir, false);
 		Term term = new Term("id",id);
 		try{
 			autocompleteMessageIndexReader.deleteDocuments(term);

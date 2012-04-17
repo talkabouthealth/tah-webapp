@@ -364,7 +364,12 @@ function makeAutocomplete(id, type, parentTopic) {
 				var url = ui.item.url;
 				if (url === "#fullsearch") {
 					//go to full conversations search
-					url = "/search?query="+ui.item.value;
+					if (trim(ui.item.value) === '') {
+						alert("Please enter search query");
+						return false;
+					}else{
+						url = "/search?query="+ui.item.value;
+					}
 				}
 				document.location = url;
 			}else if (type === "message"){
@@ -1122,6 +1127,10 @@ function mailSearch(inputId, value){
 				document.location = url;
 			}
 		);
+}
+
+function trim(stringToTrim) {
+	return stringToTrim.replace(/^\s+|\s+$/g,"");
 }
 
 //used for paging in question feed for mobile

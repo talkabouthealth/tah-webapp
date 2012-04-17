@@ -2,6 +2,7 @@ package controllers;
 
 import static util.DBUtil.getCollection;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -129,12 +130,18 @@ public class Dashboard extends Controller {
 	 * @throws Exception
 	 */
 	
+	@SuppressWarnings("deprecation")
 	private static void deleteTalkerIndex(String talkerId)throws Exception{
 		
-		Directory directory = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
-    	Directory directory1 = FSDirectory.getDirectory(SearchUtil.SEARCH_INDEX_PATH+"talker");
-    	IndexReader autocompletetalkerIndexReader = IndexReader.open(directory);
-    	IndexReader talkerIndexReader = IndexReader.open(directory1);
+		File autoCompleteIndexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
+ 		Directory autoCompleteIndexDir = FSDirectory.open(autoCompleteIndexerFile);
+ 		
+ 		File talkerIndexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"talker");
+ 		Directory talkerIndexDir = FSDirectory.open(talkerIndexerFile);
+ 		
+    	IndexReader autocompletetalkerIndexReader = IndexReader.open(autoCompleteIndexDir);
+    	IndexReader talkerIndexReader = IndexReader.open(talkerIndexDir);
+    	
     	Term term = new Term("id",talkerId);
     	try{
 			talkerIndexReader.deleteDocuments(term);
@@ -148,6 +155,10 @@ public class Dashboard extends Controller {
 			System.out.println("exception is here "+e);
 			e.printStackTrace();
 		}
+		talkerIndexReader.close();
+		autocompletetalkerIndexReader.close();
+		talkerIndexDir.close();
+		autoCompleteIndexDir.close();
 		
 	}
 	
