@@ -11,6 +11,7 @@ import models.ConversationBean;
 import models.TalkerBean;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
@@ -23,6 +24,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.highlight.Fragmenter;
+
 import org.apache.lucene.search.highlight.Highlighter;
 import org.apache.lucene.search.highlight.QueryScorer;
 import org.apache.lucene.search.highlight.Scorer;
@@ -135,14 +137,26 @@ public class SearchUtil {
 				answersString.append(" ... ");
 			}
 			
+			//TODO: Removed some of the code for funtionality working for now
+			// Need to implement in future.
 			//get result fragment with highlighted matching parts
-			searchQuery = searchQuery.rewrite(is.getIndexReader());
-			Scorer scorer = new QueryScorer(searchQuery, "answers");
-			Highlighter highlighter = new Highlighter(scorer);
-			Fragmenter fragmenter = new SimpleFragmenter(60);
-			highlighter.setTextFragmenter(fragmenter);
-			String fr = highlighter.getBestFragment(analyzer, "answers", answersString.toString());
-			convo.setSearchFragment(fr);
+			//searchQuery = searchQuery.rewrite(is.getIndexReader());
+			
+			
+			
+			//QueryScorer scorer = new QueryScorer(searchQuery, indexReader, "answers"); 
+			//Highlighter highlighter = new Highlighter(scorer); 
+			//String [] fragment = highlighter.getBestFragments(analyzer, "answers", answersString.toString(),10);
+
+	          
+			
+			//Scorer scorer = new QueryScorer(searchQuery, "answers");
+			//Highlighter highlighter = new Highlighter(scorer);
+			//Fragmenter fragmenter = new SimpleFragmenter(60);
+			//highlighter.setTextFragmenter(fragmenter);
+			//String fr = highlighter.getBestFragment(analyzer, "answers", answersString.toString());
+			//(analyzer, "answers", answersString.toString());
+			//convo.setSearchFragment(fragment[0]);
 			
 			//if(cat.contains(convo.getCategory()) || cat.contains(convo.getOtherDiseaseCategories()))
 				results.add(convo);
