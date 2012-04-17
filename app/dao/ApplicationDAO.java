@@ -40,6 +40,8 @@ public class ApplicationDAO {
 	public static final String NEWSLETTER_COLLECTION = "newsletter";
 	public static final String IPLIST_COLLECTION = "iplist";
 	
+	public static final int TALKERS_PER_PAGE = 3;
+	
 	/**
 	 * Save login record.
 	 */
