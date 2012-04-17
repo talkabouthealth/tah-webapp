@@ -84,17 +84,18 @@ public class Application extends Controller {
     		Home.index();
     	} else {
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
-    		int numberOfLiveChats = ConversationDAO.getLiveConversations().size();
-    		int numberOfQuestions = ConversationDAO.getNumberOfConversations();
-    		int numberOfAnswers = CommentsDAO.getNumberOfAnswers();
+    		int numberOfLiveChats = 0;//ConversationDAO.getLiveConversations().size();
+    		int numberOfQuestions = 0;//ConversationDAO.getNumberOfConversations();
+    		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
     		
     		//future communities
-    		Map<String, Integer> waitingCommunitiesInfo = ApplicationDAO.getWaitingCommunitiesInfo();
+    		//Map<String, Integer> waitingCommunitiesInfo = null;//ApplicationDAO.getWaitingCommunitiesInfo();
     		
-    		render(waitingCommunitiesInfo, numberOfMembers, numberOfLiveChats, 
+    		render(null, numberOfMembers, numberOfLiveChats, 
     				numberOfQuestions, numberOfAnswers);
     	}
     }
+    
     
     /* ------- Forgot Password --------- */
     public static void forgotPassword() {

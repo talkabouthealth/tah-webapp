@@ -407,10 +407,9 @@ public class CommentsDAO {
 	/**
 	 * Returns number of all answers in this community
 	 */
-	public static int getNumberOfAnswers() {
+	public static long getNumberOfAnswers() {
 		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
-		
-		int numberOfAnswers = commentsColl.find(new BasicDBObject("answer", true)).size();
+		long numberOfAnswers = commentsColl.count(new BasicDBObject("answer", true));
 		return numberOfAnswers;
 	}
 	
