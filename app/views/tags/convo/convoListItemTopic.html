@@ -1,0 +1,43 @@
+<div class="joinbox" id="${_convo.id}">
+	<div class="joinpic">
+		#{talker/talkerImageLink size: 48, userName: _convo.talker.name /}
+	</div>
+	<div class="jointxtbox">
+		<div class="jointextstop">
+			<a href="@{ViewDispatcher.view(_convo.mainURL)}">${_convo.topic}</a>
+		</div>
+		<div class="joinztextlink">
+			<!-- <span>3 members speaking</span> |  --> 
+			#{if session.username }
+				<a href="#" class="followConvoLink" rel="${_convo.id}">
+					${_talker?.followingConvosList?.contains(_convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
+			#{/if}
+			
+			*{ when the user is not logged in, change the link for "Flag" to "5 Answers" or "Answer" }*
+			#{if session.username }
+				<a href="#" class="flagConvoLink" rel="${_convo.id}">Flag</a> | 
+			#{/if}
+			#{else}
+				#{if !_convo.comments || _convo.comments?.size() == 0}
+					<a href="@{ViewDispatcher.view(_convo.mainURL)}#answers">Answer</a> | 
+				#{/if}
+				#{else}
+					<a href="@{ViewDispatcher.view(_convo.mainURL)}#answers">${_convo.comments?.size()} 
+						Answer${_convo.comments.pluralize()}</a> | 
+				#{/else}
+			#{/else}
+			
+			<span>Started ${_convo.creationDate.since()}</span>
+		</div>
+		<div class="jointxtlink1">
+			Conversation by 
+			#{talker/talkerLink talker: _convo.talker /}
+			<span class="blacktext12">
+				#{talker/talkerInfo talker: _convo.talker /}
+			</span>
+		</div>
+		<div class="jointxtlink2"></div>
+	</div>
+	<div class="cb"></div>
+	<div class="joinborder"></div>
+</div>
