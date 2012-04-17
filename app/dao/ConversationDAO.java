@@ -925,8 +925,23 @@ public class ConversationDAO {
 	 * @param convoId
 	 * @return List<ConversationBean>
 	 */
-	public static List<ConversationBean> loadPopularAnswers(String type,String convoId){
-		
+	public static List<ConversationBean> loadPopularAnswers(String type,String afterActionId){
+		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
+		while(true){
+			List<DBObject> convoDblist =getPopularAnswersFromDb( type, afterActionId);
+			
+			convosList.addAll(getConvoList(convoDblist,type,convosList.size()));
+			
+			if(convosList.size()>=20 || convoDblist.size()<40)
+			break;
+			
+			afterActionId=convoDblist.get(convoDblist.size()-1).get("_id").toString();
+		}
+		return convosList;
+	}
+	
+	
+	public static List<DBObject> getPopularAnswersFromDb(String type,String convoId){
 		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
 		convosColl.ensureIndex(new BasicDBObject("views", -1));
 		
@@ -935,7 +950,6 @@ public class ConversationDAO {
 		if (convoId != null) {
 			views = ConversationDAO.getViews(convoId);
 		}
-		
 		DBObject fields = getBasicConversationFields();
 		
 		//checking for views 
@@ -945,12 +959,16 @@ public class ConversationDAO {
 		if (views != 0) {
 			queryBuilder.add("views", new BasicDBObject("$lt", views));
 		}
-		
 		DBObject query = queryBuilder.get();
 	
 		List<DBObject> convosDBList = 
-			convosColl.find(query, fields).sort(new BasicDBObject("views", -1)).toArray();
+			convosColl.find(query, fields).limit(40).sort(new BasicDBObject("views", -1)).toArray();
 		
+		//List<ConversationBean> convosList = getConvoList(convosDBList,type);
+		return convosDBList;
+	}
+	
+	public static List<ConversationBean>  getConvoList(List<DBObject> convosDBList,String type,int size){ 
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
 			ConversationBean convo = new ConversationBean();
@@ -967,22 +985,25 @@ public class ConversationDAO {
 								if(commentBean.getFromTalker().isProf()){
 									if(convosList.size() < 20)
 										convosList.add(convo);
+									size++;
 									break;
 								}
 							}else{
 								//Add questions which have answers
 								if(convosList.size() < 20)
 									convosList.add(convo);
+								size++;
 								break;
 							}
 						}
 					}
 				}
 			}
+			if(size==20){
+				break;	
+			}
 		}
-		
 		return convosList;
-		
 	}
 
 	/**
