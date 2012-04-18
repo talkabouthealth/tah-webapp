@@ -356,7 +356,6 @@ public class ConversationDAO {
 		ConversationBean convo = null;
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
-	    	convosList.add(parseConvoFromDBObject(convoDBObject, basicInfo));
 	    	convo = new ConversationBean();
 			convo.setId(convoDBObject.get("_id").toString());
 			convo.setTopic((String)convoDBObject.get("topic"));
