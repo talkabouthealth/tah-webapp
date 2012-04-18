@@ -5346,26 +5346,26 @@ ul.tabs li {
 ul.tabs li a {
 	display :inline-table;
 	text-decoration: none;	
-	padding: 8px 7px 0;
+	padding: 8px 7px 9px;
 	font-size:14px;
 	font-family:Arial;
 	font-weight:bold;
 	color:#1550a4;
 	border: 1px solid #d3d3d3;
 	outline: none;
-	height: 25px;
+	height: 15px;
 }
 ul.tabs li.active a {
 	display :inline-table;
 	text-decoration: none;	
-	padding: 8px 7px 0;
+	padding: 8px 7px 9px;
 	font-size:14px;
 	font-family:Arial;
 	font-weight:bold;
 	color:#1550a4;
 	border-bottom: 1px solid #ffffff;
 	outline: none;
-	height: 25px;
+	height: 15px;
 }
 ul.tabs li a:hover {
 	background: #f5f5f5;
