@@ -656,7 +656,7 @@ function loadMoreFeedWithoutLogin(type, talkerName) {
 				$(data).appendTo($("#"+type+"List"));
 				//for new items
 				$('.inline-edit').inlineEdit( { hover: ''} );
-				$('.moretext').truncatable({ limit: 70, more: '... more', less: true, hideText: '...less' });
+				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
  			}
 		);
 	

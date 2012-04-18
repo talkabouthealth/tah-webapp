@@ -1,6 +1,7 @@
 package util.jobs;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,16 +27,20 @@ public class SearchConvoIndexerJob{
 		
 		File autocompleteIndexerFile = new File("/data/searchindex/autocomplete");
  		Directory autocompleteIndexDir = FSDirectory.open(autocompleteIndexerFile);
+ 		
  		File convoIndexerFile = new File("/data/searchindex/conversations");
  		Directory convoIndexDir = FSDirectory.open(convoIndexerFile);
+ 		
 		System.out.println("SearchConvoIndexerJob Started::::"+ new Date());
 		IndexWriter convoIndexWriter = new IndexWriter(convoIndexDir, new StandardAnalyzer(Version.LUCENE_36), false,MaxFieldLength.UNLIMITED) ;
-		//IndexWriter autocompleteIndexWriter = new IndexWriter(autocompleteIndexDir, autocompleteIndexWriterConfig);
 		IndexWriter autocompleteIndexWriter = new IndexWriter(autocompleteIndexDir, new StandardAnalyzer(Version.LUCENE_36), false,MaxFieldLength.UNLIMITED);
 			 
-		 try{
+		 try {
 			 System.out.println("Creating convo indexes::::");
-			 for (ConversationBean convo : ConversationDAO.loadUpdatedConversations(limit)) {
+			 List<ConversationBean> convoList =  ConversationDAO.loadUpdatedConversations(limit);
+			 ArrayList<Document> convoIndex = new ArrayList<Document>();
+		  	 ArrayList<Document> autoConvoIndex = new ArrayList<Document>();
+			 for (ConversationBean convo : convoList) {
 				//possibly weight titles, conversation details, summaries, and answers more than the archived real-time conversations?
 				
 				Document doc = new Document();
@@ -51,8 +56,8 @@ public class SearchConvoIndexerJob{
 					}
 				}
 				doc.add(new Field("answers", answersString.toString(), Field.Store.NO, Field.Index.ANALYZED));
-				convoIndexWriter.addDocument(doc);
-				  
+				//convoIndexWriter.addDocument(doc);
+				convoIndex.add(doc);
 						
 				//for autocomplete
 				doc = new Document();
@@ -62,11 +67,18 @@ public class SearchConvoIndexerJob{
 				if (convo.getMainURL() != null) {
 					doc.add(new Field("url", convo.getMainURL(), Field.Store.YES, Field.Index.NO));
 				}
-				autocompleteIndexWriter.addDocument(doc);
+				//autocompleteIndexWriter.addDocument(doc);
+				autoConvoIndex.add(doc);
 				System.out.println("Completed convo indexes::::");
 			}
-		 }
-		 finally{
+			 if(convoIndex.size()>0)
+				 convoIndexWriter.addDocuments(convoIndex);
+			 if(autoConvoIndex.size()>0)
+				 autocompleteIndexWriter.addDocuments(autoConvoIndex);
+			 convoIndex.clear();
+			 autoConvoIndex.clear();
+			 convoList.clear();
+		 } finally {
 			convoIndexWriter.close();
 			autocompleteIndexWriter.close();
 			System.out.println("SearchConvoIndexerJob Completed::::"+ new Date());

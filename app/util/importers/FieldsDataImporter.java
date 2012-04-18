@@ -8,6 +8,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
+import play.jobs.Job;
+import play.jobs.OnApplicationStart;
+
 import logic.TalkerLogic;
 import models.TopicBean;
 import util.CommonUtil;
@@ -25,9 +28,10 @@ import dao.ApplicationDAO;
 
  *
  */
-public class FieldsDataImporter {
+@OnApplicationStart
+public class FieldsDataImporter extends Job {
 	
-	public static void main(String[] args) throws Exception {
+	public void doJob() throws Exception {
 		importData("fields.dat");
 	}
 	

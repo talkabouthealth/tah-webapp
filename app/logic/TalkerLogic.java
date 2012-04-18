@@ -151,7 +151,35 @@ public class TalkerLogic {
 	private static Map<String, List<String>> fieldsDataMap;
 	
 	//Matches HealthItem with list of topics
-	private static Map<String, List<String>> healthItems2TopicsMap;
+	//private static Map<String, List<String>> healthItems2TopicsMap;
+	
+	public static Map<String, List<String>> healthItems2TopicsMap = new LinkedHashMap<String, List<String>>();
+	static {
+		healthItems2TopicsMap.put("Stage 0 (DCIS)",  Arrays.asList("Stage 0 (DCIS) Breast Cancer","Stage 0 (DCIS) Breast Cancer Experiences"));
+		healthItems2TopicsMap.put("Stage 0 (LCIS)",  Arrays.asList("Stage 0 (LCIS) Breast Cancer","Stage 0 (LCIS) Breast Cancer Experiences"));
+		healthItems2TopicsMap.put("Stage I",  Arrays.asList("Stage I (Stage 1) Breast Cancer","Stage I (Stage 1) Breast Cancer Experiences"));
+		healthItems2TopicsMap.put("Stage II",  Arrays.asList("Stage II (Stage 2) Breast Cancer","Stage II (Stage 2) Breast Cancer Experiences"));
+		healthItems2TopicsMap.put("Stage III",  Arrays.asList("Stage III (Stage 3) Breast Cancer","Stage III (Stage 3) Breast Cancer Experiences"));
+		healthItems2TopicsMap.put("Stage IV",  Arrays.asList("Stage IV (Stage 4) Breast Cancer","Stage IV (Stage 4) Breast Cancer Experiences"));
+		healthItems2TopicsMap.put("Invasive",  Arrays.asList("Invasive Breast Cancer"));
+		healthItems2TopicsMap.put("Non-invasive)",  Arrays.asList("Non-invasive Breast Cancer"));
+		healthItems2TopicsMap.put("Change in size or shape of breast",  Arrays.asList("Breast Size Changes"));
+		healthItems2TopicsMap.put("Dimpling or puckering in skin of breast",  Arrays.asList("Breast Dimpling","Breast Puckering"));
+		healthItems2TopicsMap.put("Discharge (fluid) from the nipple",  Arrays.asList("Breast Discharge"));
+		healthItems2TopicsMap.put("Lump in breast",  Arrays.asList("Lump In Breast"));
+		healthItems2TopicsMap.put("Nipple turned inward into breast",  Arrays.asList("Nipple Turned Inward Into Breast"));
+		healthItems2TopicsMap.put("Scaly, red, or swollen skin on the breast, nipple, or areola",  Arrays.asList("Scaly Breast","Red Skin On Breast","Swollen Skin On Breast"));
+		healthItems2TopicsMap.put("CA15-3 / CA27.29",  Arrays.asList("CA15-3","CA27.29"));
+		healthItems2TopicsMap.put("Bleeding and bruising",  Arrays.asList("Bleeding","Bruising"));
+		healthItems2TopicsMap.put("Blood clots and phlebitis",  Arrays.asList("Blood Clots","Phlebitis"));
+		healthItems2TopicsMap.put("Bone and joint pain",  Arrays.asList("Bone Pain","Joint Pain"));
+		healthItems2TopicsMap.put("Cold and flu symptoms",  Arrays.asList("Cold Symptoms","Symptoms"));
+		healthItems2TopicsMap.put("Heartburn or GERD",  Arrays.asList("Heartburn","GERD"));
+		healthItems2TopicsMap.put("Menopause and Menopausal Symptoms",  Arrays.asList("Menopause","Menopausal Symptoms"));
+		healthItems2TopicsMap.put("Mouth and Throat Sores",  Arrays.asList("Mouth Sores","Throat Sores"));
+		healthItems2TopicsMap.put("Tast and smell changes",  Arrays.asList("Taste Changes","Smell Changes"));
+		healthItems2TopicsMap.put("Vision and Eye Problems",  Arrays.asList("Vision Problems","Eye Problems"));
+	}	
 	
 	/**
 	 * Map for connecting professional fields' names with fields' text descriptions (used on the Profile page)

@@ -639,7 +639,7 @@ public class TalkerDAO {
 	
 	
 	public static List<TalkerBean> loadUpdatedTalker(int limit) {
-		boolean basicInfo=false;
+		boolean basicInfo=true;
 		
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 

@@ -54,6 +54,8 @@ public class TopicBean implements Comparable<TopicBean> {
 	private List<TalkerBean> followers;
 	private List<ConversationBean> conversations;
 	
+	private int noOfConverstions;
+	
 	public TopicBean() {
 		super();
 		
@@ -243,4 +245,7 @@ public class TopicBean implements Comparable<TopicBean> {
 	
 	public String getBitly() { return bitly; }
 	public void setBitly(String bitly) { this.bitly = bitly; }
+	
+	public int getNoOfConverstions() { return noOfConverstions; }
+	public void setNoOfConverstions(int noOfConverstions) { this.noOfConverstions = noOfConverstions; }
 }

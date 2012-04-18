@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -329,7 +330,7 @@ public class ConversationDAO {
 	 */
 	
 	public static List<ConversationBean> loadUpdatedConversations(int limit) {
-		boolean basicInfo=false;
+		boolean basicInfo=true;
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		convosColl.ensureIndex(new BasicDBObject("cr_date", 1));
 		
@@ -352,10 +353,23 @@ public class ConversationDAO {
 			convosDBList = 
 				convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
 		}
-		
+		ConversationBean convo = null;
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
 	    	convosList.add(parseConvoFromDBObject(convoDBObject, basicInfo));
+	    	convo = new ConversationBean();
+			convo.setId(convoDBObject.get("_id").toString());
+			convo.setTopic((String)convoDBObject.get("topic"));
+			convo.setMainURL((String)convoDBObject.get("main_url"));
+			convo.setDeleted(getBoolean(convoDBObject, "deleted"));
+			convo.setBitly((String)convoDBObject.get("bitly"));
+			convo.setBitlyChat((String)convoDBObject.get("bitly_chat"));
+			convo.setCategory((String)convoDBObject.get("category"));
+	    	Collection<String> otherDiseaseCategories = (Collection<String>)convoDBObject.get("other_disease_categories");
+			if (otherDiseaseCategories != null) {
+				convo.setOtherDiseaseCategories(otherDiseaseCategories.toArray(new String[]{}));
+			}
+			convosList.add(convo);
 		}
 		return convosList;
 	}
@@ -937,6 +951,7 @@ public class ConversationDAO {
 			
 			afterActionId=convoDblist.get(convoDblist.size()-1).get("_id").toString();
 		}
+		Collections.sort(convosList);
 		return convosList;
 	}
 	
@@ -1112,6 +1127,20 @@ public class ConversationDAO {
 		
 		DBObject convoId = new BasicDBObject("_id", new ObjectId(convo.getId()));
 		convosColl.update(convoId, new BasicDBObject("$set", convoObject),false,true);
+	}
+	
+	 /**
+	 * @param topicId
+	 * @return no of convos for topic
+	 */
+	public static int getNoOfconvosForTopic(String topicId) {
+		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
+		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topicId);
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("topics", topicRef)
+			.add("deleted", new BasicDBObject("$ne", true))
+			.get();
+		return convosColl.find(query, new BasicDBObject("_id", 1)).count();
 	}
 
 }

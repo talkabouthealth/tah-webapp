@@ -43,11 +43,6 @@ public class ApplicationUpdatesJob {
 		 */
 		System.out.println("ApplicationUpdatesJob Started::::"+ new Date());
 		System.out.println("importing data..");
-		//Fields data for Edit Profile
-		FieldsDataImporter.importData("fields.dat");
-		
-		//HealthItems -> Topics mapping (for recommendations)
-		HealthItems2Topics.importData("healthitems2topics.dat");
 		
 		//Create collections if missing
 		//if (DBUtil.isCollectionEmpty(DiseaseDAO.DISEASES_COLLECTION)) {

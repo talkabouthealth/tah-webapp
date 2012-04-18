@@ -75,9 +75,10 @@ $(document).ready(function() {
 	makeAutocomplete("#startChatText", "convo");
 	$('.inline-edit').inlineEdit( { hover: ''} );
 	
-	setInterval("checkFeed('allFeed');",60000);
-	setInterval("checkFeed('convoFeed');",60000);
-	setInterval("checkFeed('mentions','${talker.userName}');",60000);
+	//Commented automatic update code for #25259939
+	//setInterval("checkFeed('allFeed');",60000);
+	//setInterval("checkFeed('convoFeed');",60000);
+	//setInterval("checkFeed('mentions','${talker.userName}');",60000);
 	loadSimilarMember('USR',"#similarMembersCnt");
 	loadSimilarMember('EXP',"#expertsCnt");
 	loadPopularTopics();

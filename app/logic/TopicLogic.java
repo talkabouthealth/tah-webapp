@@ -165,16 +165,16 @@ public class TopicLogic {
 		List<TopicBean> popularTopics = new ArrayList<TopicBean>();
 		for (TopicBean topic : TalkerLogic.loadAllTopicsFromCache()) {
 			if (topic.getConversations() == null) {
-				topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
+				//topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
+				topic.setNoOfConverstions(ConversationDAO.getNoOfconvosForTopic(topic.getId()));
 			}
 			popularTopics.add(topic);
 		}
-		
 		//sort by number of questions
 		Collections.sort(popularTopics, new Comparator<TopicBean>() {
 			@Override
 			public int compare(TopicBean o1, TopicBean o2) {
-				return o2.getConversations().size() - o1.getConversations().size();
+				return o2.getNoOfConverstions() - o1.getNoOfConverstions();
 			}		
 		});
 

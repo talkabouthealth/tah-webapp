@@ -44,18 +44,21 @@
 					$.get("/Explore/ajaxFeedUpdate",{ type : 'popularConvo' },function(data){
 						popularConvo=1;
 						$("#"+id+"Div").html(data);
+						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
 				    });	
 				}else if(id=='expertConvo' && expertConvo==0){
 					$("#ajaxLoading").appendTo($("#"+id+"Div")).show();
 					$.get("/Explore/ajaxFeedUpdate",{ type : 'expertConvo' },function(data){
 						expertConvo=1;
 						$("#"+id+"Div").html(data);
+						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
 					});
 				}else if(id=='openConvo' && openConvo ==0){
 					$("#ajaxLoading").appendTo($("#"+id+"Div")).show();
 					$.get("/Explore/ajaxFeedUpdate",{ type : 'openConvo' },function(data){
 						openConvo=1;
 						$("#"+id+"Div").html(data);
+						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
 					});
 				}
 				

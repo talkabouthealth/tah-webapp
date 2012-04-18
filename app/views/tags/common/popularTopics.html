@@ -3,7 +3,7 @@
 			#{list items: _popularTopics, as: 'topic'}
 				<div id="${topic.id}" class="topbox1" style="margin-top: 0px;">
 					<a style="color:#0286BC;" href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a>
-					&nbsp;&nbsp;${topic.conversations?.size()} question(s)
+					&nbsp;&nbsp;${topic.noOfConverstions} question(s)
 			   	</div>
 			#{/list}
 	#{/if}#{else}No#{/else}
@@ -15,7 +15,7 @@
 			#{list items: _popularTopics, as: 'topic'}
 				<div id="${topic.id}" class="topbox1" style="margin-top: 0px;">
 					<a style="color:#0286BC;" href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a>
-					&nbsp;&nbsp;${topic.conversations?.size()} question(s)
+					&nbsp;&nbsp;${topic.noOfConverstions} question(s)
 			   	</div>
 			#{/list}
 		</div>
