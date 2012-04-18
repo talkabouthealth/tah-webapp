@@ -191,10 +191,17 @@ public class PublicProfile extends Controller {
 		
 		TalkerLogic.preloadTalkerInfo(talker);
 		
+		List<TalkerDiseaseBean> talkerDiseaseList = TalkerDiseaseDAO.getListByTalkerId(talker.getId());
 		TalkerDiseaseBean talkerDisease = null;
 		List<TopicBean> recommendedTopics = null;
 		if (talker.equals(currentTalker)) {
-			talkerDisease = TalkerDiseaseDAO.getByTalkerId(talker.getId());
+			if(talkerDiseaseList != null){
+				for(TalkerDiseaseBean diseaseBean : talkerDiseaseList){
+					if(diseaseBean != null && diseaseBean.getDiseaseName().equalsIgnoreCase(talker.getCategory())){
+						talkerDisease = diseaseBean;
+					}
+				}
+			}
 			recommendedTopics = TopicLogic.loadRecommendedTopics(talker, talkerDisease, null);
 		}
 		
@@ -204,7 +211,15 @@ public class PublicProfile extends Controller {
 	public static void recommendedTopicsAjaxLoad(String afterId) throws Throwable {
 		Secure.checkAccess();
     	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
-    	TalkerDiseaseBean talkerDisease = TalkerDiseaseDAO.getByTalkerId(_talker.getId());
+    	List<TalkerDiseaseBean> talkerDiseaseList = TalkerDiseaseDAO.getListByTalkerId(_talker.getId());
+        TalkerDiseaseBean talkerDisease = null;
+        if(talkerDiseaseList != null){
+			for(TalkerDiseaseBean diseaseBean : talkerDiseaseList){
+				if(diseaseBean != null && diseaseBean.getDiseaseName().equalsIgnoreCase(_talker.getCategory())){
+					talkerDisease = diseaseBean;
+				}
+			}
+		}
     	
     	List<TopicBean> _recommendedTopics = TopicLogic.loadRecommendedTopics(_talker, talkerDisease, afterId);
     	render("tags/publicprofile/recommendedTopicsList.html", _recommendedTopics, _talker);
