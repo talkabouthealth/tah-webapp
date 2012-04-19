@@ -349,7 +349,14 @@ public class TopicDAO {
     	}
     	return followers;
 	}
-	
+
+	public static int getTopicFollowersCount(TopicBean topic) {
+		DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
+		
+    	DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topic.getId());
+    	DBObject query = new BasicDBObject("following_topics", topicRef);
+    	return talkersColl.find(query).count();
+	}
 	/**
 	 * Loads the 20 most recently updated Topics
 	 */

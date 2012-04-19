@@ -166,7 +166,8 @@ public class TopicLogic {
 		for (TopicBean topic : TalkerLogic.loadAllTopicsFromCache()) {
 			if (topic.getConversations() == null) {
 				//topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
-				topic.setNoOfConverstions(ConversationDAO.getNoOfconvosForTopic(topic.getId()));
+				if(topic.getNoOfConverstions() < 0)
+					topic.setNoOfConverstions(ConversationDAO.getNoOfconvosForTopic(topic.getId()));
 			}
 			popularTopics.add(topic);
 		}

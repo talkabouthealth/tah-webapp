@@ -95,6 +95,8 @@ public class SearchUtil {
 	 * @throws ParseException
 	 */
 	public static List<ConversationBean> searchConvo(String query, int numOfResults, TalkerBean talker) throws CorruptIndexException, IOException, ParseException {
+		List<ConversationBean> results = new ArrayList<ConversationBean>();
+		
 		File indexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"conversations");
  		Directory indexDir = FSDirectory.open(indexerFile);
  		IndexReader indexReader = IndexReader.open(indexDir);
@@ -102,30 +104,14 @@ public class SearchUtil {
 		//prepare query to search
 		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
 		Query searchQuery = prepareSearchQuery(query, new String[] {"title", "answers"}, analyzer, true);
-		TopDocs hits = is.search(searchQuery, 10);
+		TopDocs hits = is.search(searchQuery, numOfResults);
 		ScoreDoc [] docs = hits.scoreDocs;
-		//List<String> cat = FeedsLogic.getCancerType(talker);
-		
-		/*if(talker.getOtherCategories() != null && talker.getOtherCategories().length > 0){
-			for(int index = 0; index < talker.getOtherCategories().length; index++)
-				cat.add(talker.getOtherCategories()[index]);
-		}*/
 
-		/*	List<String> cat = new ArrayList<String>();
-    	boolean loggedIn = (talker != null);
-    	 
-    	  if(loggedIn)
-			 cat = FeedsLogic.getCancerType(talker);
-			else{
-			 cat= FeedsLogic.getTypeForAnonymousUser();
-			}*/
-			
-		List<ConversationBean> results = new ArrayList<ConversationBean>();
 		for (int i = 0; i < docs.length ; i++) {
 			Document doc = is.doc(docs[i].doc);
 			
 			String convoId = doc.get("id");
-			ConversationBean convo = ConversationDAO.getById(convoId);
+			ConversationBean convo = ConversationDAO.getByIdBasicQuestion(convoId);
 			if (convo == null || convo.isDeleted()) {
 				continue;
 			}
@@ -266,6 +252,22 @@ public class SearchUtil {
 		if(searchTerm.contains("#")) searchTerm = searchTerm.replace("#", "\\#");
 		if(searchTerm.contains("\"")) searchTerm = searchTerm.replace("\"", "\\\"");
 		return(searchTerm);
+	}
+
+	public static int searchConvoToGetTotalCount(String query, int i, TalkerBean talker) throws Exception {
+		File indexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"conversations");
+ 		Directory indexDir = FSDirectory.open(indexerFile);
+ 		IndexReader indexReader = IndexReader.open(indexDir);
+		IndexSearcher is = new IndexSearcher(indexReader);
+		//prepare query to search
+		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
+		Query searchQuery = prepareSearchQuery(query, new String[] {"title", "answers"}, analyzer, true);
+		TopDocs hits = is.search(searchQuery, 1);
+
+		indexReader.close();
+		indexDir.close();
+		is.close();
+		return hits.totalHits;
 	}
 	
 }

@@ -52,9 +52,10 @@ public class TopicBean implements Comparable<TopicBean> {
 	private boolean deleted;
 	
 	private List<TalkerBean> followers;
+	private int followersCount;
 	private List<ConversationBean> conversations;
 	
-	private int noOfConverstions;
+	private int noOfConverstions = -1;
 	
 	public TopicBean() {
 		super();
@@ -221,7 +222,7 @@ public class TopicBean implements Comparable<TopicBean> {
 	
 	public List<TalkerBean> getFollowers() { return followers; }
 	public void setFollowers(List<TalkerBean> followers) { this.followers = followers; }
-	
+	public void setFollowersCount(int followersCount) { this.followersCount = followersCount; }
 	public List<ConversationBean> getConversations() { return conversations; }
 	public void setConversations(List<ConversationBean> conversations) { this.conversations = conversations; }
 	

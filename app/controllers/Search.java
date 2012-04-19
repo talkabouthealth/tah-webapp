@@ -303,7 +303,7 @@ public class Search extends Controller {
 		List<Action> convoResults = null;
 		if (query != null && !query.trim().equals("")) {
 			topicResults = topicsSearch(query);
-			totalCount = SearchUtil.searchConvo(query,200000,_talker) == null ? 0 : SearchUtil.searchConvo(query,200000,_talker).size();
+			totalCount = SearchUtil.searchConvoToGetTotalCount(query,200000,_talker);
 			List<ConversationBean> convoList = SearchUtil.searchConvo(query,limit,_talker);
 			convoResults = 
 				ConversationLogic.convosToFeed(convoList);
@@ -355,8 +355,8 @@ public class Search extends Controller {
 			String topicId = doc.get("id");
 			TopicBean topic = TopicDAO.getById(topicId);
 			//load info for 130 Followers | 200 Conversations
-			topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
-	    	topic.setFollowers(TopicDAO.getTopicFollowers(topic));
+			topic.setNoOfConverstions(ConversationDAO.getNoOfconvosForTopic(topic.getId()));
+	    	topic.setFollowersCount(TopicDAO.getTopicFollowersCount(topic));
 			results.add(topic);
 			
 			/*if (results.size() == 3) {
