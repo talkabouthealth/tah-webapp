@@ -1141,6 +1141,35 @@ public class ConversationDAO {
 			.get();
 		return convosColl.find(query, new BasicDBObject("_id", 1)).count();
 	}
+	
+	/**
+	 * Getting categories of conversation
+	 * @param convoId
+	 * @param args
+	 * @return
+	 */
+	public static ConversationBean getConvoCategories(String convoId,String []args ){
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		DBObject fields=new BasicDBObject();
+			for(String str:args){
+				fields.put(str, 1);
+			}
+			DBObject query = new BasicDBObject("_id", new ObjectId(convoId));
+			
+			DBObject convoDBObject = convosColl.findOne(query, fields);
+			
+			ConversationBean convo=new ConversationBean();
+			
+			convo.setId(convoDBObject.get("_id").toString());
+			convo.setCategory((String)convoDBObject.get("category"));
+			Collection<String> otherDiseaseCategories = (Collection<String>)convoDBObject.get("other_disease_categories");
+			
+			if (otherDiseaseCategories != null) {
+				convo.setOtherDiseaseCategories(otherDiseaseCategories.toArray(new String[]{}));
+			}
+			
+			return convo;			
+	}
 
 }
 
