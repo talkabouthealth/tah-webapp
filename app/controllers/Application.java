@@ -140,7 +140,7 @@ public class Application extends Controller {
     	//prepare additional settings for FB or Twitter
     	String from = flash.get("from");
     	Map<String, String> additionalSettings = null;
-    	List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
+    	List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
 
     	if (from != null) {
     		ServiceType type = ServiceAccountBean.parseServiceType(from);

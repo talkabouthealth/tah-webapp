@@ -18,6 +18,8 @@ import java.util.regex.Pattern;
 import org.bson.types.ObjectId;
 
 import logic.FeedsLogic;
+import logic.TalkerLogic;
+
 import models.TalkerBean;
 import play.templates.JavaExtensions;
 
@@ -240,7 +242,7 @@ public class ApplicationDAO {
 		}
 		
 		DBObject fields = TalkerDAO.getBasicTalkerFields();
-		List<DBObject> talkersDBList = loginsColl.find(query, fields).limit(10).sort(new BasicDBObject("timestamp", -1)).toArray();
+		List<DBObject> talkersDBList = loginsColl.find(query, fields).limit(20).sort(new BasicDBObject("timestamp", -1)).toArray();
 		
 		return talkersDBList;
 	}
@@ -251,19 +253,43 @@ public class ApplicationDAO {
 	 */
 	public static List<TalkerBean> getTalkersInOrder(TalkerBean talkerBean,boolean memberFlag,String afterActionId){
 		List<TalkerBean> talkerList=new ArrayList<TalkerBean>();
-		
-		List<DBObject> talkersDBList=new ArrayList<DBObject>();
-		while(true){
-			 talkersDBList=loadTalkers(talkerBean,memberFlag,afterActionId);
-			talkerList.addAll(getTalkers(talkersDBList,talkerBean,talkerList.size()));
-			
-			if(talkerList.size()>=TALKERS_PER_PAGE) 
-			break;
-			
-			if(talkersDBList.size()==10)
-				afterActionId=talkersDBList.get(talkersDBList.size()-1).get("_id").toString();
-			else
-				afterActionId=null;
+		boolean canAdd = false;
+		if(talkerBean.getFollowingList().size() > 100){
+			List<TalkerBean> cacheTalkerList = TalkerLogic.loadAllTalkersFromCache();
+			for(TalkerBean talker : cacheTalkerList){
+				if(!talkerBean.getFollowingList().contains(talker) || !talkerBean.equals(talker)){
+					if (!(talker.isSuspended() || talker.isDeactivated() || talker.isAdmin() || talkerBean.equals(talker) || talkerBean.getFollowingList().contains(talker))){
+						if((memberFlag == true && talker.isProf() && talker.isConnectionVerified() ) || (memberFlag == false && !talker.isProf())){ 
+							if(afterActionId != null){
+								if(canAdd == true)
+									talkerList.add(talker);
+								if(talker.getId().equals(afterActionId))
+									canAdd = true;
+							}else{
+								talkerList.add(talker);
+							}
+						}
+						if(talkerList.size() == 3)
+							break;
+					}
+				}
+			}
+		}else {
+
+			List<DBObject> talkersDBList=new ArrayList<DBObject>();
+			//int limitLoops = 0;
+			while(true){
+				 talkersDBList=loadTalkers(talkerBean,memberFlag,afterActionId);
+				talkerList.addAll(getTalkers(talkersDBList,talkerBean,talkerList.size()));
+				
+				if(talkerList.size()>=TALKERS_PER_PAGE )//|| ++limitLoops > 5) 
+				break;
+				
+				if(talkersDBList.size()==20)
+					afterActionId=talkersDBList.get(talkersDBList.size()-1).get("_id").toString();
+				else
+					afterActionId=null;
+			}
 		}
 		return talkerList;
 	}

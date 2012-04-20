@@ -206,7 +206,8 @@ public class FeedsLogic {
 				if (!addedConvos.contains(actionConvo)) {
 					switch (feedType) {
 						case ALL_CANCER: 
-							ConversationBean convo = ConversationDAO.getById(actionConvo.getId());
+							String str[]={"other_disease_categories","category"};
+							ConversationBean convo = ConversationDAO.getConvoCategories(actionConvo.getId(),str);
 							if(convo.getCategory() == null){
 								if (convo.getOtherDiseaseCategories() != null && convo.getOtherDiseaseCategories().length > 0)
 									isAdd = true;

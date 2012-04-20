@@ -19,6 +19,9 @@ import models.DiseaseBean.DiseaseQuestion;
 
 import org.bson.types.ObjectId;
 
+import play.cache.Cache;
+import play.mvc.Scope.Session;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
@@ -113,7 +116,17 @@ public class DiseaseDAO {
 		return disease;
 	}
 	
-	public static List<DiseaseBean> getDeiseaseList(){
+	public static List<DiseaseBean> getCatchedDiseasesList(Session session){
+		List<DiseaseBean> diseaseList = (List<DiseaseBean>) Cache.get("diseasesList");
+	    if (diseaseList == null) {
+	        //nothing in cache - load a new one
+	    	diseaseList = getDeiseaseList();
+	    	Cache.set("diseasesList", diseaseList, "2h");
+	    }
+		return diseaseList;
+	}
+	
+	public static List<DiseaseBean> getDeiseaseList() {
 		List<DiseaseBean> diseaseList = new ArrayList<DiseaseBean>();
 		DBCollection diseasesColl = getCollection(DISEASES_COLLECTION);
 		DBObject sortCond = new BasicDBObject("name", 1);

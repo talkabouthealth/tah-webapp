@@ -97,7 +97,7 @@ public class Profile extends Controller {
     public static void edit(boolean verifiedEmail) {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		TalkerLogic.preloadTalkerInfo(talker, "profile");
-		List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
+		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
     	render(talker, verifiedEmail,diseaseList);
     }
 	
@@ -867,7 +867,7 @@ public class Profile extends Controller {
 	
 	public static void categoryList(String community){
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
+		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
 		/*DiseaseBean bean12 = null;
 		List<String> arrayList = Arrays.asList(talker.getOtherCategories());
 		String name= "";

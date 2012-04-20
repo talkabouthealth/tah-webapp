@@ -76,7 +76,8 @@
            <div class="thanktxtblack">Followers:&nbsp;&nbsp;</div>
            <div class="thanktxtblue">
            	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.userName, 'followers')}">
-				${talker.followerList.size()}
+           	#{if talker.followerList != null}${talker.followerList.size()}#{/if}	
+			#{else}0#{/else}
 			</a>
            </div>
          </div>
@@ -349,7 +350,7 @@
   	 </div>
 	 <div class="topbox1" >
 		[<a href="@{Explore.browseMembers('active')}"><strong>View all</strong></a>]
-		[<a href="javascript:refreshMembers('USR');"><strong>Refresh</strong></a>] 
+		<span id = "usrRBtn" >[<a href="javascript:refreshMembers('USR');"><strong>Refresh</strong></a>] </span>
     </div>
 	<div class="topicborder"></div>
    </div>
@@ -362,7 +363,7 @@
   	 </div>
 	 <div class="topbox1" >
 	       [<a href="/explore/experts"><strong>View all</strong></a>]
-	       [<a href="javascript:refreshMembers('EXP');" id="EXPbtn"><strong>Refresh</strong></a>] 
+	       <span id = "expRBtn" >[<a href="javascript:refreshMembers('EXP');" id="EXPbtn" ><strong>Refresh</strong></a>] </span>
 	 </div>
 	<div class="topicborder"></div>
    </div>
@@ -479,3 +480,21 @@
   <!-- Mask to cover the whole screen -->
   <div id="mask"></div>
 </div>
+	<script type="text/javascript">
+		function display(){
+			var size = $("#EXPList > div").size();
+			if(size < 3){
+				document.getElementById("expRBtn").style.display = "none";
+			}else{
+				document.getElementById("expRBtn").style.display = "";
+			}
+
+			var sizeMembers = $("#USRList > div").size();
+			if(sizeMembers < 3){
+				document.getElementById("usrRBtn").style.display = "none";
+			}else{
+				document.getElementById("usrRBtn").style.display = "";
+			}
+		}
+		window.onload = display;
+	</script>

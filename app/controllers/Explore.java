@@ -217,7 +217,7 @@ public class Explore extends Controller {
 		//members.put("Caregivers", new LinkedHashSet<TalkerBean>());
 		members.put("Family & Friends", new LinkedHashSet<TalkerBean>());
 		
-		List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
+		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
 		for (DiseaseBean diseaseBean : diseaseList) {
 			members.put(diseaseBean.getName() , new LinkedHashSet<TalkerBean>());	
 		}
@@ -285,10 +285,10 @@ public class Explore extends Controller {
 		Set<Action> recentConvo = FeedsLogic.getAllCancerFeed(null, loggedIn, talker);
 		
 		List<TopicBean> popularTopics = null;
-    	if (talker == null) {
-    		int limit = session.get("topicCount")==null?TopicLogic.TOPICS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
-    		popularTopics = TopicLogic.loadPopularTopics(limit);
-    	}
+    	//if (talker == null) {
+    	//	int limit = session.get("topicCount")==null?TopicLogic.TOPICS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
+    	//	popularTopics = TopicLogic.loadPopularTopics(limit);
+		//}
     	
     	//For removing answer from feed list which have moderate no moderate value or value as "Delete Answer"
 		//Iterator<Action> recentConvosIter = recentConvos.iterator();
@@ -346,20 +346,21 @@ public class Explore extends Controller {
 		if (action == null) {
 			action = "feed";
 		}
-		render(action, recentConvo, popularTopics);
+		render(action, recentConvo, popularTopics,talker);
 	}
 	public static void ajaxFeedUpdate(String type){
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		boolean loggedIn = (talker != null);
-		
-		if(type.equals("popularConvo")){
+
+		if(type.equals("popularConvo")) {
 			List<ConversationBean> popularConvo = ConversationDAO.loadPopularAnswers("popular",null);
 			render("Explore/feedList.html",popularConvo, type);
-		}if(type.equals("expertConvo")){
+		}
+		if(type.equals("expertConvo")) {
 			System.out.println("expert Convo.........:");
 			List<ConversationBean> expertConvo = ConversationDAO.loadPopularAnswers("expert",null);
 			render("Explore/feedList.html",expertConvo, type);
-		}if(type.equals("openConvo")){
+		} if(type.equals("openConvo")) {
+			TalkerBean talker = CommonUtil.loadCachedTalker(session);
+			boolean loggedIn = (talker != null);
 			List<ConversationBean> openConvo = ConversationDAO.getOpenQuestions(talker,loggedIn);
 			render("Explore/feedList.html",openConvo, type);
 		}
@@ -514,7 +515,7 @@ public class Explore extends Controller {
 			communityFeed = FeedsLogic.getAllCancerFeed(null, loggedIn, talker);
 		}else{
 			boolean isValid = false;
-			List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
+			List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
 			for(int index = 0; index < diseaseList.size(); index++){
 				if(diseaseList.get(index).getName().equalsIgnoreCase(cancerType)){
 					isValid = true;
@@ -583,7 +584,7 @@ public class Explore extends Controller {
 	 */
 	public static void topics() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
+		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
 		List<DiseaseBean> diseaseList1 = null;
 		List<DiseaseBean> diseaseList2 = null;
 		List<DiseaseBean> diseaseList3 = null;

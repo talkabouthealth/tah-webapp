@@ -486,22 +486,22 @@ public class ConversationDAO {
 	public static List<ConversationBean> getOpenQuestions(TalkerBean talker, boolean loggedIn) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		List<String> cat = new ArrayList<String>();
-		if(loggedIn){
+		DBObject query = null;
+		if(loggedIn) {
 			cat = FeedsLogic.getCancerType(talker);
-		}else{
-			List<DiseaseBean> diseaseList = DiseaseDAO.getDeiseaseList();
-			cat.add(null);
-			for(DiseaseBean diseaBean : diseaseList){
-				cat.add(diseaBean.getName()); 
-			}
-		}
-		
-		DBObject query = BasicDBObjectBuilder.start()
+			query = BasicDBObjectBuilder.start()
 			.add("opened", true)
 			.add("deleted", new BasicDBObject("$ne", true))
 			.add("category", new BasicDBObject("$in", cat))
 			.get();
-		//System.out.println(query.toString());
+		} else {
+			query = BasicDBObjectBuilder.start()
+			.add("opened", true)
+			.add("deleted", new BasicDBObject("$ne", true))
+			.get();
+		}
+		
+		
 		List<DBObject> convosDBList = convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
 		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
