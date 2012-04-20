@@ -73,6 +73,7 @@ public class MessagingDAO {
 		}
 		catch (MongoException me) {
 			//E11000 duplicate key error index
+			Logger.error(me,"MessagingDAO.java : saveMessage ");
 			if (me.getCode() == 11000) {
 				Logger.error("Duplicate key error while saving message");
 			}
@@ -387,6 +388,7 @@ public class MessagingDAO {
 		}
 		catch (MongoException me) {
 			//E11000 duplicate key error index
+			Logger.error(me, "MessagingDAO.java : updateMessage");
 			if (me.getCode() == 11000) {
 				Logger.error("Duplicate key error while saving message");
 			}
@@ -485,7 +487,7 @@ public class MessagingDAO {
 		try{
 			query = new BasicDBObject("subject",messageSubject);
 		}catch(Exception e){
-			e.printStackTrace();
+			Logger.error(e, "MessagingDAO.java : getMessageBySubject");
 		}
 		DBObject messageDBObject = messagesColl.findOne(query);
 				
@@ -548,7 +550,7 @@ public class MessagingDAO {
 			autocompleteMessageIndexReader.deleteDocuments(term);
 			
 		}catch(Exception e){
-			e.printStackTrace();
+			Logger.error(e,"MessagingDAO : deleteMessageIndex ");
 		}
 		autocompleteMessageIndexReader.close();
 	}

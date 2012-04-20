@@ -207,6 +207,7 @@ public class CommentsDAO {
         	m.parseFromDB(cur.next());
         	result.add(m);        	
         }		
+        Logger.info("getThoughtByRootId - "+ cur.size());
 		
 		return result;
 	}
@@ -281,6 +282,7 @@ public class CommentsDAO {
 			comment.parseFromDB(cur.next());
 			result.add(comment);
 		}
+		Logger.info("getConvoCommentsByIds - "+ cur.size());
 		
 		return result;
 	}

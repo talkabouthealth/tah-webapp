@@ -9,6 +9,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import play.Logger;
+
 public class ImageUtil {
 	
 	/**
@@ -121,6 +123,7 @@ public class ImageUtil {
            h = targetHeight;
        }
        
+       int count = 0;
        do {
            if (higherQuality && w > targetWidth) {
                w /= 2;
@@ -143,7 +146,9 @@ public class ImageUtil {
            g2.dispose();
 
            ret = tmp;
+           count++;
        } while (w != targetWidth || h != targetHeight);
+       Logger.info("getScaledInstance : " + count);
 
        return ret;
    }

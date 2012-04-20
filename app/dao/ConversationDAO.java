@@ -117,11 +117,12 @@ public class ConversationDAO {
 		}
 		catch (MongoException me) {
 			//E11000 duplicate key error index
+			Logger.error(me,"ConversationDAO.java : saveInternal");
 			if (me.getCode() == 11000) {
 				Logger.error("Duplicate key error while saving convo");
 				return saveInternal(convo, --count);
 			}
-			me.printStackTrace();
+			
 		}
 		
 		String convoId = convoObject.get("_id").toString();
@@ -719,6 +720,7 @@ public class ConversationDAO {
 			convo.parseBasicFromDB(dbCursor.next());
 			convosSet.add(convo);
 		}
+		Logger.info("getConvosByIds - "+ dbCursor.size());
 		return convosSet;
 	}
 	
@@ -940,6 +942,7 @@ public class ConversationDAO {
 	 */
 	public static List<ConversationBean> loadPopularAnswers(String type,String afterActionId){
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
+		int count = 0;
 		while(true){
 			List<DBObject> convoDblist =getPopularAnswersFromDb( type, afterActionId);
 			
@@ -949,7 +952,9 @@ public class ConversationDAO {
 			break;
 			
 			afterActionId=convoDblist.get(convoDblist.size()-1).get("_id").toString();
+			count++;
 		}
+		Logger.info("loadPopularAnswers - "+ count);
 		Collections.sort(convosList);
 		return convosList;
 	}

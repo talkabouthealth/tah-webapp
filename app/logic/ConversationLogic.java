@@ -250,7 +250,7 @@ public class ConversationLogic {
 	        				System.out.println("NOTIFY: "+imText);
 	        				IMNotifier.getInstance().followersAnswerNotification(follower.getId(), convo.getId(), imText);
 		    			} catch (Throwable e) {
-		    				Logger.error(e, "Sending notifications on Convo answer");
+		    				Logger.error(e, "ConversationLogic.java : createAnswerOrReply");
 		    			}	        				
 	        		}
 	    		}
@@ -357,7 +357,7 @@ public class ConversationLogic {
 				imNotifier.answerNotify(uidArray, talker.getUserName(), convo.getId(), 
 						comment.getParentId(), comment.getId(), comment.getText());
 			} catch (Throwable e) {
-				Logger.error(e, "Sending notifications on Convo answer");
+				Logger.error(e, "ConversationLogic.java : createAnswerOrReply");
 			}
 		}
     	

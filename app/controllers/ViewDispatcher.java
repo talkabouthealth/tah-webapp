@@ -305,7 +305,7 @@ public class ViewDispatcher extends Controller {
 		try {
 			relatedConvos = SearchUtil.getRelatedConvos(talker,convo);
 		} catch (Exception e) {
-			e.printStackTrace();
+				Logger.error(e, "ViewDispatcher.java : showConvo");
 		}
 		
 		render("Conversations/viewConvo.html", talker, convo, latestActivityTime, 

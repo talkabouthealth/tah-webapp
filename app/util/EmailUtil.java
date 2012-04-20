@@ -100,7 +100,7 @@ public class EmailUtil {
 			client = new TriggerMailClient(SAILTHRU_APIKEY, SAILTHRU_SECRET);
 			client.send(emailTemplate.toString().toLowerCase(), toEmail, vars, options);
 		} catch (Exception e) {
-			Logger.error(e, "Couldn't send email");
+			Logger.error(e, "EmailUtil.java : sendEmail");
 			return false;
 		}
 
@@ -128,15 +128,14 @@ public class EmailUtil {
 					try {
 						client.setEmail(email.getEmail(), false, false, false, null, lists, null);
 					} catch (Exception e) {
-						//e.printStackTrace();
+						Logger.error(e, "EmailUtil.java: setEmail");
 					}
 				}
 			}else{
 				System.out.println("List is empty");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger.error(e, "Couldn't send email");
+			Logger.error(e, "EmailUtil.java: sentMail");
 			return false;
 		}
 		emailList.clear();

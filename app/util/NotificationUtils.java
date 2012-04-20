@@ -103,7 +103,7 @@ public class NotificationUtils {
 				String[] uidArray = talkersForNotification.toArray(new String[talkersForNotification.size()]);
 				imNotifier.broadcast(uidArray, convoId, restartTalkerId);
 			} catch (Exception e) {
-				e.printStackTrace();
+				Logger.error(e, "NotificationUtils.java : sendIMNotification");
 			}
 		}
 	}
@@ -382,7 +382,7 @@ public class NotificationUtils {
 		try {
 			imNotifier.addContact(imAccount.getService(), imAccount.getUserName());
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.error(e, "NotificationUtiles.java: sendIMInvitation");
 		}
 	}
 

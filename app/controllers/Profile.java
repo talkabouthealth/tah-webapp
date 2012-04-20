@@ -124,7 +124,9 @@ public class Profile extends Controller {
 		int childrenNum = -1;
 		try {
 			childrenNum = Integer.parseInt(talker.getChildrenNumStr());
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			Logger.error(e, "Profile.java : save");
+		}
 		talker.setChildrenNum(childrenNum);
 		
 		Date dateOfBirth = CommonUtil.parseDate(talker.getDobMonth(), talker.getDobDay(), talker.getDobYear());
@@ -384,7 +386,7 @@ public class Profile extends Controller {
 
                             } catch (IOException e) {
                                     TalkerDAO.updateTalkerImage(talker, null);
-                                    Logger.error(e, "Error converting image!");
+                                    Logger.error(e, "Profile.java : uploadImage");
                                     session.put("image_upload", "error");
                                     renderText("error converting image"); 
                             }
@@ -517,7 +519,9 @@ public class Profile extends Controller {
 				EmailSetting emailSetting = EmailSetting.valueOf(paramName);
 				emailSettings.add(emailSetting);
 			}
-			catch (IllegalArgumentException iae) {}
+			catch (IllegalArgumentException iae) {
+				Logger.error(iae, "Profile.java : emailSettingsSave");
+			}
 		}
 		sessionTalker.setEmailSettings(emailSettings);
 		
@@ -726,7 +730,7 @@ public class Profile extends Controller {
 		ActionDAO.saveAction(new UpdateProfileAction(talker, ActionType.UPDATE_HEALTH));
 		Cache.replace("healthItemsMap", null);
 		}catch(Exception e){
-			e.printStackTrace();
+			Logger.error(e, "Profile.java : saveHealthDetails");
 		}
 		renderText("ok");
 	}
@@ -813,7 +817,7 @@ public class Profile extends Controller {
 			deleteTalkerIndex(talker.getId());
 			Secure.logout();
 		} catch (Throwable e) {
-			Logger.error("Logout error", e);
+			Logger.error(e, "Profile.java : deactivateAccount");
 		}
     }
 	
@@ -846,8 +850,7 @@ public class Profile extends Controller {
 				autocompletetalkerIndexReader.close();
 				
 			}catch(Exception e){
-				System.out.println("exception is here "+e);
-				e.printStackTrace();
+				Logger.error(e, "Profile.java : deleteTalkerIndex");
 			}
 				
 			talkerIndexReader.close();

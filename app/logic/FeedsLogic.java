@@ -63,6 +63,7 @@ public class FeedsLogic {
 		Set<ConversationBean> addedConvos = new HashSet<ConversationBean>();
 		
 		String nextActionId = null;
+		int count = 0;
 		while (true) {
 			List<Action> feedActions = new ArrayList<Action>();
 			switch (feedType) {
@@ -125,7 +126,10 @@ public class FeedsLogic {
 			if (nextActionId.equals(beforeActionId) || !canAdd || feedActions.size() < ACTIONS_PRELOAD || feed.size() >= 100) {
 				break;
 			}
+			
+			count++;
 		}
+		Logger.info("updateFeed - "+ count);
 		return feed;
 	}	
 	
@@ -150,6 +154,7 @@ public class FeedsLogic {
 		String nextActionId = afterActionId;
 		boolean canAdd = true;
 		List<Action> feedActions = new ArrayList<Action>();
+		int count = 0;
 		while (true) {
 			switch (feedType) {
 				case CONVERSATION: 
@@ -179,8 +184,9 @@ public class FeedsLogic {
 			
 			//id for next preload from db
 			nextActionId = feedActions.get(feedActions.size()-1).getId();
+			count++;
 		}
-		
+		Logger.info("loadFeed : " + count);
 		return feed;
 	}
 	

@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import play.Logger;
+
 import models.CommentBean;
 import models.ConversationBean;
 
@@ -61,6 +63,7 @@ public class QuestionRecoveryDAO {
 				result.add(conversationBean);
 			}
 		}
+		Logger.info("getConvos - "+ cur.size());
 		return result;
 	}
 }

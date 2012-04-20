@@ -45,7 +45,7 @@ public class FacebookUtil {
 					
 					Logger.debug("FB update response: " + res.getStatus() + ", "+res.getString());
 				} catch (Exception e) {
-					Logger.error(e, "FB post error");
+					Logger.error(e, "FacebookUtil.java : post");
 				}
 			}
 		});
@@ -105,7 +105,7 @@ public class FacebookUtil {
 	    	TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
 		}
 		catch (Exception e) {
-			Logger.error(e, "Downloading Facebook image");
+			Logger.error(e, "FacebookUtil : userFacebookImage ");
 		}
 		
 	}

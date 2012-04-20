@@ -21,6 +21,7 @@ import logic.FeedsLogic;
 import logic.TalkerLogic;
 
 import models.TalkerBean;
+import play.Logger;
 import play.templates.JavaExtensions;
 
 import com.mongodb.BasicDBList;
@@ -278,6 +279,7 @@ public class ApplicationDAO {
 
 			List<DBObject> talkersDBList=new ArrayList<DBObject>();
 			//int limitLoops = 0;
+			int count = 0;
 			while(true){
 				 talkersDBList=loadTalkers(talkerBean,memberFlag,afterActionId);
 				talkerList.addAll(getTalkers(talkersDBList,talkerBean,talkerList.size()));
@@ -289,7 +291,9 @@ public class ApplicationDAO {
 					afterActionId=talkersDBList.get(talkersDBList.size()-1).get("_id").toString();
 				else
 					afterActionId=null;
+				count++;
 			}
+			Logger.info("getTalkersInOrder - "+ ((memberFlag) ? "EXP" : "USR") +" : "+count);
 		}
 		return talkerList;
 	}

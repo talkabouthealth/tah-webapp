@@ -17,6 +17,8 @@ import models.actions.Action.ActionType;
 
 import org.bson.types.ObjectId;
 
+import play.Logger;
+
 import util.CommonUtil;
 import util.NotificationUtils;
 
@@ -50,6 +52,7 @@ public class AnswerNotificationDAO {
 			if(name.size()>0)
 				convoCount++;
 		}
+		Logger.info("getAllConvoCount : "+convo.size());
 		return convoCount; 
 		
 	}
@@ -72,6 +75,7 @@ public class AnswerNotificationDAO {
 			if(commentList.size() > 0)
 				result.add(conversationBean);
 		}
+		Logger.info("getConvos : "+cur.size());
 		return result;
 	}
 	
@@ -98,6 +102,7 @@ public class AnswerNotificationDAO {
 			comment.setQuestion(convo.getTopic());
 			result.add(comment);
 		}
+		Logger.info("getConvoComments : "+cur.size());
 		return result;
 	}
 	

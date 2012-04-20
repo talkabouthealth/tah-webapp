@@ -81,7 +81,7 @@ public class TwitterUtil {
 					Logger.debug("Twitter follow response: " + conn.getResponseCode() + " "
 			                + conn.getResponseMessage());
 				} catch (Exception e) {
-					Logger.error(e, "Wasn't able to follow Twitter user!");
+					Logger.error(e, "TwitterUtil.java : followUser ");
 				}
 			}
 		});
@@ -113,7 +113,7 @@ public class TwitterUtil {
 					Logger.debug("Twitter DM response: " + conn.getResponseCode() + " "
 			                + conn.getResponseMessage());
 				} catch (Exception e) {
-					Logger.error(e, "DM sending error");
+					Logger.error(e, "TwitterUtil.java: sendDirect");
 				}
 			}
 		});
@@ -138,7 +138,7 @@ public class TwitterUtil {
 			
 			mentionTweets = parseTweetsFromResponse(conn.getInputStream());
 		} catch (Exception e) {
-			Logger.error(e, "Error loading mentions");
+			Logger.error(e, "TwitterUtil.java: loadMentions");
 		}
 		
 		return mentionTweets;
@@ -168,7 +168,7 @@ public class TwitterUtil {
 					Logger.debug("Twitter update response: " + conn.getResponseCode() + " "
 			                + conn.getResponseMessage());
 				} catch (Exception e) {
-					Logger.error(e, "Wasn't able to follow Twitter user!");
+					Logger.error(e, "TwitterUtil.java: followTAH");
 				}
 			}
 		});
@@ -201,7 +201,7 @@ public class TwitterUtil {
 					Logger.debug("Twitter update response: " + conn.getResponseCode() + " "
 			                + conn.getResponseMessage());
 				} catch (Exception e) {
-					Logger.error(e, "Wasn't able to follow Twitter user!");
+					Logger.error(e, "TwitterUtil.java : tweet");
 				}
 			}
 		});
@@ -269,9 +269,10 @@ public class TwitterUtil {
 					break;
 				}
 			} while (count == pageSize);
+			Logger.info("importTweets : " + count);
 			
 		} catch (Exception e) {
-			Logger.error(e, "Wasn't able to import Twitter posts!");
+			Logger.error(e, "TwitterUtil.java : importTweets ");
 		}
 		
 		return tweetsList;

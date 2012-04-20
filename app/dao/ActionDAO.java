@@ -315,7 +315,7 @@ public class ActionDAO {
 				activitiesList.add(action);
 			} while (dbCursor.hasNext());
 		}
-		
+		Logger.info("Load preload actions : "+dbCursor.size());
 		return activitiesList;
 	}
 	
@@ -426,6 +426,7 @@ public class ActionDAO {
 			id=actionDBObject.get("_id").toString();
 		}
 		catch(Throwable e) { 
+			Logger.error(e, "ActionDAO.java : saveActionGetId");
 			id=null;
 		}
 		

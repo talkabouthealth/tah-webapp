@@ -93,7 +93,7 @@ public class CommonUtil {
 			try {
 				md5hash = MD5_MESSAGE_DIGEST.digest(password.getBytes("UTF-8"));
 			} catch (UnsupportedEncodingException e) {
-				Logger.error(e, "Password hashing");
+				Logger.error(e, "CommonUtil.java : hashPassword");
 			}
 			MD5_MESSAGE_DIGEST.reset();
 		}
@@ -108,6 +108,7 @@ public class CommonUtil {
 		while (hashText.length() < 32) {
 			hashText = "0"+hashText;
 		}
+		Logger.info("hashPassword : " + 32);
 		return hashText;
 	}
 	
@@ -187,11 +188,13 @@ public class CommonUtil {
 	public static String generateVerifyCode() {
 		String verifyCode = null;
 		boolean unique = true;
+		int count = 0;
 		do {
 			verifyCode = UUID.randomUUID().toString();
 			unique = (TalkerDAO.getByVerifyCode(verifyCode) == null);
+			count++;
 		} while (!unique);
-		
+		Logger.info("generateVerifyCode : " + count);
 		return verifyCode;
 	}
 	
@@ -209,13 +212,16 @@ public class CommonUtil {
 	public static String generateRandomUserName(boolean checkUnique) {
 		String userName = null;
 		Random random = new Random();
+		int count = 0;
 		while (true) {
 			int num = random.nextInt(10000)+1;
 			userName = "member"+num;
 			if (!checkUnique || TalkerDAO.isUserNameUnique(userName)) {
 				break;
 			}
+			count++;
 		}
+		Logger.info("generateRandomUserName : " + count);
 
 		return userName;
 	}
@@ -456,6 +462,7 @@ public class CommonUtil {
 			Iterator it = allTopics.entrySet().iterator();
 
 			//for(int index =0 ; index < allTopics.size(); index++){
+			int count = 0;
 			while (it.hasNext()) {
 				Entry<String, String> topicEntry =(Map.Entry)it.next();
 				if (topicEntry.getKey().length() == 0) {
@@ -474,7 +481,9 @@ public class CommonUtil {
 						"<a href=\"http://talkabouthealth.com/"
 								+ topicEntry.getValue() + "\">#&$1</a>");
 				it.remove();
+				count++;
 			}
+			Logger.info("prepareThoughtOrAnswer : " + count);
 		}
 		if (text.contains("@")) {
 			Set<String> allTalkers =  loadTalkers();

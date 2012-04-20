@@ -1004,6 +1004,7 @@ public class TalkerLogic {
 			newUsername = screenName+i;
 			i++;
 		}
+		Logger.info("signupFromService : " + i);
 		talker.setUserName(newUsername);
 		
 		//for Tw/Fb users password is random

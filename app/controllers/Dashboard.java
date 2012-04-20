@@ -22,6 +22,7 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.With;
 import util.EmailUtil;
@@ -68,7 +69,7 @@ public class Dashboard extends Controller {
 		try {
 			imNotifier.broadcast(uidArray, convoId, null);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.error(e,"Dashboard.java : notification ");
 		}
 		
 		renderText("ok");
@@ -108,7 +109,7 @@ public class Dashboard extends Controller {
 				try{
 					deleteTalkerIndex(talker.getId());
 				}catch (Exception e) {
-					// TODO: handle exception
+					Logger.error(e,"Dashboard.java : saveAccounts");
 				}
 			}
 			else {
@@ -117,7 +118,7 @@ public class Dashboard extends Controller {
 			try{
 				TalkerDAO.updateTalker(talker);	
 			}catch (Exception e) {
-				// TODO: handle exception
+				Logger.error(e,"Dashboard.java : saveAccounts");
 			}
 			
 		}
@@ -152,8 +153,7 @@ public class Dashboard extends Controller {
 			autocompletetalkerIndexReader.close();
 			
 		}catch(Exception e){
-			System.out.println("exception is here "+e);
-			e.printStackTrace();
+			Logger.error(e,"Dashboard.java : deleteTalkerIndex");
 		}
 		talkerIndexReader.close();
 		autocompletetalkerIndexReader.close();

@@ -51,6 +51,7 @@ import dao.ConversationDAO;
 import dao.QuestionDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
+import play.Logger;
 import play.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer;
 import play.data.validation.Validation;
 import play.exceptions.UnexpectedException;
@@ -233,7 +234,7 @@ public class Conversations extends Controller {
     	try{
     	deleteConvoIndex(convo.getId());
     	}catch (Exception e) {
-			e.printStackTrace();
+    		Logger.error(e, "Conversions.java : delete ");
 		}
     	//remove related actions
     	ActionDAO.deleteActionsByConvo(convo);
@@ -270,8 +271,7 @@ public class Conversations extends Controller {
 			autocompleteConvoIndexReader.close();
 			
 		}catch(Exception e){
-			System.out.println("exception is here "+e);
-			e.printStackTrace();
+			Logger.error(e, "Conversions.java : deleteConvoIndex ");
 		}
 		
 		convoIndexReader.close();
@@ -511,7 +511,7 @@ public class Conversations extends Controller {
 					}
 					convo.setOtherDiseaseCategories(diseaseArr);
 				}catch (Exception e) {
-					e.printStackTrace();
+					Logger.error(e,"Conversions.java : updateField");
 				}
 		    	/*ActionDAO.deleteActionsByConvo(convo);
 				ActionDAO.deleteActionsByConvoType(convo);

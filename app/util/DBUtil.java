@@ -45,9 +45,10 @@ public class DBUtil {
 	
 	static {
 		try {
-			System.out.println("Connecting to DB on " + getHost() + "...");
+			Logger.info("Connecting to DB on " + getHost() + "...");
 			mongo = new Mongo(getHost(), getPort());
-			System.out.println("Connected, proceeding!");
+			Logger.info("Connected, proceeding!");
+			Logger.info("DB Connection Object: " + mongo.toString());
 		} catch (UnknownHostException e) {
 			Logger.error(e, "DB connection");
 		} catch (MongoException e) {

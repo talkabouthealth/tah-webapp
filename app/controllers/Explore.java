@@ -40,6 +40,7 @@ import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean;
 import models.TopicBean;
 import models.actions.Action;
+import play.Logger;
 import util.BitlyUtil;
 import util.CommonUtil;
 import util.DBUtil;
@@ -200,9 +201,8 @@ public class Explore extends Controller {
 				results = SearchUtil.searchTalker(query,currentTalker);
 				if(results != null && results.size() > TalkerLogic.TALKERS_PER_PAGE)
 					results = results.subList(0, TalkerLogic.TALKERS_PER_PAGE);
-			}
-			catch (Exception e) {
-				Logger.error(e, "Talker search on Browser Members page.");
+			} catch (Exception e) {
+				Logger.error(e,"Explore.java : browseMembers");
 			}
 		}
 		
@@ -269,7 +269,7 @@ public class Explore extends Controller {
 				results = SearchUtil.searchConvo(query, 10, talker);
 			}
 			catch (Exception e) {
-				Logger.error(e, "Search Conversations error");
+				Logger.error(e, "Explore.java : searchConversations");
 			}
 		}
 		render(talker, results);
@@ -419,7 +419,7 @@ public class Explore extends Controller {
 			try {
 				activeTalkers = SearchUtil.searchTalker(searchTerm,currentTalker);
 			} catch (Exception e) {
-					Logger.error(e, "Talker search on Browser Members page.");
+					Logger.error(e, "Explore.java : ajaxLoadMoreUser");
 			}
 		} else {
 			List<String> memberTypeEntry = null;

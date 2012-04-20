@@ -70,7 +70,7 @@ public class Actions extends Controller {
 		try{
 			flag = saveProfileThankYouComment(null,null,note,note,"thankyou",false,false,null);
 		}catch (Throwable e) {
-			e.printStackTrace();
+			Logger.error(e, "Action.java : createThankYou ");
 		}
 		ActionDAO.saveAction(new GiveThanksAction(fromTalker, toTalker));
 		TalkerBean mailSendtalker = TalkerDAO.getByEmail(toTalker.getEmail());

@@ -12,6 +12,7 @@ import java.util.Map;
 import models.MessageBean;
 import models.TalkerBean;
 import models.TalkerBean.EmailSetting;
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.With;
 import util.CommonUtil;
@@ -165,7 +166,7 @@ public class Messaging  extends Controller {
 				    		try{
 				    			MessagingDAO.populateMessageIndex(dummyId);
 				    		}catch(Exception e){
-				    			e.printStackTrace();
+				    			Logger.error(e, "Messaging.java : sentMail");
 				    		}
 				    	}else{
 						    messageBean.setDummyId(dummyId); 	  
@@ -187,7 +188,7 @@ public class Messaging  extends Controller {
 						    try{
 						    	MessagingDAO.populateMessageIndex(messageId);
 				    		}catch(Exception e){
-				    			e.printStackTrace();
+				    			Logger.error(e, "Messaging.java : sentMail");
 				    		}
 						}   
 					}
@@ -497,7 +498,7 @@ public class Messaging  extends Controller {
 						if(messageBean.isDeleteFlag() == true && messageBean.isDeleteFlagSender() == true)
 							MessagingDAO.deleteMessageIndex(messageBean.getId());
 					}catch(Exception e){
-						e.printStackTrace();
+						Logger.error(e, "Messaging.java : doAction");
 					}
 				}
 			}

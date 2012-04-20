@@ -16,6 +16,8 @@ import models.TalkerDiseaseBean;
 
 import org.bson.types.ObjectId;
 
+import play.Logger;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
@@ -190,7 +192,7 @@ public class TalkerDiseaseDAO {
 				talkerDisease.setOtherHealthItems(otherHealthItems);
 			}
 		}catch (Exception e) {
-			e.printStackTrace();
+			Logger.error(e, "MessagingDAO : getByTalkerId");
 		}
 		return talkerDisease;
 	}
