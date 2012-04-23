@@ -484,16 +484,20 @@
 		function display(){
 			var size = $("#EXPList > div").size();
 			if(size < 3){
-				document.getElementById("expRBtn").style.display = "none";
+				if(document.getElementById("expRBtn"))
+					document.getElementById("expRBtn").style.display = "none";
 			}else{
-				document.getElementById("expRBtn").style.display = "";
+				if(document.getElementById("expRBtn"))
+					document.getElementById("expRBtn").style.display = "";
 			}
 
 			var sizeMembers = $("#USRList > div").size();
 			if(sizeMembers < 3){
-				document.getElementById("usrRBtn").style.display = "none";
+				if(document.getElementById("usrRBtn"))
+					document.getElementById("usrRBtn").style.display = "none";
 			}else{
-				document.getElementById("usrRBtn").style.display = "";
+				if(document.getElementById("usrRBtn"))
+					document.getElementById("usrRBtn").style.display = "";
 			}
 		}
 		window.onload = display;
