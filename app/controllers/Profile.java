@@ -123,7 +123,8 @@ public class Profile extends Controller {
 		//Default '-1' (because 0 is possible value)
 		int childrenNum = -1;
 		try {
-			childrenNum = Integer.parseInt(talker.getChildrenNumStr());
+			if(talker.getChildrenNumStr() != null && !"".equals(talker.getChildrenNumStr()))
+				childrenNum = Integer.parseInt(talker.getChildrenNumStr());
 		} catch (Exception e) {
 			Logger.error(e, "Profile.java : save");
 		}
