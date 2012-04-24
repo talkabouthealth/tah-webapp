@@ -343,7 +343,7 @@ public class ViewDispatcher extends Controller {
 		openConvos.clear();
 		
 		//- "Popular Conversations" - topic conversations ordered by page views
-		List<ConversationBean> popularConvos1 = new ArrayList<ConversationBean>(topic.getConversations());
+		List<ConversationBean> popularConvos = new ArrayList<ConversationBean>(topic.getConversations());
 		//List<ConversationBean> popularConvos = new ArrayList<ConversationBean>();
 		//added for check cancer type
 		//for (ConversationBean conversationBean : popularConvos1) {
@@ -352,10 +352,10 @@ public class ViewDispatcher extends Controller {
 			//}
 		//}
 		//popularConvos1.clear();
-		Collections.sort(popularConvos1);
+		Collections.sort(popularConvos);
 		//Added code for adding pagination to the popular topic section on topic page
-		if(popularConvos1.size() >= FeedsLogic.FEEDS_PER_PAGE){
-			popularConvos1 = popularConvos1.subList(0, FeedsLogic.FEEDS_PER_PAGE);	
+		if(popularConvos != null && popularConvos.size() >= FeedsLogic.FEEDS_PER_PAGE){
+			popularConvos = popularConvos.subList(0, FeedsLogic.FEEDS_PER_PAGE);	
 		}
 
 		
@@ -363,7 +363,7 @@ public class ViewDispatcher extends Controller {
 		//cannot contain conversations in the top 10 of "Popular Conversations" tab
 		List<ConversationBean> trendingConvos = null;//new ArrayList<ConversationBean>();
 		
-		List<Action> topicMentions1 = CommentsDAO.getTopicMentions(topic);
+		List<Action> topicMentions = CommentsDAO.getTopicMentions(topic);
 		//List<Action> topicMentions = new ArrayList<Action>();
 		//added for check cancer type
 		//for (Action action : topicMentions1) {
@@ -372,15 +372,15 @@ public class ViewDispatcher extends Controller {
 			//}
 		//}
 		//topicMentions1.clear();
-		if(topicMentions1.size() >= FeedsLogic.FEEDS_PER_PAGE){
-			topicMentions1 = topicMentions1.subList(0, FeedsLogic.FEEDS_PER_PAGE);	
+		if(topicMentions != null && topicMentions.size() >= FeedsLogic.FEEDS_PER_PAGE){
+			topicMentions = topicMentions.subList(0, FeedsLogic.FEEDS_PER_PAGE);	
 		}
 		
 		if(talker != null)
 			session.put("inboxUnreadCount", MessagingDAO.getUnreadMessageCount(talker.getId()));
 		
 		render("Topics/viewTopic.html", talker, topic, activities, openConvosSaved,
-				popularConvos1, trendingConvos, topicMentions1,newsLetterFlag);
+				popularConvos, trendingConvos, topicMentions,newsLetterFlag);
 	}
 
 	/**
