@@ -11,7 +11,7 @@ body {
 
 form { padding:0px; margin:0px;}
 a img { border: none; }
-#top_container { width:972px; margin-left:auto; margin-right:auto; font-size:1px}
+#top_container { width:972px; margin-left:auto; margin-right:auto; font-size:14px;color:#434242;}
 #bottom_container { width:972px; margin-left:auto; margin-right:auto;}
 #top { float:left; width:972px; padding:0px; margin:0px; height:73px; }
 #logo { float:left; width:328px; padding:0px; margin:0px; height:73px; background:url(../images/logo.gif) no-repeat top;}
