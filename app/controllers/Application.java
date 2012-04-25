@@ -27,6 +27,7 @@ import logic.TalkerLogic;
 import models.DiseaseBean;
 import models.EmailBean;
 import models.IMAccountBean;
+import models.NewsLetterBean;
 import models.PrivacySetting;
 import models.ServiceAccountBean;
 import models.PrivacySetting.PrivacyType;
