@@ -1035,10 +1035,10 @@ public class TalkerBean implements Serializable {
 	public void setOtherCategories(String[] otherCategories) {
 		this.otherCategories = otherCategories;
 	}
-}	
 	public NewsLetterBean getNewsLetterBean() {
 		return newsLetterBean;
 	}
 	public void setNewsLetterBean(NewsLetterBean newsLetterBean) {
 		this.newsLetterBean = newsLetterBean;
 	}
+}	
