@@ -54,6 +54,18 @@ public class EmailListJob extends Job {
 			emailListBean = new EmailListBean("TAH-Newsletter",newsLetterBean.getEmail());
 			//System.out.println("Job : TAH Newsletter : " + newsLetterBean.getEmail());
 			newsLetterList.add(emailListBean);
+			
+			//add all subscribed newsletters in the email sending list.
+			String[] subNewsLetters = newsLetterBean.getNewsLetterType();
+			if(subNewsLetters != null && subNewsLetters.length > 0){
+				for(int index = 0 ; index < subNewsLetters.length; index++){
+					String newsLetterType = subNewsLetters[index];
+					newsLetterType = newsLetterType.replaceAll(",", "");
+					newsLetterType = newsLetterType.replaceAll(" ", "-");
+					emailListBean = new EmailListBean(newsLetterType,newsLetterBean.getEmail());
+					newsLetterList.add(emailListBean);
+				}
+			}
 		}
 		
 		List<String> pationtList = Arrays.asList("Just Diagnosed","Current Patient","Former Patients");

@@ -48,6 +48,7 @@ GET		/explore/ajaxLoadMoreUser				Explore.ajaxLoadMoreUser
 GET		/explore/topicAjaxLoad					Explore.topicAjaxLoad
 GET		/explore/communityFeedAjaxLoad			Explore.communityFeedAjaxLoad
 GET		/explore/topics							Explore.topics
+GET		/explore/newsletter						Explore.newsletter
 GET		/explore/{cancerType}					Explore.community
 
 GET		/home/?									Home.index

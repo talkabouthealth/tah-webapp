@@ -34,6 +34,7 @@ import logic.TopicLogic;
 import models.CommentBean;
 import models.ConversationBean;
 import models.DiseaseBean;
+import models.NewsLetterBean;
 import models.ServiceAccountBean;
 import models.PrivacySetting.PrivacyType;
 import models.ServiceAccountBean.ServiceType;
@@ -55,6 +56,7 @@ import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.DiseaseDAO;
+import dao.NewsLetterDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
 
@@ -72,16 +74,17 @@ public class Explore extends Controller {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	boolean loggedIn = (talker != null);
     	boolean newsLetterFlag = false;
-    	
+    	boolean rewardLetterFlag = false;
     	if (talker != null) {
     		TalkerLogic.preloadTalkerInfo(talker);
     		newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
+    		rewardLetterFlag=ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
     	}
     	int limit = session.get("topicCount")==null?TopicLogic.TOPICS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
     	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics(limit);
 		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions(talker,loggedIn);
 		
-		render(talker, openQuestions, popularTopics,newsLetterFlag);
+		render(talker, openQuestions, popularTopics,newsLetterFlag,rewardLetterFlag);
     }
     
     public static void liveTalks() {
@@ -106,17 +109,18 @@ public class Explore extends Controller {
     	//session.get("topicCount")==null?20:Integer.parseInt(session.get("topicCount"));
     	session.put("topicCount", TopicLogic.TOPICS_PER_PAGE);
     	boolean newsLetterFlag = false;
-    	
+    	boolean rewardLetterFlag = false;
     	if (talker != null) {
     		TalkerLogic.preloadTalkerInfo(talker);
     		newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
+    		rewardLetterFlag=ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
     	}
 
     	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics(TopicLogic.TOPICS_PER_PAGE);
 
     	Set<TopicBean> topicsTree = TopicLogic.getAllTopicsTree();
 
-    	render(topicsTree, talker, popularTopics, newsLetterFlag, limit);
+    	render(topicsTree, talker, popularTopics, newsLetterFlag,rewardLetterFlag, limit);
     }
     
     /**
@@ -505,6 +509,7 @@ public class Explore extends Controller {
 			
 			talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 			 newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
+			rewardLetterFlag=ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
 		}
 		if(cancerType == null || (cancerType != null && cancerType.equals("")))
 			cancerType = "Breast Cancer";

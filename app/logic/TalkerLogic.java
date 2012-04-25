@@ -96,7 +96,7 @@ public class TalkerLogic {
 				CommonUtil.generateAbsoluteURL("PublicProfile.thoughts", "userName", "<username>")+"'>Thoughts Feed</a>"),
 		FOLLOW(5, "Follow <a href='"+
 				CommonUtil.generateAbsoluteURL("Explore.browseMembers", "action", "active")+"'>another member</a>"),
-		FOLLOW_TOPIC(5, "Follow a <a href='"+CommonUtil.generateAbsoluteURL("Explore.browseTopics")+"'>Topic</a>"),
+		FOLLOW_TOPIC(5, "Follow a <a href='"+CommonUtil.generateAbsoluteURL("Explore.topics")+"'>Topic</a>"),
 		START_OR_JOIN_TALK(5, "Start or join a <a href='"+CommonUtil.generateAbsoluteURL("Explore.liveTalks")+"'>Live Chat</a>");
 		
 		

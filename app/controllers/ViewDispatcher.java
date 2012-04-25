@@ -140,11 +140,13 @@ public class ViewDispatcher extends Controller {
 	private static void showTalker(TalkerBean talker) throws Throwable {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		boolean newsLetterFlag = false;
+		boolean rewardLetterFlag = false;
 		if (talker.isSuspended()) {
 			if (currentTalker != null) {
 				//we need followers for displaying user's info
 				currentTalker.setFollowerList(TalkerDAO.loadFollowers(currentTalker.getId()));
 				newsLetterFlag = ApplicationDAO.isEmailExists(currentTalker.getEmail());
+				rewardLetterFlag=ApplicationDAO.isnewsLetterSubscribe(currentTalker.getEmail(),"TalkAboutHealth Rewards");
 			}
 			render("PublicProfile/suspended.html", currentTalker);
 			return;
@@ -198,6 +200,7 @@ public class ViewDispatcher extends Controller {
 				notViewableInfo = true;
 			}
 			newsLetterFlag = ApplicationDAO.isEmailExists(currentTalker.getEmail());
+			rewardLetterFlag=ApplicationDAO.isnewsLetterSubscribe(currentTalker.getEmail(),"TalkAboutHealth Rewards");
 		}
 		
 		Set<Action> talkerFeed = FeedsLogic.getTalkerFeed(talker, null);
@@ -248,16 +251,20 @@ public class ViewDispatcher extends Controller {
 		render("PublicProfile/newview.html", talker, disease, talkerDisease, healthItemsMap, 
 				currentTalker, talkerFeed,
 				notProvidedInfo, notViewableInfo,
-				numOfAnswers, numOfTopAnswers, numOfStartedConvos,newsLetterFlag);
+				numOfAnswers, numOfTopAnswers, numOfStartedConvos,newsLetterFlag,rewardLetterFlag);
 		
 	}
 	
 	private static void showConvo(ConversationBean convo) {
+		
 		TalkerBean talker = null;
 		boolean newsLetterFlag = false;
+		boolean rewardLetterFlag;
+		
 		if (Security.isConnected()) {
 			talker = CommonUtil.loadCachedTalker(session);
 			newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
+			rewardLetterFlag = ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
 		}
 		ConversationDAO.incrementConvoViews(convo.getId());
 		Date latestActivityTime = ActionDAO.getConvoLatestActivity(convo);
@@ -313,11 +320,15 @@ public class ViewDispatcher extends Controller {
     }
 	
 	private static void showTopic(TopicBean topic) {
+		
 		TalkerBean talker = null;
 		boolean newsLetterFlag = false;
+		boolean rewardLetterFlag = false;
 		if (Security.isConnected()) {
 			talker = CommonUtil.loadCachedTalker(session);
 			newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
+			
+			rewardLetterFlag=ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
 		}
 		
 		TopicDAO.incrementTopicViews(topic.getId());
@@ -380,7 +391,7 @@ public class ViewDispatcher extends Controller {
 			session.put("inboxUnreadCount", MessagingDAO.getUnreadMessageCount(talker.getId()));
 		
 		render("Topics/viewTopic.html", talker, topic, activities, openConvosSaved,
-				popularConvos, trendingConvos, topicMentions,newsLetterFlag);
+				popularConvos, trendingConvos, topicMentions,newsLetterFlag,rewardLetterFlag);
 	}
 
 	/**

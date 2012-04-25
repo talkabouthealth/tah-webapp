@@ -3,9 +3,8 @@ package models;
 import static util.DBUtil.createRef;
 import static util.DBUtil.getBoolean;
 import static util.DBUtil.getString;
-
 import java.util.Date;
-
+import java.util.Collection;
 import util.DBUtil;
 
 import com.mongodb.BasicDBObjectBuilder;
@@ -24,6 +23,7 @@ public class NewsLetterBean implements DBModel {
 	}
 
 	private String email;
+	private String[] newsLetterType;
 	
 	public NewsLetterBean(String value) {
 		this.email = value;
@@ -32,7 +32,9 @@ public class NewsLetterBean implements DBModel {
 	@Override
 	public DBObject toDBObject() {
 		DBObject emailDBObject = BasicDBObjectBuilder.start()
-			.add("email", getEmail()).get();
+			.add("email", getEmail())
+			.add("newsletter_type", getNewsLetterType())
+			.get();
 		return emailDBObject;
 	}
 	
@@ -40,6 +42,10 @@ public class NewsLetterBean implements DBModel {
 	public void parseDBObject(DBObject dbObject) {
 		String emailValue = (String)dbObject.get("email");
 		setEmail(emailValue);
+		Collection<String> newLetterTypes = (Collection<String>)dbObject.get("newsletter_type");
+		if (newLetterTypes != null) {
+			setNewsLetterType(newLetterTypes.toArray(new String[]{}));
+		}
 	}
 	
 	@Override
@@ -68,11 +74,19 @@ public class NewsLetterBean implements DBModel {
 	public String getEmail() { return email; }
 
 	public void setEmail(String email) { this.email = email; }
+	
+	public String[] getNewsLetterType() { return newsLetterType; }
+
+	public void setNewsLetterType(String[] newsLetterType) { this.newsLetterType = newsLetterType; }
 
 	public void parseBasicFromDB(DBObject newsLetterDBObject) {
 		if (newsLetterDBObject == null) {
 			return;
 		}
 		setEmail(getString(newsLetterDBObject, "email"));
+		Collection<String> newLetterTypes = (Collection<String>)newsLetterDBObject.get("newsletter_type");
+		if (newLetterTypes != null) {
+			setNewsLetterType(newLetterTypes.toArray(new String[]{}));
+		}
 	}
 }

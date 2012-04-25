@@ -76,35 +76,64 @@
 	-->
 </script>
 	<div id="newsLetter" style="display: none;">
-	<div class="mtrighttxt2" id="newsletterblock" style="height: 176px;padding-left: 32px;padding-top: 43px;width: 216px;">
-	<div style="margin-top: -33px; margin-left: 190px;" id="closeDiv"><a href="javascript:closeDiv();" title="Close">x</a></div>
-     <div class="blacktextgrey15_1">Join Our Newsletter</div>
-		<span class="blacktextgrey8"></span>	        
-		<span class="talkinfo" style="font-size: 11px;line-height: 19px;">
-			Upcoming events, best blog posts, latest news, and featured organizations and experts.
-			<br/>
-		</span>
-		<span class="blacktextgrey6"><br /></span>
-	    <span id="newsletterMessage" class="success" style="display:none;">Thanks for subscribing to newsletter.</span>
-			#{form @Application.subscribeNewsletter(), id:'newsletter'  }
-			#{if session.username }
-				<input name="email" id="email" class="email" type="text" value="${talker.email}" size="17" />
-			#{/if}
-			#{else}
-				<input name="email" id="email" class="email" type="text" value="Email Address" size="17"  onclick="javascript:changeEmail();" onblur="javascript:changeEmail();"/>
-			#{/else}
-			<br/>
-			<div style="padding-top: 12px;">
-				<input class="newsignupbutton" type="submit" value=""/>
-			</div>
-			<!--
-			 -- Old Code --
-			Just Press [Enter] Key 
-			<div class="signupbutton"><input type="submit" value="Subscribe Now" /></div>
-			 -->
-			#{/form}
-		<span class="blacktextgrey6"><br /></span>	 
+	<div class="mtrighttxt2" id="newsletterblock" style="height: auto;padding-left: 32px;padding-top: 43px;width: 216px;">
+			<div style="margin-top: -33px; margin-left: 190px;" id="closeDiv"><a href="javascript:closeDiv();" title="Close">x</a></div>
+		     <div class="blacktextgrey15_1">Join Our Newsletter</div>
+				<span class="blacktextgrey8"></span>	        
+				<span class="talkinfo" style="font-size: 11px;line-height: 19px;">
+					Upcoming events, best blog posts, latest news, and featured organizations and experts.
+					<br/>
+				</span>
+				<span class="blacktextgrey6"><br /></span>
+			    <span id="newsletterMessage" class="success" style="display:none;">Thanks for subscribing to newsletter.</span>
+					#{form @Application.subscribeNewsletter(), id:'newsletter'  }
+					#{if session.username }
+						<input name="email" id="email" class="email" type="text" value="${talker.email}" size="17" />
+					#{/if}
+					#{else}
+						<input name="email" id="email" class="email" type="text" value="Email Address" size="17"  onclick="javascript:changeEmail();" onblur="javascript:changeEmail();"/>
+					#{/else}
+					<br/>
+					<div style="padding-top: 12px;">
+						<input class="newsignupbutton" type="submit" value="" style="cursor: pointer;"/>
+					</div>
+					<br />
+					<br />
+					<div><span><a href="/explore/newsletter">
+					View all newsletters</a>
+					</span></div>
+					<!--
+					 -- Old Code --
+					Just Press [Enter] Key 
+					<div class="signupbutton"><input type="submit" value="Subscribe Now" /></div>
+					 -->
+					#{/form}
+				<span class="blacktextgrey6"><br /></span>	 
+		    </div>
+		     <div class="topicborder" style="margin-top: 15px;"></div>  
     </div>
-    <div class="topicborder" style="margin-top: 15px;"></div>  
-    </div>
+    
+    <div class="topists" id="tahNewsletter" style="display: none;">
+		<div class="mtrighttxt1">TahkAboutHealth Newsletters</div>
+		<br />
+		<div><span class="blacktextgrey15">Sign up for one of our free newsletters!</span></div>
+		 <div style="padding-top: 12px;">
+			<a href="/explore/newsletter" >	<button class="newsignupbutton" type="submit" value=""  style="cursor: pointer;"></button></a>
+		</div>	
+		<br />
+		<div class="topicborder"></div>
+	</div>
+    
 #{/if}
+#{else}
+	<div class="topists" id="tahNewsletter">
+		<div class="mtrighttxt1">TahkAboutHealth Newsletters</div>
+		<br />
+		<div><span class="blacktextgrey15">Sign up for one of our free newsletters!</span></div>
+		 <div style="padding-top: 12px;">
+			<a href="/explore/newsletter" >	<button class="newsignupbutton" type="submit" value=""  style="cursor: pointer;"></button></a>
+		</div>	
+		<br />
+		<div class="topicborder"></div>
+	</div>
+#{/else}

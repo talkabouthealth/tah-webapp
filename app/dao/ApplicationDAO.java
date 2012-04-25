@@ -19,7 +19,7 @@ import org.bson.types.ObjectId;
 
 import logic.FeedsLogic;
 import logic.TalkerLogic;
-
+import models.NewsLetterBean;
 import models.TalkerBean;
 import play.Logger;
 import play.templates.JavaExtensions;
@@ -447,12 +447,13 @@ public class ApplicationDAO {
 
 	/* ----------------- Newsletter Signup action --------------- */
 	
-	public static void addToNewsLetter(String email) {
+	public static void addToNewsLetter(String email, String[] newsLetterType) {
 
 		DBCollection waitingColl = getCollection(NEWSLETTER_COLLECTION);
 
 		DBObject waitingDBObject = BasicDBObjectBuilder.start()
 			.add("email", email)
+			.add("newsletter_type", newsLetterType)
 			.get();
 		waitingColl.save(waitingDBObject);
 	}
@@ -517,4 +518,26 @@ public class ApplicationDAO {
 		}
 		return null;
 	}
+	
+	/**
+	 * Used for checking newsletter subscribe or not.
+	 * @param email
+	 * @param newsLetter
+	 * @return
+	 */
+	public static boolean isnewsLetterSubscribe(String email,String newsLetter){
+		if(ApplicationDAO.isEmailExists(email)){
+			NewsLetterBean newsletter=NewsLetterDAO.getNewsLetterInfo(email);
+		    String newsletterType[]=newsletter.getNewsLetterType();
+		    	if(newsletterType != null)
+		    	if(newsletterType.length>0)
+		    	for(String type:newsletterType){
+		    		if(type.equalsIgnoreCase(newsLetter))
+		    			return true;
+		    	}
+			return false;
+		}else
+			return false;
+	}
+
 }

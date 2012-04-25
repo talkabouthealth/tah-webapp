@@ -345,97 +345,120 @@ function updateFeed(type,talkerName) {
 							  	<!-- <a href="#" id="convoFeed" class="tabLink">Your Conversation Feed</a>  -->
 							      <a href="#" id="convoFeed" class="tabLink">Your conversations</a>
 							  </div>
-							  <div class="newActiveTab" style="width: auto;">
-							  	<a href="#" id="allFeed" class="tabLink">All Cancers</a>
-							  </div>		
-							  #{if talker != null}
+							  #{if talker.category != null && !talker.category.equals("")}
+								  <div class="newTab" style="width: auto;">
+								  	<a href="#" id="allFeed" class="tabLink">All Cancers</a>
+								  </div>		
+							  
 							  		#{if allDiseaseList != null}
 								  		#{list items: allDiseaseList.keySet(), as: 'cancerType'}
-									  	<div class="newTab" style="width: auto;">
+									  	<div #{if talker.category.equals(cancerType.replaceAll("_", " "))} class="newActiveTab" #{/if} #{else} class="newTab" #{/else} style="width: auto;">
 										  	<a href="#" id="${cancerType}CommunityFeed" class="tabLink">${cancerType.replaceAll("_", " ")}</a> <!--  Community Feed -->
 										</div>
 							            #{/list}
 						            #{/if}
 							  #{/if}
+							  #{else}
+							  		<div class="newActiveTab" style="width: auto;">
+								  		<a href="#" id="allFeed" class="tabLink">All Cancers</a>
+								  	</div>		
 							  
+							  		#{if allDiseaseList != null}
+								  		#{list items: allDiseaseList.keySet(), as: 'cancerType'}
+									  	<div #{if talker.category.equals(cancerType.replaceAll("_", " "))} class="newTab" #{/if} #{else} class="newTab" #{/else} style="width: auto;">
+										  	<a href="#" id="${cancerType}CommunityFeed" class="tabLink">${cancerType.replaceAll("_", " ")}</a> <!--  Community Feed -->
+										</div>
+							            #{/list}
+						            #{/if}
+							  #{/else}
 							  <div class="newTab" style="width: auto;">
-							  	<a href="#" id="mentionsTab" class="tabLink">@mentions</a>
+							  	<a href="#" id="mentions" class="tabLink">@mentions</a>
 							  </div>
 						</div>
 							</div>
 							<div class="cb"></div>
 							<div style="margin-top: 50px;">
-								<div id="convoFeedContent" class="tabContent" style="display:none;">	
-									<div class="topic">
-				                      <div class="cb"></div>
-				                      <div class="topic">
-				                        <a href=# id="convoFeedNotifications" class="morenotification" style='display:none' onClick="updateFeed('convoFeed'); return false;" >
-				                        0 new items
-				                        </a>				                      
-				                        <div id="convoFeedList" class="conversationsList">
-					                    	#{list items: convoFeed, as: 'activity'}
-												#{feed/feedActivity activity: activity, talker: talker, parentList: 'convoFeedList' /}
-											#{/list}
-											#{else}
-												<br /><span class="blacktext16">Follow topics, conversations, and
-													other members to get the latest updates.</span>
-											#{/else}
-										</div>
-										#{if convoFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
-											<div class="replytommentbox" id="convoFeedBtn">
-					                          <input type="submit" src="images/seemore.jpg" 
-					                          	onclick="return loadMoreFeed('convoFeed');" value=" " class="seemorecom" />
-					                        </div>
-										#{/if}
-				                        <div class="cb"></div>
-				                      </div>
-				                      <div class="cb"></div>
-				                    </div> 
-								</div>
-								<div id="allFeedContent" class="tabContent" 
-										style="display:block;">	
-									<div class="topic">
-				                      <div class="cb"></div>
-				                      <div class="topic">
-				                        <a href=# id="allFeedNotifications" class="morenotification" style='display:none' onClick="updateFeed('allFeed'); return false;" >
-				                        0 new items
-				                        </a>				                      
-				                        <div id="allFeedList" class="conversationsList">
-					                    	#{list items: allFeed, as: 'activity'}
-												#{feed/feedActivity activity: activity, talker: talker, parentList: 'allFeedList' /}
-											#{/list}
-											#{else}
-												<br /><span class="blacktext16">Follow topics, conversations, and
-													other members to get the latest updates.</span>
-											#{/else}
-										</div>
-										#{if allFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
-											<div class="replytommentbox" id="allFeedBtn">
-					                          <input type="submit" src="images/seemore.jpg" 
-					                          	onclick="return loadMoreFeed('allFeed');" value=" " class="seemorecom" />
-					                        </div>
-										#{/if}
-				                        <div class="cb"></div>
-				                      </div>
-				                      <div class="cb"></div>
-				                    </div> 
+								<div id = "conversationFeed">
+									
 								</div>
 								
-								<div id="cancerFeed"></div>
-								
-								<div id="mentionsTabContent" class="tabContent" style="display: none;">	
-									<div class="topic">
-										<a href=# id="mentionsNotifications" class="morenotification" style='display:none' onClick="updateFeed('mentions','${talker.userName}'); return false;" >
-					                        0 new items
-					                    </a>	
-				                        <div id="mentionsList">
-					                    	#{list items: mentions, as: 'talkerMention'}
-												#{feed/feedActivity activity: talkerMention, talker: talker, parentList: 'mentionsList' /}
-											#{/list}
+								#{if talker.category != null && !talker.category.equals("")}
+									<div id = "allCancerFeed">
+									
+									</div>
+									
+									<div id="cancerFeed" >
+							          	 <div id="${talkerCat}CommunityFeedContent" class="tabContent" style="display: block;">	
+											<div class="topic">
+								                    <div class="cb"></div>
+								                    <div class="topic" id='comfeed'>
+								                      <a href=# id="${talkerCat}CommunityFeedNotifications" class="morenotification" style='display:none' onClick="updateFeed('communityFeed'); return false;" >
+								                      0 new items
+								                      </a>
+								                    	<div id="${talkerCat}CommunityFeedList">
+									                       	#{list items: allDiseaseList.get(talkerCat), as: 'cancerCommunityFeed' }
+										                    	#{list items: cancerCommunityFeed, as: 'activity'}
+																	#{feed/feedActivity activity: activity, talker: talker, parentList: 'cancerCommunityFeedContent' /}
+																#{/list}
+															#{/list}
+														</div>
+														#{if allDiseaseList.get(talkerCat) != null}
+															#{if allDiseaseList.get(talkerCat).size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+																<div class="replytommentbox" id="${ctalkerCat}CommunityFeedBtn">
+										                          <input type="submit" src="images/seemore.jpg" 
+										                          	onclick="return loadMoreFeed('${talkerCat}CommunityFeed');" value=" " class="seemorecom" />
+										                        </div>
+															#{/if}
+														#{/if}
+														<div class="cb"></div>
+							                    	</div>
+							                    <!--newpageCover-->
+							                    <div class="cb"></div>
+							                  </div> 
 										</div>
-				                    	<div class="cb"></div>
-				                    </div> 
-								</div>    
+									</div>
+								#{/if}
+								#{else}
+									<div id = "allCancerFeed">
+										<div id="allFeedContent" class="tabContent" >	
+											<div class="topic">
+						                      <div class="cb"></div>
+						                      <div class="topic">
+						                        <a href=# id="allFeedNotifications" class="morenotification" style='display:none' onClick="updateFeed('allFeed'); return false;" >
+						                        0 new items
+						                        </a>				                      
+						                        <div id="allFeedList" class="conversationsList">
+							                    	#{list items: allFeed, as: 'activity'}
+														#{feed/feedActivity activity: activity, talker: talker, parentList: 'allFeedList' /}
+													#{/list}
+													#{else}
+														<br /><span class="blacktext16">Follow topics, conversations, and
+															other members to get the latest updates.</span>
+													#{/else}
+												</div>
+												#{if allFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+													<div class="replytommentbox" id="allFeedBtn">
+							                          <input type="submit" src="images/seemore.jpg" 
+							                          	onclick="return loadMoreFeed('allFeed');" value=" " class="seemorecom" />
+							                        </div>
+												#{/if}
+						                        <div class="cb"></div>
+						                      </div>
+						                      <div class="cb"></div>
+						                    </div> 
+										</div>
+									</div>
+									
+									<div id="cancerFeed" >
+									
+									</div>
+								#{/else}
+								
+								
+								<div id = "mentionsFeed">
+									
+								</div>
+								
 							</div>               
 	                      <div class="cb"></div>
 	                    </div>
@@ -466,3 +489,4 @@ function updateFeed(type,talkerName) {
   </div>
 <!-- Right button -->
 <a href="/feedback-for-talkabouthealth" id="feedbackImage">Feedback</a>
+<div id="ajaxLoading" class="ajaxLoading"></div>

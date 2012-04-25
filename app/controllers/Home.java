@@ -22,6 +22,7 @@ import logic.TalkerLogic;
 import logic.TopicLogic;
 import logic.FeedsLogic.FeedType;
 import models.CommentBean;
+import models.ConversationBean;
 import models.DiseaseBean;
 import models.IMAccountBean;
 import models.ServiceAccountBean;
@@ -70,38 +71,32 @@ public class Home extends Controller {
 
     	Logger.info("Home: ---"+talker.getUserName()+"---");
     	List<ConversationBean> liveConversations = ConversationDAO.getLiveConversations();
-
-		Set<Action> convoFeed = FeedsLogic.getConvoFeed(talker, null);
-		// Removing community feed as it is useless in new feed.
-    	//Set<Action> communityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
-
-    	//Code added for display all cancer tab to admin
-    	Set<Action> allFeed = FeedsLogic.getAllCancerFeed(null, true,talker);
-
-    	//Code added for display all diseases tabs to admin
-    	Map<String, Set<Action>> allDiseaseList = new LinkedHashMap<String, Set<Action>>();
-    	//Set<Action> multipleCancerCommunityFeed = null;
-
-    	//List<String> talkerCategories = new ArrayList<String>();
-    	//talkerCategories.add(talker.getCategory());
-
-    	String talkerCat = talker.getCategory();
-    	//multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
-		//allDiseaseList.put(talkerCat.replaceAll(" ", "_"),multipleCancerCommunityFeed);
-    	if(talkerCat != null)
-    		allDiseaseList.put(talkerCat.replaceAll(" ", "_"),null);
-		
-    	if(talker.getOtherCategories() != null) {
-    		for (int i = 0; i < talker.getOtherCategories().length; i++) {
-    			talker.setCategory(talker.getOtherCategories()[i]);
-    			//multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
-    			allDiseaseList.put(talker.getOtherCategories()[i].replaceAll(" ", "_"),null);
-    		}
-    	}
-    	talker.setCategory(talkerCat);
-
-    	List<Action> mentions = CommentsDAO.getTalkerMentions(talker,null);
     	
+    	String talkerCat = talker.getCategory();
+    	Map<String, Set<Action>> allDiseaseList = new LinkedHashMap<String, Set<Action>>();
+    	Set<Action> allFeed = null;
+    	
+    	if(talker.getCategory() != null && !talker.getCategory().equals("")){
+			//Code added for display talker's cancer fees
+			Set<Action> multipleCancerCommunityFeed = null;
+	    	talkerCat = talker.getCategory();
+	    	multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
+	    	if(talkerCat != null)
+				allDiseaseList.put(talker.getCategory().replaceAll(" ", "_"),multipleCancerCommunityFeed);
+			
+	    	if(talker.getOtherCategories() != null) {
+	    		for (int i = 0; i < talker.getOtherCategories().length; i++) {
+	    			talker.setCategory(talker.getOtherCategories()[i]);
+	    			//multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
+	    			allDiseaseList.put(talker.getOtherCategories()[i].replaceAll(" ", "_"),null);
+	    		}
+	    	}
+	    	talker.setCategory(talkerCat);
+	    	talkerCat = talkerCat.replaceAll(" ", "_");
+    	}else{
+    		allFeed = FeedsLogic.getAllCancerFeed(null, true,talker);
+    	}
+		
     	boolean showNotificationAccounts = prepareNotificationPanel(session, talker);
 		TalkerLogic.preloadTalkerInfo(talker);
 		
@@ -111,10 +106,6 @@ public class Home extends Controller {
 
         session.put("inboxUnreadCount", MessagingDAO.getUnreadMessageCount(talker.getId()));
         
-		//List<TalkerBean> similarMembers = TalkerLogic.getRecommendedTalkers(talker,"USR",null);
-		//List<TalkerBean> experts = TalkerLogic.getRecommendedTalkers(talker,"EXP",null);
-		//List<ConversationBean> recommendedConvos = TalkerLogic.getRecommendedConvos(talker);
-		
 		boolean emailVerification = false;
 		if (session.contains("justloggedin") && talker.getVerifyCode() != null) {
 			emailVerification = true;
@@ -122,12 +113,13 @@ public class Home extends Controller {
 		}
 		
 		boolean newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
+		boolean rewardLetterFlag = ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
 		
-		render("@newhome", talker, emailVerification,liveConversations, convoFeed, mentions, showNotificationAccounts,
-		newsLetterFlag,allDiseaseList,allFeed); //similarMembers, experts, recommendedConvos , popularTopics
-		/*render("@newhome", talker, emailVerification,
-				liveConversations, convoFeed, communityFeed, mentions, showNotificationAccounts,
-				popularTopics,similarMembers, experts, recommendedConvos,newsLetterFlag,allDiseaseList,allFeed);*///recommendedTopics
+		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+		
+		render("@newhome", talker, emailVerification, liveConversations, showNotificationAccounts,
+		newsLetterFlag, rewardLetterFlag, allDiseaseList, diseaseList, talkerCat, allFeed); 
+		
     }
     
     private static boolean prepareNotificationPanel(Session session, TalkerBean talker) {
@@ -336,19 +328,31 @@ public class Home extends Controller {
     }
 
     /**
-     * Loading specific cancer type feed using ajax
-     * @param cancerType
+     * Loading feeds using ajax
+     * @param feedType, cancerType
      */
-    public static void loadCancerFeed(String cancerType){
+    public static void loadCancerFeed(String feedType, String cancerType){
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	Set<Action> multipleCancerCommunityFeed = null;
-    	Map<String, Set<Action>> allDiseaseList = new LinkedHashMap<String, Set<Action>>();
-    	String talkerCat = talker.getCategory();
-    	cancerType = cancerType.replaceAll("_", " ");
-    	talker.setCategory(cancerType);
-    	multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
-		allDiseaseList.put(talker.getCategory().replaceAll(" ", "_"),multipleCancerCommunityFeed);
-		talker.setCategory(talkerCat);
-		render("tags/feed/allCancerFeed.html", allDiseaseList, cancerType);
+    	
+    	if(feedType.equalsIgnoreCase("allFeed")){
+    		Set<Action> feedItems = FeedsLogic.getAllCancerFeed(null, true,talker);
+    		render("tags/feed/allFeedList.html", feedItems, feedType);
+    	}else if(feedType.equalsIgnoreCase("convoFeed")){
+    		Set<Action> feedItems = FeedsLogic.getConvoFeed(talker, null);
+    		render("tags/feed/allFeedList.html", feedItems, feedType);
+    	}else if(feedType.equalsIgnoreCase("mentions")){
+    		List<Action> feedItems = CommentsDAO.getTalkerMentions(talker,null);
+    		render("tags/feed/allFeedList.html", feedItems, feedType);
+    	}else{
+	    	Set<Action> multipleCancerCommunityFeed = null;
+	    	Map<String, Set<Action>> allDiseaseList = new LinkedHashMap<String, Set<Action>>();
+	    	String talkerCat = talker.getCategory();
+	    	cancerType = cancerType.replaceAll("_", " ");
+	    	talker.setCategory(cancerType);
+	    	multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
+			allDiseaseList.put(talker.getCategory().replaceAll(" ", "_"),multipleCancerCommunityFeed);
+			talker.setCategory(talkerCat);
+			render("tags/feed/allCancerFeed.html", allDiseaseList, cancerType);
+    	}
     }
 }

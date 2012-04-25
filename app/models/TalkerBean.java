@@ -236,6 +236,8 @@ public class TalkerBean implements Serializable {
 	//For supporting multiple categories to talker.
 	private String[] otherCategories;
 	
+	private NewsLetterBean newsLetterBean;
+	
 	public TalkerBean(){}
 	public TalkerBean(String id) {
 		this.id = id;
@@ -1034,3 +1036,9 @@ public class TalkerBean implements Serializable {
 		this.otherCategories = otherCategories;
 	}
 }	
+	public NewsLetterBean getNewsLetterBean() {
+		return newsLetterBean;
+	}
+	public void setNewsLetterBean(NewsLetterBean newsLetterBean) {
+		this.newsLetterBean = newsLetterBean;
+	}

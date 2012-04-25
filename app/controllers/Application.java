@@ -54,6 +54,7 @@ import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.ConversationDAO;
 import dao.DiseaseDAO;
+import dao.NewsLetterDAO;
 import dao.TalkerDAO;
 import dao.TalkerDiseaseDAO;
 
@@ -153,7 +154,7 @@ public class Application extends Controller {
     	render(additionalSettings,randomID,diseaseList);
     }
     
-    public static void register(@Valid TalkerBean talker,String code, String randomID) {
+    public static void register(@Valid TalkerBean talker,String code, String randomID, NewsLetterBean newsletter) {
     	
     	/**
     	 * Added ip address verification code. 
@@ -188,6 +189,9 @@ public class Application extends Controller {
 		hiddenHelps.add("updateTwitterSettings");
 		hiddenHelps.add("updateFacebookSettings");
         
+		//save newsletters
+		talker.setNewsLetterBean(newsletter);
+		
         boolean okSave = TalkerDAO.save(talker);
         if (!okSave) {
 
@@ -261,9 +265,9 @@ public class Application extends Controller {
 		}
 		 
     	if(talker.getCategory() == null){
-			validation.required(talker.getCategory()).message("category.notselected");
+			//validation.required(talker.getCategory()).message("category.notselected");
 		} else if(talker.getCategory().trim().equals("")) {
-			validation.required(talker.getCategory()).message("category.notselected");
+			//validation.required(talker.getCategory()).message("category.notselected");
 		} else if(talker.getCategory().trim().equals("select")) {
 			nameNotExists = true;
 			validation.isTrue(nameNotExists).message("category.notselected");
@@ -468,7 +472,7 @@ public class Application extends Controller {
         	renderText("Thank you for subscribing!");
         }else{
         	params.flash();
-	    	ApplicationDAO.addToNewsLetter(email);
+	    	ApplicationDAO.addToNewsLetter(email, new String[0]);
 	    	Map<String, String> vars = new HashMap<String, String>();
         	String parsedUsername = email.substring(0, email.indexOf("@"));
     		vars.put("username", parsedUsername);
@@ -477,6 +481,64 @@ public class Application extends Controller {
         }
     }
     
+    /**
+     * Used for subscribing rewards.
+     * @param email
+     */
+     public static void subscribeReward(@Email String email) {
+    	validation.required(email).message("Email is required");
+    	if (validation.hasErrors()) {
+    		params.flash();
+            Error error = validation.errors().get(0);
+			renderText("Error:" + error.message());
+        }else if(ApplicationDAO.isEmailExists(email)){
+        	params.flash();
+        	if(ApplicationDAO.isnewsLetterSubscribe(email, "TalkAboutHealth Rewards")){
+        		
+        	}else{
+        		
+        		NewsLetterBean newsletterBean=NewsLetterDAO.getNewsLetterInfo(email);
+        		String temp[]=newsletterBean.getNewsLetterType();
+        		int len;
+	        		if(temp==null)
+	        		len=0;
+	        		else
+	        		len=temp.length;
+        		
+        		String types[]=new String[len+1];
+        		int i;
+        		for(i=0;i<len;i++){
+        			types[i]=temp[i];
+        		}
+        		types[i]="TalkAboutHealth Rewards";
+        		
+        		newsletterBean.setEmail(email);
+        		newsletterBean.setNewsLetterType(types);
+    	    	NewsLetterDAO.saveOrUpdateNewsletter(newsletterBean);
+        		
+        	}
+        	Map<String, String> vars = new HashMap<String, String>();
+        	String parsedUsername = email.substring(0, email.indexOf("@"));
+    		vars.put("username", parsedUsername);
+        	
+        	renderText("Thanks for subscribing to TalkAboutHealth Reward!");	
+        }else{
+        	params.flash();
+        	String arrary[]={"TalkAboutHealth Rewards"};
+        	
+	    	NewsLetterBean newsletterBean=new NewsLetterBean();
+	    	newsletterBean.setEmail(email);
+	    	newsletterBean.setNewsLetterType(arrary);
+	    	NewsLetterDAO.saveOrUpdateNewsletter(newsletterBean);
+	    	
+	    	Map<String, String> vars = new HashMap<String, String>();
+        	String parsedUsername = email.substring(0, email.indexOf("@"));
+    		vars.put("username", parsedUsername);
+	    	
+	    	renderText("Thanks for subscribing to TalkAboutHealth Reward!");
+        }
+    }
+
     public static void postError(){
     	String path = request.headers.get("referer").value();
     	String remoteAddress = request.remoteAddress;

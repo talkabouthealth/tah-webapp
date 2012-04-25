@@ -56,7 +56,8 @@ public class Topics extends Controller {
 
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	boolean newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
-		render(talker, topic,newsLetterFlag);
+    	boolean rewardLetterFlag=ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
+		render(talker, topic,newsLetterFlag,rewardLetterFlag);
     }
 	
 	/**

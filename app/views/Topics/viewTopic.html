@@ -23,7 +23,7 @@
 			#{feed/feedActivity activity: activity, talker: talker /}
 		#{/list}
 	</div>
-	#{if activities.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
+	#{if activities != null &&  activities.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
 		<div class="replytommentbox" id="latestActivityBtn">
 				<input type="button" src="images/seemore.jpg" onclick="return loadMoreTopicsFeed('latestActivity','${topic.mainURL}');" 
 				value=" " class="seemorecom" />
@@ -34,7 +34,7 @@
 			#{convo/convoListItemTopic convo: convo, talker: talker /}
 		#{/list}	
 	</div>
-	#{if openConvosSaved.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
+	#{if openConvosSaved != null &&  openConvosSaved.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
 	<div class="replytommentbox" id="openQuestionsBtn" style="display: none;">
 				<input type="button" src="images/seemore.jpg" onclick="return loadMoreTopicsFeed('openQuestions','${topic.mainURL}');" 
 				value=" " class="seemorecom" />
@@ -45,7 +45,7 @@
 			#{convo/convoListItemTopic convo: convo, talker: talker /}
 		#{/list}
 	</div>
-	#{if popularConvos.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
+	#{if popularConvos != null && popularConvos.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
 	<div class="replytommentbox" id="popularConvosBtn" style="display: none;">
 				<input type="button" src="images/seemore.jpg" onclick="return loadMoreTopicsFeed('popularConvos','${topic.mainURL}');" 
 				value=" " class="seemorecom" />
@@ -56,7 +56,7 @@
 			#{feed/feedActivity activity: activity, talker: talker /}
 		#{/list}
 	</div>
-	#{if topicMentions.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
+	#{if topicMentions != null && topicMentions.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
 	<div class="replytommentbox" id="thoughtsBtn" style="display: none;">
 				<input type="button" src="images/seemore.jpg" onclick="return loadMoreTopicsFeed('thoughts','${topic.mainURL}');" 
 				value=" " class="seemorecom" />

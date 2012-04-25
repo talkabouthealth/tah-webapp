@@ -12,6 +12,16 @@
 			    }
 			});
 		});
+
+		function displayOptions(){
+			if(document.getElementById('newsLetterOption').style.display == 'none'){
+				document.getElementById('newsLetterOption').style.display = 'block';
+				document.getElementById('expandCollapse').src = "/public/images/expand.png";
+			}else{
+				document.getElementById('newsLetterOption').style.display = 'none';
+				document.getElementById('expandCollapse').src = "/public/images/collapse.png";
+			}
+		}
 	</script>
 </head>
 
@@ -67,10 +77,10 @@
 							<div class="personaltextfield">
 								<select size="1" name="talker.category" class="personalfields" id="talker.category">
 							  		 <!-- <option value="" selected="selected">Select community</option>  -->  
+							  		 <option></option>
 							  		#{list items:diseaseList , as: 'disease'}
 									    <option value="${disease.name}"
 									   #{if disease.name.equals(flash['talker.category']) } selected #{/if}
-									   #{elseif disease.name.equals("Breast Cancer") } selected #{/elseif}
 									    >${disease.name}</option>
 									#{/list}
 								</select>
@@ -184,11 +194,11 @@
 							<div class="signuptextarea"><span class="blacktext14">Date of Birth</span></div>
 							<div class="personaltextfield">
 								<select size="1"  name="talker.dobMonth" id="talker.dobMonth" class="textarea2">
-#{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
-    <option value="${i_index-1}" 
-    #{if flash['talker.dobMonth'].equals((i_index-1).toString()) } selected #{/if} 
-    >${i}</option>
-#{/list}
+									#{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
+									    <option value="${i_index-1}" 
+									    #{if flash['talker.dobMonth'].equals((i_index-1).toString()) } selected #{/if} 
+									    >${i}</option>
+									#{/list}
 								</select>
 								<select size="1" name="talker.dobDay" class="textarea2" id="talker.dobDay">
 							  		<option selected value='0'>Day</option>
@@ -234,7 +244,129 @@
 						</div>
 						#{/if}
 						
-						<div id="checkboxarea2" style="padding-top: 10px;  font-weight: bold; color: #000000;">
+						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 10px;">
+							<input id="newsletter" name="talker.newsletter" 
+								type="checkbox" id="talker.newsletter" value="TalkAboutHealth NewsLetter" checked="checked"/> 
+							TalkAboutHealth Newsletter (weekly)<br/>
+							<font size="2px;" style="font-weight: normal;padding-left: 23px;">Free newsletter of our best answers, featured experts, and special promotions.</font>
+						</div>
+						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 10px;">
+							<input id="newsletter" name="newsletter.newsLetterType" 
+								type="checkbox" id="newsletter.newsLetterType" value="TalkAboutHealth Rewards" checked="checked"/> 
+							TalkAboutHealth Rewards (weekly)<br/>
+							<font size="2px;" style="font-weight: normal;padding-left: 23px;">Health, wellness, food, and medical sales, survey opportunities, & promotions</font>
+						</div>
+						
+						<h4 style="font-weight: bold; margin-top: 10px;">
+						<a href="javascript:displayOptions();" ><img id="expandCollapse" src="/public/images/collapse.png"/><span style="margin-left: 5px; vertical-align: top;">View All Newsletters</span></a></h4>
+						<div id="newsLetterOption" style="display: none;">
+						<div id="checkboxarea2" style="padding-top: 2px;">
+							<input id="newsletter" name="newsletter.newsLetterType" 
+								type="checkbox" id="newsletter.newsLetterType" value="Answers of the day"/> 
+							Answers of the day (daily)
+						</div>
+						<div id="checkboxarea2" style="padding-top: 2px;">
+							<input id="newsletter" name="newsletter.newsLetterType" 
+								type="checkbox" id="newsletter.newsLetterType" value="Diet, Nutrition, Food, and Recipe Rewards"/> 
+							Diet, Nutrition, Food, and Recipe Rewards
+						</div>
+						<div id="checkboxarea2" style="padding-top: 2px;">
+							<input id="newsletter" name="newsletter.newsLetterType" 
+								type="checkbox" id="newsletter.newsLetterType" value="Fitness and Exercise Rewards"/> 
+							Fitness and Exercise Rewards
+						</div>
+						
+						<div id="checkboxarea2" style="padding-top: 2px;">
+							<input id="newsletter" name="newsletter.newsLetterType" 
+								type="checkbox" id="newsletter.newsLetterType" value="Skin and Beauty Rewards"/> 
+							Skin and Beauty Rewards
+						</div>
+						<div id="checkboxarea2"  style="padding-bottom: 10px;padding-top: 2px;">
+							<input id="newsletter" name="newsletter.newsLetterType" 
+								type="checkbox" id="newsletter.newsLetterType" value="Pharmaceutical Rewards"/> 
+							Pharmaceutical Rewards <br/>
+							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(relevant promotions and survey opportunities based on disease and more)</font>
+						</div>
+						<div id="checkboxarea2" style="padding-bottom: 35px;padding-top: 2px;">
+							<input id="newsletter" name="newsletter.newsLetterType" 
+								type="checkbox" id="newsletter.newsLetterType" value="Family Rewards"/> 
+							Family Rewards <br/>
+							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(maternity, baby, and family savings & special offeres)</font>
+						</div>
+						
+						<div style="width: 100%; margin-bottom: 50px;">
+						<div style="width: 50%;  float: left;">
+							<h4 style="color: #000; font-weight: bold;">Disease Communities (weekly)</h4>
+							
+							#{list items:diseaseList , as: 'disease'}
+							   <div id="checkboxarea2" style="padding-top: 2px;">
+									<input id="newsletter" name="newsletter.newsLetterType" 
+										type="checkbox"  id="newsletter.newsLetterType" value="${disease.name}"/> 
+									${disease.name}
+								</div>
+							#{/list}
+						</div>
+						
+						<div style="width: 50%; float: left;">
+							<h4 style="color: #000;font-weight: bold;">Health & Condition Management (weekly)</h4>
+							
+							<div id="checkboxarea2" style="padding-top: 2px;">
+								<input id="newsletter" name="newsletter.newsLetterType" 
+									type="checkbox" id="newsletter.newsLetterType" value="Allergies Management"/> 
+								Allergies Management
+							</div>
+							<div id="checkboxarea2" style="padding-top: 2px;">
+								<input id="newsletter" name="newsletter.newsLetterType" 
+									type="checkbox" id="newsletter.newsLetterType" value="Arthritis Management"/> 
+								Arthritis Management
+							</div>
+							
+							<div id="checkboxarea2" style="padding-top: 2px;">
+								<input id="newsletter" name="newsletter.newsLetterType" 
+									type="checkbox" id="newsletter.newsLetterType" value="Childrens Health and Parenting"/> 
+								Children's Health and Parenting
+							</div>
+							<div id="checkboxarea2" style="padding-top: 2px;">
+								<input id="newsletter" name="newsletter.newsLetterType" 
+									type="checkbox" id="newsletter.newsLetterType" value="Digestive Health"/> 
+								Digestive Health
+							</div>
+							<div id="checkboxarea2" style="padding-top: 2px;">
+								<input id="newsletter" name="newsletter.newsLetterType" 
+									type="checkbox" id="newsletter.newsLetterType" value="Emotional Health"/> 
+								Emotional Health
+							</div>
+							<div id="checkboxarea2" style="padding-top: 2px;">
+								<input id="newsletter" name="newsletter.newsLetterType" 
+									type="checkbox" id="newsletter.newsLetterType" value="Healthy Aging"/> 
+								Healthy Aging
+							</div>
+							<div id="checkboxarea2" style="padding-top: 2px;">
+								<input id="newsletter" name="newsletter.newsLetterType" 
+									type="checkbox" id="newsletter.newsLetterType" value="Pain Management"/> 
+								Pain Management
+							</div>
+							<div id="checkboxarea2" style="padding-top: 2px;">
+								<input id="newsletter" name="newsletter.newsLetterType" 
+									type="checkbox" id="newsletter.newsLetterType" value="Relationships and Sexual Health"/> 
+								Relationships and Sexual Health
+							</div>
+							<div id="checkboxarea2" style="padding-top: 2px;">
+								<input id="newsletter" name="newsletter.newsLetterType" 
+									type="checkbox" id="newsletter.newsLetterType" value="Sleep Management"/> 
+								Sleep Management
+							</div>
+							<div id="checkboxarea2" style="padding-top: 2px;">
+								<input id="newsletter" name="newsletter.newsLetterType" 
+									type="checkbox" id="newsletter.newsLetterType" value="Womens Health"/> 
+								Women's Health
+							</div>
+						</div>
+						</div>
+		          		<div class="cb"></div>
+			         </div>
+						
+						<div id="checkboxarea2" style="padding-top: 30px;  font-weight: bold; color: #000000;">
 							<input id="privacyagree" name="privacyagree" 
 								type="checkbox" checked="checked" #{if flash['privacyagree']} checked #{/if} /> 
 							By signing up I agree to the TalkAboutHealth 
@@ -248,12 +380,8 @@
 	   						<strong>Note:</strong>
 	   						<span style="font-weight: normal;">Your information will remain safe and private.</span>
 						</div>
-						<div id="checkboxarea2" style="padding-top: 22px;">
-							<input id="talker.newsletter" name="talker.newsletter" 
-								type="checkbox" checked="checked" #{if flash['talker.newsletter']} checked #{/if} /> 
-							Sign me up for the TalkAboutHealth newsletter
-						</div>
-						<div class="signupbutton"  style="padding-top: 20px;">
+						
+						<div class="signupbutton"  style="padding-top: 30px;">
 							<a href="#" onclick="validateFormOnSubmit(document.signup);">
 								<img src="/public/images/signupbutton.gif" border="0" width="126" height="46" />
 							</a>
