@@ -1,0 +1,29 @@
+#{if feedItems != null}
+<div id="${feedType}Content" class="tabContent">	
+	<div class="topic">
+        <div class="cb"></div>
+        <div class="topic">
+          <a href=# id="${feedType}Notifications" class="morenotification" style='display:none' onClick="updateFeed(${feedType}); return false;" >
+          0 new items
+          </a>				                      
+          <div id="${feedType}List" class="conversationsList">
+            #{list items: feedItems, as: 'activity'}
+				#{feed/feedActivity activity: activity, talker: talker, parentList: '${feedType}List' /}
+			#{/list}
+			#{else}
+				<br /><span class="blacktext16">Follow topics, conversations, and
+					other members to get the latest updates.</span>
+			#{/else}
+		</div>
+		#{if feedItems.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+			<div class="replytommentbox" id="${feedType}Btn">
+                <input type="submit" src="images/seemore.jpg" 
+                	onclick="return loadMoreFeed('${feedType}');" value=" " class="seemorecom" />
+            </div>
+		#{/if}
+        <div class="cb"></div>
+      </div>
+      <div class="cb"></div>
+    </div> 
+</div>
+#{/if}
