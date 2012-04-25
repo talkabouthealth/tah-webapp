@@ -6500,3 +6500,17 @@ margin-bottom:5px;
     font-weight: bold;
     padding: 15px 0;
 }
+.updateSubscription{
+	background: url("../images/Update-Subscriptions.png") no-repeat scroll 0 0 transparent;
+    border: medium none;
+    height: 50px;
+    width: 190px;
+    cursor: pointer;
+}
+.subscribe{
+	background: url("../images/subscribe.png") no-repeat scroll 0 0 transparent;
+    border: medium none;
+    height: 50px;
+    width: 190px;
+    cursor: pointer;
+}
