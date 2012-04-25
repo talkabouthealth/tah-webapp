@@ -1,0 +1,491 @@
+#{if talker && !talker?.hiddenHelps?.contains('convo')}
+<div id="convoHelp" class="helpInfo">
+      <div class="popboxWraper">
+        <div class="popbox2" style="width: 600px;">
+          <div class="closecover" style="clear: none; float: right;">
+            <div class="close" onclick="return hideHelpInfo('convo', true);"><img src="/public/images/close.jpg" alt="Close" /></div>
+          </div>
+          <div class="note">
+		  	<strong>Help: <a href="@{ViewDispatcher.view('what-can-i-do-on-the-question-page')}"
+		  		>What can I do on the Question page?</a></strong>
+		  	<br/><br/>
+          </div>
+          <div class="cb"></div>
+        </div>
+      </div>
+      <div class="cb"></div>
+</div> 
+#{/if}	
+
+<div class="editsWraper">
+	<div class="editsWraper">
+		<div class='inline-edit' id="titleEdit">
+			<div class="inline_display">
+				<div class="inline_full">
+					<div class="targetedh7">
+						<h1 class="inline_view" style="display: inline;">${convo.topic}</h1>
+						#{if talker && (talker.admin || talker.userName == convo.talker.userName) }
+							<span class="editit2" style="float: none;">
+								<a href="#" class="inline_editlink">Edit</a>
+							</span>
+						#{/if}
+					</div>
+				</div>
+				<div class="inline_empty" style="display: none">
+					#{if talker }
+					<div class="targetenew">
+						<a class="inline_addlink" href="#">Add title..</a>
+					</div>
+					#{/if}
+				</div>
+            </div>
+			<div class='inline_form'>
+				<div style="float:left; width:auto; padding-bottom:5px;" >
+		        	<input id="titleinput" type="text" style="width:600px"  
+		        		value="${convo.topic}" class="edititinputs inline_text notempty" 
+		        		maxlength="160" >
+		        </div>
+				<div style="float:right;margin-right:30px;">
+			        <input id="titleBtn" type="submit" class="updatebtns inline_save" value=" " />
+			        <div class="canclebtnz">
+			        	<a class="cancel" href="#">Cancel</a>
+			        </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div><!--editsWraper-->
+
+<div style="clear:both">
+	<div class='inline-edit' id="detailsEdit">
+		<div class="suggestxt inline_display">
+			<div class="inline_full" style="display: ${convo.details ? 'block' : 'none'}">
+				<h2 class="inline_view" style="display: inline;">${convo.details?.nl2br()}</h2>
+				#{if talker && (talker.admin || talker.userName == convo.talker.userName) }
+					<span class="editit2" style="float: none;">
+						<a href="#" class="inline_editlink">Edit</a>
+					</span>
+				#{/if}
+			</div>
+			<div class="inline_empty" style="display: ${!convo.details ? 'block' : 'none'}">
+				#{if talker && (talker.admin || talker.userName == convo.talker.userName) }
+					<div class="targetenew">
+						<a class="inline_addlink" 
+							href="#">Add Question Details (Context or Background Info)</a>
+					</div>
+				#{/if}
+			</div>
+           </div>
+		<div class='inline_form'>
+			<div style="padding-top:10px;">
+		        <textarea id="detailsinput" class="edititinputx inline_text" 
+		        	style="width:600px">${convo.details}</textarea>
+	        </div>
+			<div style="float:right;margin-right:30px;">
+				<input id="detailsBtn" type="submit" class="updatebtns inline_save" value=" " />
+				<div class="canclebtnz">
+					<a class="cancel" href="#">Cancel</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div> <!--Blank-->   
+		
+		
+<div class="topipcWraper">
+     <div class="topic">
+		<div class='inline-edit' id="topicsEdit">
+			<div class="suggestxt inline_display">
+				<div class="inline_full" style="display: ${convo.topics ? 'block' : 'none'}">
+					<div style="display: block; float: left; width: auto;" class="topictxt">
+                  						<div style="float: left;">Topics (Tags): </div>
+                  						<div id="topicsList">
+                   						#{list items: convo.topics, as: 'tag'}
+								<a class="topicTitle" href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>
+							#{/list}
+                  						</div>
+					</div>
+					#{if talker && (talker.admin || talker.userName == convo.talker.userName) }
+						<div class="editdiv">
+							<div class="editit" style="padding-top:10px;">
+								<a href="#" class="inline_editlink">Edit</a>
+							</div>
+						</div>
+					#{/if}
+				</div>
+				<div class="inline_empty" style="display: ${!convo.topics ? 'block' : 'none'}">
+					#{if talker }
+						<div class="targetenew">
+							<a class="inline_addlink" href="#">Add Topics</a>
+						</div>
+					#{/if}
+				</div>
+            </div>
+			<div class='inline_form'>
+				<div style="display: block; float: left; width: auto;" class="topictxt">
+                 						<div style="float: left;">Topics: </div>
+                 						<div id="topicsEditList">
+                  						#{list items: convo.topics, as: 'tag'}
+							<a class="topicTitle" href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>
+							<a class="deleteTopicLink" href="#" rel="${tag.id}">X</a>
+						#{/list}
+                 						</div>
+				</div>
+				<div class="addcomCover" style="width:400px;">
+					<input type="text" id="topicInput" 
+						class="addcominput inline_text"  value="" style="float:left; width:215px;"/>
+                   	<input type="submit" value=" " id="addTopicBtn" 
+                   		class="addcomsubmit inline_add" style="float:left; width:80;"  />
+			        <div class="canclebtnz" style="float:left; width:auto;">
+			          	<a class="cancel" href="#">Done</a>
+			        </div> 
+			    </div>
+			</div>
+		</div>
+
+		<div class='inline-edit' id="diseaseEdit">
+			<div class="suggestxt inline_display">
+				<div class="inline_full" style="display: ${convo.category || convo.otherDiseaseCategories ? 'block' : 'none'}">
+					<div style="display: block; float: left; width: auto;" class="topictxt">
+                  		<div style="float: left;">Diseases: </div>
+                  		<div id="diseasesList">
+                  			#{if convo.category != null && !convo.category.equals("")}
+								<a class="topicTitle" href="/explore/${convo.category.convertToURL()}">${convo.category}</a>
+							#{/if}
+							#{list items: convo.otherDiseaseCategories, as: 'category'}
+								<a class="topicTitle" href="/explore/${category.convertToURL()}">${category}</a>
+							#{/list}
+                  		</div>
+					</div>
+					#{if talker != null && (talker.admin || talker.userName == convo.talker.userName) }
+						<div class="editdiv">
+							<div class="editit" style="padding-top:10px;">
+								<a href="#" class="inline_editlink">Edit</a>
+							</div>
+						</div>
+					#{/if}
+				</div>
+				<div class="inline_empty" style="display: ${!convo.category && !convo.otherDiseaseCategories ? 'block' : 'none'}">
+					#{if talker != null && (talker.admin || talker.userName == convo.talker.userName)}
+						<div class="targetenew">
+							<a class="inline_addlink" href="#">Add Disease</a>
+						</div>
+					#{/if}
+				</div>
+            </div>
+			<div class='inline_form'>
+				<div style="display: block; float: left; width: auto;" class="topictxt">
+           			<div style="float: left;">Diseases: </div>
+           			<div id="diseasesEditList">
+           				#{if convo.category != null  && !convo.category.equals("")}
+           					<a class="topicTitle" href="/explore/${convo.category.convertToURL()}">${convo.category}</a>
+           					#{if talker != null && talker.userName.equals("admin")}
+           						<a class="deleteDiseaseLink" href="#" rel="${convo.category}">X</a>
+           					#{/if}
+           				#{/if}
+            			#{list items: convo.otherDiseaseCategories, as: 'category'}
+							<a class="topicTitle" href="/explore/${category.convertToURL()}">${category}</a>
+							<a class="deleteDiseaseLink" href="#" rel="${category}">X</a>
+						#{/list}
+           			</div>
+				</div>
+				<div class="addcomCover" style="width:400px;">
+					<input type="text" id="diseaseInput" 
+						class="addcominput inline_text"  value="" style="float:left; width:215px;"/>
+                   	<input type="submit" value=" " id="addTopicBtn" 
+                   		class="addcomsubmit inline_add" style="float:left; width:80;"  />
+			        <div class="canclebtnz" style="float:left; width:auto;">
+			          	<a class="cancel" href="#">Done</a>
+			        </div> 
+			    </div>
+			</div>
+		</div>
+        #{if talker }
+			<div class="tagtxts">
+                  	<a href="#" id="postFollowupLink">Post follow-up question</a> |  
+                  	<a href="#" onclick="$('#convoreplies').toggle(); return false;"
+                    			#{if convo.replies.size() == 0}
+                    				>Reply</a>
+                    			#{/if}
+                     		#{elseif convo.replies.size() == 1}
+                     			>1 Reply</a>
+                     		#{/elseif}
+                     		#{else}
+                     			>${convo.replies.size()} Replies</a>
+                     		#{/else}		                        		
+                    		
+                  	 | <a href="#" class="flagConvoLink">Flag As Inappropriate</a> 
+                  	#{if session.username?.equals("admin") || convo.talker.userName.equals(session.username)}
+                      	  |  <a href="#" onclick="return deleteConvo();">Delete</a> 
+                      #{/if}
+                  </div>
+		#{/if}
+		#{else}
+			<div class="tagtxts">
+            	<a href="#" onclick="$('#convoreplies').toggle(); return false;"
+              			#{if convo.replies.size() == 0}
+              				></a>
+              			#{/if}
+               		#{elseif convo.replies.size() == 1}
+               			>1 Reply</a>
+               		#{/elseif}
+               		#{else}
+               			>${convo.replies.size()} Replies</a>
+               		#{/else}		                        		
+            </div>
+		#{/else}
+		
+		<div id="convoreplies" class="replysub" style="display: none;">
+			#{list items: convo.replies, as: 'convoReply'}
+				#{convo/convoReply reply: convoReply, talker: talker /}
+			#{/list}
+			#{if talker}
+				<div id="convoReplyForm" style="clear:both">
+					<div id="saveConvoReplyImage" class="ajaxLoading" ></div>
+                    <div class="repcommbox22">
+	                    <textarea id="convoReplyText" class="repcominput" ></textarea>
+	                    <div class="repcommstextbox">
+	                    	<input type="submit" class="repcomsubmits" 
+	                    		onclick="return saveConvoReply();"
+	                    		value=" " />
+	                     	<span class="canclelz">
+	                     		<a href="#" onclick="$('#convoreplies').hide(); return false;">Cancel</a>
+	                     	</span>
+	                    </div>
+	                    <div class="cb"></div>
+                    </div>
+                   </div><!--Blankdivsub-->
+			#{/if}
+		</div>
+		<div class="cb"></div>
+	</div> <!--topic-->
+    <div class="topicborder" style="margin-bottom: 5px;margin-top: 5px;"></div>
+			#{include 'socialNetworkShare.html' /}
+				<div class="topicborder" style="margin-top: 10px;"></div>
+                 		<div class="topicborder" style="margin-bottom: 5px;"></div>
+				#{if convo.helpfulAnswers?.size > 1}
+                 		<div class="topic inline-edit" id="summaryEdit">
+                 			<div class="inline_display">
+                 				<div class="inline_empty" style="display: ${!convo.summary ? 'block' : 'none'}">
+                 					#{if talker }
+								<div class="targetenew" style="margin-top: 10px;">
+									<a class="inline_addlink" href="#">Add Answer Summary</a>
+								</div>
+							#{/if}
+						</div>
+                  			<div class="cscover inline_full" style="display: ${convo.summary ? 'block' : 'none'}">
+                  				<div class="cstop">
+			                   <div>
+			 						<div class="cstoptext" id="hidit3">Answer Summary</div>
+								</div>
+                  				</div><!--cstop-->
+                   <div class="csmid">
+                   	<div class="cmmidtext">
+									<div style="width: 100%">
+							<div class="suggestxt">
+								<div class="inline_view" 
+									style="display:block;padding-right:30px;text-align:justify">${convo.summary}</div> 
+								#{if talker }
+									<div class="editdiv" style="float:right;margin-right:80px;">
+										<div class="editit" style="padding-top:7px;">
+											<a href="#" class="inline_editlink">Edit</a>
+										</div>
+									</div>
+								#{/if}
+				            </div>
+				            <div style="margin-top:10px; margin-bottom:10px; clear: both"></div>
+						</div>
+									
+									#{if convo.sumContributors && talker}
+										<div style="clear: both; padding-top: 10px;">
+											<span class="blacktext">Contributions By:</span> 
+								<span class="blacktext">
+									#{list items: convo.sumContributors, as: 'contributor'}
+										#{ifnot contributor_isLast}
+											<a href="#">${contributor.userName}</a>, 
+										#{/ifnot}
+										#{else}
+											<a href="#">${contributor.userName}</a>
+										#{/else}
+									#{/list}
+								</span>
+										</div>
+									#{/if}
+									#{else}
+										<div style="clear: both; padding-top: 10px;">&nbsp;</div>
+									#{/else}
+					</div><!--cmmidtext-->
+               				</div><!--csmid-->
+                				<div class="csbot"></div>
+                			</div>
+               			</div>
+					<div class="cscover inline_form">
+                				<div class="cstop">
+	                   <div>
+	 						<div class="cstoptext" id="hidit3">Answer Summary</div>
+						</div>
+                				</div><!--cstop-->
+                   <div class="csmid">
+                   	<div class="cmmidtext">
+									<div style="width: 100%">
+							<div style="float:left; width:auto;">
+  												<textarea style="width:585px;height:230px;font-size:13px;font-weight:normal" 
+  													id="summaryinput" class="edititinputs inline_text">${convo.summary}</textarea>
+  											</div>
+							<div style="float:right; width:auto;margin-right:30px;">
+								<input id="summaryBtn" class="updatebtns inline_save" value=" " />
+								<div class="canclebtnz">
+									<a class="cancel" href="#">Cancel</a>
+								</div>
+							</div>
+						</div>
+									
+									#{if convo.sumContributors && talker }
+										<div style="clear: both; padding-top: 10px;">
+											<span class="blacktext">Contributions By:</span> 
+								<span class="blacktext">
+									#{list items: convo.sumContributors, as: 'contributor'}
+										#{ifnot contributor_isLast}
+											<a href="#">${contributor.userName}</a>, 
+										#{/ifnot}
+										#{else}
+											<a href="#">${contributor.userName}</a>
+										#{/else}
+									#{/list}
+								</span>
+										</div>
+									#{/if}
+									#{else}
+										<div style="clear: both; padding-top: 10px;">&nbsp;</div>
+									#{/else}
+					</div><!--cmmidtext-->
+               				</div><!--csmid-->
+               				<div class="csbot"></div>
+               			</div>
+              		</div>
+              		#{/if}
+
+               		<div class="topic" style="margin-bottom: 15px;">
+               			<a id="answers"></a>
+               			<div class="answerh1">Answers <span class="style2">(${commentSize})</span></div>
+                			<div class="topicborder"></div>
+                		</div>
+                		#{convo/convoCommentsTree commentsList: convo.helpfulAnswers, level: 1, talker: talker /}
+                		#{if talker != null && talker.userName.equals("admin")}
+                			#{set deletedAnswers = convo.deletedAnswers /}
+	                		#{if deletedAnswers.size() != 0 }
+	                			<a href="#" onclick="$('#deletedAnswers').show(); return false;"
+	                				>View ${deletedAnswers.size()} Answer(s) Deleted</a>
+	                 		<div id="deletedAnswers" style="display: none; margin-top: 3px;">
+	                 			#{convo/convoDeletedCommentsTree commentsList: deletedAnswers, level: 1, talker: talker /}
+	                 		</div>	
+	                 		<br/><br/>
+	                		#{/if}
+	                	#{/if}
+                		#{set notHelpfulAnswers = convo.notHelpfulAnswers /}
+                		#{if notHelpfulAnswers.size() != 0 }
+                			<a href="#" onclick="$('#notHelpfulAnswers').show(); return false;"
+                				>View ${notHelpfulAnswers.size()} Answer(s) Marked Not Helpful</a>
+                 		<div id="notHelpfulAnswers" style="display: none; margin-top: 3px;">
+                 			#{convo/convoCommentsTree commentsList: notHelpfulAnswers, level: 1, talker: talker /}
+                 		</div>	
+                		#{/if}
+	<div class="topic" id="replyform"><br />
+		#{if talker }
+			<div id="answerFormDiv" style="display: ${userHasAnswer ? 'none' : 'block'};">
+				<div class="topicborder" style="margin-top: 7px;"></div>
+				
+				<div class="answerh1">Add Answer </div>
+				
+				<textarea name="textarea" id="replytext" class="answerinput" style="width: 617px; height: 150px;text-align: left;"
+					onclick="if (this.value === 'Add New Answer') this.value='';">Add New Answer</textarea><br />
+				
+				
+				<input type="submit" onclick="return saveAnswerOrReply('');" 
+					src="/public/images/addcomments.jpg" class="addcomments" value=" " />
+				
+				<div id="saveAnswerImage" class="ajaxLoading" 
+					style="float: right; margin-right: 15px; margin-top: 20px;"></div>
+			</div>
+			<div id="noAnswerText" style="display: ${!userHasAnswer ? 'none' : 'block'};">
+				Only one answer per conversation per user. You may edit your answer though.
+			</div>
+		#{/if}
+		
+		#{if session.username && convo.messages}
+			<div class="answerh2 style1 style2">Conversation</div>
+			<div class="topicborder"></div>
+			<div class="tagtxts">
+				<a href="#" class="flagConvoLink">Flag As Inappropriate</a>
+			</div>
+			<div class="talkerCover">
+				<div class="talkertop">Talkers</div>
+				<div class="talkermid">
+					<div class="talkertxt1" style="padding-top: 10px;">
+						#{list items: convo.members, as: 'member'}
+							#{ talker/talkerImageLink userName: member, size: 48 /}
+							${member}&nbsp;&nbsp;&nbsp;
+						#{/list}
+					</div>
+					#{list items: convo.messages, as: 'message'}
+						<div id="chatMessage${message.index}" class="talkertxt1">
+							<span class="uzername">
+								<a href="@{ViewDispatcher.view(message.fromTalker.userName)}"
+									>${message.fromTalker.userName}</a>:
+							</span>
+							&nbsp;&nbsp;${message.text}
+							#{if talker?.isAdmin() }
+								&nbsp;&nbsp;
+								<a href="#" onclick="return deleteChatMessage(${message.index});">X</a>
+							#{/if}
+						</div>
+					#{/list}
+				</div><!--talkermid-->
+				<div class="talkerbot"></div>
+			</div><!--talkerCover-->
+		#{/if}
+	    <div class="cb"></div>
+	</div>
+	#{if talker?.isAdmin() }
+		<div class="topic">
+                   <div class="topich1">Merge conversation</div>
+                   <div class="mtinputbox" style="padding-top: 0px;">
+                     <input id="convoToMerge" type="text" onfocus="selectedConvoURL = '';"
+                     	class="mtinput" style="width: 300px; margin-right: 10px;"/>
+                     <input id="mergeConvosBtn" type="submit" value="" src="/public/images/mergebtn.jpg" class="mergebtn"/>
+                     <div class="cb"></div>
+                   </div>
+                   <!--mtinputbox-->
+                    <div class="cb"></div>
+                  </div>
+		#{/if}
+		#{ notLoggedNotice /}
+		<span style="color: red; font-weight: bold;">
+			<br/><br/>
+			Note: All content on this site is informational and not a substitute for professional medical advice. 
+			Always seek the advice of your physician or other qualified health provider with questions regarding your health.
+		</span>
+		<div class="cb"></div>
+	</div>
+
+    #{ popups/flag /}
+	#{ popups/thankyou /}
+	#{ popups/addAnswer /}
+	#{popups/startConvo page: "conversationSummary" /}
+	
+	#{if talker}
+	#{set twitterAccount = talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
+*{
+	Tags should be in one line because of the bug:
+	https://bugs.launchpad.net/play/+bug/579936
+
+}*	
+		#{ popups/shareEmail shareType: 'Conversation', userName: talker?.userName, topicName: convo.topic, topicDetails: convo.summary, topicURL: currentURL /}
+		#{ popups/shareTwitter shareType: 'Conversation', userName: twitterAccount?.userName, topicName: convo.topic, topicURL: convo.bitly /}
+		#{ popups/shareFacebook shareType: 'Conversation', topicName: convo.topic, topicURL: currentURL /}							
+	#{/if} 
+	#{else}
+		#{ popups/shareEmail shareType: 'Conversation', userName: 'Enter your Name', topicName: convo.topic, topicDetails: convo.summary, topicURL: currentURL /}
+	#{/else}
+</div>
+<div id="mask"></div>

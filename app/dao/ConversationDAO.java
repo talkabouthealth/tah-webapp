@@ -545,7 +545,7 @@ public class ConversationDAO {
 			firstConvoTime = convo.getCreationDate();
 		}
 		
-		List<String> cat = FeedsLogic.getCancerType(TalkerDAO.getById(talkerId));
+		//List<String> cat = FeedsLogic.getCancerType(TalkerDAO.getById(talkerId));
 		
 		convosColl.ensureIndex(new BasicDBObject("cr_date", 1));
 		
@@ -553,7 +553,7 @@ public class ConversationDAO {
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start()
 			.add("uid", talkerRef)
-			.add("category", new BasicDBObject("$in", cat) )
+			//.add("category", new BasicDBObject("$in", cat) )
 			.add("deleted", new BasicDBObject("$ne", true));
 		if (firstConvoTime != null) {
 			queryBuilder.add("cr_date", new BasicDBObject("$lt", firstConvoTime));
@@ -570,6 +570,7 @@ public class ConversationDAO {
 			convo.parseBasicFromDB(dbCursor.next());
 	    	convosList.add(convo);
 		}
+		Logger.info("getStartedConvos - "+ dbCursor.size());
 		return convosList;
 	}
 	

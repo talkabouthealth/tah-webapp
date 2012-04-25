@@ -500,9 +500,15 @@ public class Conversations extends Controller {
 					//diseaseName = JavaExtensions.capitalizeWords(diseaseName);
 					diseaseList.add(diseaseName);
 					htmlToRender.append(
-	    	    			"<a class=\"topicTitle\" href=\"#\">"+diseaseName+"</a>&nbsp;" +
-	    	    			"<a class=\"deleteTopicLink\" href=\"#\" rel=\""+diseaseName+"\">X</a>"
+	    	    			"<a class=\"topicTitle\" href=\"explore\\"+diseaseName+"\">"+diseaseName+"</a>&nbsp;" +
+	    	    			"<a class=\"deleteTopicLink\" href=\"explore\\"+diseaseName+"\" rel=\""+diseaseName+"\">X</a>"
 	        	    	);
+				}
+				//If the conversation category is null or blank then first category from disease list is added in category field and remaining is added in other disease categories. 
+				if(convo.getCategory() == null || convo.getCategory() != null && convo.getCategory().equals("")){
+					if(diseaseList != null && diseaseList.size() > 0)
+					convo.setCategory(diseaseList.get(0));
+					diseaseList.remove(0);
 				}
 				try{
 					String[] diseaseArr = new String[diseaseList.size()];
@@ -522,25 +528,36 @@ public class Conversations extends Controller {
 				ConversationDAO.updateConvo(convo);
 				renderText(htmlToRender.toString());
     		} else if (todo.equalsIgnoreCase("remove")) {
-    			List<String> diseaseList = new ArrayList<String>();
-    			if(convo.getOtherDiseaseCategories() != null){
-					for(int index = 0; index < convo.getOtherDiseaseCategories().length; index++){
-						if(!convo.getOtherDiseaseCategories()[index].equalsIgnoreCase(value))
-							diseaseList.add(convo.getOtherDiseaseCategories()[index]);
+    			
+    			if(convo.getCategory() != null && convo.getCategory().equalsIgnoreCase(value)){
+    				if(talker.getUserName().equalsIgnoreCase("admin")){
+    					convo.setCategory(null);
+    					ActionDAO.updateActionsConvoDiseases(convo);
+    					ConversationDAO.updateConvo(convo);
+    				}
+    			}else{
+    			
+	    			List<String> diseaseList = new ArrayList<String>();
+	    			if(convo.getOtherDiseaseCategories() != null){
+						for(int index = 0; index < convo.getOtherDiseaseCategories().length; index++){
+							if(!convo.getOtherDiseaseCategories()[index].equalsIgnoreCase(value))
+								diseaseList.add(convo.getOtherDiseaseCategories()[index]);
+						}
+	    			}
+					String[] diseaseArr = new String[diseaseList.size()];
+					for(int index = 0; index < diseaseList.size(); index++){
+						diseaseArr[index] = diseaseList.get(index);
 					}
+					convo.setOtherDiseaseCategories(diseaseArr);
+					/*ActionDAO.deleteActionsByConvo(convo);
+					TalkerBean convoTalker = convo.getTalker();
+					ActionDAO.deleteActionsByConvoType(convo);
+			    	String actionID = ActionDAO.saveActionGetId(new StartConvoAction(convoTalker, convo, ActionType.UPDATE_CONVO));
+					convo.setActionID(actionID);*/
+					ActionDAO.updateActionsConvoDiseases(convo);
+					ConversationDAO.updateConvo(convo);
+					diseaseList.clear();
     			}
-				String[] diseaseArr = new String[diseaseList.size()];
-				for(int index = 0; index < diseaseList.size(); index++){
-					diseaseArr[index] = diseaseList.get(index);
-				}
-				convo.setOtherDiseaseCategories(diseaseArr);
-				/*ActionDAO.deleteActionsByConvo(convo);
-				TalkerBean convoTalker = convo.getTalker();
-				ActionDAO.deleteActionsByConvoType(convo);
-		    	String actionID = ActionDAO.saveActionGetId(new StartConvoAction(convoTalker, convo, ActionType.UPDATE_CONVO));
-				convo.setActionID(actionID);*/
-				ActionDAO.updateActionsConvoDiseases(convo);
-				ConversationDAO.updateConvo(convo);
     		}
     	}
     }

@@ -801,11 +801,11 @@ public class TalkerBean implements Serializable {
 	public void setMaritalStatus(String maritalStatus) { this.maritalStatus = maritalStatus; }
 
 	public String getCategory() { 
-		if(category == null){
-			return "Breast Cancer";//Breast Cancer
-		}//else if(category.trim().equals(""))
+		//if(category == null){
+			//return "Breast Cancer";//Breast Cancer
+		//}//else if(category.trim().equals(""))
 		//	return "Breast Cancer";//Breast Cancer
-		else
+		//else
 			return category;
 	}
 	public void setCategory(String category) { this.category = category; }
