@@ -605,4 +605,26 @@ public class Explore extends Controller {
   		}
 		render(talker,diseaseList1,diseaseList2,diseaseList3);
 	}
+	
+	/**
+	 * Page to displaying newsletter information
+	 * 
+	 */
+	public static void newsletter(){
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		NewsLetterBean newsletter = new NewsLetterBean();
+		if(talker != null){
+			newsletter = NewsLetterDAO.getNewsLetterInfo(talker.getEmail());
+		}
+		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+		render(newsletter,diseaseList,talker);
+	}
+	
+	public static void subscribeNewsLetter(NewsLetterBean newsletter){
+		NewsLetterDAO.saveOrUpdateNewsletter(newsletter);
+		//redirect("/explore/newsletter");
+		renderText("Ok");
+	}
+	
+	
 }
