@@ -78,8 +78,8 @@ public class TalkerDAO {
 		/* Date : 27 June 2011
 		 * Added subscribe to newsletter feature. Here added user's name used by user while registration
 		 * */
-		if(talker.isNewsletter()){
-			ApplicationDAO.addToNewsLetter(talker.getEmail());
+		if(talker.isNewsletter() || talker.getNewsLetterBean() != null && talker.getNewsLetterBean().getNewsLetterType().length > 0){
+			ApplicationDAO.addToNewsLetter(talker.getEmail(), talker.getNewsLetterBean().getNewsLetterType());
 			Map<String, String> vars = new HashMap<String, String>();
     		vars.put("username", talker.getUserName());
         	EmailUtil.sendEmail(EmailTemplate.WELCOME_NEWSLETTER, talker.getEmail(), vars, null, false);
