@@ -30,9 +30,9 @@ import dao.TalkerDAO;
 @OnApplicationStart
 public class ThoughtsFromServicesJob{
 	
-	@Override
-	public void doJob() throws Exception {
-		List<TalkerBean> talkerList = TalkerDAO.loadAllActiveTalker(false);
+	public void doJob() throws Exception{
+		System.out.println("----------ThoughtsFromServicesJob Started------------"+ new Date());
+		List<TalkerBean> talkerList = TalkerDAO.loadAllActiveTalker(true);
 		List<ServicePost> postsList = new ArrayList<ServicePost>();
 		CommentBean thought;
 		boolean isDuplicate;
