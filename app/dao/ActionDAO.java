@@ -555,7 +555,10 @@ public class ActionDAO {
 		DBRef convoRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, convo.getId());
 		DBObject query = new BasicDBObject("convoId", convoRef);
 
-		DBObject convoObject = BasicDBObjectBuilder.start().add("other_disease_categories", convo.getOtherDiseaseCategories()).get();
+		DBObject convoObject = BasicDBObjectBuilder.start()
+			.add("other_disease_categories", convo.getOtherDiseaseCategories())
+			.add("category", convo.getCategory())
+			.get();
 		WriteResult result =  activitiesColl.update(query,new BasicDBObject("$set", convoObject), true, true);
 		//System.out.println(result);
 	}
