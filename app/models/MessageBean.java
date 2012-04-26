@@ -121,6 +121,8 @@ public class MessageBean implements Comparable{
 	public void setDisplayDate(String displayDate) { this.displayDate = displayDate; }
 	
 	public String getDisplayMessage() {
+		displayMessage = displayMessage.replaceAll("<a[^>]*>", "");
+		displayMessage = displayMessage.replaceAll("</a>", "");
 		if(displayMessage != null && displayMessage.length() > 50){
 			return displayMessage.substring(0, 50) + "...";
 		}
@@ -169,6 +171,7 @@ public class MessageBean implements Comparable{
 		setFromTalker(TalkerLogic.loadTalkerFromCache(messageDBObject, "fromTalker"));
 		setToTalker(TalkerLogic.loadTalkerFromCache(messageDBObject, "toTalker"));
 		setDummyId((String)messageDBObject.get("dummyid"));
+		setDisplayMessage((String)messageDBObject.get("message"));
 	}
 	@Override
 	public int compareTo(Object arg0) {

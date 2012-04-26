@@ -252,7 +252,7 @@ public class TalkerDiseaseDAO {
 				}
 				DBObject talkersId = new BasicDBObject("_id", new ObjectId(talkerDiseaseBean.getUid()));
 				DBObject talkerDisObject = new BasicDBObject("disease", diseaseListItems);
-				diseaseListItems.clear();
+				//diseaseListItems.clear();
 				
 				talkersColl.update(talkersId, new BasicDBObject("$set", talkerDisObject));
 			}

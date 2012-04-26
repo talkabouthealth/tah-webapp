@@ -213,6 +213,11 @@ public class ConversationBean implements Comparable<ConversationBean> {
 		parseFollowupConvos((Collection<DBRef>)convoDBObject.get("followup_convos"));
     	parseChatMessages((Collection<DBObject>)convoDBObject.get("messages"));
     	setTalker(TalkerLogic.loadTalkerFromCache(convoDBObject, "uid"));
+    	setCategory((String)convoDBObject.get("category"));
+    	Collection<String> otherDiseaseCategories = (Collection<String>)convoDBObject.get("other_disease_categories");
+		if (otherDiseaseCategories != null) {
+			setOtherDiseaseCategories(otherDiseaseCategories.toArray(new String[]{}));
+		}
     	setFollowers(ConversationDAO.getConversationFollowers(getId()));
 	}
 	

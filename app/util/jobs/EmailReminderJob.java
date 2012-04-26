@@ -11,6 +11,7 @@ import dao.ConversationDAO;
 import dao.TalkerDAO;
 import models.ConversationBean;
 import models.TalkerBean;
+import play.Logger;
 import play.jobs.Job;
 import play.jobs.On;
 import util.CommonUtil;
@@ -27,6 +28,7 @@ public class EmailReminderJob extends Job {
 		
 	@Override
 	public void doJob() throws Exception {
+		Logger.info("Strating EmailReminderJob");
 		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
 			if (talker.getVerifyCode() != null) {
 				Calendar now = Calendar.getInstance();
@@ -60,6 +62,7 @@ public class EmailReminderJob extends Job {
 				}
 			}
 		}
+		Logger.info("Completing EmailReminderJob");
 	}
 
 }

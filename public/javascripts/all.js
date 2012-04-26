@@ -1161,6 +1161,19 @@ function loadMoreFeedMob(type) {
 	
 	return false;
 }
+
+//used for change health community or remove from health community
+function changeHealthCommunity(community, operation, fromPage){
+	$.get("/Profile/updateHealthCommunity",{community: community, operation: operation},
+			function(data) {
+				if(fromPage == 'PROFILE')
+					window.location.href = "/profile/profileinfo";
+				else
+					window.location.href = "/home";
+			}
+		);
+}
+
 //used for paging in community feeds
 function loadMoreCommunityFeed(type, cancerType) {
 	var lastActionId = $("#"+type+"List").children().last().attr("id");
@@ -1196,4 +1209,34 @@ function loadMoreCommunityFeed(type, cancerType) {
 		);
 	
 	return false;
+}
+
+function showMessagePopup(){
+	showPopup("#messagePopup", 350);
+}
+
+function sendMessageToUser(){
+	var user= document.getElementById("userName").value;
+	var subject = document.getElementById("subject").value;
+	var message = document.getElementById("message").value;
+	var isValid = true;
+	if(user == ""){
+		isValid = false;
+		alert("Please enter the user");
+	}else if(subject == ""){
+		isValid = false;
+		alert("Please enter the subject");
+	}else if(message == ""){
+		isValid = false;
+		alert("Please enter the message");
+	}
+	if(isValid == true){
+		var messageForm = document.getElementById('messageForm');
+		messageForm.submit();
+	}
+}
+
+function hideMessagePopup(){
+	$("#messagePopup").hide();
+	$('#mask').hide();
 }

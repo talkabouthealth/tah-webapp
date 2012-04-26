@@ -20,6 +20,9 @@ public class EmailBean implements DBModel {
 	//(or 'null' if email is already verified)
 	private String verifyCode;
 	
+	public EmailBean(){
+		
+	}
 	public EmailBean(String value, String verifyCode) {
 		this.value = value;
 		this.verifyCode = verifyCode;

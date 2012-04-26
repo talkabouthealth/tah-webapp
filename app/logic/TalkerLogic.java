@@ -409,13 +409,19 @@ public class TalkerLogic {
 
 			if (loadAllInfo) {
 				ConversationBean convo = TalkerLogic.loadConvoFromCache(answer.getConvoId());
-				convo.setComments(convoAnswers);
+
+				if(convo != null){
+					convo.setComments(convoAnswers);
 				
-				//Use special action for answer displaying.
-				AnswerDisplayAction answerAction = new AnswerDisplayAction(convo.getTalker(), convo,
-						answer, ActionType.ANSWER_CONVO, null);
-				answerAction.setTime(answer.getTime());
-				answersFeed.add(answerAction);
+					//Use special action for answer displaying.
+					AnswerDisplayAction answerAction = new AnswerDisplayAction(convo.getTalker(), convo,
+							answer, ActionType.ANSWER_CONVO, null);
+					answerAction.setTime(answer.getTime());
+					answersFeed.add(answerAction);
+				}else{
+					//just empty stub as we need only number of answers
+					answersFeed.add(new AnswerDisplayAction());
+				}
 			}
 			else {
 				//just empty stub as we need only number of answers

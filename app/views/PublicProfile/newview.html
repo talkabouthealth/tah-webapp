@@ -66,7 +66,30 @@
                     <table class="profiletxtCantant">
                     <tr>
 	                      <td class="profileCantanttxtLeft"><strong>Communities:</strong> 
-	                      ${talker.category}#{if talker.otherCategories != null}#{list items: talker.otherCategories, as: 'cancerType'}, ${cancerType}#{/list}#{/if}</td>
+	                      	#{if talker.category != null}
+	                      		<a class="topicTitle" href="/explore/${talker.category.convertToURL()}">${talker.category}</a>
+	                      		#{if talker.otherCategories != null}
+	                      			#{list items: talker.otherCategories, as: 'cancerType'}
+	                      				, <a class="topicTitle" href="/explore/${cancerType.convertToURL()}">${cancerType}</a>
+	                      			#{/list}
+	                      		#{/if}
+	                      	#{/if}
+	                      	#{else}
+	                      		#{if talker.otherCategories != null}
+		                      		#{if talker.otherCategories.length == 0}
+		                      			<b>---</b>
+		                      		#{/if}
+		                      		#{else}
+		                      			#{list items: talker.otherCategories, as: 'cancerType'}
+		                      				<a class="topicTitle" href="/explore/${cancerType.convertToURL()}">${cancerType}</a>,
+		                      			#{/list}
+	                      			#{/else}
+	                      		#{/if}
+	                      		#{else}
+	                      			<b>---</b>
+	                      		#{/else}
+	                      	#{/else}
+	                      </td>
 	                     <td class="profileCantanttxt2">
                       	<strong>Thank You's:</strong>
                       	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.name, 'thankyous')}">
@@ -475,92 +498,94 @@
 		                    	<div class="topicborder"></div>
 		                    	<div class="profilebiotxt">${talkerDisease.healthBio.nl2br()}</div>
 							#{/if}
-							#{if !talkerDisease.isEmptyHealthInfo() }
-							<div class="ProfileHealth">Health Info</div>
-                    		<div class="topicborder"></div>
-							<div class="profiletext2">
-								<ul>
-									<li class="blacktext12"><b>Disease</b>: <span class="blacktext">${talkerDisease.name}</span></li>
-									#{list items: disease.questions, as: 'question'}
-										#{if question.name.equals("rareforms")}
-											#{if talkerDisease.combinedToCommaString("rareforms")}
-											<li class="blacktext12" style="height: auto"><b>${question.displayName}</b>:
-											<span class="blacktext">${talkerDisease.combinedToCommaString("rareforms")}</span>
+							#{if talker.category != null}
+								#{if !talkerDisease.isEmptyHealthInfo() }
+								<div class="ProfileHealth">Health Info</div>
+	                    		<div class="topicborder"></div>
+								<div class="profiletext2">
+									<ul>
+										<li class="blacktext12"><b>Disease</b>: <span class="blacktext">${talkerDisease.name}</span></li>
+										#{list items: disease.questions, as: 'question'}
+											#{if question.name.equals("rareforms")}
+												#{if talkerDisease.combinedToCommaString("rareforms")}
+												<li class="blacktext12" style="height: auto"><b>${question.displayName}</b>:
+												<span class="blacktext">${talkerDisease.combinedToCommaString("rareforms")}</span>
+												</li>
+												#{/if} 
+											#{/if}
+											#{elseif talkerDisease.healthInfo?.get(question.name)}
+												<li class="blacktext12" style="height: auto"><b>${question.displayName}</b>: 
+													<span class="blacktext">${talkerDisease.healthInfo.get(question.name)?.toCommaStringView()}</span>
+												</li>
+											#{/elseif}
+										#{/list}
+										#{if talkerDisease.symptomDate}
+											<li class="blacktext12"><b>Date of first symptom</b>: 
+												<span class="blacktext">${talkerDisease.symptomDate?.format('MM/dd/yyyy')}</span>
 											</li>
-											#{/if} 
 										#{/if}
-										#{elseif talkerDisease.healthInfo?.get(question.name)}
-											<li class="blacktext12" style="height: auto"><b>${question.displayName}</b>: 
-												<span class="blacktext">${talkerDisease.healthInfo.get(question.name)?.toCommaStringView()}</span>
+										
+										#{if talkerDisease.diagnoseDate}
+											<li class="blacktext12"><b>Date of diagnosis</b>: 
+												<span class="blacktext">${talkerDisease.diagnoseDate?.format('MM/dd/yyyy')}</span>
 											</li>
-										#{/elseif}
-									#{/list}
-									#{if talkerDisease.symptomDate}
-										<li class="blacktext12"><b>Date of first symptom</b>: 
-											<span class="blacktext">${talkerDisease.symptomDate?.format('MM/dd/yyyy')}</span>
+										#{/if}
+										#{if talkerDisease.recurrent}
+										<li class="blacktext12"><b>Recurrent</b>:
+											<span class="blacktext">${talkerDisease.recurrent}</span>
 										</li>
-									#{/if}
-									
-									#{if talkerDisease.diagnoseDate}
-										<li class="blacktext12"><b>Date of diagnosis</b>: 
-											<span class="blacktext">${talkerDisease.diagnoseDate?.format('MM/dd/yyyy')}</span>
+										#{/if}
+										#{if !talkerDisease.isEmpty("symptoms")}
+										<li class="blacktext12 healthitemtitle" style="padding-top:10px;"><strong>Initial Symptoms</strong></li>
+										<!-- We need span to hide health items titles without children using jQuery -->
+										#{ profile/healthItemsList healthItem: healthItemsMap.get("symptoms"), talkerDisease: talkerDisease /}
+										#{list items: talkerDisease.otherHealthItems?.symptoms, as: 'item' }									
+											<li class="blacktext12">${item}</li>
+										#{/list}
+										#{/if}
+										
+										#{if !talkerDisease.isEmpty("tests")}
+										<li class="blacktext12 healthitemtitle" style="padding-top:10px;"><strong>Tests</strong></li>
+										#{ profile/healthItemsList healthItem:healthItemsMap.tests, talkerDisease: talkerDisease /}
+										#{list items: talkerDisease.otherHealthItems?.tests, as: 'item' }
+											<li class="blacktext12">${item}</li>
+										#{/list}
+										#{/if}
+									</ul>
+								</div>
+								<div class="profiletext2">
+									<ul>
+										#{if !talkerDisease.isEmpty("procedures")}
+										<li class="blacktext12 healthitemtitle"><strong>Procedures/Surgeries</strong></li>
+											#{ profile/healthItemsList healthItem:healthItemsMap["procedures"], talkerDisease: talkerDisease /}
+											#{list items: talkerDisease.otherHealthItems?.procedures, as: 'item' }
+												<li class="blacktext12">${item}</li>
+											#{/list}
+										#{/if}
+										
+										#{if !talkerDisease.isEmpty("treatments")}
+										<li class="blacktext12 healthitemtitle" style="padding-top:10px;">
+											<strong>Medications and Treatments</strong>
 										</li>
-									#{/if}
-									#{if talkerDisease.recurrent}
-									<li class="blacktext12"><b>Recurrent</b>:
-										<span class="blacktext">${talkerDisease.recurrent}</span>
-									</li>
-									#{/if}
-									#{if !talkerDisease.isEmpty("symptoms")}
-									<li class="blacktext12 healthitemtitle" style="padding-top:10px;"><strong>Initial Symptoms</strong></li>
-									<!-- We need span to hide health items titles without children using jQuery -->
-									#{ profile/healthItemsList healthItem: healthItemsMap.get("symptoms"), talkerDisease: talkerDisease /}
-									#{list items: talkerDisease.otherHealthItems?.symptoms, as: 'item' }									
-										<li class="blacktext12">${item}</li>
-									#{/list}
-									#{/if}
-									
-									#{if !talkerDisease.isEmpty("tests")}
-									<li class="blacktext12 healthitemtitle" style="padding-top:10px;"><strong>Tests</strong></li>
-									#{ profile/healthItemsList healthItem:healthItemsMap.tests, talkerDisease: talkerDisease /}
-									#{list items: talkerDisease.otherHealthItems?.tests, as: 'item' }
-										<li class="blacktext12">${item}</li>
-									#{/list}
-									#{/if}
-								</ul>
-							</div>
-							<div class="profiletext2">
-								<ul>
-									#{if !talkerDisease.isEmpty("procedures")}
-									<li class="blacktext12 healthitemtitle"><strong>Procedures/Surgeries</strong></li>
-										#{ profile/healthItemsList healthItem:healthItemsMap["procedures"], talkerDisease: talkerDisease /}
-										#{list items: talkerDisease.otherHealthItems?.procedures, as: 'item' }
-											<li class="blacktext12">${item}</li>
-										#{/list}
-									#{/if}
-									
-									#{if !talkerDisease.isEmpty("treatments")}
-									<li class="blacktext12 healthitemtitle" style="padding-top:10px;">
-										<strong>Medications and Treatments</strong>
-									</li>
-										#{ profile/healthItemsList healthItem:healthItemsMap.get("treatments"), talkerDisease: talkerDisease /}
-										#{list items: talkerDisease.otherHealthItems?.treatments, as: 'item' }
-											<li class="blacktext12">${item}</li>
-										#{/list}
-									#{/if}
-									
-									#{if !talkerDisease.isEmpty("sideeffects")}
-									<li class="blacktext12 healthitemtitle" style="padding-top:10px;">
-										<strong>Side effects from medications/treatments</strong>
-									</li>
-										#{ profile/healthItemsList healthItem:healthItemsMap["sideeffects"], talkerDisease: talkerDisease /}
-										#{list items: talkerDisease.otherHealthItems?.sideeffects, as: 'item' }
-											<li class="blacktext12">${item}</li>
-										#{/list}
-									#{/if}
-								</ul>
-							</div>
+											#{ profile/healthItemsList healthItem:healthItemsMap.get("treatments"), talkerDisease: talkerDisease /}
+											#{list items: talkerDisease.otherHealthItems?.treatments, as: 'item' }
+												<li class="blacktext12">${item}</li>
+											#{/list}
+										#{/if}
+										
+										#{if !talkerDisease.isEmpty("sideeffects")}
+										<li class="blacktext12 healthitemtitle" style="padding-top:10px;">
+											<strong>Side effects from medications/treatments</strong>
+										</li>
+											#{ profile/healthItemsList healthItem:healthItemsMap["sideeffects"], talkerDisease: talkerDisease /}
+											#{list items: talkerDisease.otherHealthItems?.sideeffects, as: 'item' }
+												<li class="blacktext12">${item}</li>
+											#{/list}
+										#{/if}
+									</ul>
+								</div>
 							#{/if}
+						#{/if}
 					#{/if}
                     #{if talker.isAllowed(models.PrivacySetting.PrivacyType.ACTIVITY_STREAM, currentTalker) && talkerFeed}
 						<div class="Profilemurray">${talker.name} Activities</div>

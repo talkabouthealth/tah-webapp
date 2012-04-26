@@ -113,7 +113,7 @@
 							</div>							
 							#{/else}							
 						</div>
-							#{if talker.category.equals("Breast Cancer") || talker.category.equals("Ovarian Cancer") || talker.category.equals("Melanoma") || talker.category.equals("Lung Cancer") || talker.category.equals("Colon and Rectal Cancer") || talker.category.equals("Cervical Cancer") || talker.category.equals("Uterine and Corpus Cancer")}
+							#{if talker.category.equals("Breast Cancer") || talker.category.equals("Ovarian Cancer") || talker.category.equals("Melanoma") || talker.category.equals("Lung Cancer") || talker.category.equals("Colon and Rectal Cancer") || talker.category.equals("Cervical Cancer") || talker.category.equals("Uterine and Endometrial Cancer")}
 								#{list items:disease.questions, as:'question'}
 								
 								#{if question.name.equals("GeneticRisk")}
@@ -243,86 +243,88 @@
 							#{/list}
 						#{/if}
 						
-						#{ifnot talker.connection.equals("High Risk Individual")}
-						<div class="signupmain">
-							<a name="symptoms"></a>
-							<div class="generaltextarea">
-								<span class="blacktext16"><strong>Is it recurrent?</strong></span>
-							</div>
-							<div class="personaltextfield">
-								<select name="talkerDisease.recurrent" class="personalfields">
-									#{list items:['', 'no', 'yes'], as:'val' }
-										<option value="${val}" 
-									    #{if val.equals(talkerDisease?.recurrent) } selected #{/if} 
-									    >${val}</option>
-									#{/list}	
-								</select>
-							</div>
-						</div>
-						 <div class="signupmain">
-							<div class="generaltextarea">
-								<span class="blacktext16"><strong>When did the first symptom appear?</strong></span>
-							</div>
-							<div class="personaltextfield">
-								<select size="1"  name="talkerDisease.symptomMonth" id="talkerDisease.symptomMonth" class="textarea2" style="position: absolute;margin-left: 25px;">
-									#{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
-									    <option value="${i_index-1}" 
-									    #{if talkerDisease?.symptomDate?.month == i_index-2 } selected #{/if} 
-									    >${i}</option>
-									#{/list}
-								</select>
-								&nbsp;  &nbsp;  &nbsp;&nbsp;  &nbsp;  &nbsp;
-								<select size="1"  name="talkerDisease.symptomYear" class="textarea2"  style="position: absolute; margin-left: 110px;" id="talkerDisease.symptomYear">
-							  		<option value='0'>Year</option>
-							  		#{list items:java.util.Calendar.getInstance().get(Calendar.YEAR)..1950, as:'i'}
-									    <option value="${i}"
-									    *{ TODO: use of deprecated getYear() ? }*
-									    #{if talkerDisease?.symptomDate?.year == i - 1900 } selected #{/if} 
-									    >${i}</option>
-									#{/list}
-								</select>
-							</div>
-						</div>
-						<div class="signupmain">
-							<div class="generaltextarea">
-								<span class="blacktext16"><strong>When were you first diagnosed?</strong></span>
-							</div>
-							<div class="personaltextfield">
-								<select size="1"  name="talkerDisease.diagnoseMonth" id="talkerDisease.diagnoseMonth" class="textarea2" style="position: absolute;margin-left: 25px;">
-									#{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
-									    <option value="${i_index-1}" 
-									    #{if talkerDisease?.diagnoseDate?.month == i_index-2 } selected #{/if} 
-									    >${i}</option>
-									#{/list}
-								</select>
-								&nbsp;  &nbsp;  &nbsp;&nbsp;  &nbsp;  &nbsp;
-								<select size="1"  name="talkerDisease.diagnoseYear" class="textarea2"  style="position: absolute; margin-left: 110px;"  id="talkerDisease.diagnoseYear">
-							  		<option value='0'>Year</option>
-							  		#{list items:java.util.Calendar.getInstance().get(Calendar.YEAR)..1950, as:'i'}
-									    <option value="${i}"
-									    #{if talkerDisease?.diagnoseDate?.year == i - 1900 } selected #{/if} 
-									    >${i}</option>
-									#{/list}
-								</select>
-							</div>
-						</div>
-						
-						#{if talker.category.equals("Breast Cancer") || talker.category.equals("Ovarian Cancer") || talker.category.equals("Melanoma") || talker.category.equals("Lung Cancer")  || talker.category.equals("Colon and Rectal Cancer") || talker.category.equals("Cervical Cancer") || talker.category.equals("Uterine and Corpus Cancer")}
+					#{ifnot talker.connection.equals("High Risk Individual")}
+						#{if talker.category != null}
 							<div class="signupmain">
-	 							<div class="generaltextarea2">
-	 								<span class="blacktext16"><strong>What were the initial symptoms you experienced?</strong></span>
-	 							</div>
-								<div class="generalcheck">
-									#{ profile/healthItemsTree healthItem:healthItemsMap["symptoms"], checkedItems: talkerDisease?.healthItems /}
+								<a name="symptoms"></a>
+								<div class="generaltextarea">
+									<span class="blacktext16"><strong>Is it recurrent?</strong></span>
 								</div>
+								<div class="personaltextfield">
+									<select name="talkerDisease.recurrent" class="personalfields">
+										#{list items:['', 'no', 'yes'], as:'val' }
+											<option value="${val}" 
+										    #{if val.equals(talkerDisease?.recurrent) } selected #{/if} 
+										    >${val}</option>
+										#{/list}	
+									</select>
+								</div>
+							</div>
+							 <div class="signupmain">
+								<div class="generaltextarea">
+									<span class="blacktext16"><strong>When did the first symptom appear?</strong></span>
+								</div>
+								<div class="personaltextfield">
+									<select size="1"  name="talkerDisease.symptomMonth" id="talkerDisease.symptomMonth" class="textarea2" style="position: absolute;margin-left: 25px;">
+										#{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
+										    <option value="${i_index-1}" 
+										    #{if talkerDisease?.symptomDate?.month == i_index-2 } selected #{/if} 
+										    >${i}</option>
+										#{/list}
+									</select>
+									&nbsp;  &nbsp;  &nbsp;&nbsp;  &nbsp;  &nbsp;
+									<select size="1"  name="talkerDisease.symptomYear" class="textarea2"  style="position: absolute; margin-left: 110px;" id="talkerDisease.symptomYear">
+								  		<option value='0'>Year</option>
+								  		#{list items:java.util.Calendar.getInstance().get(Calendar.YEAR)..1950, as:'i'}
+										    <option value="${i}"
+										    *{ TODO: use of deprecated getYear() ? }*
+										    #{if talkerDisease?.symptomDate?.year == i - 1900 } selected #{/if} 
+										    >${i}</option>
+										#{/list}
+									</select>
+								</div>
+							</div>
+							<div class="signupmain">
+								<div class="generaltextarea">
+									<span class="blacktext16"><strong>When were you first diagnosed?</strong></span>
+								</div>
+								<div class="personaltextfield">
+									<select size="1"  name="talkerDisease.diagnoseMonth" id="talkerDisease.diagnoseMonth" class="textarea2" style="position: absolute;margin-left: 25px;">
+										#{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
+										    <option value="${i_index-1}" 
+										    #{if talkerDisease?.diagnoseDate?.month == i_index-2 } selected #{/if} 
+										    >${i}</option>
+										#{/list}
+									</select>
+									&nbsp;  &nbsp;  &nbsp;&nbsp;  &nbsp;  &nbsp;
+									<select size="1"  name="talkerDisease.diagnoseYear" class="textarea2"  style="position: absolute; margin-left: 110px;"  id="talkerDisease.diagnoseYear">
+								  		<option value='0'>Year</option>
+								  		#{list items:java.util.Calendar.getInstance().get(Calendar.YEAR)..1950, as:'i'}
+										    <option value="${i}"
+										    #{if talkerDisease?.diagnoseDate?.year == i - 1900 } selected #{/if} 
+										    >${i}</option>
+										#{/list}
+									</select>
+								</div>
+							</div>
+							
+							#{if talker.category.equals("Breast Cancer") || talker.category.equals("Ovarian Cancer") || talker.category.equals("Melanoma") || talker.category.equals("Lung Cancer")  || talker.category.equals("Colon and Rectal Cancer") || talker.category.equals("Cervical Cancer") || talker.category.equals("Uterine and Endometrial Cancer")}
 								<div class="signupmain">
-									<div class="personaltextfield">
-									  	#{ profile/otherField name:'symptoms', values: talkerDisease?.otherHealthItems /}
+		 							<div class="generaltextarea2">
+		 								<span class="blacktext16"><strong>What were the initial symptoms you experienced?</strong></span>
+		 							</div>
+									<div class="generalcheck">
+										#{ profile/healthItemsTree healthItem:healthItemsMap["symptoms"], checkedItems: talkerDisease?.healthItems /}
+									</div>
+									<div class="signupmain">
+										<div class="personaltextfield">
+										  	#{ profile/otherField name:'symptoms', values: talkerDisease?.otherHealthItems /}
+										</div>
 									</div>
 								</div>
-							</div>
+							#{/if}
+							<div class="signupmain"></div>
 						#{/if}
-						<div class="signupmain"></div>
 						#{/ifnot}
 					</div>
 				</div>
@@ -359,78 +361,82 @@
 		</div>
 		
 		#{ifnot talker.connection.equals("High Risk Individual")}
-		<div id="midnoticontainer">
-			<div id="midnoticontainermain">
-				<div id="boxarea_head2" class="blacktext2">Tests and Procedures</div>
-				<div class="signupleftarea2">
-					<div class="generalsubhead">Which of the following tests have you had?</div>
-					<div class="generalcheck">
-						#{ profile/healthItemsTree healthItem:healthItemsMap["tests"], checkedItems: talkerDisease?.healthItems /}
-					</div>
-					<div class="personaltextfield">
-						#{ profile/otherField name:'tests', values: talkerDisease?.otherHealthItems /}
-					</div>
-					<div class="generalsubhead">
-						<a name="procedures"></a>
-						What procedures/surgeries have you had?
-					</div>
-					<div class="generalcheck">
-						#{ profile/healthItemsTree healthItem:healthItemsMap["procedures"], checkedItems: talkerDisease?.healthItems /}
-					</div>
-					<div class="personaltextfield">
-						#{ profile/otherField name:'procedures', values: talkerDisease?.otherHealthItems /}
-					</div>
-					<div class="signupmain"></div>
-				</div>
-			</div>
-		</div>
-		
-		<div id="midnoticontainer">
-			<div id="midnoticontainermain">
-				<div id="boxarea_head2" class="blacktext2">Treatments and medications</div>
-				<div class="signupleftarea2">
-					<div class="generalsubhead">
-						What treatments / medications have you taken?
-					</div>
-					<div class="generalcheck">
-						<a name="treatments"></a>
-						#{ profile/healthItemsTree healthItem:healthItemsMap["treatments"], checkedItems: talkerDisease?.healthItems /}
-					</div>
-					<div class="personaltextfield">
-						#{ profile/otherField name:'treatments', values: talkerDisease?.otherHealthItems /}
-					</div>
-					<div class="signupmain"></div>
-				</div>
-			</div>
-		</div>
-		
-		<div id="midnoticontainer">
-			<div id="midnoticontainermain">
-				<div id="boxarea_head2" class="blacktext2">Side Effects</div>
-				<div class="signupleftarea2">
-					<div class="generalsubhead">What Treatment/Medication Side Effects have you experienced?</div>
-					<div class="generalcheck">
-						#{ profile/healthItemsTree healthItem:healthItemsMap["sideeffects"], checkedItems: talkerDisease?.healthItems /}
-					</div>
-					<div class="personaltextfield">
-						<a name="sideeffects"></a>
-						#{ profile/otherField name:'sideeffects', values: talkerDisease?.otherHealthItems /}
-					</div>
-					#{if talker.nextStepMessage }
-					 	<div class="generalsubhead">
-						 	Next Step: ${talker.nextStepMessage?.raw()}.
-						 	Or go to the <a href="@{Home.index()}">Home</a> page.
+			#{if talker.category != null}
+				#{if talker.category.equals("Breast Cancer") || talker.category.equals("Ovarian Cancer") || talker.category.equals("Melanoma") || talker.category.equals("Lung Cancer")  || talker.category.equals("Colon and Rectal Cancer") || talker.category.equals("Cervical Cancer") || talker.category.equals("Uterine and Endometrial Cancer")}
+				<div id="midnoticontainer">
+					<div id="midnoticontainermain">
+						<div id="boxarea_head2" class="blacktext2">Tests and Procedures</div>
+						<div class="signupleftarea2">
+							<div class="generalsubhead">Which of the following tests have you had?</div>
+							<div class="generalcheck">
+								#{ profile/healthItemsTree healthItem:healthItemsMap["tests"], checkedItems: talkerDisease?.healthItems /}
+							</div>
+							<div class="personaltextfield">
+								#{ profile/otherField name:'tests', values: talkerDisease?.otherHealthItems /}
+							</div>
+							<div class="generalsubhead">
+								<a name="procedures"></a>
+								What procedures/surgeries have you had?
+							</div>
+							<div class="generalcheck">
+								#{ profile/healthItemsTree healthItem:healthItemsMap["procedures"], checkedItems: talkerDisease?.healthItems /}
+							</div>
+							<div class="personaltextfield">
+								#{ profile/otherField name:'procedures', values: talkerDisease?.otherHealthItems /}
+							</div>
+							<div class="signupmain"></div>
 						</div>
-				 	#{/if}
-					
-					<div style="float: left; clear: both;">
-						<input id="saveBtn" disabled="disabled" type="submit" value="Save" />
-						<span id="saveBtnText"></span>
 					</div>
-				
-					<div class="signupmain"></div>
 				</div>
-			</div>
-		</div>
+				
+				<div id="midnoticontainer">
+					<div id="midnoticontainermain">
+						<div id="boxarea_head2" class="blacktext2">Treatments and medications</div>
+						<div class="signupleftarea2">
+							<div class="generalsubhead">
+								What treatments / medications have you taken?
+							</div>
+							<div class="generalcheck">
+								<a name="treatments"></a>
+								#{ profile/healthItemsTree healthItem:healthItemsMap["treatments"], checkedItems: talkerDisease?.healthItems /}
+							</div>
+							<div class="personaltextfield">
+								#{ profile/otherField name:'treatments', values: talkerDisease?.otherHealthItems /}
+							</div>
+							<div class="signupmain"></div>
+						</div>
+					</div>
+				</div>
+				
+				<div id="midnoticontainer">
+					<div id="midnoticontainermain">
+						<div id="boxarea_head2" class="blacktext2">Side Effects</div>
+						<div class="signupleftarea2">
+							<div class="generalsubhead">What Treatment/Medication Side Effects have you experienced?</div>
+							<div class="generalcheck">
+								#{ profile/healthItemsTree healthItem:healthItemsMap["sideeffects"], checkedItems: talkerDisease?.healthItems /}
+							</div>
+							<div class="personaltextfield">
+								<a name="sideeffects"></a>
+								#{ profile/otherField name:'sideeffects', values: talkerDisease?.otherHealthItems /}
+							</div>
+							#{if talker.nextStepMessage }
+							 	<div class="generalsubhead">
+								 	Next Step: ${talker.nextStepMessage?.raw()}.
+								 	Or go to the <a href="@{Home.index()}">Home</a> page.
+								</div>
+						 	#{/if}
+							
+							<div style="float: left; clear: both;">
+								<input id="saveBtn" disabled="disabled" type="submit" value="Save" />
+								<span id="saveBtnText"></span>
+							</div>
+						
+							<div class="signupmain"></div>
+						</div>
+					</div>
+				</div>
+				#{/if}
+			#{/if}
 		#{/ifnot}
 	</form>

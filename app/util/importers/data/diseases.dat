@@ -203,3 +203,59 @@ choices;Pelvic lymph nodes;Para-aortic lymph nodes;;
 RiskFactors;Risk factors for uterine cancer;Risk factors for uterine cancer;multiselect;;;
 choices;Abnormal overgrowth of the endometrium;Obesity;Reproductive and menstrual history;Never had children;Had their first menstrual period before age 12;Went through menopause after age 55;History of taking estrogen alone;History of taking tamoxifen;History of radiation therapy to pelvis;Family health history;;;;
 ;;;;;;
+Disease;Oral Cavity and Pharynx Cancer;;;;;d15;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Hodgkin Lymphoma;;;;;d16;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Stomach Cancer;;;;;d17;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Myeloma;;;;;d18;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Larynx Cancer;;;;;d19;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Liver and Intraheptic Cancer;;;;;d20;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Esophagus Cancer;;;;;d21;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;

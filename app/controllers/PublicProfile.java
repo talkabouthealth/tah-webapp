@@ -107,9 +107,16 @@ public class PublicProfile extends Controller {
 		TalkerLogic.preloadTalkerInfo(talker);
 		boolean noHealthInfo = TalkerLogic.talkerHasNoHealthInfo(talker);
 		
+		List<Action> answersFeedTemp = new ArrayList<Action>();
 		List<Action> answersFeed = new ArrayList<Action>();
-		int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeed, true);
+		int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeedTemp, true);
 		
+		//added because if convo is null then answers are not displayed.
+		for(int index=0; index < answersFeedTemp.size(); index++){
+			if(answersFeedTemp.get(index).getConvo()!=null)
+				answersFeed.add(answersFeedTemp.get(index));
+		}
+		answersFeedTemp.clear();
 		render(talker, currentTalker, answersFeed, numOfTopAnswers, noHealthInfo);
 	}
 	

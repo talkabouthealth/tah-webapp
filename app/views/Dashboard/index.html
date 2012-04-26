@@ -38,7 +38,8 @@
 			
 		$(document).ready(function() {
 			//check for new topics every 5 seconds
-			setInterval("checkNewTopic()", 5000);
+			//Commented automatic update code for #25259939
+			//setInterval("checkNewTopic()", 5000);
 
 			$("input[type=radio]").click (function() {
 				selectedTopicId = $(this).val();

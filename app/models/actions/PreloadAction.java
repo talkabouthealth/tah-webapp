@@ -23,6 +23,7 @@ public class PreloadAction implements Action {
 	protected ConversationBean convo;
 	protected ActionType type;
 	protected DBObject dbObject;
+	protected Date time;
 
 	public PreloadAction(DBObject dbObject) {
 		this.dbObject = dbObject;
@@ -78,5 +79,11 @@ public class PreloadAction implements Action {
 	public void setID(String id) {
 		this.id=id;
 	}
+
+	@Override
+	public void setTime(Date time) {
+		this.time = time;		
+	}
+
 
 }

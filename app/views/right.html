@@ -135,6 +135,29 @@
 	   </div>
 	   #{/ifnot}
 	   
+	   #{if talker.serviceAccounts != null && talker.serviceAccounts.size() > 0}
+		   #{ifnot talker?.hiddenHelps.contains("updateCommunity") }
+			   <div id="updateHealthCommunityHelp" class="topipsts">
+		           <div class="mtrighttxt1">Select health community </div>
+		           <div class="topixtext">
+		             <div class="tellustext">
+		             	<select size="1" name="talker.category" class="personalfields" id="talker.category" onchange="changeHealthCommunity(this.value,'ADD');">
+		             		<option></option>
+					  		#{list items:diseaseList , as: 'disease'}
+							    <option value="${disease.name}"
+							   #{if disease.name.equals(talker.category) } selected #{/if}
+							    >${disease.name} </option>
+							#{/list}
+						</select>
+		             </div>
+		           </div>
+		           <!--topixtext-->
+			     <div class="mtop"></div>
+			     <div class="topicborder"></div>
+			   </div>
+		   #{/ifnot}
+	   #{/if}
+	   
 	   *{
 		   <div id="updateEmailHelp" class="topipsts">
 	           <div class="mtrighttxt1">Add email</div>

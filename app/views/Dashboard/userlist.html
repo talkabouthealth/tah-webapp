@@ -30,7 +30,9 @@
 		return xmlhttp;
 	}
 	// check latest topic every 5 seconds.
-  	setInterval("checkLatestTopic()", 5000);
+	//Commented automatic update code for #25259939
+  	//setInterval("checkLatestTopic()", 5000);
+  	
   	//Send http request to newTopicAlert servlet to check if there's new topic
   	function checkLatestTopic(){
   		var xmlhttp = createHttpObj();

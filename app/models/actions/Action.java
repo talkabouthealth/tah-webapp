@@ -52,5 +52,6 @@ public interface Action {
 	public TalkerBean getTalker();
 	public String getId();
 	public void setID(String id);
+	public void setTime(Date time);
 
 }

@@ -53,11 +53,12 @@
 					<a id="followActionlink" href="#">
 					${ currentTalker.followingList.contains(talker) ? 'Unfollow' : 'Follow'}
 					</a><br/>
-					<a href=# onclick="return showSaveDialog('postQuestion');">Ask Question</a><br/>					
+					<a href=# onclick="return showSaveDialog('postQuestion');">Ask Question</a><br/>	
 				#{/ifnot}
 	            <a href="#" onclick="return showPopup('#commentPopup', 200);">Post Thought</a><br/>
 	            #{ifnot talker.userName.equals(currentTalker.userName) }
 	           		<a href="#" onclick="return showPopup('#thankYouPopup', 200);">Give a Thank You</a><br/>
+	           		<a href="javascript:showMessagePopup();" title="Send direct message to ${talker.userName}">Direct Message</a><br/>
 	            #{/ifnot}
 	            #{else}
 	            	#{if currentPage.equals('publicProfile') }
@@ -68,7 +69,6 @@
 					<a href="@{Profile.preferences()}">Privacy Settings</a>
 	            	#{/if}
 	            #{/else}
-	                 <!-- <a href="#">Private Message</a><br/>  -->
 			</div>
 		#{/if}
         <div class="mtop"></div>
@@ -223,5 +223,6 @@
 	#{ popups/thoughtComment /}
 	#{ popups/profileJoinNow /}
 	#{popups/startConvo page: 'profileRight', target: talker, talker: currentTalker /}
+	#{ popups/newMessage target: talker/}
 </div>
 <div id="mask"></div>

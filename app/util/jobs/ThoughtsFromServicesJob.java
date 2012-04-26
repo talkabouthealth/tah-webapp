@@ -28,7 +28,7 @@ import dao.TalkerDAO;
  *
  */
 @OnApplicationStart
-public class ThoughtsFromServicesJob extends Job {
+public class ThoughtsFromServicesJob{
 	
 	@Override
 	public void doJob() throws Exception {
