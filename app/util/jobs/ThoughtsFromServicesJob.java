@@ -2,6 +2,7 @@ package util.jobs;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -79,5 +80,16 @@ public class ThoughtsFromServicesJob{
 		    	}
 			}
 		}
+		System.out.println("----------ThoughtsFromServicesJob Completed------------"+ new Date());
+		ThoughtsFromServicesJob thoughtJob = new ThoughtsFromServicesJob();
+		try {
+			thoughtJob.finalize();
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+	
+	protected void finalize() throws Throwable {
+		super.finalize();
 	}
 }
