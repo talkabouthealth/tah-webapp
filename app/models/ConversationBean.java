@@ -201,6 +201,7 @@ public class ConversationBean implements Comparable<ConversationBean> {
     	setTalker(TalkerLogic.loadTalkerFromCache(convoDBObject, "uid"));
     	setModifiedDate((Date)convoDBObject.get("modified_date"));
     	setQuestionState((String)convoDBObject.get("question_state"));
+    	setFollowers(ConversationDAO.getConversationFollowers(getId()));
 	}
 	
 	public void parseFromDB(DBObject convoDBObject) {
@@ -214,11 +215,6 @@ public class ConversationBean implements Comparable<ConversationBean> {
     	parseChatMessages((Collection<DBObject>)convoDBObject.get("messages"));
     	setTalker(TalkerLogic.loadTalkerFromCache(convoDBObject, "uid"));
     	setCategory((String)convoDBObject.get("category"));
-    	Collection<String> otherDiseaseCategories = (Collection<String>)convoDBObject.get("other_disease_categories");
-		if (otherDiseaseCategories != null) {
-			setOtherDiseaseCategories(otherDiseaseCategories.toArray(new String[]{}));
-		}
-    	setFollowers(ConversationDAO.getConversationFollowers(getId()));
 	}
 	
 	/**
@@ -320,8 +316,10 @@ public class ConversationBean implements Comparable<ConversationBean> {
 	public List<DBRef> topicsToDB() {
 		List<DBRef> topicsDBList = new ArrayList<DBRef>();
 		for (TopicBean topic : getTopics()) {
-			DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topic.getId());
-			topicsDBList.add(topicRef);
+			if(topic != null && topic.getId() != null){
+				DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topic.getId());
+				topicsDBList.add(topicRef);
+			}
 		}
 		return topicsDBList;
 	}

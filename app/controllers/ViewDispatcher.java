@@ -315,8 +315,19 @@ public class ViewDispatcher extends Controller {
 				Logger.error(e, "ViewDispatcher.java : showConvo");
 		}
 		
+		//Added for displaying proper answer count
+		int commentSize = 0;
+		for(int i = 0; i < convo.getComments().size(); i++){
+			CommentBean comment =  convo.getComments().get(i);
+			if(!comment.isDeleted())
+			 commentSize++;
+		}
+		if(talker != null && talker.getUserName().equals("admin"))
+			commentSize = convo.getComments().size();
+		if(talker != null)
+			session.put("inboxUnreadCount", MessagingDAO.getUnreadMessageCount(talker.getId()));
 		render("Conversations/viewConvo.html", talker, convo, latestActivityTime, 
-				relatedConvos, userHasAnswer,newsLetterFlag);
+				relatedConvos, userHasAnswer,newsLetterFlag,commentSize);
     }
 	
 	private static void showTopic(TopicBean topic) {
