@@ -41,6 +41,7 @@ import org.apache.commons.collections.ComparatorUtils;
 import org.apache.commons.lang.StringUtils;
 
 import logic.ConversationLogic;
+import logic.TalkerLogic;
 import logic.TopicLogic;
 import models.CommentBean;
 import models.ConversationBean;
@@ -428,7 +429,7 @@ public class CommonUtil {
 	public static Set<String> loadTalkers(){
 		Set<String> allTalkers = new TreeSet<String>(
 				new StringLengthComparator());
-		for (TalkerBean talker : TalkerDAO.loadAllTalkers(true)) {
+		for (TalkerBean talker : TalkerLogic.loadAllTalkersFromCache()) {
 			allTalkers.add(talker.getUserName());
 		}
 		return allTalkers;
@@ -436,7 +437,7 @@ public class CommonUtil {
 	
 	public static Map<String, String> loadTopics(){
 		Map<String, String> allTopics = new TreeMap<String, String>(new StringLengthComparator());
-		for (TopicBean topic : TopicDAO.loadAllTopics(true)) {
+		for (TopicBean topic : TalkerLogic.loadAllTopicsFromCache()) {
 			String topicTitle = topic.getTitle().replaceAll(" ", "");
 			allTopics.put(topicTitle, topic.getMainURL());
 		}
