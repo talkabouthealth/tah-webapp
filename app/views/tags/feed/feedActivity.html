@@ -1,27 +1,10 @@
 <div class="joinbox" id="${_activity.id}">
+	*{<div class="joinpic" style="width: 70px;">
+		#{talker/talkerImageLink size: 70, userName: _activity.talker.name /}
+	</div>}*
+	
 	<div class="joinpic" style="width: 70px;">
-		
-		#{if _activity.convo}
-			#{if _activity.convo.comments}
-				#{if _activity.convo.comments[0] != null}
-			   		#{if _activity.convo.comments[0].fromTalker!=null}
-						 #{talker/talkerImageLink size: 70, userName: _activity.convo.comments[0].fromTalker.userName /}	
-			    	 #{/if}
-			    	 #{else}
-						#{talker/talkerImageLink size: 70, userName: _activity.convo.talker.userName /}
-			    	 #{/else}	
-				#{/if}
-				#{else}
-					#{talker/talkerImageLink size: 70, userName: _activity.talker.name /}	
-				#{/else}
-			#{/if}
-			#{else}
-				#{talker/talkerImageLink size: 70, userName: _activity.talker.name /}	
-			#{/else}
-		#{/if}
-		#{else}
-				#{talker/talkerImageLink size: 70, userName: _activity.talker.name /}	
-		#{/else}
+		#{talker/talkerImageLink size: 70, userName: _activity.talker.name /}
 	</div>
 	<div class="jointxtbox">
 		#{if _activity.convo}
@@ -36,6 +19,9 @@
 			#{/if}
 			#{elseif _activity.answer}
 			${_activity.answer.printThoughtOrAnswer(session.username)}
+			#{if _activity.convo.comments}
+				${_activity.convo.comments[0].printThoughtOrAnswer(session.username)}
+			#{/if}
 			#{/elseif}
 		</div>
 		
@@ -62,15 +48,13 @@
 					<a href="#" onclick="return openChat('${_activity.convo.tid}');">${_activity.convo.numOfChatters} user(s) chatting</a> | 
 				#{/if}
 				
-				#{if _activity.convo.comments}
-					#{if _activity.convo.comments.size() == 0}
-						<a href="@{ViewDispatcher.view(_activity.convo.mainURL)}#answers">Answer</a> | 
-					#{/if}
-					#{else}
-						<a href="@{ViewDispatcher.view(_activity.convo.mainURL)}#answers">${_activity.convo.comments.size()} 
-							Answer${_activity.convo.comments.pluralize()}</a> | 
-					#{/else}
+				#{if _activity.convo.comments.size() == 0}
+					<a href="@{ViewDispatcher.view(_activity.convo.mainURL)}#answers">Answer</a> | 
 				#{/if}
+				#{else}
+					<a href="@{ViewDispatcher.view(_activity.convo.mainURL)}#answers">${_activity.convo.comments.size()} 
+						Answer${_activity.convo.comments.pluralize()}</a> | 
+				#{/else}
 				
 				#{if session.username}
 					<a href="#" class="followConvoLink" rel="${_activity.convo.id}">
