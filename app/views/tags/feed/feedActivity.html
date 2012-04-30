@@ -35,9 +35,7 @@
 				${_activity.reply.text}
 			#{/if}
 			#{elseif _activity.answer}
-			#{if _activity.convo.comments}
-				${_activity.convo.comments[0].printThoughtOrAnswer(session.username)}
-			#{/if}
+			${_activity.answer.printThoughtOrAnswer(session.username)}
 			#{/elseif}
 		</div>
 		
