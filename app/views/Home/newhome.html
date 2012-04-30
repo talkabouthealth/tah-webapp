@@ -398,7 +398,7 @@ function updateFeed(type,talkerName) {
 								                    	<div id="${talkerCat}CommunityFeedList">
 									                       	#{list items: allDiseaseList.get(talkerCat), as: 'cancerCommunityFeed' }
 										                    	#{list items: cancerCommunityFeed, as: 'activity'}
-																	#{feed/feedActivity activity: activity, talker: talker, parentList: 'cancerCommunityFeedContent' /}
+																	#{feed/feedActivity activity: activity, talker: talker, parentList: talkerCat+'CommunityFeedContent' /}
 																#{/list}
 															#{/list}
 														</div>
