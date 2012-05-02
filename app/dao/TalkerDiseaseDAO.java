@@ -99,6 +99,10 @@ public class TalkerDiseaseDAO {
 		DBObject query = new BasicDBObject("_id", new ObjectId(talkerId));
 		DBObject talkerDBObject = talkersColl.findOne(query, new BasicDBObject("disease", "1"));
 		
+		if(talkerDBObject == null){
+			return null;
+		}
+		
 		List<TalkerDiseaseBean> talkerDiseaseList = new ArrayList<TalkerDiseaseBean>();
 		List<DBObject> talkerDBObjectList = (List<DBObject>)talkerDBObject.get("disease");
 		if (talkerDBObjectList == null) {
