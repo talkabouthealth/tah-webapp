@@ -528,6 +528,7 @@ public class ApplicationDAO {
 	public static boolean isnewsLetterSubscribe(String email,String newsLetter){
 		if(ApplicationDAO.isEmailExists(email)){
 			NewsLetterBean newsletter=NewsLetterDAO.getNewsLetterInfo(email);
+			if(newsletter != null){
 		    String newsletterType[]=newsletter.getNewsLetterType();
 		    	if(newsletterType != null)
 		    	if(newsletterType.length>0)
@@ -535,6 +536,7 @@ public class ApplicationDAO {
 		    		if(type.equalsIgnoreCase(newsLetter))
 		    			return true;
 		    	}
+			}
 			return false;
 		}else
 			return false;

@@ -131,8 +131,8 @@ function saveConvo(page) {
 	
 	$("#convoCreateImage").show();
 	$.post("/conversations/create", 
-			{ type: type, title: title, details: details, topics: topics, fromPage: page, 
-				parentConvoId: parentConvoId, ccTwitter: ccTwitter, ccFacebook: ccFacebook, questionCategory: questionCategory},
+				{ type: type, title: title, details: details, topics: topics, fromPage: page, questionCategory: questionCategory,
+					parentConvoId: parentConvoId, ccTwitter: ccTwitter, ccFacebook: ccFacebook},
 			function(data) {
 				$("#convoCreateImage").hide();
 				if (type === "CONVERSATION") {

@@ -260,21 +260,21 @@ public class FeedsLogic {
 	}
 	
 	public static List<String> getCancerType(TalkerBean talker){
-		String cancerType = "Breast Cancer";
+		//String cancerType = "Breast Cancer";
 		List<String> cat = new ArrayList<String>(2);
 		if (talker != null) {
 			if(talker.getCategory() == null){
 				cat.add(null);
-				cat.add(cancerType);
-			} else if(cancerType.equals(talker.getCategory())) {
+				//cat.add(cancerType);
+				/*} else if(cancerType.equals(talker.getCategory())) {
 				cat.add(null);
-				cat.add(cancerType);
+				cat.add(cancerType);*/
 			} else{
 				cat.add(talker.getCategory());
 			}
 		} else {
 			cat.add(null);
-			cat.add(cancerType);
+			//cat.add(cancerType);
 		}
 		return cat;
 	}

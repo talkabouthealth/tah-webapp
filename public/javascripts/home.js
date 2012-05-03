@@ -144,6 +144,7 @@ function initHomeTabs() {
 			$.get("/home/loadCancerFeed", {feedType: feedType, cancerType: cancerType},
 					function(data) {
 						$("#allCancerFeed").html(data);
+						$('.inline-edit').inlineEdit( { hover: ''} );
 						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
 						$('.moretext2').truncatable({ limit: 220, more: '... more', less: true, hideText: '...less' });
 					}
@@ -154,6 +155,7 @@ function initHomeTabs() {
 			$.get("/home/loadCancerFeed", {feedType: feedType, cancerType: cancerType},
 					function(data) {
 						$("#conversationFeed").html(data);
+						$('.inline-edit').inlineEdit( { hover: ''} );
 						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
 						$('.moretext2').truncatable({ limit: 220, more: '... more', less: true, hideText: '...less' });
 					}
@@ -164,6 +166,7 @@ function initHomeTabs() {
 			$.get("/home/loadCancerFeed", {feedType: feedType, cancerType: cancerType},
 					function(data) {
 						$("#mentionsFeed").html(data);
+						$('.inline-edit').inlineEdit( { hover: ''} );
 						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
 						$('.moretext2').truncatable({ limit: 220, more: '... more', less: true, hideText: '...less' });
 					}
@@ -174,6 +177,7 @@ function initHomeTabs() {
 			$.get("/home/loadCancerFeed", {feedType: feedType, cancerType: cancerType},
 					function(data) {
 						$("#cancerFeed").html(data);
+						$('.inline-edit').inlineEdit( { hover: ''} );
 						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
 						$('.moretext2').truncatable({ limit: 220, more: '... more', less: true, hideText: '...less' });
 					}

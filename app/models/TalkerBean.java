@@ -366,9 +366,10 @@ public class TalkerBean implements Serializable {
 				thankYouBean.setTo(getId());
 				
 				TalkerBean fromTalker = TalkerDAO.parseTalker(thankYouDBObject, "from");
+				if(fromTalker != null){
 				thankYouBean.setFrom(fromTalker.getId());
 				thankYouBean.setFromTalker(fromTalker);
-				
+				}
 				thankYous.add(thankYouBean);
 			}
 		}
