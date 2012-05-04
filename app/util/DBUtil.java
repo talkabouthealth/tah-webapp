@@ -72,6 +72,8 @@ public class DBUtil {
 		Logger.error("DB options:" + db1.getMongo().getMongoOptions());
 		
 		return db1;
+		//return mongo.getDB("d1");
+		 
 	}
 	
 	public static String getHost() {
