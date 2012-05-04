@@ -69,7 +69,7 @@ public class DBUtil {
 		//db1.getMongo().getMongoOptions().socketTimeout = 10;
 		db1.getMongo().getMongoOptions().threadsAllowedToBlockForConnectionMultiplier = 1000;
 		
-		Logger.error("DB options:" + db1.getMongo().getMongoOptions());
+		//Logger.error("DB options:" + db1.getMongo().getMongoOptions());
 		
 		return db1;
 		//return mongo.getDB("d1");
