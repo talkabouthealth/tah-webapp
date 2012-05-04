@@ -88,7 +88,6 @@ public class UserList extends Controller{
 		if(userName != null && !userName.equals("")){
 			TalkerBean talkerBean = TalkerDAO.getByUserName(userName);
 			if(talkerBean != null){
-				Cache.clear();
 		        session.clear();
 		        response.removeCookie("rememberme");
 				Security.authenticate(userName, talkerBean.getPassword(),true);

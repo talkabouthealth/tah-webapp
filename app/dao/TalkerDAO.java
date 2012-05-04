@@ -949,5 +949,30 @@ public class TalkerDAO {
 			return talker;
 		}
 	}
+	 public static void updateIds(){
+			
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		List<DBObject> talkersDBObjectList = talkersColl.find().toArray();
+		for (DBObject talkerDBObject : talkersDBObjectList) {
+			
+			String id=talkerDBObject.get("_id").toString();
+			
+			DBObject talkerId = new BasicDBObject("_id",id);
+			
+			DBObject talkerobj= talkersColl.findOne(talkerId);
+			
+			if(talkersColl.findOne(talkerId)!=null){
+				
+				System.out.println(id);
+				play.Logger.info("Username :"+talkerobj.get("uname")+"   id :"+id);
+				talkersColl.remove(talkerobj);
+				
+			    talkerobj.put("_id", new ObjectId(id));
+				
+				talkersColl.save(talkerobj);
+			}
+		}
+		
+	}
 }
 

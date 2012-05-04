@@ -576,4 +576,8 @@ public class Application extends Controller {
     	TalkerDiseaseDAO.convertDBObjectToDBList();
     	redirect("/home");
     }
+    public static void updateTalkerIds(){
+    	TalkerDAO.updateIds();
+    	redirect("/home");
+    }
 }
