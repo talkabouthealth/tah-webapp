@@ -58,7 +58,10 @@ public class DBUtil {
 	
 	public static DB getDB() {
 		//boolean auth = db.authenticate(myUserName, myPassword);
-		return mongo.getDB("tahdb");
+		DB db1 = mongo.getDB("tahdb");
+		Logger.error("DB options:" + db1.getMongo().getMongoOptions());
+		return db1;
+		//return mongo.getDB("tahdb");
 	}
 	
 	public static String getHost() {
