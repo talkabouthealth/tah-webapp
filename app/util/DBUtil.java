@@ -66,7 +66,7 @@ public class DBUtil {
 		db1.getMongo().getMongoOptions().autoConnectRetry = true;
 		db1.getMongo().getMongoOptions().maxAutoConnectRetryTime = 5;
 		db1.getMongo().getMongoOptions().connectTimeout = 20;
-		db1.getMongo().getMongoOptions().socketTimeout = 10;
+		//db1.getMongo().getMongoOptions().socketTimeout = 10;
 		db1.getMongo().getMongoOptions().threadsAllowedToBlockForConnectionMultiplier = 1000;
 		
 		Logger.error("DB options:" + db1.getMongo().getMongoOptions());
