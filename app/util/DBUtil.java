@@ -58,7 +58,20 @@ public class DBUtil {
 	
 	public static DB getDB() {
 		//boolean auth = db.authenticate(myUserName, myPassword);
-		return mongo.getDB("tahdb");
+		DB db1 = mongo.getDB("tahdb");
+		
+		//System.out.println(db1.getName());
+		//System.out.println(db1.getStats());
+		db1.getMongo().getMongoOptions().connectionsPerHost = 100;
+		db1.getMongo().getMongoOptions().autoConnectRetry = true;
+		db1.getMongo().getMongoOptions().maxAutoConnectRetryTime = 5;
+		db1.getMongo().getMongoOptions().connectTimeout = 20;
+		db1.getMongo().getMongoOptions().socketTimeout = 10;
+		db1.getMongo().getMongoOptions().threadsAllowedToBlockForConnectionMultiplier = 1000;
+		
+		Logger.error("DB options:" + db1.getMongo().getMongoOptions());
+		
+		return db1;
 	}
 	
 	public static String getHost() {
