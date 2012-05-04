@@ -201,7 +201,7 @@ public class ConversationBean implements Comparable<ConversationBean> {
     	setTalker(TalkerLogic.loadTalkerFromCache(convoDBObject, "uid"));
     	setModifiedDate((Date)convoDBObject.get("modified_date"));
     	setQuestionState((String)convoDBObject.get("question_state"));
-    	setFollowers(ConversationDAO.getConversationFollowers(getId()));
+    	
 	}
 	
 	public void parseFromDB(DBObject convoDBObject) {
@@ -215,6 +215,7 @@ public class ConversationBean implements Comparable<ConversationBean> {
     	parseChatMessages((Collection<DBObject>)convoDBObject.get("messages"));
     	setTalker(TalkerLogic.loadTalkerFromCache(convoDBObject, "uid"));
     	setCategory((String)convoDBObject.get("category"));
+    	setFollowers(ConversationDAO.getConversationFollowers(getId()));
 	}
 	
 	/**
