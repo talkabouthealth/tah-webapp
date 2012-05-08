@@ -901,7 +901,11 @@ public class Profile extends Controller {
 		if(diseaseBean != null){
 			if(operation != null && operation.equalsIgnoreCase("ADD"))
 				talker.setCategory(diseaseBean.getName());
-			else if(operation != null && operation.equalsIgnoreCase("REMOVE")){
+			 Set<String> hidHelps=talker.getHiddenHelps();
+			 if(!hidHelps.contains("updateCommunity"))
+		    	 hidHelps.add("updateCommunity");
+		      talker.setHiddenHelps(hidHelps);
+			}else if(operation != null && operation.equalsIgnoreCase("REMOVE")){
 				talker.setCategory(null);
 				if(talker.getOtherCategories() != null && talker.getOtherCategories().length > 0){
 					String category = talker.getOtherCategories()[0];
@@ -910,6 +914,10 @@ public class Profile extends Controller {
 						otherCategories[index-1] = talker.getOtherCategories()[index];
 					talker.setOtherCategories(otherCategories);
 					talker.setCategory(category);
+				    Set<String> hidHelps=talker.getHiddenHelps();
+				    if(!hidHelps.contains("updateCommunity"))
+				    	hidHelps.add("updateCommunity");
+				    talker.setHiddenHelps(hidHelps);
 				}
 			}
 			TalkerDAO.updateTalker(talker);
