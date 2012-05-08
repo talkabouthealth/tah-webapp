@@ -312,18 +312,22 @@ public class TalkerDAO {
 		DBObject usernameQuery = BasicDBObjectBuilder.start()
 			.add("uname", usernameOrEmailRegex)
 			.add("pass", passwordRegex)
+			.add("suspended",new BasicDBObject("$ne",true))
 			.get();
 		DBObject emailQuery = BasicDBObjectBuilder.start()
 			.add("email", usernameOrEmailRegex)
 			.add("pass", passwordRegex)
+			.add("suspended",new BasicDBObject("$ne",true))
 			.get();
 		DBObject notPrimaryEmailQuery = BasicDBObjectBuilder.start()
 			.add("emails.value", usernameOrEmailRegex)
 			.add("pass", passwordRegex)
+			.add("suspended",new BasicDBObject("$ne",true))
 			.get();
 		DBObject deactivatedUsernameQuery = BasicDBObjectBuilder.start()
 			.add("orig_uname", usernameOrEmailRegex)
 			.add("pass", passwordRegex)
+			.add("suspended",new BasicDBObject("$ne",true))
 			.get();
 		
 		DBObject query = new BasicDBObject("$or", 
