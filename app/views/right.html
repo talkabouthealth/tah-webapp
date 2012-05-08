@@ -11,9 +11,6 @@
 			}
 		});
 
-		function closeCatDiv(){
-			document.getElementById('updateHealthCommunityHelp').style.display = 'none';
-		}
 	</script>
 	
 	<div class="topipsts"> <br />
@@ -141,8 +138,8 @@
 	   
 	   #{if talker.serviceAccounts != null && talker.serviceAccounts.size() > 0}
 		   #{ifnot talker?.hiddenHelps.contains("updateCommunity") }
-			   <div id="updateHealthCommunityHelp" class="topipsts">
-			   <div style="float: right; font-size: 16px; font-weight: bold;" id="closeDiv"><a href="javascript:closeCatDiv();" title="Close">x</a></div>
+			   <div id="updateCommunityHelp" class="topipsts">
+			   <div style="float: right; font-size: 16px; font-weight: bold;" id="closeDiv"><a href="#" onclick="hideHelpInfo('updateCommunity',true);" title="Close">x</a></div>
 		           <div class="mtrighttxt1">Select health community </div>
 		           <div class="topixtext">
 		             <div class="tellustext">
