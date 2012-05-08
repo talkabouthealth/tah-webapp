@@ -899,7 +899,7 @@ public class Profile extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		DiseaseBean diseaseBean = DiseaseDAO.getByName(community);
 		if(diseaseBean != null){
-			if(operation != null && operation.equalsIgnoreCase("ADD"))
+			if(operation != null && operation.equalsIgnoreCase("ADD")){
 				talker.setCategory(diseaseBean.getName());
 			 Set<String> hidHelps=talker.getHiddenHelps();
 			 if(!hidHelps.contains("updateCommunity"))
