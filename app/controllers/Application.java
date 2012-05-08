@@ -488,6 +488,7 @@ public class Application extends Controller {
      */
      public static void subscribeReward(@Email String email) {
     	validation.required(email).message("Email is required");
+    	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	if (validation.hasErrors()) {
     		params.flash();
             Error error = validation.errors().get(0);
@@ -515,7 +516,7 @@ public class Application extends Controller {
         		
         		newsletterBean.setEmail(email);
         		newsletterBean.setNewsLetterType(types);
-    	    	NewsLetterDAO.saveOrUpdateNewsletter(newsletterBean);
+    	    	NewsLetterDAO.saveOrUpdateNewsletter(newsletterBean,talker);
         		
         	}
         	Map<String, String> vars = new HashMap<String, String>();
@@ -530,7 +531,7 @@ public class Application extends Controller {
 	    	NewsLetterBean newsletterBean=new NewsLetterBean();
 	    	newsletterBean.setEmail(email);
 	    	newsletterBean.setNewsLetterType(arrary);
-	    	NewsLetterDAO.saveOrUpdateNewsletter(newsletterBean);
+	    	NewsLetterDAO.saveOrUpdateNewsletter(newsletterBean,talker);
 	    	
 	    	Map<String, String> vars = new HashMap<String, String>();
         	String parsedUsername = email.substring(0, email.indexOf("@"));

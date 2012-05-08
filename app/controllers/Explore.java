@@ -621,7 +621,9 @@ public class Explore extends Controller {
 	}
 	
 	public static void subscribeNewsLetter(NewsLetterBean newsletter){
-		NewsLetterDAO.saveOrUpdateNewsletter(newsletter);
+		
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		NewsLetterDAO.saveOrUpdateNewsletter(newsletter,talker);
 		//redirect("/explore/newsletter");
 		renderText("Ok");
 	}
