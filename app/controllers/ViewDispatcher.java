@@ -161,7 +161,7 @@ public class ViewDispatcher extends Controller {
 		TalkerDiseaseBean talkerDisease = null;
 		if(talkerDiseaseList != null){
 			for(TalkerDiseaseBean diseaseBean : talkerDiseaseList){
-				if(diseaseBean != null && diseaseBean.getDiseaseName().equalsIgnoreCase(talker.getCategory())){
+				if(diseaseBean != null && diseaseBean.getDiseaseName() != null && diseaseBean.getDiseaseName().equalsIgnoreCase(talker.getCategory())){
 					talkerDisease = diseaseBean;
 				}
 			}
