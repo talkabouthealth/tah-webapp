@@ -351,7 +351,8 @@ public class ApplicationDAO {
 		}
 		
 		DBCollection namesColl = getCollection(NAMES_COLLECTION);
-		DBObject query = new BasicDBObject("name", userName);
+		//DBObject query = new BasicDBObject("name", userName);
+		DBObject query = new BasicDBObject("name", Pattern.compile("^"+userName+"$",Pattern.CASE_INSENSITIVE));
 		//query.put("name", uNameL);
 		//query.put("name", uNameU);
 		return namesColl.findOne(query) != null;
