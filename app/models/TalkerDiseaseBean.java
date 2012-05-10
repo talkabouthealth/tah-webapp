@@ -88,7 +88,7 @@ public class TalkerDiseaseBean {
 	public String getHealthBio() { return healthBio; }
 	public void setHealthBio(String healthBio) { this.healthBio = healthBio; }
 	
-	public String getDiseaseName() { return diseaseName; }
+	public String getDiseaseName() { return diseaseName==null?"":diseaseName; }
 	public void setDiseaseName(String diseaseName) { this.diseaseName = diseaseName; }
 
 	public boolean isDefault() { return isDefault; }
