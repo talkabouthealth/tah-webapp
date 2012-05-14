@@ -16,7 +16,7 @@
 #{if type=="expertConvo"}
 	 <div id="expertConvoList">
 				#{list items: expertConvo, as: 'convo' }
-					#{convo/convoListItem convo: convo, talker: talker /}
+					#{convo/convoListItem convo: convo, talker: talker , type : type /}
 				#{/list}
 	</div>
 	 #{if expertConvo.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
