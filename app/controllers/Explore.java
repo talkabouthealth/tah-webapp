@@ -359,8 +359,7 @@ public class Explore extends Controller {
 			render("Explore/feedList.html",popularConvo, type);
 		}
 		if(type.equals("expertConvo")) {
-			System.out.println("expert Convo.........:");
-			List<ConversationBean> expertConvo = ConversationDAO.loadPopularAnswers("expert",null);
+			List<ConversationBean> expertConvo = ConversationDAO.loadExpertsAnswer(null);
 			render("Explore/feedList.html",expertConvo, type);
 		} if(type.equals("openConvo")) {
 			TalkerBean talker = CommonUtil.loadCachedTalker(session);
@@ -392,8 +391,10 @@ public class Explore extends Controller {
         	_feedItems = FeedsLogic.getAllCancerFeed(afterActionId, loggedIn, _talker);
     		render("tags/feed/feedList.html", _feedItems, _talker);
 	    }else if ("expertConvo".equalsIgnoreCase(feedType)){
-	   	     popularConvos = ConversationDAO.loadPopularAnswers("expert",afterActionId);
-		     render("tags/convo/convoList.html", popularConvos);
+	   	     List<ConversationBean> expertConvos = null;
+	    	expertConvos = ConversationDAO.loadExpertsAnswer(afterActionId);
+	    	String type="expertConvo";
+		     render("tags/convo/convoList.html", expertConvos ,type);
 	    }else if("USR".equalsIgnoreCase(feedType) || "EXP".equalsIgnoreCase(feedType)){
     		_similarMembers = TalkerLogic.getRecommendedTalkers(_talker,feedType,afterActionId);
     		render("tags/profile/similarMemberList.html", _similarMembers);

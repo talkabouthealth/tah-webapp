@@ -16,6 +16,7 @@ import org.bson.types.ObjectId;
 
 import play.Logger;
 
+import util.CommonUtil;
 import util.DBUtil;
 
 import com.mongodb.BasicDBObject;
@@ -315,7 +316,8 @@ public class ActionDAO {
 				activitiesList.add(action);
 			} while (dbCursor.hasNext());
 		}
-		Logger.info("Load preload actions : "+dbCursor.size());
+		CommonUtil.log("ActionDAO.loadPreloadActions", ""+dbCursor.size());
+		//Logger.info("Load preload actions : "+dbCursor.size());
 		return activitiesList;
 	}
 	

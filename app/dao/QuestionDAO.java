@@ -20,6 +20,7 @@ import util.DBUtil;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.tah.im.model.Notification;
@@ -51,7 +52,14 @@ public class QuestionDAO {
 	public static List<NotificationBean> loadAllQuestions() {
 		DBCollection notificationsColl = getCollection(QUESTION_COLLECTION);
 		DBObject query = BasicDBObjectBuilder.start().add("flag", "false").get();
-		List<DBObject> topicsDBList = notificationsColl.find(query).toArray();
+		
+		
+		List<DBObject> topicsDBList = new ArrayList<DBObject>();// notificationsColl.find(query).toArray();
+		DBCursor questionCur=notificationsColl.find(query);
+		while(questionCur.hasNext()){
+			topicsDBList.add(questionCur.next());
+		}
+		
 		List<NotificationBean> list = new ArrayList<NotificationBean>();
 		for (DBObject questionDBObject : topicsDBList) {
 			NotificationBean notificationBean = new NotificationBean();

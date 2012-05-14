@@ -8,7 +8,7 @@
           </a>				                      
           <div id="${feedType}List" class="conversationsList">
             #{list items: feedItems, as: 'activity'}
-				#{feed/feedActivity activity: activity, talker: talker, parentList: '${feedType}List' /}
+				#{feed/feedActivity activity: activity, talker: talker, parentList: 'allFeedContent' /}
 			#{/list}
 			#{else}
 				<br /><span class="blacktext16">Follow topics, conversations, and

@@ -23,11 +23,13 @@ import models.NewsLetterBean;
 import models.TalkerBean;
 import play.Logger;
 import play.templates.JavaExtensions;
+import util.CommonUtil;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.QueryOperators;
@@ -84,7 +86,19 @@ public class ApplicationDAO {
 		}
 		
 		DBObject query = BasicDBObjectBuilder.start().add("log_time", new BasicDBObject("$gt", afterTime)).get();
-		List<DBObject> loginsDBList = loginsColl.find(query).sort(new BasicDBObject("log_time", -1)).toArray();
+	
+		
+		
+		List<DBObject> loginsDBList = new ArrayList<DBObject>();//loginsColl.find(query).sort(new BasicDBObject("log_time", -1)).toArray();
+		DBCursor loginCur=loginsColl.find(query).sort(new BasicDBObject("log_time", -1));
+		while(loginCur.hasNext()){
+			loginsDBList.add(loginCur.next());
+		}
+		/*DBCursor loginCur=loginsColl.find(query).sort(new BasicDBObject("log_time", -1));
+		for(int i=0;i<loginCur.size();i++){
+			loginsDBList.add(loginCur.next());
+		}*/
+		
 		
 		List<TalkerBean> activeTalkers = new ArrayList<TalkerBean>();
 		for (DBObject loginDBObject : loginsDBList) {
@@ -115,7 +129,13 @@ public class ApplicationDAO {
 
 		DBObject fields = TalkerDAO.getBasicTalkerFields();
 		
-		List<DBObject> talkersDBList = loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).toArray();
+		
+		List<DBObject> talkersDBList =new ArrayList<DBObject>();// loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).toArray();
+		DBCursor talkerCur=loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1));
+		while(talkerCur.hasNext()){
+			talkersDBList.add(talkerCur.next());
+		}
+		
 		
 		List<TalkerBean> newTalkers = new ArrayList<TalkerBean>();
 		for (DBObject talkerDBObject : talkersDBList) {
@@ -150,7 +170,14 @@ public class ApplicationDAO {
 		}
 
 		DBObject query = BasicDBObjectBuilder.start().add("log_time", new BasicDBObject("$gt", afterTime)).get();
-		List<DBObject> loginsDBList = loginsColl.find(query).sort(new BasicDBObject("log_time", -1)).toArray();
+		
+		
+		
+		List<DBObject> loginsDBList = new ArrayList<DBObject>();//loginsColl.find(query).sort(new BasicDBObject("log_time", -1)).toArray();
+		DBCursor loginCur=loginsColl.find(query).sort(new BasicDBObject("log_time", -1));
+		while(loginCur.hasNext()){
+			loginsDBList.add(loginCur.next());
+		}
 		List<String> list = TalkerBean.PROFESSIONAL_CONNECTIONS_LIST;
 
 		for (DBObject loginDBObject : loginsDBList) {
@@ -243,8 +270,11 @@ public class ApplicationDAO {
 		}
 		
 		DBObject fields = TalkerDAO.getBasicTalkerFields();
-		List<DBObject> talkersDBList = loginsColl.find(query, fields).limit(20).sort(new BasicDBObject("timestamp", -1)).toArray();
-		
+		List<DBObject> talkersDBList = new ArrayList<DBObject>();// loginsColl.find(query, fields).limit(20).sort(new BasicDBObject("timestamp", -1)).toArray();
+		DBCursor talkerCur=loginsColl.find(query, fields).limit(20).sort(new BasicDBObject("timestamp", -1));
+		while(talkerCur.hasNext()){
+			talkersDBList.add(talkerCur.next());
+		}
 		return talkersDBList;
 	}
 	
@@ -293,7 +323,8 @@ public class ApplicationDAO {
 					afterActionId=null;
 				count++;
 			}
-			Logger.info("getTalkersInOrder - "+ ((memberFlag) ? "EXP" : "USR") +" : "+count);
+			CommonUtil.log("ApplicationDAO.getTalkersInOrder", ((memberFlag) ? "EXP" : "USR") +" : "+count);
+			//Logger.info("getTalkersInOrder - "+ ((memberFlag) ? "EXP" : "USR") +" : "+count);
 		}
 		return talkerList;
 	}
@@ -317,7 +348,13 @@ public class ApplicationDAO {
 				if (!(talkerBean.getFollowingList().contains(talker)) && !talkerBean.equals(talker)){
 					DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talker.getId());
 					query = BasicDBObjectBuilder.start().add("uid", talkerRef).get();
-					List<DBObject> loginTime= loginHistoryCollection.find(query).toArray();
+					
+					List<DBObject> loginTime= new ArrayList<DBObject>();//loginHistoryCollection.find(query).toArray();
+					DBCursor loginCur=loginHistoryCollection.find(query);
+					while(loginCur.hasNext()){
+						loginTime.add(loginCur.next());
+					}
+					
 					if(loginTime.size()>=2){
 						DBObject logTimeObj = loginTime.get(0);
 						talker.setRegDate((Date)logTimeObj.get("log_time"));

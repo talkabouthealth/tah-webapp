@@ -1,4 +1,12 @@
-<div class="joinbox" id="${_convo.id}">
+
+#{if _type !=null && _type=="expertConvo"}
+	<div class="joinbox" id="${_convo.comments.get(0).id}">
+#{/if}
+#{else}
+	<div class="joinbox" id="${_convo.id}">
+#{/else}
+
+	
 	<div class="joinpic">
 		#{if _convo.comments != null && _convo.comments.size() > 0}
 			#{talker/talkerImageLink size: 48, userName: _convo.comments.get(0).fromTalker.name /}

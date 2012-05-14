@@ -52,7 +52,8 @@ public class AnswerNotificationDAO {
 			if(name.size()>0)
 				convoCount++;
 		}
-		Logger.info("getAllConvoCount : "+convo.size());
+		CommonUtil.log("AnswerNotificationDAO.getAllConvoCount()", ""+convo.size());
+		//Logger.info("getAllConvoCount : "+convo.size());
 		return convoCount; 
 		
 	}
@@ -75,7 +76,8 @@ public class AnswerNotificationDAO {
 			if(commentList.size() > 0)
 				result.add(conversationBean);
 		}
-		Logger.info("getConvos : "+cur.size());
+		CommonUtil.log("AnswerNotificationDAO.getConvos", ""+cur.size());
+		//Logger.info("getConvos : "+cur.size());
 		return result;
 	}
 	
@@ -102,7 +104,8 @@ public class AnswerNotificationDAO {
 			comment.setQuestion(convo.getTopic());
 			result.add(comment);
 		}
-		Logger.info("getConvoComments : "+cur.size());
+		CommonUtil.log("AnswerNOtificationDAO.getConvoComments", ""+cur.size());
+		//Logger.info("getConvoComments : "+cur.size());
 		return result;
 	}
 	

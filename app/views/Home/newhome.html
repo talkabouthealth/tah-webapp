@@ -345,7 +345,7 @@ function updateFeed(type,talkerName) {
 							  	<!-- <a href="#" id="convoFeed" class="tabLink">Your Conversation Feed</a>  -->
 							      <a href="#" id="convoFeed" class="tabLink">Your conversations</a>
 							  </div>
-							  #{if talker.category != null && !talker.category.equals("")}
+							  *{#{if talker.category != null && !talker.category.equals("")}
 								  <div class="newTab" style="width: auto;">
 								  	<a href="#" id="allFeed" class="tabLink">All Cancers</a>
 								  </div>		
@@ -358,7 +358,7 @@ function updateFeed(type,talkerName) {
 							            #{/list}
 						            #{/if}
 							  #{/if}
-							  #{else}
+							  #{else}*
 							  		<div class="newActiveTab" style="width: auto;">
 								  		<a href="#" id="allFeed" class="tabLink">All Cancers</a>
 								  	</div>		
@@ -370,7 +370,7 @@ function updateFeed(type,talkerName) {
 										</div>
 							            #{/list}
 						            #{/if}
-							  #{/else}
+							  *{#{/else}*
 							  <div class="newTab" style="width: auto;">
 							  	<a href="#" id="mentions" class="tabLink">@mentions</a>
 							  </div>
@@ -382,7 +382,7 @@ function updateFeed(type,talkerName) {
 									
 								</div>
 								
-								#{if talker.category != null && !talker.category.equals("")}
+								*{#{if talker.category != null && !talker.category.equals("")}
 									<div id = "allCancerFeed">
 									
 									</div>
@@ -418,7 +418,8 @@ function updateFeed(type,talkerName) {
 										</div>
 									</div>
 								#{/if}
-								#{else}
+								#{else}*
+								
 									<div id = "allCancerFeed">
 										<div id="allFeedContent" class="tabContent" >	
 											<div class="topic">
@@ -429,7 +430,7 @@ function updateFeed(type,talkerName) {
 						                        </a>				                      
 						                        <div id="allFeedList" class="conversationsList">
 							                    	#{list items: allFeed, as: 'activity'}
-														#{feed/feedActivity activity: activity, talker: talker, parentList: 'allFeedList' /}
+														#{feed/feedActivity activity: activity, talker: talker, parentList: 'allFeedContent' /}
 													#{/list}
 													#{else}
 														<br /><span class="blacktext16">Follow topics, conversations, and
@@ -452,7 +453,8 @@ function updateFeed(type,talkerName) {
 									<div id="cancerFeed" >
 									
 									</div>
-								#{/else}
+									
+								*{#{/else}*
 								
 								
 								<div id = "mentionsFeed">

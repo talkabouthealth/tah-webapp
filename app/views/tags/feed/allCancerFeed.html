@@ -10,7 +10,7 @@
 	                    	<div id="${cancerType}CommunityFeedList">
 		                       	#{list items: allDiseaseList.get(cancerType), as: 'cancerCommunityFeed' }
 			                    	#{list items: cancerCommunityFeed, as: 'activity'}
-										#{feed/feedActivity activity: activity, talker: talker, parentList: 'cancerCommunityFeedContent' /}
+										#{feed/feedActivity activity: activity, talker: talker, parentList: cancerType+'CommunityFeedContent' /}
 									#{/list}
 								#{/list}
 							</div>

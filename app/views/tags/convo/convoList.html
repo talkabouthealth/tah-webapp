@@ -1,3 +1,6 @@
 #{list items: popularConvos, as: 'convo'}
 	#{convo/convoListItem convo: convo, talker: talker /}
 #{/list}
+#{list items: expertConvos, as: 'convo'}
+	#{convo/convoListItem convo: convo, talker: talker ,type : type /}
+#{/list}

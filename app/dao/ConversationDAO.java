@@ -224,6 +224,14 @@ public class ConversationDAO {
 			.add("related_convos", 0)
 			.add("followup_convos", 0)
 			.add("messages", 0)
+			
+			.add("summary", 0)
+			.add("sum_authors", 0)
+			.add("related_convos", 0)
+			.add("followup_convos", 0)
+			//.add("uid", 0)
+			.add("category", 0)
+		
 			.get();
 		return fields;
 	}
@@ -305,12 +313,21 @@ public class ConversationDAO {
 		List<DBObject> convosDBList = null;
 		if (basicInfo) {
 			DBObject fields = getBasicConversationFields();
-			convosDBList = 
-				convosColl.find(null, fields).sort(new BasicDBObject("cr_date", -1)).toArray();
+			
+			convosDBList=new ArrayList<DBObject>();//convosDBList = convosColl.find(null, fields).sort(new BasicDBObject("cr_date", -1)).toArray();
+			DBCursor convoCur=convosColl.find(null, fields).sort(new BasicDBObject("cr_date", -1));
+			while(convoCur.hasNext()){
+				convosDBList.add(convoCur.next());
+			}
+			
 		}
 		else {
-			convosDBList = 
-				convosColl.find().sort(new BasicDBObject("cr_date", -1)).toArray();
+			convosDBList=new ArrayList<DBObject>();//convosDBList = convosColl.find().sort(new BasicDBObject("cr_date", -1)).toArray();
+			DBCursor convoCur=convosColl.find().sort(new BasicDBObject("cr_date", -1));
+			while(convoCur.hasNext()){
+				convosDBList.add(convoCur.next());
+			}
+			
 		}
 		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
@@ -347,13 +364,22 @@ public class ConversationDAO {
 		List<DBObject> convosDBList = null;
 		if (basicInfo) {
 			DBObject fields = getBasicConversationFields();
-			convosDBList = 
-				convosColl.find(query, fields).sort(new BasicDBObject("cr_date", -1)).toArray();
+			convosDBList=new ArrayList<DBObject>();//	convosDBList = convosColl.find(query, fields).sort(new BasicDBObject("cr_date", -1)).toArray();
+			DBCursor convoCur=convosColl.find(query, fields).sort(new BasicDBObject("cr_date", -1));
+			while(convoCur.hasNext()){
+				convosDBList.add(convoCur.next());
+			}
+		
 		}
 		else {
-			convosDBList = 
-				convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
+			convosDBList=new ArrayList<DBObject>();//convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
+			DBCursor convoCur=convosColl.find(query).sort(new BasicDBObject("cr_date", -1));
+			while(convoCur.hasNext()){
+				convosDBList.add(convoCur.next());
+			}
+				
 		}
+		
 		ConversationBean convo = null;
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
@@ -415,9 +441,12 @@ public class ConversationDAO {
 			.add("deleted", new BasicDBObject("$ne", true))
 			.get();*/
 		
-		
-		List<DBObject> convosDBList = 
-			convosColl.find(query, fields).sort(new BasicDBObject("views", -1)).limit(20).toArray();
+		List<DBObject> convosDBList=new ArrayList<DBObject>();//convosColl.find(query, fields).sort(new BasicDBObject("views", -1)).limit(20).toArray();
+		DBCursor convoCur=convosColl.find(query, fields).sort(new BasicDBObject("views", -1)).limit(20);
+		while(convoCur.hasNext()){
+			convosDBList.add(convoCur.next());
+		}
+			
 		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
@@ -456,8 +485,13 @@ public class ConversationDAO {
 				)
 			.add("deleted", new BasicDBObject("$ne", true))
 			.get();
-		List<DBObject> convosDBList = 
-			convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
+		
+		List<DBObject> convosDBList=new ArrayList<DBObject>();//convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
+		DBCursor convoCur=convosColl.find(query).sort(new BasicDBObject("cr_date", -1));
+		while(convoCur.hasNext()){
+			convosDBList.add(convoCur.next());
+		}
+			
 		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
@@ -502,8 +536,13 @@ public class ConversationDAO {
 			.get();
 		}
 		
+		List<DBObject> convosDBList=new ArrayList<DBObject>();//convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
+		DBCursor convoCur=convosColl.find(query).sort(new BasicDBObject("cr_date", -1));
+		while(convoCur.hasNext()){
+			convosDBList.add(convoCur.next());
+		}
 		
-		List<DBObject> convosDBList = convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
+		 
 		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
@@ -570,7 +609,8 @@ public class ConversationDAO {
 			convo.parseBasicFromDB(dbCursor.next());
 	    	convosList.add(convo);
 		}
-		Logger.info("getStartedConvos - "+ dbCursor.size());
+		CommonUtil.log("ConversationDAO.getStartedConvos", ""+dbCursor.size());
+		//Logger.info("getStartedConvos - "+ dbCursor.size());
 		return convosList;
 	}
 	
@@ -582,8 +622,17 @@ public class ConversationDAO {
     	DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
     	
     	DBObject query = new BasicDBObject("following_convos", convoId);
-    	List<DBObject> followersDBList = talkersColl.find(query).toArray();
-    	
+    	List<DBObject> followersDBList = null;
+    	try {
+    		followersDBList=new ArrayList<DBObject>();//followersDBList = talkersColl.find(query).toArray();
+			DBCursor convoCur=talkersColl.find(query);
+			while(convoCur.hasNext()){
+				followersDBList.add(convoCur.next());
+			}
+    		
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
     	List<TalkerBean> followers = new ArrayList<TalkerBean>();
     	for (DBObject followerDBObject : followersDBList) {
     		TalkerBean followerTalker = new TalkerBean();
@@ -615,7 +664,12 @@ public class ConversationDAO {
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("deleted", new BasicDBObject("$ne", true))
 			.get();
-		List<DBObject> topicsDBList = convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
+		List<DBObject> topicsDBList=new ArrayList<DBObject>();//List<DBObject> topicsDBList = convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
+		DBCursor convoCur=convosColl.find(query).sort(new BasicDBObject("cr_date", -1));
+		while(convoCur.hasNext()){
+			topicsDBList.add(convoCur.next());
+		}
+		
 		
 		List<Map<String, String>> topicsInfoList = new ArrayList<Map<String,String>>();
 		for (DBObject topicDBObject : topicsDBList) {
@@ -673,8 +727,12 @@ public class ConversationDAO {
 			.add("uid", talkerRef)
 			.add("type", type.toString())
 			.get();
-		List<DBObject> activitiesDBList = 
-			activitiesColl.find(query, new BasicDBObject("convoId", 1)).toArray();
+		List<DBObject> activitiesDBList=new ArrayList<DBObject>();//activitiesColl.find(query, new BasicDBObject("convoId", 1)).toArray();
+		DBCursor convoCur=activitiesColl.find(query, new BasicDBObject("convoId", 1));
+		while(convoCur.hasNext()){
+			activitiesDBList.add(convoCur.next());
+		}
+			
 		
 		//prepare list of matching conversations
 		List<ObjectId> convoIds = new ArrayList<ObjectId>();
@@ -721,7 +779,8 @@ public class ConversationDAO {
 			convo.parseBasicFromDB(dbCursor.next());
 			convosSet.add(convo);
 		}
-		Logger.info("getConvosByIds - "+ dbCursor.size());
+		CommonUtil.log("ConversationDAO.getConvosByIds", ""+dbCursor.size());
+		//Logger.info("getConvosByIds - "+ dbCursor.size());
 		return convosSet;
 	}
 	
@@ -761,7 +820,12 @@ public class ConversationDAO {
 		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
 		DBObject fields = new BasicDBObject("_id", "1");
 		DBObject query = new BasicDBObject("topics", new BasicDBObject("$in", allTopics));
-		List<DBObject> convosDBList = convosColl.find(query, fields).toArray();
+		
+		List<DBObject> convosDBList=new ArrayList<DBObject>();//convosColl.find(query, fields).toArray();
+		DBCursor convoCur=convosColl.find(query, fields);
+		while(convoCur.hasNext()){
+			convosDBList.add(convoCur.next());
+		}
 		
 		allTopics.clear();
 		
@@ -783,7 +847,12 @@ public class ConversationDAO {
 			.add("topics", topicRef)
 			.add("deleted", new BasicDBObject("$ne", true))
 			.get();
-		List<DBObject> convosDBList = convosColl.find(query, new BasicDBObject("_id", 1)).sort(new BasicDBObject("cr_date", -1)).toArray();
+		List<DBObject> convosDBList=new ArrayList<DBObject>();//convosColl.find(query, new BasicDBObject("_id", 1)).sort(new BasicDBObject("cr_date", -1)).toArray();
+		DBCursor convoCur=convosColl.find(query, new BasicDBObject("_id", 1)).sort(new BasicDBObject("cr_date", -1));
+		while(convoCur.hasNext()){
+			convosDBList.add(convoCur.next());
+		}
+		
 		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
@@ -896,10 +965,11 @@ public class ConversationDAO {
 	
 		DBObject query = queryBuilder.get();
 	
-		
-		List<DBObject> convosDBList = 
-			convosColl.find(query, fields).sort(new BasicDBObject("cr_date", -1)).limit(20).toArray();
-		
+		List<DBObject> convosDBList=new ArrayList<DBObject>();//convosColl.find(query, fields).sort(new BasicDBObject("cr_date", -1)).limit(20).toArray();
+		DBCursor convoCur=convosColl.find(query, fields).sort(new BasicDBObject("cr_date", -1)).limit(20);
+		while(convoCur.hasNext()){
+			convosDBList.add(convoCur.next());
+		}
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
 			ConversationBean convo = new ConversationBean();
@@ -934,9 +1004,98 @@ public class ConversationDAO {
 		return null;
 	}
 	
+	public static List <ConversationBean> loadExpertsAnswer(String afterActionId){
+		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
+		while(true){
+				List<DBObject> commentDBlist=getExpertsAnswerFromDB(afterActionId);
+				convosList.addAll(getConvoForExpAnswer(commentDBlist,convosList.size()));
+				if(convosList.size()>=20 || commentDBlist.size()<40)
+					break;
+				afterActionId=commentDBlist.get(commentDBlist.size()-1).get("_id").toString();
+		}
+		return convosList;
+	}
 	
-	/**
-	 * Load conversations as per popularity and which have answers
+	private static List<ConversationBean> getConvoForExpAnswer(List<DBObject> commentDBlist,int convosize){
+		DBCollection talkerColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
+		DBCollection ConvoColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
+		
+		List<ConversationBean> convolist=new ArrayList<ConversationBean>();
+		for(DBObject obj:commentDBlist){
+			//TalkerBean talker=TalkerLogic.loadTalkerFromCache(obj, "from");
+			DBObject query=new BasicDBObject("_id",new ObjectId(((DBRef)obj.get("from")).getId().toString()));
+			String connection=talkerColl.findOne(query, new BasicDBObject("connection",1)).get("connection").toString();
+			if(connection !=null && TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(connection)){
+				DBObject fields = getBasicConversationFields();
+				DBObject convoQuery=BasicDBObjectBuilder.start()
+				.add("_id", new ObjectId(((DBRef)obj.get("convo")).getId().toString()))
+				.add("deleted", new BasicDBObject("$ne", true))
+				.get();
+				
+				DBObject convoObj=ConvoColl.findOne(convoQuery,fields);
+				if(convoObj!=null){
+						ConversationBean convoBean=new ConversationBean();
+						convoBean.parseBasicFromDB(convoObj);
+						CommentBean answer=new CommentBean();
+								answer.parseFromDB(obj);
+								List <CommentBean> answerList=new ArrayList<CommentBean>();
+								answerList.add(answer);
+								for(int i=1;i<CommentsDAO.getConvoAnswersCount(convoBean.getId());i++){
+									answerList.add(null);
+								}
+								
+						convoBean.setComments(answerList);
+						//convoBean.setComments(loadAllAnswers(convoBean.getId()));
+						convolist.add(convoBean);
+						convosize++;
+						if(convosize>=20)
+								break;
+				}
+			}
+		}
+		return convolist;
+	}
+	
+	private static List<DBObject> getExpertsAnswerFromDB(String afterActionId) {
+		DBCollection commentsColl = getCollection(CommentsDAO.CONVO_COMMENTS_COLLECTION);
+		commentsColl.ensureIndex(new BasicDBObject("time", -1));
+		
+		BasicDBObjectBuilder queryBuilder =  BasicDBObjectBuilder.start()
+		.add("deleted", new BasicDBObject("$ne", true))
+		.add("answer",true);
+	
+		if (afterActionId != null && !afterActionId.equals("")) {
+				DBObject fields=BasicDBObjectBuilder.start()		
+					.add("time" , 1).get();
+				Date firstActionTime = new Date();
+				DBObject comment=commentsColl.findOne(new BasicDBObject("_id", new ObjectId(afterActionId)),fields);
+				
+				firstActionTime=(Date)comment.get("time");
+				
+				if(firstActionTime!=null){
+					queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
+				}
+		}
+		DBObject fields=BasicDBObjectBuilder.start()		
+		.add("_id" , 1)
+		.add("convo" , 1)
+		.add("from" , 1 )
+		.add("time",1)
+		.add("text",1)
+		.get();
+		
+		DBObject query = queryBuilder.get();
+		DBCursor commentsCur=commentsColl.find(query,fields).sort(new BasicDBObject("time", -1)).limit(40);
+		List <DBObject> commentObjList=new ArrayList<DBObject>();
+		while(commentsCur.hasNext()){
+			commentObjList.add(commentsCur.next());
+		}
+		return commentObjList;
+	}
+	
+	
+
+	/** Load conversations as per popularity and which have answers
 	 * @param type
 	 * @param convoId
 	 * @return List<ConversationBean>
@@ -955,34 +1114,50 @@ public class ConversationDAO {
 			afterActionId=convoDblist.get(convoDblist.size()-1).get("_id").toString();
 			count++;
 		}
-		Logger.info("loadPopularAnswers - "+ count);
+		CommonUtil.log("ConversationDAO.loadPopularAnswer", ""+count);
+		//Logger.info("loadPopularAnswers - "+ count);
 		Collections.sort(convosList);
 		return convosList;
 	}
 	
 	
 	public static List<DBObject> getPopularAnswersFromDb(String type,String convoId){
+		
 		DBCollection convosColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
-		convosColl.ensureIndex(new BasicDBObject("views", -1));
+		
+			convosColl.ensureIndex(new BasicDBObject("views", -1));
+		
+		//load actions for this criterias
 		
 		//added for paging
-		int views = 0;
-		if (convoId != null) {
-			views = ConversationDAO.getViews(convoId);
-		}
+		
 		DBObject fields = getBasicConversationFields();
 		
 		//checking for views 
 		BasicDBObjectBuilder queryBuilder =  BasicDBObjectBuilder.start()
 		.add("deleted", new BasicDBObject("$ne", true));
 	
-		if (views != 0) {
-			queryBuilder.add("views", new BasicDBObject("$lt", views));
+		if (convoId != null) {
+			
+				int views = 0;
+				views = ConversationDAO.getViews(convoId);
+				if (views != 0) {
+					queryBuilder.add("views", new BasicDBObject("$lt", views));
+				}
 		}
+		
 		DBObject query = queryBuilder.get();
 	
-		List<DBObject> convosDBList = 
-			convosColl.find(query, fields).limit(40).sort(new BasicDBObject("views", -1)).toArray();
+		List<DBObject> convosDBList=new ArrayList<DBObject>();//
+		DBCursor convoCur;
+		
+			convoCur=convosColl.find(query, fields).limit(40).sort(new BasicDBObject("views", -1));
+		
+		
+		while(convoCur.hasNext()){
+			convosDBList.add(convoCur.next());
+		}
+			
 		
 		//List<ConversationBean> convosList = getConvoList(convosDBList,type);
 		return convosDBList;
@@ -1068,7 +1243,13 @@ public class ConversationDAO {
 			.add("uid", talkerRef)
 			.add("deleted", new BasicDBObject("$ne", true));
 
-		List<DBObject> convoList  = convosColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("cr_date", -1)).toArray();
+		
+		List<DBObject> convoList=new ArrayList<DBObject>();//  convosColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("cr_date", -1)).toArray();
+		DBCursor convoCur=convosColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("cr_date", -1));
+		while(convoCur.hasNext()){
+			convoList.add(convoCur.next());
+		}
+		
 		String id = "";
 		List<String> convoIdList = new ArrayList<String>();
 		for(DBObject dbObj : convoList){
@@ -1098,7 +1279,13 @@ public class ConversationDAO {
 			.get();
 
 		BasicDBObject basicDBObject = new BasicDBObject("_id", new BasicDBObject("$ne", ""));
-		List<DBObject> convoList  = convosColl.find(basicDBObject,fields).sort(new BasicDBObject("cr_date", -1)).toArray();
+		
+		List<DBObject> convoList=new ArrayList<DBObject>();//convosColl.find(basicDBObject,fields).sort(new BasicDBObject("cr_date", -1))
+		DBCursor convoCur=convosColl.find(basicDBObject,fields).sort(new BasicDBObject("cr_date", -1));
+		while(convoCur.hasNext()){
+			convoList.add(convoCur.next());
+		}
+		 
 		ConversationBean convo = null;
 		List<ConversationBean> conversationList = new ArrayList<ConversationBean>();
 		for(DBObject convoDBObject : convoList){

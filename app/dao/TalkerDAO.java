@@ -33,6 +33,7 @@ import util.EmailUtil.EmailTemplate;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.QueryBuilder;
@@ -216,7 +217,11 @@ public class TalkerDAO {
 		//DBObject anonymousQuery = new BasicDBObject("anon_name", urlName);
 		DBObject query = new BasicDBObject("$or", Arrays.asList(usernameQuery, anonymousQuery));
 		
-		List<DBObject> talkersDBObjectList = talkersColl.find(query).toArray();
+		List<DBObject> talkersDBObjectList = new ArrayList<DBObject>();//talkersColl.find(query).toArray();
+		DBCursor talkerCur=talkersColl.find(query);
+		while(talkerCur.hasNext()){
+			talkersDBObjectList.add(talkerCur.next());
+		}
 		
 		TalkerBean talker = null;
 		if(talkersDBObjectList != null){
@@ -460,9 +465,13 @@ public class TalkerDAO {
 		for(String id: ids) {
 			query.or(new BasicDBObject("_id", new ObjectId(id)));
 		}
-				
-		List<DBObject> talkersDBObjectList = 
-			talkersColl.find(query.get()).toArray();
+		
+		List<DBObject> talkersDBObjectList = new ArrayList<DBObject>();//List<DBObject> talkersDBObjectList = talkersColl.find(query.get()).toArray();
+		DBCursor talkerCur=talkersColl.find(query.get());
+		while(talkerCur.hasNext()){
+			talkersDBObjectList.add(talkerCur.next());
+		}
+		
 		
 		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
 		for (DBObject talkerDBObject : talkersDBObjectList) {
@@ -492,9 +501,18 @@ public class TalkerDAO {
 		List<DBObject> talkersDBObjectList = null;
 		if (basicInfo) {
 			DBObject fields = getBasicTalkerFields();
-			talkersDBObjectList = talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1)).toArray();
+			
+			 talkersDBObjectList = new ArrayList<DBObject>();//talkersDBObjectList = talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1)).toArray();
+			DBCursor talkerCur=talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1));
+			while(talkerCur.hasNext()){
+				talkersDBObjectList.add(talkerCur.next());
+			}
 		} else {
-			talkersDBObjectList = talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
+			talkersDBObjectList = new ArrayList<DBObject>();//talkersDBObjectList = talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
+			DBCursor talkerCur=talkersColl.find().sort(new BasicDBObject("uname", 1));
+			while(talkerCur.hasNext()){
+				talkersDBObjectList.add(talkerCur.next());
+			}
 		}
 
 		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
@@ -517,15 +535,28 @@ public class TalkerDAO {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		talkersColl.ensureIndex(new BasicDBObject("uname", 1));
 		
-		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start().add("category", new BasicDBObject("$in", cat) ).add("suspended", false);
+		//BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start().add("category", new BasicDBObject("$in", cat) ).add("suspended", false);
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start().add("suspended", false);
 		
 		List<DBObject> talkersDBObjectList = null;
 		if (basicInfo) {
 			DBObject fields = getBasicTalkerFields();
-			talkersDBObjectList = talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1)).toArray();
+			
+			talkersDBObjectList=new ArrayList<DBObject>();//talkersDBObjectList = talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1)).toArray();
+			DBCursor talkerCur= talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1));
+			while(talkerCur.hasNext()){
+				talkersDBObjectList.add(talkerCur.next());
+			}
+			
+			
 		}
 		else {
-			talkersDBObjectList = talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
+			talkersDBObjectList=new ArrayList<DBObject>();//talkersDBObjectList = talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
+			DBCursor talkerCur=talkersColl.find().sort(new BasicDBObject("uname", 1));
+			while(talkerCur.hasNext()){
+				talkersDBObjectList.add(talkerCur.next());
+			}
+			
 		}
 		
 		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
@@ -555,9 +586,18 @@ public class TalkerDAO {
 		List<DBObject> talkersDBObjectList = null;
 		if (basicInfo) {
 			DBObject fields = getBasicTalkerFields();
-			talkersDBObjectList = talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1)).toArray();
+			talkersDBObjectList=new ArrayList<DBObject>();//talkersDBObjectList = talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1)).toArray();
+			DBCursor talkerCur=talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1));
+			while(talkerCur.hasNext()){
+				talkersDBObjectList.add(talkerCur.next());
+			}
+			
 		} else {
-			talkersDBObjectList = talkersColl.find(queryBuilder.get()).sort(new BasicDBObject("uname", 1)).toArray();
+			talkersDBObjectList=new ArrayList<DBObject>();//talkersDBObjectList = talkersColl.find(queryBuilder.get()).sort(new BasicDBObject("uname", 1)).toArray();
+			DBCursor talkerCur=talkersColl.find(queryBuilder.get()).sort(new BasicDBObject("uname", 1));
+			while(talkerCur.hasNext()){
+				talkersDBObjectList.add(talkerCur.next());
+			}
 		}
 		
 		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
@@ -583,9 +623,21 @@ public class TalkerDAO {
 		List<DBObject> talkersDBObjectList = null;
 		if (basicInfo) {
 			DBObject fields = getBasicTalkerFields();
-			talkersDBObjectList = talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1)).toArray();
+			
+			DBCursor talkerCur=talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1));
+			
+			talkersDBObjectList = new ArrayList<DBObject>();//talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1)).toArray();
+			while(talkerCur.hasNext()){
+				talkersDBObjectList.add(talkerCur.next());
+			}
+			
 		} else {
-			talkersDBObjectList = talkersColl.find(queryBuilder.get()).sort(new BasicDBObject("uname", 1)).toArray();
+			talkersDBObjectList=new ArrayList<DBObject>();//talkersDBObjectList = talkersColl.find(queryBuilder.get()).sort(new BasicDBObject("uname", 1)).toArray();
+			DBCursor talkerCur=talkersColl.find(queryBuilder.get()).sort(new BasicDBObject("uname", 1));
+			while(talkerCur.hasNext()){
+				talkersDBObjectList.add(talkerCur.next());
+			}
+			
 		}
 		
 		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
@@ -608,6 +660,52 @@ public class TalkerDAO {
 	 * @return
 	 */
 	public static List<TalkerBean> loadAllTalkers(boolean basicInfo) {
+		
+		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+
+		talkersColl.ensureIndex(new BasicDBObject("uname", 1));
+		
+		List<DBObject> talkersDBObjectList = null;
+		
+		if (basicInfo) {
+			DBObject fields = getBasicTalkerFields();
+			talkersDBObjectList = new ArrayList<DBObject>();//talkersColl.find(null, fields).sort(new BasicDBObject("uname", 1)).toArray();
+			
+			DBCursor talkerCur=talkersColl.find(null, fields).sort(new BasicDBObject("uname", 1));
+			while(talkerCur.hasNext()){
+				talkersDBObjectList.add(talkerCur.next());
+			}
+			
+			//talkersDBObjectList = talkersColl.find(null, fields).sort(new BasicDBObject("timestamp", -1)).toArray();
+		} else {
+			talkersDBObjectList=new ArrayList<DBObject>();//talkersDBObjectList = talkersColl.find(null, new BasicDBObject("img", 1)).sort(new BasicDBObject("uname", 1)).toArray();
+			DBCursor talkerCur=talkersColl.find().sort(new BasicDBObject("uname", 1));
+			while(talkerCur.hasNext()){
+				talkersDBObjectList.add(talkerCur.next());
+			}
+			
+			//talkersDBObjectList = talkersColl.find(null, new BasicDBObject("img", 1)).sort(new BasicDBObject("timestamp", -1)).toArray();
+		}
+
+		if(talkersDBObjectList != null && talkerList.size() < 10){
+			for (DBObject talkerDBObject : talkersDBObjectList) {
+				TalkerBean talker = new TalkerBean();
+				if (basicInfo) {
+					talker.parseBasicFromDB(talkerDBObject);
+				}
+				else {
+					talker.parseFromDB(talkerDBObject);
+				}
+				talkerList.add(talker);
+			}
+		}
+		return talkerList;
+	}
+
+	public static List<TalkerBean> loadAllTalkersForMe(boolean basicInfo) {
+		
+		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 
 		talkersColl.ensureIndex(new BasicDBObject("uname", 1));
@@ -615,23 +713,36 @@ public class TalkerDAO {
 		List<DBObject> talkersDBObjectList = null;
 		if (basicInfo) {
 			DBObject fields = getBasicTalkerFields();
-			talkersDBObjectList = talkersColl.find(null, fields).sort(new BasicDBObject("uname", 1)).toArray();
+			
+			DBCursor talkerCur=talkersColl.find(null, fields).sort(new BasicDBObject("uname", 1));
+			
+			talkersDBObjectList = new ArrayList<DBObject>();//talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1)).toArray();
+			while(talkerCur.hasNext()){
+				talkersDBObjectList.add(talkerCur.next());
+			}
+			
+			//talkersDBObjectList = talkersColl.find(null, fields).sort(new BasicDBObject("uname", 1)).toArray();
 		} else {
-			talkersDBObjectList = talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
+			talkersDBObjectList=new ArrayList<DBObject>();//talkersDBObjectList = talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
+			DBCursor talkerCur=talkersColl.find().sort(new BasicDBObject("uname", 1));
+			while(talkerCur.hasNext()){
+				talkersDBObjectList.add(talkerCur.next());
+			}
+			
 		}
 
-		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
-		for (DBObject talkerDBObject : talkersDBObjectList) {
-			TalkerBean talker = new TalkerBean();
-			if (basicInfo) {
-				talker.parseBasicFromDB(talkerDBObject);
+		if(talkersDBObjectList != null && talkerList.size() < 10){
+			for (DBObject talkerDBObject : talkersDBObjectList) {
+				TalkerBean talker = new TalkerBean();
+				if (basicInfo) {
+					talker.parseBasicFromDB(talkerDBObject);
+				}
+				else {
+					talker.parseFromDB(talkerDBObject);
+				}
+				talkerList.add(talker);
 			}
-			else {
-				talker.parseFromDB(talkerDBObject);
-			}
-			talkerList.add(talker);
 		}
-		
 		return talkerList;
 	}
 
@@ -661,9 +772,19 @@ public class TalkerDAO {
 		List<DBObject> talkersDBObjectList = null;
 		if (basicInfo) {
 			DBObject fields = getBasicTalkerFields();
-			talkersDBObjectList = talkersColl.find(query, fields).sort(new BasicDBObject("uname", 1)).toArray();
+			talkersDBObjectList=new ArrayList<DBObject>();//talkersDBObjectList = talkersColl.find(query, fields).sort(new BasicDBObject("uname", 1)).toArray();
+			DBCursor talkerCur=talkersColl.find(query, fields).sort(new BasicDBObject("uname", 1));
+			while(talkerCur.hasNext()){
+				talkersDBObjectList.add(talkerCur.next());
+			}
+			
 		} else {
-			talkersDBObjectList = talkersColl.find(query).sort(new BasicDBObject("uname", 1)).toArray();
+			talkersDBObjectList=new ArrayList<DBObject>();//talkersDBObjectList = talkersColl.find(query).sort(new BasicDBObject("uname", 1)).toArray();
+			DBCursor talkerCur=talkersColl.find(query).sort(new BasicDBObject("uname", 1));
+			while(talkerCur.hasNext()){
+				talkersDBObjectList.add(talkerCur.next());
+			}
+			
 		}
 
 		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
@@ -694,7 +815,12 @@ public class TalkerDAO {
 	public static List<TalkerBean> loadTalkersForDashboard() {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		
-		List<DBObject> talkersDBList = talkersColl.find().toArray();
+		List<DBObject>  talkersDBList=new ArrayList<DBObject>();//talkersDBList = talkersColl.find().toArray();
+		DBCursor talkerCur=talkersColl.find();
+		while(talkerCur.hasNext()){
+			talkersDBList.add(talkerCur.next());
+		}
+		
 		
 		List<TalkerBean> talkersList = new ArrayList<TalkerBean>();
 		for (DBObject talkerDBObject : talkersDBList) {
@@ -819,7 +945,12 @@ public class TalkerDAO {
 		DBRef followingTalkerRef = createRef(TALKERS_COLLECTION, talkerId);
 		BasicDBObject query = new BasicDBObject("following", followingTalkerRef);
 		
-		List<DBObject> followerDBList = talkersColl.find(query, new BasicDBObject("_id", 1)).toArray();
+		List<DBObject> followerDBList=new ArrayList<DBObject>();//List<DBObject> followerDBList = talkersColl.find(query, new BasicDBObject("_id", 1)).toArray();
+		DBCursor talkerCur=talkersColl.find(query, new BasicDBObject("_id", 1));
+		while(talkerCur.hasNext()){
+			followerDBList.add(talkerCur.next());
+		}
+		
 		
 		List<TalkerBean> followerList = new ArrayList<TalkerBean>();
 		for (DBObject followerDBObject : followerDBList) {
@@ -857,6 +988,34 @@ public class TalkerDAO {
 			.add("ethnicities", 0)
 			.add("languages", 0)
 			.add("insurance_accept", 0)
+			
+			.add("hidden_helps", 0)
+			.add("nfreq", 0)
+			.add("ntime", 0)
+			.add("ctype", 0)
+			.add("ctype_other", 0)
+			.add("newsletter", 0)
+			.add("workshop", 0)
+			.add("gender", 0)
+			.add("dob", 0)
+			.add("city", 0)
+			.add("state", 0)
+			.add("country", 0)
+			.add("ch_num", 0)
+			.add("mar_status", 0)
+			.add("firstname", 0)
+			.add("lastname", 0)
+			.add("zip", 0)
+			.add("ch_ages", 0)
+			.add("ethnicities", 0)
+			.add("religion", 0)
+			.add("religion_serious", 0)
+			.add("languages", 0)
+			.add("insurance_accept", 0)
+			.add("following", 0)
+			.add("following_convos", 0)
+			.add("following_topics", 0)
+			.add("topics_info", 0)
 			.get();
 		return fields;
 	}
@@ -873,7 +1032,12 @@ public class TalkerDAO {
 		BasicDBObject query = new BasicDBObject("uname",  userNamePattern );
 
 		List<DBObject> talkersDBObjectList = null;
-		talkersDBObjectList = talkersColl.find(query).toArray();
+		talkersDBObjectList=new ArrayList<DBObject>();//talkersDBObjectList = talkersColl.find(query).toArray();
+		DBCursor talkerCur=talkersColl.find(query);
+		while(talkerCur.hasNext()){
+			talkersDBObjectList.add(talkerCur.next());
+		}
+		
 		
 		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
 		for (DBObject talkerDBObject : talkersDBObjectList) {

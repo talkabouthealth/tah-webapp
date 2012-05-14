@@ -27,6 +27,7 @@ import models.TopicBean;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
@@ -191,10 +192,21 @@ public class TopicDAO {
 				.add("cr_date", 1)
 				.get();
 			
-			topicsDBList = topicsColl.find(query, fields).sort(new BasicDBObject("views", -1)).toArray();
+			topicsDBList=new ArrayList<DBObject>();//topicsDBList = topicsColl.find(query, fields).sort(new BasicDBObject("views", -1)).toArray();
+			DBCursor topicCur=topicsColl.find(query, fields).sort(new BasicDBObject("views", -1));
+			while(topicCur.hasNext()){
+				topicsDBList.add(topicCur.next());
+			}
+			
+			
 		}
 		else {
-			topicsDBList = topicsColl.find(query).sort(new BasicDBObject("views", -1)).toArray();
+			topicsDBList=new ArrayList<DBObject>();//topicsDBList = topicsColl.find(query).sort(new BasicDBObject("views", -1)).toArray();
+			DBCursor topicCur= topicsColl.find(query).sort(new BasicDBObject("views", -1));
+			while(topicCur.hasNext()){
+				topicsDBList.add(topicCur.next());
+			}
+			
 		}
 		
 		Set<TopicBean> topicsSet = new LinkedHashSet<TopicBean>();
@@ -251,10 +263,22 @@ public class TopicDAO {
 				.add("cr_date", 1)
 				.get();
 			
-			topicsDBList = topicsColl.find(query, fields).sort(new BasicDBObject("views", -1)).toArray();
+			
+			topicsDBList=new ArrayList<DBObject>();//topicsDBList = topicsColl.find(query, fields).sort(new BasicDBObject("views", -1)).toArray();
+			DBCursor topicCur=topicsColl.find(query, fields).sort(new BasicDBObject("views", -1));
+			while(topicCur.hasNext()){
+				topicsDBList.add(topicCur.next());
+			}
+			
 		}
 		else {
-			topicsDBList = topicsColl.find(query).sort(new BasicDBObject("views", -1)).toArray();
+			
+			topicsDBList=new ArrayList<DBObject>();//topicsDBList = topicsColl.find(query).sort(new BasicDBObject("views", -1)).toArray();
+			DBCursor topicCur= topicsColl.find(query).sort(new BasicDBObject("views", -1));
+			while(topicCur.hasNext()){
+				topicsDBList.add(topicCur.next());
+			}
+			
 		}
 		
 		Set<TopicBean> topicsSet = new LinkedHashSet<TopicBean>();
@@ -313,7 +337,13 @@ public class TopicDAO {
 		
 		DBRef topicDBRef = createRef(TOPICS_COLLECTION, topicId);
 		DBObject query = new BasicDBObject("children", topicDBRef);
-		List<DBObject> topicsDBList = topicsColl.find(query, fields).toArray();
+		
+		List<DBObject> topicsDBList=new ArrayList<DBObject>();//List<DBObject> topicsDBList = topicsColl.find(query, fields).toArray();
+		DBCursor topicCur=topicsColl.find(query, fields);
+		while(topicCur.hasNext()){
+			topicsDBList.add(topicCur.next());
+		}
+		
 		
 		Set<TopicBean> parentTopics = new HashSet<TopicBean>();
 		for (DBObject topicDBObject : topicsDBList) {
@@ -339,7 +369,13 @@ public class TopicDAO {
 		
     	DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topic.getId());
     	DBObject query = new BasicDBObject("following_topics", topicRef);
-    	List<DBObject> followersDBList = talkersColl.find(query).toArray();
+    	
+    	List<DBObject> followersDBList=new ArrayList<DBObject>();//List<DBObject> followersDBList = talkersColl.find(query).toArray();
+		DBCursor topicCur=talkersColl.find(query);
+		while(topicCur.hasNext()){
+			followersDBList.add(topicCur.next());
+		}
+    	
     	
     	List<TalkerBean> followers = new ArrayList<TalkerBean>();
     	for (DBObject followerDBObject : followersDBList) {
@@ -364,7 +400,13 @@ public class TopicDAO {
 		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
 		
 		DBObject query = new BasicDBObject("deleted", new BasicDBObject("$ne", true));
-		List<DBObject> topicsDBList = topicsColl.find(query).sort(new BasicDBObject("last_update", -1)).toArray();
+		
+		List<DBObject> topicsDBList=new ArrayList<DBObject>();//List<DBObject> topicsDBList = topicsColl.find(query).sort(new BasicDBObject("last_update", -1)).toArray();
+		DBCursor topicCur=topicsColl.find(query).sort(new BasicDBObject("last_update", -1));
+		while(topicCur.hasNext()){
+			topicsDBList.add(topicCur.next());
+		}
+		
 		
 		List<TopicBean> recentTopics = new ArrayList<TopicBean>();
 		for (DBObject topicDBObject : topicsDBList) {

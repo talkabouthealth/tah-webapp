@@ -78,11 +78,12 @@ public class Home extends Controller {
     	
     	if(talker.getCategory() != null && !talker.getCategory().equals("")){
 			//Code added for display talker's cancer fees
-			Set<Action> multipleCancerCommunityFeed = null;
+			
+    		//Set<Action> multipleCancerCommunityFeed = null;
 	    	talkerCat = talker.getCategory();
-	    	multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
+	    	//multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
 	    	if(talkerCat != null)
-				allDiseaseList.put(talker.getCategory().replaceAll(" ", "_"),multipleCancerCommunityFeed);
+	    		allDiseaseList.put(talker.getCategory().replaceAll(" ", "_"),null);
 			
 	    	if(talker.getOtherCategories() != null) {
 	    		for (int i = 0; i < talker.getOtherCategories().length; i++) {
@@ -93,10 +94,9 @@ public class Home extends Controller {
 	    	}
 	    	talker.setCategory(talkerCat);
 	    	talkerCat = talkerCat.replaceAll(" ", "_");
-    	}else{
-    		allFeed = FeedsLogic.getAllCancerFeed(null, true,talker);
     	}
 		
+    	allFeed = FeedsLogic.getAllCancerFeed(null, true,talker);
     	boolean showNotificationAccounts = prepareNotificationPanel(session, talker);
 		TalkerLogic.preloadTalkerInfo(talker);
 		

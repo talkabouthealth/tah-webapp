@@ -195,7 +195,9 @@ public class CommonUtil {
 			unique = (TalkerDAO.getByVerifyCode(verifyCode) == null);
 			count++;
 		} while (!unique);
-		Logger.info("generateVerifyCode : " + count);
+		CommonUtil.log("CommonUtil.genrateVerificode",""+count);
+		
+		//Logger.info("generateVerifyCode : " + count);
 		return verifyCode;
 	}
 	
@@ -222,7 +224,8 @@ public class CommonUtil {
 			}
 			count++;
 		}
-		Logger.info("generateRandomUserName : " + count);
+		CommonUtil.log("CommonUtil.java", ""+count);
+		//Logger.info("generateRandomUserName : " + count);
 
 		return userName;
 	}
@@ -484,7 +487,8 @@ public class CommonUtil {
 				it.remove();
 				count++;
 			}
-			Logger.info("prepareThoughtOrAnswer : " + count);
+			CommonUtil.log("CommonUtil.prepareThoughtOrAnswer", ""+count);
+			//Logger.info("prepareThoughtOrAnswer : " + count);
 		}
 		if (text.contains("@")) {
 			Set<String> allTalkers =  loadTalkers();
@@ -550,4 +554,9 @@ public class CommonUtil {
 		return htmlText;
 	}
 	
+	public static void log(String method,String error){
+		System.out.println(""+method+ "  :"+error);
+		
+		//Logger.info("method:"+method+"error"+message);
+	}
 }

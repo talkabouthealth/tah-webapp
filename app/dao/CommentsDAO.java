@@ -139,7 +139,13 @@ public class CommentsDAO {
 			.add("profile", profileTalkerRef)
 			.add("from_service", new BasicDBObject("$ne", "thankyou"))
 			.get();
-		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		
+		List<DBObject> commentsList=new ArrayList<DBObject>();////
+		DBCursor commentCur=commentsColl.find(query).sort(new BasicDBObject("time", -1));
+		while(commentCur.hasNext()){
+			commentsList.add(commentCur.next());
+		}
+		//List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
 		
 		//comments without parent (top in hierarchy)
 		List<CommentBean> topCommentsList = parseCommentsTree(commentsList);
@@ -207,7 +213,8 @@ public class CommentsDAO {
         	m.parseFromDB(cur.next());
         	result.add(m);        	
         }		
-        Logger.info("getThoughtByRootId - "+ cur.size());
+        CommonUtil.log("CommentsDAO.getThoughtByRootId", ""+cur.size());
+      //  Logger.info("getThoughtByRootId - "+ cur.size());
 		
 		return result;
 	}
@@ -282,7 +289,8 @@ public class CommentsDAO {
 			comment.parseFromDB(cur.next());
 			result.add(comment);
 		}
-		Logger.info("getConvoCommentsByIds - "+ cur.size());
+		CommonUtil.log("CommentsDAO.getConvoCommentsByIds", ""+cur.size());
+		//Logger.info("getConvoCommentsByIds - "+ cur.size());
 		
 		return result;
 	}
@@ -302,6 +310,7 @@ public class CommentsDAO {
 			.add("time", comment.getTime())
 			.add("answer", comment.isAnswer())
 			.add("convoreply", comment.isConvoReply())
+			.add("vote_score", 0)
 			.get();
 		commentsColl.save(commentObject);
 		
@@ -354,10 +363,33 @@ public class CommentsDAO {
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("convo", convoRef)
 			.add("convoreply", new BasicDBObject("$ne", true))
+			.add("vote_score", new BasicDBObject("$ne", 0))
 			.get();
-		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("vote_score", -1)).toArray();
 		
-		//comments without parent (top in hierarchy)
+		BasicDBObject orderby=new BasicDBObject();
+		orderby.put("vote_score", -1);
+		orderby.put("time", 1);
+		
+		List<DBObject> commentsList=new ArrayList<DBObject>();//List<DBObject> commentsList = commentsColl.find(query).sort(orderby).toArray();
+		DBCursor commentCur= commentsColl.find(query).sort(orderby);
+		while(commentCur.hasNext()){
+			commentsList.add(commentCur.next());
+		}
+		
+		
+		
+		query=BasicDBObjectBuilder.start()
+		.add("convo", convoRef)
+		.add("convoreply", new BasicDBObject("$ne", true))
+		.add("vote_score", 0)
+		.get();
+		//List<DBObject> commentsList=new ArrayList<DBObject>();//
+		 commentCur=commentsColl.find(query).sort(new BasicDBObject("time", -1));
+		while(commentCur.hasNext()){
+			commentsList.add(commentCur.next());
+		}
+		//commentsList.addAll(commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray());
+		
 		List<CommentBean> topCommentsList = parseCommentsTree(commentsList);
 		return topCommentsList;
 	}
@@ -371,7 +403,13 @@ public class CommentsDAO {
 			.add("convoreply", true)
 			.add("deleted", new BasicDBObject("$ne", true))
 			.get();
-		List<DBObject> commentsDBList = commentsColl.find(query).sort(new BasicDBObject("time", 1)).toArray();
+		
+		List<DBObject> commentsDBList=new ArrayList<DBObject>();//List<DBObject> commentsDBList = commentsColl.find(query).sort(new BasicDBObject("time", 1)).toArray();
+		DBCursor commentCur=commentsColl.find(query).sort(new BasicDBObject("time", 1));
+		while(commentCur.hasNext()){
+			commentsDBList.add(commentCur.next());
+		}
+		
 		
 		List<CommentBean> convoReplies = new ArrayList<CommentBean>();
 		for (DBObject commentDBObject : commentsDBList) {
@@ -395,12 +433,33 @@ public class CommentsDAO {
 			.add("deleted", new BasicDBObject("$ne", true))
 			.add("answer", true)
 			.get();
-		List<DBObject> commentsList = commentsColl.find(query, new BasicDBObject("_id", 1)).toArray();
+		
+		BasicDBObject bd=new BasicDBObject();
+		bd.append("-id",1);
+		bd.append("from", 1);
+		bd.append("text", 1);
+		
+		List<DBObject> commentsList=new ArrayList<DBObject>();//List<DBObject> commentsList = commentsColl.find(query, bd).sort(new BasicDBObject("vote_score", -1)).toArray();
+		DBCursor commentCur=commentsColl.find(query, bd).sort(new BasicDBObject("vote_score", -1));
+		while(commentCur.hasNext()){
+			commentsList.add(commentCur.next());
+		}
+		
 		
 		List<CommentBean> answersList = new ArrayList<CommentBean>();
 		for (DBObject answerDBObject : commentsList) {
+			
 			CommentBean answer = new CommentBean();
+			
 			answer.setId(answerDBObject.get("_id").toString());
+			answer.setText(answerDBObject.get("text").toString());
+			DBRef Ref=(DBRef)answerDBObject.get("from");
+			DBObject talkerRef=Ref.fetch();
+			
+				TalkerBean fromTalker=new TalkerBean();
+				fromTalker.setId((talkerRef.get("_id")).toString());
+				fromTalker.setUserName((talkerRef.get("uname")).toString());
+				answer.setFromTalker(fromTalker);
 			answersList.add(answer);
 		}
 		return answersList;
@@ -433,7 +492,13 @@ public class CommentsDAO {
 		}
 		
 		DBObject query = queryBuilder.get();
-		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		
+		List<DBObject> commentsList=new ArrayList<DBObject>();//List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		DBCursor commentCur=commentsColl.find(query).sort(new BasicDBObject("time", -1));
+		while(commentCur.hasNext()){
+			commentsList.add(commentCur.next());
+		}
+		
 		
 		List<CommentBean> answersList = new ArrayList<CommentBean>();
 		for (DBObject answerDBObject : commentsList) {
@@ -495,6 +560,8 @@ public class CommentsDAO {
 			//if (!commentBean.isDeleted()) {
 				topCommentsList.add(commentBean);
 			//}
+			
+			CommonUtil.commentToHTML(commentBean);
 		}
 		
 		for (DBObject commentDBObject : commentsList) {
@@ -541,7 +608,13 @@ public class CommentsDAO {
 		}
 		DBObject query = queryBuilder.get();
 		List<DBObject> commentsList = null;
-		commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		
+		 commentsList=new ArrayList<DBObject>();//commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		DBCursor commentCur=commentsColl.find(query).sort(new BasicDBObject("time", -1));
+		while(commentCur.hasNext()){
+			commentsList.add(commentCur.next());
+		}
+		
 		
 		List<Action> talkerMentions = new ArrayList<Action>();
 		for (DBObject commentDBObject : commentsList) {
@@ -565,7 +638,13 @@ public class CommentsDAO {
 		}
 		
 		query = queryBuilder.get();
-		commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		
+		 commentsList=new ArrayList<DBObject>();//commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		 commentCur=commentsColl.find(query).sort(new BasicDBObject("time", -1));
+		while(commentCur.hasNext()){
+			commentsList.add(commentCur.next());
+		}
+		
 		
 		for (DBObject commentDBObject : commentsList) {
 			CommentBean answer = new CommentBean();
@@ -598,7 +677,13 @@ public class CommentsDAO {
 			.add("text", mentionRegex)
 			.add("deleted", new BasicDBObject("$ne", true))
 			.get();
-		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		
+		List<DBObject> commentsList=new ArrayList<DBObject>();//List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		DBCursor commentCur=commentsColl.find(query).sort(new BasicDBObject("time", -1));
+		while(commentCur.hasNext()){
+			commentsList.add(commentCur.next());
+		}
+		
 		
 		List<Action> topicMentions = new ArrayList<Action>();
 		for (DBObject commentDBObject : commentsList) {
@@ -636,7 +721,13 @@ public class CommentsDAO {
 		.get();
 		
 		List<Action> personalProfileList = new ArrayList<Action>();
-		List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		
+		List<DBObject> commentsList=new ArrayList<DBObject>();//List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", 1)).toArray();
+		DBCursor commentCur=commentsColl.find(query).sort(new BasicDBObject("time", 1));
+		while(commentCur.hasNext()){
+			commentsList.add(commentCur.next());
+		}
+		
 		for (DBObject commentDBObject : commentsList) {
 			CommentBean commentBean = new CommentBean();
 			commentBean.parseFromDB(commentDBObject);
@@ -660,7 +751,13 @@ public class CommentsDAO {
 			.add("deleted", new BasicDBObject("$ne", true))
 			.add("answer", true)
 			.get();
-		List<DBObject> commentsList = commentsColl.find(query).toArray();
+		
+		List<DBObject> commentsList=new ArrayList<DBObject>();//List<DBObject> commentsList = commentsColl.find(query).toArray();
+		DBCursor commentCur=commentsColl.find(query);
+		while(commentCur.hasNext()){
+			commentsList.add(commentCur.next());
+		}
+		
 		
 		List<CommentBean> answersList = new ArrayList<CommentBean>();
 		
@@ -682,7 +779,13 @@ public class CommentsDAO {
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("convo", convoRef)
 			.get();
-		List<DBObject> commentsList = commentsColl.find(query).toArray();
+		
+		List<DBObject> commentsList=new ArrayList<DBObject>();//List<DBObject> commentsList = commentsColl.find(query).toArray();
+		DBCursor commentCur=commentsColl.find(query);
+		while(commentCur.hasNext()){
+			commentsList.add(commentCur.next());
+		}
+		
 		
 		List<CommentBean> answersList = new ArrayList<CommentBean>();
 		//comments without parent (top in hierarchy)
@@ -736,7 +839,11 @@ public class CommentsDAO {
 		orderby.put("vote_score", -1);
 		orderby.put("time", 1);
 		
-		List<DBObject> commentsList = commentsColl.find(query).sort(orderby).toArray();
+		List<DBObject> commentsList=new ArrayList<DBObject>();//List<DBObject> commentsList = commentsColl.find(query).sort(orderby).toArray();
+		DBCursor commentCur=commentsColl.find(query).sort(orderby);
+		while(commentCur.hasNext()){
+			commentsList.add(commentCur.next());
+		}
 		
 		
 		query=BasicDBObjectBuilder.start()
@@ -744,7 +851,13 @@ public class CommentsDAO {
 		.add("convoreply", new BasicDBObject("$ne", true))
 		.add("vote_score", 0)
 		.get();
-		commentsList.addAll(commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray());
+		
+		//List<DBObject> commentsList=new ArrayList<DBObject>();//
+		 commentCur=commentsColl.find(query).sort(new BasicDBObject("time", -1));
+		while(commentCur.hasNext()){
+			commentsList.add(commentCur.next());
+		}
+		//commentsList.addAll(commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray());
 		
 		List<CommentBean> topCommentsList = parseCommentsTreeForScheduler(commentsList);
 		return topCommentsList;
