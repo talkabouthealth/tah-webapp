@@ -493,7 +493,7 @@ h4 { float:left; width:221px; padding-bottom:7px;  font-weight: bold; font-size:
 #proheading { float:left; width:663px;  }
 .profiletext2 { float:left; width: 254px; padding-bottom:10px; padding-top:10px;}
 .profiletext2 ul  { float:left; width: 254px; list-style-type:none; padding:0px; margin:0px; }
-.profiletext2 ul li  { float:left; width: 254px; list-style-type:none; padding-right:10px; margin:0px; height:20px; line-height:20px; }
+.profiletext2 ul li  { float:left; width: 254px; list-style-type:none; padding-right:10px; margin:0px; line-height:20px; }
 .thankyoutextarea { float:left; width: 600px; padding-bottom:10px; padding-top:10px; }
 .thankyoupic { float:left; width: 48px; text-align:center; }
 .thankyoutext { float:left; width: 180px; padding-left:8px; padding-top:2px; vertical-align:top;}
@@ -566,7 +566,7 @@ a.blacktext25:hover {text-decoration: none; color: #000000;}
 .headingarea2 { float:left; width:923px; padding-bottom:10px; height:33px; line-height:33px; border-bottom:1px dashed #c2c2c2;}
 .thnksarea {float:left; width:893px; padding-top:10px; padding-left:30px;font-size: 15px; }
 
-.thnksfollowing { float:left; width:289px; padding-right:8px; padding-bottom:28px; }
+.thnksfollowing { float:left; width:289px; padding-right:8px; padding-bottom:28px; height: 100px;}
 .thnksfollowingimg { float:left; width:80px; padding-right:10px;}
 .thnksfollowingtext { float:left; width:199px; }
 .thnksbottom {float:left; width:893px; padding-left:30px; padding-top:10px; height:33px; line-height:33px; border-top:1px dashed #c2c2c2;}

@@ -579,5 +579,41 @@ public class ApplicationDAO {
 		}else
 			return false;
 	}
-
+	
+	/**
+	 * Used for Checking the name is exist or not. If not exists the create or if exists then update the name.
+	 * @param id
+	 * @param name
+	 * @param isUsername
+	 * @return String
+	 */
+	public static String checkURLName(String name, boolean isUsername, String oldName) {
+		
+		
+		DBCollection namesColl = getCollection(NAMES_COLLECTION);
+		//DBObject query = new BasicDBObject("name", name);
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("name", Pattern.compile("^"+oldName+"$" , Pattern.CASE_INSENSITIVE))
+			.get();
+		
+		DBObject nameDBObj = namesColl.findOne(query);
+		
+		if (nameDBObj != null) {
+			int count = (Integer) nameDBObj.get("cnt");
+			if( count > 1 ){
+				DBObject update = BasicDBObjectBuilder.start()
+				.add("name", (String) nameDBObj.get("name"))
+				.add("cnt", count-1)
+				.get();
+				
+				DBObject queryUpdate = new BasicDBObject("_id", nameDBObj.get("_id"));
+				
+				namesColl.update(queryUpdate, update);
+			}else{
+				namesColl.remove(nameDBObj);
+			}
+		}
+		return createURLName(name, isUsername);
+	}
+	
 }
