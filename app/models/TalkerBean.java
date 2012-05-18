@@ -327,8 +327,6 @@ public class TalkerBean implements Serializable {
 		setCountry((String)talkerDBObject.get("country"));
 		setChildrenNum(getInt(talkerDBObject, "ch_num"));
 		setMaritalStatus((String)talkerDBObject.get("mar_status"));
-		setCategory((String)talkerDBObject.get("category"));
-		setRegDate((Date)talkerDBObject.get("timestamp"));
 		setFirstName((String)talkerDBObject.get("firstname"));
 		setLastName((String)talkerDBObject.get("lastname"));
 		setZip((String)talkerDBObject.get("zip"));
@@ -348,11 +346,6 @@ public class TalkerBean implements Serializable {
 		parseFollowingTopics((Collection<DBRef>)talkerDBObject.get("following_topics"));
 		parseTopicsInfo((Collection<DBObject>)talkerDBObject.get("topics_info"));
 		setAnswerList(CommentsDAO.getTalkerAnswers(getId(), null));
-		
-		Collection<String> otherCategories = (Collection<String>)talkerDBObject.get("otherCategories");
-		if (otherCategories != null) {
-			setOtherCategories(otherCategories.toArray(new String[]{}));
-		}
 	}
 	
 	public void parseThankYous(Collection<DBObject> thankYouDBList) {
@@ -385,7 +378,7 @@ public class TalkerBean implements Serializable {
 			for (DBRef followingDBRef : followingDBList) {
 				TalkerBean followingTalker = 
 					TalkerLogic.loadTalkerFromCache(followingDBRef.getId().toString());
-				if (! (followingTalker.isDeactivated() || followingTalker.isSuspended()) ) {
+				if (followingTalker != null && ! (followingTalker.isDeactivated() || followingTalker.isSuspended()) ) {
 					followingList.add(followingTalker);
 				}
 			}
