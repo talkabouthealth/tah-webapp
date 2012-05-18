@@ -4,7 +4,9 @@
 	</div>}*
 	
 	<div class="joinpic" style="width: 70px;">
-		#{talker/talkerImageLink size: 70, userName: _activity.talker.name /}
+		#{if _activity.talker != null && _activity.talker.name != null}
+			#{talker/talkerImageLink size: 70, userName: _activity.talker.name /}
+		#{/if}
 	</div>
 	<div class="jointxtbox">
 		#{if _activity.convo}
