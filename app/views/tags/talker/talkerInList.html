@@ -12,10 +12,14 @@
         #{ifnot _talker.isPrivate(models.PrivacySetting.PrivacyType.PROFILE_INFO) }
         #{if _talker.bio}
         <br/>
-        	<span class="greytext12 moretext">
-				${_talker.bio}
-			</span>
+        	<span class="greytext12">
+        		#{if _talker.bio.length() > 70}
+				${_talker.bio.substring(0,70)} <a href="@{ViewDispatcher.view(_talker.name)}">...more</a>
 			#{/if}
+			#{else}	
+				${_talker.bio}
+			#{/else} 
+		</span>
         #{/ifnot}
        <br/>
         	#{if _currentTalker}
