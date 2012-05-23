@@ -223,16 +223,6 @@
 	                <!-- 
 	                <li class="profile"><a href="@{ViewDispatcher.view(currentUser)}">You</a></li>
 	                -->
-	                <li class="profile"><a href="#" class="menu1">You</a>
-	                  <ul>
-	                    <li><a href="@{ViewDispatcher.view(currentUser)}">Your Profile</a></li>
-	                    <li><a href="@{PublicProfile.thoughts(currentUser)}">Your Thoughts</a></li>
-	                    <li class="gap"><a href="@{PublicProfile.conversations(currentUser)}">Your Questions</a></li>
-	                    <li><a href="@{PublicProfile.topicsFollowing(currentUser)}">Your Topics Following</a></li>
-	                    <li class="gap"><a href="@{PublicProfile.answers(currentUser)}">Your Answers</a></li>
-	                    <li><a href="@{PublicProfile.userBasedActions(currentUser, 'thankyous')}">Your Thank you's</a></li>
-	                  </ul>
-	                </li>
 	                 
 	                <li class="explore"> <a href="#" class="menu2">Explore</a>
 	                  <ul>
@@ -248,6 +238,17 @@
 	                    <li><a href="@{Search.allSearch()}">Search Answers and Topics</a></li>
 	                  </ul>
 	                </li>
+	                <li class="profile"><a href="#" class="menu1">You</a>
+	                  <ul>
+	                    <li><a href="@{ViewDispatcher.view(currentUser)}">Your Profile</a></li>
+	                    <li><a href="@{PublicProfile.thoughts(currentUser)}">Your Thoughts</a></li>
+	                    <li class="gap"><a href="@{PublicProfile.conversations(currentUser)}">Your Questions</a></li>
+	                    <li><a href="@{PublicProfile.topicsFollowing(currentUser)}">Your Topics Following</a></li>
+	                    <li class="gap"><a href="@{PublicProfile.answers(currentUser)}">Your Answers</a></li>
+	                    <li><a href="@{PublicProfile.userBasedActions(currentUser, 'thankyous')}">Your Thank you's</a></li>
+	                  </ul>
+	                </li>
+			
 	                <!--<li><a href="@{Explore.liveTalks()}">Chats</a></li>-->
 	                <!--  <li class="community"> <a class="menu3" href="$">Group</a>
 	                  <ul>
