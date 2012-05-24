@@ -1,4 +1,10 @@
 #{set pageType = 'profile' /}
+#{set pageTitle = talker.name + " | TalkaboutHealth" /}
+#{if talker.profileName != null && !talker.profileName.equals("")}
+  #{set pageTitle = talker.profileName + " | TalkaboutHealth" /}
+#{/if}
+
+#{ set currentPage = 'publicProfile' /}
 #{extends 'main.html' /}
 <style>#innermiddlearea { padding-top: 10px } .seeall { padding-top: 20px } /* Hide images in talker's feed */ .joinpic { display: none; }</style>
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
@@ -60,12 +66,14 @@
                       <div class="pph1Cover">
 	                      <div class="pph1">
 	                      		#{if talker.profileName != null}
-	                      			<span style="font-size: 25px">${talker.profileName}</span>
-	                      			<br />
+	                      			<h1>${talker.profileName}</h1>
+	                      			${talker.name}#{talker/talkerInfo talker: talker /}
 	                      		#{/if}
+	                      		#{else}
+	                      		<h1>${talker.name}</h1>#{talker/talkerInfo talker: talker /}
+	                      		#{/else}
+	                      		 
 	                      		
-	                      		${talker.name} 
-	                      		#{talker/talkerInfo talker: talker /}
 	                      </div>
                     </div><!--pph1Cover-->
                     <table class="profiletxtCantant">
