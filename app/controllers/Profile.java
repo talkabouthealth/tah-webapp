@@ -141,6 +141,7 @@ public class Profile extends Controller {
 		
 		
 		//------- save updated info to the talker
+		oldTalker.setProfileName(talker.getProfileName());
 		oldTalker.setUserName(talker.getUserName());
 		oldTalker.setDob(dateOfBirth);
 		oldTalker.setGender(talker.getGender());
