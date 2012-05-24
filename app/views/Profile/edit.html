@@ -142,12 +142,30 @@
 				<!-- We need this field to pass TalkerBean validation -->
 				<input type="hidden" id="talker.password" name="talker.password" value="pass" />
 				<div id="personalleft">
+				
+				<div id="personalright">
+					<div id="personalrightimg">
+						<img src="@{Image.show(talker.userName)}" />
+					</div>
+					<div class="bluetext12" id="personalrighttext">
+						<a href="@{Profile.image()}" class="bluetext12">Change Photo</a>
+					</div>
+				</div>
+				
 					<div class="personalmain">
 						<div class="personaltextarea"><span class="blacktext14">Username</span></div>
 						<div class="personaltextfield">
 							<input name="talker.userName" type="text" class="personalfields" id="talker.userName" 
 									value="${talker.userName}" />
 						</div>
+					</div>	
+					<div class="personalmain">
+						<div class="personaltextarea"><span class="blacktext14">Name</span></div>
+						<div class="personaltextfield">
+							<input name="talker.profileName" type="text" class="personalfields" id="talker.profileName" 
+									value="${talker.profileName}" />
+						</div>
+						
 					</div>
 					<input name="talker.email" type="hidden" class="personalfields" 
 						id="talker.email" value="bad@email.com" />
@@ -193,7 +211,7 @@
 							#{/list}
 						</div>
 					</div>
-					#{if talker.category != null}
+					#{if talker.category != null && !talker.category.equals("All Cancers")}
 						<div class="personalmain" id="newCategory" style="display: none;">
 						</div>
 						<div class="personalmain" style="padding-bottom: 0px;">
@@ -214,14 +232,7 @@
 						#{include 'Profile/editfields.html' /}					
 					#{/else}
 				</div>
-				<div id="personalright">
-					<div id="personalrightimg">
-						<img src="@{Image.show(talker.userName)}" />
-					</div>
-					<div class="bluetext12" id="personalrighttext">
-						<a href="@{Profile.image()}" class="bluetext12">Change Photo</a>
-					</div>
-				</div>
+				
 			#{/form}
 			#{if talker.connection?.equals("Physician")}
 				<div id="personalleft1" style="padding-left: 0px; padding-top: 20px;">

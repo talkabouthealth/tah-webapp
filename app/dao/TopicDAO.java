@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.bson.types.ObjectId;
 
@@ -92,8 +93,8 @@ public class TopicDAO {
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("$or", 
 				Arrays.asList(
-						new BasicDBObject("main_url", url),
-						new BasicDBObject("old_names.url", url)
+						new BasicDBObject("main_url", Pattern.compile("^"+url+"$" , Pattern.CASE_INSENSITIVE)),
+						new BasicDBObject("old_names.url", Pattern.compile("^"+url+"$" , Pattern.CASE_INSENSITIVE))
 					)
 			)
 			.get();

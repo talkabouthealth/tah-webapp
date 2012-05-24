@@ -57,11 +57,16 @@
 						      <div class="cb"></div>
 						</div> 
                   	#{/if}
-                    <div class="pph1Cover">
-                      <div class="pph1">
-                      		${talker.name} 
-                      		#{talker/talkerInfo talker: talker /}
-                      </div>
+                      <div class="pph1Cover">
+	                      <div class="pph1">
+	                      		#{if talker.profileName != null}
+	                      			<span style="font-size: 25px">${talker.profileName}</span>
+	                      			<br />
+	                      		#{/if}
+	                      		
+	                      		${talker.name} 
+	                      		#{talker/talkerInfo talker: talker /}
+	                      </div>
                     </div><!--pph1Cover-->
                     <table class="profiletxtCantant">
                     <tr>

@@ -48,6 +48,7 @@ public class TalkerDAO {
 		
 		DBObject talkerDBObject = BasicDBObjectBuilder.start()
 				.add("uname", talker.getUserName())
+				.add("profilename", talker.getProfileName())
 				.add("anon_name", talker.getAnonymousName())
 				.add("pass", talker.getPassword())
 				.add("email", talker.getEmail())
@@ -95,6 +96,7 @@ public class TalkerDAO {
 		
 		DBObject talkerObject = BasicDBObjectBuilder.start()
 			.add("uname", talker.getUserName())
+			.add("profilename", talker.getProfileName())
 			.add("anon_name", talker.getAnonymousName())
 			.add("pass", talker.getPassword())
 			.add("email", talker.getEmail())
@@ -530,7 +532,7 @@ public class TalkerDAO {
 	
 	public static List<TalkerBean> loadAllTalkers(boolean basicInfo,TalkerBean currentTalker){
 		
-		List<String> cat = FeedsLogic.getCancerType(currentTalker);
+		//List<String> cat = FeedsLogic.getCancerType(currentTalker);
 		
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		talkersColl.ensureIndex(new BasicDBObject("uname", 1));

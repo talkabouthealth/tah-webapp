@@ -145,6 +145,8 @@ public class TalkerBean implements Serializable {
 	
 	private String firstName;
 	private String lastName;
+	
+	private String profileName;
 	//used to store original userName when account is deactivated
 	private String originalUserName;
 	private boolean deactivated;
@@ -269,6 +271,7 @@ public class TalkerBean implements Serializable {
 	public void parseBasicFromDB(DBObject talkerDBObject) {
 		setId(talkerDBObject.get("_id").toString());
 		setUserName((String)talkerDBObject.get("uname"));
+		setProfileName((String)talkerDBObject.get("profilename"));
 		setAnonymousName((String)talkerDBObject.get("anon_name"));
 		setPassword((String)talkerDBObject.get("pass"));
 		setEmail((String)talkerDBObject.get("email"));
@@ -1034,5 +1037,11 @@ public class TalkerBean implements Serializable {
 	}
 	public void setNewsLetterBean(NewsLetterBean newsLetterBean) {
 		this.newsLetterBean = newsLetterBean;
+	}
+public String getProfileName() {
+		return profileName;
+	}
+	public void setProfileName(String profileName) {
+		this.profileName = profileName;
 	}
 }	

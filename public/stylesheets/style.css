@@ -6514,3 +6514,19 @@ margin-bottom:5px;
     width: 190px;
     cursor: pointer;
 }
+.submitSubscribeEmail{
+	background: url("../images/submit_subEmail.png") no-repeat scroll 0 0 transparent;
+    border: medium none;
+    height: 25px;
+    width: 85px;
+    cursor: pointer;
+}
+#subcribeConvo{
+    width: 350px;
+    margin-bottom: 10px;
+}
+.subscribeEmail{
+    font-size: 10px;
+    height: 21px;
+    width: 175px;
+}
