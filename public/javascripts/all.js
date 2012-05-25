@@ -83,6 +83,8 @@ function showStartConvoDialog(type) {
 
 //Save convo after entering data in StartConvo dialog
 function saveConvo(page) {
+	$("#saveConvoBtnId").html("");
+	$("#ajaxLoading").appendTo($("#saveConvoBtnId")).show();
 	var type = "QUESTION";
 	if ($("#newConvoTypeConvo").attr("checked")) {
 		type = "CONVERSATION";

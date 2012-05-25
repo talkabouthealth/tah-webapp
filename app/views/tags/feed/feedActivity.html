@@ -21,9 +21,11 @@
 			#{/if}
 			#{elseif _activity.answer}
 			${_activity.answer.printThoughtOrAnswer(session.username)}
-			#{if _activity.convo.comments}
-				${_activity.convo.comments[0].printThoughtOrAnswer(session.username)}
-			#{/if}
+			*{
+				#{if _activity.convo.comments}
+					${_activity.convo.comments[0].printThoughtOrAnswer(session.username)}
+				#{/if}
+			}*
 			#{/elseif}
 		</div>
 		
