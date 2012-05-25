@@ -13,19 +13,30 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
+import logic.ConversationLogic;
 import logic.FeedsLogic;
 import logic.TalkerLogic;
+import logic.TopicLogic;
+import models.CommentBean;
+import models.ConversationBean;
 import models.IMAccountBean;
+import models.NewsLetterBean;
 import models.PrivacySetting;
 import models.TalkerBean;
 import models.ThankYouBean;
+import models.TopicBean;
+import models.ConversationBean.ConvoType;
 import models.PrivacySetting.PrivacyType;
 import models.PrivacySetting.PrivacyValue;
 import models.ServiceAccountBean.ServiceType;
 
 import org.bson.types.ObjectId;
+
+import play.Logger;
+import play.cache.Cache;
 
 import util.EmailUtil;
 import util.EmailUtil.EmailTemplate;
@@ -37,10 +48,15 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 import com.mongodb.QueryBuilder;
+import com.sun.xml.internal.fastinfoset.util.StringArray;
+
+import controllers.Conversations;
 
 public class TalkerDAO {
 	
 	public static final String TALKERS_COLLECTION = "talkers";
+	public static final String TALKERS_NEW_COLLECTION = "talkersnew";
+	public static final String TALKERS_MERGE_COLLECTION = "talkers_merge";
 	
 	// --------------------- Save/Update ---------------------------
 	public static boolean save(TalkerBean talker) {
@@ -1118,6 +1134,18 @@ public class TalkerDAO {
 			talker.parseBasicFromDB(talkerDBObject);
 			return talker;
 		}
+	}
+	public static void updateTalkerForDisease(TalkerBean talker) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		
+		DBObject talkerObject = BasicDBObjectBuilder.start()
+			.add("category", talker.getCategory())
+			.add("otherCategories", talker.getOtherCategories())
+			.get();
+		
+		DBObject talkerId = new BasicDBObject("_id", new ObjectId(talker.getId()));
+		//"$set" is used for updating fields
+		talkersColl.update(talkerId, new BasicDBObject("$set", talkerObject));
 	}
 	 public static void updateIds(){
 			

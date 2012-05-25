@@ -1365,5 +1365,17 @@ public class ConversationDAO {
 			return convo;			
 	}
 
+	public static void updateConvoForDisease(ConversationBean convo){
+		DBCollection convoColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
+		
+		DBObject convoObject = BasicDBObjectBuilder.start()
+			.add("category", convo.getCategory())
+			.add("other_disease_categories", convo.getOtherDiseaseCategories())
+			.get();
+		
+		DBObject convoId = new BasicDBObject("_id", new ObjectId(convo.getId()));
+		//"$set" is used for updating fields
+		convoColl.update(convoId, new BasicDBObject("$set", convoObject));
+	}
 }
 

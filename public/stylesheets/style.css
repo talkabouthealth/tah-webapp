@@ -1050,6 +1050,7 @@ a.footerlink:hover {
 .jointxtbox {
 	float:left;
 	width:420px;
+	/*width:100%;*/
 	padding-left:7px;
 	text-align:left;
 }
@@ -5960,6 +5961,7 @@ color:#000000;
 color:#000000;
 text-decoration:underline;
 }
+
 .Archive
 {
 float:left;

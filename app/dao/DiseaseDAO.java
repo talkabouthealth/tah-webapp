@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import logic.TalkerLogic;
 import org.bson.BSONObject;
 import models.ConversationBean;
 import models.DiseaseBean;
@@ -26,6 +26,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.WriteResult;
 
 public class DiseaseDAO {
 	
@@ -130,13 +131,19 @@ public class DiseaseDAO {
 		List<DiseaseBean> diseaseList = new ArrayList<DiseaseBean>();
 		DBCollection diseasesColl = getCollection(DISEASES_COLLECTION);
 		DBObject sortCond = new BasicDBObject("name", 1);
+		
 		List<DBObject>  diseaseDBList = diseasesColl.find().sort(sortCond).toArray();
-
+		
+		DiseaseBean allCancer=new DiseaseBean();
 		for (DBObject diseaseDBObject : diseaseDBList) {
 			DiseaseBean diseaseBean = new DiseaseBean();
 			diseaseBean.parseBasicFromDB(diseaseDBObject);
+			if(diseaseBean.getName().equals("All Cancers"))
+				allCancer=diseaseBean;
+			else
 			diseaseList.add(diseaseBean);
 		}
+		diseaseList.add(allCancer);
 		return diseaseList;
 	}
 	
@@ -179,16 +186,19 @@ public class DiseaseDAO {
 	 * @param oldName
 	 * @param newName
 	 */
-	private static void updateDiseaseName(String oldName, String newName){
-		List<TalkerBean> talkersList = TalkerDAO.loadAllTalkers(true); 
+	public static void updateDiseaseName(String oldName, String newName){
+		System.out.println("----------Updateing disease name is talkers---------------------");
+		List<TalkerBean> talkersList = TalkerLogic.loadAllTalkersFromCache();
 		if(talkersList != null && talkersList.size() > 0){
 			for(int index = 0; index < talkersList.size(); index++){
 				TalkerBean talker = talkersList.get(index);
+				boolean flag = false;
 				if(talker != null){
 					//update talker category
 					String category = talker.getCategory();
 					if(category != null && !category.equals("")){
 						if(category.equalsIgnoreCase(oldName)){
+							flag = true;
 							category = newName;
 							talker.setCategory(category);
 						}
@@ -200,12 +210,16 @@ public class DiseaseDAO {
 						for(int i = 0; i < otherCategories.length; i++){
 							String otherCat = otherCategories[i];
 							if(otherCat.equalsIgnoreCase(oldName)){
+								flag = true;
 								otherCat = newName;
 								otherCategories[i] = otherCat;
 								talker.setOtherCategories(otherCategories);
 							}
 						}
 					}
+					
+					if(flag == true)
+						TalkerDAO.updateTalkerForDisease(talker);
 					
 					//update talkers disease information
 					List<TalkerDiseaseBean> talkerDiseaseList = TalkerDiseaseDAO.getListByTalkerId(talker.getId());
@@ -224,20 +238,22 @@ public class DiseaseDAO {
 						
 					}
 					
-					TalkerDAO.updateTalker(talker);
 				}
 			}
 		}
-		
+		System.out.println("----------Completed updating disease name is talkers---------------------");
+		System.out.println("----------Updateing disease name is convos---------------------");
 		List<ConversationBean> convoList = ConversationDAO.getAllConvosForScheduler();
 		if(convoList != null && convoList.size() > 0){
 			for(int index = 0; index < convoList.size(); index++){
 				ConversationBean convo = convoList.get(index);
+				boolean flag = false;
 				if(convo != null){
 					//update talker category
 					String category = convo.getCategory();
 					if(category != null && !category.equals("")){
 						if(category.equalsIgnoreCase(oldName)){
+							flag = true;
 							category = newName;
 							convo.setCategory(category);
 						}
@@ -249,17 +265,19 @@ public class DiseaseDAO {
 						for(int i = 0; i < otherCategories.length; i++){
 							String otherCat = otherCategories[i];
 							if(otherCat.equalsIgnoreCase(oldName)){
+								flag = true;
 								otherCat = newName;
 								otherCategories[i] = otherCat;
 								convo.setOtherDiseaseCategories(otherCategories);
 							}
 						}
 					}
-					
-					ConversationDAO.updateConvo(convo);
+					if(flag == true)
+						ConversationDAO.updateConvoForDisease(convo);
 				}
 			}
 		}
+		System.out.println("----------Completed updating disease name is convos---------------------");
 	}
 	
 	/**
