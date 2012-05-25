@@ -363,7 +363,7 @@ function updateFeed(type,talkerName) {
 								  		<a href="#" id="allFeed" class="tabLink">All Cancers</a>
 								  	</div>		
 							  
-							  		#{if allDiseaseList != null}
+							  		#{if allDiseaseList != null && talker.category !=null && !talker.category.equals("All Cancers")}
 								  		#{list items: allDiseaseList.keySet(), as: 'cancerType'}
 									  	<div #{if talker.category.equals(cancerType.replaceAll("_", " "))} class="newTab" #{/if} #{else} class="newTab" #{/else} style="width: auto;">
 										  	<a href="#" id="${cancerType}CommunityFeed" class="tabLink">${cancerType.replaceAll("_", " ")}</a> <!--  Community Feed -->
