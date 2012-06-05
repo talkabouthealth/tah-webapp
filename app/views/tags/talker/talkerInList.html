@@ -14,13 +14,14 @@
         <br/>
         	<span class="greytext12">
         		#{if _talker.bio.length() > 70}
-					${_talker.bio.substring(0,70)} <a href="@{ViewDispatcher.view(_talker.name)}">...more</a>
-				#{/if}
-				#{else}	
-					${_talker.bio}
-				#{/else}
-			</span> 
+				${_talker.bio.substring(0,70)} <a href="@{ViewDispatcher.view(_talker.name)}">...more</a>
 			#{/if}
+			#{else}	
+				${_talker.bio}
+			#{/else}
+			</span> 
+		</span>
+	#{/if}
         #{/ifnot}
        <br/>
         	#{if _currentTalker}
