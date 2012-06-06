@@ -181,7 +181,7 @@ public class SearchUtil {
 		queryText = queryText.replaceAll("[\\W_]", " ");
 		Query searchQuery = prepareSearchQuery(queryText, new String[] {"title"}, analyzer, false);
 		
-		TopDocs hits = is.search(searchQuery, 10);
+		TopDocs hits = is.search(searchQuery, 50);
 		ScoreDoc [] docs = hits.scoreDocs;
 		
 		//List<String> cat = FeedsLogic.getCancerType(talker);
@@ -196,7 +196,7 @@ public class SearchUtil {
 			ConversationBean convo = ConversationDAO.getById(convoId);
 			//if(cat.contains(convo.getTalker().getCategory()))
 				results.add(convo);
-			if (results.size() == 3) {
+			if (results.size() == 13) {
 				break;
 			}
 		}

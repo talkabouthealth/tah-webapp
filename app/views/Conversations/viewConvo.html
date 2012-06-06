@@ -279,6 +279,7 @@
 						</div>
 						<div class="cb"></div>
 					</div><!--topipsts-->
+					#{if relatedConvo && relatedConvo.size() > 0}
 					<div class="topipsts">
 						<div class='inline-edit' id="relatedConvosEdit" style="padding-bottom: 3px;">
 							<div class="inline_display">
@@ -294,14 +295,23 @@
 									<div id="relatedConvosList">
 										#{list items: convo.relatedConvos, as: 'relatedConvo'}
 											<p class="rcpadtop">
+												#{if relatedConvo}
 												<a href="${relatedConvo.mainURL}">${relatedConvo.topic}</a>
+												#{/if}
 					                		</p>
 										#{/list}
 									</div>
+									
+									%{int i=0;}%
 									#{list items: relatedConvos, as: 'relatedConvo'}
+										
+										#{if relatedConvo && i<8 }
 										<p class="rcpadtop">
 											<a href="${relatedConvo.mainURL}">${relatedConvo.topic}</a>
-				                		</p>
+											%{i++;}%
+												</p>
+										#{/if}
+				                	
 									#{/list}
 								</div>
 								<div class="inline_empty" style="display: ${!(convo.relatedConvos || relatedConvos) ? 'block' : 'none'}">
@@ -312,14 +322,17 @@
 									#{/if}
 								</div>
 				            </div>
+				           
 							<div class='inline_form'>
 								<div class="Staticsh1" style="float:left; padding:10px 0 0 0;">Similar Questions</div>
 								<div style="float:left; font-size: 14px;">Add a similar question</div>
 								<div id="relatedConvosEditList">
 									#{list items: convo.relatedConvos, as: 'relatedConvo'}
 										<p class="rcpadtop">
+										#{if relatedConvo}
 											<a href="${relatedConvo.mainURL}">${relatedConvo.topic}</a>&nbsp;
 											<a class="deleteConvoLink relatedConvos" href="#" rel="${relatedConvo.id}">X</a>
+											#{/if}
 				                		</p>
 									#{/list}
 								</div>
@@ -337,6 +350,8 @@
 						<div class="topicborder"></div>
 						<div class="cb"></div>
 					</div><!--topipsts-->
+					 #{/if}
+					#{if convo.followupConvos != null && convo.followupConvos.size() > 0}
 					<div class="topipsts">
 						<div class="inline-edit" id="followupConvosEdit" style="padding-bottom: 3px;">
 							<div class="inline_display">
@@ -384,6 +399,7 @@
 						<div class="topicborder"></div>
 						<div class="cb"></div>
 					</div><!--topipsts-->
+					#{/if}
 					#{include 'Upcoming_Workshops.html' /}
 					#{common/popularTopics popularTopics: popularTopics /}
 					#{include 'SHARE_telephone_support.html' /}
