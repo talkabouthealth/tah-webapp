@@ -97,20 +97,28 @@ public class TalkerBean implements Serializable {
 	
 	//Convo-related items start with "CONVO" - we use it for display
 	public enum EmailSetting {
-		RECEIVE_COMMENT ("Send me an email when I receive a comment in my Thoughts Feed.", EmailTemplate.NOTIFICATION_PROFILE_COMMENT),
-		RECEIVE_THANKYOU ("Send me an email when I receive a 'Thank You'.", EmailTemplate.NOTIFICATION_THANKYOU),
+		RECEIVE_COMMENT ("", EmailTemplate.NOTIFICATION_PROFILE_COMMENT),//Send me an email when I receive a comment in my Thoughts Feed.
+		
+		RECEIVE_THOUGHT_MENTION ("Send me mail when I am mentioned", EmailTemplate.NOTIFICATION_OF_THOUGHT_MENTION),
+		RECEIVE_ANSWER_MENTION ("", EmailTemplate.NOTIFICATION_OF_ANSWER_MENTION),
+		
+		RECEIVE_THOUGHT ("Send me an email when I receive a Thought or reply to a Thought.", EmailTemplate.NOTIFICATION_PROFILE_COMMENT),
+		RECEIVE_THANKYOU ("Send me an email when I receive a 'Thank You' or reply to 'Thank You'.", EmailTemplate.NOTIFICATION_THANKYOU), //Send me an email when I receive a 'Thank You'.
 		RECEIVE_DIRECT ("Send me an email when I receive a Direct Message.", EmailTemplate.NOTIFICATION_DIRECT_MESSAGE),
 		NEW_FOLLOWER ("Send me an email when someone follows me.", EmailTemplate.NOTIFICATION_FOLLOWER),
 		
-		CONVO_RESTART ("Send me an email when a Conversation I follow is re-started.",
-				EmailTemplate.NOTIFICATION_CONVO_RESTART),
+		CONVO_RESTART ("",
+				EmailTemplate.NOTIFICATION_CONVO_RESTART),//Send me an email when a Conversation I follow is re-started.
 		CONVO_COMMENT ("Send me an email when an Answer is added to a Question I follow.", 
 				EmailTemplate.NOTIFICATION_CONVO_ANSWER),
 		CONVO_SUMMARY ("Send me an email when a Answer Summary is edited or updated for a Question I follow.", 
 				EmailTemplate.NOTIFICATION_CONVO_SUMMARY),
 		CONVO_PERSONAL ("",
 				EmailTemplate.NOTIFICATION_PERSONAL_QUESTION),
-		REPLY_TO_THANKYOU ("",EmailTemplate.NOTIFICATION_REPLY_TO_THANKYOU);
+		NOTIFY_CONVO ("Notify me of relevant questions via email.",
+				EmailTemplate.NOTIFICATION_CONVO_RESTART),
+		REPLY_TO_THANKYOU ("",
+				EmailTemplate.NOTIFICATION_REPLY_TO_THANKYOU);
 
 		
 		private final String description;
@@ -188,6 +196,7 @@ public class TalkerBean implements Serializable {
 	private String bio;
 	private String profStatement;
 	private boolean newsletter;
+	private boolean workshop;
 	private String gender;
 	private int invitations;
 	private String maritalStatus;
@@ -197,6 +206,7 @@ public class TalkerBean implements Serializable {
 	private String state;
 	private String country;
 	private String zip;
+	private boolean passwordUpdate;
 	
 	//Contains different settings for this user
 	//(e.g. name of help panels that were hidden by this user)
@@ -307,6 +317,7 @@ public class TalkerBean implements Serializable {
 		
 		Collection<DBObject> thankYousCollection = (Collection<DBObject>)talkerDBObject.get("thankyous");
 		setNumOfThankYous(thankYousCollection == null ? 0 : thankYousCollection.size());
+		setPasswordUpdate(getBoolean(talkerDBObject,"password_update"));
 	}
 	
 	public void parseFromDB(DBObject talkerDBObject) {
@@ -322,6 +333,7 @@ public class TalkerBean implements Serializable {
 		setOtherCtype(getStringList(talkerDBObject, "ctype_other"));
 		
 		setNewsletter(getBoolean(talkerDBObject, "newsletter"));
+		setWorkshop(getBoolean(talkerDBObject, "workshop"));
 		setGender((String)talkerDBObject.get("gender"));
 		setDob((Date)talkerDBObject.get("dob"));
 		setInvitations(getInt(talkerDBObject, "invites"));
@@ -1032,13 +1044,25 @@ public class TalkerBean implements Serializable {
 	public void setOtherCategories(String[] otherCategories) {
 		this.otherCategories = otherCategories;
 	}
+	public boolean isWorkshop() {
+		return workshop;
+	}
+	public void setWorkshop(boolean workshop) {
+		this.workshop = workshop;
+	}
 	public NewsLetterBean getNewsLetterBean() {
 		return newsLetterBean;
 	}
 	public void setNewsLetterBean(NewsLetterBean newsLetterBean) {
 		this.newsLetterBean = newsLetterBean;
 	}
-public String getProfileName() {
+	public boolean isPasswordUpdate() {
+		return passwordUpdate;
+	}
+	public void setPasswordUpdate(boolean passwordUpdate) {
+		this.passwordUpdate = passwordUpdate;
+	}
+	public String getProfileName() {
 		return profileName;
 	}
 	public void setProfileName(String profileName) {

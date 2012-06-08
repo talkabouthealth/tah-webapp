@@ -246,12 +246,17 @@
 										#{/if}
 									#{/list}
 								</div>
-								<h4>Newsletter</h4>
+								<h4>Newsletter and workshops</h4>
 								<div class="generalcheck">
 									<div class="preferencescheck">
 										<input id="talker.newsletter" name="talker.newsletter" 
 											type="checkbox" #{if talker.newsletter} checked #{/if} /> 
 										<span class="blacktext14">&nbsp;Send me the TalkAboutHealth newsletter.</span>
+									</div>
+									<div class="preferencescheck">
+										<input id="talker.workshop" name="talker.workshop" 
+											type="checkbox" #{if talker.workshop} checked #{/if} /> 
+										<span class="blacktext14">&nbsp;Notify me of TalkAboutHealth workshops.</span>
 									</div>
 								</div>
 								</form>
@@ -319,7 +324,9 @@
 										<a href="#" class="showSettingsLink">+ ${serviceTypeName} Settings</a>
 										<div class="settingsItems">
 											<div class="generalcheck">
+												#{if !serviceTypeName.equals("Facebook")}
 												<h4>Notifications</h4>
+												#{/if}
 												#{set settingsNames = models.ServiceAccountBean.settingsNamesByType(serviceType) /}
 												#{set showPostsTitle = true /}
 												#{list items: settingsNames.keySet(), as: 'key' }
@@ -330,10 +337,12 @@
 														#{/if}
 														<div class="generalcheck" style="padding-bottom:0px;">
 															<div class="preferencescheck">
+															#{if !settingsNames.get(key).equals("")}
 																<input type="checkbox" value="true" name="${serviceType.toString()}_${key}"
 								#{if serviceAccount?.settings && serviceAccount?.settings[key]?.equals('true')} checked='checked' #{/if}
 																/>
 																<span class="blacktext14">&nbsp;${settingsNames.get(key)}</span>
+															#{/if}
 															</div>
 														</div>
 													#{/ifnot}
@@ -363,59 +372,6 @@
         #{ include 'PublicProfile/profileRight.html' /}
             	
 	
-	<form id="setNotifyFrequency" name="setNotifyFrequency" action="@{Profile.notificationsSave()}#notificationsform" method="post"  >
-		<div id="innermiddlearea">
-					<div class="notibluearea">
-						<div class="notiblueareamid">
-							<h1>How often do you want to be notified?</h1>
-							<ul>
-	#{list items:['more than 10 times per day', '5 to 10 times per day', '2 to 5 times per day', '1 time per day', 'Never'], as:'notifyFreq'}
-		<li>
-			<input name="talker.nfreq" type="radio" value="${notifyFreq_index}" 
-			#{if talker.nfreq == notifyFreq_index} checked="true" #{/if}
-			class="radiobutton" /> 
-			<span class="blacktext" style="vertical-align:top;">${notifyFreq}</span>
-		</li>
-	#{/list}
-							</ul>
-						</div>
-					</div>
-					<a name="notificationsform"></a>
-					<div class="notibluearea">
-						<div class="notiblueareamid">
-							<h1>When do you want to be notified?</h1>
-							<ul>
-		 	#{list items:['whenever I am online', 'weekdays (9AM - 5PM)', 'weeknights (5PM - 10PM)', 'weekends (Sat and Sun)'], as:'notifyTime'}
-				<li>
-					<input name="talker.ntime" type="radio" value="${notifyTime_index}" 
-					#{if talker.ntime == notifyTime_index} checked="true" #{/if}
-					class="radiobutton" /> 
-					<span class="blacktext" style="vertical-align:top;">${notifyTime}</span>
-				</li>
-			#{/list}
-							</ul>
-						</div>
-					</div>
-					<div class="notibluearea">
-						<div class="notiblueareamid">
-							<h1>What types of conversations interest you the most?</h1>
-							<ul>	
-						#{list items:models.TalkerBean.CONVERSATIONS_TYPES_ARRAY, as:'cType'}
-							<li><input name='talker.ctype' type='checkbox' value='${cType}' 
-							#{if talker.ctype?.contains(cType) } checked="checked" #{/if}
-							/>&nbsp;<span class='blacktext' >${cType}</span></li>
-						#{/list}				
-								<li>
-									<textarea class="textarea3" rows="5" cols="45" style="padding: 5px; border: 1px solid #999999;"
-										onclick="if (this.value == 'Other (please separate by commas)') this.value='';" 
-										id="otherCTypes" name="otherCTypes">${talker.otherCtype?.toCommaString('Other')}</textarea>
-								</li>	
-							</ul>
-						</div>
-					</div>
-			</div>
-		</form>
-		
 		<div style="float: left; clear: both;">
 			<input id="saveBtn" disabled="disabled" type="submit" value="Save" />
 			<span id="saveBtnText"></span>

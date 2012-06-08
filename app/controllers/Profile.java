@@ -520,6 +520,11 @@ public class Profile extends Controller {
 			try {
 				EmailSetting emailSetting = EmailSetting.valueOf(paramName);
 				emailSettings.add(emailSetting);
+				if((emailSetting.toString()).equalsIgnoreCase("RECEIVE_THOUGHT_MENTION")){
+					emailSetting = EmailSetting.valueOf("RECEIVE_ANSWER_MENTION");
+					emailSettings.add(emailSetting);
+				}
+					
 			}
 			catch (IllegalArgumentException iae) {
 				Logger.error(iae, "Profile.java : emailSettingsSave");
@@ -532,6 +537,13 @@ public class Profile extends Controller {
 		}
 		else {
 			sessionTalker.setNewsletter(talker.isNewsletter());
+		}
+		
+		if (talker == null) {
+			sessionTalker.setWorkshop(false);
+		}
+		else {
+			sessionTalker.setWorkshop(talker.isWorkshop());
 		}
 		
 		CommonUtil.updateTalker(sessionTalker, session);
@@ -659,6 +671,25 @@ public class Profile extends Controller {
 		
 		flash.success("ok");
 		notifications();
+	}
+	
+	public static void updatePassword( String newPassword, String confirmPassword){
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		flash.put("currentForm", "changePasswordForm");
+		validation.isTrue(newPassword != null && newPassword.equals(confirmPassword)).message("password.different");
+		if (validation.hasErrors()) {
+			params.flash();
+			flash.success("");
+			validation.keep();
+			renderText("Error");
+        }else{
+        	params.flash();
+    	  	talker.setPassword(CommonUtil.hashPassword(newPassword));
+    	  	talker.setPasswordUpdate(false);
+  			TalkerDAO.updateTalker(talker);
+  			flash.success("ok");
+  			renderText("Password updated!");
+        }
 	}
 	
 	/* ------------- Health Info -------------------------- */
