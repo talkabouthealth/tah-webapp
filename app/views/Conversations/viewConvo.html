@@ -2,6 +2,13 @@
 #{set pageTitle = convo.topic /}
 #{set pageDescription = convo.pageDescription /}
 #{set pageKeywords = convo.pageKeywords /}
+#{set currentPage = 'conversationSummary' /}
+#{if convo.helpfulAnswers[0] != null }
+ 	#{set userNameOfTopAnswer = convo.helpfulAnswers[0].fromTalker.name /}
+#{/if}
+#{else}
+	#{set userNameOfTopAnswer = convo.talker.name /}
+#{/else}
 #{extends 'main.html' /}
 <link href="/public/stylesheets/viewconvo.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>

@@ -17,7 +17,12 @@
 		<meta property="og:title" content="${pageTitle}" />
 		<meta property="og:type" content="article"/>
 		<meta property="og:url" content="${currentURL}"/>
-		<meta property="og:image" content="http://talkabouthealth.com/public/images/mainlogo.png"/>
+		#{if pageType?.equals("Conversation")  }
+			<meta property="og:image" content="http://talkabouthealth.com@{Image.show(userNameOfTopAnswer)}"/>
+		#{/if}
+		#{if pageType?.equals("Topic") }
+			<meta property="og:image" content="http://talkabouthealth.com/public/images/mainlogo.png"/>
+		#{/if}
 		<meta property="og:site_name" content="TalkAboutHealth"/>
 		<meta property="og:description" content="${pageDescription}"/>
 	#{/if}
