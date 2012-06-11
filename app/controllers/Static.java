@@ -136,4 +136,7 @@ public class Static extends Controller {
    public static void trained_peer_support_program() {
     	render();
    }
+   public static void resources_nursing() {
+    	render();
+   }
 }
