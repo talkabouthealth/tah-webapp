@@ -197,6 +197,7 @@ public class TalkerBean implements Serializable {
 	private String profStatement;
 	private boolean newsletter;
 	private boolean workshop;
+	private boolean workshopSummery;
 	private String gender;
 	private int invitations;
 	private String maritalStatus;
@@ -334,6 +335,7 @@ public class TalkerBean implements Serializable {
 		
 		setNewsletter(getBoolean(talkerDBObject, "newsletter"));
 		setWorkshop(getBoolean(talkerDBObject, "workshop"));
+		setWorkshopSummery(getBoolean(talkerDBObject, "workshopSummery"));
 		setGender((String)talkerDBObject.get("gender"));
 		setDob((Date)talkerDBObject.get("dob"));
 		setInvitations(getInt(talkerDBObject, "invites"));
@@ -1068,4 +1070,10 @@ public class TalkerBean implements Serializable {
 	public void setProfileName(String profileName) {
 		this.profileName = profileName;
 	}
-}	
+	public boolean isWorkshopSummery() {
+		return workshopSummery;
+	}
+	public void setWorkshopSummery(boolean workshopSummery) {
+		this.workshopSummery = workshopSummery;
+	}
+}

@@ -517,33 +517,31 @@ public class Profile extends Controller {
 		EnumSet<EmailSetting> emailSettings = EnumSet.noneOf(EmailSetting.class);
 		for (String paramName : paramsMap.keySet()) {
 			//try to parse all parameters to EmailSetting enum
-			try {
-				EmailSetting emailSetting = EmailSetting.valueOf(paramName);
-				emailSettings.add(emailSetting);
-				if((emailSetting.toString()).equalsIgnoreCase("RECEIVE_THOUGHT_MENTION")){
-					emailSetting = EmailSetting.valueOf("RECEIVE_ANSWER_MENTION");
+			if(!(paramName.equals("talker.newsletter") || paramName.equals("talker.workshop") || paramName.equals("talker.workshopSummery") ||
+				paramName.equals("body") || paramName.equals("action") || paramName.equals("controller"))) {
+				try {
+					EmailSetting emailSetting = EmailSetting.valueOf(paramName);
 					emailSettings.add(emailSetting);
+					if((emailSetting.toString()).equalsIgnoreCase("RECEIVE_THOUGHT_MENTION")){
+						emailSetting = EmailSetting.valueOf("RECEIVE_ANSWER_MENTION");
+						emailSettings.add(emailSetting);
+					}
 				}
-					
-			}
-			catch (IllegalArgumentException iae) {
-				Logger.error(iae, "Profile.java : emailSettingsSave");
+				catch (IllegalArgumentException iae) {
+					Logger.error(iae, "Profile.java : emailSettingsSave");
+				}
 			}
 		}
 		sessionTalker.setEmailSettings(emailSettings);
-		
-		if (talker == null) {
-			sessionTalker.setNewsletter(false);
-		}
-		else {
-			sessionTalker.setNewsletter(talker.isNewsletter());
-		}
-		
+
 		if (talker == null) {
 			sessionTalker.setWorkshop(false);
-		}
-		else {
+			sessionTalker.setWorkshopSummery(false);
+			sessionTalker.setNewsletter(false);
+		} else {
 			sessionTalker.setWorkshop(talker.isWorkshop());
+			sessionTalker.setWorkshopSummery(talker.isWorkshopSummery());
+			sessionTalker.setNewsletter(talker.isNewsletter());
 		}
 		
 		CommonUtil.updateTalker(sessionTalker, session);
