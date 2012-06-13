@@ -141,7 +141,7 @@
 							<div class="inline_display">
 								<div class="inline_full">
 									<div class="targetedh7"><h1 class="inline_view">${topic.title}</h1></div>
-									#{if talker && (!topic.fixed || session.username?.equals("admin")) }
+									#{if talker && talker.name.equals("admin") && !topic.fixed }
 										<div class="editdiv">
 											<div class="editit">
 												<a href="#" class="inline_editlink">Edit</a>
@@ -177,7 +177,7 @@
 									<div style="float: left; width: 540px;">
 										<h2 class="inline_view" style="text-align: justify;">${topic.summary}</h2>
 									</div>
-									#{if talker }
+									#{if talker && talker.name.equals("admin") }
 										<div style="float:right; margin-right:10px;">
 											<div class="editit">
 												<a href="#" class="inline_editlink">Edit</a>
@@ -186,7 +186,7 @@
 									#{/if}
 								</div>
 								<div class="inline_empty" style="display: ${!topic.summary ? 'block' : 'none'}">
-									#{if talker }
+									#{if talker && talker.name.equals("admin") }
 										<div class="targetenew">
 											<a class="inline_addlink" href="#">Add Topic Description</a>
 										</div>
@@ -246,10 +246,12 @@
 					     	<a class="${currentPage.equals('viewTopic') ? 'current' : ''}" 
 					     		href="@{ViewDispatcher.view(topic.mainURL)}">Topic Home</a>
 					    </div>
+					    #{if talker.name.equals("admin") }
 	                  	<div class="mtrighttxt">
 					     	<a class="${currentPage.equals('manageTopic') ? 'current' : ''}" 
 					     		href="@{Topics.manage(topic.mainURL)}">Manage Topic</a>
 					    </div>
+					    #{/if}
 	                  <div class="mtop"></div>
 	                  <div class="topicborder"></div>
 	                  <div class="cb"></div>

@@ -569,8 +569,8 @@ public class TalkerLogic {
 				vars.put("other_talker", talker.getUserName());
 				vars.put("comment_text", CommonUtil.commentToHTML(comment));
 				TalkerBean mailSendtalker = TalkerDAO.getByEmail(profileTalker.getEmail());
-	    		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_COMMENT"))
-				NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_COMMENT, 
+	    		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_THOUGHT_MENTION"))
+					NotificationUtils.sendEmailNotification(EmailSetting.RECEIVE_THOUGHT_MENTION, 
 						profileTalker, vars);
 			}
 		}
@@ -579,6 +579,21 @@ public class TalkerLogic {
 			ActionDAO.updateProfileCommentActionTime(comment.getParentId());
 			
 			CommentBean thought = CommentsDAO.getProfileCommentById(comment.getParentId());
+			TalkerBean thankYouTalker = TalkerDAO.getByThankYouId(comment.getParentId());
+			
+			// Get the comment text of original thank you
+			if(parentList != null && parentList.equalsIgnoreCase("thankYouList")){
+				List<ThankYouBean> thanklist = thankYouTalker.getThankYouList();
+				if(thanklist != null){
+					for(int index = 0 ; index < thanklist.size(); index++){
+						ThankYouBean thanYou = thanklist.get(index);
+						if(thanYou.getId().equalsIgnoreCase(comment.getParentId())){
+							String commentText = thanYou.getNote();
+							thought.setText(commentText);
+						}
+					}
+				}
+			}
 			
 			//when user leaves post in someone else's Thoughts Feed, if there are replies, 
 			//send email to the owner of the Thoughts Feed as well as the user who started the thread.
@@ -636,15 +651,23 @@ public class TalkerLogic {
 						ThankYouBean thanYou = list.get(index);
 						if(thanYou.getId().equalsIgnoreCase(rootId)){
 							TalkerBean mailSendtalker = TalkerDAO.getByEmail(thanYou.getFromTalker().getEmail());
-				    		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_COMMENT"))
-							NotificationUtils.sendEmailNotification(EmailSetting.REPLY_TO_THANKYOU, 
-									thanYou.getFromTalker(), vars);
+				    		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_COMMENT")){
+				    			if(talker.getUserName().equals(thanYou.getFromTalker().getUserName())){
+				    				System.out.println("equels");
+				    				NotificationUtils.sendEmailNotification(EmailSetting.REPLY_TO_THANKYOU, 
+				    					TalkerDAO.getById(thanYou.getTo()), vars);
+				    			}else{
+				    				System.out.println("not eqyels ");
+				    				NotificationUtils.sendEmailNotification(EmailSetting.REPLY_TO_THANKYOU, 
+				    						thanYou.getFromTalker(), vars);
+				    			}
+				    		}
+							
 						}
 					}
 				}
 			}
 		}
-		
 		return comment;
 	}
 
