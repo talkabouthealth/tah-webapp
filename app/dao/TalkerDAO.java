@@ -88,8 +88,10 @@ public class TalkerDAO {
 				.add("hidden_helps", talker.getHiddenHelps())
 				
 				.add("newsletter", talker.isNewsletter())
+				.add("workshop", true)
 				.add("invites", talker.getInvitations())
 				.add("ch_num", -1)
+				.add("password_update", talker.isPasswordUpdate())
 				.get();
 
 		talkersColl.save(talkerDBObject);
@@ -142,6 +144,7 @@ public class TalkerDAO {
 			.add("country", talker.getCountry())
 			.add("category", talker.getCategory())
 			.add("newsletter", talker.isNewsletter())
+			.add("workshop", talker.isWorkshop())
 			.add("nfreq", talker.getNfreq())
 			.add("ntime", talker.getNtime())
 			.add("ctype", talker.getCtype())
@@ -169,6 +172,7 @@ public class TalkerDAO {
 			.add("following_topics", talker.followingTopicsToList())
 			.add("topics_info", talker.topicsInfoToDB())
 			.add("otherCategories", talker.getOtherCategories())
+			.add("password_update", talker.isPasswordUpdate())
 			.get();
 		
 		DBObject talkerId = new BasicDBObject("_id", new ObjectId(talker.getId()));
@@ -430,14 +434,20 @@ public class TalkerDAO {
 		DBObject fields = getBasicTalkerFields();
 		
 		DBObject query = new BasicDBObject("_id", new ObjectId(talkerId));
-		DBObject talkerDBObject = talkersColl.findOne(query, fields);
+		DBObject talkerDBObject = null;
+		try{
+			talkerDBObject = talkersColl.findOne(query, fields);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 		
 		if (talkerDBObject == null) {
 			return null;
 		}
 		else {
 			TalkerBean talker = new TalkerBean();
-			talker.parseBasicFromDB(talkerDBObject);
+			if(talkerDBObject != null)
+				talker.parseBasicFromDB(talkerDBObject);
 			return talker;
 		}
 	}
@@ -1087,6 +1097,32 @@ public class TalkerDAO {
 		talker.parseFromDB(talkerDBObject);
 		return talker;
 	}
+	
+	public static List<TalkerBean> getTalkersForWorkshopMail(){
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+
+		List<DBObject> talkersDBObjectList = null;
+		DBObject query = BasicDBObjectBuilder.start()
+		.add("workshop", new BasicDBObject("$ne", false))
+		.get();
+		
+		talkersDBObjectList=new ArrayList<DBObject>();//talkersDBObjectList = talkersColl.find(query).toArray();
+		DBCursor talkerCur=talkersColl.find(query);
+		while(talkerCur.hasNext()){
+			talkersDBObjectList.add(talkerCur.next());
+		}
+		
+		
+		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
+		for (DBObject talkerDBObject : talkersDBObjectList) {
+			TalkerBean talker = new TalkerBean();
+			talker.parseFromDB(talkerDBObject);
+			talkerList.add(talker);
+		}
+		
+		return talkerList;
+	}
+	
 	/**
 	 * Loads a talker by userName by ignoring case
 	 */

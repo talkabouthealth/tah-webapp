@@ -102,6 +102,17 @@ public class EmailListJob extends Job {
 				//System.out.println("Job : Organizations : " + talkerBean.getEmail());
 				newsLetterList.add(emailListBean);
 			}
+			
+			//Send mail to those who check the 'Notify me of TalkAboutHealth workshop' option from Email Settings
+			if(talkerBean.isWorkshop()){
+				emailListBean = new EmailListBean("TAH-Workshop-Notification",talkerBean.getEmail());
+				newsLetterList.add(emailListBean);
+			}
+			
+			if(talkerBean.isWorkshopSummery()){
+				emailListBean = new EmailListBean("TAH-Workshop-Summary",talkerBean.getEmail());
+				newsLetterList.add(emailListBean);
+			}
 		}
 		return EmailUtil.setEmail(newsLetterList);
 		//return true;

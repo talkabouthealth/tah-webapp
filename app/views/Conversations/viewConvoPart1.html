@@ -460,6 +460,21 @@
                   </div>
 		#{/if}
 		#{ notLoggedNotice /}
+		<div>
+			<div class="answerh1">Similar Questions </div>
+			<br />			
+			%{int i=0;}%
+			#{list items: relatedConvos, as: 'relatedConvo'}
+						#{if relatedConvo && i>=8 }
+							<span class="topipsts" style="font-weight: bold;">
+										<a href="${relatedConvo.mainURL}">${relatedConvo.topic}</a>
+							</span>
+							<br /><br />
+						#{/if}
+						%{i++;}%
+				  
+			#{/list}
+		</div>
 		<span style="color: red; font-weight: bold;">
 			<br/><br/>
 			Note: All content on this site is informational and not a substitute for professional medical advice. 

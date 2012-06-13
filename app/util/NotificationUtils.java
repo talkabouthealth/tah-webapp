@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
 
+import net.sf.jml.Email;
+
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 
@@ -162,10 +164,10 @@ public class NotificationUtils {
 				//Reply to the conversation
 				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_CONVO_REPLY, talker.getEmail(), vars, null, true);
 			}
-			else if (emailSetting == EmailSetting.RECEIVE_COMMENT && vars.get("reply_text") != null) {
+			/*else if (emailSetting == EmailSetting.RECEIVE_COMMENT && vars.get("reply_text") != null) {
 				//Reply to the thought
 				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_REPLY_TO_COMMENT_IN_JOURNAL, talker.getEmail(), vars, null, true);
-			}
+			}*/
 			else if (emailSetting == EmailSetting.CONVO_PERSONAL && vars.get("convo") != null) {
 				//Personal question
 				/*
@@ -185,6 +187,12 @@ public class NotificationUtils {
 			}else if(emailSetting == EmailSetting.RECEIVE_DIRECT && vars.get("message_text") != null){
 				//Receive direct message
 				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, talker.getEmail(), vars, null, false);
+			}else if(emailSetting == EmailSetting.RECEIVE_THOUGHT_MENTION && vars.get("comment_text") != null){
+				//Receive thought mention
+				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_OF_THOUGHT_MENTION, talker.getEmail(), vars, null, false);
+			}else if(emailSetting == EmailSetting.RECEIVE_ANSWER_MENTION && vars.get("answer_text") != null){
+				//Receive answer mention
+				EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_OF_ANSWER_MENTION, talker.getEmail(), vars, null, false);
 			}else {
 				EmailUtil.sendEmail(emailSetting.getEmailTemplate(), talker.getEmail(), vars, null, true);
 			}
@@ -267,8 +275,8 @@ public class NotificationUtils {
 		vars.put("convo_talk_url", convoTalkURL);
     	for (TalkerBean follower : convo.getFollowers()) {
     		TalkerBean mailSendtalker = TalkerDAO.getByEmail(follower.getEmail());
-    		if(mailSendtalker.getEmailSettings().toString().contains("CONVO_RESTART"))
-    			sendEmailNotification(EmailSetting.CONVO_RESTART, follower, vars);
+    		/*if(mailSendtalker.getEmailSettings().toString().contains("CONVO_RESTART"))
+    			sendEmailNotification(EmailSetting.CONVO_RESTART, follower, vars);*/
     	}
 	}
 	
