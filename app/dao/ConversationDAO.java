@@ -1356,6 +1356,7 @@ public class ConversationDAO {
 			
 			convo.setId(convoDBObject.get("_id").toString());
 			convo.setCategory((String)convoDBObject.get("category"));
+			convo.setOpened(getBoolean(convoDBObject, "opened"));
 			Collection<String> otherDiseaseCategories = (Collection<String>)convoDBObject.get("other_disease_categories");
 			
 			if (otherDiseaseCategories != null) {
