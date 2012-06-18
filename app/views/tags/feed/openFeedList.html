@@ -1,5 +1,5 @@
 <div id="${feedType}Content" class="tabContent">
-#{if feedItems != null}
+#{if feedItems != null && feedItems?.size() > 0}
 	#{list items: feedItems, as: 'convo' }
 				#{convo/openQuestion convo: convo, talker: talker /}
 		#{/list}
