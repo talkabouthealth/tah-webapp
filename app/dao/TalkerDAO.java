@@ -86,9 +86,10 @@ public class TalkerDAO {
 				.add("email_settings", talker.emailSettingsToList())
 				
 				.add("hidden_helps", talker.getHiddenHelps())
-				
-				.add("newsletter", talker.isNewsletter())
+				//.add("newsletter", talker.isNewsletter())
+				.add("newsletter", true)
 				.add("workshop", true)
+				.add("workshopSummery", true)
 				.add("invites", talker.getInvitations())
 				.add("ch_num", -1)
 				.add("password_update", talker.isPasswordUpdate())
@@ -145,6 +146,7 @@ public class TalkerDAO {
 			.add("category", talker.getCategory())
 			.add("newsletter", talker.isNewsletter())
 			.add("workshop", talker.isWorkshop())
+			.add("workshopSummery", talker.isWorkshopSummery())
 			.add("nfreq", talker.getNfreq())
 			.add("ntime", talker.getNtime())
 			.add("ctype", talker.getCtype())
@@ -235,7 +237,7 @@ public class TalkerDAO {
 		
 		DBObject usernameQuery = new BasicDBObject("uname", Pattern.compile(urlName , Pattern.CASE_INSENSITIVE));
 		DBObject anonymousQuery = new BasicDBObject("anon_name", Pattern.compile(urlName , Pattern.CASE_INSENSITIVE));
-		//DBObject usernameQuery = new BasicDBObject("uname", urlName );
+		//DBObject usernameQuery = new BasicDBObject("uname", urlName);
 		//DBObject anonymousQuery = new BasicDBObject("anon_name", urlName);
 		DBObject query = new BasicDBObject("$or", Arrays.asList(usernameQuery, anonymousQuery));
 		
@@ -246,12 +248,12 @@ public class TalkerDAO {
 		}
 		
 		TalkerBean talker = null;
-		if(talkersDBObjectList != null){
+		if(talkersDBObjectList != null) {
 			for (DBObject talkerDBObject : talkersDBObjectList) {
 				TalkerBean talkerTemp = new TalkerBean();
 				talkerTemp.parseFromDB(talkerDBObject);
 				if(!talkerTemp.isSuspended() && ((talkerTemp.getUserName() != null && talkerTemp.getUserName().toLowerCase().equals(urlName.toLowerCase())) || (talkerTemp.getAnonymousName() != null &&  talkerTemp.getAnonymousName()
-						.toLowerCase().equals(urlName.toLowerCase())))){
+						.toLowerCase().equals(urlName.toLowerCase())))) {
 					talker = talkerTemp;
 				}
 			}
@@ -773,7 +775,6 @@ public class TalkerDAO {
 		}
 		return talkerList;
 	}
-
 	
 	/**
 	 * load talker who create from last minute 

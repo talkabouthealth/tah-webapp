@@ -450,11 +450,16 @@ public class CommonUtil {
 	private static class StringLengthComparator implements Comparator<String> {
 		@Override
 		public int compare(String o1, String o2) {
-			if (o1.length() == o2.length()) {
-				return o1.compareTo(o2);
+			if(o1 !=null && o2 != null){
+				if (o1.length() == o2.length()) {
+					return o1.compareTo(o2);
+				}
+				else {
+					return o2.length() - o1.length();
+				}
 			}
-			else {
-				return o2.length() - o1.length();
+			else{
+				return 0;
 			}
 		}
 	}

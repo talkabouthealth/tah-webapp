@@ -172,6 +172,7 @@
 							            </div>
 						            </div>
 						           </div>
+						           #{if memberType != null}
 									<div class="thnksarea" id="${memberType.replaceAll(" ", "-").replaceAll("&", "and")}TabFirst">
 						            	#{list items: members.get(memberType), as: 'talker' }
 						            		#{if currentTalker || talker.name != null}
@@ -179,6 +180,7 @@
 						            		#{/if}
 						            	#{/list}
 									</div>
+									#{/if}
 									 #{if  members.get(memberType).length == logic.TalkerLogic.TALKERS_PER_PAGE }
 										<div align="center" style=" clear: both;" id="${memberType.replaceAll(" ", "-").replaceAll("&", "and")}Btn">
 						                	<input type="submit" src="images/seemore.jpg" onclick="return loadMoreUser('${memberType.replaceAll(" ", "-").replaceAll("&", "and")}');" value=" " class="seemorecom" />
