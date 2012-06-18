@@ -343,7 +343,11 @@ public class Home extends Controller {
     		List<Action> feedItems = CommentsDAO.getTalkerMentions(talker,null);
     		render("tags/feed/allFeedList.html", feedItems, feedType);
     	}else if(feedType.equalsIgnoreCase("openConvo")){
-			List<ConversationBean> feedItems = ConversationDAO.getOpenQuestions(talker);
+    		List<ConversationBean> feedItems = null;
+    		if(Security.isConnected())
+    			feedItems = ConversationDAO.getOpenQuestions(talker,true);
+    		else
+    			feedItems = ConversationDAO.getOpenQuestions(talker,false);
 			render("tags/feed/openFeedList.html",feedItems, feedType);
     	} else {
 	    	Set<Action> multipleCancerCommunityFeed = null;
