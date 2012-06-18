@@ -182,7 +182,6 @@ function initHomeTabs() {
 						$('.moretext2').truncatable({ limit: 220, more: '... more', less: true, hideText: '...less' });
 					}
 				);
-			alert('Not doing anyting');
 		} else if(cancerType != ""){
 			$("#ajaxLoading").appendTo($("#cancerFeed")).show();
 			$(".tabContent").hide();
