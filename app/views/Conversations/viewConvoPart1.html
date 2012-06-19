@@ -267,7 +267,7 @@
                  		<div class="topic inline-edit" id="summaryEdit">
                  			<div class="inline_display">
                  				<div class="inline_empty" style="display: ${!convo.summary ? 'block' : 'none'}">
-                 					#{if talker }
+                 					#{if talker && talker?.isAdmin()}
 								<div class="targetenew" style="margin-top: 10px;">
 									<a class="inline_addlink" href="#">Add Answer Summary</a>
 								</div>
