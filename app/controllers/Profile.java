@@ -954,4 +954,9 @@ public class Profile extends Controller {
 		}
 		renderText("Ok");
 	}
+	
+	public static void updateEmailList() {
+		TalkerLogic.updateTalkerField();
+		renderText("ok");
+	}
 }
