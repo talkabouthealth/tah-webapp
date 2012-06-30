@@ -151,8 +151,30 @@ public class Application extends Controller {
     	if(!ApplicationDAO.isIpUsed(remoteAddress,duration)){
     		flash("captcha", "true");
     	}
+    	
     	String randomID = Codec.UUID();
     	render(additionalSettings,randomID,diseaseList);
+    }
+    
+    public static void signupNews(NewsLetterBean newsletter,boolean newsletterFlag,boolean workshopSummery) {
+    	String remoteAddress = request.remoteAddress;
+    	int duration = -6;
+    	//prepare additional settings for FB or Twitter
+    	String from = flash.get("from");
+    	Map<String, String> additionalSettings = null;
+    	List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+
+    	if (from != null) {
+    		ServiceType type = ServiceAccountBean.parseServiceType(from);
+    		additionalSettings = ServiceAccountBean.settingsNamesByType(type);
+    	}
+    	if(!ApplicationDAO.isIpUsed(remoteAddress,duration)){
+    		flash("captcha", "true");
+    	}
+
+    	String randomID = Codec.UUID();
+    	render("Application/signup.html",additionalSettings,randomID,diseaseList,newsletter,newsletterFlag,workshopSummery);
+    	return;
     }
     
     public static void register(@Valid TalkerBean talker,String code, String randomID, NewsLetterBean newsletter) {
@@ -176,12 +198,11 @@ public class Application extends Controller {
         if (validation.hasErrors()) {
             params.flash(); // add http parameters to the flash scope
             validation.keep(); // keep the errors for the next request
-            signup();
+            signupNews(newsletter,talker.isNewsletter(),talker.isWorkshopSummery());
             return;
         }
         
         TalkerLogic.prepareTalkerForSignup(talker);
-        
         //for these users we do not show update panels
 		Set<String> hiddenHelps = talker.getHiddenHelps();
 		hiddenHelps.add("updateUsername");
@@ -195,13 +216,11 @@ public class Application extends Controller {
 		
         boolean okSave = TalkerDAO.save(talker);
         if (!okSave) {
-
         	params.flash();
             validation.keep();
         	flash.error("Sorry, unknown error. Please contact support.");
         	Logger.error("Error during signup. User: "+talker.getEmail());
-
-        	signup();
+        	 signupNews(newsletter,talker.isNewsletter(),talker.isWorkshopSummery());
         	return;
 		} else {
 			/* Date : 16 Aug 2011
