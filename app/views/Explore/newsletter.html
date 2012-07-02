@@ -20,7 +20,7 @@
 		$(document).ready(function() {
 			var newsLetterOptions = { success: showMsg };
 			addAjaxForm("#newsLetterForm"); 
-			/*$('#newsLetterForm').submit(function() {
+			$('#newsLetterForm').submit(function() {
 				var email = document.getElementById("email").value;
 				if (email === 'Your Email' || email === '') {
 					alert("Please enter your email id")
@@ -29,9 +29,8 @@
 				$("#newsLetterForm").ajaxSubmit(newsLetterOptions); 
 				
 				return false;
-			})*/
+			})
 		});
-
 		function showMsg(responseText){
 			if(responseText === "Ok"){
 				window.scrollTo(0,280);
