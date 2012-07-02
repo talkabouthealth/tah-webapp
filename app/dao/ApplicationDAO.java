@@ -511,6 +511,14 @@ public class ApplicationDAO {
 		return namesColl.findOne(query) != null;
 	}
 	
+	public static void removeFromNewsletter(String email) {
+		DBCollection waitingColl = getCollection(NEWSLETTER_COLLECTION);
+		DBObject query = new BasicDBObject("email", email);
+		DBObject waitingDBObject = waitingColl.findOne(query);
+		waitingColl.remove(waitingDBObject);
+		//waitingColl.save(waitingDBObject);
+	}
+	
 	/**
 	 * Check if the ip address is available in the iplist database table.
 	 * @param ip

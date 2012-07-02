@@ -621,13 +621,45 @@ public class Explore extends Controller {
 		render(newsletter,diseaseList,talker);
 	}
 	
-	public static void subscribeNewsLetter(NewsLetterBean newsletter){
-		
+	public static void subscribeNewsLetter(NewsLetterBean newsletter,boolean newsletterFlag) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		NewsLetterDAO.saveOrUpdateNewsletter(newsletter,talker);
-		//redirect("/explore/newsletter");
-		renderText("Ok");
+		String email = newsletter.getEmail();
+		System.out.println(email);
+		validation.required(email).message("Email is required");
+		validation.email(email.trim());
+		if (validation.hasErrors()) {
+			renderText("Error:" + validation.errors().get(0));
+		}
+		
+		if(newsletter != null && newsletter.getNewsLetterType() != null && newsletter.getNewsLetterType().length > 0){
+			NewsLetterDAO.saveOrUpdateNewsletter(newsletter,talker);
+			renderText("Ok");
+		}
+		if(talker != null && !newsletterFlag) {
+			ApplicationDAO.removeFromNewsletter(email);
+			renderText("Ok");
+		}
+		if(newsletterFlag) {
+	    	if (validation.hasErrors()) {
+	    	    params.flash();
+	            Error error = validation.errors().get(0);
+				renderText("Error:" + error.message());
+	        } else if(ApplicationDAO.isEmailExists(email)) {
+	        	params.flash();
+	        	Map<String, String> vars = new HashMap<String, String>();
+	        	String parsedUsername = email.substring(0, email.indexOf("@"));
+	    		vars.put("username", parsedUsername);
+	        	EmailUtil.sendEmail(EmailTemplate.WELCOME_NEWSLETTER, email, vars, null, false);
+	        	renderText("Ok");
+	        } else {
+	        	params.flash();
+		    	ApplicationDAO.addToNewsLetter(email, new String[0]);
+		    	Map<String, String> vars = new HashMap<String, String>();
+	        	String parsedUsername = email.substring(0, email.indexOf("@"));
+	    		vars.put("username", parsedUsername);
+		    	EmailUtil.sendEmail(EmailTemplate.WELCOME_NEWSLETTER, email, vars, null, false);
+		    	renderText("Ok");
+	        }
+		}
 	}
-	
-	
 }
