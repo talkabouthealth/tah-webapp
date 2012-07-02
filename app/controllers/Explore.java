@@ -651,7 +651,7 @@ public class Explore extends Controller {
 	        	Map<String, String> vars = new HashMap<String, String>();
 	        	String parsedUsername = email.substring(0, email.indexOf("@"));
 	    		vars.put("username", parsedUsername);
-	        	EmailUtil.sendEmail(EmailTemplate.WELCOME_NEWSLETTER, email, vars, null, false);
+	        	//EmailUtil.sendEmail(EmailTemplate.WELCOME_NEWSLETTER, email, vars, null, false);
 	        	renderText("Ok");
 	        } else {
 	        	params.flash();
@@ -659,7 +659,7 @@ public class Explore extends Controller {
 		    	Map<String, String> vars = new HashMap<String, String>();
 	        	String parsedUsername = email.substring(0, email.indexOf("@"));
 	    		vars.put("username", parsedUsername);
-		    	EmailUtil.sendEmail(EmailTemplate.WELCOME_NEWSLETTER, email, vars, null, false);
+		    	//EmailUtil.sendEmail(EmailTemplate.WELCOME_NEWSLETTER, email, vars, null, false);
 		    	renderText("Ok");
 	        }
 		}
