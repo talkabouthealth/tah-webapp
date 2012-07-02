@@ -43,6 +43,7 @@ import models.TopicBean;
 import models.actions.Action;
 import play.Logger;
 import play.data.validation.Error;
+import util.EmailUtil;
 import util.BitlyUtil;
 import util.CommonUtil;
 import util.DBUtil;
