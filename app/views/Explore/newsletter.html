@@ -61,8 +61,11 @@
 		            	#{form @Explore.subscribeNewsLetter() , id:'newsLetterForm' }
 		            	<h3 style="color: #000">Free newsletters of our featured experts, best answers, latest news and custom offers.</h3>
 		          		<div id="checkboxarea3">
-							<input id="newsletter" name="newsletterFlag" 
-								type="checkbox" id="newsletterFlag" checked="checked"/>
+							<input id="newsletter" name="newsletter.newsLetterType" 
+								type="checkbox" value="workshop"
+								#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('workshop') } 
+										    		checked='checked'
+										    	#{/if}>
 							#{if session.username} 
 								Daily Update & Workshop Announcement<br/>
 								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured answers, experts, tips &amp; latest news.)</font>
@@ -73,7 +76,11 @@
 							#{/else}
 						</div>
 						<div id="checkboxarea3">
-							<input id="newsletter.newsLetterType" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery"/>
+							<input id="newsletter.newsLetterType" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery"
+							#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Workshop summery') } 
+										    		checked='checked'
+										    	#{/if}
+							/>
 							#{if session.username}
 								Q&A Workshop Summary<br/>
 								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Daily answer summaries from our expert Q&A workshops.)</font>

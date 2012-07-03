@@ -244,31 +244,31 @@
 						#{/if}
 						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
 							#{if newsletter != null && newsletter.newsLetterType !=null}
-								#{if newsletter.newsLetterType.contains("Answers of the day")}
-									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Answers of the day" checked="checked"/>
+								#{if newsletter.newsLetterType.contains("workshop")}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="workshop" checked="checked"/>
 								#{/if}
 								#{else}
-									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Answers of the day"/>
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="workshop"/>
 								#{/else}
 							#{/if}
 							#{else}
-								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Answers of the day" checked="checked"/>
+								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="workshop" checked="checked"/>
 							#{/else}
 							Daily Update &amp; Workshop Announcement<br/>
 							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured answers, experts, tips &amp; latest news.)</font>
 						</div>
 						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
-							#{if workshopSummery != null}
-								#{if workshopSummery == true}
-									<input id="talker.workshopSummery" name="talker.workshopSummery" type="checkbox" checked="checked"/>
+							#{if newsletter != null && newsletter.newsLetterType !=null}
+								#{if newsletter.newsLetterType.contains("Workshop summery")}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked="checked"/>
 								#{/if}
 								#{else}
-									<input id="talker.workshopSummery" name="talker.workshopSummery" type="checkbox" />
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery"/>
 								#{/else}
 							#{/if}
 							#{else}
-								<input id="talker.workshopSummery" name="talker.workshopSummery" type="checkbox" checked="checked"/>
-							#{/else} 
+								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked="checked"/>
+							#{/else}
 							Daily Q&A Workshop Summary<br/>
 							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Daily answer summaries from our expert Q&A workshops.)</font>
 						</div>

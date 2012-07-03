@@ -623,10 +623,9 @@ public class Explore extends Controller {
 		render(newsletter,diseaseList,talker);
 	}
 	
-	public static void subscribeNewsLetter(NewsLetterBean newsletter,boolean newsletterFlag) {
+	public static void subscribeNewsLetter(NewsLetterBean newsletter) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		String email = newsletter.getEmail();
-		System.out.println(email);
 		validation.required(email).message("Email is required");
 		validation.email(email.trim());
 		if (validation.hasErrors()) {
@@ -637,7 +636,7 @@ public class Explore extends Controller {
 			NewsLetterDAO.saveOrUpdateNewsletter(newsletter,talker);
 			renderText("Ok");
 		}
-		if(talker != null && !newsletterFlag) {
+		/*if(talker != null && !newsletterFlag) {
 			ApplicationDAO.removeFromNewsletter(email);
 			renderText("Ok");
 		}
@@ -662,6 +661,6 @@ public class Explore extends Controller {
 		    	//EmailUtil.sendEmail(EmailTemplate.WELCOME_NEWSLETTER, email, vars, null, false);
 		    	renderText("Ok");
 	        }
-		}
+		}*/
 	}
 }

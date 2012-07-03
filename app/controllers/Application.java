@@ -156,7 +156,7 @@ public class Application extends Controller {
     	render(additionalSettings,randomID,diseaseList);
     }
     
-    public static void signupNews(NewsLetterBean newsletter,boolean newsletterFlag,boolean workshopSummery) {
+    public static void signupNews(NewsLetterBean newsletter) {
     	String remoteAddress = request.remoteAddress;
     	int duration = -6;
     	//prepare additional settings for FB or Twitter
@@ -173,7 +173,7 @@ public class Application extends Controller {
     	}
 
     	String randomID = Codec.UUID();
-    	render("Application/signup.html",additionalSettings,randomID,diseaseList,newsletter,newsletterFlag,workshopSummery);
+    	render("Application/signup.html",additionalSettings,randomID,diseaseList,newsletter);
     	return;
     }
     
@@ -198,7 +198,7 @@ public class Application extends Controller {
         if (validation.hasErrors()) {
             params.flash(); // add http parameters to the flash scope
             validation.keep(); // keep the errors for the next request
-            signupNews(newsletter,talker.isNewsletter(),talker.isWorkshopSummery());
+            signupNews(newsletter);
             return;
         }
         
@@ -220,7 +220,7 @@ public class Application extends Controller {
             validation.keep();
         	flash.error("Sorry, unknown error. Please contact support.");
         	Logger.error("Error during signup. User: "+talker.getEmail());
-        	 signupNews(newsletter,talker.isNewsletter(),talker.isWorkshopSummery());
+        	 signupNews(newsletter);
         	return;
 		} else {
 			/* Date : 16 Aug 2011
