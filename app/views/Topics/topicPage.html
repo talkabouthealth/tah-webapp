@@ -256,25 +256,22 @@
 	                  <div class="topicborder"></div>
 	                  <div class="cb"></div>
 	                </div>
-                #{/if}
-                #{else}
-                	#{include 'tahInfo.html' /}
-                #{/else}
+                
                 
                 <div class="topipsts">
                   <div class="mtrighttxt1">Topic Statistics</div>
                   <div class="latextCover">
-                    <div class="latextr"><strong><span class="black">Conversations/Questions:</span></strong> </div>
+                    <div class="latextr"><strong><span class="black" style="color: #646664;">Conversations/Questions:</span></strong> </div>
                     <div style="float: left; width: auto;" class="viewstext1">${topic.conversations?.size()}</div>
                   </div>
                   <!--topixtext-->
                   <div class="latextCover">
-                    <div class="latextr"><strong><span class="black">Views:</span></strong> </div>
+                    <div class="latextr"><strong><span class="black" style="color: #646664;">Views:</span></strong> </div>
                     <div style="float: left; width: auto;" class="viewstext1">${topic.views}</div>
                   </div>
                   <!--topixtext-->
                   <div class="latextCover">
-                    <div class="latextr"><strong><span class="black">Followed By:</span></strong> </div>
+                    <div class="latextr"><strong><span class="black" style="color: #646664;">Followed By:</span></strong> </div>
                     <div style="float: left; width: auto;" class="viewstext1">${topic.followers?.size()} Members</div>
                   </div>
                   <!--topixtext-->
@@ -288,14 +285,19 @@
                   <!--membersarea-->
                   <div class="topicborder"></div>
                 </div>
+                #{/if}
+                #{else}
+                	#{include 'tahInfo.html' /}
+                	#{include 'newsletter_signup.html' /}
+                #{/else}
                 <!--topipsts-->
                 <div class="topipsts">
                   <div class="mtrighttxt1">Topic Organization</div>
                   <div class="topixtext">
-                    <div class="viewstext" style="color: #000000;">Parent Topic: </div>
+                    <div class="viewstext" style="color: #646664;">Parent Topic: </div>
                     <div class="viewstext1">
 	                    #{list items: topic.parents, as: 'parent'}
-							<a href="@{ViewDispatcher.view(parent.mainURL)}">${parent.title}</a>${ parent_isLast ? '' : ', ' }
+							<a href="@{ViewDispatcher.view(parent.mainURL)}" style="color: #646664;">${parent.title}</a>${ parent_isLast ? '' : ', ' }
 						#{/list}
 						#{else}
 							none
@@ -304,7 +306,7 @@
                   </div>
                   <!--topixtext-->
                   <div class="topixtext">
-                    <div class="viewstext" style="color: #000000;">Sub-topics: </div>
+                    <div class="viewstext" style="color: #646664;">Sub-topics: </div>
                     <div class="viewstext1">
                     	#{list items: topic.children, as: 'children'}
 							<a href="@{ViewDispatcher.view(children.mainURL)}">${children.title}</a>${ children_isLast ? '' : ', ' }
@@ -319,7 +321,9 @@
                   <div class="mtop"></div>
                   <div class="topicborder"></div>
                 </div>
-                
+                #{ifnot session.username }
+                	#{include 'subscribe_reward.html' /}
+                #{/ifnot}
                 #{set currentPage = 'topicPage' /}
 		#{include 'Upcoming_Workshops.html' /}
 		#{common/popularTopics popularTopics: popularTopics /}
