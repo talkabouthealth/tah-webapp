@@ -1,4 +1,9 @@
 <div class="signrightbox">
+	#{if currentPage.equals("workshop")}
+		#{ifnot session.username }
+			#{include '/tags/newsletter/subscribeWorkshop.html' /}
+		#{/ifnot}
+	#{/if}
 	<div class="aboutrightop"></div>
 	<div class="signrighmid">
 		<a href="/static/aboutus" class="bluetext14">About Us</a><br />

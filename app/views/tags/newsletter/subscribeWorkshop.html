@@ -1,10 +1,25 @@
+<style>
+#checkboxareainner {
+    color: #646664;
+    float: left;
+    font-family: arial;
+    font-size: 12px;
+    font-weight: none;
+    height: 20px;
+    padding-top: 5px;
+    text-decoration: none;
+}
+#subcribeConvo {
+    margin-bottom: 10px;
+    width: 284px;
+    float: left;
+}
+</style>
 <script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
 <script type="text/javascript">
-
-
-
 function changeEmail(){
 	var email = document.getElementById("email").value;
+	alert(email);
 	if(email == 'Please Enter Your Email Address'){
 		document.getElementById("email").value = "";
 	}else if(email == ''){
@@ -12,10 +27,7 @@ function changeEmail(){
 	}
 }
 
-
-
 $(document).ready(function() {
-
 	var submitOption = { success: setMessage }; 
 	$('#subcribe').submit(function() {
 		$("#subcribe").ajaxSubmit(submitOption);
@@ -30,8 +42,8 @@ $(document).ready(function() {
 		if($("#email").val().trim() == '')
 			$("#email").val('Please Enter Your Email Address');
 	});
-	
 });
+
 function setMessage(responseText, statusText, xhr, $form)  {
 	if (responseText.indexOf("Error:") === 0) {
    		var errorText = responseText.replace("Error:", "");
@@ -46,19 +58,22 @@ function setMessage(responseText, statusText, xhr, $form)  {
    		closeTimeout = setTimeout(function() { $("#responseMessage").fadeOut(200) }, 4000);
    	}
 }
-
 </script>
-
 <div id="subcribeConvo">
-	#{form @Application.subscribeConvo(), id:'subcribe'  }
-   
-   		<strong style="color: #646664;">Email updates of answers  <br />to this question</strong> <br />
+	#{form @Application.subscribeWorkShop(), id:'subcribe'  }
+   		<strong style="color: #646664;">Notifications of Q&A Workshops</strong> <br />
+   		<div id="checkboxareainner">
+   			<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="workshop"/>
+   			Q&A Workshop Notifications
+   		</div>
+   		<div id="checkboxareainner">
+   			<input id="newsletter.newsLetterType" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" />
+   			Q&A Workshop Answer Summaries
+   		</div>
    		<span id="responseMessage" style="margin-top: 5px;height:15px;float:left;width:100%;"></span>
-   		<div style="margin-top: 5px;">
-	   		<input name="email" id="email" class="subscribeEmail" type="text" value="Please Enter Your Email Address" size="17"/>
-	   		<input  type="hidden" name="convoId" value="${convo.id}" />
+   		<div style="margin-top: 5px;float:left;">
+	   		<input name="newsletter.email" id="email" class="subscribeEmail" type="text" value="Please Enter Your Email Address"/>
 	   		<input class=submitSubscribeEmail type="submit" value=""/>
    		</div>
    #{/form}
  </div>
- <div class="topicborder"></div>
