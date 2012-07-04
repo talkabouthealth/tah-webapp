@@ -267,6 +267,8 @@
 				    	<div class="topicborder" style="margin-top: 10px;"></div>
 					#{/if}
 					#{else}
+						#{include '/Conversations/subscribeConvo.html' /}	
+						<br />
 						#{include 'tahInfo.html' /}
 					#{/else}
 					#{if talker }

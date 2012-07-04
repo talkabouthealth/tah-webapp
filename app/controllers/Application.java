@@ -210,7 +210,7 @@ public class Application extends Controller {
 		hiddenHelps.add("updateConnection");
 		hiddenHelps.add("updateTwitterSettings");
 		hiddenHelps.add("updateFacebookSettings");
-        
+
 		//save newsletters
 		talker.setNewsLetterBean(newsletter);
 		
@@ -409,9 +409,7 @@ public class Application extends Controller {
 			if (verifyCode.equals(talker.getVerifyCode())) {
 				//primary email
 				talker.setVerifyCode(null);
-				System.out.println("Setting Old: " + verifyCode);
 				talker.setOldVerifyCode(verifyCode);
-				System.out.println("Set Old: " + talker.getOldVerifyCode());
 			} else {
 				//clear verify code for non-primary email
 				EmailBean emailBean = talker.findNonPrimaryEmail(null, verifyCode);
@@ -592,6 +590,26 @@ public class Application extends Controller {
         renderBinary(captcha);
     }
     
+    /**
+     * Method for subscribing email for particular conversation's answer notification.
+     * @param email
+     * @param convoId
+     */
+    public static void subscribeConvo(@Email String email,String convoId){
+    	
+    	validation.required(email).message("Email is required");
+    	if (validation.hasErrors()) {
+    		params.flash();
+            Error error = validation.errors().get(0);
+			renderText("Error:" + error.message());
+    	}else if(ConversationDAO.subcribeConvoForAnsNotification(email, convoId)){
+    		params.flash();
+    		renderText("Email alrady subscribed!");
+    	}else{
+    		params.flash();
+    		renderText("Thank you for subscribing!");
+    	}
+    }
     public static void reloadTalkersHealthInfo(){
     	TalkerDiseaseDAO.convertDBObjectToDBList();
     	redirect("/home");

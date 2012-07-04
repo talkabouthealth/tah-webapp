@@ -1,0 +1,56 @@
+<script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
+<script type="text/javascript">
+
+
+
+function changeEmail(){
+	var email = document.getElementById("email").value;
+	if(email == 'Please Enter Your Email Address'){
+		document.getElementById("email").value = "";
+	}else if(email == ''){
+		document.getElementById("email").value = "Please Enter Your Email Address";
+	}
+}
+
+
+
+$(document).ready(function() {
+
+	var submitOption = { success: setMessage }; 
+	$('#subcribe').submit(function() {
+		$("#subcribe").ajaxSubmit(submitOption);
+		return false;
+	});
+
+	
+});
+function setMessage(responseText, statusText, xhr, $form)  {
+	if (responseText.indexOf("Error:") === 0) {
+   		var errorText = responseText.replace("Error:", "");
+   		$("#responseMessage").css("color","#ff0000");
+   		$("#responseMessage").html(errorText); 
+   		$("#responseMessage").fadeIn(100);
+   		closeTimeout = setTimeout(function() { $("#responseMessage").fadeOut(200) }, 4000);
+   	} else {
+   		$("#responseMessage").css("color","#2E8B57");
+   		$("#responseMessage").html(responseText);
+   		$("#responseMessage").fadeIn(100);
+   		closeTimeout = setTimeout(function() { $("#responseMessage").fadeOut(200) }, 4000);
+   	}
+}
+
+</script>
+
+<div id="subcribeConvo">
+	#{form @Application.subscribeConvo(), id:'subcribe'  }
+   
+   		<strong style="color: #646664;">Email updates of answers  <br />to this question</strong> <br />
+   		<span id="responseMessage" style="margin-top: 5px;height:15px;float:left;width:100%;"></span>
+   		<div style="margin-top: 5px;">
+	   		<input name="email" id="email" class="subscribeEmail" type="text" value="Please Enter Your Email Address" size="17"  onclick="javascript:changeEmail();" onblur="javascript:changeEmail();"/>
+	   		<input  type="hidden" name="convoId" value="${convo.id}" />
+	   		<input class=submitSubscribeEmail type="submit" value=""/>
+   		</div>
+   #{/form}
+ </div>
+ <div class="topicborder"></div>
