@@ -616,10 +616,7 @@ public class Application extends Controller {
     	redirect("/home");
     }
     
-    public static void reloadDiseasename(){
-    	DiseaseChangeUtil.updateDiseaseNameInTalker("Uterine ans Corpus Cancer", "Uterine and Endometrial Cancer");
-    	redirect("/home");
-    }
+ 
     
     public static void mergeTables(){
     	TalkerDAO.mergeTable();
