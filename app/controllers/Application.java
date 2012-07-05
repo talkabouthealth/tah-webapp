@@ -618,12 +618,4 @@ public class Application extends Controller {
     
  
     
-    public static void mergeTables(){
-    	TalkerDAO.mergeTable();
-    	redirect("/home");
-    }
-    public static void updateTalkerIds(){
-    	TalkerDAO.updateIds();
-    	redirect("/home");
-    }
 }
