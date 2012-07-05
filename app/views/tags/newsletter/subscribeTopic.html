@@ -11,9 +11,13 @@
 }
 #subcribeConvo {
     margin-bottom: 10px;
-    width: 284px;
+    width: 250px;
     float: left;
+    margin-top: 10px;
 }
+
+
+
 </style>
 <script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
 <script type="text/javascript">
@@ -60,20 +64,20 @@ function setMessage(responseText, statusText, xhr, $form)  {
 }
 </script>
 <div id="subcribeConvo">
-	#{form @Newsletter.subscribeWorkShop(), id:'subcribe'  }
-   		<strong style="color: #646664;">Notifications of Q&A Workshops</strong> <br />
-   		<div id="checkboxareainner">
-   			<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="workshop"/>
-   			Q&A Workshop Notifications
-   		</div>
-   		<div id="checkboxareainner">
-   			<input id="newsletter.newsLetterType" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" />
-   			Q&A Workshop Answer Summaries
-   		</div>
-   		<span id="responseMessage" style="margin-top: 5px;height:15px;float:left;width:100%;"></span>
+	#{form @Newsletter.subscribeTopic(), id:'subcribe'  }
+   		<strong style="color: #000;">Receive weekly email digest of<br/> updates to the <span style="color:#0286BC">${topic.title}</span> topic</strong> <br />
+   		<span id="responseMessage" style="display:none;margin-top: 5px;height:15px;float:left;width:100%;"></span>
    		<div style="margin-top: 5px;float:left;">
-	   		<input name="newsletter.email" id="email" class="subscribeEmail" type="text" value="Please Enter Your Email Address"/>
-	   		<input class=submitSubscribeEmail type="submit" value=""/>
+   			<input name="topicId" type="hidden" value="${topic.id}"/>
+   			#{if talker }
+   			 <input type="hidden" name="email" id="email" value="${talker.email}" />
+   			 <input class="submitSubscribeTopic" type="submit" value=""/>
+   			#{/if}
+   			#{else}
+	   		<input name="email" id="email" class="subscribeEmail" type="text" value="Please Enter Your Email Address"/>
+	   		<input class="submitSubscribeEmail" type="submit" value=""/>
+	   		#{/else}
    		</div>
    #{/form}
  </div>
+ <div class="topicborder"></div>

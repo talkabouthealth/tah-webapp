@@ -1,8 +1,13 @@
 package dao;
 
+import static util.DBUtil.createRef;
 import static util.DBUtil.getCollection;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import util.DBUtil;
 
 import models.NewsLetterBean;
 import models.TalkerBean;
@@ -11,6 +16,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.DBRef;
 
 public class NewsLetterDAO {
 	
@@ -68,5 +74,28 @@ public class NewsLetterDAO {
 			newsLetterBean.parseBasicFromDB(newsLetterDBObject);
 		}
 		return newsLetterBean;
+	}
+	
+	
+	public static boolean saveOrUpdateTopicNewsletter(String email, String topicId) {
+		String NEWSLETTER_COLLECTION = "topicNewsletter";
+		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
+		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topicId);
+		DBObject topicIdObj = new BasicDBObject("topicId", topicRef);
+		DBObject obj = newsLetterColl.findOne(topicIdObj);
+		Set<String> emailList = null;
+		DBObject newsLetterDBObject;
+		if(obj == null) {
+			emailList = new HashSet<String>();
+			emailList.add(email);
+			newsLetterDBObject = BasicDBObjectBuilder.start().add("topicId", topicRef).add("email", emailList).get();
+			newsLetterColl.save(newsLetterDBObject);
+		} else {
+			emailList = DBUtil.getStringSet(obj,"email");
+			emailList.add(email);
+			newsLetterDBObject = BasicDBObjectBuilder.start().add("topicId", topicRef).add("email", emailList).get();
+			newsLetterColl.update(topicIdObj,newsLetterDBObject);
+		}
+		return true;
 	}
 }

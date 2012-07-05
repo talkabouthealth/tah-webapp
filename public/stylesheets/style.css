@@ -6523,6 +6523,14 @@ margin-bottom:5px;
     width: 85px;
     cursor: pointer;
 }
+.submitSubscribeTopic{
+  	background: url("../images/weeklydigest.png") no-repeat scroll 0 0 transparent;
+    border: medium none;
+    cursor: pointer;
+    height: 40px;
+    width: 175px;
+    margin-left: 33px;
+}
 #subcribeConvo{
     width: 350px;
     margin-bottom: 10px;

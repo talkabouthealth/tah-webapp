@@ -611,27 +611,18 @@ public class Application extends Controller {
     	}
     }
     
-    public static void subscribeWorkShop(NewsLetterBean newsletter){
-    	System.out.println(newsletter.getEmail());
-    	String []types = newsletter.getNewsLetterType();
-    	String email = newsletter.getEmail();
-    	validation.required(email).message("Email is required");
-    	validation.email(email);
-    	if (validation.hasErrors()) {
-    		params.flash();
-            Error error = validation.errors().get(0);
-			renderText("Error:" + error.message());
-    	} else if(types == null) {
-    		renderText("Error: Please select workshop types.");
-    	} else {
-    		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    		NewsLetterDAO.saveOrUpdateNewsletter(newsletter,talker);
-    		renderText("Thank you for subscribing!");
-    	}
-    }
-    
     public static void reloadTalkersHealthInfo(){
     	TalkerDiseaseDAO.convertDBObjectToDBList();
+    	redirect("/home");
+    }
+    
+    public static void reloadDiseasename(){
+    	DiseaseChangeUtil.updateDiseaseNameInTalker("Uterine ans Corpus Cancer", "Uterine and Endometrial Cancer");
+    	redirect("/home");
+    }
+    
+    public static void mergeTables(){
+    	TalkerDAO.mergeTable();
     	redirect("/home");
     }
     public static void updateTalkerIds(){
