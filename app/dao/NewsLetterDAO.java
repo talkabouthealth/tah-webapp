@@ -103,8 +103,8 @@ public class NewsLetterDAO {
 		String NEWSLETTER_COLLECTION = "talkerNewsletter";
 		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
-		DBObject topicIdObj = new BasicDBObject("talkerId", talkerRef);
-		DBObject obj = newsLetterColl.findOne(topicIdObj);
+		DBObject talkerIdObj = new BasicDBObject("talkerId", talkerRef);
+		DBObject obj = newsLetterColl.findOne(talkerIdObj);
 		Set<String> emailList = null;
 		DBObject newsLetterDBObject;
 		if(obj == null) {
@@ -116,8 +116,28 @@ public class NewsLetterDAO {
 			emailList = DBUtil.getStringSet(obj,"email");
 			emailList.add(email);
 			newsLetterDBObject = BasicDBObjectBuilder.start().add("talkerId", talkerRef).add("email", emailList).get();
-			newsLetterColl.update(topicIdObj,newsLetterDBObject);
+			newsLetterColl.update(talkerIdObj,newsLetterDBObject);
 		}
 		return true;
+	}
+	
+	public static boolean isSubscribeTalker(String email, String talkerId) {
+		String NEWSLETTER_COLLECTION = "talkerNewsletter";
+		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
+		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
+		DBObject talkerIdObj = new BasicDBObject("talkerId", talkerRef);
+		DBObject obj = newsLetterColl.findOne(talkerIdObj);
+		boolean returnFlag = false;
+		if(obj == null) {
+			returnFlag = false;
+		}else{
+			Set<String> emailList = DBUtil.getStringSet(obj,"email");
+			if(emailList.contains(email)) {
+				returnFlag = true;
+			} else{
+				returnFlag = false;
+			}
+		}
+		return returnFlag;
 	}
 }
