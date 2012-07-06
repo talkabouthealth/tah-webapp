@@ -1,0 +1,66 @@
+<style>
+#checkboxareainner { color: #646664; float: left; font-family: arial; font-size: 12px; font-weight: none; height: 20px;padding-top: 5px;text-decoration: none; }
+#subcribeConvo { margin-bottom: 10px;width: 260px;float: left;margin-top: 10px; }
+.subscribeEmail{width:165px;}
+</style>
+<script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
+<script type="text/javascript">
+function changeEmail(){
+	var email = document.getElementById("email").value;
+	alert(email);
+	if(email == 'Please Enter Your Email Address'){
+		document.getElementById("email").value = "";
+	}else if(email == ''){
+		document.getElementById("email").value = "Please Enter Your Email Address";
+	}
+}
+
+$(document).ready(function() {
+	var submitOption = { success: setMessage }; 
+	$('#subcribe').submit(function() {
+		$("#subcribe").ajaxSubmit(submitOption);
+		return false;
+	});
+	$('#email').click(function() {
+		if($("#email").val().trim() == 'Please Enter Your Email Address')
+			$("#email").val('');
+	});
+	$('#email').blur(function() {
+		if($("#email").val().trim() == '')
+			$("#email").val('Please Enter Your Email Address');
+	});
+});
+
+function setMessage(responseText, statusText, xhr, $form)  {
+	if (responseText.indexOf("Error:") === 0) {
+   		var errorText = responseText.replace("Error:", "");
+   		$("#responseMessage").css("color","#ff0000");
+   		$("#responseMessage").html(errorText); 
+   		$("#responseMessage").fadeIn(100);
+   		closeTimeout = setTimeout(function() { $("#responseMessage").fadeOut(200) }, 4000);
+   	} else {
+   		$("#responseMessage").css("color","#2E8B57");
+   		$("#responseMessage").html(responseText);
+   		$("#responseMessage").fadeIn(100);
+   		closeTimeout = setTimeout(function() { $("#responseMessage").fadeOut(200) }, 4000);
+   	}
+}
+</script>
+<div id="subcribeConvo">
+	#{form @Newsletter.subscribeTalker(), id:'subcribe'  }
+   		<strong style="color: #000;">Receive weekly email digest of<br/> <span style="color:#0286BC">${talker.userName}'s</span> answers and thoughts.</strong> <br />
+   		<span id="responseMessage" style="display:none;margin-top: 5px;height:15px;float:left;width:100%;"></span>
+   		<div style="margin-top: 5px;float:left;">
+   			<input name="talkerId" type="hidden" value="${talker.id}"/>
+   			#{if currentTalker }
+   				<input type="hidden" name="email" id="email" value="${currentTalker.email}" />
+   				<input class="submitSubscribeTopic" type="submit" value=""/>
+   			#{/if}
+   			#{else}
+	   			<input name="email" id="email" class="subscribeEmail" type="text" value="Please Enter Your Email Address"/>
+	   			<input class="submitSubscribeEmail" type="submit" value=""/>
+	   		#{/else}
+   		</div>
+   #{/form}
+ </div>
+ <div class="topicborder"></div>

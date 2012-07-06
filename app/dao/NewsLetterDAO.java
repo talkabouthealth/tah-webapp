@@ -98,4 +98,26 @@ public class NewsLetterDAO {
 		}
 		return true;
 	}
+	
+	public static boolean saveOrUpdateTalkerNewsletter(String email, String talkerId) {
+		String NEWSLETTER_COLLECTION = "talkerNewsletter";
+		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
+		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
+		DBObject topicIdObj = new BasicDBObject("talkerId", talkerRef);
+		DBObject obj = newsLetterColl.findOne(topicIdObj);
+		Set<String> emailList = null;
+		DBObject newsLetterDBObject;
+		if(obj == null) {
+			emailList = new HashSet<String>();
+			emailList.add(email);
+			newsLetterDBObject = BasicDBObjectBuilder.start().add("talkerId", talkerRef).add("email", emailList).get();
+			newsLetterColl.save(newsLetterDBObject);
+		} else {
+			emailList = DBUtil.getStringSet(obj,"email");
+			emailList.add(email);
+			newsLetterDBObject = BasicDBObjectBuilder.start().add("talkerId", talkerRef).add("email", emailList).get();
+			newsLetterColl.update(topicIdObj,newsLetterDBObject);
+		}
+		return true;
+	}
 }

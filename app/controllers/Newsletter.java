@@ -44,4 +44,19 @@ public class Newsletter extends Controller {
     		renderText("Thank you for subscribing!");
     	}
 	}
+	
+	public static void subscribeTalker(@Email String email, String talkerId){
+		validation.required(email).message("Email is required");
+    	validation.email(email);
+		if (validation.hasErrors()) {
+    		params.flash();
+            Error error = validation.errors().get(0);
+			renderText("Error:" + error.message());
+    	} else if(talkerId == null) {
+    		renderText("Error: Please try again.");
+    	} else {
+    		NewsLetterDAO.saveOrUpdateTalkerNewsletter(email,talkerId);
+    		renderText("Thank you for subscribing!");
+    	}
+	}
 }

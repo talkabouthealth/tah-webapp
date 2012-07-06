@@ -36,7 +36,11 @@
 		<input type="button" id="followActionImageBtn" value=""
 			class="${ currentTalker.followingList.contains(talker) ? 'followingMemberBtn' : 'followMemberBtn'}"  />
 	</div>
+	<div class="topicborder" style="margin-top:5px;"></div>
     #{/if}
+    #{ifnot session.username.equals(talker.userName) }
+		#{include '/tags/newsletter/subscribeTalker.html' /}
+	#{/ifnot}
 	<div style="padding-left: 10px; padding-top: 10px;">
 		#{if session.username.equals(talker.userName) }
      		Welcome <a href="@{ViewDispatcher.view(talker.userName)}"><strong>${talker.userName}</strong></a>!
