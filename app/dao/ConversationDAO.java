@@ -1377,46 +1377,40 @@ public class ConversationDAO {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		DBObject query = new BasicDBObject("_id", new ObjectId(convoId));
 		DBObject convoDBObject = convosColl.findOne(query);
-		System.out.println(convoDBObject.get("_id").toString());
 		if(talker==null){
 			Collection<String> emails = (Collection<String>)convoDBObject.get("answer_subscription");
-			if(emails==null || emails.size()==0){
+			if(emails==null || emails.size()==0) {
 				String []emaillist={email};
 				DBObject emailsObj=new BasicDBObject("answer_subscription", emaillist);
 				
 				DBObject Id = new BasicDBObject("_id", new ObjectId(convoDBObject.get("_id").toString()));
 				convosColl.update(Id, new BasicDBObject("$set", emailsObj),false ,true);
 				return false;
-			}else if(!emails.contains(email)){
+			} else if(!emails.contains(email)) {
 				emails.add(email);
 				DBObject emailsObj=new BasicDBObject("answer_subscription",  emails.toArray(new String[]{}));
 				DBObject Id = new BasicDBObject("_id", new ObjectId(convoDBObject.get("_id").toString()));
 				convosColl.update(Id, new BasicDBObject("$set", emailsObj),false,true);
 				return false;
-			}else
+			} else
 				return true;
-		}else{
+		} else {
 			if (!talker.getFollowingConvosList().contains(convoId)) {
-				
 				talker.getFollowingConvosList().add(convoId);
-				
 				TalkerDAO.updateTalker(talker);
-	    		TalkerBean mailSendtalker = TalkerLogic.loadTalkerFromCache(convoDBObject, "uid");// TalkerDAO.getByEmail(convo.getTalker().getEmail());
-	    		
+				/*TalkerBean mailSendtalker = TalkerLogic.loadTalkerFromCache(convoDBObject, "uid");
 	    		Map<String, String> vars = new HashMap<String, String>();
 	    		vars.put("other_talker", talker.getUserName());
-	    		
 	    		if(mailSendtalker.getEmailSettings().toString().contains("NEW_FOLLOWER"))
 	    			EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_FOLLOWER, mailSendtalker.getEmail(), vars, null, false);
-	    	} 
+	    		*/
+	    	}
 			return false;
 		}
-			
 	}
 	
 	public static void updateConvoForDisease(ConversationBean convo){
 		DBCollection convoColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
-		
 		DBObject convoObject = BasicDBObjectBuilder.start()
 			.add("category", convo.getCategory())
 			.add("other_disease_categories", convo.getOtherDiseaseCategories())
@@ -1427,4 +1421,3 @@ public class ConversationDAO {
 		convoColl.update(convoId, new BasicDBObject("$set", convoObject));
 	}
 }
-
