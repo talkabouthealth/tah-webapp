@@ -1,7 +1,7 @@
 #{extends 'main.html' /}
 	<style type="text/css">
-		#innermiddlearea { padding-top: 10px }
-		#checkboxareainner {   color: #000000;
+	#innermiddlearea { padding-top: 10px }
+	#checkboxareainner {   color: #000000;
     float: left;
     font-family: arial;
     font-size: 14px;
@@ -27,9 +27,9 @@
 					return false;
 				}
 				$("#newsLetterForm").ajaxSubmit(newsLetterOptions); 
-				
 				return false;
 			})
+			
 		});
 		function showMsg(responseText){
 			if(responseText === "Ok"){
@@ -48,7 +48,6 @@
 			}
 		}
 	</script>
-		
 <div id="managtopic1">
   <div id="managtopic">
   	#{include 'header.html' /}

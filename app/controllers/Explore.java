@@ -635,32 +635,8 @@ public class Explore extends Controller {
 		if(newsletter != null && newsletter.getNewsLetterType() != null && newsletter.getNewsLetterType().length > 0){
 			NewsLetterDAO.saveOrUpdateNewsletter(newsletter,talker);
 			renderText("Ok");
+		}else{
+			renderText("Please select on of the option");
 		}
-		/*if(talker != null && !newsletterFlag) {
-			ApplicationDAO.removeFromNewsletter(email);
-			renderText("Ok");
-		}
-		if(newsletterFlag) {
-	    	if (validation.hasErrors()) {
-	    	    params.flash();
-	            Error error = validation.errors().get(0);
-				renderText("Error:" + error.message());
-	        } else if(ApplicationDAO.isEmailExists(email)) {
-	        	params.flash();
-	        	Map<String, String> vars = new HashMap<String, String>();
-	        	String parsedUsername = email.substring(0, email.indexOf("@"));
-	    		vars.put("username", parsedUsername);
-	        	//EmailUtil.sendEmail(EmailTemplate.WELCOME_NEWSLETTER, email, vars, null, false);
-	        	renderText("Ok");
-	        } else {
-	        	params.flash();
-		    	ApplicationDAO.addToNewsLetter(email, new String[0]);
-		    	Map<String, String> vars = new HashMap<String, String>();
-	        	String parsedUsername = email.substring(0, email.indexOf("@"));
-	    		vars.put("username", parsedUsername);
-		    	//EmailUtil.sendEmail(EmailTemplate.WELCOME_NEWSLETTER, email, vars, null, false);
-		    	renderText("Ok");
-	        }
-		}*/
 	}
 }

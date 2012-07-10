@@ -1,0 +1,88 @@
+<script type="text/javascript">
+	$(document).ready(function() {
+		var newOptions = { success: showEmailMsg };
+		$('#emailLetterForm').submit(function() {
+			$("#emailLetterForm").ajaxSubmit(newOptions); 
+			return false;
+		})
+	});
+	function showEmailMsg(responseText) {
+		if(responseText === "Ok") {
+			hideAll();
+			alert("Thank you for subscribing");
+		} else {
+			alert(responseText);
+		}
+	}
+</script>
+<div id="emailpopup" class="window">
+    <div class="boxtopcenter">
+		<div id="newConvoForm" class="popboxWraper">
+			<div class="popbox2" style="height: 100%;">
+				<div class="closecover">
+					<div class="close"><img src="/public/images/close.jpg" alt="Close" /></div>
+				</div>
+				<div class="askquestion">
+					<div class="askquestionbox"><b>Thank you for subscribing</b></div>
+				</div>
+				<div class="askheadingCoverz">
+					<div class="askinputCover">
+						Would you like to subscribe to some of our newsletters ?
+					</div>
+				</div>
+				#{form @Newsletter.subscribeMoreNewsLetter() , id:'emailLetterForm' }
+				<div class="answerh1">
+					<div style="clear: both;">
+						<input type="hidden" name="newsletter.email" value="" />
+						<div id="checkboxarea3" style="float:none;height:30px;">
+							<input id="newsletter" name="newsletter.newsLetterType" 
+								type="checkbox" value="workshop"
+								#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('workshop') } 
+							   		checked='checked'
+							   	#{/if}>
+							Daily Update & Workshop Announcement<br/>
+							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured answers, experts, tips &amp; latest news.)</font>
+						</div>
+						<div id="checkboxarea3"  style="float:none;height:30px;">
+							<input id="newsletter.newsLetterType" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery"
+							#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Workshop summery') } 
+										    		checked='checked'
+										    	#{/if}
+							/>
+							Q&A Workshop Summary<br/>
+							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Daily answer summaries from our expert Q&A workshops.)</font>
+						</div>
+						<div id="checkboxarea3"  style="float:none;height:30px;">
+						<input id="newsletter" name="newsletter.newsLetterType" 
+								type="checkbox" id="newsletter.newsLetterType" value="Best of TalkAboutHealth"
+								#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Best of TalkAboutHealth') } 
+										    		checked='checked'
+										    	#{/if}>
+								Best of TalkAboutHealth (weekly)<br/>
+								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(The week's best answers, news &amp; support.)</font>	
+						</div>		
+						<div id="checkboxarea3" style="float:none;height:30px;">
+							<input id="newsletter" name="newsletter.newsLetterType" 
+								type="checkbox" id="newsletter.newsLetterType" value="TalkAboutHealth Rewards"
+								#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('TalkAboutHealth Rewards') } 
+										    		checked='checked'
+										    	#{/if}> 
+							TalkAboutHealth Bebefits
+							<br/>
+							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Custom health, wellness &amp; medical offers.)</font>
+						</div>
+					</div>
+				</div>
+				<div style="padding: 10px 0;border-top: 1px solid #C5D0D6;font-size: 16px;height: 50px; margin-top: 10px; width: 635px;">
+					<div class="askinputCover" style="float:right;">
+						<button type="submit" class="subscribe"></button>
+						<a href="#" onclick="javaScript:hideAll();">No Thanks.</a>
+						<br/>
+						<a href="/explore/newsletter">View all Newsletters</a>
+					</div>
+				</div>
+				#{/form}
+			</div>
+		</div> 
+	</div>
+</div>

@@ -5,16 +5,6 @@
 </style>
 <script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
 <script type="text/javascript">
-function changeEmail(){
-	var email = document.getElementById("email").value;
-	alert(email);
-	if(email == 'Please Enter Your Email Address'){
-		document.getElementById("email").value = "";
-	}else if(email == ''){
-		document.getElementById("email").value = "Please Enter Your Email Address";
-	}
-}
-
 $(document).ready(function() {
 	var submitOption = { success: setMessage }; 
 	$('#subcribe').submit(function() {
@@ -38,12 +28,23 @@ function setMessage(responseText, statusText, xhr, $form)  {
    		$("#responseMessage").html(errorText); 
    		$("#responseMessage").fadeIn(100);
    		closeTimeout = setTimeout(function() { $("#responseMessage").fadeOut(200) }, 4000);
+   	}else if (responseText.indexOf("NEW:") === 0) {
+   		$("#responseMessage").css("color","#2E8B57");
+   		$("#responseMessage").html(responseText.substring(4));
+   		$("#responseMessage").fadeIn(100);
+   		closeTimeout = setTimeout(function() { $("#responseMessage").fadeOut(200) }, 4000);
+   		var email = $("#subcribe :input[name='email']").val();
+   		showPopupEmail(email);
    	} else {
    		$("#responseMessage").css("color","#2E8B57");
    		$("#responseMessage").html(responseText);
    		$("#responseMessage").fadeIn(100);
    		closeTimeout = setTimeout(function() { $("#responseMessage").fadeOut(200) }, 4000);
    	}
+}
+showPopupEmail = function(email){
+	$("#emailpopup :input[name='newsletter.email']").val(email);
+	showPopup("#emailpopup", 350);
 }
 </script>
 <div id="subcribeConvo">

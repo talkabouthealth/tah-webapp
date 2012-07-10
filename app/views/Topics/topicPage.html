@@ -1,3 +1,4 @@
+ #{set currentPage = 'topicPage' /}
 #{extends 'main.html' /}
 	<style>
 		#innermiddlearea { padding-top: 10px }
@@ -92,6 +93,34 @@
 
 <body>
 #{include 'header.html' /}
+
+<div id="boxes">
+	<div id="dialog" class="window"></div>
+	
+	#{if !talker}
+		#{ popups/loginPopup  mainURL: topic.mainURL /}
+		#{ newsletter/emailpopup /}
+	#{/if}
+	#{ popups/flag /}
+	
+	#{if talker}
+			#{set twitterAccount = talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
+			#{ popups/shareTwitter shareType: 'Topic', userName: twitterAccount?.userName, topicName: topic.title, topicURL: topic.bitly /}
+			#{ popups/shareFacebook shareType: 'Topic', topicName: topic.title, topicURL: currentURL /}
+	#{/if}
+	#{ popups/shareEmail shareType: 'Topic', userName: talker?.userName, topicName: topic.title, topicDetails: topic.summary, topicURL: currentURL /}
+</div>
+<!-- Mask to cover the whole screen -->
+<div id="mask"></div>  
+<script type="text/javascript">
+var medium='${session.showLoginPoup}';
+if(medium=='show'){
+	$("#loginpopupform").show();
+	  showPopup("#loginPopup", 350);
+}
+</script>
+
+
 	<div id="bottom_container">
       	<div class="haderbanner"><div id="innerbanner"></div></div>
 	<div id="targetedtherapy">
@@ -324,7 +353,6 @@
                 #{ifnot session.username }
                 	#{include 'subscribe_reward.html' /}
                 #{/ifnot}
-                #{set currentPage = 'topicPage' /}
 		#{include 'Upcoming_Workshops.html' /}
 		#{common/popularTopics popularTopics: popularTopics /}
 		#{include 'SHARE_trained_peer_support.html' /}
@@ -366,18 +394,4 @@
           <div id="signupright"></div>
     </div>
     
-<div id="boxes">
-	<div id="dialog" class="window"></div>
-	
-	#{ popups/flag /}
-	
-	#{if talker}
-			#{set twitterAccount = talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
-			
-			#{ popups/shareEmail shareType: 'Topic', userName: talker?.userName, topicName: topic.title, topicDetails: topic.summary, topicURL: currentURL /}	
-			#{ popups/shareTwitter shareType: 'Topic', userName: twitterAccount?.userName, topicName: topic.title, topicURL: topic.bitly /}
-			#{ popups/shareFacebook shareType: 'Topic', topicName: topic.title, topicURL: currentURL /}
-	#{/if}
-</div>
-<!-- Mask to cover the whole screen -->
-<div id="mask"></div>    
+  

@@ -26,7 +26,7 @@ public class NewsLetterDAO {
 	 * Method used for save or update newsletter information.
 	 * @param newsLetterBean
 	 */
-	public static void saveOrUpdateNewsletter(NewsLetterBean newsLetterBean,TalkerBean talker){
+	public static boolean saveOrUpdateNewsletter(NewsLetterBean newsLetterBean,TalkerBean talker){
 		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
 		boolean isExist = ApplicationDAO.isEmailExists(newsLetterBean.getEmail());
 		if(isExist){
@@ -57,6 +57,7 @@ public class NewsLetterDAO {
 				.get();
 			newsLetterColl.save(newsLetterDBObject);
 		}
+		return isExist;
 	}
 	
 	/**
@@ -139,5 +140,19 @@ public class NewsLetterDAO {
 			}
 		}
 		return returnFlag;
+	}
+	
+	/**
+	 * Used for checking newsletter subscribe or not.
+	 * @param email
+	 * @param newsLetter
+	 * @return
+	 */
+	public static boolean isnewsLetterSubscribe(String email){
+		NewsLetterBean newsletter = NewsLetterDAO.getNewsLetterInfo(email);
+		if(newsletter != null)
+			return true;
+		else
+			return false;
 	}
 }
