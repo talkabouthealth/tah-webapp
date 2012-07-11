@@ -28,7 +28,7 @@ function setMessage(responseText, statusText, xhr, $form)  {
    		$("#responseMessage").html(errorText); 
    		$("#responseMessage").fadeIn(100);
    		closeTimeout = setTimeout(function() { $("#responseMessage").fadeOut(200) }, 4000);
-   	}else if (responseText.indexOf("NEW:") === 0) {
+   	} else if (responseText.indexOf("NEW:") === 0) {
    		$("#responseMessage").css("color","#2E8B57");
    		$("#responseMessage").html(responseText.substring(4));
    		$("#responseMessage").fadeIn(100);

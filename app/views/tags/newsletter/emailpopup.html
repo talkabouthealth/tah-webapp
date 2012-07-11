@@ -35,40 +35,23 @@
 					<div style="clear: both;">
 						<input type="hidden" name="newsletter.email" value="" />
 						<div id="checkboxarea3" style="float:none;height:30px;">
-							<input id="newsletter" name="newsletter.newsLetterType" 
-								type="checkbox" value="workshop"
-								#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('workshop') } 
-							   		checked='checked'
-							   	#{/if}>
-							Daily Update & Workshop Announcement<br/>
+							<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="workshop" checked='checked' />
+							Daily Update &amp; Workshop Announcement<br/>
 							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured answers, experts, tips &amp; latest news.)</font>
 						</div>
 						<div id="checkboxarea3"  style="float:none;height:30px;">
-							<input id="newsletter.newsLetterType" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery"
-							#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Workshop summery') } 
-										    		checked='checked'
-										    	#{/if}
-							/>
+							<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked='checked' />
 							Q&A Workshop Summary<br/>
 							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Daily answer summaries from our expert Q&A workshops.)</font>
 						</div>
 						<div id="checkboxarea3"  style="float:none;height:30px;">
-						<input id="newsletter" name="newsletter.newsLetterType" 
-								type="checkbox" id="newsletter.newsLetterType" value="Best of TalkAboutHealth"
-								#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Best of TalkAboutHealth') } 
-										    		checked='checked'
-										    	#{/if}>
-								Best of TalkAboutHealth (weekly)<br/>
-								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(The week's best answers, news &amp; support.)</font>	
+							<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Best of TalkAboutHealth" checked='checked' />
+							Best of TalkAboutHealth (weekly)<br/>
+							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(The week's best answers, news &amp; support.)</font>	
 						</div>		
 						<div id="checkboxarea3" style="float:none;height:30px;">
-							<input id="newsletter" name="newsletter.newsLetterType" 
-								type="checkbox" id="newsletter.newsLetterType" value="TalkAboutHealth Rewards"
-								#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('TalkAboutHealth Rewards') } 
-										    		checked='checked'
-										    	#{/if}> 
-							TalkAboutHealth Bebefits
-							<br/>
+							<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TalkAboutHealth Rewards" checked='checked' /> 
+							TalkAboutHealth Bebefits<br/>
 							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Custom health, wellness &amp; medical offers.)</font>
 						</div>
 					</div>
