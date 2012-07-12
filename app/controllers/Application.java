@@ -540,8 +540,8 @@ public class Application extends Controller {
         	String parsedUsername = email.substring(0, email.indexOf("@"));
     		vars.put("username", parsedUsername);
         	
-        	renderText("Thanks for subscribing to TalkAboutHealth Reward!");	
-        }else{
+        	renderText("Thanks for subscribing");	
+        } else {
         	params.flash();
         	String arrary[]={"TalkAboutHealth Rewards"};
         	
@@ -554,7 +554,7 @@ public class Application extends Controller {
         	String parsedUsername = email.substring(0, email.indexOf("@"));
     		vars.put("username", parsedUsername);
 	    	
-	    	renderText("Thanks for subscribing to TalkAboutHealth Reward!");
+	    	renderText("Thanks for subscribing");
         }
     }
 

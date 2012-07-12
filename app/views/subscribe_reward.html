@@ -7,9 +7,17 @@
 				$("#reward").ajaxSubmit(rewardOptions); 
 				return false;
 			});
-		
+			$('#emailReward').click(function() {
+				if($("#emailReward").val().trim() == 'Email Address')
+					$("#emailReward").val('');
+			});
+			
+			$('#emailReward').blur(function() {
+				if($("#emailReward").val().trim() == '')
+					$("#emailReward").val('Email Address');
+			});
 		});
-		function setRewardLetterMessage(responseText, statusText, xhr, $form)  {
+		function setRewardLetterMessage(responseText, statusText, xhr, $form) {
 			if (responseText.indexOf("Error:") === 0) {
 		   		var errorText = responseText.replace("Error:", "");
 		   		$("#rewardMessage").css("color","#ff0000");
@@ -23,40 +31,33 @@
 		   		closeTimeout = setTimeout(function() { $("#rewardblock").fadeOut(200) }, 4000);
 		   	}
 		}
-
-		function changeEmailReward(){
-			var email = document.getElementById("emailReward").value;
-			if(email == 'Email Address'){
-				document.getElementById("emailReward").value = "";
-			}else if(email == ''){
-				document.getElementById("emailReward").value = "Email Address";
-			}
-		}
 	</script>
-
-
 	<div class="topipsts" id="tahreward">
 	<div class="" id="rewardblock" >
-	
-   		<div class="mtrighttxt1">TalkAboutHealth Rewards</div>
-   		<span id="rewardMessage" class="success" style="display:none;font-weight: bold;">Thanks for subscribing to TalkAboutHealth Reward.</span>
+		<div style="padding:5px;float: left;">
+			<span style="float: left;"><img width="153px" src="/public/images/logo_footer.jpg"/></span>
+			<span style="float: left; padding-top: 3px;color:#3888c1;font-style: italic;font-size: 14px;" class="mtrighttxt1">Benefits</span>
+		</div>
+		<div style="float:left;padding:5px;">
+			<span class="blacktextgrey15">Health, wellness, food, medical saving,<br/> survey opportunities &special offers</span>
+		</div>
+		<div style="border-top: 2px solid #D9D7D7;float: left; margin: 5px 5px 0;width: 97%;"></div>
    		#{form @Application.subscribeReward(), id:'reward' }
- 		  		<div><br/><span class="blacktextgrey15">Health, wellness, food, medical saving,<br/> survey opportunities &special offers<br /></span></div>
- 		  		<br />
+	  		<div style="clear: both;height: 15px;padding:0 5px"><span id="rewardMessage" class="success" style="display:none;font-size: 12px;">Thanks for subscribing.</span></div>
+	  		<div style="float:left;padding:0px 5px 0 5px">
 			#{if session.username }
-				<input name="email" id="emailReward" class="email" type="text" value="${talker.email}" size="17" />
+				<input name="email" id="emailReward" style="background: none repeat scroll 0 0 #F0F0F0;border: 1px solid #606060;color: #010101;padding: 3px;" type="text" value="${talker.email}" size="17" />
 			#{/if}
 			#{else}
-				<input name="email" id="emailReward" class="email" type="text" value="Email Address" size="17"  onclick="javascript:changeEmailReward();" onblur="javascript:changeEmailReward();"/>
+				<input name="email" id="emailReward" style="background: none repeat scroll 0 0 #F0F0F0;border: 1px solid #606060;color: #010101;padding: 3px;" type="text" value="Email Address" size="17"/>
 			#{/else}
-			<br/>
-			<div style="padding-top: 12px;">
-				<input class="newsignupbutton" type="submit" value="" style="cursor: pointer;"/>
-			</div>	
-		#{/form}   		
-		<br />
-   		<div class="topicborder"></div>
+			</div>
+			<div style="float:left;padding-top: 2px;">
+				<input class="newsignupBenefits" type="submit" value="" style="cursor: pointer;"/>
+			</div>
+		#{/form}
+		<br/>
+   		<div class="topicborder" style="margin-top: 20px;"></div>
    	</div>
-   	 
    	</div>
 #{/if}

@@ -34,9 +34,12 @@ function setMessage(responseText, statusText, xhr, $form)  {
 -->
 </script>
 <div id="newsLetter" style="padding:10px 0;">
-	<div style="text-align: center;"><img src="/public/images/logo_footer.jpg"/></div>
-	<div style="text-align: center;border-bottom: 2px solid #D9D7D7;" class="mtrighttxt1">Newsletters</div>
-	<div style="padding:5px;" class="talkinfo">Sign up for our newsletters to get updates on upcoming workshops, expert answers, and member benefits.</div>
+	<div style="padding:5px;float: left;">
+		<span style="float: left;"><img width="153px" src="/public/images/logo_footer.jpg"/></span>
+		<span style="float: left; padding-top: 3px;color:#3888c1;font-style: italic;font-size: 14px;" class="mtrighttxt1">Newsletters</span>
+	</div>
+	<div style="border-bottom: 2px solid #D9D7D7;float: left; margin: 5px;width: 97%;"></div>
+	<div style="padding:5px;text-align: justify;" class="talkinfo">Sign up for our newsletters to get updates on upcoming workshops, expert answers, and member benefits.</div>
 	#{if !newsLetterFlag }
 		#{form @Newsletter.subscribeMoreNewsLetter() , id:'subcribe' }
 			<div style="font-size: 12px;float: left;" class="talkinfo">
@@ -45,7 +48,7 @@ function setMessage(responseText, statusText, xhr, $form)  {
 			</div>
 			<div style="font-size: 12px;float: left;" class="talkinfo">
 				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked='checked' /></div>
-				<div style="padding-top: 3px;float:left;">Q&A Workshop Summary</div>
+				<div style="padding-top: 3px;float:left;">Daily Q&A Workshop Summary</div>
 			</div>
 			<div style="font-size: 12px;float: left;" class="talkinfo">
 				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Best of TalkAboutHealth" checked='checked' /></div>
@@ -53,7 +56,7 @@ function setMessage(responseText, statusText, xhr, $form)  {
 			</div>
 			<div style="font-size: 12px;float: left;" class="talkinfo">
 				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TalkAboutHealth Rewards" checked='checked' /></div> 
-				<div style="padding-top: 3px;float:left;">TalkAboutHealth Bebefits</div>
+				<div style="padding-top: 3px;float:left;">TalkAboutHealth Benefits</div>
 			</div>
 			<div style="font-size: 12px;padding:15px 5px 0;" class="talkinfo">
 				<div style="clear: both;height: 20px;">
@@ -65,15 +68,13 @@ function setMessage(responseText, statusText, xhr, $form)  {
 				#{else}
 					<input name="newsletter.email" id="email" style="background: none repeat scroll 0 0 #F0F0F0;border: 1px solid #606060;color: #010101;padding: 3px;" type="text" value="Email Address" size="17"/>
 				#{/else}
-				<input style="font-size: 11px;background: none repeat scroll 0 0 #014DAB;border: 1px solid #000F22;color: #FFFFFF;padding: 3px;text-transform: uppercase;cursor: pointer;" type="submit" value="submit">
+				<input style="font-size: 11px;background: none repeat scroll 0 0 #014DAB;border: 1px solid #000F22;color: #FFFFFF;padding: 3px 2px 2px;text-transform: uppercase;cursor: pointer;" type="submit" value="submit">
 			</div>
 		#{/form}
 	#{/if}
 	#{else}
 		<div style="padding:5px;"><span class="blacktextgrey15">Sign up for one of our free newsletters!</span></div>
 	#{/else}
-	<div style="text-align: center;padding:15px 0 0; font-weight: bold;"><a href="/explore/newsletter">View all newsletters</a></div>
-	<div class="topicborder" style="margin-top: 15px;"></div>  
+	<div style=" font-size: 11px; font-weight: bold; padding: 10px 5px 0;"><a href="/explore/newsletter">View all newsletters</a></div>
+	<div class="topicborder" style="margin-top: 10px;"></div>  
 </div>
- 
-	 
