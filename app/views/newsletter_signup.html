@@ -1,9 +1,9 @@
 <script>
 <!--
 $(document).ready(function() {
-	var submitOption = { success: setMessage }; 
-	$('#subcribe').submit(function() {
-		$("#subcribe").ajaxSubmit(submitOption);
+	var submitOption = { success: setNewsletterMessage }; 
+	$('#subcribeNewsletter').submit(function() {
+		$("#subcribeNewsletter").ajaxSubmit(submitOption);
 		return false;
 	});
 	$('#email').click(function() {
@@ -16,20 +16,20 @@ $(document).ready(function() {
 			$("#email").val('Email Address');
 	});
 });
-function setMessage(responseText, statusText, xhr, $form)  {
+function setNewsletterMessage(responseText, statusText, xhr, $form)  {
 	var errorText;
-	$("#responseMessage").css("color","#2E8B57");
+	$("#respMessage").css("color","#2E8B57");
 	if (responseText.indexOf("Error:") === 0) {
    		errorText = responseText.replace("Error:", "");
-   		$("#responseMessage").css("color","#ff0000");
+   		$("#respMessage").css("color","#ff0000");
    	} else if (responseText.indexOf("Email alrady subscribed!") === 0) {
    		errorText = responseText;
    	} else {
    		errorText= "Thank you for subscribing!";
    	}
-	$("#responseMessage").html(errorText); 
-	$("#responseMessage").fadeIn(100);
-	closeTimeout = setTimeout(function() { $("#responseMessage").fadeOut(200) }, 4000);
+	$("#respMessage").html(errorText); 
+	$("#respMessage").fadeIn(100);
+	closeTimeout = setTimeout(function() { $("#respMessage").fadeOut(200) }, 4000);
 }
 -->
 </script>
@@ -41,7 +41,7 @@ function setMessage(responseText, statusText, xhr, $form)  {
 	<div style="border-bottom: 2px solid #D9D7D7;float: left; margin: 5px;width: 97%;"></div>
 	<div style="padding:5px;text-align: justify;" class="talkinfo">Sign up for our newsletters to get updates on upcoming workshops, expert answers, and member benefits.</div>
 	#{if !newsLetterFlag }
-		#{form @Newsletter.subscribeMoreNewsLetter() , id:'subcribe' }
+		#{form @Newsletter.subscribeMoreNewsLetter() , id:'subcribeNewsletter' }
 			<div style="font-size: 12px;float: left;" class="talkinfo">
 				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="workshop" checked='checked' /></div>
 				<div style="padding-top: 3px;float:left;">Daily Update &amp; Workshop</div>
@@ -60,7 +60,7 @@ function setMessage(responseText, statusText, xhr, $form)  {
 			</div>
 			<div style="font-size: 12px;padding:15px 5px 0;" class="talkinfo">
 				<div style="clear: both;height: 20px;">
-				<span id="responseMessage" style="margin-top: 5px;height:15px;float:left;width:100%;"></span>
+				<span id="respMessage" style="margin-top: 5px;height:15px;float:left;width:100%;"></span>
 				</div>
 				#{if session.username }
 					<input name="newsletter.email" id="email" style="background: none repeat scroll 0 0 #F0F0F0;border: 1px solid #606060;color: #010101;padding: 3px;" type="text" value="${talker.email}" size="17" />
