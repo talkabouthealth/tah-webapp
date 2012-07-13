@@ -8,7 +8,7 @@
 		var action = '${action}';
 
 		var popularConvo=0;
-		var recentConvo=1;
+		var recentConvo=0;
 		var expertConvo=0;
 		var openConvo=0;
 		
@@ -52,7 +52,7 @@
 				    });	
 				}else 
 				*/ 
-				if(id=='recentConvo' && popularConvo==0 ){
+				if(id=='recentConvo' && recentConvo==0 ){
 					$("#ajaxLoading").appendTo($("#"+id+"Div")).show();
 					$.get("/Explore/ajaxFeedUpdate",{ type : 'recentConvo' },function(data){
 						recentConvo=1;
@@ -101,8 +101,8 @@
                 <div class="mtcontent">
                   <div class="topipcWraper">
                   	<div class="newTabCover">
-                  	  <div class="newTab"><a href="#" id="expertConvo" class="tabLink">Expert Answers</a></div>
-					  <div class="newActiveTab"><a href="#" id="recentConvo" class="tabLink">Recent Answers</a></div>
+                  	  <div class="newActiveTab"><a href="#" id="expertConvo" class="tabLink">Expert Answers</a></div>
+					  <div class="newTab"><a href="#" id="recentConvo" class="tabLink">Recent Answers</a></div>
 <!--					  <div class="newTab"><a href="#" id="popularConvo" class="tabLink">Popular Answers</a></div>-->
 					  <div class="newTab"><a href="#" id="openConvo" class="tabLink">Unanswered Questions</a></div>
 					  <div class="laborder"></div>
