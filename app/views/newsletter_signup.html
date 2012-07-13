@@ -10,7 +10,6 @@ $(document).ready(function() {
 		if($("#email").val().trim() == 'Email Address')
 			$("#email").val('');
 	});
-	
 	$('#email').blur(function() {
 		if($("#email").val().trim() == '')
 			$("#email").val('Email Address');
@@ -38,7 +37,7 @@ function setNewsletterMessage(responseText, statusText, xhr, $form)  {
 		<span style="float: left;"><img width="153px" src="/public/images/logo_footer.jpg"/></span>
 		<span style="float: left; padding-top: 3px;color:#3888c1;font-style: italic;font-size: 14px;" class="mtrighttxt1">Newsletters</span>
 	</div>
-	<div style="border-bottom: 2px solid #D9D7D7;float: left; margin: 5px;width: 97%;"></div>
+<!--	<div style="border-bottom: 2px solid #D9D7D7;float: left; margin: 5px;width: 97%;"></div>-->
 	<div style="padding:5px;text-align: justify;" class="talkinfo">Sign up for our newsletters to get updates on upcoming workshops, expert answers, and member benefits.</div>
 	#{if !newsLetterFlag }
 		#{form @Newsletter.subscribeMoreNewsLetter() , id:'subcribeNewsletter' }
@@ -60,7 +59,7 @@ function setNewsletterMessage(responseText, statusText, xhr, $form)  {
 			</div>
 			<div style="font-size: 12px;padding:15px 5px 0;" class="talkinfo">
 				<div style="clear: both;height: 20px;">
-				<span id="respMessage" style="margin-top: 5px;height:15px;float:left;width:100%;"></span>
+					<span id="respMessage" style="margin-top: 5px;height:15px;float:left;width:100%;"></span>
 				</div>
 				#{if session.username }
 					<input name="newsletter.email" id="email" style="background: none repeat scroll 0 0 #F0F0F0;border: 1px solid #606060;color: #010101;padding: 3px;" type="text" value="${talker.email}" size="17" />

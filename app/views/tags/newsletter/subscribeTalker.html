@@ -49,9 +49,11 @@ showPopupEmail = function(email){
 </script>
 <div id="subcribeConvo">
 	#{form @Newsletter.subscribeTalker(), id:'subcribe'  }
-   		<strong style="color: #000;">Receive weekly email digest of<br/> <span style="color:#0286BC">${talker.userName}'s</span> answers and thoughts.</strong> <br />
-   		<span id="responseMessage" style="display:none;margin-top: 5px;height:15px;float:left;width:100%;"></span>
-   		<div style="margin-top: 5px;float:left;">
+   		<strong style="color: #000;">Receive weekly email digest of<br/> <span style="color:#0286BC">${talker.userName}'s</span> answers and thoughts.</strong>
+   		<div style="clear: both;height: 15px;margin-top: 5px;">
+   			<span id="responseMessage" style="display:none;height:15px;float:left;width:100%;"></span>
+   		</div>
+   		<div style="float:left;">
    			<input name="talkerId" type="hidden" value="${talker.id}"/>
    			#{if currentTalker }
    				<input type="hidden" name="email" id="email" value="${currentTalker.email}" />

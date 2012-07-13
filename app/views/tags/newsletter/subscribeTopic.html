@@ -11,13 +11,10 @@
 }
 #subcribeConvo {
     margin-bottom: 10px;
-    width: 250px;
+    width: 260px;
     float: left;
     margin-top: 10px;
 }
-
-
-
 </style>
 <script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
 <script type="text/javascript">
@@ -67,16 +64,18 @@ showPopupEmail = function(email){
 </script>
 <div id="subcribeConvo">
 	#{form @Newsletter.subscribeTopic(), id:'subcribe'  }
-   		<strong style="color: #000;">Receive weekly email digest of<br/> updates to the <span style="color:#0286BC">${topic.title}</span> topic</strong> <br />
-   		<span id="responseMessage" style="display:none;margin-top: 5px;height:15px;float:left;width:100%;"></span>
-   		<div style="margin-top: 5px;float:left;">
+   		<strong style="color: #000;">Receive weekly email digest of<br/> updates to the <span style="color:#0286BC">${topic.title}</span> topic</strong>
+		<div style="clear: both;height: 15px;margin-top: 5px;">
+   		<span id="responseMessage" style="display:none;height:15px;float:left;width:100%;"></span>
+   		</div>
+   		<div style="float:left;">
    			<input name="topicId" type="hidden" value="${topic.id}"/>
    			#{if talker }
    			 <input type="hidden" name="email" id="email" value="${talker.email}" />
    			 <input class="submitSubscribeTopic" type="submit" value=""/>
    			#{/if}
    			#{else}
-	   		<input name="email" id="email" class="subscribeEmail" type="text" value="Please Enter Your Email Address"/>
+	   		<input name="email" id="email" class="subscribeEmail" type="text" value="Please Enter Your Email Address" size="17"/>
 	   		<input class="submitSubscribeEmail" type="submit" value=""/>
 	   		#{/else}
    		</div>

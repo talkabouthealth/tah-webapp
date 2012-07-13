@@ -6527,11 +6527,11 @@ margin-bottom:5px;
 	background: url("../images/submit_subEmail.png") no-repeat scroll 0 0 transparent;
     border: medium none;
     height: 25px;
-    width: 85px;
+    width: 75px;
     cursor: pointer;
 }
 .submitSubscribeTopic{
-  	background: url("../images/weeklydigest.png") no-repeat scroll 0 0 transparent;
+    background: url("../images/weeklydigest.png") no-repeat scroll 0 0 transparent;
     border: medium none;
     cursor: pointer;
     height: 40px;
@@ -6545,5 +6545,5 @@ margin-bottom:5px;
 .subscribeEmail{
     font-size: 10px;
     height: 21px;
-    width: 175px;
+    width: 160px;
 }

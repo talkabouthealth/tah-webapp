@@ -12,19 +12,17 @@
 			    }
 			});
 		});
-
-		function displayOptions(option){
-			if(document.getElementById(option).style.display == 'none'){
+		function displayOptions(option) {
+			if(document.getElementById(option).style.display == 'none') {
 				document.getElementById(option).style.display = 'block';
 				document.getElementById(option + 'EC').src = "/public/images/expand.png";
-			}else{
+			} else {
 				document.getElementById(option).style.display = 'none';
 				document.getElementById(option + 'EC').src = "/public/images/collapse.png";
 			}
 		}
 	</script>
 </head>
-
 <body>
 	<div id="top_container">
 		<div id="top">

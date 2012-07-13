@@ -1,19 +1,6 @@
 <style>
-#checkboxareainner {
-    color: #646664;
-    float: left;
-    font-family: arial;
-    font-size: 12px;
-    font-weight: none;
-    height: 20px;
-    padding-top: 5px;
-    text-decoration: none;
-}
-#subcribeConvo {
-    margin-bottom: 10px;
-    width: 284px;
-    float: left;
-}
+#checkboxareainner { color: #646664;float: left;font-family: arial;font-size: 12px;font-weight: none;height: 20px;padding-top: 5px;text-decoration: none; }
+#subcribeConvo { margin-bottom: 10px;width: 284px;float: left; }
 </style>
 <script type="text/javascript" src="/public/plugins/jquery.form.js"></script>
 <script type="text/javascript">
@@ -56,7 +43,7 @@ function setMessage(responseText, statusText, xhr, $form)  {
    		closeTimeout = setTimeout(function() { $("#responseMessage").fadeOut(200) }, 4000);
    	}
 }
-showPopupEmail = function(email){
+showPopupEmail = function(email) {
 	$("#emailpopup :input[name='newsletter.email']").val(email);
 	showPopup("#emailpopup", 350);
 }
@@ -65,15 +52,17 @@ showPopupEmail = function(email){
 	#{form @Newsletter.subscribeWorkShop(), id:'subcribe'  }
    		<strong style="color: #646664;">Notifications of Q&A Workshops</strong> <br />
    		<div id="checkboxareainner">
-   			<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="workshop"/>
-   			Q&A Workshop Notifications
+   			<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="workshop" checked="checked"/></div>
+   			<div style="padding-top: 3px;float:left;">Q&A Workshop Notifications</div>
    		</div>
    		<div id="checkboxareainner">
-   			<input id="newsletter.newsLetterType" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" />
-   			Q&A Workshop Answer Summaries
+   			<div style="float:left;"><input id="newsletter.newsLetterType" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked="checked"/></div>
+   			<div style="padding-top: 3px;float:left;">Q&A Workshop Answer Summaries</div>
    		</div>
-   		<span id="responseMessage" style="margin-top: 5px;height:15px;float:left;width:100%;"></span>
-   		<div style="margin-top: 5px;float:left;">
+   		<div style="clear: both;height: 15px;margin-top: 5px;padding-left: 5px;">
+   			<span id="responseMessage" style="height:15px;float:left;width:100%;font-size: 12px;"></span>
+   		</div>
+   		<div style="margin-top: 2px;float:left;padding-left: 5px;">
 	   		<input name="newsletter.email" id="email" class="subscribeEmail" type="text" value="Please Enter Your Email Address"/>
 	   		<input class=submitSubscribeEmail type="submit" value=""/>
    		</div>
