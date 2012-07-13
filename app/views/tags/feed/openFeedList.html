@@ -1,0 +1,11 @@
+<div id="${feedType}Content" class="tabContent">
+#{if feedItems != null && feedItems?.size() > 0}
+	#{list items: feedItems, as: 'convo' }
+				#{convo/openQuestion convo: convo, talker: talker /}
+		#{/list}
+#{/if}
+#{else}
+	<br/>
+	<span class="blacktext16">Ask question, Follow topics, conversations, and other members to get the latest updates.</span>
+#{/else}
+</div>

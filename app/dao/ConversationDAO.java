@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import logic.ConversationLogic;
 import logic.FeedsLogic;
 import logic.TalkerLogic;
 import models.CommentBean;
@@ -41,6 +42,8 @@ import play.Logger;
 
 import util.DBUtil;
 import util.CommonUtil;
+import util.EmailUtil;
+import util.EmailUtil.EmailTemplate;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -176,6 +179,7 @@ public class ConversationDAO {
 			
 			.add("category", convo.getCategory())
 			.add("other_disease_categories", convo.getOtherDiseaseCategories())
+			.add("answer_subscription", convo.getSubcribeEmails())
 			.get();
 		
 		DBObject convoId = new BasicDBObject("_id", new ObjectId(convo.getId()));
@@ -1322,7 +1326,8 @@ public class ConversationDAO {
 		convosColl.update(convoId, new BasicDBObject("$set", convoObject),false,true);
 	}
 	
-	 /**
+	/**
+	 * Getting no of conversation for topic 
 	 * @param topicId
 	 * @return no of convos for topic
 	 */
@@ -1356,6 +1361,7 @@ public class ConversationDAO {
 			
 			convo.setId(convoDBObject.get("_id").toString());
 			convo.setCategory((String)convoDBObject.get("category"));
+			convo.setOpened(getBoolean(convoDBObject, "opened"));
 			Collection<String> otherDiseaseCategories = (Collection<String>)convoDBObject.get("other_disease_categories");
 			
 			if (otherDiseaseCategories != null) {
@@ -1365,9 +1371,46 @@ public class ConversationDAO {
 			return convo;			
 	}
 
+	public static boolean subcribeConvoForAnsNotification(String email,String convoId){
+		
+		TalkerBean talker=TalkerDAO.getByEmail(email);
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		DBObject query = new BasicDBObject("_id", new ObjectId(convoId));
+		DBObject convoDBObject = convosColl.findOne(query);
+		if(talker==null){
+			Collection<String> emails = (Collection<String>)convoDBObject.get("answer_subscription");
+			if(emails==null || emails.size()==0) {
+				String []emaillist={email};
+				DBObject emailsObj=new BasicDBObject("answer_subscription", emaillist);
+				
+				DBObject Id = new BasicDBObject("_id", new ObjectId(convoDBObject.get("_id").toString()));
+				convosColl.update(Id, new BasicDBObject("$set", emailsObj),false ,true);
+				return false;
+			} else if(!emails.contains(email)) {
+				emails.add(email);
+				DBObject emailsObj=new BasicDBObject("answer_subscription",  emails.toArray(new String[]{}));
+				DBObject Id = new BasicDBObject("_id", new ObjectId(convoDBObject.get("_id").toString()));
+				convosColl.update(Id, new BasicDBObject("$set", emailsObj),false,true);
+				return false;
+			} else
+				return true;
+		} else {
+			if (!talker.getFollowingConvosList().contains(convoId)) {
+				talker.getFollowingConvosList().add(convoId);
+				TalkerDAO.updateTalker(talker);
+				/*TalkerBean mailSendtalker = TalkerLogic.loadTalkerFromCache(convoDBObject, "uid");
+	    		Map<String, String> vars = new HashMap<String, String>();
+	    		vars.put("other_talker", talker.getUserName());
+	    		if(mailSendtalker.getEmailSettings().toString().contains("NEW_FOLLOWER"))
+	    			EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_FOLLOWER, mailSendtalker.getEmail(), vars, null, false);
+	    		*/
+	    	}
+			return false;
+		}
+	}
+	
 	public static void updateConvoForDisease(ConversationBean convo){
 		DBCollection convoColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
-		
 		DBObject convoObject = BasicDBObjectBuilder.start()
 			.add("category", convo.getCategory())
 			.add("other_disease_categories", convo.getOtherDiseaseCategories())
@@ -1378,4 +1421,3 @@ public class ConversationDAO {
 		convoColl.update(convoId, new BasicDBObject("$set", convoObject));
 	}
 }
-

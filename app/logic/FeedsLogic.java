@@ -212,7 +212,7 @@ public class FeedsLogic {
 				if (!addedConvos.contains(actionConvo)) {
 					switch (feedType) {
 						case ALL_CANCER: 
-							String str[]={"other_disease_categories","category"};
+							String str[]={"other_disease_categories","category","opened"};
 							ConversationBean convo = ConversationDAO.getConvoCategories(actionConvo.getId(),str);
 							if(convo.getCategory() == null){
 								if (convo.getOtherDiseaseCategories() != null && convo.getOtherDiseaseCategories().length > 0)
@@ -225,6 +225,8 @@ public class FeedsLogic {
 								else
 									isAdd = true;
 							}
+							if(convo.isOpened() == true) 
+								isAdd = false;
 							break;
 					}
 					if (canAdd) {

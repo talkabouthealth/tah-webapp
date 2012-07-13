@@ -42,6 +42,8 @@ import models.TalkerBean;
 import models.TopicBean;
 import models.actions.Action;
 import play.Logger;
+import play.data.validation.Error;
+import util.EmailUtil;
 import util.BitlyUtil;
 import util.CommonUtil;
 import util.DBUtil;
@@ -621,13 +623,20 @@ public class Explore extends Controller {
 		render(newsletter,diseaseList,talker);
 	}
 	
-	public static void subscribeNewsLetter(NewsLetterBean newsletter){
-		
+	public static void subscribeNewsLetter(NewsLetterBean newsletter) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		NewsLetterDAO.saveOrUpdateNewsletter(newsletter,talker);
-		//redirect("/explore/newsletter");
-		renderText("Ok");
+		String email = newsletter.getEmail();
+		validation.required(email).message("Email is required");
+		validation.email(email.trim());
+		if (validation.hasErrors()) {
+			renderText("Error:" + validation.errors().get(0));
+		}
+		
+		if(newsletter != null && newsletter.getNewsLetterType() != null && newsletter.getNewsLetterType().length > 0){
+			NewsLetterDAO.saveOrUpdateNewsletter(newsletter,talker);
+			renderText("Ok");
+		}else{
+			renderText("Please select on of the option");
+		}
 	}
-	
-	
 }

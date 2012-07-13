@@ -38,6 +38,7 @@ import dao.TalkerDAO;
 import dao.TalkerDiseaseDAO;
 import dao.ConversationDAO;
 import dao.TopicDAO;
+import dao.NewsLetterDAO;
 import play.Logger;
 import play.mvc.Before;
 import play.mvc.Controller;
@@ -141,13 +142,15 @@ public class ViewDispatcher extends Controller {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		boolean newsLetterFlag = false;
 		boolean rewardLetterFlag = false;
+		boolean talkerLetterFlag = false;
+		if (!talker.isSuspended() && currentTalker != null) {
+			//we need followers for displaying user's info
+			currentTalker.setFollowerList(TalkerDAO.loadFollowers(currentTalker.getId()));
+			newsLetterFlag = ApplicationDAO.isEmailExists(currentTalker.getEmail());
+			rewardLetterFlag=ApplicationDAO.isnewsLetterSubscribe(currentTalker.getEmail(),"TalkAboutHealth Rewards");
+			talkerLetterFlag = NewsLetterDAO.isSubscribeTalker(currentTalker.getEmail(), talker.getId());
+		}
 		if (talker.isSuspended()) {
-			if (currentTalker != null) {
-				//we need followers for displaying user's info
-				currentTalker.setFollowerList(TalkerDAO.loadFollowers(currentTalker.getId()));
-				newsLetterFlag = ApplicationDAO.isEmailExists(currentTalker.getEmail());
-				rewardLetterFlag=ApplicationDAO.isnewsLetterSubscribe(currentTalker.getEmail(),"TalkAboutHealth Rewards");
-			}
 			render("PublicProfile/suspended.html", currentTalker);
 			return;
 		}
@@ -251,7 +254,7 @@ public class ViewDispatcher extends Controller {
 		render("PublicProfile/newview.html", talker, disease, talkerDisease, healthItemsMap, 
 				currentTalker, talkerFeed,
 				notProvidedInfo, notViewableInfo,
-				numOfAnswers, numOfTopAnswers, numOfStartedConvos,newsLetterFlag,rewardLetterFlag);
+				numOfAnswers, numOfTopAnswers, numOfStartedConvos,newsLetterFlag,rewardLetterFlag,talkerLetterFlag);
 		
 	}
 	
