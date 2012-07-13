@@ -151,8 +151,30 @@ public class Application extends Controller {
     	if(!ApplicationDAO.isIpUsed(remoteAddress,duration)){
     		flash("captcha", "true");
     	}
+    	
     	String randomID = Codec.UUID();
     	render(additionalSettings,randomID,diseaseList);
+    }
+    
+    public static void signupNews(NewsLetterBean newsletter) {
+    	String remoteAddress = request.remoteAddress;
+    	int duration = -6;
+    	//prepare additional settings for FB or Twitter
+    	String from = flash.get("from");
+    	Map<String, String> additionalSettings = null;
+    	List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+
+    	if (from != null) {
+    		ServiceType type = ServiceAccountBean.parseServiceType(from);
+    		additionalSettings = ServiceAccountBean.settingsNamesByType(type);
+    	}
+    	if(!ApplicationDAO.isIpUsed(remoteAddress,duration)){
+    		flash("captcha", "true");
+    	}
+
+    	String randomID = Codec.UUID();
+    	render("Application/signup.html",additionalSettings,randomID,diseaseList,newsletter);
+    	return;
     }
     
     public static void register(@Valid TalkerBean talker,String code, String randomID, NewsLetterBean newsletter) {
@@ -176,12 +198,11 @@ public class Application extends Controller {
         if (validation.hasErrors()) {
             params.flash(); // add http parameters to the flash scope
             validation.keep(); // keep the errors for the next request
-            signup();
+            signupNews(newsletter);
             return;
         }
         
         TalkerLogic.prepareTalkerForSignup(talker);
-        
         //for these users we do not show update panels
 		Set<String> hiddenHelps = talker.getHiddenHelps();
 		hiddenHelps.add("updateUsername");
@@ -189,19 +210,17 @@ public class Application extends Controller {
 		hiddenHelps.add("updateConnection");
 		hiddenHelps.add("updateTwitterSettings");
 		hiddenHelps.add("updateFacebookSettings");
-        
+
 		//save newsletters
 		talker.setNewsLetterBean(newsletter);
 		
         boolean okSave = TalkerDAO.save(talker);
         if (!okSave) {
-
         	params.flash();
             validation.keep();
         	flash.error("Sorry, unknown error. Please contact support.");
         	Logger.error("Error during signup. User: "+talker.getEmail());
-
-        	signup();
+        	 signupNews(newsletter);
         	return;
 		} else {
 			/* Date : 16 Aug 2011
@@ -390,9 +409,7 @@ public class Application extends Controller {
 			if (verifyCode.equals(talker.getVerifyCode())) {
 				//primary email
 				talker.setVerifyCode(null);
-				System.out.println("Setting Old: " + verifyCode);
 				talker.setOldVerifyCode(verifyCode);
-				System.out.println("Set Old: " + talker.getOldVerifyCode());
 			} else {
 				//clear verify code for non-primary email
 				EmailBean emailBean = talker.findNonPrimaryEmail(null, verifyCode);
@@ -523,8 +540,8 @@ public class Application extends Controller {
         	String parsedUsername = email.substring(0, email.indexOf("@"));
     		vars.put("username", parsedUsername);
         	
-        	renderText("Thanks for subscribing to TalkAboutHealth Reward!");	
-        }else{
+        	renderText("Thanks for subscribing");	
+        } else {
         	params.flash();
         	String arrary[]={"TalkAboutHealth Rewards"};
         	
@@ -537,7 +554,7 @@ public class Application extends Controller {
         	String parsedUsername = email.substring(0, email.indexOf("@"));
     		vars.put("username", parsedUsername);
 	    	
-	    	renderText("Thanks for subscribing to TalkAboutHealth Reward!");
+	    	renderText("Thanks for subscribing");
         }
     }
 
@@ -573,12 +590,32 @@ public class Application extends Controller {
         renderBinary(captcha);
     }
     
+    /**
+     * Method for subscribing email for particular conversation's answer notification.
+     * @param email
+     * @param convoId
+     */
+    public static void subscribeConvo(@Email String email,String convoId){
+    	
+    	validation.required(email).message("Email is required");
+    	if (validation.hasErrors()) {
+    		params.flash();
+            Error error = validation.errors().get(0);
+			renderText("Error:" + error.message());
+    	}else if(ConversationDAO.subcribeConvoForAnsNotification(email, convoId)){
+    		params.flash();
+    		renderText("Email alrady subscribed!");
+    	}else{
+    		params.flash();
+    		renderText("Thank you for subscribing!");
+    	}
+    }
+    
     public static void reloadTalkersHealthInfo(){
     	TalkerDiseaseDAO.convertDBObjectToDBList();
     	redirect("/home");
     }
-    public static void updateTalkerIds(){
-    	TalkerDAO.updateIds();
-    	redirect("/home");
-    }
+    
+ 
+    
 }

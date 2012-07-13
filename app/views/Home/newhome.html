@@ -341,28 +341,17 @@ function updateFeed(type,talkerName) {
 	                    <div class="newpageCover">  
 							<div class="newTabCover">
 							<div id="makeMeScrollable">
-				 			<div class="newTab" style="width: auto;">
-							  	<!-- <a href="#" id="convoFeed" class="tabLink">Your Conversation Feed</a>  -->
-							      <a href="#" id="convoFeed" class="tabLink">Your conversations</a>
-							  </div>
-							  *{#{if talker.category != null && !talker.category.equals("")}
-								  <div class="newTab" style="width: auto;">
-								  	<a href="#" id="allFeed" class="tabLink">All Cancers</a>
-								  </div>		
-							  
-							  		#{if allDiseaseList != null}
-								  		#{list items: allDiseaseList.keySet(), as: 'cancerType'}
-									  	<div #{if talker.category.equals(cancerType.replaceAll("_", " "))} class="newActiveTab" #{/if} #{else} class="newTab" #{/else} style="width: auto;">
-										  	<a href="#" id="${cancerType}CommunityFeed" class="tabLink">${cancerType.replaceAll("_", " ")}</a> <!--  Community Feed -->
-										</div>
-							            #{/list}
-						            #{/if}
-							  #{/if}
-							  #{else}*
+					 				<div class="newTab" style="width: auto;">
+								  		<!-- <a href="#" id="convoFeed" class="tabLink">Your Conversation Feed</a>  -->
+								     	<a href="#" id="convoFeed" class="tabLink">Your conversations</a>
+								  	</div>
 							  		<div class="newActiveTab" style="width: auto;">
-								  		<a href="#" id="allFeed" class="tabLink">All Cancers</a>
+								  		<!-- <a href="#" id="allFeed" class="tabLink">All Cancers</a>  -->
+								  		<a href="#" id="allFeed" class="tabLink">All Answers &amp; Thoughts</a>
 								  	</div>		
-							  
+							  		<div class="newTab" style="width: auto;">
+								  		<a href="#" id="openConvo" class="tabLink">Unanswered Questions</a>
+								  	</div>	
 							  		#{if allDiseaseList != null && talker.category !=null && !talker.category.equals("All Cancers")}
 								  		#{list items: allDiseaseList.keySet(), as: 'cancerType'}
 									  	<div #{if talker.category.equals(cancerType.replaceAll("_", " "))} class="newTab" #{/if} #{else} class="newTab" #{/else} style="width: auto;">
@@ -370,56 +359,15 @@ function updateFeed(type,talkerName) {
 										</div>
 							            #{/list}
 						            #{/if}
-							  *{#{/else}*
-							  <div class="newTab" style="width: auto;">
-							  	<a href="#" id="mentions" class="tabLink">@mentions</a>
-							  </div>
-						</div>
+								  	<div class="newTab" style="width: auto;">
+								  		<a href="#" id="mentions" class="tabLink">@mentions</a>
+								  	</div>
+								</div>
 							</div>
 							<div class="cb"></div>
 							<div style="margin-top: 50px;">
 								<div id = "conversationFeed">
-									
 								</div>
-								
-								*{#{if talker.category != null && !talker.category.equals("")}
-									<div id = "allCancerFeed">
-									
-									</div>
-									
-									<div id="cancerFeed" >
-							          	 <div id="${talkerCat}CommunityFeedContent" class="tabContent" style="display: block;">	
-											<div class="topic">
-								                    <div class="cb"></div>
-								                    <div class="topic" id='comfeed'>
-								                      <a href=# id="${talkerCat}CommunityFeedNotifications" class="morenotification" style='display:none' onClick="updateFeed('communityFeed'); return false;" >
-								                      0 new items
-								                      </a>
-								                    	<div id="${talkerCat}CommunityFeedList">
-									                       	#{list items: allDiseaseList.get(talkerCat), as: 'cancerCommunityFeed' }
-										                    	#{list items: cancerCommunityFeed, as: 'activity'}
-																	#{feed/feedActivity activity: activity, talker: talker, parentList: talkerCat+'CommunityFeedContent' /}
-																#{/list}
-															#{/list}
-														</div>
-														#{if allDiseaseList.get(talkerCat) != null}
-															#{if allDiseaseList.get(talkerCat).size() == logic.FeedsLogic.FEEDS_PER_PAGE }
-																<div class="replytommentbox" id="${ctalkerCat}CommunityFeedBtn">
-										                          <input type="submit" src="images/seemore.jpg" 
-										                          	onclick="return loadMoreFeed('${talkerCat}CommunityFeed');" value=" " class="seemorecom" />
-										                        </div>
-															#{/if}
-														#{/if}
-														<div class="cb"></div>
-							                    	</div>
-							                    <!--newpageCover-->
-							                    <div class="cb"></div>
-							                  </div> 
-										</div>
-									</div>
-								#{/if}
-								#{else}*
-								
 									<div id = "allCancerFeed">
 										<div id="allFeedContent" class="tabContent" >	
 											<div class="topic">
@@ -449,18 +397,10 @@ function updateFeed(type,talkerName) {
 						                    </div> 
 										</div>
 									</div>
-									
-									<div id="cancerFeed" >
-									
+									<div id="openFeed">
 									</div>
-									
-								*{#{/else}*
-								
-								
-								<div id = "mentionsFeed">
-									
-								</div>
-								
+									<div id="cancerFeed"></div>
+									<div id = "mentionsFeed"></div>
 							</div>               
 	                      <div class="cb"></div>
 	                    </div>

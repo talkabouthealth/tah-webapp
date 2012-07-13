@@ -1,0 +1,70 @@
+<style>
+#checkboxareainner { color: #646664;float: left;font-family: arial;font-size: 12px;font-weight: none;height: 20px;padding-top: 5px;text-decoration: none; }
+#subcribeConvo { margin-bottom: 10px;width: 284px;float: left; }
+</style>
+<script type="text/javascript" src="/public/plugins/jquery.form.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+	var submitOption = { success: setMessage }; 
+	$('#subcribe').submit(function() {
+		$("#subcribe").ajaxSubmit(submitOption);
+		return false;
+	});
+	$('#email').click(function() {
+		if($("#email").val().trim() == 'Please Enter Your Email Address')
+			$("#email").val('');
+	});
+
+	$('#email').blur(function() {
+		if($("#email").val().trim() == '')
+			$("#email").val('Please Enter Your Email Address');
+	});
+});
+
+function setMessage(responseText, statusText, xhr, $form)  {
+	if (responseText.indexOf("Error:") === 0) {
+   		var errorText = responseText.replace("Error:", "");
+   		$("#responseMessage").css("color","#ff0000");
+   		$("#responseMessage").html(errorText); 
+   		$("#responseMessage").fadeIn(100);
+   		closeTimeout = setTimeout(function() { $("#responseMessage").fadeOut(200) }, 4000);
+   	} else if (responseText.indexOf("NEW:") === 0) {
+   		$("#responseMessage").css("color","#2E8B57");
+   		$("#responseMessage").html(responseText.substring(4));
+   		$("#responseMessage").fadeIn(100);
+   		closeTimeout = setTimeout(function() { $("#responseMessage").fadeOut(200) }, 4000);
+   		var email = $("#subcribe :input[name='newsletter.email']").val();
+   		showPopupEmail(email);
+   	} else {
+   		$("#responseMessage").css("color","#2E8B57");
+   		$("#responseMessage").html(responseText);
+   		$("#responseMessage").fadeIn(100);
+   		closeTimeout = setTimeout(function() { $("#responseMessage").fadeOut(200) }, 4000);
+   	}
+}
+showPopupEmail = function(email) {
+	$("#emailpopup :input[name='newsletter.email']").val(email);
+	showPopup("#emailpopup", 350);
+}
+</script>
+<div id="subcribeConvo">
+	#{form @Newsletter.subscribeWorkShop(), id:'subcribe'  }
+   		<strong style="color: #646664;">Notifications of Q&A Workshops</strong> <br />
+   		<div id="checkboxareainner">
+   			<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="workshop" checked="checked"/></div>
+   			<div style="padding-top: 3px;float:left;">Q&A Workshop Notifications</div>
+   		</div>
+   		<div id="checkboxareainner">
+   			<div style="float:left;"><input id="newsletter.newsLetterType" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked="checked"/></div>
+   			<div style="padding-top: 3px;float:left;">Q&A Workshop Answer Summaries</div>
+   		</div>
+   		<div style="clear: both;height: 15px;margin-top: 5px;padding-left: 5px;">
+   			<span id="responseMessage" style="height:15px;float:left;width:100%;font-size: 12px;"></span>
+   		</div>
+   		<div style="margin-top: 2px;float:left;padding-left: 5px;">
+	   		<input name="newsletter.email" id="email" class="subscribeEmail" type="text" value="Please Enter Your Email Address"/>
+	   		<input class=submitSubscribeEmail type="submit" value=""/>
+   		</div>
+   #{/form}
+ </div>

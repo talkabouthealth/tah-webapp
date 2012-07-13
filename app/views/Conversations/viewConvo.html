@@ -267,15 +267,18 @@
 				    	<div class="topicborder" style="margin-top: 10px;"></div>
 					#{/if}
 					#{else}
+						#{include '/Conversations/subscribeConvo.html' /}	
+						<br />
 						#{include 'tahInfo.html' /}
 					#{/else}
+					#{if talker }
 					<div class="topipsts">
 						<div class="Statics">
-							<div class="Staticsh1">Question Statistics</div>
+							<div class="mtrighttxt1">Question Statistics</div>
 							<p style="color:#000000">
-								<strong>Latest Activity:</strong> ${latestActivityTime?.format('MM / dd / yyyy')} <br />
-								<strong>Views:</strong> ${convo.views}<br />
-								<strong>Followed By:</strong> ${convo.followers?.size()} members<br/>
+								<strong style="color: #646664;">Latest Activity:</strong> ${latestActivityTime?.format('MM / dd / yyyy')} <br />
+								<strong style="color: #646664;">Views:</strong> ${convo.views}<br />
+								<strong style="color: #646664;">Followed By:</strong> ${convo.followers?.size()} members<br/>
 								#{if talker}
 									#{list items: convo.followers, as: 'follower'}
 										#{talker/talkerImageLink size: 48, userName: follower.userName /}
@@ -286,10 +289,14 @@
 						</div>
 						<div class="cb"></div>
 					</div><!--topipsts-->
+					#{/if}
+					#{else}
+						#{include 'newsletter_signup.html' /}
+					#{/else}
 					<div class="topipsts">
 						<div class='inline-edit' id="relatedConvosEdit" style="padding-bottom: 3px;">
 							<div class="inline_display">
-								<div class="Staticsh1" style="float:left; padding:10px 0 0 0;">Similar Questions</div>
+								<div class="mtrighttxt1" style="float:left; padding:10px 0 0 0;">Similar Questions</div>
 								<div class="inline_full" style="display: ${(convo.relatedConvos || relatedConvos) ? 'block' : 'none'}">
 									#{if talker && (talker.admin || talker.userName == convo.talker.userName) }
 										<div class="editdiv">
@@ -356,6 +363,9 @@
 						<div class="topicborder"></div>
 						<div class="cb"></div>
 					</div><!--topipsts-->
+					#{if !talker}
+						#{include 'subscribe_reward.html' /}
+					#{/if}
 					#{if convo.followupConvos != null && convo.followupConvos.size() > 0}
 					<div class="topipsts">
 						<div class="inline-edit" id="followupConvosEdit" style="padding-bottom: 3px;">

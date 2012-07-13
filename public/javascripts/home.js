@@ -171,7 +171,18 @@ function initHomeTabs() {
 						$('.moretext2').truncatable({ limit: 220, more: '... more', less: true, hideText: '...less' });
 					}
 				);	
-		}else if(cancerType != ""){
+		} else if(id == "openConvo"){ 
+			$("#ajaxLoading").appendTo($("#openFeed")).show();
+			$(".tabContent").hide();
+			$.get("/home/loadCancerFeed", {feedType: feedType, cancerType: cancerType},
+					function(data) {
+						$("#openFeed").html(data);
+						$('.inline-edit').inlineEdit( { hover: ''} );
+						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+						$('.moretext2').truncatable({ limit: 220, more: '... more', less: true, hideText: '...less' });
+					}
+				);
+		} else if(cancerType != ""){
 			$("#ajaxLoading").appendTo($("#cancerFeed")).show();
 			$(".tabContent").hide();
 			$.get("/home/loadCancerFeed", {feedType: feedType, cancerType: cancerType},

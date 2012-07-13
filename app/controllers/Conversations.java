@@ -170,8 +170,6 @@ public class Conversations extends Controller {
         Template template = TemplateLoader.load(templateName);
     	String html = template.render(templateBinding.data);
     	
-    	System.out.println("New convo - " + convo.getId());
-    	
     	Map<String, String> jsonData = new HashMap<String, String>();
     	jsonData.put("id", convo.getId());
     	jsonData.put("tid", ""+convo.getTid());

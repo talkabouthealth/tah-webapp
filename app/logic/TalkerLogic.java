@@ -1193,4 +1193,27 @@ public class TalkerLogic {
 			.get();
 		commentsColl.save(commentObject);
 	}
+	
+	public static boolean updateTalkerField() {
+		DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
+		List<TalkerBean> allTalkersList = TalkerDAO.loadAllTalkers(true);
+		for(TalkerBean talker : allTalkersList){
+			Set<EmailSetting> setting = talker.getEmailSettings();
+			setting.add(EmailSetting.RECEIVE_THOUGHT);
+			setting.add(EmailSetting.NOTIFY_CONVO);
+			setting.add(EmailSetting.RECEIVE_THOUGHT_MENTION);
+			List<String> emailSettingsStringList = new ArrayList<String>();
+			if (setting != null) {
+				for (EmailSetting emailSetting : setting) {
+					emailSettingsStringList.add(emailSetting.toString());
+				}
+			}
+			System.out.println(emailSettingsStringList);
+			DBObject talkerDisObject = new BasicDBObject("email_settings", emailSettingsStringList);
+			DBObject talkersId = new BasicDBObject("_id", new ObjectId(talker.getId()));
+			talkersColl.update(talkersId, new BasicDBObject("$set", talkerDisObject));	
+			
+		}
+		return true;
+	}
 }
