@@ -121,6 +121,8 @@ public class ConversationBean implements Comparable<ConversationBean> {
 	private Date modifiedDate;
 	private String displayDate;
 		
+	private String[] subscribeEmails;
+	
 	public TalkerBean getNotifedTalker() {
 		return notifedTalker;
 	}
@@ -202,6 +204,11 @@ public class ConversationBean implements Comparable<ConversationBean> {
     	setModifiedDate((Date)convoDBObject.get("modified_date"));
     	setQuestionState((String)convoDBObject.get("question_state"));
     	
+    	Collection<String> subscribeEmails = (Collection<String>)convoDBObject.get("answer_subscription");
+		if (subscribeEmails != null) {
+			setSubcribeEmails(subscribeEmails.toArray(new String[]{}));
+		}
+    	
 	}
 	
 	public void parseFromDB(DBObject convoDBObject) {
@@ -209,7 +216,6 @@ public class ConversationBean implements Comparable<ConversationBean> {
 		
 		setSummary((String)convoDBObject.get("summary"));
     	parseSumContributors((Collection<DBRef>)convoDBObject.get("sum_authors"));
-		
 		parseRelatedConvos((Collection<DBRef>)convoDBObject.get("related_convos"));
 		parseFollowupConvos((Collection<DBRef>)convoDBObject.get("followup_convos"));
     	parseChatMessages((Collection<DBObject>)convoDBObject.get("messages"));
@@ -671,5 +677,11 @@ public class ConversationBean implements Comparable<ConversationBean> {
 	}
 	public void setOtherDiseaseCategories(String[] otherDiseaseCategories) {
 		this.otherDiseaseCategories = otherDiseaseCategories;
+	}
+	public String[] getSubcribeEmails() {
+		return subscribeEmails;
+	}
+	public void setSubcribeEmails(String[] subcribeEmails) {
+		this.subscribeEmails = subcribeEmails;
 	}
 }

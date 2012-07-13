@@ -89,8 +89,8 @@
                   <div class="topipcWraper">
                   	<div class="newTabCover">
                   	  <div class="newTab"><a href="#" id="expertConvo" class="tabLink">Expert Answers</a></div>
-					  <div class="newActiveTab"><a href="#" id="recentConvo" class="tabLink">Recent Questions</a></div>
-					  <div class="newTab"><a href="#" id="popularConvo" class="tabLink">Popular Answers</a></div>
+					  <div class="newActiveTab"><a href="#" id="recentConvo" class="tabLink">Recent Answers</a></div>
+<!--					  <div class="newTab"><a href="#" id="popularConvo" class="tabLink">Popular Answers</a></div>-->
 					  <div class="newTab"><a href="#" id="openConvo" class="tabLink">Unanswered Questions</a></div>
 					  <div class="laborder"></div>
 					</div>
@@ -108,14 +108,14 @@
 										#{feed/feedActivity activity: activity, talker: talker /}
 									#{/list}
 								</div>
-								
+								#{if recentConvo != null}
 									#{if recentConvo.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
 										<div class="replytommentbox" id="recentConvoBtn">
 				                          <input type="submit" src="images/seemore.jpg" 
 				                          	onclick="return loadMoreFeedWithoutLogin('recentConvo');" value=" " class="seemorecom" />
 				                        </div>
 									#{/if}
-								
+								#{/if}
 		                        <div class="cb"></div>
 		                      </div>
 		                      <!--newpageCover-->
@@ -147,7 +147,6 @@
 		
 		                      <div class="cb"></div>
 		                      <div class="joinborder"></div>
-		                      <!--mtinputbox-->
 		                      <div class="cb"></div>
 		                      <div class="topic" >
 			                  <div id="popularConvoDiv">    
@@ -156,7 +155,6 @@
 			                    </div>  
 									<div class="cb"></div>
 								</div>
-		                      <!--newpageCover-->
 		                      <div class="cb"></div>
 		                    </div> 
 						</div>

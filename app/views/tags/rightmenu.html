@@ -1,4 +1,9 @@
 <div class="signrightbox">
+	#{if currentPage.equals("workshop")}
+		#{ifnot session.username }
+			#{include '/tags/newsletter/subscribeWorkshop.html' /}
+		#{/ifnot}
+	#{/if}
 	<div class="aboutrightop"></div>
 	<div class="signrighmid">
 		<a href="/static/aboutus" class="bluetext14">About Us</a><br />
@@ -20,7 +25,9 @@
 	#{ifnot session.username }
 		<span style="font-size: 12px;"><br /></span>
 		#{include 'tahInfo.html' /}
+		#{include 'newsletter_signup.html' /}
 		#{include 'Upcoming_Workshops.html' /}
+		#{include 'subscribe_reward.html' /}
 		#{include 'tahShare.html' /}
 		#{common/popularTopics popularTopics: popularTopics /}
 		#{include 'tahHowYouCanHelp.html' /}

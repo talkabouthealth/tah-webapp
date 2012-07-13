@@ -1,8 +1,13 @@
 package dao;
 
+import static util.DBUtil.createRef;
 import static util.DBUtil.getCollection;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import util.DBUtil;
 
 import models.NewsLetterBean;
 import models.TalkerBean;
@@ -11,6 +16,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.DBRef;
 
 public class NewsLetterDAO {
 	
@@ -20,7 +26,7 @@ public class NewsLetterDAO {
 	 * Method used for save or update newsletter information.
 	 * @param newsLetterBean
 	 */
-	public static void saveOrUpdateNewsletter(NewsLetterBean newsLetterBean,TalkerBean talker){
+	public static boolean saveOrUpdateNewsletter(NewsLetterBean newsLetterBean,TalkerBean talker){
 		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
 		boolean isExist = ApplicationDAO.isEmailExists(newsLetterBean.getEmail());
 		if(isExist){
@@ -51,6 +57,7 @@ public class NewsLetterDAO {
 				.get();
 			newsLetterColl.save(newsLetterDBObject);
 		}
+		return isExist;
 	}
 	
 	/**
@@ -68,5 +75,84 @@ public class NewsLetterDAO {
 			newsLetterBean.parseBasicFromDB(newsLetterDBObject);
 		}
 		return newsLetterBean;
+	}
+	
+	
+	public static boolean saveOrUpdateTopicNewsletter(String email, String topicId) {
+		String NEWSLETTER_COLLECTION = "topicNewsletter";
+		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
+		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topicId);
+		DBObject topicIdObj = new BasicDBObject("topicId", topicRef);
+		DBObject obj = newsLetterColl.findOne(topicIdObj);
+		Set<String> emailList = null;
+		DBObject newsLetterDBObject;
+		if(obj == null) {
+			emailList = new HashSet<String>();
+			emailList.add(email);
+			newsLetterDBObject = BasicDBObjectBuilder.start().add("topicId", topicRef).add("email", emailList).get();
+			newsLetterColl.save(newsLetterDBObject);
+		} else {
+			emailList = DBUtil.getStringSet(obj,"email");
+			emailList.add(email);
+			newsLetterDBObject = BasicDBObjectBuilder.start().add("topicId", topicRef).add("email", emailList).get();
+			newsLetterColl.update(topicIdObj,newsLetterDBObject);
+		}
+		return true;
+	}
+	
+	public static boolean saveOrUpdateTalkerNewsletter(String email, String talkerId) {
+		String NEWSLETTER_COLLECTION = "talkerNewsletter";
+		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
+		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
+		DBObject talkerIdObj = new BasicDBObject("talkerId", talkerRef);
+		DBObject obj = newsLetterColl.findOne(talkerIdObj);
+		Set<String> emailList = null;
+		DBObject newsLetterDBObject;
+		if(obj == null) {
+			emailList = new HashSet<String>();
+			emailList.add(email);
+			newsLetterDBObject = BasicDBObjectBuilder.start().add("talkerId", talkerRef).add("email", emailList).get();
+			newsLetterColl.save(newsLetterDBObject);
+		} else {
+			emailList = DBUtil.getStringSet(obj,"email");
+			emailList.add(email);
+			newsLetterDBObject = BasicDBObjectBuilder.start().add("talkerId", talkerRef).add("email", emailList).get();
+			newsLetterColl.update(talkerIdObj,newsLetterDBObject);
+		}
+		return true;
+	}
+	
+	public static boolean isSubscribeTalker(String email, String talkerId) {
+		String NEWSLETTER_COLLECTION = "talkerNewsletter";
+		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
+		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
+		DBObject talkerIdObj = new BasicDBObject("talkerId", talkerRef);
+		DBObject obj = newsLetterColl.findOne(talkerIdObj);
+		boolean returnFlag = false;
+		if(obj == null) {
+			returnFlag = false;
+		}else{
+			Set<String> emailList = DBUtil.getStringSet(obj,"email");
+			if(emailList.contains(email)) {
+				returnFlag = true;
+			} else{
+				returnFlag = false;
+			}
+		}
+		return returnFlag;
+	}
+	
+	/**
+	 * Used for checking newsletter subscribe or not.
+	 * @param email
+	 * @param newsLetter
+	 * @return
+	 */
+	public static boolean isnewsLetterSubscribe(String email){
+		NewsLetterBean newsletter = NewsLetterDAO.getNewsLetterInfo(email);
+		if(newsletter != null)
+			return true;
+		else
+			return false;
 	}
 }

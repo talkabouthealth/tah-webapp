@@ -1,3 +1,4 @@
+ #{set currentPage = 'topicPage' /}
 #{extends 'main.html' /}
 	<style>
 		#innermiddlearea { padding-top: 10px }
@@ -92,6 +93,31 @@
 
 <body>
 #{include 'header.html' /}
+
+<div id="boxes">
+	<div id="dialog" class="window"></div>
+	
+	#{if !talker}
+		#{ newsletter/emailpopup /}
+	#{/if}
+	#{ popups/flag /}
+	
+	#{if talker}
+			#{set twitterAccount = talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
+			#{ popups/shareTwitter shareType: 'Topic', userName: twitterAccount?.userName, topicName: topic.title, topicURL: topic.bitly /}
+			#{ popups/shareFacebook shareType: 'Topic', topicName: topic.title, topicURL: currentURL /}
+	#{/if}
+	#{ popups/shareEmail shareType: 'Topic', userName: talker?.userName, topicName: topic.title, topicDetails: topic.summary, topicURL: currentURL /}
+</div>
+<!-- Mask to cover the whole screen -->
+<div id="mask"></div>  
+<script type="text/javascript">
+var medium='${session.showLoginPoup}';
+if(medium=='show'){
+	$("#loginpopupform").show();
+	  showPopup("#loginPopup", 350);
+}
+</script>
 	<div id="bottom_container">
       	<div class="haderbanner"><div id="innerbanner"></div></div>
 	<div id="targetedtherapy">
@@ -239,7 +265,7 @@
 	                </div>
 	                <div class="cb"></div>
 				#{/if}
-				
+				#{include '/tags/newsletter/subscribeTopic.html' /}
 				#{if talker }
 	                <div class="topipsts">
 	                	<div class="mtrighttxt">
@@ -256,25 +282,22 @@
 	                  <div class="topicborder"></div>
 	                  <div class="cb"></div>
 	                </div>
-                #{/if}
-                #{else}
-                	#{include 'tahInfo.html' /}
-                #{/else}
+                
                 
                 <div class="topipsts">
                   <div class="mtrighttxt1">Topic Statistics</div>
                   <div class="latextCover">
-                    <div class="latextr"><strong><span class="black">Conversations/Questions:</span></strong> </div>
+                    <div class="latextr"><strong><span class="black" style="color: #646664;">Conversations/Questions:</span></strong> </div>
                     <div style="float: left; width: auto;" class="viewstext1">${topic.conversations?.size()}</div>
                   </div>
                   <!--topixtext-->
                   <div class="latextCover">
-                    <div class="latextr"><strong><span class="black">Views:</span></strong> </div>
+                    <div class="latextr"><strong><span class="black" style="color: #646664;">Views:</span></strong> </div>
                     <div style="float: left; width: auto;" class="viewstext1">${topic.views}</div>
                   </div>
                   <!--topixtext-->
                   <div class="latextCover">
-                    <div class="latextr"><strong><span class="black">Followed By:</span></strong> </div>
+                    <div class="latextr"><strong><span class="black" style="color: #646664;">Followed By:</span></strong> </div>
                     <div style="float: left; width: auto;" class="viewstext1">${topic.followers?.size()} Members</div>
                   </div>
                   <!--topixtext-->
@@ -288,14 +311,19 @@
                   <!--membersarea-->
                   <div class="topicborder"></div>
                 </div>
+                #{/if}
+                #{else}
+                	#{include 'tahInfo.html' /}
+                	#{include 'newsletter_signup.html' /}
+                #{/else}
                 <!--topipsts-->
                 <div class="topipsts">
                   <div class="mtrighttxt1">Topic Organization</div>
                   <div class="topixtext">
-                    <div class="viewstext" style="color: #000000;">Parent Topic: </div>
+                    <div class="viewstext" style="color: #646664;">Parent Topic: </div>
                     <div class="viewstext1">
 	                    #{list items: topic.parents, as: 'parent'}
-							<a href="@{ViewDispatcher.view(parent.mainURL)}">${parent.title}</a>${ parent_isLast ? '' : ', ' }
+							<a href="@{ViewDispatcher.view(parent.mainURL)}" style="color: #646664;">${parent.title}</a>${ parent_isLast ? '' : ', ' }
 						#{/list}
 						#{else}
 							none
@@ -304,7 +332,7 @@
                   </div>
                   <!--topixtext-->
                   <div class="topixtext">
-                    <div class="viewstext" style="color: #000000;">Sub-topics: </div>
+                    <div class="viewstext" style="color: #646664;">Sub-topics: </div>
                     <div class="viewstext1">
                     	#{list items: topic.children, as: 'children'}
 							<a href="@{ViewDispatcher.view(children.mainURL)}">${children.title}</a>${ children_isLast ? '' : ', ' }
@@ -319,8 +347,9 @@
                   <div class="mtop"></div>
                   <div class="topicborder"></div>
                 </div>
-                
-                #{set currentPage = 'topicPage' /}
+                #{ifnot session.username }
+                	#{include 'subscribe_reward.html' /}
+                #{/ifnot}
 		#{include 'Upcoming_Workshops.html' /}
 		#{common/popularTopics popularTopics: popularTopics /}
 		#{include 'SHARE_trained_peer_support.html' /}
@@ -362,18 +391,4 @@
           <div id="signupright"></div>
     </div>
     
-<div id="boxes">
-	<div id="dialog" class="window"></div>
-	
-	#{ popups/flag /}
-	
-	#{if talker}
-			#{set twitterAccount = talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
-			
-			#{ popups/shareEmail shareType: 'Topic', userName: talker?.userName, topicName: topic.title, topicDetails: topic.summary, topicURL: currentURL /}	
-			#{ popups/shareTwitter shareType: 'Topic', userName: twitterAccount?.userName, topicName: topic.title, topicURL: topic.bitly /}
-			#{ popups/shareFacebook shareType: 'Topic', topicName: topic.title, topicURL: currentURL /}
-	#{/if}
-</div>
-<!-- Mask to cover the whole screen -->
-<div id="mask"></div>    
+  

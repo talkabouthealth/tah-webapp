@@ -198,7 +198,7 @@ a img { border: none; }
 #usertext { float:left; width:285px;  padding-top:15px; }
 #selectim { float:left; width:285px; padding-top:130px; }
 #datebirth { float:left; width:285px;  padding-top:70px;}
-.signrightbox { float:left; width:284px; padding-top:20px;}
+.signrightbox { float:left; width:244px; padding-top:20px;}
 .personalinfosignrightbox { float:left; width:284px; padding-top:5px;}
 .personalinfosignrighttop { float:left; width:284px; background:url(../images/personalinforight_top.gif) no-repeat; height:57px; }
 .signrightop { float:left; width:284px; background:url(../images/signrighttop.jpg) no-repeat; height:57px; }

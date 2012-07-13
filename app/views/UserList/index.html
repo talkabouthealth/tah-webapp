@@ -64,6 +64,10 @@
 				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/notification">Moderate New Questions</a></td>
 				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/userlist">Users</a></td>
 				<td style="padding-right:20px;" nowrap="nowrap"><a href="/questionrecovery">Question Recovery</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/questionnotification">Question Notifications</a></td>
+				
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Profile.updateEmailList()}">Update Emails</a></td>
+				
 				<td style="padding-right:20px;" nowrap><a href="@{Secure.logout()}">Logout</a></td>
 				<td style="width: 100%;">&nbsp;</td>
 			</tr>
@@ -117,7 +121,7 @@
 													#{/if}
 													#{else}
 														<tr>
-															<td colspan="4" align="center">No record found.</td>
+															<td colspan="5" align="center">No record found.</td>
 														</tr>
 													#{/else}
 												#{/if}
