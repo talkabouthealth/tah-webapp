@@ -15,12 +15,15 @@
 		$(document).ready(function() {
 			initTabs();
 
-   			if (action === 'popular') {
+   			/*if (action === 'popular') {
    	   			$("#popularConvo").click();
-   			}else if (action === 'expert') {
+   			}else*/ 
+   	   		if (action === 'expert') {
    	   			$("#expertConvo").click();
-   			}else if (action === 'open') {
+   			} else if (action === 'open') {
    	   			$("#openConvo").click();
+   			} else if (action === 'feed') {
+   	   			$("#recentConvo").click();
    			}
 
 			$(".flagConvoLink").click(function() {
@@ -39,6 +42,7 @@
 				$(".tabContent").hide();
 				$(".replytommentbox").hide();
 				
+				/*
 				if(id=='popularConvo' && popularConvo==0 ){
 					$("#ajaxLoading").appendTo($("#"+id+"Div")).show();
 					$.get("/Explore/ajaxFeedUpdate",{ type : 'popularConvo' },function(data){
@@ -46,7 +50,16 @@
 						$("#"+id+"Div").html(data);
 						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
 				    });	
-				}else if(id=='expertConvo' && expertConvo==0){
+				}else 
+				*/ 
+				if(id=='recentConvo' && popularConvo==0 ){
+					$("#ajaxLoading").appendTo($("#"+id+"Div")).show();
+					$.get("/Explore/ajaxFeedUpdate",{ type : 'recentConvo' },function(data){
+						recentConvo=1;
+						$("#"+id+"Div").html(data);
+						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+				    });	
+				} else if(id=='expertConvo' && expertConvo==0){
 					$("#ajaxLoading").appendTo($("#"+id+"Div")).show();
 					$.get("/Explore/ajaxFeedUpdate",{ type : 'expertConvo' },function(data){
 						expertConvo=1;
@@ -73,8 +86,8 @@
 				return false;
 			});
 		}
-	</script>
-		
+</script>
+
 <div id="managtopic1">
   <div id="managtopic">
   	#{include 'header.html' /}
@@ -103,6 +116,12 @@
 		                      <div class="joinborder"></div>
 		                      <div class="cb"></div>
 		                      <div class="topic">
+		                      	<div id="recentConvoDiv"> 
+				                      <div id="recentConvoList">
+				                      </div>
+				                  </div>
+		                        
+		                        <!-- 
 		                        <div id="recentConvoList">
 			                    	#{list items: recentConvo, as: 'activity'}
 										#{feed/feedActivity activity: activity, talker: talker /}
@@ -116,6 +135,7 @@
 				                        </div>
 									#{/if}
 								#{/if}
+								 -->
 		                        <div class="cb"></div>
 		                      </div>
 		                      <!--newpageCover-->
@@ -131,12 +151,12 @@
 		                      <!--mtinputbox-->
 		                      <div class="cb"></div>
 		                      <div class="topic" >
-		                      <div id="expertConvoDiv"> 
-			                      <div id="expertConvoList">
-			                      </div>
-			                   </div>	
-									<div class="cb"></div>
-								</div>
+			                      <div id="expertConvoDiv"> 
+				                      <div id="expertConvoList">
+				                      </div>
+				                  </div>	
+								  <div class="cb"></div>
+							  </div>
 		                      <!--newpageCover-->
 		                      <div class="cb"></div>
 		                    </div> 

@@ -287,8 +287,8 @@ public class Explore extends Controller {
 	 */
 	public static void conversations(String action) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		boolean loggedIn = (talker != null);
-		Set<Action> recentConvo = FeedsLogic.getAllCancerFeed(null, loggedIn, talker);
+		//boolean loggedIn = (talker != null);
+		Set<Action> recentConvo = null;//FeedsLogic.getAllCancerFeed(null, loggedIn, talker);
 		
 		List<TopicBean> popularTopics = null;
     	//if (talker == null) {
@@ -363,12 +363,20 @@ public class Explore extends Controller {
 		if(type.equals("expertConvo")) {
 			List<ConversationBean> expertConvo = ConversationDAO.loadExpertsAnswer(null);
 			render("Explore/feedList.html",expertConvo, type);
-		} if(type.equals("openConvo")) {
+		}
+		if(type.equals("openConvo")) {
 			TalkerBean talker = CommonUtil.loadCachedTalker(session);
 			boolean loggedIn = (talker != null);
 			List<ConversationBean> openConvo = ConversationDAO.getOpenQuestions(talker,loggedIn);
 			render("Explore/feedList.html",openConvo, type);
 		}
+		if(type.equals("recentConvo")){
+			TalkerBean talker = CommonUtil.loadCachedTalker(session);
+			boolean loggedIn = (talker != null);
+			Set<Action> recentConvo = FeedsLogic.getAllCancerFeed(null, loggedIn, talker);	
+			render("Explore/feedList.html",recentConvo, type);
+		}
+		
 	}
 	/**
 	 * Used by "More" button in different feeds.
