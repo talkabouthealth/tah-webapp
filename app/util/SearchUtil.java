@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import logic.FeedsLogic;
+import logic.TalkerLogic;
 import models.CommentBean;
 import models.ConversationBean;
 import models.TalkerBean;
@@ -63,7 +64,7 @@ public class SearchUtil {
 		TopDocs hits = is.search(searchQuery, 10);
 		ScoreDoc [] docs = hits.scoreDocs;
 		
-		List<String> cat = FeedsLogic.getCancerType(talkerBean);
+		//List<String> cat = FeedsLogic.getCancerType(talkerBean);
 		
 		List<TalkerBean> results = new ArrayList<TalkerBean>();
 		for (int i = 0; i < docs.length ; i++) {
@@ -184,23 +185,21 @@ public class SearchUtil {
 		TopDocs hits = is.search(searchQuery, 50);
 		ScoreDoc [] docs = hits.scoreDocs;
 		
-		//List<String> cat = FeedsLogic.getCancerType(talker);
 		List<ConversationBean> results = new ArrayList<ConversationBean>();
 		for (int i = 0; i < docs.length ; i++) {
-			Document doc = is.doc(docs[i].doc);
-			
-			String convoId = doc.get("id");
-			if (searchedConvo.getId().equals(convoId)) {
-				continue;
-			}
-			ConversationBean convo = ConversationDAO.getById(convoId);
-			//if(cat.contains(convo.getTalker().getCategory()))
-				results.add(convo);
 			if (results.size() == 13) {
 				break;
+			} else {
+				Document doc = is.doc(docs[i].doc);
+				String convoId = doc.get("id");
+				if (searchedConvo.getId().equals(convoId)) {
+					continue;
+				} else {
+					ConversationBean convo = TalkerLogic.loadConvoFromCache(convoId);
+					results.add(convo);
+				}
 			}
 		}
-		
 		indexReader.close();
 		indexDir.close();
 		is.close();
