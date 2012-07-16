@@ -224,7 +224,10 @@ public class Home extends Controller {
     	} else if("allFeed".equals(feedType)) {
     		_feedItems = FeedsLogic.getAllCancerFeed(afterActionId, loggedIn, _talker);
     		render("tags/feed/feedList.html", _feedItems, _talker);
-    	} else {
+    	} else if("openConvo".equalsIgnoreCase(feedType)) {
+			List<ConversationBean> openConvo = ConversationDAO.getOpenQuestions(afterActionId);
+			render("tags/convo/convoList.html",openConvo, feedType);
+		}  else {
     		TalkerBean profileTalker = TalkerDAO.getByUserName(talkerName);
     		if (profileTalker != null) {
     			_feedItems = FeedsLogic.getTalkerFeed(profileTalker, afterActionId);
@@ -345,9 +348,9 @@ public class Home extends Controller {
     	}else if(feedType.equalsIgnoreCase("openConvo")){
     		List<ConversationBean> feedItems = null;
     		if(Security.isConnected())
-    			feedItems = ConversationDAO.getOpenQuestions(talker,true);
+    			feedItems = ConversationDAO.getOpenQuestions(null);
     		else
-    			feedItems = ConversationDAO.getOpenQuestions(talker,false);
+    			feedItems = ConversationDAO.getOpenQuestions(null);
 			render("tags/feed/openFeedList.html",feedItems, feedType);
     	} else {
 	    	Set<Action> multipleCancerCommunityFeed = null;

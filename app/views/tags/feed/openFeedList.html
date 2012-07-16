@@ -1,8 +1,16 @@
 <div id="${feedType}Content" class="tabContent">
 #{if feedItems != null && feedItems?.size() > 0}
+	<div id="${feedType}List" class="conversationsList">
 	#{list items: feedItems, as: 'convo' }
 				#{convo/openQuestion convo: convo, talker: talker /}
-		#{/list}
+	#{/list}
+	</div>
+	#{if feedItems.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+		<div class="replytommentbox" id="openConvoBtn">
+           <input type="submit" src="images/seemore.jpg" 
+           	onclick="return loadMoreFeed('${feedType}');" value=" " class="seemorecom" />
+        </div>
+	#{/if}
 #{/if}
 #{else}
 	<br/>

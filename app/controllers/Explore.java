@@ -74,7 +74,7 @@ public class Explore extends Controller {
 	
 	public static void openQuestions() {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
-    	boolean loggedIn = (talker != null);
+    	//boolean loggedIn = (talker != null);
     	boolean newsLetterFlag = false;
     	boolean rewardLetterFlag = false;
     	if (talker != null) {
@@ -84,7 +84,7 @@ public class Explore extends Controller {
     	}
     	int limit = session.get("topicCount")==null?TopicLogic.TOPICS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
     	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics(limit);
-		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions(talker,loggedIn);
+		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions(null);
 		
 		render(talker, openQuestions, popularTopics,newsLetterFlag,rewardLetterFlag);
     }
@@ -163,7 +163,7 @@ public class Explore extends Controller {
     public static void browseMembers(String action) throws Throwable {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 
-		List<String> cat = FeedsLogic.getCancerType(currentTalker);
+		//List<String> cat = FeedsLogic.getCancerType(currentTalker);
 		
 		//Active talkers on this day
 		// Displaying members active since last 2 week's rather than 1 week
@@ -318,17 +318,12 @@ public class Explore extends Controller {
 						 commentBeanList.remove(index);
 						 actionIterator.getConvo().setComments(commentBeanList);
 					 }
-					
 				 }
 			 }
 		 }
 		 */
-		 
 		//"Popular Conversations" - ordered by page views
-    	
-    	
 		//List<ConversationBean> popularConvo = ConversationDAO.loadPopularAnswers("popular",null);
-		
 		//For removing answer from feed list which have moderate value as "Delete Answer"
 		/*for(int index = 0; index < popularConvo.size(); index++){
 			 ConversationBean conversationBean = popularConvo.get(index);
@@ -348,14 +343,13 @@ public class Explore extends Controller {
 			 }
 		 }*/
 		//Set<Action> popularConvos = FeedsLogic.getPopularConvoFeed(null);
-		
+
 		if (action == null) {
 			action = "feed";
 		}
 		render(action, recentConvo, popularTopics,talker);
 	}
 	public static void ajaxFeedUpdate(String type){
-
 		if(type.equals("popularConvo")) {
 			List<ConversationBean> popularConvo = ConversationDAO.loadPopularAnswers("popular",null);
 			render("Explore/feedList.html",popularConvo, type);
@@ -366,8 +360,8 @@ public class Explore extends Controller {
 		}
 		if(type.equals("openConvo")) {
 			TalkerBean talker = CommonUtil.loadCachedTalker(session);
-			boolean loggedIn = (talker != null);
-			List<ConversationBean> openConvo = ConversationDAO.getOpenQuestions(talker,loggedIn);
+			//boolean loggedIn = (talker != null);
+			List<ConversationBean> openConvo = ConversationDAO.getOpenQuestions(null);
 			render("Explore/feedList.html",openConvo, type);
 		}
 		if(type.equals("recentConvo")){
@@ -376,7 +370,6 @@ public class Explore extends Controller {
 			Set<Action> recentConvo = FeedsLogic.getAllCancerFeed(null, loggedIn, talker);	
 			render("Explore/feedList.html",recentConvo, type);
 		}
-		
 	}
 	/**
 	 * Used by "More" button in different feeds.
@@ -405,7 +398,10 @@ public class Explore extends Controller {
 	    	expertConvos = ConversationDAO.loadExpertsAnswer(afterActionId);
 	    	String type="expertConvo";
 		     render("tags/convo/convoList.html", expertConvos ,type);
-	    }else if("USR".equalsIgnoreCase(feedType) || "EXP".equalsIgnoreCase(feedType)){
+	    } else if("openConvo".equalsIgnoreCase(feedType)) {
+			List<ConversationBean> openConvo = ConversationDAO.getOpenQuestions(afterActionId);
+			render("tags/convo/convoList.html",openConvo, feedType);
+		} else if("USR".equalsIgnoreCase(feedType) || "EXP".equalsIgnoreCase(feedType)){
     		_similarMembers = TalkerLogic.getRecommendedTalkers(_talker,feedType,afterActionId);
     		render("tags/profile/similarMemberList.html", _similarMembers);
     	} else if("TOPIC".equals(feedType)) {
