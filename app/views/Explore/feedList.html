@@ -1,36 +1,48 @@
 #{if type=="popularConvo"}
-		<div id="popularConvoList">
-			                      
-		 #{list items: popularConvo, as: 'convo' }
-			#{convo/convoListItem convo: convo, talker: talker /}
-		#{/list}
-		</div>
-		#{if popularConvo.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
-										<div class="replytommentbox" id="popularConvoBtn">
-				                          <input type="submit" src="images/seemore.jpg" 
-				                          	onclick="return loadMoreFeedWithoutLogin('popularConvo');" value=" " class="seemorecom" />
-				                        </div>
-		#{/if}
-		        
-#{/if}
-#{if type=="expertConvo"}
-	 <div id="expertConvoList">
-				#{list items: expertConvo, as: 'convo' }
-					#{convo/convoListItem convo: convo, talker: talker , type : type /}
-				#{/list}
+	<div id="popularConvoList">
+	 #{list items: popularConvo, as: 'convo' }
+		#{convo/convoListItem convo: convo, talker: talker /}
+	#{/list}
 	</div>
-	 #{if expertConvo.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
-										<div class="replytommentbox" id="expertConvoBtn">
-				                          <input type="submit" src="images/seemore.jpg" 
-				                          	onclick="return loadMoreFeedWithoutLogin('expertConvo');" value=" " class="seemorecom" />
-				                        </div>
-		#{/if}
+	#{if popularConvo.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+		<div class="replytommentbox" id="popularConvoBtn">
+           <input type="submit" src="images/seemore.jpg" 
+           	onclick="return loadMoreFeedWithoutLogin('popularConvo');" value=" " class="seemorecom" />
+         </div>
+	#{/if}
 #{/if}
-#{if type=="openConvo"}
 
-		 #{list items: openConvo, as: 'convo' }
-				#{convo/openQuestion convo: convo, talker: talker /}
+#{if type=="expertConvo"}
+	<div id="expertConvoList">
+		#{list items: expertConvo, as: 'convo' }
+			#{convo/convoListItem convo: convo, talker: talker , type : type /}
 		#{/list}
+	</div>
+	#{if expertConvo.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+		<div class="replytommentbox" id="expertConvoBtn">
+           <input type="submit" src="images/seemore.jpg" 
+           	onclick="return loadMoreFeedWithoutLogin('expertConvo');" value=" " class="seemorecom" />
+         </div>
+	#{/if}
 #{/if}
 
+#{if type=="openConvo"}
+	#{list items: openConvo, as: 'convo' }
+		#{convo/openQuestion convo: convo, talker: talker /}
+	#{/list}
+#{/if}
 
+#{if type == "recentConvo"}
+	<div id="recentConvoList">
+		#{list items: recentConvo, as: 'activity'}
+			#{feed/feedActivity activity: activity, talker: talker /}
+		#{/list}
+	</div>
+	#{if recentConvo != null}
+		#{if recentConvo.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+			<div class="replytommentbox" id="recentConvoBtn">
+				<input type="submit" src="images/seemore.jpg" onclick="return loadMoreFeedWithoutLogin('recentConvo');" value=" " class="seemorecom" />
+			</div>
+		#{/if}
+	#{/if}
+#{/if}

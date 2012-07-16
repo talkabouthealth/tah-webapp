@@ -286,14 +286,14 @@ public class ConversationBean implements Comparable<ConversationBean> {
 		topics = new HashSet<TopicBean>();
 		if (topicsDBList != null) {
 			for (DBRef topicDBRef : topicsDBList) {
-				TopicBean topic = new TopicBean();
-				topic.parseBasicFromDB(topicDBRef.fetch());
-				
-				if (topic.getId() == null) {
-					//maybe deleted topic
-					continue;
+				if(topicDBRef.getId() != null ){ 
+					TopicBean topic = new TopicBean();
+					topic = TalkerLogic.loadTopicFromCache(topicDBRef.getId().toString());
+					//topic.parseBasicFromDB(topicDBRef.fetch());
+					if (topic.getId() != null) {
+						topics.add(topic);
+					}
 				}
-				topics.add(topic);
 			}
 		}
 	}
