@@ -66,12 +66,12 @@
 										    		checked='checked'
 										    	#{/if}>
 							#{if session.username} 
-								Daily Update & Workshop Announcement<br/>
-								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured answers, experts, tips &amp; latest news.)</font>
+								Daily Workshop Announcement and News<br/>
+								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured experts, answers, tips &amp; latest news.)</font>
 							#{/if}
 							#{else}
-								Q&A Workshop notifications<br/>
-								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Notifications of all of our expert Q&A workshops.)</font>
+								Daily Workshop Announcement and News<br/>
+								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured experts, answers, tips &amp; latest news.)</font>
 							#{/else}
 						</div>
 						<div id="checkboxarea3">
@@ -81,12 +81,12 @@
 										    	#{/if}
 							/>
 							#{if session.username}
-								Q&A Workshop Summary<br/>
+								Daily Q&A Workshop Summary<br/>
 								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Daily answer summaries from our expert Q&A workshops.)</font>
 							#{/if}
 							#{else}
-								Answer Summaries of Q&A Workshops<br/>
-								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Receive notifications of all workshop answers when completed.)</font>
+								Daily Q&A Workshop Summary<br/>
+								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Daily answer summaries from our expert Q&A workshops.)</font>
 							#{/else}
 						</div>
 						<div id="checkboxarea3">
@@ -100,35 +100,25 @@
 								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(The week's best answers, news &amp; support.)</font>	
 							#{/if}
 							#{else}
-							TalkAboutHealth Newsletter (weekly)
+							Best of TalkAboutHealth (weekly)
 							<br/>
-								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured answers, expert and latest news)</font>
+								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(The week's best answers, news &amp; support.)</font>
 							#{/else}	
 							
 						</div>
-						#{if !session.username}
-						<div id="checkboxarea3" style="height: 15px;">
-							<input id="newsletter" name="newsletter.newsLetterType" 
-								type="checkbox" id="newsletter.newsLetterType" value="Answers of the day"
-								#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Answers of the day') } 
-										    		checked='checked'
-										    	#{/if}/> 
-							Answers of the day (daily)
-						</div>
-						#{/if}
 						<div id="checkboxarea3">
 							<input id="newsletter" name="newsletter.newsLetterType" 
 								type="checkbox" id="newsletter.newsLetterType" value="TalkAboutHealth Rewards"
 								#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('TalkAboutHealth Rewards') } 
 										    		checked='checked'
 										    	#{/if}> 
-							#{if session.username}TalkAboutHealth Bebefits
+							#{if session.username}TalkAboutHealth Benefits
 							<br/>
 							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Custom health, wellness &amp; medical offers.)</font>
 							#{/if}
-							#{else}TalkAboutHealth Rewards (weekly)
+							#{else}TalkAboutHealth Benefits
 							<br/>
-							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Health, wellness, food & medical savings, survery opportunites & special offers)</font>
+							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Custom health, wellness &amp; medical offers.)</font>
 							#{/else}
 							
 						</div>

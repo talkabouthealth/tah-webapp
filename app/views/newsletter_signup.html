@@ -43,7 +43,7 @@ function setNewsletterMessage(responseText, statusText, xhr, $form)  {
 		#{form @Newsletter.subscribeMoreNewsLetter() , id:'subcribeNewsletter' }
 			<div style="font-size: 12px;float: left;" class="talkinfo">
 				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="workshop" checked='checked' /></div>
-				<div style="padding-top: 3px;float:left;">Daily Update &amp; Workshop</div>
+				<div style="padding-top: 3px;float:left;">Daily Workshop Announcement &amp; News</div>
 			</div>
 			<div style="font-size: 12px;float: left;" class="talkinfo">
 				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked='checked' /></div>
@@ -72,7 +72,7 @@ function setNewsletterMessage(responseText, statusText, xhr, $form)  {
 		#{/form}
 	#{/if}
 	#{else}
-		<div style="padding:5px;"><span class="blacktextgrey15">Sign up for one of our free newsletters!</span></div>
+		<!--<div style="padding:5px;"><span class="blacktextgrey15">Sign up for one of our free newsletters!</span></div>-->
 	#{/else}
 	<div style=" font-size: 11px; font-weight: bold; padding: 10px 5px 0;"><a href="/explore/newsletter">View all newsletters</a></div>
 	<div class="topicborder" style="margin-top: 10px;"></div>  
