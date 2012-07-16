@@ -1,0 +1,144 @@
+<script>
+<!--
+$(document).ready(function() {
+	var submitOption = { success: setNewsletterMessage }; 
+	$('#subcribeNewsletter').submit(function() {
+		$("#subcribeNewsletter").ajaxSubmit(submitOption);
+		return false;
+	});
+	$('#email').click(function() {
+		if($("#email").val().trim() == 'Email Address')
+			$("#email").val('');
+	});
+	$('#email').blur(function() {
+		if($("#email").val().trim() == '')
+			$("#email").val('Email Address');
+	});
+});
+function setNewsletterMessage(responseText, statusText, xhr, $form)  {
+	var errorText;
+	$("#respMessage").css("color","#2E8B57");
+	if (responseText.indexOf("Error:") === 0) {
+   		errorText = responseText.replace("Error:", "");
+   		$("#respMessage").css("color","#ff0000");
+   	} else if (responseText.indexOf("Email alrady subscribed!") === 0) {
+   		errorText = responseText;
+   	} else {
+   		errorText= "Thank you for subscribing!";
+   	}
+	$("#respMessage").html(errorText); 
+	$("#respMessage").fadeIn(100);
+	closeTimeout = setTimeout(function() { $("#respMessage").fadeOut(200) }, 4000);
+}
+-->
+</script>
+<<<<<<< HEAD
+	<div id="newsLetter" style="display: none;">
+	<div class="mtrighttxt2" id="newsletterblock" style="height: auto;padding-left: 32px;padding-top: 43px;width: 216px;">
+			<div style="margin-top: -33px; margin-left: 190px;" id="closeDiv"><a href="javascript:closeDiv();" title="Close">x</a></div>
+		     <div class="blacktextgrey15_1">Join Our Newsletter</div>
+				<span class="blacktextgrey8"></span>	        
+				<span class="talkinfo" style="font-size: 11px;line-height: 19px;">
+					Upcoming events, best blog posts, latest news, and featured organizations and experts.
+					<br/>
+				</span>
+				<span class="blacktextgrey6"><br /></span>
+			    <span id="newsletterMessage" class="success" style="display:none;">Thanks for subscribing to newsletter.</span>
+					#{form @Application.subscribeNewsletter(), id:'newsletter'  }
+					#{if session.username }
+						<input name="email" id="email" class="email" type="text" value="${talker.email}" size="17" />
+					#{/if}
+					#{else}
+						<input name="email" id="email" class="email" type="text" value="Email Address" size="17"  onclick="javascript:changeEmail();" onblur="javascript:changeEmail();"/>
+					#{/else}
+					<br/>
+					<div style="padding-top: 12px;">
+						<input class="newsignupbutton" type="submit" value="" style="cursor: pointer;"/>
+					</div>
+					<br />
+					<br />
+					<div><span><a href="/explore/newsletter">
+					View all newsletters</a>
+					</span></div>
+					<!--
+					 -- Old Code --
+					Just Press [Enter] Key 
+					<div class="signupbutton"><input type="submit" value="Subscribe Now" /></div>
+					 -->
+					#{/form}
+				<span class="blacktextgrey6"><br /></span>	 
+		    </div>
+		     <div class="topicborder" style="margin-top: 15px;"></div>  
+    </div>
+    
+    <div class="topists" id="tahNewsletter" style="display: none;">
+		<div class="mtrighttxt1">TalkAboutHealth Newsletters</div>
+		<br />
+		<div><span class="blacktextgrey15">Sign up for one of our free newsletters!</span></div>
+		 <div style="padding-top: 12px;">
+			<a href="/explore/newsletter" >	<button class="newsignupbutton" type="submit" value=""  style="cursor: pointer;"></button></a>
+		</div>	
+		<br />
+		<div class="topicborder"></div>
+	</div>
+    
+#{/if}
+#{else}
+	<div class="topists" id="tahNewsletter">
+		<div class="mtrighttxt1">TalkAboutHealth Newsletters</div>
+		<br />
+		<div><span class="blacktextgrey15">Sign up for one of our free newsletters!</span></div>
+		 <div style="padding-top: 12px;">
+			<a href="/explore/newsletter" >	<button class="newsignupbutton" type="submit" value=""  style="cursor: pointer;"></button></a>
+		</div>	
+		<br />
+		<div class="topicborder"></div>
+	</div>
+#{/else}
+=======
+<div id="newsLetter" style="padding:10px 0;">
+	<div style="padding:5px;float: left;">
+		<span style="float: left;"><img width="153px" src="/public/images/logo_footer.jpg"/></span>
+		<span style="float: left; padding-top: 3px;color:#3888c1;font-style: italic;font-size: 14px;" class="mtrighttxt1">Newsletters</span>
+	</div>
+<!--	<div style="border-bottom: 2px solid #D9D7D7;float: left; margin: 5px;width: 97%;"></div>-->
+	<div style="padding:5px;text-align: justify;" class="talkinfo">Sign up for our newsletters to get updates on upcoming workshops, expert answers, and member benefits.</div>
+	#{if !newsLetterFlag }
+		#{form @Newsletter.subscribeMoreNewsLetter() , id:'subcribeNewsletter' }
+			<div style="font-size: 12px;float: left;" class="talkinfo">
+				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="workshop" checked='checked' /></div>
+				<div style="padding-top: 3px;float:left;">Daily Update &amp; Workshop</div>
+			</div>
+			<div style="font-size: 12px;float: left;" class="talkinfo">
+				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked='checked' /></div>
+				<div style="padding-top: 3px;float:left;">Daily Q&A Workshop Summary</div>
+			</div>
+			<div style="font-size: 12px;float: left;" class="talkinfo">
+				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Best of TalkAboutHealth" checked='checked' /></div>
+				<div style="padding-top: 3px;float:left;">Best of TalkAboutHealth (weekly)</div>
+			</div>
+			<div style="font-size: 12px;float: left;" class="talkinfo">
+				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TalkAboutHealth Rewards" checked='checked' /></div> 
+				<div style="padding-top: 3px;float:left;">TalkAboutHealth Benefits</div>
+			</div>
+			<div style="font-size: 12px;padding:15px 5px 0;" class="talkinfo">
+				<div style="clear: both;height: 20px;">
+					<span id="respMessage" style="margin-top: 5px;height:15px;float:left;width:100%;"></span>
+				</div>
+				#{if session.username }
+					<input name="newsletter.email" id="email" style="background: none repeat scroll 0 0 #F0F0F0;border: 1px solid #606060;color: #010101;padding: 3px;" type="text" value="${talker.email}" size="17" />
+				#{/if}
+				#{else}
+					<input name="newsletter.email" id="email" style="background: none repeat scroll 0 0 #F0F0F0;border: 1px solid #606060;color: #010101;padding: 3px;" type="text" value="Email Address" size="17"/>
+				#{/else}
+				<input style="font-size: 11px;background: none repeat scroll 0 0 #014DAB;border: 1px solid #000F22;color: #FFFFFF;padding: 3px 2px 2px;text-transform: uppercase;cursor: pointer;" type="submit" value="submit">
+			</div>
+		#{/form}
+	#{/if}
+	#{else}
+		<div style="padding:5px;"><span class="blacktextgrey15">Sign up for one of our free newsletters!</span></div>
+	#{/else}
+	<div style=" font-size: 11px; font-weight: bold; padding: 10px 5px 0;"><a href="/explore/newsletter">View all newsletters</a></div>
+	<div class="topicborder" style="margin-top: 10px;"></div>  
+</div>
+>>>>>>> tah-qa
