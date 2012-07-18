@@ -5341,7 +5341,7 @@ ul.tabs li {
 	color:#000000;
 	
 	margin-bottom: -1px;
-	background: #f5f5f5;
+	/*background: #f5f5f5;*/
 	overflow: hidden;
 	position: relative;
 }

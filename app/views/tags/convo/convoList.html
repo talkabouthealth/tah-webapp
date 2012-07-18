@@ -4,3 +4,6 @@
 #{list items: expertConvos, as: 'convo'}
 	#{convo/convoListItem convo: convo, talker: talker ,type : type /}
 #{/list}
+#{list items: openConvo, as: 'convo' }
+		#{convo/openQuestion convo: convo, talker: talker /}
+#{/list}

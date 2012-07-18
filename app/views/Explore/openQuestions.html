@@ -12,8 +12,8 @@
 				return showStartConvoDialog("question");
 			});
 		});
+		var feedsPerPage = ${logic.FeedsLogic.FEEDS_PER_PAGE};
 	</script>
-		
 <div id="managtopic1">
   <div id="managtopic">
   	#{include 'header.html' /}
@@ -34,23 +34,25 @@
 	            #{else}
 	            	<div class="topipcWraper">
 	            #{/else}
-                   		<div class="convoPagesTitle">Open Questions (${openQuestions.size()})</div>
+                   		<div class="convoPagesTitle">Open Questions</div>
+                   		*{ (${openQuestions.size()}) }*
 	                    <div class="topicborder"></div>
 	                    <div class="cb"></div>
-	                    
 	                    <div class="topic conversationsList">
-							#{list items: openQuestions, as: 'convo'}
+							<div id="openConvoList">
+							#{list items: openQuestions, as: 'convo' }
 								#{convo/openQuestion convo: convo, talker: talker /}
-							#{/list}                    
-							
-	                      	<div class="replytommentbox1" style="display: none;">
-	                        	<input type="submit" src="images/seemore.jpg" value=" " class="seemorecom" />
-	                      	</div>
+							#{/list}
+							</div>
+							#{if openQuestions.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+								<div class="replytommentbox" id="openConvoBtn">
+						           <input type="submit" src="images/seemore.jpg" 
+						           	onclick="return loadMoreFeedWithoutLogin('openConvo');" value=" " class="seemorecom" />
+						         </div>
+							#{/if}
 	                      	<div class="cb"></div>
 	                    </div>
-                    
 						#{ notLoggedNotice /}                   
-
                   		<div class="cb"></div>
                 	</div>
                 	<div class="cb"></div>
@@ -59,16 +61,13 @@
               <div class="cb"></div>
             </div>
             <!--mtleft-->
-            
             #{ set currentPage = 'openQuestions' /}
             #{ include 'right.html' /}
-            
             <!--mtright-->
             <div class="cb"></div>
           </div>
           <!--mtcover-->
           <div class="cb"></div>
-
         </div>
         <div id="signupright"></div>
       </div>

@@ -27,9 +27,17 @@
 #{/if}
 
 #{if type=="openConvo"}
+	<div id="openConvoList">
 	#{list items: openConvo, as: 'convo' }
 		#{convo/openQuestion convo: convo, talker: talker /}
 	#{/list}
+	</div>
+	#{if openConvo.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+		<div class="replytommentbox" id="openConvoBtn">
+           <input type="submit" src="images/seemore.jpg" 
+           	onclick="return loadMoreFeedWithoutLogin('openConvo');" value=" " class="seemorecom" />
+         </div>
+	#{/if}
 #{/if}
 
 #{if type == "recentConvo"}

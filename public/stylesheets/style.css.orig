@@ -6471,8 +6471,15 @@ margin-bottom:5px;
 .newsignupbutton{
 	float:left;  
 	height:34px; 
-	width: 75px;
+	width: 72px;
 	background: url(../images/sign_up.png) no-repeat;
+	border: none;
+}
+.newsignupBenefits{
+	float:left;  
+	height:21px; 
+	width: 69px;
+	background: url(../images/signupnow.png) no-repeat;
 	border: none;
 }
 .popbox_join {
@@ -6517,13 +6524,20 @@ margin-bottom:5px;
     width: 190px;
     cursor: pointer;
 }
-<<<<<<< HEAD
 .submitSubscribeEmail{
 	background: url("../images/submit_subEmail.png") no-repeat scroll 0 0 transparent;
     border: medium none;
     height: 25px;
-    width: 85px;
+    width: 75px;
     cursor: pointer;
+}
+.submitSubscribeTopic{
+    background: url("../images/weeklydigest.png") no-repeat scroll 0 0 transparent;
+    border: medium none;
+    cursor: pointer;
+    height: 40px;
+    width: 175px;
+    margin-left: 33px;
 }
 #subcribeConvo{
     width: 350px;
@@ -6532,7 +6546,10 @@ margin-bottom:5px;
 .subscribeEmail{
     font-size: 10px;
     height: 21px;
+<<<<<<< HEAD
     width: 175px;
 }
 =======
->>>>>>> master
+    width: 160px;
+}
+>>>>>>> tah-qa

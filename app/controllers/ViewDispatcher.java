@@ -203,13 +203,13 @@ public class ViewDispatcher extends Controller {
 				notViewableInfo = true;
 			}
 			newsLetterFlag = ApplicationDAO.isEmailExists(currentTalker.getEmail());
-			rewardLetterFlag=ApplicationDAO.isnewsLetterSubscribe(currentTalker.getEmail(),"TalkAboutHealth Rewards");
+			rewardLetterFlag = ApplicationDAO.isnewsLetterSubscribe(currentTalker.getEmail(),"TalkAboutHealth Rewards");
 		}
 		
 		Set<Action> talkerFeed = FeedsLogic.getTalkerFeed(talker, null);
 		
 		//For removing answer from feed list which have moderate no moderate value or value as "Delete Answer"
-		Iterator<Action> talkerFeedIter = talkerFeed.iterator();
+		//Iterator<Action> talkerFeedIter = talkerFeed.iterator();
 		/* while (talkerFeedIter.hasNext()) {
 			 Action actionIterator = talkerFeedIter.next();
 			 if(actionIterator != null && actionIterator.getConvo() != null){
@@ -262,12 +262,12 @@ public class ViewDispatcher extends Controller {
 		
 		TalkerBean talker = null;
 		boolean newsLetterFlag = false;
-		boolean rewardLetterFlag;
+		//boolean rewardLetterFlag;
 		
 		if (Security.isConnected()) {
 			talker = CommonUtil.loadCachedTalker(session);
 			newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
-			rewardLetterFlag = ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
+			//rewardLetterFlag = ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
 		}
 		ConversationDAO.incrementConvoViews(convo.getId());
 		Date latestActivityTime = ActionDAO.getConvoLatestActivity(convo);
@@ -359,7 +359,7 @@ public class ViewDispatcher extends Controller {
 		List<ConversationBean> openConvosSaved = new ArrayList<ConversationBean>();
 		for (ConversationBean conversationBean : openConvos) {
 			//added for check cancer type
-			if(conversationBean.isOpened()){ //&& cat.contains(conversationBean.getCategory())
+			if(conversationBean.isOpened()){ // && cat.contains(conversationBean.getCategory())
 				openConvosSaved.add(conversationBean);
 			}
 			if(openConvosSaved.size() >= FeedsLogic.FEEDS_PER_PAGE)
@@ -442,6 +442,7 @@ public class ViewDispatcher extends Controller {
     				popularConvos.add(conversationBean);
     			}
     		}
+    		openConvos.clear();
     		for (ConversationBean conversationBean : popularConvos) {
 				if(!conversationBean.getId().equals(afterActionId))
 					countArray++;

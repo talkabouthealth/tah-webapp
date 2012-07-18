@@ -1,53 +1,42 @@
 #{extends 'main.html' /}
-	<style type="text/css">
+<style type="text/css">
 	#innermiddlearea { padding-top: 10px }
-	#checkboxareainner {   color: #000000;
-    float: left;
-    font-family: arial;
-    font-size: 14px;
-    font-weight: bold;
-    height: 20px;
-    padding-top: 5px;
-    text-decoration: none;
-    width: 590px; }
-    #checkboxarea3 {   
-    float: none;height: 30px;
-     }
-     /*#checkboxarea3 input{padding:0px;margin: 0;}*/
-	</style>
-	<script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			var newsLetterOptions = { success: showMsg };
-			addAjaxForm("#newsLetterForm"); 
-			$('#newsLetterForm').submit(function() {
-				var email = document.getElementById("email").value;
-				if (email === 'Your Email' || email === '') {
-					alert("Please enter your email id")
-					return false;
-				}
-				$("#newsLetterForm").ajaxSubmit(newsLetterOptions); 
+	#checkboxareainner { color: #000000;float: left;font-family: arial;font-size: 14px;font-weight: bold;height: 20px;padding-top: 5px;text-decoration: none;width: 590px; }
+    #checkboxarea3 { float: none;height: 30px; }
+    .lableDiv {float:left;margin: 2px 0 0 5px;}
+</style>
+<script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		var newsLetterOptions = { success: showMsg };
+		addAjaxForm("#newsLetterForm"); 
+		$('#newsLetterForm').submit(function() {
+			var email = document.getElementById("email").value;
+			if (email === 'Your Email' || email === '') {
+				alert("Please enter your email id")
 				return false;
-			})
-			
-		});
-		function showMsg(responseText){
-			if(responseText === "Ok"){
-				window.scrollTo(0,280);
-				showPopup("#subNewsletter", 350);
 			}
-		}
+			$("#newsLetterForm").ajaxSubmit(newsLetterOptions); 
+			return false;
+		})
 		
-		function displayOptions(option){
-			if(document.getElementById(option).style.display == 'none'){
-				document.getElementById(option).style.display = 'block';
-				document.getElementById(option + 'EC').src = "/public/images/expand.png";
-			}else{
-				document.getElementById(option).style.display = 'none';
-				document.getElementById(option + 'EC').src = "/public/images/collapse.png";
-			}
+	});
+	function showMsg(responseText) {
+		if(responseText === "Ok") {
+			window.scrollTo(0,280);
+			showPopup("#subNewsletter", 350);
 		}
-	</script>
+	}
+	function displayOptions(option){
+		if(document.getElementById(option).style.display == 'none'){
+			document.getElementById(option).style.display = 'block';
+			document.getElementById(option + 'EC').src = "/public/images/expand.png";
+		}else{
+			document.getElementById(option).style.display = 'none';
+			document.getElementById(option + 'EC').src = "/public/images/collapse.png";
+		}
+	}
+</script>
 <div id="managtopic1">
   <div id="managtopic">
   	#{include 'header.html' /}
@@ -60,67 +49,105 @@
 		            	#{form @Explore.subscribeNewsLetter() , id:'newsLetterForm' }
 		            	<h3 style="color: #000">Free newsletters of our featured experts, best answers, latest news and custom offers.</h3>
 		          		<div id="checkboxarea3">
-							<input id="newsletter" name="newsletter.newsLetterType" 
-								type="checkbox" value="workshop"
-								#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('workshop') } 
-										    		checked='checked'
-										    	#{/if}>
+		          			<div style="float:left;">
+							#{if newsletter != null && newsletter.newsLetterType !=null}
+								#{if newsletter.newsLetterType.contains("workshop")}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="workshop" checked="checked"/>
+								#{/if}
+								#{else}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="workshop"/>
+								#{/else}
+							#{/if}
+							#{else}
+								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="workshop" checked="checked"/>
+							#{/else}
+							</div>
+							<div class="lableDiv">
 							#{if session.username} 
 								Daily Workshop Announcement and News<br/>
-								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured experts, answers, tips &amp; latest news.)</font>
+								<font size="2px;" style="font-weight: normal;">(Featured experts, answers, tips &amp; latest news.)</font>
 							#{/if}
 							#{else}
 								Daily Workshop Announcement and News<br/>
-								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured experts, answers, tips &amp; latest news.)</font>
+								<font size="2px;" style="font-weight: normal;">(Featured experts, answers, tips &amp; latest news.)</font>
 							#{/else}
+							</div>
 						</div>
 						<div id="checkboxarea3">
-							<input id="newsletter.newsLetterType" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery"
-							#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Workshop summery') } 
-										    		checked='checked'
-										    	#{/if}
-							/>
+							<div style="float:left;">
+							#{if newsletter != null && newsletter.newsLetterType !=null}
+								#{if newsletter.newsLetterType.contains("Workshop summery")}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked="checked"/>
+								#{/if}
+								#{else}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery"/>
+								#{/else}
+							#{/if}
+							#{else}
+								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked="checked"/>
+							#{/else}
+							</div>
+							<div class="lableDiv">
 							#{if session.username}
 								Daily Q&A Workshop Summary<br/>
-								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Daily answer summaries from our expert Q&A workshops.)</font>
+								<font size="2px;" style="font-weight: normal;">(Daily answer summaries from our expert Q&A workshops.)</font>
 							#{/if}
 							#{else}
 								Daily Q&A Workshop Summary<br/>
-								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Daily answer summaries from our expert Q&A workshops.)</font>
+								<font size="2px;" style="font-weight: normal;">(Daily answer summaries from our expert Q&A workshops.)</font>
 							#{/else}
+							</div>
 						</div>
 						<div id="checkboxarea3">
-						<input id="newsletter" name="newsletter.newsLetterType" 
-								type="checkbox" id="newsletter.newsLetterType" value="Best of TalkAboutHealth"
-								#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Best of TalkAboutHealth') } 
-										    		checked='checked'
-										    	#{/if}>
+							<div style="float:left;">
+							#{if newsletter != null && newsletter.newsLetterType !=null}
+								#{if newsletter.newsLetterType.contains("Best of TalkAboutHealth")}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Best of TalkAboutHealth" checked='checked'>
+								#{/if}
+								#{else}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Best of TalkAboutHealth">
+								#{/else}
+							#{/if}
+							#{else}
+								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Best of TalkAboutHealth" checked='checked'> 
+							#{/else}
+							</div>
+							<div class="lableDiv">
 							#{if session.username}
 								Best of TalkAboutHealth (weekly)<br/>
-								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(The week's best answers, news &amp; support.)</font>	
+								<font size="2px;" style="font-weight: normal;">(The week's best answers, news &amp; support.)</font>	
 							#{/if}
 							#{else}
 							Best of TalkAboutHealth (weekly)
 							<br/>
-								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(The week's best answers, news &amp; support.)</font>
+								<font size="2px;" style="font-weight: normal;">(The week's best answers, news &amp; support.)</font>
 							#{/else}	
-							
+							</div>
 						</div>
 						<div id="checkboxarea3">
-							<input id="newsletter" name="newsletter.newsLetterType" 
-								type="checkbox" id="newsletter.newsLetterType" value="TalkAboutHealth Rewards"
-								#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('TalkAboutHealth Rewards') } 
-										    		checked='checked'
-										    	#{/if}> 
+							<div style="float:left;">
+							#{if newsletter != null && newsletter.newsLetterType !=null}
+								#{if newsletter.newsLetterType.contains("TalkAboutHealth Rewards")}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TalkAboutHealth Rewards" checked="checked"/>
+								#{/if}
+								#{else}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TalkAboutHealth Rewards"/>
+								#{/else}
+							#{/if}
+							#{else}
+								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TalkAboutHealth Rewards" checked="checked"/>
+							#{/else}
+							</div>
+							<div class="lableDiv">
 							#{if session.username}TalkAboutHealth Benefits
 							<br/>
-							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Custom health, wellness &amp; medical offers.)</font>
+							<font size="2px;" style="font-weight: normal;">(Custom health, wellness &amp; medical offers.)</font>
 							#{/if}
 							#{else}TalkAboutHealth Benefits
 							<br/>
-							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Custom health, wellness &amp; medical offers.)</font>
+							<font size="2px;" style="font-weight: normal;">(Custom health, wellness &amp; medical offers.)</font>
 							#{/else}
-							
+							</div>
 						</div>
 						<div style="width:100%;">
 						<h4 style="font-weight: bold; margin-top: 20px;float:none;  width: 100%;">
@@ -132,66 +159,88 @@
 							<div id="newsLetterOption" style="display: none;padding-left: 20px; padding-bottom: 7px; float: left;">
 								#{list items:diseaseList , as: 'disease'}
 								   <div id="checkboxareainner">
+								   		<div style="float:left;">
 										<input id="newsletter" name="newsletter.newsLetterType" 
 											type="checkbox"  id="newsletter.newsLetterType" value="${disease.name}"
 											#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains(disease.name) } 
 												    		checked='checked'
 												    	#{/if}/> 
-										${disease.name}
+										</div>
+										<div class="lableDiv">
+											${disease.name}
+										</div>
 									</div>
 								#{/list}
 							</div>
 						</div>
 						<div style="width:100%;">
 						<h4 style="  width: 100%;"><a href="javascript:displayOptions('rewardsOptions');" ><img id="rewardsOptionsEC" src="/public/images/collapse.png"/><span style="margin-left: 5px; vertical-align: top;">
-						
 							#{if session.username}More TalkAboutHealth Benefits#{/if}
 							#{else}View more TalkaboutHealth Rewards (weekly)#{/else}
-						
 						</span></a></h4>
 						<div id="rewardsOptions" style="display: none;padding-left: 20px; padding-bottom: 7px; float: left;">
 							<div id="checkboxareainner">
-								<input id="newsletter" name="newsletter.newsLetterType" 
+								<div style="float:left;">
+									<input id="newsletter" name="newsletter.newsLetterType" 
 									type="checkbox" id="newsletter.newsLetterType" value="Diet, Nutrition, Food, and Recipe Rewards"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Diet, Nutrition, Food, and Recipe Rewards') } 
 											    		checked='checked'
 											    	#{/if}> 
-								Diet, Nutrition, Food, and Recipe Rewards
+								</div>
+								<div class="lableDiv">
+									Diet, Nutrition, Food, and Recipe Rewards
+								</div>
 							</div>
 							<div id="checkboxareainner">
+								<div style="float:left;">
 								<input id="newsletter" name="newsletter.newsLetterType" 
 									type="checkbox" id="newsletter.newsLetterType" value="Fitness and Exercise Rewards"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Fitness and Exercise Rewards') } 
 											    		checked='checked'
 											    	#{/if}/> 
+								</div>
+								<div class="lableDiv">
 								Fitness and Exercise Rewards
+								</div>
 							</div>
 							
 							<div id="checkboxareainner">
+								<div style="float:left;">
 								<input id="newsletter" name="newsletter.newsLetterType" 
 									type="checkbox" id="newsletter.newsLetterType" value="Skin and Beauty Rewards"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Skin and Beauty Rewards') } 
 											    		checked='checked'
 											    	#{/if}> 
+								</div>
+								<div class="lableDiv">
 								Skin and Beauty Rewards
+								</div>
 							</div>
 							<div id="checkboxareainner"  style="padding-bottom: 10px;">
+								<div style="float:left;">
 								<input id="newsletter" name="newsletter.newsLetterType" 
 									type="checkbox" id="newsletter.newsLetterType" value="Pharmaceutical Rewards"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Pharmaceutical Rewards') } 
 											    		checked='checked'
 											    	#{/if}/> 
+								</div>
+								<div class="lableDiv">
 								Pharmaceutical Rewards <br/>
-								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(relevant promotions and survey opportunities based on disease and more)</font>
+								<font size="2px;" style="font-weight: normal;">(Relevant promotions and survey opportunities based on disease and more)</font>
+								</div>
 							</div>
 							<div id="checkboxareainner" style="padding-bottom: 17px;">
+								<div style="float:left;">
 								<input id="newsletter" name="newsletter.newsLetterType" 
 									type="checkbox" id="newsletter.newsLetterType" value="Family Rewards"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Family Rewards') } 
 											    		checked='checked'
 											    	#{/if}> 
+								</div>
+								<div class="lableDiv">
 								Family Rewards <br/>
-								<font size="2px;" style="font-weight: normal;padding-left: 23px;">(maternity, baby, and family savings & special offeres)</font>
+								<font size="2px;" style="font-weight: normal;">(Maternity, baby, and family savings & special offeres)</font>
+								</div>
 							</div>
 						</div>
 						</div>
@@ -203,186 +252,238 @@
 								</span></a></h4>
 							<div id="otherOption" style="display: none;padding-left: 20px; padding-bottom: 7px; float: left;">
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Beauty and Skin Care"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Beauty and Skin Care') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Beauty and Skin Care
+									</div>
+									<div class="lableDiv">Beauty and Skin Care</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Bone Health"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Bone Health') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Bone Health
+									</div>
+									<div class="lableDiv">Bone Health</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Cancer Genetics"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Cancer Genetics') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Cancer Genetics
+									</div>
+									<div class="lableDiv">Cancer Genetics</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Cancer Medications"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Cancer Medications') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Cancer Medications
+									</div>
+									<div class="lableDiv">Cancer Medications</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Cancer Prevention"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Cancer Prevention') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Cancer Prevention
+									</div>
+									<div class="lableDiv">Cancer Prevention</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Cancer Screening"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Cancer Screening') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Cancer Screening
+									</div>
+									<div class="lableDiv">Cancer Screening</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Cancer Treatments"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Cancer Treatments') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Cancer Treatments
+									</div>
+									<div class="lableDiv">Cancer Treatments</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Depression"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Depression') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Depression
+									</div>
+									<div class="lableDiv">Depression</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Emotional Health"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Emotional Health') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Emotional Health
+									</div>
+									<div class="lableDiv">Emotional Health</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Fertility"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Fertility') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Fertility
+									</div>
+									<div class="lableDiv">Fertility</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Fitness"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Fitness') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Fitness
+									</div>
+									<div class="lableDiv">Fitness</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Food and Nutrition"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Food and Nutrition') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Food and Nutrition
+									</div>
+									<div class="lableDiv">Food and Nutrition</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Integrative Medicine"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Integrative Medicine') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Integrative Medicine
+									</div>
+									<div class="lableDiv">Integrative Medicine</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Joint Health"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Joint Health') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Joint Health
+									</div>
+									<div class="lableDiv">Joint Health</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Mens Health"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Mens Health') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Men's Health
+									</div>
+									<div class="lableDiv">Men's Health</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Menopause"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Menopause') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Menopause
+									</div>
+									<div class="lableDiv">Menopause</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Mood and Stress"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Mood and Stress') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Mood and Stress
+									</div>
+									<div class="lableDiv">Mood and Stress</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Oral Health"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Oral Health') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Oral Health
+									</div>
+									<div class="lableDiv">Oral Health</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Pain Management"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Pain Management') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Pain Management
+									</div>
+									<div class="lableDiv">Pain Management</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Parenting"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Parenting') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Parenting
+									</div>
+									<div class="lableDiv">Parenting</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Pregnancy"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Pregnancy') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Pregnancy
+									</div>
+									<div class="lableDiv">Pregnancy</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Sex and Relationships"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Sex and Relationships') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Sex and Relationships
+									</div>
+									<div class="lableDiv">Sex and Relationships</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Sleep Management"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Sleep Management') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Sleep Management
+									</div>
+									<div class="lableDiv">Sleep Management</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Vitamins and Supplements"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Vitamins and Supplements') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Vitamins and Supplements
+									</div>
+									<div class="lableDiv">Vitamins and Supplements</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Weight Loss and Diet"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Weight Loss and Diet') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Weight Loss and Diet
+									</div>
+									<div class="lableDiv">Weight Loss and Diet</div>
 								</div>
 								<div id="checkboxareainner">
+									<div style="float:left;">
 									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="Womens Health"
 									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains('Womens Health') } 
 								   		checked='checked'
 								    	#{/if}> 
-									Women's Health
+									</div>
+									<div class="lableDiv">Women's Health</div>
 								</div>
 							</div>
 						</div>

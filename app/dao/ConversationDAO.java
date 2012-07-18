@@ -324,7 +324,6 @@ public class ConversationDAO {
 			while(convoCur.hasNext()){
 				convosDBList.add(convoCur.next());
 			}
-			
 		}
 		else {
 			convosDBList=new ArrayList<DBObject>();//convosDBList = convosColl.find().sort(new BasicDBObject("cr_date", -1)).toArray();
@@ -523,39 +522,48 @@ public class ConversationDAO {
 	/**
 	 * Opened Questions - not answered, which are marked with 'opened' flag.
 	 */
-	public static List<ConversationBean> getOpenQuestions(TalkerBean talker, boolean loggedIn) {
+	public static List<ConversationBean> getOpenQuestions(String afterActionId) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
-		List<String> cat = new ArrayList<String>();
-		DBObject query = null;
-		if(loggedIn) {
-			cat = FeedsLogic.getCancerType(talker);
-			query = BasicDBObjectBuilder.start()
-			.add("opened", true)
-			.add("deleted", new BasicDBObject("$ne", true))
-			.add("category", new BasicDBObject("$in", cat))
-			.get();
-		} else {
-			query = BasicDBObjectBuilder.start()
-			.add("opened", true)
-			.add("deleted", new BasicDBObject("$ne", true))
-			.get();
-		}
+		//List<String> cat = new ArrayList<String>();
 		
-		List<DBObject> convosDBList=new ArrayList<DBObject>();//convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
-		DBCursor convoCur=convosColl.find(query).sort(new BasicDBObject("cr_date", -1));
-		while(convoCur.hasNext()){
+		BasicDBObjectBuilder queryBuilder =  BasicDBObjectBuilder.start()
+			.add("opened", true)
+			.add("deleted", new BasicDBObject("$ne", true));
+		
+		//DBObject query = BasicDBObjectBuilder.start()
+		//	.add("opened", true)
+		//	.add("deleted", new BasicDBObject("$ne", true))
+		//	.get();
+		System.out.println(afterActionId);
+		if (afterActionId != null && !afterActionId.equals("")) {
+			DBObject fields=BasicDBObjectBuilder.start()		
+			.add("cr_date" , 1).get();
+			Date firstActionTime = new Date();
+			DBObject comment=convosColl.findOne(new BasicDBObject("_id", new ObjectId(afterActionId)),fields);
+		
+			firstActionTime=(Date)comment.get("cr_date");
+		
+			if(firstActionTime != null) {
+				queryBuilder.add("cr_date", new BasicDBObject("$lt", firstActionTime));
+			}
+		}
+
+		List<DBObject> convosDBList = new ArrayList<DBObject>();//convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
+		DBCursor convoCur=convosColl.find(queryBuilder.get()).sort(new BasicDBObject("cr_date", -1)).limit(logic.FeedsLogic.FEEDS_PER_PAGE);
+		int recCount = 0;
+		while(convoCur.hasNext()) {
+			if(recCount>=logic.FeedsLogic.FEEDS_PER_PAGE)
+				break;
+			recCount++;
 			convosDBList.add(convoCur.next());
 		}
-		
-		 
-		
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		for (DBObject convoDBObject : convosDBList) {
 			ConversationBean convo = new ConversationBean();
 			convo.parseBasicFromDB(convoDBObject);
 	    	convosList.add(convo);
 		}
-		cat.clear();
+		//cat.clear();
 		return convosList;
 	}
 	
