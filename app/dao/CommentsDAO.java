@@ -314,6 +314,10 @@ public class CommentsDAO {
 			.get();
 		commentsColl.save(commentObject);
 		
+		if(comment.isAnswer()) {
+			TalkerDAO.addUserAnswerCount(comment.getFromTalker().getId());
+		}
+		
 		// update [children ...] repo on target answer/comment
 		updateParent(commentsColl, comment.getParentId(), getString(commentObject, "_id"));
 		
