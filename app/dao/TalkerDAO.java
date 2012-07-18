@@ -1276,7 +1276,7 @@ public class TalkerDAO {
 		}
 		
 	}
-}
+
 	 public static List<TalkerBean> getSortedTalkerList(List<TalkerBean> talkerList,boolean loggedIn) {
 		 
 		 Collections.sort(talkerList, new Comparator<TalkerBean>() {

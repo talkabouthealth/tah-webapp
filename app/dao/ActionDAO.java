@@ -562,6 +562,5 @@ public class ActionDAO {
 			.add("category", convo.getCategory())
 			.get();
 		WriteResult result =  activitiesColl.update(query,new BasicDBObject("$set", convoObject), true, true);
-		//System.out.println(result);
 	}
 }
