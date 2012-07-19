@@ -72,6 +72,7 @@ GET     /public/                                staticDir:public
 
 GET		/{name}/?								ViewDispatcher.view
 GET		/{name}/manage							Topics.manage
+GET		/{name}/videos							ViewDispatcher.showTopicVideo 
 
 GET		/{userName}/thoughts					PublicProfile.thoughts
 GET		/{userName}/answers						PublicProfile.answers

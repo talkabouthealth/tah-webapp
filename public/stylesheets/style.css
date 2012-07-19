@@ -3525,6 +3525,16 @@ a.popup_black10s:hover {
 	background-repeat:no-repeat;
 	cursor:pointer;
 }
+.addVideobtn {
+	background:url(../images/addVideo_btn.png);
+	width:122px;
+	height:40px;
+	float:left;
+	border:0;
+	text-align:left;
+	background-repeat:no-repeat;
+	cursor:pointer;
+}
 .addbtn {
 	background:url(../images/addbtn.jpg);
 	width:87px;

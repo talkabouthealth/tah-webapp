@@ -295,7 +295,6 @@
 				            </div>
 				            <div style="margin-top:10px; margin-bottom:10px; clear: both"></div>
 						</div>
-									
 									#{if convo.sumContributors && talker}
 										<div style="clear: both; padding-top: 10px;">
 											<span class="blacktext">Contributions By:</span> 
@@ -364,7 +363,11 @@
                			</div>
               		</div>
               		#{/if}
-
+					<!-- Video Code -->
+						#{if videoBeanList != null}
+							#{include '/Conversations/viewVideo.html' /}
+						#{/if}
+					<!-- End Video Code -->
                		<div class="topic" style="margin-bottom: 15px;">
                			<a id="answers"></a>
                			<div class="answerh1">Answers <span class="style2">(${commentSize})</span></div>
@@ -399,11 +402,8 @@
 				
 				<textarea name="textarea" id="replytext" class="answerinput" style="width: 617px; height: 150px;text-align: left;"
 					onclick="if (this.value === 'Add New Answer') this.value='';">Add New Answer</textarea><br />
-				
-				
 				<input type="submit" onclick="return saveAnswerOrReply('');" 
 					src="/public/images/addcomments.jpg" class="addcomments" value=" " />
-				
 				<div id="saveAnswerImage" class="ajaxLoading" 
 					style="float: right; margin-right: 15px; margin-top: 20px;"></div>
 			</div>
@@ -411,7 +411,6 @@
 				Only one answer per conversation per user. You may edit your answer though.
 			</div>
 		#{/if}
-		
 		#{if session.username && convo.messages}
 			<div class="answerh2 style1 style2">Conversation</div>
 			<div class="topicborder"></div>
@@ -448,18 +447,46 @@
 	</div>
 	#{if talker?.isAdmin() }
 		<div class="topic">
-                   <div class="topich1">Merge conversation</div>
-                   <div class="mtinputbox" style="padding-top: 0px;">
-                     <input id="convoToMerge" type="text" onfocus="selectedConvoURL = '';"
-                     	class="mtinput" style="width: 300px; margin-right: 10px;"/>
-                     <input id="mergeConvosBtn" type="submit" value="" src="/public/images/mergebtn.jpg" class="mergebtn"/>
-                     <div class="cb"></div>
-                   </div>
-                   <!--mtinputbox-->
-                    <div class="cb"></div>
-                  </div>
-		#{/if}
-		#{ notLoggedNotice /}
+			<div style="margin-bottom: 5px;margin-top: 20px;" class="topicborder"></div>
+			<div class="topich1">Add Video</div>
+			<div class="blacktextgrey15">Note: Every Youtube video come's with a unique 11 charactor lenght id. Please save that ID only as URL
+			<br/> Eg. If URL is http://youtu.be/gUQKZ8Md0Rg then Video ID is <i>gUQKZ8Md0Rg</i> 
+			<br/> If URL is http://www.youtube.com/watch?v=X7mW9vhMx3A then Video ID is <i>X7mW9vhMx3A</i>
+			</div>
+			#{form @Video.addNewVideo() , id:'videoForm' }
+				<input type="hidden" name="convoId" value="${convo.id}" />
+				<div class="mtinputbox" style="padding-top: 0px;">
+					<div style="float:left;margin-bottom:5px;">
+						<div style="float:left;font-weight: bold;margin-top: 7px;width: 138px;">Video ID: http://youtu.be/</div>
+						 <input type="text" name="videoId" class="mtinput" style="width: 175px; margin-right: 10px;"/>
+					</div>
+					<div style="float:left;margin-bottom:5px;">
+						<div style="float:left;font-weight: bold;margin-top: 7px;width: 138px">User:</div>
+						<input type="text" name="talkerId" class="mtinput" style="width: 175px; margin-right: 10px;"/>
+					</div>
+					<div style="float:left;margin-top:-10px;">
+						<input type="submit" class="addVideobtn" value=" "/>
+					</div>
+					<div style="width: 100%;float:left;margin-bottom:5px;"><span id="vedioMessage"></span></div>
+				</div>
+			#{/form}
+			<div style="margin-bottom: 5px;margin-top: 5px;" class="topicborder"></div>
+		</div>
+
+		<div class="topic"> 
+           <div class="topich1">Merge conversation</div>
+           <div class="mtinputbox" style="padding-top: 0px;">
+             <input id="convoToMerge" type="text" onfocus="selectedConvoURL = '';"
+             	class="mtinput" style="width: 300px; margin-right: 10px;"/>
+             <input id="mergeConvosBtn" type="submit" value="" src="/public/images/mergebtn.jpg" class="mergebtn"/>
+             <div class="cb"></div>
+           </div>
+           <!--mtinputbox-->
+           <div style="margin-bottom: 5px;margin-top: 5px;" class="topicborder"></div>
+            <div class="cb"></div>
+		</div>
+	#{/if}
+	#{ notLoggedNotice /}
 		<div>
 			<div class="answerh1">Similar Questions </div>
 			<br />			

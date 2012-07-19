@@ -302,11 +302,9 @@ if(medium=='show'){
                   </div>
                   <!--topixtext-->
                   <div class="membersarea">
-                  	#{if talker }
 	                  	#{list items: topic.followers, as: 'follower'}
 							#{talker/talkerImageLink size: 25, userName: follower.userName /}
 						#{/list}
-					#{/if}
                   </div>
                   <!--membersarea-->
                   <div class="topicborder"></div>
@@ -314,8 +312,17 @@ if(medium=='show'){
                 #{/if}
                 #{else}
                 	#{include 'tahInfo.html' /}
-                	#{include 'newsletter_signup.html' /}
                 #{/else}
+                	
+		        #{ifnot pageType == 'TopicVideo'}
+					#{if videoBeanList != null}
+							#{include '/Conversations/viewVideo.html' /}
+					#{/if}
+				#{/ifnot}
+                
+				#{ifnot talker }
+                	#{include 'newsletter_signup.html' /}
+                #{/ifnot}
                 <!--topipsts-->
                 <div class="topipsts">
                   <div class="mtrighttxt1">Topic Organization</div>

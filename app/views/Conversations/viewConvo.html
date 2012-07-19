@@ -13,10 +13,42 @@
 <link href="/public/stylesheets/viewconvo.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 <script type="text/javascript" src="/public/javascripts/viewconvo.js" ></script>
+<script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
 <script type="text/javascript">
 		var tid = "${convo.tid}";
 		var currentConvoId = "${convo.id}";
+
+		setVideoMessage = function(responseText, statusText, xhr, $form){
+			if (responseText.indexOf("Error:") === 0) {
+		   		var errorText = responseText.replace("Error:", "");
+		   		$('#videoForm input[name=videoId]').focus();
+		   		$("#vedioMessage").css("color","#ff0000");
+		   		$("#vedioMessage").html(errorText); 
+		   		$("#vedioMessage").fadeIn(100);
+		   		closeTimeout = setTimeout(function() { $("#vedioMessage").fadeOut(200) }, 4000);
+		   	} else {
+		   		$("#vedioMessage").css("color","#2E8B57");
+		   		$("#vedioMessage").html(responseText);
+		   		$("#vedioMessage").fadeIn(100);
+		   		closeTimeout = setTimeout(function() { $("#vedioMessage").fadeOut(200) }, 4000);
+		   	}
+		}
 		$(document).ready(function() {
+			if($("#videoForm").length != 0){
+				var videoOptions = { success: setVideoMessage }; 
+				$('#videoForm').submit(function() {
+					if($('#videoForm input[name=videoId]').val() =='') {
+						$('#videoForm input[name=videoId]').focus();
+						$("#vedioMessage").css("color","#ff0000");
+				   		$("#vedioMessage").html("Provide value for video Id");
+				   		$("#vedioMessage").fadeIn(100);
+				   		closeTimeout = setTimeout(function() { $("#vedioMessage").fadeOut(200) }, 4000);
+					} else {
+						$("#videoForm").ajaxSubmit(videoOptions); 
+					}
+					return false;
+				});
+			}
 			var share = "${params.share}";
 			$("#followConvoBtn").click(function() {
 				var moreBtn = this;

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import dao.VideoDAO;
 import logic.FeedsLogic;
 import logic.TalkerLogic;
 import logic.TopicLogic;
@@ -26,6 +27,7 @@ import models.TalkerBean;
 import models.TalkerDiseaseBean;
 import models.ConversationBean;
 import models.TopicBean;
+import models.VideoBean;
 import models.actions.Action;
 import models.actions.Action.ActionType;
 import dao.ActionDAO;
@@ -329,8 +331,12 @@ public class ViewDispatcher extends Controller {
 			commentSize = convo.getComments().size();
 		if(talker != null)
 			session.put("inboxUnreadCount", MessagingDAO.getUnreadMessageCount(talker.getId()));
+		
+		/*Code for Video*/
+		List<VideoBean> videoBeanList = VideoDAO.loadConvoVideo(convo.getId());
+		/*Code for Video*/
 		render("Conversations/viewConvo.html", talker, convo, latestActivityTime, 
-				relatedConvos, userHasAnswer,newsLetterFlag,commentSize);
+				relatedConvos, userHasAnswer,newsLetterFlag,commentSize,videoBeanList);
     }
 	
 	private static void showTopic(TopicBean topic) {
@@ -404,8 +410,32 @@ public class ViewDispatcher extends Controller {
 		if(talker != null)
 			session.put("inboxUnreadCount", MessagingDAO.getUnreadMessageCount(talker.getId()));
 		
+		/*Code for Video*/
+		List<VideoBean> videoBeanList = VideoDAO.loadTopicVideo(topic.getId(),2);
+		/*Code for Video*/
+		
 		render("Topics/viewTopic.html", talker, topic, activities, openConvosSaved,
-				popularConvos, trendingConvos, topicMentions,newsLetterFlag,rewardLetterFlag);
+				popularConvos, trendingConvos, topicMentions,newsLetterFlag,rewardLetterFlag,videoBeanList);
+	}
+	
+	public static void showTopicVideo(String name) {
+		TalkerBean talker = null;
+		boolean newsLetterFlag = false;
+		boolean rewardLetterFlag = false;
+		if (Security.isConnected()) {
+			talker = CommonUtil.loadCachedTalker(session);
+			newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
+			
+			rewardLetterFlag=ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
+		}
+		TopicBean topic = TopicDAO.getByURL(name);
+		if(talker != null)
+			session.put("inboxUnreadCount", MessagingDAO.getUnreadMessageCount(talker.getId()));
+		
+		/*Code for Video*/
+		List<VideoBean> videoBeanList = VideoDAO.loadTopicVideo(topic.getId(),0);
+		/*Code for Video*/
+		render("Topics/viewVideo.html", talker,topic, newsLetterFlag,rewardLetterFlag,videoBeanList);
 	}
 
 	/**
