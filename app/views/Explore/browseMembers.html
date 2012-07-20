@@ -135,7 +135,7 @@
 								#{if results }
 									<div style="font-size: 14px; clear: left; padding-top: 10px" id="searchTab">	
 										#{list items:results, as: 'talker'}
-											#{if currentTalker || talker.name != null}
+											#{if talker != null && talker.name != null}
 						            			#{talker/talkerInList talker: talker, currentTalker: currentTalker /}
 						            		#{/if}
 										#{/list}

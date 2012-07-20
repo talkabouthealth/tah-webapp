@@ -9,6 +9,8 @@ import static util.DBUtil.setToDB;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -93,6 +95,8 @@ public class TalkerDAO {
 				.add("invites", talker.getInvitations())
 				.add("ch_num", -1)
 				.add("password_update", talker.isPasswordUpdate())
+				.add("isImg", false)
+				.add("answerCnt", 0)
 				.get();
 
 		talkersColl.save(talkerDBObject);
@@ -105,7 +109,7 @@ public class TalkerDAO {
     		vars.put("username", talker.getUserName());
         	EmailUtil.sendEmail(EmailTemplate.WELCOME_NEWSLETTER, talker.getEmail(), vars, null, false);
 		}
-		
+
 		talker.setId(talkerDBObject.get("_id").toString());
 		return true;
 	}
@@ -184,9 +188,13 @@ public class TalkerDAO {
 	
 	public static void updateTalkerImage(TalkerBean talker, byte[] imageArray) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		boolean isImage = true;
+		if(imageArray == null)
+			isImage = false;
 		
 		DBObject talkerObject = BasicDBObjectBuilder.start()
 			.add("img", imageArray)
+			.add("isImg", isImage)
 			.get();
 		
 		DBObject talkerId = new BasicDBObject("_id", new ObjectId(talker.getId()));
@@ -571,16 +579,12 @@ public class TalkerDAO {
 		List<DBObject> talkersDBObjectList = null;
 		if (basicInfo) {
 			DBObject fields = getBasicTalkerFields();
-			
 			talkersDBObjectList=new ArrayList<DBObject>();//talkersDBObjectList = talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1)).toArray();
 			DBCursor talkerCur= talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1));
-			while(talkerCur.hasNext()){
+			while(talkerCur.hasNext()) {
 				talkersDBObjectList.add(talkerCur.next());
 			}
-			
-			
-		}
-		else {
+		} else {
 			talkersDBObjectList=new ArrayList<DBObject>();//talkersDBObjectList = talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
 			DBCursor talkerCur=talkersColl.find().sort(new BasicDBObject("uname", 1));
 			while(talkerCur.hasNext()){
@@ -913,6 +917,30 @@ public class TalkerDAO {
 			return (byte[])talkerDBObject.get("img");
 	}
 	
+	
+	/**
+	 * Returns 'null' if Privacy Settings do not allow to show image.
+	 * 
+	 * @param userName
+	 * @param currentUser
+	 * @return
+	 */
+	public static boolean isTalkerImage(String userId) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		DBObject query = new BasicDBObject("_id", new ObjectId(userId));
+		DBObject talkerDBObject = talkersColl.findOne(query, new BasicDBObject("isImg", 1));
+		if (talkerDBObject == null) {
+			return false;
+		} else {
+			if (talkerDBObject.get("isImg") == null) {
+				return false;
+			} else if(getBoolean(talkerDBObject, "isImg")) {
+				return true;
+			} else
+				return false;
+		}
+	}
+	
 	/**
 	 * For now, there will only be the breast cancer community,
 	 * so this method returns total number of users (talkers) in the DB.
@@ -1184,6 +1212,47 @@ public class TalkerDAO {
 		//"$set" is used for updating fields
 		talkersColl.update(talkerId, new BasicDBObject("$set", talkerObject));
 	}
+	
+	public static void addUserAnswerCount(String userId){
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		DBObject talkerId = new BasicDBObject("_id", new ObjectId(userId));
+		DBObject update = BasicDBObjectBuilder.start()
+		.add("$inc", new BasicDBObject("answerCnt", 1))
+		.get();
+		talkersColl.findAndModify(talkerId, update);
+	}
+	
+	public static void updateTalkerForImage() {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		List<DBObject> talkersDBObjectList = talkersColl.find().toArray();
+		DBObject talkerObject = null;
+		boolean isImage = false;
+		DBObject talkerId = null;
+		for (DBObject talkerDBObject : talkersDBObjectList) {
+			isImage = isTalkerImage(talkerDBObject.get("_id").toString());
+			talkerObject = BasicDBObjectBuilder.start()
+			.add("isImg", isImage)
+			.get();
+			talkerId = new BasicDBObject("_id", new ObjectId(talkerDBObject.get("_id").toString()));
+			talkersColl.update(talkerId, new BasicDBObject("$set", talkerObject));
+		}
+	}
+	
+	public static void updateTalkerForAnswerCount() {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		List<DBObject> talkersDBObjectList = talkersColl.find().toArray();
+		DBObject talkerObject = null;
+		int ansCount = 0;
+		DBObject talkerId = null;
+		for (DBObject talkerDBObject : talkersDBObjectList) {
+			ansCount = CommentsDAO.getTalkerNumberOfAnswers(talkerDBObject.get("_id").toString(),null);
+			talkerObject = BasicDBObjectBuilder.start()
+			.add("answerCnt", ansCount)
+			.get();
+			talkerId = new BasicDBObject("_id", new ObjectId(talkerDBObject.get("_id").toString()));
+			talkersColl.update(talkerId, new BasicDBObject("$set", talkerObject));
+		}
+	}
 	 public static void updateIds(){
 			
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
@@ -1209,5 +1278,63 @@ public class TalkerDAO {
 		}
 		
 	}
-}
 
+	 public static List<TalkerBean> getSortedTalkerList(List<TalkerBean> talkerList,boolean loggedIn) {
+		 
+		 Collections.sort(talkerList, new Comparator<TalkerBean>() {
+			@Override
+			public int compare(TalkerBean o1, TalkerBean o2) {
+				int user1 = 0;
+				int user2 = 0;
+				if(o1.getAnsCount() != 0)
+					user1 = 1;
+				if(o2.getAnsCount() != 0)
+					user2 = 1;
+				return user2 - user1;
+			}
+		 });
+		 
+		 Collections.sort(talkerList, new Comparator<TalkerBean>() {
+			@Override
+			public int compare(TalkerBean o1, TalkerBean o2) {
+				int user1 = 0;
+				int user2 = 0;
+				int result = 0;
+				if(o1.isImageFlag())
+					user1 = 1;
+				if(o2.isImageFlag())
+					user2 = 1;
+				result = user2 - user1;
+				return result;
+			}
+		});
+		 
+		 if(!loggedIn) {
+			 Collections.sort(talkerList, new Comparator<TalkerBean>() {
+				@Override
+				public int compare(TalkerBean o1, TalkerBean o2) {
+
+					int user1 = 0;
+					int user2 = 0;
+					if(o1.getPrivacyValue(PrivacyType.USERNAME) != null && PrivacyValue.PUBLIC.equals(o1.getPrivacyValue(PrivacyType.USERNAME)))
+						user1 = 1;
+					
+					if(o1.getPrivacyValue(PrivacyType.PROFILE_IMAGE) != null && PrivacyValue.PUBLIC.equals(o1.getPrivacyValue(PrivacyType.PROFILE_IMAGE)))
+						user1 = 1;
+					else
+						user1 = 0;
+					
+					if(o2.getPrivacyValue(PrivacyType.USERNAME) != null && PrivacyValue.PUBLIC.equals(o2.getPrivacyValue(PrivacyType.USERNAME)))
+						user2 = 1;
+					
+					if(o2.getPrivacyValue(PrivacyType.PROFILE_IMAGE) != null && PrivacyValue.PUBLIC.equals(o2.getPrivacyValue(PrivacyType.PROFILE_IMAGE)))
+						user2 = 1;
+					else
+						user2 = 0;
+					return user2 - user1;
+				}
+			});
+		 }
+		return talkerList;
+	 }
+}

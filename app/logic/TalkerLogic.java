@@ -1147,7 +1147,6 @@ public class TalkerLogic {
 				return cachedTopic;
 			}
 		}
-		
 		return TopicDAO.getByIdBasic(topicId);
 	}
 	
@@ -1208,7 +1207,6 @@ public class TalkerLogic {
 					emailSettingsStringList.add(emailSetting.toString());
 				}
 			}
-			System.out.println(emailSettingsStringList);
 			DBObject talkerDisObject = new BasicDBObject("email_settings", emailSettingsStringList);
 			DBObject talkersId = new BasicDBObject("_id", new ObjectId(talker.getId()));
 			talkersColl.update(talkersId, new BasicDBObject("$set", talkerDisObject));	
