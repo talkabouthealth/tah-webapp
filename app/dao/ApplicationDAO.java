@@ -59,6 +59,13 @@ public class ApplicationDAO {
 			.add("log_time", new Date())
 			.add("from", from)
 			.get();
+		
+		
+		//Saing log time in new record
+		DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
+		DBObject talkerObject = BasicDBObjectBuilder.start().add("log_time", new Date()).get();
+		DBObject talkerId1 = new BasicDBObject("_id", new ObjectId(talkerId));
+		talkersColl.update(talkerId1, new BasicDBObject("$set", talkerObject));
 
 		loginsColl.save(loginHistoryObject);
 	}

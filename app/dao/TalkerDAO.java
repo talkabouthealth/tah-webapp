@@ -1222,6 +1222,31 @@ public class TalkerDAO {
 		talkersColl.findAndModify(talkerId, update);
 	}
 	
+	public static void updateLogTime() {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		DBCollection loginsColl = getCollection(ApplicationDAO.LOGIN_HISTORY_COLLECTION);
+		List<DBObject> talkersDBObjectList = talkersColl.find().toArray();
+		DBObject talkerObject = null;
+		DBObject talkerId = null,query=null;
+		Date date = null;
+		DBCursor loginCur = null;
+		DBRef talkerRef =null;
+		for (DBObject talkerDBObject : talkersDBObjectList) {
+			date = new Date();
+			talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerDBObject.get("_id").toString());
+			query = BasicDBObjectBuilder.start().add("uid", talkerRef).get();
+			loginCur = loginsColl.find(query).sort(new BasicDBObject("log_time", 1));
+			if(loginCur != null && loginCur.hasNext()) {
+				DBObject logObj = loginCur.next();
+				date = (Date) logObj.get("log_time");
+			}
+			
+			talkerObject = BasicDBObjectBuilder.start().add("log_time", date).get();
+			talkerId = new BasicDBObject("_id", new ObjectId(talkerDBObject.get("_id").toString()));
+			talkersColl.update(talkerId, new BasicDBObject("$set", talkerObject));
+		}
+	}
+	
 	public static void updateTalkerForImage() {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		List<DBObject> talkersDBObjectList = talkersColl.find().toArray();
@@ -1281,6 +1306,21 @@ public class TalkerDAO {
 
 	 public static List<TalkerBean> getSortedTalkerList(List<TalkerBean> talkerList,boolean loggedIn) {
 		 
+		 /*Sort by login time*/
+		 Collections.sort(talkerList, new Comparator<TalkerBean>() {
+			@Override
+			public int compare(TalkerBean o1, TalkerBean o2) {
+				if(o1.getLogTime() != null) {
+					if(o2.getLogTime() != null)
+						return o2.getLogTime().compareTo(o1.getLogTime());
+					else
+						return 1;
+				} else
+					return 0;
+			}
+		});
+		 
+		 /* Sort using answer count*/
 		 Collections.sort(talkerList, new Comparator<TalkerBean>() {
 			@Override
 			public int compare(TalkerBean o1, TalkerBean o2) {
@@ -1294,6 +1334,7 @@ public class TalkerDAO {
 			}
 		 });
 		 
+		 /* Sort using answer count*/
 		 Collections.sort(talkerList, new Comparator<TalkerBean>() {
 			@Override
 			public int compare(TalkerBean o1, TalkerBean o2) {
@@ -1308,7 +1349,8 @@ public class TalkerDAO {
 				return result;
 			}
 		});
-		 
+
+		 /*Sort by permissions only if not logged in*/
 		 if(!loggedIn) {
 			 Collections.sort(talkerList, new Comparator<TalkerBean>() {
 				@Override

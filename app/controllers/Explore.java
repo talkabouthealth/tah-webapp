@@ -446,7 +446,7 @@ public class Explore extends Controller {
 			else if("Caregivers".equals(feedType))
 				memberTypeEntry = Arrays.asList("Caregiver");*/
 			else if("Family & Friends".equals(feedType))
-				memberTypeEntry = Arrays.asList("Family member", "Friend","Parent","Caregiver");
+				memberTypeEntry = Arrays.asList("Family member", "Friend","Parent","Caregiver","other");
 			/*else if("Breast Cancer".equals(feedType)){
 				memberTypeEntry = Arrays.asList(null,"Breast Cancer");
 				loadFlag = true;
