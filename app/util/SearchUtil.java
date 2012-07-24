@@ -196,7 +196,8 @@ public class SearchUtil {
 					continue;
 				} else {
 					ConversationBean convo = TalkerLogic.loadConvoFromCache(convoId);
-					results.add(convo);
+					if(!convo.isOpened())
+						results.add(convo);
 				}
 			}
 		}
