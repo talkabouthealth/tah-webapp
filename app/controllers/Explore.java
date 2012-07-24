@@ -260,13 +260,14 @@ public class Explore extends Controller {
 		if (action == null || action.equals("browsemembers")) {
 			action = "active";
 		}
+		boolean loggedIn = (currentTalker != null);
+		activeTalkers = TalkerDAO.getSortedTalkerList(activeTalkers,loggedIn);
 		render(currentTalker, action, activeTalkers, newTalkers, results, members);
 	}
     
 
 	public static void searchConversations() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		
 		String query = params.get("query");
 		List<ConversationBean> results = null;
 		if (query != null) {
@@ -458,14 +459,17 @@ public class Explore extends Controller {
 			}
 			List<TalkerBean> allActiveTalkers = null;
 			activeTalkers = new ArrayList<TalkerBean>();
+			boolean loggedIn = (currentTalker != null);
 			if(loadFlag){
 				allActiveTalkers = TalkerDAO.loadAllTalkersByCategory(true,memberTypeEntry);
+				allActiveTalkers = TalkerDAO.getSortedTalkerList(allActiveTalkers,loggedIn);
 				for (TalkerBean talker : allActiveTalkers) {
 					if (talker.getName() != null)
 						activeTalkers.add(talker);
 				}
 			} else {
 				allActiveTalkers = TalkerDAO.loadAllTalkers(true,currentTalker);
+				allActiveTalkers = TalkerDAO.getSortedTalkerList(allActiveTalkers,loggedIn);
 				for (TalkerBean talker : allActiveTalkers) {
 					if (memberTypeEntry.contains(talker.getConnection()) && talker.getName() != null) 
 						activeTalkers.add(talker);

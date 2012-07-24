@@ -1,0 +1,29 @@
+#{set pageType = 'TopicVideo' /}
+#{set pageTitle = topic.title /}
+#{set pageDescription = (topic.summary?.length() > 0 ? topic.summary : topic.title) /}
+
+#{extends 'Topics/topicPage.html' /}
+#{set currentPage = 'viewTopic' /}
+<script type="text/javascript">
+		var feedsPerPage = ${logic.FeedsLogic.TALKERFEEDS_PER_PAGE};
+</script>
+<br/>
+
+<div class="topicborder" style="padding:10px 0;"></div>
+<div class="cb"></div>
+<div>
+	#{if videoBeanList != null}
+		<div class="topic" style="margin-bottom: 15px;">
+			<div class="answerh1"> Video Answers<span class="style2">(${videoBeanList.size})</span></div>
+			<div class="topicborder"></div>
+			#{list items: videoBeanList, as: 'video'}
+				<div class="jointextstop" style="padding:10px 0 0;"><a href="@{ViewDispatcher.view(video.convoBean.mainURL)}" style="font-size:13px;">${video.convoBean.topic}</a></div>
+				<div style="padding:5px 0;">
+					<iframe width="600" height="300" src="http://www.youtube.com/embed/${video.videoId}" frameborder="0" allowfullscreen></iframe>
+				</div>
+				<div style="margin-top: 10px;" class="topicborder"></div>
+			#{/list}
+		</div>
+	#{/if}
+</div>
+#{ notLoggedNotice /}

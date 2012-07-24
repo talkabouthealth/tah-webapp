@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import logic.TalkerLogic;
 import models.EmailListBean;
 import models.NewsLetterBean;
 import models.TalkerBean;
@@ -96,7 +97,7 @@ public class Dashboard extends Controller {
 	
 	// --------------- Manage accounts -----------------------
 	public static void manageAccounts() {
-		List<TalkerBean> talkers = TalkerDAO.loadAllTalkers();
+		List<TalkerBean> talkers =  TalkerDAO.loadAllTalkers(); //TalkerLogic.loadAllTalkersFromCache();
 		render(talkers);
 	}
 	public static void saveAccounts(List<String> selectedTalkerIds) {
@@ -123,6 +124,12 @@ public class Dashboard extends Controller {
 			
 		}
 		manageAccounts();
+	}
+	
+	public static void updateTalkerImage() {
+		TalkerDAO.updateTalkerForImage();
+		TalkerDAO.updateTalkerForAnswerCount();
+		renderText("OK");
 	}
 	
 	/**
@@ -187,7 +194,7 @@ public class Dashboard extends Controller {
 	}
 	
 	private static List<TalkerBean> loadProfessionalTalkers() {
-		List<TalkerBean> talkerList = TalkerDAO.loadAllTalkers();
+		List<TalkerBean> talkerList = TalkerDAO.loadAllTalkers(); //TalkerLogic.loadAllTalkersFromCache();
 		
 		List<TalkerBean> professionalTalkers = new ArrayList<TalkerBean>();
 		for (TalkerBean talker : talkerList) {

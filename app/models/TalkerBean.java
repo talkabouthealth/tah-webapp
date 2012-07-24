@@ -251,6 +251,9 @@ public class TalkerBean implements Serializable {
 	
 	private NewsLetterBean newsLetterBean;
 	
+	private boolean imageFlag;
+	private int ansCount;
+	
 	public TalkerBean(){}
 	public TalkerBean(String id) {
 		this.id = id;
@@ -315,10 +318,12 @@ public class TalkerBean implements Serializable {
 		if (otherCategories != null) {
 			setOtherCategories(otherCategories.toArray(new String[]{}));
 		}
-		
+
 		Collection<DBObject> thankYousCollection = (Collection<DBObject>)talkerDBObject.get("thankyous");
 		setNumOfThankYous(thankYousCollection == null ? 0 : thankYousCollection.size());
 		setPasswordUpdate(getBoolean(talkerDBObject,"password_update"));
+		setImageFlag(getBoolean(talkerDBObject, "isImg"));
+		setAnsCount(getInt(talkerDBObject, "answerCnt"));
 	}
 	
 	public void parseFromDB(DBObject talkerDBObject) {
@@ -1082,5 +1087,17 @@ public class TalkerBean implements Serializable {
 	}
 	public void setWorkshopSummery(boolean workshopSummery) {
 		this.workshopSummery = workshopSummery;
+	}
+	public boolean isImageFlag() {
+		return imageFlag;
+	}
+	public void setImageFlag(boolean imageFlag) {
+		this.imageFlag = imageFlag;
+	}
+	public int getAnsCount() {
+		return ansCount;
+	}
+	public void setAnsCount(int ansCount) {
+		this.ansCount = ansCount;
 	}
 }
