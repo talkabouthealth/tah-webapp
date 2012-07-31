@@ -1,7 +1,7 @@
-<div class="topic" style="margin-bottom: 15px">
+<div class="topic" style="margin-bottom: 15px" id="videoDiv">
 	<div class="answerh1"> Video Answers
 	#{ifnot currentPage == 'topicPage'} 
-		<span class="style2">(${videoBeanList.size})</span>
+		(<span class="style2" id="videoCnt">${videoBeanList.size}</span>)
 	#{/ifnot}
 	</div>
 	<div class="topicborder"></div>
@@ -11,7 +11,10 @@
 			<a href="@{ViewDispatcher.view(video.convoBean.mainURL)}"><img src="http://img.youtube.com/vi/${video.videoId}/0.jpg" width="240" /></a>
 		#{/if}
 		#{else}
+			<div id="${video.videoId}">
 			<iframe width="600" height="300" src="http://www.youtube.com/embed/${video.videoId}" frameborder="0" allowfullscreen></iframe>
+			<div style="padding: 10px 0 0;"><a href="javaScript:deleteVideo('${video.videoId}');">Delete</a></div>
+			</div>
 		#{/else}
 		</div>
 	#{/list}
