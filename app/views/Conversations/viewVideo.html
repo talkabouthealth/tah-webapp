@@ -13,7 +13,9 @@
 		#{else}
 			<div id="${video.videoId}">
 			<iframe width="600" height="300" src="http://www.youtube.com/embed/${video.videoId}" frameborder="0" allowfullscreen></iframe>
-			<div style="padding: 10px 0 0;"><a href="javaScript:deleteVideo('${video.videoId}');">Delete</a></div>
+			#{if talker && talker.admin }
+				<div style="padding: 10px 0 0;"><a href="javaScript:deleteVideo('${video.videoId}');">Delete</a></div>
+			#{/if}
 			</div>
 		#{/else}
 		</div>
