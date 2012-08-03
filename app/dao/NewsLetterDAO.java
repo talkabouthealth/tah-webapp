@@ -131,11 +131,11 @@ public class NewsLetterDAO {
 		boolean returnFlag = false;
 		if(obj == null) {
 			returnFlag = false;
-		}else{
+		} else {
 			Set<String> emailList = DBUtil.getStringSet(obj,"email");
 			if(emailList.contains(email)) {
 				returnFlag = true;
-			} else{
+			} else {
 				returnFlag = false;
 			}
 		}

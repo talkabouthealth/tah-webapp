@@ -19,6 +19,13 @@
 		//default action
 		var activeTab = tabs["${action}"];
 		initOldTabs(activeTab);
+		if('${action}' == 'experts')
+			$("#Experts").click();
+		else if('${action}' == 'patients')
+			$("#Patients").click();
+		else if('${action}' == 'family and friends'){
+			$("#Family-and-Friends").click();
+		}
 	});
 </script>
 
@@ -51,7 +58,9 @@
 											            <li style="display: inline;width: auto;"><a href="#tab2" style=""><span>New</span></a></li>
 											            <li style="display: inline;width: auto;"><a href="#tab4" style=""><span>Search</span></a></li>
 											            #{list items: members.keySet(), as: 'memberType'}
-											            	<li style="display: inline;width: auto;"><a style="" href="#tab${memberType_index+4}" id="${memberType}"><span >${memberType}</span></a></li>
+											            	#{if memberType != null}
+											            	<li style="display: inline;width: auto;"><a style="" href="#tab${memberType_index+4}" id="${memberType.replaceAll(" ","-")}"><span >${memberType}</span></a></li>
+											            	#{/if}
 											            #{/list}
 											        </ul>
     								</div>	

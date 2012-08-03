@@ -27,6 +27,8 @@ GET     /captcha                                Application.captcha
 
 GET		/explore/members						Explore.browseMembers(action:'active')
 GET		/explore/experts						Explore.browseMembers(action:'experts')
+GET		/explore/patients						Explore.browseMembers(action:'patients')
+GET		/explore/familyandfriends				Explore.browseMembers(action:'family and friends')
 *		/search/members							Explore.browseMembers(action:'search')
 GET		/community/breast-cancer				Community.viewCommunity
 
@@ -48,6 +50,8 @@ GET		/explore/ajaxLoadMoreUser				Explore.ajaxLoadMoreUser
 GET		/explore/topicAjaxLoad					Explore.topicAjaxLoad
 GET		/explore/communityFeedAjaxLoad			Explore.communityFeedAjaxLoad
 GET		/explore/topics							Explore.topics
+GET		/explore/topics/{topic}					Explore.topics
+
 GET		/explore/newsletter						Explore.newsletter
 GET		/explore/{cancerType}					Explore.community
 
