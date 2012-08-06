@@ -1,0 +1,455 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:og="http://ogp.me/ns#"
+      xmlns:fb="http://www.facebook.com/2008/fbml">
+<head>    
+    <title>TalkAboutHealth - Breast Cancer Questions and Answers. Personalized, helpful, and accurate health information.</title>  
+    <meta name="description" content="${pageDescription ? pageDescription : 'Breast Cancer Questions and Answers.  Personalized, helpful, and accurate health answers. We are a welcoming and caring community who have come together to meet, share, and learn with each other. We welcome patients, families, caregivers, survivors, professionals, and organizations. Everyone is encouraged to share their unique knowledge and experiences. The more we share, the more lives we improve and save.'}" /> 
+    <meta name="keywords" content="${pageKeywords ? pageKeywords : 'support, health, talk'}" />
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <meta name="author" content="TalkAboutHealth" /> 
+    <meta name="robots" content="all" /> 
+    <meta property="og:title" content="Talk About Health" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="${currentURL}" />
+    <meta property="og:image" content="http://talkabouthealth.com/public/images/mainlogo.png"/>    
+    <meta property="og:site_name" content="TalkAbouthealth" />
+    <meta property="og:description" content="${pageDescription}"/>
+
+	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
+    
+    <link href="/public/stylesheets/new_style.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="/public/plugins/ui-lightness/jquery-ui-1.8.4.custom.css" type="text/css" media="screen" />
+
+    <script type="text/javascript" src="/public/javascripts/jquery-1.5.1.min.js" ></script>
+    <script type="text/javascript" src="/public/javascripts/jquery-ui-1.8.4.custom.min.js" ></script>
+    <script type="text/javascript" src="/public/javascripts/slides.min.jquery.js" ></script>
+    <script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
+    <script type="text/javascript" src="/public/javascripts/jscroller.js"></script>
+    <script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
+
+</head>
+<body class="home">
+	<div id="wrapper">
+		<div id="header">
+			<h1 class="logo"><a href="#"><img src="/public/images/index/tah_logo.png" alt="Talk About Health" />
+				<br /><p>You're not alone! <span>${numberOfMembers} Members &amp; ${numberOfAnswers} Answers</span></p></a>
+			</h1>
+			<ul class="search_signin">
+			    <li>
+			      <form action="?action=search" method="get">
+			        <input id="topSearchBox" type="text" placeholder="Your search here..." class="search_field" />
+			        <input id="topSearchText" type="button" class="search_btn" />
+			      </form>
+			    </li>
+			    <li><a href="@{Application.signup()}"><img src="/public/images/index/user.png" alt="join now" /> Join Now</a></li>
+			    <li><a href="@{Secure.login()}"><img src="/public/images/index/sign_in_icon.png" alt="sign in" /> Sign In</a></li>
+			    <li><a href="#" class="twitterBtn"><img src="/public/images/index/t_signin.png" alt="twitter signin" /></a></li>
+			    <li><a href="#" class="facebookBtn"><img src="/public/images/index/fb_signin.png" alt="facebook signin" /></a></li>
+			</ul>
+			<ul id="nav">
+			    <li><a href="@{Explore.conversations('expert')}">Answers</a></li>
+			    <li><a href="@{Explore.topics()}">Topics</a></li>
+			    <li><a href="@{Explore.browseMembers('active')}">Members</a></li>
+			    <li><a href="@{Static.medical_professionals()}">Experts</a></li>
+			    <li><a href="@{Static.workshops()}">Workshops</a></li>
+			    <li><a href="@{Static.trained_peer_support_program()}">Support Team</a></li>
+			    <li><a href="http://blog.talkabouthealth.com" target="_new">Blog</a></li>
+			</ul>
+		</div>
+		<!-- header end -->
+		<!-- Banner code -->
+		<div id="banner">
+		  <div id="slider">
+		    <div id="example">
+		      <div id="slides">
+		        <div class="slides_container">
+		          <div class="slide banner1">
+		            <h4>Health Answers from the</h4>
+		            <h2>World's Leading Experts</h2>
+		            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
+		              amazing. I have received many answers from leading physicians! <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
+		              <div class="get_started">
+		              	<a href="@{Application.signup()}"><img src="/public/images/index/get_started_btn.png" alt="get started" /></a> or
+		              	<a href="#" class="facebookBtn"><img src="/public/images/index/join_using_fb.png" alt="join using facebbok" /></a> 
+		              	<a href="#" class="twitterBtn"><img src="/public/images/index/join_using_t.png" alt="join using twitter" /></a>
+		              </div>
+		          </div>
+		          <div class="slide banner3">
+		            <h4>Health Answers from the</h4>
+		            <h2>World's Leading Experts</h2>
+		            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
+		              amazing. I have received many answers from leading physicians! <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
+		              <div class="get_started">
+		              	<a href="@{Application.signup()}"><img src="/public/images/index/get_started_btn.png" alt="get started" /></a> or
+		              	<a href="#" class="facebookBtn"><img src="/public/images/index/join_using_fb.png" alt="join using facebbok" /></a> 
+		              	<a href="#" class="twitterBtn"><img src="/public/images/index/join_using_t.png" alt="join using twitter" /></a>
+		              </div>
+		          </div>
+		          <div class="slide banner4">
+		            <h4>Answers from</h4>
+		            <h2>Experts and Trained Survivors.</h2>
+		            <!-- <h4>Health Answers from the</h4>
+		            <h2>World's Leading Experts</h2> -->
+		            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
+		              amazing. I have received many answers from leading physicians! <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
+		              <div class="get_started">
+		              	<a href="@{Application.signup()}"><img src="/public/images/index/get_started_btn.png" alt="get started" /></a> or
+		              	<a href="#" class="facebookBtn"><img src="/public/images/index/join_using_fb.png" alt="join using facebbok" /></a> 
+		              	<a href="#" class="twitterBtn"><img src="/public/images/index/join_using_t.png" alt="join using twitter" /></a>
+		              </div>
+		          </div>
+		        </div>
+		        <!--slides_container end--> 
+		     </div>
+		     <!--slides end--> 
+		   </div>
+		   <!--example end--> 
+		 </div>
+		 <!--slider end--> 
+		</div>
+		<!-- banner end -->
+		<div id="content">
+			<div id="main" class="slide">
+			    <ul class="tabs">
+			     <li id="expert" class="fst active"><a href="#">Expert Answers</a></li>
+			     <li id="recent"><a href="#">Recent Answers</a></li>
+			     <li id="open"><a href="#">Unanswered Questions</a></li>
+			   </ul>
+			   <div id="expertTab" class="tabBody">
+			     <ul id="expertCnt">
+			     </ul>
+			     <ul>
+			     	<li class="lastFeed">
+			     		<a class="moreBtn" id="expertMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+			     	</li>
+			     </ul>
+			   </div>
+			   <div id="recentTab" class="tabBody" style="display:none;">
+					<ul id="recentCnt">
+			     	</ul>
+			     	<ul>
+			     	<li class="lastFeed">
+			     		<a class="moreBtn" id="recentMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+			     	</li>
+			     </ul>
+			   </div>
+			   <div id="openTab" class="tabBody" style="display:none;">
+			   		<ul id="openCnt">
+			     	</ul>
+			     	<ul>
+			     	<li class="lastFeed">
+			     		<a class="moreBtn" id="openMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+			     	</li>
+			     </ul>
+			   </div>
+			   <!-- Recent end --> 
+			 </div>
+			 <!-- main end -->
+			 <div id="sidebar">
+			 #{include 'Upcoming_Workshops_new.html' /}
+
+			 <div class="box2">
+		        <h2 class="heading"><img src="/public/images/index/logo_blue.png" alt="logo_blue" /><a href="@{Explore.topics()}"> Cancer Communities</a></h2>
+		        <ul>
+			        #{list items: diseaseList, as: 'disease'}
+			        	#{ifnot disease.name == null}
+						<li><a href="/explore/${disease.name.convertToURL()}">${disease.name}</a></li>
+						#{/ifnot}
+					#{/list}
+					<li><a href="@{Explore.topics()}" class="last">More Options +</a></li>
+		        </ul>
+		      </div>
+			 #{include 'home_topic_list.html' /}
+			 </div>
+		</div>
+		<!-- Content end -->
+	</div>
+	<!-- wrapper end -->
+	<div id="client">
+	  <div id="client_inner">
+	    <h2><a href="@{Static.partner_network()}" style="float: left;">Partners</a> <a href="@{Static.become_a_partner()}"><img src="/public/images/index/become_partner.png" alt="become a partner" /></a> </h2>
+	    <ul class="client">
+	      <li><a href="#"><img src="/public/images/index/senology.png" alt="senology" /></a></li>
+	      <li><a href="#"><img src="/public/images/index/q_cancerquest.png" alt="q cancer quest" /></a></li>
+	      <li><a href="#"><img src="/public/images/index/cfah.png" alt="cfah" /></a></li>
+	      <li><a href="#"><img src="/public/images/index/clrc.png" alt="clrc" /></a></li>
+	      <li><a href="#"><img src="/public/images/index/paf.png" alt="paf" /></a></li>
+	      <li><a href="#"><img src="/public/images/index/women_at_risk.png" alt="women at risk" /></a></li>
+	      <li><a href="#"><img src="/public/images/index/4th_angel.png" alt="4th angel" /></a></li>
+	      <li><a href="#"><img src="/public/images/index/cancel_and_careers.png" alt="cancel_and_careers" /></a></li>
+	      <li><a href="#"><img src="/public/images/index/share.png" alt="share" /></a></li>
+	      <li><a href="#"><img src="/public/images/index/the_leukemia_and_lymphoma_society.png" alt="the_leukemia_and_lymphoma_society" /></a></li>
+	    </ul>
+	    <a href="#" class="prev"></a> <a href="#" class="next"></a> </div>
+	</div>
+	<!-- Footer -->
+	<div id="footer">
+  <div id="footer_inner">
+    <div id="site_nav">
+      <h3>Answers &amp; Members</h3>
+      <ul>
+        <li><a href="@{Explore.conversations('expert')}">Expert Answers</a></li>
+        <li><a href="@{Explore.conversations('feed')}">Recent Answers</a></li>
+        <li><a href="@{Explore.conversations('open')}">Unanswered Questions</a></li>
+        <li><a href="@{Explore.browseMembers('experts')}">Experts</a></li>
+        <li><a href="@{Explore.browseMembers('patients')}">Patients &amp; Survivors</a></li>
+        <li><a href="/explore/familyandfriends">Family &amp; Friends</a></li>
+      </ul>
+    </div>
+    <div id="site_nav">
+      <h3>Topics</h3>
+      <ul>
+        <li><a href="@{Explore.topics()}">Cancer Communities</a></li>
+        <li><a href="@{Explore.topics('survivorship')}">Cancer Patients and Survivors</a></li>
+        <li><a href="@{Explore.topics('Symptoms and Diagnosis')}">Cancer Symptoms and Diagnosis</a></li>
+        <li><a href="@{Explore.topics('treatments and side effect')}">Cancer Treatments and Side Effects</a></li>
+        <li><a href="@{Explore.topics('Life and Everyday')}">Life and Everyday</a></li>
+        <li><a href="@{Explore.topics('Risk')}">Cancer Risk and Screening</a></li>
+      </ul>
+    </div>
+    <!-- site nav end -->
+    <div id="site_nav">
+      <h3>More</h3>
+      <ul>
+        <li><a href="@{Static.aboutus()}">About</a></li>
+        <li><a href="@{Static.howitworks()}">How it Works</a></li>
+        <li><a href="@{Static.workshops()}">Q/A Workshops</a></li>
+        <li><a href="@{Static.trained_peer_support_program()}">Trained Peer Support</a></li>
+        <li><a href="@{Explore.browseMembers('active')}">Members</a></li>
+        <li><a href="http://blog.talkabouthealth.com" target="_new">Blog</a></li>
+      </ul>
+    </div>
+    <!-- site nav end -->
+    <div id="newsltr">
+      <h3>Stay in the loop!</h3>
+      <div class="follow">
+      	<div style="float: left;margin-right: 5px;">
+			<!-- <img src="/public/images/index/t_follow.png" alt="twitter follow" /> -->
+			<a href="https://twitter.com/talkabouthealth" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false" data-dnt="true">Follow</a>
+			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+		</div>
+		<div style="float: left;margin-right: 5px;">
+			<iframe src="http://www.facebook.com/plugins/like.php?href=http://www.facebook.com/talkabouthealth&amp;layout=button_count&amp;show_faces=true&amp;width=80&amp;action=like&amp;colorscheme=light&amp;height=30" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:85px; height:30px;" allowTransparency="true"></iframe>
+      	</div>
+      	<a href="http://talkabouthealth.tumblr.com" target="_new"><img src="/public/images/index/t_icon.png" alt="t" /></a> 
+      	<a href="http://www.youtube.com/user/talkabouthealth" target="_new"><img src="/public/images/index/youtube_icon.png" alt="you tube" /></a>
+      </div>
+      <p><img src="/public/images/index/footer_logo.png" width="150" alt="Talk About Health Newsletter" class="sml_logo" /> Newsletter</p>
+      	#{form @Newsletter.subscribeMoreNewsLetter() , id:'subcribeNewsletter' }
+        <ul>
+          <li>
+            <input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="workshop" checked='checked' />
+            Daily Update &amp; Workshop Announcement</li>
+          <li>
+            <input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked='checked' />
+            Q&amp;A Workshop Summary</li>
+          <li>
+            <input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Best of TalkAboutHealth" checked='checked' />
+            Benefits(Custom Health &amp; Medical Offers)</li>
+          <li>
+            <input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TalkAboutHealth Rewards" checked='checked' />
+            Best of TalkAboutHealth (Weekly)</li>
+        </ul>
+        <div>
+	        <div style="float:left;height:12px;">&nbsp;<span id="respMessage" style="float:left;display: none;">Test Text</span></div>
+	        <div style="float:left;">
+	        	<input name="newsletter.email" id="email" placeholder="Valid Email" type="text" class="newsltr_field" />
+	        	<input id="subscribe" type="button" class="newsltr_btn" />
+	        </div>
+        </div>
+      	#{/form}
+		<div style="float:left;">
+			<p>
+				<a href="@{Explore.newsletter()}">
+				<img src="/public/images/index/newsletter_icon.png" alt="all newsletters" /> View All Newsletters
+				</a>
+			</p>
+		</div>
+    </div>
+    <!-- newsletter end -->
+    <div class="footer_logo"></div>
+  </div>
+  <!--footer inner end--> 
+</div>
+
+<!-- footer end -->
+<div id="copy">
+  <div id="copy_inner"> &copy; Copyright ${java.util.Calendar.getInstance().get(Calendar.YEAR)} - Talk About Health - <a href="@{Static.privacy()}">Privacy Policy</a> | <a href="@{Static.tos()}">Terms of Service</a></div>
+  <!-- copy_inner end --> 
+</div>
+<!-- copy end -->
+	<!--footer end--> 
+	#{ common/googleAnalytics /}
+<script type="text/javascript">
+<!--
+$(document).ready(function(){
+	//Search button code
+	$("#topSearchText").click(function() {
+		makeSearch();
+	});
+
+	$("#topSearchBox").keydown(function(c) {
+		if (c.keyCode === 10 || c.keyCode === 13) {
+			makeSearch();
+		}
+	});
+	$(".twitterBtn").click(function() {
+		openServiceLogin('T');
+	});
+	$(".facebookBtn").click(function() {
+		openServiceLogin('F');
+	});
+
+	makeAutoComplete();
+
+	// Initialize Slides
+	$('#slides').slides({
+		preload: false,
+		preloadImage: '/public/images/index/tah_loading.gif',
+		generatePagination: true,
+		play: 10000,
+		effect: 'fade',
+		crossfade: true,
+		pause: 2000,
+		hoverPause: true,
+		start: 1
+	});
+
+	//Subscribe button feature	
+	$('#subscribe').click(function() {
+		$("#subcribeNewsletter").ajaxSubmit({ success: setNewsletterMessage });
+		return false;
+	});
+
+	//TAbs
+	$(".tabs li").click(function() {
+		$(".active").removeClass("active");
+		$(this).addClass("active");
+		var id = $(this).attr("id");
+		var lastActionId = '';
+		var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
+		$("#"+id+"Cnt").html(loading);
+		$.get("/Explore/homePageFeed",{ type : id,lastActionId:lastActionId },function(data){
+			$(loading).remove();
+			$(data).appendTo($("#"+id+"Cnt"));
+			$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+		});
+		$(".tabBody").hide();
+		$("#" + id + "Tab").fadeIn();
+		return false;
+	});
+
+	$(".moreBtn").click(function() {
+		var idBtn = $(this).attr("id");
+		var id = "expert"
+		if(idBtn == 'expertMore')
+			id = "expert";
+		else if(idBtn == 'recentMore')
+			id = "recent";
+		else if(idBtn == 'openMore')
+			id = "open";
+		var idElm =  $("#" + id);
+		var lastActionId = $("#"+id+"Cnt").children().last().attr("id");
+		var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
+		$(loading).appendTo($("#"+id+"Cnt"));
+		$.get("/Explore/homePageFeed",{ type : id,lastActionId:lastActionId },function(data){
+			$(loading).remove();
+			$(data).appendTo($("#"+id+"Cnt"));
+			$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+		});
+		return false;
+	});
+
+	$("#client_inner").jCarouselLite({
+        btnNext: ".next",
+        btnPrev: ".prev",
+		auto: 800,
+   		speed: 1000,
+		visible:4,
+		mouseWheel:true
+    });
+
+	$("#expert").click();
+});
+setNewsletterMessage = function(responseText, statusText, xhr, $form)  {
+	var errorText;
+	$("#respMessage").css("color","#FFFFFF");
+	if (responseText.indexOf("Error:") === 0) {
+   		errorText = responseText.replace("Error:", "");
+   		$("#respMessage").css("color","#ff0000");
+   	} else if (responseText.indexOf("Email alrady subscribed!") === 0) {
+   		errorText = responseText;
+   	} else {
+   		errorText= "Thank you for subscribing!";
+   	}
+	$("#respMessage").html(errorText); 
+	$("#respMessage").fadeIn(100);
+	closeTimeout = setTimeout(function() { $("#respMessage").fadeOut(200) }, 4000);
+}
+makeSearch = function(){
+	var query = $("#topSearchBox").val();
+	if ($.trim(query) === '') {
+		$("#topSearchBox").focus();
+		return false;
+	}else{
+		query = encodeURIComponent($.trim(query));
+		var url = "/search?query="+query;
+		document.location = url; 
+	}
+}
+makeAutoComplete = function(){
+	var url = "/search/ajaxSearch";
+	var cache = {};
+	$("#topSearchBox").autocomplete({
+		minLength: 1,
+		source: function(request, response) {
+			var term = ""
+			if ( request.term in cache ) {
+					response( cache[ request.term ] );
+					return;
+			}
+			request.term = request.term;
+			$.ajax({
+				url: url,
+				dataType: "json",
+				data: request,
+				success: function( data ) {
+					cache[ term ] = data;
+					response( data );
+				}
+			});
+		},
+		select: function(event, ui) {
+			var url = ui.item.url;
+			if (url === "#fullsearch") {
+				if (trim(ui.item.value) === '') {
+					$("#topSearchBox").focus();
+					return false;
+				}else{
+					url = "/search?query="+ui.item.value;
+				}
+			}
+			document.location = url;
+		}
+	})
+	.data( "autocomplete" )._renderItem = function( ul, item ) {
+		return $( "<li></li>" )
+			.data( "item.autocomplete", item )
+			.append( "<a>" + item.label + "&nbsp;<span>" + item.type + "</span></a>" )
+			.appendTo( ul );
+	};
+}
+
+openServiceLogin = function(serviceType) {
+	if(serviceType === 'F')
+		window.open("/oauth/getauth?type=facebook&redirectURL=","FacebookLogin", "width=1000,height=550,toolbar=no,location=no,menubar=no");
+	else if(serviceType === 'T')
+		window.open("/oauth/getauth?type=twitter&redirectURL=","TwitterLogin", "width=800,height=470,toolbar=no,location=no,menubar=no");
+}
+-->
+</script>
+</body>
+</html>
