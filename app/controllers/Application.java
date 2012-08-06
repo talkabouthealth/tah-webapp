@@ -98,6 +98,17 @@ public class Application extends Controller {
     	}
     }
     
+    /*New Home page*/
+    public static void indexNew(){
+    	if (Security.isConnected()) {
+    		Home.index();
+    	} else {
+    		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
+    		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
+    		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+    		render(null, numberOfMembers, numberOfAnswers, diseaseList);
+    	}
+    }
     
     /* ------- Forgot Password --------- */
     public static void forgotPassword() {

@@ -1,0 +1,158 @@
+#{if type == 'expert'}
+	#{list items: convoFeed, as: 'convo'}
+	    <li id="${convo.comments.get(0).id}">
+			<div class="varified"> 
+				#{if convo.comments != null && convo.comments.size() > 0}
+					#{talker/talkerImageLink size: 72, userName: convo.comments.get(0).fromTalker.name /}
+				#{/if}
+				#{else}
+					#{talker/talkerImageLink size: 72, userName: convo.talker.name /}
+				#{/else}
+				#{if convo.comments.get(0).fromTalker.connectionVerified }
+					<h4>Verified</h4>
+				#{/if}
+				#{else}
+					<h4 class="not">Not Verified</h4>
+				#{/else}
+	        </div>
+			<div  class="q">
+				<h3 class="sub_heading">
+					<a href="@{ViewDispatcher.view(convo.mainURL)}">${convo.topic}</a>
+				</h3>
+				<p class="disc">
+					#{if convo.comments != null && convo.comments.size() > 0}
+						${convo.comments.get(0).text.raw()}
+					#{/if}
+				</p>
+				<p class="by">
+					New answer by 
+					<span>#{if convo.comments != null && convo.comments.size() > 0}
+						#{talker/talkerLink talker: convo.comments.get(0).fromTalker /}
+					#{/if}
+					#{else}
+						#{talker/talkerLink talker: convo.talker /}
+					#{/else}</span>
+					#{if convo.comments != null && convo.comments.size() > 0}
+						(${convo.comments.get(0).fromTalker.connection})
+					#{/if}
+					#{else}
+						(#{talker/talkerLink talker: convo.talker /})
+					#{/else}
+				</p>
+				<div class="ans">
+					<img src="/public/images/index/chat_icon.png" alt="answers" />
+	 				#{if !convo.comments || convo.comments?.size() == 0}
+						<a href="@{ViewDispatcher.view(convo.mainURL)}#answers">0 Answer</a>  
+					#{/if}
+					#{else}
+						<a href="@{ViewDispatcher.view(convo.mainURL)}#answers">${convo.comments?.size()} 
+							Answer${convo.comments.pluralize()}</a>
+					#{/else}
+				</div>
+				<div class="ans">	
+					<img src="/public/images/index/timer_icon.png" alt="time" />
+					#{if convo.comments != null && convo.comments.size() > 0}
+						${convo.comments.get(0).time.since()}
+					#{/if}
+					#{else}
+						${convo.creationDate.since()}
+					#{/else}
+				</div>
+			</div>
+		</li>
+	#{/list}
+#{/if}
+#{elseif type == 'recent'}
+	#{list items: convoFeed, as: 'convo'}
+	    <li id="${convo.id}">
+		    <div class="varified"> 
+				#{if convo.talker != null && convo.talker.name != null}
+					#{talker/talkerImageLink size: 72, userName: convo.talker.name /}
+				#{/if}
+				#{if convo.talker.connectionVerified }
+					<h4>Verified</h4>
+				#{/if}
+				#{elseif convo.talker.isProf() }
+						<h4 class="not">Not Verified</h4>
+				#{/elseif}
+	        </div>
+	        <div  class="q">
+				<h3 class="sub_heading">
+					<a href="@{ViewDispatcher.view(convo.convo.mainURL)}">${convo.convo.topic}</a>
+				</h3>
+				<p class="disc">
+					#{if convo.reply}
+						#{if convo.reply != null && convo.reply.size() > 0}
+							${convo.reply.text.raw()}
+						#{/if}
+					#{/if}
+					#{elseif convo.answer}
+						${convo.answer.printThoughtOrAnswer(session.username)}
+					#{/elseif}
+				</p>
+				<p class="by">
+					#{if convo.profileComment}
+						#{if convo.otherTalker.equals(convo.talker)}
+							#{publicprofile/profileCommentsTree commentsList: [convo.profileComment], level: 1, showDelete: _talker?.isAdmin(), isFeed: true, parentList: _parentList /}
+						#{/if}
+						#{else}
+								${convo.toHTML(session.username != null).raw()}
+							#{publicprofile/profileCommentsTree commentsList: [convo.profileComment], level: 1, showDelete: _talker?.isAdmin(), isFeed: true, parentList: _parentList /}
+						#{/else}
+					#{/if}
+					#{else}
+							${convo.toHTML(session.username != null).raw()}
+					#{/else}
+				</p>
+				<div class="ans">
+					<img src="/public/images/index/chat_icon.png" alt="answers" />
+	 				#{if convo.convo.comments != null}
+					#{if convo.convo.comments.size() == 0}
+						<a href="@{ViewDispatcher.view(convo.convo.mainURL)}#answers">0 Answer</a>  
+					#{/if}
+					#{else}
+						<a href="@{ViewDispatcher.view(convo.convo.mainURL)}#answers">${convo.convo.comments.size()} 
+							Answer${convo.convo.comments.pluralize()}</a> 
+					#{/else}
+				#{/if}
+				</div>
+				<div class="ans">	
+					<img src="/public/images/index/timer_icon.png" alt="time" />
+					${convo.time.since()}
+				</div>
+			</div>
+		</li>
+	#{/list}
+#{/elseif}
+#{elseif type == 'open'}
+	#{list items: convoFeed, as: 'convo'}
+	    <li id="${convo.id}">
+	    	<div class="varified"> 
+				#{if convo.talker != null && convo.talker.name != null}
+					#{talker/talkerImageLink size: 72, userName: convo.talker.name /}
+				#{/if}
+				#{if convo.talker.connectionVerified }
+					<h4>Verified</h4>
+				#{/if}
+				#{elseif convo.talker.isProf() }
+					<h4 class="not">Not Verified</h4>
+				#{/elseif}
+	        </div>
+			<div  class="q">
+				<h3 class="sub_heading">
+					<a href="@{ViewDispatcher.view(convo.mainURL)}">${convo.topic}</a>
+				</h3>
+				<p class="disc"></p>
+				<p class="by">${convo.getHtmlDetails(_talker != null).raw()}</p>
+				<div class="ans">
+					<img src="/public/images/index/chat_icon.png" alt="answers" />
+	 				<a href="@{ViewDispatcher.view(convo.mainURL)}#answers">0 Answer</a>
+				</div>
+				<div class="ans">	
+					<img src="/public/images/index/timer_icon.png" alt="time" />
+					${convo.creationDate.since()}
+				</div>
+			</div>
+	    </li>
+	#{/list}
+#{/elseif}

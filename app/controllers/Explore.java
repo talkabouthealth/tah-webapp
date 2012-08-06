@@ -372,6 +372,25 @@ public class Explore extends Controller {
 			render("Explore/feedList.html",recentConvo, type);
 		}
 	}
+	
+	public static void homePageFeed(String type, String lastActionId){
+		if(lastActionId != null && "".equals(lastActionId))
+			lastActionId = null;
+		if(type.equals("expert")) {
+			List<ConversationBean> convoFeed = ConversationDAO.loadExpertsAnswer(lastActionId);
+			render("Explore/homeFeedList.html",convoFeed, type);
+		}
+		if(type.equals("open")) {
+			List<ConversationBean> convoFeed = ConversationDAO.getOpenQuestions(lastActionId);
+			render("Explore/homeFeedList.html",convoFeed, type);
+		}
+		if(type.equals("recent")){
+			TalkerBean talker = CommonUtil.loadCachedTalker(session);
+			Set<Action> convoFeed = FeedsLogic.getAllCancerFeed(lastActionId, Security.isConnected(), talker);	
+			render("Explore/homeFeedList.html",convoFeed, type);
+		}
+	}
+	
 	/**
 	 * Used by "More" button in different feeds.
 	 * @param afterActionId load actions after given action
@@ -598,10 +617,13 @@ public class Explore extends Controller {
 	 * 
 	 */
 	public static void topics(String topic) {
-		System.out.println(topic);
-		topic = topic.replace("_", " ");
-		topic = topic.replace("+", " ");
-		topic = topic.toLowerCase();
+
+		if(topic != null){
+			System.out.println(topic);
+			topic = topic.replace("_", " ");
+			topic = topic.replace("+", " ");
+			topic = topic.toLowerCase();
+		}
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
 		List<DiseaseBean> diseaseList1 = null;
@@ -609,15 +631,15 @@ public class Explore extends Controller {
 		List<DiseaseBean> diseaseList3 = null;
 		int size = 0;
   		if(diseaseList != null && diseaseList.size() > 0){
-  			int mod = diseaseList.size()%3;
-      		size = diseaseList.size()/3;
+  			int mod = (diseaseList.size()-1)%3;
+      		size = (diseaseList.size()-1)/3;
       		if(mod > 0)
       			size = size + 1;
       		diseaseList1 = diseaseList.subList(0, size);
       		diseaseList2 = diseaseList.subList(size, size + size);
-      		diseaseList3 = diseaseList.subList(size + size, diseaseList.size());
+      		diseaseList3 = diseaseList.subList(size + size, diseaseList.size()-1);
   		}
-		render(talker,diseaseList1,diseaseList2,diseaseList3);
+		render(talker,diseaseList1,diseaseList2,diseaseList3,topic);
 	}
 	
 	/**
