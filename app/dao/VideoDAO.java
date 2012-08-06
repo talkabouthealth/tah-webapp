@@ -60,8 +60,7 @@ public class VideoDAO {
 		List<VideoBean> videoBeanList = null;
 		VideoBean videoBean;
 		DBCollection videoColl = getCollection(VIDEO_COLLECTION);
-		
-		
+
 		Set<DBRef> topicDB = new HashSet<DBRef>();
 		topicDB.add(createRef(TopicDAO.TOPICS_COLLECTION, convoId));
 		
@@ -81,6 +80,16 @@ public class VideoDAO {
 			}while(convoCur.hasNext());
 		}
 		return videoBeanList;
+	}
+	
+	public static boolean deleteVideo(String videoId) {
+		boolean returnFlag = true;
+		DBCollection videoColl = getCollection(VIDEO_COLLECTION);
+		DBObject query =  BasicDBObjectBuilder.start()
+						  .add("videoId", videoId)
+						  .get();
+		videoColl.remove(query);
+		return returnFlag;
 	}
 	public static final String VIDEO_COLLECTION = "video";
 }

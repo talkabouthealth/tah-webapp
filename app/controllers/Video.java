@@ -42,9 +42,6 @@ public class Video extends Controller {
 				returnPath = true;	
 			
 		}
-		System.out.println("videoId :" + videoId);
-		System.out.println("talkerId :" + talkerId);
-		System.out.println("convoId :" + convoId);
 		if(returnPath){
 			renderText(message);
 		}else
@@ -53,5 +50,12 @@ public class Video extends Controller {
 	
 	public static void topicVideo(String name){
 		render();
+	}
+	
+	public static void deleteVideo(String videoId) {
+		if(VideoDAO.deleteVideo(videoId))
+			renderText("Deleted video successfully.Please refresh page");
+		else
+			renderText("Internal error: Please try again");
 	}
 }
