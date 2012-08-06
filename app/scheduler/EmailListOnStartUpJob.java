@@ -21,8 +21,8 @@ import play.jobs.*;
 import util.EmailUtil;
 
 /** Fire on application start up **/ 
-@OnApplicationStart
-public class EmailListOnStartUpJob extends Job {
+//@OnApplicationStart
+public class EmailListOnStartUpJob {
 
 	public void doJob() {
 		System.out.println("Job : Email list population one time on sailthrou");
