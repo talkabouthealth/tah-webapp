@@ -33,6 +33,20 @@
 		   		closeTimeout = setTimeout(function() { $("#vedioMessage").fadeOut(200) }, 4000);
 		   	}
 		}
+		deleteVideo = function(videoId) {
+			$.post("@{Video.deleteVideo()}", { videoId: videoId },
+				function(nextAction) {
+	  				var videoCnt = $("#videoCnt").html();
+	  				videoCnt = videoCnt - 1;
+	  				if(videoCnt == 0) {
+	  					$("#videoDiv").hide('slow');
+	  				} else {
+	  					$("#videoCnt").html(videoCnt);
+	  					$("#" +videoId).hide('slow');
+	  				}
+	  			}
+			);
+		}
 		$(document).ready(function() {
 			if($("#videoForm").length != 0){
 				var videoOptions = { success: setVideoMessage }; 

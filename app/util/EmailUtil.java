@@ -145,6 +145,25 @@ public class EmailUtil {
 		return returnFlag;
 	}
 	
+
+	/**
+	 * 
+	 * @param listName
+	 * @param emailList
+	 * @return
+	 */
+	public static boolean setEmail(Map<String, Boolean> lists,String email){
+		boolean returnFlag = true;
+		TriggerMailClient client;
+		try {
+			client = new TriggerMailClient(SAILTHRU_APIKEY, SAILTHRU_SECRET);
+			client.setEmail(email, false, false, false, null, lists, null);
+		} catch (Exception e) {
+			Logger.error(e, "EmailUtil.java: sentMail");
+			return false;
+		}
+		return returnFlag;
+	}
 	/**
 	 * Checks if given email was verified by talker
 	 * @param email

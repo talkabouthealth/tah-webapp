@@ -221,7 +221,7 @@ public class Explore extends Controller {
 		members.put("Former Patients", new LinkedHashSet<TalkerBean>());
 		//members.put("Parents", new LinkedHashSet<TalkerBean>());
 		//members.put("Caregivers", new LinkedHashSet<TalkerBean>());
-		members.put("Family & Friends", new LinkedHashSet<TalkerBean>());
+		members.put("Family and Friends", new LinkedHashSet<TalkerBean>());
 		
 		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
 		for (DiseaseBean diseaseBean : diseaseList) {
@@ -360,7 +360,7 @@ public class Explore extends Controller {
 			render("Explore/feedList.html",expertConvo, type);
 		}
 		if(type.equals("openConvo")) {
-			TalkerBean talker = CommonUtil.loadCachedTalker(session);
+			//TalkerBean talker = CommonUtil.loadCachedTalker(session);
 			//boolean loggedIn = (talker != null);
 			List<ConversationBean> openConvo = ConversationDAO.getOpenQuestions(null);
 			render("Explore/feedList.html",openConvo, type);
@@ -396,9 +396,8 @@ public class Explore extends Controller {
     		render("tags/feed/feedList.html", _feedItems, _talker);
 	    }else if ("expertConvo".equalsIgnoreCase(feedType)){
 	   	     List<ConversationBean> expertConvos = null;
-	    	expertConvos = ConversationDAO.loadExpertsAnswer(afterActionId);
-	    	String type="expertConvo";
-		     render("tags/convo/convoList.html", expertConvos ,type);
+	    	 expertConvos = ConversationDAO.loadExpertsAnswer(afterActionId);
+		     render("tags/convo/convoList.html", expertConvos ,feedType);
 	    } else if("openConvo".equalsIgnoreCase(feedType)) {
 			List<ConversationBean> openConvo = ConversationDAO.getOpenQuestions(afterActionId);
 			render("tags/convo/convoList.html",openConvo, feedType);
@@ -446,7 +445,7 @@ public class Explore extends Controller {
 			else if("Caregivers".equals(feedType))
 				memberTypeEntry = Arrays.asList("Caregiver");*/
 			else if("Family & Friends".equals(feedType))
-				memberTypeEntry = Arrays.asList("Family member", "Friend","Parent","Caregiver");
+				memberTypeEntry = Arrays.asList("Family member", "Friend","Parent","Caregiver","other");
 			/*else if("Breast Cancer".equals(feedType)){
 				memberTypeEntry = Arrays.asList(null,"Breast Cancer");
 				loadFlag = true;
@@ -598,7 +597,11 @@ public class Explore extends Controller {
 	 * Page to displaying topics information
 	 * 
 	 */
-	public static void topics() {
+	public static void topics(String topic) {
+		System.out.println(topic);
+		topic = topic.replace("_", " ");
+		topic = topic.replace("+", " ");
+		topic = topic.toLowerCase();
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
 		List<DiseaseBean> diseaseList1 = null;

@@ -253,6 +253,7 @@ public class TalkerBean implements Serializable {
 	
 	private boolean imageFlag;
 	private int ansCount;
+	private Date logTime;
 	
 	public TalkerBean(){}
 	public TalkerBean(String id) {
@@ -324,6 +325,7 @@ public class TalkerBean implements Serializable {
 		setPasswordUpdate(getBoolean(talkerDBObject,"password_update"));
 		setImageFlag(getBoolean(talkerDBObject, "isImg"));
 		setAnsCount(getInt(talkerDBObject, "answerCnt"));
+		setLogTime((Date)talkerDBObject.get("log_time"));
 	}
 	
 	public void parseFromDB(DBObject talkerDBObject) {
@@ -1099,5 +1101,11 @@ public class TalkerBean implements Serializable {
 	}
 	public void setAnsCount(int ansCount) {
 		this.ansCount = ansCount;
+	}
+	public Date getLogTime() {
+		return logTime;
+	}
+	public void setLogTime(Date logTime) {
+		this.logTime = logTime;
 	}
 }
