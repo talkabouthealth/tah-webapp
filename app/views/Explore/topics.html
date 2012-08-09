@@ -13,7 +13,6 @@
 	</style>
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
-
 		$(document).ready(function() {
 			initNewTabs();
 			if('${topic}' == 'life and everyday') {
@@ -29,14 +28,12 @@
 			}
 		});
 	</script>
-		
 <div id="managtopic1">
   <div id="managtopic">
   	#{include 'header.html' /}
   	<div id="bottom_container">
       	<div class="haderbanner"><div id="innerbanner"></div></div>
         <div id="targetedtherapy">
-
           <div id="innermiddlearea">
             <div id="mtcover">
               <div id="mtleft">
@@ -56,7 +53,6 @@
 						<div id="diseasesContent" class="tabContent">	
 							<div class="topic">
 		                      <div class="newpage1">Cancers</div>
-		
 		                      <div class="cb"></div>
 		                      <div class="joinborder"></div>
 		                      <div class="cb"></div>
@@ -89,178 +85,36 @@
 		                      	<div class="joinborder"></div>
 		                      	<div class="cb"></div>
 		                      	<div class="topic"  style="padding-top: 10px;">
-		                      	 	<div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
-	                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Patients & Survivors</a><br/>
-	                        			<a class="diseaseLink" href="#">Patient Experiences</a><br/>
-	                        			<a class="diseaseLink" href="#">Patient Decisions</a><br/>
-	                        			<a class="diseaseLink" href="#">Survivorship</a><br/>
-	                        			<a class="diseaseLink" href="#">Emotional Support</a><br/>
-	                        			<a class="diseaseLink" href="#">Mental Health</a><br/><br/>
-	                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Symptoms & Diagnosis</a><br/>
-	                        			<a class="diseaseLink" href="#">Symptoms</a><br/>
-	                        			<a class="diseaseLink" href="#">Just Diagnosed</a><br/>
-	                        			<a class="diseaseLink" href="#">Diagnosis</a><br/>
-	                        			<a class="diseaseLink" href="#">Pathology</a><br/>
-	                        			<a class="diseaseLink" href="#">Staging</a><br/>
-	                        			<a class="diseaseLink" href="#">Recurrence</a><br/>
+		                      		<div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
+	     	                   			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Risk & Screening</a><br/>
+	                        			<a class="diseaseLink" href="/cancer-screening">Screening (Cancer)</a><br/>
+	                        			<a class="diseaseLink" href="/cancer-prevention">Prevention (Cancer)</a><br/>
+	                        			<a class="diseaseLink" href="/cancer-risk-factors">Risk Factors (Cancer)</a><br/>
+	                        			<a class="diseaseLink" href="/cancer-genetics">Genetics (Cancer)</a><br/>
 	                        		</div>
-	                        		
+		                      	 	<div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
+	                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Symptoms & Diagnosis</a><br/>
+	                        			<a class="diseaseLink" href="/cancer-symptoms">Symptoms (Cancer)</a><br/>
+	                        			<a class="diseaseLink" href="/cancer-just-diagnosed">Just Diagnosed (Cancer)</a><br/>
+	                        			<a class="diseaseLink" href="/cancer-diagnosis">Diagnosis (Cancer)</a><br/>
+	                        			<a class="diseaseLink" href="/cancer-pathology">Pathology (Cancer)</a><br/>
+	                        			<a class="diseaseLink" href="/cancer-staging">Staging (Cancer)</a><br/>
+	                        			<a class="diseaseLink" href="/cancer-recurrence">Recurrence (Cancer)</a><br/>
+										<a class="diseaseLink" href="/metastatic-cancer">Metastatic Cancer</a><br/>
+	                        		</div>
 	                        		<div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
 	                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Treatment & Side Effects</a><br/>
-	                        			<a class="diseaseLink" href="#">Medications</a><br/>
-	                        			<a class="diseaseLink" href="#">Surgery</a><br/>
-	                        			<a class="diseaseLink" href="#">Oncology</a><br/>
-	                        			<a class="diseaseLink" href="#">Radiation Therapy</a><br/>
-	                        			<a class="diseaseLink" href="#">Chemotherapy</a><br/>
-	                        			<a class="diseaseLink" href="#">Hormonal Therapy</a><br/>
-	                        			<a class="diseaseLink" href="#">Biologic Therapy</a><br/>
-	                        			<a class="diseaseLink" href="#">Immunotherapy</a><br/>
-	                        			<a class="diseaseLink" href="#">Complementary & Integrative Medicine</a><br/>
-	                        			<a class="diseaseLink" href="#">Side Effects</a><br/>
-	                        		</div>
-	                        		
-	                        		<div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
-	                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Life & Everyday</a><br/>
-	                        			<a class="diseaseLink" href="#">Nutrition</a><br/>
-	                        			<a class="diseaseLink" href="#">Health</a><br/>
-	                        			<a class="diseaseLink" href="#">Exercise and Fitness</a><br/>
-	                        			<a class="diseaseLink" href="#">Skin & Beauty</a><br/>
-	                        			<a class="diseaseLink" href="#">Sex & Intimacy</a><br/>
-	                        			<a class="diseaseLink" href="#">Career & Employment</a><br/>
-	                        			<a class="diseaseLink" href="#">Legal</a><br/>
-	                        			<a class="diseaseLink" href="#">Insurance</a><br/>
-	                        			<a class="diseaseLink" href="#">Medical Debt</a><br/><br/>
-	                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Risk & Screening</a><br/>
-	                        			<a class="diseaseLink" href="#">Screening</a><br/>
-	                        			<a class="diseaseLink" href="#">Risk Factors</a><br/>
-	                        			<a class="diseaseLink" href="#">Genetics</a><br/>
+	                        			<a class="diseaseLink" href="/cancer-medications">Medications (Cancer)</a><br/>
+										<a class="diseaseLink" href="/cancer-surgery">Surgery (Cancer)</a><br/>
+										<a class="diseaseLink" href="/radiation-therapy">Radiation Therapy (Cancer)</a><br/>
+										<a class="diseaseLink" href="/chemotherapy">Chemotherapy</a><br/>
+										<a class="diseaseLink" href="/biologic-therapy">Biologic Therapy</a><br/>
+										<a class="diseaseLink" href="/hormonal-therapy">Hormonal Therapy</a><br/>
+										<a class="diseaseLink" href="/complementary-and-alternative-medicine">Complementary & Alternative Medicine</a><br/>
+										<a class="diseaseLink" href="/cancer-side-effects">Side Effects (Cancer)</a><br/>
 	                        		</div>
 		                      	</div>
 		                        <div class="cb"> </div>
-		                        <!-- 
-		                        <div class="newpage1">Breast Cancer</div>
-		                        <div class="cb"></div>
-		                      	<div class="joinborder"></div>
-		                      	<div class="cb"></div>
-
-		                      	<div class="topic"  style="padding-top: 10px;">
-		                      	 	<div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
-	                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Breast Cancer Patients & Survivors</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Patient Experiences</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Patient Decisions</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Survivorship</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Emotional Support</a><br/>
-	                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Breast Cancer Symptoms & Diagnosis</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Symptoms</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Just Diagnosed</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Diagnosis</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Pathology</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Staging</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Recurrence</a><br/>
-	                        		</div>
-	                        		
-	                        		<div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
-	                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Breast Cancer Treatment & Side Effects</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Medications</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Surgery</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Oncology</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Radiation Therapy</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Chemotherapy</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Hormonal Therapy</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Side Effects</a><br/>
-	                        		</div>
-
-	                        		<div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
-	                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Breast Cancer Risk & Screening</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Screening</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Risk Factors</a><br/>
-	                        			<a class="diseaseLink" href="#">Breast Cancer Genetics</a><br/>
-	                        		</div>
-		                      	</div>
-		                        <div class="cb"> </div>
-		                        
-		                        <div class="newpage1">Lung Cancer</div>
-		                        <div class="cb"></div>
-		                      	<div class="joinborder"></div>
-		                      	<div class="cb"></div>
-
-		                      	<div class="topic"  style="padding-top: 10px;">
-		                      	 	<div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
-	                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Lung Cancer Patients & Survivors</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Patient Experiences</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Patient Decisions</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Survivorship</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Emotional Support</a><br/>
-	                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Lung Cancer Symptoms & Diagnosis</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Symptoms</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Just Diagnosed</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Diagnosis</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Pathology</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Staging</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Recurrence</a><br/>
-	                        		</div>
-	                        		
-	                        		<div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
-	                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Lung Cancer Treatment & Side Effects</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Medications</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Surgery</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Oncology</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Radiation Therapy</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Chemotherapy</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Hormonal Therapy</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Side Effects</a><br/>
-	                        		</div>
-
-	                        		<div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
-	                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Lung Cancer Risk & Screening</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Screening</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Risk Factors</a><br/>
-	                        			<a class="diseaseLink" href="#">Lung Cancer Genetics</a><br/>
-	                        		</div>
-		                      	</div>
-		                        <div class="cb"> </div>
-		                        
-		                        <div class="newpage1">Melanoma</div>
-		                        <div class="cb"></div>
-		                      	<div class="joinborder"></div>
-		                      	<div class="cb"></div>
-
-		                      	<div class="topic"  style="padding-top: 10px;">
-		                      	 	<div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
-	                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Melanoma Patients & Survivors</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Patient Experiences</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Patient Decisions</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Survivorship</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Emotional Support</a><br/>
-	                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Melanoma Symptoms & Diagnosis</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Symptoms</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Just Diagnosed</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Diagnosis</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Pathology</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Staging</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Recurrence</a><br/>
-	                        		</div>
-	                        		
-	                        		<div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
-	                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Melanoma Treatment & Side Effects</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Medications</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Surgery</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Oncology</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Radiation Therapy</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Chemotherapy</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Hormonal Therapy</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Side Effects</a><br/>
-	                        		</div>
-
-	                        		<div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
-	                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Melanoma Risk & Screening</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Screening</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Risk Factors</a><br/>
-	                        			<a class="diseaseLink" href="#">Melanoma Genetics</a><br/>
-	                        		</div>
-		                      	</div>
-		                        <div class="cb"></div>
-		                       -->
 		                      </div>
 		                      <div class="cb"></div>
 		                    </div>
@@ -275,21 +129,21 @@
 		                      <div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
 	                        		#{if diseaseList1 != null && diseaseList1.size() > 0}
 	                        			#{list items: diseaseList1, as: 'disease'}
-	                        				<a class="diseaseLink" href="#">${disease.name} Risk Factors</a><br/><!-- bluetext14-->
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-risk-factors">Risk Factors (${disease.name})</a><br/><!-- bluetext14-->
 	                        			#{/list}
 	                        		#{/if}
 	                        	</div>
 	                        	<div style="width: 290px;display: inline-block; vertical-align: top;float: none;">
 	                        		#{if diseaseList2 != null && diseaseList2.size() > 0}
 	                        			#{list items: diseaseList2, as: 'disease'}
-	                        				<a class="diseaseLink" href="#">${disease.name} Risk Factors</a><br/><!-- bluetext14-->
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-risk-factors">Risk Factors (${disease.name})</a><br/><!-- bluetext14-->
 	                        			#{/list}
 	                        		#{/if}
 	                        	</div>
 	                        	<div style="width: 290px;display: inline-block; vertical-align: top;float: none;">
 	                        		#{if diseaseList3 != null && diseaseList3.size() > 0}
 	                        			#{list items: diseaseList3, as: 'disease'}
-	                        				<a class="diseaseLink" href="#">${disease.name} Risk Factors</a><br/><!-- bluetext14-->
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-risk-factors">Risk Factors (${disease.name})</a><br/><!-- bluetext14-->
 	                        			#{/list}
 	                        		#{/if}
 	                        	</div>
@@ -304,26 +158,25 @@
 		                      <div class="cb"></div>
 		                      <div class="joinborder"></div>
 		                      <div class="cb"></div>
-
 		                      <div class="topic"  style="padding-top: 10px;">
 		                      <div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
 	                        		#{if diseaseList1 != null && diseaseList1.size() > 0}
 	                        			#{list items: diseaseList1, as: 'disease'}
-	                        				<a class="diseaseLink" href="#">${disease.name} Screening</a><br/><!-- bluetext14-->
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-screening">Screening (${disease.name})</a><br/><!-- bluetext14-->
 	                        			#{/list}
 	                        		#{/if}
 	                        	</div>
 	                        	<div style="width: 290px;display: inline-block; vertical-align: top;float: none;">
 	                        		#{if diseaseList2 != null && diseaseList2.size() > 0}
 	                        			#{list items: diseaseList2, as: 'disease'}
-	                        				<a class="diseaseLink" href="#">${disease.name} Screening</a><br/><!-- bluetext14-->
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-screening">Screening (${disease.name})</a><br/><!-- bluetext14-->
 	                        			#{/list}
 	                        		#{/if}
 	                        	</div>
 	                        	<div style="width: 290px;display: inline-block; vertical-align: top;float: none;">
 	                        		#{if diseaseList3 != null && diseaseList3.size() > 0}
 	                        			#{list items: diseaseList3, as: 'disease'}
-	                        				<a class="diseaseLink" href="#">${disease.name} Screening</a><br/><!-- bluetext14-->
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-screening">Screening (${disease.name})</a><br/><!-- bluetext14-->
 	                        			#{/list}
 	                        		#{/if}
 	                        	</div>
@@ -343,21 +196,21 @@
 		                      <div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
 	                        		#{if diseaseList1 != null && diseaseList1.size() > 0}
 	                        			#{list items: diseaseList1, as: 'disease'}
-	                        				<a class="diseaseLink" href="#">${disease.name} Genetics</a><br/><!-- bluetext14-->
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-genetics">Genetics (${disease.name})</a><br/><!-- bluetext14-->
 	                        			#{/list}
 	                        		#{/if}
 	                        	</div>
 	                        	<div style="width: 290px;display: inline-block; vertical-align: top;float: none;">
 	                        		#{if diseaseList2 != null && diseaseList2.size() > 0}
 	                        			#{list items: diseaseList2, as: 'disease'}
-	                        				<a class="diseaseLink" href="#">${disease.name} Genetics</a><br/><!-- bluetext14-->
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-genetics">Genetics (${disease.name})</a><br/><!-- bluetext14-->
 	                        			#{/list}
 	                        		#{/if}
 	                        	</div>
 	                        	<div style="width: 290px;display: inline-block; vertical-align: top;float: none;">
 	                        		#{if diseaseList3 != null && diseaseList3.size() > 0}
 	                        			#{list items: diseaseList3, as: 'disease'}
-	                        				<a class="diseaseLink" href="#">${disease.name} Genetics</a><br/><!-- bluetext14-->
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-genetics">Genetics (${disease.name})</a><br/><!-- bluetext14-->
 	                        			#{/list}
 	                        		#{/if}
 	                        	</div>
@@ -378,21 +231,21 @@
 		                      <div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
 	                        		#{if diseaseList1 != null && diseaseList1.size() > 0}
 	                        			#{list items: diseaseList1, as: 'disease'}
-	                        				<a class="diseaseLink" href="#">${disease.name} Symptoms</a><br/><!-- bluetext14-->
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-symptoms">Symptoms (${disease.name})</a><br/><!-- bluetext14-->
 	                        			#{/list}
 	                        		#{/if}
 	                        	</div>
 	                        	<div style="width: 290px;display: inline-block; vertical-align: top;float: none;">
 	                        		#{if diseaseList2 != null && diseaseList2.size() > 0}
 	                        			#{list items: diseaseList2, as: 'disease'}
-	                        				<a class="diseaseLink" href="#">${disease.name} Symptoms</a><br/><!-- bluetext14-->
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-symptoms">Symptoms (${disease.name})</a><br/><!-- bluetext14-->
 	                        			#{/list}
 	                        		#{/if}
 	                        	</div>
 	                        	<div style="width: 290px;display: inline-block; vertical-align: top;float: none;">
 	                        		#{if diseaseList3 != null && diseaseList3.size() > 0}
 	                        			#{list items: diseaseList3, as: 'disease'}
-	                        				<a class="diseaseLink" href="#">${disease.name} Symptoms</a><br/><!-- bluetext14-->
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-symptoms">Symptoms (${disease.name})</a><br/><!-- bluetext14-->
 	                        			#{/list}
 	                        		#{/if}
 	                        	</div>
@@ -412,21 +265,21 @@
 		                      <div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
 	                        		#{if diseaseList1 != null && diseaseList1.size() > 0}
 	                        			#{list items: diseaseList1, as: 'disease'}
-	                        				<a class="diseaseLink" href="#">${disease.name} Diagnosis</a><br/><!-- bluetext14-->
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-diagnosis">Diagnosis (${disease.name})</a><br/><!-- bluetext14-->
 	                        			#{/list}
 	                        		#{/if}
 	                        	</div>
 	                        	<div style="width: 290px;display: inline-block; vertical-align: top;float: none;">
 	                        		#{if diseaseList2 != null && diseaseList2.size() > 0}
 	                        			#{list items: diseaseList2, as: 'disease'}
-	                        				<a class="diseaseLink" href="#">${disease.name} Diagnosis</a><br/><!-- bluetext14-->
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-diagnosis">Diagnosis (${disease.name})</a><br/><!-- bluetext14-->
 	                        			#{/list}
 	                        		#{/if}
 	                        	</div>
 	                        	<div style="width: 290px;display: inline-block; vertical-align: top;float: none;">
 	                        		#{if diseaseList3 != null && diseaseList3.size() > 0}
 	                        			#{list items: diseaseList3, as: 'disease'}
-	                        				<a class="diseaseLink" href="#">${disease.name} Diagnosis</a><br/><!-- bluetext14-->
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-diagnosis">Diagnosis (${disease.name})</a><br/><!-- bluetext14-->
 	                        			#{/list}
 	                        		#{/if}
 	                        	</div>
@@ -437,7 +290,7 @@
 		                    </div>
 		                    
 		                    <div class="topic">
-		                      <div class="newpage1">Tests</div>
+		                      <div class="newpage1">Staging</div>
 		                      <div class="cb"></div>
 		                      <div class="joinborder"></div>
 		                      <div class="cb"></div>
@@ -446,21 +299,21 @@
 		                      <div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
 	                        		#{if diseaseList1 != null && diseaseList1.size() > 0}
 	                        			#{list items: diseaseList1, as: 'disease'}
-	                        				<a class="diseaseLink" href="#">${disease.name} Tests</a><br/><!-- bluetext14-->
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-staging">Staging (${disease.name})</a><br/><!-- bluetext14-->
 	                        			#{/list}
 	                        		#{/if}
 	                        	</div>
 	                        	<div style="width: 290px;display: inline-block; vertical-align: top;float: none;">
 	                        		#{if diseaseList2 != null && diseaseList2.size() > 0}
 	                        			#{list items: diseaseList2, as: 'disease'}
-	                        				<a class="diseaseLink" href="#">${disease.name} Tests</a><br/><!-- bluetext14-->
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-staging">Staging (${disease.name})</a><br/><!-- bluetext14-->
 	                        			#{/list}
 	                        		#{/if}
 	                        	</div>
 	                        	<div style="width: 290px;display: inline-block; vertical-align: top;float: none;">
 	                        		#{if diseaseList3 != null && diseaseList3.size() > 0}
 	                        			#{list items: diseaseList3, as: 'disease'}
-	                        				<a class="diseaseLink" href="#">${disease.name} Tests</a><br/><!-- bluetext14-->
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-staging">Staging (${disease.name})</a><br/><!-- bluetext14-->
 	                        			#{/list}
 	                        		#{/if}
 	                        	</div>
@@ -469,6 +322,109 @@
 		                      <!--newpageCover-->
 		                      <div class="cb"></div>
 		                    </div>
+		                    
+		                    <div class="topic">
+		                      <div class="newpage1">Just Diagnosed</div>
+		                      <div class="cb"></div>
+		                      <div class="joinborder"></div>
+		                      <div class="cb"></div>
+
+		                      <div class="topic"  style="padding-top: 10px;">
+		                      <div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
+	                        		#{if diseaseList1 != null && diseaseList1.size() > 0}
+	                        			#{list items: diseaseList1, as: 'disease'}
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-just-diagnosed">Just Diagnosed (${disease.name})</a><br/><!-- bluetext14-->
+	                        			#{/list}
+	                        		#{/if}
+	                        	</div>
+	                        	<div style="width: 290px;display: inline-block; vertical-align: top;float: none;">
+	                        		#{if diseaseList2 != null && diseaseList2.size() > 0}
+	                        			#{list items: diseaseList2, as: 'disease'}
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-just-diagnosed">Just Diagnosed (${disease.name})</a><br/><!-- bluetext14-->
+	                        			#{/list}
+	                        		#{/if}
+	                        	</div>
+	                        	<div style="width: 290px;display: inline-block; vertical-align: top;float: none;">
+	                        		#{if diseaseList3 != null && diseaseList3.size() > 0}
+	                        			#{list items: diseaseList3, as: 'disease'}
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-just-diagnosed">Just Diagnosed (${disease.name})</a><br/><!-- bluetext14-->
+	                        			#{/list}
+	                        		#{/if}
+	                        	</div>
+		                        <div class="cb"></div>
+		                      </div>
+		                      <!--newpageCover-->
+		                      <div class="cb"></div>
+		                    </div>
+		                    
+		                    <div class="topic">
+		                      <div class="newpage1">Pathology</div>
+		                      <div class="cb"></div>
+		                      <div class="joinborder"></div>
+		                      <div class="cb"></div>
+
+		                      <div class="topic"  style="padding-top: 10px;">
+		                      <div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
+	                        		#{if diseaseList1 != null && diseaseList1.size() > 0}
+	                        			#{list items: diseaseList1, as: 'disease'}
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-pathology">Pathology (${disease.name})</a><br/><!-- bluetext14-->
+	                        			#{/list}
+	                        		#{/if}
+	                        	</div>
+	                        	<div style="width: 290px;display: inline-block; vertical-align: top;float: none;">
+	                        		#{if diseaseList2 != null && diseaseList2.size() > 0}
+	                        			#{list items: diseaseList2, as: 'disease'}
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-pathology">Pathology (${disease.name})</a><br/><!-- bluetext14-->
+	                        			#{/list}
+	                        		#{/if}
+	                        	</div>
+	                        	<div style="width: 290px;display: inline-block; vertical-align: top;float: none;">
+	                        		#{if diseaseList3 != null && diseaseList3.size() > 0}
+	                        			#{list items: diseaseList3, as: 'disease'}
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-pathology">Pathology (${disease.name})</a><br/><!-- bluetext14-->
+	                        			#{/list}
+	                        		#{/if}
+	                        	</div>
+		                        <div class="cb"></div>
+		                      </div>
+		                      <!--newpageCover-->
+		                      <div class="cb"></div>
+		                    </div>
+		                    
+		                    <div class="topic">
+		                      <div class="newpage1">Recurrence</div>
+		                      <div class="cb"></div>
+		                      <div class="joinborder"></div>
+		                      <div class="cb"></div>
+
+		                      <div class="topic"  style="padding-top: 10px;">
+		                      <div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
+	                        		#{if diseaseList1 != null && diseaseList1.size() > 0}
+	                        			#{list items: diseaseList1, as: 'disease'}
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-recurrence">Recurrence (${disease.name})</a><br/><!-- bluetext14-->
+	                        			#{/list}
+	                        		#{/if}
+	                        	</div>
+	                        	<div style="width: 290px;display: inline-block; vertical-align: top;float: none;">
+	                        		#{if diseaseList2 != null && diseaseList2.size() > 0}
+	                        			#{list items: diseaseList2, as: 'disease'}
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-recurrence">Recurrence (${disease.name})</a><br/><!-- bluetext14-->
+	                        			#{/list}
+	                        		#{/if}
+	                        	</div>
+	                        	<div style="width: 290px;display: inline-block; vertical-align: top;float: none;">
+	                        		#{if diseaseList3 != null && diseaseList3.size() > 0}
+	                        			#{list items: diseaseList3, as: 'disease'}
+	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-recurrence">Recurrence (${disease.name})</a><br/><!-- bluetext14-->
+	                        			#{/list}
+	                        		#{/if}
+	                        	</div>
+		                        <div class="cb"></div>
+		                      </div>
+		                      <!--newpageCover-->
+		                      <div class="cb"></div>
+		                    </div>
+		                    
 						</div>
 						<div id="treatmentsContent" class="tabContent" style="display: none;">	
 							<div class="topic">
@@ -503,14 +459,12 @@
 		                      </div>
 		                      <!--newpageCover-->
 		                      <div class="cb"></div>
-		                    </div> 
-		                    
+		                    </div>
 		                    <div class="topic">
 		                      <div class="newpage1">Side Effects</div>
 		                      <div class="cb"></div>
 		                      <div class="joinborder"></div>
 		                      <div class="cb"></div>
-
 		                      <div class="topic"  style="padding-top: 10px;">
 		                      <div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
 	                        		#{if diseaseList1 != null && diseaseList1.size() > 0}
@@ -535,7 +489,6 @@
 	                        	</div>
 		                        <div class="cb"></div>
 		                      </div>
-		                      <!--newpageCover-->
 		                      <div class="cb"></div>
 		                    </div>
 						</div>
@@ -546,15 +499,22 @@
 		                      	<div class="cb"></div>	
 							<div class="topic"  style="padding-top: 10px;">
 	                      	 	<div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
-                        			<a class="diseaseLink" href="#">Nutrition</a><br/>
-                        			<a class="diseaseLink" href="#">Health</a><br/>
-                        			<a class="diseaseLink" href="#">Exercise & Fitness</a><br/>
-                        			<a class="diseaseLink" href="#">Skin & Beauty</a><br/>
-                        			<a class="diseaseLink" href="#">Career & Employment</a><br/>
-                        			<a class="diseaseLink" href="#">Legal</a><br/>
-                        			<a class="diseaseLink" href="#">Insurance</a><br/>
-                        			<a class="diseaseLink" href="#">Medical Debt</a><br/>
-                        		</div>
+	                        			<a class="diseaseLink" href="/nutrition">Nutrition</a><br/>
+	                        			<a class="diseaseLink" href="/health">Health</a><br/>
+	                        			<a class="diseaseLink" href="/exercise">Exercise</a><br/>
+	                        			<a class="diseaseLink" href="/beauty">Beauty</a><br/>
+	                        		</div>
+	                        		<div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
+	                        			<a class="diseaseLink" href="/skin">Skin</a><br/>
+	                        			<a class="diseaseLink" href="/sex">Sex</a><br/>
+	                        			<a class="diseaseLink" href="/intimacy">Intimacy</a><br/>
+	                        			<a class="diseaseLink" href="/career">Career</a><br/>
+	                        		</div>
+	                        		<div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
+	                        			<a class="diseaseLink" href="/legal">Legal</a><br/>
+	                        			<a class="diseaseLink" href="/insurance">Insurance</a><br/>
+	                        			<a class="diseaseLink" href="/medical-debt">Medical Debt</a><br/>
+	                        		</div>
 	                        </div>
 						</div>
 						<div id="survivorshipContent" class="tabContent" style="display: none;">	
@@ -564,15 +524,30 @@
 		                      <div class="cb"></div>
 		                      <div class="joinborder"></div>
 		                      <div class="cb"></div>
-		                      <div class="topic">
-		                        <a class="diseaseLink" href="#">Survivorship</a><br/>
+		                      <div class="topic" style="padding-top: 10px;">
+		                        <div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
+	                        			<a class="diseaseLink" href="/cancer-patient-experiences">Patient Experiences (Cancer)</a><br/>
+	                        			<a class="diseaseLink" href="/cancer-patient-decisions">Patient Decisions (Cancer)</a><br/>
+	                        			<a class="diseaseLink" href="/cancer-survivorship">Survivorship (Cancer)</a><br/>
+
+	                        		</div>
+	                        		<div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
+	                        			<a class="diseaseLink" href="/cancer-emotional-support">Emotional Support (Cancer)</a><br/>
+	                        			<a class="diseaseLink" href="/cancer-what-to-expect">What To Expect (Cancer)</a><br/>
+	                        			<a class="diseaseLink" href="/cancer-mental-health">Mental Health (Cancer)</a><br/>
+
+	                        		</div>
+
+	                        		<div style="width: 290px; display: inline-block; vertical-align: top;float: none;">
+	                        			<a class="diseaseLink" href="/cancer-how-to-prepare">How To Prepare (Cancer)</a><br/>
+	                        			<a class="diseaseLink" href="/cancer-next-steps">Next Steps (Cancer)</a><br/>
+	                        		</div>
 		                      </div>
 		                      <!--newpageCover-->
 		                      <div class="cb"></div>
 		                    </div> 
 						</div>
 					</div>
-                    
                     <div class="cb"></div>
                   </div>
                   <!--topipcWraper-->
@@ -580,26 +555,21 @@
                   <div class="cb"></div>
                 </div>
                 <!--mtcontent-->
-                
                 <div class="cb"></div>
               </div>
               <!--mtleft-->
-              
             <div class="cb"></div>
           </div>
           <!--mtcover-->
           <div class="cb"></div>
-
         </div>
         <div id="signupright"></div>
       </div>
     </div>
   </div>
-  
 <div id="boxes">
 	<div id="dialog" class="window"></div>
-	
 	#{ popups/flag /}
 </div>
 <!-- Mask to cover the whole screen -->
-<div id="mask"></div>    
+<div id="mask"></div>
