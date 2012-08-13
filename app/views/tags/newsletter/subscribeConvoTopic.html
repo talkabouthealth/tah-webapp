@@ -1,0 +1,66 @@
+#{set convoTopicName = 'All Cancers' /}
+<script type="text/javascript">
+	$(document).ready(function() {
+		var rewardOptions = { success: setconvoTopicLetterMessage }; 
+		$('#convoTopic').submit(function() {
+			$("#convoTopic").ajaxSubmit(rewardOptions); 
+			return false;
+		});
+		$('#emailconvoTopic').click(function() {
+			if($("#emailconvoTopic").val().trim() == 'Email Address')
+				$("#emailconvoTopic").val('');
+		});
+
+		$('#emailconvoTopic').blur(function() {
+			if($("#emailconvoTopic").val().trim() == '')
+				$("#emailconvoTopic").val('Email Address');
+		});
+	});
+	function setconvoTopicLetterMessage(responseText, statusText, xhr, $form) {
+		if (responseText.indexOf("Error:") === 0) {
+	   		var errorText = responseText.replace("Error:", "");
+	   		$("#convoTopicMessage").css("color","#ff0000");
+	   		$("#convoTopicMessage").html(errorText); 
+	   		$("#convoTopicMessage").fadeIn(100);
+	   		closeTimeout = setTimeout(function() { $("#convoTopicMessage").fadeOut(200) }, 4000);
+	   	} else {
+	   		$("#convoTopicMessage").css("color","#2E8B57");
+	   		$("#convoTopicMessage").html(responseText);
+	   		$("#convoTopicMessage").fadeIn(100);
+	   		closeTimeout = setTimeout(function() { $("#convoTopicblock").fadeOut(200) }, 4000);
+	   	}
+	}
+</script>
+#{if convo.category != null && !convo.category.equals("")}
+	#{set convoTopicName = convo.category /}
+#{/if}
+#{elseif convo.otherDiseaseCategories != null && convo.otherDiseaseCategories.size() > 0 }
+	#{set convoTopicName = convo.otherDiseaseCategories[0] /}
+#{/elseif}
+<div class="topipsts" id="tahconvoTopic">
+	<div class="" id="convoTopicblock" >
+		<div style="padding:5px;float: left;">
+			<span style="float: left; padding-top: 3px;color:#3888c1;font-style: italic;font-size: 14px;" class="mtrighttxt1">${convoTopicName} newsletter</span>
+		</div>
+		<div style="float:left;padding:5px;">
+			<span class="blacktextgrey15">Sign up for our weekly ${convoTopicName} newsletter for the latest news, best answers and featured experts.</span>
+		</div>
+	  		#{form @Newsletter.subscribeWorkShop(), id:'convoTopic' }
+	  		<input id="newsletter" name="newsletter.newsLetterType" type="hidden" value="${convoTopicName}"/>
+	  		<div style="clear: both;height: 15px;padding:0 5px"><span id="convoTopicMessage" class="success" style="display:none;font-size: 12px;">Thanks for subscribing.</span></div>
+	  		<div style="float:left;padding:0px 5px 0 5px">
+			#{if session.username }
+				<input name="newsletter.email" id="emailconvoTopic" style="background: none repeat scroll 0 0 #F0F0F0;border: 1px solid #606060;color: #010101;padding: 3px;" type="text" value="${talker.email}" size="17" />
+			#{/if}
+			#{else}
+				<input name="newsletter.email" id="emailconvoTopic" style="background: none repeat scroll 0 0 #F0F0F0;border: 1px solid #606060;color: #010101;padding: 3px;" type="text" value="Email Address" size="17"/>
+			#{/else}
+			</div>
+			<div style="float:left;padding-top: 2px;">
+				<input class="newsignupBenefits" type="submit" value="" style="cursor: pointer;"/>
+			</div>
+		#{/form}
+		<br/>
+  		<div class="topicborder" style="margin-top: 20px;"></div>
+  	</div>
+</div>
