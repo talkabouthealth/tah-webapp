@@ -11,6 +11,20 @@
 				   return false;
 			    }
 			});
+			$('#talkercategory').change(function(e){
+				var str = "";
+		        $("#talkercategory option:selected").each(function () {
+		              str = $(this).text();
+		        });
+		        str = $.trim(str);
+		        $("#categoryText").text(str);
+		        $("#newDieses").val(str);
+		        if(str != "") {
+		        	$("#diesesNewsletter").show();
+				} else {
+					$("#diesesNewsletter").hide();
+				}
+			});
 		});
 		function displayOptions(option) {
 			if(document.getElementById(option).style.display == 'none') {
@@ -56,7 +70,6 @@
 							</ul>
 						</div>
 					#{/else}	
-
 					<h5 class="error">
 						#{ifErrors}
 						   <p>Validation failed! Please correct the following errors:</p>
@@ -73,7 +86,7 @@
 						<div class="signupmain">
 							<div class="signuptextarea"><span class="blacktext14">Health Community</span></div>
 							<div class="personaltextfield">
-								<select size="1" name="talker.category" class="personalfields" id="talker.category">
+								<select size="1" name="talker.category" class="personalfields" id="talkercategory">
 							  		 <!-- <option value="" selected="selected">Select community</option>  -->  
 							  		 <option></option>
 							  		#{list items:diseaseList , as: 'disease'}
@@ -82,14 +95,19 @@
 									    >${disease.name}</option>
 									#{/list}
 								</select>
-								  
-							  		
 								<!-- <span class="blacktext14">Breast Cancer</span>  -->
 							</div>
 							<div class="signtag" style="margin-top: -5px">
 								<span class="textgreylight12">More Health communities coming soon. 
 								Click <a href="@{Application.updatesEmail}" 
 								class="bluetext12">here</a> to be reminded of our next community launch.</span>
+							</div>
+							<div id="diesesNewsletter" style="float: left; padding: 5px 15px;display:none;">
+								<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
+									<input id="newDieses" name="newsletter.newsLetterType" type="checkbox" value="" checked="checked"/>
+									Weekly <span id="categoryText"></span> Newsletter<br/>
+									<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured answers, experts, tips &amp; latest news.)</font>
+								</div>
 							</div>
 						</div>
 						<div class="signupmain">
