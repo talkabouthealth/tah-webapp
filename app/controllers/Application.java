@@ -295,10 +295,10 @@ public class Application extends Controller {
 			validation.isTrue(otherTalker == null).message("email.exists");
 		}
 		 
-    	if(talker.getCategory() == null){
-			//validation.required(talker.getCategory()).message("category.notselected");
+    	if(talker.getCategory() == null) {
+			validation.required(talker.getCategory()).message("category.notselected");
 		} else if(talker.getCategory().trim().equals("")) {
-			//validation.required(talker.getCategory()).message("category.notselected");
+			validation.required(talker.getCategory()).message("category.notselected");
 		} else if(talker.getCategory().trim().equals("select")) {
 			nameNotExists = true;
 			validation.isTrue(nameNotExists).message("category.notselected");
