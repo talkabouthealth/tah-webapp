@@ -1,0 +1,144 @@
+#{if diseaseList1 != null && diseaseList1.size() > 0}
+	#{list items: diseaseList1, as: 'disease'}
+		<div class="newpage1" id="${disease.name.replaceAll(" ", "-")}">${disease.name}</div>
+		<div class="cb"></div>
+		<div class="joinborder"></div>
+		<div class="cb"></div>
+		<div class="topic"  style="padding-top: 10px;">
+			<div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+				<a href="#${disease.name.replaceAll(" ", "-")}" style="font-weight: bold; color: black; font-size: 15px;">${disease.name} Patients & Survivorship</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-patient-experiences">Patient Experiences </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-patient-decisions">Patient Decisions </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-survivorship">Survivorship </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-emotional-support">Emotional Support </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-what-to-expect">What To Expect </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-mental-health">Mental Health </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-how-to-prepare">How To Prepare </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-next-steps">Next Steps </a><br/>
+			</div>
+			<div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+				<a href="#${disease.name.replaceAll(" ", "-")}" style="font-weight: bold; color: black; font-size: 15px;">${disease.name} Treatment & Side Effects</a><br/>
+			    <a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-medications">Medications </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-surgery">Surgery </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-oncology">Oncology </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-radiation-therapy">Radiation Therapy </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-chemotherapy">Chemotherapy</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-biologic-therapy">Biologic Therapy</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-hormonal-therapy">Hormonal Therapy</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-complementary-and-alternative-medicine">Complementary & Alternative Medicine</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-side-effects">Side Effects </a><br/>
+			</div>
+		    <div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+				<a href="#${disease.name.replaceAll(" ", "-")}" style="font-weight: bold; color: black; font-size: 15px;">${disease.name} Symptoms & Diagnosis</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-symptoms">Symptoms </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-just-diagnosed">Just Diagnosed </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-diagnosis">Diagnosis </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-pathology">Pathology </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-staging">Staging </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-recurrence">Recurrence </a><br/>
+			</div>
+			<div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+				<a href="#${disease.name.replaceAll(" ", "-")}" style="font-weight: bold; color: black; font-size: 15px;">${disease.name} Risk, Screening & Genetics</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-screening">Screening </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-risk-factors">Risk Factors </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-genetics">Genetics </a><br/>
+			</div>
+		</div>
+	#{/list}
+#{/if}
+#{if diseaseList2 != null && diseaseList2.size() > 0}
+	#{list items: diseaseList2, as: 'disease'}
+		<div class="newpage1" id="${disease.name.replaceAll(" ", "-")}">${disease.name}</div>
+		<div class="cb"></div>
+		<div class="joinborder"></div>
+		<div class="cb"></div>
+		<div class="topic"  style="padding-top: 10px;">
+			<div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+				<a href="#${disease.name.replaceAll(" ", "-")}" style="font-weight: bold; color: black; font-size: 15px;">${disease.name} Patients & Survivorship</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-patient-experiences">Patient Experiences </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-patient-decisions">Patient Decisions </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-survivorship">Survivorship </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-emotional-support">Emotional Support </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-what-to-expect">What To Expect </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-mental-health">Mental Health </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-how-to-prepare">How To Prepare </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-next-steps">Next Steps </a><br/>
+			</div>
+			<div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+				<a href="#${disease.name.replaceAll(" ", "-")}" style="font-weight: bold; color: black; font-size: 15px;">${disease.name} Treatment & Side Effects</a><br/>
+			    <a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-medications">Medications </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-surgery">Surgery </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-oncology">Oncology </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-radiation-therapy">Radiation Therapy </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-chemotherapy">Chemotherapy</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-biologic-therapy">Biologic Therapy</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-hormonal-therapy">Hormonal Therapy</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-complementary-and-alternative-medicine">Complementary & Alternative Medicine</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-side-effects">Side Effects </a><br/>
+			</div>
+		    <div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+				<a href="#${disease.name.replaceAll(" ", "-")}" style="font-weight: bold; color: black; font-size: 15px;">${disease.name} Symptoms & Diagnosis</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-symptoms">Symptoms </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-just-diagnosed">Just Diagnosed </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-diagnosis">Diagnosis </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-pathology">Pathology </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-staging">Staging </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-recurrence">Recurrence </a><br/>
+			</div>
+			<div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+				<a href="#${disease.name.replaceAll(" ", "-")}" style="font-weight: bold; color: black; font-size: 15px;">${disease.name} Risk, Screening & Genetics</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-screening">Screening </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-risk-factors">Risk Factors </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-genetics">Genetics </a><br/>
+			</div>
+		</div>	
+	#{/list}
+#{/if}
+#{if diseaseList3 != null && diseaseList3.size() > 0}
+	#{list items: diseaseList3, as: 'disease'}
+		<div class="newpage1" id="${disease.name.replaceAll(" ", "-")}">${disease.name}</div>
+		<div class="cb"></div>
+		<div class="joinborder"></div>
+		<div class="cb"></div>
+		<div class="topic"  style="padding-top: 10px;">
+			<div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+				<a href="#${disease.name.replaceAll(" ", "-")}" style="font-weight: bold; color: black; font-size: 15px;">${disease.name} Patients & Survivorship</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-patient-experiences">Patient Experiences </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-patient-decisions">Patient Decisions </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-survivorship">Survivorship </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-emotional-support">Emotional Support </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-what-to-expect">What To Expect </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-mental-health">Mental Health </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-how-to-prepare">How To Prepare </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-next-steps">Next Steps </a><br/>
+			</div>
+			<div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+				<a href="#${disease.name.replaceAll(" ", "-")}" style="font-weight: bold; color: black; font-size: 15px;">${disease.name} Treatment & Side Effects</a><br/>
+			    <a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-medications">Medications </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-surgery">Surgery </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-oncology">Oncology </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-radiation-therapy">Radiation Therapy </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-chemotherapy">Chemotherapy</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-biologic-therapy">Biologic Therapy</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-hormonal-therapy">Hormonal Therapy</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-complementary-and-alternative-medicine">Complementary & Alternative Medicine</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-side-effects">Side Effects </a><br/>
+			</div>
+		    <div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+				<a href="#${disease.name.replaceAll(" ", "-")}" style="font-weight: bold; color: black; font-size: 15px;">${disease.name} Symptoms & Diagnosis</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-symptoms">Symptoms </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-just-diagnosed">Just Diagnosed </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-diagnosis">Diagnosis </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-pathology">Pathology </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-staging">Staging </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-recurrence">Recurrence </a><br/>
+			</div>
+			<div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+				<a href="#${disease.name.replaceAll(" ", "-")}" style="font-weight: bold; color: black; font-size: 15px;">${disease.name} Risk, Screening & Genetics</a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-screening">Screening </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-risk-factors">Risk Factors </a><br/>
+				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-genetics">Genetics </a><br/>
+			</div>
+		</div>
+	#{/list}
+#{/if}
