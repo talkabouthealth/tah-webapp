@@ -1,8 +1,5 @@
 @charset "utf-8";
 /* CSS Document */
-@charset "utf-8";
-
-/* CSS Document */
 
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
 	margin: 0;
@@ -253,22 +250,22 @@ body {
 .pagination li.current a { background-position:0 -13px; }
 
 .banner1 {
-	background: url(../images/index/banner1.png) 0 bottom no-repeat;
+	/*background: url(../images/index/banner1.png) 0 bottom no-repeat;*/
 	height: 350px;
 }
 
 .banner2 {
-	background: url(../images/index/banner2.png) 0 bottom no-repeat;
+	/*background: url(../images/index/banner2.png) 0 bottom no-repeat;*/
 	height: 350px;
 }
 
 .banner3 {
-	background: url(../images/index/banner3.png) 0 bottom no-repeat;
+	/*background: url(../images/index/banner3.png) 0 bottom no-repeat;*/
 	height: 350px;
 }
 
 .banner4 {
-	background: url(../images/index/banner4.png) 0 bottom no-repeat;
+	/*background: url(../images/index/banner4.png) 0 bottom no-repeat;*/
 	height: 350px;
 }
 

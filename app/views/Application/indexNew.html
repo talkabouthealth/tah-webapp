@@ -17,19 +17,15 @@
     <meta property="og:image" content="http://talkabouthealth.com/public/images/mainlogo.png"/>    
     <meta property="og:site_name" content="TalkAbouthealth" />
     <meta property="og:description" content="${pageDescription}"/>
-
 	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
-    
     <link href="/public/stylesheets/new_style.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" href="/public/plugins/ui-lightness/jquery-ui-1.8.4.custom.css" type="text/css" media="screen" />
-
     <script type="text/javascript" src="/public/javascripts/jquery-1.5.1.min.js" ></script>
     <script type="text/javascript" src="/public/javascripts/jquery-ui-1.8.4.custom.min.js" ></script>
     <script type="text/javascript" src="/public/javascripts/slides.min.jquery.js" ></script>
     <script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
     <script type="text/javascript" src="/public/javascripts/jscroller.js"></script>
     <script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
-
 </head>
 <body class="home">
 	<div id="wrapper">
@@ -67,6 +63,25 @@
 		      <div id="slides">
 		        <div class="slides_container">
 		          <div class="slide banner1">
+		          	#{if videoList != null}
+			          	<div style="position: absolute;top:30px;left:0px;width:350px;">
+				          	<table cellpadding="0" cellspacing="" width="100%"><tr><td>
+				          	<a href="@{ViewDispatcher.view(videoList.get(0).convoBean.mainURL)}" style="color:#FFF;font-size:15px;font-weight:bold;">
+				          	<img src="http://img.youtube.com/vi/${videoList.get(0).videoId}/0.jpg" width="355" height="265" style="border: 1px solid #CCC; border-radius: 10px;" />
+				          	</a>
+				          	</td></tr><tr><td nowrap="nowrap">
+				          	<a href="@{ViewDispatcher.view(videoList.get(0).convoBean.mainURL)}" style="color:#FFF;font-size:13px;font-weight:bold;">
+				          	#{if videoList.get(0).convoBean.topic.length() > 55}
+				          	${videoList.get(0).convoBean.topic.substring(0,55) }...
+				          	#{/if}
+				          	#{else}
+				          	${videoList.get(0).convoBean.topic }
+				          	#{/else}
+				          	</a>
+				          	</td></tr>
+				          	</table>
+			          	</div>
+		          	#{/if}
 		            <h4>Health Answers from the</h4>
 		            <h2>World's Leading Experts</h2>
 		            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
@@ -78,6 +93,25 @@
 		              </div>
 		          </div>
 		          <div class="slide banner3">
+		          	#{if videoList != null}
+			          	<div style="position: absolute;top:30px;left:0px;width:350px;">
+				          	<table cellpadding="0" cellspacing="" width="100%"><tr><td>
+				          	<a href="@{ViewDispatcher.view(videoList.get(1).convoBean.mainURL)}" style="color:#FFF;font-size:15px;font-weight:bold;">
+				          	<img src="http://img.youtube.com/vi/${videoList.get(1).videoId}/0.jpg" width="355" height="265" style="border: 1px solid #CCC; border-radius: 10px;" />
+				          	</a>
+				          	</td></tr><tr><td nowrap="nowrap">
+				          	<a href="@{ViewDispatcher.view(videoList.get(1).convoBean.mainURL)}" style="color:#FFF;font-size:13px;font-weight:bold;">
+				          	#{if videoList.get(1).convoBean.topic.length() > 55}
+				          	${videoList.get(1).convoBean.topic.substring(0,55) }...
+				          	#{/if}
+				          	#{else}
+				          	${videoList.get(1).convoBean.topic }
+				          	#{/else}
+				          	</a>
+				          	</td></tr>
+				          	</table>
+			          	</div>
+		          	#{/if}
 		            <h4>Health Answers from the</h4>
 		            <h2>World's Leading Experts</h2>
 		            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
@@ -89,6 +123,25 @@
 		              </div>
 		          </div>
 		          <div class="slide banner4">
+		          	#{if videoList != null}
+			          	<div style="position: absolute;top:30px;left:0px;width:350px;">
+				          	<table cellpadding="0" cellspacing="" width="100%"><tr><td>
+				          	<a href="@{ViewDispatcher.view(videoList.get(3).convoBean.mainURL)}" style="color:#FFF;font-size:15px;font-weight:bold;">
+				          	<img src="http://img.youtube.com/vi/${videoList.get(3).videoId}/0.jpg" width="355" height="265" style="border: 1px solid #CCC; border-radius: 10px;" />
+				          	</a>
+				          	</td></tr><tr><td nowrap="nowrap">
+				          	<a href="@{ViewDispatcher.view(videoList.get(3).convoBean.mainURL)}" style="color:#FFF;font-size:13px;font-weight:bold;">
+				          	#{if videoList.get(3).convoBean.topic.length() > 55}
+				          	${videoList.get(3).convoBean.topic.substring(0,55) }...
+				          	#{/if}
+				          	#{else}
+				          	${videoList.get(3).convoBean.topic }
+				          	#{/else}
+				          	</a>
+				          	</td></tr>
+				          	</table>
+			          	</div>
+		          	#{/if}
 		            <h4>Answers from</h4>
 		            <h2>Experts and Trained Survivors.</h2>
 		            <!-- <h4>Health Answers from the</h4>

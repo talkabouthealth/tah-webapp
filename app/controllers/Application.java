@@ -58,6 +58,8 @@ import dao.DiseaseDAO;
 import dao.NewsLetterDAO;
 import dao.TalkerDAO;
 import dao.TalkerDiseaseDAO;
+import dao.VideoDAO;
+import models.VideoBean;
 
 /**
  * Operations for not-authenticated talkers:
@@ -99,14 +101,15 @@ public class Application extends Controller {
     }
     
     /*New Home page*/
-    public static void indexNew(){
+    public static void indexNew() {
     	if (Security.isConnected()) {
     		Home.index();
     	} else {
+    		List<VideoBean> videoList = VideoDAO.loadVideo(4);
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
     		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
     		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
-    		render(null, numberOfMembers, numberOfAnswers, diseaseList);
+    		render(null, numberOfMembers, numberOfAnswers, diseaseList,videoList);
     	}
     }
     
@@ -295,10 +298,10 @@ public class Application extends Controller {
 			validation.isTrue(otherTalker == null).message("email.exists");
 		}
 		 
-    	if(talker.getCategory() == null){
-			//validation.required(talker.getCategory()).message("category.notselected");
+    	if(talker.getCategory() == null) {
+			validation.required(talker.getCategory()).message("category.notselected");
 		} else if(talker.getCategory().trim().equals("")) {
-			//validation.required(talker.getCategory()).message("category.notselected");
+			validation.required(talker.getCategory()).message("category.notselected");
 		} else if(talker.getCategory().trim().equals("select")) {
 			nameNotExists = true;
 			validation.isTrue(nameNotExists).message("category.notselected");
