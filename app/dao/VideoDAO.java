@@ -91,5 +91,27 @@ public class VideoDAO {
 		videoColl.remove(query);
 		return returnFlag;
 	}
+	
+	public static List<VideoBean> loadVideo(int limit){
+		List<VideoBean> videoBeanList = null;
+		VideoBean videoBean;
+		DBCollection videoColl = getCollection(VIDEO_COLLECTION);
+		DBCursor convoCur= null;
+		if(limit == 0)
+			convoCur=videoColl.find().sort(new BasicDBObject("timestamp", -1));
+		else
+			convoCur=videoColl.find().sort(new BasicDBObject("timestamp", -1)).limit(limit);
+
+		if(convoCur.hasNext()) {
+			videoBeanList = new ArrayList<VideoBean>();
+			do {
+				videoBean = new VideoBean();
+				videoBean.parseDBObjectTopic(convoCur.next());
+				videoBeanList.add(videoBean);
+			}while(convoCur.hasNext());
+		}
+		return videoBeanList;
+	}
+
 	public static final String VIDEO_COLLECTION = "video";
 }
