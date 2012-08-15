@@ -83,21 +83,18 @@ public class Application extends Controller {
 	 * Landing page
 	 */
     public static void index() {
-    	if (Security.isConnected()) {
-    		//redirect to Home page if user is logged in
+    	/*
+        if (Security.isConnected()) {
     		Home.index();
     	} else {
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
     		int numberOfLiveChats = 0;//ConversationDAO.getLiveConversations().size();
     		int numberOfQuestions = 0;//ConversationDAO.getNumberOfConversations();
     		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
-    		
-    		//future communities
-    		//Map<String, Integer> waitingCommunitiesInfo = null;//ApplicationDAO.getWaitingCommunitiesInfo();
-    		
-    		render(null, numberOfMembers, numberOfLiveChats, 
-    				numberOfQuestions, numberOfAnswers);
+    		render(null, numberOfMembers, numberOfLiveChats, numberOfQuestions, numberOfAnswers);
     	}
+	*/
+	indexNew();
     }
     
     /*New Home page*/
