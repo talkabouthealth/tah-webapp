@@ -21,8 +21,8 @@ import play.jobs.*;
 import util.EmailUtil;
 
 /** Fire on application start up **/ 
-@OnApplicationStart
-public class EmailListOnStartUpJob extends Job {
+//@OnApplicationStart
+public class EmailListOnStartUpJob {
 
 	public void doJob() {
 		System.out.println("Job : Email list population one time on sailthrou");
@@ -37,12 +37,14 @@ public class EmailListOnStartUpJob extends Job {
 		ArrayList<EmailListBean> newsLetterList = new ArrayList<EmailListBean>();
 		EmailListBean  emailListBean;
 		NewsLetterBean newsLetterBean;
+		int counterOnlyNewsletter = 0;
+		int counterTalker = 0;
 		for (DBObject newsletterDBObject : newsletterDBList) {
 			newsLetterBean = new NewsLetterBean();
 			newsLetterBean.parseBasicFromDB(newsletterDBObject);
 			emailListBean = new EmailListBean("TAH-Newsletter",newsLetterBean.getEmail());
 			newsLetterList.add(emailListBean);
-			
+			counterOnlyNewsletter++;
 			String[] subNewsLetters = newsLetterBean.getNewsLetterType();
 			if(subNewsLetters != null && subNewsLetters.length > 0){
 				for(int index = 0 ; index < subNewsLetters.length; index++){
@@ -52,11 +54,20 @@ public class EmailListOnStartUpJob extends Job {
 					emailListBean = new EmailListBean(newsLetterType,newsLetterBean.getEmail());
 					newsLetterList.add(emailListBean);
 				}
+			}else{
+				Map<String, Boolean> lists = new HashMap<String, Boolean>();
+				lists.put("Best-of-TalkAboutHealth", true);
+				lists.put("TalkAboutHealth-Rewards", true);
+				lists.put("TAH-Workshop-Summary", true);
+				lists.put("TAH-Workshop-Notification", true);
+				EmailUtil.setEmail(lists, newsLetterBean.getEmail());
 			}
 		}
-
+		EmailUtil.setEmail(newsLetterList);
+		
 		List<TalkerBean> talkerBeans = TalkerDAO.loadAllTalkers();
 		for (Iterator<TalkerBean> iterator = talkerBeans.iterator(); iterator.hasNext();) {
+			counterTalker++;
 			TalkerBean talkerBean = (TalkerBean) iterator.next();
 			/*
 			  	- Daily Workshop Announcement Update
@@ -71,6 +82,8 @@ public class EmailListOnStartUpJob extends Job {
 			lists.put("TAH-Workshop-Notification", true);
 			EmailUtil.setEmail(lists, talkerBean.getEmail());
 		}
+		System.out.println("Only Newsletter : " + counterOnlyNewsletter);
+		System.out.println("Talker Newsletter : " + counterTalker);
 		return true;
 	}
 }
