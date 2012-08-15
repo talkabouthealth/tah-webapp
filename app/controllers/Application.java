@@ -83,18 +83,25 @@ public class Application extends Controller {
 	 * Landing page
 	 */
     public static void index() {
-    	/*
-        if (Security.isConnected()) {
-    		Home.index();
+    	/*if (Security.isConnected()) {
+    		Home.index(); //redirect to Home page if user is logged in
     	} else {
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
     		int numberOfLiveChats = 0;//ConversationDAO.getLiveConversations().size();
     		int numberOfQuestions = 0;//ConversationDAO.getNumberOfConversations();
     		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
+    		
     		render(null, numberOfMembers, numberOfLiveChats, numberOfQuestions, numberOfAnswers);
+    	}*/
+    	if (Security.isConnected()) {
+    		Home.index();
+    	} else {
+    		List<VideoBean> videoList = VideoDAO.loadVideo(4);
+    		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
+    		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
+    		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+    		render(null, numberOfMembers, numberOfAnswers, diseaseList,videoList);
     	}
-	*/
-	indexNew();
     }
     
     /*New Home page*/
