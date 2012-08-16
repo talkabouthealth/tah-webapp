@@ -63,7 +63,7 @@
 		      <div id="slides">
 		        <div class="slides_container">
 		          <div class="slide banner1">
-		          	#{if videoList != null && videoList.size() > 1}
+		          	#{if videoList != null && videoList.size() >= 1}
 			          	<div style="position: absolute;top:30px;left:0px;width:350px;">
 				          	<table cellpadding="0" cellspacing="" width="100%"><tr><td>
 <!-- 				          	<a href="@{ViewDispatcher.view(videoList.get(0).convoBean.mainURL)}" style="color:#FFF;font-size:15px;font-weight:bold;"> -->
@@ -96,7 +96,7 @@
 			         </div>
 		          </div>
 		          <div class="slide banner3">
-		          	#{if videoList != null  && videoList.size() > 2}
+		          	#{if videoList != null  && videoList.size() >= 2}
 			          	<div style="position: absolute;top:30px;left:0px;width:350px;">
 				          	<table cellpadding="0" cellspacing="" width="100%"><tr><td>
 				          	<!-- <a href="@{ViewDispatcher.view(videoList.get(1).convoBean.mainURL)}" style="color:#FFF;font-size:15px;font-weight:bold;">
@@ -130,7 +130,7 @@
 			         </div>
 		          </div>
 		          <div class="slide banner4">
-		          	#{if videoList != null  && videoList.size() > 2}
+		          	#{if videoList != null  && videoList.size() >= 3}
 			          	<div style="position: absolute;top:30px;left:0px;width:350px;">
 				          	<table cellpadding="0" cellspacing="" width="100%"><tr><td>
 				          	<!-- <a href="@{ViewDispatcher.view(videoList.get(2).convoBean.mainURL)}" style="color:#FFF;font-size:15px;font-weight:bold;">
