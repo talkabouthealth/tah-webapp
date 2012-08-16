@@ -130,21 +130,21 @@
 			         </div>
 		          </div>
 		          <div class="slide banner4">
-		          	#{if videoList != null  && videoList.size() > 3}
+		          	#{if videoList != null  && videoList.size() > 2}
 			          	<div style="position: absolute;top:30px;left:0px;width:350px;">
 				          	<table cellpadding="0" cellspacing="" width="100%"><tr><td>
-				          	<!-- <a href="@{ViewDispatcher.view(videoList.get(3).convoBean.mainURL)}" style="color:#FFF;font-size:15px;font-weight:bold;">
-				          	<img src="http://img.youtube.com/vi/${videoList.get(3).videoId}/0.jpg" width="355" height="265" style="border: 1px solid #CCC; border-radius: 10px;" />
+				          	<!-- <a href="@{ViewDispatcher.view(videoList.get(2).convoBean.mainURL)}" style="color:#FFF;font-size:15px;font-weight:bold;">
+				          	<img src="http://img.youtube.com/vi/${videoList.get(2).videoId}/0.jpg" width="355" height="265" style="border: 1px solid #CCC; border-radius: 10px;" />
 				          	</a>
 				          	-->
-				          	<iframe width="385" height="255" src="http://www.youtube.com/embed/${videoList.get(3).videoId}" frameborder="0" allowfullscreen></iframe>
+				          	<iframe width="385" height="255" src="http://www.youtube.com/embed/${videoList.get(2).videoId}" frameborder="0" allowfullscreen></iframe>
 				          	</td></tr><tr><td nowrap="nowrap">
-				          	<a href="@{ViewDispatcher.view(videoList.get(3).convoBean.mainURL)}" style="color:#FFF;font-size:13px;font-weight:bold;">
-				          	#{if videoList.get(3).videoTitle.length() > 55}
-				          	${videoList.get(3).videoTitle.substring(0,55) }...
+				          	<a href="@{ViewDispatcher.view(videoList.get(2).convoBean.mainURL)}" style="color:#FFF;font-size:13px;font-weight:bold;">
+				          	#{if videoList.get(2).videoTitle.length() > 55}
+				          	${videoList.get(2).videoTitle.substring(0,55) }...
 				          	#{/if}
 				          	#{else}
-				          	${videoList.get(3).videoTitle }
+				          	${videoList.get(2).videoTitle }
 				          	#{/else}
 				          	</a>
 				          	</td></tr>

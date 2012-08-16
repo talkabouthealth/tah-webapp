@@ -107,7 +107,8 @@ public class VideoDAO {
 				VideoBean videoBean;
 				DBCollection videoColl = getCollection(VIDEO_COLLECTION);
 				DBCursor convoCur= null;
-				convoCur=videoColl.find().limit(newLimit).sort(new BasicDBObject("timestamp", -1));
+				BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start().add("homeVideoFlag", false);
+				convoCur=videoColl.find(queryBuilder.get()).limit(newLimit).sort(new BasicDBObject("timestamp", -1));
 				if(convoCur.hasNext()) {
 					if(videoBeanList == null)
 						videoBeanList = new ArrayList<VideoBean>();
