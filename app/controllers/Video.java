@@ -1,5 +1,8 @@
 package controllers;
 
+import org.apache.commons.lang.StringUtils;
+
+import antlr.collections.List;
 import models.ConversationBean;
 import models.NewsLetterBean;
 import models.TalkerBean;
@@ -14,14 +17,27 @@ import dao.NewsLetterDAO;
 import dao.TalkerDAO;
 import dao.VideoDAO;
 
-@With( LoggerController.class )
+@Check("admin")
+@With(Secure.class)
 public class Video extends Controller {
 
 	@Check("admin")
-	public static void addNewVideo(String videoId, String talkerId, String convoId) {
+	public static void homePageVideo() {
+		java.util.List<VideoBean> list = VideoDAO.loadHomeVideo();
+		render("Dashboard/homeVideo.html",list);
+	}
+
+	public static void removeHomeVideo(String videoId) {
+		VideoDAO.removeHomeVideo(videoId);
+		homePageVideo();
+	}
+
+	@Check("admin")
+	public static void addNewVideo(String videoId, String talkerId, String convoId,String videoTitle,boolean homeVideoFlag) {
 		String message = "Added video successfully.Please refresh page";
 		boolean returnPath = false;
 		ConversationBean convoBean = null;
+
 		if(videoId == null)
 			message = "Error:Please provide value for video";
 		else if(videoId.trim().equals("")) 
@@ -29,30 +45,35 @@ public class Video extends Controller {
 		else {
 			VideoBean videoBean = new VideoBean();
 			videoBean.setVideoId(videoId);
+			if(StringUtils.isNotBlank(videoTitle)) {
+				videoBean.setVideoTitle(videoTitle);
+			}
+			videoBean.setHomeVideoFlag(homeVideoFlag);
 			/*if(talkerId != null && !talkerId.trim().equals("")){
 				TalkerBean talkerBean = TalkerDAO.getById(talkerId);
 				videoBean.setTalkerBean(talkerBean);
 			}*/
 			convoBean = ConversationDAO.getConvoById(convoId);
 			videoBean.setConvoBean(convoBean);
-			
 			videoBean.setTopics(convoBean.getTopics());
-
 			if(VideoDAO.save(videoBean))
 				returnPath = true;	
-			
 		}
 		if(returnPath){
 			renderText(message);
 		}else
 			renderText(message);
     }
-	
-	public static void topicVideo(String name){
-		render();
-	}
-	
+
 	public static void deleteVideo(String videoId) {
+		/* 
+		if(Security.isConnected()){
+			TalkerBean talker =  CommonUtil.loadCachedTalker(session);
+			if(!talker.isAdmin())
+				notFound();
+		}else
+			notFound();
+		*/
 		if(VideoDAO.deleteVideo(videoId))
 			renderText("Deleted video successfully.Please refresh page");
 		else

@@ -66,93 +66,104 @@
 		          	#{if videoList != null}
 			          	<div style="position: absolute;top:30px;left:0px;width:350px;">
 				          	<table cellpadding="0" cellspacing="" width="100%"><tr><td>
-				          	<a href="@{ViewDispatcher.view(videoList.get(0).convoBean.mainURL)}" style="color:#FFF;font-size:15px;font-weight:bold;">
-				          	<img src="http://img.youtube.com/vi/${videoList.get(0).videoId}/0.jpg" width="355" height="265" style="border: 1px solid #CCC; border-radius: 10px;" />
-				          	</a>
+<!-- 				          	<a href="@{ViewDispatcher.view(videoList.get(0).convoBean.mainURL)}" style="color:#FFF;font-size:15px;font-weight:bold;"> -->
+<!-- 				          	<img src="http://img.youtube.com/vi/${videoList.get(0).videoId}/0.jpg" width="355" height="265" style="border: 1px solid #CCC; border-radius: 10px;" /> -->
+<!-- 				          	</a> -->
+				          	<iframe width="385" height="255" src="http://www.youtube.com/embed/${videoList.get(0).videoId}" frameborder="0" allowfullscreen></iframe>
 				          	</td></tr><tr><td nowrap="nowrap">
 				          	<a href="@{ViewDispatcher.view(videoList.get(0).convoBean.mainURL)}" style="color:#FFF;font-size:13px;font-weight:bold;">
-				          	#{if videoList.get(0).convoBean.topic.length() > 55}
-				          	${videoList.get(0).convoBean.topic.substring(0,55) }...
+				          	#{if videoList.get(0).videoTitle.length() > 55}
+				          	${videoList.get(0).videoTitle.substring(0,55) }...
 				          	#{/if}
 				          	#{else}
-				          	${videoList.get(0).convoBean.topic }
+				          	${videoList.get(0).videoTitle }
 				          	#{/else}
 				          	</a>
 				          	</td></tr>
 				          	</table>
 			          	</div>
 		          	#{/if}
-		            <h4>Health Answers from the</h4>
-		            <h2>World's Leading Experts</h2>
-		            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
-		              amazing. I have received many answers from leading physicians! <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
-		              <div class="get_started">
-		              	<a href="@{Application.signup()}"><img src="/public/images/index/get_started_btn.png" alt="get started" /></a> or
-		              	<a href="#" class="facebookBtn"><img src="/public/images/index/join_using_fb.png" alt="join using facebbok" /></a> 
-		              	<a href="#" class="twitterBtn"><img src="/public/images/index/join_using_t.png" alt="join using twitter" /></a>
-		              </div>
+		          	<div style="margin-left: 30px;">
+			            <h4>Health Answers from the</h4>
+			            <h2>World's Leading Experts</h2>
+			            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
+			              amazing. I have received many answers from leading physicians! <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
+			              <div class="get_started">
+			              	<a href="@{Application.signup()}"><img src="/public/images/index/get_started_btn.png" alt="get started" /></a> or
+			              	<a href="#" class="facebookBtn"><img src="/public/images/index/join_using_fb.png" alt="join using facebbok" /></a> 
+			              	<a href="#" class="twitterBtn"><img src="/public/images/index/join_using_t.png" alt="join using twitter" /></a>
+			              </div>
+			         </div>
 		          </div>
 		          <div class="slide banner3">
 		          	#{if videoList != null}
 			          	<div style="position: absolute;top:30px;left:0px;width:350px;">
 				          	<table cellpadding="0" cellspacing="" width="100%"><tr><td>
-				          	<a href="@{ViewDispatcher.view(videoList.get(1).convoBean.mainURL)}" style="color:#FFF;font-size:15px;font-weight:bold;">
+				          	<!-- <a href="@{ViewDispatcher.view(videoList.get(1).convoBean.mainURL)}" style="color:#FFF;font-size:15px;font-weight:bold;">
 				          	<img src="http://img.youtube.com/vi/${videoList.get(1).videoId}/0.jpg" width="355" height="265" style="border: 1px solid #CCC; border-radius: 10px;" />
 				          	</a>
+				          	 -->
+				          	<iframe width="385" height="255" src="http://www.youtube.com/embed/${videoList.get(1).videoId}" frameborder="0" allowfullscreen></iframe>
 				          	</td></tr><tr><td nowrap="nowrap">
 				          	<a href="@{ViewDispatcher.view(videoList.get(1).convoBean.mainURL)}" style="color:#FFF;font-size:13px;font-weight:bold;">
-				          	#{if videoList.get(1).convoBean.topic.length() > 55}
-				          	${videoList.get(1).convoBean.topic.substring(0,55) }...
+				          	#{if videoList.get(1).videoTitle.length() > 55}
+				          	${videoList.get(1).videoTitle.substring(0,55) }...
 				          	#{/if}
 				          	#{else}
-				          	${videoList.get(1).convoBean.topic }
+				          	${videoList.get(1).videoTitle }
 				          	#{/else}
 				          	</a>
 				          	</td></tr>
 				          	</table>
 			          	</div>
 		          	#{/if}
-		            <h4>Health Answers from the</h4>
-		            <h2>World's Leading Experts</h2>
-		            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
-		              amazing. I have received many answers from leading physicians! <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
-		              <div class="get_started">
-		              	<a href="@{Application.signup()}"><img src="/public/images/index/get_started_btn.png" alt="get started" /></a> or
-		              	<a href="#" class="facebookBtn"><img src="/public/images/index/join_using_fb.png" alt="join using facebbok" /></a> 
-		              	<a href="#" class="twitterBtn"><img src="/public/images/index/join_using_t.png" alt="join using twitter" /></a>
-		              </div>
+		          	<div style="margin-left: 30px;">
+			            <h4>Health Answers from the</h4>
+			            <h2>World's Leading Experts</h2>
+			            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
+			              amazing. I have received many answers from leading physicians! <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
+			              <div class="get_started">
+			              	<a href="@{Application.signup()}"><img src="/public/images/index/get_started_btn.png" alt="get started" /></a> or
+			              	<a href="#" class="facebookBtn"><img src="/public/images/index/join_using_fb.png" alt="join using facebbok" /></a> 
+			              	<a href="#" class="twitterBtn"><img src="/public/images/index/join_using_t.png" alt="join using twitter" /></a>
+			              </div>
+			         </div>
 		          </div>
 		          <div class="slide banner4">
 		          	#{if videoList != null}
 			          	<div style="position: absolute;top:30px;left:0px;width:350px;">
 				          	<table cellpadding="0" cellspacing="" width="100%"><tr><td>
-				          	<a href="@{ViewDispatcher.view(videoList.get(3).convoBean.mainURL)}" style="color:#FFF;font-size:15px;font-weight:bold;">
+				          	<!-- <a href="@{ViewDispatcher.view(videoList.get(3).convoBean.mainURL)}" style="color:#FFF;font-size:15px;font-weight:bold;">
 				          	<img src="http://img.youtube.com/vi/${videoList.get(3).videoId}/0.jpg" width="355" height="265" style="border: 1px solid #CCC; border-radius: 10px;" />
 				          	</a>
+				          	-->
+				          	<iframe width="385" height="255" src="http://www.youtube.com/embed/${videoList.get(3).videoId}" frameborder="0" allowfullscreen></iframe>
 				          	</td></tr><tr><td nowrap="nowrap">
 				          	<a href="@{ViewDispatcher.view(videoList.get(3).convoBean.mainURL)}" style="color:#FFF;font-size:13px;font-weight:bold;">
-				          	#{if videoList.get(3).convoBean.topic.length() > 55}
-				          	${videoList.get(3).convoBean.topic.substring(0,55) }...
+				          	#{if videoList.get(3).videoTitle.length() > 55}
+				          	${videoList.get(3).videoTitle.substring(0,55) }...
 				          	#{/if}
 				          	#{else}
-				          	${videoList.get(3).convoBean.topic }
+				          	${videoList.get(3).videoTitle }
 				          	#{/else}
 				          	</a>
 				          	</td></tr>
 				          	</table>
 			          	</div>
 		          	#{/if}
-		            <h4>Answers from</h4>
-		            <h2>Experts and Trained Survivors.</h2>
-		            <!-- <h4>Health Answers from the</h4>
-		            <h2>World's Leading Experts</h2> -->
-		            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
-		              amazing. I have received many answers from leading physicians! <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
-		              <div class="get_started">
-		              	<a href="@{Application.signup()}"><img src="/public/images/index/get_started_btn.png" alt="get started" /></a> or
-		              	<a href="#" class="facebookBtn"><img src="/public/images/index/join_using_fb.png" alt="join using facebbok" /></a> 
-		              	<a href="#" class="twitterBtn"><img src="/public/images/index/join_using_t.png" alt="join using twitter" /></a>
-		              </div>
+		          	<div style="margin-left: 30px;">
+			            <h4>Health Answers from the</h4>
+			            <h2>World's Leading Experts</h2>
+			            <!-- <h4>Health Answers from the</h4>
+			            <h2>World's Leading Experts</h2> -->
+			            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
+			              amazing. I have received many answers from leading physicians! <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
+			              <div class="get_started">
+			              	<a href="@{Application.signup()}"><img src="/public/images/index/get_started_btn.png" alt="get started" /></a> or
+			              	<a href="#" class="facebookBtn"><img src="/public/images/index/join_using_fb.png" alt="join using facebbok" /></a> 
+			              	<a href="#" class="twitterBtn"><img src="/public/images/index/join_using_t.png" alt="join using twitter" /></a>
+			              </div>
+			         </div>
 		          </div>
 		        </div>
 		        <!--slides_container end--> 

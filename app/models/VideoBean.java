@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
@@ -20,6 +22,8 @@ public class VideoBean implements DBModel {
 	private TalkerBean talkerBean;
 	private ConversationBean convoBean;
 	private Set<TopicBean> topics;
+	private String videoTitle;
+	private boolean homeVideoFlag;
 
 	public String getVideoId() {
 		return videoId;
@@ -51,6 +55,19 @@ public class VideoBean implements DBModel {
 	public void setId(String id) {
 		this.id = id;
 	}
+	public String getVideoTitle() {
+		return videoTitle;
+	}
+	public void setVideoTitle(String videoTitle) {
+		this.videoTitle = videoTitle;
+	}
+	public boolean isHomeVideoFlag() {
+		return homeVideoFlag;
+	}
+	public void setHomeVideoFlag(boolean homeVideoFlag) {
+		this.homeVideoFlag = homeVideoFlag;
+	}
+
 	@Override
 	public void parseDBObject(DBObject dbObject) {
 		setId(dbObject.get("_id").toString());
@@ -58,13 +75,22 @@ public class VideoBean implements DBModel {
 		//setConvoBean(ConversationDAO.getConvoById(dbObject.get("convo").toString()));
 	}
 	
+	
 	public void parseDBObjectTopic(DBObject dbObject){
 		setId(dbObject.get("_id").toString());
 		setVideoId(dbObject.get("videoId").toString());
+		if(dbObject.get("videoTitle")!= null) {
+			setVideoTitle(dbObject.get("videoTitle").toString());
+		}
 		DBRef topicDBRef = (DBRef)dbObject.get("convo"); 
 		setConvoBean(ConversationDAO.getConvoById(topicDBRef.getId().toString()));
+		if(getVideoTitle() == null){
+			setVideoTitle(getConvoBean().getTopic());
+		}else if(StringUtils.isBlank(getVideoTitle())){
+			setVideoTitle(getConvoBean().getTopic());
+		}
 	}
-	
+
 	@Override
 	public DBObject toDBObject() {
 		DBRef convoDBRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, getConvoBean().getId());
@@ -75,6 +101,8 @@ public class VideoBean implements DBModel {
 		.add("convo", convoDBRef)
 		.add("topics", getConvoBean().topicsToDB())
 		.add("timestamp", Calendar.getInstance().getTime())
+		.add("homeVideoFlag", isHomeVideoFlag())
+		.add("videoTitle",getVideoTitle())
 		.get();
 		return videoDBObject;
 	}
