@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+	<meta name="author" content="Talkmi" /> 
+	<meta name="keywords" content="support, health, talk" /> 
+	<meta name="description" content="real-time support for your health issues" /> 
+	<meta name="robots" content="all" /> 
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Home video: List</title>
+	
+	<link href="@{'/public/stylesheets/style.css'}" rel="stylesheet" type="text/css" />
+	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
+	<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/play-pagination.css'}"/> 
+	<script type="text/javascript" src="@{'/public/javascripts/jquery-1.4.2.min.js'}" ></script>
+
+	<style type="text/css">
+		body {
+			margin: 20px;
+			width: auto;
+			font-size: 14px;
+		}
+		#notificationbar {
+			border: #000000 dashed 1px;
+			margin-top: 3px;
+			padding: 10px;
+		}
+	</style>
+	
+	<script>
+
+		function savePassword(id){
+			var newPassword = document.getElementById('passwordEdit_'+id).innerHTML;
+			var userForm = document.getElementById('userForm');
+			userForm.action = "/dashboard/userlist?id="+id+"&password="+newPassword+"&action=passwordEdit";
+			userForm.submit();
+		}
+
+		function searchUser(){
+			var searchUserName = document.getElementById('searchBy').value;
+			var userForm = document.getElementById('userForm');
+			userForm.action = "/dashboard/userlist?id=''&password=''&action=searchUser&searchString="+searchUserName;
+			userForm.submit();
+		}
+
+		function loginAsAnotherUser(userName){
+			var userForm = document.getElementById('userForm');
+			//confirm("'admin' user is logout internally and '"+userName+"' user is logged in. Are you login as '"+userName+"' user?")
+			var confirmAlert = confirm("Are you sure to login as '"+userName+"' user?")
+			if (confirmAlert==true){
+				userForm.action = "/Userlist/loginAsAnotherUser?userName="+userName;
+				userForm.submit();
+			}else{
+			}
+		}
+	</script>
+</head>
+<body>
+		<table width="100%">
+			<tr>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Home.index()}">Home</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/notification">Moderate New Questions</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/userlist">Users</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="/questionrecovery">Question Recovery</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/questionnotification">Question Notifications</a></td>
+				<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Profile.updateEmailList()}">Update Emails</a></td>
+				<td style="padding-right:20px;" nowrap><a href="@{Secure.logout()}">Logout</a></td>
+				<td style="width: 100%;">&nbsp;</td>
+			</tr>
+		</table>
+		<form method = "post" action = "" id="userForm">
+			<table style="width: 100%">
+				<tr>
+					<td valign = "top" width="50%">
+						<div>
+							<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" width="100%">
+								<tr>
+									<th style="padding:3px;" colspan="2">Home page video List</th>   
+								</tr>
+									<tr>
+										<td  colspan="2">
+										<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;" width="100%">
+												#{if list != null}
+													#{if list.size > 0}
+														<tr>
+<!-- 															<th>Sr. No.</th> -->
+															<th>Video Id</th>
+															<th>Video</th>
+															<th>Title</th>
+															<th>Remove</th>
+														</tr>
+														#{list items: list, as: 'video' }
+															<tr>
+																<td>${video.videoId}</td>
+																<td>
+																	<img src="http://img.youtube.com/vi/${video.videoId}/0.jpg" width="355" height="265" style="border: 1px solid #CCC; border-radius: 10px;" />
+																</td>
+																<td>${video.videoTitle}</td>
+																<td><a href="/video/removeHomeVideo?videoId=${video.videoId}">Remove</a></td>
+															</tr>
+														#{/list}
+													#{/if}
+													#{else}
+														<tr>
+															<td colspan="4" align="center">No record found.</td>
+														</tr>
+													#{/else}
+												#{/if}
+												#{else}
+												<tr>
+															<td colspan="4" align="center">No record found.</td>
+														</tr>
+												#{/else}
+										</table>
+										</td>   
+									</tr>
+							</table>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</form>
+		#{ common/googleAnalytics /}
+		<!-- Quantcast Tag -->
+		<script type="text/javascript">
+			var _qevents = _qevents || [];
+			
+			(function() {
+			var elem = document.createElement('script');
+			elem.src = (document.location.protocol == "https:" ? "https://secure" : "http://edge") + ".quantserve.com/quant.js";
+			elem.async = true;
+			elem.type = "text/javascript";
+			var scpt = document.getElementsByTagName('script')[0];
+			scpt.parentNode.insertBefore(elem, scpt);
+			})();
+			
+			_qevents.push({
+			qacct:"p-7aWXmxtlCHn1M"
+			});
+		</script>
+		<noscript>
+		<div style="display:none;">
+		<img src="//pixel.quantserve.com/pixel/p-7aWXmxtlCHn1M.gif" border="0" height="1" width="1" alt="Quantcast"/>
+		</div>
+		</noscript>
+		<!-- End Quantcast tag -->
+	</body>
+</html>

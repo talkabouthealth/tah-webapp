@@ -91,17 +91,44 @@ public class VideoDAO {
 		videoColl.remove(query);
 		return returnFlag;
 	}
+
+	public static List<VideoBean> loadVideoForHome(int limit){
+		 List<VideoBean> videoBeanList = loadHomeVideo();
+		 boolean loadMore = false;
+		 int newLimit = limit;
+		 if(videoBeanList == null){
+			loadMore = true;
+			newLimit = limit;
+		 }else if(videoBeanList.size() < limit) {
+			 newLimit =  (limit - videoBeanList.size()) + 1;
+			 loadMore = true;
+		 }
+		 if(loadMore){
+				VideoBean videoBean;
+				DBCollection videoColl = getCollection(VIDEO_COLLECTION);
+				DBCursor convoCur= null;
+				BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start().add("homeVideoFlag", false);
+				convoCur=videoColl.find(queryBuilder.get()).limit(newLimit).sort(new BasicDBObject("timestamp", -1));
+				if(convoCur.hasNext()) {
+					if(videoBeanList == null)
+						videoBeanList = new ArrayList<VideoBean>();
+					do {
+						videoBean = new VideoBean();
+						videoBean.parseDBObjectTopic(convoCur.next());
+						videoBeanList.add(videoBean);
+					}while(convoCur.hasNext());
+				} 
+		 }
+		 return videoBeanList;
+	}
 	
-	public static List<VideoBean> loadVideo(int limit){
+	public static List<VideoBean> loadHomeVideo(){
 		List<VideoBean> videoBeanList = null;
 		VideoBean videoBean;
 		DBCollection videoColl = getCollection(VIDEO_COLLECTION);
 		DBCursor convoCur= null;
-		if(limit == 0)
-			convoCur=videoColl.find().sort(new BasicDBObject("timestamp", -1));
-		else
-			convoCur=videoColl.find().sort(new BasicDBObject("timestamp", -1)).limit(limit);
-
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start().add("homeVideoFlag", true);
+		convoCur=videoColl.find(queryBuilder.get()).sort(new BasicDBObject("timestamp", -1));
 		if(convoCur.hasNext()) {
 			videoBeanList = new ArrayList<VideoBean>();
 			do {
@@ -111,6 +138,21 @@ public class VideoDAO {
 			}while(convoCur.hasNext());
 		}
 		return videoBeanList;
+	}
+	
+	public static boolean removeHomeVideo(String videoId){
+		boolean returnFlag = true;
+		DBCollection videoColl = getCollection(VIDEO_COLLECTION);
+		DBObject query =  BasicDBObjectBuilder.start().add("videoId", videoId).get();
+		DBCursor convoCur = videoColl.find(query);
+		if(convoCur.hasNext()) {
+			do {
+				DBObject dbObject =	convoCur.next();
+				dbObject.put("homeVideoFlag", false);
+				videoColl.save(dbObject);
+			}while(convoCur.hasNext());
+		}
+		return returnFlag;
 	}
 
 	public static final String VIDEO_COLLECTION = "video";
