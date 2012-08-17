@@ -96,7 +96,7 @@ public class Application extends Controller {
     	if (Security.isConnected()) {
     		Home.index();
     	} else {
-    		List<VideoBean> videoList = VideoDAO.loadVideoForHome(5);
+    		List<VideoBean> videoList = VideoDAO.loadVideoForHome(4);
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
     		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
     		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
@@ -109,7 +109,7 @@ public class Application extends Controller {
     	if (Security.isConnected()) {
     		Home.index();
     	} else {
-    		List<VideoBean> videoList = VideoDAO.loadVideoForHome(5);
+    		List<VideoBean> videoList = VideoDAO.loadVideoForHome(4);
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
     		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
     		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);

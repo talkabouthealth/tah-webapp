@@ -59,7 +59,6 @@
 		<!-- Banner code -->
 		<div id="banner">
 		  <div id="slider">
-		    <div id="example">
 		      <div id="slides">
 		        <div class="slides_container">
 		          <div class="slide banner1">
@@ -69,7 +68,7 @@
 <!-- 				          	<a href="@{ViewDispatcher.view(videoList.get(0).convoBean.mainURL)}" style="color:#FFF;font-size:15px;font-weight:bold;"> -->
 <!-- 				          	<img src="http://img.youtube.com/vi/${videoList.get(0).videoId}/0.jpg" width="355" height="265" style="border: 1px solid #CCC; border-radius: 10px;" /> -->
 <!-- 				          	</a> -->
-				          	<iframe width="385" height="255" src="http://www.youtube.com/embed/${videoList.get(0).videoId}" frameborder="0" allowfullscreen></iframe>
+				          	<iframe width="435" height="255" src="http://www.youtube.com/embed/${videoList.get(0).videoId}" frameborder="0" allowfullscreen></iframe>
 				          	</td></tr><tr><td nowrap="nowrap">
 				          	<a href="@{ViewDispatcher.view(videoList.get(0).convoBean.mainURL)}" style="color:#FFF;font-size:13px;font-weight:bold;">
 				          	#{if videoList.get(0).videoTitle.length() > 55}
@@ -84,8 +83,8 @@
 			          	</div>
 		          	#{/if}
 		          	<div style="margin-left: 30px;">
-			            <h4>Health Answers from the</h4>
-			            <h2>World's Leading Experts</h2>
+			            <h4>Health Answers from the World's</h4>
+			            <h2>Leading Medical Experts</h2>
 			            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
 			              amazing. I have received many answers from leading physicians! <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
 			              <div class="get_started">
@@ -103,7 +102,7 @@
 				          	<img src="http://img.youtube.com/vi/${videoList.get(1).videoId}/0.jpg" width="355" height="265" style="border: 1px solid #CCC; border-radius: 10px;" />
 				          	</a>
 				          	 -->
-				          	<iframe width="385" height="255" src="http://www.youtube.com/embed/${videoList.get(1).videoId}" frameborder="0" allowfullscreen></iframe>
+				          	<iframe width="435" height="255" src="http://www.youtube.com/embed/${videoList.get(1).videoId}" frameborder="0" allowfullscreen></iframe>
 				          	</td></tr><tr><td nowrap="nowrap">
 				          	<a href="@{ViewDispatcher.view(videoList.get(1).convoBean.mainURL)}" style="color:#FFF;font-size:13px;font-weight:bold;">
 				          	#{if videoList.get(1).videoTitle.length() > 55}
@@ -118,8 +117,8 @@
 			          	</div>
 		          	#{/if}
 		          	<div style="margin-left: 30px;">
-			            <h4>Health Answers from the</h4>
-			            <h2>World's Leading Experts</h2>
+			            <h4>Answers from Trained Supporters</h4>
+			            <h2>Sharing Their Experiences</h2>
 			            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
 			              amazing. I have received many answers from leading physicians! <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
 			              <div class="get_started">
@@ -137,7 +136,7 @@
 				          	<img src="http://img.youtube.com/vi/${videoList.get(2).videoId}/0.jpg" width="355" height="265" style="border: 1px solid #CCC; border-radius: 10px;" />
 				          	</a>
 				          	-->
-				          	<iframe width="385" height="255" src="http://www.youtube.com/embed/${videoList.get(2).videoId}" frameborder="0" allowfullscreen></iframe>
+				          	<iframe width="435" height="255" src="http://www.youtube.com/embed/${videoList.get(2).videoId}" frameborder="0" allowfullscreen></iframe>
 				          	</td></tr><tr><td nowrap="nowrap">
 				          	<a href="@{ViewDispatcher.view(videoList.get(2).convoBean.mainURL)}" style="color:#FFF;font-size:13px;font-weight:bold;">
 				          	#{if videoList.get(2).videoTitle.length() > 55}
@@ -152,8 +151,8 @@
 			          	</div>
 		          	#{/if}
 		          	<div style="margin-left: 30px;">
-			            <h4>Health Answers from the</h4>
-			            <h2>World's Leading Experts</h2>
+			            <h4>Connect with Experts and Trained Survivors</h4>
+			            <h2>Who Can Help</h2>
 			            <!-- <h4>Health Answers from the</h4>
 			            <h2>World's Leading Experts</h2> -->
 			            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
@@ -169,8 +168,6 @@
 		        <!--slides_container end--> 
 		     </div>
 		     <!--slides end--> 
-		   </div>
-		   <!--example end--> 
 		 </div>
 		 <!--slider end--> 
 		</div>
@@ -374,10 +371,10 @@ $(document).ready(function(){
 		preload: false,
 		preloadImage: '/public/images/index/tah_loading.gif',
 		generatePagination: true,
-		play: 10000,
+		/*play: 100000,
+		pause: 100000,*/
 		effect: 'fade',
 		crossfade: true,
-		pause: 2000,
 		hoverPause: true,
 		start: 1
 	});

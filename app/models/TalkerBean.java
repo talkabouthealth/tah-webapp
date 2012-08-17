@@ -372,11 +372,6 @@ public class TalkerBean implements Serializable {
 		parseFollowingTopics((Collection<DBRef>)talkerDBObject.get("following_topics"));
 		parseTopicsInfo((Collection<DBObject>)talkerDBObject.get("topics_info"));
 		setAnswerList(CommentsDAO.getTalkerAnswers(getId(), null));
-		
-		Collection<String> otherCategories = (Collection<String>)talkerDBObject.get("otherCategories");
-		if (otherCategories != null) {
-			setOtherCategories(otherCategories.toArray(new String[]{}));
-		}
 	}
 	
 	public void parseThankYous(Collection<DBObject> thankYouDBList) {
