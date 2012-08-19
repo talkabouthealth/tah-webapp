@@ -139,4 +139,7 @@ public class Static extends Controller {
    public static void resources_nursing() {
     	render();
    }
+   public static void TAH_Videos() {
+    	render();
+   }
 }
