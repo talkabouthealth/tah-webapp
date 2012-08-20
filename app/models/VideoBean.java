@@ -23,7 +23,7 @@ public class VideoBean implements DBModel {
 	private ConversationBean convoBean;
 	private Set<TopicBean> topics;
 	private String videoTitle;
-	private boolean homeVideoFlag;
+	private String homeVideoLink;
 
 	public String getVideoId() {
 		return videoId;
@@ -61,11 +61,11 @@ public class VideoBean implements DBModel {
 	public void setVideoTitle(String videoTitle) {
 		this.videoTitle = videoTitle;
 	}
-	public boolean isHomeVideoFlag() {
-		return homeVideoFlag;
+	public String getHomeVideoLink() {
+		return homeVideoLink;
 	}
-	public void setHomeVideoFlag(boolean homeVideoFlag) {
-		this.homeVideoFlag = homeVideoFlag;
+	public void setHomeVideoLink(String homeVideoLink) {
+		this.homeVideoLink = homeVideoLink;
 	}
 
 	@Override
@@ -75,8 +75,14 @@ public class VideoBean implements DBModel {
 		//setConvoBean(ConversationDAO.getConvoById(dbObject.get("convo").toString()));
 	}
 	
+	public void parseDBObjectHome(DBObject dbObject){
+		setId(dbObject.get("_id").toString());
+		setVideoId(dbObject.get("videoId").toString());
+		setVideoTitle(dbObject.get("videoTitle").toString());
+		setHomeVideoLink(dbObject.get("videoLink").toString());
+	}
 	
-	public void parseDBObjectTopic(DBObject dbObject){
+	public void parseDBObjectTopic(DBObject dbObject) {
 		setId(dbObject.get("_id").toString());
 		setVideoId(dbObject.get("videoId").toString());
 		if(dbObject.get("videoTitle")!= null) {
@@ -101,8 +107,7 @@ public class VideoBean implements DBModel {
 		.add("convo", convoDBRef)
 		.add("topics", getConvoBean().topicsToDB())
 		.add("timestamp", Calendar.getInstance().getTime())
-		.add("homeVideoFlag", isHomeVideoFlag())
-		.add("videoTitle",getVideoTitle())
+		//.add("videoTitle",getVideoTitle())
 		.get();
 		return videoDBObject;
 	}

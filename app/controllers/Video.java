@@ -31,9 +31,20 @@ public class Video extends Controller {
 		VideoDAO.removeHomeVideo(videoId);
 		homePageVideo();
 	}
+	
+	public static void addHomeVideo(String videoId, String videoTitle, String videoLink) {
+		System.out.println(videoId);
+		System.out.println(videoTitle);
+		System.out.println(videoLink);
+		if(videoId != null){
+			VideoDAO.addHomeVideo(videoId,videoTitle,videoLink);
+		}
+		java.util.List<VideoBean> list = VideoDAO.loadHomeVideo();
+		homePageVideo();
+	}
 
 	@Check("admin")
-	public static void addNewVideo(String videoId, String talkerId, String convoId,String videoTitle,boolean homeVideoFlag) {
+	public static void addNewVideo(String videoId, String talkerId, String convoId) {
 		String message = "Added video successfully.Please refresh page";
 		boolean returnPath = false;
 		ConversationBean convoBean = null;
@@ -45,10 +56,12 @@ public class Video extends Controller {
 		else {
 			VideoBean videoBean = new VideoBean();
 			videoBean.setVideoId(videoId);
-			if(StringUtils.isNotBlank(videoTitle)) {
+			/*if(StringUtils.isNotBlank(videoTitle)) {
 				videoBean.setVideoTitle(videoTitle);
 			}
 			videoBean.setHomeVideoFlag(homeVideoFlag);
+			*/
+			 
 			/*if(talkerId != null && !talkerId.trim().equals("")){
 				TalkerBean talkerBean = TalkerDAO.getById(talkerId);
 				videoBean.setTalkerBean(talkerBean);
