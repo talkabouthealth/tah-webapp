@@ -5,6 +5,7 @@ import static util.DBUtil.getCollection;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -122,18 +123,30 @@ public class VideoDAO {
 		 return videoBeanList;
 	}
 	
+	public static boolean addHomeVideo(String videoId, String videoTitle, String videoLink){
+		boolean addFlag = true;
+		DBCollection videoColl = getCollection(HOME_VIDEO_COLLECTION);
+		DBObject videoDBObject = BasicDBObjectBuilder.start()
+				.add("videoId", videoId)
+				.add("videoTitle", videoTitle)
+				.add("videoLink", videoLink)
+				.add("timestamp", Calendar.getInstance().getTime())
+				.get();
+		videoColl.save(videoDBObject);
+		return addFlag;
+	}
+	
 	public static List<VideoBean> loadHomeVideo(){
 		List<VideoBean> videoBeanList = null;
 		VideoBean videoBean;
-		DBCollection videoColl = getCollection(VIDEO_COLLECTION);
+		DBCollection videoColl = getCollection(HOME_VIDEO_COLLECTION);
 		DBCursor convoCur= null;
-		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start().add("homeVideoFlag", true);
-		convoCur=videoColl.find(queryBuilder.get()).sort(new BasicDBObject("timestamp", -1));
+		convoCur=videoColl.find().sort(new BasicDBObject("timestamp", -1));
 		if(convoCur.hasNext()) {
 			videoBeanList = new ArrayList<VideoBean>();
 			do {
 				videoBean = new VideoBean();
-				videoBean.parseDBObjectTopic(convoCur.next());
+				videoBean.parseDBObjectHome(convoCur.next());
 				videoBeanList.add(videoBean);
 			}while(convoCur.hasNext());
 		}
@@ -142,18 +155,18 @@ public class VideoDAO {
 	
 	public static boolean removeHomeVideo(String videoId){
 		boolean returnFlag = true;
-		DBCollection videoColl = getCollection(VIDEO_COLLECTION);
+		DBCollection videoColl = getCollection(HOME_VIDEO_COLLECTION);
 		DBObject query =  BasicDBObjectBuilder.start().add("videoId", videoId).get();
 		DBCursor convoCur = videoColl.find(query);
 		if(convoCur.hasNext()) {
 			do {
 				DBObject dbObject =	convoCur.next();
-				dbObject.put("homeVideoFlag", false);
-				videoColl.save(dbObject);
+				videoColl.remove(dbObject);
 			}while(convoCur.hasNext());
 		}
 		return returnFlag;
 	}
 
 	public static final String VIDEO_COLLECTION = "video";
+	public static final String HOME_VIDEO_COLLECTION = "homevideo";
 }
