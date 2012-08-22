@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+
 import models.EmailListBean;
 import models.NewsLetterBean;
 import models.TalkerBean;
@@ -21,14 +23,36 @@ import play.jobs.*;
 import util.EmailUtil;
 
 /** Fire on application start up **/ 
-//@OnApplicationStart
-public class EmailListOnStartUpJob {
+@OnApplicationStart
+public class EmailListOnStartUpJob extends Job {
 
 	public void doJob() {
 		System.out.println("Job : Email list population one time on sailthrou");
-		runEmailJob();
+		//runEmailJob();
+		runDiseaseJob();
 	}
 
+	private boolean runDiseaseJob() {
+		List<TalkerBean> talkerBeans = TalkerDAO.loadAllTalkers();
+		for (Iterator<TalkerBean> iterator = talkerBeans.iterator(); iterator.hasNext();) {
+			TalkerBean talkerBean = (TalkerBean) iterator.next();
+			Map<String, Boolean> lists = new HashMap<String, Boolean>();
+			if(StringUtils.isNotBlank(talkerBean.getCategory())){
+				lists.put(talkerBean.getCategory().replaceAll(" ", "-"), true);
+			}
+			if(talkerBean.getOtherCategories() != null) {
+	    		for (int i = 0; i < talkerBean.getOtherCategories().length; i++) {
+	    			lists.put(talkerBean.getOtherCategories()[i].replaceAll(" ", "-"), true);
+	    		}
+	    	}
+			if(!lists.isEmpty()){
+				EmailUtil.setEmail(lists, talkerBean.getEmail());
+			}
+			lists.clear();
+		}
+		return true;
+	}
+	
 	private boolean runEmailJob(){
 		String NEWSLETTER_COLLECTION = "newsletter";
 		DBCollection newsLetterCol = getCollection(NEWSLETTER_COLLECTION);

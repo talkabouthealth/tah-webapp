@@ -1802,6 +1802,15 @@ As Community page copied from Home page . So this is using most of home page css
 	color:#0286bc;
 	float:left;
 }
+.thnksfollowingimg {
+    float: left;
+    padding-right: 10px;
+    width: 80px;
+}
+.thnksfollowingtext {
+    float: left;
+    width: 199px;
+}
 /*---------------------Conversation Feed ---------------*/
 .youactivity {
 	clear:both;

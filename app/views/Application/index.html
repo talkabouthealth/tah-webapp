@@ -20,12 +20,6 @@
 	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
     <link href="/public/stylesheets/new_style.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" href="/public/plugins/ui-lightness/jquery-ui-1.8.4.custom.css" type="text/css" media="screen" />
-    <script type="text/javascript" src="/public/javascripts/jquery-1.5.1.min.js" ></script>
-    <script type="text/javascript" src="/public/javascripts/jquery-ui-1.8.4.custom.min.js" ></script>
-    <script type="text/javascript" src="/public/javascripts/slides.min.jquery.js" ></script>
-    <script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
-    <script type="text/javascript" src="/public/javascripts/jscroller.js"></script>
-    <script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 </head>
 <body class="home">
 	<div id="wrapper">
@@ -65,18 +59,10 @@
 		          	#{if videoList != null && videoList.size() >= 1}
 			          	<div style="position: absolute;top:30px;left:0px;width:350px;">
 				          	<table cellpadding="0" cellspacing="" width="100%"><tr><td>
-<!-- 				          	<a href="@{ViewDispatcher.view(videoList.get(0).convoBean.mainURL)}" style="color:#FFF;font-size:15px;font-weight:bold;"> -->
-<!-- 				          	<img src="http://img.youtube.com/vi/${videoList.get(0).videoId}/0.jpg" width="355" height="265" style="border: 1px solid #CCC; border-radius: 10px;" /> -->
-<!-- 				          	</a> -->
 				          	<iframe width="435" height="255" src="http://www.youtube.com/embed/${videoList.get(0).videoId}" frameborder="0" allowfullscreen></iframe>
-				          	</td></tr><tr><td nowrap="nowrap">
-				          	<a href="@{ViewDispatcher.view(videoList.get(0).convoBean.mainURL)}" style="color:#FFF;font-size:13px;font-weight:bold;">
-				          	#{if videoList.get(0).videoTitle.length() > 55}
-				          	${videoList.get(0).videoTitle.substring(0,55) }...
-				          	#{/if}
-				          	#{else}
+				          	</td></tr><tr><td style="padding-top:5px">
+				          	<a href="${videoList.get(0).homeVideoLink}" style="color:#FFF;font-size:13px;font-weight:bold;">
 				          	${videoList.get(0).videoTitle }
-				          	#{/else}
 				          	</a>
 				          	</td></tr>
 				          	</table>
@@ -98,19 +84,10 @@
 		          	#{if videoList != null  && videoList.size() >= 2}
 			          	<div style="position: absolute;top:30px;left:0px;width:350px;">
 				          	<table cellpadding="0" cellspacing="" width="100%"><tr><td>
-				          	<!-- <a href="@{ViewDispatcher.view(videoList.get(1).convoBean.mainURL)}" style="color:#FFF;font-size:15px;font-weight:bold;">
-				          	<img src="http://img.youtube.com/vi/${videoList.get(1).videoId}/0.jpg" width="355" height="265" style="border: 1px solid #CCC; border-radius: 10px;" />
-				          	</a>
-				          	 -->
 				          	<iframe width="435" height="255" src="http://www.youtube.com/embed/${videoList.get(1).videoId}" frameborder="0" allowfullscreen></iframe>
-				          	</td></tr><tr><td nowrap="nowrap">
-				          	<a href="@{ViewDispatcher.view(videoList.get(1).convoBean.mainURL)}" style="color:#FFF;font-size:13px;font-weight:bold;">
-				          	#{if videoList.get(1).videoTitle.length() > 55}
-				          	${videoList.get(1).videoTitle.substring(0,55) }...
-				          	#{/if}
-				          	#{else}
+				          	</td></tr><tr><td style="padding-top:5px">
+				          	<a href="${videoList.get(1).homeVideoLink}" style="color:#FFF;font-size:13px;font-weight:bold;">
 				          	${videoList.get(1).videoTitle }
-				          	#{/else}
 				          	</a>
 				          	</td></tr>
 				          	</table>
@@ -132,19 +109,10 @@
 		          	#{if videoList != null  && videoList.size() >= 3}
 			          	<div style="position: absolute;top:30px;left:0px;width:350px;">
 				          	<table cellpadding="0" cellspacing="" width="100%"><tr><td>
-				          	<!-- <a href="@{ViewDispatcher.view(videoList.get(2).convoBean.mainURL)}" style="color:#FFF;font-size:15px;font-weight:bold;">
-				          	<img src="http://img.youtube.com/vi/${videoList.get(2).videoId}/0.jpg" width="355" height="265" style="border: 1px solid #CCC; border-radius: 10px;" />
-				          	</a>
-				          	-->
 				          	<iframe width="435" height="255" src="http://www.youtube.com/embed/${videoList.get(2).videoId}" frameborder="0" allowfullscreen></iframe>
-				          	</td></tr><tr><td nowrap="nowrap">
-				          	<a href="@{ViewDispatcher.view(videoList.get(2).convoBean.mainURL)}" style="color:#FFF;font-size:13px;font-weight:bold;">
-				          	#{if videoList.get(2).videoTitle.length() > 55}
-				          	${videoList.get(2).videoTitle.substring(0,55) }...
-				          	#{/if}
-				          	#{else}
+				          	</td></tr><tr><td style="padding-top:5px">
+				          	<a href="${videoList.get(2).homeVideoLink}" style="color:#FFF;font-size:13px;font-weight:bold;">
 				          	${videoList.get(2).videoTitle }
-				          	#{/else}
 				          	</a>
 				          	</td></tr>
 				          	</table>
@@ -153,8 +121,6 @@
 		          	<div style="margin-left: 30px;">
 			            <h4>Connect with Experts and Trained Survivors</h4>
 			            <h2>Who Can Help</h2>
-			            <!-- <h4>Health Answers from the</h4>
-			            <h2>World's Leading Experts</h2> -->
 			            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
 			              amazing, so many wonderful doctors sharing their expertise! <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
 			              <div class="get_started">
@@ -343,7 +309,13 @@
 </div>
 <!-- copy end -->
 	<!--footer end--> 
-	#{ common/googleAnalytics /}
+#{ common/googleAnalytics /}
+<script type="text/javascript" src="/public/javascripts/jquery-1.5.1.min.js" ></script>
+<script type="text/javascript" src="/public/javascripts/jquery-ui-1.8.4.custom.min.js" ></script>
+<script type="text/javascript" src="/public/javascripts/slides.min.jquery.js" ></script>
+<script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
+<script type="text/javascript" src="/public/javascripts/jscroller.js"></script>
+<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 <script type="text/javascript">
 <!--
 $(document).ready(function(){
@@ -486,7 +458,7 @@ makeAutoComplete = function(){
 		select: function(event, ui) {
 			var url = ui.item.url;
 			if (url === "#fullsearch") {
-				if (trim(ui.item.value) === '') {
+				if ($.trim(ui.item.value) === '') {
 					$("#topSearchBox").focus();
 					return false;
 				}else{

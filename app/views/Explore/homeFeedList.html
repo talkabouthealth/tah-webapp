@@ -21,7 +21,7 @@
 				</h3>
 				<p class="disc">
 					#{if convo.comments != null && convo.comments.size() > 0}
-						${convo.comments.get(0).text.raw()}
+						${convo.comments.get(0).text.nl2br()}
 					#{/if}
 				</p>
 				<p class="by">
@@ -83,7 +83,7 @@
 				<p class="disc">
 					#{if convo.reply}
 						#{if convo.reply != null && convo.reply.size() > 0}
-							${convo.reply.text.raw()}
+							${convo.reply.text.printThoughtOrAnswer(session.username)}
 						#{/if}
 					#{/if}
 					#{elseif convo.answer}

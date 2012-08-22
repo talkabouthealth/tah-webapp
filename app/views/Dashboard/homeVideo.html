@@ -10,12 +10,10 @@
 	<meta name="robots" content="all" /> 
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Home video: List</title>
-	
 	<link href="@{'/public/stylesheets/style.css'}" rel="stylesheet" type="text/css" />
 	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
 	<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/play-pagination.css'}"/> 
 	<script type="text/javascript" src="@{'/public/javascripts/jquery-1.4.2.min.js'}" ></script>
-
 	<style type="text/css">
 		body {
 			margin: 20px;
@@ -30,31 +28,30 @@
 	</style>
 	
 	<script>
-
-		function savePassword(id){
-			var newPassword = document.getElementById('passwordEdit_'+id).innerHTML;
-			var userForm = document.getElementById('userForm');
-			userForm.action = "/dashboard/userlist?id="+id+"&password="+newPassword+"&action=passwordEdit";
-			userForm.submit();
+	<!--
+	addThisVideo = function(index){
+		var form = $("#videoList");
+		var videoId = $("#videoList :input[name='video" + index + "Id']").val();
+		var videoTitle = $("#videoList :input[name='video" + index + "Title']").val();
+		var videoLink = $("#videoList :input[name='video" + index + "Link']").val();
+		
+		if($.trim(videoId) == ''){
+			alert('Please add vide id');
+			return;
+		} else if($.trim(videoTitle) == ''){
+			alert('Please add video Title');
+			return;
+		} else if($.trim(videoLink) == ''){
+			alert('Please add video Link');
+			return;
+		} else {
+			$("#videoForm :input[name='videoId']").val(videoId);
+			$("#videoForm :input[name='videoTitle']").val(videoTitle);
+			$("#videoForm :input[name='videoLink']").val(videoLink);
+			$("#videoForm").submit();
 		}
-
-		function searchUser(){
-			var searchUserName = document.getElementById('searchBy').value;
-			var userForm = document.getElementById('userForm');
-			userForm.action = "/dashboard/userlist?id=''&password=''&action=searchUser&searchString="+searchUserName;
-			userForm.submit();
-		}
-
-		function loginAsAnotherUser(userName){
-			var userForm = document.getElementById('userForm');
-			//confirm("'admin' user is logout internally and '"+userName+"' user is logged in. Are you login as '"+userName+"' user?")
-			var confirmAlert = confirm("Are you sure to login as '"+userName+"' user?")
-			if (confirmAlert==true){
-				userForm.action = "/Userlist/loginAsAnotherUser?userName="+userName;
-				userForm.submit();
-			}else{
-			}
-		}
+	}
+	-->
 	</script>
 </head>
 <body>
@@ -70,7 +67,12 @@
 				<td style="width: 100%;">&nbsp;</td>
 			</tr>
 		</table>
-		<form method = "post" action = "" id="userForm">
+		#{form @Video.addHomeVideo(), id:'videoForm' }
+			<input type="hidden" name="videoId" />
+			<input type="hidden" name="videoTitle"/>
+			<input type="hidden" name="videoLink"/>
+		#{/form}
+		<form id="videoList">
 			<table style="width: 100%">
 				<tr>
 					<td valign = "top" width="50%">
@@ -82,37 +84,66 @@
 									<tr>
 										<td  colspan="2">
 										<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;" width="100%">
-												#{if list != null}
-													#{if list.size > 0}
+											<tr>
+												<th>Video Id</th>
+												<th>Title</th>
+												<th>Link</th>
+												<th>Add/Remove</th>
+											</tr>
+											#{if list != null}
+												#{if list.size > 0}
+													#{list items: list, as: 'video' }
 														<tr>
-<!-- 															<th>Sr. No.</th> -->
-															<th>Video Id</th>
-															<th>Video</th>
-															<th>Title</th>
-															<th>Remove</th>
+															<td>${video.videoId}</td>
+															<td>${video.videoTitle}</td>
+															<td>${video.homeVideoLink}</td>
+															<td><a href="/video/removeHomeVideo?videoId=${video.videoId}">Remove</a></td>
 														</tr>
-														#{list items: list, as: 'video' }
-															<tr>
-																<td>${video.videoId}</td>
-																<td>
-																	<img src="http://img.youtube.com/vi/${video.videoId}/0.jpg" width="355" height="265" style="border: 1px solid #CCC; border-radius: 10px;" />
-																</td>
-																<td>${video.videoTitle}</td>
-																<td><a href="/video/removeHomeVideo?videoId=${video.videoId}">Remove</a></td>
-															</tr>
-														#{/list}
-													#{/if}
-													#{else}
-														<tr>
-															<td colspan="4" align="center">No record found.</td>
-														</tr>
-													#{/else}
+													#{/list}
 												#{/if}
-												#{else}
+												#{if list.size == 1}
+													<tr>
+														<td><input type="text" size="12" name="video2Id" /></td>
+														<td><input type="text" name="video2Title"/></td>
+														<td><input type="text" name="video2Link"/></td>
+														<td><a href="javaScript:addThisVideo('2')">Add</a></td>
+													</tr>
+													<tr>
+														<td><input type="text" size="12" name="video3Id" /></td>
+														<td><input type="text" name="video3Title"/></td>
+														<td><input type="text" name="video3Link"/></td>
+														<td><a href="javaScript:addThisVideo('3')">Add</a></td>
+													</tr>
+												#{/if}
+												#{if list.size == 2}
+													<tr>
+														<td><input type="text" size="12" name="video3Id" /></td>
+														<td><input type="text" name="video3Title"/></td>
+														<td><input type="text" name="video3Link"/></td>
+														<td><a href="javaScript:addThisVideo('3')">Add</a></td>
+													</tr>
+												#{/if}
+											#{/if}
+											#{else}
 												<tr>
-															<td colspan="4" align="center">No record found.</td>
-														</tr>
-												#{/else}
+													<td><input type="text" size="12" name="video1Id" /></td>
+													<td><input type="text" name="video1Title"/></td>
+													<td><input type="text" name="video1Link"/></td>
+													<td><a href="javaScript:addThisVideo('1')">Add</a></td>
+												</tr>
+												<tr>
+													<td><input type="text" size="12" name="video2Id" /></td>
+													<td><input type="text" name="video2Title"/></td>
+													<td><input type="text" name="video2Link"/></td>
+													<td><a href="javaScript:addThisVideo('2')">Add</a></td>
+												</tr>
+												<tr>
+													<td><input type="text" size="12" name="video3Id" /></td>
+													<td><input type="text" name="video3Title"/></td>
+													<td><input type="text" name="video3Link"/></td>
+													<td><a href="javaScript:addThisVideo('3')">Add</a></td>
+												</tr>
+											#{/else}
 										</table>
 										</td>   
 									</tr>
@@ -120,6 +151,7 @@
 						</div>
 					</td>
 				</tr>
+				<tr><td>Note: Please don't add title of more than 125 char's</td></tr>
 			</table>
 		</form>
 		#{ common/googleAnalytics /}
