@@ -1,53 +1,142 @@
 <style type="text/css">
 	/* Font size for autocomplete items */
-	.ui-menu .ui-menu-item a { font-size: 16px }
+	#wrapper {
+	margin: 0 auto;
+	width: 980px;
+}
 	
-	#nav { padding-top:9px; }
-	
-	.ajaxLoading {
-		display: none;
-		background-image: url(/public/images/ajax-loader.gif);
-		background-repeat:no-repeat;
-		width: 15px;
-		height: 15px;
-		margin: 10px auto;
-	}
-	//for caching image
-	#ajaxLoading2 {
-		background-image: url(/public/images/ajax-loader.gif);
-		background-repeat:no-repeat;
-		height: 1px;
-	}
-</style>
-	
-<script type="text/javascript">
-	var timeout         = 500;
-	var closetimer		= 0;
-	var ddmenuitem      = 0;
-	
-	function jsddm_open()
-	{	jsddm_canceltimer();
-		jsddm_close();
-		ddmenuitem = $(this).find('ul').eq(0).css('visibility', 'visible');}
-	
-	function jsddm_close()
-	{	if(ddmenuitem) ddmenuitem.css('visibility', 'hidden');}
-	
-	function jsddm_timer()
-	{	closetimer = window.setTimeout(jsddm_close, timeout);}
-	
-	function jsddm_canceltimer()
-	{	
-		if(closetimer)
-		{	window.clearTimeout(closetimer);
-			closetimer = null;}
-		}
-	
-	$(document).ready(function() {
-		$('#jsddm > li').bind('mouseover', jsddm_open);
-		$('#jsddm > li').bind('mouseout',  jsddm_timer);
+#header a,#header a:visited {
+	color: #014ba9;
+	text-decoration: none;
+}
 
-		$("#topSearchBox")
+#header a:hover,#header a:focus { color: #E9225F; }
+	
+	
+#header {
+	float: left;
+	width: 980px;
+	margin: 10px 0 0 0;
+}
+.logo { float: left; position: relative; }
+
+.search_signin {
+	float: left;
+	margin: 0 10px 0 20px;
+	font-size: 13px;
+}
+
+.search_signin li {
+	display: inline;
+	float: left;
+	margin: 0 10px;
+	line-height: 27px;
+}
+
+.search_field {
+	border: 1px solid #dadada;
+	padding: 5px;
+	width: 180px;
+	border-radius: 3px 0 0 3px;
+	-moz-border-radius:  3px 0 0 3px;
+	-webkit-border-radius:  3px 0 0 3px;
+}
+
+.search_btn {
+	background: #f5f5f5 url(/public/images/index/search_icon.png) center center no-repeat;
+	padding: 4px 10px;
+	margin: 0 0 0 -5px;
+	border: 1px solid #dadada;
+	border-radius: 0 3px 3px 0;
+	-moz-border-radius: 0 3px 3px 0;
+	-webkit-border-radius: 0 3px 3px 0;
+	cursor: pointer;
+}
+	
+	/* main nav */
+	
+	#jsddm { float: left;margin-left: 25px; margin-top: 20px; }
+	#jsddm li ul{background-color: #FFF;}
+	#jsddm li ul li,#settings li,#settings1 li,#settings2 li {
+		display: inline;
+		clear:both;
+		
+		
+	}
+	#jsddm li a.menu1 {
+   	background-image: url("/public/images/bullet.gif");
+    background-position: 36px 10px;
+    background-repeat: no-repeat;
+    padding-right: 20px;
+}
+	#jsddm li a {
+		cursor: pointer;
+		display: block;
+		text-transform: capitalize;
+		font-size: 14px;
+		color: #014ba9;
+		font-weight: bold;
+		padding: 5px;
+	}
+	#settings ul,#settings1 ul,#settings2 ul {
+		margin: 0;
+		padding: 0;
+		position: absolute;
+		visibility: hidden;
+		border:1px solid #CCC;
+		border-top: 1px solid #CCC;
+		z-index: 1000;
+		background-color: #FFF;
+	}
+	#jsddm li ul li a,#settings li ul li a,#settings1 li ul li a,#settings2 li ul li a {
+		cursor: pointer;
+		display: block;
+		text-transform: capitalize;
+		font-size: 12px;
+		color: #014ba9;
+		font-weight: normal;
+		padding: 5px;
+	}
+	 
+</style>
+<script type="text/javascript">
+var timeout         = 500;
+var closetimer		= 0;
+var ddmenuitem      = 0;
+
+function jsddm_open()
+{	jsddm_canceltimer();
+	jsddm_close();
+	ddmenuitem = $(this).find('ul').eq(0).css('visibility', 'visible');}
+
+function jsddm_close()
+{	if(ddmenuitem) ddmenuitem.css('visibility', 'hidden');}
+
+function jsddm_timer()
+{	closetimer = window.setTimeout(jsddm_close, timeout);}
+
+function jsddm_canceltimer()
+{	
+	if(closetimer)
+	{	window.clearTimeout(closetimer);
+		closetimer = null;
+	}
+}
+openServiceLogin = function(serviceType) {
+	if(serviceType === 'F') {
+		window.open("/oauth/getauth?type=facebook&redirectURL=","FacebookLogin", "width=1000,height=550,toolbar=no,location=no,menubar=no");
+	} else if(serviceType === 'T'){
+		window.open("/oauth/getauth?type=twitter&redirectURL=","TwitterLogin", "width=800,height=470,toolbar=no,location=no,menubar=no");
+	}
+}
+	$(document).ready(function() {
+		$(".twitterBtn").click(function() {
+			openServiceLogin('T');
+		});
+		$(".facebookBtn").click(function() {
+			openServiceLogin('F');
+		});
+		/*$("#topSearchBox")
 			.focus(function() {
 				$("#topSearchBox").autocomplete( "search" );
 			})
@@ -57,12 +146,11 @@
 					return false;
 				}
 			});
-
 		$("#topSearchHelp")
 			.focus(function() {
 				$(this).hide();
 				$("#topSearchBox").show().focus();
-			})
+		})*/
 		
 		makeAutocomplete("#topSearchBox", "all");
 
@@ -70,13 +158,18 @@
 		$('.moretext').truncatable({ limit: 70, more: '... more', less: true, hideText: '...less' });
 		$('.moretext2').truncatable({ limit: 220, more: '... more', less: true, hideText: '...less' });
 		
-
-		//close button in popups
-		$('.window .close, .window .cancelLink').click(function (e) {
-			//Cancel the link behavior
-			e.preventDefault();
-			hideAll();
-		});
+		$('#jsddm > li').bind('mouseover', jsddm_open);
+		$('#jsddm > li').bind('mouseout',  jsddm_timer);
+		
+		$('#settings').bind('mouseover', jsddm_open);
+		$('#settings').bind('mouseout',  jsddm_timer);
+		
+		$('#settings1').bind('mouseover', jsddm_open);
+		$('#settings1').bind('mouseout',  jsddm_timer);
+		
+		$('#settings2').bind('mouseover', jsddm_open);
+		$('#settings2').bind('mouseout',  jsddm_timer);
+	 
 	});
 
 	function makeFullSearch(inputId) {
@@ -84,293 +177,133 @@
 		
 		if (trim(query) === '') {
 			alert("Please enter search query");
-			$(inputId).focus();
 			return false;
+		}else{
+			query = encodeURIComponent(trim(query));
+			var url = "/search?query="+query;
+			document.location = url; 
 		}
-		query = encodeURIComponent(trim(query));
-		var url = "/search?query="+query;
-		document.location = url; 
 	}
-
-	function trim(stringToTrim) {
-		return stringToTrim.replace(/^\s+|\s+$/g,"");
-	}
-		
-	document.onclick = jsddm_close;
-	
-// MOVED YURIY
-   		function deleteComment(commentId) {
-   	   		var confirmDel = confirm("Are you sure want to delete this thought/reply?");
-   	   		if (confirmDel) {
-   	   	   		//$(".comment"+commentId).remove();
-   	   	   		$(".comment"+commentId).html("<div class=\"inline_view moretext2\" style=\"color:#000000;padding-bottom:5px; border-bottom:solid 0px gray\">Thought deleted ...</span>");
-
-   	   	  		$.post("@{Actions.deleteComment()}", 
-    				{ commentId : commentId},
-    				function(html) {
-    	  				//...
-    				}
-    			);
-   	   		}
-   	   		return false;
-   		}
-// MOVED YURIY   			
 </script>
-<div id="top_container">
-	<div id="top">
-        <div id="logoac">
-        	<a href="@{Application.index()}">
-        		<img width="322" height="66" class="logotopmargin" 
-        			alt="Talk About Health" src="/public/images/mainlogo.png" border="0"/>
-        	</a>
-        </div>
-        <div id="topnav3">
-        	#{if session.contains("username") }
-				#{set currentUser = session.get("username") /}
-				<div class="topnavigationz">
-					<div class="top4ie7"></div>
-		            <ul id="jsddm">
-		              <!-- <li><a href="#">Inbox</a></li>
-		              <li class="separator">|</li> -->
-		              #{if currentUser.equals("admin") }
-							<li style="margin-right: 5px;"> <a class="libull" href="#"><b>Admin</b></a>
-				                <ul>
-				                  <li><a href="@{Notifications.index()}">Moderate New Questions</a></li>
-				                  <li><a href="@{Dashboard.manageAccounts()}">Manage Accounts</a></li>
-				                  <li><a href="@{Dashboard.verifyProfessionals()}">Verify Professionals</a></li>
-				                  <li><a href="@{UserList.index()}">Users</a></li>
-				                  <li><a href="@{QuestionRecovery.index()}">Question Recovery</a></li>
-				                  <li><a href="@{Application.reloadTalkersHealthInfo()}">Reload Talker Health Info</a></li>
-				                  <!--<li><a href="@{UpdateQuestion.updateQuestionStatus()}">Question Recovery</a></li>-->
-				                  <li><a href="@{Dashboard.updateTalkerImage()}">Image All</a></li>
-				                  <li><a href="@{Video.homePageVideo()}">Home video</a></li>
-				                </ul>
-				            </li>
-				            <li class="separator">|</li>
-					  #{/if}
-					  <li style="margin-right: 5px;">
-		                <div  id="inboxLink">
-		               		 #{if !session.inboxUnreadCount.equals("0")}
-		               		 	<a class="" href="@{Messaging.inbox()}" title="You have ${session.inboxUnreadCount} unread messages">
-		               		 		<b>Inbox(${session.inboxUnreadCount})</b>
-		               		 	</a>
-		                	 #{/if}
-		                	 #{else}
-		                	 	<a class="" href="@{Messaging.inbox()}" id="inboxLink">
-		                	 		Inbox
-		                	 	</a>
-		                	 #{/else}
-		                </div>
-		              </li>
-		              <li class="separator">|</li>
-		              <li style="margin-right: 5px;">
-		                <a class="libull" href="#">Settings</a>
-		                <ul>
-		                  <li><a href="@{Profile.edit()}">Edit Profile</a></li>
-		                  #{ifnot session.prof }
-		                  	<li><a href="@{Profile.healthDetails()}">Edit Health Info</a></li>
-		                  #{/ifnot}
-		                  <li><a href="@{Profile.notifications()}">Notification Settings & Password</a></li>
-		                  <li><a href="@{Profile.preferences()}">Privacy Settings</a></li>
-		                </ul>
-		              </li>
-		              <li class="separator">|</li>
-		              <li> <a class="libull2" href="#">More</a>
-		                <ul>
-			          <li><a href="@{Static.aboutus()}">About</a></li>
-			          <li><a href="@{Static.howitworks()}">How it works</a></li>		                
-		                  <li><a href="@{Static.faq()}">FAQ</a></li>
-		                  <li><a href="@{Static.workshops()}">Q&A Workshops</a></li>
-		                  <li><a href="@{Static.trained_peer_support_program()}">Trained Peer Support</a></li>
-		                  <li><a href="@{Static.communityguidelines()}">Community Guidelines</a></li>
-		                  <li><a href="@{Static.howyoucanhelp()}">How you can help</a></li>
-		                  <li><a href="@{Explore.newsletter()}">Newsletters</a></li>
-			          <li><a href="http://blog.talkabouthealth.com">Blog</a></li>
-		                  <li><a href="@{Static.resources()}">Resources</a></li>
-		                  <li><a href="#" onclick="openInvitationsWindow();">Share TalkAboutHealth</a></li>
-			          <li><a href="@{Application.contactus()}">Feedback</a></li>
-			           <li><a href="@{Secure.logout()}">Logout</a></li>
-		                </ul>
-		              </li>
-		            </ul>
-	            	<div class="cb"></div>
-	          	</div>
-	          <!--topnavigations-->
-	          <div class="cb"></div>
-          
-	          <div class="topnavCover">
-	          
-	            <div style="float: left; width: 265px;">
-	              <div class="topnavCover2">
-	                <div style="padding-top: 2px;" class="topsearchCover">
-	                  <div class="topsearchinput">
-	                    <input id="topSearchHelp" type="text" class="topserchz iebox"
-	                    	style="color: #aaaaaa;" value="Search answers and topics"
-	                    	/>
-	                    <input id="topSearchBox" type="text" class="topserchz iebox" style="display: none;z-index: 2;"/>
-	                  </div>
-	                  <div class="topsubmitsz">
-	                    <input id="topSearchText" type="submit" onclick="return makeFullSearch('#topSearchBox');" 
-	                    	style="cursor: pointer;" value=" " src="images/topsubmitbtn.png" class="topsubmit"/>
-	                  </div>
-	                </div>
-	                <!--topsearchCover-->
-	              </div>
-	              <!--topnavCover2-->
-	            </div>
-	            
-	            <div class="topnavCover1">
-	              <ul id="nav">
-	                <li class="home no-hov"><a href="@{Home.index()}">Home</a></li>
-	                <!-- 
-	                <li class="profile"><a href="@{ViewDispatcher.view(currentUser)}">You</a></li>
-	                -->
-	                  <li><a href="@{Explore.topics()}">Topics</a></li>
-	                <li><a href="@{Explore.browseMembers('active')}">Members</a></li>
-	                 
-	               <!--  <li class="explore"> <a href="#" class="menu2">Explore</a>
-	                  <ul>
-	                    <!-- <li><a href="@{Home.conversationFeed()}">Community Conversation Feed</a></li>  -->
-	                    <!-- REFACTOR REMOVING LIVE CHAT OPTION
-	                    <li><a href="@{Explore.liveTalks()}">Live Chats</a></li>
-
-	                    -- >
-	                    <li><a href="@{Explore.openQuestions()}">Unanswered Questions</a></li>
-	                    <li class="gap"><a href="@{Explore.browseMembers('active')}">Browse Members</a></li>
-	                    <li><a href="@{Explore.browseMembers('search')}">Search Members</a></li>
-	                    <li class="gap"><a href="@{Explore.topics()}">Browse Topics</a></li>
-	                    <li><a href="@{Search.allSearch()}">Search Answers and Topics</a></li>
-	                  </ul>
-	                </li> -->
-	                <li class="profile"><a href="#" class="menu1">You</a>
-	                  <ul>
-	                    <li><a href="@{ViewDispatcher.view(currentUser)}">Your Profile</a></li>
-	                    <li><a href="@{PublicProfile.thoughts(currentUser)}">Your Thoughts</a></li>
-	                    <li class="gap"><a href="@{PublicProfile.conversations(currentUser)}">Your Questions</a></li>
-	                    <li><a href="@{PublicProfile.topicsFollowing(currentUser)}">Your Topics Following</a></li>
-	                    <li class="gap"><a href="@{PublicProfile.answers(currentUser)}">Your Answers</a></li>
-	                    <li><a href="@{PublicProfile.userBasedActions(currentUser, 'thankyous')}">Your Thank you's</a></li>
-	                  </ul>
-	                </li>
-			
-	                <!--<li><a href="@{Explore.liveTalks()}">Chats</a></li>-->
-	                <!--  <li class="community"> <a class="menu3" href="$">Group</a>
-	                  <ul>
-	                    <li><a href="#">Your Contacts</a></li>
-	                    <li><a href="#">Browse People</a></li>
-	                    <li><a href="#">Contributor Dash</a></li>
-	                    <li class="gap"><a href="#">Blog</a></li>
-	                    <li><a href="#">Forum</a></li>
-	                  </ul>
-	                </li>-->
-	              </ul>
-	              <!--nave-->
-	            </div>
-	            <!--topnavCover1-->
-	            
-	          </div>
-	      #{/if}
-	      #{else}
-				<div class="topnavigationz" style="width: 270px;">	      
-					#{if currentPage?.equals('landing') }
-						<!--<ul id="jsddm" style="float: left;margin-left:-40px;">-->
-						<ul id="jsddm" style="float: left;">
-			              <li class="tell"><a href="@{Application.signup()}">Join Now</a></li>
-			              <li class="separator">|</li>
-			              <li class="tell"><a href="@{Secure.login()}">Sign In</a></li>
-			              <!--			              			              
-			              <li class="separator">|</li>
-			              <li> <a class="libull4" href="#">More</a>
-			                <ul>
-			                  <li><a href="@{Static.aboutus()}">About</a></li>
-			                  <li><a href="@{Static.howitworks()}">How it works</a></li>
-			                  <li><a href="@{Static.faq()}">FAQ</a></li>
-			                  <li><a href="@{Static.communityguidelines()}">Community Guidelines</a></li>
-			                  <li><a href="@{Static.howyoucanhelp()}">How you can help</a></li>
-			                  <li><a href="http://blog.talkabouthealth.com">Blog</a></li>
-			                  <li><a href="@{Static.resources()}">Resources</a></li>
-			                  <li><a href="@{Static.workshops()}">Workshops and Events</a></li>
-			                  <li><a href="@{Application.contactus()}">Feedback</a></li>
-			                  <li><a href="#" onclick="openInvitationsWindow();">Share TalkAboutHealth</a></li>
-			                </ul>
-			              </li>
-			              -->			              
-			            </ul>
-			            <div class="homesocail">
-			          		<a href="#" onclick="openFacebook()"><img border="0" alt="Facebook" src="/public/images/facebook.jpg"/></a> 
-			          		<a href="#" onclick="openTwitter()"><img border="0" alt="Twitter" src="/public/images/twitter.jpg"/></a> 
-			          	</div>
-					#{/if}
-					#{else}
-						<ul id="jsddm">
-			              <li class="tell"><a href="@{Application.signup()}">Join Now</a></li>
-			              <li class="separator">|</li>
-			              <li class="tell"><a href="@{Secure.login()}">Sign In</a></li>
-			              <li class="separator">|</li>
-			              <li> <a class="libull4" href="#">More</a>
-			                <ul>
-			                  <li><a href="@{Static.aboutus()}">About</a></li>
-			              	  <li><a href="@{Static.howitworks()}">How it works</a></li>		                
-		                   	  <li><a href="@{Static.faq()}">FAQ</a></li>
-			                  <li><a href="@{Static.workshops()}">Q&A Workshops</a></li>
-			                  <li><a href="@{Static.trained_peer_support_program()}">Trained Peer Support</a></li>
-			                  <li><a href="@{Static.communityguidelines()}">Community Guidelines</a></li>
-			                  <li><a href="@{Static.howyoucanhelp()}">How you can help</a></li>
-			                  <li><a href="http://blog.talkabouthealth.com">Blog</a></li>
-			                  <li><a href="@{Explore.newsletter()}">Newsletters</a></li>
-			                  <li><a href="@{Static.resources()}">Resources</a></li>
-			                  <li><a href="@{Application.contactus()}">Feedback</a></li>
-			                  <li><a href="#" onclick="openInvitationsWindow();">Share TalkAboutHealth</a></li>
-			                </ul>
-			              </li>
-			            </ul>
-					#{/else}
-		            
-	            	<div class="cb"></div>
-	          	</div>
-	          	
-	          <div class="cb"></div>
-          
-	          <div class="topnavCover">
-	          	<div style="float: left; width: 265px;">
-	              <div class="topnavCover2">
-	                <div style="padding-top: 2px;" class="topsearchCover">
-	                  <div class="topsearchinput">
-	                    <input id="topSearchHelp" type="text" class="topserchz iebox"
-	                    	style="color: #aaaaaa;" value="Search answers and topics"
-	                    	/>
-	                    <input id="topSearchBox" type="text" class="topserchz iebox" style="display: none;"/>
-	                  </div>
-	                  <div class="topsubmitsz">
-	                    <input id="topSearchText" type="submit" onclick="return makeFullSearch('#topSearchBox');" 
-	                    	style="cursor: pointer;" value=" " src="images/topsubmitbtn.png" class="topsubmit"/>
-	                  </div>
-	                </div>
-	                <!--topsearchCover-->
-	              </div>
-	              <!--topnavCover2-->
-	            </div>
-	            
-	            <div class="topnavCover1">
-	            	#{include 'notloggedinMenu.html' /}
-	            </div>
-	          </div>	      
-	      #{/else}
-	      
-          <div class="cb"></div>
-        </div>
-      </div>
-      
-<!-- Saved form notification -->      
-<div id="savedHelp">
-	<div style="clear: none; float: right;" class="closecover">
-		<div onclick="return hideHelpInfo('saved', false);" class="close">
-			<img alt="Close" src="/public/images/close.png"/>
-		</div>
-	</div>
-	<div id="savedHelpText">Saving...</div>
-	<div id="savedHelpError"></div>
-</div>      
-
-<div id="ajaxLoading" class="ajaxLoading"></div>
-<div id="ajaxLoading2"></div>
+<div id="wrapper">
+<div id="header">
+	<h1 class="logo">
+		<a href="/"><img src="/public/images/index/tah_logo.png" alt="Talk About Health" /></a>
+	</h1>
+	<ul class="search_signin">
+	    
+	    #{if session.contains("username") }
+	    #{set currentUser = session.get("username") /}
+	    #{if currentUser.equals("admin") }
+	    <li style="width:367px;">
+	    #{/if}
+	    #{else}
+	    <li style="width:375px">
+	    #{/else}
+	      <form action="?action=search" method="get">
+	        <input id="topSearchBox" type="text" placeholder="Your search here..." class="search_field" />
+	        <input id="topSearchText" type="button" class="search_btn" onclick="return makeFullSearch('#topSearchBox');" />
+	      </form>
+	    </li>
+	    #{if currentUser.equals("admin") }
+				<li id="settings2"> <a href="#">Admin</a>
+	                <ul>
+	                  <li><a href="@{Notifications.index()}">Moderate New Questions</a></li>
+	                  <li><a href="@{Dashboard.manageAccounts()}">Manage Accounts</a></li>
+	                  <li><a href="@{Dashboard.verifyProfessionals()}">Verify Professionals</a></li>
+	                  <li><a href="@{UserList.index()}">Users</a></li>
+	                  <li><a href="@{QuestionRecovery.index()}">Question Recovery</a></li>
+	                  <li><a href="@{Application.reloadTalkersHealthInfo()}">Reload Talker Health Info</a></li>
+	                  <li><a href="@{Application.updateTalkerIds()}">Update Talkers</a></li>
+	                  <!--<li><a href="@{UpdateQuestion.updateQuestionStatus()}">Question Recovery</a></li>-->
+	                  <li><a href="@{Dashboard.updateTalkerImage()}">Image All</a></li>
+	                  <li><a href="@{Video.homePageVideo()}">Home video</a></li>
+	                </ul>
+	            </li>
+		  #{/if}
+	    	<li>
+                <div id="inboxLink">
+               		 #{if !session.inboxUnreadCount.equals("0")}
+               		 	<a class="" href="@{Messaging.inbox()}" title="You have ${session.inboxUnreadCount} unread messages">
+               		 		<b>Inbox(${session.inboxUnreadCount})</b>
+               		 	</a>
+                	 #{/if}
+                	 #{else}
+                	 	<a class="" href="@{Messaging.inbox()}" id="inboxLink">
+                	 		Inbox
+                	 	</a>
+                	 #{/else}
+                </div>
+              </li>
+              <li id="settings">
+                <a class="libull" href="#">Settings</a>
+                <ul style="width: 210px; right: 0;">
+                  <li><a href="@{Profile.edit()}">Edit Profile</a></li>
+                  #{ifnot session.prof }
+                  	<li><a href="@{Profile.healthDetails()}">Edit Health Info</a></li>
+                  #{/ifnot}
+                  <li><a href="@{Profile.notifications()}">Notification Settings & Password</a></li>
+                  <li><a href="@{Profile.preferences()}">Privacy Settings</a></li>
+                </ul>
+              </li>
+              <li id="settings1"> <a class="libull2" href="#">More</a>
+                <ul style="width: 160px; right: 0;">
+					<li><a href="@{Static.aboutus()}">About</a></li>
+					<li><a href="@{Static.howitworks()}">How it works</a></li>		                
+					<li><a href="@{Static.faq()}">FAQ</a></li>
+					<li><a href="@{Static.workshops()}">Q&A Workshops</a></li>
+					<li><a href="@{Static.trained_peer_support_program()}">Trained Peer Support</a></li>
+					<li><a href="@{Static.communityguidelines()}">Community Guidelines</a></li>
+					<li><a href="@{Static.howyoucanhelp()}">How you can help</a></li>
+					<li><a href="http://blog.talkabouthealth.com">Blog</a></li>
+					<li><a href="@{Static.resources()}">Resources</a></li>
+					<li><a href="#" onclick="openInvitationsWindow();">Share TalkAboutHealth</a></li>
+					<li><a href="@{Application.contactus()}">Feedback</a></li>
+					<li><a href="@{Secure.logout()}">Logout</a></li>
+                </ul>
+              </li>
+	    #{/if}
+		#{else}
+		<li >
+	      <form action="?action=search" method="get">
+	        <input id="topSearchBox" type="text" placeholder="Your search here..." class="search_field" />
+	        <input id="topSearchText" type="button" class="search_btn" onclick="return makeFullSearch('#topSearchBox');" />
+	      </form>
+	    </li>
+			<li><a href="@{Application.signup()}"><img src="/public/images/index/user.png" alt="join now" /> Join Now</a></li>
+		    <li><a href="@{Secure.login()}"><img src="/public/images/index/sign_in_icon.png" alt="sign in" /> Sign In</a></li>
+	    	<li><a href="#" class="twitterBtn"><img src="/public/images/index/t_signin.png" alt="twitter signin" /></a></li>
+	    	<li><a href="#" class="facebookBtn"><img src="/public/images/index/fb_signin.png" alt="facebook signin" /></a></li>
+		#{/else}
+	    
+	</ul>
+	<ul id="jsddm">
+	#{if session.contains("username") }
+		<li><a href="@{Home.index()}">Home</a></li>
+		<li><a href="@{Explore.topics()}">Topics</a></li>
+		<li><a href="@{Explore.browseMembers('active')}">Members</a></li>
+		<li ><a href="#" class="menu1">You</a>
+          <ul>
+            <li><a href="@{ViewDispatcher.view(currentUser)}">Your Profile</a></li>
+            <li><a href="@{PublicProfile.thoughts(currentUser)}">Your Thoughts</a></li>
+            <li class="gap"><a href="@{PublicProfile.conversations(currentUser)}">Your Questions</a></li>
+            <li><a href="@{PublicProfile.topicsFollowing(currentUser)}">Your Topics Following</a></li>
+            <li class="gap"><a href="@{PublicProfile.answers(currentUser)}">Your Answers</a></li>
+            <li><a href="@{PublicProfile.userBasedActions(currentUser, 'thankyous')}">Your Thank you's</a></li>
+          </ul>
+        </li>
+        <li><a href="/unorganized/videos">Videos</a></li>
+	#{/if}
+	#{else}
+	    <li><a href="@{Explore.conversations('expert')}">Answers</a></li>
+	    <li><a href="@{Explore.topics()}">Topics</a></li>
+	    <li><a href="/unorganized/videos">Videos</a></li>
+	    <li><a href="@{Explore.browseMembers('active')}">Members</a></li>
+	    <li><a href="@{Static.medical_professionals()}">Experts</a></li>
+	    <li><a href="@{Static.workshops()}">Workshops</a></li>
+	    <li><a href="@{Static.trained_peer_support_program()}">Support Team</a></li>
+	    <li><a href="http://blog.talkabouthealth.com" target="_new">Blog</a></li>
+	#{/else}
+	</ul>
+</div>
+</div>

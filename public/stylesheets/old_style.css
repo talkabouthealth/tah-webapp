@@ -4,10 +4,12 @@ body {
 	margin: 0px;
 	padding:0px;
 	font-family:arial;
-	font-size:11px;
+	font-size:12px;
 	width:100%;
 	color:#000000;
-	font-family: arial; font-size: 25px;}
+	font-family: arial; 
+	/*font-size: 25px;*/
+}
 
 form { padding:0px; margin:0px;}
 a img { border: none; }
