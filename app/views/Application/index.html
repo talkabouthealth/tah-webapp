@@ -458,7 +458,7 @@ makeAutoComplete = function(){
 		select: function(event, ui) {
 			var url = ui.item.url;
 			if (url === "#fullsearch") {
-				if (trim(ui.item.value) === '') {
+				if ($.trim(ui.item.value) === '') {
 					$("#topSearchBox").focus();
 					return false;
 				}else{
