@@ -57,17 +57,22 @@
 	
 	#jsddm { float: left;margin-left: 25px; margin-top: 20px; }
 	#jsddm li ul{background-color: #FFF;}
-	#jsddm li ul li,#settings li,#settings1 li,#settings2 li {
+	#jsddm li ul li,#settings li,#settings1 li,#settings2 li{
 		display: inline;
 		clear:both;
-		
-		
+		float: none;
+		line-height:15px;
+	}
+	 
+	#settings li:hover, #settings1 li:hover, #settings2 li:hover  {
+		background: #0286BC !important;
+		color : #FFF !important;
 	}
 	#jsddm li a.menu1 {
    	background-image: url("/public/images/bullet.gif");
     background-position: 36px 10px;
     background-repeat: no-repeat;
-    padding-right: 20px;
+    padding-right: 25px;
 }
 	#jsddm li a {
 		cursor: pointer;
@@ -76,7 +81,7 @@
 		font-size: 14px;
 		color: #014ba9;
 		font-weight: bold;
-		padding: 5px;
+		padding: 5px 15px 5px 5px;
 	}
 	#settings ul,#settings1 ul,#settings2 ul {
 		margin: 0;
@@ -88,7 +93,7 @@
 		z-index: 1000;
 		background-color: #FFF;
 	}
-	#jsddm li ul li a,#settings li ul li a,#settings1 li ul li a,#settings2 li ul li a {
+	#jsddm li ul li a,#settings li a,#settings1 li a,#settings2 li a {
 		cursor: pointer;
 		display: block;
 		text-transform: capitalize;
@@ -97,7 +102,20 @@
 		font-weight: normal;
 		padding: 5px;
 	}
-	 
+	
+	#settings li a:hover,#settings1 li a:hover,#settings2 li a:hover {
+		background: #0286BC;
+		color:#FFF;
+	}
+	#settings1,#settings2,#settings{margin:0 5px;}
+	#settings1 a.menu1,#settings2 a.menu1,#settings a.menu1 {
+    background-image: url("/public/images/bullet.gif");
+    background-repeat: no-repeat;
+    padding-right: 9px;
+	}
+	#settings1 a.menu1{ background-position: 31px 5px; }
+	#settings2 a.menu1{	background-position: 39px 5px; }
+	#settings a.menu1 { background-position: 50px 5px; }
 </style>
 <script type="text/javascript">
 var timeout         = 500;
@@ -195,10 +213,10 @@ openServiceLogin = function(serviceType) {
 	    #{if session.contains("username") }
 	    #{set currentUser = session.get("username") /}
 	    #{if currentUser.equals("admin") }
-	    <li style="width:367px;">
+	    <li style="width:300px;">
 	    #{/if}
 	    #{else}
-	    <li style="width:375px">
+	    <li style="width:300px">
 	    #{/else}
 	      <form action="?action=search" method="get">
 	        <input id="topSearchBox" type="text" placeholder="Your search here..." class="search_field" />
@@ -206,7 +224,7 @@ openServiceLogin = function(serviceType) {
 	      </form>
 	    </li>
 	    #{if currentUser.equals("admin") }
-				<li id="settings2"> <a href="#">Admin</a>
+				<li id="settings2"> <a class="menu1" href="#">Admin</a>
 	                <ul>
 	                  <li><a href="@{Notifications.index()}">Moderate New Questions</a></li>
 	                  <li><a href="@{Dashboard.manageAccounts()}">Manage Accounts</a></li>
@@ -214,6 +232,11 @@ openServiceLogin = function(serviceType) {
 	                  <li><a href="@{UserList.index()}">Users</a></li>
 	                  <li><a href="@{QuestionRecovery.index()}">Question Recovery</a></li>
 	                  <li><a href="@{Application.reloadTalkersHealthInfo()}">Reload Talker Health Info</a></li>
+	                  *{
+	                  <li><a href="@{Application.updateTalkerIds()}">Update Talkers</a></li>
+	                  <li><a href="@{UpdateQuestion.updateQuestionStatus()}">Question Recovery</a></li>
+	                  <li><a href="@{Dashboard.updateTalkerImage()}">Image All</a></li>
+	                  }*
 	                  <li><a href="@{Video.homePageVideo()}">Home video</a></li>
 	                </ul>
 	            </li>
@@ -233,18 +256,18 @@ openServiceLogin = function(serviceType) {
                 </div>
               </li>
               <li id="settings">
-                <a class="libull" href="#">Settings</a>
-                <ul style="width: 210px; right: 0;">
+                <a class="menu1" href="#">Settings</a>
+                <ul style="width: 141px;"><!--  right: 0; -->
                   <li><a href="@{Profile.edit()}">Edit Profile</a></li>
                   #{ifnot session.prof }
                   	<li><a href="@{Profile.healthDetails()}">Edit Health Info</a></li>
                   #{/ifnot}
-                  <li><a href="@{Profile.notifications()}">Notification Settings & Password</a></li>
+                  <li><a href="@{Profile.notifications()}">Notification & Password</a></li><!-- Notification Settings & Password -->
                   <li><a href="@{Profile.preferences()}">Privacy Settings</a></li>
                 </ul>
               </li>
-              <li id="settings1"> <a class="libull2" href="#">More</a>
-                <ul style="width: 160px; right: 0;">
+              <li id="settings1"> <a class="menu1" href="#">More</a>
+                <ul style="width: 136px;"><!-- right: 0; -->
 					<li><a href="@{Static.aboutus()}">About</a></li>
 					<li><a href="@{Static.howitworks()}">How it works</a></li>		                
 					<li><a href="@{Static.faq()}">FAQ</a></li>
@@ -298,7 +321,7 @@ openServiceLogin = function(serviceType) {
 	    <li><a href="@{Explore.browseMembers('active')}">Members</a></li>
 	    <li><a href="@{Static.medical_professionals()}">Experts</a></li>
 	    <li><a href="@{Static.workshops()}">Workshops</a></li>
-	    <li><a href="@{Static.trained_peer_support_program()}">Support Team</a></li>
+	    <li><a href="@{Static.trained_peer_support_program()}">Support</a></li><!--WAS: Support Team -->
 	    <li><a href="http://blog.talkabouthealth.com" target="_new">Blog</a></li>
 	#{/else}
 	</ul>
