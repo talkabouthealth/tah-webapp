@@ -1,470 +1,489 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:og="http://ogp.me/ns#"
       xmlns:fb="http://www.facebook.com/2008/fbml">
+<head>    
+    <title>TalkAboutHealth - Health and Medical Answers From World Leading Experts. Relevant, helpful, and accurate health information.</title>  
+    <meta name="description" content="${pageDescription ? pageDescription : 'Health and Medical Answers From World Leading Experts. Relevant, helpful, and accurate health information. We are a welcoming and caring community who have come together to meet, share, and learn with each other. We welcome patients, families, caregivers, survivors, professionals, and organizations. Everyone is encouraged to share their unique knowledge and experiences. The more we share, the more lives we improve and save.'}" /> 
+    <meta name="keywords" content="${pageKeywords ? pageKeywords : 'support, health, talk'}" />
+    
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
     <meta name="author" content="TalkAboutHealth" /> 
     <meta name="robots" content="all" /> 
-
     <meta property="og:title" content="Talk About Health" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="${currentURL}" />
     <meta property="og:image" content="http://talkabouthealth.com/public/images/mainlogo.png"/>    
     <meta property="og:site_name" content="TalkAbouthealth" />
     <meta property="og:description" content="${pageDescription}"/>
-
-    <title>TalkAboutHealth - Health and Medical Answers From World Leading Experts. Relevant, helpful, and accurate health information.</title>
-    <meta name="description" content="${pageDescription ? pageDescription : 'Health and Medical Answers From World Leading Experts. Relevant, helpful, and accurate health information. We are a welcoming and caring community who have come together to meet, share, and learn with each other. We welcome patients, families, caregivers, survivors, professionals, and organizations. Everyone is encouraged to share their unique knowledge and experiences. The more we share, the more lives we improve and save.'}" /> 
-    <meta name="keywords" content="${pageKeywords ? pageKeywords : 'support, health, talk'}" /> 
-
-    <link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
-
-
-    <link href="/public/stylesheets/landpage_style.css" rel="stylesheet" type="text/css" />
-    <!--[if IE 6]><link rel="stylesheet" href="/public/stylesheets/landpage_ie.css" type="text/css" />
-    <![endif]-->
-    <!--[if IE 5]><link rel="stylesheet" href="/public/stylesheets/landpage_ie7.css" type="text/css" />
-    <![endif]-->
-
-    <script type="text/javascript" src="/public/javascripts/jquery-1.4.2.min.js" ></script>
-    <script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
-
-    <link rel="stylesheet" href="/public/plugins/ui-lightness/jquery-ui-1.8.4.custom.css" type="text/css" media="screen" />
-    <script type="text/javascript" src="/public/javascripts/jquery-ui-1.8.4.custom.min.js" ></script>
-
-    <script type="text/javascript" src="/public/javascripts/all.js" ></script>
-    <script type="text/javascript" src="/public/javascripts/headermenu.js" ></script>
-    <script type="text/javascript">
-        var currentURL = "${currentURL}";
-        #{if talker}
-        var hasTwitter = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) != null };
-        var hasFacebook = ${ talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.FACEBOOK) != null };		
-        #{/if}
-    </script>
-
-
+	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
+    <link href="/public/stylesheets/new_style.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="/public/plugins/ui-lightness/jquery-ui-1.8.4.custom.css" type="text/css" media="screen" />
 </head>
-<body>
-
-    <div id="bg">
-        <div id="waperhome">
-            <div id="headerHome">
-                <div class="logohome"><img src="/public/images/mainlogo.png" width="322" height="66" />
-			<div style="padding-left: 50px; margin-top: -10px; font-size: small;"><font color="#20488E">You're</font><font color="#559759"> not</font><font color="#D84A94"> alone </font><font color="#A7A8AA"> ${numberOfMembers} Members | ${numberOfAnswers} Answers </font></div>
+<body class="home">
+	<div id="wrapper">
+		<div id="header">
+			<h1 class="logo"><a href="#"><img src="/public/images/index/tah_logo.png" alt="Talk About Health" />
+				<br /><p>You're not alone! <span>${numberOfMembers} Members &amp; ${numberOfAnswers} Answers</span></p></a>
+			</h1>
+			<ul class="search_signin">
+			    <li>
+			      <form action="?action=search" method="get">
+			        <input id="topSearchBox" type="text" placeholder="Your search here..." class="search_field" />
+			        <input id="topSearchText" type="button" class="search_btn" />
+			      </form>
+			    </li>
+			    <li><a href="@{Application.signup()}"><img src="/public/images/index/user.png" alt="join now" /> Join Now</a></li>
+			    <li><a href="@{Secure.login()}"><img src="/public/images/index/sign_in_icon.png" alt="sign in" /> Sign In</a></li>
+			    <li><a href="#" class="twitterBtn"><img src="/public/images/index/t_signin.png" alt="twitter signin" /></a></li>
+			    <li><a href="#" class="facebookBtn"><img src="/public/images/index/fb_signin.png" alt="facebook signin" /></a></li>
+			</ul>
+			<ul id="nav">
+			    <li><a href="@{Explore.conversations('expert')}">Answers</a></li>
+			    <li><a href="@{Explore.topics()}">Topics</a></li>
+			    <li><a href="/unorganized/videos">Videos</a></li>
+			    <li><a href="@{Explore.browseMembers('active')}">Members</a></li>
+			    <li><a href="@{Static.medical_professionals()}">Experts</a></li>
+			    <li><a href="@{Static.workshops()}">Workshops</a></li>
+			    <li><a href="@{Static.trained_peer_support_program()}">Support</a></li><!-- Support Team -->
+			    <li><a href="http://blog.talkabouthealth.com" target="_new">Blog</a></li>
+			</ul>
 		</div>
-                <!--searchCoverhome-->
-                <div class="headerright">
-                    <div class="topmenuhome">
-                        <div class="joinnowhome"> <a href="@{Application.signup()}">Join Now</a>|<a href="@{Secure.login()}">Sign In</a></div>
-                        <div class="homesocail"> <a href="#" onclick="openFacebook()" ><img src="/public/images/facebook.jpg" alt="Facebook" border="0" /></a> <a  href="#" onclick="openTwitter()"><img src="/public/images/twitter.jpg" alt="Facebook" border="0" /></a> </div>
-                        <!--homesocail-->
-                    </div>
-                    <div class="navcover">
-                        <div class="nav">
-                            <ul>
-                                <li class="lisep"></li>
-                                <li class="lisep"> </li>
-                                <li><a href="@{Static.howitworks()}">How it works</a></li>
-                                <li class="lisep"> </li>
-<<<<<<< HEAD
-                                <li><a href="@{Explore.conversations('expert')}">Recent Questions</a></li>
-=======
-                                <li><a href="@{Explore.conversations('feed')}">Recent Answers</a></li>
->>>>>>> master
-                                <li class="lisep"> </li>
-                                <li><a href="@{Explore.topics()}">Topics</a></li>
-                                <li class="lisep"> </li>
-                                <li><a href="@{Static.trained_peer_support_program()}">Support Team</a></li>
-                                <li class="lisep"> </li>
-                                <li><a href="@{Static.aboutus()}">About us</a></li>
-                            </ul>
-                        </div>
-                        <!--nav-->
-                    </div>
-                    <!--navcover-->
-                </div>
-                <div class="cb"></div>
-                <!--It is used to go to new line and fix height of parent div.-->
-            </div>
-            <!--headerHome-->
-            <!--======================================header Ends======================================-->
-            <div id="ContentHome">
-                <div class="meetCover">
-                    <div class="banner_left">
-                        <div class="main_heading">Cancer questions,<br/> answers, and support</div>
-                        <div class="banner_text01"> Learn, feel confident, and take control with a support community to help with your journey. </div>
-                        <div class="facebook_join"><center><a href="@{Application.signup()}"><img src="/public/images/joinnow.png" alt="join talk about health" width="135" height="44"  border="0"/></a></center></div>
-                        <div class="socialmedia_join">
-                            <div class="socialmedia_left">
-                                <div class="twitter_join">
-                                    <div class="twitter_icon"><a href="#" onclick="openTwitter()" ><img src="/public/images/JoinTweet.jpg" width="62" height="21"  border="0"/></a></div>
-                                </div>
-                                <div class="twitter_join">
-                                    <div class="twitter_icon"><a href="#" onclick="openFacebook()"><img src="/public/images/Joinfbook.jpg" width="62" height="21" border="0"/></a></div>
-                                </div>
-                            </div>
-                            <div class="facebook_like">
-                                <div class="like_icon">#{ share/fblike currentURL: 'www.facebook.com/talkabouthealth' /} </div>
-                                <div class="fb_pics"><!--img src="/public/images/fb_pics.jpg" width="127" height="20" /--></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="banner_right">
-
-
-                        <div class="center"  />
-                        <div class="img1"  onmouseover="showimage()" onmouseout="showimg1()"  />
-                        <div class="show" id="show">AMoore<br />1 yr survivor</div>
-                    </div>
-
-                </div>
-
-                <div class="center" /> 
-                <div class="img2" onmouseover="showimage1()" onmouseout="showimg2()" /> 
-                <div class="show1" id="show1">Deanna Attai, MD<br />Breast Surgeon</div>
-            </div>
-        </div>
-        <div class="center"  />
-        <div class="img3" onmouseover="showimage2()" onmouseout="showimg3()" />
-        <div class="show2" id="show2">JSaldana<br />5 yr survivor</div>
-    </div>
-    </div>
-    <div class="center" />
-    <div class="img4" onmouseover="showimage3()" onmouseout="showimg4()" />
-    <div  class="show3" id="show3">Sue, Author of<br />Nowhere Hair</div>
-    </div>
-    </div>
-    <div class="center" />
-    <div class="img5" onmouseover="showimage4()" onmouseout="showimg5()" />
-    <div  class="show4" id="show4">Margarita, MSAc, LAc<br />Acupuncturist</div>
-    </div>
-    </div>
-
-    <div class="center" />
-    <div class="img6"  onmouseover="showimage5()" onmouseout="showimg6()" />
-    <div  class="show5" id="show5">Nancy, Survivor<br /> Patient Navigator</div>
-    </div>
-    </div>
-    <div class="center" />
-    <div class="img7" onmouseover="showimage6()" onmouseout="showimg7()" />
-    <div  class="show6" id="show6">JKJones, PharmD<br />TVMC</div>
-
-    </div>
-    </div>
-    <div class="center" />
-    <div class="img8" onmouseover="showimage7()" onmouseout="showimg8()" />
-    <div class="show7" id="show7">Allan Ramsay, MD<br />Palliative Care</div>
-    </div>
-    </div>
-    <div class="center"  />
-    <div class="img9" onmouseover="showimage8()" onmouseout="showimg9()" />
-    <div class="show8" id="show8">Susan, Founder<br />4Women.com</div>
-    </div>
-    </div>
-    <div class="center" />
-    <div class="img10" onmouseover="showimage9()" onmouseout="showimg10()" />
-    <div  class="show9" id="show9">Elyn, Cancer Coach<br />Survivor & Mother</div>
-    </div>
-    </div>
-    <div class="center"  />
-    <div class="img11" onmouseover="showimage10()" onmouseout="showimg11()" />
-    <div  class="show10" id="show10">raysingboyz, blogger<br />2 yr survivor</div>
-    </div>
-    </div>
-    <div class="center" />
-    <div class="img12" onmouseover="showimage11()" onmouseout="showimg12()" />
-    <div  class="show11" id="show11">vbabey, mother<br />2 yr survivor</div>
-    </div>
-    </div>
-
-
-    </div>
-
-    </div>
-    <div class="body_content">
-        <div class="callout_box_left"></div>
-        <div class="callout_box_center">
-            <div class="callout_box01">
-                <div class="callout_inner">
-                    <div class="callout_top"><div class="callout_text01">SHARE Trained Peers</div>
-                    </div>
-                    <div class="callout_center">
-				<a href="@{ViewDispatcher.view("Viva")}"><div class="callout_pic01"><img src="/public/images/Viva.gif" width="42" height="42" border="0"/></div></a>
-                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("Viva")}">Viva</a></strong> (SHARE trained peer supporter and survivor)</div>
-				<div class="callout_pic01"><a href="@{ViewDispatcher.view("Melissa")}"><img src="/public/images/Melissa.gif" width="42" height="42" border="0"/></a></div>
-                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("Melissa")}">Melissa</a></strong> (SHARE trained peer supporter and survivor)</div>
-		    </div>
-
-
-                    <a href="@{Static.trained_peer_support_program()}"><div class="callout_bottem">Trained Support Program</div></a>
-                </div>
-            </div>
-            <div class="callout_box01"><div class="callout_inner">
-                    <div class="callout_top01"><div class="callout_text01">Patients &amp; Caregivers</div>
-                    </div>
-
-                    <div class="callout_center">
-				<a href="@{ViewDispatcher.view("TeriFuller185")}"><div class="callout_pic01"><img src="/public/images/TeriFuller.gif" width="42" height="42" border="0"/></div></a>
-                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("TeriFuller")}">Teri</a></strong> (Triple Neg. BRCA+ Survivor)</div>
-				<div class="callout_pic01"><a href="@{ViewDispatcher.view("CJ")}"><img src="/public/images/CJ.gif" width="42" height="42" border="0"/></a></div>
-                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("CJ")}">CJ</a></strong> (Metastatic Breast Cancer Survivor)</div>
-		    </div>
-
-                    <a href="@{Explore.browseMembers('active')}"><div class="callout_bottem">More Members</div></a>
-                </div></div>
-
-            <div class="callout_box01"><div class="callout_inner">
-                    <div class="callout_top02">
-                        <div class="callout_text01">Experts &amp; Providers</div>
-                    </div>
-		                    <div class="callout_center">
-				<div class="callout_pic01"><a href="@{ViewDispatcher.view("ShelliKeslerPhD")}"><img src="/public/images/ShelliKeslerPhD.gif" width="42" height="42" border="0"/></a></div>
-                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("ShelliKeslerPhD")}">Shelli Kesler, PhD </a></strong> <br />Chemo-brain</div>
-				<div class="callout_pic01"><a href="@{ViewDispatcher.view("RobertFineMD")}"><img src="/public/images/RobertFineMD.gif" width="42" height="42" border="0"/></a></div>
-                            	<div class="callout_text02"><strong><a href="@{ViewDispatcher.view("RobertFineMD")}">Robert Fine, MD</a></strong> Pancreatic Cancer Oncology</div>
-		    </div>
-		    <a href="@{Static.medical_professionals()}"><div class="callout_bottem">More Medical Professionals</div></a>
-                 </div>
-	    </div>
-		
-		<div class="callout_box01"><div class="callout_inner">
-                    <div class="callout_top03"><div class="callout_text01">Expert Workshops</div>
-                    </div>
-                    <div class="callout_center">
-				<a href="@{ViewDispatcher.view("EzraCohenMD")}"><div class="callout_pic01"><img src="/public/images/EzraCohenMD.gif" width="42" height="42" border="0"/></div></a>
-                            	<div class="callout_text02"><strong>Head & Neck Cancer Oncology</strong>, Wed., July 11th <a href="@{ViewDispatcher.view("EzraCohenMD")}">Ezra Cohen, MD</a></div>
-				<a href="@{ViewDispatcher.view("paulodonnellmdphd")}"><div class="callout_pic01"><img src="/public/images/PaulODonnellMDPhD.gif" width="42" height="42" border="0"/></div></a>
-                            	<div class="callout_text02"><strong>Bone Marrow Transplantation</strong>, Thurs., July 12th <a href="@{ViewDispatcher.view("paulodonnellmdphd")}">Paul O'Donnell, MD, PhD</a></div>
-		    </div>
-                    <a href="@{Static.workshops()}"><div class="callout_bottem">More workshops</div></a>
-                </div></div>
-
-        </div>
-        <div class="callout_box_right"></div>
-    </div>
-    <!--meetCover-->
-    <!--Communities-->
-
-    <!--optionCover-->
-    <div class="optionCover2"></div>
-    <!--optionCover2-->
-    <div class="optionCover3"></div>
-    <!--optionCover3-->
-    <div class="cb"></div>
-    </div>
-    <!--Content-->
-
-    <!--======================================Content Ends=============================-->
-    <div class="cb"></div>
-    </div>
-    <!--waperhome-->
-
-    </div>
-    <div class="partner">
-        <div class="partnertext">
-            <a href="@{Static.partner_network()}">Partners<a/> <a href="@{Static.become_a_partner()}"><span class="bluetext12">(Become a partner)</span></a>
-        </div>
-    </div>
-    <div id="footercover">
-        <div class="footercover2">
-        	<div class="footer_icon"><img src="/public/images/senology_logo.jpg" border="0" style="margin-top:10px;margin-left:32px;"/></div>
-		<div class="footer_icon"><img src="/public/images/logos/cancer.png" style="margin-top:25px;margin-left:3px;"  border="0"/></div>
-		<div class="footer_icon"><img src="/public/images/logos/cfa.png" border="0" style="margin-top:10px;margin-left:5px;"/></div>
-		<div class="footer_icon"><img src="/public/images/CLRC.jpg" border="0" style="margin-left:0px;"/></div>
-		<div class="footer_icon"><img src="/public/images/logos/logo-paf.png" border="0" style="margin-top:10px;margin-left:10px;"/></div>
-            <div class="cb"></div>
-        </div>
-        <div class="footercover2">
-        	<div class="footer_icon"><img src="/public/images/logos/WAR_Logo_home.png" border="0" style="margin-top:5px;margin-left:32px;"/></div>
-		<div class="footer_icon"><img src="/public/images/logos/4thAngel_logo_home.PNG" style="margin-top:15px;margin-left:10px;"  border="0"/></div>
-		<div class="footer_icon"><img src="/public/images/C&C_logo.jpg" border="0" style="margin-top:20px;margin-left:15px;"/></div>
-		<div class="footer_icon"><img src="/public/images/SHARE.jpg" border="0" style="margin-top:15px;margin-left:5px;"/></div>
-		<div class="footer_icon"><img src="/public/images/lls.jpg" border="0" style="margin-top:10px;margin-left:10px;"/></div>
-            <div class="cb"></div>
-        </div>
-    </div>
-    <!--footercover-->
-    <!--===================================================================-->
-<div id="footerarea">
-		<div id="footer">
-			<div id="footerleft">
-				<div id="footericons">Find us on Facebook and Twitter 
-					<a href="http://www.facebook.com/pages/TalkAboutHealth/123999230963635?ref=sgm" >
-						<img src="/public/images/facebookfooter.gif" width="17" height="17" border="0" />
-					</a>
-					<a href="http://twitter.com/talkabouthealth">
-						<img src="/public/images/twitterfooter.gif" width="17" height="17" border="0" />
-					</a>
-				</div>
-				<a href="@{Explore.newsletter()}" class="footerlink">Newsletter |</a>
-				<a href="http://blog.talkabouthealth.com" class="footerlink"> Blog |</a>
-				<a href="@{Static.faq()}" class="footerlink"> Faq |</a>
-				<a href="@{Application.contactus()}" class="footerlink"> Contact Us |</a>
-				<a href="@{Static.aboutus()}" class="footerlink"> About Us |</a>
-				<a href="@{Static.privacy()}" class="footerlink"> Privacy Policy |</a>
-				<a href="@{Static.tos()}" class="footerlink"> Terms of Service</a>
-				<br/>
-                <span style="color: #403c3e; font-family:arial">&copy; 2010, ${java.util.Calendar.getInstance().get(Calendar.YEAR)}</span>
-			</div>
-			<div id="footerright"><img src="/public/images/logo_footer.jpg" width="178" height="28" alt="" /></div>
+		<!-- header end -->
+		<!-- Banner code -->
+		<div id="banner">
+		  <div id="slider">
+		      <div id="slides">
+		        <div class="slides_container">
+		          <div class="slide banner1">
+		          	#{if videoList != null && videoList.size() >= 1}
+			          	<div style="position: absolute;top:30px;left:0px;width:350px;">
+				          	<table cellpadding="0" cellspacing="" width="100%"><tr><td>
+				          	<iframe width="435" height="255" src="http://www.youtube.com/embed/${videoList.get(0).videoId}" frameborder="0" allowfullscreen></iframe>
+				          	</td></tr><tr><td style="padding-top:5px">
+				          	<a href="${videoList.get(0).homeVideoLink}" style="color:#FFF;font-size:13px;font-weight:bold;">
+				          	${videoList.get(0).videoTitle }
+				          	</a>
+				          	</td></tr>
+				          	</table>
+			          	</div>
+		          	#{/if}
+		          	<div style="margin-left: 30px;">
+			            <h4>Health Answers from the World's</h4>
+			            <h2>Leading Medical Experts</h2>
+			            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
+			              amazing, so many great doctors sharing their expertise! <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
+			              <div class="get_started">
+			              	<a href="@{Application.signup()}"><img src="/public/images/index/get_started_btn.png" alt="get started" /></a> or
+			              	<a href="#" class="facebookBtn"><img src="/public/images/index/join_using_fb.png" alt="join using facebbok" /></a> 
+			              	<a href="#" class="twitterBtn"><img src="/public/images/index/join_using_t.png" alt="join using twitter" /></a>
+			              </div>
+			         </div>
+		          </div>
+		          <div class="slide banner3">
+		          	#{if videoList != null  && videoList.size() >= 2}
+			          	<div style="position: absolute;top:30px;left:0px;width:350px;">
+				          	<table cellpadding="0" cellspacing="" width="100%"><tr><td>
+				          	<iframe width="435" height="255" src="http://www.youtube.com/embed/${videoList.get(1).videoId}" frameborder="0" allowfullscreen></iframe>
+				          	</td></tr><tr><td style="padding-top:5px">
+				          	<a href="${videoList.get(1).homeVideoLink}" style="color:#FFF;font-size:13px;font-weight:bold;">
+				          	${videoList.get(1).videoTitle }
+				          	</a>
+				          	</td></tr>
+				          	</table>
+			          	</div>
+		          	#{/if}
+		          	<div style="margin-left: 30px;">
+			            <h4>Answers from Trained Supporters</h4>
+			            <h2>Sharing Their Experiences</h2>
+			            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
+			              amazing, so many wonderful doctors sharing their expertise! <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
+			              <div class="get_started">
+			              	<a href="@{Application.signup()}"><img src="/public/images/index/get_started_btn.png" alt="get started" /></a> or
+			              	<a href="#" class="facebookBtn"><img src="/public/images/index/join_using_fb.png" alt="join using facebbok" /></a> 
+			              	<a href="#" class="twitterBtn"><img src="/public/images/index/join_using_t.png" alt="join using twitter" /></a>
+			              </div>
+			         </div>
+		          </div>
+		          <div class="slide banner4">
+		          	#{if videoList != null  && videoList.size() >= 3}
+			          	<div style="position: absolute;top:30px;left:0px;width:350px;">
+				          	<table cellpadding="0" cellspacing="" width="100%"><tr><td>
+				          	<iframe width="435" height="255" src="http://www.youtube.com/embed/${videoList.get(2).videoId}" frameborder="0" allowfullscreen></iframe>
+				          	</td></tr><tr><td style="padding-top:5px">
+				          	<a href="${videoList.get(2).homeVideoLink}" style="color:#FFF;font-size:13px;font-weight:bold;">
+				          	${videoList.get(2).videoTitle }
+				          	</a>
+				          	</td></tr>
+				          	</table>
+			          	</div>
+		          	#{/if}
+		          	<div style="margin-left: 30px;">
+			            <h4>Connect with Experts and Trained Survivors</h4>
+			            <h2>Who Can Help</h2>
+			            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
+			              amazing, so many wonderful doctors sharing their expertise! <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
+			              <div class="get_started">
+			              	<a href="@{Application.signup()}"><img src="/public/images/index/get_started_btn.png" alt="get started" /></a> or
+			              	<a href="#" class="facebookBtn"><img src="/public/images/index/join_using_fb.png" alt="join using facebbok" /></a> 
+			              	<a href="#" class="twitterBtn"><img src="/public/images/index/join_using_t.png" alt="join using twitter" /></a>
+			              </div>
+			         </div>
+		          </div>
+		        </div>
+		        <!--slides_container end--> 
+		     </div>
+		     <!--slides end--> 
+		 </div>
+		 <!--slider end--> 
 		</div>
+		<!-- banner end -->
+		<div id="content">
+			<div id="main" class="slide">
+			    <ul class="tabs">
+			     <li id="expert" class="fst active"><a href="#">Expert Answers</a></li>
+			     <li id="recent"><a href="#">Recent Answers</a></li>
+			     <li id="open"><a href="#">Unanswered Questions</a></li>
+			   </ul>
+			   <div id="expertTab" class="tabBody">
+			     <ul id="expertCnt">
+			     </ul>
+			     <ul>
+			     	<li class="lastFeed">
+			     		<a class="moreBtn" id="expertMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+			     	</li>
+			     </ul>
+			   </div>
+			   <div id="recentTab" class="tabBody" style="display:none;">
+					<ul id="recentCnt">
+			     	</ul>
+			     	<ul>
+			     	<li class="lastFeed">
+			     		<a class="moreBtn" id="recentMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+			     	</li>
+			     </ul>
+			   </div>
+			   <div id="openTab" class="tabBody" style="display:none;">
+			   		<ul id="openCnt">
+			     	</ul>
+			     	<ul>
+			     	<li class="lastFeed">
+			     		<a class="moreBtn" id="openMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+			     	</li>
+			     </ul>
+			   </div>
+			   <!-- Recent end --> 
+			 </div>
+			 <!-- main end -->
+			 <div id="sidebar">
+			 #{include 'Upcoming_Workshops_new.html' /}
+
+			 <div class="box2">
+		        <h2 class="heading"><img src="/public/images/index/logo_blue.png" alt="logo_blue" /><a href="@{Explore.topics()}"> Cancer Communities</a></h2>
+		        <ul>
+			        #{list items: diseaseList, as: 'disease'}
+			        	#{ifnot disease.name == null}
+						<li><a href="/explore/${disease.name.convertToURL()}">${disease.name}</a></li>
+						#{/ifnot}
+					#{/list}
+					<li><a href="@{Explore.topics()}" class="last">More Options +</a></li>
+		        </ul>
+		      </div>
+			 #{include 'home_topic_list.html' /}
+			 </div>
+		</div>
+		<!-- Content end -->
 	</div>
+	<!-- wrapper end -->
+	<div id="client">
+	  <div id="client_inner">
+	    <h2><a href="@{Static.partner_network()}" style="float: left;">Partners</a> <a href="@{Static.become_a_partner()}"><img src="/public/images/index/become_partner.png" alt="become a partner" /></a> </h2>
+	    <ul class="client">
+	      <li><a href="#"><img src="/public/images/index/senology.png" alt="senology" /></a></li>
+	      <li><a href="#"><img src="/public/images/index/q_cancerquest.png" alt="q cancer quest" /></a></li>
+	      <li><a href="#"><img src="/public/images/index/cfah.png" alt="cfah" /></a></li>
+	      <li><a href="#"><img src="/public/images/index/clrc.png" alt="clrc" /></a></li>
+	      <li><a href="#"><img src="/public/images/index/paf.png" alt="paf" /></a></li>
+	      <li><a href="#"><img src="/public/images/index/women_at_risk.png" alt="women at risk" /></a></li>
+	      <li><a href="#"><img src="/public/images/index/4th_angel.png" alt="4th angel" /></a></li>
+	      <li><a href="#"><img src="/public/images/index/cancel_and_careers.png" alt="cancel_and_careers" /></a></li>
+	      <li><a href="#"><img src="/public/images/index/share.png" alt="share" /></a></li>
+	      <li><a href="#"><img src="/public/images/index/the_leukemia_and_lymphoma_society.png" alt="the_leukemia_and_lymphoma_society" /></a></li>
+	    </ul>
+	    <a href="#" class="prev"></a> <a href="#" class="next"></a> </div>
+	</div>
+	<!-- Footer -->
+	<div id="footer">
+  <div id="footer_inner">
+    <div id="site_nav">
+      <h3>Answers &amp; Members</h3>
+      <ul>
+        <li><a href="@{Explore.conversations('expert')}">Expert Answers</a></li>
+        <li><a href="@{Explore.conversations('feed')}">Recent Answers</a></li>
+        <li><a href="@{Explore.conversations('open')}">Unanswered Questions</a></li>
+        <li><a href="@{Explore.browseMembers('experts')}">Experts</a></li>
+        <li><a href="@{Explore.browseMembers('patients')}">Patients &amp; Survivors</a></li>
+        <li><a href="/explore/familyandfriends">Family &amp; Friends</a></li>
+      </ul>
+    </div>
+    <div id="site_nav">
+      <h3>Topics</h3>
+      <ul>
+        <li><a href="@{Explore.topics()}">Cancer Communities</a></li>
+        <li><a href="@{Explore.topics('survivorship')}">Cancer Patients and Survivors</a></li>
+        <li><a href="@{Explore.topics('Symptoms and Diagnosis')}">Cancer Symptoms and Diagnosis</a></li>
+        <li><a href="@{Explore.topics('treatments and side effect')}">Cancer Treatments and Side Effects</a></li>
+        <li><a href="@{Explore.topics('Life and Everyday')}">Life and Everyday</a></li>
+        <li><a href="@{Explore.topics('Risk')}">Cancer Risk and Screening</a></li>
+      </ul>
+    </div>
+    <!-- site nav end -->
+    <div id="site_nav">
+      <h3>More</h3>
+      <ul>
+        <li><a href="@{Static.aboutus()}">About</a></li>
+        <li><a href="@{Static.howitworks()}">How it Works</a></li>
+        <li><a href="@{Static.workshops()}">Q/A Workshops</a></li>
+        <li><a href="@{Static.trained_peer_support_program()}">Trained Peer Support</a></li>
+        <li><a href="@{Explore.browseMembers('active')}">Members</a></li>
+        <li><a href="http://blog.talkabouthealth.com" target="_new">Blog</a></li>
+      </ul>
+    </div>
+    <!-- site nav end -->
+    <div id="newsltr">
+      <h3>Stay in the loop!</h3>
+      <div class="follow">
+      	<div style="float: left;margin-right: 5px;">
+			<!-- <img src="/public/images/index/t_follow.png" alt="twitter follow" /> -->
+			<a href="https://twitter.com/talkabouthealth" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false" data-dnt="true">Follow</a>
+			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+		</div>
+		<div style="float: left;margin-right: 5px;">
+			<iframe src="http://www.facebook.com/plugins/like.php?href=http://www.facebook.com/talkabouthealth&amp;layout=button_count&amp;show_faces=true&amp;width=80&amp;action=like&amp;colorscheme=light&amp;height=30" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:85px; height:30px;" allowTransparency="true"></iframe>
+      	</div>
+      	<a href="http://talkabouthealth.tumblr.com" target="_new"><img src="/public/images/index/t_icon.png" alt="t" /></a> 
+      	<a href="http://www.youtube.com/user/talkabouthealth" target="_new"><img src="/public/images/index/youtube_icon.png" alt="you tube" /></a>
+      </div>
+      <p><img src="/public/images/index/footer_logo.png" width="150" alt="Talk About Health Newsletter" class="sml_logo" /> Newsletter</p>
+      	#{form @Newsletter.subscribeMoreNewsLetter() , id:'subcribeNewsletter' }
+        <ul>
+          <li>
+            <input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="workshop" checked='checked' />
+            Daily Update &amp; Workshop Announcement</li>
+          <li>
+            <input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked='checked' />
+            Q&amp;A Workshop Summary</li>
+          <li>
+            <input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Best of TalkAboutHealth" checked='checked' />
+            Benefits(Custom Health &amp; Medical Offers)</li>
+          <li>
+            <input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TalkAboutHealth Rewards" checked='checked' />
+            Best of TalkAboutHealth (Weekly)</li>
+        </ul>
+        <div>
+	        <div style="float:left;height:12px;">&nbsp;<span id="respMessage" style="float:left;display: none;">Test Text</span></div>
+	        <div style="float:left;">
+	        	<input name="newsletter.email" id="email" placeholder="Valid Email" type="text" class="newsltr_field" />
+	        	<input id="subscribe" type="button" class="newsltr_btn" />
+	        </div>
+        </div>
+      	#{/form}
+		<div style="float:left;">
+			<p>
+				<a href="@{Explore.newsletter()}">
+				<img src="/public/images/index/newsletter_icon.png" alt="all newsletters" /> View All Newsletters
+				</a>
+			</p>
+		</div>
+    </div>
+    <!-- newsletter end -->
+    <div class="footer_logo"></div>
+  </div>
+  <!--footer inner end--> 
+</div>
 
-<script type="text/javascript" language="javascript">
-    function showimage()
-    {
-    
-        document.getElementById('show').style.display='block';
-	
-    }
-    function showimg1()
-    {
-        document.getElementById('show').style.display='none';
-    }
-	
-    function showimage1()
-    {
-    
-        document.getElementById('show1').style.display='block';
-	
-    }
-    function showimg2()
-    {
-        document.getElementById('show1').style.display='none';
-    }
-    function showimage2()
-    {
-    
-        document.getElementById('show2').style.display='block';
-	
-    }
-    function showimg3()
-    {
-        document.getElementById('show2').style.display='none';
-    }
-    function showimage3()
-    {
-    
-        document.getElementById('show3').style.display='block';
-	
-    }
-    function showimg4()
-    {
-        document.getElementById('show3').style.display='none';
-    }
-    function showimage4()
-    {
-    
-        document.getElementById('show4').style.display='block';
-	
-    }
-    function showimg5()
-    {
-        document.getElementById('show4').style.display='none';
-    }
-    function showimage5()
-    {    
-        document.getElementById('show5').style.display='block';
-    }
-    function showimg6()
-    {
-        document.getElementById('show5').style.display='none';
-    }
-    function showimage6()
-    {
-    
-        document.getElementById('show6').style.display='block';
-	
-    }
-    function showimg7()
-    {
-        document.getElementById('show6').style.display='none';
-    }
-    function showimage7()
-    {
-    
-        document.getElementById('show7').style.display='block';
-	
-    }
-    function showimg8()
-    {
-        document.getElementById('show7').style.display='none';
-    }
-    function showimage8()
-    {
-    
-        document.getElementById('show8').style.display='block';
-	
-    }
-    function showimg9()
-    {
-        document.getElementById('show8').style.display='none';
-    }
-    function showimage9()
-    {
-    
-        document.getElementById('show9').style.display='block';
-	
-    }
-    function showimg10()
-    {
-        document.getElementById('show9').style.display='none';
-    }
-    function showimage10()
-    {
-    
-        document.getElementById('show10').style.display='block';
-	
-    }
-    function showimg11()
-    {
-        document.getElementById('show10').style.display='none';
-    }
-    function showimage11()
-    {
-    
-        document.getElementById('show11').style.display='block';
-	
-    }
-    function showimg12()
-    {
-        document.getElementById('show11').style.display='none';
-    }
-	
-	
+<!-- footer end -->
+<div id="copy">
+  <div id="copy_inner"> &copy; Copyright ${java.util.Calendar.getInstance().get(Calendar.YEAR)} - Talk About Health - <a href="@{Static.privacy()}">Privacy Policy</a> | <a href="@{Static.tos()}">Terms of Service</a></div>
+  <!-- copy_inner end --> 
+</div>
+<!-- copy end -->
+	<!--footer end--> 
+#{ common/googleAnalytics /}
+<script type="text/javascript" src="/public/javascripts/jquery-1.5.1.min.js" ></script>
+<script type="text/javascript" src="/public/javascripts/jquery-ui-1.8.4.custom.min.js" ></script>
+<script type="text/javascript" src="/public/javascripts/slides.min.jquery.js" ></script>
+<script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
+<script type="text/javascript" src="/public/javascripts/jscroller.js"></script>
+<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
+<script type="text/javascript">
+<!--
+$(document).ready(function(){
+	//Search button code
+	$("#topSearchText").click(function() {
+		makeSearch();
+	});
 
-</script>
+	$("#topSearchBox").keydown(function(c) {
+		if (c.keyCode === 10 || c.keyCode === 13) {
+			makeSearch();
+		}
+	});
+	$(".twitterBtn").click(function() {
+		openServiceLogin('T');
+	});
+	$(".facebookBtn").click(function() {
+		openServiceLogin('F');
+	});
 
+	makeAutoComplete();
 
+	// Initialize Slides
+	$('#slides').slides({
+		preload: false,
+		preloadImage: '/public/images/index/tah_loading.gif',
+		generatePagination: true,
+		/*play: 100000,
+		pause: 100000,*/
+		effect: 'fade',
+		crossfade: true,
+		hoverPause: true,
+		start: 1
+	});
 
-	#{ common/googleAnalytics /}
-	
-	<!-- Quantcast Tag -->
-	<script type="text/javascript">
-		var _qevents = _qevents || [];
-		
-		(function() {
-		var elem = document.createElement('script');
-		elem.src = (document.location.protocol == "https:" ? "https://secure" : "http://edge") + ".quantserve.com/quant.js";
-		elem.async = true;
-		elem.type = "text/javascript";
-		var scpt = document.getElementsByTagName('script')[0];
-		scpt.parentNode.insertBefore(elem, scpt);
-		})();
-		
-		_qevents.push({
-		qacct:"p-7aWXmxtlCHn1M"
+	//Subscribe button feature	
+	$('#subscribe').click(function() {
+		$("#subcribeNewsletter").ajaxSubmit({ success: setNewsletterMessage });
+		return false;
+	});
+
+	//TAbs
+	$(".tabs li").click(function() {
+		$(".active").removeClass("active");
+		$(this).addClass("active");
+		var id = $(this).attr("id");
+		var lastActionId = '';
+		var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
+		$("#"+id+"Cnt").html(loading);
+		$.get("/Explore/homePageFeed",{ type : id,lastActionId:lastActionId },function(data){
+			$(loading).remove();
+			$(data).appendTo($("#"+id+"Cnt"));
+			$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
 		});
-	</script>
-	
-	<noscript>
-	<div style="display:none;">
-	<img src="//pixel.quantserve.com/pixel/p-7aWXmxtlCHn1M.gif" border="0" height="1" width="1" alt="Quantcast"/>
-	</div>
-	</noscript>
-	<!-- End Quantcast tag -->
+		$(".tabBody").hide();
+		$("#" + id + "Tab").fadeIn();
+		return false;
+	});
+
+	$(".moreBtn").click(function() {
+		var idBtn = $(this).attr("id");
+		var id = "expert"
+		if(idBtn == 'expertMore')
+			id = "expert";
+		else if(idBtn == 'recentMore')
+			id = "recent";
+		else if(idBtn == 'openMore')
+			id = "open";
+		var idElm =  $("#" + id);
+		var lastActionId = $("#"+id+"Cnt").children().last().attr("id");
+		var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
+		$(loading).appendTo($("#"+id+"Cnt"));
+		$.get("/Explore/homePageFeed",{ type : id,lastActionId:lastActionId },function(data){
+			$(loading).remove();
+			$(data).appendTo($("#"+id+"Cnt"));
+			$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+		});
+		return false;
+	});
+
+	$("#client_inner").jCarouselLite({
+        btnNext: ".next",
+        btnPrev: ".prev",
+		auto: 800,
+   		speed: 1000,
+		visible:4,
+		mouseWheel:true
+    });
+
+	$("#expert").click();
+});
+setNewsletterMessage = function(responseText, statusText, xhr, $form)  {
+	var errorText;
+	$("#respMessage").css("color","#FFFFFF");
+	if (responseText.indexOf("Error:") === 0) {
+   		errorText = responseText.replace("Error:", "");
+   		$("#respMessage").css("color","#ff0000");
+   	} else if (responseText.indexOf("Email alrady subscribed!") === 0) {
+   		errorText = responseText;
+   	} else {
+   		errorText= "Thank you for subscribing!";
+   	}
+	$("#respMessage").html(errorText); 
+	$("#respMessage").fadeIn(100);
+	closeTimeout = setTimeout(function() { $("#respMessage").fadeOut(200) }, 4000);
+}
+makeSearch = function(){
+	var query = $("#topSearchBox").val();
+	if ($.trim(query) === '') {
+		$("#topSearchBox").focus();
+		return false;
+	}else{
+		query = encodeURIComponent($.trim(query));
+		var url = "/search?query="+query;
+		document.location = url; 
+	}
+}
+makeAutoComplete = function(){
+	var url = "/search/ajaxSearch";
+	var cache = {};
+	$("#topSearchBox").autocomplete({
+		minLength: 1,
+		source: function(request, response) {
+			var term = ""
+			if ( request.term in cache ) {
+					response( cache[ request.term ] );
+					return;
+			}
+			request.term = request.term;
+			$.ajax({
+				url: url,
+				dataType: "json",
+				data: request,
+				success: function( data ) {
+					cache[ term ] = data;
+					response( data );
+				}
+			});
+		},
+		select: function(event, ui) {
+			var url = ui.item.url;
+			if (url === "#fullsearch") {
+				if ($.trim(ui.item.value) === '') {
+					$("#topSearchBox").focus();
+					return false;
+				}else{
+					url = "/search?query="+ui.item.value;
+				}
+			}
+			document.location = url;
+		}
+	})
+	.data( "autocomplete" )._renderItem = function( ul, item ) {
+		return $( "<li></li>" )
+			.data( "item.autocomplete", item )
+			.append( "<a>" + item.label + "&nbsp;<span>" + item.type + "</span></a>" )
+			.appendTo( ul );
+	};
+}
+
+openServiceLogin = function(serviceType) {
+	if(serviceType === 'F')
+		window.open("/oauth/getauth?type=facebook&redirectURL=","FacebookLogin", "width=1000,height=550,toolbar=no,location=no,menubar=no");
+	else if(serviceType === 'T')
+		window.open("/oauth/getauth?type=twitter&redirectURL=","TwitterLogin", "width=800,height=470,toolbar=no,location=no,menubar=no");
+}
+-->
+</script>
 </body>
 </html>
-
