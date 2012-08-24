@@ -1,11 +1,11 @@
 <div class="box">
 	<h2 class="heading"><img src="/public/images/index/cal_icon.png" alt="calendar" /><a href="@{Static.workshops()}"> Upcoming Workshops</a></h2>
 	<ul>
+<<<<<<< HEAD
 
-
-
-
-
+=======
+		
+>>>>>>> master
 		<li>
 			<a href="@{ViewDispatcher.view("DavidSidranskyMD")}" target="_blank">
 				<span>Tumorgrafting</span><br />
