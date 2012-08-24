@@ -312,12 +312,12 @@ openServiceLogin = function(serviceType) {
             <li><a href="@{PublicProfile.userBasedActions(currentUser, 'thankyous')}">Your Thank you's</a></li>
           </ul>
         </li>
-        <li><a href="/unorganized/videos">Videos</a></li>
+        <li><a href="@{Static.TAH_Videos()}">Videos</a></li>
 	#{/if}
 	#{else}
 	    <li><a href="@{Explore.conversations('expert')}">Answers</a></li>
 	    <li><a href="@{Explore.topics()}">Topics</a></li>
-	    <li><a href="/unorganized/videos">Videos</a></li>
+	    <li><a href="@{Static.TAH_Videos()}">Videos</a></li>
 	    <li><a href="@{Explore.browseMembers('active')}">Members</a></li>
 	    <li><a href="@{Static.medical_professionals()}">Experts</a></li>
 	    <li><a href="@{Static.workshops()}">Workshops</a></li>
