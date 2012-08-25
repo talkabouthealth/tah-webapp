@@ -34,7 +34,7 @@
 			        <input id="topSearchText" type="button" class="search_btn" />
 			      </form>
 			    </li>
-			    <li><a href="@{Application.signup()}"><img src="/public/images/index/user.png" alt="join now" /> Join Now</a></li>
+			    <li><a href="@{Application.signup()}" onClick="_gaq.push(['_trackEvent', 'Join_Home', 'Signup_Text', 'Standard']);"><img src="/public/images/index/user.png" alt="join now" /> Join Now</a></li>
 			    <li><a href="@{Secure.login()}"><img src="/public/images/index/sign_in_icon.png" alt="sign in" /> Sign In</a></li>
 			    <li><a href="#" class="twitterBtn"><img src="/public/images/index/t_signin.png" alt="twitter signin" /></a></li>
 			    <li><a href="#" class="facebookBtn"><img src="/public/images/index/fb_signin.png" alt="facebook signin" /></a></li>
@@ -75,9 +75,9 @@
 			            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
 			              amazing, so many great doctors sharing their expertise! <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
 			              <div class="get_started">
-			              	<a href="@{Application.signup()}"><img src="/public/images/index/get_started_btn.png" alt="get started" /></a> or
-			              	<a href="#" class="facebookBtn"><img src="/public/images/index/join_using_fb.png" alt="join using facebbok" /></a> 
-			              	<a href="#" class="twitterBtn"><img src="/public/images/index/join_using_t.png" alt="join using twitter" /></a>
+			              	<a href="@{Application.signup()}" onClick="_gaq.push(['_trackEvent', 'Join_Home', 'Signup_Image', 'Standard']);"><img src="/public/images/index/get_started_btn.png" alt="get started" /></a> or
+			              	<a href="#" class="facebookBtn" onClick="_gaq.push(['_trackEvent', 'Join_Home', 'Signup', 'Facebook']);"><img src="/public/images/index/join_using_fb.png" alt="join using facebbok" /></a> 
+			              	<a href="#" class="twitterBtn" onClick="_gaq.push(['_trackEvent', 'Join_Home', 'Signup', 'Twitter']);"><img src="/public/images/index/join_using_t.png" alt="join using twitter" /></a>
 			              </div>
 			         </div>
 		          </div>

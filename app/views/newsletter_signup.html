@@ -67,7 +67,7 @@ function setNewsletterMessage(responseText, statusText, xhr, $form)  {
 				#{else}
 					<input name="newsletter.email" id="email" style="background: none repeat scroll 0 0 #F0F0F0;border: 1px solid #606060;color: #010101;padding: 3px;" type="text" value="Email Address" size="17"/>
 				#{/else}
-				<input style="font-size: 11px;background: none repeat scroll 0 0 #014DAB;border: 1px solid #000F22;color: #FFFFFF;padding: 3px 2px 2px;text-transform: uppercase;cursor: pointer;" type="submit" value="submit">
+				<input style="font-size: 11px;background: none repeat scroll 0 0 #014DAB;border: 1px solid #000F22;color: #FFFFFF;padding: 3px 2px 2px;text-transform: uppercase;cursor: pointer;" type="submit" onClick="_gaq.push(['_trackEvent', 'Newsletter_Signup_Widget', 'Signup_Click', 'Newsletter']);" value="submit">
 			</div>
 		#{/form}
 	#{/if}

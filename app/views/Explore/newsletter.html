@@ -510,7 +510,7 @@
 									<button type="submit" class="updateSubscription"></button>
 								#{/if}
 								#{else}
-									<button type="submit" class="subscribe"></button>
+									<button type="submit" class="subscribe" onClick="_gaq.push(['_trackEvent', 'Newsletter_Signup_Page', 'Signup_Click', 'Signup_Click']);"></button>
 								#{/else}
 							</a>
 						</div>
