@@ -21,7 +21,7 @@
 				</h3>
 				<p class="disc">
 					#{if convo.comments != null && convo.comments.size() > 0}
-						${convo.comments.get(0).text.nl2br()}
+						${convo.comments.get(0).printThoughtOrAnswer()}
 					#{/if}
 				</p>
 				<p class="by">
