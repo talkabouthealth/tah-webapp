@@ -928,16 +928,16 @@ public class TalkerDAO {
 	public static boolean isTalkerImage(String userId) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		DBObject query = new BasicDBObject("_id", new ObjectId(userId));
-		DBObject talkerDBObject = talkersColl.findOne(query, new BasicDBObject("isImg", 1));
+		DBObject talkerDBObject = talkersColl.findOne(query, new BasicDBObject("img", 1));
 		if (talkerDBObject == null) {
 			return false;
 		} else {
-			if (talkerDBObject.get("isImg") == null) {
+			if (talkerDBObject.get("img") == null) {
 				return false;
-			} else if(getBoolean(talkerDBObject, "isImg")) {
-				return true;
+			//} else if(getBoolean(talkerDBObject, "isImg")) {
+			//	return true;
 			} else
-				return false;
+				return true;
 		}
 	}
 	

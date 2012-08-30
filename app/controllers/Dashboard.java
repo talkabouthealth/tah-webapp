@@ -127,9 +127,9 @@ public class Dashboard extends Controller {
 	}
 	
 	public static void updateTalkerImage() {
-		//TalkerDAO.updateTalkerForImage();
+		TalkerDAO.updateTalkerForImage();
 		//TalkerDAO.updateTalkerForAnswerCount();
-		TalkerDAO.updateLogTime();
+		//TalkerDAO.updateLogTime();
 		renderText("OK");
 	}
 	
