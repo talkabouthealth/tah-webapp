@@ -52,7 +52,11 @@
      	#{/else}
     </div>
 	<div class="followpicbox" style="padding-top: 3px;">
-		<div class="followpic" style="width: 110px; height: 110px;"><img src="@{Image.show(talker.name)}" width="110" height="110"/></div>
+		#{if currentTalker != null || talker.imageFlag}
+			<div class="followpic" style="width: 110px; height: 110px;">
+				<img src="@{Image.show(talker.name)}" width="110" height="110"/>
+			</div>
+		#{/if}
 		#{if currentTalker}
 			<div class="foloowpictext" style="width: 110px;">
 				#{ifnot talker.userName.equals(currentTalker.userName) }
@@ -94,37 +98,45 @@
 	      	</div>
       	#{/if}
       	#{if talker.isAllowed(models.PrivacySetting.PrivacyType.QUESTIONS_STARTED, currentTalker) || talker.isAllowed(models.PrivacySetting.PrivacyType.CHATS_JOINED, currentTalker) || talker.isAllowed(models.PrivacySetting.PrivacyType.QUESTIONS_FOLLOWING, currentTalker)}
-	      	<div class="mtrighttxt">
-	           	<a class="${currentPage.equals('conversations') ? 'current' : ''}" 
-	           		href="@{PublicProfile.conversations(talker.name)}">Questions</a>
-			</div>
+	      	#{if currentTalker != null || numOfStartedConvos != 0 }
+		      	<div class="mtrighttxt">
+		           	<a class="${currentPage.equals('conversations') ? 'current' : ''}" 
+		           		href="@{PublicProfile.conversations(talker.name)}">Questions (${numOfStartedConvos})</a>
+				</div>
+			#{/if}
 		#{/if}
 		#{if talker.isAllowed(models.PrivacySetting.PrivacyType.TOPICS_FOLLOWING, currentTalker) }
+			#{if currentTalker != null || !talker.followingTopicsList.isEmpty()}
 			<div class="mtrighttxt">
 		     	<a class="${currentPage.equals('topicsFollowing') ? 'current' : ''}" 
 		     		href="@{PublicProfile.topicsFollowing(talker.name)}"
 		     		>Topics Following (${talker.followingTopicsList.size()})</a>
 			</div>
+			#{/if}
 		#{/if}
 		#{if talker.isAllowed(models.PrivacySetting.PrivacyType.ANSWERS, currentTalker) }
+			#{if currentTalker != null || numOfAnswers != 0 }
 			<div class="mtrighttxt">
 	               	<a class="${currentPage.equals('answers') ? 'current' : ''}" 
-	     		href="@{PublicProfile.answers(talker.name)}">Answers</a>
+	     		href="@{PublicProfile.answers(talker.name)}">Answers (${talker.ansCount})</a>
 			</div>
+			#{/if}
 		#{/if}
 		#{if talker.isAllowed(models.PrivacySetting.PrivacyType.THANKYOUS, currentTalker) }
+			#{if currentTalker != null || !talker.thankYouList.isEmpty()}
 			<div class="mtrighttxt">
 				<a class="${currentPage.equals('thankyous') ? 'current' : ''}" 
 	               		href="@{PublicProfile.userBasedActions(talker.name, 'thankyous')}"
 	               	>Thank You's (${talker.thankYouList.size()})</a>
 			</div>
+			#{/if}
 		#{/if}
         <div class="mtop"></div>
         <div class="topicborder"></div>
         <div class="cb"></div>
 	</div>
-             
 	#{if talker.isAllowed(models.PrivacySetting.PrivacyType.FOLLOWING, currentTalker) }
+		#{if currentTalker != null || !talker.followingList.isEmpty()}
 		<div class="followingbox">
 			<div class="followingtoptxt">
 				<div class="followingh1">
@@ -134,7 +146,6 @@
 			</div>
 			<div class="cb"></div>
 		</div>
-              
 		<div class="followingpicbox">
 			#{list items:talker.followingList.limit(8), as:'following' }
 				<div class="followingtxtpic">
@@ -149,11 +160,12 @@
 			#{/list}
 		</div>
         <div class="cb"></div>
-        <br/>
+        <div class="mtop"></div>
         <div class="topicborder"></div>
+        #{/if}
 	#{/if}
-	
 	#{if talker.isAllowed(models.PrivacySetting.PrivacyType.FOLLOWERS, currentTalker) }
+		#{if currentTalker != null || !talker.followerList.isEmpty()}
 		<div class="followingbox">
 			<div class="followingtoptxt">
 				<div class="followingh1">
@@ -177,9 +189,14 @@
 			#{/list}
 		</div>
 		<div class="cb"></div>
+		<div class="mtop"></div>
+		<div class="topicborder"></div>
+		#{/if}
 	#{/if}
 	<!-- New Changes Added -->
 	#{if currentTalker == null }
+	#{include 'tahInfo.html' /}
+	*{ 
 	<div class="topipsts">
 		<div class="mtrighttxt1">Cancer questions and answers.<br /></div>
 		<div class="latextCover latextr" style="font-size: 14px;">Personalized, helpful, and accurate health information.</div>
@@ -202,6 +219,7 @@
 		</div>
 		<div class="topicborder"></div>
 	</div>
+	 }*
 	#{include '/newsletter_signup.html' /}
 	#{include '/subscribe_reward.html' /}
 	<div class="topipsts">
