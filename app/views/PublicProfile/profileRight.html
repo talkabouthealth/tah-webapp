@@ -52,11 +52,11 @@
      	#{/else}
     </div>
 	<div class="followpicbox" style="padding-top: 3px;">
-		#{if currentTalker != null || talker.imageFlag}
+		*{#{if currentTalker != null || talker.imageFlag}#{/if}}*
 			<div class="followpic" style="width: 110px; height: 110px;">
 				<img src="@{Image.show(talker.name)}" width="110" height="110"/>
 			</div>
-		#{/if}
+		
 		#{if currentTalker}
 			<div class="foloowpictext" style="width: 110px;">
 				#{ifnot talker.userName.equals(currentTalker.userName) }
@@ -92,10 +92,12 @@
 	     		href="@{ViewDispatcher.view(talker.name)}">Profile</a>
 		</div>
 		#{if talker.isAllowed(models.PrivacySetting.PrivacyType.THOUGHTS, currentTalker) }
+			#{ifnot commentCount == 0 }
 			<div class="mtrighttxt">
 				<a class="${currentPage.equals('thoughts') ? 'current' : ''}" 
 	     			href="@{PublicProfile.thoughts(talker.name)}">Thoughts</a>
 	      	</div>
+	      	#{/ifnot}
       	#{/if}
       	#{if talker.isAllowed(models.PrivacySetting.PrivacyType.QUESTIONS_STARTED, currentTalker) || talker.isAllowed(models.PrivacySetting.PrivacyType.CHATS_JOINED, currentTalker) || talker.isAllowed(models.PrivacySetting.PrivacyType.QUESTIONS_FOLLOWING, currentTalker)}
 	      	#{if currentTalker != null || numOfStartedConvos != 0 }

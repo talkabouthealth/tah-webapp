@@ -152,6 +152,22 @@ public class CommentsDAO {
 		return topCommentsList;
 	}
 	
+	/**
+	 * Is there any profile comment
+	 */
+	public static int loadProfileCommentCount(String talkerId) {
+		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
+		int commentCount = 0;
+		commentsColl.ensureIndex(new BasicDBObject("time", 1));
+		DBRef profileTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
+		DBObject query = BasicDBObjectBuilder.start()
+			.add("profile", profileTalkerRef)
+			.add("from_service", new BasicDBObject("$ne", "thankyou"))
+			.get();
+		commentCount = commentsColl.find(query).count();
+		return commentCount;
+	}
+	
 	public static CommentBean getThoughtByFromInfo(String from, String fromId) {
 		DBCollection convosColl = getCollection(PROFILE_COMMENTS_COLLECTION);
 		
@@ -585,6 +601,8 @@ public class CommentsDAO {
 				topCommentsList.remove(childrenCommentBean);
 			}
 			commentBean.setChildren(childrenList);
+			childrenList.clear();
+			CommonUtil.commentToHTML(commentBean);
 		}
 		
 		return topCommentsList;
@@ -738,6 +756,7 @@ public class CommentsDAO {
 			Action thankYouAction = new PersonalProfileCommentAction(commentBean.getFromTalker(),
 					commentBean.getFromTalker(), commentBean, null, ActionType.PERSONAL_PROFILE_COMMENT);
 			thankYouAction.setID(commentBean.getId());
+			thankYouAction.setTime(commentBean.getTime());
 			personalProfileList.add(thankYouAction);
 		}
 		return personalProfileList;
