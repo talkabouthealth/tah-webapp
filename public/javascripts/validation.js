@@ -3,7 +3,7 @@
  */
 function validateFormOnSubmit(signup) {
 	var reason = "";
-		
+	_gaq.push(['_trackEvent', 'Signup_page', 'Signup', 'Standard']);
 	  //reason += validateUsername(signup.username);
 	  //reason += validatePassword(signup.password);
 	  //reason += validateEmail(signup.email);

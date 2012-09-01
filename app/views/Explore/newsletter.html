@@ -506,12 +506,12 @@
 						</div>
 						<br/>
 						<div id="checkboxarea3" style=" padding-bottom: 20px;float:left;">
-							<a onclick="" style="cursor: pointer;">
+							<a onclick="" style="cursor: pointer;" onClick="_gaq.push(['_trackEvent', 'Newsletter_Signup_Page', 'Signup_Click', 'Signup_Click']);">
 								#{if session.username}
 									<button type="submit" class="updateSubscription"></button>
 								#{/if}
 								#{else}
-									<button type="submit" class="subscribe" onClick="_gaq.push(['_trackEvent', 'Newsletter_Signup_Page', 'Signup_Click', 'Signup_Click']);"></button>
+									<button type="submit" class="subscribe"></button>
 								#{/else}
 							</a>
 						</div>
