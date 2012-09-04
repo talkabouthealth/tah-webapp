@@ -8,7 +8,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import java.util.Date;
 import logic.ConversationLogic;
 import logic.FeedsLogic;
 import logic.TalkerLogic;
@@ -70,7 +70,34 @@ public class PublicProfile extends Controller {
 			thankYouBean.setProfileComments(profileComments);
 		}
 		
-		render(talker, currentTalker, action, from, thankyouList);
+		//Displaying thank you's in most recent order
+		if(thankyouList != null && thankyouList.size() > 1){
+			for(int i=0;i<thankyouList.size();i++){
+				for(int index=0;index<thankyouList.size()-1;index++){
+					Date indexdate;
+					Date indexdate1;
+					List<Action> indexProfilecomments=((ThankYouBean)thankyouList.get(index)).getProfileComments();
+					if(indexProfilecomments.size()==0)
+						indexdate=(Date)((ThankYouBean)thankyouList.get(index)).getTime().clone();
+					else
+						indexdate=(Date)indexProfilecomments.get(indexProfilecomments.size()-1).getTime().clone();
+					
+					List<Action> indexProfilecomments1=((ThankYouBean)thankyouList.get(index+1)).getProfileComments();
+					if(indexProfilecomments1.size()==0)
+						indexdate1=(Date)((ThankYouBean)thankyouList.get(index+1)).getTime().clone();
+					else
+						indexdate1=(Date)indexProfilecomments1.get(indexProfilecomments1.size()-1).getTime().clone();
+					if(indexdate.before(indexdate1)){
+						ThankYouBean temp=((ThankYouBean)thankyouList.get(index));
+						thankyouList.set(index, ((ThankYouBean)thankyouList.get(index+1)));
+						thankyouList.set(index+1, temp);
+					}
+				}
+			}
+		}
+		int numOfStartedConvos = ConversationDAO.getNumOfStartedConvos(talker.getId());
+		int commentCount = CommentsDAO.loadProfileCommentCount(talker.getId());
+		render(talker, currentTalker, action, from, thankyouList,numOfStartedConvos,commentCount);
 	}
 	
 	public static void thoughts(String userName) {
@@ -95,8 +122,9 @@ public class PublicProfile extends Controller {
 				}
 			}
 		}
-		
-		render(talker, currentTalker, firstTimeComment);
+		int numOfStartedConvos = ConversationDAO.getNumOfStartedConvos(talker.getId());
+		int commentCount = CommentsDAO.loadProfileCommentCount(talker.getId());
+		render(talker, currentTalker, firstTimeComment,commentCount,numOfStartedConvos);
 	}
 	
 	public static void answers(String userName) {
@@ -117,7 +145,9 @@ public class PublicProfile extends Controller {
 				answersFeed.add(answersFeedTemp.get(index));
 		}
 		answersFeedTemp.clear();
-		render(talker, currentTalker, answersFeed, numOfTopAnswers, noHealthInfo);
+		int numOfStartedConvos = ConversationDAO.getNumOfStartedConvos(talker.getId());
+		int commentCount = CommentsDAO.loadProfileCommentCount(talker.getId());
+		render(talker, currentTalker, answersFeed, numOfTopAnswers, noHealthInfo,commentCount,numOfStartedConvos);
 	}
 	
 	/**
@@ -153,11 +183,12 @@ public class PublicProfile extends Controller {
 		if (talker.equals(currentTalker)) {
 			recommendedConvos = TalkerLogic.getRecommendedConvos(talker);
 		}
+		int commentCount = CommentsDAO.loadProfileCommentCount(talker.getId());
 		
 		render(talker, currentTalker, 
 				startedConvosFeed, joinedConvosFeed, followingConvosFeed,
 				numOfStartedConvos, numOfFollowingConvos,
-				noHealthInfo, recommendedConvos);
+				noHealthInfo, recommendedConvos,commentCount);
 	}
 	
 	/**
@@ -211,8 +242,9 @@ public class PublicProfile extends Controller {
 			}
 			recommendedTopics = TopicLogic.loadRecommendedTopics(talker, talkerDisease, null);
 		}
-		
-		render(talker, currentTalker, talkerDisease, recommendedTopics);
+		int numOfStartedConvos = ConversationDAO.getNumOfStartedConvos(talker.getId());
+		int commentCount = CommentsDAO.loadProfileCommentCount(talker.getId());
+		render(talker, currentTalker, talkerDisease, recommendedTopics,numOfStartedConvos,commentCount);
 	}
 	
 	public static void recommendedTopicsAjaxLoad(String afterId) throws Throwable {

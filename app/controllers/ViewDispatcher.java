@@ -253,10 +253,11 @@ public class ViewDispatcher extends Controller {
 		if(currentTalker != null)
 			session.put("inboxUnreadCount", MessagingDAO.getUnreadMessageCount(currentTalker.getId()));
 		
+		int commentCount = CommentsDAO.loadProfileCommentCount(talker.getId());
 		render("PublicProfile/newview.html", talker, disease, talkerDisease, healthItemsMap, 
 				currentTalker, talkerFeed,
 				notProvidedInfo, notViewableInfo,
-				numOfAnswers, numOfTopAnswers, numOfStartedConvos,newsLetterFlag,rewardLetterFlag,talkerLetterFlag);
+				numOfAnswers, numOfTopAnswers, numOfStartedConvos,newsLetterFlag,rewardLetterFlag,talkerLetterFlag,commentCount);
 		
 	}
 	

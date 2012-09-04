@@ -169,7 +169,9 @@
 								#{if talker.isOrg()}
 								#{/if}							
 								#{elseif talker.isProf()}
-									<div class="Profileperson">Professional Info</div><div class="topicborder"></div>						
+									#{ifnot talker.profInfo != null && talker.profInfo.isEmpty() }
+									<div class="Profileperson">Professional Info</div><div class="topicborder"></div>
+									#{/ifnot}						
 								#{/elseif}
 								#{else}
 									<div class="Profileperson">Profile Info</div><div class="topicborder"></div>								
