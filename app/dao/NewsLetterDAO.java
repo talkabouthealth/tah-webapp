@@ -3,18 +3,24 @@ package dao;
 import static util.DBUtil.createRef;
 import static util.DBUtil.getCollection;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import util.DBUtil;
 
 import models.NewsLetterBean;
 import models.TalkerBean;
+import models.TopicBean;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
@@ -154,5 +160,67 @@ public class NewsLetterDAO {
 			return true;
 		else
 			return false;
+	}
+	
+	/*Methods for statistics*/
+	
+	public static long getNewsletterCount(String newsletterType) {
+		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
+		List<String> nType = new ArrayList<String>();
+		nType.add(newsletterType);
+		DBObject query = new BasicDBObject("newsletter_type", new BasicDBObject("$in", nType));
+		long newsLetterDBObject = newsLetterColl.count(query);
+		return newsLetterDBObject;
+	}
+	
+	public static List<String> getNewsletterEmail(String newsletterType) {
+		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
+		List<String> nType = new ArrayList<String>();
+		nType.add(newsletterType);
+		DBObject query = new BasicDBObject("newsletter_type", new BasicDBObject("$in", nType));
+		DBCursor dbObject = newsLetterColl.find(query);
+		List<String> emaiList = new ArrayList<String>();
+		for (DBObject talkerDBObject : dbObject) {
+			emaiList.add(DBUtil.getString(talkerDBObject, "email"));
+		}
+		return emaiList;
+	}
+	
+	public static Map<String, String> getTalkerNewsletterCount() {
+		Map<String, String> emaiList = new HashMap<String, String>();
+		String NEWSLETTER_COLLECTION = "talkerNewsletter";
+		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
+		DBCursor dbObject = newsLetterColl.find();
+		TalkerBean talkerBean;
+		Set<String> emailList = null;
+		long total = 0;
+		for (DBObject talkerDBObject : dbObject) {
+			DBRef talkerRef = (DBRef)talkerDBObject.get("talkerId");
+			emailList = DBUtil.getStringSet(talkerDBObject,"email");
+			talkerBean = TalkerDAO.getById(talkerRef.getId().toString());
+			total = total + emailList.size();
+			emaiList.put(talkerBean.getName(), Long.toString(emailList.size())); 
+		}
+		emaiList.put("all", Long.toString(total)); 
+		return emaiList;
+	}
+	
+	public static Map<String, String> getTopicNewsletterCount() { 
+		Map<String, String> emaiList = new HashMap<String, String>();
+		String NEWSLETTER_COLLECTION = "topicNewsletter";
+		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
+		DBCursor dbObject = newsLetterColl.find();
+		TopicBean topicBean;
+		Set<String> emailList = null;
+		long total = 0;
+		for (DBObject talkerDBObject : dbObject) {
+			DBRef topicRef = (DBRef)talkerDBObject.get("topicId");
+			topicBean = TopicDAO.getById(topicRef.getId().toString());
+			emailList = DBUtil.getStringSet(talkerDBObject,"email");
+			total = total + emailList.size();
+			emaiList.put(topicBean.getTitle(), Long.toString(emailList.size())); 
+		}
+		emaiList.put("all", Long.toString(total)); 
+		return emaiList;
 	}
 }
