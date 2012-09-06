@@ -19,8 +19,8 @@
 	</style>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$("#fromDate").datepicker({maxDate:new Date()});
-			$("#toDate").datepicker({maxDate:new Date()});
+			$("#fromDate").datepicker({maxDate:new Date(),dateFormat: "yy-dd-mm"});
+			$("#toDate").datepicker({maxDate:new Date(),dateFormat: "yy-dd-mm"});
 		});
 	</script>
 </head>
@@ -87,7 +87,8 @@
 							<a href="#">${email.key}</a>
 						#{/if}
 						#{else}
-							<a href="@{NewsletterStats.emailList(email.key)}">${email.key}</a>
+							<!-- <a href="@{NewsletterStats.emailList(email.key)}">${email.key}</a> -->
+							<a href="#">${email.key}</a>
 						#{/else}	
 						</td>
 						<td style="border: 1px solid #CCC;">${email.value}</td></tr>

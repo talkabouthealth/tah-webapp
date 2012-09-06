@@ -29,19 +29,26 @@ public class NewsletterStats extends Controller {
 	public static void index(String letterType,String fromDate,String toDate) {
 		
 		String errorMsg = "";
-		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-dd-MM");//09/04/2012
+		Date fromDt = new Date();
+		Date toDt = new Date();
 		boolean dateError = false;
-		if(fromDate != null && !"".equals(fromDate)){
-			try{
-				Date fromDt = dateFormat.parse(fromDate);
-				Date toDt = dateFormat.parse(toDate);
+		if(fromDate != null && !"".equals(fromDate)) {
+			try {
+				fromDt = dateFormat.parse(fromDate);
+				toDt = dateFormat.parse(toDate);
 				if(toDt.before(fromDt)){
 					dateError = true;
 				}
-			}catch(Exception e){
-				//e.printStackTrace();
+			} catch(Exception e) {
+				e.printStackTrace();
 				dateError = true;
 			}
+			if(dateError){
+				errorMsg = "Wrong dates selected";
+			}
+		}else{
+			dateError = true;
 		}
 
 		if(letterType == null){
@@ -50,11 +57,15 @@ public class NewsletterStats extends Controller {
 		
 		Map<String, String> emailList = new HashMap<String, String>();
 		long total = 0;
-		long dTotal;
+		long dTotal = 0;
 		if("0".equals(letterType)) {
 			List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
 			for (DiseaseBean diseaseBean : diseaseList) {
-				dTotal = NewsLetterDAO.getNewsletterCount(diseaseBean.getName());
+				if(!dateError){
+					dTotal = NewsLetterDAO.getNewsletterCount(diseaseBean.getName(),fromDt,toDt);
+				}else{
+					dTotal = NewsLetterDAO.getNewsletterCount(diseaseBean.getName());	
+				}
 				total = total + dTotal;
 				emailList.put(diseaseBean.getName(), Long.toString(dTotal));
 			}
@@ -67,7 +78,12 @@ public class NewsletterStats extends Controller {
 			rewardList.add("Pharmaceutical Rewards");
 			rewardList.add("Family Rewards");
 			for (String string : rewardList) {
-				dTotal = NewsLetterDAO.getNewsletterCount(string);
+				if(!dateError){
+					dTotal = NewsLetterDAO.getNewsletterCount(string,fromDt,toDt);
+				}else{
+					dTotal = NewsLetterDAO.getNewsletterCount(string);	
+				}
+				//dTotal = NewsLetterDAO.getNewsletterCount(string);
 				total = total + dTotal;
 				emailList.put(string, Long.toString(dTotal));
 			}
@@ -77,7 +93,12 @@ public class NewsletterStats extends Controller {
 			rewardList.add("Workshop summery");
 			rewardList.add("Best of TalkAboutHealth");
 			for (String string : rewardList) {
-				dTotal = NewsLetterDAO.getNewsletterCount(string);
+				if(!dateError) {
+					dTotal = NewsLetterDAO.getNewsletterCount(string,fromDt,toDt);
+				}else {
+					dTotal = NewsLetterDAO.getNewsletterCount(string);	
+				}
+				//dTotal = NewsLetterDAO.getNewsletterCount(string);
 				total = total + dTotal;
 				emailList.put(string, Long.toString(dTotal));
 			}
@@ -118,14 +139,17 @@ public class NewsletterStats extends Controller {
 			rewardList.add("Weight Loss and Diet");
 			rewardList.add("Womens Health");
 			for (String string : rewardList) {
-				dTotal = NewsLetterDAO.getNewsletterCount(string);
+				if(!dateError){
+					dTotal = NewsLetterDAO.getNewsletterCount(string,fromDt,toDt);
+				}else{
+					dTotal = NewsLetterDAO.getNewsletterCount(string);	
+				}
+				//dTotal = NewsLetterDAO.getNewsletterCount(string);
 				total = total + dTotal;
 				emailList.put(string, Long.toString(dTotal));
 			}	
 		}
-		if(dateError){
-			errorMsg = "Wrong dates selected";
-		}
+		
 		render(emailList,total,letterType,fromDate,toDate,errorMsg);
 	}
 

@@ -3,13 +3,20 @@ package dao;
 import static util.DBUtil.createRef;
 import static util.DBUtil.getCollection;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang.time.DateUtils;
 
 import util.DBUtil;
 
@@ -35,9 +42,9 @@ public class NewsLetterDAO {
 	public static boolean saveOrUpdateNewsletter(NewsLetterBean newsLetterBean,TalkerBean talker){
 		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
 		boolean isExist = ApplicationDAO.isEmailExists(newsLetterBean.getEmail());
-		if(isExist){
+		String []types = newsLetterBean.getNewsLetterType();
+		if(isExist) {
 			DBObject email = new BasicDBObject("email", newsLetterBean.getEmail());
-			String []types = newsLetterBean.getNewsLetterType();
 			if(talker == null) {
 				DBObject obj=newsLetterColl.findOne(email);
 				Collection<String> newLetterTypes = (Collection<String>)obj.get("newsletter_type");
@@ -45,27 +52,69 @@ public class NewsLetterDAO {
 					for(String type:types) {
 						if(!newLetterTypes.contains(type)) {
 							newLetterTypes.add(type);
+							populateStats(type,true);
 						}
 					}
 				}
 				types = newLetterTypes.toArray(new String[]{});
+			} else {
+				DBObject obj=newsLetterColl.findOne(email);
+				Collection<String> newLetterTypes = (Collection<String>)obj.get("newsletter_type");
+				if(newLetterTypes != null && !newLetterTypes.isEmpty()) {
+					for(String type:types) {
+						if(!newLetterTypes.contains(type)) {
+							populateStats(type,true);
+						}
+					}
+				}
 			}
+			
 			DBObject newsLetterDBObject = BasicDBObjectBuilder.start()
 				.add("email", newsLetterBean.getEmail())
 				.add("newsletter_type", types)
 				.get();
 			newsLetterColl.update(email,newsLetterDBObject);
-		}else{
-
+		} else {
+			for(String type:types) {
+				populateStats(type,true);
+			}
 			DBObject newsLetterDBObject = BasicDBObjectBuilder.start()
 				.add("email", newsLetterBean.getEmail())
-				.add("newsletter_type", newsLetterBean.getNewsLetterType())
+				.add("newsletter_type", types)
 				.get();
 			newsLetterColl.save(newsLetterDBObject);
 		}
 		return isExist;
 	}
 	
+	public static void populateStats(String newsLetter, boolean addFlag){
+		DBCollection newsLetterColl = getCollection("newsletterStats");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-dd-MM");
+		Date dt = Calendar.getInstance().getTime();
+		System.out.println(dateFormat.format(dt));
+		DBObject query = new BasicDBObject("newsletter_type", newsLetter).append("timestamp",dateFormat.format(dt));
+		DBObject obj = newsLetterColl.findOne(query);
+		if(obj != null) {
+			DBObject updateObj;
+			if(addFlag)
+				updateObj = new BasicDBObject("letterCount", 1);
+			else
+				updateObj = new BasicDBObject("letterCount", -1);
+			newsLetterColl.update(query,new BasicDBObject("$inc", updateObj));
+		} else {
+			DBObject newsLetterDBObject = BasicDBObjectBuilder.start()
+					.add("newsletter_type", newsLetter)
+					.add("timestamp", dateFormat.format(dt))
+					.add("letterCount", 1)
+					.get();
+			newsLetterColl.save(newsLetterDBObject);
+		}
+		System.out.println("Done");
+		
+	}
+	public static void main(String [] args){
+		populateStats("workshop",true);
+	}
 	/**
 	 * Method used for get newsletter information by user email.
 	 * @param email
@@ -171,6 +220,25 @@ public class NewsLetterDAO {
 		DBObject query = new BasicDBObject("newsletter_type", new BasicDBObject("$in", nType));
 		long newsLetterDBObject = newsLetterColl.count(query);
 		return newsLetterDBObject;
+	}
+	
+	public static long getNewsletterCount(String newsletterType,Date fromDt, Date toDt) {
+		DBCollection newsLetterColl = getCollection("newsletterStats");
+		long count=0;
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-dd-MM");
+		toDt = DateUtils.addDays(toDt, 1);
+		do {
+			DBObject usernameQuery = BasicDBObjectBuilder.start()
+					.add("newsletter_type", newsletterType)
+					.add("timestamp", dateFormat.format(fromDt))
+					.get();
+			DBObject newsLetterDBObject = newsLetterColl.findOne(usernameQuery);
+			if(newsLetterDBObject!=null) {
+				count = DBUtil.getInt(newsLetterDBObject, "letterCount");
+			}
+			fromDt = DateUtils.addDays(fromDt, 1);
+		}while(toDt.after(fromDt));
+		return count;
 	}
 	
 	public static List<String> getNewsletterEmail(String newsletterType) {
