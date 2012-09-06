@@ -18,6 +18,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.time.DateUtils;
 
+import play.Logger;
+
 import util.DBUtil;
 
 import models.NewsLetterBean;
@@ -91,7 +93,7 @@ public class NewsLetterDAO {
 		DBCollection newsLetterColl = getCollection("newsletterStats");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-dd-MM");
 		Date dt = Calendar.getInstance().getTime();
-		System.out.println(dateFormat.format(dt));
+		Logger.info(dateFormat.format(dt));
 		DBObject query = new BasicDBObject("newsletter_type", newsLetter).append("timestamp",dateFormat.format(dt));
 		DBObject obj = newsLetterColl.findOne(query);
 		if(obj != null) {
@@ -109,7 +111,7 @@ public class NewsLetterDAO {
 					.get();
 			newsLetterColl.save(newsLetterDBObject);
 		}
-		System.out.println("Done");
+		Logger.info("Done");
 		
 	}
 	public static void main(String [] args){
