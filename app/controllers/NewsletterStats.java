@@ -3,19 +3,16 @@ package controllers;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import models.DiseaseBean;
-import dao.DiseaseDAO;
-import dao.NewsLetterDAO;
 import play.mvc.Controller;
 import play.mvc.With;
+import dao.DiseaseDAO;
+import dao.NewsLetterDAO;
 
 
 /**
@@ -103,11 +100,21 @@ public class NewsletterStats extends Controller {
 				emailList.put(string, Long.toString(dTotal));
 			}
 		} else if("3".equals(letterType)) {
-			emailList = NewsLetterDAO.getTalkerNewsletterCount();
+			if(!dateError){
+				emailList = NewsLetterDAO.getTalkerNewsletterCount(fromDt,toDt);
+			}else{
+				emailList = NewsLetterDAO.getTalkerNewsletterCount(null,null);
+			}
+			//emailList = NewsLetterDAO.getTalkerNewsletterCount();
 			total = Long.parseLong(emailList.get("all"));
 			emailList.remove("all");
 		} else if("4".equals(letterType)) {
-			emailList = NewsLetterDAO.getTopicNewsletterCount();
+			if(!dateError){
+				emailList = NewsLetterDAO.getTopicNewsletterCount(fromDt,toDt);
+			}else{
+				emailList = NewsLetterDAO.getTopicNewsletterCount(null,null);
+			}
+			//emailList = NewsLetterDAO.getTopicNewsletterCount();
 			total = Long.parseLong(emailList.get("all"));
 			emailList.remove("all");
 		} else if("5".equals(letterType)) {
@@ -156,5 +163,14 @@ public class NewsletterStats extends Controller {
 	public static void emailList(String emailList) {
 		List<String> emailLIst = NewsLetterDAO.getNewsletterEmail(emailList);
 		render(emailLIst);
+	}
+	
+	public static void moveEmail(String type){
+		if("topic".equals(type)) {
+			NewsLetterDAO.moveNewsletters();
+		} else if ("expert".equals(type)) {
+			NewsLetterDAO.moveNewslettersExpert();
+		}
+		renderText("OK");
 	}
 }

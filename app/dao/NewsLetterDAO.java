@@ -14,17 +14,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang.time.DateUtils;
-
-import play.Logger;
-
-import util.DBUtil;
 
 import models.NewsLetterBean;
 import models.TalkerBean;
 import models.TopicBean;
+
+import org.apache.commons.lang.time.DateUtils;
+
+import play.Logger;
+import util.DBUtil;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
@@ -135,6 +133,20 @@ public class NewsLetterDAO {
 	}
 	
 	
+	public static boolean saveOrUpdateTopicNewsletterNew(String email, String topicId) {
+		String NEWSLETTER_COLLECTION = "topicNewsletterNew";
+		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
+		DBRef topicRef = createRef(TopicDAO.TOPICS_COLLECTION, topicId);
+		DBObject newsLetterDBObject;
+		newsLetterDBObject = BasicDBObjectBuilder.start()
+							.add("topicId", topicRef)
+							.add("email", email)
+							.add("timestamp",  Calendar.getInstance().getTime()).get();
+		newsLetterColl.save(newsLetterDBObject);
+		return true;
+		
+	}
+	
 	public static boolean saveOrUpdateTopicNewsletter(String email, String topicId) {
 		String NEWSLETTER_COLLECTION = "topicNewsletter";
 		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
@@ -154,6 +166,19 @@ public class NewsLetterDAO {
 			newsLetterDBObject = BasicDBObjectBuilder.start().add("topicId", topicRef).add("email", emailList).get();
 			newsLetterColl.update(topicIdObj,newsLetterDBObject);
 		}
+		return true;
+	}
+	
+	public static boolean saveOrUpdateTalkerNewsletterNew(String email, String talkerId) {
+		String NEWSLETTER_COLLECTION = "talkerNewsletterNew";
+		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
+		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
+		DBObject newsLetterDBObject;
+		newsLetterDBObject = BasicDBObjectBuilder.start()
+							.add("talkerId", talkerRef)
+							.add("email", email)
+							.add("timestamp",  Calendar.getInstance().getTime()).get();
+		newsLetterColl.save(newsLetterDBObject);
 		return true;
 	}
 	
@@ -256,41 +281,111 @@ public class NewsLetterDAO {
 		return emaiList;
 	}
 	
-	public static Map<String, String> getTalkerNewsletterCount() {
+	public static Map<String, String> getTalkerNewsletterCount(Date fromDt,Date toDt) {
 		Map<String, String> emaiList = new HashMap<String, String>();
-		String NEWSLETTER_COLLECTION = "talkerNewsletter";
+		String NEWSLETTER_COLLECTION = "talkerNewsletterNew";
 		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
-		DBCursor dbObject = newsLetterColl.find();
+		
+		DBCursor dbObject = null;
+		if(fromDt != null) {
+			BasicDBObject query = new BasicDBObject();
+			query.put("timestamp", BasicDBObjectBuilder.start("$gte", fromDt).add("$lte", toDt).get());
+			dbObject = newsLetterColl.find(query);
+		} else {
+			dbObject = newsLetterColl.find();
+		}
 		TalkerBean talkerBean;
-		Set<String> emailList = null;
 		long total = 0;
+		long talkerTotal = 0;
 		for (DBObject talkerDBObject : dbObject) {
 			DBRef talkerRef = (DBRef)talkerDBObject.get("talkerId");
-			emailList = DBUtil.getStringSet(talkerDBObject,"email");
 			talkerBean = TalkerDAO.getById(talkerRef.getId().toString());
-			total = total + emailList.size();
-			emaiList.put(talkerBean.getName(), Long.toString(emailList.size())); 
+			if(emaiList.containsKey(talkerBean.getName())) {
+				talkerTotal = Long.parseLong(emaiList.get(talkerBean.getName())) + 1;
+				emaiList.put(talkerBean.getName(), Long.toString(talkerTotal));
+			} else {
+				emaiList.put(talkerBean.getName(), "1");
+			}
+			++total;
+		}
+		emaiList.put("all", Long.toString(total)); 
+		return emaiList;
+	}
+
+	public static Map<String, String> getTopicNewsletterCount(Date fromDt,Date toDt) { 
+		Map<String, String> emaiList = new HashMap<String, String>();
+		String NEWSLETTER_COLLECTION = "topicNewsletterNew";
+		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
+		DBCursor dbObject = null;
+		if(fromDt != null) {
+			BasicDBObject query = new BasicDBObject();
+			query.put("timestamp", BasicDBObjectBuilder.start("$gte", fromDt).add("$lte", toDt).get());
+			dbObject = newsLetterColl.find(query);
+		} else {
+			dbObject = newsLetterColl.find();
+		}
+		TopicBean topicBean;
+		long total = 0;
+		long topicTotal = 0;
+		for (DBObject talkerDBObject : dbObject) {
+			DBRef topicRef = (DBRef)talkerDBObject.get("topicId");
+			topicBean = TopicDAO.getById(topicRef.getId().toString());
+			if(emaiList.containsKey(topicBean.getTitle())){
+				topicTotal = Long.parseLong(emaiList.get(topicBean.getTitle())) + 1;
+				emaiList.put(topicBean.getTitle(), Long.toString(topicTotal));
+			} else {
+				emaiList.put(topicBean.getTitle(), "1");
+			}
+			++total;
 		}
 		emaiList.put("all", Long.toString(total)); 
 		return emaiList;
 	}
 	
-	public static Map<String, String> getTopicNewsletterCount() { 
-		Map<String, String> emaiList = new HashMap<String, String>();
+	public static void moveNewsletters() {
 		String NEWSLETTER_COLLECTION = "topicNewsletter";
-		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
-		DBCursor dbObject = newsLetterColl.find();
-		TopicBean topicBean;
+		String NEWSLETTER_COLLECTION_NEW = "topicNewsletterNew";
+		DBCollection dbObject = getCollection(NEWSLETTER_COLLECTION);
+		DBCollection dbObjectNew = getCollection(NEWSLETTER_COLLECTION_NEW);
+		DBCursor dbObject1 = dbObject.find();
 		Set<String> emailList = null;
-		long total = 0;
-		for (DBObject talkerDBObject : dbObject) {
+		Calendar calendar =  Calendar.getInstance();
+		calendar.set(Calendar.MONTH, Calendar.AUGUST);
+		calendar.set(Calendar.DAY_OF_MONTH,1);
+		for (DBObject talkerDBObject : dbObject1) {
 			DBRef topicRef = (DBRef)talkerDBObject.get("topicId");
-			topicBean = TopicDAO.getById(topicRef.getId().toString());
 			emailList = DBUtil.getStringSet(talkerDBObject,"email");
-			total = total + emailList.size();
-			emaiList.put(topicBean.getTitle(), Long.toString(emailList.size())); 
+			for (String string : emailList) {
+				DBObject newsLetterDBObject;
+				newsLetterDBObject = BasicDBObjectBuilder.start()
+									.add("topicId", topicRef)
+									.add("email", string)
+									.add("timestamp", calendar.getTime()).get();
+				dbObjectNew.save(newsLetterDBObject);
+			}
 		}
-		emaiList.put("all", Long.toString(total)); 
-		return emaiList;
+	}
+	public static void moveNewslettersExpert() {
+		String NEWSLETTER_COLLECTION = "talkerNewsletter";
+		String NEWSLETTER_COLLECTION_NEW = "talkerNewsletterNew";
+		DBCollection dbObject = getCollection(NEWSLETTER_COLLECTION);
+		DBCollection dbObjectNew = getCollection(NEWSLETTER_COLLECTION_NEW);
+		DBCursor dbObject1 = dbObject.find();
+		Set<String> emailList = null;
+		Calendar calendar =  Calendar.getInstance();
+		calendar.set(Calendar.MONTH, Calendar.AUGUST);
+		calendar.set(Calendar.DAY_OF_MONTH,1);
+		for (DBObject talkerDBObject : dbObject1) {
+			DBRef topicRef = (DBRef)talkerDBObject.get("talkerId");
+			emailList = DBUtil.getStringSet(talkerDBObject,"email");
+			for (String string : emailList) {
+				DBObject newsLetterDBObject;
+				newsLetterDBObject = BasicDBObjectBuilder.start()
+									.add("talkerId", topicRef)
+									.add("email", string)
+									.add("timestamp", calendar.getTime()).get();
+				dbObjectNew.save(newsLetterDBObject);
+			}
+		}
 	}
 }
