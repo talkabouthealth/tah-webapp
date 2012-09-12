@@ -232,10 +232,12 @@ public class Profile extends Controller {
 			CommonUtil.updateTalker(talker, session);
 			
 			//send verification email
+			/* 
 			Map<String, String> vars = new HashMap<String, String>();
 			vars.put("username", talker.getUserName());
 			vars.put("verify_code", talker.getVerifyCode());
 			EmailUtil.sendEmail(EmailTemplate.VERIFICATION, talker.getEmail(), vars, null, false);
+			*/
 		}
 		else if (name.equals("twittersettings")) {
 			ServiceAccountBean twitterAccount = talker.serviceAccountByType(ServiceType.TWITTER);

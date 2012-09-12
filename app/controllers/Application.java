@@ -279,7 +279,7 @@ public class Application extends Controller {
 			}
 			
 			userEmail = email;
-			verifyCode = CommonUtil.generateVerifyCode();
+			//verifyCode = CommonUtil.generateVerifyCode();
 
 			//follow this user by TAH
     		TwitterUtil.followUser(accountId);

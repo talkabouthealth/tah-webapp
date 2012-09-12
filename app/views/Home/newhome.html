@@ -173,8 +173,16 @@ function doOnLoad(){
 			);
 		}
 	});
-	if (${emailVerification}) {
-		showPopup("#emailVerificationDialog", 350);
+	//if (${emailVerification} == true) {
+	//	showPopup("#emailVerificationDialog", 350);
+	//}else {			
+	//	showUpdatePassword();
+	//}
+}
+function showUpdatePassword(){
+	if('${talker.passwordUpdate}'=='true'){
+		$("#changePasswordForm").show();
+		showPopup("#changePassword", 350);
 	}
 }
 

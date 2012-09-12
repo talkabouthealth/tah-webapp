@@ -28,6 +28,7 @@ public class EmailReminderJob extends Job {
 		
 	@Override
 	public void doJob() throws Exception {
+		/*
 		Logger.info("Strating EmailReminderJob");
 		for (TalkerBean talker : TalkerDAO.loadAllTalkers()) {
 			if (talker.getVerifyCode() != null) {
@@ -63,6 +64,6 @@ public class EmailReminderJob extends Job {
 			}
 		}
 		Logger.info("Completing EmailReminderJob");
+		*/
 	}
-
 }
