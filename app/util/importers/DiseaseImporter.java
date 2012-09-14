@@ -2,13 +2,17 @@ package util.importers;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.io.IOUtils;
 
 import models.DiseaseBean;
 import models.DiseaseBean.DiseaseQuestion;
@@ -40,7 +44,7 @@ public class DiseaseImporter {
 	public static void importDiseases(String fileName) throws Exception {
 		
 		BufferedReader br = CommonUtil.createImportReader(fileName);
-		
+		System.out.println("Importing diseases::::::");
 	
 		String buffer="";
 		String line = null;
@@ -99,6 +103,8 @@ public class DiseaseImporter {
 			}
 		}
 		
+		System.out.println("Completed diseases::::::");
+		
 		if (disease != null) {
 			//save disease to DB
 			DiseaseDAO.save(disease);
@@ -109,12 +115,15 @@ public class DiseaseImporter {
 		 buffer=buffer.replaceAll("true","false");
 		 buffer=buffer.replaceAll("insert","false");
 		 
-		  FileWriter fstream = new FileWriter("/opt/tah-webapp/tmpClasses/classes/util/importers/data/"+fileName);
-		  BufferedWriter out = new BufferedWriter(fstream);
-		  out.write(buffer);
-		  out.close();
-		  DiseaseDAO.removeDisease(fileids);
+		 java.net.URL url = CommonUtil.class.getResource("/util/importers/data/"+fileName);
+		  //FileWriter fstream = new FileWriter("/base/repos/talkabouthealth.com/tah-webapp/tmpClasses/classes/util/importers/data/"+fileName); ///base/repos/talkabouthealth.com/tah-webapp/app/util/importers/data/
+		 FileWriter fstream = new FileWriter(url.getPath());
+		 BufferedWriter out = new BufferedWriter(fstream);
+		 out.write(buffer);
+		 out.close();
+		 System.out.println("Diseases.dat file updated::::::");
+		 DiseaseDAO.removeDisease(fileids);
 		  
 	}
-
+	
 }

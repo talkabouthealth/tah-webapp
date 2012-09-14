@@ -34,6 +34,7 @@ import util.DiseaseChangeUtil;
 import util.EmailUtil;
 import util.NotificationUtils;
 import util.SearchUtil;
+import util.importers.DiseaseImporter;
 
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -292,5 +293,19 @@ public class Dashboard extends Controller {
 		Cache.set("diseasesList", null);
 		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
 		render("@diseaseUtil",diseaseList,errorMsg,oldName,newName);
+	}
+	
+	public static void updateAllDisease(){
+		String errorMsg = "Please restart server to get reflections done\nIf you have edited a name Please user change util to reflect it all where";
+		try {
+			DiseaseImporter.importDiseases("diseases.dat");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			errorMsg = "Internal server error";
+		}
+		Cache.set("diseasesList", null);
+		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+		render("@diseaseUtil",diseaseList,errorMsg);
 	}
 }
