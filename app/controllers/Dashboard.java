@@ -14,18 +14,23 @@ import java.util.Map;
 import java.util.Set;
 
 import logic.TalkerLogic;
+import models.DiseaseBean;
 import models.EmailListBean;
 import models.NewsLetterBean;
 import models.TalkerBean;
 import models.TopicBean;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
 import play.Logger;
+import play.cache.Cache;
 import play.mvc.Controller;
 import play.mvc.With;
+import util.DiseaseChangeUtil;
 import util.EmailUtil;
 import util.NotificationUtils;
 import util.SearchUtil;
@@ -37,6 +42,7 @@ import com.tah.im.IMNotifier;
 import com.tah.im.singleton.OnlineUsersSingleton;
 
 import dao.ConfigDAO;
+import dao.DiseaseDAO;
 import dao.TalkerDAO;
 import dao.ConversationDAO;
 
@@ -60,7 +66,7 @@ public class Dashboard extends Controller {
 		
 		render(topicsList, topicsWithNotificationsList, talkersList, lastTopicId, onlineUsersSingleton, automaticNotification);
 	}
-		
+
 	/**
 	 * Send notification to given users
 	 * @param uidArray array of ids of users to notify
@@ -72,7 +78,6 @@ public class Dashboard extends Controller {
 		} catch (Exception e) {
 			Logger.error(e,"Dashboard.java : notification ");
 		}
-		
 		renderText("ok");
 	}
 	
@@ -264,5 +269,28 @@ public class Dashboard extends Controller {
 
 		EmailUtil.setEmail(newsLetterList);
 		index();
+	}
+	
+	public static void diseaseUtil(){
+		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+		render(diseaseList);
+	}
+	
+	public static void changeDisease(String oldName, String newName){
+		System.out.println(oldName);
+		System.out.println(newName);
+		String errorMsg = "";
+		if(StringUtils.isBlank(oldName)){
+			errorMsg = "Please select old Name";
+		} else if(StringUtils.isBlank(newName)) {
+			errorMsg = "Please select new Name";
+		} else {
+			DiseaseChangeUtil.updateDiseaseNameInTalker(oldName, newName);
+			DiseaseChangeUtil.updateDiseaseNameInConvo(oldName, newName);
+		}
+		
+		Cache.set("diseasesList", null);
+		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+		render("@diseaseUtil",diseaseList,errorMsg,oldName,newName);
 	}
 }

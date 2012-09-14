@@ -1,4 +1,4 @@
-<div class="thnksarea" id="${feedType.replaceAll(" ", "-").replaceAll("&", "and")}Tab">
+<div class="thnksarea" id="${feedType.replaceAll(" ", "-").replaceAll("&", "and").replaceAll("\\(","").replaceAll("\\)","")}Tab">
 #{if activeTalkers == null}
 No record found
 #{/if}
@@ -10,6 +10,6 @@ No record found
 </div>
 #{if activeTalkers != null && activeTalkers.size() == logic.TalkerLogic.TALKERS_PER_PAGE }
 	<div align="center" style=" clear: both;" id="${feedType.replaceAll(" ", "-").replaceAll("&", "and")}Btn">
-		<input type="submit" src="images/seemore.jpg" onclick="return loadMoreUser('${feedType.replaceAll(" ", "-").replaceAll("&", "and")}');" value=" " class="seemorecom" />
+		<input type="submit" src="images/seemore.jpg" onclick="return loadMoreUser('${feedType}','${feedType.replaceAll(" ", "-").replaceAll("&", "and").replaceAll("\\(","").replaceAll("\\)","")}');" value=" " class="seemorecom" />
 	</div>
 #{/if}
