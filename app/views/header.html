@@ -202,6 +202,20 @@ openServiceLogin = function(serviceType) {
 			document.location = url; 
 		}
 	}
+	
+	deleteComment = function(commentId) {
+   		var confirmDel = confirm("Are you sure want to delete this thought/reply?");
+   		if (confirmDel) {
+   	  		$.post("@{Actions.deleteComment()}", 
+				{ commentId : commentId},
+				function(html) {
+					$(".comment"+html).html("<div class=\"inline_view moretext2\" style=\"color:#000000;padding-bottom:5px; border-bottom:solid 0px gray\">Thought deleted ...</span>");
+				}
+			);
+   		}
+   		return false;
+	}
+	
 </script>
 <div id="wrapper">
 <div id="header">

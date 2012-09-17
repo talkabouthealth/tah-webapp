@@ -183,7 +183,7 @@ public class Actions extends Controller {
 		
 		//remove all actions connected with this comment
 		ActionDAO.deleteActionsByProfileComment(comment);
-    	renderText("ok");
+    	renderText(commentId);
     }
 	
 	/**

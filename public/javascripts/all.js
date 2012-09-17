@@ -740,6 +740,10 @@ function showPopup(id, popupWidth) {
 	$(id).css('left', winW/2-popupWidth);
 	$(id).fadeIn(200); 
 	
+	$(".close").click(function(){
+		hideAll();
+	});
+	
 	return false;
 }
 
