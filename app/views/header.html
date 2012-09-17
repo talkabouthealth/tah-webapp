@@ -187,7 +187,13 @@ openServiceLogin = function(serviceType) {
 		
 		$('#settings2').bind('mouseover', jsddm_open);
 		$('#settings2').bind('mouseout',  jsddm_timer);
-	 
+
+		//close button in popups
+		$('.window .close, .window .cancelLink').click(function (e) {
+		//Cancel the link behavior
+			e.preventDefault();
+			hideAll();
+		});
 	});
 
 	function makeFullSearch(inputId) {
