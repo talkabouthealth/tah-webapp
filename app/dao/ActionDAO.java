@@ -210,11 +210,24 @@ public class ActionDAO {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
 		}
 		
-		//getDeiseaseList
+		//Code to exculde all cancer feeds from the new cancer types.
+		
+		Set<String> newCancerType = new HashSet<String>();
+		newCancerType.add("ADHD");
+		newCancerType.add("Sleep Disorders");
+		newCancerType.add("Anorexia");
+		newCancerType.add("Stress Management");
+		newCancerType.add("Anger Management");
+		newCancerType.add("Addiction");
+		newCancerType.add("Psychopathy");
+		newCancerType.add("Creativity");
 		
 		List<String> cat=new ArrayList<String>();
 		cat = FeedsLogic.getCancerType(talker);
-		cat.add(ConversationBean.ALL_CANCERS);
+		if(!newCancerType.contains(talker.getCategory())) {
+			cat.add(ConversationBean.ALL_CANCERS);
+		}
+		
 		if(talker == null) {
 			queryBuilder.add("category", new BasicDBObject("$in", cat) );
 		} else {
@@ -223,7 +236,9 @@ public class ActionDAO {
 			} else {
 				List<String> otherCat = new ArrayList<String>();
 				otherCat.add(talker.getCategory());// = cat;
-				otherCat.add(ConversationBean.ALL_CANCERS);
+				if(!newCancerType.contains(talker.getCategory())) {
+					otherCat.add(ConversationBean.ALL_CANCERS);
+				}
 				queryBuilder.add("$or", 
 					Arrays.asList(
 							new BasicDBObject("other_disease_categories", new BasicDBObject("$in", otherCat)),
