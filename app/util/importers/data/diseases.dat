@@ -91,7 +91,7 @@ choices;Lining of the bronchial tubes (NSCLC - squamous cell carcinoma / epiderm
 GeneticRisk;Genetic Risk;Genetic Risk;multiselect;;;
 choices;EGFR;KRAS;EML4-ALK;Nuclear Factor I/B (NFIB);P53;Nicotine metabolic gene (CYP2A6);BRAF;Nicotinic gene cluster (CHRNA5-A3-B3);RAS;;;;
 ;;;;;;
-Disease;Melanoma;;;;;d7;false
+Disease;Melanoma (Cutaneous);;;;;d7;true
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage 0 (Melanoma in Situ);Stage I;Stage II;Stage III;Stage IV
@@ -157,7 +157,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Bladder and Urinary Cancer;;;;;d13;true
+Disease;Bladder and Urinary Cancer;;;;;d13;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -277,7 +277,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Sarcoma;;;;;d24;insert
+Disease;Sarcoma;;;;;d25;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -285,7 +285,31 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Thyroid Cancer;;;;;d24;insert
+Disease;Thyroid Cancer;;;;;d26;false
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Mesothelioma;;;;;d27;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Melanoma (Ocular or Uveal);;;;;d28;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Melanoma (Mucosal);;;;;d29;insert
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV

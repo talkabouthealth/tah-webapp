@@ -773,9 +773,10 @@ function initOldTabs(activeTabName) {
 		
 		//find the rel attribute value to identify the active tab + content
 		var activeTab = $(this).find("a").attr("href"); 
+		var name = $(this).find("a").attr("name");
 		var type = $(this).find("a").attr("id");
 		$(activeTab).fadeIn();
-		loadMoreUser(type,'b');
+		loadMoreUser(name,type,'b');
 		return false;
 	});
 }
@@ -971,7 +972,7 @@ function refreshMembers(type,elm){
 	);
 }
 
-function loadMoreUser(type,from){
+function loadMoreUser(name,type,from){
 	
 
 	var lastActionId = '';
@@ -994,9 +995,11 @@ function loadMoreUser(type,from){
 
 	var typeParam = replaceAll(type,"-"," ");
 	typeParam = replaceAll(typeParam,"and","&");
-
+	
+	name = replaceAll(name,"and","&");
+	
 	//Useful for the special charactors in the string
-	$.get("/explore/ajaxLoadMoreUser", {afterActionId: lastActionId, feedType: typeParam, searchTerm : searchTerm},
+	$.get("/explore/ajaxLoadMoreUser", {afterActionId: lastActionId, feedType: name, searchTerm : searchTerm},
 		function(data) {
 			populateMemberArea(data,type,from);
 		}
@@ -1011,7 +1014,7 @@ function populateMemberArea(data,type,from){
 	type = type.replaceAll(' ', '-');
 	type = type.replaceAll('&', 'and');
 	if(from && from == 'b'){
-		$("#"+type+"TabFirst").html("");
+		$("#" + type + "TabFirst").html("");	
 		$(data).appendTo($("#"+type+"TabFirst"));
 		$('.moretext').truncatable({ limit: 70, more: '... more', less: true, hideText: '...less' });
 		$("#ajaxLoading").hide();
@@ -1026,7 +1029,6 @@ function populateMemberArea(data,type,from){
 		}
 		$("#ajaxLoading").hide();
 	}
-	
 }
 
 function replaceAll(strText,oldParam,newParam){

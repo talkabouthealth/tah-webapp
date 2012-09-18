@@ -972,7 +972,8 @@ public class TalkerLogic {
         talker.setPassword(hashedPassword);
         
         //code for email validation
-        talker.setVerifyCode(CommonUtil.generateVerifyCode());
+        //talker.setVerifyCode(CommonUtil.generateVerifyCode());
+        talker.setVerifyCode(null);
         
         talker.setConnectionVerified(false);
 	}
@@ -990,6 +991,7 @@ public class TalkerLogic {
         //Send 'email verification' and 'welcome' emails
 		Map<String, String> vars = new HashMap<String, String>();
 		
+		/* Not needed for verification code changes
 		if (talker.getVerifyCode() != null) {
 			vars.put("username", talker.getUserName());
 			vars.put("verify_code", talker.getVerifyCode());
@@ -997,6 +999,7 @@ public class TalkerLogic {
 		}
 		
 		vars = new HashMap<String, String>();
+		*/
 		vars.put("username", talker.getUserName());
 		EmailUtil.sendEmail(EmailTemplate.WELCOME, talker.getEmail(), vars, null, false);
 		

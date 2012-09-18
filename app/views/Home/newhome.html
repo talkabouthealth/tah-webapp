@@ -20,6 +20,9 @@
 var username = "${talker.userName}";
 var feedsPerPage = ${logic.FeedsLogic.FEEDS_PER_PAGE};
 function doOnLoad(){
+	
+	$("#${talkerCat}CommunityFeed").click(); 
+	
 	/* ------- Follow methods for Recommended sections ---------- */
 	$(".followTopicLink").live('click', function() {
 		//replace More button with loading image
@@ -173,8 +176,16 @@ function doOnLoad(){
 			);
 		}
 	});
-	if (${emailVerification}) {
-		showPopup("#emailVerificationDialog", 350);
+	//if (${emailVerification} == true) {
+	//	showPopup("#emailVerificationDialog", 350);
+	//}else {			
+	//	showUpdatePassword();
+	//}
+}
+function showUpdatePassword(){
+	if('${talker.passwordUpdate}'=='true'){
+		$("#changePasswordForm").show();
+		showPopup("#changePassword", 350);
 	}
 }
 
@@ -369,6 +380,7 @@ function updateFeed(type,talkerName) {
 								<div id = "conversationFeed">
 								</div>
 									<div id = "allCancerFeed">
+									#{if allFeed != null}
 										<div id="allFeedContent" class="tabContent" >	
 											<div class="topic">
 						                      <div class="cb"></div>
@@ -396,6 +408,7 @@ function updateFeed(type,talkerName) {
 						                      <div class="cb"></div>
 						                    </div> 
 										</div>
+										#{/if}
 									</div>
 									<div id="openFeed"></div>
 									<div id="cancerFeed"></div>

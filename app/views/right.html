@@ -251,6 +251,7 @@
 	   #{/ifnot}
  	#{/if}
  	
+ 	*{
  	#{if session.username.equals(talker.userName) && talker.verifyCode != null }
 		<div class="topipsts">
            <div class="mtrighttxt1">Please verify your email</div>
@@ -270,6 +271,7 @@
 	     <div class="topicborder"></div>
 	   </div>
  	#{/if}
+ 	}*
  	
  	<!-- REFACTOR DEEMPHASIZE IM --> 
  	#{if false && currentPage?.equals("home") && showNotificationAccounts }

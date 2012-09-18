@@ -80,7 +80,7 @@ public class Home extends Controller {
 			//Code added for display talker's cancer fees
 			
     		//Set<Action> multipleCancerCommunityFeed = null;
-	    	talkerCat = talker.getCategory();
+	    	//talkerCat = talker.getCategory();
 	    	//multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
 	    	if(talkerCat != null)
 	    		allDiseaseList.put(talker.getCategory().replaceAll(" ", "_"),null);
@@ -94,9 +94,10 @@ public class Home extends Controller {
 	    	}
 	    	talker.setCategory(talkerCat);
 	    	talkerCat = talkerCat.replaceAll(" ", "_");
+    	} else {
+    		allFeed = FeedsLogic.getAllCancerFeed(null, true,talker);
     	}
 		
-    	allFeed = FeedsLogic.getAllCancerFeed(null, true,talker);
     	boolean showNotificationAccounts = prepareNotificationPanel(session, talker);
 		TalkerLogic.preloadTalkerInfo(talker);
 		

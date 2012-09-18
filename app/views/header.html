@@ -187,7 +187,13 @@ openServiceLogin = function(serviceType) {
 		
 		$('#settings2').bind('mouseover', jsddm_open);
 		$('#settings2').bind('mouseout',  jsddm_timer);
-	 
+
+		//close button in popups
+		$('.window .close, .window .cancelLink').click(function (e) {
+		//Cancel the link behavior
+			e.preventDefault();
+			hideAll();
+		});
 	});
 
 	function makeFullSearch(inputId) {
@@ -202,6 +208,20 @@ openServiceLogin = function(serviceType) {
 			document.location = url; 
 		}
 	}
+	
+	deleteComment = function(commentId) {
+   		var confirmDel = confirm("Are you sure want to delete this thought/reply?");
+   		if (confirmDel) {
+   	  		$.post("@{Actions.deleteComment()}", 
+				{ commentId : commentId},
+				function(html) {
+					$(".comment"+html).html("<div class=\"inline_view moretext2\" style=\"color:#000000;padding-bottom:5px; border-bottom:solid 0px gray\">Thought deleted ...</span>");
+				}
+			);
+   		}
+   		return false;
+	}
+	
 </script>
 <div id="wrapper">
 <div id="header">
@@ -230,14 +250,17 @@ openServiceLogin = function(serviceType) {
 	                  <li><a href="@{Dashboard.manageAccounts()}">Manage Accounts</a></li>
 	                  <li><a href="@{Dashboard.verifyProfessionals()}">Verify Professionals</a></li>
 	                  <li><a href="@{UserList.index()}">Users</a></li>
+	                  <li><a href="@{Video.homePageVideo()}">Home video</a></li>
+	                  <li><a href="@{NewsletterStats.index()}">Newsletter Stats</a></li>
+	                  <li><a href="@{Dashboard.diseaseUtil()}">Disease</a></li>
+	                  <li><hr></li>
+					  *{
 	                  <li><a href="@{QuestionRecovery.index()}">Question Recovery</a></li>
 	                  <li><a href="@{Application.reloadTalkersHealthInfo()}">Reload Talker Health Info</a></li>
-	                  *{
 	                  <li><a href="@{Application.updateTalkerIds()}">Update Talkers</a></li>
 	                  <li><a href="@{UpdateQuestion.updateQuestionStatus()}">Question Recovery</a></li>
 	                  }*
 	                  <li><a href="@{Dashboard.updateTalkerImage()}">Image All</a></li>
-	                  <li><a href="@{Video.homePageVideo()}">Home video</a></li>
 	                </ul>
 	            </li>
 		  #{/if}

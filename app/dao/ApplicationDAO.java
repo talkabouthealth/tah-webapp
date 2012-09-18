@@ -499,6 +499,10 @@ public class ApplicationDAO {
 			.add("email", email)
 			.add("newsletter_type", newsLetterType)
 			.get();
+		for (String string : newsLetterType) {
+			NewsLetterDAO.populateStats(string,true);	
+		}
+		
 		waitingColl.save(waitingDBObject);
 	}
 	

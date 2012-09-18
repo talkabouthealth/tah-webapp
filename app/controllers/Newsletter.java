@@ -48,7 +48,8 @@ public class Newsletter extends Controller {
     	} else if(topicId == null) {
     		msg = "Error: Please try again.";
     	} else {
-    		NewsLetterDAO.saveOrUpdateTopicNewsletter(email,topicId);
+    		//NewsLetterDAO.saveOrUpdateTopicNewsletter(email,topicId);
+    		NewsLetterDAO.saveOrUpdateTopicNewsletterNew(email,topicId);
     		if(isNewsletter)
     			msg ="Thank you for subscribing!";
     		else
@@ -69,7 +70,8 @@ public class Newsletter extends Controller {
     	} else if(talkerId == null) {
     		msg = "Error: Please try again.";
     	} else {
-    		NewsLetterDAO.saveOrUpdateTalkerNewsletter(email,talkerId);
+    		//NewsLetterDAO.saveOrUpdateTalkerNewsletter(email,talkerId);
+    		NewsLetterDAO.saveOrUpdateTalkerNewsletterNew(email,talkerId);
     		if(isNewsletter)
     			msg = "Thank you for subscribing!";
     		else
