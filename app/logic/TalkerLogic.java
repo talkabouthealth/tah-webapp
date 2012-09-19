@@ -48,6 +48,7 @@ import util.EmailUtil;
 import util.FacebookUtil;
 import util.ImageUtil;
 import util.NotificationUtils;
+import util.SearchIndexUtil;
 import util.TwitterUtil;
 import util.EmailUtil.EmailTemplate;
 
@@ -263,13 +264,16 @@ public class TalkerLogic {
 	public static List<String> getFieldsData(String fieldName, String talkerType) {
 		String key = fieldName+"|"+talkerType;
 		//System.out.println(key+": "+fieldsDataMap.get(key));
-		if (fieldsDataMap.containsKey(key)) {
-			return fieldsDataMap.get(key);
+		if(fieldsDataMap != null){
+			if (fieldsDataMap.containsKey(key)) {
+				return fieldsDataMap.get(key);
+			}
+			else {
+				key = fieldName+"|all";
+				return fieldsDataMap.get(key);
+			}
 		}
-		else {
-			key = fieldName+"|all";
-			return fieldsDataMap.get(key);
-		}
+		return null;
 		
 	}
 	
@@ -1012,6 +1016,11 @@ public class TalkerLogic {
 		//manually login this talker
 		ApplicationDAO.saveLogin(talker.getId(), "signup");
 		session.put("username", talker.getUserName());
+		
+		//Populate talker in search index on the go
+		SearchIndexUtil.populateTalkerSearchIndex(talker);
+		
+		
 		if (talker.isProf()) {
     		session.put("prof", "true");
     	}
@@ -1199,7 +1208,7 @@ public class TalkerLogic {
 	public static boolean updateTalkerField() {
 		DBCollection talkersColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
 		List<TalkerBean> allTalkersList = TalkerDAO.loadAllTalkers(true);
-		for(TalkerBean talker : allTalkersList){
+		for(TalkerBean talker : allTalkersList) {
 			Set<EmailSetting> setting = talker.getEmailSettings();
 			setting.add(EmailSetting.RECEIVE_THOUGHT);
 			setting.add(EmailSetting.NOTIFY_CONVO);
@@ -1213,7 +1222,6 @@ public class TalkerLogic {
 			DBObject talkerDisObject = new BasicDBObject("email_settings", emailSettingsStringList);
 			DBObject talkersId = new BasicDBObject("_id", new ObjectId(talker.getId()));
 			talkersColl.update(talkersId, new BasicDBObject("$set", talkerDisObject));	
-			
 		}
 		return true;
 	}

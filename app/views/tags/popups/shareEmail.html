@@ -29,26 +29,7 @@
 		  	From: <input id="shareUserName" type="text" value="${_userName}" style="background-color:#F5F5F5;"/>
 		  </div>
 		  <div class="Addnote">Add a personal note here:</div>
-		  
-		  <textarea id="shareemailNote" class="popupinut" cols="4" rows="3" autocomplete="off"
-		  #{if _shareType.equals('Topic')}
->I thought you would be interested in the topic "${_topicName}" on TalkAboutHealth. - ${_topicURL}
-		  	
-${_topicDetails}</textarea>
-		  #{/if}
-		  #{elseif _shareType.equals('Conversation') }
->I thought you would be interested in the TalkAboutHealth conversation:
-${_topicName}
-
-${_topicDetails}
-
-${_topicURL}</textarea>
-		  #{/elseif}		
-		  #{elseif _shareType.equals('TalkAboutHealth') }
->I thought you would be interested in meeting others and sharing your experiences on TalkAboutHealth. http://talkabouthealth.com</textarea>
-		  #{/elseif}
-		  
-		  	
+			<textarea id="shareemailNote" class="popupinut" cols="4" rows="3" autocomplete="off">#{if _shareType.equals('Topic')}I thought you would be interested in the topic "${_topicName}" on TalkAboutHealth. - ${_topicURL} ${_topicDetails}#{/if}#{elseif _shareType.equals('Conversation') } I thought you would be interested in the TalkAboutHealth conversation: ${_topicName} ${_topicDetails} ${_topicURL} #{/elseif}#{elseif _shareType.equals('TalkAboutHealth') }I thought you would be interested in meeting others and sharing your experiences on TalkAboutHealth. http://talkabouthealth.com#{/elseif}</textarea>
 		  <div class="sentbox">
 		    <div id="shareResultError" class="senttxt" style="color: red;"></div>
 		    <input type="submit" class="sendinvites" id="shareTopicBtn" 
