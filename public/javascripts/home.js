@@ -13,7 +13,7 @@ $(document).ready(function() {
 			$("#startConvoSmall").hide();
 			$("#"+id+"Content").show(); //Fade in the active content
 			return false;
-		});
+	});
 	$("#startConvoSmall a").click(function() {
 		$("#postQuestionTab").parent().addClass("activeTopTab");
 		
@@ -135,8 +135,10 @@ function initHomeTabs() {
 		$(this).parent().removeClass("newTab").addClass("newActiveTab");
 		
 		var id = $(this).attr("id");
+		var cancerType;
 		var feedType = id; 
-		var cancerType = id.substring(0,id.lastIndexOf("CommunityFeed"));
+		id = $(this).attr("name");
+		cancerType = id;
 		
 		if(id == "allFeed"){
 			$("#ajaxLoading").appendTo($("#allCancerFeed")).show();

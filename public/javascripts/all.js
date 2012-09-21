@@ -581,20 +581,28 @@ function showResponse(responseText, statusText, xhr, $form)  {
 /* --------------- Feeds ---------------- */
 //used for paging in different feeds
 function loadMoreFeed(type, talkerName) {
+	var feedType = "";alert(type);
+	if(type == "allFeed"){
+		feedType = "allFeed"
+	} else {
+		if(type == "Melanoma_CutaneousCommunityFeed")
+			feedType = "Melanoma_(Cutaneous)CommunityFeed";
+		else if(type == "Melanoma_Ocular_or_UvealCommunityFeed")
+			feedType = "Melanoma_(Ocular_or_Uveal)CommunityFeed";
+		else if(type == "Melanoma_MucosalCommunityFeed")
+			feedType = "Melanoma_(Mucosal)CommunityFeed";
+		else
+			feedType = type;
+	}
+
 	var lastActionId = $("#"+type+"List").children().last().attr("id");
 	
 	//replace More button with loading image
 	var moreBtn = $("#"+type+"Btn");
 	$("#ajaxLoading").appendTo(moreBtn.parent()).show();
 	moreBtn.hide();
-	
 	//Code added for multiple cancer types
-	var feedType = "";
-	if(type == "allFeed"){
-		feedType = "allFeed"
-	}else{
-		feedType = type;
-	}
+
 	//public static void conversationFeedAjax(String afterActionId) {
 	$.get("/home/feedAjaxLoad", {afterActionId: lastActionId, feedType: feedType, talkerName: talkerName},
 			function(data) {

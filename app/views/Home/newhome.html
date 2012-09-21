@@ -14,14 +14,14 @@
 		left: 606px;
 		}
 	body { font-family:arial;font-size:11px; }
-		
+	div.scrollWrapper{left:15px;}
+	#makeMeScrollable div.scrollWrapper { width: 590px; }
 </style>
 <script type="text/javascript">
 var username = "${talker.userName}";
 var feedsPerPage = ${logic.FeedsLogic.FEEDS_PER_PAGE};
 function doOnLoad(){
-	
-	$("#${talkerCat}CommunityFeed").click(); 
+	$("#${talkerCat.replaceAll("\\(","").replaceAll("\\)","")}CommunityFeed").click();
 	
 	/* ------- Follow methods for Recommended sections ---------- */
 	$(".followTopicLink").live('click', function() {
@@ -352,26 +352,33 @@ function updateFeed(type,talkerName) {
 	                    <div class="newpageCover">  
 							<div class="newTabCover">
 							<div id="makeMeScrollable">
+									#{ifnot talkerCat == null}
+									  	<div class="newTab" style="width: auto;">
+										  	<a href="#" name="${talkerCat}" id="${talkerCat.replaceAll("\\(","").replaceAll("\\)","")}CommunityFeed" class="tabLink">${talkerCat.replaceAll("_", " ")}</a> <!--  Community Feed -->
+										</div>
+									#{/ifnot}
 					 				<div class="newTab" style="width: auto;">
 								  		<!-- <a href="#" id="convoFeed" class="tabLink">Your Conversation Feed</a>  -->
-								     	<a href="#" id="convoFeed" class="tabLink">Your conversations</a>
+								     	<a href="#" name="convoFeed" id="convoFeed" class="tabLink">Your conversations</a>
 								  	</div>
 							  		<div class="newActiveTab" style="width: auto;">
 								  		<!-- <a href="#" id="allFeed" class="tabLink">All Cancers</a>  -->
-								  		<a href="#" id="allFeed" class="tabLink">All Answers &amp; Thoughts</a>
+								  		<a href="#" name="allFeed" id="allFeed" class="tabLink">All Answers &amp; Thoughts</a>
 								  	</div>		
 							  		<div class="newTab" style="width: auto;">
-								  		<a href="#" id="openConvo" class="tabLink">Unanswered Questions</a>
+								  		<a href="#" name="openConvo" id="openConvo" class="tabLink">Unanswered Questions</a>
 								  	</div>	
-							  		#{if allDiseaseList != null && talker.category !=null && !talker.category.equals("All Cancers")}
+							  		#{if allDiseaseList != null && talker.category != null && !talker.category.equals("All Cancers")}
 								  		#{list items: allDiseaseList.keySet(), as: 'cancerType'}
+								  		#{ifnot talker.category.equals(cancerType.replaceAll("_", " "))}
 									  	<div #{if talker.category.equals(cancerType.replaceAll("_", " "))} class="newTab" #{/if} #{else} class="newTab" #{/else} style="width: auto;">
-										  	<a href="#" id="${cancerType}CommunityFeed" class="tabLink">${cancerType.replaceAll("_", " ")}</a> <!--  Community Feed -->
+										  	<a href="#" name="${cancerType}" id="${cancerType.replaceAll("\\(","").replaceAll("\\)","")}CommunityFeed" class="tabLink">${cancerType.replaceAll("_", " ")}</a> <!--  Community Feed -->
 										</div>
+										#{/ifnot}
 							            #{/list}
 						            #{/if}
 								  	<div class="newTab" style="width: auto;">
-								  		<a href="#" id="mentions" class="tabLink">@mentions</a>
+								  		<a href="#" name="mentions" id="mentions" class="tabLink">@mentions</a>
 								  	</div>
 								</div>
 							</div>
