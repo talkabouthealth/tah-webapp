@@ -28,6 +28,13 @@
 	                      <div class="cb"></div>
 	                      <div class="topic">
 	                        <div id="communityFeedList">
+		                        #{if communityFeed.size() == 0}
+		                        	<br/>
+		                        	<span class="blacktext16">
+		                        		Follow topics, conversations, and
+										other members to get the latest updates.
+									</span>
+								#{/if}
 		                    	#{list items: communityFeed, as: 'activity'}
 									#{feed/feedActivity activity: activity, talker: talker /}
 								#{/list}

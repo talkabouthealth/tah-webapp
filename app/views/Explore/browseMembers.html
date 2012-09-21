@@ -51,20 +51,19 @@
 		<div id="innermiddlearea">
 			<div class="tabbed_box" id="tabbed_box_1">
     			<div class="tabbed_area" style="padding-left:0px;">
-    			
-    								<div id="makeMeScrollable">
-    											<ul class="tabs" style="padding-right:10px;white-space: nowrap; width: auto;" >
-											        	<li style="display: inline;width: auto;"><a href="#tab1" style=""><span>Active</span></a></li>
-											            <li style="display: inline;width: auto;"><a href="#tab2" style=""><span>New</span></a></li>
-											            <li style="display: inline;width: auto;"><a href="#tab4" style=""><span>Search</span></a></li>
-											            #{list items: members.keySet(), as: 'memberType'}
-											            	#{if memberType != null}
-											            	<li style="display: inline;width: auto;"><a style="" href="#tab${memberType_index+4}" 
-											            	name="${memberType}" id="${memberType.replaceAll(" ","-").replaceAll("\\(","").replaceAll("\\)","")}"><span>${memberType}</span></a></li>
-											            	#{/if}
-											            #{/list}
-											        </ul>
-    								</div>	
+					<div id="makeMeScrollable">
+							<ul class="tabs" style="padding-right:10px;white-space: nowrap; width: auto;" >
+				        	<li style="display: inline;width: auto;"><a name="active" href="#tab1" style=""><span>Active</span></a></li>
+				            <li style="display: inline;width: auto;"><a name="new" href="#tab2" style=""><span>New</span></a></li>
+				            <li style="display: inline;width: auto;"><a name="search" href="#tab4" style=""><span>Search</span></a></li>
+				            #{list items: members.keySet(), as: 'memberType'}
+				            	#{if memberType != null}
+				            	<li style="display: inline;width: auto;"><a style="" href="#tab${memberType_index+4}" 
+				            	name="${memberType}" id="${memberType.replaceAll(" ","-").replaceAll("\\(","").replaceAll("\\)","")}"><span>${memberType}</span></a></li>
+				            	#{/if}
+				            #{/list}
+				        </ul>
+					</div>
 			        <div class="tab_container">
 				        <div id="tab1" class="tab_content">
 			   			<div>
@@ -83,7 +82,7 @@
 			        	</div>
 			        	#{if activeTalkers.size() == logic.TalkerLogic.TALKERS_PER_PAGE }
 								<div align="center" id="activeBtn" style=" clear: both;">
-			                          <input type="submit" src="images/seemore.jpg" onclick="return loadMoreUser('active');" value=" " class="seemorecom" />
+			                          <input type="submit" src="images/seemore.jpg" onclick="return loadMoreUser('active','active');" value=" " class="seemorecom" />
 		                        </div>
 							#{/if}
 			        	</div>
@@ -104,7 +103,7 @@
 			        	</div>
 			        	#{if newTalkers.size() == logic.TalkerLogic.TALKERS_PER_PAGE }
 							<div align="center" id="newBtn" style=" clear: both;">
-			                	<input type="submit" src="images/seemore.jpg" onclick="return loadMoreUser('new');" value=" " class="seemorecom" />
+			                	<input type="submit" src="images/seemore.jpg" onclick="return loadMoreUser('new','new');" value=" " class="seemorecom" />
 							</div>
 						#{/if}
 			        	</div>
@@ -151,7 +150,7 @@
 									</div>
 									#{if results.size() == logic.TalkerLogic.TALKERS_PER_PAGE }
 										<div align="center" id="searchBtn" style=" clear: both;">
-						                	<input type="submit" src="images/seemore.jpg" onclick="return loadMoreUser('search');" value=" " class="seemorecom" />
+						                	<input type="submit" src="images/seemore.jpg" onclick="return loadMoreUser('search','search');" value=" " class="seemorecom" />
 										</div>
 									#{/if}
 								#{/if}
