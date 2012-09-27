@@ -200,6 +200,9 @@ public class Application extends Controller {
     	/**
     	 * Added ip address verification code. 
     	 */
+    	if(request.method.equals("GET")) {
+    		forbidden();
+    	}
     	int duration = -6;
     	String remoteAddress = request.remoteAddress;
     	
@@ -258,36 +261,40 @@ public class Application extends Controller {
      * 
      */
     public static void createUserFromService(String email) {
-    	ServiceType serviceType = ServiceType.valueOf(session.get("serviceType"));
-    	String screenName = session.get("screenName");
-    	String userEmail = session.get("userEmail");
-    	String accountId = session.get("accountId");
-    	String verifyCode = null;
-    	
-    	if (serviceType == ServiceType.TWITTER) {
-    		//for Twitter we check email
-    		validation.required(email);
-    		validation.email(email);
-			if (validation.hasError("email")) {
-				renderText("Error: "+validation.error("email").message());
-				return;
-			}
-			TalkerBean otherTalker = TalkerDAO.getByEmail(email);
-			if (otherTalker != null) {
-				renderText("Error: "+Messages.get("email.exists"));
-				return;
-			}
-			
-			userEmail = email;
-			//verifyCode = CommonUtil.generateVerifyCode();
+    	if(request.method.equals("POST")) {
+    		ServiceType serviceType = ServiceType.valueOf(session.get("serviceType"));
+        	String screenName = session.get("screenName");
+        	String userEmail = session.get("userEmail");
+        	String accountId = session.get("accountId");
+        	String verifyCode = null;
+        	
+        	if (serviceType == ServiceType.TWITTER) {
+        		//for Twitter we check email
+        		validation.required(email);
+        		validation.email(email);
+    			if (validation.hasError("email")) {
+    				renderText("Error: "+validation.error("email").message());
+    				return;
+    			}
+    			TalkerBean otherTalker = TalkerDAO.getByEmail(email);
+    			if (otherTalker != null) {
+    				renderText("Error: "+Messages.get("email.exists"));
+    				return;
+    			}
 
-			//follow this user by TAH
-    		TwitterUtil.followUser(accountId);
+    			userEmail = email;
+    			//verifyCode = CommonUtil.generateVerifyCode();
+
+    			//follow this user by TAH
+        		TwitterUtil.followUser(accountId);
+        	}
+        	TalkerLogic.signupFromService(serviceType, session, screenName, 
+        			userEmail, verifyCode, accountId);
+        	
+        	renderText("ok");
+    	} else {
+    		forbidden();
     	}
-    	TalkerLogic.signupFromService(serviceType, session, screenName, 
-    			userEmail, verifyCode, accountId);
-    	
-    	renderText("ok");
     }
 
     private static void validateTalker(TalkerBean talker) {

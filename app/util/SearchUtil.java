@@ -11,6 +11,8 @@ import models.CommentBean;
 import models.ConversationBean;
 import models.TalkerBean;
 
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -231,8 +233,21 @@ public class SearchUtil {
 			}
 		}
 		
+		searchTerm = removeChars(searchTerm);
 		Query searchQuery = parser.parse(searchTerm);
 		return searchQuery;
+	}
+	
+	private static String removeChars(String searchTerm) {
+		if(searchTerm.contains("(")) searchTerm = searchTerm.replace("(", "");
+		if(searchTerm.contains(")")) searchTerm = searchTerm.replace(")", "");
+		if(searchTerm.contains("[")) searchTerm = searchTerm.replace("[", "");
+		if(searchTerm.contains("]")) searchTerm = searchTerm.replace("]", "");
+		if(searchTerm.contains("{")) searchTerm = searchTerm.replace("{", "");
+		if(searchTerm.contains("}")) searchTerm = searchTerm.replace("}", "");
+		if(searchTerm.contains("^")) searchTerm = searchTerm.replace("^", "");
+		if(searchTerm.contains("\"")) searchTerm = searchTerm.replace("\"", "");
+		return(searchTerm);
 	}
 	
 	public static String escapeString(String searchTerm){
