@@ -1,0 +1,46 @@
+<div class="box">
+	<h2 class="heading"><img src="/public/images/index/cal_icon.png" alt="calendar" /><a href="@{Static.workshops()}"> Upcoming Workshops</a></h2>
+	#{if _category == "Breast Cancer"}
+	<ul>
+		<li>
+			<a href="#" target="_blank">
+				<span>Breast Cancer Exp</span><br />
+				Mon., Aug 20th<br />
+				Expert: <span>New EXP, MD</span>
+			</a>
+		</li>
+		<li>
+			<a href="@{ViewDispatcher.view("ChrisRecklitisPhD")}" target="_blank">
+				<span>Young adult and cancer survivorship</span><br />
+				Tues., Aug 21st<br />
+				Expert: <span>Chris Recklitis, PhD</span>
+			</a>
+		</li>
+		<li>
+			<a href="@{ViewDispatcher.view("KantiRaiMD")}" target="_blank">
+				<span>Chronic Lymphocytic Leukemia</span><br />
+				Wed., Aug 22nd<br />
+				Expert: <span>Kanti Rai, MD</span>
+			</a>
+		</li>
+		<li>
+			<a href="@{ViewDispatcher.view("ErikCastleMD")}" target="_blank">
+				<span>Bladder Cancer</span><br />
+				Thurs., Aug 23rd<br />
+				Expert: <span>Erik Castle, MD</span>
+			</a>
+		</li>
+		<li>
+			<a href="@{ViewDispatcher.view("JuddMoulMD")}" target="_blank">
+				<span>Prostate Cancer</span><br />
+				Fri., Aug 24th<br />
+				Expert: <span>Judd Moul, MD</span>
+			</a>
+		</li>
+   </ul>
+   #{/if}
+   #{else}
+		<ul><li><a href="#" target="_blank">Comming soon</a></li></ul>
+   #{/else}
+   <div class="more"><a href="@{Static.workshops()}">All Workshops <img src="/public/images/index/arrow_blue.png" alt="all workshops" /></a></div>
+</div>

@@ -373,8 +373,13 @@ public class ActionDAO {
 		if (firstActionTime != null) {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
 		}
-		//List<String> cat = FeedsLogic.getCancerType(talker);
 		
+		if(talker != null && talker.getId() == null){
+			List<String> cat = FeedsLogic.getCancerType(talker);
+			cat.add(ConversationBean.ALL_CANCERS);
+			queryBuilder.add("category", new BasicDBObject("$in", cat));
+		}
+
 		DBObject query = queryBuilder.get();
 		return loadPreloadActions(query);
 	}
