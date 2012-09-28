@@ -85,7 +85,7 @@ public class Application extends Controller {
     public static void index() {
     	String[] arr = request.host.split("\\.");
 		if (arr != null && arr.length > 0) {
-			if(arr.length > 2){
+			if(arr.length == 2){
 				String lang = arr[0];
 				// We are going to use this in our application for redirecting to user profile or site.
 	    		try {
