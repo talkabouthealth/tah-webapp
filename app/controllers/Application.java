@@ -79,20 +79,22 @@ public class Application extends Controller {
 		"explore", "search", "community", "openquestions", "livechats", "conversationfeed"
 	});
 
-	/**
+    /**
 	 * Landing page
 	 */
     public static void index() {
-    	/*if (Security.isConnected()) {
-    		Home.index(); //redirect to Home page if user is logged in
-    	} else {
-    		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
-    		int numberOfLiveChats = 0;//ConversationDAO.getLiveConversations().size();
-    		int numberOfQuestions = 0;//ConversationDAO.getNumberOfConversations();
-    		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
-    		
-    		render(null, numberOfMembers, numberOfLiveChats, numberOfQuestions, numberOfAnswers);
-    	}*/
+    	String[] arr = request.host.split("\\.");
+		if (arr != null && arr.length > 0) {
+			if(arr.length > 2){
+				String lang = arr[0];
+				// We are going to use this in our application for redirecting to user profile or site.
+	    		try {
+	    			Community.index();
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+			}
+    	}
     	if (Security.isConnected()) {
     		Home.index();
     	} else {
