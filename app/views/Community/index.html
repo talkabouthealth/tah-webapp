@@ -20,19 +20,66 @@
 	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
     <link href="/public/stylesheets/new_style.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" href="/public/plugins/ui-lightness/jquery-ui-1.8.4.custom.css" type="text/css" media="screen" />
+	<style type="text/css">
+	<!--
+	.email {
+		background: url(/public/images/email_box.png) no-repeat;
+		border: medium none;
+    	height: 35px;
+    	margin-top: 2px;
+    	padding-left: 35px;
+    	width: 210px;
+    	background-size:250px;
+    	padding-right: 10px;
+	}
+	.buttonNL {
+		font-size: 15px;
+		font-size-adjust: none;
+		font-stretch: normal;
+		font-style: normal;
+		font-variant: normal;
+		font-weight: bolder;
+		height: 35px;
+		line-height: normal;
+		padding-bottom: 5px;
+		padding-left: 0;
+		padding-right: 0;
+		padding-top: 5px;
+		text-align: center;
+		width: 90px;
+		color: #FFFFFF;
+		background-color: #ff8300;
+		background-image: -moz-linear-gradient(center bottom , #f75e1a 26%, #ff8300 55%);
+		border:1px solid #cd4300;
+		border-top-color: #ffd390;
+		border-left-color:#fe8d31;
+		border-right-color:#fe8d31;
+		border-top-left-radius:5px;
+		border-radius:5px;
+		cursor: pointer;
+		border-left-radius: 10px; 
+	}
+	.buttonNL:HOVER {
+		background-image: -moz-linear-gradient(center bottom , #f75e1f 26%, #ff5202 55%);
+	}
+	-->
+	</style>
 	#{ common/analytics_top /}
 </head>
 <body class="home">
 	<div id="wrapper">
 		<div id="header">
 			<h1 class="logo">
-				<div style="height:61px;width:338px;">
-					<span style="float:left;margin-right:10px;"><img src="/public/images/index/tah_loading.gif" alt="${cancerType}" /></span>
-					<div style="margin-top:-5px;font-weight:bold;font-size:35px;float: left;color:#EB208C;text-shadow: 1px 1px 3px #1C7EB9;">${cancerType}</div>
+				<div style="height:61px;width:370px;">
+					<span style="float:left;margin-right:0px;"><img src="/public/images/index/tah_logo_only.png" alt="${cancerType}" /></span>
+					<div style="margin-top:0px;font-weight:bold;font-size:35px;float: left;color:#EB208C;text-shadow: 1px 1px 3px #1C7EB9;">Talk${cancerType.replaceAll(" ","")}</div>
+					<!-- 
 					<div style="font-weight:bolder;font-size:12px;float: left;">
-					<font color="#014BA9">By Talk</font><font color="#0FA04B">About</font><font color="#EB208C">Health.com</font></div>
+					<font color="#014BA9">By Talk</font><font color="#0FA04B">About</font><font color="#EB208C">Health.com</font>
+					</div>
+					 -->
 				</div>
-				<br /><p style="left:60px;">You're not alone! <span>${numberOfMembers} Members &amp; ${numberOfAnswers} Answers</span></p>
+				<br /><p style="left:55px;top:35px;">You're not alone! <span>${numberOfMembers} Members &amp; ${numberOfAnswers} Answers</span></p>
 			</h1>
 			<ul class="search_signin">
 			    <li>
@@ -120,12 +167,12 @@
 		        </div>
 		        <div style="position: absolute; top: 122px; float: left; left: 40%;">
 		        	<p style="font-style:inherit;margin-top:20px;font-weight: bolder;">Sign up for our ${cancerType} newsletter to keep up with the<br/> latest news, best answers & featured expert.</p>
-		            <div style="float: left; margin-left: 63px; margin-top: 30px;">
+		            <div style="float: left; margin-left: 63px; margin-top: 20px;">
 		            	<div style="float: left; height: 12px; width: 385px;padding-bottom: 5px;">&nbsp;<span id="diseaseMessage" style="float:left;display: none;">Test Text</span></div>
 		            	#{form @Newsletter.subscribeMoreNewsLetter() , id:'subscribeDiseaseForm' }
 		            		<input name="newsletter.newsLetterType" type="hidden" value="${cancerType}"/>
-		            		<input size="30px" type="text" class="newsltr_field" placeholder="Valid Email" id="email" name="newsletter.email">
-		            		<input style="margin-left:30px;" type="button" class="newsltr_btn" id="subscribeDisease"></input>
+		            		<input type="text" class="email" placeholder="Valid Email" id="email" name="newsletter.email">
+		            		<input style="margin-left:0px;" type="submit" class="buttonNL" id="subscribeDisease" value="Sign Up!"></input>
 		            		<br/>By signing up I agree to the Terms of Service and Privacy Policy.
 		            	#{/form}
 		            </div>
@@ -284,7 +331,7 @@
 	        <div style="float:left;height:12px;">&nbsp;<span id="respMessage" style="float:left;display: none;">Test Text</span></div>
 	        <div style="float:left;">
 	        	<input name="newsletter.email" id="email" placeholder="Valid Email" type="text" class="newsltr_field" />
-	        	<input id="subscribe" type="button" class="newsltr_btn" />
+	        	<input id="subscribe" type="submit" class="newsltr_btn" value=""/>
 	        </div>
         </div>
       	#{/form}
@@ -351,11 +398,17 @@ $(document).ready(function(){
 		start: 1
 	});
 
-	//Subscribe button feature	
+	$('#subcribeNewsletter').submit(function() {
+		$("#subcribeNewsletter").ajaxSubmit({ success: setNewsletterMessage }); 
+		return false;
+	});
+	
+	/*	
 	$('#subscribe').click(function() {
 		$("#subcribeNewsletter").ajaxSubmit({ success: setNewsletterMessage });
 		return false;
 	});
+	
 	
 	//Subscribe button feature	
 	$('#subscribeDisease').click(function() {
@@ -368,6 +421,7 @@ $(document).ready(function(){
 			   	} else if (responseText.indexOf("Email alrady subscribed!") === 0) {
 			   		errorText = responseText;
 			   	} else {
+			   		window.location.href = "/signup?cancerType=${cancerType}";
 			   		errorText= "Thank you for subscribing!";
 			   	}
 				$("#diseaseMessage").html(errorText); 
@@ -377,7 +431,28 @@ $(document).ready(function(){
 		});
 		return false;
 	});
-
+	*/
+	$('#subscribeDiseaseForm').submit(function() {
+		$("#subscribeDiseaseForm").ajaxSubmit({ success: function(responseText){
+			var errorText;
+			$("#diseaseMessage").css("color","#FFFFFF");
+			if (responseText.indexOf("Error:") === 0) {
+		   		errorText = responseText.replace("Error:", "");
+		   		$("#diseaseMessage").css("color","#ff0000");
+		   	} else if (responseText.indexOf("Email alrady subscribed!") === 0) {
+		   		errorText = responseText;
+		   	} else {
+		   		window.location.href = "/signup?cancerType=${cancerType}";
+		   		errorText= "Thank you for subscribing!";
+		   	}
+			$("#diseaseMessage").html(errorText); 
+			$("#diseaseMessage").fadeIn(100);
+			closeTimeout = setTimeout(function() { $("#diseaseMessage").fadeOut(200) }, 4000);		
+		} 
+	});
+		return false;
+	});
+	
 	//TAbs
 	$(".tabs li").click(function() {
 		$(".active").removeClass("active");
