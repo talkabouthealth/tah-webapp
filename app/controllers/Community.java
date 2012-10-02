@@ -45,12 +45,12 @@ public class Community extends Controller {
     	} else {
     		String[] arr = request.host.split("\\.");
     		if (arr != null && arr.length > 0) {
-    			if(arr.length == 2){
+    			if(arr.length == 3) {
     				//cancerType= arr[0];
     				cancerType = "Breast Cancer";
     				//cancerType = "Lung Cancer";
     				//cancerURL = "breastcancer";
-    			}else{
+    			} else {
     				cancerType = params.get("type");
     			}
         	} else {
