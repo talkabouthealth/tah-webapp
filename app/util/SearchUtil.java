@@ -55,15 +55,16 @@ public class SearchUtil {
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public static List<TalkerBean> searchTalker(String query, TalkerBean talkerBean) throws CorruptIndexException, IOException, ParseException {
+	public static List<TalkerBean> searchTalker(String query, TalkerBean talkerBean,String cancerType) throws CorruptIndexException, IOException, ParseException {
 		File indexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"talker");
  		Directory indexDir = FSDirectory.open(indexerFile);
  		IndexReader indexReader = IndexReader.open(indexDir);
 		IndexSearcher is = new IndexSearcher(indexReader);
 		//prepare query to search
 		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
-		Query searchQuery = prepareSearchQuery(query, new String[] {"uname","fname","lname","bio"}, analyzer, true);
-		TopDocs hits = is.search(searchQuery, 10);
+		Query searchQuery = prepareSearchQuery(query, new String[] {"uname","fname","lname","bio"}, analyzer, true,cancerType);
+		System.out.println(searchQuery.toString());
+		TopDocs hits = is.search(searchQuery, 15);
 		ScoreDoc [] docs = hits.scoreDocs;
 		
 		//List<String> cat = FeedsLogic.getCancerType(talkerBean);
@@ -97,7 +98,7 @@ public class SearchUtil {
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public static List<ConversationBean> searchConvo(String query, int numOfResults, TalkerBean talker) throws CorruptIndexException, IOException, ParseException {
+	public static List<ConversationBean> searchConvo(String query, int numOfResults, TalkerBean talker,String cancerType) throws CorruptIndexException, IOException, ParseException {
 		List<ConversationBean> results = new ArrayList<ConversationBean>();
 		
 		File indexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"conversations");
@@ -106,7 +107,7 @@ public class SearchUtil {
 		IndexSearcher is = new IndexSearcher(indexReader);
 		//prepare query to search
 		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
-		Query searchQuery = prepareSearchQuery(query, new String[] {"title", "answers"}, analyzer, true);
+		Query searchQuery = prepareSearchQuery(query, new String[] {"title", "answers"}, analyzer, true,cancerType);
 		TopDocs hits = is.search(searchQuery, numOfResults);
 		ScoreDoc [] docs = hits.scoreDocs;
 
@@ -164,7 +165,7 @@ public class SearchUtil {
 	/**
 	 * Returns 3 conversations related to given.
 	 */
-	public static List<ConversationBean> getRelatedConvos(TalkerBean talker,ConversationBean searchedConvo) throws Exception {
+	public static List<ConversationBean> getRelatedConvos(TalkerBean talker,ConversationBean searchedConvo,String cancerType) throws Exception {
 		File indexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"conversations");
  		Directory indexDir = FSDirectory.open(indexerFile);
  		IndexReader indexReader = IndexReader.open(indexDir);
@@ -182,7 +183,7 @@ public class SearchUtil {
 		//remove bad characters (special for search)
 		String queryText = searchedConvo.getTopic();
 		queryText = queryText.replaceAll("[\\W_]", " ");
-		Query searchQuery = prepareSearchQuery(queryText, new String[] {"title"}, analyzer, false);
+		Query searchQuery = prepareSearchQuery(queryText, new String[] {"title"}, analyzer, false,cancerType);
 		
 		TopDocs hits = is.search(searchQuery, 50);
 		ScoreDoc [] docs = hits.scoreDocs;
@@ -209,7 +210,7 @@ public class SearchUtil {
 		return results;
 	}
 	
-	public static Query prepareSearchQuery(String term, String[] fields, Analyzer analyzer,boolean check)
+	public static Query prepareSearchQuery(String term, String[] fields, Analyzer analyzer,boolean check,String cancerType)
 			throws ParseException {
 
 		if(check){
@@ -234,7 +235,12 @@ public class SearchUtil {
 		}
 		
 		searchTerm = removeChars(searchTerm);
-		Query searchQuery = parser.parse(searchTerm);
+		Query searchQuery;
+		if(StringUtils.isNotEmpty(cancerType)) {
+			searchQuery = parser.parse(searchTerm +"* AND category:\"" + cancerType + "\"");	
+		} else {
+			searchQuery = parser.parse(searchTerm);
+		}
 		return searchQuery;
 	}
 	
@@ -269,14 +275,14 @@ public class SearchUtil {
 		return(searchTerm);
 	}
 
-	public static int searchConvoToGetTotalCount(String query, int i, TalkerBean talker) throws Exception {
+	public static int searchConvoToGetTotalCount(String query, int i, TalkerBean talker,String cancerType) throws Exception {
 		File indexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"conversations");
  		Directory indexDir = FSDirectory.open(indexerFile);
  		IndexReader indexReader = IndexReader.open(indexDir);
 		IndexSearcher is = new IndexSearcher(indexReader);
 		//prepare query to search
 		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
-		Query searchQuery = prepareSearchQuery(query, new String[] {"title", "answers"}, analyzer, true);
+		Query searchQuery = prepareSearchQuery(query, new String[] {"title", "answers"}, analyzer, true,cancerType);
 		TopDocs hits = is.search(searchQuery, 1);
 
 		indexReader.close();

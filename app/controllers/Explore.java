@@ -204,7 +204,8 @@ public class Explore extends Controller {
 		if (query != null) {
 			params.flash("query");
 			try {
-				results = SearchUtil.searchTalker(query,currentTalker);
+				String cancerType = session.get("cancerType");
+				results = SearchUtil.searchTalker(query,currentTalker,cancerType);
 				if(results != null && results.size() > TalkerLogic.TALKERS_PER_PAGE)
 					results = results.subList(0, TalkerLogic.TALKERS_PER_PAGE);
 			} catch (Exception e) {
@@ -273,7 +274,8 @@ public class Explore extends Controller {
 		if (query != null) {
 			params.flash("query");
 			try {
-				results = SearchUtil.searchConvo(query, 10, talker);
+				String cancerType = session.get("cancerType");
+				results = SearchUtil.searchConvo(query, 10, talker,cancerType);
 			}
 			catch (Exception e) {
 				Logger.error(e, "Explore.java : searchConversations");
@@ -447,7 +449,8 @@ public class Explore extends Controller {
 			activeTalkers = ApplicationDAO.getNewTalkers();
 		} else if("search".equals(feedType)) {
 			try {
-				activeTalkers = SearchUtil.searchTalker(searchTerm,currentTalker);
+				String cancerType = session.get("cancerType");
+				activeTalkers = SearchUtil.searchTalker(searchTerm,currentTalker,cancerType);
 			} catch (Exception e) {
 					Logger.error(e, "Explore.java : ajaxLoadMoreUser");
 			}

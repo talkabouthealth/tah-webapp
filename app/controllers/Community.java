@@ -60,6 +60,9 @@ public class Community extends Controller {
     			cancerType = "Breast Cancer";
     		else if("".equals(cancerType))
     			cancerType = "Breast Cancer";
+    		
+    		session.put("cancerType", cancerType);
+    		
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
     		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
     		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);

@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,9 +21,12 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.Collector;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.Scorer;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -170,7 +174,8 @@ public class Search extends Controller {
 		IndexSearcher is = new IndexSearcher(indexReader);
 		
 		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
-		Query searchQuery = SearchUtil.prepareSearchQuery(term, new String[] {"uname", "title"}, analyzer, true);
+		String cancerType = session.get("cancerType");
+		Query searchQuery = SearchUtil.prepareSearchQuery(term, new String[] {"uname", "title"}, analyzer, true,cancerType);
 		
 		TopDocs hits = is.search(searchQuery, 10);
 		ScoreDoc [] docs = hits.scoreDocs;
@@ -236,8 +241,9 @@ public class Search extends Controller {
 		IndexSearcher is = new IndexSearcher(indexReader);
 		
 		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
-		Query searchQuery = SearchUtil.prepareSearchQuery(term, new String[] {"title"}, analyzer, true);
-		
+		String cancerType = session.get("cancerType");
+		Query searchQuery = SearchUtil.prepareSearchQuery(term, new String[] {"title"}, analyzer, true,cancerType);
+
 		TopDocs hits = is.search(searchQuery, 10);
 		ScoreDoc [] docs = hits.scoreDocs;
 		
@@ -303,10 +309,10 @@ public class Search extends Controller {
 		List<Action> convoResults = null;
 		if (query != null && !query.trim().equals("")) {
 			topicResults = topicsSearch(query);
-			totalCount = SearchUtil.searchConvoToGetTotalCount(query,200000,_talker);
-			List<ConversationBean> convoList = SearchUtil.searchConvo(query,limit,_talker);
-			convoResults = 
-				ConversationLogic.convosToFeed(convoList);
+			String cancerType = session.get("cancerType");
+			totalCount = SearchUtil.searchConvoToGetTotalCount(query,200000,_talker,cancerType);
+			List<ConversationBean> convoList = SearchUtil.searchConvo(query,limit,_talker,cancerType);
+			convoResults = ConversationLogic.convosToFeed(convoList);
 		}
 		render(topicResults, convoResults, totalCount);
 	}
@@ -318,7 +324,8 @@ public class Search extends Controller {
 			limit=10;
 		List<Action> convoResults = null;
 		if (query != null) {
-			List<ConversationBean> convoList = SearchUtil.searchConvo(query,limit,_talker);
+			String cancerType = session.get("cancerType");
+			List<ConversationBean> convoList = SearchUtil.searchConvo(query,limit,_talker,cancerType);
 			convoResults = 
 				ConversationLogic.convosToFeed(convoList);
 		}
@@ -335,7 +342,8 @@ public class Search extends Controller {
 		IndexSearcher is = new IndexSearcher(indexReader);
 		
 		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
-		Query searchQuery = SearchUtil.prepareSearchQuery(query, new String[] {"title"}, analyzer, false);
+		String cancerType = session.get("cancerType");
+		Query searchQuery = SearchUtil.prepareSearchQuery(query, new String[] {"title"}, analyzer, false,cancerType);
 		//Hits hits = is.search(searchQuery);
 		
 		TopDocs hits = is.search(searchQuery, null, 5);
