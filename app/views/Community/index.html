@@ -402,36 +402,7 @@ $(document).ready(function(){
 		$("#subcribeNewsletter").ajaxSubmit({ success: setNewsletterMessage }); 
 		return false;
 	});
-	
-	/*	
-	$('#subscribe').click(function() {
-		$("#subcribeNewsletter").ajaxSubmit({ success: setNewsletterMessage });
-		return false;
-	});
-	
-	
-	//Subscribe button feature	
-	$('#subscribeDisease').click(function() {
-		$("#subscribeDiseaseForm").ajaxSubmit({ success: function(responseText){
-				var errorText;
-				$("#diseaseMessage").css("color","#FFFFFF");
-				if (responseText.indexOf("Error:") === 0) {
-			   		errorText = responseText.replace("Error:", "");
-			   		$("#diseaseMessage").css("color","#ff0000");
-			   	} else if (responseText.indexOf("Email alrady subscribed!") === 0) {
-			   		errorText = responseText;
-			   	} else {
-			   		window.location.href = "/signup?cancerType=${cancerType}";
-			   		errorText= "Thank you for subscribing!";
-			   	}
-				$("#diseaseMessage").html(errorText); 
-				$("#diseaseMessage").fadeIn(100);
-				closeTimeout = setTimeout(function() { $("#respMessage").fadeOut(200) }, 4000);		
-			} 
-		});
-		return false;
-	});
-	*/
+
 	$('#subscribeDiseaseForm').submit(function() {
 		$("#subscribeDiseaseForm").ajaxSubmit({ success: function(responseText){
 			var errorText;

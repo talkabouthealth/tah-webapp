@@ -316,7 +316,8 @@ public class ViewDispatcher extends Controller {
 		
 		List<ConversationBean> relatedConvos = null;
 		try {
-			relatedConvos = SearchUtil.getRelatedConvos(talker,convo);
+			String cancerType = session.get("cancerType");
+			relatedConvos = SearchUtil.getRelatedConvos(talker,convo,cancerType);
 		} catch (Exception e) {
 				Logger.error(e, "ViewDispatcher.java : showConvo");
 		}
