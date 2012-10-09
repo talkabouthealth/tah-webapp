@@ -374,17 +374,20 @@ public class ActionDAO {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
 		}
 		
-		if(talker != null && talker.getId() == null){
+		if(talker != null && talker.getId() == null) {
 			List<String> cat = FeedsLogic.getCancerType(talker);
 			cat.add(ConversationBean.ALL_CANCERS);
-			queryBuilder.add("category", new BasicDBObject("$in", cat));
+			queryBuilder.add("$or", 
+				Arrays.asList(
+						new BasicDBObject("other_disease_categories", new BasicDBObject("$in", cat)),
+						new BasicDBObject("category", new BasicDBObject("$in", cat))
+				)
+			);
 		}
-
 		DBObject query = queryBuilder.get();
 		return loadPreloadActions(query);
 	}
-	
-	
+
 	/**
 	 * Parses given DBObject to Action object
 	 */

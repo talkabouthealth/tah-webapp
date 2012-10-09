@@ -1,0 +1,32 @@
+#{set currentPage:'workshop' /}
+#{extends 'static.html' /}
+#{set pageHeader:'Workshops and Events' /}
+<style>
+<!--
+#partnerlogo1 a img{
+ box-shadow:2px 0 5px #555555;
+ border-radius: 5px;
+}
+-->
+</style>
+<div id="boxes">
+	<div id="dialog" class="window"></div>
+	#{if !talker}
+		#{ newsletter/emailpopup /}
+	#{/if}
+</div>
+<div id="mask"></div>
+<div id="dashedborder" style="width:590px;"></div>
+<span class="blacktext20"><br />Expert Q&amp;A Workshops</span><span class="blacktextgrey14"><a href="/static/past_workshops">&nbsp;&nbsp;(Past workshops)</a></span><br/><br/>
+<span class="blacktextgrey14"><br />
+	Answers from the leading cancer experts in their fields.  Our free educational question and answer sessions give you exclusive access to premiere medical professionals.  Ask questions before or during the session.<br/><br/>
+</span>
+#{if cancerType == "Breast Cancer"}
+	#{include 'MicroSite/breastcancer_ws.html' /}
+#{/if}
+#{elseif  cancerType == "Lung Cancer"}
+	#{include 'MicroSite/lungcancer_ws.html' /}
+#{/elseif}
+#{else}
+	<span class="blacktextgrey14">No Workshop scheduled, <a href="/signup">Sign Up</a> and Stay updated</span>
+#{/else}

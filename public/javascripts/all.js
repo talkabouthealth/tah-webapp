@@ -581,7 +581,7 @@ function showResponse(responseText, statusText, xhr, $form)  {
 /* --------------- Feeds ---------------- */
 //used for paging in different feeds
 function loadMoreFeed(type, talkerName) {
-	var feedType = "";alert(type);
+	var feedType = "";
 	if(type == "allFeed"){
 		feedType = "allFeed"
 	} else {
@@ -1083,7 +1083,6 @@ function makeFullSearchAjaxLoad(inputId) {
 
 //saveProfileComment(String profileTalkerId, String parentId, String text)
 function saveProfileThankYouComment(parentId, parentList, userName) {
-	alert("saveProfileThankYouComment");
 	var parentListId = "";
 	if (parentList) {
 		parentListId = "#"+parentList+" ";

@@ -15,6 +15,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.PatternLayout;
@@ -93,7 +94,14 @@ public class Application extends Controller {
 				} catch (Throwable e) {
 					e.printStackTrace();
 				}
+			} else {
+				String cancerType = session.get("cancerType");
+				if(StringUtils.isNotBlank(cancerType)){
+					Community.index();
+				}
 			}
+    	} else {
+    		session.remove("cancerType");
     	}
     	if (Security.isConnected()) {
     		Home.index();

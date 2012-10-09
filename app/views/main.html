@@ -75,7 +75,17 @@
 				<br/>
                 <span style="color: #403c3e; font-family:arial">&copy; 2010, ${java.util.Calendar.getInstance().get(Calendar.YEAR)}</span>
 			</div>
-			<div id="footerright"><img src="/public/images/logo_footer.jpg" width="178" height="28" alt="" /></div>
+			<div id="footerright">
+				#{if session.get("cancerType")}
+				<div>
+					<span style="float:left;margin-right:0px;"><img height="28" src="/public/images/index/tah_logo_only.png" alt="${session.get("cancerType")}" /></span>
+					<div style="margin-top:3px;font-weight:bold;font-size:20px;float: left;color:#EB208C;text-shadow: 1px 1px 3px #1C7EB9;">Talk${session.get("cancerType").replaceAll(" ","")}</div>
+				</div>
+				#{/if}
+				#{else}
+					<img src="/public/images/logo_footer.jpg" width="178" height="28" alt="" />
+				#{/else}
+			</div>
 		</div>
 	</div>
 	#{ common/googleAnalytics /}

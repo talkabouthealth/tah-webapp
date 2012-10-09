@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+
 import logic.FeedsLogic;
 import models.CommentBean;
 import models.ConversationBean;
@@ -38,7 +40,7 @@ import dao.VideoDAO;
 public class Community extends Controller {
 	
 	public static void index() {
-		String cancerType = "Breast Cancer";
+		String cancerType = "";
 		if (Security.isConnected()) {
     		//redirect to Home page if user is logged in
     		Home.index();
@@ -48,19 +50,22 @@ public class Community extends Controller {
     			if(arr.length == 3) {
     				//cancerType= arr[0];
     				cancerType = "Breast Cancer";
-    				//cancerType = "Lung Cancer";
-    				//cancerURL = "breastcancer";
     			} else {
     				cancerType = params.get("type");
+    				if(StringUtils.isBlank(cancerType) ){
+    					cancerType = session.get("cancerType");
+    				}
     			}
         	} else {
         		cancerType = params.get("type");
+        		if(StringUtils.isBlank(cancerType) ){
+					cancerType = session.get("cancerType");
+				}
         	}
-    		if(cancerType == null)
-    			cancerType = "Breast Cancer";
-    		else if("".equals(cancerType))
+    		if(StringUtils.isBlank(cancerType) || DiseaseDAO.getDiseaseByName(cancerType) == null)
     			cancerType = "Breast Cancer";
     		
+    		System.out.println("cancerType: " + cancerType);
     		session.put("cancerType", cancerType);
     		
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
@@ -98,15 +103,15 @@ public class Community extends Controller {
 	}
 
 	public static void homePageFeed(String type, String lastActionId) {
-		String cancerType = "Breast Cancer";
-		String[] arr = request.host.split("\\.");
+		String cancerType = session.get("cancerType");
+		/*String[] arr = request.host.split("\\.");
 		if (arr != null && arr.length > 0) {
 			if(arr.length > 2){
 				//cancerType= arr[0];
 				cancerType = "Breast Cancer";
 				//cancerType = "Lung Cancer";
 			}
-    	}
+    	}*/
 		
 		if(lastActionId != null && "".equals(lastActionId))
 			lastActionId = null;

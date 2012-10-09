@@ -1,0 +1,183 @@
+#{extends 'main.html' /}
+<style type="text/css">
+	#innermiddlearea { padding-top: 10px }
+	.diseaseLink { font-size: 14px; font-weight: normal; line-height: 20px; text-overflow: clip; }
+	.newpage1 { padding-bottom:0px; }
+	.joinborder { height: 2px; }
+</style>
+<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		initNewTabs();
+		if('${topic}' == 'life and everyday') {
+			$("#lifeEveryday").click();
+		} 
+	});
+</script>
+</head>
+<body>
+	<div id="managtopic">
+	#{include 'header.html' /}
+	<div id="bottom_container">
+		<div class="haderbanner"><div id="innerbanner"></div></div>
+        <div id="targetedtherapy">
+			<div id="innermiddlearea">
+				<div id="mtcover">
+					<div id="mtleft">
+						<div class="mtcontent" style="width: 942px;">
+							<div class="topipcWraper">
+								<div class="newTabCover">
+									<div class="newActiveTab"><a href="#" id="diseases" class="tabLink">Diseases</a></div>
+									<div class="newTab"><a href="#" id="lifeEveryday" class="tabLink">Life &amp; Everyday</a></div>
+									<div class="laborder"></div>
+								</div>
+								<div class="cb"></div>
+								<div>
+									<div id="diseasesContent" class="tabContent">	
+										<div class="topic" style="padding-top: 10px;">
+											<div class="newpage1">${cancerType}</div>
+											<div class="cb"></div>
+											<div class="joinborder"></div>
+											<div class="cb"></div>
+											<div class="topic"  style="padding-top: 10px;">
+												<div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+													<a href="#${cancerType.replaceAll(" ", "-")}" style="font-weight: bold; color: black; font-size: 15px;">${cancerType} Patients & Survivorship</a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-patient-experiences">Patient Experiences </a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-patient-decisions">Patient Decisions </a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-survivorship">Survivorship </a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-emotional-support">Emotional Support </a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-what-to-expect">What To Expect </a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-mental-health">Mental Health </a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-how-to-prepare">How To Prepare </a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-next-steps">Next Steps </a><br/>
+												</div>
+												<div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+													<a href="#${cancerType.replaceAll(" ", "-")}" style="font-weight: bold; color: black; font-size: 15px;">${cancerType} Treatment & Side Effects</a><br/>
+												    <a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-medications">Medications </a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-surgery">Surgery </a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-oncology">Oncology </a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-radiation-therapy">Radiation Therapy </a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-chemotherapy">Chemotherapy</a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-biologic-therapy">Biologic Therapy</a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-hormonal-therapy">Hormonal Therapy</a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-complementary-and-alternative-medicine">Complementary & Alternative Medicine</a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-side-effects">Side Effects </a><br/>
+												</div>
+											    <div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+													<a href="#${cancerType.replaceAll(" ", "-")}" style="font-weight: bold; color: black; font-size: 15px;">${cancerType} Symptoms & Diagnosis</a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-symptoms">Symptoms </a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-just-diagnosed">Just Diagnosed </a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-diagnosis">Diagnosis </a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-pathology">Pathology </a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-staging">Staging </a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-recurrence">Recurrence </a><br/>
+												</div>
+												<div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+													<a href="#${cancerType.replaceAll(" ", "-")}" style="font-weight: bold; color: black; font-size: 15px;">${cancerType} Risk, Screening & Genetics</a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-screening">Screening </a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-risk-factors">Risk Factors </a><br/>
+													<a class="diseaseLink" href="/${cancerType.replaceAll(" ", "-")}-genetics">Genetics </a><br/>
+												</div>
+											</div>
+		                        			<div class="newpage1">All Cancers</div>
+					                        <div class="cb"></div>
+					                      	<div class="joinborder"></div>
+					                      	<div class="cb"></div>
+					                      	<div class="topic"  style="padding-top: 10px;">
+					                      		<div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+				                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Patients & Survivorship</a><br/>
+				                        			<a class="diseaseLink" href="/cancer-patient-experiences">Patient Experiences </a><br/>
+				                        			<a class="diseaseLink" href="/cancer-patient-decisions">Patient Decisions </a><br/>
+				                        			<a class="diseaseLink" href="/cancer-survivorship">Survivorship </a><br/>
+				                        			<a class="diseaseLink" href="/cancer-emotional-support">Emotional Support </a><br/>
+				                        			<a class="diseaseLink" href="/cancer-what-to-expect">What To Expect </a><br/>
+				                        			<a class="diseaseLink" href="/cancer-mental-health">Mental Health </a><br/>
+				                        			<a class="diseaseLink" href="/cancer-how-to-prepare">How To Prepare </a><br/>
+				                        			<a class="diseaseLink" href="/cancer-next-steps">Next Steps </a><br/>
+				                        		</div>
+				                        		<div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+				                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Treatment & Side Effects</a><br/>
+				                        			<a class="diseaseLink" href="/cancer-medications">Medications </a><br/>
+													<a class="diseaseLink" href="/cancer-surgery">Surgery </a><br/>
+													<a class="diseaseLink" href="/cancer-oncology">Oncology </a><br/>
+													<a class="diseaseLink" href="/radiation-therapy">Radiation Therapy </a><br/>
+													<a class="diseaseLink" href="/chemotherapy">Chemotherapy</a><br/>
+													<a class="diseaseLink" href="/biologic-therapy">Biologic Therapy</a><br/>
+													<a class="diseaseLink" href="/hormonal-therapy">Hormonal Therapy</a><br/>
+													<a class="diseaseLink" href="/complementary-and-alternative-medicine">Complementary & Alternative Medicine</a><br/>
+													<a class="diseaseLink" href="/cancer-side-effects">Side Effects </a><br/>
+				                        		</div>
+				                        		<div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+				                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Life & Everyday</a><br/>
+				                        			<a class="diseaseLink" href="/nutrition">Nutrition</a><br/>
+				                        			<a class="diseaseLink" href="/health">Health</a><br/>
+				                        			<a class="diseaseLink" href="/exercise">Exercise & Fitness</a><br/>
+				                        			<a class="diseaseLink" href="/beauty">Skin & Beauty</a><br/>
+				                        			<a class="diseaseLink" href="/career">Career & Employment</a><br/>
+				                        			<a class="diseaseLink" href="/legal">Legal</a><br/>
+				                        			<a class="diseaseLink" href="/insurance">Insurance</a><br/>
+				                        			<a class="diseaseLink" href="/medical-debt">Medical Debt</a><br/>
+				                        		</div>
+				                        		<div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+				                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Symptoms & Diagnosis</a><br/>
+				                        			<a class="diseaseLink" href="/cancer-symptoms">Symptoms </a><br/>
+				                        			<a class="diseaseLink" href="/cancer-just-diagnosed">Just Diagnosed </a><br/>
+				                        			<a class="diseaseLink" href="/cancer-diagnosis">Diagnosis </a><br/>
+				                        			<a class="diseaseLink" href="/cancer-pathology">Pathology </a><br/>
+				                        			<a class="diseaseLink" href="/cancer-staging">Staging </a><br/>
+				                        			<a class="diseaseLink" href="/cancer-recurrence">Recurrence </a><br/>
+				                        		</div>
+				                        		<div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;"></div>
+				                        		<div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
+				     	                   			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Risk, Screening & Genetics</a><br/>
+				                        			<a class="diseaseLink" href="/cancer-screening">Screening </a><br/>
+				                        			<a class="diseaseLink" href="/cancer-risk-factors">Risk Factors </a><br/>
+				                        			<a class="diseaseLink" href="/cancer-genetics">Genetics </a><br/>
+				                        		</div>
+					                      	</div>
+					                        <div class="cb"> </div>
+					                      </div>
+					                      <div class="cb"></div>
+					                    </div>
+									</div>
+									<div id="lifeEverydayContent" class="tabContent" style="display: none;">
+										<div class="newpage1">Life & Everyday</div>
+				                        <div class="cb"></div>
+				                      	<div class="joinborder"></div>
+				                      	<div class="cb"></div>	
+										<div class="topic"  style="padding-top: 10px;">
+				                      	 	<div style="width: 33%; display: inline-block; vertical-align: top;float: none;">
+			                        			<a class="diseaseLink" href="/nutrition">Nutrition</a><br/>
+			                        			<a class="diseaseLink" href="/health">Health</a><br/>
+			                        			<a class="diseaseLink" href="/exercise">Exercise</a><br/>
+			                        			<a class="diseaseLink" href="/beauty">Beauty</a><br/>
+			                        		</div>
+			                        		<div style="width: 33%; display: inline-block; vertical-align: top;float: none;">
+			                        			<a class="diseaseLink" href="/skin">Skin</a><br/>
+			                        			<a class="diseaseLink" href="/sex">Sex</a><br/>
+			                        			<a class="diseaseLink" href="/intimacy">Intimacy</a><br/>
+			                        			<a class="diseaseLink" href="/career">Career</a><br/>
+			                        		</div>
+			                        		<div style="width: 33%; display: inline-block; vertical-align: top;float: none;">
+			                        			<a class="diseaseLink" href="/legal">Legal</a><br/>
+			                        			<a class="diseaseLink" href="/insurance">Insurance</a><br/>
+			                        			<a class="diseaseLink" href="/medical-debt">Medical Debt</a><br/>
+			                        		</div>
+				                        </div>
+									</div>
+								</div>
+                    			<div class="cb"></div>
+                  			</div><!--topipcWraper-->
+                  			<div class="cb"></div>
+                		</div><!--mtcontent-->
+						<div class="cb"></div>
+					</div><!--mtleft-->
+					<div class="cb"></div>
+				</div><!--mtcover-->
+				<div class="cb"></div>
+			</div>
+			<div id="signupright"></div>
+		</div>
+	</div>
+</body>
+</html>
