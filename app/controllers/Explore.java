@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 
@@ -84,7 +85,8 @@ public class Explore extends Controller {
     	}
     	int limit = session.get("topicCount")==null?TopicLogic.TOPICS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
     	List<TopicBean> popularTopics = TopicLogic.loadPopularTopics(limit);
-		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions(null);
+    	String cancerType = session.get("cancerType"); 
+		List<ConversationBean> openQuestions = ConversationDAO.getOpenQuestions(null,cancerType);
 		
 		render(talker, openQuestions, popularTopics,newsLetterFlag,rewardLetterFlag);
     }
@@ -94,12 +96,10 @@ public class Explore extends Controller {
     	List<TopicBean> popularTopics = null;
     	if (talker != null) {
     		TalkerLogic.preloadTalkerInfo(talker);
-    	}
-    	else {
+    	} else {
     		int limit = session.get("topicCount")==null?TopicLogic.TOPICS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
     		popularTopics = TopicLogic.loadPopularTopics(limit);
     	}
-    	
     	List<ConversationBean> liveTalks = ConversationDAO.getLiveConversations();
 		render(talker, liveTalks, popularTopics);
     }
@@ -170,11 +170,11 @@ public class Explore extends Controller {
 		Calendar oneWeekBeforeNow = Calendar.getInstance();
 		oneWeekBeforeNow.add(Calendar.WEEK_OF_YEAR, -2);
 		
-		
-		List<TalkerBean> activeTalkers1 =  ApplicationDAO.getActiveTalkers(oneWeekBeforeNow.getTime());
+		String cancerType = session.get("cancerType");
+		List<TalkerBean> activeTalkers1 =  ApplicationDAO.getActiveTalkers(oneWeekBeforeNow.getTime(),cancerType);
 		
 		List<TalkerBean> activeTalkers = new ArrayList<TalkerBean>();
-		for(TalkerBean talkerBean : activeTalkers1){
+		for(TalkerBean talkerBean : activeTalkers1) {
 			//Commented code to display all category users in members page
 			//if(cat.contains(talkerBean.getCategory())){
 				activeTalkers.add(talkerBean);
@@ -185,7 +185,7 @@ public class Explore extends Controller {
 		if(activeTalkers != null && activeTalkers.size() > TalkerLogic.TALKERS_PER_PAGE)
 			activeTalkers = activeTalkers.subList(0, TalkerLogic.TALKERS_PER_PAGE);
 		
-		List<TalkerBean> newTalkers1 = ApplicationDAO.getNewTalkers();
+		List<TalkerBean> newTalkers1 = ApplicationDAO.getNewTalkers(cancerType);
 
 		List<TalkerBean> newTalkers = new ArrayList<TalkerBean>();
 		for(TalkerBean talkerBean : newTalkers1){
@@ -204,7 +204,6 @@ public class Explore extends Controller {
 		if (query != null) {
 			params.flash("query");
 			try {
-				String cancerType = session.get("cancerType");
 				results = SearchUtil.searchTalker(query,currentTalker,cancerType);
 				if(results != null && results.size() > TalkerLogic.TALKERS_PER_PAGE)
 					results = results.subList(0, TalkerLogic.TALKERS_PER_PAGE);
@@ -223,10 +222,11 @@ public class Explore extends Controller {
 		//members.put("Parents", new LinkedHashSet<TalkerBean>());
 		//members.put("Caregivers", new LinkedHashSet<TalkerBean>());
 		members.put("Family and Friends", new LinkedHashSet<TalkerBean>());
-		
-		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
-		for (DiseaseBean diseaseBean : diseaseList) {
-			members.put(diseaseBean.getName() , new LinkedHashSet<TalkerBean>());	
+		if(StringUtils.isBlank(cancerType)){
+			List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+			for (DiseaseBean diseaseBean : diseaseList) {
+				members.put(diseaseBean.getName() , new LinkedHashSet<TalkerBean>());	
+			}
 		}
 		//members.put("Breast Cancer", new LinkedHashSet<TalkerBean>());
 		//members.put("Ovarian Cancer", new LinkedHashSet<TalkerBean>());
@@ -358,32 +358,37 @@ public class Explore extends Controller {
 			render("Explore/feedList.html",popularConvo, type);
 		}
 		if(type.equals("expertConvo")) {
-			List<ConversationBean> expertConvo = ConversationDAO.loadExpertsAnswer(null);
+			String cancerType = session.get("cancerType"); 
+			List<ConversationBean> expertConvo = ConversationDAO.loadExpertsAnswer(null,cancerType);
 			render("Explore/feedList.html",expertConvo, type);
 		}
 		if(type.equals("openConvo")) {
-			//TalkerBean talker = CommonUtil.loadCachedTalker(session);
-			//boolean loggedIn = (talker != null);
-			List<ConversationBean> openConvo = ConversationDAO.getOpenQuestions(null);
+			String cancerType = session.get("cancerType");
+			List<ConversationBean> openConvo = ConversationDAO.getOpenQuestions(null,cancerType);
 			render("Explore/feedList.html",openConvo, type);
 		}
-		if(type.equals("recentConvo")){
+		if(type.equals("recentConvo")) {
 			TalkerBean talker = CommonUtil.loadCachedTalker(session);
 			boolean loggedIn = (talker != null);
+			String cancerType = session.get("cancerType"); 
+			talker = new TalkerBean();
+			talker.setCategory(cancerType);
 			Set<Action> recentConvo = FeedsLogic.getAllCancerFeed(null, loggedIn, talker);	
 			render("Explore/feedList.html",recentConvo, type);
 		}
 	}
-	
+
 	public static void homePageFeed(String type, String lastActionId){
 		if(lastActionId != null && "".equals(lastActionId))
 			lastActionId = null;
 		if(type.equals("expert")) {
-			List<ConversationBean> convoFeed = ConversationDAO.loadExpertsAnswer(lastActionId);
+			String cancerType = session.get("cancerType"); 
+			List<ConversationBean> convoFeed = ConversationDAO.loadExpertsAnswer(lastActionId,cancerType);
 			render("Explore/homeFeedList.html",convoFeed, type);
 		}
 		if(type.equals("open")) {
-			List<ConversationBean> convoFeed = ConversationDAO.getOpenQuestions(lastActionId);
+			String cancerType = session.get("cancerType"); 
+			List<ConversationBean> convoFeed = ConversationDAO.getOpenQuestions(lastActionId,cancerType);
 			render("Explore/homeFeedList.html",convoFeed, type);
 		}
 		if(type.equals("recent")){
@@ -392,7 +397,7 @@ public class Explore extends Controller {
 			render("Explore/homeFeedList.html",convoFeed, type);
 		}
 	}
-	
+
 	/**
 	 * Used by "More" button in different feeds.
 	 * @param afterActionId load actions after given action
@@ -403,6 +408,7 @@ public class Explore extends Controller {
     	Set<Action> _feedItems = null;
     	List<TalkerBean> _similarMembers = null;
     	List<ConversationBean> popularConvos = null;
+    	String cancerType = session.get("cancerType"); 
     	if ("convoFeed".equalsIgnoreCase(feedType)) {
     		_feedItems = FeedsLogic.getConvoFeed(_talker, afterActionId);
     		render("tags/feed/feedList.html", _feedItems, _talker);
@@ -417,10 +423,10 @@ public class Explore extends Controller {
     		render("tags/feed/feedList.html", _feedItems, _talker);
 	    }else if ("expertConvo".equalsIgnoreCase(feedType)){
 	   	     List<ConversationBean> expertConvos = null;
-	    	 expertConvos = ConversationDAO.loadExpertsAnswer(afterActionId);
+	    	 expertConvos = ConversationDAO.loadExpertsAnswer(afterActionId,cancerType);
 		     render("tags/convo/convoList.html", expertConvos ,feedType);
 	    } else if("openConvo".equalsIgnoreCase(feedType)) {
-			List<ConversationBean> openConvo = ConversationDAO.getOpenQuestions(afterActionId);
+			List<ConversationBean> openConvo = ConversationDAO.getOpenQuestions(afterActionId,cancerType);
 			render("tags/convo/convoList.html",openConvo, feedType);
 		} else if("USR".equalsIgnoreCase(feedType) || "EXP".equalsIgnoreCase(feedType)){
     		_similarMembers = TalkerLogic.getRecommendedTalkers(_talker,feedType,afterActionId);
@@ -441,15 +447,15 @@ public class Explore extends Controller {
 		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
 		List<TalkerBean> activeTalkers = null;
 		boolean loadFlag = false;
+		String cancerType = session.get("cancerType");
 		if ("active".equals(feedType)) {
 			Calendar twoWeekBeforeNow = Calendar.getInstance();
 			twoWeekBeforeNow.add(Calendar.WEEK_OF_YEAR, -2);
-			activeTalkers =  ApplicationDAO.getActiveTalkers(twoWeekBeforeNow.getTime());
+			activeTalkers =  ApplicationDAO.getActiveTalkers(twoWeekBeforeNow.getTime(),cancerType);
 		} else if("new".equals(feedType)) {
-			activeTalkers = ApplicationDAO.getNewTalkers();
+			activeTalkers = ApplicationDAO.getNewTalkers(cancerType);
 		} else if("search".equals(feedType)) {
 			try {
-				String cancerType = session.get("cancerType");
 				activeTalkers = SearchUtil.searchTalker(searchTerm,currentTalker,cancerType);
 			} catch (Exception e) {
 					Logger.error(e, "Explore.java : ajaxLoadMoreUser");
@@ -481,7 +487,7 @@ public class Explore extends Controller {
 			List<TalkerBean> allActiveTalkers = null;
 			activeTalkers = new ArrayList<TalkerBean>();
 			boolean loggedIn = (currentTalker != null);
-			if(loadFlag){
+			if(loadFlag) {
 				allActiveTalkers = TalkerDAO.loadAllTalkersByCategory(true,memberTypeEntry);
 				allActiveTalkers = TalkerDAO.getSortedTalkerList(allActiveTalkers,loggedIn);
 				for (TalkerBean talker : allActiveTalkers) {
@@ -489,7 +495,7 @@ public class Explore extends Controller {
 						activeTalkers.add(talker);
 				}
 			} else {
-				allActiveTalkers = TalkerDAO.loadAllTalkers(true,currentTalker);
+				allActiveTalkers = TalkerDAO.loadAllTalkers(true,currentTalker,cancerType);
 				allActiveTalkers = TalkerDAO.getSortedTalkerList(allActiveTalkers,loggedIn);
 				for (TalkerBean talker : allActiveTalkers) {
 					if (memberTypeEntry.contains(talker.getConnection()) && talker.getName() != null) 
@@ -620,7 +626,10 @@ public class Explore extends Controller {
 	 * 
 	 */
 	public static void topics(String topic) {
-
+		String cancerType = session.get("cancerType");
+		if(StringUtils.isNotBlank(cancerType)){
+			render("@topics_micro",cancerType);
+		}
 		if(topic != null){
 			System.out.println(topic);
 			topic = topic.replace("_", " ");

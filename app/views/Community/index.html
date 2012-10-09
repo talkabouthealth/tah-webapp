@@ -96,10 +96,10 @@
 			<ul id="nav">
 			    <li><a href="@{Explore.conversations('expert')}">Answers</a></li>
 			    <li><a href="@{Explore.topics()}">Topics</a></li>
-			    <li><a href="@{Static.TAH_Videos()}">Videos</a></li>
+			    <li><a href="@{MicroSite.video()}">Videos</a></li>
 			    <li><a href="@{Explore.browseMembers('active')}">Members</a></li>
-			    <li><a href="@{Static.medical_professionals()}">Experts</a></li>
-			    <li><a href="@{Static.workshops()}">Workshops</a></li>
+			    <li><a href="@{MicroSite.medical_professionals()}">Experts</a></li>
+			    <li><a href="@{MicroSite.workshops()}">Workshops</a></li>
 			    <li><a href="@{Static.trained_peer_support_program()}">Support</a></li><!-- Support Team -->
 			    <li><a href="http://blog.talkabouthealth.com" target="_new">Blog</a></li>
 			</ul>
@@ -348,7 +348,6 @@
   </div>
   <!--footer inner end--> 
 </div>
-
 <!-- footer end -->
 <div id="copy">
   <div id="copy_inner"> &copy; Copyright ${java.util.Calendar.getInstance().get(Calendar.YEAR)} - Talk About Health - <a href="@{Static.privacy()}">Privacy Policy</a> | <a href="@{Static.tos()}">Terms of Service</a></div>
@@ -365,7 +364,7 @@
 <script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 <script type="text/javascript">
 <!--
-$(document).ready(function(){
+$(window).load(function() {
 	//Search button code
 	$("#topSearchText").click(function() {
 		makeSearch();

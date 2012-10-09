@@ -1,6 +1,18 @@
-<div id="logo">
-	<a href="@{Application.index()}">
-		<img src="/public/images/spacer.gif" alt="Talk About Health" 
-			width="328" height="73" border="0" />
-	</a>
-</div>
+#{if session.contains("cancerType")}
+	<div style=" margin-top: 10px;">
+		<a href="@{Application.index()}">
+			<div style="height:61px;width:345px;">
+				<span style="float:left;margin-right:0px;"><img src="/public/images/index/tah_logo_only.png" alt="${session.get("cancerType")}" /></span>
+				<div style="margin-top:10px;font-weight:bold;font-size:30px;float: left;color:#EB208C;text-shadow: 1px 1px 3px #1C7EB9;">Talk${session.get("cancerType").replaceAll(" ","")}</div>
+			</div>
+		</a>
+	</div>
+#{/if}
+#{else}
+	<div id="logo">
+		<a href="@{Application.index()}">
+			<img src="/public/images/spacer.gif" alt="Talk About Health" width="328" height="73" border="0" />
+		</a>
+	</div>
+#{/else}
+	

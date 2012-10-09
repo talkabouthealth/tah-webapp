@@ -567,7 +567,7 @@ public class TalkerDAO {
 		return talkerList;
 	}
 	
-	public static List<TalkerBean> loadAllTalkers(boolean basicInfo,TalkerBean currentTalker){
+	public static List<TalkerBean> loadAllTalkers(boolean basicInfo,TalkerBean currentTalker,String cancerType) {
 		
 		//List<String> cat = FeedsLogic.getCancerType(currentTalker);
 		
@@ -576,6 +576,19 @@ public class TalkerDAO {
 		
 		//BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start().add("category", new BasicDBObject("$in", cat) ).add("suspended", false);
 		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start().add("suspended", false);
+		
+		if(StringUtils.isNotBlank(cancerType)){
+			List<String> cat = new ArrayList<String>();
+			cat.add(cancerType);
+			cat.add(ConversationBean.ALL_CANCERS);
+			queryBuilder.add("$or", 
+				Arrays.asList(
+						new BasicDBObject("otherCategories", new BasicDBObject("$in", cat)),
+						new BasicDBObject("category", new BasicDBObject("$in", cat))
+				)
+			);
+			
+		}
 		
 		List<DBObject> talkersDBObjectList = null;
 		if (basicInfo) {
@@ -588,19 +601,17 @@ public class TalkerDAO {
 		} else {
 			talkersDBObjectList=new ArrayList<DBObject>();//talkersDBObjectList = talkersColl.find().sort(new BasicDBObject("uname", 1)).toArray();
 			DBCursor talkerCur=talkersColl.find().sort(new BasicDBObject("uname", 1));
-			while(talkerCur.hasNext()){
+			while(talkerCur.hasNext()) {
 				talkersDBObjectList.add(talkerCur.next());
 			}
-			
 		}
-		
+
 		List<TalkerBean> talkerList = new ArrayList<TalkerBean>();
 		for (DBObject talkerDBObject : talkersDBObjectList) {
 			TalkerBean talker = new TalkerBean();
 			if (basicInfo) {
 				talker.parseBasicFromDB(talkerDBObject);
-			}
-			else {
+			} else {
 				talker.parseFromDB(talkerDBObject);
 			}
 			talkerList.add(talker);

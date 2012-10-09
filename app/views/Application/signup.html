@@ -5,6 +5,9 @@
 			#{if flash.cancerType}
 				changeNewsletterCategory();
 			#{/if}
+			#{elseif session.get("cancerType")}
+				changeNewsletterCategory();
+			#{/elseif}
 			$('.personalfields').keypress(function(e){
 				//call submit on enter in any field
 				if (e.which == 13) {
@@ -107,6 +110,7 @@
 									    <option value="${disease.name}"
 									   #{if disease.name.equals(flash['talker.category']) } selected #{/if}
 									   #{elseif disease.name.equals(flash.cancerType)} selected  #{/elseif}
+									   #{elseif disease.name.equals(session.get("cancerType"))} selected  #{/elseif}
 									    >${disease.name}</option>
 									#{/list}
 								</select>
@@ -265,7 +269,7 @@
 							#{/list}
 						</div>
 						#{/if}
-						#{ifnot flash.cancerType}
+						#{ifnot session.get("cancerType")}
 						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
 							#{if newsletter != null && newsletter.newsLetterType !=null}
 								#{if newsletter.newsLetterType.contains("workshop")}
