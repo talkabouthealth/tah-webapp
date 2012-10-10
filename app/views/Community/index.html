@@ -290,7 +290,7 @@
       <ul>
         <li><a href="@{Static.aboutus()}">About</a></li>
         <li><a href="@{Static.howitworks()}">How it Works</a></li>
-        <li><a href="@{Static.workshops()}">Q/A Workshops</a></li>
+        <li><a href="@{MicroSite.workshops()}">Q/A Workshops</a></li>
         <li><a href="@{Static.trained_peer_support_program()}">Trained Peer Support</a></li>
         <li><a href="@{Explore.browseMembers('active')}">Members</a></li>
         <li><a href="http://blog.talkabouthealth.com" target="_new">Blog</a></li>
@@ -311,7 +311,11 @@
       	<a href="http://talkabouthealth.tumblr.com" target="_new"><img src="/public/images/index/t_icon.png" alt="t" /></a> 
       	<a href="http://www.youtube.com/user/talkabouthealth" target="_new"><img src="/public/images/index/youtube_icon.png" alt="you tube" /></a>
       </div>
-      <p><img src="/public/images/index/footer_logo.png" width="150" alt="Talk About Health Newsletter" class="sml_logo" /> Newsletter</p>
+      	<div style="float: left;">
+      		<img src="/public/images/index/logo_bw.png" alt="Talk About Health Newsletter" class="sml_logo" />
+			<span style="float: left; font-weight: bold; font-size: 20px;">Talk${cancerType.replaceAll(" ","")}</span>
+			<span style="float:left;padding-top:5px;">&nbsp;Newsletter</span>
+		</div>
       	#{form @Newsletter.subscribeMoreNewsLetter() , id:'subcribeNewsletter' }
         <ul>
           <li>
@@ -321,11 +325,11 @@
             <input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked='checked' />
             Q&amp;A Workshop Summary</li>
           <li>
-            <input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Best of TalkAboutHealth" checked='checked' />
+            <input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TalkAboutHealth Rewards" checked='checked' />
             Benefits(Custom Health &amp; Medical Offers)</li>
           <li>
-            <input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TalkAboutHealth Rewards" checked='checked' />
-            Best of TalkAboutHealth (Weekly)</li>
+            <input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Best of TalkAboutHealth" checked='checked' />
+            Best of Talk${cancerType.replaceAll(" ","")} (Weekly)</li>
         </ul>
         <div>
 	        <div style="float:left;height:12px;">&nbsp;<span id="respMessage" style="float:left;display: none;">Test Text</span></div>
@@ -344,13 +348,25 @@
 		</div>
     </div>
     <!-- newsletter end -->
-    <div class="footer_logo"></div>
+    #{if session.get("cancerType")}
+    	<div class="footer_logo" style="background-image:none;font-size: 30px;width:660px;">
+    		<img style="float: left;" src="/public/images/index/footer_logo_new.png" />
+    		<span style="float: left; padding-top: 5px; padding-left: 10px;">Talk${cancerType.replaceAll(" ","")}</span>
+    	</div>
+    #{/if}
+	#{else}<div class="footer_logo"></div>#{/else} 
+    
   </div>
   <!--footer inner end--> 
 </div>
 <!-- footer end -->
 <div id="copy">
-  <div id="copy_inner"> &copy; Copyright ${java.util.Calendar.getInstance().get(Calendar.YEAR)} - Talk About Health - <a href="@{Static.privacy()}">Privacy Policy</a> | <a href="@{Static.tos()}">Terms of Service</a></div>
+  <div id="copy_inner"> &copy; Copyright ${java.util.Calendar.getInstance().get(Calendar.YEAR)} -
+  	#{if session.get("cancerType")}Talk${cancerType.replaceAll(" ","")}#{/if}
+  	#{else}Talk About Health#{/else} 
+  	 - 
+  	<a href="@{Static.privacy()}">Privacy Policy</a> | <a href="@{Static.tos()}">Terms of Service</a>
+  </div>
   <!-- copy_inner end --> 
 </div>
 <!-- copy end -->

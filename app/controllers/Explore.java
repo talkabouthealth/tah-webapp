@@ -627,15 +627,17 @@ public class Explore extends Controller {
 	 */
 	public static void topics(String topic) {
 		String cancerType = session.get("cancerType");
-		if(StringUtils.isNotBlank(cancerType)){
-			render("@topics_micro",cancerType);
-		}
 		if(topic != null){
 			System.out.println(topic);
 			topic = topic.replace("_", " ");
 			topic = topic.replace("+", " ");
 			topic = topic.toLowerCase();
 		}
+		
+		if(StringUtils.isNotBlank(cancerType)){
+			render("@topics_micro",cancerType,topic);
+		}
+		
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
 		List<DiseaseBean> diseaseList1 = null;
