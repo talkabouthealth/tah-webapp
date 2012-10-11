@@ -25,6 +25,9 @@
 		if(responseText === "Ok") {
 			window.scrollTo(0,280);
 			showPopup("#subNewsletter", 350);
+		} else if(responseText.indexOf("Error:") === 0) {
+			var errorText = responseText.replace("Error:", "");
+			alert(errorText);
 		}
 	}
 	function displayOptions(option){
@@ -150,8 +153,9 @@
 							#{/else}
 							</div>
 						</div>
-						<div style="width:100%;">
-						<h4 style="font-weight: bold; margin-top: 20px;float:none;  width: 100%;">
+						<div style="width:100%;margin-top: 10px;">
+						#{if session.get("cancerType") == null}
+						<h4 style="font-weight: bold; margin-top: 10px;float:none;  width: 100%;">
 							<a href="javascript:displayOptions('newsLetterOption');" ><img id="newsLetterOptionEC" src="/public/images/collapse.png"/>
 							<span style="margin-left: 5px; vertical-align: top;">
 							#{if session.username}Disease Newsletters (weekly)#{/if}
@@ -173,6 +177,7 @@
 									</div>
 								#{/list}
 							</div>
+							#{/if}
 						</div>
 						<div style="width:100%;">
 						<h4 style="  width: 100%;"><a href="javascript:displayOptions('rewardsOptions');" ><img id="rewardsOptionsEC" src="/public/images/collapse.png"/><span style="margin-left: 5px; vertical-align: top;">
