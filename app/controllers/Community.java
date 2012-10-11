@@ -26,6 +26,7 @@ import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Http.Request;
 import play.mvc.With;
+import plugin.TAHGlobalSettings;
 import util.CommonUtil;
 import util.SearchUtil;
 import dao.ActionDAO;
@@ -37,6 +38,7 @@ import dao.DiseaseDAO;
 import dao.TalkerDAO;
 import dao.VideoDAO;
 
+@With(TAHGlobalSettings.class)
 public class Community extends Controller {
 	
 	public static void index() {
@@ -45,29 +47,10 @@ public class Community extends Controller {
     		//redirect to Home page if user is logged in
     		Home.index();
     	} else {
-    		String[] arr = request.host.split("\\.");
-    		if (arr != null && arr.length > 0) {
-    			if(arr.length == 3) {
-    				//cancerType= arr[0];
-    				cancerType = "Breast Cancer";
-    			} else {
-    				cancerType = params.get("type");
-    				if(StringUtils.isBlank(cancerType) ){
-    					cancerType = session.get("cancerType");
-    				}
-    			}
-        	} else {
-        		cancerType = params.get("type");
-        		if(StringUtils.isBlank(cancerType) ){
-					cancerType = session.get("cancerType");
-				}
-        	}
-    		if(StringUtils.isBlank(cancerType) || DiseaseDAO.getDiseaseByName(cancerType) == null)
-    			cancerType = "Breast Cancer";
-    		
+    		//session.put("cancerType", cancerType);
+    		cancerType = session.get("cancerType");
     		System.out.println("cancerType: " + cancerType);
-    		session.put("cancerType", cancerType);
-    		
+
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
     		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
     		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
