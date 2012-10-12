@@ -14,6 +14,7 @@ import java.util.TreeSet;
 import logic.FeedsLogic;
 import logic.TopicLogic;
 import models.CommentBean;
+import models.DiseaseBean;
 import models.TalkerBean;
 import models.ConversationBean;
 import models.TalkerTopicInfo;
@@ -36,6 +37,7 @@ import util.NotificationUtils;
 import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
+import dao.DiseaseDAO;
 import dao.TalkerDAO;
 import dao.ConversationDAO;
 import dao.TopicDAO;
@@ -57,7 +59,15 @@ public class Topics extends Controller {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	boolean newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
     	boolean rewardLetterFlag=ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
-		render(talker, topic,newsLetterFlag,rewardLetterFlag);
+
+    	String cancerType = "";
+		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+		for (DiseaseBean diseaseBean : diseaseList) {
+			if(topic.getTitle().contains(diseaseBean.getName()))
+				cancerType =  diseaseBean.getName();		
+		}
+		
+    	render(talker, topic,newsLetterFlag,rewardLetterFlag,cancerType);
     }
 	
 	/**
@@ -197,8 +207,7 @@ public class Topics extends Controller {
         		TopicDAO.updateTopic(oldParentFull);
         	}
         	TopicDAO.updateTopic(parentTopic);
-    	}
-    	else {
+    	} else {
     		parentTopic = TopicDAO.getById(parentId);
         	notFoundIfNull(parentTopic);
         	
