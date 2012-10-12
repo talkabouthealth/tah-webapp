@@ -23,12 +23,23 @@
 	   		$("#convoTopicMessage").html(errorText); 
 	   		$("#convoTopicMessage").fadeIn(100);
 	   		closeTimeout = setTimeout(function() { $("#convoTopicMessage").fadeOut(200) }, 4000);
+	   	} else if (responseText.indexOf("NEW:") === 0) {
+	   		$("#convoTopicMessage").css("color","#2E8B57");
+	   		$("#convoTopicMessage").html(responseText.substring(4));
+	   		$("#convoTopicMessage").fadeIn(100);
+	   		closeTimeout = setTimeout(function() { $("#convoTopicMessage").fadeOut(200) }, 4000);
+	   		var email = $("#convoTopic :input[name='newsletter.email']").val();
+	   		showPopupEmail(email);
 	   	} else {
 	   		$("#convoTopicMessage").css("color","#2E8B57");
 	   		$("#convoTopicMessage").html(responseText);
 	   		$("#convoTopicMessage").fadeIn(100);
 	   		closeTimeout = setTimeout(function() { $("#convoTopicblock").fadeOut(200) }, 4000);
 	   	}
+	}
+	showPopupEmail = function(email) {
+		$("#emailLetterForm :input[name='newsletter.email']").val(email);
+		showPopup("#emailpopup", 350);
 	}
 </script>
 #{if convo.category != null && !convo.category.equals("")}
