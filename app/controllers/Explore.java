@@ -543,14 +543,14 @@ public class Explore extends Controller {
 		Set<Action> communityFeed = null;
 		boolean newsLetterFlag=false;
 		boolean rewardLetterFlag=false;
+		String sessionCancer = session.get("cancerType");
 		if(talker != null){
-			
 			talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 			 newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
 			rewardLetterFlag=ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
 		}
 		if(cancerType == null || (cancerType != null && cancerType.equals("")))
-			cancerType = "Breast Cancer";
+			cancerType = "All Cancers";
 		else
 			cancerType = cancerType.replaceAll("_", " ");
 		
