@@ -78,7 +78,7 @@ public class SearchIndexerJob extends Throwable{
 				  if(StringUtils.isNotBlank(talker.getCategory())){
 					  doc.add(new Field("category", talker.getCategory(), Field.Store.YES, Field.Index.ANALYZED));
 				  }else{
-					  doc.add(new Field("category", "All Cancer", Field.Store.YES, Field.Index.ANALYZED));
+					  doc.add(new Field("category", ALL_CANCERS, Field.Store.YES, Field.Index.ANALYZED));
 				  }
 				  doc.add(new Field("type", "User", Field.Store.YES, Field.Index.NO));
 				  autocompleteIndexWriter.addDocument(doc);
@@ -100,7 +100,7 @@ public class SearchIndexerJob extends Throwable{
 				if(StringUtils.isNotBlank(convo.getCategory())){
 					doc.add(new Field("category", convo.getCategory(), Field.Store.YES, Field.Index.ANALYZED));
 				} else {
-					doc.add(new Field("category", "All Cancer", Field.Store.YES, Field.Index.ANALYZED));
+					doc.add(new Field("category", ALL_CANCERS, Field.Store.YES, Field.Index.ANALYZED));
 				}
 				
 				//add an answer, reply, or live conversation text ?
@@ -122,7 +122,7 @@ public class SearchIndexerJob extends Throwable{
 				if(StringUtils.isNotBlank(convo.getCategory())){
 					doc.add(new Field("category", convo.getCategory(), Field.Store.YES, Field.Index.ANALYZED));
 				} else {
-					doc.add(new Field("category", "All Cancer", Field.Store.YES, Field.Index.ANALYZED));
+					doc.add(new Field("category", ALL_CANCERS, Field.Store.YES, Field.Index.ANALYZED));
 				}
 				doc.add(new Field("type", "Conversation", Field.Store.YES, Field.Index.NO));
 				if (convo.getMainURL() != null) {
@@ -164,4 +164,6 @@ public class SearchIndexerJob extends Throwable{
 	protected void finalize() throws Throwable {
 		super.finalize();
 	}
+	
+	private static String ALL_CANCERS = "All Cancers";
 }
