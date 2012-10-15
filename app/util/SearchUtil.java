@@ -44,7 +44,7 @@ import dao.TalkerDAO;
 public class SearchUtil {
 	
 	public static final String SEARCH_INDEX_PATH = Play.configuration.getProperty("search.index");
-
+	private static String ALL_CANCERS = "All Cancers";
 	/**
 	 * Returns eight talkers for given query.
 	 * Search by username and bio.
@@ -234,10 +234,15 @@ public class SearchUtil {
 			}
 		}
 		
+		String[] cancerFields = new String[] {"category"};
+		
+		QueryParser cancerParser = new MultiFieldQueryParser(Version.LUCENE_36,cancerFields, analyzer);
+		parser.setAllowLeadingWildcard(true);
+		
 		searchTerm = removeChars(searchTerm);
 		Query searchQuery;
 		if(StringUtils.isNotEmpty(cancerType)) {
-			searchQuery = parser.parse(searchTerm +"* AND category:\"" + cancerType + "\"");	
+			searchQuery = parser.parse(searchTerm  + " AND  (" +cancerParser.parse("\"" + cancerType + "\",\"" + ALL_CANCERS  + "\"") + ")");
 		} else {
 			searchQuery = parser.parse(searchTerm);
 		}
