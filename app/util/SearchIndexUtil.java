@@ -6,6 +6,7 @@ import java.io.IOException;
 import models.TalkerBean;
 import models.PrivacySetting.PrivacyType;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -35,6 +36,11 @@ public class SearchIndexUtil {
 			IndexWriter autocompleteIndexWriter = new IndexWriter(autocompleteIndexDir, new IndexWriterConfig(Version.LUCENE_36,new StandardAnalyzer(Version.LUCENE_36)));
 			doc.add(new Field("id", talker.getId(), Field.Store.YES, Field.Index.ANALYZED));
 			doc.add(new Field("uname", talker.getUserName(), Field.Store.YES, Field.Index.ANALYZED));
+			if(StringUtils.isNotBlank(talker.getCategory())){
+				  doc.add(new Field("category", talker.getCategory(), Field.Store.YES, Field.Index.ANALYZED));
+			} else {
+				  doc.add(new Field("category", "All Cancer", Field.Store.YES, Field.Index.ANALYZED));
+			}
 			doc.add(new Field("type", "User", Field.Store.YES, Field.Index.NO));
 			autocompleteIndexWriter.addDocument(doc);
 			autocompleteIndexWriter.close();
@@ -46,6 +52,11 @@ public class SearchIndexUtil {
 			doc = new Document();
 			doc.add(new Field("id", talker.getId(), Field.Store.YES, Field.Index.ANALYZED));
 			doc.add(new Field("uname", talker.getUserName(), Field.Store.YES, Field.Index.ANALYZED));
+			if(StringUtils.isNotBlank(talker.getCategory())){
+				  doc.add(new Field("category", talker.getCategory(), Field.Store.YES, Field.Index.ANALYZED));
+			} else {
+				  doc.add(new Field("category", "All Cancer", Field.Store.YES, Field.Index.ANALYZED));
+			}
 			if (!talker.isPrivate(PrivacyType.PROFILE_INFO) && talker.getBio() != null) {
 				doc.add(new Field("bio", talker.getBio(), Field.Store.YES,Field.Index.ANALYZED));
 			}

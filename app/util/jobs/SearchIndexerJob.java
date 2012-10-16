@@ -59,9 +59,9 @@ public class SearchIndexerJob extends Throwable{
 				  Document doc = new Document();
 				  doc.add(new Field("id", talker.getId(), Field.Store.YES, Field.Index.ANALYZED));
 				  doc.add(new Field("uname", talker.getUserName(), Field.Store.YES, Field.Index.ANALYZED));
-				  if(StringUtils.isNotBlank(talker.getCategory())){
+				  if(StringUtils.isNotBlank(talker.getCategory())) {
 					  doc.add(new Field("category", talker.getCategory(), Field.Store.YES, Field.Index.ANALYZED));
-				  }else{
+				  } else {
 					  doc.add(new Field("category", "All Cancer", Field.Store.YES, Field.Index.ANALYZED));
 				  }
 					  
@@ -75,9 +75,9 @@ public class SearchIndexerJob extends Throwable{
 				  doc = new Document();
 				  doc.add(new Field("id", talker.getId(), Field.Store.YES, Field.Index.ANALYZED));
 				  doc.add(new Field("uname", talker.getUserName(), Field.Store.YES, Field.Index.ANALYZED));
-				  if(StringUtils.isNotBlank(talker.getCategory())){
+				  if(StringUtils.isNotBlank(talker.getCategory())) {
 					  doc.add(new Field("category", talker.getCategory(), Field.Store.YES, Field.Index.ANALYZED));
-				  }else{
+				  } else {
 					  doc.add(new Field("category", ALL_CANCERS, Field.Store.YES, Field.Index.ANALYZED));
 				  }
 				  doc.add(new Field("type", "User", Field.Store.YES, Field.Index.NO));

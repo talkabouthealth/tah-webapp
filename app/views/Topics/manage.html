@@ -35,7 +35,7 @@
 			$.post("@{Topics.manageParents()}", 
 				{topicId: "${topic.id}", todo: "add", parentId: newParent},
 				function(data) {
-					$("#parents").html($(data));
+					$("#parents").after($(data));
 				}
 			);
 			return false;
@@ -98,7 +98,6 @@
 				window.location.reload();
 			}
 		);
-
 		//window.location.reload();
 		return false;
 	}
@@ -162,13 +161,11 @@
 					  </div>
                       #{ifnot topic.fixed }
 	                      <div class="mtinputbox">
-	                        
-		                         <div class="inputCover">
-		                          <input id="newParent" type="text" class="mtinput"/>
-		                        </div>
-		                        <input id="newParentBtn" type="submit" value="Change" />
-		                        <div class="cb"></div>
-	                        
+	                        <div class="inputCover">
+	                          <input id="newParent" type="text" class="mtinput"/>
+	                        </div>
+	                        <input id="newParentBtn" type="submit" value=" " class="addbtn" />
+	                        <div class="cb"></div>
 	                      </div>
 	                  #{/ifnot}
                       <div class="cb"></div>

@@ -66,7 +66,6 @@ public class Topics extends Controller {
 			if(topic.getTitle().contains(diseaseBean.getName()))
 				cancerType =  diseaseBean.getName();		
 		}
-		
     	render(talker, topic,newsLetterFlag,rewardLetterFlag,cancerType);
     }
 	
@@ -197,15 +196,32 @@ public class Topics extends Controller {
     			forbidden();
         		return;
     		}
+    		
+    		Set<TopicBean> parent = topic.getParents();
+    		for (TopicBean topicBean : parent) {
+				if(topicBean.getId().equals(parentTopic.getId()))
+					renderText("Sorry, this topic is already a parent-topic.");
+			}
+    		
+    		Set<TopicBean> childs = topic.getChildren();
+    		for (TopicBean topicBean : childs) {
+				if(topicBean.getId().equals(parentTopic.getId()))
+					renderText("Sorry, this topic is already a sub-topic.");
+			}
+    		
         	parentTopic.getChildren().add(topic);
         	
         	//remove topic from previous parent
+        	//Commented in order to let a topic have multiple parent topics
+        	/*
         	if (!topic.getParents().isEmpty()) {
         		TopicBean oldParent = topic.getParents().iterator().next();
         		TopicBean oldParentFull = TopicDAO.getById(oldParent.getId());
         		oldParentFull.getChildren().remove(topic);
         		TopicDAO.updateTopic(oldParentFull);
         	}
+        	*/
+        	
         	TopicDAO.updateTopic(parentTopic);
     	} else {
     		parentTopic = TopicDAO.getById(parentId);
@@ -213,7 +229,8 @@ public class Topics extends Controller {
         	
     		parentTopic.getChildren().remove(topic);
     		TopicDAO.updateTopic(parentTopic);
-    		TopicLogic.addToDefaultParent(topic);
+    		//Commented in order to let a topic have standalone topic and no need of any default parent topic
+    		//TopicLogic.addToDefaultParent(topic);
     	}
     	
     	renderText("<div class='topictxtz'>"+parentTopic.getTitle()+"&nbsp;&nbsp;<a href='#' rel='"+
@@ -233,22 +250,34 @@ public class Topics extends Controller {
         		return;
     		}
     		
+    		Set<TopicBean> parent = topic.getParents();
+    		for (TopicBean topicBean : parent) {
+				if(topicBean.getId().equals(childTopic.getId()))
+					renderText("Sorry, this topic cannot be a sub-topic.");
+			}
+    		
+    		Set<TopicBean> childs = topic.getChildren();
+    		for (TopicBean topicBean : childs) {
+				if(topicBean.getId().equals(childTopic.getId()))
+					renderText("Sorry, this topic is already a sub-topic.");
+			}
+    		
     		//check if child topic already has a parent
     		if (childTopic.getParents() != null && childTopic.getParents().size() > 0) {
+    			//Commented so that a topic can have more than one parent topic and same topic can be child of multiple topics
+    			/*  
     			TopicBean oldParent = childTopic.getParents().iterator().next();
     			if (oldParent.getTitle().equals(TopicLogic.DEFAULT_TOPIC)) {
     				TopicBean oldParentFull = TopicDAO.getById(oldParent.getId());
             		oldParentFull.getChildren().remove(childTopic);
             		TopicDAO.updateTopic(oldParentFull);
-    			}
-    			else {
+    			} else {
     				renderText("Sorry, this topic cannot be a sub-topic. It already has a parent topic.");
         			return;
     			}
-    			
+    			*/
     			topic.getChildren().add(childTopic);
-    		}
-    		else {
+    		} else {
     			//top level topic (should be without parents)
     			renderText("Sorry, this topic cannot be a sub-topic.");
     		}
