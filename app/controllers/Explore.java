@@ -429,7 +429,7 @@ public class Explore extends Controller {
 			List<ConversationBean> openConvo = ConversationDAO.getOpenQuestions(afterActionId,cancerType);
 			render("tags/convo/convoList.html",openConvo, feedType);
 		} else if("USR".equalsIgnoreCase(feedType) || "EXP".equalsIgnoreCase(feedType)){
-    		_similarMembers = TalkerLogic.getRecommendedTalkers(_talker,feedType,afterActionId);
+    		_similarMembers = TalkerLogic.getRecommendedTalkers(_talker,feedType,afterActionId,cancerType);
     		render("tags/profile/similarMemberList.html", _similarMembers);
     	} else if("TOPIC".equals(feedType)) {
     		List<TopicBean> _recommendedTopics = TalkerLogic.getRecommendedTopics(_talker,afterActionId);
