@@ -72,7 +72,14 @@
 			<h1 class="logo">
 				<div style="height:61px;width:370px;">
 					<span style="float:left;margin-right:0px;"><img src="/public/images/index/tah_logo_only.png" alt="${cancerType}" /></span>
-					<div style="margin-top:0px;font-weight:bold;font-size:35px;float: left;color:#EB208C;text-shadow: 1px 1px 3px #1C7EB9;">Talk${cancerType.replaceAll(" ","")}</div>
+					<div style="margin-top:0px;font-weight:bold;font-size:35px;float: left;color:#EB208C;"><!-- text-shadow: 1px 1px 3px #1C7EB9; -->
+						#{if cancerType.indexOf(" ") > 0}
+							<span style="color:#1da655;">Talk</span><span style="color:#1550a4;">${cancerType.replaceAll(" ","").substring(0,cancerType.indexOf(" "))}</span><span style="color:#eb1d90;">${cancerType.replaceAll(" ","").substring(cancerType.indexOf(" "))}</span>
+						#{/if}
+						#{else}
+							<span style="color:#1da655;">Talk</span><span style="color:#1550a4;">${cancerType.replaceAll(" ","")}</span>
+						#{/else}
+					</div>
 					<!-- 
 					<div style="font-weight:bolder;font-size:12px;float: left;">
 					<font color="#014BA9">By Talk</font><font color="#0FA04B">About</font><font color="#EB208C">Health.com</font>
@@ -173,7 +180,7 @@
 		            		<input name="newsletter.newsLetterType" type="hidden" value="${cancerType}"/>
 		            		<input type="text" class="email" placeholder="Valid Email" id="email" name="newsletter.email">
 		            		<input style="margin-left:0px;" type="submit" class="buttonNL" id="subscribeDisease" value="Sign Up!"></input>
-		            		<br/>By signing up I agree to the Terms of Service and Privacy Policy.
+		            		<br/>By signing up I agree to the <a href="@{Static.tos()}" target="_new" style="color:#FFFFFF;">Terms of Service</a> and <a href="@{Static.privacy()}" target="_new" style="color:#FFFFFF;">Privacy Policy</a>.
 		            	#{/form}
 		            </div>
 	            </div>
@@ -371,7 +378,7 @@
 </div>
 <!-- copy end -->
 	<!--footer end--> 
-#{ common/googleAnalytics /}
+
 <script type="text/javascript" src="/public/javascripts/jquery-1.5.1.min.js" ></script>
 <script type="text/javascript" src="/public/javascripts/jquery-ui-1.8.4.custom.min.js" ></script>
 <script type="text/javascript" src="/public/javascripts/slides.min.jquery.js" ></script>
@@ -566,5 +573,6 @@ openServiceLogin = function(serviceType) {
 }
 -->
 </script>
+#{ common/googleAnalytics cpage: "home" /}
 </body>
 </html>
