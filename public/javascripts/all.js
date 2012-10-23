@@ -1082,10 +1082,6 @@ function makeFullSearchAjaxLoad(inputId) {
 
 //saveProfileComment(String profileTalkerId, String parentId, String text)
 function saveProfileThankYouComment(parentId, parentList, userName) {
-<<<<<<< HEAD
-	//alert("saveProfileThankYouComment");
-=======
->>>>>>> tah-qa
 	var parentListId = "";
 	if (parentList) {
 		parentListId = "#"+parentList+" ";
