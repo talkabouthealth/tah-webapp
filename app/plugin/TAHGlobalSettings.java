@@ -34,9 +34,16 @@ public class TAHGlobalSettings  extends Controller  {
 				cancerType = session.get("cancerType");
 			}
     	}
+
+		if(StringUtils.isNotBlank(cancerType) && cancerType.equals("breastcancer")) {
+			cancerType = "Breast Cancer";
+		} else if(StringUtils.isNotBlank(cancerType) && cancerType.equals("lungcancer")) {
+			cancerType = "Lung Cancer";
+		}
+		
 		if(StringUtils.isBlank(cancerType) || DiseaseDAO.getDiseaseByName(cancerType) == null){
-			controllers.Application.index();
 			session.put("def", "1");
+			controllers.Application.index();
 		} else {
 			session.put("def", "0");
 			session.put("cancerType", cancerType);
