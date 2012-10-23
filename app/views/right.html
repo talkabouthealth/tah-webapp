@@ -471,6 +471,9 @@
 	<div class="cb"></div>
 #{/if}
 #{else}
+	#{if pageType != null && pageType == "cancerPage"}
+		#{include '/tags/newsletter/subscribeCancer.html' /}
+	#{/if}
 	#{include 'tahInfo.html' /}
 	#{include 'newsletter_signup.html' /}
 	#{ share/fbwidget /}<br />
@@ -496,7 +499,7 @@
   <div id="dialog" class="window"> </div>
   
   #{popups/startConvo page: currentPage, talker: talker /}
-  
+  #{newsletter/emailpopup page: currentPage, talker: talker /}
   #{if talker}
   	#{popups/emailDialogs talker: talker /}
   	

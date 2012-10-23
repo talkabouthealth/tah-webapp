@@ -1,0 +1,72 @@
+#{if cancerType != null && cancerType != ""}
+<script type="text/javascript">
+	$(document).ready(function() {
+		var rewardOptions = { success: setcancerTopicLetterMessage }; 
+		$('#cancerTopic').submit(function() {
+			$("#cancerTopic").ajaxSubmit(rewardOptions); 
+			return false;
+		});
+		$('#emailcancerTopic').click(function() {
+			if($("#emailcancerTopic").val().trim() == 'Email Address')
+				$("#emailcancerTopic").val('');
+		});
+
+		$('#emailcancerTopic').blur(function() {
+			if($("#emailcancerTopic").val().trim() == '')
+				$("#emailcancerTopic").val('Email Address');
+		});
+	});
+	function setcancerTopicLetterMessage(responseText, statusText, xhr, $form) {
+		if (responseText.indexOf("Error:") === 0) {
+	   		var errorText = responseText.replace("Error:", "");
+	   		$("#cancerTopicMessage").css("color","#ff0000");
+	   		$("#cancerTopicMessage").html(errorText); 
+	   		$("#cancerTopicMessage").fadeIn(100);
+	   		closeTimeout = setTimeout(function() { $("#cancerTopicMessage").fadeOut(200) }, 4000);
+	   	} else if (responseText.indexOf("NEW:") === 0) {
+	   		$("#cancerTopicMessage").css("color","#2E8B57");
+	   		$("#cancerTopicMessage").html(responseText.substring(4));
+	   		$("#cancerTopicMessage").fadeIn(100);
+	   		closeTimeout = setTimeout(function() { $("#cancerTopicMessage").fadeOut(200) }, 4000);
+	   		var email = $("#cancerTopic :input[name='newsletter.email']").val();
+	   		showPopupEmail(email);
+	   	} else {
+	   		$("#cancerTopicMessage").css("color","#2E8B57");
+	   		$("#cancerTopicMessage").html(responseText);
+	   		$("#cancerTopicMessage").fadeIn(100);
+	   		closeTimeout = setTimeout(function() { $("#cancerTopicBlock").fadeOut(200) }, 4000);
+	   	}
+	}
+	showPopupEmail = function(email) {
+		$("#emailLetterForm :input[name='newsletter.email']").val(email);
+		showPopup("#emailpopup", 350);
+	}
+</script>
+<div class="topipsts" id="tahcancerTopic">
+	<div class="" id="cancerTopicBlock">
+		<div style="padding:5px;float: left;">
+			<span style="float: left; padding-top: 3px;color:#3888c1;font-style: italic;font-size: 14px;" class="mtrighttxt1">${cancerType} newsletter</span>
+		</div>
+		<div style="float:left;padding:5px;">
+			<span class="blacktextgrey15">Sign up for our weekly ${cancerType} newsletter for the latest news, best answers and featured experts.</span>
+		</div>
+	  		#{form @Newsletter.subscribeWorkShop(), id:'cancerTopic' }
+	  		<input id="newsletter" name="newsletter.newsLetterType" type="hidden" value="${cancerType}"/>
+	  		<div style="clear: both;height: 15px;padding:0 5px"><span id="cancerTopicMessage" class="success" style="display:none;font-size: 12px;">Thanks for subscribing.</span></div>
+	  		<div style="float:left;padding:0px 5px 0 5px">
+			#{if session.username }
+				<input name="newsletter.email" id="emailcancerTopic" style="background: none repeat scroll 0 0 #F0F0F0;border: 1px solid #606060;color: #010101;padding: 3px;" type="text" value="${talker.email}" size="17" />
+			#{/if}
+			#{else}
+				<input name="newsletter.email" id="emailcancerTopic" style="background: none repeat scroll 0 0 #F0F0F0;border: 1px solid #606060;color: #010101;padding: 3px;" type="text" value="Email Address" size="17"/>
+			#{/else}
+			</div>
+			<div style="float:left;padding-top: 2px;">
+				<input class="newsignupBenefits" type="submit" value="" style="cursor: pointer;"/>
+			</div>
+		#{/form}
+		<br/>
+  		<div class="topicborder" style="margin-top: 20px;"></div>
+  	</div>
+</div>
+#{/if}

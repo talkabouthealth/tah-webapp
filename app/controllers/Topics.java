@@ -14,6 +14,7 @@ import java.util.TreeSet;
 import logic.FeedsLogic;
 import logic.TopicLogic;
 import models.CommentBean;
+import models.DiseaseBean;
 import models.TalkerBean;
 import models.ConversationBean;
 import models.TalkerTopicInfo;
@@ -36,6 +37,7 @@ import util.NotificationUtils;
 import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
+import dao.DiseaseDAO;
 import dao.TalkerDAO;
 import dao.ConversationDAO;
 import dao.TopicDAO;
@@ -57,7 +59,14 @@ public class Topics extends Controller {
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	boolean newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
     	boolean rewardLetterFlag=ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
-		render(talker, topic,newsLetterFlag,rewardLetterFlag);
+
+    	String cancerType = "";
+		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+		for (DiseaseBean diseaseBean : diseaseList) {
+			if(topic.getTitle().contains(diseaseBean.getName()))
+				cancerType =  diseaseBean.getName();		
+		}
+    	render(talker, topic,newsLetterFlag,rewardLetterFlag,cancerType);
     }
 	
 	/**
@@ -173,10 +182,10 @@ public class Topics extends Controller {
     public static void manageParents(String topicId, String todo, String parentId) {
     	TopicBean topic = TopicDAO.getById(topicId);
     	notFoundIfNull(topic);
-    	if (topic.isFixed()) {
-    		forbidden();
-    		return;
-    	}
+    	//if (topic.isFixed()) {
+    	//	forbidden();
+    	//	return;
+    	//}
     	
     	TopicBean parentTopic = null;
     	if (todo.equalsIgnoreCase("add")) {
@@ -187,24 +196,50 @@ public class Topics extends Controller {
     			forbidden();
         		return;
     		}
+    		
+
+    		if(parentTopic.getTitle().equals(topic.getTitle())){
+    			renderText("Sorry, Same topic.");
+    			return;
+    		}
+    		
+    		Set<TopicBean> parent = topic.getParents();
+    		for (TopicBean topicBean : parent) {
+				if(topicBean.getId().equals(parentTopic.getId())){
+					renderText("Sorry, this topic is already a parent-topic.");
+					return;
+				}
+			}
+    		
+    		/*
+    		Set<TopicBean> childs = topic.getChildren();
+    		for (TopicBean topicBean : childs) {
+				if(topicBean.getId().equals(parentTopic.getId()))
+					renderText("Sorry, this topic is already a sub-topic.");
+			}
+    		*/
         	parentTopic.getChildren().add(topic);
         	
         	//remove topic from previous parent
+        	//Commented in order to let a topic have multiple parent topics
+        	/*
         	if (!topic.getParents().isEmpty()) {
         		TopicBean oldParent = topic.getParents().iterator().next();
         		TopicBean oldParentFull = TopicDAO.getById(oldParent.getId());
         		oldParentFull.getChildren().remove(topic);
         		TopicDAO.updateTopic(oldParentFull);
         	}
+        	*/
+        	
         	TopicDAO.updateTopic(parentTopic);
-    	}
-    	else {
+    	} else {
     		parentTopic = TopicDAO.getById(parentId);
         	notFoundIfNull(parentTopic);
         	
     		parentTopic.getChildren().remove(topic);
     		TopicDAO.updateTopic(parentTopic);
-    		TopicLogic.addToDefaultParent(topic);
+    		//Commented in order to let a topic have standalone topic and no need of any default parent topic
+    		//TopicLogic.addToDefaultParent(topic);
     	}
     	
     	renderText("<div class='topictxtz'>"+parentTopic.getTitle()+"&nbsp;&nbsp;<a href='#' rel='"+
@@ -219,30 +254,51 @@ public class Topics extends Controller {
     	if (todo.equalsIgnoreCase("add")) {
     		childId = JavaExtensions.capitalizeWords(childId);
     		childTopic = TopicDAO.getOrRestoreByTitle(childId);
-    		if (childTopic == null || childTopic.equals(topic)) {
+    		if (childTopic == null || childTopic.getId().equals(topic.getId())) {
     			forbidden();
         		return;
     		}
     		
+    		
+    		if(childTopic.getTitle().equals(topic.getTitle())){
+    			renderText("Sorry, Same topic.");
+    			return;
+    		}
+    		
+    		/*Set<TopicBean> parent = topic.getParents();
+    		for (TopicBean topicBean : parent) {
+				if(topicBean.getId().equals(childTopic.getId()))
+					renderText("Sorry, this topic cannot be a sub-topic.");
+			}
+    		*/
+    		
+    		Set<TopicBean> childs = topic.getChildren();
+    		for (TopicBean topicBean : childs) {
+				if(topicBean.getId().equals(childTopic.getId())){
+					renderText("Sorry, this topic is already a sub-topic.");
+					return;
+				}
+			}
+    		
     		//check if child topic already has a parent
-    		if (childTopic.getParents() != null && childTopic.getParents().size() > 0) {
+    		//if (childTopic.getParents() != null && childTopic.getParents().size() > 0) {
+    			//Commented so that a topic can have more than one parent topic and same topic can be child of multiple topics
+    			/*  
     			TopicBean oldParent = childTopic.getParents().iterator().next();
     			if (oldParent.getTitle().equals(TopicLogic.DEFAULT_TOPIC)) {
     				TopicBean oldParentFull = TopicDAO.getById(oldParent.getId());
             		oldParentFull.getChildren().remove(childTopic);
             		TopicDAO.updateTopic(oldParentFull);
-    			}
-    			else {
+    			} else {
     				renderText("Sorry, this topic cannot be a sub-topic. It already has a parent topic.");
         			return;
     			}
-    			
+    			*/
     			topic.getChildren().add(childTopic);
-    		}
-    		else {
+    		//} else {
     			//top level topic (should be without parents)
-    			renderText("Sorry, this topic cannot be a sub-topic.");
-    		}
+    		//	renderText("Sorry, this topic cannot be a sub-topic.");
+    		//}
     	}
     	else {
     		if (topic.isFixed()) {

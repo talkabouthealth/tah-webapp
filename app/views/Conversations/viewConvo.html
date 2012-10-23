@@ -48,7 +48,7 @@
 			);
 		}
 		$(document).ready(function() {
-			if($("#videoForm").length != 0){
+			if($("#videoForm").length != 0) {
 				var videoOptions = { success: setVideoMessage }; 
 				$('#videoForm').submit(function() {
 					if($('#videoForm input[name=videoId]').val() =='') {
@@ -92,8 +92,7 @@
 		   		   				if (value) {
 		   			   				$("#vote"+answerId+" .votebtnup").addClass("selected");
 		   			   				$("#vote"+answerId+" .votebtndown").removeClass("selected");
-		   		   				}
-		   		   				else {
+		   		   				} else {
 		   		   					$("#vote"+answerId+" .votebtnup").removeClass("selected");
 		   			   				$("#vote"+answerId+" .votebtndown").addClass("selected");
 		   		   				}
@@ -109,14 +108,12 @@
    	   			$(this).prev().remove();
    	   			var topicId = $(this).attr("rel");
    	   			$(this).remove();
-
    	   			$.post("@{Conversations.updateField()}", 
 	   					{ convoId : '${convo.id}', name: 'topic', value: topicId, todo: 'remove'},
 	   					function() {
 	   						$("#topicsList").html($("#topicsEditList").html());
 	   					}
 	   				);
-
    	   			return false;
    			});
 
@@ -157,10 +154,10 @@
    			});
    			startWindow(share);
 		});
-		function mergeConvoOp(selectedConvoURL){
+		function mergeConvoOp(selectedConvoURL) {
 	   	  		$.post("@{Conversations.mergeConvos()}",{ convoId :'${convo.id}', convoToMergeURL : selectedConvoURL}, function(html) { window.location.reload(); });
 		}
-		function deleteLinkClickEvent(){
+		function deleteLinkClickEvent() {
 			$.post("@{Conversations.updateField()}", { convoId : '${convo.id}', name: 'topic', value: topicId, todo: 'remove'},function() { $("#topicsList").html($("#topicsEditList").html()); } );
 		}
 		/** Called after inline editing of title/details/summary/etc. */
@@ -290,7 +287,6 @@
 						<div id="targetedtherapy">
 							<div class="suggescover">
 								#{include '/Conversations/viewConvoPart1.html' /}	
-	
 							</div><!--suggescover-->
             			</div> <!--targetedtherapy-->
             		
@@ -315,8 +311,11 @@
 					#{else}
 						#{include '/Conversations/subscribeConvo.html' /}	
 						<br />
-						#{include 'tahInfo.html' /}
 					#{/else}
+					#{include 'tags/newsletter/subscribeConvoTopic.html' /}
+					#{ifnot talker }						
+						#{include 'tahInfo.html' /}
+					#{/ifnot}
 					#{if talker }
 					<div class="topipsts">
 						<div class="Statics">
@@ -409,7 +408,6 @@
 						<div class="topicborder"></div>
 						<div class="cb"></div>
 					</div><!--topipsts-->
-					#{include 'tags/newsletter/subscribeConvoTopic.html' /}
 					#{if !talker}
 						#{include 'subscribe_reward.html' /}
 					#{/if}

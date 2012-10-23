@@ -3,7 +3,7 @@
       xmlns:og="http://ogp.me/ns#"
       xmlns:fb="http://www.facebook.com/2008/fbml">
 <head>    
-    <title>TalkAboutHealth - Health and Medical Answers From World Leading Experts. Relevant, helpful, and accurate health information.</title>  
+    <title>${cancerType} - Health and Medical Answers From World Leading Experts. Relevant, helpful, and accurate health information.</title>  
     <meta name="description" content="${pageDescription ? pageDescription : 'Health and Medical Answers From World Leading Experts. Relevant, helpful, and accurate health information. We are a welcoming and caring community who have come together to meet, share, and learn with each other. We welcome patients, families, caregivers, survivors, professionals, and organizations. Everyone is encouraged to share their unique knowledge and experiences. The more we share, the more lives we improve and save.'}" /> 
     <meta name="keywords" content="${pageKeywords ? pageKeywords : 'support, health, talk'}" />
     
@@ -20,13 +20,73 @@
 	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
     <link href="/public/stylesheets/new_style.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" href="/public/plugins/ui-lightness/jquery-ui-1.8.4.custom.css" type="text/css" media="screen" />
+	<style type="text/css">
+	<!--
+	.email {
+		background: url(/public/images/email_box.png) no-repeat;
+		border: medium none;
+    	height: 35px;
+    	margin-top: 2px;
+    	padding-left: 35px;
+    	width: 210px;
+    	background-size:250px;
+    	padding-right: 10px;
+	}
+	.buttonNL {
+		font-size: 15px;
+		font-size-adjust: none;
+		font-stretch: normal;
+		font-style: normal;
+		font-variant: normal;
+		font-weight: bolder;
+		height: 35px;
+		line-height: normal;
+		padding-bottom: 5px;
+		padding-left: 0;
+		padding-right: 0;
+		padding-top: 5px;
+		text-align: center;
+		width: 90px;
+		color: #FFFFFF;
+		background-color: #ff8300;
+		background-image: -moz-linear-gradient(center bottom , #f75e1a 26%, #ff8300 55%);
+		border:1px solid #cd4300;
+		border-top-color: #ffd390;
+		border-left-color:#fe8d31;
+		border-right-color:#fe8d31;
+		border-top-left-radius:5px;
+		border-radius:5px;
+		cursor: pointer;
+		border-left-radius: 10px; 
+	}
+	.buttonNL:HOVER {
+		background-image: -moz-linear-gradient(center bottom , #f75e1f 26%, #ff5202 55%);
+	}
+	-->
+	</style>
 	#{ common/analytics_top /}
 </head>
 <body class="home">
 	<div id="wrapper">
 		<div id="header">
-			<h1 class="logo"><a href="#"><img src="/public/images/index/tah_logo.png" alt="Talk About Health" />
-				<br /><p>You're not alone! <span>${numberOfMembers} Members &amp; ${numberOfAnswers} Answers</span></p></a>
+			<h1 class="logo">
+				<div style="height:61px;width:370px;">
+					<span style="float:left;margin-right:0px;"><img src="/public/images/index/tah_logo_only.png" alt="${cancerType}" /></span>
+					<div style="margin-top:0px;font-weight:bold;font-size:35px;float: left;color:#EB208C;"><!-- text-shadow: 1px 1px 3px #1C7EB9; -->
+						#{if cancerType.indexOf(" ") > 0}
+							<span style="color:#1da655;">Talk</span><span style="color:#1550a4;">${cancerType.replaceAll(" ","").substring(0,cancerType.indexOf(" "))}</span><span style="color:#eb1d90;">${cancerType.replaceAll(" ","").substring(cancerType.indexOf(" "))}</span>
+						#{/if}
+						#{else}
+							<span style="color:#1da655;">Talk</span><span style="color:#1550a4;">${cancerType.replaceAll(" ","")}</span>
+						#{/else}
+					</div>
+					<!-- 
+					<div style="font-weight:bolder;font-size:12px;float: left;">
+					<font color="#014BA9">By Talk</font><font color="#0FA04B">About</font><font color="#EB208C">Health.com</font>
+					</div>
+					 -->
+				</div>
+				<br /><p style="left:55px;top:35px;">You're not alone! <span>${numberOfMembers} Members &amp; ${numberOfAnswers} Answers</span></p>
 			</h1>
 			<ul class="search_signin">
 			    <li>
@@ -35,7 +95,7 @@
 			        <input id="topSearchText" type="button" class="search_btn" />
 			      </form>
 			    </li>
-			    <li><a href="@{Application.signup()}" onClick="_gaq.push(['_trackEvent', 'Join_Home', 'Signup_Text', 'Standard']);"><img src="/public/images/index/user.png" alt="join now" /> Join Now</a></li>
+			    <li><a href="@{Application.signup()}"><img src="/public/images/index/user.png" alt="join now" /> Join Now</a></li>
 			    <li><a href="@{Secure.login()}"><img src="/public/images/index/sign_in_icon.png" alt="sign in" /> Sign In</a></li>
 			    <li><a href="#" class="twitterBtn"><img src="/public/images/index/t_signin.png" alt="twitter signin" /></a></li>
 			    <li><a href="#" class="facebookBtn"><img src="/public/images/index/fb_signin.png" alt="facebook signin" /></a></li>
@@ -43,10 +103,10 @@
 			<ul id="nav">
 			    <li><a href="@{Explore.conversations('expert')}">Answers</a></li>
 			    <li><a href="@{Explore.topics()}">Topics</a></li>
-			    <li><a href="@{Static.TAH_Videos()}">Videos</a></li>
+			    <li><a href="@{MicroSite.video()}">Videos</a></li>
 			    <li><a href="@{Explore.browseMembers('active')}">Members</a></li>
-			    <li><a href="@{Static.medical_professionals()}">Experts</a></li>
-			    <li><a href="@{Static.workshops()}">Workshops</a></li>
+			    <li><a href="@{MicroSite.medical_professionals()}">Experts</a></li>
+			    <li><a href="@{MicroSite.workshops()}">Workshops</a></li>
 			    <li><a href="@{Static.trained_peer_support_program()}">Support</a></li><!-- Support Team -->
 			    <li><a href="http://blog.talkabouthealth.com" target="_new">Blog</a></li>
 			</ul>
@@ -71,15 +131,8 @@
 			          	</div>
 		          	#{/if}
 		          	<div style="margin-left: 30px;">
-			            <h4> Answers from the World's</h4>
-			            <h2>Leading Cancer Experts</h2>
-			            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> The helpfulness and quality of answers on TalkAboutHealth is<br />
-			              amazing, so many great doctors and survivors sharing their expertise! <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
-			              <div class="get_started">
-			              	<a href="@{Application.signup()}" onClick="_gaq.push(['_trackEvent', 'Join_Home', 'Signup_Image', 'Standard']);"><img src="/public/images/index/get_started_btn.png" alt="get started" /></a> or
-			              	<a href="#" class="facebookBtn" onClick="_gaq.push(['_trackEvent', 'Join_Home', 'Signup', 'Facebook']);"><img src="/public/images/index/join_using_fb.png" alt="join using facebbok" /></a> 
-			              	<a href="#" class="twitterBtn" onClick="_gaq.push(['_trackEvent', 'Join_Home', 'Signup', 'Twitter']);"><img src="/public/images/index/join_using_t.png" alt="join using twitter" /></a>
-			              </div>
+			            <h4>${cancerType} Answers from the World's</h4>
+			            <h2>Leading Medical Experts</h2>
 			         </div>
 		          </div>
 		          <div class="slide banner3">
@@ -96,14 +149,8 @@
 			          	</div>
 		          	#{/if}
 		          	<div style="margin-left: 30px;">
-			            <h4>Trained Supporters and Survivors</h4>
+			            <h4>Answers from Trained Supporters</h4>
 			            <h2>Sharing Their Experiences</h2>
-			            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> This site gives hope and strength to survivors and patients<br/> who just do not know anyone who can relate. <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
-			              <div class="get_started">
-			              	<a href="@{Application.signup()}"><img src="/public/images/index/get_started_btn.png" alt="get started" /></a> or
-			              	<a href="#" class="facebookBtn"><img src="/public/images/index/join_using_fb.png" alt="join using facebbok" /></a> 
-			              	<a href="#" class="twitterBtn"><img src="/public/images/index/join_using_t.png" alt="join using twitter" /></a>
-			              </div>
 			         </div>
 		          </div>
 		          <div class="slide banner4">
@@ -120,17 +167,23 @@
 			          	</div>
 		          	#{/if}
 		          	<div style="margin-left: 30px;">
-			            <h4>Free World Class Health Information</h4>
-			            <h2>Shared by Leading Experts</h2>
-			            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> Thank you for this very valuable resource for us all.<br/> This site is an inspiration to me! <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
-			              <div class="get_started">
-			              	<a href="@{Application.signup()}"><img src="/public/images/index/get_started_btn.png" alt="get started" /></a> or
-			              	<a href="#" class="facebookBtn"><img src="/public/images/index/join_using_fb.png" alt="join using facebbok" /></a> 
-			              	<a href="#" class="twitterBtn"><img src="/public/images/index/join_using_t.png" alt="join using twitter" /></a>
-			              </div>
+			            <h4>Connect with Experts and Trained Survivors</h4>
+			            <h2>Who Can Help</h2>
 			         </div>
 		          </div>
 		        </div>
+		        <div style="position: absolute; top: 122px; float: left; left: 40%;">
+		        	<p style="font-style:inherit;margin-top:20px;font-weight: bolder;">Sign up for our ${cancerType} newsletter to keep up with the<br/> latest news, best answers & featured expert.</p>
+		            <div style="float: left; margin-left: 63px; margin-top: 20px;">
+		            	<div style="float: left; height: 12px; width: 385px;padding-bottom: 5px;">&nbsp;<span id="diseaseMessage" style="float:left;display: none;">Test Text</span></div>
+		            	#{form @Newsletter.subscribeMoreNewsLetter() , id:'subscribeDiseaseForm' }
+		            		<input name="newsletter.newsLetterType" type="hidden" value="${cancerType}"/>
+		            		<input type="text" class="email" placeholder="Valid Email" id="email" name="newsletter.email">
+		            		<input style="margin-left:0px;" type="submit" class="buttonNL" id="subscribeDisease" value="Sign Up!"></input>
+		            		<br/>By signing up I agree to the <a href="@{Static.tos()}" target="_new" style="color:#FFFFFF;">Terms of Service</a> and <a href="@{Static.privacy()}" target="_new" style="color:#FFFFFF;">Privacy Policy</a>.
+		            	#{/form}
+		            </div>
+	            </div>
 		        <!--slides_container end--> 
 		     </div>
 		     <!--slides end--> 
@@ -176,7 +229,8 @@
 			 </div>
 			 <!-- main end -->
 			 <div id="sidebar">
-			 #{include 'Upcoming_Workshops_new.html' /}
+			 #{ community/Upcoming_Workshops_micro category: cancerType /}
+			 #{ community/home_topic_list_micro category: cancerType /}
 
 			 <div class="box2">
 		        <h2 class="heading"><img src="/public/images/index/logo_blue.png" alt="logo_blue" /><a href="@{Explore.topics()}"> Cancer Communities</a></h2>
@@ -189,7 +243,7 @@
 					<li><a href="@{Explore.topics()}" class="last">More Options +</a></li>
 		        </ul>
 		      </div>
-			 #{include 'home_topic_list.html' /}
+			 
 			 </div>
 		</div>
 		<!-- Content end -->
@@ -243,7 +297,7 @@
       <ul>
         <li><a href="@{Static.aboutus()}">About</a></li>
         <li><a href="@{Static.howitworks()}">How it Works</a></li>
-        <li><a href="@{Static.workshops()}">Q/A Workshops</a></li>
+        <li><a href="@{MicroSite.workshops()}">Q/A Workshops</a></li>
         <li><a href="@{Static.trained_peer_support_program()}">Trained Peer Support</a></li>
         <li><a href="@{Explore.browseMembers('active')}">Members</a></li>
         <li><a href="http://blog.talkabouthealth.com" target="_new">Blog</a></li>
@@ -264,7 +318,11 @@
       	<a href="http://talkabouthealth.tumblr.com" target="_new"><img src="/public/images/index/t_icon.png" alt="t" /></a> 
       	<a href="http://www.youtube.com/user/talkabouthealth" target="_new"><img src="/public/images/index/youtube_icon.png" alt="you tube" /></a>
       </div>
-      <p><img src="/public/images/index/footer_logo.png" width="150" alt="Talk About Health Newsletter" class="sml_logo" /> <span style="float:left">Newsletter</span></p>
+      	<div style="float: left;">
+      		<img src="/public/images/index/logo_bw.png" alt="Talk About Health Newsletter" class="sml_logo" />
+			<span style="float: left; font-weight: bold; font-size: 20px;">Talk${cancerType.replaceAll(" ","")}</span>
+			<span style="float:left;padding-top:5px;">&nbsp;Newsletter</span>
+		</div>
       	#{form @Newsletter.subscribeMoreNewsLetter() , id:'subcribeNewsletter' }
         <ul>
           <li>
@@ -278,13 +336,13 @@
             Benefits(Custom Health &amp; Medical Offers)</li>
           <li>
             <input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Best of TalkAboutHealth" checked='checked' />
-            Best of TalkAboutHealth (Weekly)</li>
+            Best of Talk${cancerType.replaceAll(" ","")} (Weekly)</li>
         </ul>
         <div>
 	        <div style="float:left;height:12px;">&nbsp;<span id="respMessage" style="float:left;display: none;">Test Text</span></div>
 	        <div style="float:left;">
 	        	<input name="newsletter.email" id="email" placeholder="Valid Email" type="text" class="newsltr_field" />
-	        	<input id="subscribe" type="button" class="newsltr_btn" />
+	        	<input id="subscribe" type="submit" class="newsltr_btn" value=""/>
 	        </div>
         </div>
       	#{/form}
@@ -297,19 +355,30 @@
 		</div>
     </div>
     <!-- newsletter end -->
-    <div class="footer_logo"></div>
+    #{if session.get("cancerType")}
+    	<div class="footer_logo" style="background-image:none;font-size: 30px;width:660px;">
+    		<img style="float: left;" src="/public/images/index/footer_logo_new.png" />
+    		<span style="float: left; padding-top: 5px; padding-left: 10px;">Talk${cancerType.replaceAll(" ","")}</span>
+    	</div>
+    #{/if}
+	#{else}<div class="footer_logo"></div>#{/else} 
+    
   </div>
   <!--footer inner end--> 
 </div>
-
 <!-- footer end -->
 <div id="copy">
-  <div id="copy_inner"> &copy; Copyright ${java.util.Calendar.getInstance().get(Calendar.YEAR)} - Talk About Health - <a href="@{Static.privacy()}">Privacy Policy</a> | <a href="@{Static.tos()}">Terms of Service</a></div>
+  <div id="copy_inner"> &copy; Copyright ${java.util.Calendar.getInstance().get(Calendar.YEAR)} -
+  	#{if session.get("cancerType")}Talk${cancerType.replaceAll(" ","")}#{/if}
+  	#{else}Talk About Health#{/else} 
+  	 - 
+  	<a href="@{Static.privacy()}">Privacy Policy</a> | <a href="@{Static.tos()}">Terms of Service</a>
+  </div>
   <!-- copy_inner end --> 
 </div>
 <!-- copy end -->
 	<!--footer end--> 
-#{ common/googleAnalytics /}
+
 <script type="text/javascript" src="/public/javascripts/jquery-1.5.1.min.js" ></script>
 <script type="text/javascript" src="/public/javascripts/jquery-ui-1.8.4.custom.min.js" ></script>
 <script type="text/javascript" src="/public/javascripts/slides.min.jquery.js" ></script>
@@ -318,7 +387,7 @@
 <script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 <script type="text/javascript">
 <!--
-$(document).ready(function(){
+$(window).load(function() {
 	//Search button code
 	$("#topSearchText").click(function() {
 		makeSearch();
@@ -351,12 +420,32 @@ $(document).ready(function(){
 		start: 1
 	});
 
-	//Subscribe button feature	
-	$('#subscribe').click(function() {
-		$("#subcribeNewsletter").ajaxSubmit({ success: setNewsletterMessage });
+	$('#subcribeNewsletter').submit(function() {
+		$("#subcribeNewsletter").ajaxSubmit({ success: setNewsletterMessage }); 
 		return false;
 	});
 
+	$('#subscribeDiseaseForm').submit(function() {
+		$("#subscribeDiseaseForm").ajaxSubmit({ success: function(responseText){
+			var errorText;
+			$("#diseaseMessage").css("color","#FFFFFF");
+			if (responseText.indexOf("Error:") === 0) {
+		   		errorText = responseText.replace("Error:", "");
+		   		$("#diseaseMessage").css("color","#ff0000");
+		   	} else if (responseText.indexOf("Email alrady subscribed!") === 0) {
+		   		errorText = responseText;
+		   	} else {
+		   		window.location.href = "/signup?cancerType=${cancerType}";
+		   		errorText= "Thank you for subscribing!";
+		   	}
+			$("#diseaseMessage").html(errorText); 
+			$("#diseaseMessage").fadeIn(100);
+			closeTimeout = setTimeout(function() { $("#diseaseMessage").fadeOut(200) }, 4000);		
+		} 
+	});
+		return false;
+	});
+	
 	//TAbs
 	$(".tabs li").click(function() {
 		$(".active").removeClass("active");
@@ -365,7 +454,7 @@ $(document).ready(function(){
 		var lastActionId = '';
 		var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
 		$("#"+id+"Cnt").html(loading);
-		$.get("/Explore/homePageFeed",{ type : id,lastActionId:lastActionId },function(data){
+		$.get("/Community/homePageFeed",{ type : id,lastActionId:lastActionId },function(data){
 			$(loading).remove();
 			$(data).appendTo($("#"+id+"Cnt"));
 			$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
@@ -388,7 +477,7 @@ $(document).ready(function(){
 		var lastActionId = $("#"+id+"Cnt").children().last().attr("id");
 		var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
 		$(loading).appendTo($("#"+id+"Cnt"));
-		$.get("/Explore/homePageFeed",{ type : id,lastActionId:lastActionId },function(data){
+		$.get("/Community/homePageFeed",{ type : id,lastActionId:lastActionId },function(data){
 			$(loading).remove();
 			$(data).appendTo($("#"+id+"Cnt"));
 			$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
@@ -484,5 +573,6 @@ openServiceLogin = function(serviceType) {
 }
 -->
 </script>
+#{ common/googleAnalytics cpage: "home" /}
 </body>
 </html>

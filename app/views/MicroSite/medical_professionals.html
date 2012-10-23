@@ -1,0 +1,19 @@
+#{extends 'static.html' /}
+#{set pageHeader:'Medical Professionals' /}
+<style>
+<!--
+#partnerlogo1 a img{
+ box-shadow:2px 0 5px #555555;
+ border-radius: 5px;
+}
+-->
+</style>
+#{if cancerType == "Sarcoma"}
+	#{include 'MicroSite/sarcoma_mp.html' /}
+#{/if}
+#{elseif  cancerType == "Breast Cancer"}
+	#{include 'MicroSite/breastcancer_mp.html' /}
+#{/elseif}
+#{else}
+	<span class="blacktextgrey14">No Expert found, <a href="/signup">Sign Up</a> and Stay updated</span>
+#{/else}

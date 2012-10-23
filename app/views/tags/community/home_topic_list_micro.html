@@ -1,0 +1,48 @@
+<div class="box2">
+	<h2 class="heading"><img src="/public/images/index/logo_blue.png" alt="logo_blue" /><a href="@{Explore.topics()}"> Topics</a></h2>
+	#{if _category != null}
+		<ul>
+			<h3 class="sub_heading">Patients and Survivors</h3>
+			<li><a href="/${_category.replaceAll(" ", "-")}-patient-experiences">Patient Experiences</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-patient-decisions">Patient Decisions</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-survivorship">Survivorship</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-emotional-support">Emotional Support</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-what-to-expect">What To Expect</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-mental-health">Mental Health</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-how-to-prepare">How To Prepare</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-next-steps">Next Steps</a></li>
+		<!--<li><a href="#" class="last">More Options +</a></li> -->
+		</ul>
+		<ul>
+			<h3 class="sub_heading">Treatment & Side Effects</h3>
+			<li><a href="/${_category.replaceAll(" ", "-")}-medications">Medications</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-surgery">Surgery</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-oncology">Oncology</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-radiation-therapy">Radiation Therapy</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-chemotherapy">Chemotherapy</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-biologic-therapy">Biologic Therapy</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-biologic-therapy">Hormonal Therapy</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-complementary-and-alternative-medicine">Complementary & Alternative Medicine</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-side-effects">Side Effects</a></li>
+		</ul>
+		<ul>
+			<h3 class="sub_heading">Symptoms & Diagnosis</h3>
+			<li><a href="/${_category.replaceAll(" ", "-")}-symptoms">Symptoms</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-just-diagnosed">Just Diagnosed</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-diagnosis">Diagnosis</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-pathology">Pathology</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-staging">Staging</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-recurrence">Recurrence</a></li>
+		<!-- <li><a href="#" class="last">More Options +</a></li> -->
+		</ul>
+		<ul>
+			<h3 class="sub_heading">Risk, Screening & Genetics</h3>
+			<li><a href="/${_category.replaceAll(" ", "-")}-screening">Screening</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-risk-factors">Risk Factors</a></li>
+			<li><a href="/${_category.replaceAll(" ", "-")}-genetics">Genetics</a></li>
+		</ul>
+	#{/if}
+	#{else}
+		Nothing
+	#{/else}
+</div>

@@ -261,7 +261,7 @@ public class NewsLetterDAO {
 					.get();
 			DBObject newsLetterDBObject = newsLetterColl.findOne(usernameQuery);
 			if(newsLetterDBObject!=null) {
-				count = DBUtil.getInt(newsLetterDBObject, "letterCount");
+				count += DBUtil.getInt(newsLetterDBObject, "letterCount");
 			}
 			fromDt = DateUtils.addDays(fromDt, 1);
 		}while(toDt.after(fromDt));

@@ -15,6 +15,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.PatternLayout;
@@ -79,20 +80,29 @@ public class Application extends Controller {
 		"explore", "search", "community", "openquestions", "livechats", "conversationfeed"
 	});
 
-	/**
+    /**
 	 * Landing page
 	 */
     public static void index() {
-    	/*if (Security.isConnected()) {
-    		Home.index(); //redirect to Home page if user is logged in
+    	String[] arr = request.host.split("\\.");
+		if (arr != null && arr.length > 0) {
+			if(arr.length == 3){
+				//String lang = arr[0];
+				// We are going to use this in our application for redirecting to user profile or site.
+	    		try {
+	    			Community.index();
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+			} else {
+				String cancerType = session.get("cancerType");
+				if(StringUtils.isNotBlank(cancerType)){
+					Community.index();
+				}
+			}
     	} else {
-    		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
-    		int numberOfLiveChats = 0;//ConversationDAO.getLiveConversations().size();
-    		int numberOfQuestions = 0;//ConversationDAO.getNumberOfConversations();
-    		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
-    		
-    		render(null, numberOfMembers, numberOfLiveChats, numberOfQuestions, numberOfAnswers);
-    	}*/
+    		session.remove("cancerType");
+    	}
     	if (Security.isConnected()) {
     		Home.index();
     	} else {
@@ -153,7 +163,7 @@ public class Application extends Controller {
     }
     
     /* ------- Sign Up --------- */
-    public static void signup() {
+    public static void signup(String cancerType) {
     	//params.flash();
     	String remoteAddress = request.remoteAddress;
     	int duration = -6;
@@ -170,11 +180,14 @@ public class Application extends Controller {
     		flash("captcha", "true");
     	}
     	
+    	if(cancerType != null)
+    		flash("cancerType", cancerType);
+    	
     	String randomID = Codec.UUID();
     	render(additionalSettings,randomID,diseaseList);
     }
     
-    public static void signupNews(NewsLetterBean newsletter) {
+    public static void signupNews(NewsLetterBean newsletter,String cancerType) {
     	String remoteAddress = request.remoteAddress;
     	int duration = -6;
     	//prepare additional settings for FB or Twitter
@@ -189,9 +202,10 @@ public class Application extends Controller {
     	if(!ApplicationDAO.isIpUsed(remoteAddress,duration)){
     		flash("captcha", "true");
     	}
-
+    	if(cancerType == null)
+    		cancerType = flash.get("cancerType");
     	String randomID = Codec.UUID();
-    	render("Application/signup.html",additionalSettings,randomID,diseaseList,newsletter);
+    	render("Application/signup.html",additionalSettings,randomID,diseaseList,newsletter,cancerType);
     	return;
     }
     
@@ -214,12 +228,14 @@ public class Application extends Controller {
     	
     	validation.isTrue("on".equalsIgnoreCase(privacyAgreeString))
     		.message("Please agree to the TalkAboutHealth Terms of Service and Privacy Policy.");
-    	
+    	String cancerType = flash.get("cancerType");
+    	if(cancerType != null)
+    		flash("cancerType", cancerType);
 		validateTalker(talker);
         if (validation.hasErrors()) {
             params.flash(); // add http parameters to the flash scope
             validation.keep(); // keep the errors for the next request
-            signupNews(newsletter);
+            signupNews(newsletter,cancerType);
             return;
         }
         
@@ -241,7 +257,8 @@ public class Application extends Controller {
             validation.keep();
         	flash.error("Sorry, unknown error. Please contact support.");
         	Logger.error("Error during signup. User: "+talker.getEmail());
-        	 signupNews(newsletter);
+        	
+        	 signupNews(newsletter,cancerType);
         	return;
 		} else {
 			/* Date : 16 Aug 2011

@@ -226,10 +226,27 @@ openServiceLogin = function(serviceType) {
 <div id="wrapper">
 <div id="header">
 	<h1 class="logo">
-		<a href="/"><img src="/public/images/index/tah_logo.png" alt="Talk About Health" /></a>
+		<a href="/">
+		#{if session.contains("cancerType")}
+			<div style="height:61px;width:345px;">
+				<span style="float:left;margin-right:0px;"><img src="/public/images/index/tah_logo_only.png" alt="${session.get("cancerType")}" /></span>
+<!-- 				<div style="margin-top:10px;font-weight:bold;font-size:30px;float: left;color:#EB208C;text-shadow: 1px 1px 3px #1C7EB9;">Talk${session.get("cancerType").replaceAll(" ","")}</div> -->
+				<div style="margin-top:10px;font-weight:bold;font-size:30px;float: left;color:#EB208C;"><!-- text-shadow: 1px 1px 3px #1C7EB9; -->
+					#{if session.get("cancerType").indexOf(" ") > 0}
+						<span style="color:#1da655;">Talk</span><span style="color:#1550a4;">${session.get("cancerType").replaceAll(" ","").substring(0,session.get("cancerType").indexOf(" "))}</span><span style="color:#eb1d90;">${session.get("cancerType").replaceAll(" ","").substring(session.get("cancerType").indexOf(" "))}</span>
+					#{/if}
+					#{else}
+						<span style="color:#1da655;">Talk</span><span style="color:#1550a4;">${session.get("cancerType").replaceAll(" ","")}</span>
+					#{/else}
+				</div>
+			</div>
+		#{/if}
+		#{else}
+			<img src="/public/images/index/tah_logo.png" alt="Talk About Health" />
+		#{/else}
+		</a>
 	</h1>
 	<ul class="search_signin">
-	    
 	    #{if session.contains("username") }
 	    #{set currentUser = session.get("username") /}
 	    #{if currentUser.equals("admin") }
@@ -244,7 +261,7 @@ openServiceLogin = function(serviceType) {
 	      </form>
 	    </li>
 	    #{if currentUser.equals("admin") }
-				<li id="settings2"> <a class="menu1" href="#">Admin</a>
+				<li id="settings2"><a class="menu1" href="#">Admin</a>
 	                <ul>
 	                  <li><a href="@{Notifications.index()}">Moderate New Questions</a></li>
 	                  <li><a href="@{Dashboard.manageAccounts()}">Manage Accounts</a></li>
@@ -340,10 +357,23 @@ openServiceLogin = function(serviceType) {
 	#{else}
 	    <li><a href="@{Explore.conversations('expert')}">Answers</a></li>
 	    <li><a href="@{Explore.topics()}">Topics</a></li>
-	    <li><a href="@{Static.TAH_Videos()}">Videos</a></li>
+	    <li>
+	    	#{if session.contains("cancerType")}
+	    		<a href="@{MicroSite.video()}">Videos</a>
+	    	#{/if}
+	    	#{else}
+	    		<a href="@{Static.TAH_Videos()}">Videos</a>
+	    	#{/else}
+	    </li>
 	    <li><a href="@{Explore.browseMembers('active')}">Members</a></li>
-	    <li><a href="@{Static.medical_professionals()}">Experts</a></li>
-	    <li><a href="@{Static.workshops()}">Workshops</a></li>
+	    	#{if session.contains("cancerType")}
+				<li><a href="@{MicroSite.medical_professionals()}">Experts</a></li>
+				<li><a href="@{MicroSite.workshops()}">Workshops</a></li>
+			#{/if}
+	    	#{else}
+	    		<li><a href="@{Static.medical_professionals()}">Experts</a></li>
+	    		<li><a href="@{Static.workshops()}">Workshops</a></li>
+	    	#{/else}
 	    <li><a href="@{Static.trained_peer_support_program()}">Support</a></li><!--WAS: Support Team -->
 	    <li><a href="http://blog.talkabouthealth.com" target="_new">Blog</a></li>
 	#{/else}
