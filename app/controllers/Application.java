@@ -84,24 +84,37 @@ public class Application extends Controller {
 	 * Landing page
 	 */
     public static void index() {
-    	String[] arr = request.host.split("\\.");
-		if (arr != null && arr.length > 0) {
-			if(arr.length == 3){
-				//String lang = arr[0];
-				// We are going to use this in our application for redirecting to user profile or site.
-	    		try {
-	    			Community.index();
-				} catch (Throwable e) {
-					e.printStackTrace();
+    	
+    	String def = session.get("def");
+    	if(StringUtils.isBlank(def)){
+    		def = "0";
+    	}
+    	if("0".equals(def)) {
+	    	String[] arr = request.host.split("\\.");
+			if (arr != null && arr.length > 0) {
+				if(arr.length == 3) {
+					//String lang = arr[0];
+					// We are going to use this in our application for redirecting to user profile or site.
+		    		try {
+		    			Community.index();
+					} catch (Throwable e) {
+						e.printStackTrace();
+					}
+				} if(arr.length == 4) { 
+					try {
+		    			Community.index();
+					} catch (Throwable e) {
+						e.printStackTrace();
+					}
+				}else {
+					String cancerType = session.get("cancerType");
+					if(StringUtils.isNotBlank(cancerType)){
+						Community.index();
+					}
 				}
-			} else {
-				String cancerType = session.get("cancerType");
-				if(StringUtils.isNotBlank(cancerType)){
-					Community.index();
-				}
-			}
-    	} else {
-    		session.remove("cancerType");
+	    	} else {
+	    		session.remove("cancerType");
+	    	}
     	}
     	if (Security.isConnected()) {
     		Home.index();
