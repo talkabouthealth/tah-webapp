@@ -1082,7 +1082,6 @@ function makeFullSearchAjaxLoad(inputId) {
 
 //saveProfileComment(String profileTalkerId, String parentId, String text)
 function saveProfileThankYouComment(parentId, parentList, userName) {
-	//Changes for other pages for micro site
 	var parentListId = "";
 	if (parentList) {
 		parentListId = "#"+parentList+" ";
