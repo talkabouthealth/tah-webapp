@@ -18,8 +18,10 @@ public class TAHGlobalSettings  extends Controller  {
 		String[] arr = request.host.split("\\.");
 		if (arr != null && arr.length > 0) {
 			if(arr.length == 3) {
-				//cancerType= arr[0];
+				cancerType= arr[0];
 				//cancerType = "Breast Cancer";
+			} else if(arr.length == 4) { 
+				cancerType= arr[1];
 			} else {
 				cancerType = params.get("cancerType");
 				if(StringUtils.isBlank(cancerType) ){
@@ -32,12 +34,13 @@ public class TAHGlobalSettings  extends Controller  {
 				cancerType = session.get("cancerType");
 			}
     	}
-		if(StringUtils.isBlank(cancerType) || DiseaseDAO.getDiseaseByName(cancerType) == null)
+		if(StringUtils.isBlank(cancerType) || DiseaseDAO.getDiseaseByName(cancerType) == null){
 			controllers.Application.index();
-			//cancerType = null;
-		else
+			session.put("def", "1");
+		} else {
+			session.put("def", "0");
 			session.put("cancerType", cancerType);
-
+		}
         /*if(session.get("cancerType") != null) {
         	System.out.println("CancerType New: " + session.get("cancerType"));
         }*/
