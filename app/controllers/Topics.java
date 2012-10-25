@@ -197,12 +197,11 @@ public class Topics extends Controller {
         		return;
     		}
     		
-
     		if(parentTopic.getTitle().equals(topic.getTitle())){
     			renderText("Sorry, Same topic.");
     			return;
     		}
-    		
+
     		Set<TopicBean> parent = topic.getParents();
     		for (TopicBean topicBean : parent) {
 				if(topicBean.getId().equals(parentTopic.getId())){
@@ -210,7 +209,7 @@ public class Topics extends Controller {
 					return;
 				}
 			}
-    		
+
     		/*
     		Set<TopicBean> childs = topic.getChildren();
     		for (TopicBean topicBean : childs) {

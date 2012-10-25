@@ -92,21 +92,13 @@ public class Application extends Controller {
     	if("0".equals(def)) {
 	    	String[] arr = request.host.split("\\.");
 			if (arr != null && arr.length > 0) {
-				if(arr.length == 3) {
-					//String lang = arr[0];
-					// We are going to use this in our application for redirecting to user profile or site.
+				if(arr.length == 3 || arr.length == 4) {
 		    		try {
 		    			Community.index();
 					} catch (Throwable e) {
 						e.printStackTrace();
 					}
-				} if(arr.length == 4) { 
-					try {
-		    			Community.index();
-					} catch (Throwable e) {
-						e.printStackTrace();
-					}
-				}else {
+				} else {
 					String cancerType = session.get("cancerType");
 					if(StringUtils.isNotBlank(cancerType)){
 						Community.index();
@@ -115,6 +107,8 @@ public class Application extends Controller {
 	    	} else {
 	    		session.remove("cancerType");
 	    	}
+    	} else {
+    		session.remove("cancerType");
     	}
     	if (Security.isConnected()) {
     		Home.index();
@@ -122,11 +116,20 @@ public class Application extends Controller {
     		List<VideoBean> videoList = VideoDAO.loadVideoForHome(3);
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
     		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
-    		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+    		List<DiseaseBean> homediseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+    		List<DiseaseBean> diseaseList = new ArrayList<DiseaseBean>();
+
+    		/*	Code to remove new cancer categories from home page */
+    		Set<String> newCancerList = DiseaseDAO.newCancerTypes();
+
+    		for (DiseaseBean diseaseBean : homediseaseList) {
+    			if(!newCancerList.contains(diseaseBean.getName()))
+    				diseaseList.add(diseaseBean);
+			}
     		render(null, numberOfMembers, numberOfAnswers, diseaseList,videoList);
     	}
     }
-    
+
     /*New Home page*/
     public static void indexNew() {
     	if (Security.isConnected()) {

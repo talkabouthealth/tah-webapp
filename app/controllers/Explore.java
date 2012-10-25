@@ -628,7 +628,6 @@ public class Explore extends Controller {
 	public static void topics(String topic) {
 		String cancerType = session.get("cancerType");
 		if(topic != null){
-			System.out.println(topic);
 			topic = topic.replace("_", " ");
 			topic = topic.replace("+", " ");
 			topic = topic.toLowerCase();
@@ -639,7 +638,19 @@ public class Explore extends Controller {
 		}
 		
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+		//List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+		
+		List<DiseaseBean> homediseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+		List<DiseaseBean> diseaseList = new ArrayList<DiseaseBean>();
+
+		/*	Code to remove new cancer categories from home page */
+		Set<String> newCancerList = DiseaseDAO.newCancerTypes();
+
+		for (DiseaseBean diseaseBean : homediseaseList) {
+			if(!newCancerList.contains(diseaseBean.getName()))
+				diseaseList.add(diseaseBean);
+		}
+		
 		List<DiseaseBean> diseaseList1 = null;
 		List<DiseaseBean> diseaseList2 = null;
 		List<DiseaseBean> diseaseList3 = null;
@@ -678,7 +689,7 @@ public class Explore extends Controller {
 		if (validation.hasErrors()) {
 			renderText("Error:" + validation.errors().get(0));
 		}
-		
+
 		if(newsletter != null && newsletter.getNewsLetterType() != null && newsletter.getNewsLetterType().length > 0){
 			NewsLetterDAO.saveOrUpdateNewsletter(newsletter,talker);
 			renderText("Ok");

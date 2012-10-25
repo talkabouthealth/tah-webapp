@@ -1,5 +1,6 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
@@ -53,7 +54,17 @@ public class Community extends Controller {
 
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
     		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
-    		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+    		List<DiseaseBean> homediseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+    		List<DiseaseBean> diseaseList = new ArrayList<DiseaseBean>();
+
+    		/*	Code to remove new cancer categories from home page */
+    		Set<String> newCancerList = DiseaseDAO.newCancerTypes();
+
+    		for (DiseaseBean diseaseBean : homediseaseList) {
+    			if(!newCancerList.contains(diseaseBean.getName()))
+    				diseaseList.add(diseaseBean);
+			}
+
     		List<VideoBean> videoList = VideoDAO.loadVideoForHome(3);
     		//future communities
     		render("@index",diseaseList, videoList, numberOfMembers, numberOfAnswers,cancerType);

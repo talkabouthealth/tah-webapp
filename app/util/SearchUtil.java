@@ -242,7 +242,10 @@ public class SearchUtil {
 		searchTerm = removeChars(searchTerm);
 		Query searchQuery;
 		if(StringUtils.isNotEmpty(cancerType)) {
-			searchQuery = parser.parse(searchTerm  + " AND  (" +cancerParser.parse("\"" + cancerType + "\",\"" + ALL_CANCERS  + "\"") + ")");
+			if(StringUtils.isNotBlank(searchTerm))
+				searchQuery = parser.parse(searchTerm  + " AND  (" +cancerParser.parse("\"" + cancerType + "\",\"" + ALL_CANCERS  + "\"") + ")");
+			else
+				searchQuery = cancerParser.parse("\"" + cancerType + "\",\"" + ALL_CANCERS  + "\"");
 		} else {
 			searchQuery = parser.parse(searchTerm);
 		}
