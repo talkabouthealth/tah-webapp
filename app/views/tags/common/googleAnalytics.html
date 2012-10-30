@@ -1,0 +1,12 @@
+<script type="text/javascript">
+$(document).ready(function() {
+	var location = window.location + "";
+	var ur = encodeURIComponent(window.location);
+	var rf = encodeURIComponent(document.referrer);
+	var cPage = '${_cpage}';
+	var newPageName = location.substring(location.lastIndexOf('/') + 1);
+	if(cPage == '')
+		cPage = newPageName; 
+ 	$.post("/ActivityLogController/log",{ ref: rf, page: ur, pageType: cPage },function(data) { /*alert(data);*/ });
+});
+</script>

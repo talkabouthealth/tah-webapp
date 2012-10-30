@@ -1,3 +1,4 @@
+#{set currentPage:'error' /}
 #{if play.mode.name() == 'DEV'}
 	#{500 exception /}
 #{/if}
@@ -40,12 +41,10 @@
 	</div>
 	<div id="bottom_container"></div>
 #{/else}
-#{ common/googleAnalytics /}
-
 	<!-- Quantcast Tag -->
 	<script type="text/javascript">
 		var _qevents = _qevents || [];
-		
+
 		(function() {
 		var elem = document.createElement('script');
 		elem.src = (document.location.protocol == "https:" ? "https://secure" : "http://edge") + ".quantserve.com/quant.js";
