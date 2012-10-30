@@ -2,13 +2,9 @@ package plugin;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.skype.Application;
-
-import dao.DiseaseDAO;
-import play.*;
 import play.mvc.Before;
 import play.mvc.Controller;
-import play.mvc.Scope.Session;
+import dao.DiseaseDAO;
 
 public class TAHGlobalSettings  extends Controller  {
 
@@ -16,11 +12,12 @@ public class TAHGlobalSettings  extends Controller  {
     static void checkValidSession() {
 		String cancerType = "";
 		String[] arr = request.host.split("\\.");
-		if (arr != null && arr.length > 0) {
+		if( request.host.contains("talkabreastcancer.com")) {
+    		cancerType = "breastcancer";
+    	} else if (arr != null && arr.length > 0) {
 			if(arr.length == 3) {
 				cancerType= arr[0];
-				//cancerType = "Breast Cancer";
-			} else if(arr.length == 4) { 
+			} else if(arr.length == 4) {
 				cancerType= arr[1];
 			} else {
 				cancerType = params.get("cancerType");
@@ -30,7 +27,7 @@ public class TAHGlobalSettings  extends Controller  {
 			}
     	} else {
     		cancerType = params.get("cancerType");
-    		if(StringUtils.isBlank(cancerType) ){
+    		if(StringUtils.isBlank(cancerType) ) {
 				cancerType = session.get("cancerType");
 			}
     	}

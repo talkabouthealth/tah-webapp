@@ -50,7 +50,6 @@ public class Community extends Controller {
     	} else {
     		//session.put("cancerType", cancerType);
     		cancerType = session.get("cancerType");
-    		System.out.println("cancerType: " + cancerType);
 
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
     		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();

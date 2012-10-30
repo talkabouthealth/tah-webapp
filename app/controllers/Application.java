@@ -90,23 +90,30 @@ public class Application extends Controller {
     		def = "0";
     	}
     	if("0".equals(def)) {
-	    	String[] arr = request.host.split("\\.");
-			if (arr != null && arr.length > 0) {
-				if(arr.length == 3 || arr.length == 4) {
-		    		try {
-		    			Community.index();
-					} catch (Throwable e) {
-						e.printStackTrace();
+    		String hostAll = request.host;
+    		if(hostAll.contains("talkabreastcancer.com")) {
+    			System.out.println(hostAll + " : " + hostAll.indexOf("breastcancer.talkabouthealth.com"));
+    			Community.index();
+    		} else {
+	    		String[] arr = request.host.split("\\.");
+				if (arr != null && arr.length > 0) {
+					if(arr.length == 3 || arr.length == 4) {
+			    		try {
+			    			Community.index();
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+					} else {
+						String cancerType = session.get("cancerType");
+						if(StringUtils.isNotBlank(cancerType)){
+							Community.index();
+						}
 					}
-				} else {
-					String cancerType = session.get("cancerType");
-					if(StringUtils.isNotBlank(cancerType)){
-						Community.index();
-					}
-				}
-	    	} else {
-	    		session.remove("cancerType");
-	    	}
+		    	} else {
+		    		session.remove("cancerType");
+		    	}
+    		}
+			
     	} else {
     		session.remove("cancerType");
     	}
