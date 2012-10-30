@@ -1083,9 +1083,15 @@ function makeFullSearchAjaxLoad(inputId) {
 //saveProfileComment(String profileTalkerId, String parentId, String text)
 function saveProfileThankYouComment(parentId, parentList, userName) {
 <<<<<<< HEAD
+<<<<<<< HEAD
+	//Changes for other pages for micro site
+=======
+>>>>>>> changes for conflict resolve
+=======
 	//alert("saveProfileThankYouComment");
 =======
 >>>>>>> tah-qa
+>>>>>>> 818fd35b395df364648efa23f2bd1cd509ae0288
 	var parentListId = "";
 	if (parentList) {
 		parentListId = "#"+parentList+" ";
