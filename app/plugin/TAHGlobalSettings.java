@@ -12,8 +12,10 @@ public class TAHGlobalSettings  extends Controller  {
     static void checkValidSession() {
 		String cancerType = "";
 		String[] arr = request.host.split("\\.");
-		if( request.host.contains("talkabreastcancer.com")) {
+		if( request.host.contains("talkbreastcancer.com")) {
     		cancerType = "breastcancer";
+    	} else if(request.host.contains("173.203.101.101")) {
+    		cancerType = params.get("cancerType");
     	} else if (arr != null && arr.length > 0) {
 			if(arr.length == 3) {
 				cancerType= arr[0];
@@ -37,8 +39,8 @@ public class TAHGlobalSettings  extends Controller  {
 		} else if(StringUtils.isNotBlank(cancerType) && cancerType.equals("lungcancer")) {
 			cancerType = "Lung Cancer";
 		}
-		
-		if(StringUtils.isBlank(cancerType) || DiseaseDAO.getDiseaseByName(cancerType) == null){
+
+		if(StringUtils.isBlank(cancerType) || DiseaseDAO.getDiseaseByName(cancerType) == null) {
 			session.put("def", "1");
 			controllers.Application.index();
 		} else {

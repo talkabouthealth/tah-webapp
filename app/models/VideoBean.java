@@ -24,6 +24,7 @@ public class VideoBean implements DBModel {
 	private Set<TopicBean> topics;
 	private String videoTitle;
 	private String homeVideoLink;
+	private String cancerType;
 
 	public String getVideoId() {
 		return videoId;
@@ -67,6 +68,12 @@ public class VideoBean implements DBModel {
 	public void setHomeVideoLink(String homeVideoLink) {
 		this.homeVideoLink = homeVideoLink;
 	}
+	public String getCancerType() {
+		return cancerType;
+	}
+	public void setCancerType(String cancerType) {
+		this.cancerType = cancerType;
+	}
 
 	@Override
 	public void parseDBObject(DBObject dbObject) {
@@ -75,7 +82,7 @@ public class VideoBean implements DBModel {
 		//setConvoBean(ConversationDAO.getConvoById(dbObject.get("convo").toString()));
 	}
 	
-	public void parseDBObjectHome(DBObject dbObject){
+	public void parseDBObjectHome(DBObject dbObject) {
 		setId(dbObject.get("_id").toString());
 		setVideoId(dbObject.get("videoId").toString());
 		setVideoTitle(dbObject.get("videoTitle").toString());
@@ -90,9 +97,9 @@ public class VideoBean implements DBModel {
 		}
 		DBRef topicDBRef = (DBRef)dbObject.get("convo"); 
 		setConvoBean(ConversationDAO.getConvoById(topicDBRef.getId().toString()));
-		if(getVideoTitle() == null){
+		if(getVideoTitle() == null) {
 			setVideoTitle(getConvoBean().getTopic());
-		}else if(StringUtils.isBlank(getVideoTitle())){
+		} else if(StringUtils.isBlank(getVideoTitle())) {
 			setVideoTitle(getConvoBean().getTopic());
 		}
 	}

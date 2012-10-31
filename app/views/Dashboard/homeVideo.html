@@ -29,6 +29,29 @@
 	
 	<script>
 	<!--
+	addThisVideoBC = function(index){
+		var form = $("#videoList");
+		var videoId = $("#videoList :input[name='BCvideo" + index + "Id']").val();
+		var videoTitle = $("#videoList :input[name='BCvideo" + index + "Title']").val();
+		var videoLink = $("#videoList :input[name='BCvideo" + index + "Link']").val();
+		
+		if($.trim(videoId) == ''){
+			alert('Please add vide id');
+			return;
+		} else if($.trim(videoTitle) == ''){
+			alert('Please add video Title');
+			return;
+		} else if($.trim(videoLink) == ''){
+			alert('Please add video Link');
+			return;
+		} else {
+			$("#videoForm :input[name='videoId']").val(videoId);
+			$("#videoForm :input[name='videoTitle']").val(videoTitle);
+			$("#videoForm :input[name='videoLink']").val(videoLink);
+			$("#videoForm :input[name='cancerType']").val("Breast Cancer");
+			$("#videoForm").submit();
+		}
+	}
 	addThisVideo = function(index){
 		var form = $("#videoList");
 		var videoId = $("#videoList :input[name='video" + index + "Id']").val();
@@ -48,6 +71,7 @@
 			$("#videoForm :input[name='videoId']").val(videoId);
 			$("#videoForm :input[name='videoTitle']").val(videoTitle);
 			$("#videoForm :input[name='videoLink']").val(videoLink);
+			$("#videoForm :input[name='cancerType']").val("All Cancers");
 			$("#videoForm").submit();
 		}
 	}
@@ -71,82 +95,154 @@
 			<input type="hidden" name="videoId" />
 			<input type="hidden" name="videoTitle"/>
 			<input type="hidden" name="videoLink"/>
+			<input type="hidden" name="cancerType"/>
 		#{/form}
 		<form id="videoList">
-			<table style="width: 100%">
+			<table style="width: 100%" cellpadding="0" cellspacing="0">
 				<tr>
 					<td valign = "top" width="50%">
 						<div>
 							<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" width="100%">
 								<tr>
-									<th style="padding:3px;" colspan="2">Home page video List</th>   
+									<th style="padding:3px;" colspan="2">Home page video List (TalkAboutHealth.com) </th>   
 								</tr>
 									<tr>
 										<td  colspan="2">
-										<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;" width="100%">
+										<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" width="100%">
 											<tr>
-												<th>Video Id</th>
-												<th>Title</th>
-												<th>Link</th>
-												<th>Add/Remove</th>
+												<th style="padding:5px; width: 98px;">Video Id</th>
+												<th style="padding:5px;">Title</th>
+												<th style="padding:5px;">Link</th>
+												<th style="padding:5px;">Add/Remove</th>
 											</tr>
 											#{if list != null}
 												#{if list.size > 0}
 													#{list items: list, as: 'video' }
 														<tr>
-															<td>${video.videoId}</td>
-															<td>${video.videoTitle}</td>
-															<td>${video.homeVideoLink}</td>
-															<td><a href="/video/removeHomeVideo?videoId=${video.videoId}">Remove</a></td>
+															<td style="padding:5px;">${video.videoId}</td>
+															<td style="padding:5px;">${video.videoTitle}</td>
+															<td style="padding:5px;"><a href="${video.homeVideoLink}" target="_new">${video.homeVideoLink}</a></td>
+															<td style="padding:5px;"><a href="/video/removeHomeVideo?videoId=${video.videoId}&cancerType=All Cancers">Remove</a></td>
 														</tr>
 													#{/list}
 												#{/if}
 												#{if list.size == 1}
 													<tr>
-														<td><input type="text" size="12" name="video2Id" /></td>
-														<td><input type="text" name="video2Title"/></td>
-														<td><input type="text" name="video2Link"/></td>
-														<td><a href="javaScript:addThisVideo('2')">Add</a></td>
+														<td><input type="text" size="10" name="video2Id" /></td>
+														<td><input type="text" size="50" name="video2Title"/></td>
+														<td><input type="text" size="82" name="video2Link"/></td>
+														<td style="padding:5px;"><a href="javaScript:addThisVideo('2')">Add</a></td>
 													</tr>
 													<tr>
-														<td><input type="text" size="12" name="video3Id" /></td>
-														<td><input type="text" name="video3Title"/></td>
-														<td><input type="text" name="video3Link"/></td>
-														<td><a href="javaScript:addThisVideo('3')">Add</a></td>
+														<td><input type="text" size="10" name="video3Id" /></td>
+														<td><input type="text" size="50" name="video3Title"/></td>
+														<td><input type="text" size="82" name="video3Link"/></td>
+														<td style="padding:5px;"><a href="javaScript:addThisVideo('3')">Add</a></td>
 													</tr>
 												#{/if}
 												#{if list.size == 2}
 													<tr>
-														<td><input type="text" size="12" name="video3Id" /></td>
-														<td><input type="text" name="video3Title"/></td>
-														<td><input type="text" name="video3Link"/></td>
-														<td><a href="javaScript:addThisVideo('3')">Add</a></td>
+														<td><input type="text" size="10" name="video3Id" /></td>
+														<td><input type="text" size="50" name="video3Title"/></td>
+														<td><input type="text" size="82" name="video3Link"/></td>
+														<td style="padding:5px;"><a href="javaScript:addThisVideo('3')">Add</a></td>
 													</tr>
 												#{/if}
 											#{/if}
 											#{else}
 												<tr>
-													<td><input type="text" size="12" name="video1Id" /></td>
-													<td><input type="text" name="video1Title"/></td>
-													<td><input type="text" name="video1Link"/></td>
-													<td><a href="javaScript:addThisVideo('1')">Add</a></td>
+													<td><input type="text" size="10" name="video1Id" /></td>
+													<td><input type="text" size="50" name="video1Title"/></td>
+													<td><input type="text" size="82" name="video1Link"/></td>
+													<td style="padding:5px;"><a href="javaScript:addThisVideo('1')">Add</a></td>
 												</tr>
 												<tr>
-													<td><input type="text" size="12" name="video2Id" /></td>
-													<td><input type="text" name="video2Title"/></td>
-													<td><input type="text" name="video2Link"/></td>
-													<td><a href="javaScript:addThisVideo('2')">Add</a></td>
+													<td><input type="text" size="10" name="video2Id" /></td>
+													<td><input type="text" size="50" name="video2Title"/></td>
+													<td><input type="text" size="82" name="video2Link"/></td>
+													<td style="padding:5px;"><a href="javaScript:addThisVideo('2')">Add</a></td>
 												</tr>
 												<tr>
-													<td><input type="text" size="12" name="video3Id" /></td>
-													<td><input type="text" name="video3Title"/></td>
-													<td><input type="text" name="video3Link"/></td>
-													<td><a href="javaScript:addThisVideo('3')">Add</a></td>
+													<td><input type="text" size="10" name="video3Id" /></td>
+													<td><input type="text" size="50" name="video3Title"/></td>
+													<td><input type="text" size="82" name="video3Link"/></td>
+													<td style="padding:5px;"><a href="javaScript:addThisVideo('3')">Add</a></td>
 												</tr>
 											#{/else}
 										</table>
 										</td>   
 									</tr>
+							</table>
+						</div>
+						<div style="padding-top:10px;">
+							<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;" width="100%">
+								<tr><th style="padding:3px;" colspan="2">Breast Cancer Home page (TalkBreastCancer.com)</th></tr>
+								<tr>
+									<td  colspan="2">
+										<table border="1" cellpadding="1" cellspacing="0" style="border-collapse: collapse;" width="100%">
+											<tr>
+												<th style="padding:5px; width: 98px;">Video Id</th>
+												<th style="padding:5px;">Title</th>
+												<th style="padding:5px;">Link</th>
+												<th style="padding:5px;">Add/Remove</th>
+											</tr>
+											#{if listBC != null}
+												#{if listBC.size > 0}
+													#{list items: listBC, as: 'video' }
+														<tr>
+															<td style="padding:5px;">${video.videoId}</td>
+															<td style="padding:5px;">${video.videoTitle}</td>
+															<td style="padding:5px;"><a href="${video.homeVideoLink}" target="_new">${video.homeVideoLink}</a></td>
+															<td style="padding:5px;"><a href="/video/removeHomeVideo?videoId=${video.videoId}&cancerType=Breast Cancer">Remove</a></td>
+														</tr>
+													#{/list}
+												#{/if}
+												#{if listBC.size == 1}
+													<tr>
+														<td><input type="text" size="10" name="BCvideo2Id" /></td>
+														<td><input type="text" size="50" name="BCvideo2Title"/></td>
+														<td><input type="text" size="82" name="BCvideo2Link"/></td>
+														<td style="padding:5px;"><a href="javaScript:addThisVideoBC('2')">Add</a></td>
+													</tr>
+													<tr>
+														<td><input type="text" size="10" name="BCvideo3Id" /></td>
+														<td><input type="text" size="50" name="BCvideo3Title"/></td>
+														<td><input type="text" size="82" name="BCvideo3Link"/></td>
+														<td style="padding:5px;"><a href="javaScript:addThisVideoBC('3')">Add</a></td>
+													</tr>
+												#{/if}
+												#{if listBC.size == 2}
+													<tr>
+														<td><input type="text" size="10" name="BCvideo3Id" /></td>
+														<td><input type="text" size="50" name="BCvideo3Title" /></td>
+														<td><input type="text" size="82" name="BCvideo3Link"/></td>
+														<td style="padding:5px;"><a href="javaScript:addThisVideoBC('3')">Add</a></td>
+													</tr>
+												#{/if}
+											#{/if}
+											#{else}
+												<tr>
+													<td><input type="text" size="10" name="BCvideo1Id" /></td>
+													<td><input type="text" size="50" name="BCvideo1Title"/></td>
+													<td><input type="text" size="82" name="BCvideo1Link"/></td>
+													<td style="padding:5px;"><a href="javaScript:addThisVideoBC('1')">Add</a></td>
+												</tr>
+												<tr>
+													<td><input type="text" size="10" name="BCvideo2Id" /></td>
+													<td><input type="text" size="50" name="BCvideo2Title"/></td>
+													<td><input type="text" size="82" name="BCvideo2Link"/></td>
+													<td style="padding:5px;"><a href="javaScript:addThisVideoBC('2')">Add</a></td>
+												</tr>
+												<tr>
+													<td><input type="text" size="10" name="BCvideo3Id" /></td>
+													<td><input type="text" size="50" name="BCvideo3Title"/></td>
+													<td><input type="text" size="82" name="BCvideo3Link"/></td>
+													<td style="padding:5px;"><a href="javaScript:addThisVideoBC('3')">Add</a></td>
+												</tr>
+											#{/else}
+										</table>
+									</td>
+								</tr>
 							</table>
 						</div>
 					</td>

@@ -91,8 +91,8 @@ public class Application extends Controller {
     	}
     	if("0".equals(def)) {
     		String hostAll = request.host;
-    		if(hostAll.contains("talkabreastcancer.com")) {
-    			System.out.println(hostAll + " : " + hostAll.indexOf("breastcancer.talkabouthealth.com"));
+    		System.out.println("Host: " + hostAll);
+    		if(hostAll.contains("talkbreastcancer.com")) {
     			Community.index();
     		} else {
 	    		String[] arr = request.host.split("\\.");
@@ -120,7 +120,7 @@ public class Application extends Controller {
     	if (Security.isConnected()) {
     		Home.index();
     	} else {
-    		List<VideoBean> videoList = VideoDAO.loadVideoForHome(3);
+    		List<VideoBean> videoList = VideoDAO.loadVideoForHome(3,"All Cancers");
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
     		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
     		List<DiseaseBean> homediseaseList = DiseaseDAO.getCatchedDiseasesList(session);
@@ -142,7 +142,7 @@ public class Application extends Controller {
     	if (Security.isConnected()) {
     		Home.index();
     	} else {
-    		List<VideoBean> videoList = VideoDAO.loadVideoForHome(4);
+    		List<VideoBean> videoList = VideoDAO.loadVideoForHome(4,"All Cancers");
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
     		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
     		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);

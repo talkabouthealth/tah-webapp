@@ -171,15 +171,12 @@ public class Explore extends Controller {
 		oneWeekBeforeNow.add(Calendar.WEEK_OF_YEAR, -2);
 		
 		String cancerType = session.get("cancerType");
-		List<TalkerBean> activeTalkers1 =  ApplicationDAO.getActiveTalkers(oneWeekBeforeNow.getTime(),cancerType);
+		List<TalkerBean> activeTalkers =  ApplicationDAO.getActiveTalkers(oneWeekBeforeNow.getTime(),cancerType);
 		
-		List<TalkerBean> activeTalkers = new ArrayList<TalkerBean>();
-		for(TalkerBean talkerBean : activeTalkers1) {
-			//Commented code to display all category users in members page
-			//if(cat.contains(talkerBean.getCategory())){
-				activeTalkers.add(talkerBean);
-			//}
-		}
+		//List<TalkerBean> activeTalkers = new ArrayList<TalkerBean>();
+		//for(TalkerBean talkerBean : activeTalkers1) {
+		//		activeTalkers.add(talkerBean);
+		//}
 		
 		
 		if(activeTalkers != null && activeTalkers.size() > TalkerLogic.TALKERS_PER_PAGE)
@@ -189,10 +186,7 @@ public class Explore extends Controller {
 
 		List<TalkerBean> newTalkers = new ArrayList<TalkerBean>();
 		for(TalkerBean talkerBean : newTalkers1){
-			//Commented code to display all category users in members page
-			//if(cat.contains(talkerBean.getCategory())){
 				newTalkers.add(talkerBean);
-			//}
 		}
 		
 		if(newTalkers != null && newTalkers.size() > TalkerLogic.TALKERS_PER_PAGE)
@@ -448,10 +442,12 @@ public class Explore extends Controller {
 		List<TalkerBean> activeTalkers = null;
 		boolean loadFlag = false;
 		String cancerType = session.get("cancerType");
+		boolean loggedIn = (currentTalker != null);
 		if ("active".equals(feedType)) {
 			Calendar twoWeekBeforeNow = Calendar.getInstance();
 			twoWeekBeforeNow.add(Calendar.WEEK_OF_YEAR, -2);
 			activeTalkers =  ApplicationDAO.getActiveTalkers(twoWeekBeforeNow.getTime(),cancerType);
+			activeTalkers = TalkerDAO.getSortedTalkerList(activeTalkers,loggedIn);
 		} else if("new".equals(feedType)) {
 			activeTalkers = ApplicationDAO.getNewTalkers(cancerType);
 		} else if("search".equals(feedType)) {
@@ -486,7 +482,7 @@ public class Explore extends Controller {
 			}
 			List<TalkerBean> allActiveTalkers = null;
 			activeTalkers = new ArrayList<TalkerBean>();
-			boolean loggedIn = (currentTalker != null);
+			
 			if(loadFlag) {
 				allActiveTalkers = TalkerDAO.loadAllTalkersByCategory(true,memberTypeEntry);
 				allActiveTalkers = TalkerDAO.getSortedTalkerList(allActiveTalkers,loggedIn);
@@ -638,8 +634,6 @@ public class Explore extends Controller {
 		}
 		
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		//List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
-		
 		List<DiseaseBean> homediseaseList = DiseaseDAO.getCatchedDiseasesList(session);
 		List<DiseaseBean> diseaseList = new ArrayList<DiseaseBean>();
 

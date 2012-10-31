@@ -64,7 +64,7 @@ public class Community extends Controller {
     				diseaseList.add(diseaseBean);
 			}
 
-    		List<VideoBean> videoList = VideoDAO.loadVideoForHome(3);
+    		List<VideoBean> videoList = VideoDAO.loadVideoForHome(3, cancerType);
     		//future communities
     		render("@index",diseaseList, videoList, numberOfMembers, numberOfAnswers,cancerType);
     	}

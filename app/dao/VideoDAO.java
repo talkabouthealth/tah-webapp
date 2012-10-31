@@ -18,6 +18,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import com.mongodb.QueryBuilder;
 import com.mongodb.WriteResult;
 
 import models.CommentBean;
@@ -93,18 +94,18 @@ public class VideoDAO {
 		return returnFlag;
 	}
 
-	public static List<VideoBean> loadVideoForHome(int limit){
-		 List<VideoBean> videoBeanList = loadHomeVideo();
+	public static List<VideoBean> loadVideoForHome(int limit, String cancerType){
+		 List<VideoBean> videoBeanList = loadHomeVideo(cancerType);
 		 boolean loadMore = false;
 		 int newLimit = limit;
-		 if(videoBeanList == null){
+		 if(videoBeanList == null) {
 			loadMore = true;
 			newLimit = limit;
-		 }else if(videoBeanList.size() < limit) {
+		 } else if(videoBeanList.size() < limit) {
 			 newLimit =  (limit - videoBeanList.size()) + 1;
 			 loadMore = true;
 		 }
-		 if(loadMore){
+		 if(loadMore && "All Cancers".equals(cancerType)) {
 				VideoBean videoBean;
 				DBCollection videoColl = getCollection(VIDEO_COLLECTION);
 				DBCursor convoCur= null;
@@ -118,45 +119,51 @@ public class VideoDAO {
 						videoBean.parseDBObjectTopic(convoCur.next());
 						videoBeanList.add(videoBean);
 					}while(convoCur.hasNext());
-				} 
+				}
+		 } else {
+			 System.out.println("Not for all cancer");
 		 }
 		 return videoBeanList;
 	}
 	
-	public static boolean addHomeVideo(String videoId, String videoTitle, String videoLink){
+	public static boolean addHomeVideo(String videoId, String videoTitle, String videoLink,String cancerType){
 		boolean addFlag = true;
 		DBCollection videoColl = getCollection(HOME_VIDEO_COLLECTION);
 		DBObject videoDBObject = BasicDBObjectBuilder.start()
-				.add("videoId", videoId)
-				.add("videoTitle", videoTitle)
-				.add("videoLink", videoLink)
-				.add("timestamp", Calendar.getInstance().getTime())
-				.get();
+			.add("videoId", videoId)
+			.add("videoTitle", videoTitle)
+			.add("videoLink", videoLink)
+			.add("timestamp", Calendar.getInstance().getTime())
+			.add("cancerType", cancerType)
+			.get();
 		videoColl.save(videoDBObject);
 		return addFlag;
 	}
 	
-	public static List<VideoBean> loadHomeVideo(){
+	public static List<VideoBean> loadHomeVideo(String cancerType) {
 		List<VideoBean> videoBeanList = null;
 		VideoBean videoBean;
 		DBCollection videoColl = getCollection(HOME_VIDEO_COLLECTION);
 		DBCursor convoCur= null;
-		convoCur=videoColl.find().sort(new BasicDBObject("timestamp", -1));
+
+		DBObject query =  BasicDBObjectBuilder.start().add("cancerType", cancerType).get();
+		convoCur=videoColl.find(query).sort(new BasicDBObject("timestamp", -1));
+
 		if(convoCur.hasNext()) {
 			videoBeanList = new ArrayList<VideoBean>();
 			do {
 				videoBean = new VideoBean();
 				videoBean.parseDBObjectHome(convoCur.next());
 				videoBeanList.add(videoBean);
-			}while(convoCur.hasNext());
+			} while(convoCur.hasNext());
 		}
 		return videoBeanList;
 	}
 	
-	public static boolean removeHomeVideo(String videoId){
+	public static boolean removeHomeVideo(String videoId, String cancerType){
 		boolean returnFlag = true;
 		DBCollection videoColl = getCollection(HOME_VIDEO_COLLECTION);
-		DBObject query =  BasicDBObjectBuilder.start().add("videoId", videoId).get();
+		DBObject query =  BasicDBObjectBuilder.start().add("videoId", videoId).add("cancerType",cancerType).get();
 		DBCursor convoCur = videoColl.find(query);
 		if(convoCur.hasNext()) {
 			do {
