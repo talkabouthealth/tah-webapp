@@ -455,7 +455,7 @@ $(window).load(function() {
 		var lastActionId = '';
 		var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
 		$("#"+id+"Cnt").html(loading);
-		$.get("/Community/homePageFeed",{ type : id,lastActionId:lastActionId },function(data){
+		$.get("/Explore/homePageFeed",{ type : id,lastActionId:lastActionId },function(data){
 			$(loading).remove();
 			$(data).appendTo($("#"+id+"Cnt"));
 			$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
@@ -478,7 +478,7 @@ $(window).load(function() {
 		var lastActionId = $("#"+id+"Cnt").children().last().attr("id");
 		var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
 		$(loading).appendTo($("#"+id+"Cnt"));
-		$.get("/Community/homePageFeed",{ type : id,lastActionId:lastActionId },function(data){
+		$.get("/Explore/homePageFeed",{ type : id,lastActionId:lastActionId },function(data){
 			$(loading).remove();
 			$(data).appendTo($("#"+id+"Cnt"));
 			$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
