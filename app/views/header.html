@@ -284,7 +284,7 @@ openServiceLogin = function(serviceType) {
 		  #{/if}
 	    	<li>
                 <div id="inboxLink">
-               		 #{if !session.inboxUnreadCount.equals("0")}
+               		 #{if session.inboxUnreadCount != null && !session.inboxUnreadCount.equals("") && !session.inboxUnreadCount.equals("0")  }
                		 	<a class="" href="@{Messaging.inbox()}" title="You have ${session.inboxUnreadCount} unread messages">
                		 		<b>Inbox(${session.inboxUnreadCount})</b>
                		 	</a>
