@@ -195,6 +195,21 @@ public class Application extends Controller {
     	Map<String, String> additionalSettings = null;
     	List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
 
+    	/*Added code to redirect on page before login*/
+        if(request.headers.containsKey("referer")) {
+        	String savedURL = session.get("signUpBackUrl");
+        	String refere = request.headers.get("referer").value();
+        	System.out.println("refere : " + refere);
+        	System.out.println("savedURL : " + savedURL);
+        	if(StringUtils.isNotBlank(savedURL) && refere.contains(savedURL)) {
+        		session.put("signUpBackUrl", refere);
+        		System.out.println("Adding saved URL");
+        	} else {
+        		System.out.println("Removing saved URL");
+        		session.remove("signUpBackUrl");
+        	}
+        }
+
     	if (from != null) {
     		ServiceType type = ServiceAccountBean.parseServiceType(from);
     		additionalSettings = ServiceAccountBean.settingsNamesByType(type);
