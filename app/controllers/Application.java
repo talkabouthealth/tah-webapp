@@ -91,7 +91,7 @@ public class Application extends Controller {
     	}
     	if("0".equals(def)) {
     		String hostAll = request.host;
-    		System.out.println("Host: " + hostAll);
+    		//System.out.println("Host: " + hostAll);
     		if(hostAll.contains("talkbreastcancer.com")) {
     			Community.index();
     		} else {
@@ -292,7 +292,16 @@ public class Application extends Controller {
 		}
 
         TalkerLogic.onSignup(talker, session);
-        index();
+        
+        /*Changes for sending user back to page where came from*/
+        String signUpBackUrl = session.get("signUpBackUrl");
+        session.remove("signUpBackUrl");
+        if(StringUtils.isNotBlank(signUpBackUrl)) {
+        	System.out.println(signUpBackUrl);
+        	redirect(signUpBackUrl);
+        } else {
+        	index();
+        }
     }
     
     /**

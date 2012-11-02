@@ -79,6 +79,7 @@ public class ViewDispatcher extends Controller {
 				}
 			}
 			if ( showTalker ){
+				session.put("signUpBackUrl", name);
 				showTalker(talker);
 				return;
 			} else {
@@ -106,6 +107,7 @@ public class ViewDispatcher extends Controller {
 				notFound();
 			}
 			
+			session.put("signUpBackUrl", name);
 			showConvo(convo);
 			return;
 		}
