@@ -53,16 +53,22 @@ public class UserList extends Controller{
 			List<TalkerBean> list = TalkerDAO.loadAllTalkers(true);
 			//removing admin from user list
 			for(int index = 0; index < list.size(); index++){
-				if(list.get(index).getUserName().equalsIgnoreCase(ADMIN)){
-					list.remove(index);
+				TalkerBean talker = list.get(index);
+				if(talker != null && talker.getUserName() != null){
+					if(talker.getUserName().equalsIgnoreCase(ADMIN)){
+						list.remove(index);
+					}
 				}
 			}
 			render(list);
 		}else if(action != null && action.equalsIgnoreCase("searchUser")){
 			List<TalkerBean> list = TalkerDAO.searchTalkers(searchString);
 			for(int index = 0; index < list.size(); index++){
-				if(list.get(index).getUserName().equalsIgnoreCase(ADMIN)){
-					list.remove(index);
+				TalkerBean talker = list.get(index);
+				if(talker != null && talker.getUserName() != null){
+					if(talker.getUserName().equalsIgnoreCase(ADMIN)){
+						list.remove(index);
+					}
 				}
 			}
 			render(list);
@@ -70,8 +76,11 @@ public class UserList extends Controller{
 			List<TalkerBean> list = TalkerDAO.loadAllTalkers(true);
 			//removing admin from user list
 			for(int index = 0; index < list.size(); index++){
-				if(list.get(index).getUserName().equalsIgnoreCase(ADMIN)){
-					list.remove(index);
+				TalkerBean talker = list.get(index);
+				if(talker != null && talker.getUserName() != null){
+					if(talker.getUserName().equalsIgnoreCase(ADMIN)){
+						list.remove(index);
+					}
 				}
 			}
 			render(list);

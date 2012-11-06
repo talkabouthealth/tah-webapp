@@ -120,9 +120,10 @@ public class VideoDAO {
 						videoBeanList.add(videoBean);
 					}while(convoCur.hasNext());
 				}
-		 } else {
+		 } 
+		 /* else {
 			 System.out.println("Not for all cancer");
-		 }
+		 }*/
 		 return videoBeanList;
 	}
 	

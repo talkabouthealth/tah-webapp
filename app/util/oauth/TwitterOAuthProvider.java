@@ -16,6 +16,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 import logic.TalkerLogic;
 import models.ServiceAccountBean;
 import models.ServiceAccountBean.ServiceType;
@@ -37,16 +39,16 @@ import dao.TalkerDAO;
  *
  */
 public class TwitterOAuthProvider implements OAuthServiceProvider {
-	
+
+	/*Live : TalkAboutHealth.com*/
 	public static final String CONSUMER_KEY = "D9iFrN4G8ObpLCtGJ9w";
 	public static final String CONSUMER_SECRET = "Yy1srQbpldqjtqzzAXpJe3RzuWGxHFKPCF8FPsZKU";
-	private static final String CALLBACK_URL =
-		"talkabouthealth.com/oauth/callback?type=twitter";
-	
-//	public static final String CONSUMER_KEY = "7VymbW3wmOOoQ892BqIsaA";
-//	public static final String CONSUMER_SECRET = "s8aexaIBgMxAm4ZqQNayv5SAr6Wd1SKFVETUEPv0cmM";
-//	public static final String CALLBACK_URL =
-//		"kan.dev.com:9000/oauth/callback?type=twitter";
+	private static final String CALLBACK_URL = "talkabouthealth.com/oauth/callback?type=twitter";
+
+	/*Live : TalkBreastCancer.com*/
+	private static final String TBC_CONSUMER_KEY = "pJyZYlPoFXzJGHblwczpKg";
+	private static final String TBC_CONSUMER_SECRET = "dWeC3D7rSZilfgZ5Ty1TH4UDle1Rt75KUWzz7FZeAuk";
+	private static final String TBC_CALLBACK_URL = "talkbreastcancer.com/oauth/callback?type=twitter";
 	
 	private OAuthConsumer consumer;
 	private OAuthProvider provider;
@@ -61,12 +63,20 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 	
 	public String getAuthURL(Session session, boolean secureRequest) {
         String authURL = null;
+        String cancerType = "";
         try {
+        	cancerType = session.get("cancerType");
         	String callbackURL = (secureRequest ? "https://" : "http://");
-			callbackURL = callbackURL+CALLBACK_URL;
-			
+
+        	if(StringUtils.isNotBlank(cancerType) && "Breast Cancer".equals(cancerType)) {
+        		callbackURL = callbackURL+TBC_CALLBACK_URL;
+        		consumer = new DefaultOAuthConsumer(TBC_CONSUMER_KEY, TBC_CONSUMER_SECRET);
+        	} else {
+        		callbackURL = callbackURL+CALLBACK_URL;	
+        	}
+
 			authURL = provider.retrieveRequestToken(consumer, callbackURL);
-			
+
 			//save token and token secret for next step of OAuth
 			session.put("twitter_token", consumer.getToken());
 			session.put("twitter_token_secret", consumer.getTokenSecret());

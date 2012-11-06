@@ -23,7 +23,7 @@ public class TAHGlobalSettings  extends Controller  {
 				cancerType= arr[1];
 			} else {
 				cancerType = params.get("cancerType");
-				if(StringUtils.isBlank(cancerType) ){
+				if(StringUtils.isBlank(cancerType) ) {
 					cancerType = session.get("cancerType");
 				}
 			}
