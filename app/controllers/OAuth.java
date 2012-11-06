@@ -61,11 +61,13 @@ public class OAuth extends Controller {
 	}
 	
 	private static OAuthServiceProvider getProvider(String serviceType) {
+		String cancerType = "";
+		cancerType = session.get("cancerType");
 		if (serviceType.equalsIgnoreCase("twitter")) {
-			return new TwitterOAuthProvider();
+			return new TwitterOAuthProvider(cancerType);
 		}
 		else if (serviceType.equalsIgnoreCase("facebook")) {
-			return new FacebookOAuthProvider();
+			return new FacebookOAuthProvider(cancerType);
 		}
 		else {
 			throw new IllegalArgumentException("Bad service type");
