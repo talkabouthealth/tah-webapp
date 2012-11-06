@@ -35,7 +35,7 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 	*/
 	private static final String TBC_APP_ID = "493017477397828";
 	private static final String TBC_APP_SECRET = "377e78f1ec32db46795c182d1b3cdf3a";
-	private static final String TBC_CALLBACK_URL = "talkbreastcancer.com//oauth/callback?type=facebook";
+	private static final String TBC_CALLBACK_URL = "talkbreastcancer.com/oauth/callback?type=facebook";
 
 	/*Local
 	private static final String APP_ID = "270834789694900";
