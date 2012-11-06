@@ -139,7 +139,7 @@ public class SearchIndexerJob extends Throwable{
 				if (topic.isDeleted()) {
 					continue;
 				}
-				
+
 				Document doc = new Document();
 				doc.add(new Field("id", topic.getId(), Field.Store.YES, Field.Index.NO));
 				doc.add(new Field("title", topic.getTitle(), Field.Store.YES, Field.Index.ANALYZED));

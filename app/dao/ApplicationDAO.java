@@ -94,13 +94,13 @@ public class ApplicationDAO {
 			monthBeforeNow.add(Calendar.DAY_OF_MONTH, -30);
 			afterTime = monthBeforeNow.getTime();
 		}
-		
-		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start().add("suspended", false)
-											.add("log_time", new BasicDBObject("$gt", afterTime));
-		
-		if(StringUtils.isNotBlank(cancerType)){
+
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start();//.add("log_time", new BasicDBObject("$gt", afterTime));
+
+		if(StringUtils.isNotBlank(cancerType)) {
 			List<String> cat = new ArrayList<String>();
 			cat.add(cancerType);
+			cat.add(null);
 			cat.add(ConversationBean.ALL_CANCERS);
 			queryBuilder.add("$or", 
 				Arrays.asList(
@@ -111,22 +111,14 @@ public class ApplicationDAO {
 		}
 		
 		DBObject query = queryBuilder.get();
-	
-		
-		
+		System.out.println("Active talker: " + query);
+
 		List<DBObject> loginsDBList = new ArrayList<DBObject>();//loginsColl.find(query).sort(new BasicDBObject("log_time", -1)).toArray();
-		DBCursor loginCur=loginsColl.find(query).sort(new BasicDBObject("log_time", -1));
+		DBCursor loginCur=loginsColl.find(query).sort(new BasicDBObject("log_time", -1)).limit(50);
 		while(loginCur.hasNext()){
 			loginsDBList.add(loginCur.next());
 		}
-		/*
-		DBCursor loginCur=loginsColl.find(query).sort(new BasicDBObject("log_time", -1));
-		for(int i=0;i<loginCur.size();i++) {
-			loginsDBList.add(loginCur.next());
-		}
-		*/
-		
-		
+
 		List<TalkerBean> activeTalkers = new ArrayList<TalkerBean>();
 		for (DBObject loginDBObject : loginsDBList) {
 			DBRef talkerDBRef = (DBRef)loginDBObject.get("uid");
@@ -144,6 +136,7 @@ public class ApplicationDAO {
 	
 	/**
 	 * New users - users signed up in last 2 weeks
+	 * Updating logic to show latest users 
 	 */
 	public static List<TalkerBean> getNewTalkers(String cancerType) {
 		//{"_id":{$gt : ObjectId("4e6efaff36882ba357358498")}}
@@ -152,7 +145,7 @@ public class ApplicationDAO {
 		Calendar twoWeeksBeforeNow = Calendar.getInstance();
 		twoWeeksBeforeNow.add(Calendar.WEEK_OF_YEAR, -2);
 		DBObject query = null;
-		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start().add("timestamp", new BasicDBObject("$gt", twoWeeksBeforeNow.getTime()));
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start();//.add("timestamp", new BasicDBObject("$gt", twoWeeksBeforeNow.getTime()));
 
 		if(StringUtils.isNotBlank(cancerType)){
 			List<String> cat = new ArrayList<String>();
@@ -170,7 +163,7 @@ public class ApplicationDAO {
 		
 		
 		List<DBObject> talkersDBList =new ArrayList<DBObject>();// loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).toArray();
-		DBCursor talkerCur=loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1));
+		DBCursor talkerCur=loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).limit(20);
 		while(talkerCur.hasNext()){
 			talkersDBList.add(talkerCur.next());
 		}
@@ -459,9 +452,10 @@ public class ApplicationDAO {
 			return true;
 		}
 		
+		DBObject query = new BasicDBObject("name", Pattern.compile("^"+userName+"$" , Pattern.CASE_INSENSITIVE));
+
 		DBCollection namesColl = getCollection(NAMES_COLLECTION);
 		//DBObject query = new BasicDBObject("name", userName);
-		DBObject query = new BasicDBObject("name", Pattern.compile("^"+userName+"$",Pattern.CASE_INSENSITIVE));
 		//query.put("name", uNameL);
 		//query.put("name", uNameU);
 		return namesColl.findOne(query) != null;

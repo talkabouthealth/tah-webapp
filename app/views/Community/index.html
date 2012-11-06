@@ -62,6 +62,7 @@
 	.buttonNL:HOVER {
 		background-image: -moz-linear-gradient(center bottom , #f75e1f 26%, #ff5202 55%);
 	}
+	#subscribeDiseaseForm a:HOVER { text-decoration: underline; }
 	-->
 	</style>
 	#{ common/analytics_top /}
@@ -74,10 +75,10 @@
 					<span style="float:left;margin-right:0px;"><img src="/public/images/index/tah_logo_only.png" alt="${cancerType}" /></span>
 					<div style="margin-top:0px;font-weight:bold;font-size:35px;float: left;color:#EB208C;"><!-- text-shadow: 1px 1px 3px #1C7EB9; -->
 						#{if cancerType.indexOf(" ") > 0}
-							<span style="color:#1da655;">Talk</span><span style="color:#1550a4;">${cancerType.replaceAll(" ","").substring(0,cancerType.indexOf(" "))}</span><span style="color:#eb1d90;">${cancerType.replaceAll(" ","").substring(cancerType.indexOf(" "))}</span>
+							<span style="color:#1550a4;">Talk</span><span style="color:#1da655;">${cancerType.replaceAll(" ","").substring(0,cancerType.indexOf(" "))}</span><span style="color:#eb1d90;">${cancerType.replaceAll(" ","").substring(cancerType.indexOf(" "))}</span>
 						#{/if}
 						#{else}
-							<span style="color:#1da655;">Talk</span><span style="color:#1550a4;">${cancerType.replaceAll(" ","")}</span>
+							<span style="color:#1550a4;">Talk</span><span style="color:#1da655;">${cancerType.replaceAll(" ","")}</span>
 						#{/else}
 					</div>
 					<!-- 
@@ -454,7 +455,7 @@ $(window).load(function() {
 		var lastActionId = '';
 		var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
 		$("#"+id+"Cnt").html(loading);
-		$.get("/Community/homePageFeed",{ type : id,lastActionId:lastActionId },function(data){
+		$.get("/Explore/homePageFeed",{ type : id,lastActionId:lastActionId },function(data){
 			$(loading).remove();
 			$(data).appendTo($("#"+id+"Cnt"));
 			$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
@@ -477,7 +478,7 @@ $(window).load(function() {
 		var lastActionId = $("#"+id+"Cnt").children().last().attr("id");
 		var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
 		$(loading).appendTo($("#"+id+"Cnt"));
-		$.get("/Community/homePageFeed",{ type : id,lastActionId:lastActionId },function(data){
+		$.get("/Explore/homePageFeed",{ type : id,lastActionId:lastActionId },function(data){
 			$(loading).remove();
 			$(data).appendTo($("#"+id+"Cnt"));
 			$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });

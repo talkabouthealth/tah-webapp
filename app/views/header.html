@@ -270,6 +270,7 @@ openServiceLogin = function(serviceType) {
 	                  <li><a href="@{Video.homePageVideo()}">Home video</a></li>
 	                  <li><a href="@{NewsletterStats.index()}">Newsletter Stats</a></li>
 	                  <li><a href="@{Dashboard.diseaseUtil()}">Disease</a></li>
+	                  <li><a href="@{ActivityLogReportController.logReport()}">Activity</a></li>
 	                  <li><hr></li>
 					  *{
 	                  <li><a href="@{QuestionRecovery.index()}">Question Recovery</a></li>
@@ -283,7 +284,7 @@ openServiceLogin = function(serviceType) {
 		  #{/if}
 	    	<li>
                 <div id="inboxLink">
-               		 #{if !session.inboxUnreadCount.equals("0")}
+               		 #{if session.inboxUnreadCount != null && !session.inboxUnreadCount.equals("") && !session.inboxUnreadCount.equals("0")  }
                		 	<a class="" href="@{Messaging.inbox()}" title="You have ${session.inboxUnreadCount} unread messages">
                		 		<b>Inbox(${session.inboxUnreadCount})</b>
                		 	</a>

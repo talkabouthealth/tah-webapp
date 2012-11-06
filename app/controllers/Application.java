@@ -91,8 +91,8 @@ public class Application extends Controller {
     	}
     	if("0".equals(def)) {
     		String hostAll = request.host;
-    		if(hostAll.contains("talkabreastcancer.com")) {
-    			System.out.println(hostAll + " : " + hostAll.indexOf("breastcancer.talkabouthealth.com"));
+    		//System.out.println("Host: " + hostAll);
+    		if(hostAll.contains("talkbreastcancer.com")) {
     			Community.index();
     		} else {
 	    		String[] arr = request.host.split("\\.");
@@ -120,7 +120,7 @@ public class Application extends Controller {
     	if (Security.isConnected()) {
     		Home.index();
     	} else {
-    		List<VideoBean> videoList = VideoDAO.loadVideoForHome(3);
+    		List<VideoBean> videoList = VideoDAO.loadVideoForHome(3,"All Cancers");
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
     		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
     		List<DiseaseBean> homediseaseList = DiseaseDAO.getCatchedDiseasesList(session);
@@ -142,7 +142,7 @@ public class Application extends Controller {
     	if (Security.isConnected()) {
     		Home.index();
     	} else {
-    		List<VideoBean> videoList = VideoDAO.loadVideoForHome(4);
+    		List<VideoBean> videoList = VideoDAO.loadVideoForHome(4,"All Cancers");
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
     		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
     		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
@@ -194,6 +194,21 @@ public class Application extends Controller {
     	String from = flash.get("from");
     	Map<String, String> additionalSettings = null;
     	List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+
+    	/*Added code to redirect on page before login*/
+        if(request.headers.containsKey("referer")) {
+        	String savedURL = session.get("signUpBackUrl");
+        	String refere = request.headers.get("referer").value();
+        	System.out.println("refere : " + refere);
+        	System.out.println("savedURL : " + savedURL);
+        	if(StringUtils.isNotBlank(savedURL) && refere.contains(savedURL)) {
+        		session.put("signUpBackUrl", refere);
+        		System.out.println("Adding saved URL");
+        	} else {
+        		System.out.println("Removing saved URL");
+        		session.remove("signUpBackUrl");
+        	}
+        }
 
     	if (from != null) {
     		ServiceType type = ServiceAccountBean.parseServiceType(from);
@@ -292,7 +307,16 @@ public class Application extends Controller {
 		}
 
         TalkerLogic.onSignup(talker, session);
-        index();
+        
+        /*Changes for sending user back to page where came from*/
+        String signUpBackUrl = session.get("signUpBackUrl");
+        session.remove("signUpBackUrl");
+        if(StringUtils.isNotBlank(signUpBackUrl)) {
+        	System.out.println(signUpBackUrl);
+        	redirect(signUpBackUrl);
+        } else {
+        	index();
+        }
     }
     
     /**
