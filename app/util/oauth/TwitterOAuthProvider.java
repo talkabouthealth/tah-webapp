@@ -49,9 +49,11 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 	private static final String TBC_CONSUMER_KEY = "pJyZYlPoFXzJGHblwczpKg";
 	private static final String TBC_CONSUMER_SECRET = "dWeC3D7rSZilfgZ5Ty1TH4UDle1Rt75KUWzz7FZeAuk";
 	private static final String TBC_CALLBACK_URL = "talkbreastcancer.com/oauth/callback?type=twitter";
-	
+
 	private OAuthConsumer consumer;
 	private OAuthProvider provider;
+
+	private String cancerType;
 
 	public TwitterOAuthProvider() {
 		consumer = new DefaultOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
@@ -61,16 +63,26 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 	            "http://twitter.com/oauth/authorize");
 	}
 	
+	public TwitterOAuthProvider(String csrType) {
+		cancerType = csrType;
+		if(StringUtils.isNotBlank(cancerType) && "Breast Cancer".equals(cancerType)) {
+			consumer = new DefaultOAuthConsumer(TBC_CONSUMER_KEY, TBC_CONSUMER_SECRET);
+		} else {
+			consumer = new DefaultOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);	
+		}
+
+		provider = new DefaultOAuthProvider(
+	            "http://twitter.com/oauth/request_token",
+	            "http://twitter.com/oauth/access_token",
+	            "http://twitter.com/oauth/authorize");
+	}
+
 	public String getAuthURL(Session session, boolean secureRequest) {
         String authURL = null;
-        String cancerType = "";
         try {
-        	cancerType = session.get("cancerType");
         	String callbackURL = (secureRequest ? "https://" : "http://");
-
         	if(StringUtils.isNotBlank(cancerType) && "Breast Cancer".equals(cancerType)) {
         		callbackURL = callbackURL+TBC_CALLBACK_URL;
-        		consumer = new DefaultOAuthConsumer(TBC_CONSUMER_KEY, TBC_CONSUMER_SECRET);
         	} else {
         		callbackURL = callbackURL+CALLBACK_URL;	
         	}

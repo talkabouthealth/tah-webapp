@@ -43,12 +43,19 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 	private static final String CALLBACK_URL = "localhost:9000/oauth/callback?type=facebook";
 	*/
 	
+	private String cancerType;
+
+	public FacebookOAuthProvider() {
+	}
+
+	public FacebookOAuthProvider(String csrType) {
+		cancerType = csrType;
+	}
+
 	public String getAuthURL(Session session, boolean secureRequest) {
 		String authURL = null;
-		String cancerType = "";
 		try {
 			String callbackURL = (secureRequest ? "https://" : "http://");
-			cancerType = session.get("cancerType");
 			if(StringUtils.isNotBlank(cancerType) && "Breast Cancer".equals(cancerType)) {
 				callbackURL = callbackURL+TBC_CALLBACK_URL;
 				authURL = "https://graph.facebook.com/oauth/authorize?" + "client_id="+TBC_APP_ID+"&redirect_uri="+URLEncoder.encode(callbackURL, "UTF-8") +
@@ -71,12 +78,9 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			return null;
 		}
 		
-		String cancerType = "";
-		cancerType = session.get("cancerType");
-		
-		String accessToken = loadAccessToken(secureRequest, code, cancerType);
+		String accessToken = loadAccessToken(secureRequest, code);
 		session.put("token", accessToken);
-		
+
 		//load user info, parse Facebook id and email from reply
 		HttpResponse res = WS.url("https://graph.facebook.com/me?access_token=%s", accessToken).get();
 		String responseText = res.getString();
@@ -112,7 +116,7 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 		}
 	}
 	
-	private String loadAccessToken(boolean secureRequest, String code, String cancerType) {
+	private String loadAccessToken(boolean secureRequest, String code) {
 
 		String callbackURL = (secureRequest ? "https://" : "http://");
 		WSRequest A = null;
