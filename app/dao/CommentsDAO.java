@@ -587,7 +587,7 @@ public class CommentsDAO {
 		for (DBObject commentDBObject : commentsList) {
 			String commentId = getString(commentDBObject, "_id");
 			CommentBean commentBean = commentsCacheMap.get(commentId);
-			
+
 			//save children
 			List<CommentBean> childrenList = new ArrayList<CommentBean>();
 			List<String> childrenIdsList = getStringList(commentDBObject, "children");
@@ -596,18 +596,16 @@ public class CommentsDAO {
 				//if (!childrenCommentBean.isDeleted()) {
 					childrenList.add(childrenCommentBean);
 				//}
-				
+
 				//remove replies from the list of answers/thoughts
 				topCommentsList.remove(childrenCommentBean);
 			}
 			commentBean.setChildren(childrenList);
-			childrenList.clear();
 			CommonUtil.commentToHTML(commentBean);
 		}
-		
 		return topCommentsList;
 	}
-	
+
 	/**
 	 * Returns talker's mentions ('@username') in thoughts and answers
 	 * @param talker
