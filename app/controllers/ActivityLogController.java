@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.codec.StringDecoder;
 import org.apache.commons.lang.StringUtils;
@@ -23,45 +24,46 @@ public class ActivityLogController  extends Controller{
 
 	// ActivityLogController
 	public static void log() {
-		/* 
-		System.out.println("IP: " + request.remoteAddress);
-		System.out.println("Page: " + URLDecoder.decode(params.get("page")));
-		System.out.println("pageType: " + params.get("pageType"));
-		System.out.println("Referer: " + URLDecoder.decode(params.get("ref")));
-		System.out.println("Session: "+ session.getId());
 
-		HashMap<String, Http.Header> head = (HashMap<String, Header>) request.headers;
-		Iterator<Entry<String, Header>> it = head.entrySet().iterator();
-
-		while (it.hasNext()) {
-	        Map.Entry pairs = (Map.Entry)it.next();
-	        System.out.println(pairs.getKey() + " = " + pairs.getValue());
-	        it.remove();
-	    }
-		*/
 		if(Security.isConnected() && Security.connected().equals("admin")) {
 			renderText("Admin");
 			return;
 		}
+
+		//Page Type
 		String pageType = params.get("pageType");
 		if(StringUtils.isEmpty(pageType))
 			pageType = "Other";
+		
+		//Remote IP address
+		String remoteIp = request.remoteAddress;
+		if(request.headers.containsKey("X-Forwarded-For")) {
+			remoteIp = request.headers.get("X-Forwarded-For").value();
+			remoteIp = remoteIp.substring(0, remoteIp.indexOf(",")); 
+		}
+
+		//Header Values
+		String userAgent = "";
+		Set<String> heads =  request.headers.keySet();
+		for (String string : heads) {
+			if(string.equals("user-agent"))
+				userAgent = request.headers.get("user-agent").value();
+			// accept-language
+			// cookie
+			// System.out.println(string + " : " + request.headers.get(string).value());
+		}
 
 		ActivityLogBean logBean = new ActivityLogBean(
-									request.remoteAddress,
-									pageType,
-									URLDecoder.decode(params.get("page")),
-									URLDecoder.decode(params.get("ref")),
-									request.headers.get("user-agent").value(),
-									session.getId(),
-									"",
-									"");
+							remoteIp,
+							pageType,
+							URLDecoder.decode(params.get("page")),
+							URLDecoder.decode(params.get("ref")),
+							userAgent,
+							session.getId(),
+							"",
+							"");
 		if(Security.isConnected()) {
 			TalkerBean talker = CommonUtil.loadCachedTalker(session);
-			/*
-			System.out.println("e-Mail: " + talker.getEmail());
-			System.out.println("User Name: " + talker.getName());
-			*/
 			logBean.setUserEmail(talker.getEmail());
 			logBean.setUserName(talker.getName());
 		}

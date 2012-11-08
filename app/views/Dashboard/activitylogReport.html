@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	
+
 	<link href="@{'/public/stylesheets/style.css'}" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/play-pagination.css'}"/>
 	<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/smoothness/jquery-ui-1.8.14.custom.css'}"/>
@@ -58,6 +58,7 @@
 						<th>User</th>
 						<th>IP Address</th>
 						<th>Page Name</th>
+						<th>Page URL</th>
 						<th>Date Time</th>
 					</tr>
 					#{paginate.list items: logList, as: 'userInfo' }
@@ -72,6 +73,7 @@
 							</td>
 							<td>${userInfo.ipAddress}</td>
 							<td>${userInfo.pageName}</td>
+							<td><A href="${userInfo.pageURL}" target="_new">${userInfo.pageURL}</A></td>
 							<td>${userInfo.timeStamp}</td>
 						</tr>
 					#{/paginate.list}
