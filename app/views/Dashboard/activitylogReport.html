@@ -51,6 +51,9 @@
 		<input type="button" value="Go.!" id="dateFilter"/>
 		<span style="color: #F00;">If wrong date will show today's records</span>
 	</div>
+	#{if logList.size > 0}
+	<div>#{paginate.summary items: logList /} </div>
+	#{/if}
 	<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;" width="100%">
 			#{if logList != null}
 				#{if logList.size > 0}

@@ -1,40 +1,48 @@
 package dao;
 
 import static util.DBUtil.getCollection;
+import static util.DBUtil.getString;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+
+import models.ActivityLogBean;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.QueryBuilder;
-
-import models.ActivityLogBean;
 
 public class ActivityLogDAO {
 
 	public static final String ACTIVITYLOG_COLLECTION = "activitylog";
 	
-	public static boolean logRequest(ActivityLogBean logBean) {
-		DBCollection activityLogColl = getCollection(ACTIVITYLOG_COLLECTION);
-		DBObject activityLogDBObject = BasicDBObjectBuilder.start()
-				.add("ipAddress", logBean.getIpAddress())
-				.add("pageName", logBean.getPageName())
-				.add("pageURL", logBean.getPageURL())
-				.add("referer", logBean.getReferer())
-				.add("userAgent", logBean.getUserAgent())
-				.add("sessionId", logBean.getSessionId())
-				.add("userEmail", logBean.getUserEmail())
-				.add("userName", logBean.getUserName())
-				.add("timestamp",  Calendar.getInstance().getTime())
-				.get();
-		activityLogColl.save(activityLogDBObject);
-		return true;
+	public static String logRequest(ActivityLogBean logBean) {
+		String result = "0";
+		try {
+			DBCollection activityLogColl = getCollection(ACTIVITYLOG_COLLECTION);
+			DBObject activityLogDBObject = BasicDBObjectBuilder.start()
+					.add("ipAddress", logBean.getIpAddress())
+					.add("pageName", logBean.getPageName())
+					.add("pageURL", logBean.getPageURL())
+					.add("referer", logBean.getReferer())
+					.add("userAgent", logBean.getUserAgent())
+					.add("userLanguage", logBean.getUserLanguage())
+					.add("userCookie", logBean.getUserCookie())
+					.add("cancerSite", logBean.getCancerSite())
+					.add("sessionId", logBean.getSessionId())
+					.add("userEmail", logBean.getUserEmail())
+					.add("userName", logBean.getUserName())
+					.add("timestamp",  Calendar.getInstance().getTime())
+					.get();
+			activityLogColl.save(activityLogDBObject);
+			result = getString(activityLogDBObject, "_id");;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	@Deprecated
@@ -80,4 +88,13 @@ public class ActivityLogDAO {
 		}
 		return logList;
 	}
+	
+	/* 
+	 public static void logOutTime(String logId) {
+		DBCollection activityLogColl = getCollection(ACTIVITYLOG_COLLECTION);
+		DBObject logIdRef = new BasicDBObject("_id", new ObjectId(logId));
+		DBObject logOutObject = BasicDBObjectBuilder.start().add("outTimeStamp", Calendar.getInstance().getTime()).get();
+		activityLogColl.update(logIdRef, new BasicDBObject("$set", logOutObject));
+	}
+	*/
 }

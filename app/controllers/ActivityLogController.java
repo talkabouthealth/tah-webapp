@@ -34,7 +34,7 @@ public class ActivityLogController  extends Controller{
 		String pageType = params.get("pageType");
 		if(StringUtils.isEmpty(pageType))
 			pageType = "Other";
-		
+
 		//Remote IP address
 		String remoteIp = request.remoteAddress;
 		if(request.headers.containsKey("X-Forwarded-For")) {
@@ -44,13 +44,22 @@ public class ActivityLogController  extends Controller{
 
 		//Header Values
 		String userAgent = "";
+		String userLanguage = "";
+		String userCookie = "";
+		String cancerSite = "";
 		Set<String> heads =  request.headers.keySet();
 		for (String string : heads) {
 			if(string.equals("user-agent"))
 				userAgent = request.headers.get("user-agent").value();
-			// accept-language
-			// cookie
+			if(string.equals("accept-language"))
+				userLanguage = request.headers.get("accept-language").value();
+			if(string.equals("cookie"))
+				userCookie = request.headers.get("cookie").value();
+			if(StringUtils.isNotBlank(session.get("cancerType")))
+				cancerSite = session.get("cancerType");
+			// accept-language, cookie
 			// System.out.println(string + " : " + request.headers.get(string).value());
+			// TAH Or TalkBreastCancer
 		}
 
 		ActivityLogBean logBean = new ActivityLogBean(
@@ -62,14 +71,25 @@ public class ActivityLogController  extends Controller{
 							session.getId(),
 							"",
 							"");
+
+		logBean.setUserLanguage(userLanguage);
+		logBean.setUserCookie(userCookie);
+		logBean.setCancerSite(cancerSite);
+
 		if(Security.isConnected()) {
 			TalkerBean talker = CommonUtil.loadCachedTalker(session);
 			logBean.setUserEmail(talker.getEmail());
 			logBean.setUserName(talker.getName());
 		}
-		if(ActivityLogDAO.logRequest(logBean))
-			renderText("DONE");
-		else
-			renderText("ERROR");
+		renderText(ActivityLogDAO.logRequest(logBean));
 	}
+
+	/*
+	public static void logouttime() {
+		String logId = params.get("logId");
+		System.out.println("Log Id: " + logId);
+		ActivityLogDAO.logOutTime(logId);
+		renderText("Done");
+	}
+	*/
 }

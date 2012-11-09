@@ -2,6 +2,8 @@ package models;
 
 import org.apache.commons.lang.StringUtils;
 
+import util.DBUtil;
+
 import com.mongodb.DBObject;
 
 public class ActivityLogBean {
@@ -12,14 +14,17 @@ public class ActivityLogBean {
 	private String pageURL;
 	private String referer;
 	private String userAgent;
+	private String userLanguage;
+	private String userCookie;
+	private String cancerSite;
+
 	private String sessionId;
 	private String timeStamp;
 
 	private String userEmail;
 	private String userName;
 
-	public ActivityLogBean() {
-	}
+	public ActivityLogBean() { }
 
 	public ActivityLogBean(String ipAddress, String pageName,
 			String pageURL, String referer, String userAgent, String sessionId,
@@ -95,6 +100,24 @@ public class ActivityLogBean {
 	public void setTimeStamp(String timeStamp) {
 		this.timeStamp = timeStamp;
 	}
+	public String getUserLanguage() {
+		return userLanguage;
+	}
+	public void setUserLanguage(String userLanguage) {
+		this.userLanguage = userLanguage;
+	}
+	public String getUserCookie() {
+		return userCookie;
+	}
+	public void setUserCookie(String userCookie) {
+		this.userCookie = userCookie;
+	}
+	public String getCancerSite() {
+		return cancerSite;
+	}
+	public void setCancerSite(String cancerSite) {
+		this.cancerSite = cancerSite;
+	}
 
 	public void parseFromDB(DBObject activityLogDBObject) {
 		setId(activityLogDBObject.get("_id").toString());
@@ -105,13 +128,14 @@ public class ActivityLogBean {
 		setReferer(activityLogDBObject.get("referer").toString());
 		setSessionId(activityLogDBObject.get("sessionId").toString());
 		setUserAgent(activityLogDBObject.get("userAgent").toString());
+		setUserLanguage(DBUtil.getString(activityLogDBObject, "userLanguage"));
+		setUserCookie(DBUtil.getString(activityLogDBObject, "userCookie"));
+		setCancerSite(DBUtil.getString(activityLogDBObject, "cancerSite"));
 		setUserEmail(activityLogDBObject.get("userEmail").toString());
 		setUserName(activityLogDBObject.get("userName").toString());
-		
 		if(StringUtils.isBlank(getUserName())) { //Anonymous
 			setUserName("Guest");
 		}
-		
 		setTimeStamp(activityLogDBObject.get("timestamp").toString());
 	}
 }
