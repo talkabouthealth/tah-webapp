@@ -62,6 +62,21 @@ public class ActivityLogController  extends Controller{
 			// TAH Or TalkBreastCancer
 		}
 
+		//Location
+		String userLocationCode = params.get("geoLcode");
+		String userLocationCountry = params.get("geoLcountry");
+		String userLocationState = params.get("geoLstate");
+		String userLocationCity = params.get("geoLcity");
+		String userLocationLatitude = params.get("geoLat");
+		String userLocationLongitude = params.get("geoLong");
+
+		System.out.println("userLocationCode: " + userLocationCode);
+		System.out.println("userLocationCountry: " + userLocationCountry);
+		System.out.println("userLocationState: " + userLocationState);
+		System.out.println("userLocationCity: " + userLocationCity);
+		System.out.println("userLocationLatitude: " + userLocationLatitude);
+		System.out.println("userLocationLongitude: " + userLocationLongitude);
+
 		ActivityLogBean logBean = new ActivityLogBean(
 							remoteIp,
 							pageType,
@@ -75,6 +90,14 @@ public class ActivityLogController  extends Controller{
 		logBean.setUserLanguage(userLanguage);
 		logBean.setUserCookie(userCookie);
 		logBean.setCancerSite(cancerSite);
+		
+		//Location details
+		logBean.setUserLocationCode(userLocationCode);
+		logBean.setUserLocationCountry(userLocationCountry);
+		logBean.setUserLocationState(userLocationState);
+		logBean.setUserLocationCity(userLocationCity);
+		logBean.setUserLocationLatitude(userLocationLatitude);
+		logBean.setUserLocationLongitude(userLocationLongitude);
 
 		if(Security.isConnected()) {
 			TalkerBean talker = CommonUtil.loadCachedTalker(session);
@@ -82,6 +105,7 @@ public class ActivityLogController  extends Controller{
 			logBean.setUserName(talker.getName());
 		}
 		renderText(ActivityLogDAO.logRequest(logBean));
+		//renderText("OK");
 	}
 
 	/*

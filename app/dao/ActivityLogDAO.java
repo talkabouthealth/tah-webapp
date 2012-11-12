@@ -35,6 +35,12 @@ public class ActivityLogDAO {
 					.add("sessionId", logBean.getSessionId())
 					.add("userEmail", logBean.getUserEmail())
 					.add("userName", logBean.getUserName())
+					.add("userLocationCode", logBean.getUserLocationCode())
+					.add("userLocationCountry", logBean.getUserLocationCountry())
+					.add("userLocationState", logBean.getUserLocationState())
+					.add("userLocationCity", logBean.getUserLocationCity())
+					.add("userLocationLatitude", logBean.getUserLocationLatitude())
+					.add("userLocationLongitude", logBean.getUserLocationLongitude())
 					.add("timestamp",  Calendar.getInstance().getTime())
 					.get();
 			activityLogColl.save(activityLogDBObject);
@@ -61,7 +67,7 @@ public class ActivityLogDAO {
 		}
 		return logList;
 	}
-	
+
 	public static ArrayList<ActivityLogBean> getLogList(Date date) {
 
 		ArrayList<ActivityLogBean> logList = null;
@@ -88,7 +94,7 @@ public class ActivityLogDAO {
 		}
 		return logList;
 	}
-	
+
 	/* 
 	 public static void logOutTime(String logId) {
 		DBCollection activityLogColl = getCollection(ACTIVITYLOG_COLLECTION);

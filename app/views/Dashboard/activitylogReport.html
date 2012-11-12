@@ -62,6 +62,7 @@
 						<th>IP Address</th>
 						<th>Page Name</th>
 						<th>Page URL</th>
+						<th>Location</th>
 						<th>Date Time</th>
 					</tr>
 					#{paginate.list items: logList, as: 'userInfo' }
@@ -77,6 +78,10 @@
 							<td>${userInfo.ipAddress}</td>
 							<td>${userInfo.pageName}</td>
 							<td><A href="${userInfo.pageURL}" target="_new">${userInfo.pageURL}</A></td>
+							<td><!-- ${userInfo.userLocationCode}<br/>  -->
+								${userInfo.userLocationCity} ${userInfo.userLocationState}, ${userInfo.userLocationCountry}
+								[${userInfo.userLocationLongitude} , ${userInfo.userLocationLatitude}]
+							</td>
 							<td>${userInfo.timeStamp}</td>
 						</tr>
 					#{/paginate.list}

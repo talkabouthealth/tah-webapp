@@ -23,6 +23,13 @@ public class ActivityLogBean {
 
 	private String userEmail;
 	private String userName;
+	//Location Details
+	private String userLocationCode;
+	private String userLocationCountry;
+	private String userLocationState;
+	private String userLocationCity;
+	private String userLocationLatitude;
+	private String userLocationLongitude;
 
 	public ActivityLogBean() { }
 
@@ -118,10 +125,46 @@ public class ActivityLogBean {
 	public void setCancerSite(String cancerSite) {
 		this.cancerSite = cancerSite;
 	}
+	public String getUserLocationCode() {
+		return userLocationCode;
+	}
+	public void setUserLocationCode(String userLocationCode) {
+		this.userLocationCode = userLocationCode;
+	}
+	public String getUserLocationCountry() {
+		return userLocationCountry;
+	}
+	public void setUserLocationCountry(String userLocationCountry) {
+		this.userLocationCountry = userLocationCountry;
+	}
+	public String getUserLocationState() {
+		return userLocationState;
+	}
+	public void setUserLocationState(String userLocationState) {
+		this.userLocationState = userLocationState;
+	}
+	public String getUserLocationCity() {
+		return userLocationCity;
+	}
+	public void setUserLocationCity(String userLocationCity) {
+		this.userLocationCity = userLocationCity;
+	}
+	public String getUserLocationLatitude() {
+		return userLocationLatitude;
+	}
+	public void setUserLocationLatitude(String userLocationLatitude) {
+		this.userLocationLatitude = userLocationLatitude;
+	}
+	public String getUserLocationLongitude() {
+		return userLocationLongitude;
+	}
+	public void setUserLocationLongitude(String userLocationLongitude) {
+		this.userLocationLongitude = userLocationLongitude;
+	}
 
 	public void parseFromDB(DBObject activityLogDBObject) {
 		setId(activityLogDBObject.get("_id").toString());
-		
+
 		setIpAddress(activityLogDBObject.get("ipAddress").toString());
 		setPageName(activityLogDBObject.get("pageName").toString());
 		setPageURL(activityLogDBObject.get("pageURL").toString());
@@ -133,6 +176,15 @@ public class ActivityLogBean {
 		setCancerSite(DBUtil.getString(activityLogDBObject, "cancerSite"));
 		setUserEmail(activityLogDBObject.get("userEmail").toString());
 		setUserName(activityLogDBObject.get("userName").toString());
+		
+		//Location
+		setUserLocationCode(DBUtil.getString(activityLogDBObject, "userLocationCode"));
+		setUserLocationCountry(DBUtil.getString(activityLogDBObject, "userLocationCountry"));
+		setUserLocationState(DBUtil.getString(activityLogDBObject, "userLocationState"));
+		setUserLocationCity(DBUtil.getString(activityLogDBObject, "userLocationCity"));
+		setUserLocationLatitude(DBUtil.getString(activityLogDBObject, "userLocationLatitude"));
+		setUserLocationLongitude(DBUtil.getString(activityLogDBObject, "userLocationLongitude"));
+
 		if(StringUtils.isBlank(getUserName())) { //Anonymous
 			setUserName("Guest");
 		}
