@@ -44,7 +44,7 @@
 		</div>
 		<div id="innerbanner"></div>
 		<div id="bottom_container">
-			<div class="blacktext2" id="innerheading">Sign Up Now</div>
+			<div class="blacktext2" id="innerheading">Become a TalkAboutHealth Member</div>
 			<div id="innermiddlearea">
 				<div id="signupleft">
 				#{form @Application.register() , id:'signup' }
@@ -57,20 +57,21 @@
 					    <input type="hidden" id="from" name="from" value="${flash.from}" />
 					#{/if}
 					#{else}
-					    <h6 class="blacktext14" style="text-align:left;">Save time entering your information</h6>
-						<div class="socialicons2">
-							<ul>
-								<li style="padding-right: 30px; " ><a href="#" onclick="openFacebook()">
+					    
+					    <!--<h6 class="blacktext14" style="text-align:left;">Save time entering your information</h6>-->
+						<!--<div class="socialicons2">
+							<!--<ul>
+								<!--<li style="padding-right: 30px; " ><a href="#" onclick="openFacebook()">
 										<img src="/public/images/joinusingfacebook.gif" width="150" height="22" border="0" />
-								</a></li>
-								<li><a href="#" onclick="openTwitter()">
+								</a></li>-->
+								<!--<li><a href="#" onclick="openTwitter()">
 										<img src="/public/images/joinusingtwitter.gif" width="150" height="22" border="0" />
-								</a></li>
-								<!-- <li><img src="/public/images/JoinwithGoogle.gif" width="150" height="22" />&nbsp;&nbsp;</li> -->
+								</a></li>-->
+								<!-- <li><img src="/public/images/JoinwithGoogle.gif" width="150" height="22" />&nbsp;&nbsp;</li>
 							</ul>
-						</div>
+						</div>-->
 					#{/else}	
-					<h5 class="error">
+					<div class="error">
 						#{ifErrors}
 						   <p>Validation failed! Please correct the following errors:</p>
 						   <br/>
@@ -81,7 +82,7 @@
 						#{if flash.contains("error") }
 							<p>${flash.error}</p>
 						#{/if}
-					</h5>
+					</div>
 					<div id="signupleftarea">
 						<div class="signupmain">
 							<div class="signuptextarea"><span class="blacktext14">Health Community</span></div>
@@ -443,6 +444,11 @@
 				#{/form}
 				</div>
 				<div id="signupright">
+					<div class="blacktext20" style="text-align:left;">Or save time by:</div><br/>
+					<div class="socialicons2">
+								<a href="#" onclick="openFacebook()"><img src="/public/images/joinusingfacebook.gif" width="150" height="22" border="0" /></a><br/><br/>
+								<a href="#" onclick="openTwitter()"><img src="/public/images/joinusingtwitter.gif" width="150" height="22" border="0" /></a>
+						</div>
 					#{common/whyLoveTAHBox /}
 				</div>
 			</div>
