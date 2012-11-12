@@ -48,11 +48,12 @@
   	<div id="bottom_container">
   		<div class="haderbanner"><div id="innerbanner"></div></div>
   			<div id="innermain">
-	         	<div class="blacktext2" id="innerheading">Subscribe to our free newsletters!</div>
+	         	<!--<div class="blacktext2" id="innerheading">Subscribe to our free newsletters.</div>-->
 	         	<div id="innermiddlearea">
 		            <div id="signupleft">
 		            	#{form @Explore.subscribeNewsLetter() , id:'newsLetterForm' }
-		            	<h3 style="color: #000">Keep up to date with the latest news, featured experts, best answers, and custom offers.</h3>
+				<h1 style="color: #000">Daily guidance and support through the cancer journey.</h1><br/>
+				<h3 style="color: #000">Subscribe to our free newsletters for the latest news, what to expect, how to prepare, and answers from the world's leading experts.</h3>
 		          		<div id="checkboxarea3">
 		          			<div style="float:left;">
 							#{if newsletter != null && newsletter.newsLetterType !=null}
