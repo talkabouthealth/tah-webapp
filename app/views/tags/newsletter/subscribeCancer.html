@@ -31,10 +31,11 @@
 	   		var email = $("#cancerTopic :input[name='newsletter.email']").val();
 	   		showPopupEmail(email);
 	   	} else {
-	   		$("#cancerTopicMessage").css("color","#2E8B57");
-	   		$("#cancerTopicMessage").html(responseText);
-	   		$("#cancerTopicMessage").fadeIn(100);
-	   		closeTimeout = setTimeout(function() { $("#cancerTopicBlock").fadeOut(200) }, 4000);
+	   		window.location.href = "/signup?fromPage=NEWS";
+	   		//$("#cancerTopicMessage").css("color","#2E8B57");
+	   		//$("#cancerTopicMessage").html(responseText);
+	   		//$("#cancerTopicMessage").fadeIn(100);
+	   		//closeTimeout = setTimeout(function() { $("#cancerTopicBlock").fadeOut(200) }, 4000);
 	   	}
 	}
 	showPopupEmail = function(email) {
