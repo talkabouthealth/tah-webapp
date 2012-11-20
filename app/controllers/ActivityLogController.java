@@ -70,13 +70,13 @@ public class ActivityLogController  extends Controller{
 		String userLocationLatitude = params.get("geoLat");
 		String userLocationLongitude = params.get("geoLong");
 
-		System.out.println("userLocationCode: " + userLocationCode);
+		/*System.out.println("userLocationCode: " + userLocationCode);
 		System.out.println("userLocationCountry: " + userLocationCountry);
 		System.out.println("userLocationState: " + userLocationState);
 		System.out.println("userLocationCity: " + userLocationCity);
 		System.out.println("userLocationLatitude: " + userLocationLatitude);
 		System.out.println("userLocationLongitude: " + userLocationLongitude);
-
+*/
 		ActivityLogBean logBean = new ActivityLogBean(
 							remoteIp,
 							pageType,
@@ -98,7 +98,6 @@ public class ActivityLogController  extends Controller{
 		logBean.setUserLocationCity(userLocationCity);
 		logBean.setUserLocationLatitude(userLocationLatitude);
 		logBean.setUserLocationLongitude(userLocationLongitude);
-
 		if(Security.isConnected()) {
 			TalkerBean talker = CommonUtil.loadCachedTalker(session);
 			logBean.setUserEmail(talker.getEmail());
