@@ -446,7 +446,7 @@ public class Explore extends Controller {
 			Calendar twoWeekBeforeNow = Calendar.getInstance();
 			twoWeekBeforeNow.add(Calendar.WEEK_OF_YEAR, -2);
 			activeTalkers =  ApplicationDAO.getActiveTalkers(twoWeekBeforeNow.getTime(),cancerType);
-			activeTalkers = TalkerDAO.getSortedTalkerList(activeTalkers,loggedIn);
+			//activeTalkers = TalkerDAO.getSortedTalkerList(activeTalkers,loggedIn);
 		} else if("new".equals(feedType)) {
 			activeTalkers = ApplicationDAO.getNewTalkers(cancerType);
 		} else if("search".equals(feedType)) {
