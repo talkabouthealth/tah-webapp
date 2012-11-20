@@ -5,10 +5,13 @@ import java.util.Map;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Http.Header;
+import play.mvc.With;
+import plugin.TAHGlobalSettings;
 import util.oauth.FacebookOAuthProvider;
 import util.oauth.OAuthServiceProvider;
 import util.oauth.TwitterOAuthProvider;
 
+@With(TAHGlobalSettings.class)
 public class OAuth extends Controller {
 	
 	/**
