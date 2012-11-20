@@ -506,6 +506,7 @@ setNewsletterMessage = function(responseText, statusText, xhr, $form)  {
    	} else if (responseText.indexOf("Email alrady subscribed!") === 0) {
    		errorText = responseText;
    	} else {
+   		window.location.href = "/signup?fromPage=NEWS";
    		errorText= "Thank you for subscribing!";
    	}
 	$("#respMessage").html(errorText); 

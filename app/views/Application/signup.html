@@ -57,12 +57,24 @@
 			#{if flash.cancerType}
 				<div style="font-size: 19px;font-weight: bold;line-height:20px;width:590px;" id="innerheading">Thank you for subscribing to our newsletter! Join now to ask questions to leading medical professionals and connect with others like you.</div>
 			#{/if}
+			#{elseif flash.fromPage}
+				<div style="font-size: 19px;font-weight: bold;line-height:20px;width:590px;" id="innerheading">
+				Thank you for subscribing to our newsletters! 
+				<br/>Join now to ask questions to leading medical professionals and connect with others like you.
+				</div>
+			#{/elseif}
 			#{else}
 				<div class="blacktext2" id="innerheading">Sign Up Now</div>
 			#{/else}
+			<!-- Thank you for subscribing to our newsletters! 
+			Join now to ask questions to leading medical professionals and connect with others like you. -->
+			
 			<div id="innermiddlearea">
 				<div id="signupleft">
 				#{form @Application.register() , id:'signup' }
+				#{if flash.fromPage}  
+					<input type="hidden" id="fromPage" name="fromPage" value="${flash.fromPage}" />
+				#{/if}
 					#{if flash.cancerType}
 					<input type="hidden" id="cancerType" name="cancerType" value="${flash.cancerType}" />
 					#{/if}	

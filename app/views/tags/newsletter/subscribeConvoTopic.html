@@ -31,10 +31,11 @@
 	   		var email = $("#convoTopic :input[name='newsletter.email']").val();
 	   		showPopupEmail(email);
 	   	} else {
-	   		$("#convoTopicMessage").css("color","#2E8B57");
-	   		$("#convoTopicMessage").html(responseText);
-	   		$("#convoTopicMessage").fadeIn(100);
-	   		closeTimeout = setTimeout(function() { $("#convoTopicblock").fadeOut(200) }, 4000);
+	   		//$("#convoTopicMessage").css("color","#2E8B57");
+	   		//$("#convoTopicMessage").html(responseText);
+	   		//$("#convoTopicMessage").fadeIn(100);
+	   		//closeTimeout = setTimeout(function() { $("#convoTopicblock").fadeOut(200) }, 4000);
+	   		window.location.href = "/signup?fromPage=NEWS";
 	   	}
 	}
 	showPopupEmail = function(email) {
@@ -51,13 +52,33 @@
 <div class="topipsts" id="tahconvoTopic">
 	<div class="" id="convoTopicblock" >
 		<div style="padding:5px;float: left;">
-			<span style="float: left; padding-top: 3px;color:#3888c1;font-style: italic;font-size: 14px;" class="mtrighttxt1">${convoTopicName} newsletter</span>
+			<span style="float: left; padding-top: 3px;color:#3888c1;font-style: italic;font-size: 14px;" class="mtrighttxt1">
+				#{if session.get("cancerType")}
+					${session.get("cancerType")} 
+				#{/if}
+				#{else}
+					${convoTopicName}
+				#{/else} 
+				newsletter</span>
 		</div>
 		<div style="float:left;padding:5px;">
-			<span class="blacktextgrey15">Sign up for our weekly ${convoTopicName} newsletter for the latest news, best answers and featured experts.</span>
+			<span class="blacktextgrey15">Sign up for our weekly 
+			#{if session.get("cancerType")}
+				${session.get("cancerType")} 
+			#{/if}
+			#{else}
+				${convoTopicName}
+			#{/else}
+			newsletter for the latest news, best answers and featured experts.</span>
 		</div>
 	  		#{form @Newsletter.subscribeWorkShop(), id:'convoTopic' }
-	  		<input id="newsletter" name="newsletter.newsLetterType" type="hidden" value="${convoTopicName}"/>
+	  		#{if session.get("cancerType")}
+					<input id="newsletter" name="newsletter.newsLetterType" type="hidden" value="${session.get("cancerType")}"/>
+				#{/if}
+				#{else}
+					<input id="newsletter" name="newsletter.newsLetterType" type="hidden" value="${convoTopicName}"/>
+				#{/else}
+	  		
 	  		<div style="clear: both;height: 15px;padding:0 5px"><span id="convoTopicMessage" class="success" style="display:none;font-size: 12px;">Thanks for subscribing.</span></div>
 	  		<div style="float:left;padding:0px 5px 0 5px">
 			#{if session.username }

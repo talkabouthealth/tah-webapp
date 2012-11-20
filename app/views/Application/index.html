@@ -402,7 +402,6 @@ $(document).ready(function(){
 		visible:4,
 		mouseWheel:true
     });
-
 	$("#expert").click();
 });
 setNewsletterMessage = function(responseText, statusText, xhr, $form)  {
@@ -411,14 +410,18 @@ setNewsletterMessage = function(responseText, statusText, xhr, $form)  {
 	if (responseText.indexOf("Error:") === 0) {
    		errorText = responseText.replace("Error:", "");
    		$("#respMessage").css("color","#ff0000");
+   		$("#respMessage").html(errorText); 
+   		$("#respMessage").fadeIn(100);
+   		closeTimeout = setTimeout(function() { $("#respMessage").fadeOut(200) }, 4000);
    	} else if (responseText.indexOf("Email alrady subscribed!") === 0) {
    		errorText = responseText;
+   		$("#respMessage").html(errorText); 
+   		$("#respMessage").fadeIn(100);
+   		closeTimeout = setTimeout(function() { $("#respMessage").fadeOut(200) }, 4000);
    	} else {
    		errorText= "Thank you for subscribing!";
+   		window.location.href = "/signup?fromPage=NEWS";
    	}
-	$("#respMessage").html(errorText); 
-	$("#respMessage").fadeIn(100);
-	closeTimeout = setTimeout(function() { $("#respMessage").fadeOut(200) }, 4000);
 }
 makeSearch = function(){
 	var query = $("#topSearchBox").val();

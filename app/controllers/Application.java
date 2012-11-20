@@ -199,13 +199,13 @@ public class Application extends Controller {
         if(request.headers.containsKey("referer")) {
         	String savedURL = session.get("signUpBackUrl");
         	String refere = request.headers.get("referer").value();
-        	System.out.println("refere : " + refere);
-        	System.out.println("savedURL : " + savedURL);
+        	//System.out.println("refere : " + refere);
+        	//System.out.println("savedURL : " + savedURL);
         	if(StringUtils.isNotBlank(savedURL) && refere.contains(savedURL)) {
         		session.put("signUpBackUrl", refere);
-        		System.out.println("Adding saved URL");
+        		//System.out.println("Adding saved URL");
         	} else {
-        		System.out.println("Removing saved URL");
+        		//System.out.println("Removing saved URL");
         		session.remove("signUpBackUrl");
         	}
         }
@@ -218,14 +218,21 @@ public class Application extends Controller {
     		flash("captcha", "true");
     	}
     	
-    	if(cancerType != null)
+    	if(StringUtils.isNotBlank(cancerType))
     		flash("cancerType", cancerType);
+    	
+    	String fromPage = params.get("fromPage");
+    	System.out.println(fromPage);
+    	if(StringUtils.isNotBlank(fromPage))
+    		flash("fromPage", fromPage);
+    	else
+    		System.out.println("Not added in Flush");
     	
     	String randomID = Codec.UUID();
     	render(additionalSettings,randomID,diseaseList);
     }
     
-    public static void signupNews(NewsLetterBean newsletter,String cancerType) {
+    public static void signupNews(NewsLetterBean newsletter,String cancerType,String fromPage) {
     	String remoteAddress = request.remoteAddress;
     	int duration = -6;
     	//prepare additional settings for FB or Twitter
@@ -242,12 +249,21 @@ public class Application extends Controller {
     	}
     	if(cancerType == null)
     		cancerType = flash.get("cancerType");
+    	
+    	System.out.println(fromPage);
+    	if(StringUtils.isNotBlank(fromPage))
+    		flash("fromPage", fromPage);
+    	
     	String randomID = Codec.UUID();
     	render("Application/signup.html",additionalSettings,randomID,diseaseList,newsletter,cancerType);
     	return;
     }
     
     public static void register(@Valid TalkerBean talker,String code, String randomID, NewsLetterBean newsletter) {
+    	
+    
+    	String fromPage = flash.get("fromPage");
+    	System.out.println("Register: " + fromPage);
     	
     	/**
     	 * Added ip address verification code. 
@@ -273,7 +289,7 @@ public class Application extends Controller {
         if (validation.hasErrors()) {
             params.flash(); // add http parameters to the flash scope
             validation.keep(); // keep the errors for the next request
-            signupNews(newsletter,cancerType);
+            signupNews(newsletter,cancerType,fromPage);
             return;
         }
         
@@ -296,7 +312,7 @@ public class Application extends Controller {
         	flash.error("Sorry, unknown error. Please contact support.");
         	Logger.error("Error during signup. User: "+talker.getEmail());
         	
-        	 signupNews(newsletter,cancerType);
+        	 signupNews(newsletter,cancerType,fromPage);
         	return;
 		} else {
 			/* Date : 16 Aug 2011
@@ -312,7 +328,7 @@ public class Application extends Controller {
         String signUpBackUrl = session.get("signUpBackUrl");
         session.remove("signUpBackUrl");
         if(StringUtils.isNotBlank(signUpBackUrl)) {
-        	System.out.println(signUpBackUrl);
+        	//System.out.println(signUpBackUrl);
         	redirect(signUpBackUrl);
         } else {
         	index();

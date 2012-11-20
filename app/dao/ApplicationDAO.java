@@ -114,11 +114,12 @@ public class ApplicationDAO {
 		System.out.println("Active talker: " + query);
 
 		List<DBObject> loginsDBList = new ArrayList<DBObject>();//loginsColl.find(query).sort(new BasicDBObject("log_time", -1)).toArray();
-		DBCursor loginCur=loginsColl.find(query).sort(new BasicDBObject("log_time", -1)).limit(50);
+		DBCursor loginCur=loginsColl.find(query).sort(new BasicDBObject("log_time", -1)).limit(500);
 		while(loginCur.hasNext()){
 			loginsDBList.add(loginCur.next());
 		}
-
+		int countToShow = 0;
+		
 		List<TalkerBean> activeTalkers = new ArrayList<TalkerBean>();
 		for (DBObject loginDBObject : loginsDBList) {
 			DBRef talkerDBRef = (DBRef)loginDBObject.get("uid");
@@ -128,6 +129,9 @@ public class ApplicationDAO {
 				talker = TalkerDAO.parseTalker(talkerDBRef);
 				if (talker != null &&  !talker.isSuspended() && !talker.isDeactivated()) {
 					activeTalkers.add(talker);
+					countToShow++;
+					if(countToShow > 50)
+						break;
 				}
 			}
 		}
@@ -163,11 +167,12 @@ public class ApplicationDAO {
 		
 		
 		List<DBObject> talkersDBList =new ArrayList<DBObject>();// loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).toArray();
-		DBCursor talkerCur=loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).limit(20);
+		DBCursor talkerCur=loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).limit(100);
 		while(talkerCur.hasNext()){
 			talkersDBList.add(talkerCur.next());
 		}
 		
+		int countToShow = 0;
 		
 		List<TalkerBean> newTalkers = new ArrayList<TalkerBean>();
 		for (DBObject talkerDBObject : talkersDBList) {
@@ -177,6 +182,9 @@ public class ApplicationDAO {
 				talker.parseBasicFromDB(talkerDBObject);
 				if (!talker.isSuspended()) {
 					newTalkers.add(talker);
+					countToShow++;
+					if(countToShow > 50)
+						break;
 				}
 			}
 		}

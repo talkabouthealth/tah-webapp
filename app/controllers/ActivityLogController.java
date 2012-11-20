@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.codec.StringDecoder;
 import org.apache.commons.lang.StringUtils;
@@ -23,51 +24,96 @@ public class ActivityLogController  extends Controller{
 
 	// ActivityLogController
 	public static void log() {
-		/* 
-		System.out.println("IP: " + request.remoteAddress);
-		System.out.println("Page: " + URLDecoder.decode(params.get("page")));
-		System.out.println("pageType: " + params.get("pageType"));
-		System.out.println("Referer: " + URLDecoder.decode(params.get("ref")));
-		System.out.println("Session: "+ session.getId());
 
-		HashMap<String, Http.Header> head = (HashMap<String, Header>) request.headers;
-		Iterator<Entry<String, Header>> it = head.entrySet().iterator();
-
-		while (it.hasNext()) {
-	        Map.Entry pairs = (Map.Entry)it.next();
-	        System.out.println(pairs.getKey() + " = " + pairs.getValue());
-	        it.remove();
-	    }
-		*/
 		if(Security.isConnected() && Security.connected().equals("admin")) {
 			renderText("Admin");
 			return;
 		}
+
+		//Page Type
 		String pageType = params.get("pageType");
 		if(StringUtils.isEmpty(pageType))
 			pageType = "Other";
 
+		//Remote IP address
+		String remoteIp = request.remoteAddress;
+		if(request.headers.containsKey("X-Forwarded-For")) {
+			remoteIp = request.headers.get("X-Forwarded-For").value();
+			remoteIp = remoteIp.substring(0, remoteIp.indexOf(",")); 
+		}
+
+		//Header Values
+		String userAgent = "";
+		String userLanguage = "";
+		String userCookie = "";
+		String cancerSite = "";
+		Set<String> heads =  request.headers.keySet();
+		for (String string : heads) {
+			if(string.equals("user-agent"))
+				userAgent = request.headers.get("user-agent").value();
+			if(string.equals("accept-language"))
+				userLanguage = request.headers.get("accept-language").value();
+			if(string.equals("cookie"))
+				userCookie = request.headers.get("cookie").value();
+			if(StringUtils.isNotBlank(session.get("cancerType")))
+				cancerSite = session.get("cancerType");
+			// accept-language, cookie
+			// System.out.println(string + " : " + request.headers.get(string).value());
+			// TAH Or TalkBreastCancer
+		}
+
+		//Location
+		String userLocationCode = params.get("geoLcode");
+		String userLocationCountry = params.get("geoLcountry");
+		String userLocationState = params.get("geoLstate");
+		String userLocationCity = params.get("geoLcity");
+		String userLocationLatitude = params.get("geoLat");
+		String userLocationLongitude = params.get("geoLong");
+
+		System.out.println("userLocationCode: " + userLocationCode);
+		System.out.println("userLocationCountry: " + userLocationCountry);
+		System.out.println("userLocationState: " + userLocationState);
+		System.out.println("userLocationCity: " + userLocationCity);
+		System.out.println("userLocationLatitude: " + userLocationLatitude);
+		System.out.println("userLocationLongitude: " + userLocationLongitude);
+
 		ActivityLogBean logBean = new ActivityLogBean(
-									request.remoteAddress,
-									pageType,
-									URLDecoder.decode(params.get("page")),
-									URLDecoder.decode(params.get("ref")),
-									request.headers.get("user-agent").value(),
-									session.getId(),
-									"",
-									"");
+							remoteIp,
+							pageType,
+							URLDecoder.decode(params.get("page")),
+							URLDecoder.decode(params.get("ref")),
+							userAgent,
+							session.getId(),
+							"",
+							"");
+
+		logBean.setUserLanguage(userLanguage);
+		logBean.setUserCookie(userCookie);
+		logBean.setCancerSite(cancerSite);
+		
+		//Location details
+		logBean.setUserLocationCode(userLocationCode);
+		logBean.setUserLocationCountry(userLocationCountry);
+		logBean.setUserLocationState(userLocationState);
+		logBean.setUserLocationCity(userLocationCity);
+		logBean.setUserLocationLatitude(userLocationLatitude);
+		logBean.setUserLocationLongitude(userLocationLongitude);
+
 		if(Security.isConnected()) {
 			TalkerBean talker = CommonUtil.loadCachedTalker(session);
-			/*
-			System.out.println("e-Mail: " + talker.getEmail());
-			System.out.println("User Name: " + talker.getName());
-			*/
 			logBean.setUserEmail(talker.getEmail());
 			logBean.setUserName(talker.getName());
 		}
-		if(ActivityLogDAO.logRequest(logBean))
-			renderText("DONE");
-		else
-			renderText("ERROR");
+		renderText(ActivityLogDAO.logRequest(logBean));
+		//renderText("OK");
 	}
+
+	/*
+	public static void logouttime() {
+		String logId = params.get("logId");
+		System.out.println("Log Id: " + logId);
+		ActivityLogDAO.logOutTime(logId);
+		renderText("Done");
+	}
+	*/
 }

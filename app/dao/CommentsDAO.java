@@ -593,9 +593,9 @@ public class CommentsDAO {
 			List<String> childrenIdsList = getStringList(commentDBObject, "children");
 			for (String childId : childrenIdsList) {
 				CommentBean childrenCommentBean = commentsCacheMap.get(childId);
-				//if (!childrenCommentBean.isDeleted()) {
+				if (!childrenCommentBean.isDeleted()) {
 					childrenList.add(childrenCommentBean);
-				//}
+				}
 
 				//remove replies from the list of answers/thoughts
 				topCommentsList.remove(childrenCommentBean);

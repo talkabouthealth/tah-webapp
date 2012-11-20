@@ -178,16 +178,15 @@ public class Explore extends Controller {
 		//		activeTalkers.add(talkerBean);
 		//}
 		
-		
 		if(activeTalkers != null && activeTalkers.size() > TalkerLogic.TALKERS_PER_PAGE)
 			activeTalkers = activeTalkers.subList(0, TalkerLogic.TALKERS_PER_PAGE);
 		
-		List<TalkerBean> newTalkers1 = ApplicationDAO.getNewTalkers(cancerType);
+		List<TalkerBean> newTalkers = ApplicationDAO.getNewTalkers(cancerType);
 
-		List<TalkerBean> newTalkers = new ArrayList<TalkerBean>();
-		for(TalkerBean talkerBean : newTalkers1){
-				newTalkers.add(talkerBean);
-		}
+		//List<TalkerBean> newTalkers = new ArrayList<TalkerBean>();
+		//for(TalkerBean talkerBean : newTalkers1){
+		//		newTalkers.add(talkerBean);
+		//}
 		
 		if(newTalkers != null && newTalkers.size() > TalkerLogic.TALKERS_PER_PAGE)
 			newTalkers = newTalkers.subList(0,TalkerLogic.TALKERS_PER_PAGE); 
