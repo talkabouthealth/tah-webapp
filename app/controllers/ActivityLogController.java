@@ -14,6 +14,7 @@ import dao.ActivityLogDAO;
 
 import models.ActivityLogBean;
 import models.TalkerBean;
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Http.Header;
