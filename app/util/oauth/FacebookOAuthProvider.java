@@ -135,7 +135,7 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 		//returned string is: access_token=...token...
 		String accessToken = null;
 		if (responseText.startsWith("access_token")) {
-			accessToken = responseText.substring(13);
+			accessToken = responseText.substring(13,responseText.lastIndexOf('&'));
 		}
 		return accessToken;
 	}
