@@ -1,25 +1,16 @@
 package controllers;
 
 import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-
-import org.apache.commons.codec.StringDecoder;
-import org.apache.commons.lang.StringUtils;
-
-import dao.ActivityLogDAO;
 
 import models.ActivityLogBean;
 import models.TalkerBean;
-import play.Logger;
+
+import org.apache.commons.lang.StringUtils;
+
 import play.mvc.Controller;
-import play.mvc.Http;
-import play.mvc.Http.Header;
-import play.mvc.Http.Request;
 import util.CommonUtil;
+import dao.ActivityLogDAO;
 
 public class ActivityLogController  extends Controller{
 
@@ -38,14 +29,9 @@ public class ActivityLogController  extends Controller{
 
 		//Remote IP address
 		String remoteIp = request.remoteAddress;
-		Logger.info("---------- Activity INFO --------------");
-		Logger.info("Rquest IP: " + remoteIp);
-		if(request.headers.containsKey("X-Forwarded-For")) { //x-forwarded-for
-			remoteIp = request.headers.get("X-Forwarded-For").value();
-			Logger.info("X-Forwarded-Ip IP: " + remoteIp);
-			remoteIp = remoteIp.substring(0, remoteIp.indexOf(",")); 
+		if(request.headers.containsKey("x-forwarded-for")) { //x-forwarded-for: Getting remote address if not in request. Nginx manage this
+			remoteIp = request.headers.get("x-forwarded-for").value();
 		}
-		Logger.info("---------- Activity INFO END --------------");
 
 		//Header Values
 		String userAgent = "";
@@ -63,8 +49,6 @@ public class ActivityLogController  extends Controller{
 			if(StringUtils.isNotBlank(session.get("cancerType")))
 				cancerSite = session.get("cancerType");
 			// accept-language, cookie
-			// System.out.println(string + " : " + request.headers.get(string).value());
-			// TAH Or TalkBreastCancer
 		}
 
 		//Location
@@ -75,13 +59,6 @@ public class ActivityLogController  extends Controller{
 		String userLocationLatitude = params.get("geoLat");
 		String userLocationLongitude = params.get("geoLong");
 
-		/*System.out.println("userLocationCode: " + userLocationCode);
-		System.out.println("userLocationCountry: " + userLocationCountry);
-		System.out.println("userLocationState: " + userLocationState);
-		System.out.println("userLocationCity: " + userLocationCity);
-		System.out.println("userLocationLatitude: " + userLocationLatitude);
-		System.out.println("userLocationLongitude: " + userLocationLongitude);
-*/
 		ActivityLogBean logBean = new ActivityLogBean(
 							remoteIp,
 							pageType,
