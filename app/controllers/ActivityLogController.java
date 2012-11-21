@@ -37,10 +37,14 @@ public class ActivityLogController  extends Controller{
 
 		//Remote IP address
 		String remoteIp = request.remoteAddress;
-		if(request.headers.containsKey("X-Forwarded-For")) {
+		Logger.info("---------- Activity INFO --------------");
+		Logger.info("Rquest IP: " + remoteIp);
+		if(request.headers.containsKey("X-Forwarded-For")) { //x-forwarded-for
 			remoteIp = request.headers.get("X-Forwarded-For").value();
+			Logger.info("X-Forwarded-Ip IP: " + remoteIp);
 			remoteIp = remoteIp.substring(0, remoteIp.indexOf(",")); 
 		}
+		Logger.info("---------- Activity INFO END --------------");
 
 		//Header Values
 		String userAgent = "";
