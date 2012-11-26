@@ -23,23 +23,24 @@ public class Video extends Controller {
 
 	@Check("admin")
 	public static void homePageVideo() {
-		java.util.List<VideoBean> list = VideoDAO.loadHomeVideo();
-		render("Dashboard/homeVideo.html",list);
+		java.util.List<VideoBean> list = VideoDAO.loadHomeVideo("All Cancers");
+		java.util.List<VideoBean> listBC = VideoDAO.loadHomeVideo("Breast Cancer");
+		render("Dashboard/homeVideo.html",list,listBC);
 	}
 
-	public static void removeHomeVideo(String videoId) {
-		VideoDAO.removeHomeVideo(videoId);
+	public static void removeHomeVideo(String videoId,String cancerType) {
+		VideoDAO.removeHomeVideo(videoId,cancerType);
 		homePageVideo();
 	}
 	
-	public static void addHomeVideo(String videoId, String videoTitle, String videoLink) {
+	public static void addHomeVideo(String videoId, String videoTitle, String videoLink, String cancerType) {
 		System.out.println(videoId);
 		System.out.println(videoTitle);
 		System.out.println(videoLink);
+		System.out.println(cancerType);
 		if(videoId != null){
-			VideoDAO.addHomeVideo(videoId,videoTitle,videoLink);
+			VideoDAO.addHomeVideo(videoId,videoTitle,videoLink,cancerType);
 		}
-		java.util.List<VideoBean> list = VideoDAO.loadHomeVideo();
 		homePageVideo();
 	}
 

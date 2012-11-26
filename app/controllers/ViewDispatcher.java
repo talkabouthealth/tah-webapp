@@ -79,6 +79,7 @@ public class ViewDispatcher extends Controller {
 				}
 			}
 			if ( showTalker ){
+				session.put("signUpBackUrl", name);
 				showTalker(talker);
 				return;
 			} else {
@@ -106,6 +107,7 @@ public class ViewDispatcher extends Controller {
 				notFound();
 			}
 			
+			session.put("signUpBackUrl", name);
 			showConvo(convo);
 			return;
 		}
@@ -316,7 +318,8 @@ public class ViewDispatcher extends Controller {
 		
 		List<ConversationBean> relatedConvos = null;
 		try {
-			relatedConvos = SearchUtil.getRelatedConvos(talker,convo);
+			String cancerType = session.get("cancerType");
+			relatedConvos = SearchUtil.getRelatedConvos(talker,convo,cancerType);
 		} catch (Exception e) {
 				Logger.error(e, "ViewDispatcher.java : showConvo");
 		}
@@ -348,7 +351,6 @@ public class ViewDispatcher extends Controller {
 		if (Security.isConnected()) {
 			talker = CommonUtil.loadCachedTalker(session);
 			newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
-			
 			rewardLetterFlag=ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
 		}
 		
@@ -415,8 +417,14 @@ public class ViewDispatcher extends Controller {
 		List<VideoBean> videoBeanList = VideoDAO.loadTopicVideo(topic.getId(),2);
 		/*Code for Video*/
 		
+		String cancerType = "";
+		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+		for (DiseaseBean diseaseBean : diseaseList) {
+			if(topic.getTitle().contains(diseaseBean.getName()))
+				cancerType =  diseaseBean.getName();		
+		}
 		render("Topics/viewTopic.html", talker, topic, activities, openConvosSaved,
-				popularConvos, trendingConvos, topicMentions,newsLetterFlag,rewardLetterFlag,videoBeanList);
+				popularConvos, trendingConvos, topicMentions,newsLetterFlag,rewardLetterFlag,videoBeanList,cancerType);
 	}
 	
 	public static void showTopicVideo(String name) {

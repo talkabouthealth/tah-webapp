@@ -85,5 +85,4 @@ public class DiseaseBean {
 	public void setUpdateFlag(String updateFlag) {
 		this.updateFlag = updateFlag;
 	}
-
 }

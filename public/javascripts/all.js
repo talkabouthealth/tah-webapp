@@ -93,9 +93,9 @@ function saveConvo(page) {
 	if (title === 'Enter your question or request here.') {
 		title = '';
 	}
-	var details = $("#newConvoDetails").val();
-	if (details === 'For example. Will the stage of disease, current medications, or patient history help to answer the question?') {
-		details = '';
+		var details = $("#newConvoDetails").val();
+		if (details === 'For example. Will the stage of disease, current medications, or patient history help to answer the question?') {
+			details = '';
 	}
 	//var topics = $("#newConvoTopics").val();
 	var topics = '';
@@ -135,42 +135,41 @@ function saveConvo(page) {
 	$.post("/conversations/create", 
 				{ type: type, title: title, details: details, topics: topics, fromPage: page, questionCategory: questionCategory,
 					parentConvoId: parentConvoId, ccTwitter: ccTwitter, ccFacebook: ccFacebook},
-			function(data) {
-				$("#convoCreateImage").hide();
-				if (type === "CONVERSATION") {
-					$("#startTalkBtn").click(function() {
-	  					openChat(data.tid);
-	  					$.post("/conversations/start}", {convoId: data.id});
-	  					hideAll();
-					});
-					$("#startChatText").val("");
-					$("#newTalkConfirm").show();
-				}
-				else {
-					$("#questionLink").attr("href", data.url).html(data.url);
-					$("#postQuestionText").val("");
-					$("#newQuestionConfirm").show();
-				}
-				$("#newConvoForm").hide();
-				
-				//add new item to the feeds
-				//exception: question items on LiveChats page
-				if (!(type === "QUESTION" && page === "liveTalks")) {
-					//alert(data.html);
-					if ($(".conversationsList")) {
-						$(data.html).prependTo($(".conversationsList"));
+				function(data) {
+					$("#convoCreateImage").hide();
+					if (type === "CONVERSATION") {
+						$("#startTalkBtn").click(function() {
+		  					openChat(data.tid);
+		  					$.post("/conversations/start}", {convoId: data.id});
+		  					hideAll();
+						});
+						$("#startChatText").val("");
+						$("#newTalkConfirm").show();
 					}
-					if ($("#communityFeedList")) {
-						$(data.html).prependTo($("#communityFeedList"));
+					else {
+						$("#questionLink").attr("href", data.url).html(data.url);
+						$("#postQuestionText").val("");
+						$("#newQuestionConfirm").show();
 					}
+					$("#newConvoForm").hide();
+					
+					//add new item to the feeds
+					//exception: question items on LiveChats page
+					if (!(type === "QUESTION" && page === "liveTalks")) {
+						//alert(data.html);
+						if ($(".conversationsList")) {
+							$(data.html).prependTo($(".conversationsList"));
+						}
+						if ($("#communityFeedList")) {
+							$(data.html).prependTo($("#communityFeedList"));
+						}
+					}
+	
+					$("#convoText").val("");
+					$("#newConvoTitle").val("");
+					$("#newConvoDetails").val("For example. Will the stage of disease, current medications, or patient history help to answer the question?");
 				}
-
-				$("#convoText").val("");
-				$("#newConvoTitle").val("");
-				$("#newConvoDetails").val("For example. Will the stage of disease, current medications, or patient history help to answer the question?");
-				//$("#newConvoTopics").val("");
-			}
-		);
+			);
 
 	return false;
 }
@@ -1083,7 +1082,6 @@ function makeFullSearchAjaxLoad(inputId) {
 
 //saveProfileComment(String profileTalkerId, String parentId, String text)
 function saveProfileThankYouComment(parentId, parentList, userName) {
-	//alert("saveProfileThankYouComment");
 	var parentListId = "";
 	if (parentList) {
 		parentListId = "#"+parentList+" ";

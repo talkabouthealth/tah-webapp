@@ -1,0 +1,494 @@
+#{ set currentPage = 'signup' /}
+#{extends 'main.html' /}
+	<script type="text/javascript" src="/public/javascripts/validation.js" ></script>
+	<script type="text/javascript" charset="utf-8">
+		$(document).ready(function() {
+			#{if flash.cancerType}
+				changeNewsletterCategory();
+			#{/if}
+			#{elseif session.get("cancerType")}
+				changeNewsletterCategory();
+			#{/elseif}
+			$('.personalfields').keypress(function(e){
+				//call submit on enter in any field
+				if (e.which == 13) {
+			       $('form#signup').submit();
+
+			       e.preventDefault();
+				   return false;
+			    }
+			});
+			$('#talkercategory').change(function(e){
+				changeNewsletterCategory();
+			});
+		});
+		function displayOptions(option) {
+			if(document.getElementById(option).style.display == 'none') {
+				document.getElementById(option).style.display = 'block';
+				document.getElementById(option + 'EC').src = "/public/images/expand.png";
+			} else {
+				document.getElementById(option).style.display = 'none';
+				document.getElementById(option + 'EC').src = "/public/images/collapse.png";
+			}
+		}
+		changeNewsletterCategory = function(){
+			var str = "";
+	        $("#talkercategory option:selected").each(function () {
+	              str = $(this).text();
+	        });
+	        str = $.trim(str);
+	        $("#categoryText").text(str);
+	        $("#newDieses").val(str);
+	        if(str != "") {
+	        	$("#diesesNewsletter").show();
+			} else {
+				$("#diesesNewsletter").hide();
+			}
+		}
+	</script>
+</head>
+<body>
+	<div id="top_container">
+		<div id="top">
+			#{ common/logo /}
+		</div>
+		<div id="innerbanner"></div>
+		<div id="bottom_container">
+<<<<<<< HEAD
+			<div class="blacktext2" id="innerheading">Become a TalkAboutHealth Member</div>
+=======
+			#{if flash.cancerType}
+				<div style="font-size: 19px;font-weight: bold;line-height:20px;width:590px;" id="innerheading">Thank you for subscribing to our newsletter! Join now to ask questions to leading medical professionals and connect with others like you.</div>
+			#{/if}
+			#{elseif flash.fromPage}
+				<div style="font-size: 19px;font-weight: bold;line-height:20px;width:590px;" id="innerheading">
+				Thank you for subscribing to our newsletters! 
+				<br/>Join now to ask questions to leading medical professionals and connect with others like you.
+				</div>
+			#{/elseif}
+			#{else}
+				<div class="blacktext2" id="innerheading">Sign Up Now</div>
+			#{/else}
+			<!-- Thank you for subscribing to our newsletters! 
+			Join now to ask questions to leading medical professionals and connect with others like you. -->
+			
+>>>>>>> mastergit
+			<div id="innermiddlearea">
+				<div id="signupleft">
+				#{form @Application.register() , id:'signup' }
+				#{if flash.fromPage}  
+					<input type="hidden" id="fromPage" name="fromPage" value="${flash.fromPage}" />
+				#{/if}
+					#{if flash.cancerType}
+					<input type="hidden" id="cancerType" name="cancerType" value="${flash.cancerType}" />
+					#{/if}	
+					#{if flash.from }
+					    <h6 class="blacktext14">
+					    	Welcome! You've gotten started by connecting your <i>${flash.from.toLowerCase().capFirst()}</i> account.
+					    	<br/>Your TalkAboutHealth account needs just a few more details. 
+					    	Please take a moment to provide them below
+					    </h6>
+					    <input type="hidden" id="from" name="from" value="${flash.from}" />
+					#{/if}
+					#{else}
+					    
+					    <!--<h6 class="blacktext14" style="text-align:left;">Save time entering your information</h6>-->
+						<!--<div class="socialicons2">
+							<!--<ul>
+								<!--<li style="padding-right: 30px; " ><a href="#" onclick="openFacebook()">
+										<img src="/public/images/joinusingfacebook.gif" width="150" height="22" border="0" />
+								</a></li>-->
+								<!--<li><a href="#" onclick="openTwitter()">
+										<img src="/public/images/joinusingtwitter.gif" width="150" height="22" border="0" />
+								</a></li>-->
+								<!-- <li><img src="/public/images/JoinwithGoogle.gif" width="150" height="22" />&nbsp;&nbsp;</li>
+							</ul>
+						</div>-->
+					#{/else}	
+					<div class="error">
+						#{ifErrors}
+						   <p>Validation failed! Please correct the following errors:</p>
+						   <br/>
+						   #{errors}
+						       <p>${error}</p>
+						   #{/errors}
+						#{/ifErrors}
+						#{if flash.contains("error") }
+							<p>${flash.error}</p>
+						#{/if}
+					</div>
+					<div id="signupleftarea">
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">Health Community</span></div>
+							<div class="personaltextfield">
+								<select size="1" name="talker.category" class="personalfields" id="talkercategory">
+							  		 <!-- <option value="" selected="selected">Select community</option>  -->  
+							  		 <option></option>
+							  		#{list items:diseaseList , as: 'disease'}
+									    <option value="${disease.name}"
+									   #{if disease.name.equals(flash['talker.category']) } selected #{/if}
+									   #{elseif disease.name.equals(flash.cancerType)} selected  #{/elseif}
+									   #{elseif disease.name.equals(session.get("cancerType"))} selected  #{/elseif}
+									    >${disease.name}</option>
+									#{/list}
+								</select>
+								<!-- <span class="blacktext14">Breast Cancer</span>  -->
+							</div>
+							
+							<div id="diesesNewsletter" style="float: left; padding: 5px 15px;display:none;">
+								<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
+									<input id="newDieses" name="newsletter.newsLetterType" type="checkbox" value="" checked="checked"/>
+									Weekly <span id="categoryText"></span> Newsletter<br/>
+									<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured answers, experts, tips &amp; latest news.)</font>
+								</div>
+							</div>
+						</div>
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">Patient, Physician, Caregiver, etc.</span></div>
+							<div class="personaltextfield">
+								<select size="1" name="talker.connection" class="personalfields" id="talker.connection">
+							  		<option selected value=''></option>
+							  		#{list items:models.TalkerBean.CONNECTIONS_ARRAY, as:'connection'}
+									    <option value="${connection}"
+									    #{if connection.equals(flash['talker.connection']) } selected #{/if} 
+									    >${connection}</option>
+									#{/list}
+								</select>
+							</div>
+						</div>
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">Username</span></div>
+							<div class="personaltextfield">
+								<input name="talker.userName" type="text" class="personalfields" id="talker.userName" 
+									value="${flash['talker.userName']}" />
+							</div>
+						</div>
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">Email</span></div>
+							<div class="personaltextfield">
+							  	<input name="talker.email" type="text" class="personalfields" id="talker.email" 
+									value="${flash['talker.email']}" />
+							</div>
+						</div>
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">Password</span></div>
+							<div class="personaltextfield">
+							  	<input name="talker.password" type="password" class="personalfields" id="talker.password" 
+									value="${flash['talker.password']}" />
+							</div>
+						</div>
+						#{if flash.captcha }
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">Please type the code bellow</span></div>
+							<div ><img src="@{Application.captcha(randomID)}" /></div>
+						</div>
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14"></span></div>
+							<div class="personaltextfield"><input class="personalfields" type="text" name="code" id="code" value="" />
+						   		 <input type="hidden" name="randomID" value="${randomID}" />
+							</div>
+						</div>
+						#{/if}
+						*{
+						
+						***** Hidden fields (for now) *******
+						
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">Confirm Password</span></div>
+							<div class="personaltextfield">
+							  	<input id="talker.confirmPassword" name="talker.confirmPassword" type="password" class="personalfields"  
+									value="" />
+							</div>
+						</div>
+						
+						Now it's added through popup on Home page or on Notifications page
+						<div class="signupmain">
+							<div class="signtag">
+								<span class="textgreylight12">TalkAboutHealth notifies you of conversations via IM.</span>
+							</div>
+							<div class="signuptextarea">
+								<span class="blacktext14" style="line-height:5px;">Select an IM Service</span><br/>
+								<span class="blacktext11">(not required)</span>
+							</div>
+							<div class="personaltextfield" >
+								<select id="talker.im" name="talker.im" class="personalfields">
+							  		<option selected value=''>Select an IM service</option>
+									#{list items: models.IMAccountBean.IM_SERVICES_MAP.keySet(), as:'imService'}
+									    <option value="${imService}" 
+									    #{if flash['talker.im'].equals(imService) } selected #{/if} 
+									    >${models.IMAccountBean.IM_SERVICES_MAP.get(imService)}</option>
+									#{/list}
+								</select>
+							</div>
+						</div>
+						<div class="signupmain">
+							<div class="signuptextarea">
+								<span class="blacktext14" style="line-height:5px;">IM Username</span><br/>
+								<span class="blacktext11">(not required)</span>
+							</div>
+							<div class="personaltextfield" >
+								<input name="talker.imUsername" id="talker.imUsername"  type="text" class="personalfields" 
+								  	value="${flash['talker.imUsername']}" />
+							</div>
+							<div class="signtag">
+								<span class="textgreylight12">Just the username, 
+								  		no need for the "@gmail.com" or "@yahoo.com" (i.e. joesmith)</span>
+							</div>
+						</div>
+						<div class="signupmain">
+							<div class="signuptextarea"><span class="blacktext14">Date of Birth</span></div>
+							<div class="personaltextfield">
+								<select size="1"  name="talker.dobMonth" id="talker.dobMonth" class="textarea2">
+									#{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
+									    <option value="${i_index-1}" 
+									    #{if flash['talker.dobMonth'].equals((i_index-1).toString()) } selected #{/if} 
+									    >${i}</option>
+									#{/list}
+								</select>
+								<select size="1" name="talker.dobDay" class="textarea2" id="talker.dobDay">
+							  		<option selected value='0'>Day</option>
+							  		#{list items:1..31, as:'i'}
+									    <option value="${i}"
+									    #{if flash['talker.dobDay'].equals(i.toString()) } selected #{/if} 
+									    >${i}</option>
+									#{/list}
+								</select>
+								<select size="1"  name="talker.dobYear" class="textarea2" id="talker.dobYear">
+							  		<option selected value='0'>Year</option>
+							  		#{list items:1991..1900, as:'i'}
+									    <option value="${i}"
+									    #{if flash['talker.dobYear'].equals(i.toString()) } selected #{/if} 
+									    >${i}</option>
+									#{/list}
+								</select>
+							</div>
+							<div class="signtag">
+								<span class="textgreylight12">You must be over 18 years old to use this service.</span>
+							</div>
+						</div>
+						}*
+						<div class="signupmain"></div>
+					</div>								
+					<div class="signdown">
+						#{if additionalSettings }
+						<div style="padding-left: 10px">
+							<div class="generalcheck" style="padding-top: 3px; padding-bottom:3px;">
+								<span class="blacktext16"><b>Optional:</b></span>
+							</div>
+							#{list items: additionalSettings.keySet(), as: 'key' }
+								<div class="generalcheck" style="padding-bottom:0px;">
+									<div class="preferencescheck">
+										<input type="checkbox" value="true" name="${flash.from}_${key}" style="margin-bottom: 0px;"
+											#{if flash[flash.from+'_'+key] } checked='checked' #{/if}
+										/>
+										<span class="blacktext14">&nbsp;${additionalSettings.get(key)}</span>
+									</div>
+								</div>
+							#{/list}
+						</div>
+						#{/if}
+						#{ifnot session.get("cancerType")}
+						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
+							#{if newsletter != null && newsletter.newsLetterType !=null}
+								#{if newsletter.newsLetterType.contains("workshop")}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="workshop" checked="checked"/>
+								#{/if}
+								#{else}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="workshop"/>
+								#{/else}
+							#{/if}
+							#{else}
+								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="workshop" checked="checked"/>
+							#{/else}
+							Daily Health Update<br/>
+							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured answers, experts, tips &amp; latest news.)</font>
+						</div>
+						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
+							#{if newsletter != null && newsletter.newsLetterType !=null}
+								#{if newsletter.newsLetterType.contains("Workshop summery")}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked="checked"/>
+								#{/if}
+								#{else}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery"/>
+								#{/else}
+							#{/if}
+							#{else}
+								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked="checked"/>
+							#{/else}
+							Daily Q&A Workshop Summary<br/>
+							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Daily answer summaries from our expert Q&A workshops.)</font>
+						</div>
+						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
+							#{if newsletter != null && newsletter.newsLetterType !=null}
+								#{if newsletter.newsLetterType.contains("Best of TalkAboutHealth")}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Best of TalkAboutHealth" checked='checked'>
+								#{/if}
+								#{else}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Best of TalkAboutHealth">
+								#{/else}
+							#{/if}
+							#{else}
+								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Best of TalkAboutHealth" checked='checked'> 
+							#{/else}
+							Best of TalkAboutHealth (weekly)<br/>
+							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(The week's best answers, news &amp; support.)</font>
+						</div>
+						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
+							#{if newsletter != null && newsletter.newsLetterType !=null}
+								#{if newsletter.newsLetterType.contains("TalkAboutHealth Rewards")}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TalkAboutHealth Rewards" checked="checked"/>
+								#{/if}
+								#{else}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TalkAboutHealth Rewards"/>
+								#{/else}
+							#{/if}
+							#{else}
+								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TalkAboutHealth Rewards" checked="checked"/>
+							#{/else}
+							TalkAboutHealth Benefits<br/>
+							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Custom health, wellness &amp; medical offers.)</font>
+						</div>
+						<h4 style="font-weight: bold; margin-top: 10px;">
+						<a href="javascript:displayOptions('newsLetterOption');" ><img id="newsLetterOptionEC" src="/public/images/collapse.png"/><span style="margin-left: 5px; vertical-align: top;">View All Newsletters</span></a></h4>
+						<div id="newsLetterOption" style="display: none;">
+							<div style="width: 100%; margin-bottom: 50px;">
+							<div style="width: 50%;  float: left;">
+								<h4 style="color: #000; font-weight: bold;">Disease Communities (weekly)</h4>
+								#{list items:diseaseList , as: 'disease'}
+								   <div id="checkboxarea2" style="padding-top: 2px;">
+								       #{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains(disease.name) }
+										<input id="newsletter" name="newsletter.newsLetterType" 
+											type="checkbox"  id="newsletter.newsLetterType" value="${disease.name}" checked="checked"/> 
+										#{/if}
+										#{else}
+											<input id="newsletter" name="newsletter.newsLetterType" 
+											type="checkbox"  id="newsletter.newsLetterType" value="${disease.name}"/>
+										#{/else}	
+										${disease.name}
+									</div>
+								#{/list}
+							</div>
+						</div>
+		          		<div class="cb"></div>
+			         </div>
+					<h4 style="font-weight: bold; margin-top: 10px;">
+					<a href="javascript:displayOptions('rewardsOptions');" ><img id="rewardsOptionsEC" src="/public/images/collapse.png"/><span style="margin-left: 5px; vertical-align: top;">View All Benefits</span></a></h4>
+						<div id="rewardsOptions" style="display: none;">
+							<div id="checkboxarea2" style="padding-top: 2px;">
+								#{if newsletter != null && newsletter.newsLetterType !=null}
+									#{if newsletter.newsLetterType.contains("Diet, Nutrition, Food, and Recipe Rewards")}
+										<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Diet, Nutrition, Food, and Recipe Rewards" checked="checked"/>
+									#{/if}
+									#{else}
+										<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Diet, Nutrition, Food, and Recipe Rewards"/>
+									#{/else}
+								#{/if}
+								#{else}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Diet, Nutrition, Food, and Recipe Rewards"/>
+								#{/else}
+								Diet, Nutrition, Food and Recipe Benefits
+							</div>
+							<div id="checkboxarea2" style="padding-top: 2px;">
+								#{if newsletter != null && newsletter.newsLetterType !=null}
+									#{if newsletter.newsLetterType.contains("Fitness and Exercise Rewards")}
+										<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Fitness and Exercise Rewards" checked="checked"/>
+									#{/if}
+									#{else}
+										<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Fitness and Exercise Rewards"/>
+									#{/else}
+								#{/if}
+								#{else}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Fitness and Exercise Rewards"/>
+								#{/else}
+								Fitness and Exercise Benefits
+							</div>
+							
+							<div id="checkboxarea2" style="padding-top: 2px;">
+								#{if newsletter != null && newsletter.newsLetterType !=null}
+									#{if newsletter.newsLetterType.contains("Skin and Beauty Rewards")}
+										<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Skin and Beauty Rewards" checked="checked"/>
+									#{/if}
+									#{else}
+										<input id="newsletter" name="newsletter.newsLetterType"	type="checkbox" id="newsletter.newsLetterType" value="Skin and Beauty Rewards"/>
+									#{/else}
+								#{/if}
+								#{else}
+									<input id="newsletter" name="newsletter.newsLetterType"	type="checkbox" id="newsletter.newsLetterType" value="Skin and Beauty Rewards"/>
+								#{/else}
+								Skin and Beauty Benefits
+							</div>
+							<div id="checkboxarea2"  style="padding-bottom: 10px;padding-top: 2px;">
+								#{if newsletter != null && newsletter.newsLetterType !=null}
+									#{if newsletter.newsLetterType.contains("Pharmaceutical Rewards")}
+										<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Pharmaceutical Rewards" checked="checked"/>
+									#{/if}
+									#{else}
+										<input id="newsletter" name="newsletter.newsLetterType"	type="checkbox" id="newsletter.newsLetterType" value="Pharmaceutical Rewards"/>
+									#{/else}
+								#{/if}
+								#{else}
+									<input id="newsletter" name="newsletter.newsLetterType"	type="checkbox" id="newsletter.newsLetterType" value="Pharmaceutical Rewards"/>
+								#{/else}
+								Pharmaceutical Benefits<br/>
+								<font size="2px;" style="font-weight: normal;padding-left: 23px;">Relevant offers and survey opportunities based on disease and more.</font>
+							</div>
+							<div id="checkboxarea2" style="padding-bottom: 35px;padding-top: 2px;">
+								#{if newsletter != null && newsletter.newsLetterType !=null}
+									#{if newsletter.newsLetterType.contains("Family Rewards")}
+										<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Family Rewards" checked="checked"/>
+									#{/if}
+									#{else}
+										<input id="newsletter" name="newsletter.newsLetterType"	type="checkbox" id="newsletter.newsLetterType" value="Family Rewards"/>
+									#{/else}
+								#{/if}
+								#{else}
+									<input id="newsletter" name="newsletter.newsLetterType"	type="checkbox" id="newsletter.newsLetterType" value="Family Rewards"/>
+								#{/else}
+								Family Benefits <br/>
+								<font size="2px;" style="font-weight: normal;padding-left: 23px;">Maternity, baby and family offers.</font>
+							</div>
+						</diV>
+						#{/ifnot}
+						<div id="checkboxarea2" style="padding-top: 30px;  font-weight: bold; color: #000000;">
+							<input id="privacyagree" name="privacyagree" 
+								type="checkbox" checked="checked" #{if flash['privacyagree']} checked #{/if} /> 
+							By signing up I agree to the TalkAboutHealth 
+							<a href="#" 
+								onclick="window.open('@{Static.tos()}', 'TermsOfService','width=1000,height=550,resizable=1,scrollbars=1');" 
+								class="bluetext14">Terms Of Service</a> and 
+							<a href="#" 
+								onclick="window.open('@{Static.privacy()}', 'PrivacyPolicy','width=1000,height=550,resizable=1,scrollbars=1');" 
+								class="bluetext14">Privacy Policy</a>.
+							<br />
+	   						<strong>Note:</strong>
+	   						<span style="font-weight: normal;">Your information will remain safe and private.</span>
+						</div>
+						
+						<div class="signupbutton"  style="padding-top: 30px;">
+							<a href="#" onclick="validateFormOnSubmit(document.signup);">
+								<img src="/public/images/signupbutton.gif" border="0" width="126" height="46" />
+							</a>
+						</div>
+						<div id="alreadyuser" style="padding-top: 30px;">
+							<span class="blacktext14">Already have an account?&nbsp;</span> 
+							<a href="@{Secure.login()}" class="bluetext16">Sign in</a>
+						</div>
+						<div id="checkboxarea2" style="padding-top: 20px; height: auto;">
+							<span class="blacktext14"><strong>Note:</strong> All content on this site is informational and not a substitute for professional medical advice. 
+							Always seek the advice of your physician or other qualified health provider with questions regarding your health.<br /><br />
+ 							<strong>Note:</strong> Health care professionals (i.e. physicians, pharmacists, nurses, etc.) are members of the TalkAboutHealth Community and do participate by sharing insights and knowledge.  Just like any other member, their communications are informational and are not personal medical advice.</span>
+						</div>
+					</div>
+				#{/form}
+				</div>
+				<div id="signupright">
+					<div class="blacktext20" style="text-align:left;">Or save time by:</div><br/>
+					<div class="socialicons2">
+								<a href="#" onclick="openFacebook()"><img src="/public/images/joinusingfacebook.gif" width="150" height="22" border="0" /></a><br/><br/>
+								<a href="#" onclick="openTwitter()"><img src="/public/images/joinusingtwitter.gif" width="150" height="22" border="0" /></a>
+						</div>
+					#{common/whyLoveTAHBox /}
+				</div>
+			</div>
+		</div>
+	</div>

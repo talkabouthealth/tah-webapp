@@ -2,54 +2,69 @@ package util.oauth;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringUtils;
 
+import models.ServiceAccountBean;
+import models.TalkerBean;
+import models.ServiceAccountBean.ServiceType;
 import play.Logger;
 import play.libs.WS;
 import play.libs.WS.HttpResponse;
 import play.libs.WS.WSRequest;
-import play.mvc.Http.Request;
 import play.mvc.Scope.Session;
-
-import logic.TalkerLogic;
-import models.ServiceAccountBean.ServiceType;
-import models.ServiceAccountBean;
-import models.TalkerBean;
 import util.CommonUtil;
-import util.TwitterUtil;
 import dao.ApplicationDAO;
 import dao.TalkerDAO;
 
 
 public class FacebookOAuthProvider implements OAuthServiceProvider {
 	
+	/*
+	Live : TalkAboutHealth
+	*/
 	private static final String APP_ID = "131545373528131";
 	private static final String APP_SECRET = "0620bead67e2ffa4e9e46f60b3376dec";
-	private static final String CALLBACK_URL =
-		"talkabouthealth.com/oauth/callback?type=facebook";
+	private static final String CALLBACK_URL = "talkabouthealth.com/oauth/callback?type=facebook";
 	
-// Test settings	
-//	public static final String APP_ID = "126479497379490";
-//	public static final String APP_SECRET = "cd4606efec03ea8c5bd9ffb9d49000ff";
-//	public static final String CALLBACK_URL =
-//		"kan.dev.com:9000/oauth/callback?type=facebook";
+	/*
+	Live : TalkBreastCancer
+	*/
+	private static final String TBC_APP_ID = "493017477397828";
+	private static final String TBC_APP_SECRET = "377e78f1ec32db46795c182d1b3cdf3a";
+	private static final String TBC_CALLBACK_URL = "talkbreastcancer.com/oauth/callback?type=facebook";
+
+	/*Local
+	private static final String APP_ID = "270834789694900";
+	private static final String APP_SECRET = "f9e5cd87d46afd8ff378a8aa7e2ab308";
+	private static final String CALLBACK_URL = "localhost:9000/oauth/callback?type=facebook";
+	*/
 	
+	private String cancerType;
+
+	public FacebookOAuthProvider() {
+	}
+
+	public FacebookOAuthProvider(String csrType) {
+		cancerType = csrType;
+	}
+
 	public String getAuthURL(Session session, boolean secureRequest) {
 		String authURL = null;
 		try {
 			String callbackURL = (secureRequest ? "https://" : "http://");
-			callbackURL = callbackURL+CALLBACK_URL;
-			
-			authURL = "https://graph.facebook.com/oauth/authorize?" +
-				"client_id="+APP_ID+"&redirect_uri="+URLEncoder.encode(callbackURL, "UTF-8")+
-				"&scope=email,publish_stream,offline_access";
+			if(StringUtils.isNotBlank(cancerType) && "Breast Cancer".equals(cancerType)) {
+				callbackURL = callbackURL+TBC_CALLBACK_URL;
+				authURL = "https://graph.facebook.com/oauth/authorize?" + "client_id="+TBC_APP_ID+"&redirect_uri="+URLEncoder.encode(callbackURL, "UTF-8") +
+					"&scope=email,publish_stream,offline_access";
+			} else {
+				callbackURL = callbackURL+CALLBACK_URL;
+				authURL = "https://graph.facebook.com/oauth/authorize?" + "client_id="+APP_ID+"&redirect_uri="+URLEncoder.encode(callbackURL, "UTF-8") +
+					"&scope=email,publish_stream,offline_access";	
+			}
 		} catch (UnsupportedEncodingException e) {
 			Logger.error(e, "");
 		}
@@ -65,17 +80,13 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 		
 		String accessToken = loadAccessToken(secureRequest, code);
 		session.put("token", accessToken);
-		
+
 		//load user info, parse Facebook id and email from reply
 		HttpResponse res = WS.url("https://graph.facebook.com/me?access_token=%s", accessToken).get();
 		String responseText = res.getString();
 		Logger.info("---------- FACEBOOK INFO --------------");
 		Logger.info(responseText);
-		
-		
-		//{"id":"745278081","name":"Murray Nathan Jones","first_name":"Murray","middle_name":"Nathan","last_name":"Jones","link":"http:\/\/www.facebook.com\/murraynathaniel","birthday":"05\/20\/1975","gender":"male","email":"murrayjones\u0040gmail.com","timezone":-5,"locale":"en_US","verified":true,"updated_time":"2011-01-10T17:47:23+0000"}
-		//{"id":"100001842920779","name":"Osya Osezno","first_name":"Osya","last_name":"Osezno","link":"http:\/\/www.facebook.com\/profile.php?id=100001842920779","birthday":"01\/01\/1986","location":{"id":"106078429431815","name":"London, United Kingdom"},"gender":"female","email":"ira_osezno\u0040mail.ru","timezone":2,"locale":"en_US"}
-		
+
 		String accountId = null;
 		String userEmail = null;
 		if (responseText.startsWith("{")) {
@@ -106,22 +117,33 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 	}
 	
 	private String loadAccessToken(boolean secureRequest, String code) {
+
 		String callbackURL = (secureRequest ? "https://" : "http://");
-		callbackURL = callbackURL+CALLBACK_URL;
-		
-		//HttpResponse res =  
-		//	WS.url("https://graph.facebook.com/oauth/access_token" +
-		//			"?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s", APP_ID, callbackURL, APP_SECRET, code).get();
-		WSRequest A = WS.url("https://graph.facebook.com/oauth/access_token" +
-						"?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s", APP_ID, callbackURL, APP_SECRET, WS.encode(code));
+		WSRequest A = null;
+
+		if(StringUtils.isNotBlank(cancerType) && "Breast Cancer".equals(cancerType)) {
+			callbackURL = callbackURL+TBC_CALLBACK_URL;
+			A = WS.url("https://graph.facebook.com/oauth/access_token?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s",TBC_APP_ID, callbackURL, TBC_APP_SECRET, WS.encode(code));
+		} else {
+			callbackURL = callbackURL+CALLBACK_URL;
+			A = WS.url("https://graph.facebook.com/oauth/access_token?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s",APP_ID, callbackURL, APP_SECRET, WS.encode(code));
+		}
+
 		HttpResponse res = A.get();
 		String responseText = res.getString();
-		
-		//returned string is:
-		//access_token=...token...
+
+		//returned string is: access_token=...token...
 		String accessToken = null;
-		if (responseText.startsWith("access_token")) {
-			accessToken = responseText.substring(13);
+		if (responseText.startsWith("access_token")) { //String index out of range: -14
+			if(StringUtils.isNotBlank(cancerType) && "Breast Cancer".equals(cancerType)) {
+				try{
+					accessToken = responseText.substring(13,responseText.lastIndexOf('&'));
+				} catch(ArrayIndexOutOfBoundsException e){
+					accessToken = responseText.substring(13);
+				}
+			} else {
+				accessToken = responseText.substring(13);
+			}
 		}
 		return accessToken;
 	}
@@ -210,5 +232,4 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 		    return "/application/tosAccept";
 		}
 	}
-
 }

@@ -1,0 +1,26 @@
+<script type="text/javascript" src="http://gd.geobytes.com/gd?after=-1&variables=GeobytesLocationCode,GeobytesCode,GeobytesInternet,GeobytesCity,sGeobytesLatitude,sGeobytesLongitude"></script>
+<script type="text/javascript">
+	if(typeof(sGeobytesLocationCode)=="undefined" || typeof(sGeobytesCode)=="undefined" || typeof(sGeobytesInternet)=="undefined" || typeof(sGeobytesCity)=="undefined") {
+		var sGeobytesLocationCode="unknown";
+		var sGeobytesCode="unknown";
+		var sGeobytesInternet="unknown";
+		var sGeobytesCity="unknown";
+	}
+	if(typeof(sGeobytesLatitude)=="undefined" || typeof(sGeobytesLongitude)=="undefined") {
+		var sGeobytesLatitude="0"
+		var sGeobytesLongitude="0";
+	}
+</script>
+<script type="text/javascript">
+var recId = '';
+$(document).ready(function() {
+	var location = window.location + "";
+	var ur = encodeURIComponent(window.location);
+	var rf = encodeURIComponent(document.referrer);
+	var cPage = '${_cpage}';
+	var newPageName = location.substring(location.lastIndexOf('/') + 1);
+	if(cPage == '')
+		cPage = newPageName;
+	$.post("/ActivityLogController/log",{ ref: rf, page: ur, pageType: cPage, geoLcode: sGeobytesLocationCode, geoLcountry:sGeobytesInternet, geoLstate:sGeobytesCode, geoLcity:sGeobytesCity,geoLat: sGeobytesLatitude, geoLong: sGeobytesLongitude },function(data) { /*alert(recId);*/ });
+});
+</script>

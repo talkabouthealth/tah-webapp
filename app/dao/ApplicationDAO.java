@@ -5,6 +5,7 @@ import static util.DBUtil.getCollection;
 import static util.DBUtil.getString;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -15,10 +16,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 
 import logic.FeedsLogic;
 import logic.TalkerLogic;
+import models.ConversationBean;
 import models.NewsLetterBean;
 import models.TalkerBean;
 import play.Logger;
@@ -81,8 +84,8 @@ public class ApplicationDAO {
 	/**
 	 * Active users - users logged in after given time (or 1 month by default)
 	 */
-	public static List<TalkerBean> getActiveTalkers(Date afterTime) {
-		DBCollection loginsColl = getCollection(LOGIN_HISTORY_COLLECTION);
+	public static List<TalkerBean> getActiveTalkers(Date afterTime,String cancerType) {
+		/*DBCollection loginsColl = getCollection(LOGIN_HISTORY_COLLECTION);
 		
 		loginsColl.ensureIndex(new BasicDBObject("log_time", 1));
 		
@@ -91,30 +94,74 @@ public class ApplicationDAO {
 			monthBeforeNow.add(Calendar.DAY_OF_MONTH, -30);
 			afterTime = monthBeforeNow.getTime();
 		}
+
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start();//.add("log_time", new BasicDBObject("$gt", afterTime));
+
+		if(StringUtils.isNotBlank(cancerType)) {
+			List<String> cat = new ArrayList<String>();
+			cat.add(cancerType);
+			cat.add(null);
+			cat.add(ConversationBean.ALL_CANCERS);
+			queryBuilder.add("$or", 
+				Arrays.asList(
+						new BasicDBObject("otherCategories", new BasicDBObject("$in", cat)),
+						new BasicDBObject("category", new BasicDBObject("$in", cat))
+				)
+			);
+		}
 		
-		DBObject query = BasicDBObjectBuilder.start().add("log_time", new BasicDBObject("$gt", afterTime)).get();
-	
-		
-		
+		DBObject query = queryBuilder.get();
+		System.out.println("Active talker: " + query);
+
 		List<DBObject> loginsDBList = new ArrayList<DBObject>();//loginsColl.find(query).sort(new BasicDBObject("log_time", -1)).toArray();
-		DBCursor loginCur=loginsColl.find(query).sort(new BasicDBObject("log_time", -1));
+		DBCursor loginCur=loginsColl.find(query).sort(new BasicDBObject("log_time", -1)).limit(500);
 		while(loginCur.hasNext()){
 			loginsDBList.add(loginCur.next());
 		}
-		/*DBCursor loginCur=loginsColl.find(query).sort(new BasicDBObject("log_time", -1));
-		for(int i=0;i<loginCur.size();i++){
-			loginsDBList.add(loginCur.next());
-		}*/
-		
+		int countToShow = 0;
 		
 		List<TalkerBean> activeTalkers = new ArrayList<TalkerBean>();
 		for (DBObject loginDBObject : loginsDBList) {
+			if(countToShow > 50)
+				break;
 			DBRef talkerDBRef = (DBRef)loginDBObject.get("uid");
 			TalkerBean talker = new TalkerBean();
 			talker.setId(talkerDBRef.getId().toString());
 			if (talker != null &&  !activeTalkers.contains(talker)) {
 				talker = TalkerDAO.parseTalker(talkerDBRef);
 				if (talker != null &&  !talker.isSuspended() && !talker.isDeactivated()) {
+					activeTalkers.add(talker);
+					countToShow++;
+				}
+			}
+		}
+		*/
+		//db.talkers.find({},{log_time:1,uname:1}).sort({log_time:-1}).limit(50);
+		List<TalkerBean> activeTalkers = new ArrayList<TalkerBean>();
+		DBCollection loginsColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start();
+		if(StringUtils.isNotBlank(cancerType)) {
+			List<String> cat = new ArrayList<String>();
+			cat.add(cancerType);
+			cat.add(null);
+			cat.add(ConversationBean.ALL_CANCERS);
+			queryBuilder.add("$or", 
+				Arrays.asList(
+						new BasicDBObject("otherCategories", new BasicDBObject("$in", cat)),
+						new BasicDBObject("category", new BasicDBObject("$in", cat))
+				)
+			);
+		}
+		queryBuilder.add("suspended", false); 
+		DBObject fields = TalkerDAO.getBasicTalkerFields();
+		DBCursor talkerCur=loginsColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("log_time", -1)).limit(50);
+		while(talkerCur.hasNext()) {
+			DBObject talkerDBObject = talkerCur.next();
+			TalkerBean talker = new TalkerBean();
+			talker.setId(getString(talkerDBObject, "_id"));
+			if (!activeTalkers.contains(talker)) {
+				talker.parseBasicFromDB(talkerDBObject);
+				if (!talker.isSuspended()) {
 					activeTalkers.add(talker);
 				}
 			}
@@ -124,34 +171,50 @@ public class ApplicationDAO {
 	
 	/**
 	 * New users - users signed up in last 2 weeks
+	 * Updating logic to show latest users 
 	 */
-	public static List<TalkerBean> getNewTalkers() {
+	public static List<TalkerBean> getNewTalkers(String cancerType) {
 		//{"_id":{$gt : ObjectId("4e6efaff36882ba357358498")}}
 		DBCollection loginsColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
 		
 		Calendar twoWeeksBeforeNow = Calendar.getInstance();
 		twoWeeksBeforeNow.add(Calendar.WEEK_OF_YEAR, -2);
 		DBObject query = null;
-		query = BasicDBObjectBuilder.start().add("timestamp", new BasicDBObject("$gt", twoWeeksBeforeNow.getTime())).get();
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start();//.add("timestamp", new BasicDBObject("$gt", twoWeeksBeforeNow.getTime()));
 
+		if(StringUtils.isNotBlank(cancerType)){
+			List<String> cat = new ArrayList<String>();
+			cat.add(cancerType);
+			cat.add(ConversationBean.ALL_CANCERS);
+			queryBuilder.add("$or", 
+				Arrays.asList(
+						new BasicDBObject("otherCategories", new BasicDBObject("$in", cat)),
+						new BasicDBObject("category", new BasicDBObject("$in", cat))
+				)
+			);
+		}
+		query = queryBuilder.get();
 		DBObject fields = TalkerDAO.getBasicTalkerFields();
 		
-		
+		queryBuilder.add("suspended", false); 
 		List<DBObject> talkersDBList =new ArrayList<DBObject>();// loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).toArray();
-		DBCursor talkerCur=loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1));
+		DBCursor talkerCur=loginsColl.find(query, fields).sort(new BasicDBObject("timestamp", -1)).limit(50);
 		while(talkerCur.hasNext()){
 			talkersDBList.add(talkerCur.next());
 		}
-		
-		
+
+		//int countToShow = 0;
 		List<TalkerBean> newTalkers = new ArrayList<TalkerBean>();
 		for (DBObject talkerDBObject : talkersDBList) {
+			//if(countToShow > 50)
+			//	break;
 			TalkerBean talker = new TalkerBean();
 			talker.setId(getString(talkerDBObject, "_id"));
 			if (!newTalkers.contains(talker)) {
 				talker.parseBasicFromDB(talkerDBObject);
 				if (!talker.isSuspended()) {
 					newTalkers.add(talker);
+					//countToShow++;
 				}
 			}
 		}
@@ -214,24 +277,26 @@ public class ApplicationDAO {
 	 * New users/Experts - users signed up or logged in date descending order
 	 * Using to 20 users only for the list on profile page for recommendations.
 	 */
-	public static List<DBObject> loadTalkers(TalkerBean talkerBean,boolean memberFlag,String afterActionId) {
+	public static List<DBObject> loadTalkers(TalkerBean talkerBean,boolean memberFlag,String afterActionId, String cancerType) {
 		DBCollection loginsColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
 		List<String> list = TalkerBean.PROFESSIONAL_CONNECTIONS_LIST;
 		BasicDBList basicDBList = new BasicDBList();
 
 		//Commented code to display all category users in similar members and experts
-		//List<String> cat = FeedsLogic.getCancerType(talkerBean);
+		//
 		
 		for (String element : list) {
 			basicDBList.add(element);
 		}
 		DBObject query = null;
+		BasicDBObjectBuilder queryBuilder;
+		
 		
 		//Using when refresh members
 		if(afterActionId != null){
 			Date date = getCreationDate(afterActionId);
 			if(memberFlag){
-				query = BasicDBObjectBuilder.start()
+				queryBuilder = BasicDBObjectBuilder.start()
 					.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList ))
 					//.add("category", new BasicDBObject("$in", cat) )
 					.add("timestamp", new BasicDBObject("$lt", date) )
@@ -239,41 +304,75 @@ public class ApplicationDAO {
 					.add("deactivated", new BasicDBObject("$ne", true))
 					.add("suspended",new BasicDBObject("$ne", true))
 					.add("uname",new BasicDBObject("$ne", "admin"))
-					.add("_id",new BasicDBObject("$ne",talkerBean.getId()))
-					.get();
+					.add("_id",new BasicDBObject("$ne",talkerBean.getId()));
+					//.get();
 			}else{
-				query = BasicDBObjectBuilder.start()
+				queryBuilder = BasicDBObjectBuilder.start()
 				.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList ))
 				//.add("category", new BasicDBObject("$in", cat) )
 				.add("timestamp", new BasicDBObject("$lt", date) )
 				.add("deactivated", new BasicDBObject("$ne", true))
 				.add("suspended",new BasicDBObject("$ne", true))
 				.add("uname",new BasicDBObject("$ne", "admin"))
-				.add("_id",new BasicDBObject("$ne",talkerBean.getId()))
-				.get();
+				.add("_id",new BasicDBObject("$ne",talkerBean.getId()));
+				//.get();
 			}
 		}else{
 			if(memberFlag){
-				query = BasicDBObjectBuilder.start()
+				queryBuilder = BasicDBObjectBuilder.start()
 					.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList ))
 					//.add("category", new BasicDBObject("$in", cat) )
 					.add("deactivated", new BasicDBObject("$ne", true))
 					.add("suspended",new BasicDBObject("$ne", true))
 					.add("uname",new BasicDBObject("$ne", "admin"))
 					.add("_id",new BasicDBObject("$ne",talkerBean.getId()))
-					.add("connection_verified",true)
-					.get();
+					.add("connection_verified",true);
+					//.get();
 			}else{
-				query = BasicDBObjectBuilder.start()
+				queryBuilder = BasicDBObjectBuilder.start()
 					.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList ))
 					.add("deactivated", new BasicDBObject("$ne", true))
 					.add("suspended",new BasicDBObject("$ne", true))
 					.add("uname",new BasicDBObject("$ne", "admin"))
-					.add("_id",new BasicDBObject("$ne",talkerBean.getId()))
+					.add("_id",new BasicDBObject("$ne",talkerBean.getId()));
 					//.add("category", new BasicDBObject("$in", cat) )
-					.get();
+					//.get();
 			}
 		}
+		if(cancerType != null) {
+			List<String> cat = new ArrayList<String>(2);
+			cat.add(ConversationBean.ALL_CANCERS);
+			cat.add(cancerType);
+			queryBuilder.add("$or", 
+				Arrays.asList(
+					new BasicDBObject("other_disease_categories", new BasicDBObject("$in", cat)),
+					new BasicDBObject("category", new BasicDBObject("$in", cat))
+				)
+			);
+		}
+		
+		query = queryBuilder.get();
+		/*
+		//If member size is zero then again displays members from latest date
+		if(newTalkers.size()==0){
+						if(memberFlag){
+							query = BasicDBObjectBuilder.start()
+								.add("connection",new BasicDBObject(QueryOperators.IN, basicDBList ))
+								//.add("category", new BasicDBObject("$in", cat) )
+								.add("connection_verified",true)
+								.get();
+						}else{
+							query = BasicDBObjectBuilder.start()
+								.add("connection",new BasicDBObject(QueryOperators.NIN, basicDBList ))
+								//.add("category", new BasicDBObject("$in", cat) )
+								.get();
+						}
+						
+			fields = TalkerDAO.getBasicTalkerFields();
+			talkersDBList = loginsColl.find(query, fields).limit(3).sort(new BasicDBObject("timestamp", -1)).toArray();
+			
+			newTalkers.addAll(getTalkers(talkersDBList,talkerBean));
+		}*/
 		
 		DBObject fields = TalkerDAO.getBasicTalkerFields();
 		List<DBObject> talkersDBList = new ArrayList<DBObject>();// loginsColl.find(query, fields).limit(20).sort(new BasicDBObject("timestamp", -1)).toArray();
@@ -288,7 +387,7 @@ public class ApplicationDAO {
 	 * 
 	 * 
 	 */
-	public static List<TalkerBean> getTalkersInOrder(TalkerBean talkerBean,boolean memberFlag,String afterActionId){
+	public static List<TalkerBean> getTalkersInOrder(TalkerBean talkerBean,boolean memberFlag,String afterActionId, String cancerType){
 		List<TalkerBean> talkerList=new ArrayList<TalkerBean>();
 		boolean canAdd = false;
 		if(talkerBean.getFollowingList().size() > 100){
@@ -317,7 +416,7 @@ public class ApplicationDAO {
 			//int limitLoops = 0;
 			int count = 0;
 			while(true){
-				 talkersDBList=loadTalkers(talkerBean,memberFlag,afterActionId);
+				talkersDBList=loadTalkers(talkerBean,memberFlag,afterActionId,cancerType);
 				talkerList.addAll(getTalkers(talkersDBList,talkerBean,talkerList.size()));
 				
 				if(talkerList.size()>=TALKERS_PER_PAGE )//|| ++limitLoops > 5) 
@@ -354,13 +453,13 @@ public class ApplicationDAO {
 				if (!(talkerBean.getFollowingList().contains(talker)) && !talkerBean.equals(talker)){
 					DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talker.getId());
 					query = BasicDBObjectBuilder.start().add("uid", talkerRef).get();
-					
+
 					List<DBObject> loginTime= new ArrayList<DBObject>();//loginHistoryCollection.find(query).toArray();
 					DBCursor loginCur=loginHistoryCollection.find(query);
 					while(loginCur.hasNext()){
 						loginTime.add(loginCur.next());
 					}
-					
+
 					if(loginTime.size()>=2){
 						DBObject logTimeObj = loginTime.get(0);
 						talker.setRegDate((Date)logTimeObj.get("log_time"));
@@ -368,12 +467,10 @@ public class ApplicationDAO {
 						size++;
 						if(size>=TALKERS_PER_PAGE)
 							break;
-
 					}
 				}
 			}
 		}
-		
 		//Collections.sort(newTalkers, new TalkerBean());
 		return newTalkers;
 	}
@@ -393,9 +490,10 @@ public class ApplicationDAO {
 			return true;
 		}
 		
+		DBObject query = new BasicDBObject("name", Pattern.compile("^"+userName+"$" , Pattern.CASE_INSENSITIVE));
+
 		DBCollection namesColl = getCollection(NAMES_COLLECTION);
 		//DBObject query = new BasicDBObject("name", userName);
-		DBObject query = new BasicDBObject("name", Pattern.compile("^"+userName+"$",Pattern.CASE_INSENSITIVE));
 		//query.put("name", uNameL);
 		//query.put("name", uNameU);
 		return namesColl.findOne(query) != null;
@@ -492,9 +590,7 @@ public class ApplicationDAO {
 	/* ----------------- Newsletter Signup action --------------- */
 	
 	public static void addToNewsLetter(String email, String[] newsLetterType) {
-
 		DBCollection waitingColl = getCollection(NEWSLETTER_COLLECTION);
-
 		DBObject waitingDBObject = BasicDBObjectBuilder.start()
 			.add("email", email)
 			.add("newsletter_type", newsLetterType)

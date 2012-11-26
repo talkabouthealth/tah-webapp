@@ -1,0 +1,86 @@
+#{extends 'static.html' /}
+#{set pageHeader:'About us' /}
+
+<<<<<<< HEAD
+
+<span class="blacktextgrey18">TalkAboutHealth is a social learning and support community for people dealing with chronic health conditions.  We are on a mission to help people diagnosed with a chronic disease feel more confident and in control of their health by providing guidance through the disease journey and individualized information about treatment options.<br/><br />  
+
+With over 3,400 answers and 300 videos, TalkAboutHealth aims to have the most comprehensive and highest quality library of answers and information.  We achieve this goal by collecting and organizing the knowledge and expertise of the world's leading medical professionals who are actually doing the research and caring for patients everyday.<br/><br />
+
+Keep up to date with the latest news, best answers, and featured experts through our <a href="/explore/newsletter" target="_blank">daily and weekly emails.</a><br/><br />
+
+=======
+<span class="blacktextgrey20">Free world class health information shared by the world's leading medical professionals. <br/><br />
+		
+<span class="blacktextgrey18">TalkAboutHealth is a patient education and support platform that collects and organizes the knowledge and experience of the world's leading medical professionals and trained supporters.  <br/><br />With over 3,400 answers and 300 videos, we are on a mission to improve patient education and support to help you be more confident in your health decisions and communicate better with your doctors.  <br/><br />Keep up to date with the latest news, best answers, and featured experts through our <a href="/explore/newsletter" target="_blank">daily and weekly emails.</a><br/><br />
+>>>>>>> mastergit
+<span class="blacktextgrey14">Whether you are just diagnosed, a long-term survivor, or a caregiver, TalkAboutHealth is a great place to find answers from leading experts, stay informed of the latest developments with your disease, and learn from survivors who have been through it before.  </span><br/>
+
+<span class="blacktextgrey14"><br />We are a welcoming and caring community that has come together to meet, share, and learn with each other. We welcome patients, families, caregivers, survivors, professionals, and organizations.<br/><br/>
+
+	<div id="dashedborder" style="width:590px;"></div><br /></span>
+<span class="blacktextgrey16"><strong>What makes us different:</strong></span>
+<span class="blacktextgrey14"><br /><br />
+	
+<strong>1) Relevant, helpful, and accurate health answers and information.</strong>  Every question on TalkAboutHealth should be the best resource possible, covering all points of view and perspectives.  To accomplish this goal, we find and notify the right experts and trained survivors to answer questions.  Answers come directly from experts performing the research and caring for patients every day in surgery, oncology, psychiatry, screening, prevention, and more.  We then curate and organize the content and answers to make them easy to find and accessible to everyone.<br /><br />
+
+<strong>2) The right information to the right people, at the right time.</strong>  We organize and curate all of our content so answers are easy to find, and we guide patients to relevant information based on their disease, stage, treatments, side effects, and more.  We notify users of answers to their questions and other relevant information via e-mail, Facebook, and Twitter.  <br /><br />
+
+<strong>3) Connect the right people to support each other.</strong>  We match patients and caregivers with experienced peers, survivors, and experts who can help.  Members are matched based on their disease, stage, treatments, cultural background, demographics, and more. <br /><br />
+
+	<div id="dashedborder" style="width:590px;"></div><br /></span>
+<span class="blacktextgrey16"><strong>Our vision</strong></span>
+<span class="blacktextgrey14"><br /><br />
+	A world where all patients, caregivers, and medical professionals have access to the health support they need, when they need it.<br /><br />
+	<div id="dashedborder" style="width:590px;"></div><br /></span>
+<span class="blacktextgrey16"><strong>Our mission</strong></span>
+<span class="blacktextgrey14"><br /><br />
+	To improve people’s lives by connecting them with the right people and information they need for support in managing their health.  
+<br /><br />
+	<div id="dashedborder" style="width:590px;"></div><br /></span>
+<span class="blacktextgrey16"><strong>Our sharing philosophy</strong></span>
+<span class="blacktextgrey14"><br /><br />
+	At TalkAboutHealth we believe in sharing our experiences and knowledge. 
+	Our purpose is to create a community to help each other and expand our collective knowledge. 
+	That's why all content is collected, organized, and made available for the benefit and convenience of everyone. 
+	<br /><br /><div id="dashedborder" style="width:590px;"></div><br /></span>
+<span class="blacktextgrey16"><strong>What TalkAboutHealth can do for you</strong></span>
+<span class="blacktextgrey14"><br /><br />
+	- Feel confident making decisions after getting answers from leading experts.<br />
+	- Take control of your care after learning from survivors and experienced peers.<br />
+	- Know that you are not alone after connecting with others like you.<br />
+	- Have hope after hearing survivors' experiences.<br />
+	- Take comfort in sharing with someone else.<br />
+	- Feel fulfilled after helping others.<br /><br />
+	<div id="dashedborder" style="width:590px;"></div><br /></span>
+<span class="blacktextgrey16"><strong>Anonymous and secure</strong></span>
+<span class="blacktextgrey14"><br /><br />
+	You will only be identified by your username. 
+	You determine how much information to share in your profile and whether your profile is private, public, or viewable by the community. 
+	TalkAboutHealth protects your personal information and will not share personally identifiable information such as your name and email address without your explicit permission.  <br /><br />
+	<div id="dashedborder" style="width:590px;"></div><br /></span>
+<span class="blacktextgrey16"><strong>Safe</strong></span>
+<span class="blacktextgrey14"><br /><br />
+	TalkAboutHealth is a designated safe space.  We diligently review and moderate content to enforce Community Guidelines.  
+	Members are encouraged to 'flag' content they feel is not acceptable. TalkAboutHealth removes content and bans users that do not follow the <a href="@{Static.communityguidelines()}">Community Guidelines</a> or that cause negative feelings for others.<br /><br />
+	<div id="dashedborder" style="width:590px;"></div><br /></span>
+<!--<span class="bluetext14"><strong>Our promise</strong></span>
+<span class="blacktextgrey14"><br />
+	We respect privacy and will never share any personally identifiable information with anyone without your explicit permission.
+	<br /><br /><div id="dashedborder" style="width:590px;"></div><br /></span>-->
+<span class="blacktextgrey16"><strong>Team and advisors</strong></span>
+<span class="blacktextgrey14"><br /><br />
+	TalkAboutHealth is led by a team and advisors concerned about your health. 
+	We have qualified physicians, pharmacists, and therapists on our medical advisory board.<br /><br />
+	<div id="dashedborder" style="width:590px;"></div><br /></span>
+<span class="blacktextgrey16"><strong>Future features</strong></span>
+<span class="blacktextgrey14"><br /><br />
+	Please share your feedback and thoughts, or just say hi to our team at <a href="mailto:feedback@talkabouthealth.com" class="bluetext14">feedback@talkabouthealth.com</a> <br/></span>
+<br/>
+	<div id="dashedborder" style="width:590px;"></div><br /></span>
+<span class="blacktextgrey16"><strong>Message from our founder: Murray Jones</strong></span>
+<span class="blacktextgrey14"><br /><br /><div style="width:120px;float:left"><img src="/public/images/murrayTAH.JPG" alt="" width="110"/></div>
+I was inspired to start TalkAboutHealth while my father was going through treatment for melanoma.  It was a difficult and emotional period where we had many decisions to make in a limited amount of time.  We felt alone and confused.  There was too much information available and we did not know what was relevant or significant.<br/><br/>
+There are 12 million survivors in the United States and 1.6 million new cases in 2012.  All of these patients need support and education.  That is why TalkAboutHealth is here.  Our goal is to improve outcomes by helping patients find the right information, communicate better with their doctors expressing their needs and desires, and feel confident in their decisions.  <br/><br/>
+
+

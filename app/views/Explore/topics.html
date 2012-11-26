@@ -1,3 +1,4 @@
+#{ set currentPage = 'browseTopics' /}
 #{extends 'main.html' /}
 <style type="text/css">
 #innermiddlearea { padding-top: 10px }
@@ -91,7 +92,7 @@ $(document).ready(function() {
 	                        		</div>
 	                        		<div style="width: 33%; padding-bottom:10px; display: inline-block; vertical-align: top;float: none;">
 	                        			<a href="#" style="font-weight: bold; color: black; font-size: 15px;">Treatment & Side Effects</a><br/>
-	                        						<a class="diseaseLink" href="/cancer-medications">Medications </a><br/>
+	                        			<a class="diseaseLink" href="/cancer-medications">Medications </a><br/>
 										<a class="diseaseLink" href="/cancer-surgery">Surgery </a><br/>
 										<a class="diseaseLink" href="/oncology">Oncology </a><br/>
 										<a class="diseaseLink" href="/radiation-therapy">Radiation Therapy </a><br/>
@@ -131,340 +132,47 @@ $(document).ready(function() {
 	                        		</div>
 		                      	</div>
 		                        <div class="cb"> </div>
-		                        
-		                        #{include '/Explore/topics_diseases.html' /}	
-		                      	
+		                        #{include '/Explore/topics_diseases_static.html' /}	
 		                      </div>
 		                      <div class="cb"></div>
 		                    </div>
 						</div>
 						<div id="risksContent" class="tabContent" style="display: none;">	
-							<div class="topic">
-		                      <div class="newpage1">Risk</div>
-		                      <div class="cb"></div>
-		                      <div class="joinborder"></div>
-		                      <div class="cb"></div>
-		                      <div class="topic"  style="padding-top: 10px;">
-		                      <div style="width: 33%; display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList1 != null && diseaseList1.size() > 0}
-	                        			#{list items: diseaseList1, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-risk-factors">Risk Factors (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-	                        	<div style="width: 33%;display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList2 != null && diseaseList2.size() > 0}
-	                        			#{list items: diseaseList2, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-risk-factors">Risk Factors (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-	                        	<div style="width: 33%;display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList3 != null && diseaseList3.size() > 0}
-	                        			#{list items: diseaseList3, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-risk-factors">Risk Factors (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-		                        <div class="cb"></div>
-		                      </div>
-		                      <!--newpageCover-->
-		                      <div class="cb"></div>
-		                    </div> 
-		                    <div class="topic">
-		                      <div class="newpage1">Screening</div>
-		                      <div class="cb"></div>
-		                      <div class="joinborder"></div>
-		                      <div class="cb"></div>
-		                      <div class="topic"  style="padding-top: 10px;">
-		                      <div style="width: 33%; display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList1 != null && diseaseList1.size() > 0}
-	                        			#{list items: diseaseList1, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-screening">Screening (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-	                        	<div style="width: 33%;display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList2 != null && diseaseList2.size() > 0}
-	                        			#{list items: diseaseList2, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-screening">Screening (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-	                        	<div style="width: 33%;display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList3 != null && diseaseList3.size() > 0}
-	                        			#{list items: diseaseList3, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-screening">Screening (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-		                        <div class="cb"></div>
-		                      </div>
-		                      <!--newpageCover-->
-		                      <div class="cb"></div>
-		                    </div>
-		                    <div class="topic">
-		                      <div class="newpage1">Genetics</div>
-		                      <div class="cb"></div>
-		                      <div class="joinborder"></div>
-		                      <div class="cb"></div>
-		                      <div class="topic"  style="padding-top: 10px;">
-		                      <div style="width: 33%; display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList1 != null && diseaseList1.size() > 0}
-	                        			#{list items: diseaseList1, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-genetics">Genetics (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-	                        	<div style="width: 33%;display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList2 != null && diseaseList2.size() > 0}
-	                        			#{list items: diseaseList2, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-genetics">Genetics (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-	                        	<div style="width: 33%;display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList3 != null && diseaseList3.size() > 0}
-	                        			#{list items: diseaseList3, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-genetics">Genetics (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-		                        <div class="cb"></div>
-		                      </div>
-		                      <!--newpageCover-->
-		                      <div class="cb"></div>
-		                    </div>
+							  #{include '/Explore/topics_risk_static.html' /}	
 						</div>
 						<div id="symptomsContent" class="tabContent" style="display: none;">	
-							<div class="topic">
-		                      <div class="newpage1">Symptoms</div>
-		                      <div class="cb"></div>
-		                      <div class="joinborder"></div>
-		                      <div class="cb"></div>
-		                      <div class="topic"  style="padding-top: 10px;">
-		                      <div style="width: 33%; display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList1 != null && diseaseList1.size() > 0}
-	                        			#{list items: diseaseList1, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-symptoms">Symptoms (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-	                        	<div style="width: 33%;display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList2 != null && diseaseList2.size() > 0}
-	                        			#{list items: diseaseList2, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-symptoms">Symptoms (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-	                        	<div style="width: 33%;display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList3 != null && diseaseList3.size() > 0}
-	                        			#{list items: diseaseList3, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-symptoms">Symptoms (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-		                        <div class="cb"></div>
-		                      </div>
-		                      <!--newpageCover-->
-		                      <div class="cb"></div>
-		                    </div> 
-		                    <div class="topic">
-		                      <div class="newpage1">Diagnosis</div>
-		                      <div class="cb"></div>
-		                      <div class="joinborder"></div>
-		                      <div class="cb"></div>
-
-		                      <div class="topic"  style="padding-top: 10px;">
-		                      <div style="width: 33%; display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList1 != null && diseaseList1.size() > 0}
-	                        			#{list items: diseaseList1, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-diagnosis">Diagnosis (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-	                        	<div style="width: 33%;display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList2 != null && diseaseList2.size() > 0}
-	                        			#{list items: diseaseList2, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-diagnosis">Diagnosis (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-	                        	<div style="width: 33%;display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList3 != null && diseaseList3.size() > 0}
-	                        			#{list items: diseaseList3, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-diagnosis">Diagnosis (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-		                        <div class="cb"></div>
-		                      </div>
-		                      <!--newpageCover-->
-		                      <div class="cb"></div>
-		                    </div>
-		                    <div class="topic">
-		                      <div class="newpage1">Staging</div>
-		                      <div class="cb"></div>
-		                      <div class="joinborder"></div>
-		                      <div class="cb"></div>
-		                      <div class="topic"  style="padding-top: 10px;">
-		                      <div style="width: 33%; display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList1 != null && diseaseList1.size() > 0}
-	                        			#{list items: diseaseList1, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-staging">Staging (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-	                        	<div style="width: 33%;display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList2 != null && diseaseList2.size() > 0}
-	                        			#{list items: diseaseList2, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-staging">Staging (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-	                        	<div style="width: 33%;display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList3 != null && diseaseList3.size() > 0}
-	                        			#{list items: diseaseList3, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-staging">Staging (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-		                        <div class="cb"></div>
-		                      </div>
-		                      <!--newpageCover-->
-		                      <div class="cb"></div>
-		                    </div>
-
-		                    <div class="topic">
-		                      <div class="newpage1">Just Diagnosed</div>
-		                      <div class="cb"></div>
-		                      <div class="joinborder"></div>
-		                      <div class="cb"></div>
-		                      <div class="topic"  style="padding-top: 10px;">
-		                      <div style="width: 33%; display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList1 != null && diseaseList1.size() > 0}
-	                        			#{list items: diseaseList1, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-just-diagnosed">Just Diagnosed (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-	                        	<div style="width: 33%;display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList2 != null && diseaseList2.size() > 0}
-	                        			#{list items: diseaseList2, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-just-diagnosed">Just Diagnosed (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-	                        	<div style="width: 33%;display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList3 != null && diseaseList3.size() > 0}
-	                        			#{list items: diseaseList3, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-just-diagnosed">Just Diagnosed (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-		                        <div class="cb"></div>
-		                      </div>
-		                      <!--newpageCover-->
-		                      <div class="cb"></div>
-		                    </div>
-		                    
-		                    <div class="topic">
-		                      <div class="newpage1">Pathology</div>
-		                      <div class="cb"></div>
-		                      <div class="joinborder"></div>
-		                      <div class="cb"></div>
-
-		                      <div class="topic"  style="padding-top: 10px;">
-		                      <div style="width: 33%; display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList1 != null && diseaseList1.size() > 0}
-	                        			#{list items: diseaseList1, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-pathology">Pathology (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-	                        	<div style="width: 33%;display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList2 != null && diseaseList2.size() > 0}
-	                        			#{list items: diseaseList2, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-pathology">Pathology (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-	                        	<div style="width: 33%;display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList3 != null && diseaseList3.size() > 0}
-	                        			#{list items: diseaseList3, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-pathology">Pathology (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-		                        <div class="cb"></div>
-		                      </div>
-		                      <!--newpageCover-->
-		                      <div class="cb"></div>
-		                    </div>
-		                    <div class="topic">
-		                      <div class="newpage1">Recurrence</div>
-		                      <div class="cb"></div>
-		                      <div class="joinborder"></div>
-		                      <div class="cb"></div>
-		                      <div class="topic"  style="padding-top: 10px;">
-		                      <div style="width: 33%; display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList1 != null && diseaseList1.size() > 0}
-	                        			#{list items: diseaseList1, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-recurrence">Recurrence (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-	                        	<div style="width: 33%;display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList2 != null && diseaseList2.size() > 0}
-	                        			#{list items: diseaseList2, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-recurrence">Recurrence (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-	                        	<div style="width: 33%;display: inline-block; vertical-align: top;float: none;">
-	                        		#{if diseaseList3 != null && diseaseList3.size() > 0}
-	                        			#{list items: diseaseList3, as: 'disease'}
-	                        				<a class="diseaseLink" href="/${disease.name.replaceAll(" ", "-")}-recurrence">Recurrence (${disease.name})</a><br/><!-- bluetext14-->
-	                        			#{/list}
-	                        		#{/if}
-	                        	</div>
-		                        <div class="cb"></div>
-		                      </div>
-		                      <!--newpageCover-->
-		                      <div class="cb"></div>
-		                    </div>
-
+							#{include '/Explore/topics_symptoms_static.html' /}
 						</div>
 						<div id="treatmentsContent" class="tabContent" style="display: none;">	
-							#{include '/Explore/topics_treatments.html' /}	
+							#{include '/Explore/topics_treatments_static.html' /}	
 						</div>
 						<div id="lifeEverydayContent" class="tabContent" style="display: none;">
 							<div class="newpage1">Life & Everyday</div>
-		                        <div class="cb"></div>
-		                      	<div class="joinborder"></div>
-		                      	<div class="cb"></div>	
+		                    <div class="cb"></div>
+		                    <div class="joinborder"></div>
+		                    <div class="cb"></div>	
 							<div class="topic"  style="padding-top: 10px;">
-	                      	 	<div style="width: 33%; display: inline-block; vertical-align: top;float: none;">
-	                        			<a class="diseaseLink" href="/nutrition">Nutrition</a><br/>
-	                        			<a class="diseaseLink" href="/health">Health</a><br/>
-	                        			<a class="diseaseLink" href="/exercise">Exercise</a><br/>
-	                        			<a class="diseaseLink" href="/beauty">Beauty</a><br/>
-	                        		</div>
-	                        		<div style="width: 33%; display: inline-block; vertical-align: top;float: none;">
-	                        			<a class="diseaseLink" href="/skin">Skin</a><br/>
-	                        			<a class="diseaseLink" href="/sex">Sex</a><br/>
-	                        			<a class="diseaseLink" href="/intimacy">Intimacy</a><br/>
-	                        			<a class="diseaseLink" href="/career">Career</a><br/>
-	                        		</div>
-	                        		<div style="width: 33%; display: inline-block; vertical-align: top;float: none;">
-	                        			<a class="diseaseLink" href="/legal">Legal</a><br/>
-	                        			<a class="diseaseLink" href="/insurance">Insurance</a><br/>
-	                        			<a class="diseaseLink" href="/medical-debt">Medical Debt</a><br/>
-	                        		</div>
-	                        </div>
+                     	 		<div style="width: 33%; display: inline-block; vertical-align: top;float: none;">
+	                       			<a class="diseaseLink" href="/nutrition">Nutrition</a><br/>
+	                       			<a class="diseaseLink" href="/health">Health</a><br/>
+	                       			<a class="diseaseLink" href="/exercise">Exercise</a><br/>
+	                       			<a class="diseaseLink" href="/beauty">Beauty</a><br/>
+	                       		</div>
+	                       		<div style="width: 33%; display: inline-block; vertical-align: top;float: none;">
+	                       			<a class="diseaseLink" href="/skin">Skin</a><br/>
+	                       			<a class="diseaseLink" href="/sex">Sex</a><br/>
+	                       			<a class="diseaseLink" href="/intimacy">Intimacy</a><br/>
+	                       			<a class="diseaseLink" href="/career">Career</a><br/>
+	                       		</div>
+	                       		<div style="width: 33%; display: inline-block; vertical-align: top;float: none;">
+	                       			<a class="diseaseLink" href="/legal">Legal</a><br/>
+	                       			<a class="diseaseLink" href="/insurance">Insurance</a><br/>
+	                       			<a class="diseaseLink" href="/medical-debt">Medical Debt</a><br/>
+                       			</div>
+                       		</div>
 						</div>
 						<div id="survivorshipContent" class="tabContent" style="display: none;">
-							#{include '/Explore/topics_survivorship.html' /}	
+							#{include '/Explore/topics_survivorship_static.html' /}	
 						</div>
 					</div>
                     <div class="cb"></div>

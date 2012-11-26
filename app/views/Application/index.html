@@ -263,7 +263,7 @@
       	<a href="http://talkabouthealth.tumblr.com" target="_new"><img src="/public/images/index/t_icon.png" alt="t" /></a> 
       	<a href="http://www.youtube.com/user/talkabouthealth" target="_new"><img src="/public/images/index/youtube_icon.png" alt="you tube" /></a>
       </div>
-      <p><img src="/public/images/index/footer_logo.png" width="150" alt="Talk About Health Newsletter" class="sml_logo" /> Newsletter</p>
+      <p><img src="/public/images/index/footer_logo.png" width="150" alt="Talk About Health Newsletter" class="sml_logo" /> <span style="float:left">Newsletter</span></p>
       	#{form @Newsletter.subscribeMoreNewsLetter() , id:'subcribeNewsletter' }
         <ul>
           <li>
@@ -273,10 +273,10 @@
             <input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked='checked' />
             Q&amp;A Workshop Summary</li>
           <li>
-            <input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Best of TalkAboutHealth" checked='checked' />
+            <input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TalkAboutHealth Rewards" checked='checked' />
             Benefits(Custom Health &amp; Medical Offers)</li>
           <li>
-            <input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TalkAboutHealth Rewards" checked='checked' />
+            <input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Best of TalkAboutHealth" checked='checked' />
             Best of TalkAboutHealth (Weekly)</li>
         </ul>
         <div>
@@ -308,7 +308,6 @@
 </div>
 <!-- copy end -->
 	<!--footer end--> 
-#{ common/googleAnalytics /}
 <script type="text/javascript" src="/public/javascripts/jquery-1.5.1.min.js" ></script>
 <script type="text/javascript" src="/public/javascripts/jquery-ui-1.8.4.custom.min.js" ></script>
 <script type="text/javascript" src="/public/javascripts/slides.min.jquery.js" ></script>
@@ -403,7 +402,6 @@ $(document).ready(function(){
 		visible:4,
 		mouseWheel:true
     });
-
 	$("#expert").click();
 });
 setNewsletterMessage = function(responseText, statusText, xhr, $form)  {
@@ -412,14 +410,18 @@ setNewsletterMessage = function(responseText, statusText, xhr, $form)  {
 	if (responseText.indexOf("Error:") === 0) {
    		errorText = responseText.replace("Error:", "");
    		$("#respMessage").css("color","#ff0000");
+   		$("#respMessage").html(errorText); 
+   		$("#respMessage").fadeIn(100);
+   		closeTimeout = setTimeout(function() { $("#respMessage").fadeOut(200) }, 4000);
    	} else if (responseText.indexOf("Email alrady subscribed!") === 0) {
    		errorText = responseText;
+   		$("#respMessage").html(errorText); 
+   		$("#respMessage").fadeIn(100);
+   		closeTimeout = setTimeout(function() { $("#respMessage").fadeOut(200) }, 4000);
    	} else {
    		errorText= "Thank you for subscribing!";
+   		window.location.href = "/signup?fromPage=NEWS";
    	}
-	$("#respMessage").html(errorText); 
-	$("#respMessage").fadeIn(100);
-	closeTimeout = setTimeout(function() { $("#respMessage").fadeOut(200) }, 4000);
 }
 makeSearch = function(){
 	var query = $("#topSearchBox").val();
@@ -483,5 +485,6 @@ openServiceLogin = function(serviceType) {
 }
 -->
 </script>
+#{ common/googleAnalytics  cpage: "home"/}
 </body>
 </html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<link href="@{'/public/stylesheets/style.css'}" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/play-pagination.css'}"/>
+	<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/smoothness/jquery-ui-1.8.14.custom.css'}"/>
+	<style type="text/css">
+		body {
+			margin: 20px;
+			width: auto;
+			font-size: 14px;
+		}
+		#notificationbar {
+			border: #000000 dashed 1px;
+			margin-top: 3px;
+			padding: 10px;
+		}
+		ul.pagination{padding:5px 0;float:right;}
+		.ui-widget{font-size:13px;}
+	</style> 
+	<script src="/public/javascripts/jquery.js" type="text/javascript"></script>
+	<script src="/public/javascripts/jquery-ui-1.8.14.custom.min.js" type="text/javascript"></script>
+	<script>
+	$(window).load(function() {
+		$("#date").datepicker({ autoSize: true, maxDate:1 });
+		$("#dateFilter").click(function() {
+			window.location = "/activitylogreportcontroller/logSortedReport?dateString=" + $("#date").val();
+		});
+	});
+	</script>
+	<title>Dashboard ActivityList</title>
+</head>
+<body>
+	<table width="100%">
+		<tr>
+			<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Home.index()}">Home</a></td>
+			<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/notification">Moderate New Questions</a></td>
+			<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/userlist">Users</a></td>
+			<td style="padding-right:20px;" nowrap="nowrap"><a href="/questionrecovery">Question Recovery</a></td>
+			<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/questionnotification">Question Notifications</a></td>
+			<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Profile.updateEmailList()}">Update Emails</a></td>
+			<td style="padding-right:20px;" nowrap><a href="@{Secure.logout()}">Logout</a></td>
+			<td style="width: 100%;">&nbsp;</td>
+		</tr>
+	</table>
+	<hr/>
+	<div style="padding:10px 0;">
+		Filter By Date: <input type="text" id="date" value="${dateString}" />  
+		<input type="button" value="Go.!" id="dateFilter"/>
+		<span style="color: #F00;">If wrong date will show today's records</span>
+	</div>
+	#{if logList.size > 0}
+	<div>#{paginate.summary items: logList /} </div>
+	#{/if}
+	<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;" width="100%">
+			#{if logList != null}
+				#{if logList.size > 0}
+					<tr>
+						<th>User</th>
+						<th>IP Address</th>
+						<th>Page Name</th>
+						<th>Page URL</th>
+						<th>Location</th>
+						<th>Date Time</th>
+					</tr>
+					#{paginate.list items: logList, as: 'userInfo' }
+						<tr>
+							<td>
+								#{ if "Guest" == userInfo.userName}
+									${userInfo.userName}
+								#{/if}
+								#{else}
+									${userInfo.userName}-(${userInfo.userEmail})
+								#{/else}
+							</td>
+							<td>${userInfo.ipAddress}</td>
+							<td>${userInfo.pageName}</td>
+							<td><A href="${userInfo.pageURL}" target="_new">${userInfo.pageURL}</A></td>
+							<td><!-- ${userInfo.userLocationCode}<br/>  -->
+								${userInfo.userLocationCity} ${userInfo.userLocationState}, ${userInfo.userLocationCountry}
+								[${userInfo.userLocationLongitude} , ${userInfo.userLocationLatitude}]
+							</td>
+							<td>${userInfo.timeStamp}</td>
+						</tr>
+					#{/paginate.list}
+					#{paginate.controls items:logList /} 
+				#{/if}
+				#{else}
+					<tr><td align="center">No record found. Please try another date</td></tr>
+				#{/else}
+			#{/if}
+	</table>
+</body>
+</html>

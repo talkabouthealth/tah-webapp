@@ -36,6 +36,7 @@ import models.ConversationBean;
 import models.TopicBean;
 import models.actions.Action.ActionType;
 
+import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 
 import play.Logger;
@@ -522,7 +523,7 @@ public class ConversationDAO {
 	/**
 	 * Opened Questions - not answered, which are marked with 'opened' flag.
 	 */
-	public static List<ConversationBean> getOpenQuestions(String afterActionId) {
+	public static List<ConversationBean> getOpenQuestions(String afterActionId,String cancerType) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
 		//List<String> cat = new ArrayList<String>();
 		
@@ -534,7 +535,6 @@ public class ConversationDAO {
 		//	.add("opened", true)
 		//	.add("deleted", new BasicDBObject("$ne", true))
 		//	.get();
-		System.out.println(afterActionId);
 		if (afterActionId != null && !afterActionId.equals("")) {
 			DBObject fields=BasicDBObjectBuilder.start()		
 			.add("cr_date" , 1).get();
@@ -548,7 +548,19 @@ public class ConversationDAO {
 			}
 		}
 
-		List<DBObject> convosDBList = new ArrayList<DBObject>();//convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
+		if(StringUtils.isNotBlank(cancerType)){
+			List<String> cat = new ArrayList<String>();
+			cat.add(cancerType);
+			cat.add(ConversationBean.ALL_CANCERS);
+			queryBuilder.add("$or", 
+				Arrays.asList(
+						new BasicDBObject("other_disease_categories", new BasicDBObject("$in", cat)),
+						new BasicDBObject("category", new BasicDBObject("$in", cat))
+				)
+			);
+		}
+		List<DBObject> convosDBList = new ArrayList<DBObject>();
+		//convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
 		DBCursor convoCur=convosColl.find(queryBuilder.get()).sort(new BasicDBObject("cr_date", -1)).limit(logic.FeedsLogic.FEEDS_PER_PAGE);
 		int recCount = 0;
 		while(convoCur.hasNext()) {
@@ -1017,11 +1029,11 @@ public class ConversationDAO {
 		return null;
 	}
 	
-	public static List <ConversationBean> loadExpertsAnswer(String afterActionId){
+	public static List <ConversationBean> loadExpertsAnswer(String afterActionId,String cancerType){
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
 		while(true){
 				List<DBObject> commentDBlist=getExpertsAnswerFromDB(afterActionId);
-				convosList.addAll(getConvoForExpAnswer(commentDBlist,convosList.size()));
+				convosList.addAll(getConvoForExpAnswer(commentDBlist,convosList.size(),cancerType));
 				if(convosList.size()>=20 || commentDBlist.size()<40)
 					break;
 				afterActionId=commentDBlist.get(commentDBlist.size()-1).get("_id").toString();
@@ -1029,10 +1041,14 @@ public class ConversationDAO {
 		return convosList;
 	}
 	
-	private static List<ConversationBean> getConvoForExpAnswer(List<DBObject> commentDBlist,int convosize){
+	private static List<ConversationBean> getConvoForExpAnswer(List<DBObject> commentDBlist,int convosize,String cancerType){
 		DBCollection talkerColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
 		DBCollection ConvoColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
-		
+		List<String> cat = new ArrayList<String>(2);
+		if(StringUtils.isNotBlank(cancerType)){
+			cat.add(cancerType);
+			cat.add("All Cancers");
+		}
 		List<ConversationBean> convolist=new ArrayList<ConversationBean>();
 		for(DBObject obj:commentDBlist){
 			//TalkerBean talker=TalkerLogic.loadTalkerFromCache(obj, "from");
@@ -1040,11 +1056,21 @@ public class ConversationDAO {
 			String connection=talkerColl.findOne(query, new BasicDBObject("connection",1)).get("connection").toString();
 			if(connection !=null && TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(connection)){
 				DBObject fields = getBasicConversationFields();
-				DBObject convoQuery=BasicDBObjectBuilder.start()
-				.add("_id", new ObjectId(((DBRef)obj.get("convo")).getId().toString()))
-				.add("deleted", new BasicDBObject("$ne", true))
-				.get();
-				
+				DBObject convoQuery;
+				if(StringUtils.isNotBlank(cancerType)){
+					convoQuery=BasicDBObjectBuilder.start()
+					.add("_id", new ObjectId(((DBRef)obj.get("convo")).getId().toString()))
+					.add("$or", 
+						Arrays.asList(
+								new BasicDBObject("other_disease_categories", new BasicDBObject("$in", cat)),
+								new BasicDBObject("category", new BasicDBObject("$in", cat))
+							)
+					)
+					.get();
+				} else {
+					convoQuery=BasicDBObjectBuilder.start()
+					.add("_id", new ObjectId(((DBRef)obj.get("convo")).getId().toString())).get();
+				}
 				DBObject convoObj=ConvoColl.findOne(convoQuery,fields);
 				if(convoObj!=null){
 						ConversationBean convoBean=new ConversationBean();
@@ -1082,10 +1108,9 @@ public class ConversationDAO {
 					.add("time" , 1).get();
 				Date firstActionTime = new Date();
 				DBObject comment=commentsColl.findOne(new BasicDBObject("_id", new ObjectId(afterActionId)),fields);
-				
 				firstActionTime=(Date)comment.get("time");
 				
-				if(firstActionTime!=null){
+				if(firstActionTime!=null) {
 					queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
 				}
 		}

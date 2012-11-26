@@ -37,10 +37,11 @@ function setMessage(responseText, statusText, xhr, $form)  {
    		var email = $("#subcribe :input[name='newsletter.email']").val();
    		showPopupEmail(email);
    	} else {
-   		$("#responseMessage").css("color","#2E8B57");
-   		$("#responseMessage").html(responseText);
-   		$("#responseMessage").fadeIn(100);
-   		closeTimeout = setTimeout(function() { $("#responseMessage").fadeOut(200) }, 4000);
+   		//$("#responseMessage").css("color","#2E8B57");
+   		//$("#responseMessage").html(responseText);
+   		//$("#responseMessage").fadeIn(100);
+   		//closeTimeout = setTimeout(function() { $("#responseMessage").fadeOut(200) }, 4000);
+   		window.location.href = "/signup?fromPage=NEWS";
    	}
 }
 showPopupEmail = function(email) {

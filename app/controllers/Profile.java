@@ -71,6 +71,7 @@ import play.mvc.With;
 import play.templates.JavaExtensions;
 import util.CommonUtil;
 import util.EmailUtil;
+import util.SearchIndexUtil;
 import util.SearchUtil;
 import util.TwitterUtil;
 import util.EmailUtil.EmailTemplate;
@@ -309,7 +310,7 @@ public class Profile extends Controller {
 		}
 		CommonUtil.updateTalker(talker, session);
 		otherCategories.clear();
-		
+		SearchIndexUtil.modifyTalkerSearchIndex(talker);
 		//used for menu displaying
 		if (talker.isProf()) {
 			session.put("prof", "true");
@@ -953,6 +954,7 @@ public class Profile extends Controller {
 				}
 			}
 			TalkerDAO.updateTalker(talker);
+			SearchIndexUtil.modifyTalkerSearchIndex(talker);
 		}
 		renderText("Ok");
 	}

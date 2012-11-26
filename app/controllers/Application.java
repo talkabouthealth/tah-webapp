@@ -15,6 +15,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.PatternLayout;
@@ -79,37 +80,69 @@ public class Application extends Controller {
 		"explore", "search", "community", "openquestions", "livechats", "conversationfeed"
 	});
 
-	/**
+    /**
 	 * Landing page
 	 */
     public static void index() {
-    	/*if (Security.isConnected()) {
-    		Home.index(); //redirect to Home page if user is logged in
+    	
+    	String def = session.get("def");
+    	if(StringUtils.isBlank(def)){
+    		def = "0";
+    	}
+    	if("0".equals(def)) {
+    		String hostAll = request.host;
+    		//System.out.println("Host: " + hostAll);
+    		if(hostAll.contains("talkbreastcancer.com")) {
+    			Community.index();
+    		} else {
+	    		String[] arr = request.host.split("\\.");
+				if (arr != null && arr.length > 0) {
+					if(arr.length == 3 || arr.length == 4) {
+			    		try {
+			    			Community.index();
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+					} else {
+						String cancerType = session.get("cancerType");
+						if(StringUtils.isNotBlank(cancerType)){
+							Community.index();
+						}
+					}
+		    	} else {
+		    		session.remove("cancerType");
+		    	}
+    		}
+			
     	} else {
-    		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
-    		int numberOfLiveChats = 0;//ConversationDAO.getLiveConversations().size();
-    		int numberOfQuestions = 0;//ConversationDAO.getNumberOfConversations();
-    		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
-    		
-    		render(null, numberOfMembers, numberOfLiveChats, numberOfQuestions, numberOfAnswers);
-    	}*/
+    		session.remove("cancerType");
+    	}
     	if (Security.isConnected()) {
     		Home.index();
     	} else {
-    		List<VideoBean> videoList = VideoDAO.loadVideoForHome(3);
+    		List<VideoBean> videoList = VideoDAO.loadVideoForHome(3,"All Cancers");
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
     		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
-    		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+    		List<DiseaseBean> homediseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+    		List<DiseaseBean> diseaseList = new ArrayList<DiseaseBean>();
+
+    		/*	Code to remove new cancer categories from home page */
+    		Set<String> newCancerList = DiseaseDAO.newCancerTypes();
+
+    		for (DiseaseBean diseaseBean : homediseaseList) {
+    			if(!newCancerList.contains(diseaseBean.getName()))
+    				diseaseList.add(diseaseBean);
+			}
     		render(null, numberOfMembers, numberOfAnswers, diseaseList,videoList);
     	}
     }
-    
+
     /*New Home page*/
     public static void indexNew() {
     	if (Security.isConnected()) {
     		Home.index();
     	} else {
-    		List<VideoBean> videoList = VideoDAO.loadVideoForHome(4);
+    		List<VideoBean> videoList = VideoDAO.loadVideoForHome(4,"All Cancers");
     		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
     		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
     		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
@@ -153,7 +186,7 @@ public class Application extends Controller {
     }
     
     /* ------- Sign Up --------- */
-    public static void signup() {
+    public static void signup(String cancerType) {
     	//params.flash();
     	String remoteAddress = request.remoteAddress;
     	int duration = -6;
@@ -161,6 +194,21 @@ public class Application extends Controller {
     	String from = flash.get("from");
     	Map<String, String> additionalSettings = null;
     	List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+
+    	/*Added code to redirect on page before login*/
+        if(request.headers.containsKey("referer")) {
+        	String savedURL = session.get("signUpBackUrl");
+        	String refere = request.headers.get("referer").value();
+        	//System.out.println("refere : " + refere);
+        	//System.out.println("savedURL : " + savedURL);
+        	if(StringUtils.isNotBlank(savedURL) && refere.contains(savedURL)) {
+        		session.put("signUpBackUrl", refere);
+        		//System.out.println("Adding saved URL");
+        	} else {
+        		//System.out.println("Removing saved URL");
+        		session.remove("signUpBackUrl");
+        	}
+        }
 
     	if (from != null) {
     		ServiceType type = ServiceAccountBean.parseServiceType(from);
@@ -170,11 +218,21 @@ public class Application extends Controller {
     		flash("captcha", "true");
     	}
     	
+    	if(StringUtils.isNotBlank(cancerType))
+    		flash("cancerType", cancerType);
+    	
+    	String fromPage = params.get("fromPage");
+    	System.out.println(fromPage);
+    	if(StringUtils.isNotBlank(fromPage))
+    		flash("fromPage", fromPage);
+    	else
+    		System.out.println("Not added in Flush");
+    	
     	String randomID = Codec.UUID();
     	render(additionalSettings,randomID,diseaseList);
     }
     
-    public static void signupNews(NewsLetterBean newsletter) {
+    public static void signupNews(NewsLetterBean newsletter,String cancerType,String fromPage) {
     	String remoteAddress = request.remoteAddress;
     	int duration = -6;
     	//prepare additional settings for FB or Twitter
@@ -189,13 +247,23 @@ public class Application extends Controller {
     	if(!ApplicationDAO.isIpUsed(remoteAddress,duration)){
     		flash("captcha", "true");
     	}
-
+    	if(cancerType == null)
+    		cancerType = flash.get("cancerType");
+    	
+    	System.out.println(fromPage);
+    	if(StringUtils.isNotBlank(fromPage))
+    		flash("fromPage", fromPage);
+    	
     	String randomID = Codec.UUID();
-    	render("Application/signup.html",additionalSettings,randomID,diseaseList,newsletter);
+    	render("Application/signup.html",additionalSettings,randomID,diseaseList,newsletter,cancerType);
     	return;
     }
     
     public static void register(@Valid TalkerBean talker,String code, String randomID, NewsLetterBean newsletter) {
+    	
+    
+    	String fromPage = flash.get("fromPage");
+    	System.out.println("Register: " + fromPage);
     	
     	/**
     	 * Added ip address verification code. 
@@ -214,12 +282,14 @@ public class Application extends Controller {
     	
     	validation.isTrue("on".equalsIgnoreCase(privacyAgreeString))
     		.message("Please agree to the TalkAboutHealth Terms of Service and Privacy Policy.");
-    	
+    	String cancerType = flash.get("cancerType");
+    	if(cancerType != null)
+    		flash("cancerType", cancerType);
 		validateTalker(talker);
         if (validation.hasErrors()) {
             params.flash(); // add http parameters to the flash scope
             validation.keep(); // keep the errors for the next request
-            signupNews(newsletter);
+            signupNews(newsletter,cancerType,fromPage);
             return;
         }
         
@@ -241,7 +311,8 @@ public class Application extends Controller {
             validation.keep();
         	flash.error("Sorry, unknown error. Please contact support.");
         	Logger.error("Error during signup. User: "+talker.getEmail());
-        	 signupNews(newsletter);
+        	
+        	 signupNews(newsletter,cancerType,fromPage);
         	return;
 		} else {
 			/* Date : 16 Aug 2011
@@ -252,7 +323,16 @@ public class Application extends Controller {
 		}
 
         TalkerLogic.onSignup(talker, session);
-        index();
+        
+        /*Changes for sending user back to page where came from*/
+        String signUpBackUrl = session.get("signUpBackUrl");
+        session.remove("signUpBackUrl");
+        if(StringUtils.isNotBlank(signUpBackUrl)) {
+        	//System.out.println(signUpBackUrl);
+        	redirect(signUpBackUrl);
+        } else {
+        	index();
+        }
     }
     
     /**

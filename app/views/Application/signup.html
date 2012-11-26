@@ -1,7 +1,14 @@
+#{ set currentPage = 'signup' /}
 #{extends 'main.html' /}
 	<script type="text/javascript" src="/public/javascripts/validation.js" ></script>
 	<script type="text/javascript" charset="utf-8">
 		$(document).ready(function() {
+			#{if flash.cancerType}
+				changeNewsletterCategory();
+			#{/if}
+			#{elseif session.get("cancerType")}
+				changeNewsletterCategory();
+			#{/elseif}
 			$('.personalfields').keypress(function(e){
 				//call submit on enter in any field
 				if (e.which == 13) {
@@ -12,18 +19,7 @@
 			    }
 			});
 			$('#talkercategory').change(function(e){
-				var str = "";
-		        $("#talkercategory option:selected").each(function () {
-		              str = $(this).text();
-		        });
-		        str = $.trim(str);
-		        $("#categoryText").text(str);
-		        $("#newDieses").val(str);
-		        if(str != "") {
-		        	$("#diesesNewsletter").show();
-				} else {
-					$("#diesesNewsletter").hide();
-				}
+				changeNewsletterCategory();
 			});
 		});
 		function displayOptions(option) {
@@ -35,6 +31,20 @@
 				document.getElementById(option + 'EC').src = "/public/images/collapse.png";
 			}
 		}
+		changeNewsletterCategory = function(){
+			var str = "";
+	        $("#talkercategory option:selected").each(function () {
+	              str = $(this).text();
+	        });
+	        str = $.trim(str);
+	        $("#categoryText").text(str);
+	        $("#newDieses").val(str);
+	        if(str != "") {
+	        	$("#diesesNewsletter").show();
+			} else {
+				$("#diesesNewsletter").hide();
+			}
+		}
 	</script>
 </head>
 <body>
@@ -44,10 +54,34 @@
 		</div>
 		<div id="innerbanner"></div>
 		<div id="bottom_container">
-			<div class="blacktext2" id="innerheading">Become a TalkAboutHealth Member</div>
+
+
+
+			#{if flash.cancerType}
+				<div style="font-size: 19px;font-weight: bold;line-height:20px;width:590px;" id="innerheading">Thank you for subscribing to our newsletter! Join now to ask questions to leading medical professionals and connect with others like you.</div>
+			#{/if}
+			#{elseif flash.fromPage}
+				<div style="font-size: 19px;font-weight: bold;line-height:20px;width:590px;" id="innerheading">
+				Thank you for subscribing to our newsletters! 
+				<br/>Join now to ask questions to leading medical professionals and connect with others like you.
+				</div>
+			#{/elseif}
+			#{else}
+				<div class="blacktext2" id="innerheading">Sign Up Now</div>
+			#{/else}
+			<!-- Thank you for subscribing to our newsletters! 
+			Join now to ask questions to leading medical professionals and connect with others like you. -->
+			
+
 			<div id="innermiddlearea">
 				<div id="signupleft">
 				#{form @Application.register() , id:'signup' }
+				#{if flash.fromPage}  
+					<input type="hidden" id="fromPage" name="fromPage" value="${flash.fromPage}" />
+				#{/if}
+					#{if flash.cancerType}
+					<input type="hidden" id="cancerType" name="cancerType" value="${flash.cancerType}" />
+					#{/if}	
 					#{if flash.from }
 					    <h6 class="blacktext14">
 					    	Welcome! You've gotten started by connecting your <i>${flash.from.toLowerCase().capFirst()}</i> account.
@@ -93,6 +127,8 @@
 							  		#{list items:diseaseList , as: 'disease'}
 									    <option value="${disease.name}"
 									   #{if disease.name.equals(flash['talker.category']) } selected #{/if}
+									   #{elseif disease.name.equals(flash.cancerType)} selected  #{/elseif}
+									   #{elseif disease.name.equals(session.get("cancerType"))} selected  #{/elseif}
 									    >${disease.name}</option>
 									#{/list}
 								</select>
@@ -251,6 +287,7 @@
 							#{/list}
 						</div>
 						#{/if}
+						#{ifnot session.get("cancerType")}
 						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
 							#{if newsletter != null && newsletter.newsLetterType !=null}
 								#{if newsletter.newsLetterType.contains("workshop")}
@@ -411,6 +448,7 @@
 								<font size="2px;" style="font-weight: normal;padding-left: 23px;">Maternity, baby and family offers.</font>
 							</div>
 						</diV>
+						#{/ifnot}
 						<div id="checkboxarea2" style="padding-top: 30px;  font-weight: bold; color: #000000;">
 							<input id="privacyagree" name="privacyagree" 
 								type="checkbox" checked="checked" #{if flash['privacyagree']} checked #{/if} /> 

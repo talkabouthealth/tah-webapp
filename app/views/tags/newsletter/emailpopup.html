@@ -8,8 +8,9 @@
 	});
 	function showEmailMsg(responseText) {
 		if(responseText === "Ok") {
-			hideAll();
-			alert("Thank you for subscribing");
+			//hideAll();
+			window.location.href = "/signup?fromPage=NEWS";
+			//alert("Thank you for subscribing");
 		} else {
 			alert(responseText);
 		}

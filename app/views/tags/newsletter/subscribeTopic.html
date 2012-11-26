@@ -1,3 +1,4 @@
+#{if cancerType != null && cancerType != ""}
 <style>
 #checkboxareainner {
     color: #646664;
@@ -51,10 +52,11 @@ function setMessage(responseText, statusText, xhr, $form)  {
    		var email = $("#subcribe :input[name='email']").val();
    		showPopupEmail(email);
    	} else {
-   		$("#responseMessage").css("color","#2E8B57");
-   		$("#responseMessage").html(responseText);
-   		$("#responseMessage").fadeIn(100);
-   		closeTimeout = setTimeout(function() { $("#responseMessage").fadeOut(200) }, 4000);
+   		window.location.href = "/signup?fromPage=NEWS";
+   		//$("#responseMessage").css("color","#2E8B57");
+   		//$("#responseMessage").html(responseText);
+   		//$("#responseMessage").fadeIn(100);
+   		//closeTimeout = setTimeout(function() { $("#responseMessage").fadeOut(200) }, 4000);
    	}
 }
 showPopupEmail = function(email){
@@ -82,3 +84,4 @@ showPopupEmail = function(email){
    #{/form}
  </div>
  <div class="topicborder"></div>
+ #{/if}

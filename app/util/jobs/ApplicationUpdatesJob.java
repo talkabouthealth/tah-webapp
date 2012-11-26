@@ -161,7 +161,6 @@ public class ApplicationUpdatesJob {
 			}
 		});
 	}
-	
 	protected void finalize() throws Throwable {
 		super.finalize();
 	}

@@ -6,6 +6,7 @@ import static util.DBUtil.getStringSet;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -117,10 +118,9 @@ public class DiseaseDAO {
 		return disease;
 	}
 	
-	public static List<DiseaseBean> getCatchedDiseasesList(Session session){
+	public static List<DiseaseBean> getCatchedDiseasesList(Session session) {
 		List<DiseaseBean> diseaseList = (List<DiseaseBean>) Cache.get("diseasesList");
-	    if (diseaseList == null) {
-	        //nothing in cache - load a new one
+	    if (diseaseList == null) {	//nothing in cache - load a new one
 	    	diseaseList = getDeiseaseList();
 	    	Cache.set("diseasesList", diseaseList, "2h");
 	    }
@@ -131,9 +131,13 @@ public class DiseaseDAO {
 		List<DiseaseBean> diseaseList = new ArrayList<DiseaseBean>();
 		DBCollection diseasesColl = getCollection(DISEASES_COLLECTION);
 		DBObject sortCond = new BasicDBObject("name", 1);
-		
+
+		/*
+		DBObject query = new BasicDBObject("name", new BasicDBObject("$nin", newCancerTypes()));
+		List<DBObject>  diseaseDBList = diseasesColl.find(query).sort(sortCond).toArray();
+		*/
+
 		List<DBObject>  diseaseDBList = diseasesColl.find().sort(sortCond).toArray();
-		
 		DiseaseBean allCancer=new DiseaseBean();
 		for (DBObject diseaseDBObject : diseaseDBList) {
 			DiseaseBean diseaseBean = new DiseaseBean();
@@ -141,7 +145,7 @@ public class DiseaseDAO {
 			if(diseaseBean.getName().equals("All Cancers"))
 				allCancer=diseaseBean;
 			else
-			diseaseList.add(diseaseBean);
+				diseaseList.add(diseaseBean);
 		}
 		diseaseList.add(allCancer);
 		return diseaseList;
@@ -296,6 +300,19 @@ public class DiseaseDAO {
 		}
 		String diseaseName = (String)diseaseDBObject.get("name");
 		return diseaseName;
+	}
+
+	public static Set<String> newCancerTypes(){
+		Set<String> newCancerType = new HashSet<String>();
+		newCancerType.add("ADHD");
+		newCancerType.add("Sleep Disorders");
+		newCancerType.add("Anorexia");
+		newCancerType.add("Stress Management");
+		newCancerType.add("Anger Management");
+		newCancerType.add("Addiction");
+		newCancerType.add("Psychopathy");
+		newCancerType.add("Creativity");
+		return newCancerType;
 	}
 }
 

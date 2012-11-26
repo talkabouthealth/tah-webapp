@@ -1,0 +1,100 @@
+package controllers;
+
+import java.net.URLDecoder;
+import java.util.Set;
+
+import models.ActivityLogBean;
+import models.TalkerBean;
+
+import org.apache.commons.lang.StringUtils;
+
+import play.mvc.Controller;
+import util.CommonUtil;
+import dao.ActivityLogDAO;
+
+public class ActivityLogController  extends Controller{
+
+	// ActivityLogController
+	public static void log() {
+
+		if(Security.isConnected() && Security.connected().equals("admin")) {
+			renderText("Admin");
+			return;
+		}
+
+		//Page Type
+		String pageType = params.get("pageType");
+		if(StringUtils.isEmpty(pageType))
+			pageType = "Other";
+
+		//Remote IP address
+		String remoteIp = request.remoteAddress;
+		if(request.headers.containsKey("x-forwarded-for")) { //x-forwarded-for: Getting remote address if not in request. Nginx manage this
+			remoteIp = request.headers.get("x-forwarded-for").value();
+		}
+
+		//Header Values
+		String userAgent = "";
+		String userLanguage = "";
+		String userCookie = "";
+		String cancerSite = "";
+		Set<String> heads =  request.headers.keySet();
+		for (String string : heads) {
+			if(string.equals("user-agent"))
+				userAgent = request.headers.get("user-agent").value();
+			if(string.equals("accept-language"))
+				userLanguage = request.headers.get("accept-language").value();
+			if(string.equals("cookie"))
+				userCookie = request.headers.get("cookie").value();
+			if(StringUtils.isNotBlank(session.get("cancerType")))
+				cancerSite = session.get("cancerType");
+			// accept-language, cookie
+		}
+
+		//Location
+		String userLocationCode = params.get("geoLcode");
+		String userLocationCountry = params.get("geoLcountry");
+		String userLocationState = params.get("geoLstate");
+		String userLocationCity = params.get("geoLcity");
+		String userLocationLatitude = params.get("geoLat");
+		String userLocationLongitude = params.get("geoLong");
+
+		ActivityLogBean logBean = new ActivityLogBean(
+							remoteIp,
+							pageType,
+							URLDecoder.decode(params.get("page")),
+							URLDecoder.decode(params.get("ref")),
+							userAgent,
+							session.getId(),
+							"",
+							"");
+
+		logBean.setUserLanguage(userLanguage);
+		logBean.setUserCookie(userCookie);
+		logBean.setCancerSite(cancerSite);
+		
+		//Location details
+		logBean.setUserLocationCode(userLocationCode);
+		logBean.setUserLocationCountry(userLocationCountry);
+		logBean.setUserLocationState(userLocationState);
+		logBean.setUserLocationCity(userLocationCity);
+		logBean.setUserLocationLatitude(userLocationLatitude);
+		logBean.setUserLocationLongitude(userLocationLongitude);
+		if(Security.isConnected()) {
+			TalkerBean talker = CommonUtil.loadCachedTalker(session);
+			logBean.setUserEmail(talker.getEmail());
+			logBean.setUserName(talker.getName());
+		}
+		renderText(ActivityLogDAO.logRequest(logBean));
+		//renderText("OK");
+	}
+
+	/*
+	public static void logouttime() {
+		String logId = params.get("logId");
+		System.out.println("Log Id: " + logId);
+		ActivityLogDAO.logOutTime(logId);
+		renderText("Done");
+	}
+	*/
+}

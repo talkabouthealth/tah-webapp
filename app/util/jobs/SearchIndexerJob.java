@@ -11,6 +11,7 @@ import models.TalkerBean;
 import models.TopicBean;
 import models.PrivacySetting.PrivacyType;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -53,10 +54,17 @@ public class SearchIndexerJob extends Throwable{
 				  if (talker.isSuspended()) {
 					  continue;
 				  }
-				  
+				  if(talker.getUserName()== null)
+					  continue;
 				  Document doc = new Document();
 				  doc.add(new Field("id", talker.getId(), Field.Store.YES, Field.Index.ANALYZED));
 				  doc.add(new Field("uname", talker.getUserName(), Field.Store.YES, Field.Index.ANALYZED));
+				  if(StringUtils.isNotBlank(talker.getCategory())) {
+					  doc.add(new Field("category", talker.getCategory(), Field.Store.YES, Field.Index.ANALYZED));
+				  } else {
+					  doc.add(new Field("category", "All Cancer", Field.Store.YES, Field.Index.ANALYZED));
+				  }
+					  
 				  if (!talker.isPrivate(PrivacyType.PROFILE_INFO) && talker.getBio() != null) {
 					  doc.add(new Field("bio", talker.getBio(), Field.Store.YES,
 		                      Field.Index.ANALYZED));
@@ -67,6 +75,11 @@ public class SearchIndexerJob extends Throwable{
 				  doc = new Document();
 				  doc.add(new Field("id", talker.getId(), Field.Store.YES, Field.Index.ANALYZED));
 				  doc.add(new Field("uname", talker.getUserName(), Field.Store.YES, Field.Index.ANALYZED));
+				  if(StringUtils.isNotBlank(talker.getCategory())) {
+					  doc.add(new Field("category", talker.getCategory(), Field.Store.YES, Field.Index.ANALYZED));
+				  } else {
+					  doc.add(new Field("category", ALL_CANCERS, Field.Store.YES, Field.Index.ANALYZED));
+				  }
 				  doc.add(new Field("type", "User", Field.Store.YES, Field.Index.NO));
 				  autocompleteIndexWriter.addDocument(doc);
 			}
@@ -84,6 +97,12 @@ public class SearchIndexerJob extends Throwable{
 				doc.add(new Field("id", convo.getId(), Field.Store.YES, Field.Index.ANALYZED));
 				doc.add(new Field("title", convo.getTopic(), Field.Store.YES, Field.Index.ANALYZED));
 				
+				if(StringUtils.isNotBlank(convo.getCategory())){
+					doc.add(new Field("category", convo.getCategory(), Field.Store.YES, Field.Index.ANALYZED));
+				} else {
+					doc.add(new Field("category", ALL_CANCERS, Field.Store.YES, Field.Index.ANALYZED));
+				}
+				
 				//add an answer, reply, or live conversation text ?
 				List<CommentBean> answersList = CommentsDAO.loadConvoAnswersTreeForScheduler(convo.getId());
 				StringBuilder answersString = new StringBuilder();
@@ -100,21 +119,27 @@ public class SearchIndexerJob extends Throwable{
 				doc = new Document();
 				doc.add(new Field("id", convo.getId(), Field.Store.YES, Field.Index.ANALYZED));
 				doc.add(new Field("title", convo.getTopic(), Field.Store.YES, Field.Index.ANALYZED));
+				if(StringUtils.isNotBlank(convo.getCategory())){
+					doc.add(new Field("category", convo.getCategory(), Field.Store.YES, Field.Index.ANALYZED));
+				} else {
+					doc.add(new Field("category", ALL_CANCERS, Field.Store.YES, Field.Index.ANALYZED));
+				}
 				doc.add(new Field("type", "Conversation", Field.Store.YES, Field.Index.NO));
 				if (convo.getMainURL() != null) {
 					doc.add(new Field("url", convo.getMainURL(), Field.Store.YES, Field.Index.NO));
 				}
 				autocompleteIndexWriter.addDocument(doc);
 			}
-			System.out.println("Completed convo indexes::::");
-			System.out.println("Creating topic indexes::::");
 			allConvos.clear();
+			System.out.println("Completed convo indexes::::");
+			
+			System.out.println("Creating topic indexes::::");
 			Set<TopicBean> allTopics = TopicDAO.loadAllTopics(true);
 			for (TopicBean topic : allTopics) {
 				if (topic.isDeleted()) {
 					continue;
 				}
-				
+
 				Document doc = new Document();
 				doc.add(new Field("id", topic.getId(), Field.Store.YES, Field.Index.NO));
 				doc.add(new Field("title", topic.getTitle(), Field.Store.YES, Field.Index.ANALYZED));
@@ -139,4 +164,6 @@ public class SearchIndexerJob extends Throwable{
 	protected void finalize() throws Throwable {
 		super.finalize();
 	}
+	
+	private static String ALL_CANCERS = "All Cancers";
 }

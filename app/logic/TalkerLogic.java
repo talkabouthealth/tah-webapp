@@ -773,11 +773,11 @@ public class TalkerLogic {
 		return recommendedTopics;
 	}
 	
-	public static ArrayList<TalkerBean> getRecommendedTalkers(TalkerBean talker,String type, String afterActionId){
+	public static ArrayList<TalkerBean> getRecommendedTalkers(TalkerBean talker,String type, String afterActionId, String cancerType){
 		ArrayList<TalkerBean> recommendedMembers = new ArrayList<TalkerBean>();
 		
 		if("EXP".equals(type)){
-			List<TalkerBean> allExperts = ApplicationDAO.getTalkersInOrder(talker,true,afterActionId);
+			List<TalkerBean> allExperts = ApplicationDAO.getTalkersInOrder(talker,true,afterActionId,cancerType);
 			for (TalkerBean member : allExperts) {
 				recommendedMembers.add(member);
 				if (recommendedMembers.size() == 3) {
@@ -785,7 +785,7 @@ public class TalkerLogic {
 				}
 			}
 		}else if("USR".equals(type)){
-			List<TalkerBean> allMembers = ApplicationDAO.getTalkersInOrder(talker,false,afterActionId);
+			List<TalkerBean> allMembers = ApplicationDAO.getTalkersInOrder(talker,false,afterActionId,cancerType);
 			for (TalkerBean member : allMembers) {
 				recommendedMembers.add(member);
 				if (recommendedMembers.size() == 3) {
@@ -799,7 +799,7 @@ public class TalkerLogic {
 	
 	public static void getRecommendedTalkers(TalkerBean talker, List<TalkerBean> similarMembers,
 			List<TalkerBean> experts) {
-		List<TalkerBean> allExperts = ApplicationDAO.getTalkersInOrder(talker,true,null);
+		List<TalkerBean> allExperts = ApplicationDAO.getTalkersInOrder(talker,true,null,null);
 		for (TalkerBean member : allExperts) {
 			experts.add(member);
 			if (experts.size() == 3) {
@@ -807,7 +807,7 @@ public class TalkerLogic {
 			}
 		}
 
-		List<TalkerBean> allMembers = ApplicationDAO.getTalkersInOrder(talker,false,null);
+		List<TalkerBean> allMembers = ApplicationDAO.getTalkersInOrder(talker,false,null,null);
 		for (TalkerBean member : allMembers) {
 			similarMembers.add(member);
 			if (similarMembers.size() == 3) {
