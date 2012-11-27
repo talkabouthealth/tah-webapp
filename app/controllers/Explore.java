@@ -35,6 +35,7 @@ import logic.TopicLogic;
 import models.CommentBean;
 import models.ConversationBean;
 import models.DiseaseBean;
+import models.GuidanceNewsLetterBean;
 import models.NewsLetterBean;
 import models.ServiceAccountBean;
 import models.PrivacySetting.PrivacyType;
@@ -659,19 +660,43 @@ public class Explore extends Controller {
   		}
 		render(talker,diseaseList1,diseaseList2,diseaseList3,topic);
 	}
-	
+
 	/**
 	 * Page to displaying newsletter information
 	 * 
 	 */
-	public static void newsletter(){
+	public static void newsletter(String name) {
+		String cancerType = session.get("cancerType"); 
+		if(StringUtils.isNotBlank(name)) {
+			if(name.equals("cancer")){
+				
+			} else if(name.equals("breast-cancer") && "Breast Cancer".equals(cancerType)){
+				
+			} else {
+				notFound();
+			}
+			System.out.println("Need to add a page");
+		} else {
+			System.out.println("Its fine here");
+		}
+
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		NewsLetterBean newsletter = new NewsLetterBean();
-		if(talker != null){
+		NewsLetterBean newsletter = null;
+		GuidanceNewsLetterBean letterBean = null;
+		if(talker != null) {
 			newsletter = NewsLetterDAO.getNewsLetterInfo(talker.getEmail());
+			letterBean = NewsLetterDAO.getGuidanceNewsLetterInfo(talker.getEmail(),"Breast Cancer Guidance");
 		}
 		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
-		render(newsletter,diseaseList,talker);
+		render(newsletter,diseaseList,talker,cancerType,letterBean);
+	}
+
+	/**
+	 * Page to displaying newsletter information
+	 * 
+	 */
+	public static void newsletterOld() {
+		redirect("/cancer-newsletters",true);
 	}
 	
 	public static void subscribeNewsLetter(NewsLetterBean newsletter) {
@@ -685,6 +710,23 @@ public class Explore extends Controller {
 
 		if(newsletter != null && newsletter.getNewsLetterType() != null && newsletter.getNewsLetterType().length > 0){
 			NewsLetterDAO.saveOrUpdateNewsletter(newsletter,talker);
+			renderText("Ok");
+		}else{
+			renderText("Please select on of the option");
+		}
+	}
+	
+	public static void subscribeNewsLetterAll(NewsLetterBean newsletter) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		String email = newsletter.getEmail();
+		validation.required(email).message("Email is required");
+		validation.email(email.trim());
+		if (validation.hasErrors()) {
+			renderText("Error:" + validation.errors().get(0));
+		}
+
+		if(newsletter != null && newsletter.getNewsLetterType() != null && newsletter.getNewsLetterType().length > 0) {
+			NewsLetterDAO.saveOrUpdateNewsletterAll(newsletter,talker);
 			renderText("Ok");
 		}else{
 			renderText("Please select on of the option");

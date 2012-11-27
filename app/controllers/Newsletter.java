@@ -1,5 +1,10 @@
 package controllers;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.apache.commons.lang.StringUtils;
+
 import models.NewsLetterBean;
 import models.TalkerBean;
 import play.data.validation.Email;
@@ -93,6 +98,48 @@ public class Newsletter extends Controller {
 			renderText("Ok");
 		}else{
 			renderText("Please select on of the option");
+		}
+	}
+
+	public static void subscribeCancerNews(NewsLetterBean newsletter) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		String highrisk = params.get("highrisk");
+		String day = params.get("day")==null?"":params.get("day");
+		String month = params.get("month")==null?"":params.get("month");
+		String year = params.get("year")==null?"":params.get("year");
+		String guidance = params.get("guidance");
+
+		
+		
+		String email = newsletter.getEmail();
+		validation.required(email).message("Email is required");
+		validation.email(email.trim());
+		if (validation.hasErrors()) {
+			renderText("Error:" + validation.errors().get(0));
+		}
+
+		if(StringUtils.isNotEmpty(guidance)) {
+			boolean highriskFlag = StringUtils.isNotBlank(highrisk);
+			NewsLetterDAO.saveOrUpdateGuidanceNewsletter(email,guidance,highriskFlag,day,month,year);
+		}
+		
+		if(newsletter != null && newsletter.getNewsLetterType() != null && newsletter.getNewsLetterType().length > 0) {
+			NewsLetterBean newsletterNew = NewsLetterDAO.getNewsLetterInfo(talker.getEmail());
+			String[] newLetterTypes = newsletterNew.getNewsLetterType();
+
+    		int len = newLetterTypes.length;
+    		String types[]=new String[len+1];
+    		int i;
+    		for(i=0;i<len;i++) {
+    			types[i]=newLetterTypes[i];
+    		}
+    		types[i]="Breast Cancer Update";
+    		newsletter.setNewsLetterType(types);
+			NewsLetterDAO.saveOrUpdateNewsletter(newsletter,talker);
+			renderText("Ok");
+		} else {
+			renderText("Please select one of the option");
 		}
 	}
 }

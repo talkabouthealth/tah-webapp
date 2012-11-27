@@ -52,7 +52,8 @@ GET		/explore/communityFeedAjaxLoad			Explore.communityFeedAjaxLoad
 GET		/explore/topics							Explore.topics
 GET		/explore/topics/{topic}					Explore.topics
 
-GET		/explore/newsletter						Explore.newsletter
+GET		/{name}-newsletters						Explore.newsletter
+GET		/explore/newsletter						Explore.newsletterOld
 GET		/explore/{cancerType}					Explore.community
 
 GET		/home/?									Home.index

@@ -86,27 +86,30 @@ public class Application extends Controller {
     public static void index() {
     	
     	String def = session.get("def");
+    	boolean isCommunityHomePage = false;
     	if(StringUtils.isBlank(def)){
     		def = "0";
     	}
     	if("0".equals(def)) {
     		String hostAll = request.host;
-    		//System.out.println("Host: " + hostAll);
     		if(hostAll.contains("talkbreastcancer.com")) {
-    			Community.index();
+    			//Community.index();
+    			isCommunityHomePage = true;
     		} else {
 	    		String[] arr = request.host.split("\\.");
 				if (arr != null && arr.length > 0) {
 					if(arr.length == 3 || arr.length == 4) {
 			    		try {
-			    			Community.index();
+			    			//Community.index();
+			    			isCommunityHomePage = true;
 						} catch (Throwable e) {
 							e.printStackTrace();
 						}
 					} else {
 						String cancerType = session.get("cancerType");
 						if(StringUtils.isNotBlank(cancerType)){
-							Community.index();
+							//Community.index();
+							isCommunityHomePage = true;
 						}
 					}
 		    	} else {
@@ -120,20 +123,26 @@ public class Application extends Controller {
     	if (Security.isConnected()) {
     		Home.index();
     	} else {
-    		List<VideoBean> videoList = VideoDAO.loadVideoForHome(3,"All Cancers");
-    		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
-    		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
-    		List<DiseaseBean> homediseaseList = DiseaseDAO.getCatchedDiseasesList(session);
-    		List<DiseaseBean> diseaseList = new ArrayList<DiseaseBean>();
-
-    		/*	Code to remove new cancer categories from home page */
-    		Set<String> newCancerList = DiseaseDAO.newCancerTypes();
-
-    		for (DiseaseBean diseaseBean : homediseaseList) {
-    			if(!newCancerList.contains(diseaseBean.getName()))
-    				diseaseList.add(diseaseBean);
-			}
-    		render(null, numberOfMembers, numberOfAnswers, diseaseList,videoList);
+	    		long numberOfMembers = TalkerDAO.getNumberOfTalkers();
+	    		long numberOfAnswers = CommentsDAO.getNumberOfAnswers();
+	    		List<DiseaseBean> homediseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+	    		List<DiseaseBean> diseaseList = new ArrayList<DiseaseBean>();
+	
+	    		/*	Code to remove new cancer categories from home page */
+	    		Set<String> newCancerList = DiseaseDAO.newCancerTypes();
+	
+	    		for (DiseaseBean diseaseBean : homediseaseList) {
+	    			if(!newCancerList.contains(diseaseBean.getName()))
+	    				diseaseList.add(diseaseBean);
+				}
+	    		if(isCommunityHomePage){
+	    			String cancerType = session.get("cancerType");
+	    			List<VideoBean> videoList = VideoDAO.loadVideoForHome(3, cancerType);
+	    			render("/Community/index.html",diseaseList, videoList, numberOfMembers, numberOfAnswers,cancerType);
+	    		} else {
+	    			List<VideoBean> videoList = VideoDAO.loadVideoForHome(3,"All Cancers");
+	    			render(null, numberOfMembers, numberOfAnswers, diseaseList,videoList);
+	    		}
     	}
     }
 
@@ -566,7 +575,8 @@ public class Application extends Controller {
 			email = talker.getEmail();
 			newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
 		}
-		render(talker,email,newsLetterFlag);
+		//render(talker,email,newsLetterFlag); //Old redirect code
+		redirect("/cancer-newsletters");
     }
 
     /*	Date : 24 Jun 2011

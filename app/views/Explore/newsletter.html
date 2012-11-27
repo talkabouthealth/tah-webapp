@@ -10,7 +10,6 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		var newsLetterOptions = { success: showMsg };
-		addAjaxForm("#newsLetterForm"); 
 		$('#newsLetterForm').submit(function() {
 			var email = document.getElementById("email").value;
 			if (email === 'Your Email' || email === '') {
@@ -20,7 +19,6 @@
 			$("#newsLetterForm").ajaxSubmit(newsLetterOptions); 
 			return false;
 		})
-		
 	});
 	function showMsg(responseText) {
 		if(responseText === "Ok") {
@@ -29,6 +27,8 @@
 		} else if(responseText.indexOf("Error:") === 0) {
 			var errorText = responseText.replace("Error:", "");
 			alert(errorText);
+		} else {
+			$("#responseText").html(responseText);
 		}
 	}
 	function displayOptions(option){
@@ -48,10 +48,11 @@
   	<div id="bottom_container">
   		<div class="haderbanner"><div id="innerbanner"></div></div>
   			<div id="innermain">
+  			  #{ifnot session.contains("cancerType")}
 	         	<div class="blacktext2" id="innerheading">Subscribe to our free newsletters!</div>
 	         	<div id="innermiddlearea">
 		            <div id="signupleft">
-		            	#{form @Explore.subscribeNewsLetter() , id:'newsLetterForm' }
+		            	#{form @Explore.subscribeNewsLetterAll() , id:'newsLetterForm' }
 		            	<h3 style="color: #000">Keep up to date with the latest news, featured experts, best answers, and custom offers.</h3>
 		          		<div id="checkboxarea3">
 		          			<div style="float:left;">
@@ -155,7 +156,6 @@
 							</div>
 						</div>
 						<div style="width:100%;margin-top: 10px;">
-						#{if session.get("cancerType") == null}
 						<h4 style="font-weight: bold; margin-top: 10px;float:none;  width: 100%;">
 							<a href="javascript:displayOptions('newsLetterOption');" ><img id="newsLetterOptionEC" src="/public/images/collapse.png"/>
 							<span style="margin-left: 5px; vertical-align: top;">
@@ -178,7 +178,6 @@
 									</div>
 								#{/list}
 							</div>
-							#{/if}
 						</div>
 						<div style="width:100%;">
 						<h4 style="  width: 100%;"><a href="javascript:displayOptions('rewardsOptions');" ><img id="rewardsOptionsEC" src="/public/images/collapse.png"/><span style="margin-left: 5px; vertical-align: top;">
@@ -523,12 +522,104 @@
 						</div>
 		          		<div class="cb"></div>
 		          		#{/form}
-			         </div>
-			          <div id="signupright">
+		          	
+			        </div>
+			        <div id="signupright">
 			        	#{ set currentPage = 'newsLetter' /}
 			        	#{rightmenu /}
 			        </div>
 			   </div>
+			#{/ifnot}
+		    #{else}
+				<div class="blacktext2" id="innerheading">Daily guidance through the ${cancerType} journey.</div>
+		         	<div id="innermiddlearea">
+			            <div id="signupleft">
+			            #{form @Newsletter.subscribeCancerNews() , id:'newsLetterForm' }
+		            	<h3 style="color: #000">
+		            	Subscribe to our free newsletters for the latest news, what to expect, how to prepare and answers from the world's leading experts.
+		            	</h3>
+		            	<div id="checkboxarea3" class="lableDiv">
+		            	<div style="float:left;">
+							<input id="newsletter" name="guidance" type="checkbox"  value="${cancerType} Guidance"  #{if letterBean != null} checked='checked' #{/if}> 
+							</div> ${cancerType} Guidance <br/>
+						<div  style="font-size:12px; font-weight: normal;">(Our popular weekly series shares customized answers, tips & guidance through your unique journey.)</div>
+						</div>
+						<div style="padding: 20px 5px 30px 25px;">
+						Enter when you were diagnosed.  
+						
+						<div>
+							<select size="1"  name="month" id="month" class="textarea2">
+								#{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
+								    <option value="${i_index-1}" 
+								    	#{if letterBean?.month.equals(i_index-1 + "")} selected #{/if}
+								    >${i}</option>
+								#{/list}
+							</select>
+							<select size="1" name="day" class="textarea2" id="day">
+						  		<option selected value='0'>Day</option>
+						  		#{list items:1..31, as:'i'}
+								    <option value="${i}"
+								    #{if letterBean?.day.equals(i + "")} selected #{/if}
+								    >${i}</option>
+								#{/list}
+							</select>
+							<select size="1"  name="year" class="textarea2" id="year">
+						  		<option selected value='0'>Year</option>
+						  		#{list items:2012..1950, as:'i'}
+								    <option value="${i}"
+								    #{if letterBean?.year.equals(i + "")} selected #{/if}
+								    >${i}</option>
+								#{/list}
+							</select>
+						</div>
+						<input name="highrisk" type="checkbox"  value="highrisk" #{if letterBean?.isHighRisk} checked='checked' #{/if}> I'm high risk.
+		            	</div>
+		            	<div id="checkboxarea3" class="lableDiv">
+			            	<div style="float:left;">
+								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="${cancerType} Update"
+								#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains(cancerType + ' Update') } 
+							   		checked='checked' #{/if}> 
+								</div> ${cancerType} Update
+							<div  style="font-size:12px; font-weight: normal;">(Daily news, featured experts, best answers, tips and more customized for you.</div>
+		         		</div>   
+		         		<div style="width: 100%; margin-bottom: 5px;float: left;">
+						<div style="width: 100%;  float: left;">
+							#{if session.username}
+								<input name="newsletter.email" id="email" type="hidden"  size="35" class="personalfields"  id="newsletter.email" 
+									onfocus="if (this.value == 'Your Email') this.value = ''" onblur="if (this.value == '') this.value = 'Your Email'" 
+								 #{if talker} value = "${talker.email}" #{/if} #{else} value="Your Email" #{/else} />
+							#{/if}
+							#{else}
+								<div class="personaltextfield" style="margin-top: 15px;">
+									<input name="newsletter.email" id="email" type="text"  size="35" class="personalfields"  id="newsletter.email" 
+										onfocus="if (this.value == 'Your Email') this.value = ''" onblur="if (this.value == '') this.value = 'Your Email'" 
+									 #{if talker} value = "${talker.email}" #{/if} #{else} value="Your Email" #{/else} />
+								</div>
+							#{/else}
+						</div>
+						</div>
+						<br/>
+						<div id="checkboxarea3" style=" padding-bottom: 20px;float:left;">
+							<a onclick="" style="cursor: pointer;" onClick="_gaq.push(['_trackEvent', 'Newsletter_Signup_Page', 'Signup_Click', 'Signup_Click']);">
+								#{if session.username}
+									<button type="submit" class="updateSubscription"></button>
+								#{/if}
+								#{else}
+									<button type="submit" class="subscribe"></button>
+								#{/else}
+							</a>
+							<div id="responseText"></div>
+						</div>
+		          		<div class="cb"></div>
+			            #{/form}
+			            </div>
+			            <div id="signupright">
+			        	#{ set currentPage = 'newsLetter' /}
+			        	#{rightmenu /}
+			    		</div>
+					</div>
+					</div>
+			#{/else}
 	        </div>
 	      </div>
     	</div>
