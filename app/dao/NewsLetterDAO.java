@@ -108,8 +108,8 @@ public class NewsLetterDAO {
 							populateStats(type,true);
 						}
 					}
+					types = newLetterTypes.toArray(new String[]{});
 				}
-				types = newLetterTypes.toArray(new String[]{});
 			/*} else {
 				DBObject obj=newsLetterColl.findOne(email);
 				Collection<String> newLetterTypes = (Collection<String>)obj.get("newsletter_type");
