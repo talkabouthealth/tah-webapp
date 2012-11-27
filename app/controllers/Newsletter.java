@@ -127,15 +127,21 @@ public class Newsletter extends Controller {
 		
 		if(newsletter != null && newsletter.getNewsLetterType() != null && newsletter.getNewsLetterType().length > 0) {
 			NewsLetterBean newsletterNew = NewsLetterDAO.getNewsLetterInfo(email);
-			String[] newLetterTypes = newsletterNew.getNewsLetterType();
-
-    		int len = newLetterTypes.length;
-    		String types[]=new String[len+1];
-    		int i;
-    		for(i=0;i<len;i++) {
-    			types[i]=newLetterTypes[i];
-    		}
-    		types[i]="Breast Cancer Update";
+			int i = 0;
+			String types[]= null;
+			if(newsletterNew!=null) {
+				String[] newLetterTypes = newsletterNew.getNewsLetterType();
+				int len = newLetterTypes==null?0:newLetterTypes.length;
+				types =new String[len+1];
+	    		if(len != 0) {
+	    			for(i=0;i<len;i++) {
+	    				types[i]=newLetterTypes[i];
+	    			}
+	    		}
+			} else {
+				types =new String[1];
+			}
+			types[i]="Breast Cancer Update";
     		newsletter.setNewsLetterType(types);
 			NewsLetterDAO.saveOrUpdateNewsletter(newsletter,talker);
 			isNewsletterSaved = true;
