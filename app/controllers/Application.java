@@ -96,27 +96,26 @@ public class Application extends Controller {
     			//Community.index();
     			isCommunityHomePage = true;
     		} else {
-	    		String[] arr = request.host.split("\\.");
-				if (arr != null && arr.length > 0) {
-					if(arr.length == 3 || arr.length == 4) {
-			    		try {
-			    			//Community.index();
-			    			isCommunityHomePage = true;
-						} catch (Throwable e) {
-							e.printStackTrace();
-						}
-					} else {
+	    		//String[] arr = request.host.split("\\.");
+				//if (arr != null && arr.length > 0) {
+				//	if(arr.length == 3 || arr.length == 4) {
+			    //		try {
+			    //			//Community.index();
+			    //			isCommunityHomePage = true;
+				//		} catch (Throwable e) {
+				//			e.printStackTrace();
+				//		}
+				//	} else {
 						String cancerType = session.get("cancerType");
 						if(StringUtils.isNotBlank(cancerType)){
 							//Community.index();
 							isCommunityHomePage = true;
 						}
-					}
-		    	} else {
-		    		session.remove("cancerType");
-		    	}
+				//	}
+		    	//} else {
+		    	//	session.remove("cancerType");
+		    	//}
     		}
-			
     	} else {
     		session.remove("cancerType");
     	}

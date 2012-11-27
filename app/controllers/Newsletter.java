@@ -109,7 +109,7 @@ public class Newsletter extends Controller {
 		String month = params.get("month")==null?"":params.get("month");
 		String year = params.get("year")==null?"":params.get("year");
 		String guidance = params.get("guidance");
-
+		boolean isNewsletterSaved = false;
 		
 		
 		String email = newsletter.getEmail();
@@ -122,10 +122,11 @@ public class Newsletter extends Controller {
 		if(StringUtils.isNotEmpty(guidance)) {
 			boolean highriskFlag = StringUtils.isNotBlank(highrisk);
 			NewsLetterDAO.saveOrUpdateGuidanceNewsletter(email,guidance,highriskFlag,day,month,year);
+			isNewsletterSaved = true;
 		}
 		
 		if(newsletter != null && newsletter.getNewsLetterType() != null && newsletter.getNewsLetterType().length > 0) {
-			NewsLetterBean newsletterNew = NewsLetterDAO.getNewsLetterInfo(talker.getEmail());
+			NewsLetterBean newsletterNew = NewsLetterDAO.getNewsLetterInfo(email);
 			String[] newLetterTypes = newsletterNew.getNewsLetterType();
 
     		int len = newLetterTypes.length;
@@ -137,6 +138,9 @@ public class Newsletter extends Controller {
     		types[i]="Breast Cancer Update";
     		newsletter.setNewsLetterType(types);
 			NewsLetterDAO.saveOrUpdateNewsletter(newsletter,talker);
+			isNewsletterSaved = true;
+		}
+		if(isNewsletterSaved) {
 			renderText("Ok");
 		} else {
 			renderText("Please select one of the option");
