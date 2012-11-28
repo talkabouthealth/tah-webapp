@@ -104,10 +104,12 @@
 			<ul id="nav">
 			    <li><a href="@{Explore.conversations('expert')}">Answers</a></li>
 			    <li><a href="@{Explore.topics()}">Topics</a></li>
-			    <li><a href="@{MicroSite.video()}">Videos</a></li>
+			    <li>
+			    	<a href="@{MicroSite.video(cancerType.toLowerCase().replaceAll(" ","-"))}">Videos</a>
+			    </li>
 			    <li><a href="@{Explore.browseMembers('active')}">Members</a></li>
-			    <li><a href="@{MicroSite.medical_professionals()}">Experts</a></li>
-			    <li><a href="@{MicroSite.workshops()}">Workshops</a></li>
+			    <li><a href="@{MicroSite.medical_professionals(cancerType.toLowerCase().replaceAll(" ","-"))}">Experts</a></li>
+			    <li><a href="@{MicroSite.workshops(cancerType.toLowerCase().replaceAll(" ","-"))}">Workshops</a></li>
 			    <li><a href="@{Static.trained_peer_support_program()}">Support</a></li><!-- Support Team -->
 			    <li><a href="http://blog.talkabouthealth.com" target="_new">Blog</a></li>
 			</ul>
@@ -349,7 +351,7 @@
       	#{/form}
 		<div style="float:left;">
 			<p>
-				<a href="@{Explore.newsletter()}">
+				<a href="@{Explore.newsletter(cancerType.toLowerCase().replaceAll(" ","-"))}">
 				<img src="/public/images/index/newsletter_icon.png" alt="all newsletters" /> View All Newsletters
 				</a>
 			</p>

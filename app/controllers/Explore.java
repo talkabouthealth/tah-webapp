@@ -668,10 +668,8 @@ public class Explore extends Controller {
 	public static void newsletter(String name) {
 		String cancerType = session.get("cancerType"); 
 		if(StringUtils.isNotBlank(name)) {
-			if(name.equals("cancer")){
-				
-			} else if(name.equals("breast-cancer") && "Breast Cancer".equals(cancerType)){
-				
+			if(name.equals("cancer")) {
+			} else if(name.equals("breast-cancer") && "Breast Cancer".equals(cancerType)) {
 			} else {
 				notFound();
 			}

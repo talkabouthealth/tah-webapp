@@ -93,6 +93,14 @@ GET		/{userName}/topics						PublicProfile.topicsFollowing
 *		/message/doaction						Messaging.doAction
 *		/message/archive						Messaging.archive
 
+# Map's All Static new and old URLS
+*		/static/cancer-video					Static.TAH_Videos
+*		/static/{name}-video					MicroSite.video
+*		/static/cancer-workshops				Static.workshops
+*		/static/{name}-workshops				MicroSite.workshops
+*		/static/cancer-medical-professionals	Static.medical_professionals
+*		/static/{name}-medical-professionals	MicroSite.medical_professionals
+
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}
 

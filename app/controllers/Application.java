@@ -567,15 +567,17 @@ public class Application extends Controller {
 
     /* ----------------- Signup Newsletter ------------------------- */
     public static void newsletter_signup() {
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		/* //Old redirect code
+ 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		boolean newsLetterFlag = false;
 		String email = null;
 		if(talker != null){
 			email = talker.getEmail();
 			newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
 		}
-		//render(talker,email,newsLetterFlag); //Old redirect code
-		redirect("/cancer-newsletters");
+		render(talker,email,newsLetterFlag); 
+		*/
+		redirect("/cancer-newsletters", true);
     }
 
     /*	Date : 24 Jun 2011

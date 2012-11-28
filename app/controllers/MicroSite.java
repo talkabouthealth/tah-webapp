@@ -20,17 +20,17 @@ import dao.VideoDAO;
 @With( LoggerController.class )
 public class MicroSite extends Controller {
 
-	public static void video() {
+	public static void video(String name) {
+		String cancerType = session.get("cancerType");
+		render("/MicroSite/video.html",cancerType);
+	}
+
+	public static void medical_professionals(String name) {
 		String cancerType = session.get("cancerType");
 		render(cancerType);
 	}
 
-	public static void medical_professionals() {
-		String cancerType = session.get("cancerType");
-		render(cancerType);
-	}
-
-	public static void workshops() {
+	public static void workshops(String name) {
 		String cancerType = session.get("cancerType");
 		render(cancerType);
    }
