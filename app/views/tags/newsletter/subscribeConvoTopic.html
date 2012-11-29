@@ -31,11 +31,15 @@
 	   		var email = $("#convoTopic :input[name='newsletter.email']").val();
 	   		showPopupEmail(email);
 	   	} else {
-	   		//$("#convoTopicMessage").css("color","#2E8B57");
-	   		//$("#convoTopicMessage").html(responseText);
-	   		//$("#convoTopicMessage").fadeIn(100);
-	   		//closeTimeout = setTimeout(function() { $("#convoTopicblock").fadeOut(200) }, 4000);
-	   		window.location.href = "/signup?fromPage=NEWS";
+	   		#{ifnot session.username }
+	   			window.location.href = "/signup?fromPage=NEWS";
+	   		#{/ifnot}
+	   		#{else}
+		   		$("#convoTopicMessage").css("color","#2E8B57");
+		   		$("#convoTopicMessage").html(responseText);
+		   		$("#convoTopicMessage").fadeIn(100);
+		   		closeTimeout = setTimeout(function() { $("#convoTopicblock").fadeOut(200) }, 4000);
+	   		#{/else}
 	   	}
 	}
 	showPopupEmail = function(email) {

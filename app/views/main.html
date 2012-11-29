@@ -8,11 +8,22 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 	<meta name="author" content="TalkAboutHealth" /> 
 	<meta name="robots" content="all" /> 
-	
+
+	#{if session.get("cancerType") != null }
+		#{if pageTitle}
+			<title>${pageTitle}</title>
+		#{/if}
+		#{else}
+			<title> ${session.get("cancerType")} - Health and Medical Answers From World Leading Experts. Relevant, helpful, and accurate health information.</title>
+		#{/else}
+	#{/if}
+	#{else}
 	<title>${pageTitle ? pageTitle : 'TalkAboutHealth - Health and Medical Answers From World Leading Experts. Relevant, helpful, and accurate health information.'}</title>
+	#{/else} 
+
 	<meta name="description" content="${pageDescription ? pageDescription : 'Health and Medical Answers From World Leading Experts. Relevant, helpful, and accurate health information. We are a welcoming and caring community who have come together to meet, share, and learn with each other. We welcome patients, families, caregivers, survivors, professionals, and organizations. Everyone is encouraged to share their unique knowledge and experiences. The more we share, the more lives we improve and save.'}" /> 
 	<meta name="keywords" content="${pageKeywords ? pageKeywords : 'support, health information, cancer, breast cancer, questions, answers, personalized health, emotional support, medical information, meet, learn, share, health community, relationships, wellness, health advice'}" /> 
-	
+
 	#{if pageType?.equals("Conversation") || pageType?.equals("Topic") }
 		<meta property="og:title" content="${pageTitle}" />
 		<meta property="og:type" content="article"/>

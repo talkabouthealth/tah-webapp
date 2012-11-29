@@ -22,6 +22,13 @@ public class ActivityLogController  extends Controller{
 			return;
 		}
 
+		String oldSessionId = session.get("thisSessionId");
+		String sessionId = session.getId();
+		session.put("thisSessionId", sessionId);
+		
+		//System.out.println("oldSessionId: " + oldSessionId);
+		//System.out.println("sessionId: " + sessionId);
+
 		//Page Type
 		String pageType = params.get("pageType");
 		if(StringUtils.isEmpty(pageType))
@@ -51,6 +58,8 @@ public class ActivityLogController  extends Controller{
 			// accept-language, cookie
 		}
 
+		String addrArray = null;
+
 		//Location
 		String userLocationCode = params.get("geoLcode");
 		String userLocationCountry = params.get("geoLcountry");
@@ -58,6 +67,26 @@ public class ActivityLogController  extends Controller{
 		String userLocationCity = params.get("geoLcity");
 		String userLocationLatitude = params.get("geoLat");
 		String userLocationLongitude = params.get("geoLong");
+		
+		if(!userLocationCode.equals("unknown")){
+			addrArray = userLocationCode + "," + userLocationCountry + "," + userLocationState + "," + userLocationCity + "," + userLocationLatitude + "," + userLocationLongitude;
+			session.put("address", addrArray);
+		}
+		if(StringUtils.isNotEmpty(oldSessionId) && oldSessionId.equals(sessionId)) {
+			addrArray =  session.get("address");
+			String addressArray[] = addrArray.split(",");
+			userLocationCode = addressArray[0];
+			userLocationCountry = addressArray[1];
+			userLocationState = addressArray[2];
+			userLocationCity = addressArray[3];
+			userLocationLatitude = addressArray[4];
+			userLocationLongitude = addressArray[5];
+			addrArray = userLocationCode + "," + userLocationCountry + "," + userLocationState + "," + userLocationCity + "," + userLocationLatitude + "," + userLocationLongitude;
+			session.put("address", addrArray);
+		} else {
+			addrArray = userLocationCode + "," + userLocationCountry + "," + userLocationState + "," + userLocationCity + "," + userLocationLatitude + "," + userLocationLongitude;
+			session.put("address", addrArray);
+		}
 
 		ActivityLogBean logBean = new ActivityLogBean(
 							remoteIp,
@@ -65,14 +94,14 @@ public class ActivityLogController  extends Controller{
 							URLDecoder.decode(params.get("page")),
 							URLDecoder.decode(params.get("ref")),
 							userAgent,
-							session.getId(),
+							sessionId,
 							"",
 							"");
 
 		logBean.setUserLanguage(userLanguage);
 		logBean.setUserCookie(userCookie);
 		logBean.setCancerSite(cancerSite);
-		
+
 		//Location details
 		logBean.setUserLocationCode(userLocationCode);
 		logBean.setUserLocationCountry(userLocationCountry);

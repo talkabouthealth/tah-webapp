@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import models.GuidanceNewsLetterBean;
 import models.NewsLetterBean;
 import models.TalkerBean;
 import models.TopicBean;
@@ -39,7 +40,7 @@ public class NewsLetterDAO {
 	 * Method used for save or update newsletter information.
 	 * @param newsLetterBean
 	 */
-	public static boolean saveOrUpdateNewsletter(NewsLetterBean newsLetterBean,TalkerBean talker){
+	public static boolean saveOrUpdateNewsletterAll(NewsLetterBean newsLetterBean,TalkerBean talker){
 		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
 		boolean isExist = ApplicationDAO.isEmailExists(newsLetterBean.getEmail());
 		String []types = newsLetterBean.getNewsLetterType();
@@ -68,7 +69,59 @@ public class NewsLetterDAO {
 					}
 				}
 			}
-			
+
+			DBObject newsLetterDBObject = BasicDBObjectBuilder.start()
+				.add("email", newsLetterBean.getEmail())
+				.add("newsletter_type", types)
+				.get();
+			newsLetterColl.update(email,newsLetterDBObject);
+		} else {
+			for(String type:types) {
+				populateStats(type,true);
+			}
+			DBObject newsLetterDBObject = BasicDBObjectBuilder.start()
+				.add("email", newsLetterBean.getEmail())
+				.add("newsletter_type", types)
+				.get();
+			newsLetterColl.save(newsLetterDBObject);
+		}
+		return isExist;
+	}
+	
+	/**
+	 * Method used for save or update newsletter information.
+	 * @param newsLetterBean
+	 */
+	public static boolean saveOrUpdateNewsletter(NewsLetterBean newsLetterBean,TalkerBean talker){
+		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
+		boolean isExist = ApplicationDAO.isEmailExists(newsLetterBean.getEmail());
+		String []types = newsLetterBean.getNewsLetterType();
+		if(isExist) {
+			DBObject email = new BasicDBObject("email", newsLetterBean.getEmail());
+			//if(talker == null) {
+				DBObject obj=newsLetterColl.findOne(email);
+				Collection<String> newLetterTypes = (Collection<String>)obj.get("newsletter_type");
+				if(newLetterTypes != null && !newLetterTypes.isEmpty()) {
+					for(String type:types) {
+						if(!newLetterTypes.contains(type)) {
+							newLetterTypes.add(type);
+							populateStats(type,true);
+						}
+					}
+					types = newLetterTypes.toArray(new String[]{});
+				}
+			/*} else {
+				DBObject obj=newsLetterColl.findOne(email);
+				Collection<String> newLetterTypes = (Collection<String>)obj.get("newsletter_type");
+				if(newLetterTypes != null && !newLetterTypes.isEmpty()) {
+					for(String type:types) {
+						if(!newLetterTypes.contains(type)) {
+							populateStats(type,true);
+						}
+					}
+				}
+			}*/
+
 			DBObject newsLetterDBObject = BasicDBObjectBuilder.start()
 				.add("email", newsLetterBean.getEmail())
 				.add("newsletter_type", types)
@@ -131,8 +184,7 @@ public class NewsLetterDAO {
 		}
 		return newsLetterBean;
 	}
-	
-	
+
 	public static boolean saveOrUpdateTopicNewsletterNew(String email, String topicId) {
 		String NEWSLETTER_COLLECTION = "topicNewsletterNew";
 		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
@@ -144,7 +196,6 @@ public class NewsLetterDAO {
 							.add("timestamp",  Calendar.getInstance().getTime()).get();
 		newsLetterColl.save(newsLetterDBObject);
 		return true;
-		
 	}
 	
 	public static boolean saveOrUpdateTopicNewsletter(String email, String topicId) {
@@ -202,6 +253,43 @@ public class NewsLetterDAO {
 			newsLetterColl.update(talkerIdObj,newsLetterDBObject);
 		}
 		return true;
+	}
+	
+	public static boolean saveOrUpdateGuidanceNewsletter(String email,String letterName,boolean highRisk,String day,String month,String year) {
+		String NEWSLETTER_COLLECTION = "guidanceNewsletter";
+		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
+		DBObject query = new BasicDBObject("email", email).append("letterName",letterName);
+		DBObject objRec = newsLetterColl.findOne(query);
+		DBObject newsLetterDBObject;
+		if(objRec == null) { //Insert
+			newsLetterDBObject = BasicDBObjectBuilder.start().add("email", email).add("letterName", letterName).add("isHighRisk", highRisk).add("day", day)
+								.add("month", month).add("year", year).add("timestamp", Calendar.getInstance().getTime()).get();
+			newsLetterColl.save(newsLetterDBObject);
+		} else {
+			//Update
+			newsLetterDBObject = BasicDBObjectBuilder.start().add("email", email).add("letterName", letterName).add("isHighRisk", highRisk).add("day", day)
+								.add("month", month).add("year", year).add("timestamp", Calendar.getInstance().getTime()).get();
+			newsLetterColl.update(query,newsLetterDBObject);
+		}
+		return true;
+	}
+
+	public static GuidanceNewsLetterBean getGuidanceNewsLetterInfo(String email,String letterName) {
+		GuidanceNewsLetterBean letterBean = null;
+		String NEWSLETTER_COLLECTION = "guidanceNewsletter";
+		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
+		DBObject query = new BasicDBObject("email", email).append("letterName",letterName);
+		DBObject objRec = newsLetterColl.findOne(query);
+		if(objRec != null) { //Insert
+			letterBean = new GuidanceNewsLetterBean();
+			letterBean.setEmail(email);
+			letterBean.setDay(DBUtil.getString(objRec, "day"));
+			letterBean.setHighRisk(DBUtil.getBoolean(objRec, "isHighRisk"));
+			letterBean.setMonth(DBUtil.getString(objRec, "month"));
+			letterBean.setNewsLetterName(letterName);
+			letterBean.setYear(DBUtil.getString(objRec, "year"));
+		}
+		return letterBean;
 	}
 	
 	public static boolean isSubscribeTalker(String email, String talkerId) {

@@ -360,7 +360,7 @@ openServiceLogin = function(serviceType) {
 	    <li><a href="@{Explore.topics()}">Topics</a></li>
 	    <li>
 	    	#{if session.contains("cancerType")}
-	    		<a href="@{MicroSite.video()}">Videos</a>
+	    		<a href="@{MicroSite.video(session.get("cancerType").toLowerCase().replaceAll(" ","-"))}">Videos</a>
 	    	#{/if}
 	    	#{else}
 	    		<a href="@{Static.TAH_Videos()}">Videos</a>
@@ -368,8 +368,8 @@ openServiceLogin = function(serviceType) {
 	    </li>
 	    <li><a href="@{Explore.browseMembers('active')}">Members</a></li>
 	    	#{if session.contains("cancerType")}
-				<li><a href="@{MicroSite.medical_professionals()}">Experts</a></li>
-				<li><a href="@{MicroSite.workshops()}">Workshops</a></li>
+				<li><a href="@{MicroSite.medical_professionals(session.get("cancerType").toLowerCase().replaceAll(" ","-"))}">Experts</a></li>
+				<li><a href="@{MicroSite.workshops(session.get("cancerType").toLowerCase().replaceAll(" ","-"))}">Workshops</a></li>
 			#{/if}
 	    	#{else}
 	    		<li><a href="@{Static.medical_professionals()}">Experts</a></li>
