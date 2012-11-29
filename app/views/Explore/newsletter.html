@@ -540,7 +540,11 @@
 		            	</h3>
 		            	<div id="checkboxarea3" class="lableDiv">
 		            	<div style="float:left;">
-							<input id="newsletter" name="guidance" type="checkbox"  value="${cancerType} Guidance"  #{if letterBean != null} checked='checked' #{/if}> 
+							<input id="newsletter" name="guidance" type="checkbox"  value="${cancerType} Guidance" 
+							#{if session.username}
+								#{if letterBean != null} checked='checked' #{/if}
+					   		#{/if}
+					   		#{else} checked='checked' #{/else}> 
 							</div> ${cancerType} Guidance <br/>
 						<div  style="font-size:12px; font-weight: normal;">(Our popular weekly series shares customized answers, tips & guidance through your unique journey.)</div>
 						</div>
@@ -577,8 +581,14 @@
 		            	<div id="checkboxarea3" class="lableDiv">
 			            	<div style="float:left;">
 								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox"  value="${cancerType} Update"
-								#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains(cancerType + ' Update') } 
-							   		checked='checked' #{/if}> 
+									#{if session.username}
+									#{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains(cancerType + ' Update') } 
+							   			checked='checked' 
+							   		#{/if}
+							   		#{/if}
+							   		#{else}
+							   			checked='checked'
+							   		#{/else}>
 								</div> ${cancerType} Update
 							<div  style="font-size:12px; font-weight: normal;">(Daily news, featured experts, best answers, tips and more customized for you.</div>
 		         		</div>   
