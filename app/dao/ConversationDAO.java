@@ -1053,8 +1053,12 @@ public class ConversationDAO {
 		for(DBObject obj:commentDBlist){
 			//TalkerBean talker=TalkerLogic.loadTalkerFromCache(obj, "from");
 			DBObject query=new BasicDBObject("_id",new ObjectId(((DBRef)obj.get("from")).getId().toString()));
-			String connection=talkerColl.findOne(query, new BasicDBObject("connection",1)).get("connection").toString();
-			if(connection !=null && TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(connection)){
+			//connection_verified
+			DBObject talkerFields = BasicDBObjectBuilder.start().add("connection", 1).add("connection_verified", 1).get();
+			DBObject talkerObj = talkerColl.findOne(query, talkerFields);///.get("connection").toString();
+			String connection = DBUtil.getString(talkerObj, "connection");
+			boolean verifiedUser = DBUtil.getBoolean(talkerObj, "connection_verified");
+			if(connection !=null && TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(connection) && verifiedUser){
 				DBObject fields = getBasicConversationFields();
 				DBObject convoQuery;
 				if(StringUtils.isNotBlank(cancerType)){
