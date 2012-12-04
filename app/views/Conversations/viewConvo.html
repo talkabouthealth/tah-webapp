@@ -1,5 +1,10 @@
 #{set pageType = 'Conversation' /}
-#{set pageTitle = convo.topic /}
+#{if convo.category != null && !convo.category.equals("")}
+	#{set pageTitle = convo.category + ' : ' + convo.topic /}
+#{/if}
+#{else}
+	#{set pageTitle = convo.topic /}
+#{/else}
 #{set pageDescription = convo.pageDescription /}
 #{set pageKeywords = convo.pageKeywords /}
 #{set currentPage = 'conversationSummary' /}
@@ -289,7 +294,6 @@
 								#{include '/Conversations/viewConvoPart1.html' /}	
 							</div><!--suggescover-->
             			</div> <!--targetedtherapy-->
-            		
 						<div class="cb"></div>
 					</div><!--mtcontent-->
           		</div>

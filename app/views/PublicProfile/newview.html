@@ -1,7 +1,11 @@
 #{set pageType = 'profile' /}
-#{set pageTitle = talker.name + " | TalkaboutHealth" /}
+#{set pageTitle = talker.name + " | " + talker.connection + " " + (talker.profInfo?.get("prim_specialty")==null?"":talker.profInfo?.get("prim_specialty")) + " | " + talker.category + (talker.otherCategories==null?"":"  " + talker.otherCategories) /}
 #{if talker.profileName != null && !talker.profileName.equals("")}
-  #{set pageTitle = talker.profileName + " | TalkaboutHealth" /}
+  #{set pageTitle = talker.profileName + " | " + talker.connection + " " + (talker.profInfo?.get("prim_specialty")==null?"":talker.profInfo?.get("prim_specialty")) + " | " + talker.category + (talker.otherCategories==null?"":"  " + talker.otherCategories) /}
+#{/if}
+
+#{if talker.profStatement}
+#{set pageDescription = talker.profStatement /}  
 #{/if}
 
 #{ set currentPage = 'publicProfile' /}
@@ -73,8 +77,6 @@
 	                      		#{else}
 	                      		<h1>${talker.name}</h1>#{talker/talkerInfo talker: talker /}
 	                      		#{/else}
-	                      		 
-	                      		
 	                      </div>
                     </div><!--pph1Cover-->
                     <table class="profiletxtCantant">
@@ -153,7 +155,7 @@
 								#{else}<input type="button" onclick="joinNow();" id="postQuestionBtn" value="" />#{/else}
 							</div>
 							<div style="clear:both"></div>
-	                  	</div><!--profiletxtCantant-->
+	                  	</div>
 							#{if talker.isProf() && talker.isAllowed(models.PrivacySetting.PrivacyType.PROFESSIONAL_INFO, currentTalker)}
 								#{if talker.isOrg()}
 								<div class="profilebio">Organization Info</div>
@@ -310,10 +312,10 @@
 					                    #{if talker.profInfo.get(field)} 			                    	
 					                    <div class="profiletxtCantant">
 					                      <div class="profileCantanttxt1">
-					                      	<strong>${logic.TalkerLogic.PROF_FIELDS_MAP.get(field)?.raw()}:</strong> 
-					                      	<span class="Profilepersonsub">
+					                      	<h2 style="font-size:12px;"><strong>${logic.TalkerLogic.PROF_FIELDS_MAP.get(field)?.raw()}:</strong> 
+					                      	<span class="Profilepersonsub" style="font-weight: normal;">
 					                      		${talker.profInfo.get(field).replaceAll("(http://[^\"\'\n ]+)", "<a href=\"\$1\" target=_blank>\$1</a>").nl2br()}					                      		
-					                      	</span>
+					                      	</span></h2>
 					                      </div>
 					                    </div>
 					                    #{/if}
@@ -638,7 +640,6 @@
                   <div class="cb"></div>
                 </div>
 			  </div><!--mtleft-->
-            	#{ set currentPage = 'publicProfile' /}
             	#{ include 'PublicProfile/profileRight.html' /}
             <!--mtright--><div class="cb"></div>
           </div><!--mtcover-->

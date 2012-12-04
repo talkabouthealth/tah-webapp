@@ -14,17 +14,23 @@
 			<title>${pageTitle}</title>
 		#{/if}
 		#{else}
-			<title> ${session.get("cancerType")} - Health and Medical Answers From World Leading Experts. Relevant, helpful, and accurate health information.</title>
+			<title> ${session.get("cancerType")}: Health and Medical Answers From World Leading Experts. Relevant, helpful, and accurate health information.</title>
 		#{/else}
 	#{/if}
 	#{else}
-	<title>${pageTitle ? pageTitle : 'TalkAboutHealth - Health and Medical Answers From World Leading Experts. Relevant, helpful, and accurate health information.'}</title>
+		<title>${pageTitle ? pageTitle : 'TalkAboutHealth - Health and Medical Answers From World Leading Experts. Relevant, helpful, and accurate health information.'}</title>
 	#{/else} 
 
 	<meta name="description" content="${pageDescription ? pageDescription : 'Health and Medical Answers From World Leading Experts. Relevant, helpful, and accurate health information. We are a welcoming and caring community who have come together to meet, share, and learn with each other. We welcome patients, families, caregivers, survivors, professionals, and organizations. Everyone is encouraged to share their unique knowledge and experiences. The more we share, the more lives we improve and save.'}" /> 
 	<meta name="keywords" content="${pageKeywords ? pageKeywords : 'support, health information, cancer, breast cancer, questions, answers, personalized health, emotional support, medical information, meet, learn, share, health community, relationships, wellness, health advice'}" /> 
 
 	#{if pageType?.equals("Conversation") || pageType?.equals("Topic") }
+		#{if session.get("cancerType") != null }
+			<meta property="og:site_name" content="Talk ${session.get("cancerType")}"/>
+		#{/if}
+		#{else}
+			<meta property="og:site_name" content="TalkAboutHealth"/>
+		#{/else}
 		<meta property="og:title" content="${pageTitle}" />
 		<meta property="og:type" content="article"/>
 		<meta property="og:url" content="${currentURL}"/>
@@ -34,8 +40,20 @@
 		#{if pageType?.equals("Topic") }
 			<meta property="og:image" content="http://talkabouthealth.com/public/images/mainlogo.png"/>
 		#{/if}
-		<meta property="og:site_name" content="TalkAboutHealth"/>
 		<meta property="og:description" content="${pageDescription}"/>
+	#{/if}
+	#{if pageType?.equals("profile")}
+		#{if session.get("cancerType") != null }
+			<meta property="og:site_name" content="Talk ${session.get("cancerType")}"/>
+		#{/if}
+		#{else}
+			<meta property="og:site_name" content="TalkAboutHealth"/>
+		#{/else}
+		<meta property="og:title" content="${pageTitle}" />
+		<meta property="og:type" content="article"/>
+		<meta property="og:url" content="${currentURL}"/>
+		<meta property="og:description" content="${pageDescription}"/>
+		<meta property="og:image" content="http://talkabouthealth.com@{Image.show(talker.name)}"/>
 	#{/if}
 	
 	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
