@@ -53,7 +53,7 @@
 	         	<div id="innermiddlearea">
 		            <div id="signupleft">
 		            	#{form @Explore.subscribeNewsLetterAll() , id:'newsLetterForm' }
-		            	<h3 style="color: #000">Keep up to date with the latest news, featured experts, best answers, and custom offers.</h3>
+		            	<h3 style="color: #000">Answers from leading cancer experts: What to expect. How to prepare. Next steps.</h3>
 		          		<div id="checkboxarea3">
 		          			<div style="float:left;">
 							#{if newsletter != null && newsletter.newsLetterType !=null}
@@ -531,12 +531,12 @@
 			   </div>
 			#{/ifnot}
 		    #{else}
-				<div class="blacktext2" id="innerheading">Daily guidance through the ${cancerType} journey.</div>
+				<div class="blacktext2" id="innerheading">Subscribe to our free ${cancerType} newsletters.</div>
 		         	<div id="innermiddlearea">
 			            <div id="signupleft">
 			            #{form @Newsletter.subscribeCancerNews() , id:'newsLetterForm' }
 		            	<h3 style="color: #000">
-		            	Subscribe to our free newsletters for the latest news, what to expect, how to prepare and answers from the world's leading experts.
+		            	Answers from leading ${cancerType} experts: What to expect. How to prepare. Next steps.
 		            	</h3>
 		            	<div id="checkboxarea3" class="lableDiv">
 		            	<div style="float:left;">
