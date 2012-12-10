@@ -37,10 +37,10 @@ public class SEO extends Controller  {
 	}*/
 	
 	public static void sitemap(String name) {
-		String cancerType = session.get("cancerType");;
-		if(StringUtils.isNotBlank(cancerType) && cancerType.equals("Breast Cancer")) {
-			render("SEO/sitemap_bc.xml");			
-		} else {
+		//String cancerType = session.get("cancerType");;
+		//if(StringUtils.isNotBlank(cancerType) && cancerType.equals("Breast Cancer")) {
+		//	render("SEO/sitemap_bc.xml");			
+		//} else {
 			if(StringUtils.isNotBlank(name)) {
 				if("cancer".equals(name)) {
 					Document xml = getCancerXml();
@@ -55,15 +55,15 @@ public class SEO extends Controller  {
 					Document xml = getConvoXml();
 					renderXml(xml);
 				} else {
-					render("SEO/sitemap" + name +  ".xml");
+					render("SEO/sitemap.xml");
 				}
 			} else {
 				render("SEO/sitemap.xml");
 			}
-		}
+		//}
 	}
 
-	private static Document getCancerXml(){
+	private static Document getCancerXml() {
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder;
 		Document xml = null;
