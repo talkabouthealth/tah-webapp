@@ -106,31 +106,32 @@
 	                      		#{/else}
 	                      	#{/else}
 	                      </td>
-	                     <td class="profileCantanttxt2">
-                      	<strong>Thank You's:</strong>
-                      	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.name, 'thankyous')}">
-							${talker.thankYouList.size()}
-						</a>
-					  </td>
-                    </tr><!--profiletxtCantant-->
-                    <tr>
-                      <td class="profileCantanttxtLeft"><strong>Member Since:&nbsp;</strong>${talker.regDate.format('MMM. yyyy')}</td>
-                  	<td class="profileCantanttxtLeft">
-                      	<strong>&nbsp;Questions:&nbsp;</strong>
-                      	<a style="text-decoration: none" href="@{PublicProfile.conversations(talker.name)}">${numOfStartedConvos}</a>
-                      </td>   
-		<!--    <td class="profileCantanttxt2">
-                      	<strong>Top Answers:&nbsp;</strong>
-                      	<a style="text-decoration: none" href="@{PublicProfile.answers(talker.name)}">${numOfTopAnswers}</a>
-                      </td>-->
-                    </tr><!--profiletxtCantant-->
-                    <tr>
-                                       
-                      <td class="profileCantanttxt2">
+	                      <td class="profileCantanttxt2">
                       	<strong>Answers:&nbsp;</strong>
                       	<a style="text-decoration: none" href="@{PublicProfile.answers(talker.name)}">${numOfAnswers}</a>
                       </td>
                     </tr>
+                    <tr>
+                      <td class="profileCantanttxtLeft"><strong>Member Since:&nbsp;</strong>${talker.regDate.format('MMM. yyyy')}</td>
+                      <td class="profileCantanttxt2">
+                      	<strong>Top Answers:&nbsp;</strong>
+                      	<a style="text-decoration: none" href="@{PublicProfile.answers(talker.name)}">${numOfTopAnswers}</a>
+                      </td>
+                    </tr>
+                    #{if currentTalker != null}
+                    <tr>
+                      <td class="profileCantanttxtLeft">
+                      	<strong>Questions:&nbsp;</strong>
+                      	<a style="text-decoration: none" href="@{PublicProfile.conversations(talker.name)}">${numOfStartedConvos}</a>
+                      </td>
+                      <td class="profileCantanttxt2">
+							<strong>Thank You's:</strong>
+							<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.name, 'thankyous')}">
+								${talker.thankYouList.size()}
+							</a>
+					  </td>
+                    </tr>
+                    #{/if}
                     </table>
 	                  	<div id="postQuestionTabContent" class="topTabContent" style="display:block">	
 	                  		<div style="float:left;">                  		    
