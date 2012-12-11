@@ -87,10 +87,12 @@
         <div class="cb"></div>
 	</div>
 	<div class="topipsts">
+		#{if currentTalker != null}
 		<div class="mtrighttxt">
 	     	<a class="${currentPage.equals('publicProfile') ? 'current' : ''}" 
 	     		href="@{ViewDispatcher.view(talker.name)}">Profile</a>
 		</div>
+		#{/if}
 		#{if talker.isAllowed(models.PrivacySetting.PrivacyType.THOUGHTS, currentTalker) }
 			#{if currentTalker != null || commentCount != 0 }
 			<div class="mtrighttxt">
@@ -124,7 +126,7 @@
 			</div>
 			#{/if}
 		#{/if}
-		#{if talker.isAllowed(models.PrivacySetting.PrivacyType.THANKYOUS, currentTalker) }
+		#{if currentTalker != null && talker.isAllowed(models.PrivacySetting.PrivacyType.THANKYOUS, currentTalker) }
 			#{if currentTalker != null || !talker.thankYouList.isEmpty()}
 			<div class="mtrighttxt">
 				<a class="${currentPage.equals('thankyous') ? 'current' : ''}" 
@@ -166,7 +168,7 @@
         <div class="topicborder"></div>
         #{/if}
 	#{/if}
-	#{if talker.isAllowed(models.PrivacySetting.PrivacyType.FOLLOWERS, currentTalker) }
+	#{if currentTalker != null && talker.isAllowed(models.PrivacySetting.PrivacyType.FOLLOWERS, currentTalker) }
 		#{if currentTalker != null || !talker.followerList.isEmpty()}
 		<div class="followingbox">
 			<div class="followingtoptxt">

@@ -5,6 +5,10 @@
 # Modules
 *		/										module:secure
 
+#siteMaps for SEO
+GET		/sitemap.xml							SEO.sitemap
+GET		/sitemap{name}.xml						SEO.sitemap
+
 GET     /                                       Application.index
 GET     /signup/?                               Application.signup
 POST    /register/?	                            Application.register

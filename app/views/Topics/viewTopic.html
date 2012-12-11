@@ -1,6 +1,8 @@
 #{set pageType = 'Topic' /}
-#{set pageTitle = topic.title /}
+#{set pageTitle = topic.title + ' questions and answers' /}
 #{set pageDescription = (topic.summary?.length() > 0 ? topic.summary : topic.title) /}
+#{set pageDescription = ('A summary of ' + topic.title + ' questions and answers on TalkAboutHealth') /}
+
 
 #{extends 'Topics/topicPage.html' /}
 #{set currentPage = 'viewTopic' /}
