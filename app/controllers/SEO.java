@@ -54,8 +54,8 @@ public class SEO extends Controller  {
 				} else if("convo".equals(name)) {
 					Document xml = getConvoXml();
 					renderXml(xml);
-				} else {
-					render("SEO/sitemap.xml");
+				} else if("static".equals(name))  {
+					render("SEO/sitemapstatic.xml");
 				}
 			} else {
 				render("SEO/sitemap.xml");
