@@ -1,6 +1,9 @@
 #{if _type !=null && _type=="expertConvo"}
 	<div class="joinbox" id="${_convo.comments.get(0).id}">
 #{/if}
+#{elseif _type !=null && _type=="recentConvo"}
+	<div class="joinbox" id="${_convo.comments.get(0).id}">
+#{/elseif}
 #{else}
 	<div class="joinbox" id="${_convo.id}">
 #{/else}

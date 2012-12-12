@@ -1,27 +1,13 @@
-#{if type=="popularConvo"}
-	<div id="popularConvoList">
-	 #{list items: popularConvo, as: 'convo' }
-		#{convo/convoListItem convo: convo, talker: talker /}
-	#{/list}
-	</div>
-	#{if popularConvo.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
-		<div class="replytommentbox" id="popularConvoBtn">
-           <input type="submit" src="images/seemore.jpg" 
-           	onclick="return loadMoreFeedWithoutLogin('popularConvo');" value=" " class="seemorecom" />
-         </div>
-	#{/if}
-#{/if}
-
 #{if type=="expertConvo"}
 	<div id="expertConvoList">
-		#{list items: expertConvo, as: 'convo' }
+		#{list items: expertConvos, as: 'convo' }
 			#{convo/convoListItem convo: convo, talker: talker , type : type /}
 		#{/list}
 	</div>
-	#{if expertConvo.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+	#{if expertConvos.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
 		<div class="replytommentbox" id="expertConvoBtn">
            <input type="submit" src="images/seemore.jpg" 
-           	onclick="return loadMoreFeedWithoutLogin('expertConvo');" value=" " class="seemorecom" />
+           	onclick="return loadMoreCommunityFeeds('expertConvo');" value=" " class="seemorecom" />
          </div>
 	#{/if}
 #{/if}
@@ -35,7 +21,7 @@
 	#{if openConvo.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
 		<div class="replytommentbox" id="openConvoBtn">
            <input type="submit" src="images/seemore.jpg" 
-           	onclick="return loadMoreFeedWithoutLogin('openConvo');" value=" " class="seemorecom" />
+           	onclick="return loadMoreCommunityFeeds('openConvo');" value=" " class="seemorecom" />
          </div>
 	#{/if}
 #{/if}
@@ -49,7 +35,7 @@
 	#{if recentConvo != null}
 		#{if recentConvo.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
 			<div class="replytommentbox" id="recentConvoBtn">
-				<input type="submit" src="images/seemore.jpg" onclick="return loadMoreFeedWithoutLogin('recentConvo');" value=" " class="seemorecom" />
+				<input type="submit" src="images/seemore.jpg" onclick="return loadMoreCommunityFeeds('recentConvo');" value=" " class="seemorecom" />
 			</div>
 		#{/if}
 	#{/if}

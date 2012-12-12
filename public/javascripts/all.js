@@ -1201,7 +1201,7 @@ function loadMoreCommunityFeed(type, cancerType) {
 		feedType = type;
 	}
 	//public static void conversationFeedAjax(String afterActionId) {
-	$.get("/explore/communityFeedAjaxLoad", {afterActionId: lastActionId, feedType: feedType, cancerType: cancerType},
+	$.get("/explore/communityFeedAjaxLoad", {afterActionId: lastActionId, type: feedType, csrType: cancerType},
 			function(data) {
 				$("#ajaxLoading").hide();
 				
@@ -1217,7 +1217,6 @@ function loadMoreCommunityFeed(type, cancerType) {
 				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
 			}
 		);
-	
 	return false;
 }
 

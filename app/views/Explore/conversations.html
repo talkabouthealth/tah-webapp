@@ -42,23 +42,13 @@
 				$(".tabContent").hide();
 				$(".replytommentbox").hide();
 				
-				/*
-				if(id=='popularConvo' && popularConvo==0 ){
-					$("#ajaxLoading").appendTo($("#"+id+"Div")).show();
-					$.get("/Explore/ajaxFeedUpdate",{ type : 'popularConvo' },function(data){
-						popularConvo=1;
-						$("#"+id+"Div").html(data);
-						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
-				    });	
-				}else 
-				*/ 
 				if(id=='recentConvo' && recentConvo==0 ){
 					$("#ajaxLoading").appendTo($("#"+id+"Div")).show();
 					$.get("/Explore/ajaxFeedUpdate",{ type : 'recentConvo' },function(data){
 						recentConvo=1;
 						$("#"+id+"Div").html(data);
 						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
-				    });	
+				    });
 				} else if(id=='expertConvo' && expertConvo==0){
 					$("#ajaxLoading").appendTo($("#"+id+"Div")).show();
 					$.get("/Explore/ajaxFeedUpdate",{ type : 'expertConvo' },function(data){
@@ -102,7 +92,8 @@
                   <div class="topipcWraper">
                   	<div class="newTabCover">
                   	  <div class="newActiveTab"><a href="#" id="expertConvo" class="tabLink">Expert Answers</a></div>
-					  <div class="newTab"><a href="#" id="recentConvo" class="tabLink">Recent Answers</a></div>
+<!-- 		Rename This			  <div class="newTab"><a href="#" id="recentConvo" class="tabLink">Recent Answers</a></div> -->
+					  <div class="newTab"><a href="#" id="recentConvo" class="tabLink">Shared Experiences</a></div>
 <!--					  <div class="newTab"><a href="#" id="popularConvo" class="tabLink">Popular Answers</a></div>-->
 					  <div class="newTab"><a href="#" id="openConvo" class="tabLink">Unanswered Questions</a></div>
 					  <div class="laborder"></div>
@@ -111,7 +102,7 @@
 					<div>
 						<div id="recentConvoContent" class="tabContent">	
 							<div class="topic">
-		                      <div class="newpage1">Recent Questions</div>
+		                      <div class="newpage1">Shared Experiences</div>
 		                      <div class="cb"></div>
 		                      <div class="joinborder"></div>
 		                      <div class="cb"></div>
@@ -120,23 +111,7 @@
 				                      <div id="recentConvoList">
 				                      </div>
 				                  </div>
-		                        
-		                        <!-- 
-		                        <div id="recentConvoList">
-			                    	#{list items: recentConvo, as: 'activity'}
-										#{feed/feedActivity activity: activity, talker: talker /}
-									#{/list}
-								</div>
-								#{if recentConvo != null}
-									#{if recentConvo.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
-										<div class="replytommentbox" id="recentConvoBtn">
-				                          <input type="submit" src="images/seemore.jpg" 
-				                          	onclick="return loadMoreFeedWithoutLogin('recentConvo');" value=" " class="seemorecom" />
-				                        </div>
-									#{/if}
-								#{/if}
-								 -->
-		                        <div class="cb"></div>
+							  <div class="cb"></div>
 		                      </div>
 		                      <!--newpageCover-->
 		                      <div class="cb"></div>
@@ -164,7 +139,6 @@
 						<div id="popularConvoContent" class="tabContent" style="display: none;">
 							<div class="topic">
 		                      <div class="newpage1">Popular Answers</div>
-		
 		                      <div class="cb"></div>
 		                      <div class="joinborder"></div>
 		                      <div class="cb"></div>
@@ -178,14 +152,11 @@
 		                      <div class="cb"></div>
 		                    </div> 
 						</div>
-						
 						<div id="openConvoContent" class="tabContent" style="display: none;">
 							<div class="topic">
-		                      <div class="newpage1">Unanswered Questions </div>
-		
+		                      <div class="newpage1">Unanswered Questions</div>
 		                      <div class="cb"></div>
 		                      <div class="joinborder"></div>
-		                      <!--mtinputbox-->
 		                      <div class="cb"></div>
 		                      <div class="topic" >
 							  <div id="openConvoDiv">		                      
@@ -199,17 +170,13 @@
 		                    </div> 
 						</div>
 					</div>
-					
 					#{ notLoggedNotice /} 
-                    
                     <div class="cb"></div>
                   </div>
                   <!--topipcWraper-->
-
                   <div class="cb"></div>
                 </div>
                 <!--mtcontent-->
-                
                 <div class="cb"></div>
               </div>
               <!--mtleft-->
@@ -221,16 +188,14 @@
           </div>
           <!--mtcover-->
           <div class="cb"></div>
-
         </div>
         <div id="signupright"></div>
       </div>
     </div>
   </div>
-  
+</div>
 <div id="boxes">
 	<div id="dialog" class="window"></div>
-	
 	#{ popups/flag /}
 </div>
 <!-- Mask to cover the whole screen -->

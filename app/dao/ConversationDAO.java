@@ -560,7 +560,6 @@ public class ConversationDAO {
 			);
 		}
 		List<DBObject> convosDBList = new ArrayList<DBObject>();
-		//convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
 		DBCursor convoCur=convosColl.find(queryBuilder.get()).sort(new BasicDBObject("cr_date", -1)).limit(logic.FeedsLogic.FEEDS_PER_PAGE);
 		int recCount = 0;
 		while(convoCur.hasNext()) {
@@ -575,7 +574,6 @@ public class ConversationDAO {
 			convo.parseBasicFromDB(convoDBObject);
 	    	convosList.add(convo);
 		}
-		//cat.clear();
 		return convosList;
 	}
 	
@@ -1041,7 +1039,19 @@ public class ConversationDAO {
 		return convosList;
 	}
 	
-	private static List<ConversationBean> getConvoForExpAnswer(List<DBObject> commentDBlist,int convosize,String cancerType){
+	public static List <ConversationBean> loadSharedExperiences(String afterActionId,String cancerType){
+		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
+		while(true){
+				List<DBObject> commentDBlist=getExpertsAnswerFromDB(afterActionId);
+				convosList.addAll(getConvoForSharedAnswer(commentDBlist,convosList.size(),cancerType));
+				if(convosList.size()>=20 || commentDBlist.size()<40)
+					break;
+				afterActionId=commentDBlist.get(commentDBlist.size()-1).get("_id").toString();
+		}
+		return convosList;
+	}
+	
+	private static List<ConversationBean> getConvoForSharedAnswer(List<DBObject> commentDBlist,int convosize,String cancerType){
 		DBCollection talkerColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
 		DBCollection ConvoColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
 		List<String> cat = new ArrayList<String>(2);
@@ -1050,12 +1060,67 @@ public class ConversationDAO {
 			cat.add("All Cancers");
 		}
 		List<ConversationBean> convolist=new ArrayList<ConversationBean>();
+		
 		for(DBObject obj:commentDBlist){
-			//TalkerBean talker=TalkerLogic.loadTalkerFromCache(obj, "from");
 			DBObject query=new BasicDBObject("_id",new ObjectId(((DBRef)obj.get("from")).getId().toString()));
-			//connection_verified
+			String connection=talkerColl.findOne(query, new BasicDBObject("connection",1)).get("connection").toString();
+			if(connection !=null && !TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(connection)){
+				DBObject fields = getBasicConversationFields();
+				DBObject convoQuery;
+				if(StringUtils.isNotBlank(cancerType)){
+					convoQuery=BasicDBObjectBuilder.start()
+					.add("_id", new ObjectId(((DBRef)obj.get("convo")).getId().toString()))
+					.add("$or", 
+						Arrays.asList(
+								new BasicDBObject("other_disease_categories", new BasicDBObject("$in", cat)),
+								new BasicDBObject("category", new BasicDBObject("$in", cat))
+							)
+					)
+					.get();
+				} else {
+					convoQuery=BasicDBObjectBuilder.start()
+					.add("_id", new ObjectId(((DBRef)obj.get("convo")).getId().toString())).get();
+				}
+				DBObject convoObj=ConvoColl.findOne(convoQuery,fields);
+				if(convoObj!=null){
+						ConversationBean convoBean=new ConversationBean();
+						convoBean.parseBasicFromDB(convoObj);
+						CommentBean answer=new CommentBean();
+								answer.parseFromDB(obj);
+								List <CommentBean> answerList=new ArrayList<CommentBean>();
+								answerList.add(answer);
+								for(int i=1;i<CommentsDAO.getConvoAnswersCount(convoBean.getId());i++){
+									answerList.add(null);
+								}
+								
+						convoBean.setComments(answerList);
+						if(!convolist.contains(convoBean)) {
+							convolist.add(convoBean);
+							convosize++;
+						}
+						if(convosize>=20)
+								break;
+				}
+			}
+		}
+		return convolist;
+	}
+	
+	private static List<ConversationBean> getConvoForExpAnswer(List<DBObject> commentDBlist,int convosize,String cancerType){
+		DBCollection talkerColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
+		DBCollection ConvoColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
+		List<String> cat = new ArrayList<String>(2);
+		System.out.println("cancerType : " + cancerType);
+		if(StringUtils.isNotBlank(cancerType)){
+			cat.add(cancerType);
+			cat.add("All Cancers");
+		}
+		List<ConversationBean> convolist=new ArrayList<ConversationBean>();
+		
+		for(DBObject obj:commentDBlist) {
+			DBObject query=new BasicDBObject("_id",new ObjectId(((DBRef)obj.get("from")).getId().toString()));
 			DBObject talkerFields = BasicDBObjectBuilder.start().add("connection", 1).add("connection_verified", 1).get();
-			DBObject talkerObj = talkerColl.findOne(query, talkerFields);///.get("connection").toString();
+			DBObject talkerObj = talkerColl.findOne(query, talkerFields);
 			String connection = DBUtil.getString(talkerObj, "connection");
 			boolean verifiedUser = DBUtil.getBoolean(talkerObj, "connection_verified");
 			if(connection !=null && TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(connection) && verifiedUser){
@@ -1088,9 +1153,10 @@ public class ConversationDAO {
 								}
 								
 						convoBean.setComments(answerList);
-						//convoBean.setComments(loadAllAnswers(convoBean.getId()));
-						convolist.add(convoBean);
-						convosize++;
+						if(!convolist.contains(convoBean)) {
+							convolist.add(convoBean);
+							convosize++;
+						}
 						if(convosize>=20)
 								break;
 				}
@@ -1102,35 +1168,41 @@ public class ConversationDAO {
 	private static List<DBObject> getExpertsAnswerFromDB(String afterActionId) {
 		DBCollection commentsColl = getCollection(CommentsDAO.CONVO_COMMENTS_COLLECTION);
 		commentsColl.ensureIndex(new BasicDBObject("time", -1));
-		
+		List <DBObject> commentObjList=new ArrayList<DBObject>();
 		BasicDBObjectBuilder queryBuilder =  BasicDBObjectBuilder.start()
 		.add("deleted", new BasicDBObject("$ne", true))
 		.add("answer",true);
-	
+		boolean isNextDate = false;
 		if (afterActionId != null && !afterActionId.equals("")) {
-				DBObject fields=BasicDBObjectBuilder.start()		
-					.add("time" , 1).get();
+				DBObject fields=BasicDBObjectBuilder.start().add("time" , 1).get();
 				Date firstActionTime = new Date();
 				DBObject comment=commentsColl.findOne(new BasicDBObject("_id", new ObjectId(afterActionId)),fields);
-				firstActionTime=(Date)comment.get("time");
-				
-				if(firstActionTime!=null) {
-					queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
+				if(comment != null) {
+					firstActionTime=(Date)comment.get("time");
+
+					if(firstActionTime!=null) {
+						queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
+						isNextDate = true;
+					}
 				}
+		} else {
+			isNextDate = true;
 		}
-		DBObject fields=BasicDBObjectBuilder.start()		
-		.add("_id" , 1)
-		.add("convo" , 1)
-		.add("from" , 1 )
-		.add("time",1)
-		.add("text",1)
-		.get();
-		
-		DBObject query = queryBuilder.get();
-		DBCursor commentsCur=commentsColl.find(query,fields).sort(new BasicDBObject("time", -1)).limit(40);
-		List <DBObject> commentObjList=new ArrayList<DBObject>();
-		while(commentsCur.hasNext()){
-			commentObjList.add(commentsCur.next());
+		if(isNextDate){
+			DBObject fields=BasicDBObjectBuilder.start()		
+			.add("_id" , 1)
+			.add("convo" , 1)
+			.add("from" , 1 )
+			.add("time",1)
+			.add("text",1)
+			.get();
+			
+			DBObject query = queryBuilder.get();
+			DBCursor commentsCur=commentsColl.find(query,fields).sort(new BasicDBObject("time", -1)).limit(40);
+			
+			while(commentsCur.hasNext()){
+				commentObjList.add(commentsCur.next());
+			}
 		}
 		return commentObjList;
 	}

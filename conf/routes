@@ -58,7 +58,7 @@ GET		/explore/topics/{topic}					Explore.topics
 
 GET		/{name}-newsletters						Explore.newsletter
 GET		/explore/newsletter						Explore.newsletterOld
-GET		/explore/{cancerType}					Explore.community
+GET		/explore/{csrType}					Explore.community
 
 GET		/home/?									Home.index
 GET		/conversationfeed/?						Home.conversationFeed

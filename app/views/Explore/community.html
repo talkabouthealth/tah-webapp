@@ -6,7 +6,101 @@
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
 		var feedsPerPage = ${logic.FeedsLogic.FEEDS_PER_PAGE};
-	</script>
+		var action = '${type}';
+
+		var popularConvo=0;
+		var recentConvo=0;
+		var expertConvo=0;
+		var openConvo=0;
+		
+		$(document).ready(function() {
+			initTabs();
+
+   	   		if (action === 'expertConvo') {
+   	   			$("#expertConvo").click();
+   			} else if (action === 'openConvo') {
+   	   			$("#openConvo").click();
+   			} else if (action === 'recentConvo') {
+   	   			$("#recentConvo").click();
+   			}
+
+			$(".flagConvoLink").click(function() {
+				flagType = "convo";
+				flagId = $(this).attr("rel");
+				showPopup("#flagPopup", 200);
+			});
+		});
+		
+		function initTabs(){
+			$(".tabLink").click(function() {
+				$(".newActiveTab").removeClass("newActiveTab").addClass("newTab");
+				$(this).parent().removeClass("newTab").addClass("newActiveTab");
+				
+				var id = $(this).attr("id");
+				$(".tabContent").hide();
+				$(".replytommentbox").hide();
+				
+				if(id=='recentConvo' && recentConvo==0 ) {
+					$("#ajaxLoading").appendTo($("#"+id+"Div")).show();
+					$.get("/Explore/communityFeedAjaxLoad",{  type : 'recentConvo', csrType : '${csrType}' },function(data){
+						recentConvo=1;
+						$("#"+id+"Div").html(data);
+						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+				    });
+				} else if(id=='expertConvo' && expertConvo==0){
+					$("#ajaxLoading").appendTo($("#"+id+"Div")).show();
+					$.get("/Explore/communityFeedAjaxLoad",{  type : 'expertConvo', csrType : '${csrType}' },function(data){
+						expertConvo=1;
+						$("#"+id+"Div").html(data);
+						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+					});
+				} else if(id=='openConvo' && openConvo ==0) {
+					$("#ajaxLoading").appendTo($("#"+id+"Div")).show();
+					$.get("/Explore/communityFeedAjaxLoad",{ type : 'openConvo', csrType : '${csrType}' },function(data){
+						openConvo=1;
+						$("#"+id+"Div").html(data);
+						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+					});
+				}
+				
+				$("#"+id+"Content").fadeIn();
+				
+				$("#"+id+"Notifications").addClass("morenotification");
+				
+				//Code to show hide respective buttons also
+				$("#"+id+"Btn").fadeIn();
+				
+				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+				return false;
+			});
+		}
+		
+		loadMoreCommunityFeeds = function(type) {
+			var lastActionId = $("#"+type+"List").children().last().attr("id");
+			var moreBtn = $("#"+type+"Btn");
+			$("#ajaxLoading").appendTo(moreBtn.parent()).show();
+			moreBtn.hide();
+			$.get("/Explore/communityFeedAjaxLoad", {afterActionId: lastActionId, type: type, csrType : '${csrType}' },
+					function(data) {
+						$("#ajaxLoading").hide();
+				
+						//show more button if it isn't the end of a feed
+						var feedSize = $(data).find(".joinpic").size();
+						if (feedSize >= feedsPerPage) {
+							moreBtn.show();
+						}
+						
+						$(data).appendTo($("#"+type+"List"));
+						//for new items
+						$('.inline-edit').inlineEdit( { hover: ''} );
+						$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+		 			}
+				);
+			
+			return false;
+		}
+</script>
+	
 </head>		
 <div id="managtopic1">
   <div id="managtopic">
@@ -14,66 +108,88 @@
   	<div id="bottom_container">
       	<div class="haderbanner"><div id="innerbanner"></div></div>
         <div id="targetedtherapy">
-
           <div id="innermiddlearea">
             <div id="mtcover">
               <div id="mtleft">
                 <div class="mtcontent">
                   <div class="topipcWraper">
 					<div class="cb"></div>
-						<div class="topic">
-	                      <div class="newpage1">${cancerType} Questions and Answers</div>
-	
+					<div class="topic">
+	                   <div class="newpage1">${csrType} Questions and Answers</div>
+						<div class="newTabCover">
+							<div class="newActiveTab"><a href="#" id="expertConvo" class="tabLink">Expert Answers</a></div>
+							<div class="newTab"><a href="#" id="recentConvo" class="tabLink">Shared Experiences</a></div>
+							<div class="newTab"><a href="#" id="openConvo" class="tabLink">Unanswered Questions</a></div>
+					  		<div class="laborder"></div>
+						</div>
 	                      <div class="cb"></div>
-	                      <div class="joinborder"></div>
-	                      <div class="cb"></div>
-	                      <div class="topic">
-	                        <div id="communityFeedList">
-		                        #{if communityFeed.size() == 0}
-		                        	<br/>
-		                        	<span class="blacktext16">
-		                        		Follow topics, conversations, and
-										other members to get the latest updates.
-									</span>
-								#{/if}
-		                    	#{list items: communityFeed, as: 'activity'}
-									#{feed/feedActivity activity: activity, talker: talker /}
-								#{/list}
-							</div>
-							
-								#{if communityFeed.size() == logic.FeedsLogic.FEEDS_PER_PAGE }
-									<div class="replytommentbox" id="recentConvoBtn">
-			                          <input type="submit" src="images/seemore.jpg" 
-			                          	onclick="return loadMoreCommunityFeed('communityFeed', '${cancerType}');" value=" " class="seemorecom" />
-			                        </div>
-								#{/if}
-							
-	                        <div class="cb"></div>
-	                      </div>
-	                      <!--newpageCover-->
-	                      <div class="cb"></div>
+	                      <div id="expertConvoContent" class="tabContent" style="display: none;">
+							<div class="topic">
+		                      <div class="newpage1">Expert Answers</div>
+		                      <div class="cb"></div>
+		                      <div class="joinborder"></div>
+		                      <!--mtinputbox-->
+		                      <div class="cb"></div>
+		                      <div class="topic" >
+			                      <div id="expertConvoDiv"> 
+				                      <div id="expertConvoList"></div>
+				                  </div>	
+								  <div class="cb"></div>
+							  </div>
+		                      <!--newpageCover-->
+		                      <div class="cb"></div>
+		                    </div> 
+						</div>
+	                      <div id="recentConvoContent" class="tabContent">	
+							<div class="topic">
+		                      <div class="newpage1">Shared Experiences</div>
+		                      <div class="cb"></div>
+		                      <div class="joinborder"></div>
+		                      <div class="cb"></div>
+		                      <div class="topic">
+		                      	<div id="recentConvoDiv"> 
+				                      <div id="recentConvoList">
+				                      </div>
+				                  </div>
+							  <div class="cb"></div>
+		                      </div> <!--newpageCover-->
+		                      <div class="cb"></div>
+		                    </div> 
+						</div>
+						
+						<div id="openConvoContent" class="tabContent" style="display: none;">
+							<div class="topic">
+		                      <div class="newpage1">Unanswered Questions</div>
+		                      <div class="cb"></div>
+		                      <div class="joinborder"></div>
+		                      <div class="cb"></div>
+		                      <div class="topic" >
+							  <div id="openConvoDiv">		                      
+			                      <div id="openConvoList">
+			                      </div>
+			                  </div>
+									<div class="cb"></div>
+								</div>  <!--newpageCover-->
+		                      <div class="cb"></div>
+		                    </div> 
+						</div>
 	                    </div> 
                     <div class="cb"></div>
-                  <!--topipcWraper-->
-
                   <div class="cb"></div>
                 </div>
-                <!--mtcontent-->
-                
                 <div class="cb"></div>
               </div>
-              <!--mtleft-->
-              
               <div class="cb"></div>
           </div>
           <!--mtcover-->
             #{ include 'right.html' /}
           <div class="cb"></div>
-
         </div>
         <div id="signupright"></div>
       </div>
     </div>
   </div>
+  </div>
+  </div>
 <!-- Mask to cover the whole screen -->
-<div id="mask"></div>    
+<div id="mask"></div>
