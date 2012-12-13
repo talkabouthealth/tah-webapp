@@ -9,6 +9,8 @@
 GET		/sitemap.xml							SEO.sitemap
 GET		/sitemap{name}.xml						SEO.sitemap
 
+#Ad controller
+GET		/advertisement/{addId}					Advertisement.index
 GET     /                                       Application.index
 GET     /signup/?                               Application.signup
 POST    /register/?	                            Application.register

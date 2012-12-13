@@ -50,7 +50,7 @@ public class ActivityLogDAO {
 		}
 		return result;
 	}
-	
+
 	@Deprecated
 	public static ArrayList<ActivityLogBean> getLogList() {
 		ArrayList<ActivityLogBean> logList = null;

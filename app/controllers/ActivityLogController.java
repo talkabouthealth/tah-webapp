@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import play.mvc.Controller;
 import util.CommonUtil;
 import dao.ActivityLogDAO;
+import dao.AdvertisementDAO;
 
 public class ActivityLogController  extends Controller{
 
@@ -25,9 +26,6 @@ public class ActivityLogController  extends Controller{
 		String oldSessionId = session.get("thisSessionId");
 		String sessionId = session.getId();
 		session.put("thisSessionId", sessionId);
-		
-		//System.out.println("oldSessionId: " + oldSessionId);
-		//System.out.println("sessionId: " + sessionId);
 
 		//Page Type
 		String pageType = params.get("pageType");
@@ -67,8 +65,8 @@ public class ActivityLogController  extends Controller{
 		String userLocationCity = params.get("geoLcity");
 		String userLocationLatitude = params.get("geoLat");
 		String userLocationLongitude = params.get("geoLong");
-		
-		if(!userLocationCode.equals("unknown")){
+
+		if(!userLocationCode.equals("unknown")) {
 			addrArray = userLocationCode + "," + userLocationCountry + "," + userLocationState + "," + userLocationCity + "," + userLocationLatitude + "," + userLocationLongitude;
 			session.put("address", addrArray);
 		}
@@ -114,8 +112,12 @@ public class ActivityLogController  extends Controller{
 			logBean.setUserEmail(talker.getEmail());
 			logBean.setUserName(talker.getName());
 		}
+		
+		if(isAdvertisementPage(pageType)) {
+			AdvertisementDAO.populateStats("1", "impression",  true);
+		}
+		
 		renderText(ActivityLogDAO.logRequest(logBean));
-		//renderText("OK");
 	}
 
 	/*
