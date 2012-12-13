@@ -119,13 +119,13 @@ public class ActivityLogController  extends Controller{
 		
 		renderText(ActivityLogDAO.logRequest(logBean));
 	}
-
-	/*
-	public static void logouttime() {
-		String logId = params.get("logId");
-		System.out.println("Log Id: " + logId);
-		ActivityLogDAO.logOutTime(logId);
-		renderText("Done");
+	
+	private static boolean isAdvertisementPage(String pageName) {
+		//conversationSummary, 
+		boolean returnFlag = false;
+		if(StringUtils.isNotBlank(pageName) && ("conversationSummary".equals(pageName) || "topicPage".equals(pageName) || "cancerPage".equals(pageName) )) {
+			returnFlag = true;
+		}
+		return returnFlag;
 	}
-	*/
 }
