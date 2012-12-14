@@ -406,11 +406,17 @@
 		#{if talker }
 			<div id="answerFormDiv" style="display: ${userHasAnswer ? 'none' : 'block'};">
 				<div class="topicborder" style="margin-top: 7px;"></div>
-				
-				<div class="answerh1">Add Answer </div>
-				
-				<textarea name="textarea" id="replytext" class="answerinput" style="width: 617px; height: 150px;text-align: left;"
-					onclick="if (this.value === 'Add New Answer') this.value='';">Add New Answer</textarea><br />
+				#{if talker.isProf() }
+					<div class="answerh1">Add Answer </div>
+					<textarea name="textarea" id="replytext" class="answerinput" style="width: 617px; height: 150px;text-align: left;"
+					onclick="if (this.value === 'Add New Answer') this.value='';">Add New Answer</textarea>
+				#{/if}
+				#{else}
+					<div class="answerh1">Share your experience</div>
+					<textarea name="textarea" id="replytext" class="answerinput" style="width: 617px; height: 150px;text-align: left;"
+					onclick="if (this.value === 'Share your experience') this.value='';">Share your experience</textarea>
+				#{/else}
+				<br />
 				<input type="submit" onclick="return saveAnswerOrReply('');" 
 					src="/public/images/addcomments.jpg" class="addcomments" value=" " />
 				<div id="saveAnswerImage" class="ajaxLoading" 

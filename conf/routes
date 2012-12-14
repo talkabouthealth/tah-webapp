@@ -10,6 +10,7 @@ GET		/sitemap.xml							SEO.sitemap
 GET		/sitemap{name}.xml						SEO.sitemap
 
 #Ad controller
+*		/advertisement/logreport				Advertisement.logReport
 GET		/advertisement/{addId}					Advertisement.index
 GET     /                                       Application.index
 GET     /signup/?                               Application.signup
