@@ -264,6 +264,9 @@ if(medium=='show'){
 	                  <div class="topicborder"></div>
 	                </div>
 	                <div class="cb"></div>
+	                <!-- Advertisement Code Start -->
+	                #{ad/advertisement add: '1' /}
+			        <!-- Advertisement Code End -->
 				#{/if}
 				#{include '/tags/newsletter/subscribeTopic.html' /}
 				#{include '/tags/newsletter/subscribeCancer.html' /}
@@ -313,6 +316,9 @@ if(medium=='show'){
                 #{/if}
                 #{else}
                 	#{include 'tahInfo.html' /}
+                	<!-- Advertisement Code Start -->
+	                #{ad/advertisement add: '1' /}
+			        <!-- Advertisement Code End -->
                 #{/else}
                 	
 		        #{ifnot pageType == 'TopicVideo'}

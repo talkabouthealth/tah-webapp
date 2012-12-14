@@ -316,6 +316,11 @@
 						#{include '/Conversations/subscribeConvo.html' /}	
 						<br />
 					#{/else}
+					
+					<!-- Advertisement Code Start -->
+                	#{ad/advertisement add: '1' /}
+		        	<!-- Advertisement Code End -->
+					
 					#{include 'tags/newsletter/subscribeConvoTopic.html' /}
 					#{ifnot talker }						
 						#{include 'tahInfo.html' /}

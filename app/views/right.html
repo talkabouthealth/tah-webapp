@@ -436,7 +436,11 @@
 	</div>
 	#{/if}
 	-->
-		
+	#{if pageType != null && pageType == "cancerPage"}
+		<!-- Advertisement Code Start -->
+    	#{ad/advertisement add: '1' /}
+		<!-- Advertisement Code End -->
+	#{/if}
 	#{include 'Upcoming_Workshops.html' /}
 	<!-- New Changes Added -->
 	<div id="popularTopicsCnt" style="display:none;"></div>
@@ -473,6 +477,9 @@
 #{else}
 	#{if pageType != null && pageType == "cancerPage"}
 		#{include '/tags/newsletter/subscribeCancer.html' /}
+		<!-- Advertisement Code Start -->
+    	#{ad/advertisement add: '1' /}
+		<!-- Advertisement Code End -->
 	#{/if}
 	#{include 'tahInfo.html' /}
 	#{include 'newsletter_signup.html' /}

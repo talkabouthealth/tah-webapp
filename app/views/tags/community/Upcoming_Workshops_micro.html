@@ -32,5 +32,10 @@
    #{else}
 		<ul><li><a href="#" target="_blank">Comming soon</a></li></ul>
    #{/else}
-   <div class="more"><a href="@{MicroSite.workshops()}">All Workshops <img src="/public/images/index/arrow_blue.png" alt="all workshops" /></a></div>
+
+<div>
+
+
+   <div class="more"><a href="@{MicroSite.workshops(_category.toLowerCase().replaceAll(" ","-"))}">All Workshops <img src="/public/images/index/arrow_blue.png" alt="all workshops" /></a></div>
 </div>
+

@@ -56,6 +56,8 @@ public class SEO extends Controller  {
 					renderXml(xml);
 				} else if("static".equals(name))  {
 					render("SEO/sitemapstatic.xml");
+				} else {
+					render("SEO/sitemap.xml");
 				}
 			} else {
 				render("SEO/sitemap.xml");

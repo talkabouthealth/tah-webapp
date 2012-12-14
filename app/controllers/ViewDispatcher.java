@@ -282,14 +282,14 @@ public class ViewDispatcher extends Controller {
 		
 		if (Security.isConnected()) {
 			if(!talker.isAdmin()){
-				for(int index = 0; index < answerList.size(); index++){
+				for(int index = 0; index < answerList.size(); index++) {
 					CommentBean commentBean= answerList.get(index);
 					if(commentBean.isDeleted())
 						answerList.remove(index);
 				}
 			}
-		}else{
-			for(int index = 0; index < answerList.size(); index++){
+		} else {
+			for(int index = 0; index < answerList.size(); index++) {
 				CommentBean commentBean= answerList.get(index);
 				if(commentBean.isDeleted())
 					answerList.remove(index);
@@ -323,10 +323,28 @@ public class ViewDispatcher extends Controller {
 		} catch (Exception e) {
 				Logger.error(e, "ViewDispatcher.java : showConvo");
 		}
+		//For two tab view
+		List<CommentBean> expertComments = new ArrayList<CommentBean>();
+		List<CommentBean> sharedComments = new ArrayList<CommentBean>();
+		int expertCommentSize = 0;
+		int sharedCommentSize = 0;
+		for(int i = 0; i < convo.getComments().size(); i++) {
+			CommentBean comment =  convo.getComments().get(i);
+			if(!comment.isDeleted()) {
+				if(TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(comment.getFromTalker().getConnection())){
+					expertCommentSize++;
+					expertComments.add(comment);
+				} else {
+					sharedCommentSize++;
+					sharedComments.add(comment);
+				}
+			}
+		}
+		
 		
 		//Added for displaying proper answer count
 		int commentSize = 0;
-		for(int i = 0; i < convo.getComments().size(); i++){
+		for(int i = 0; i < convo.getComments().size(); i++) {
 			CommentBean comment =  convo.getComments().get(i);
 			if(!comment.isDeleted())
 			 commentSize++;
@@ -335,12 +353,12 @@ public class ViewDispatcher extends Controller {
 			commentSize = convo.getComments().size();
 		if(talker != null)
 			session.put("inboxUnreadCount", MessagingDAO.getUnreadMessageCount(talker.getId()));
-		
+
 		/*Code for Video*/
 		List<VideoBean> videoBeanList = VideoDAO.loadConvoVideo(convo.getId());
 		/*Code for Video*/
 		render("Conversations/viewConvo.html", talker, convo, latestActivityTime, 
-				relatedConvos, userHasAnswer,newsLetterFlag,commentSize,videoBeanList);
+				relatedConvos, userHasAnswer,newsLetterFlag,commentSize,videoBeanList,expertComments,sharedComments,expertCommentSize,sharedCommentSize);
     }
 	
 	private static void showTopic(TopicBean topic) {

@@ -368,10 +368,20 @@
 					<!-- End Video Code -->
                		<div class="topic" style="margin-bottom: 15px;">
                			<a id="answers"></a>
-               			<div class="answerh1">Answers <span class="style2">(${commentSize})</span></div>
+               			#{if expertCommentSize != 0}
+               			<div class="answerh1">Expert Answers <span class="style2">(${expertCommentSize})</span></div>
                 			<div class="topicborder"></div>
-                		</div>
-                		#{convo/convoCommentsTree commentsList: convo.helpfulAnswers, level: 1, talker: talker /}
+                		#{convo/convoCommentsTree commentsList: expertComments, level: 1, talker: talker /}
+                		#{/if}
+                		
+                		<!-- Code for experience -->
+                		<!-- expertComments,sharedComments,expertCommentSize,sharedCommentSize -->
+                		#{if sharedCommentSize != 0}
+                		<div class="answerh1">Shared Experiences <span class="style2">(${sharedCommentSize})</span></div>
+                			<div class="topicborder"></div>
+                		#{convo/convoCommentsTree commentsList: sharedComments, level: 1, talker: talker /}
+                		#{/if}
+                	</div>
                 		#{if talker != null && talker.userName.equals("admin")}
                 			#{set deletedAnswers = convo.deletedAnswers /}
 	                		#{if deletedAnswers.size() != 0 }
@@ -391,15 +401,22 @@
                  			#{convo/convoCommentsTree commentsList: notHelpfulAnswers, level: 1, talker: talker /}
                  		</div>	
                 		#{/if}
+                		</div>
 	<div class="topic" id="replyform"><br />
 		#{if talker }
 			<div id="answerFormDiv" style="display: ${userHasAnswer ? 'none' : 'block'};">
 				<div class="topicborder" style="margin-top: 7px;"></div>
-				
-				<div class="answerh1">Add Answer </div>
-				
-				<textarea name="textarea" id="replytext" class="answerinput" style="width: 617px; height: 150px;text-align: left;"
-					onclick="if (this.value === 'Add New Answer') this.value='';">Add New Answer</textarea><br />
+				#{if talker.isProf() }
+					<div class="answerh1">Add Answer </div>
+					<textarea name="textarea" id="replytext" class="answerinput" style="width: 617px; height: 150px;text-align: left;"
+					onclick="if (this.value === 'Add New Answer') this.value='';">Add New Answer</textarea>
+				#{/if}
+				#{else}
+					<div class="answerh1">Share your experience</div>
+					<textarea name="textarea" id="replytext" class="answerinput" style="width: 617px; height: 150px;text-align: left;"
+					onclick="if (this.value === 'Share your experience') this.value='';">Share your experience</textarea>
+				#{/else}
+				<br />
 				<input type="submit" onclick="return saveAnswerOrReply('');" 
 					src="/public/images/addcomments.jpg" class="addcomments" value=" " />
 				<div id="saveAnswerImage" class="ajaxLoading" 
@@ -515,7 +532,6 @@
 			Always seek the advice of your physician or other qualified health provider with questions regarding your health.
 		</span>
 		<div class="cb"></div>
-	</div>
 <div id="boxes">
 	<div id="dialog" class="window"></div>
     #{ popups/flag /}

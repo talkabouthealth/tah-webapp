@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+	<meta name="author" content="Talkmi" /> 
+	<meta name="keywords" content="support, health, talk" /> 
+	<meta name="description" content="real-time support for your health issues" /> 
+	<meta name="robots" content="all" /> 
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Advertisement Statistics</title>
+	<link href="@{'/public/stylesheets/style.css'}" rel="stylesheet" type="text/css" />
+	<link href="@{'/public/stylesheets/jquery-ui.css'}" rel="stylesheet" type="text/css" />
+	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
+	<script type="text/javascript" src="@{'/public/javascripts/jquery-1.4.2.min.js'}" ></script>
+	<script type="text/javascript" src="@{'/public/javascripts/jquery-ui-1.8.14.custom.min.js'}" ></script>
+	<style type="text/css">
+		body { margin: 20px;width: auto;font-size: 14px; }
+	</style>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#fromDate").datepicker({maxDate:new Date(),dateFormat: "yy-dd-mm"});
+			$("#toDate").datepicker({maxDate:new Date(),dateFormat: "yy-dd-mm"});
+		});
+	</script>
+</head>
+<body>
+	<table width="100%">
+		<tr>
+			<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Home.index()}">Home</a></td>
+			<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Dashboard.sendEmailToSailThrou()}">Update Email List</a></td>
+			<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/notification">Notifications</a></td>
+			<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/userlist">Users</a></td>
+			<td style="padding-right:20px;" nowrap><a href="@{Secure.logout()}">Logout</a></td>
+			<td style="width: 100%;">&nbsp;</td>
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="0" style="margin-top:10px;width:100%;height:100%;">
+		<tr>
+			<td style="padding:10px 0;"><b>Advertisement Stats</b></td>
+		</tr>
+		<tr>
+			<td style="padding: 10px 0pt 5px;">
+				<form action="@{Advertisement.logReport()}" method="post">
+					<table>
+						<tr>
+							<td><b>Date Range: </b></td>
+							<td><input id="fromDate" name="fromDate" type="text" maxlength="10" size="10" value="${fromDate}"/></td>
+							<td>-</td>
+							<td><input id="toDate" name="toDate" type="text" maxlength="10" size="10" value="${toDate}"/></td>
+							<td><input type="submit" value="Apply" /></td>
+						</tr>
+					</table>
+				</form>
+			</td>
+		</tr>
+		<tr><td style="color:#FF0000;">${errorMsg}</td></tr>
+		<tr>
+			<td style="padding:10px 0 0 0;float: right;">
+				Total # of Impression: ${total}
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<table border="1" cellpadding="5" cellspacing="0" style="width:100%;height:100%;border-color: #CCC;border-collapse: collapse;">
+					<tr>
+						<th style="width:250px;border-right: 1px solid #CCC;background-color: #EEE;">Record Type</th>
+						<th style="background-color: #EEE;"># of event's</th>
+					</tr>
+					#{list items:emailList , as: 'email'}
+					<tr>
+						<td style="width:250px;border: 1px solid #CCC;">${email.key}</td>
+						<td style="border: 1px solid #CCC;">${email.value}</td>
+					</tr>
+					#{/list}
+				</table>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

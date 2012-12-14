@@ -9,6 +9,9 @@
 GET		/sitemap.xml							SEO.sitemap
 GET		/sitemap{name}.xml						SEO.sitemap
 
+#Ad controller
+*		/advertisement/logreport				Advertisement.logReport
+GET		/advertisement/{addId}					Advertisement.index
 GET     /                                       Application.index
 GET     /signup/?                               Application.signup
 POST    /register/?	                            Application.register
@@ -58,7 +61,7 @@ GET		/explore/topics/{topic}					Explore.topics
 
 GET		/{name}-newsletters						Explore.newsletter
 GET		/explore/newsletter						Explore.newsletterOld
-GET		/explore/{cancerType}					Explore.community
+GET		/explore/{csrType}					Explore.community
 
 GET		/home/?									Home.index
 GET		/conversationfeed/?						Home.conversationFeed

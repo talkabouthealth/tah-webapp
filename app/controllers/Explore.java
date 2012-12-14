@@ -347,27 +347,27 @@ public class Explore extends Controller {
 		render(action, recentConvo, popularTopics,talker);
 	}
 	public static void ajaxFeedUpdate(String type){
+		String cancerType = session.get("cancerType");
 		if(type.equals("popularConvo")) {
 			List<ConversationBean> popularConvo = ConversationDAO.loadPopularAnswers("popular",null);
 			render("Explore/feedList.html",popularConvo, type);
 		}
 		if(type.equals("expertConvo")) {
-			String cancerType = session.get("cancerType"); 
 			List<ConversationBean> expertConvo = ConversationDAO.loadExpertsAnswer(null,cancerType);
 			render("Explore/feedList.html",expertConvo, type);
 		}
 		if(type.equals("openConvo")) {
-			String cancerType = session.get("cancerType");
 			List<ConversationBean> openConvo = ConversationDAO.getOpenQuestions(null,cancerType);
 			render("Explore/feedList.html",openConvo, type);
 		}
 		if(type.equals("recentConvo")) {
-			TalkerBean talker = CommonUtil.loadCachedTalker(session);
-			boolean loggedIn = (talker != null);
-			String cancerType = session.get("cancerType"); 
-			talker = new TalkerBean();
-			talker.setCategory(cancerType);
-			Set<Action> recentConvo = FeedsLogic.getAllCancerFeed(null, loggedIn, talker);	
+//			TalkerBean talker = CommonUtil.loadCachedTalker(session);
+//			boolean loggedIn = (talker != null);
+//			String cancerType = session.get("cancerType"); 
+//			talker = new TalkerBean();
+//			talker.setCategory(cancerType);
+//			Set<Action> recentConvo = FeedsLogic.getAllCancerFeed(null, loggedIn, talker);
+			List<ConversationBean> recentConvo = ConversationDAO.loadSharedExperiences(null,cancerType);
 			render("Explore/feedList.html",recentConvo, type);
 		}
 	}
@@ -386,9 +386,15 @@ public class Explore extends Controller {
 			render("Explore/homeFeedList.html",convoFeed, type);
 		}
 		if(type.equals("recent")){
+			
+			String cancerType = session.get("cancerType"); 
+			List<ConversationBean> convoFeed = ConversationDAO.loadSharedExperiences(lastActionId,cancerType);
+			render("Explore/homeFeedList.html",convoFeed, type);
+
+			/* Removed Old Listing for new tab changes
 			TalkerBean talker = CommonUtil.loadCachedTalker(session);
 			Set<Action> convoFeed = FeedsLogic.getAllCancerFeed(lastActionId, Security.isConnected(), talker);	
-			render("Explore/homeFeedList.html",convoFeed, type);
+			render("Explore/homeFeedList.html",convoFeed, type);*/
 		}
 	}
 
@@ -413,12 +419,14 @@ public class Explore extends Controller {
     	     popularConvos = ConversationDAO.loadPopularAnswers("popular",afterActionId);
     	     render("tags/convo/convoList.html", popularConvos);
         }else if ("recentConvo".equalsIgnoreCase(feedType)){
-        	_feedItems = FeedsLogic.getAllCancerFeed(afterActionId, loggedIn, _talker);
-    		render("tags/feed/feedList.html", _feedItems, _talker);
-	    }else if ("expertConvo".equalsIgnoreCase(feedType)){
+        	List<ConversationBean> recentConvo = ConversationDAO.loadSharedExperiences(afterActionId,cancerType);
+        	String type = feedType;
+    		render("tags/feed/recentFeedList.html", recentConvo, _talker,type);
+	    }else if ("expertConvo".equalsIgnoreCase(feedType)) {
+	    	String type = feedType;
 	   	     List<ConversationBean> expertConvos = null;
 	    	 expertConvos = ConversationDAO.loadExpertsAnswer(afterActionId,cancerType);
-		     render("tags/convo/convoList.html", expertConvos ,feedType);
+		     render("tags/convo/convoList.html", expertConvos ,type);
 	    } else if("openConvo".equalsIgnoreCase(feedType)) {
 			List<ConversationBean> openConvo = ConversationDAO.getOpenQuestions(afterActionId,cancerType);
 			render("tags/convo/convoList.html",openConvo, feedType);
@@ -533,89 +541,70 @@ public class Explore extends Controller {
 	 * Page with conversations feed of particular disease
 	 * @param cancerType
 	 */
-	public static void community(String cancerType) {
+	public static void community(String csrType) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		boolean loggedIn = (talker != null);
-		Set<Action> communityFeed = null;
+		List <ConversationBean> communityFeed = null;
 		boolean newsLetterFlag=false;
 		boolean rewardLetterFlag=false;
-		String sessionCancer = session.get("cancerType");
 		if(talker != null){
 			talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
-			 newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
+			newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
 			rewardLetterFlag=ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
 		}
-		if(cancerType == null || (cancerType != null && cancerType.equals("")))
-			cancerType = "All Cancers";
+		if(csrType == null || (csrType != null && csrType.equals("")))
+			csrType = "All Cancers";
 		else
-			cancerType = cancerType.replaceAll("_", " ");
+			csrType = csrType.replaceAll("_", " ");
 		
-		if(cancerType.equalsIgnoreCase("All Cancers")){
-			communityFeed = FeedsLogic.getAllCancerFeed(null, loggedIn, talker);
-		}else{
 			boolean isValid = false;
 			List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
 			for(int index = 0; index < diseaseList.size(); index++){
-				if(diseaseList.get(index).getName().equalsIgnoreCase(cancerType)){
+				if(diseaseList.get(index).getName().equalsIgnoreCase(csrType)){
 					isValid = true;
-					cancerType = diseaseList.get(index).getName();
+					csrType = diseaseList.get(index).getName();
 					break;
 				}
 			}
 			if(isValid){
-				if(talker != null){
-					String category = talker.getCategory();
-					talker.setCategory(cancerType);
-					String[] otherCategories = talker.getOtherCategories();
-					String[] otherCat = new String[1];
-					otherCat[0] = cancerType;
-					talker.setOtherCategories(otherCat);
-					communityFeed = FeedsLogic.getCommunityFeed(null, loggedIn, talker);
-					talker.setCategory(category);
-					talker.setOtherCategories(otherCategories);
-				}else{
-					talker = new TalkerBean();
-					talker.setCategory(cancerType);
-					String[] otherCat = new String[1];
-					otherCat[0] = cancerType;
-					talker.setOtherCategories(otherCat);
-					communityFeed = FeedsLogic.getCommunityFeed(null, loggedIn, talker);
-					talker = null;
-				}
-			}else{
+					communityFeed = ConversationDAO.loadExpertsAnswer(null,csrType);
+			} else {
 				notFound("The page you requested was not found.");
 			}
-		}
-				render(communityFeed, cancerType,talker,rewardLetterFlag,newsLetterFlag);
+		String type = "expertConvo";
+		render(communityFeed, csrType,talker,rewardLetterFlag,newsLetterFlag,type);
 	}
 	
 	/**
 	 * Used by "More" button in community feeds.
 	 * @param afterActionId load actions after given action
 	 */
-    public static void communityFeedAjaxLoad( String afterActionId, String feedType, String cancerType) {
-    	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
-    	boolean loggedIn = (_talker != null);
-    	Set<Action> _feedItems = null;
-    	if (feedType != null && feedType.equals("communityFeed")) {
-    		
-    		if(_talker != null){
-				String category = _talker.getCategory();
-				_talker.setCategory(cancerType);
-				_feedItems = FeedsLogic.getCommunityFeed(afterActionId, loggedIn, _talker);
-				_talker.setCategory(category);
-			}else{
-				_talker = new TalkerBean();
-				_talker.setCategory(cancerType);
-				_talker.setOtherCategories(new String[0]);
-				_feedItems = FeedsLogic.getCommunityFeed(afterActionId, loggedIn, _talker);
-				_talker = null;
+    public static void communityFeedAjaxLoad( String afterActionId, String type, String csrType) {
+    	if(type.equals("expertConvo")) {
+    		List<ConversationBean> expertConvos = ConversationDAO.loadExpertsAnswer(afterActionId,csrType);
+    		if(afterActionId != null) {
+		    	render("tags/convo/convoList.html", expertConvos ,type);
+    		} else {
+    			render("Explore/communityFeedList.html",expertConvos, type,csrType);
+    		}
+		}
+		if(type.equals("openConvo")) {
+			List<ConversationBean> openConvo = ConversationDAO.getOpenQuestions(afterActionId,csrType);
+			if(afterActionId != null) {
+				String feedType = type;
+				render("tags/convo/convoList.html",openConvo, feedType);
+			} else {
+				render("Explore/communityFeedList.html",openConvo, type,csrType);
 			}
-     		render("tags/feed/feedList.html", _feedItems, _talker);
-     	} else if(feedType != null && feedType.equals("allFeed")) {
-    		_feedItems = FeedsLogic.getAllCancerFeed(afterActionId, loggedIn, _talker);
-    		render("tags/feed/feedList.html", _feedItems, _talker);
-    	}
+		}
+		if(type.equals("recentConvo")) {
+			List<ConversationBean> recentConvo = ConversationDAO.loadSharedExperiences(afterActionId,csrType);
+			if(afterActionId != null) {
+				TalkerBean _talker = CommonUtil.loadCachedTalker(session);
+				render("tags/feed/recentFeedList.html", recentConvo, _talker, type);
+			} else {
+				render("Explore/communityFeedList.html",recentConvo, type,csrType);
+			}
+		}
     }
     /**
 	 * Page to displaying topics information
