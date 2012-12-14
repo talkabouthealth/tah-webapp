@@ -1,0 +1,41 @@
+<div class="box">
+	<h2 class="heading"><img src="/public/images/index/cal_icon.png" alt="calendar" /><a href="@{Static.workshops()}"> Upcoming Workshops</a></h2>
+	#{if _category == "Breast Cancer"}
+	<ul>
+		<strong>Breast Cancer Oncology</strong><br /> (Mon., Dec. 10th)<br />
+		</span>
+		<span class="blacktextgrey15_1">
+			<a href="@{ViewDispatcher.view("GabrielHortobagyiMD")}" target="_blank">Gabriel Hortobagyi, MD</a><br />
+			<a href="@{ViewDispatcher.view("GabrielHortobagyiMD")}" target="_blank">Ask Questions Now!</a></strong>
+			<br /><br />   
+		
+		<strong>Palliative Care</strong><br /> (Wed., Dec. 12th)<br />
+		</span>
+		<span class="blacktextgrey15_1">
+			<a href="@{ViewDispatcher.view("ThomasSmithMD")}" target="_blank">Thomas Smith, MD</a><br />
+			<a href="@{ViewDispatcher.view("ThomasSmithMD")}" target="_blank">Ask Questions Now!</a></strong>
+			<br /><br /> 
+		<strong>Geriatric Oncology</strong><br /> (Tues., Dec. 18th)<br />
+		</span>
+		<span class="blacktextgrey15_1">
+			<a href="@{ViewDispatcher.view("SupriyaMohileMD")}" target="_blank">Supriya Mohile, MD</a><br />
+			<a href="@{ViewDispatcher.view("SupriyaMohileMD")}" target="_blank">Ask Questions Now!</a></strong>
+			<br /><br /> 
+		<strong>Cancer Biology</strong><br /> (Thurs., Dec. 20th)<br />
+		</span>
+		<span class="blacktextgrey15_1">
+			<a href="@{ViewDispatcher.view("CancerQuest")}" target="_blank">Gregg Orloff, PhD</a><br />
+			<a href="@{ViewDispatcher.view("CancerQuest")}" target="_blank">Ask Questions Now!</a></strong>
+			<br /><br /> 
+   </ul>
+   #{/if}
+   #{else}
+		<ul><li><a href="#" target="_blank">Comming soon</a></li></ul>
+   #{/else}
+<<<<<<< HEAD
+   <div class="more"><a href="@{MicroSite.workshops()}">All Workshops <img src="/public/images/index/arrow_blue.png" alt="all workshops" /></a></div>
+</div>
+=======
+   <div class="more"><a href="@{MicroSite.workshops(_category.toLowerCase().replaceAll(" ","-"))}">All Workshops <img src="/public/images/index/arrow_blue.png" alt="all workshops" /></a></div>
+</div>
+>>>>>>> mastergit
