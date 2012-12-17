@@ -1,11 +1,16 @@
 #{set getAddr = true /}
 #{if session.get("thisSessionId")}
 	#{if session.id == session.get("thisSessionId")}
-		#{if session.get("address").startsWith("unknown") }
-		 #{set getAddr = true /}
+		#{if session.get("address")}
+			#{if session.get("address").startsWith("unknown") }
+		 		#{set getAddr = true /}
+		 	#{/if}
+		 	#{else}
+		 		#{set getAddr = false /}
+		 	#{/else}
 		 #{/if}
 		 #{else}
-		 #{set getAddr = false /}
+		 	#{set getAddr = false /}
 		 #{/else}
 	#{/if}
 #{/if}
@@ -33,7 +38,6 @@
 			var sGeobytesLongitude="0";
 		}
 	</script>
-
 	<script type="text/javascript">
 	var recId = '';
 	$(document).ready(function() {
