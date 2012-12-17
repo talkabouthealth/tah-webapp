@@ -112,7 +112,7 @@ public class SEO extends Controller  {
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder;
 		Document xml = null;
-		Element urlElement,locElement,freqElement,priorityElement;
+		Element urlElement,locElement,freqElement; //,priorityElement;
 		try {
 			docBuilder = docFactory.newDocumentBuilder();
 			xml = docBuilder.newDocument();
@@ -133,13 +133,15 @@ public class SEO extends Controller  {
 					locElement.appendChild(xml.createTextNode("http://talkabouthealth.com/" + talkerBean.getUserName()));
 					urlElement.appendChild(locElement);
 
+					//Made update daily so that search engines can search sitemap on daily basis
 					freqElement = xml.createElement("changefreq");
-					freqElement.appendChild(xml.createTextNode("weekly"));
+					freqElement.appendChild(xml.createTextNode("daily"));
 					urlElement.appendChild(freqElement);
 
-					priorityElement = xml.createElement("priority");
-					priorityElement.appendChild(xml.createTextNode("0.80"));
-					urlElement.appendChild(priorityElement);
+					//Removing priority to as it might be harm ranking
+					//priorityElement = xml.createElement("priority");
+					//priorityElement.appendChild(xml.createTextNode("0.80"));
+					//urlElement.appendChild(priorityElement);
 
 					rootElement.appendChild(urlElement);
 					it++;
@@ -202,7 +204,7 @@ public class SEO extends Controller  {
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder;
 		Document xml = null;
-		Element urlElement,locElement,freqElement,priorityElement;
+		Element urlElement,locElement,freqElement; //,priorityElement;
 		try {
 			docBuilder = docFactory.newDocumentBuilder();
 			xml = docBuilder.newDocument();
@@ -224,12 +226,12 @@ public class SEO extends Controller  {
 					urlElement.appendChild(locElement);
 
 					freqElement = xml.createElement("changefreq");
-					freqElement.appendChild(xml.createTextNode("weekly"));
+					freqElement.appendChild(xml.createTextNode("daily")); // daily/weekly
 					urlElement.appendChild(freqElement);
 
-					priorityElement = xml.createElement("priority");
-					priorityElement.appendChild(xml.createTextNode("0.80"));
-					urlElement.appendChild(priorityElement);
+					//priorityElement = xml.createElement("priority");
+					//priorityElement.appendChild(xml.createTextNode("0.80"));
+					//urlElement.appendChild(priorityElement);
 
 					rootElement.appendChild(urlElement);
 					it++;
