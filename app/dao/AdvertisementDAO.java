@@ -4,11 +4,14 @@ import static util.DBUtil.getCollection;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import models.AdvertisementBean;
 import models.TopicBean;
 
 import play.Logger;
@@ -48,8 +51,11 @@ public class AdvertisementDAO {
 		}
 	}
 	
-	public static Map<String, String> getAdvertisementCount(Date fromDt,Date toDt) { 
-		Map<String, String> emaiList = new HashMap<String, String>();
+	public static List<AdvertisementBean> getAdvertisementCount(Date fromDt,Date toDt, boolean group) { 
+		//Map<String, String> emaiList = new HashMap<String, String>();
+		
+		List<AdvertisementBean> advertisementBeans = new ArrayList<AdvertisementBean>(); 
+		AdvertisementBean bean;
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-dd-MM");
 		DBCollection newsLetterColl = getCollection("advertisement");
 		DBCursor dbObject = null;
@@ -60,8 +66,8 @@ public class AdvertisementDAO {
 		} else {
 			dbObject = newsLetterColl.find();
 		}
-		long clickCount=0;
-		long impCount=0;
+		int clickCount=0;
+		int impCount=0;
 		String type;
 		for (DBObject talkerDBObject : dbObject) {
 			type = DBUtil.getString(talkerDBObject, "recordType");
@@ -70,10 +76,26 @@ public class AdvertisementDAO {
 			} else {
 				impCount = impCount +  + DBUtil.getInt(talkerDBObject, "adCount");
 			}
+			if(!group) {
+				bean = new AdvertisementBean(DBUtil.getString(talkerDBObject, "timestamp"),DBUtil.getString(talkerDBObject, "recordType"),DBUtil.getInt(talkerDBObject, "adCount"));
+				advertisementBeans.add(bean);
+			}
 		}
-		emaiList.put("click", Long.toString(clickCount)); 
-		emaiList.put("impression", Long.toString(impCount));
-		emaiList.put("all", Long.toString(impCount)); 
-		return emaiList;
+		
+		if(group) {
+			bean = new AdvertisementBean("","click",clickCount);
+			advertisementBeans.add(bean);
+			bean = new AdvertisementBean("","impression",impCount);
+			advertisementBeans.add(bean);
+		} else {
+			bean = new AdvertisementBean("","impression",impCount);
+			advertisementBeans.add(bean);
+			
+			bean = new AdvertisementBean("","click",clickCount);
+			advertisementBeans.add(bean);
+		}
+		
+		
+		return advertisementBeans;
 	}
 }

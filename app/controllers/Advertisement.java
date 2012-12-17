@@ -4,8 +4,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import models.AdvertisementBean;
 import models.TalkerBean;
 
 import org.apache.commons.lang.StringUtils;
@@ -34,17 +36,17 @@ public class Advertisement extends Controller {
 		redirect("http://www.fifthseasonfinancial.com/");
 	}
 	
-	public static void logReport(String fromDate,String toDate) {
+	public static void logReport(String fromDate,String toDate,boolean group) {
 		
 		if (Security.isConnected()) {
 			TalkerBean talker = CommonUtil.loadCachedTalker(session);
 			if(talker.isAdmin()) {
 				String errorMsg = "No/Wrong date range will display complete stats";
-				Map<String, String> emailList = new HashMap<String, String>();
+				List<AdvertisementBean> emailList;// = new HashMap<String, String>();
 				DateFormat dateFormat = new SimpleDateFormat("yyyy-dd-MM");//09/04/2012
 				Date fromDt = new Date();
 				Date toDt = new Date();
-				long total = 0;
+				int totalImp = 0, totalClick = 0;
 				
 				boolean dateError = false;
 				if(fromDate != null && !"".equals(fromDate)) {
@@ -64,17 +66,23 @@ public class Advertisement extends Controller {
 				}else{
 					dateError = true;
 				}
-				
-				
-				if(!dateError){
-					emailList = AdvertisementDAO.getAdvertisementCount(fromDt,toDt);
-				}else{
-					emailList = AdvertisementDAO.getAdvertisementCount(null,null);
+
+				if(dateError) {
+					emailList = AdvertisementDAO.getAdvertisementCount(null,null,group);
+				} else {
+					emailList = AdvertisementDAO.getAdvertisementCount(fromDt,toDt,group);
 				}
-				total = Long.parseLong(emailList.get("all"));
-				emailList.remove("all");
+				if(!group) {
+					AdvertisementBean bean = emailList.get(emailList.size() - 1);
+					totalClick = bean.getAdCount();
+					emailList.remove(bean);	
+					
+					bean = emailList.get(emailList.size() - 1);
+					totalImp = bean.getAdCount();
+					emailList.remove(bean);
+				}
 				
-				render(emailList,total,fromDate,toDate,errorMsg);
+				render(emailList,totalImp,totalClick,fromDate,toDate,errorMsg,group);
 			} else {
 				forbidden();
 			}
