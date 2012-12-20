@@ -41,10 +41,10 @@ public class NewsletterStats extends Controller {
 				e.printStackTrace();
 				dateError = true;
 			}
-			if(dateError){
+			if(dateError) {
 				errorMsg = "Wrong dates selected";
 			}
-		}else{
+		} else {
 			dateError = true;
 		}
 

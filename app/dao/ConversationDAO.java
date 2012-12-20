@@ -1060,14 +1060,21 @@ public class ConversationDAO {
 			cat.add("All Cancers");
 		}
 		List<ConversationBean> convolist=new ArrayList<ConversationBean>();
-		
+
 		for(DBObject obj:commentDBlist){
 			DBObject query=new BasicDBObject("_id",new ObjectId(((DBRef)obj.get("from")).getId().toString()));
-			String connection=talkerColl.findOne(query, new BasicDBObject("connection",1)).get("connection").toString();
-			if(connection !=null && !TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(connection)){
-				DBObject fields = getBasicConversationFields();
+			DBObject fields = BasicDBObjectBuilder.start().add("connection", 1).add("connection_verified", 1).get();
+			DBObject connectionObj=talkerColl.findOne(query, fields);
+			String connection = DBUtil.getString(connectionObj, "connection");
+			boolean connectionVerified = DBUtil.getBoolean(connectionObj, "connection_verified");
+			boolean showRec = true;
+
+			if(connection != null && TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(connection) && connectionVerified)
+				showRec = false;
+			if(showRec) {
+				fields = getBasicConversationFields();
 				DBObject convoQuery;
-				if(StringUtils.isNotBlank(cancerType)){
+				if(StringUtils.isNotBlank(cancerType)) {
 					convoQuery=BasicDBObjectBuilder.start()
 					.add("_id", new ObjectId(((DBRef)obj.get("convo")).getId().toString()))
 					.add("$or", 
@@ -1111,7 +1118,7 @@ public class ConversationDAO {
 		DBCollection ConvoColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
 		List<String> cat = new ArrayList<String>(2);
 		System.out.println("cancerType : " + cancerType);
-		if(StringUtils.isNotBlank(cancerType)){
+		if(StringUtils.isNotBlank(cancerType)) {
 			cat.add(cancerType);
 			cat.add("All Cancers");
 		}
