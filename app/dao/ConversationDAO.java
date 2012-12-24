@@ -1089,24 +1089,27 @@ public class ConversationDAO {
 					.add("_id", new ObjectId(((DBRef)obj.get("convo")).getId().toString())).get();
 				}
 				DBObject convoObj=ConvoColl.findOne(convoQuery,fields);
-				if(convoObj!=null){
-						ConversationBean convoBean=new ConversationBean();
-						convoBean.parseBasicFromDB(convoObj);
+				if(convoObj!=null) {
+					ConversationBean convoBean=new ConversationBean();
+					convoBean.parseBasicFromDB(convoObj);
+					
+					if(!convoBean.isDeleted()) {
 						CommentBean answer=new CommentBean();
-								answer.parseFromDB(obj);
-								List <CommentBean> answerList=new ArrayList<CommentBean>();
-								answerList.add(answer);
-								for(int i=1;i<CommentsDAO.getConvoAnswersCount(convoBean.getId());i++){
-									answerList.add(null);
-								}
+						answer.parseFromDB(obj);
+						List <CommentBean> answerList=new ArrayList<CommentBean>();
+						answerList.add(answer);
+						for(int i=1;i<CommentsDAO.getConvoAnswersCount(convoBean.getId());i++){
+							answerList.add(null);
+						}
 								
 						convoBean.setComments(answerList);
 						if(!convolist.contains(convoBean)) {
 							convolist.add(convoBean);
 							convosize++;
 						}
-						if(convosize>=20)
-								break;
+					}
+					if(convosize>=20)
+						break;
 				}
 			}
 		}
@@ -1149,21 +1152,22 @@ public class ConversationDAO {
 				}
 				DBObject convoObj=ConvoColl.findOne(convoQuery,fields);
 				if(convoObj!=null){
-						ConversationBean convoBean=new ConversationBean();
-						convoBean.parseBasicFromDB(convoObj);
+					ConversationBean convoBean=new ConversationBean();
+					convoBean.parseBasicFromDB(convoObj);
+					if(!convoBean.isDeleted()) {
 						CommentBean answer=new CommentBean();
-								answer.parseFromDB(obj);
-								List <CommentBean> answerList=new ArrayList<CommentBean>();
-								answerList.add(answer);
-								for(int i=1;i<CommentsDAO.getConvoAnswersCount(convoBean.getId());i++){
-									answerList.add(null);
-								}
-								
+						answer.parseFromDB(obj);
+						List <CommentBean> answerList=new ArrayList<CommentBean>();
+						answerList.add(answer);
+						for(int i=1;i<CommentsDAO.getConvoAnswersCount(convoBean.getId());i++){
+							answerList.add(null);
+						}
 						convoBean.setComments(answerList);
 						if(!convolist.contains(convoBean)) {
 							convolist.add(convoBean);
 							convosize++;
 						}
+					}
 						if(convosize>=20)
 								break;
 				}
@@ -1186,7 +1190,6 @@ public class ConversationDAO {
 				DBObject comment=commentsColl.findOne(new BasicDBObject("_id", new ObjectId(afterActionId)),fields);
 				if(comment != null) {
 					firstActionTime=(Date)comment.get("time");
-
 					if(firstActionTime!=null) {
 						queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
 						isNextDate = true;
