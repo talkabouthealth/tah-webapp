@@ -331,7 +331,7 @@ public class ViewDispatcher extends Controller {
 		for(int i = 0; i < convo.getComments().size(); i++) {
 			CommentBean comment =  convo.getComments().get(i);
 			if(!comment.isDeleted()) {
-				if(TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(comment.getFromTalker().getConnection())){
+				if(comment.getFromTalker().getConnection() != null && TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(comment.getFromTalker().getConnection()) && comment.getFromTalker().isConnectionVerified()){
 					expertCommentSize++;
 					expertComments.add(comment);
 				} else {
