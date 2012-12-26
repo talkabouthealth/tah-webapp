@@ -752,8 +752,9 @@ function showPopup(id, popupWidth) {
 
 //hides background and popup
 function hideAll() {
-	$('#mask').hide();
-	$('.window').hide();
+	$('.window').slideUp(2500, function(){
+		$('#mask').hide("slow");	
+	});
 	return false;
 }
 
@@ -1248,4 +1249,9 @@ function sendMessageToUser(){
 function hideMessagePopup(){
 	$("#messagePopup").hide();
 	$('#mask').hide();
+}
+
+showPopupEmail = function(email){
+	$("#emailpopup :input[name='newsletter.email']").val(email);
+	showPopup("#emailpopup", 350);
 }

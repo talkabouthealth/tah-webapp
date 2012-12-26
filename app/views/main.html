@@ -141,5 +141,25 @@
 	</div>
 	</noscript>
 	<!-- End Quantcast tag -->
+	#{ifnot session.contains("username")}
+		#{if currentPage != 'newsLetter'}
+			#{ set newsLetterPopup = session.get("newsletterDisplayed") /}
+			#{ if newsLetterPopup == null  }
+				#{set session.put("newsletterDisplayed","0") /}
+			#{/if}
+			#{elseif newsLetterPopup.equals("0")}
+				#{set session.put("newsletterDisplayed","1") /}
+			#{/elseif}
+			#{elseif newsLetterPopup.equals("1") || newsLetterPopup.equals("2")}
+				#{set session.put("newsletterDisplayed","2") /}
+			#{/elseif}
+
+			#{ if session.get("newsletterDisplayed") == "1"}
+			<script type="text/javascript"><!--
+				showPopupEmail();
+			--></script>
+			#{/if}
+		#{/if}
+	#{/ifnot}
 </body>
 </html>

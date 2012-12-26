@@ -250,8 +250,7 @@ public class Search extends Controller {
 		List<Map<String, String>> results = new ArrayList<Map<String, String>>();
 		for (int i = 0; i < docs.length; i++) {
 			Document doc = is.doc(docs[i].doc);
-			
-						
+
 			//filter by id or type
 			String type = doc.get("type");
 			if (!allowedTypes.contains(type)) {

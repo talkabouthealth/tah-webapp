@@ -8,62 +8,75 @@
 	});
 	function showEmailMsg(responseText) {
 		if(responseText === "Ok") {
-			//hideAll();
-			window.location.href = "/signup?fromPage=NEWS";
+			$("#emailPopupError").css("color","#2E8B57");
+	   		$("#emailPopupError").html("Thank you for subscribing"); 
+	   		$("#emailPopupError").fadeIn(100);
+	   		hideAll();
+			/*Removing page submit in popup conditions*/
+			//window.location.href = "/signup?fromPage=NEWS";
 			//alert("Thank you for subscribing");
 		} else {
-			alert(responseText);
+			var errorText = responseText.replace("Error:", "");
+	   		$("#emailPopupError").css("color","#ff0000");
+	   		$("#emailPopupError").html(errorText); 
+	   		$("#emailPopupError").fadeIn(100);
+	   		closeTimeout = setTimeout(function() { $("#emailPopupError").fadeOut(200) }, 4000);
+			//$("#emailPopupError").html(responseText);
 		}
 	}
 </script>
-<div id="emailpopup" class="window">
+<div id="emailpopup" class="window" style="width: 685px;">
     <div class="boxtopcenter">
 		<div id="newConvoForm" class="popboxWraper">
 			<div class="popbox2" style="height: 100%;">
 				<div class="closecover">
 					<div class="close"><img src="/public/images/close.jpg" alt="Close" /></div>
 				</div>
-				<div class="askquestion">
-					<div class="askquestionbox"><b>Thank you for subscribing</b></div>
+				<div class="askquestion" style="margin-top: -14px;">
+					<div class="askquestionbox"><b>
+						<!-- Thank you for subscribing -->
+						Subscribe to our newsletters for the latest news, best answers and featured experts!
+					</b></div>
 				</div>
-				<div class="askheadingCoverz">
-					<div class="askinputCover">
-						Would you like to subscribe to some of our newsletters ?
-					</div>
-				</div>
+<!-- 				<div class="askheadingCoverz"><div class="askinputCover">Would you like to subscribe to some of our newsletters ?</div></div> -->
 				#{form @Newsletter.subscribeMoreNewsLetter() , id:'emailLetterForm' }
 				<div class="answerh1">
 					<div style="clear: both;">
-						<input type="hidden" name="newsletter.email" value="" />
+						<span style="font-size:14px;font-weight: bold;" >Your Email:</span> 
+						<input type="text" name="newsletter.email" value="" class="askkinput" style="float:none;width:250px;" />
+						<span id="emailPopupError" style="color: #FF0000;font-size: 14px;"></span>
 						<div id="checkboxarea3" style="float:none;height:30px;">
-							<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="workshop" checked='checked' />
-							Daily Update &amp; Workshop Announcement<br/>
-							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured answers, experts, tips &amp; latest news.)</font>
+							<span style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="workshop" checked='checked' /></span>
+							<span style="float:left; padding-top: 2px;">Daily Update &amp; Workshop Announcement<br/>
+							<font size="2px;" style="font-weight: normal;">(Featured answers, experts, tips &amp; latest news.)</font>
+							</span>
 						</div>
 						<div id="checkboxarea3"  style="float:none;height:30px;">
-							<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked='checked' />
-							Daily Q&A Workshop Summary<br/>
-							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Daily answer summaries from our expert Q&A workshops.)</font>
+							<span style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked='checked' /></span>
+							<span style="float:left; padding-top: 2px;">Daily Q&A Workshop Summary<br/>
+							<font size="2px;" style="font-weight: normal;">(Daily answer summaries from our expert Q&A workshops.)</font>
+							</span>
 						</div>
 						<div id="checkboxarea3"  style="float:none;height:30px;">
-							<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Best of TalkAboutHealth" checked='checked' />
-							Best of TalkAboutHealth (weekly)<br/>
-							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(The week's best answers, news &amp; support.)</font>	
+							<span style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Best of TalkAboutHealth" checked='checked' /></span>
+							<span style="float:left; padding-top: 2px;">Best of TalkAboutHealth (weekly)<br/>
+							<font size="2px;" style="font-weight: normal;">(The week's best answers, news &amp; support.)</font></span>	
 						</div>		
 						<div id="checkboxarea3" style="float:none;height:30px;">
-							<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TalkAboutHealth Rewards" checked='checked' /> 
-							TalkAboutHealth Benefits<br/>
-							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Custom health, wellness &amp; medical offers.)</font>
+							<span style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TalkAboutHealth Rewards" checked='checked' /></span> 
+							<span style="float:left; padding-top: 2px;">TalkAboutHealth Benefits<br/>
+							<font size="2px;" style="font-weight: normal;">(Custom health, wellness &amp; medical offers.)</font>
+							</span>
 						</div>
 					</div>
 				</div>
-				<div style="padding: 10px 0;border-top: 1px solid #C5D0D6;font-size: 16px;height: 50px; margin-top: 10px; width: 635px;">
+				<div style="padding: 10px 0px 0px;border-top: 1px solid #C5D0D6;font-size: 16px;height: 50px; margin-top: 10px; width: 635px;">
 					<div class="askinputCover" style="float:right;">
 						<span style="float:left;">
 							<button type="submit" class="subscribe" onClick="_gaq.push(['_trackEvent', 'Newsletter_Popup', 'Signup_Click', 'Newsletter']);"></button>
 						</span>
 						<span style="float:left; padding-top: 15px;font-size: 13px;">
-							<a href="#" onclick="javaScript:hideAll();">No Thanks</a>
+							<a onclick="javaScript:hideAll();" style="cursor: pointer;">No Thanks</a>
 						</span>
 						<span style="float:right;padding-top: 15px;font-size: 13px;">
 						<a href="/explore/newsletter">View all Newsletters</a></span>

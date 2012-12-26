@@ -35,10 +35,7 @@ function setMessage(responseText, statusText, xhr, $form)  {
 	$("#responseMessage").fadeIn(100);
 	closeTimeout = setTimeout(function() { $("#responseMessage").fadeOut(200) }, 4000);
 }
-showPopupEmail = function(email){
-	$("#emailpopup :input[name='newsletter.email']").val(email);
-	showPopup("#emailpopup", 350);
-}
+
 </script>
 <div id="subcribeConvo">
 	#{form @Application.subscribeConvo(), id:'subcribe'  }

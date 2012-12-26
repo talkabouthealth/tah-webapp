@@ -30,7 +30,6 @@ public class AdvertisementDAO {
 		DBCollection newsLetterColl = getCollection("advertisement");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-dd-MM");
 		Date dt = Calendar.getInstance().getTime();
-		Logger.info(dateFormat.format(dt));
 		DBObject query = new BasicDBObject("adId", adId).append("recordType",recordType).append("timestamp",dateFormat.format(dt));
 		DBObject obj = newsLetterColl.findOne(query);
 		if(obj != null) {

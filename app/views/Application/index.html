@@ -51,8 +51,6 @@
 			    <li><a href="http://blog.talkabouthealth.com" target="_new">Blog</a></li>
 			</ul>
 		</div>
-		<!-- header end -->
-		<!-- Banner code -->
 		<div id="banner">
 		  <div id="slider">
 		      <div id="slides">
@@ -319,6 +317,9 @@
 <script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 <script type="text/javascript">
 <!--
+var recentConvo=0;
+var expertConvo=0;
+var openConvo=0;
 $(document).ready(function(){
 	//Search button code
 	$("#topSearchText").click(function() {
@@ -363,14 +364,16 @@ $(document).ready(function(){
 		$(".active").removeClass("active");
 		$(this).addClass("active");
 		var id = $(this).attr("id");
-		var lastActionId = '';
-		var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
-		$("#"+id+"Cnt").html(loading);
-		$.get("/Explore/homePageFeed",{ type : id,lastActionId:lastActionId },function(data){
-			$(loading).remove();
-			$(data).appendTo($("#"+id+"Cnt"));
-			$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
-		});
+		if(id == 'expert' && expertConvo==0) {
+			loadFeed(id);
+			expertConvo = 1;
+		} else if(id == 'recent' && recentConvo==0) {
+			loadFeed(id);
+			recentConvo = 1;
+		} else if(id == 'open' && openConvo==0) {
+			loadFeed(id);
+			openConvo = 1;
+		}
 		$(".tabBody").hide();
 		$("#" + id + "Tab").fadeIn();
 		return false;
@@ -407,6 +410,18 @@ $(document).ready(function(){
     });
 	$("#expert").click();
 });
+
+loadFeed = function(id) {
+	var lastActionId = '';
+	var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
+	$("#"+id+"Cnt").html(loading);
+	$.get("/Explore/homePageFeed",{ type : id,lastActionId:lastActionId },function(data){
+		$(loading).remove();
+		$(data).appendTo($("#"+id+"Cnt"));
+		$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+	});
+}
+
 setNewsletterMessage = function(responseText, statusText, xhr, $form)  {
 	var errorText;
 	$("#respMessage").css("color","#FFFFFF");
