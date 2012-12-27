@@ -28,19 +28,20 @@
 <div id="emailpopup" class="window" style="width: 685px;">
     <div class="boxtopcenter">
 		<div id="newConvoForm" class="popboxWraper">
-			<div class="popbox2" style="height: 100%;">
-				<div class="closecover">
-					<div class="close"><img src="/public/images/close.jpg" alt="Close" /></div>
-				</div>
-				<div class="askquestion" style="margin-top: -14px;">
-					<div class="askquestionbox"><b>
-						<!-- Thank you for subscribing -->
-						Subscribe to our newsletters for the latest news, best answers and featured experts!
-					</b></div>
+			<div class="popbox2" style="height: 100%; padding: 0px;">
+				
+				<div class="askquestion" style="background-color: #FFF; margin-top: 0pt; padding: 10px; width: 650px;">
+					<div class="askquestionbox" style="padding: 5px;">
+						<span style="float: left;"><img width="153px" src="/public/images/logo_footer.jpg"/></span>
+						<span style="float: left; padding-top: 3px;color:#3888c1;font-style: italic;font-size: 14px;" class="mtrighttxt1">Newsletters</span>
+					</div>
+					<div class="close" style="padding: 5px 0px 0px;"><img src="/public/images/close.jpg" alt="Close" /></div>
 				</div>
 <!-- 				<div class="askheadingCoverz"><div class="askinputCover">Would you like to subscribe to some of our newsletters ?</div></div> -->
 				#{form @Newsletter.subscribeMoreNewsLetter() , id:'emailLetterForm' }
-				<div class="answerh1">
+				<div class="answerh1" style="padding:5px 15px;">
+					<div style="padding: 5px 0pt 10px;font-size:14px;font-weight: bold;">Subscribe to our newsletters for the latest news, best answers and featured experts!</div>
+					 
 					<div style="clear: both;">
 						<span style="font-size:14px;font-weight: bold;" >Your Email:</span> 
 						<input type="text" name="newsletter.email" value="" class="askkinput" style="float:none;width:250px;" />
@@ -70,7 +71,7 @@
 						</div>
 					</div>
 				</div>
-				<div style="padding: 10px 0px 0px;border-top: 1px solid #C5D0D6;font-size: 16px;height: 50px; margin-top: 10px; width: 635px;">
+				<div style="padding: 5px 10px 0px;border-top: 1px solid #C5D0D6;font-size: 16px;height: 50px; margin-top: 10px; width: 650px;">
 					<div class="askinputCover" style="float:right;">
 						<span style="float:left;">
 							<button type="submit" class="subscribe" onClick="_gaq.push(['_trackEvent', 'Newsletter_Popup', 'Signup_Click', 'Newsletter']);"></button>

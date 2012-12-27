@@ -6539,8 +6539,9 @@ margin-bottom:5px;
 .subscribe{
 	background: url("../images/subscribe.png") no-repeat scroll 0 0 transparent;
     border: medium none;
-    height: 50px;
-    width: 190px;
+    height: 45px;
+    margin-right: 50px;
+    width: 140px;
     cursor: pointer;
 }
 .submitSubscribeEmail{
