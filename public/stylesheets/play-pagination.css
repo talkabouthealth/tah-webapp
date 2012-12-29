@@ -17,16 +17,17 @@ ul.pagination {
 	margin: 0;
 	padding: 0;
 	list-style: none;
-	border: solid 1px #1E1E1E;
+	border: solid 1px #014BA9;
 	float: left;
 	margin-right : 2px;
+	background-color: #0D94D6;
 }
 
 .pagination .previous-off a,
 .pagination .next-off a, 
 .pagination .off a:link, 
 .pagination .off a:visited {
-	color: #888888;
+	color: #FFF;
 	font-weight: bold;
 }
 
@@ -36,13 +37,13 @@ ul.pagination {
 }
 
 .pagination .active {
-	color: #00000;
-	background-color: #DEDEDE;
+	color: #0D94D6 !important;
+	background-color: #FFF;
 	font-weight : bold;
 }
 
 .pagination a:link, .pagination a:visited {
-	color: #0033CC;
+	color: #FFF;
 	display : block;
 	float: left;
 	padding: 3px 6px;

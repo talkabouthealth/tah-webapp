@@ -4,7 +4,7 @@
 		$('#emailLetterForm').submit(function() {
 			$("#emailLetterForm").ajaxSubmit(newOptions); 
 			return false;
-		})
+		});
 	});
 	function showEmailMsg(responseText) {
 		if(responseText === "Ok") {

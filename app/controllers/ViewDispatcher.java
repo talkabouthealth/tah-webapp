@@ -13,7 +13,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+
 import dao.VideoDAO;
+import logic.ConversationLogic;
 import logic.FeedsLogic;
 import logic.TalkerLogic;
 import logic.TopicLogic;
@@ -78,7 +81,7 @@ public class ViewDispatcher extends Controller {
 					showTalker = true;
 				}
 			}
-			if ( showTalker ){
+			if ( showTalker ) {
 				session.put("signUpBackUrl", name);
 				showTalker(talker);
 				return;
@@ -134,10 +137,34 @@ public class ViewDispatcher extends Controller {
 		}
 		
 		//nothing was found
-		notFound("The page you requested was not found.");
+		//notFound();
+		notFoundSearch("The page you requested was not found.",name);
+		return;
 		//todo();
 	}
 
+	private static void notFoundSearch(String message,String query) {
+		List<TopicBean> topicResults = new ArrayList<TopicBean>();
+		List<Action> convoResults = new ArrayList<Action>();
+		TalkerBean _talker = CommonUtil.loadCachedTalker(session);
+		boolean resultFlag = true;
+		try {
+			if (StringUtils.isNotBlank(query)) {
+				query = query.replaceAll("-"," ");
+				topicResults = Search.topicsSearch(query);
+				String cancerType = session.get("cancerType");
+				List<ConversationBean> convoList = SearchUtil.searchConvo(query,10,_talker,cancerType);
+				convoResults = ConversationLogic.convosToFeed(convoList);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if(topicResults.isEmpty() && convoResults.isEmpty())
+			resultFlag = false;
+
+		render("errors/404.html", message,topicResults,convoResults,resultFlag);
+	}
 	/**
 	 * Shows public profile page of given talker
 	 * @param talker

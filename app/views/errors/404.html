@@ -1,5 +1,11 @@
 #{set currentPage:'error' /}
 #{extends 'main.html' /}
+<style>
+<!--
+.activitiestext { width: 100%; }
+.jointxtbox { width: 80%; }
+-->
+</style>
 <script type="text/javascript">
 <!--
 $(document).ready(function() {
@@ -16,22 +22,16 @@ $(document).ready(function() {
 	#{include 'header.html' /}
    	<div id="innerbanner"></div>
    	<div id="innermain">
-		#{if play.mode.name() == 'DEV'}
-			#{404 result /}
-		#{/if}
-        #{else}
         	<div style="width:100%;">
-        		<div style="float: left; padding: 0pt 10px;width:350px;">	
-        			<img width="350" height="357" class="logotopmargin" 
-       					alt="Talk About Health" src="/public/images/PageNotFound.jpg" border="0"/>
+        		<div style="float: left; padding: 50px 10px 0pt;">	
+        			<img class="logotopmargin" alt="Talk About Health" src="/public/images/PageNotFound.jpg" border="0"/>
        			</div>
-       			<div style="float: left; padding: 50px 10px 10px;width:550px;">
-					<span class="blacktext12">${result.message}</span>
-					<!-- <span class="blacktext12" id="serverResp"></span>  -->
+       			<div style="float: left; padding: 15px 10px 10px;width:660px;">
+					<span class="blacktext12">${message}</span>
 					<br/><br/>
-					<div style="font-size: 25px; float: left;">Something went wrong! Rest assured, If you have any choice words to pass along, please email <a href="mailto:support@talkabouthealth.com" style="font-size:15px;" >support@talkabouthealth.com</a> OR <a href="/contactus" style="font-size:15px;">Contact Us</a></div>
+					<div style="font-size: 20px; float: left;">Something went wrong! Rest assured, If you have any choice words to pass along, please email <a href="mailto:support@talkabouthealth.com" style="font-size:15px;" >support@talkabouthealth.com</a> OR <a href="/contactus" style="font-size:15px;">Contact Us</a></div>
 					<div style="font-size: 15px; float: left;">
-					<br/><br/>
+					<br/>
 						If you’re really stuck, here are some other options:<br/><br/>
 						<ul>
 							<li>Were you looking for information about our <a href="/explore/members">members</a></li>
@@ -41,33 +41,32 @@ $(document).ready(function() {
 						</ul>
 					</div>
 				</div>
+				#{if resultFlag }
+					<div class="resulttopics">Try browsing the related search results</div>
+					#{if topicResults}
+						<div class="resulttopics">Topics</div>
+						<div class="topicborder"></div>
+	
+						#{list items: topicResults, as: 'topic'}
+							<div class="resulbreast"><a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a></div>
+							<div class="resulbreasttxt">${topic.followersCount} Follower(s) | ${topic.noOfConverstions} Conversation(s)</div>
+						#{/list}
+					#{/if}
+					#{if convoResults}
+						<div class="resulttopics">Questions</div>
+						<div class="topicborder"></div>
+						<div class="activitiestext" id="convoList">
+							#{list items: convoResults, as: 'convoResult'}
+								#{feed/feedActivity activity: convoResult, talker: talker /}
+							#{/list}
+						</div>
+					#{/if}
+				#{/if}
+				#{else}
+				<div class="resulttopics" style="height:150px;"></div>
+				#{/else}
 			</div>
-        #{/else}
 	</div>
 	<div id="bottom_container"></div>
-    <!-- Quantcast Tag -->
-	<script type="text/javascript">
-		var _qevents = _qevents || [];
-		
-		(function() {
-		var elem = document.createElement('script');
-		elem.src = (document.location.protocol == "https:" ? "https://secure" : "http://edge") + ".quantserve.com/quant.js";
-		elem.async = true;
-		elem.type = "text/javascript";
-		var scpt = document.getElementsByTagName('script')[0];
-		scpt.parentNode.insertBefore(elem, scpt);
-		})();
-		
-		_qevents.push({
-		qacct:"p-7aWXmxtlCHn1M"
-		});
-	</script>
-	
-	<noscript>
-	<div style="display:none;">
-	<img src="//pixel.quantserve.com/pixel/p-7aWXmxtlCHn1M.gif" border="0" height="1" width="1" alt="Quantcast"/>
-	</div>
-	</noscript>
-	<!-- End Quantcast tag -->
 </body>
 </html>

@@ -28,6 +28,15 @@ $(document).ready(function() {
 	});
 });
 
+
+//hides background and popup
+function hideAll() {
+	$('.window').slideUp(2500, function(){
+		$('#mask').hide("slow");	
+	});
+	return false;
+}
+
 /* ---------------- OAuth and other popup windows ----------------- */
 function openChat(convoId){
 	window.open("/chat/"+convoId, "Chat", "resizable=1, scrollbars=false, width=810,height=610");
@@ -747,14 +756,6 @@ function showPopup(id, popupWidth) {
 	$(id).css('left', winW/2-popupWidth);
 	$(id).fadeIn(200); 
 	
-	return false;
-}
-
-//hides background and popup
-function hideAll() {
-	$('.window').slideUp(2500, function(){
-		$('#mask').hide("slow");	
-	});
 	return false;
 }
 

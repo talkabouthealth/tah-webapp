@@ -265,7 +265,7 @@ public class Search extends Controller {
 				String toTalkerid = doc.get("toTalker");
 				
 				if(talker.getId().equals(fromTalkerId) || talker.getId().equals(toTalkerid)){
-				}else{
+				} else {
 					continue;
 				}
 			}
@@ -334,7 +334,7 @@ public class Search extends Controller {
 		render("tags/feed/feedList.html", _feedItems, _talker);
 	}
 	
-	private static List<TopicBean> topicsSearch(String query) throws Exception {
+	public static List<TopicBean> topicsSearch(String query) throws Exception {
 		File indexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
  		Directory indexDir = FSDirectory.open(indexerFile);
  		IndexReader indexReader = IndexReader.open(indexDir);
