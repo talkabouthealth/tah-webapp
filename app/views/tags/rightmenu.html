@@ -49,3 +49,8 @@
 		#{include 'tahHowYouCanHelp.html' /}
 	#{/ifnot}
 </div>
+<div id="boxes">
+	<div id="dialog" class="window"></div>
+	#{newsletter/emailpopup page: currentPage, talker: talker /}
+</div>
+<div id="mask"></div>

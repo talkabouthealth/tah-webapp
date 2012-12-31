@@ -28,25 +28,25 @@
 <div id="emailpopup" class="window" style="width: 685px;">
     <div class="boxtopcenter">
 		<div id="newConvoForm" class="popboxWraper">
-
-
-
-
-
-
-
-
-
-
-
-
+<<<<<<< HEAD
+			<div class="popbox2" style="height: 100%;">
+				<div class="closecover">
+					<div class="close"><img src="/public/images/close.jpg" alt="Close" /></div>
+				</div>
+				<div class="askquestion">
+					<div class="askquestionbox"><b>Thank you for subscribing!</b></div>
+				</div>
+				<div class="askheadingCoverz">
+					<div class="askinputCover">
+						Would you like to subscribe to some of our free newsletters for the latest health news, answers and information from the world's leading medical experts?
+=======
 			<div class="popbox2" style="height: 100%; padding: 0px;">
 				
 				<div class="askquestion" style="background-color: #FFF; margin-top: 0pt; padding: 10px; width: 650px;">
 					<div class="askquestionbox" style="padding: 5px;">
 						<span style="float: left;"><img width="153px" src="/public/images/logo_footer.jpg"/></span>
 						<span style="float: left; padding-top: 3px;color:#3888c1;font-style: italic;font-size: 14px;" class="mtrighttxt1">Newsletters</span>
-
+>>>>>>> mastergit
 					</div>
 					<div class="close" style="padding: 5px 0px 0px;"><img src="/public/images/close.jpg" alt="Close" /></div>
 				</div>

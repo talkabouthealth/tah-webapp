@@ -250,8 +250,7 @@ public class Search extends Controller {
 		List<Map<String, String>> results = new ArrayList<Map<String, String>>();
 		for (int i = 0; i < docs.length; i++) {
 			Document doc = is.doc(docs[i].doc);
-			
-						
+
 			//filter by id or type
 			String type = doc.get("type");
 			if (!allowedTypes.contains(type)) {
@@ -266,7 +265,7 @@ public class Search extends Controller {
 				String toTalkerid = doc.get("toTalker");
 				
 				if(talker.getId().equals(fromTalkerId) || talker.getId().equals(toTalkerid)){
-				}else{
+				} else {
 					continue;
 				}
 			}
@@ -335,7 +334,7 @@ public class Search extends Controller {
 		render("tags/feed/feedList.html", _feedItems, _talker);
 	}
 	
-	private static List<TopicBean> topicsSearch(String query) throws Exception {
+	public static List<TopicBean> topicsSearch(String query) throws Exception {
 		File indexerFile = new File(SearchUtil.SEARCH_INDEX_PATH+"autocomplete");
  		Directory indexDir = FSDirectory.open(indexerFile);
  		IndexReader indexReader = IndexReader.open(indexDir);

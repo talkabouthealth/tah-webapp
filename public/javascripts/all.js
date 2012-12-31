@@ -28,6 +28,15 @@ $(document).ready(function() {
 	});
 });
 
+
+//hides background and popup
+function hideAll() {
+	$('.window').slideUp(2500, function(){
+		$('#mask').hide("slow");	
+	});
+	return false;
+}
+
 /* ---------------- OAuth and other popup windows ----------------- */
 function openChat(convoId){
 	window.open("/chat/"+convoId, "Chat", "resizable=1, scrollbars=false, width=810,height=610");
@@ -750,13 +759,6 @@ function showPopup(id, popupWidth) {
 	return false;
 }
 
-//hides background and popup
-function hideAll() {
-	$('#mask').hide();
-	$('.window').hide();
-	return false;
-}
-
 //limits number of symbols in a field
 function limitText(limitField, limitNum) {
     if (limitField.value.length > limitNum) {
@@ -1248,4 +1250,9 @@ function sendMessageToUser(){
 function hideMessagePopup(){
 	$("#messagePopup").hide();
 	$('#mask').hide();
+}
+
+showPopupEmail = function(email){
+	$("#emailpopup :input[name='newsletter.email']").val(email);
+	showPopup("#emailpopup", 350);
 }

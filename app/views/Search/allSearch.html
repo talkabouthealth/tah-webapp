@@ -21,6 +21,9 @@
    	</script>
 	<style>
 		#innermiddlearea { padding: 0px }
+		#mtleft,.activitiestext { width:100%;}
+		.jointxtbox{ width: 90%;}
+		.replytommentbox { text-align: center; }
 	</style>
 </head>
 <body>
@@ -49,15 +52,31 @@
 	                  #{if params.query}
 		                  <div class="searchresulth1">Search Results</div>
 		                  <div class="topicborder"></div>
-		                  
+
 		                  #{ifnot topicResults || convoResults }
 							<span style="font-size: 14px;"><br/>Sorry, no matches were found.</span>
+							
+							<div style="font-size: 14px;margin-top:10px;">Suggestions:
+								<ul style="padding: 20px 20px 20px 40px;">
+									<li style="list-style-type:disc;">Make sure all words are spelled correctly.</li>
+									<li style="list-style-type:disc;">Try different keywords.</li>
+									<li style="list-style-type:disc;">Try more general keywords.</li>
+									<li style="list-style-type:disc;">Try fewer keywords.</li>
+									<li style="list-style-type:disc;">Try to browse some of the popular topics, 
+										<a href="@{ViewDispatcher.view('breast-cancer')}">Breast cancer</a>,&nbsp;
+										<a href="@{ViewDispatcher.view('cancer-prevention')}">Cancer prevention</a>,&nbsp;
+										<a href="@{ViewDispatcher.view('side-effects')}">Side effects</a>
+										
+									</li>
+								</ul>
+							</div>
+							
 		                  #{/ifnot}
-		                  
+
 		                  #{if topicResults}
 		                 	  <div class="resulttopics">Topics</div>
 			                  <div class="topicborder"></div>
-			
+
 							#{list items: topicResults, as: 'topic'}
 								<div class="resulbreast">
 									<a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a>
@@ -84,8 +103,7 @@
 		                          	onclick="return makeFullSearchAjaxLoad('#allSearchBox');" value=" " class="seemorecom" />
 		                        </div>
 		                  #{/if}
-		                  
-		                  <div class="cb" style="padding: 25px 0px"></div>
+		                  <div class="cb" style="padding-top: 15px"></div>
 		              #{/if}
 		              #{else}
 		              		<div class="cb" style="padding: 100px 0px"></div>
