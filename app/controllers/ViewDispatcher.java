@@ -92,8 +92,7 @@ public class ViewDispatcher extends Controller {
 					redirect("/login");
 				}
 			}
-		}
-		
+		} 
 		
 		//next - question or conversation
 		ConversationBean convo = ConversationDAO.getByURL(name);
@@ -402,9 +401,6 @@ public class ViewDispatcher extends Controller {
 		TopicDAO.incrementTopicViews(topic.getId());
 		
 		//List<String> cat = FeedsLogic.getCancerType(talker);
-		
-		//Need to get specific count of feeds first
-		//FeedsLogic.FEEDS_PER_PAGE
 		
 		//load latest activities for convos with this topic
 		Set<Action> activities = FeedsLogic.getTopicFeed(talker,topic, null);

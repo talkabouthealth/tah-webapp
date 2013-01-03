@@ -23,6 +23,7 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
 import dao.ConversationDAO;
+import dao.DiseaseDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
 
@@ -54,6 +55,9 @@ public class TopicBean implements Comparable<TopicBean> {
 	private List<TalkerBean> followers;
 	private int followersCount;
 	private List<ConversationBean> conversations;
+	
+	//Added to add disease in the topic
+	private Set<DiseaseBean> diseaseList;
 	
 	private int noOfConverstions = -1;
 	
@@ -114,6 +118,7 @@ public class TopicBean implements Comparable<TopicBean> {
 		setBitly((String)topicDBObject.get("bitly"));
 		setViews(DBUtil.getInt(topicDBObject, "views"));
 		setCreationDate((Date)topicDBObject.get("cr_date"));
+		
 	}
 	
 	public void parseFromDB(DBObject topicDBObject) {
@@ -121,14 +126,14 @@ public class TopicBean implements Comparable<TopicBean> {
 			return;
 		}
 		parseBasicFromDB(topicDBObject);
-		
+
 		setSummary((String)topicDBObject.get("summary"));
 		setAliases(getStringSet(topicDBObject, "aliases"));
 		setOldNames(parseSet(URLName.class, topicDBObject, "old_names"));
-		
+		parseRelatedDisease((Collection<DBRef>)topicDBObject.get("related_disease"));
 		parseRelatives(topicDBObject);
 	}
-	
+
 	private void parseRelatives(DBObject topicDBObject) {
 		//children
 		Collection<DBRef> childrenDBList = (Collection<DBRef>)topicDBObject.get("children");
@@ -198,10 +203,37 @@ public class TopicBean implements Comparable<TopicBean> {
 		return shareText.substring(0, shareText.length()-sampleTwitterURL.length());
 	}
 	
+	private void parseRelatedDisease(Collection<DBRef> relatedDBList) {
+		diseaseList = new HashSet<DiseaseBean>();
+		if (relatedDBList != null) {
+			for (DBRef convoDBRef : relatedDBList) {
+				DiseaseBean convo = new DiseaseBean();
+				convo.parseBasicFromDB(convoDBRef.fetch());
+				diseaseList.add(convo);
+			}
+		} else {
+			DiseaseBean convo = new DiseaseBean();
+			convo = DiseaseDAO.getByName(ConversationBean.ALL_CANCERS);
+			diseaseList.add(convo);
+		}
+	}
 	
+	public Set<DBRef> relatedDiseaseToDB() {
+
+		Set<DBRef> relatedDiseaseDBList = new HashSet<DBRef>();
+		if (getDiseaseList() == null) {
+			return relatedDiseaseDBList;
+		}
+		for (DiseaseBean disease : getDiseaseList()) {
+			DBRef convoRef = createRef(DiseaseDAO.DISEASES_COLLECTION, disease.getId());
+			relatedDiseaseDBList.add(convoRef);
+		}
+		return relatedDiseaseDBList;
+	}
+
 	public String getId() { return id; }
 	public void setId(String id) { this.id = id; }
-	
+
 	public String getTitle() { return title; }
 	public void setTitle(String title) { this.title = title; }
 	
@@ -249,4 +281,8 @@ public class TopicBean implements Comparable<TopicBean> {
 	
 	public int getNoOfConverstions() { return noOfConverstions; }
 	public void setNoOfConverstions(int noOfConverstions) { this.noOfConverstions = noOfConverstions; }
+
+	public Set<DiseaseBean> getDiseaseList() { return diseaseList; }
+	public void setDiseaseList(Set<DiseaseBean> diseaseList) {	this.diseaseList = diseaseList; }
+
 }

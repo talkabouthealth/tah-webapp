@@ -22,11 +22,19 @@
 		}
 		
 		.tabContent { padding-top: 10px }
+		#diseasesList a,#diseasesEditList .deleteDiseaseLink { margin-right: 10px; } 
 	</style>
 	
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
+
+			var medium='${session.showLoginPoup}';
+			if(medium=='show'){
+				$("#loginpopupform").show();
+				  showPopup("#loginPopup", 350);
+			}
+			
 			$("#followTopicLink").click(function() {
 				//replace More button with loading image
 				var moreBtn = this;
@@ -68,6 +76,22 @@
 			else if (share === "facebook") {
 				showPopup("#shareFBDialog", 450);
 			}
+
+			makeDiseaseAutocomplete("#diseaseInput",'${topic.id}');
+			
+			//Delete disease from other diseases
+   			$(".deleteDiseaseLink").live("click", function() {
+   	   			$(this).prev().remove();
+   	   			var disease = $(this).attr("rel");
+   	   			$(this).remove();
+   	   			$.post("@{Topics.updateField()}", 
+	   					{ topicId : '${topic.id}', name: 'disease', value: disease, todo: 'remove'},
+	   					function() {
+	   						$("#diseasesList").html($("#diseasesEditList").html());
+	   					}
+	   				);
+   	   			return false;
+   			});
 		});
 
 		function saveData(dataType, newValue) {
@@ -78,14 +102,21 @@
    	   					//good save!!
    					}
    				);
-			}
-			else if (dataType === 'summaryEdit') {
+			} else if (dataType === 'summaryEdit') {
 				$.post("@{Topics.updateField()}", 
    					{ topicId : '${topic.id}', name: 'summary', value: newValue},
    					function() {
    	   					//good save!!
    					}
    				);
+			} else if (dataType === 'diseaseEdit') {  //possible comma-separated diseases
+				alert('Doing same');
+				$.post("@{Topics.updateField()}", { topicId : '${topic.id}', name: 'disease', value: newValue, todo: 'add'},
+	   				function(html) {
+	   					$(html).appendTo($("#diseasesEditList"));
+	   	   				$("#diseasesList").html($("#diseasesEditList").html());
+	   				}
+	   			);
 			}
 		}
 	</script>
@@ -218,8 +249,8 @@ if(medium=='show'){
 										</div>
 									#{/if}
 								</div>
-						          </div>
-                                                            #{include 'socialNetworkShare.html' /}
+								
+						        </div>
 							<div class='inline_form'>
 								<div style="padding-top:10px;">
 							        <textarea id="summaryinput" class="edititinputx inline_text" 
@@ -233,10 +264,46 @@ if(medium=='show'){
 									</div>
 								</div>
 							</div>
+							
 						</div>                      
-                      
+                      <!-- New disease association feature -->
+							<div class='inline-edit' id="diseaseEdit">
+								<div class="suggestxt inline_display">
+									<div class="inline_full" style="display: ${topic.diseaseList ? 'block' : 'none'}">
+										<div style="display: block; float: left; width: auto;" class="topictxt">
+					                  		<div style="float: left;">Diseases: </div>
+					                  		<div id="diseasesList" style="float: left; padding: 0pt 10px;">
+												#{list items: topic.diseaseList, as: 'category'}
+													<a class="topicTitle" href="/explore/${category.name.convertToURL()}">${category.name}</a>
+												#{/list}
+					                  		</div>
+											#{if talker != null && talker.admin}
+												<div class="editit">
+													<a href="#" class="inline_editlink">Edit</a>
+												</div>
+											#{/if}
+										</div>
+									</div>
+					            </div>
+								<div class='inline_form'>
+									<div style="display: block; float: left; width: auto;" class="topictxt">
+					           			<div style="float: left;">Diseases: </div>
+					           			<div id="diseasesEditList" style="float: left; padding: 0pt 10px;">
+					            			#{list items: topic.diseaseList, as: 'category'}
+												<a class="deleteDiseaseLink" href="#" rel="${category.name}">${category.name} X</a>
+											#{/list}
+					           			</div>
+									</div>
+									<div class="addcomCover" style="float: left;">
+										<input type="text" id="diseaseInput"  class="addcominput inline_text"  value="" 
+										style="float:left; padding-right: 10px;width: 195px; margin-right: 5px"/>
+					                   	<input type="submit" value=" " class="updatebtns inline_save" style="float: left; margin-top: 3px;"  />
+								    </div>
+								</div>
+							</div>
+					        <!-- New disease association feature End-->
+					        #{include 'socialNetworkShare.html' /}
                       	#{doLayout /}
-                      
                       <!--comreplyCover-->
                       <div class="cb"></div>
                     </div>

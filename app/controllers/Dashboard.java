@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -28,6 +29,7 @@ import org.apache.lucene.store.FSDirectory;
 
 import play.Logger;
 import play.cache.Cache;
+import play.modules.paginate.ValuePaginator;
 import play.mvc.Controller;
 import play.mvc.With;
 import util.DiseaseChangeUtil;
@@ -46,6 +48,7 @@ import dao.ConfigDAO;
 import dao.DiseaseDAO;
 import dao.TalkerDAO;
 import dao.ConversationDAO;
+import dao.TopicDAO;
 
 /**
  * Admin Dashboard
@@ -295,7 +298,7 @@ public class Dashboard extends Controller {
 		render("@diseaseUtil",diseaseList,errorMsg,oldName,newName);
 	}
 	
-	public static void updateAllDisease(){
+	public static void updateAllDisease() {
 		String errorMsg = "Please restart server to get reflections done\nIf you have edited a name Please user change util to reflect it all where";
 		try {
 			DiseaseImporter.importDiseases("diseases.dat");
@@ -307,5 +310,31 @@ public class Dashboard extends Controller {
 		Cache.set("diseasesList", null);
 		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
 		render("@diseaseUtil",diseaseList,errorMsg);
+	}
+	
+	public static void topicUtil(int page) {
+		List<TopicBean> topicList = new ArrayList<TopicBean>();
+		Set<TopicBean> topList = TalkerLogic.loadAllTopicsFromCache();
+		if(page == 0){
+			page = 1;
+		}
+		int recoCount = 20;
+		int counter = (recoCount * (page - 1));
+		int topicCounter = 0;
+		for (TopicBean topic : topList) {
+			topicCounter++;
+			if(topicCounter <= (recoCount * page) &&  topicCounter >= ((recoCount * page) - 20)) {
+				if(topic.getNoOfConverstions() <= 0 && counter <= (recoCount * page)) {
+					//System.out.println(topicCounter + " : " + topic.getTitle());
+					topic.setNoOfConverstions(ConversationDAO.getNoOfconvosForTopic(topic.getId()));
+				}
+				counter++;
+			}
+			topicList.add(topic);
+		}
+		ValuePaginator<TopicBean> paginator = new ValuePaginator(topicList);
+		paginator.setPageNumber(page); 
+	    render(paginator);
+		//render(topicList);
 	}
 }

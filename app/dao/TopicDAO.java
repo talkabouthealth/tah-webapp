@@ -12,9 +12,11 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 
 import util.DBUtil;
@@ -74,10 +76,10 @@ public class TopicDAO {
 			.add("summary", topic.getSummary())
 			
 			.add("children", topic.childrenToList())
-			
+			.add("related_disease", topic.relatedDiseaseToDB())
 			.add("last_update", new Date())
 			.get();
-		
+
 		DBObject topicId = new BasicDBObject("_id", new ObjectId(topic.getId()));
 		topicsColl.update(topicId, new BasicDBObject("$set", topicObject));
 	}
@@ -107,6 +109,7 @@ public class TopicDAO {
 		TopicBean topic = new TopicBean();
 		topic.parseFromDB(topicDBObject);
 		topic.setConversations(ConversationDAO.loadConversationsByTopic(topic.getId()));
+		//topic.setDiseaseList(diseaseList);
     	topic.setFollowers(getTopicFollowers(topic));
 		return topic;
 	}
@@ -223,6 +226,44 @@ public class TopicDAO {
 		}
 		return topicsSet;
 	}
+	
+	/**
+	 * Loads all topics, sorted by views number
+	 * @param onlyBasicInfo Determines how much information to load.
+	 * @return
+	 */
+	public static Set<TopicBean> loadAllTopicsByName(boolean onlyBasicInfo) {
+		DBCollection topicsColl = getCollection(TOPICS_COLLECTION);
+		//topicsColl.ensureIndex(new BasicDBObject("views", 1));
+		DBObject query = new BasicDBObject("deleted", new BasicDBObject("$ne", true));
+		DBCursor topicCur;
+		if (onlyBasicInfo) {
+			DBObject fields = BasicDBObjectBuilder.start()
+				.add("title", 1)
+				.add("fixed", 1)
+				.add("deleted", 1)
+				.add("main_url", 1)
+				.add("bitly", 1)
+				.add("views", 1)
+				.add("cr_date", 1)
+				.get();
+			topicCur=topicsColl.find(query, fields).sort(new BasicDBObject("title", 1));
+		} else {
+			topicCur= topicsColl.find(query).sort(new BasicDBObject("title", 1));
+		}
+		Set<TopicBean> topicsSet = new LinkedHashSet<TopicBean>();
+		while(topicCur.hasNext()){
+			TopicBean topic = new TopicBean();
+			if (onlyBasicInfo) {
+				topic.parseBasicFromDB(topicCur.next());
+			} else {
+				topic.parseFromDB(topicCur.next());
+			}
+			topicsSet.add(topic);
+		}
+		return topicsSet;
+	}
+
 	public static Set<TopicBean> loadAllTopics() {
 		return loadAllTopics(false);
 	}

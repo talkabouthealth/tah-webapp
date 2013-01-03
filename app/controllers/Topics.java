@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.lang.StringUtils;
+
 import logic.FeedsLogic;
 import logic.TopicLogic;
 import models.CommentBean;
@@ -140,6 +142,42 @@ public class Topics extends Controller {
     		boolean newValue = Boolean.parseBoolean(value);
     		topic.setFixed(newValue);
     		TopicDAO.updateTopic(topic);
+    	} else if(name.equalsIgnoreCase("disease")) {
+    		String todo = params.get("todo");
+    		StringBuilder htmlToRender = new StringBuilder();
+    		if (todo.equalsIgnoreCase("add")) {
+    			String[] valueArr = value.split(",\\s*");
+    			for (String topicName : valueArr) {
+	    			DiseaseBean relatedDisease = DiseaseDAO.getByName(topicName);
+	    			if (relatedDisease != null) {
+	    				Set<DiseaseBean> relatedDiseaseList = new HashSet<DiseaseBean>();
+	    				if(topic.getDiseaseList() != null) {
+	    					topic.getDiseaseList().add(relatedDisease);
+	    				} else {
+	    					relatedDiseaseList.add(relatedDisease);
+	    					topic.setDiseaseList(relatedDiseaseList);
+	    				}
+	    				System.out.println("Its Null: " + topic.getDiseaseList().size());
+	    				TopicDAO.updateTopic(topic);
+	    				htmlToRender.append("<a class=\"topicTitle\" href=\"explore\\"+topicName+"\">"+topicName+"</a>&nbsp;" +
+		    	    		"<a class=\"deleteTopicLink\" href=\"explore\\"+topicName+"\" rel=\""+topicName+"\">X</a>");
+					}
+    			}
+    			renderText(htmlToRender.toString());
+    		} else if (todo.equalsIgnoreCase("remove")) {
+    			DiseaseBean relatedDisease = null;
+    			if(StringUtils.isNotBlank(value)) {
+    				for (DiseaseBean disease : topic.getDiseaseList()) {
+						if(disease.getName().equalsIgnoreCase(value)) {
+							relatedDisease = disease;
+						}
+    				}
+    			}
+    			if(relatedDisease != null) {
+    				topic.getDiseaseList().remove(relatedDisease);
+    				TopicDAO.updateTopic(topic);
+    			}
+    		}
     	}
     }
     
@@ -153,7 +191,7 @@ public class Topics extends Controller {
 
     	topic.setDeleted(true);
     	TopicDAO.updateTopic(topic);
-    	
+
     	//remove from parent topic
     	if (!topic.getParents().isEmpty()) {
     		TopicBean oldParent = topic.getParents().iterator().next();

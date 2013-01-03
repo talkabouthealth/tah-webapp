@@ -48,8 +48,10 @@ $(document).ready(function() {
 						<div class="topicborder"></div>
 	
 						#{list items: topicResults, as: 'topic'}
-							<div class="resulbreast"><a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a></div>
-							<div class="resulbreasttxt">${topic.followersCount} Follower(s) | ${topic.noOfConverstions} Conversation(s)</div>
+						<div style="clear:both;">
+							<div class="resulbreast" style="clear:none;float: left;padding-top: 5px;"><a href="@{ViewDispatcher.view(topic.mainURL)}">${topic.title}</a></div>
+							<div class="resulbreasttxt" style="clear:none;float: left;padding-top: 7px;padding-left: 10px;">${topic.followersCount} Follower(s) | ${topic.noOfConverstions} Conversation(s)</div>
+						</div>
 						#{/list}
 					#{/if}
 					#{if convoResults}

@@ -87,13 +87,13 @@
 							<a href="#">${email.key}</a>
 						#{/if}
 						#{else}
-							<!-- <a href="@{NewsletterStats.emailList(email.key)}">${email.key}</a> -->
-							<a href="#">${email.key}</a>
+							<a href="@{NewsletterStats.emailList(email.key)}">${email.key}</a>
+							<!-- <a href="#">${email.key}</a> -->
 						#{/else}	
 						</td>
 						<td style="border: 1px solid #CCC;">${email.value}</td></tr>
 					#{/list}
-					*{ 
+					*{
 					#{list items:diseaseList , as: 'disease'}
 					<tr>
 						<td style="width:250px;border: 1px solid #CCC;">
