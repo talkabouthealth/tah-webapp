@@ -162,8 +162,6 @@ public class NewsLetterDAO {
 					.get();
 			newsLetterColl.save(newsLetterDBObject);
 		}
-		Logger.info("Done");
-		
 	}
 	public static void main(String [] args){
 		populateStats("workshop",true);
@@ -331,7 +329,11 @@ public class NewsLetterDAO {
 	public static long getNewsletterCount(String newsletterType) {
 		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
 		List<String> nType = new ArrayList<String>();
-		nType.add(newsletterType);
+		if("other".equals(newsletterType)){
+			nType.add(null);
+		}  else {
+			nType.add(newsletterType);
+		}
 		DBObject query = new BasicDBObject("newsletter_type", new BasicDBObject("$in", nType));
 		long newsLetterDBObject = newsLetterColl.count(query);
 		return newsLetterDBObject;

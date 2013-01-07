@@ -56,6 +56,7 @@ import util.jobs.ConvoFromTwitterJob;
 import util.jobs.EmailReminderJob;
 import util.jobs.ThoughtsFromServicesJob;
 import dao.ActionDAO;
+import dao.ActivityLogDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.ConversationDAO;
@@ -571,6 +572,9 @@ public class Explore extends Controller {
 				notFound("The page you requested was not found.");
 			}
 		String type = "expertConvo";
+		//Logging disease
+		DiseaseBean diseaseBean = DiseaseDAO.getByName(csrType);
+		ActivityLogDAO.logSingleDisease(diseaseBean);
 		render(communityFeed, csrType,talker,rewardLetterFlag,newsLetterFlag,type);
 	}
 	

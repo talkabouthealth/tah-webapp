@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+	<meta name="author" content="Talkmi" /> 
+	<meta name="keywords" content="support, health, talk" /> 
+	<meta name="description" content="real-time support for your health issues" /> 
+	<meta name="robots" content="all" /> 
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Topic Statistics</title>
+	<link href="@{'/public/stylesheets/style.css'}" rel="stylesheet" type="text/css" />
+	<link href="@{'/public/stylesheets/jquery-ui.css'}" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/play-pagination.css'}"/> 
+	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
+	<script type="text/javascript" src="@{'/public/javascripts/jquery-1.4.2.min.js'}" ></script>
+	<style type="text/css">
+		body { margin: 20px;width: auto;font-size: 14px; }
+	</style>
+	
+</head>
+<body>
+	<table width="100%">
+		<tr>
+			<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Home.index()}">Home</a></td>
+			<td style="padding-right:20px;" nowrap="nowrap"><a href="#" id="automaticNotificationLink">Turn ${ automaticNotification ? 'off' : 'on' } Automatic Notification</a></td>
+			<td style="padding-right:20px;" nowrap="nowrap"><a href="@{Dashboard.sendEmailToSailThrou()}">Update Email List</a></td>
+			<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/notification">Notifications</a></td>
+			<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/userlist">Users</a></td>
+			<td style="padding-right:20px;" nowrap><a href="@{Secure.logout()}">Logout</a></td>
+			<td style="width: 100%;">&nbsp;</td>
+		</tr>
+	</table>
+	<hr></hr>
+	<form  action="@{Dashboard.changeDisease()}" method="post">
+	<table cellpadding="5" cellspacing="0" style="margin-top:10px;width:100%;height:100%;">
+		<tr>
+			<td style="padding:10px 0;"><b>Topic statistics</b></td>
+		</tr>
+		<tr>
+			<td>
+			#{paginate.controls items:paginator /} 
+				<table width="90%" style="border-collapse: collapse;margin-top: 5px;" border="1px" cellpadding="5">
+				 <tr>
+				 	<th>Title</th>
+<!-- 				 	<th>URL</th> -->
+				 	<th width="120px">Question Count</th>
+				 	<th width="120px">Views</th>
+				 </tr>
+				#{paginate.list items: paginator, as: 'topicInfo' }
+					<tr>
+						<td> <a href="@{ViewDispatcher.view(topicInfo.mainURL)}" target="_new">${topicInfo.title}</a></td>
+<!-- 						<td> ${topicInfo.mainURL}</td> -->
+						<td> ${topicInfo.noOfConverstions}</td>
+						<td> ${topicInfo.views}</td>
+					</tr>
+				#{/paginate.list}
+				</table>
+				
+			</td>
+		</tr> 
+	</table>
+	</form>
+</body>
+</html>

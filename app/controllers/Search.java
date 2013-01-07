@@ -11,11 +11,13 @@ import java.util.Map;
 import logic.ConversationLogic;
 import logic.TopicLogic;
 import models.ConversationBean;
+import models.DiseaseBean;
 import models.MessageBean;
 import models.TalkerBean;
 import models.TopicBean;
 import models.actions.Action;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -36,6 +38,7 @@ import play.mvc.Controller;
 import util.CommonUtil;
 import util.SearchUtil;
 import dao.ConversationDAO;
+import dao.DiseaseDAO;
 import dao.MessagingDAO;
 import dao.TopicDAO;
 
@@ -123,37 +126,52 @@ public class Search extends Controller {
 	public static void ajaxDiseaseSearch(String term, String convoId) throws Exception {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		//ConversationBean convo = ConversationDAO.getConvoById(convoId);
-		String[] diseaseArr = new String[14];
-		
-		diseaseArr = talker.getOtherCategories();
 		
 		List<String> diseaseList = new ArrayList<String>();
-		if(diseaseArr != null){
-			for(int index = 0; index < diseaseArr.length; index++){
-				if(term == null)
-					diseaseList.add(diseaseArr[index]);
-				else
-					if(diseaseArr[index].toLowerCase().contains(term))
+		
+		if(talker.isAdmin()) {
+			if(StringUtils.isBlank(term)) {
+				diseaseList.add(ConversationBean.ALL_CANCERS);
+			} else {
+				List<DiseaseBean> disBeanList = DiseaseDAO.getCatchedDiseasesList(session);
+				//Add All Cancer in category
+				for (DiseaseBean diseaseBean : disBeanList) {
+					if(diseaseBean.getName().toLowerCase().contains(term))
+						diseaseList.add(diseaseBean.getName());
+				}
+			}
+			if(diseaseList.isEmpty()) {
+				diseaseList.add(ConversationBean.ALL_CANCERS);
+			}
+		} else {
+			String[] diseaseArr = new String[14];
+			diseaseArr = talker.getOtherCategories();
+			if(diseaseArr != null){
+				for(int index = 0; index < diseaseArr.length; index++){
+					if(term == null)
 						diseaseList.add(diseaseArr[index]);
+					else
+						if(diseaseArr[index].toLowerCase().contains(term))
+							diseaseList.add(diseaseArr[index]);
+				}
+			}
+			
+			//Add talker category in list. If user is admin user then add the convo talkers category
+			if(StringUtils.isBlank(term)){
+				diseaseList.add(talker.getCategory());
+			}else{
+				if(talker.getCategory() != null && talker.getCategory().toLowerCase().contains(term))
+				    diseaseList.add(talker.getCategory());
+			}
+			
+			//Add All Cancer in category
+			if(StringUtils.isBlank(term))
+				diseaseList.add(ConversationBean.ALL_CANCERS);
+			else{
+				if(ConversationBean.ALL_CANCERS.toLowerCase().contains(term))
+					diseaseList.add(ConversationBean.ALL_CANCERS);
 			}
 		}
-		
-		//Add talker category in list. If user is admin user then add the convo talkers category
-		if(term == null){
-			diseaseList.add(talker.getCategory());
-		}else{
-			if(talker.getCategory() != null && talker.getCategory().toLowerCase().contains(term))
-			    diseaseList.add(talker.getCategory());
-		}
-		
-		//Add All Cancer in category
-		if(term == null)
-			diseaseList.add(ConversationBean.ALL_CANCERS);
-		else{
-			if(ConversationBean.ALL_CANCERS.toLowerCase().contains(term))
-				diseaseList.add(ConversationBean.ALL_CANCERS);
-		}
-		
 		renderJSON(diseaseList);
 	}
 	

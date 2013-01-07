@@ -26,7 +26,11 @@
 	$(window).load(function() {
 		$("#date").datepicker({ autoSize: true, maxDate:1 });
 		$("#dateFilter").click(function() {
-			window.location = "/activitylogreportcontroller/logSortedReport?dateString=" + $("#date").val();
+			if($("#pagegroup").is(":checked")){
+				window.location = "/activitylogreportcontroller/logSortedReport?group=1&dateString=" + $("#date").val();
+			} else {
+				window.location = "/activitylogreportcontroller/logSortedReport?group=0&dateString=" + $("#date").val();
+			}
 		});
 	});
 	</script>
@@ -47,50 +51,67 @@
 	</table>
 	<hr/>
 	<div style="padding:10px 0;">
-		Filter By Date: <input type="text" id="date" value="${dateString}" />  
+		Filter By Date: <input type="text" id="date" value="${dateString}" />
 		<input type="button" value="Go.!" id="dateFilter"/>
 		<span style="color: #F00;">If wrong date will show today's records</span>
+		<br/> Group by Page Type <input type="checkbox" value="pagegroup" id="pagegroup" #{if group}checked#{/if}> 
 	</div>
-	#{if logList.size > 0}
-	<div>#{paginate.summary items: logList /} </div>
+	#{if logList != null && logList.size > 0}
+		<div>#{paginate.summary items: logList /} </div>
 	#{/if}
 	<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;" width="100%">
-			#{if logList != null}
-				#{if logList.size > 0}
-					<tr>
-						<th>User</th>
-						<th>IP Address</th>
-						<th>Page Name</th>
-						<th>Page URL</th>
-						<th>Location</th>
-						<th>Date Time</th>
-					</tr>
-					#{paginate.list items: logList, as: 'userInfo' }
-						<tr>
-							<td>
-								#{ if "Guest" == userInfo.userName}
-									${userInfo.userName}
-								#{/if}
-								#{else}
-									${userInfo.userName}-(${userInfo.userEmail})
-								#{/else}
-							</td>
-							<td>${userInfo.ipAddress}</td>
-							<td>${userInfo.pageName}</td>
-							<td><A href="${userInfo.pageURL}" target="_new">${userInfo.pageURL}</A></td>
-							<td><!-- ${userInfo.userLocationCode}<br/>  -->
-								${userInfo.userLocationCity} ${userInfo.userLocationState}, ${userInfo.userLocationCountry}
-								[${userInfo.userLocationLongitude} , ${userInfo.userLocationLatitude}]
-							</td>
-							<td>${userInfo.timeStamp}</td>
-						</tr>
-					#{/paginate.list}
-					#{paginate.controls items:logList /} 
-				#{/if}
-				#{else}
-					<tr><td align="center">No record found. Please try another date</td></tr>
-				#{/else}
-			#{/if}
+	#{if logList != null}
+		#{if logList.size() > 0}
+			#{ifnot group}
+				<tr>
+					<th>User</th>
+					<th>IP Address</th>
+					<th>Page Name</th>
+					<th style="width:300px;">Page URL</th>
+					<th>CancerType</th>
+					<th>Location</th>
+					<th>Date Time</th>
+				</tr>
+				#{paginate.list items: logList, as: 'userInfo' }
+				<tr>
+					<td>
+						#{ if "Guest" == userInfo.userName}
+							${userInfo.userName}
+						#{/if}
+						#{else}
+							${userInfo.userName}-(${userInfo.userEmail})
+						#{/else}
+					</td>
+					<td>${userInfo.ipAddress}</td>
+					<td>${userInfo.pageName}</td>
+					<td><a href="${userInfo.pageURL}" target="_new">${userInfo.pageURL}</a></td>
+					<td>${userInfo.cancerSite}</td>
+					<td><!-- ${userInfo.userLocationCode}<br/>  -->
+						${userInfo.userLocationCity} ${userInfo.userLocationState}, ${userInfo.userLocationCountry}
+						[${userInfo.userLocationLongitude} , ${userInfo.userLocationLatitude}]
+					</td>
+					<td>${userInfo.timeStamp}</td>
+				</tr>
+				#{/paginate.list}
+				#{paginate.controls items:logList /} 
+			#{/ifnot}
+			#{else}
+				<tr>
+					<th>PageName</th>
+					<th>Count</th>
+				</tr>
+				#{list items:logList, as: 'pageLog' }
+				<tr>
+					<td>${pageLog.key}</td>
+					<td>${pageLog.value}</td>
+				</tr>
+				#{/list}
+			#{/else}
+		#{/if}
+		#{else}
+			<tr><td align="center">No record found. Please try another date</td></tr>
+		#{/else}
+	#{/if}
 	</table>
 </body>
 </html>

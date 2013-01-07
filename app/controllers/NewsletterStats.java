@@ -8,7 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mongodb.util.Util;
+
 import models.DiseaseBean;
+import models.NewsLetterBean;
 import play.mvc.Controller;
 import play.mvc.With;
 import dao.DiseaseDAO;
@@ -58,9 +61,9 @@ public class NewsletterStats extends Controller {
 		if("0".equals(letterType)) {
 			List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
 			for (DiseaseBean diseaseBean : diseaseList) {
-				if(!dateError){
+				if(!dateError) {
 					dTotal = NewsLetterDAO.getNewsletterCount(diseaseBean.getName(),fromDt,toDt);
-				}else{
+				}else {
 					dTotal = NewsLetterDAO.getNewsletterCount(diseaseBean.getName());	
 				}
 				total = total + dTotal;
@@ -89,6 +92,7 @@ public class NewsletterStats extends Controller {
 			rewardList.add("workshop");
 			rewardList.add("Workshop summery");
 			rewardList.add("Best of TalkAboutHealth");
+			rewardList.add("other");
 			for (String string : rewardList) {
 				if(!dateError) {
 					dTotal = NewsLetterDAO.getNewsletterCount(string,fromDt,toDt);
@@ -165,12 +169,24 @@ public class NewsletterStats extends Controller {
 		render(emailLIst);
 	}
 	
-	public static void moveEmail(String type){
+	public static void moveEmail(String type) {
 		if("topic".equals(type)) {
 			NewsLetterDAO.moveNewsletters();
 		} else if ("expert".equals(type)) {
 			NewsLetterDAO.moveNewslettersExpert();
 		}
 		renderText("OK");
+	}
+	
+	public static void emailLookup(String email) {
+		validation.email(email);
+		String errorMsg = "";
+		NewsLetterBean letterBean = null;
+		if(validation.hasErrors()){
+			errorMsg = "Wrong Email";
+		} else {
+			letterBean = NewsLetterDAO.getNewsLetterInfo(email);
+		}
+		render(email,errorMsg,letterBean);
 	}
 }

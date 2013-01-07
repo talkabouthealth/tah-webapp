@@ -34,6 +34,7 @@ import models.VideoBean;
 import models.actions.Action;
 import models.actions.Action.ActionType;
 import dao.ActionDAO;
+import dao.ActivityLogDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.DiseaseDAO;
@@ -301,6 +302,17 @@ public class ViewDispatcher extends Controller {
 			//rewardLetterFlag = ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
 		}
 		ConversationDAO.incrementConvoViews(convo.getId());
+		
+		//Logging disease
+		DiseaseBean diseaseBean = DiseaseDAO.getByName(convo.getCategory());
+		ActivityLogDAO.logSingleDisease(diseaseBean);
+		if(convo.getOtherDiseaseCategories() != null && convo.getOtherDiseaseCategories().length > 0){
+			for (int i = 0; i < convo.getOtherDiseaseCategories().length; i++) {
+				diseaseBean = DiseaseDAO.getByName(convo.getOtherDiseaseCategories()[i]);
+				ActivityLogDAO.logSingleDisease(diseaseBean);
+			}
+		}
+		
 		Date latestActivityTime = ActionDAO.getConvoLatestActivity(convo);
 		
 		//For displaying answers sequence wise
@@ -399,6 +411,9 @@ public class ViewDispatcher extends Controller {
 		}
 		
 		TopicDAO.incrementTopicViews(topic.getId());
+		
+		//Logging disease
+		ActivityLogDAO.logDisease(topic.getDiseaseList());
 		
 		//List<String> cat = FeedsLogic.getCancerType(talker);
 		
