@@ -17,6 +17,17 @@
 	<style type="text/css">
 		body { margin: 20px;width: auto;font-size: 14px; }
 	</style>
+	<script type="text/javascript">
+	<!--
+	$(document).ready(function() {
+		$("#rename").click(function(){
+			var oldName = $("#oldName").val();
+			var newName = $("#newName").val();
+			$.post("/newsletterstats/changeNewsletterName", { newName: newName,oldName: oldName }, function(data) { alert(data); } );
+		});
+	});
+	-->
+	</script>
 </head>
 <body>
 	<table width="100%">
@@ -28,6 +39,20 @@
 			<td style="padding-right:20px;" nowrap="nowrap"><a href="/dashboard/userlist">Users</a></td>
 			<td style="padding-right:20px;" nowrap><a href="@{Secure.logout()}">Logout</a></td>
 			<td style="width: 100%;">&nbsp;</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><b>Rename List </b></td>
+		</tr>
+		<tr>
+			<td>Old Name : <input type="text" name="oldName" id="oldName"></input></td>
+		</tr>
+		<tr>
+			<td>New Name : <input type="text" name="newName" id="newName"></input></td>
+		</tr>
+		<tr>
+			<td style="float:right;"><input type="button" id="rename" value="Rename"></input> </td>
 		</tr>
 	</table>
 		<form action="@{NewsletterStats.emailLookup()}" method="post">
