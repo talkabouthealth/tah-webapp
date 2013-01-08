@@ -100,8 +100,9 @@ public class DiseaseDAO {
 		if (diseaseDBObject == null) {
 			return null;
 		}
-		
+
 		DiseaseBean disease = new DiseaseBean();
+		disease.parseBasicFromDB(diseaseDBObject);
 		disease.setName(diseaseName);
 		
 		List<DiseaseQuestion> questions = new ArrayList<DiseaseQuestion>();

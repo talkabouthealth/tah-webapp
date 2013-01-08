@@ -37,22 +37,33 @@ public class ActivityLogReportController  extends Controller {
 		calendar.set(Calendar.SECOND, 0);
 		
 		ArrayList<ActivityLogBean> logList = ActivityLogDAO.getLogList(calendar.getTime());
-		render("Dashboard/activitylogReport.html",logList);
+		boolean group = false;
+		render("Dashboard/activitylogReport.html",logList,group);
 	}
 	
-	public static void logSortedReport(String dateString) {
+	public static void logSortedReport(boolean group,String dateString) {
+		
+		System.out.println("Group : " + group);
+		
 		Date date = new Date();
 		Calendar calendar = Calendar.getInstance();
-		try { //10/31/2012 : To get date check exact date format on view side script
-			date = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).parse(dateString);
-		} catch (ParseException e) {
-			e.printStackTrace();
+		if(StringUtils.isNotBlank(dateString)) {
+			try { //10/31/2012 : To get date check exact date format on view side script
+				date = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).parse(dateString);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 		}
 		calendar.setTime(date);
 		calendar.set(Calendar.HOUR, 0);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
-		ArrayList<ActivityLogBean> logList = ActivityLogDAO.getLogList(calendar.getTime());
-		render("Dashboard/activitylogReport.html",logList,dateString);
+		if(group){
+			Map<String, Integer> logList = ActivityLogDAO.getLogListGrouped(calendar.getTime());
+			render("Dashboard/activitylogReport.html",logList,dateString,group);
+		} else {
+			ArrayList<ActivityLogBean> logList = ActivityLogDAO.getLogList(calendar.getTime());	
+			render("Dashboard/activitylogReport.html",logList,dateString,group);
+		}
 	}
 }

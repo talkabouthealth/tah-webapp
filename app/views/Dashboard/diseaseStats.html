@@ -8,9 +8,10 @@
 	<meta name="description" content="real-time support for your health issues" /> 
 	<meta name="robots" content="all" /> 
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Newsletter Statistics</title>
+	<title>Disease Statistics</title>
 	<link href="@{'/public/stylesheets/style.css'}" rel="stylesheet" type="text/css" />
 	<link href="@{'/public/stylesheets/jquery-ui.css'}" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/play-pagination.css'}"/> 
 	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
 	<script type="text/javascript" src="@{'/public/javascripts/jquery-1.4.2.min.js'}" ></script>
 	<script type="text/javascript" src="@{'/public/javascripts/jquery-ui-1.8.14.custom.min.js'}" ></script>
@@ -36,27 +37,11 @@
 			<td style="width: 100%;">&nbsp;</td>
 		</tr>
 	</table>
-	<table cellpadding="0" cellspacing="0" style="margin-top:10px;width:100%;height:100%;">
+	<hr></hr>
+	<form action="@{Dashboard.diseaseStats()}" method="post">
+		 <table cellpadding="0" cellspacing="0" style="margin-top:10px;width:100%;height:100%;">
 		<tr>
-			<td style="padding:10px 0;"><b>Newsletter Stats</b></td>
-		</tr>
-		<form action="@{NewsletterStats.index()}" method="post">
-		<tr>
-			<td style="padding:10px 0;">
-				<b>Letter Type:</b>
-				<select name="letterType">
-					<option value="2" #{if letterType == "2"}selected#{/if}>Newsletter</option>
-					<option value="0" #{if letterType == "0"}selected#{/if}>Disease</option>
-					<option value="1" #{if letterType == "1"}selected#{/if}>Benefits</option>
-					<option value="3" #{if letterType == "3"}selected#{/if}>Expert</option>
-					<option value="4" #{if letterType == "4"}selected#{/if}>Topic</option>
-					<option value="5" #{if letterType == "5"}selected#{/if}>Health & Condition Management</option>
-					<!-- <option value="5" #{if letterType == "5"}selected#{/if}>Question</option>  -->
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td style="padding: 10px 0pt 5px;">
+			<td style="padding: 10px 0pt 0px;">
 				<b>Date Range:</b>
 				<input id="fromDate" name="fromDate" type="text" maxlength="10" size="10" value="${fromDate}"/> 
 				- 
@@ -67,47 +52,30 @@
 		#{if errorMsg != ""}
 			<tr><td style="color:#FF0000;">${errorMsg}</td></tr>
 		#{/if}
+		</table>
 		</form>
+	<table cellpadding="5" cellspacing="0" style="margin-top:10px;width:100%;height:100%;">
 		<tr>
-			<td style="padding:10px 0 0 0;float: right;">
-				Total # of Emails collected: ${total}
-			</td>
+			<td style="padding:10px 0;"><b>Disease statistics</b></td>
 		</tr>
 		<tr>
 			<td>
-				<table border="1" cellpadding="5" cellspacing="0" style="width:100%;height:100%;border-color: #CCC;border-collapse: collapse;">
+				<table width="90%" style="border-collapse: collapse;margin-top: 5px;" border="1px" cellpadding="5">
+				 <tr>
+				 	<th width="150px">Disease</th>
+				 	<th width="100px">Page Views</th>
+<!-- 				 	<th width="100px">Number Of Members</th> -->
+				 </tr>
+				#{list items:diseaseStatsList , as: 'disease'}
 					<tr>
-						<th style="width:250px;border-right: 1px solid #CCC;background-color: #EEE;">Newsletter</th>
-						<th style="background-color: #EEE;"># of email's collected</th>
+						<td> <a href="/explore/${disease.key.convertToURL()}" target="_new">${disease.key}</a></td>
+						<td> ${disease.value}</td>
+<!-- 						<td> -</td> -->
 					</tr>
-					#{list items:emailList , as: 'email'}
-					<tr>
-						<td style="width:250px;border: 1px solid #CCC;">
-						#{if (letterType != "0" && letterType != "1" && letterType != "2" && letterType != "5") || email.value == "0"}
-							<a href="#">${email.key}</a>
-						#{/if}
-						#{else}
-							<a href="@{NewsletterStats.emailList(email.key)}">${email.key}</a>
-							<!-- <a href="#">${email.key}</a> -->
-						#{/else}	
-						</td>
-						<td style="border: 1px solid #CCC;">${email.value}</td></tr>
-					#{/list}
-					*{
-					#{list items:diseaseList , as: 'disease'}
-					<tr>
-						<td style="width:250px;border: 1px solid #CCC;">
-							<a href="#">${disease.name}</a>
-						</td>
-						<td style="border: 1px solid #CCC;">-</td>
-					</tr>
-					#{/list}
-					}*
+				#{/list}
 				</table>
 			</td>
-		</tr>
+		</tr> 
 	</table>
-	<br/><br/>
-<!-- 	<a href="/NewsletterStats/moveEmail?type=topic">Topic</a> | <a href="/NewsletterStats/moveEmail?type=expert">Expert</a> -->
 </body>
 </html>

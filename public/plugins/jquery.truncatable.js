@@ -16,11 +16,14 @@
 		return this.each(function(num){
 			//get size of only plain text, we don't need html tags
 			if(($(this).html()).search(">... more")==-1){
-				var plainText = $(this).html().replace(/<a[^>]*>/g, '');
-				plainText = plainText.replace(/<\/a>/g, '');
+				var plainText = $(this).html();//.replace(/<a[^>]*>/g, '');
+				//plainText = plainText.replace(/<\/a>/g, '');
 				var stringLength=plainText.length;
 				if(stringLength>defaults.limit){
-					var splitText=$(this).html().substr(defaults.limit);
+					if(plainText.indexOf("<a") <= defaults.limit && plainText.indexOf("</a") >= defaults.limit) {
+						defaults.limit = plainText.indexOf("</a>");
+					}
+					var splitText=plainText.substr(defaults.limit);
 					var splitPoint=splitText.substr(0,1);
 					var whiteSpace=new RegExp(/^\s+$/);
 					for(var newLimit=defaults.limit;newLimit<stringLength;newLimit++){
