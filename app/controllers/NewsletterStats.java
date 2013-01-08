@@ -3,6 +3,7 @@ package controllers;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -89,10 +90,12 @@ public class NewsletterStats extends Controller {
 			}
 		} else if("2".equals(letterType)) {
 			List<String> rewardList = new ArrayList<String>();
-			rewardList.add("workshop");
-			rewardList.add("Workshop summery");
+			//rewardList.add("workshop");
+			//rewardList.add("Workshop summery");
 			rewardList.add("Best of TalkAboutHealth");
-			rewardList.add("other");
+			rewardList.add("TAH Workshop Notification");
+			rewardList.add("TAH Workshop Summary");
+			//rewardList.add("other");
 			for (String string : rewardList) {
 				if(!dateError) {
 					dTotal = NewsLetterDAO.getNewsletterCount(string,fromDt,toDt);
@@ -188,5 +191,28 @@ public class NewsletterStats extends Controller {
 			letterBean = NewsLetterDAO.getNewsLetterInfo(email);
 		}
 		render(email,errorMsg,letterBean);
+	}
+	
+	public static void changeNewsletterName(String oldName,String newName) {
+		List<String> emailList = NewsLetterDAO.getNewsletterEmail(oldName);
+		NewsLetterBean letterBean = null;
+		int count = 0;
+		if(!emailList.isEmpty()) {
+			for (String email : emailList) {
+				letterBean = NewsLetterDAO.getNewsLetterInfo(email);
+				String[] newLetterTypes = letterBean.getNewsLetterType();
+				for (int i = 0; i < newLetterTypes.length; i++) {
+					if(newLetterTypes[i].equals(oldName)){
+						newLetterTypes[i] = newLetterTypes[i].replaceAll(oldName, newName);
+						//System.out.println(letterBean.getEmail() + " : Name" + newLetterTypes[i]);
+					}
+				}
+				letterBean.setNewsLetterType(newLetterTypes);
+				NewsLetterDAO.saveOrUpdateNewsletter(letterBean, null);
+				
+				count++;
+			}					
+		}
+		renderText("Done: " + count);
 	}
 }
