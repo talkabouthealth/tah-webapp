@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import models.EmailListBean;
 import models.NewsLetterBean;
 import models.TalkerBean;
@@ -54,12 +56,17 @@ public class EmailListJob extends Job {
 			emailListBean = new EmailListBean("TAH-Newsletter",newsLetterBean.getEmail());
 			//System.out.println("Job : TAH Newsletter : " + newsLetterBean.getEmail());
 			newsLetterList.add(emailListBean);
-			
+
 			//add all subscribed newsletters in the email sending list.
 			String[] subNewsLetters = newsLetterBean.getNewsLetterType();
-			if(subNewsLetters != null && subNewsLetters.length > 0){
-				for(int index = 0 ; index < subNewsLetters.length; index++){
+			if(subNewsLetters != null && subNewsLetters.length > 0) {
+				for(int index = 0 ; index < subNewsLetters.length; index++) {
 					String newsLetterType = subNewsLetters[index];
+					if(StringUtils.isNotBlank(newsLetterType) && newsLetterType.equalsIgnoreCase("workshop")) {
+						newsLetterType = "TAH Workshop Notification";
+					} else if(StringUtils.isNotBlank(newsLetterType) && newsLetterType.equalsIgnoreCase("Workshop summery")) {
+						newsLetterType = "TAH Workshop Summary";
+					}
 					newsLetterType = newsLetterType.replaceAll(",", "");
 					newsLetterType = newsLetterType.replaceAll(" ", "-");
 					emailListBean = new EmailListBean(newsLetterType,newsLetterBean.getEmail());
@@ -85,13 +92,13 @@ public class EmailListJob extends Job {
 				newsLetterList.add(emailListBean);
 			}
 			
-			if(pationtList.contains(talkerBean.getConnection())){
+			if(pationtList.contains(talkerBean.getConnection())) {
 				emailListBean = new EmailListBean("Patients",talkerBean.getEmail());
 				//System.out.println("Job : Patients : " + talkerBean.getEmail());
 				newsLetterList.add(emailListBean);
 			}
 			
-			if(expertList.contains(talkerBean.getConnection())){
+			if(expertList.contains(talkerBean.getConnection())) {
 				emailListBean = new EmailListBean("Experts",talkerBean.getEmail());
 				//System.out.println("Job : Experts : " + talkerBean.getEmail());
 				newsLetterList.add(emailListBean);

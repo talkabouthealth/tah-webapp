@@ -296,30 +296,30 @@
 						#{ifnot session.get("cancerType")}
 						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
 							#{if newsletter != null && newsletter.newsLetterType !=null}
-								#{if newsletter.newsLetterType.contains("workshop")}
-									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="workshop" checked="checked"/>
+								#{if newsletter.newsLetterType.contains("TAH Workshop Notification")}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TAH Workshop Notification" checked="checked"/>
 								#{/if}
 								#{else}
-									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="workshop"/>
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TAH Workshop Notification"/>
 								#{/else}
 							#{/if}
 							#{else}
-								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="workshop" checked="checked"/>
+								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TAH Workshop Notification" checked="checked"/>
 							#{/else}
 							Daily Health Update<br/>
 							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured answers, experts, tips &amp; latest news.)</font>
 						</div>
 						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
 							#{if newsletter != null && newsletter.newsLetterType !=null}
-								#{if newsletter.newsLetterType.contains("Workshop summery")}
-									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked="checked"/>
+								#{if newsletter.newsLetterType.contains("TAH Workshop Summary")}
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TAH Workshop Summary" checked="checked"/>
 								#{/if}
 								#{else}
-									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery"/>
+									<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TAH Workshop Summary"/>
 								#{/else}
 							#{/if}
 							#{else}
-								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Workshop summery" checked="checked"/>
+								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TAH Workshop Summary" checked="checked"/>
 							#{/else}
 							Daily Q&A Workshop Summary<br/>
 							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Daily answer summaries from our expert Q&A workshops.)</font>
