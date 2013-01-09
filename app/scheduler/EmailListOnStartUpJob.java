@@ -70,15 +70,20 @@ public class EmailListOnStartUpJob extends Job {
 			newsLetterList.add(emailListBean);
 			counterOnlyNewsletter++;
 			String[] subNewsLetters = newsLetterBean.getNewsLetterType();
-			if(subNewsLetters != null && subNewsLetters.length > 0){
-				for(int index = 0 ; index < subNewsLetters.length; index++){
+			if(subNewsLetters != null && subNewsLetters.length > 0) {
+				for(int index = 0 ; index < subNewsLetters.length; index++) {
 					String newsLetterType = subNewsLetters[index];
+					if(StringUtils.isNotBlank(newsLetterType) && newsLetterType.equalsIgnoreCase("workshop")) {
+						newsLetterType = "TAH Workshop Notification";
+					} else if(StringUtils.isNotBlank(newsLetterType) && newsLetterType.equalsIgnoreCase("Workshop summery")) {
+						newsLetterType = "TAH Workshop Summary";
+					}
 					newsLetterType = newsLetterType.replaceAll(",", "");
 					newsLetterType = newsLetterType.replaceAll(" ", "-");
 					emailListBean = new EmailListBean(newsLetterType,newsLetterBean.getEmail());
 					newsLetterList.add(emailListBean);
 				}
-			}else{
+			} else {
 				Map<String, Boolean> lists = new HashMap<String, Boolean>();
 				lists.put("Best-of-TalkAboutHealth", true);
 				lists.put("TalkAboutHealth-Rewards", true);
