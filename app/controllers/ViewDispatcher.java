@@ -269,10 +269,11 @@ public class ViewDispatcher extends Controller {
 		 }
 		*/
 		
-		List<Action> answersFeed = new ArrayList<Action>();
-		int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeed, false);
-		int numOfAnswers = answersFeed.size();
-		answersFeed.clear();
+		//List<Action> answersFeed = new ArrayList<Action>();
+		//int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeed, false);
+		//List<CommentBean> allAnswers = CommentsDAO.getTalkerAnswers(talker.getId(), null);
+		int numOfAnswers = CommentsDAO.getTalkerNumberOfAnswers(talker.getId(), null);
+		//allAnswers.clear();
 		
 		if(talkerDisease != null) {
 			talkerDisease.setHealthItemsMap(healthItemsMap);
@@ -283,10 +284,10 @@ public class ViewDispatcher extends Controller {
 			session.put("inboxUnreadCount", MessagingDAO.getUnreadMessageCount(currentTalker.getId()));
 		
 		int commentCount = CommentsDAO.loadProfileCommentCount(talker.getId());
-		render("PublicProfile/newview.html", talker, disease, talkerDisease, healthItemsMap, 
-				currentTalker, talkerFeed,
-				notProvidedInfo, notViewableInfo,
-				numOfAnswers, numOfTopAnswers, numOfStartedConvos,newsLetterFlag,rewardLetterFlag,talkerLetterFlag,commentCount);
+		/* render("PublicProfile/newview.html", talker, disease, talkerDisease, healthItemsMap, currentTalker, talkerFeed, notProvidedInfo, notViewableInfo,
+				numOfAnswers, numOfTopAnswers, numOfStartedConvos,newsLetterFlag,rewardLetterFlag,talkerLetterFlag,commentCount); */
+		render("PublicProfile/newview.html", talker, disease, talkerDisease, healthItemsMap, currentTalker, talkerFeed, notProvidedInfo, notViewableInfo,
+				numOfAnswers, numOfStartedConvos,newsLetterFlag,rewardLetterFlag,talkerLetterFlag,commentCount);
 		
 	}
 	

@@ -42,9 +42,6 @@ public class ActivityLogReportController  extends Controller {
 	}
 	
 	public static void logSortedReport(boolean group,String dateString) {
-		
-		System.out.println("Group : " + group);
-		
 		Date date = new Date();
 		Calendar calendar = Calendar.getInstance();
 		if(StringUtils.isNotBlank(dateString)) {

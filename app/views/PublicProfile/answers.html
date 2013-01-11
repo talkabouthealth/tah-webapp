@@ -21,9 +21,11 @@
                   	<div class="topicfolth1">
 	                  	<a href="@{ViewDispatcher.view(talker.name)}" 
 	                    	class="bluetext20">${talker.name}'s</a> Answers (${answersFeed.size()}) 
+	                    *{
 	                    #{if answersFeed.size() > 0}
 	                    	- Top Answers: ${numOfTopAnswers}
-	                    #{/if} 
+	                    #{/if}
+	                    }* 
 	                </div>
 	                
 	                #{if talker.isAllowed(models.PrivacySetting.PrivacyType.ANSWERS, currentTalker) }
