@@ -113,10 +113,13 @@
                     </tr>
                     <tr>
                       <td class="profileCantanttxtLeft"><strong>Member Since:&nbsp;</strong>${talker.regDate.format('MMM. yyyy')}</td>
+                      <td>&nbsp;</td>
+                     *{
                       <td class="profileCantanttxt2">
                       	<strong>Top Answers:&nbsp;</strong>
                       	<a style="text-decoration: none" href="@{PublicProfile.answers(talker.name)}">${numOfTopAnswers}</a>
                       </td>
+                      }*
                     </tr>
                     #{if currentTalker != null}
                     <tr>

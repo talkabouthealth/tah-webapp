@@ -317,7 +317,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Sleep Disorders;;;;;d30;insert
+Disease;Sleep Disorders;;;;;d30;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -325,7 +325,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;ADHD;;;;;d31;insert
+Disease;ADHD;;;;;d31;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -333,7 +333,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Anorexia;;;;;d32;insert
+Disease;Anorexia;;;;;d32;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -341,7 +341,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Stress Management;;;;;d33;insert
+Disease;Stress Management;;;;;d33;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -349,7 +349,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Anger Management;;;;;d34;insert
+Disease;Anger Management;;;;;d34;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -357,7 +357,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Addiction;;;;;d35;insert
+Disease;Addiction;;;;;d35;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -365,7 +365,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Psychopathy;;;;;d36;insert
+Disease;Psychopathy;;;;;d36;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -373,7 +373,71 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Creativity;;;;;d37;insert
+Disease;Creativity;;;;;d37;false
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Metastatic Breast Cancer;;;;;d38;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Metastatic Lung Cancer;;;;;d39;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Metastatic Colorectal Cancer;;;;;d40;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Metastatic Prostate Cancer;;;;;d41;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Metastatic Melanoma;;;;;d42;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Metastatic Endometrial Cancer;;;;;d43;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Metastatic Kidney Cancer;;;;;d44;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Metastatic Bladder Cancer;;;;;d45;insert
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV

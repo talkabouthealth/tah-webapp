@@ -401,22 +401,21 @@ public class TalkerLogic {
 	 * @return Number of top answers of this talker
 	 */
 	public static int prepareTalkerAnswers(String talkerId, List<Action> answersFeed, boolean loadAllInfo) {
-		int numOfTopAnswers = 0;
 		List<CommentBean> allAnswers = CommentsDAO.getTalkerAnswers(talkerId, null);
+		
+		//int numOfTopAnswers = 0;
 		for (CommentBean answer : allAnswers) {
 			List<CommentBean> convoAnswers = CommentsDAO.loadConvoAnswers(answer.getConvoId());
 			
 			//the first in the list - top answer
-			if (!convoAnswers.isEmpty() && convoAnswers.get(0).equals(answer)) {
-				numOfTopAnswers++;
-			}
+			//if (!convoAnswers.isEmpty() && convoAnswers.get(0).equals(answer)) {
+			//	numOfTopAnswers++;
+			//}
 
 			if (loadAllInfo) {
 				ConversationBean convo = TalkerLogic.loadConvoFromCache(answer.getConvoId());
-
 				if(convo != null){
 					convo.setComments(convoAnswers);
-				
 					//Use special action for answer displaying.
 					AnswerDisplayAction answerAction = new AnswerDisplayAction(convo.getTalker(), convo,
 							answer, ActionType.ANSWER_CONVO, null);
@@ -432,7 +431,7 @@ public class TalkerLogic {
 				answersFeed.add(new AnswerDisplayAction());
 			}
 		}
-		return numOfTopAnswers;
+		return allAnswers.size();
 	}
 	
 	public static Set<ConversationBean> loadFollowingConversations(TalkerBean talker,

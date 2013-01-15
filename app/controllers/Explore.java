@@ -566,7 +566,7 @@ public class Explore extends Controller {
 					break;
 				}
 			}
-			if(isValid){
+			if(isValid) {
 					communityFeed = ConversationDAO.loadExpertsAnswer(null,csrType);
 			} else {
 				notFound("The page you requested was not found.");
