@@ -178,10 +178,13 @@ public class SearchUtil {
 		queryText = queryText.replaceAll("[\\W_]", " ");
 		cancerType = searchedConvo.getCategory();
 		
-		String topic = "";
+		String [] topic =  null;
 		if(searchedConvo.getTopics() != null && !searchedConvo.getTopics().isEmpty()) {
+			topic = new String[searchedConvo.getTopics().size()];
+			int i = 0;
 			for (TopicBean topicBean : searchedConvo.getTopics()) {
-				topic = topic + topicBean.getTitle() + " ";
+				topic[i++] = topicBean.getTitle();
+				//topic = topic + topicBean.getTitle() + " ";
 			}
 	 	}
 		
@@ -197,6 +200,7 @@ public class SearchUtil {
 			} else {
 				Document doc = is.doc(docs[i].doc);
 				String convoId = doc.get("id");
+				System.out.println(doc.get("topics"));
 				if (searchedConvo.getId().equals(convoId)) {
 					continue;
 				} else {
@@ -212,7 +216,7 @@ public class SearchUtil {
 		return results;
 	}
 
-	public static Query prepareSearchQueryForRelatedQuestion(String term, String[] fields, Analyzer analyzer,boolean check,String cancerType,String topic) 
+	public static Query prepareSearchQueryForRelatedQuestion(String term, String[] fields, Analyzer analyzer,boolean check,String cancerType,String[] topic) 
 			throws ParseException {
 
 		QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36,fields, analyzer);
@@ -234,11 +238,16 @@ public class SearchUtil {
 
 		String[] topicFields = new String[] {"topics"};
 		QueryParser topicParser = new MultiFieldQueryParser(Version.LUCENE_36,topicFields, analyzer);
+		String topics = "";
+		for (String thisTopic : topic) {
+			topics = topics + "\"" + thisTopic + "\",";
+		}
+		Query topicQuery = topicParser.parse(topics);
 
 		Query searchQuery;
 		if(StringUtils.isNotEmpty(cancerType)) {
 			if(StringUtils.isNotBlank(term))
-				searchQuery = parser.parse(term  + " OR  ((" +cancerParser.parse("\"" + cancerType + "\"") + ") AND (" + topicParser.parse(topic) +  ") )");
+				searchQuery = parser.parse(term  + " OR  ((" +cancerParser.parse("\"" + cancerType + "\"") + ") AND (" + topicQuery +  ") )");
 			else
 				searchQuery = cancerParser.parse("\"" + cancerType + "\"");
 		} else {
