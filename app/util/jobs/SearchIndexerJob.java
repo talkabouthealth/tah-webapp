@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import models.CommentBean;
 import models.ConversationBean;
@@ -30,7 +31,7 @@ import dao.TopicDAO;
  * Updates all search indexes
  *
  */
-public class SearchIndexerJob extends Throwable{
+public class SearchIndexerJob extends Throwable {
 
 	public static void main(String[] args) throws Throwable {
 		System.out.println("SearchIndexerJob Started::::"+ new Date());
@@ -62,7 +63,7 @@ public class SearchIndexerJob extends Throwable{
 				  if(StringUtils.isNotBlank(talker.getCategory())) {
 					  doc.add(new Field("category", talker.getCategory(), Field.Store.YES, Field.Index.ANALYZED));
 				  } else {
-					  doc.add(new Field("category", "All Cancer", Field.Store.YES, Field.Index.ANALYZED));
+					  doc.add(new Field("category", ConversationBean.ALL_CANCERS, Field.Store.YES, Field.Index.ANALYZED));
 				  }
 					  
 				  if (!talker.isPrivate(PrivacyType.PROFILE_INFO) && talker.getBio() != null) {
@@ -78,7 +79,7 @@ public class SearchIndexerJob extends Throwable{
 				  if(StringUtils.isNotBlank(talker.getCategory())) {
 					  doc.add(new Field("category", talker.getCategory(), Field.Store.YES, Field.Index.ANALYZED));
 				  } else {
-					  doc.add(new Field("category", ALL_CANCERS, Field.Store.YES, Field.Index.ANALYZED));
+					  doc.add(new Field("category", ConversationBean.ALL_CANCERS, Field.Store.YES, Field.Index.ANALYZED));
 				  }
 				  doc.add(new Field("type", "User", Field.Store.YES, Field.Index.NO));
 				  autocompleteIndexWriter.addDocument(doc);
@@ -100,7 +101,7 @@ public class SearchIndexerJob extends Throwable{
 				if(StringUtils.isNotBlank(convo.getCategory())){
 					doc.add(new Field("category", convo.getCategory(), Field.Store.YES, Field.Index.ANALYZED));
 				} else {
-					doc.add(new Field("category", ALL_CANCERS, Field.Store.YES, Field.Index.ANALYZED));
+					doc.add(new Field("category", ConversationBean.ALL_CANCERS, Field.Store.YES, Field.Index.ANALYZED));
 				}
 				
 				//add an answer, reply, or live conversation text ?
@@ -112,6 +113,15 @@ public class SearchIndexerJob extends Throwable{
 					}
 				}
 				doc.add(new Field("answers", answersString.toString(), Field.Store.NO, Field.Index.ANALYZED));
+				
+				String topic = "";
+				if(convo.getTopics() != null && !convo.getTopics().isEmpty()) {
+					for (TopicBean topicBean : convo.getTopics()) {
+						topic = topic + topicBean.getTitle() + " ";
+					}
+			 	}
+				doc.add(new Field("topics", topic, Field.Store.YES, Field.Index.ANALYZED));
+				
 				convoIndexWriter.addDocument(doc);
 				  
 						
@@ -122,8 +132,11 @@ public class SearchIndexerJob extends Throwable{
 				if(StringUtils.isNotBlank(convo.getCategory())){
 					doc.add(new Field("category", convo.getCategory(), Field.Store.YES, Field.Index.ANALYZED));
 				} else {
-					doc.add(new Field("category", ALL_CANCERS, Field.Store.YES, Field.Index.ANALYZED));
+					doc.add(new Field("category", ConversationBean.ALL_CANCERS, Field.Store.YES, Field.Index.ANALYZED));
 				}
+				
+				doc.add(new Field("topics", topic, Field.Store.YES, Field.Index.ANALYZED));
+				
 				doc.add(new Field("type", "Conversation", Field.Store.YES, Field.Index.NO));
 				if (convo.getMainURL() != null) {
 					doc.add(new Field("url", convo.getMainURL(), Field.Store.YES, Field.Index.NO));
@@ -149,8 +162,9 @@ public class SearchIndexerJob extends Throwable{
 			}
 			allTopics.clear();
 			System.out.println("Completed topic indexes::::");
-		}
-		finally {
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
 			talkerIndexWriter.close();
 			convoIndexWriter.close();
 			autocompleteIndexWriter.close();
@@ -164,6 +178,4 @@ public class SearchIndexerJob extends Throwable{
 	protected void finalize() throws Throwable {
 		super.finalize();
 	}
-	
-	private static String ALL_CANCERS = "All Cancers";
 }

@@ -1400,8 +1400,9 @@ public class ConversationDAO {
 			.add("bitly_chat", 1)
 			.add("category", 1)
 			.add("other_disease_categories", 1)
+			.add("topics", 1)
 			.get();
-
+		
 		BasicDBObject basicDBObject = new BasicDBObject("_id", new BasicDBObject("$ne", ""));
 		
 		List<DBObject> convoList=new ArrayList<DBObject>();//convosColl.find(basicDBObject,fields).sort(new BasicDBObject("cr_date", -1))
@@ -1425,6 +1426,8 @@ public class ConversationDAO {
 			if (otherDiseaseCategories != null) {
 				convo.setOtherDiseaseCategories(otherDiseaseCategories.toArray(new String[]{}));
 			}
+			convo.parseTopics((Collection<DBRef>)convoDBObject.get("topics"));  
+			
 			conversationList.add(convo);
 		}
 		return conversationList;
