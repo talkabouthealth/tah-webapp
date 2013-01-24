@@ -7,7 +7,9 @@ import java.util.List;
 
 import models.CommentBean;
 import models.ConversationBean;
+import models.TopicBean;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -46,7 +48,11 @@ public class SearchConvoIndexerJob{
 				Document doc = new Document();
 				doc.add(new Field("id", convo.getId(), Field.Store.YES, Field.Index.ANALYZED));
 				doc.add(new Field("title", convo.getTopic(), Field.Store.YES, Field.Index.ANALYZED));
-				
+				if(StringUtils.isNotBlank(convo.getCategory())){
+					doc.add(new Field("category", convo.getCategory(), Field.Store.YES, Field.Index.ANALYZED));
+				} else {
+					doc.add(new Field("category", ConversationBean.ALL_CANCERS, Field.Store.YES, Field.Index.ANALYZED));
+				}
 				//add an answer, reply, or live conversation text ?
 				List<CommentBean> answersList = CommentsDAO.loadConvoAnswersTreeForScheduler(convo.getId());
 				StringBuilder answersString = new StringBuilder();
@@ -56,13 +62,27 @@ public class SearchConvoIndexerJob{
 					}
 				}
 				doc.add(new Field("answers", answersString.toString(), Field.Store.NO, Field.Index.ANALYZED));
+				String topic = "";
+				if(convo.getTopics() != null && !convo.getTopics().isEmpty()) {
+					for (TopicBean topicBean : convo.getTopics()) {
+						topic = topic + topicBean.getTitle() + " ";
+					}
+			 	}
+				doc.add(new Field("topics", topic, Field.Store.YES, Field.Index.ANALYZED));
 				//convoIndexWriter.addDocument(doc);
 				convoIndex.add(doc);
-						
 				//for autocomplete
 				doc = new Document();
 				doc.add(new Field("id", convo.getId(), Field.Store.YES, Field.Index.ANALYZED));
 				doc.add(new Field("title", convo.getTopic(), Field.Store.YES, Field.Index.ANALYZED));
+				if(StringUtils.isNotBlank(convo.getCategory())){
+					doc.add(new Field("category", convo.getCategory(), Field.Store.YES, Field.Index.ANALYZED));
+				} else {
+					doc.add(new Field("category", ConversationBean.ALL_CANCERS, Field.Store.YES, Field.Index.ANALYZED));
+				}
+				
+				doc.add(new Field("topics", topic, Field.Store.YES, Field.Index.ANALYZED));
+				
 				doc.add(new Field("type", "Conversation", Field.Store.YES, Field.Index.NO));
 				if (convo.getMainURL() != null) {
 					doc.add(new Field("url", convo.getMainURL(), Field.Store.YES, Field.Index.NO));

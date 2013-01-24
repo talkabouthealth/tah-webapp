@@ -282,7 +282,7 @@ public class ConversationBean implements Comparable<ConversationBean> {
 		}
 	}
 	
-	private void parseTopics(Collection<DBRef> topicsDBList) {
+	public void parseTopics(Collection<DBRef> topicsDBList) {
 		topics = new HashSet<TopicBean>();
 		if (topicsDBList != null) {
 			for (DBRef topicDBRef : topicsDBList) {

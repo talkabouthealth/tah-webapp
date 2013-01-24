@@ -4,12 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import logic.FeedsLogic;
 import logic.TalkerLogic;
 import models.CommentBean;
 import models.ConversationBean;
 import models.TalkerBean;
+import models.TopicBean;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -35,6 +37,8 @@ import org.apache.lucene.search.highlight.SimpleFragmenter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+
+import com.mongodb.QueryBuilder;
 
 import play.Play;
 import dao.CommentsDAO;
@@ -132,14 +136,10 @@ public class SearchUtil {
 			//get result fragment with highlighted matching parts
 			//searchQuery = searchQuery.rewrite(is.getIndexReader());
 			
-			
-			
 			//QueryScorer scorer = new QueryScorer(searchQuery, indexReader, "answers"); 
 			//Highlighter highlighter = new Highlighter(scorer); 
 			//String [] fragment = highlighter.getBestFragments(analyzer, "answers", answersString.toString(),10);
 
-	          
-			
 			//Scorer scorer = new QueryScorer(searchQuery, "answers");
 			//Highlighter highlighter = new Highlighter(scorer);
 			//Fragmenter fragmenter = new SimpleFragmenter(60);
@@ -172,18 +172,23 @@ public class SearchUtil {
 		IndexSearcher is = new IndexSearcher(indexReader);
 		//prepare query to search
 		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
-		
-		//Possible implementation?
-//		MoreLikeThis mlt = new MoreLikeThis(is.getIndexReader());
-//		mlt.setAnalyzer(new StandardAnalyzer());
-//		mlt.setFieldNames(new String[] {"title"});
-//		Query searchQuery = mlt.like(new StringReader(searchedConvo.getTopic()));
-//		Hits hits = is.search(searchQuery);
-		
+
 		//remove bad characters (special for search)
 		String queryText = searchedConvo.getTopic();
 		queryText = queryText.replaceAll("[\\W_]", " ");
-		Query searchQuery = prepareSearchQuery(queryText, new String[] {"title"}, analyzer, false,cancerType);
+		cancerType = searchedConvo.getCategory();
+		
+		String [] topic =  null;
+		if(searchedConvo.getTopics() != null && !searchedConvo.getTopics().isEmpty()) {
+			topic = new String[searchedConvo.getTopics().size()];
+			int i = 0;
+			for (TopicBean topicBean : searchedConvo.getTopics()) {
+				topic[i++] = topicBean.getTitle();
+				//topic = topic + topicBean.getTitle() + " ";
+			}
+	 	}
+		
+		Query searchQuery = prepareSearchQueryForRelatedQuestion(queryText, new String[] {"title"}, analyzer, true,cancerType,topic);
 		
 		TopDocs hits = is.search(searchQuery, 50);
 		ScoreDoc [] docs = hits.scoreDocs;
@@ -195,6 +200,7 @@ public class SearchUtil {
 			} else {
 				Document doc = is.doc(docs[i].doc);
 				String convoId = doc.get("id");
+				System.out.println(doc.get("topics"));
 				if (searchedConvo.getId().equals(convoId)) {
 					continue;
 				} else {
@@ -209,11 +215,59 @@ public class SearchUtil {
 		is.close();
 		return results;
 	}
-	
-	public static Query prepareSearchQuery(String term, String[] fields, Analyzer analyzer,boolean check,String cancerType)
+
+	public static Query prepareSearchQueryForRelatedQuestion(String term, String[] fields, Analyzer analyzer,boolean check,String cancerType,String[] topic) 
 			throws ParseException {
 
-		if(check){
+		QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36,fields, analyzer);
+		parser.setAllowLeadingWildcard(true);
+		/* Updated to show all users if no search term entered.  Good to have change */
+
+		if (StringUtils.isBlank(term))
+			term = "";
+
+		if(check)
+			term = escapeString(term);
+
+		term = removeChars(term);
+
+		String[] cancerFields = new String[] {"category"};
+		
+		QueryParser cancerParser = new MultiFieldQueryParser(Version.LUCENE_36,cancerFields, analyzer);
+		parser.setAllowLeadingWildcard(true);
+
+		String[] topicFields = new String[] {"topics"};
+		QueryParser topicParser = new MultiFieldQueryParser(Version.LUCENE_36,topicFields, analyzer);
+		String topics = "";
+		for (String thisTopic : topic) {
+			topics = topics + "\"" + thisTopic + "\",";
+		}
+		Query topicQuery = topicParser.parse(topics);
+
+		Query searchQuery;
+		if(StringUtils.isNotEmpty(cancerType)) {
+			if(StringUtils.isNotBlank(term))
+				searchQuery = parser.parse(term  + " OR  ((" +cancerParser.parse("\"" + cancerType + "\"") + ") AND (" + topicQuery +  ") )");
+			else
+				searchQuery = cancerParser.parse("\"" + cancerType + "\"");
+		} else {
+			searchQuery = parser.parse(term);
+		}
+		
+		//Query queries = topicParser.parse("cancer");
+		//ArrayList<Query> arr = new ArrayList<Query>();
+		//arr.add(queries);
+		//Query [] qArray = (Query[]) arr.toArray();
+		
+		//searchQuery.combine(qArray);
+		//System.out.println("The Updated Query: " + searchQuery);
+		return searchQuery;
+	}
+
+	public static Query prepareSearchQuery(String term, String[] fields, Analyzer analyzer,boolean check,String cancerType)
+			throws ParseException {
+		
+		if(check) {
 			if(term != null && !term.equals(""))
 				term = escapeString(term);
 		}
