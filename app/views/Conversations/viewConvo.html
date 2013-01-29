@@ -308,18 +308,6 @@
   			);
   			return false;
    		}
-   		function saveAnswerInDraft(){
- 			   var answerText=$("#replytext").val();	
-	   	   		$.post("@{Conversations.saveAnswerInDraft()}",
-				{convoId : '${convo.id}' ,draftId : '${convo.answerDraft.id}',text : answerText},
-				function(data){
-						var vv=data;
-					if(vv.substr(0,4)=="true")
-						alert("Your answer is saved as draft");
-					else
-						alert("Your answer dosen't save");
-				});
-  		}
    		function saveAnswer(parentId) {
    	   		var commentText = $("#replytextPopup"+parentId).val();
    			$("#saveAnswerImagePopup"+parentId).show();
