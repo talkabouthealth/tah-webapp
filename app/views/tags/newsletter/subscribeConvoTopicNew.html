@@ -1,0 +1,101 @@
+#{set convoTopicName = 'All Cancers' /}
+<script type="text/javascript">
+	$(document).ready(function() {
+		var rewardOptions = { success: setconvoTopicLetterMessage }; 
+		$('#convoTopic').submit(function() {
+			$("#convoTopic").ajaxSubmit(rewardOptions); 
+			return false;
+		});
+		$('#emailconvoTopic').click(function() {
+			if($("#emailconvoTopic").val().trim() == 'Email Address')
+				$("#emailconvoTopic").val('');
+		});
+
+		$('#emailconvoTopic').blur(function() {
+			if($("#emailconvoTopic").val().trim() == '')
+				$("#emailconvoTopic").val('Email Address');
+		});
+	});
+	function setconvoTopicLetterMessage(responseText, statusText, xhr, $form) {
+		if (responseText.indexOf("Error:") === 0) {
+	   		var errorText = responseText.replace("Error:", "");
+	   		$("#convoTopicMessage").css("color","#ff0000");
+	   		$("#convoTopicMessage").html(errorText); 
+	   		$("#convoTopicMessage").fadeIn(100);
+	   		closeTimeout = setTimeout(function() { $("#convoTopicMessage").fadeOut(200) }, 4000);
+	   	} else if (responseText.indexOf("NEW:") === 0) {
+	   		$("#convoTopicMessage").css("color","#2E8B57");
+	   		$("#convoTopicMessage").html(responseText.substring(4));
+	   		$("#convoTopicMessage").fadeIn(100);
+	   		closeTimeout = setTimeout(function() { $("#convoTopicMessage").fadeOut(200) }, 4000);
+	   		var email = $("#convoTopic :input[name='newsletter.email']").val();
+	   		showPopupEmail(email);
+	   	} else {
+	   		#{ifnot session.username }
+	   			window.location.href = "/signup?fromPage=NEWS";
+	   		#{/ifnot}
+	   		#{else}
+		   		$("#convoTopicMessage").css("color","#2E8B57");
+		   		$("#convoTopicMessage").html(responseText);
+		   		$("#convoTopicMessage").fadeIn(100);
+		   		closeTimeout = setTimeout(function() { $("#convoTopicblock").fadeOut(200) }, 4000);
+	   		#{/else}
+	   	}
+	}
+	showPopupEmail = function(email) {
+		$("#emailLetterForm :input[name='newsletter.email']").val(email);
+		showPopup("#emailpopup", 350);
+	}
+</script>
+#{if convo.category != null && !convo.category.equals("")}
+	#{set convoTopicName = convo.category /}
+#{/if}
+#{elseif convo.otherDiseaseCategories != null && convo.otherDiseaseCategories.size() > 0 }
+	#{set convoTopicName = convo.otherDiseaseCategories[0] /}
+#{/elseif}
+<div class="box" id="tahconvoTopic">
+<h2 class="heading"><img src="/public/images/index/emailIcon.png" /> 
+				#{if session.get("cancerType")}
+					${session.get("cancerType")} 
+				#{/if}
+				#{else}
+					${convoTopicName}
+				#{/else} 
+				newsletter</h2>
+		
+	<div class="body" style="width: 100%; padding:0px;" id="convoTopicblock" >
+	<div style="padding:20px;">
+		<div style="float:left;padding:5px;">
+			<span class="blacktextgrey15">Sign up for our weekly 
+			#{if session.get("cancerType")}
+				${session.get("cancerType")} 
+			#{/if}
+			#{else}
+				${convoTopicName}
+			#{/else}
+			newsletter for the latest news, best answers and featured experts.</span>
+		</div>
+	  		#{form @Newsletter.subscribeWorkShop(), id:'convoTopic' }
+	  		#{if session.get("cancerType")}
+					<input id="newsletter" name="newsletter.newsLetterType" type="hidden" value="${session.get("cancerType")}"/>
+				#{/if}
+				#{else}
+					<input id="newsletter" name="newsletter.newsLetterType" type="hidden" value="${convoTopicName}"/>
+				#{/else}
+	  		
+	  		<div style="clear: both;height: 15px;"><span id="convoTopicMessage" class="success" style="display:none;font-size: 12px;">Thanks for subscribing.</span></div>
+	  		<div style="float:left;">
+			#{if session.username }
+				<input name="newsletter.email" id="emailconvoTopic" class="search_field" type="text" value="${talker.email}" size="17"  style="width: 145px;"/>
+			#{/if}
+			#{else}
+				<input name="newsletter.email" id="emailconvoTopic" class="search_field" type="text" value="Email Address" size="17"  style="width: 145px;"/>
+			#{/else}
+				<input class="submitSubscribeEmail" type="submit" value="" style="cursor: pointer;" onClick="_gaq.push(['_trackEvent', 'Newsletter_Signup_Widget', 'Signup_Click', 'Disease']);"/>
+			</div>
+		#{/form}
+		<br/>
+  		<div class="topicborder" style="margin-top: 20px;"></div>
+  	</div>
+  	</div>
+</div>

@@ -1,6 +1,6 @@
 #{list items: _commentsList, as: 'comment' }
 	<div id="comment${comment.id}" class="topic" 
-			style="padding-bottom:5px; ${_level == 1 ? 'margin-left:-40px;' : ''} ">
+			style="float:left;width:100%;border-bottom: 1px solid #CCC; margin-bottom: 20px; padding-bottom: 10px;padding-bottom:10px; ${_level != 1 ? 'margin-left:16%;' : ''} ">
     	<div class="answerCover">
 			#{if _level == 1 }
 				<div id="vote${comment.id}" class="replyr1">
@@ -21,14 +21,15 @@
 	            	<div class="answerz">
 						<div class="replytop"></div>
 						<div class="replymid">
-	                    	<div class="replypics">
-	                    		#{talker/talkerImageLink size: 48, userName: comment.fromTalker.name /}
+	                    	<div class="varified">
+	                    		#{talker/talkerImageLink size: 72, userName: comment.fromTalker.name /}
 	                    	</div>
-	             			<div class="replytextarea" style="width: 550px;">
+	             			<div class="q" >
 								<p>
 									<span class="stylzz">
 										#{talker/talkerLink talker: comment.fromTalker /}
 									</span> 
+									<br/>
 									<span class="stylexz"> #{talker/talkerInfo talker: comment.fromTalker /} - </span> 
 									<span class="stylezx">${comment.time.format("MM / dd / yyyy")}</span>
 								</p>

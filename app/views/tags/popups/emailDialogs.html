@@ -32,9 +32,9 @@
 	<div id="innermiddlearea">
 		<div class="popboxWraper">
 			<div class="popbox" style="height: 240px;">
-				<div class="closecover">
-            		<div class="close">
-            			<img src="/public/images/close.jpg" alt="Close" onmouseover="this.style.cursor='pointer'"/>
+				<div class="closecover" >
+            		<div style="padding-right:10px; float:right;cursor:pointer;">
+            			<img src="/public/images/close.jpg" alt="Close" onclick="hideAll();showUpdatePassword()" />
             		</div>
             	</div>
 				<div class="tah">
@@ -53,7 +53,7 @@
 						
 					<input type="button" id="agreeBtn" value="Close" 
 			       		style="padding: 3px 15px; font-size: 16px; margin: 15px 0px; clear: both;"
-			       		onclick="hideAll();"
+			       		onclick="hideAll(),showUpdatePassword()"
 			       		onmouseover="this.style.cursor='pointer'"/>
 				</div>
  		

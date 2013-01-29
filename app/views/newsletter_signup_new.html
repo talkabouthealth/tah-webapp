@@ -36,18 +36,18 @@ function setNewsletterMessage(responseText, statusText, xhr, $form)  {
 }
 -->
 </script>
-<div id="newsLetter" style="padding:10px 0;">
-	<div style="padding:5px;float: left;">
-		<span style="float: left;"><img width="153px" src="/public/images/logo_footer.jpg"/></span>
-		<span style="float: left; padding-top: 3px;color:#3888c1;font-style: italic;font-size: 14px;" class="mtrighttxt1">Newsletters</span>
-	</div>
-<!--	<div style="border-bottom: 2px solid #D9D7D7;float: left; margin: 5px;width: 97%;"></div>-->
-	<div style="padding:5px;text-align: justify;" class="talkinfo">Sign up for our newsletters for the latest news on your disease, best answers, and featured experts.</div>
+<div id="newsLetter" class="box">
+	<h2 class="heading" style="font-size:16px;">
+		<img style="margin-top: -2px;" src="/public/images/index/tah_logo_widget.png"/> Newsletters
+	</h2>
+	<div class="body" style="padding:20px 10px;">
+	<div style="padding-bottom:5px;text-align: justify;" class="talkinfo">Sign up for our newsletters for the latest news on your disease, best answers, and featured experts.</div>
 	#{if !newsLetterFlag }
 		#{form @Newsletter.subscribeMoreNewsLetter() , id:'subcribeNewsletter' }
 			<div style="font-size: 12px;float: left;" class="talkinfo">
 				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TAH Workshop Notification" checked='checked' /></div>
-				<div style="padding-top: 3px;float:left;">Daily Workshop Announcement &amp; News</div>
+					<!-- <div style="padding-top: 3px;float:left;">Daily Workshop Announcement &amp; News</div> -->
+					<div style="padding-top: 3px;float:left;">Daily Health Update</div>
 			</div>
 			<div style="font-size: 12px;float: left;" class="talkinfo">
 				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TAH Workshop Summary" checked='checked' /></div>
@@ -66,18 +66,17 @@ function setNewsletterMessage(responseText, statusText, xhr, $form)  {
 					<span id="respMessage" style="margin-top: 5px;height:15px;float:left;width:100%;"></span>
 				</div>
 				#{if session.username }
-					<input name="newsletter.email" id="email" style="background: none repeat scroll 0 0 #F0F0F0;border: 1px solid #606060;color: #010101;padding: 3px;" type="text" value="${talker.email}" size="17" />
+					<input name="newsletter.email" id="email" style="width: 220px;" class="search_field" type="text" value="${talker.email}" />
 				#{/if}
 				#{else}
-					<input name="newsletter.email" id="email" style="background: none repeat scroll 0 0 #F0F0F0;border: 1px solid #606060;color: #010101;padding: 3px;" type="text" value="Email Address" size="17"/>
+					<input name="newsletter.email" id="email" style="width: 220px;" class="search_field" type="text" value="Email Address" />
 				#{/else}
-				<input style="font-size: 11px;background: none repeat scroll 0 0 #014DAB;border: 1px solid #000F22;color: #FFFFFF;padding: 3px 2px 2px;text-transform: uppercase;cursor: pointer;" type="submit" onClick="_gaq.push(['_trackEvent', 'Newsletter_Signup_Widget', 'Signup_Click', 'Newsletter']);" value="submit">
+				<input style="background: url(/public/images/index/newsletter_btn.png);border: 0px;height: 32px;width: 233px;margin-top: 5px;cursor: pointer;" type="submit" value="" />
 			</div>
 		#{/form}
 	#{/if}
 	#{else}
-		<!--<div style="padding:5px;"><span class="blacktextgrey15">Sign up for one of our free newsletters!</span></div>-->
 	#{/else}
 	<div style=" font-size: 11px; font-weight: bold; padding: 10px 5px 0;"><a href="/explore/newsletter">View all newsletters</a></div>
-	<div class="topicborder" style="margin-top: 10px;"></div>  
+	</div>
 </div>
