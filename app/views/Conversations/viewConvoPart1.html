@@ -154,7 +154,7 @@
 							#{if convo.otherDiseaseCategories != null}
 								#{set topicSize = convo.otherDiseaseCategories.size() /}
 								#{list items: convo.otherDiseaseCategories, as: 'category'}
-									#{if convo.otherDiseaseCategories.size() > 1 && topicSize > 0 },#{/if}
+									#{if convo.otherDiseaseCategories.size() > 0 && topicSize > 0 },#{/if}
 									#{set topicSize = topicSize -1 /}
 									<a class="topicTitle" href="/explore/${category.convertToURL()}">${category}</a>
 								#{/list}
