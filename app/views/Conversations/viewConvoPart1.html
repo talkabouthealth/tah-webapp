@@ -97,9 +97,11 @@
 					<div style="display: block; width: auto;" class="topictxt">
                   						<div style="float: left; background: url(/public/images/index/tagicon.png) no-repeat scroll left center; padding-left: 20px;">Topic Tags:&nbsp;&nbsp;</div>
                   						<div id="topicsList">
+                  						#{set topicSize = convo.topics.size() /}
                    						#{list items: convo.topics, as: 'tag'}
-								<a class="topicTitle" href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>
-							#{/list}
+											<a class="topicTitle" href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>#{if convo.topics.size() > 1 && topicSize > 1 },#{/if}
+											#{set topicSize = topicSize -1 /}
+										#{/list}
                   						</div>
 					</div>
 					#{if talker && (talker.admin || talker.userName == convo.talker.userName) }
@@ -149,9 +151,14 @@
                   			#{if convo.category != null && !convo.category.equals("")}
 								<a class="topicTitle" href="/explore/${convo.category.convertToURL()}">${convo.category}</a>
 							#{/if}
-							#{list items: convo.otherDiseaseCategories, as: 'category'}
-								<a class="topicTitle" href="/explore/${category.convertToURL()}">${category}</a>
-							#{/list}
+							#{if convo.otherDiseaseCategories != null}
+								#{set topicSize = convo.otherDiseaseCategories.size() /}
+								#{list items: convo.otherDiseaseCategories, as: 'category'}
+									#{if convo.otherDiseaseCategories.size() > 1 && topicSize > 0 },#{/if}
+									#{set topicSize = topicSize -1 /}
+									<a class="topicTitle" href="/explore/${category.convertToURL()}">${category}</a>
+								#{/list}
+							#{/if}	
                   		</div>
 					</div>
 					#{if talker != null && (talker.admin || talker.userName == convo.talker.userName) }
@@ -368,8 +375,12 @@
 					<!-- End Video Code -->
                		<div class="topic" style="margin-bottom: 15px;">
                			<a id="answers"></a>
+               			<!-- Video Code -->
+						#{if videoBeanList != null}
+							#{include '/Conversations/viewVideo.html' /}
+						#{/if}
                			#{if expertCommentSize != 0}
-               			<div style="padding: 20px 0pt;">
+               			<div style="float:left;">
                			<div class="answerh1">
                				<div class="convoCount">${expertCommentSize}</div> Expert Answers</div>
                 			<div class="topicborder"></div>
@@ -413,11 +424,8 @@
                 		#{if talker == null}
                 			<div style="padding:20px 0; float: left;"><a href="/signup"><img src="/public/images/index/signupbanner.png" /></a></div>
                 		#{/if}
-                		<!-- Video Code -->
-						#{if videoBeanList != null}
-							#{include '/Conversations/viewVideo.html' /}
-						#{/if}
-	<div class="topic" id="replyform"><br />
+                		
+	<div class="topic" id="replyform"> 
 		#{if talker }
 			<div id="answerFormDiv" style="display: ${userHasAnswer ? 'none' : 'block'};">
 				<div class="topicborder" style="margin-top: 7px;"></div>
@@ -520,16 +528,10 @@
 		</div>
 	#{/if}
 	
-		#{ifnot session.username}
-		<div class="tabBody" style="padding:10px 20px;width:auto;">
-		<span>
-			<b>Note:</b> Usernames have been made anonymous and profile images are not shown to protect the privacy of our members.
-		</span>
-		</div>
-		#{/ifnot}
+
 	
 	#{if relatedConvos != null && relatedConvos.size() > 8}
-		<div style="float: left; padding: 20px 0px;">
+		<div style="float: left; padding-bottom: 20px;">
 			<div Style="font-size: 20px; padding: 10px 0pt;"><strong>Similar Questions </strong></div>
 			%{int i=0;}%
 			#{list items: relatedConvos, as: 'relatedConvo'}
@@ -548,6 +550,13 @@
 			Always seek the advice of your physician or other qualified health provider with questions regarding your health.
 			</span>
 		</div>
+		#{ifnot session.username}
+		<div class="tabBody" style="padding:10px 20px;width:auto;margin-top:15px;">
+		<span>
+			<b>Note:</b> Usernames have been made anonymous and profile images are not shown to protect the privacy of our members.
+		</span>
+		</div>
+		#{/ifnot}
 		<div class="cb"></div>
 <div id="boxes">
 	<div id="dialog" class="window"></div>

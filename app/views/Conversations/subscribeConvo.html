@@ -8,13 +8,13 @@ $(document).ready(function() {
 		return false;
 	});
 	$('#email').click(function() {
-		if($("#email").val().trim() == 'Please Enter Your Email Address')
+		if($("#email").val().trim() == 'Email Address')
 			$("#email").val('');
 	});
 
 	$('#email').blur(function() {
 		if($("#email").val().trim() == '')
-			$("#email").val('Please Enter Your Email Address');
+			$("#email").val('Email Address');
 	});
 	
 });
@@ -42,10 +42,10 @@ function setMessage(responseText, statusText, xhr, $form)  {
 	<div class="body" style="width: 100%; padding:0px;;">
 		<div style="padding:20px;">
 	#{form @Application.subscribeConvo(), id:'subcribe'  }
-   		<strong style="color: #646664;">Receive email updates of answers to this question</strong>
+   		 Receive email updates of answers to this question 
    		<span id="responseMessage" style="margin-top: 5px;height:15px;float:left;width:100%;"></span>
    		<div style="margin-top: 5px;">
-	   		<input name="email" id="email" class="search_field" type="text" value="Please Enter Your Email Address" size="15" style="width: 145px;"/>
+	   		<input name="email" id="email" class="search_field" type="text" value="Email Address" size="15" style="width: 145px;"/>
 	   		<input  type="hidden" name="convoId" value="${convo.id}" />
 	   		<input class=submitSubscribeEmail type="submit" value=""/>
    		</div>

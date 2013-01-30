@@ -1,7 +1,7 @@
 #{list items: _commentsList, as: 'comment' }
 #{ifnot comment.deleted}
 	<div id="comment${comment.id}" class="topic" 
-			style="float:left;width:100%;border-bottom: 1px solid #CCC; margin-bottom: 20px; padding-bottom: 10px;padding-bottom:10px; ${_level != 1 ? 'margin-left:16%;' : ''} ">
+			style="float:left;width:100%;border-bottom: 1px solid #CCC;padding: 15px 0; ${_level != 1 ? 'margin-left:16%;' : ''} "><!-- margin-bottom: 20px;  -->
     	<div class="answerCover">
 			#{if _level == 1 }
 				<div id="vote${comment.id}" class="replyr1">
@@ -26,11 +26,11 @@
 	                    		#{talker/talkerImageLink size: 72, userName: comment.fromTalker.name /}
 	                    	</div>
 	             			<div class="q">
-								<p>
+								<p style="line-height:13px;">
 									<span class="stylzz">
 										#{talker/talkerLink talker: comment.fromTalker /}
 									</span> 
-									<br/>
+<!-- 									<br/> -->
 									<span class="stylexz"> #{talker/talkerInfo talker: comment.fromTalker /} - </span> 
 									<span class="stylezx">${comment.time.format("MM / dd / yyyy")}</span>
 								</p>
@@ -206,7 +206,6 @@
 	            	<div class="cb"></div>
 				</div>
             #{/else}
-	            
 			<div class="cb"></div>
 		</div>
 		<div class="cb"></div>

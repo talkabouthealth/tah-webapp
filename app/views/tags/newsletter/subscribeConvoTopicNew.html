@@ -54,14 +54,7 @@
 	#{set convoTopicName = convo.otherDiseaseCategories[0] /}
 #{/elseif}
 <div class="box" id="tahconvoTopic">
-<h2 class="heading"><img src="/public/images/index/emailIcon.png" /> 
-				#{if session.get("cancerType")}
-					${session.get("cancerType")} 
-				#{/if}
-				#{else}
-					${convoTopicName}
-				#{/else} 
-				newsletter</h2>
+<h2 class="heading"><img src="/public/images/index/emailIcon.png" />#{if session.get("cancerType")}${session.get("cancerType")}#{/if}#{else}${convoTopicName}#{/else} Updates</h2>
 		
 	<div class="body" style="width: 100%; padding:0px;" id="convoTopicblock" >
 	<div style="padding:20px;">

@@ -424,6 +424,7 @@
 							<div class="inline_display">
 								<h2 class="heading"><img alt="logo_blue" src="/public/images/index/logo_blue.png">Similar Questions</h2>
 								<div class="inline_full" style="display: ${(convo.relatedConvos || relatedConvos) ? 'block' : 'none'}">
+									*{
 									#{if talker && (talker.admin || talker.userName == convo.talker.userName) }
 										<div class="editdiv">
 											<div class="editit" style="padding-top:10px;">
@@ -431,6 +432,7 @@
 											</div>
 										</div>
 									#{/if}
+									}*
 									<ul id="relatedConvosList">
 										#{list items: convo.relatedConvos, as: 'relatedConvo'}
 											<li class="rcpadtop">

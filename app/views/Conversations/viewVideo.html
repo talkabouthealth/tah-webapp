@@ -1,4 +1,4 @@
-<div class="topic" style="margin-bottom: 15px" id="videoDiv">
+<div class="topic"  id="videoDiv">
 	<div class="answerh1 video"> Video Answers
 	#{ifnot currentPage == 'topicPage'} 
 		(<span class="style2" id="videoCnt">${videoBeanList.size}</span>)
@@ -6,9 +6,11 @@
 	</div>
 	<div class="topicborder"></div>
 	#{list items: videoBeanList, as: 'video'}
-		<div style="padding:10px 0;">
+		
 		#{if currentPage == 'topicPage'}
-			<a href="@{ViewDispatcher.view(video.convoBean.mainURL)}"><img src="http://img.youtube.com/vi/${video.videoId}/0.jpg" width="240" /></a>
+			<div style="padding:10px 0;">
+				<a href="@{ViewDispatcher.view(video.convoBean.mainURL)}"><img src="http://img.youtube.com/vi/${video.videoId}/0.jpg" width="240" /></a>
+			</div>
 		#{/if}
 		#{else}
 			<div id="${video.videoId}">
@@ -18,12 +20,12 @@
 			#{/if}
 			</div>
 		#{/else}
-		</div>
+		
 	#{/list}
 	#{if currentPage == 'topicPage'}
 		<div style=" font-size: 11px; font-weight: bold;">
 			<a href="${topic.mainURL}/videos">See more ${topic.title} videos</a>
 		</div>
+		<div style="margin-top: 10px;" class="topicborder"></div>
 	#{/if}
-	<div style="margin-top: 10px;" class="topicborder"></div>
 </div>

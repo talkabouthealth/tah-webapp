@@ -1,18 +1,20 @@
 <script>
 <!--
+var submitOption = { success: setNewsletterMessage }; 
 $(document).ready(function() {
-	var submitOption = { success: setNewsletterMessage }; 
+	
+	 
+	$('#subcribeNewsletter .search_field').click(function() {
+		if($("#subcribeNewsletter .search_field").val().trim() == 'Email Address')
+			$("#subcribeNewsletter .search_field").val('');
+	});
+	$('#subcribeNewsletter .search_field').blur(function() {
+		if($("#subcribeNewsletter .search_field").val().trim() == '')
+			$("#subcribeNewsletter .search_field").val('Email Address');
+	});
 	$('#subcribeNewsletter').submit(function() {
 		$("#subcribeNewsletter").ajaxSubmit(submitOption);
 		return false;
-	});
-	$('#email').click(function() {
-		if($("#email").val().trim() == 'Email Address')
-			$("#email").val('');
-	});
-	$('#email').blur(function() {
-		if($("#email").val().trim() == '')
-			$("#email").val('Email Address');
 	});
 });
 function setNewsletterMessage(responseText, statusText, xhr, $form)  {
@@ -38,7 +40,7 @@ function setNewsletterMessage(responseText, statusText, xhr, $form)  {
 </script>
 <div id="newsLetter" class="box">
 	<h2 class="heading" style="font-size:16px;">
-		<img style="margin-top: -2px;" src="/public/images/index/tah_logo_widget.png"/> Newsletters
+		<img style="margin-top: -2px;" src="/public/images/index/tah_logo_widget.png"/> Updates
 	</h2>
 	<div class="body" style="padding:20px 10px;">
 	<div style="padding-bottom:5px;text-align: justify;" class="talkinfo">Sign up for our newsletters for the latest news on your disease, best answers, and featured experts.</div>
@@ -66,10 +68,10 @@ function setNewsletterMessage(responseText, statusText, xhr, $form)  {
 					<span id="respMessage" style="margin-top: 5px;height:15px;float:left;width:100%;"></span>
 				</div>
 				#{if session.username }
-					<input name="newsletter.email" id="email" style="width: 220px;" class="search_field" type="text" value="${talker.email}" />
+					<input name="email" id="email" style="width: 220px;" class="search_field" type="text" value="${talker.email}" />
 				#{/if}
 				#{else}
-					<input name="newsletter.email" id="email" style="width: 220px;" class="search_field" type="text" value="Email Address" />
+					<input name="email" id="email" style="width: 220px;" class="search_field" type="text" value="Email Address" />
 				#{/else}
 				<input style="background: url(/public/images/index/newsletter_btn.png);border: 0px;height: 32px;width: 233px;margin-top: 5px;cursor: pointer;" type="submit" value="" />
 			</div>
