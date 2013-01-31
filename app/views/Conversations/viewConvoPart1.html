@@ -391,7 +391,7 @@
                 		<!-- Code for experience -->
                 		<!-- expertComments,sharedComments,expertCommentSize,sharedCommentSize -->
                 		#{if sharedCommentSize != 0}
-                		<div style="float:left;background: url(/public/images/index/grayTop.png) repeat-x scroll 0% 0% transparent;">
+                		<div style="float:left;background: url(/public/images/index/grayTop.png) repeat-x scroll 0% 0% transparent;width:690px;">
                 		<div class="answerh1">
                 		<div class="convoCount">
                 			${sharedCommentSize}</div> Shared Experiences</div>
@@ -409,7 +409,7 @@
 	                 		<div id="deletedAnswers" style="width:100%;display: none; margin-top: 3px;float:left;">
 	                 			#{convo/convoDeletedCommentsTree commentsList: deletedAnswers, level: 1, talker: talker /}
 	                 		</div>	
-	                 		<br/><br/>
+<!-- 	                 		<br/><br/> -->
 	                		#{/if}
 	                	#{/if}
                 		#{set notHelpfulAnswers = convo.notHelpfulAnswers /}
@@ -422,7 +422,7 @@
                  		</div>	
                 		#{/if}
                 		#{if talker == null}
-                			<div style="padding:20px 0; float: left;"><a href="/signup"><img src="/public/images/index/signupbanner.png" /></a></div>
+                			<div style="padding:20px 0; float: left;"><a href="/signup"><div class="questionbannerSignup"></div></a></div>
                 		#{/if}
                 		
 	<div class="topic" id="replyform"> 
@@ -445,7 +445,7 @@
 				<div id="saveAnswerImage" class="ajaxLoading" 
 					style="float: right; margin-right: 15px; margin-top: 20px;"></div>
 			</div>
-			<div class="tabBody" style="padding:10px 20px;width:650px;display: ${!userHasAnswer ? 'none' : 'block'};">
+			<div class="tabBody" style="padding:10px 20px;width:650px;display: ${!userHasAnswer ? 'none' : 'block'};margin-top: 15px;">
 				<span>
 				<b>Note:</b> Only one answer per conversation per user. You may edit your answer though.
 				</span>

@@ -295,12 +295,20 @@ public class ViewDispatcher extends Controller {
 		
 		TalkerBean talker = null;
 		boolean newsLetterFlag = false;
-		//boolean rewardLetterFlag;
+		boolean rewardLetterFlag = false;
 		
 		if (Security.isConnected()) {
 			talker = CommonUtil.loadCachedTalker(session);
 			newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
-			//rewardLetterFlag = ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
+			String convoTopicName = ConversationBean.ALL_CANCERS;
+			if(StringUtils.isNotBlank(convo.getCategory())){
+				convoTopicName = convo.getCategory();
+			} else if(convo.getOtherDiseaseCategories() != null && convo.getOtherDiseaseCategories().length > 0) {
+				convoTopicName = convo.getOtherDiseaseCategories()[0];
+			}
+			if(convoTopicName != null) {
+				rewardLetterFlag = ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),convoTopicName);	
+			}
 		}
 		ConversationDAO.incrementConvoViews(convo.getId());
 		
@@ -397,7 +405,7 @@ public class ViewDispatcher extends Controller {
 		List<VideoBean> videoBeanList = VideoDAO.loadConvoVideo(convo.getId());
 		/*Code for Video*/
 		render("Conversations/viewConvo.html", talker, convo, latestActivityTime, 
-				relatedConvos, userHasAnswer,newsLetterFlag,commentSize,videoBeanList,expertComments,sharedComments,expertCommentSize,sharedCommentSize);
+				relatedConvos, userHasAnswer,newsLetterFlag,rewardLetterFlag,commentSize,videoBeanList,expertComments,sharedComments,expertCommentSize,sharedCommentSize);
     }
 	
 	private static void showTopic(TopicBean topic) {

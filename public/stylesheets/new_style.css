@@ -753,6 +753,8 @@ ul.client { float: left; }
     cursor: pointer;
 }
 
+.submitSubscribeEmail:HOVER,.repcomsubmits:HOVER,.updatebtns:HOVER,.submitspops:HOVER,.submitspopss:HOVER { background: url("../images/index/submitBtnHover.png") no-repeat scroll 0 0px transparent; } 
+
 .addcomments {
 	background:url(../images/index/buttonBg.png);
 	width:233px;
@@ -766,6 +768,8 @@ ul.client { float: left; }
 	font-weight: bold;
 	font-size: 17px;
 }
+.addcomments:HOVER { background:url(../images/index/buttonBgHover.png); }
+
 .edititinputs, .repcominput,.popinputs,.askkinput{
 		border: 1px solid #dadada;
 	padding: 5px;
@@ -1424,4 +1428,17 @@ border:0;
 	.stylezx,.votestxt3 {
     color: #787878;
     font-size: 11px;
+}
+.newsletterWidgetBtn{ 
+	background: url(../images/index/newsletter_btn.png);
+	border: 0px;height: 32px;width: 233px;margin-top: 5px;cursor: pointer;
+}
+.newsletterWidgetBtn:HOVER{ 
+	background: url(../images/index/newsletter_btnHover.png);
+}
+.questionbannerSignup{
+	background: url('/public/images/index/signupbanner.png');width:690px;height:85px;
+}
+.questionbannerSignup:HOVER{
+	background: url('/public/images/index/signupbannerHover.png'); 
 }

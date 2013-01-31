@@ -1,6 +1,6 @@
 #{list items: _commentsList, as: 'comment' }
 	<div id="comment${comment.id}" class="topic" 
-			style="float:left;width:100%;border-bottom: 1px solid #CCC; margin-bottom: 20px; padding-bottom: 10px;padding-bottom:10px; ${_level != 1 ? 'margin-left:16%;' : ''} ">
+			style="float:left;width:100%;border-bottom: 1px solid #CCC; padding: 10px 0; ${_level != 1 ? 'margin-left:16%;' : ''} ">
     	<div class="answerCover">
 			#{if _level == 1 }
 				<div id="vote${comment.id}" class="replyr1">

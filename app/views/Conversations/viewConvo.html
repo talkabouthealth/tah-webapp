@@ -380,15 +380,16 @@
 				    	<div class="topicborder" style="margin-top: 10px;"></div>
 					#{/if}
 					#{else}
-						#{include '/Conversations/subscribeConvo.html' /}	
-						<br />
+						*{ #{include '/Conversations/subscribeConvo.html' /} }*	
 					#{/else}
+					
+					#{include 'tags/newsletter/subscribeConvoTopicNew.html' /}
 					
 					<!-- Advertisement Code Start -->
                 	#{ad/advertisement add: '1' /}
 		        	<!-- Advertisement Code End -->
 					
-					#{include 'tags/newsletter/subscribeConvoTopicNew.html' /}
+					
 					#{ifnot talker }
 						<a href="@{Application.signup()}" onClick="_gaq.push(['_trackEvent', 'Join_Other', 'Signup', 'Standard']);">
 							<img src="/public/images/index/getstarted.png" alt="" border="0"/>
