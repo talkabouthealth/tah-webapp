@@ -348,38 +348,45 @@ public class Application extends Controller {
      * Called after accepting TOS and PP by user.
      * 
      */
-    public static void createUserFromService(String email) {
+    public static void createUserFromService(String email,NewsLetterBean newsletter) {
     	if(request.method.equals("POST")) {
-    		ServiceType serviceType = ServiceType.valueOf(session.get("serviceType"));
+    		ServiceType serviceType = ServiceType.valueOf(session.get("serviceType")); //ServiceType.TWITTER;//
         	String screenName = session.get("screenName");
         	String userEmail = session.get("userEmail");
         	String accountId = session.get("accountId");
         	String verifyCode = null;
-        	
+
+        	List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
         	if (serviceType == ServiceType.TWITTER) {
-        		//for Twitter we check email
-        		validation.required(email);
-        		validation.email(email);
-    			if (validation.hasError("email")) {
-    				renderText("Error: "+validation.error("email").message());
-    				return;
-    			}
-    			TalkerBean otherTalker = TalkerDAO.getByEmail(email);
-    			if (otherTalker != null) {
-    				renderText("Error: "+Messages.get("email.exists"));
-    				return;
-    			}
-
-    			userEmail = email;
-    			//verifyCode = CommonUtil.generateVerifyCode();
-
-    			//follow this user by TAH
+    			userEmail = email;		//verifyCode = CommonUtil.generateVerifyCode();
         		TwitterUtil.followUser(accountId);
+        	} 
+       		//for Twitter we check email
+       		validation.required(userEmail);
+       		validation.email(userEmail);
+       		
+        	if (!validation.hasErrors()) {
+        		TalkerBean otherTalker = TalkerDAO.getByEmail(email);
+    			if (otherTalker != null) {
+    				//renderText("Error: "+Messages.get("email.exists"));
+    				String error = "Error: "+Messages.get("email.exists");
+    				render("Application/tosAccept.html",error,diseaseList,newsletter,email);
+    				return;
+    			}
+    			TalkerLogic.signupFromService(serviceType, session, screenName, userEmail, verifyCode, accountId);
+    			if(newsletter != null) {
+    				newsletter.setEmail(userEmail);
+    				if(newsletter.getNewsLetterType() != null && newsletter.getNewsLetterType().length > 0){
+    					ApplicationDAO.addToNewsLetter(userEmail, newsletter.getNewsLetterType());
+    				}
+    			}
+        		//render("ok");
+        		index();
+        	} else {
+        		String error = "Error: "+Messages.get("validation.required","email");
+        		render("Application/tosAccept.html",error,diseaseList,newsletter,email);
+				return;
         	}
-        	TalkerLogic.signupFromService(serviceType, session, screenName, 
-        			userEmail, verifyCode, accountId);
-        	
-        	renderText("ok");
     	} else {
     		forbidden();
     	}
@@ -486,7 +493,8 @@ public class Application extends Controller {
 	}
     
 	public static void tosAccept() {
-		render();
+		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+		render(diseaseList);
 	}
 	
     public static void suspendedAccount() {
