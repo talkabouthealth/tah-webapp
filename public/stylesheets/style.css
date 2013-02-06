@@ -758,8 +758,8 @@ a {
 .editit {
 	float:left;
 	width:auto;
-	height:10px;
-	font-size:11px;
+	height:12px;
+	font-size:12px;
 	margin-left:5px;
 }
 .editit a {
@@ -769,11 +769,11 @@ a {
 	color:#4B4B4B;
 	text-decoration:none;
 	height:12px;
-	padding-top:3px;
+	padding-top:0px;
 	padding-left:12px;
 	background:url(../images/edi.jpg);
 	background-repeat:no-repeat;
-	background-position:0 3px;
+	/*background-position:0 3px;*/
 }
 .editdiv .editit a {
 	color:#4B4B4B;

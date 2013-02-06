@@ -14,8 +14,80 @@
 #{else}
 	#{set userNameOfTopAnswer = convo.talker.name /}
 #{/else}
-#{extends 'main.html' /}
-<link href="/public/stylesheets/viewconvo.css" rel="stylesheet" type="text/css" />
+#{extends 'main_new.html' /}
+<style>
+/*-----------------Popups Global (common popup css)------------------------------*/
+#mask1 {
+	position:absolute;
+	left:0;
+	top:0;
+	z-index:9000;
+	display:none;
+}
+#boxes .window {
+	position:absolute;
+	left:0;
+	top:0;
+	width:440px;
+	height:200px;
+	display:none;
+	z-index:9999;
+	padding:20px;
+}
+#boxes #dialog {
+	width:375px;
+	height:203px;
+	padding:10px;
+	background-color:#ffffff;
+}
+.closecover {
+	clear:both;
+	padding-top:7px;
+	height:21px;
+}
+#close {
+	float:right;
+	width: 30px;
+	height:31px;
+	padding-right:5px;
+}
+.popboxWraper {
+	clear:both;
+}
+
+.popsubmit {
+	width:111px;
+	height:28px;
+	background:url(../images/popsubmit.jpg);
+	background-repeat:no-repeat;
+	border:0;
+}
+
+#mask {
+	position:absolute;
+	left:0;
+	top:0;
+	z-index:9000;
+	display:none;
+	background-color: #FFFFFF
+}
+
+
+.home { background: url(/public/images/index/headernew.png) 0 0px repeat-x; }
+.inline_form{ display:none;}
+/* .tabBody div.editsWraper {padding:10px;} */
+.tabBody { border-radius:5px; width:auto;}
+
+.answerh1 {
+    clear: both;
+    font-size: 18px;
+    font-weight: normal;
+    padding-bottom: 25px;
+    padding-top: 25px;
+}
+.video { padding-left: 25px;background: url("/public/images/index/videoIcon.png") 0 center no-repeat;}
+.convoCount {float:left;background: url(/public/images/index/countbubble.png) repeat scroll 0 0 transparent; height:25px;width:28px;text-align:center;font-size:15px;font-weight:bold;margin-right:5px}
+</style>
 <script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 <script type="text/javascript" src="/public/javascripts/viewconvo.js" ></script>
 <script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
@@ -53,6 +125,7 @@
 			);
 		}
 		$(document).ready(function() {
+			
 			if($("#videoForm").length != 0) {
 				var videoOptions = { success: setVideoMessage }; 
 				$('#videoForm').submit(function() {
@@ -108,7 +181,7 @@
    				return false;
    			}); 
 			
-				//Delete topic from topics (tags)
+			//Delete topic from topics (tags)
    			$(".deleteTopicLink").live("click", function() {
    	   			$(this).prev().remove();
    	   			var topicId = $(this).attr("rel");
@@ -220,6 +293,8 @@
    			$.post("@{Conversations.saveAnswerOrReply()}", 
   				{ convoId: '${convo.id}', parentId: parentId, text: commentText},
   				function(html) {
+  					window.location.reload();
+  					/*
   					$("#replyform"+parentId).before($(html));
   					$("#saveAnswerImage"+parentId).hide();//user can post only one answer per convo
   					if (parentId === '') {
@@ -228,6 +303,7 @@
   	  					$("#noAnswerText").show();
   					}
   					$('.inline-edit').inlineEdit({ hover: '', saveFunction: saveData, updateFunction: updateData});
+  					*/
   				}
   			);
   			return false;
@@ -279,56 +355,52 @@
 	}
 	</script>
 </head>
-<body>
-<div id="managtopic1">
-	#{include 'header.html' /}
-	<div id="bottom_container">
-      	<div class="haderbanner"><div id="innerbanner"></div></div>
-	<div id="targetedtherapy">
-		<div id="innermiddlearea">
-			<div id="mtcover">
-				<div id="mtleft">
-					<div class="mtcontent">
-						<div id="targetedtherapy">
-							<div class="suggescover">
-								#{include '/Conversations/viewConvoPart1.html' /}	
-							</div><!--suggescover-->
-            			</div> <!--targetedtherapy-->
-						<div class="cb"></div>
-					</div><!--mtcontent-->
-          		</div>
-				<div id="mtright1" style="padding-top: 10px">
+<body class="home">
+
+<div id="wrapper">
+	#{include 'header_new.html' /}
+	<div id="content">
+<!--       	<div class="haderbanner"><div id="innerbanner"></div></div> -->
+	<div id="main">
+		#{include '/Conversations/viewConvoPart1.html' /}
+	</div>
+	<div id="sidebar">
 					#{if talker }
-					<div width=100%>
+					<div style="float:left;width: 100%;margin-bottom: 5px;">
 						#{if talker.followingConvosList?.contains(convo.id) }
-							<a href="#" id="followConvoBtn" class="followingConvoBtn"></a>
-							<a href="#" id="answerBtn" class="answerBtn" onclick="addAnswer();" style="display: ${userHasAnswer ? 'none' : 'block'};"></a>
+							<a href="#" id="followConvoBtn" class="followingConvoBtn">&nbsp;</a>
+							<a href="#" id="answerBtn" class="answerBtn" onclick="addAnswer();" style="display: ${userHasAnswer ? 'none' : 'block'};">&nbsp;</a>
 						#{/if}
 						#{else}
-							<a href="#" id="followConvoBtn" class="followConvoBtn"></a>
-							<a href="#" id="answerBtn" class="answerBtn" onclick="addAnswer();" style="display: ${userHasAnswer ? 'none' : 'block'};"></a>
+							<a href="#" id="followConvoBtn" class="followConvoBtn">&nbsp;</a>
+							<a href="#" id="answerBtn" class="answerBtn" onclick="addAnswer();" style="display: ${userHasAnswer ? 'none' : 'block'};">&nbsp;</a>
 						#{/else}
 					</div>
 						<div class="cb"></div>
 				    	<div class="topicborder" style="margin-top: 10px;"></div>
 					#{/if}
 					#{else}
-						#{include '/Conversations/subscribeConvo.html' /}	
-						<br />
+						*{ #{include '/Conversations/subscribeConvo.html' /} }*	
 					#{/else}
+					
+					#{include 'tags/newsletter/subscribeConvoTopicNew.html' /}
 					
 					<!-- Advertisement Code Start -->
                 	#{ad/advertisement add: '1' /}
 		        	<!-- Advertisement Code End -->
 					
-					#{include 'tags/newsletter/subscribeConvoTopic.html' /}
-					#{ifnot talker }						
-						#{include 'tahInfo.html' /}
+					
+					#{ifnot talker }
+						<a href="@{Application.signup()}" onClick="_gaq.push(['_trackEvent', 'Join_Other', 'Signup', 'Standard']);">
+							<img src="/public/images/index/getstarted.png" alt="" border="0"/>
+						</a>	
+						*{ #{include 'tahInfo.html' /} }*
 					#{/ifnot}
 					#{if talker }
-					<div class="topipsts">
-						<div class="Statics">
-							<div class="mtrighttxt1">Question Statistics</div>
+					<div class="box">
+					<h2 class="heading">Question Statistics</h2>
+						<div class="body" style="padding: 0px;width:100%;">
+							<div style="padding:20px;float:left;">
 							<p style="color:#000000">
 								<strong style="color: #646664;">Latest Activity:</strong> ${latestActivityTime?.format('MM / dd / yyyy')} <br />
 								<strong style="color: #646664;">Views:</strong> ${convo.views}<br />
@@ -338,20 +410,22 @@
 										#{talker/talkerImageLink size: 48, userName: follower.userName /}
 									#{/list}
 								#{/if}
-							</p><br />
+							</p>
+							</div>
 							<div class="topicborder"></div>
 						</div>
 						<div class="cb"></div>
 					</div><!--topipsts-->
 					#{/if}
 					#{else}
-						#{include 'newsletter_signup.html' /}
+						#{include 'newsletter_signup_new.html' /}
 					#{/else}
-					<div class="topipsts">
-						<div class='inline-edit' id="relatedConvosEdit" style="padding-bottom: 3px;">
+					<div class="box">
+						<div class='inline-edit' id="relatedConvosEdit">
 							<div class="inline_display">
-								<div class="mtrighttxt1" style="float:left; padding:10px 0 0 0;">Similar Questions</div>
+								<h2 class="heading"><img alt="logo_blue" src="/public/images/index/logo_blue.png">Similar Questions</h2>
 								<div class="inline_full" style="display: ${(convo.relatedConvos || relatedConvos) ? 'block' : 'none'}">
+									*{
 									#{if talker && (talker.admin || talker.userName == convo.talker.userName) }
 										<div class="editdiv">
 											<div class="editit" style="padding-top:10px;">
@@ -359,27 +433,26 @@
 											</div>
 										</div>
 									#{/if}
-									<div id="relatedConvosList">
+									}*
+									<ul id="relatedConvosList">
 										#{list items: convo.relatedConvos, as: 'relatedConvo'}
-											<p class="rcpadtop">
+											<li class="rcpadtop">
 												#{if relatedConvo}
 												<a href="${relatedConvo.mainURL}">${relatedConvo.topic}</a>
 												#{/if}
-					                		</p>
+					                		</li>
 										#{/list}
-									</div>
-									
 									%{int i=0;}%
 									#{list items: relatedConvos, as: 'relatedConvo'}
 										
 										#{if relatedConvo && i<8 }
-										<p class="rcpadtop">
+										<li class="rcpadtop">
 											<a href="${relatedConvo.mainURL}">${relatedConvo.topic}</a>
 											%{i++;}%
-												</p>
+												</li>
 										#{/if}
-				                	
 									#{/list}
+									</ul>
 								</div>
 								<div class="inline_empty" style="display: ${!(convo.relatedConvos || relatedConvos) ? 'block' : 'none'}">
 									#{if talker }
@@ -391,7 +464,7 @@
 				            </div>
 				           
 							<div class='inline_form'>
-								<div class="Staticsh1" style="float:left; padding:10px 0 0 0;">Similar Questions</div>
+								<h2 class="heading"><img alt="logo_blue" src="/public/images/index/logo_blue.png">Similar Questions</h2>
 								<div style="float:left; font-size: 14px;">Add a similar question</div>
 								<div id="relatedConvosEditList">
 									#{list items: convo.relatedConvos, as: 'relatedConvo'}
@@ -414,11 +487,9 @@
 								</div>
 							</div>
 						</div>
-						<div class="topicborder"></div>
-						<div class="cb"></div>
 					</div><!--topipsts-->
 					#{if !talker}
-						#{include 'subscribe_reward.html' /}
+						#{include 'subscribe_reward_new.html' /}
 					#{/if}
 					#{if convo.followupConvos != null && convo.followupConvos.size() > 0}
 					<div class="topipsts">
@@ -469,17 +540,16 @@
 						<div class="cb"></div>
 					</div><!--topipsts-->
 					#{/if}
-					#{include 'Upcoming_Workshops.html' /}
-					#{common/popularTopics popularTopics: popularTopics /}
-					#{include 'SHARE_telephone_support.html' /}
-					#{include 'tahHowYouCanHelp.html' /}
-					#{include 'shareWidgets.html' /}
+					#{include 'Upcoming_Workshops_new.html' /}
+ 					*{ #{include 'Upcoming_Workshops.html' /}
+					#{common/popularTopics popularTopics: popularTopics /}  }* 
+					#{include 'SHARE_telephone_support_new.html' /}
+					#{include 'tahHowYouCanHelp_new.html' /}
+					*{ #{include 'shareWidgets.html' /} }*
 		            <div class="cb"></div>
-				</div>
           		<div class="cb"></div>
-          </div><!--mtcover-->
            <div class="cb"></div>
-	</div>
+</div>
 </div>
 </div>
 </div>

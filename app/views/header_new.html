@@ -1,0 +1,242 @@
+<style type="text/css">
+	/* main nav */
+	/*#nav { float: left;margin-left: 25px; margin-top: 20px; }*/ 
+	#nav { position: relative;height: 26px; }
+	#nav li ul{background-color: #FFF; border: 1px solid #CCCCCC;}
+	#nav li ul li,#settings li,#settings1 li,#settings2 li{
+		display: inline;
+		clear:both;
+		float: none;
+		line-height:15px;
+	}
+	 
+	#settings li:hover, #settings1 li:hover, #settings2 li:hover  {
+		background: #0286BC !important;
+		color : #FFF !important;
+	}
+	#nav li a.menu1 {
+   	background-image: url("/public/images/bullet.gif");
+    background-position: 36px 10px;
+    background-repeat: no-repeat;
+    padding-right: 25px;
+}
+	#nav li a {
+		cursor: pointer;
+		display: block;
+		text-transform: capitalize;
+		font-size: 14px;
+		color: #014ba9;
+		font-weight: bold;
+		padding: 5px 15px 5px 5px;
+	}
+	#settings ul,#settings1 ul,#settings2 ul {
+		margin: 0;
+		padding: 0;
+		position: absolute;
+		visibility: hidden;
+		border:1px solid #CCC;
+		border-top: 1px solid #CCC;
+		z-index: 1000;
+		background-color: #FFF;
+	}
+	#nav li ul li a,#settings li a,#settings1 li a,#settings2 li a {
+		cursor: pointer;
+		display: block;
+		text-transform: capitalize;
+		font-size: 12px;
+		color: #014ba9;
+		font-weight: normal;
+		padding: 5px;
+	}
+	
+	#settings li a:hover,#settings1 li a:hover,#settings2 li a:hover {
+		background: #0286BC;
+		color:#FFF;
+	}
+	#settings1,#settings2,#settings{margin:0 5px;}
+	#settings1 a.menu1,#settings2 a.menu1,#settings a.menu1 {
+    background-image: url("/public/images/bullet.gif");
+    background-repeat: no-repeat;
+    padding-right: 9px;
+	}
+	#settings1 a.menu1{ background-position: 31px 5px; }
+	#settings2 a.menu1{	background-position: 39px 5px; }
+	#settings a.menu1 { background-position: 50px 5px; }
+</style>
+<script type="text/javascript">
+var timeout         = 500;
+var closetimer		= 0;
+var ddmenuitem      = 0;
+
+function jsddm_open()
+{	jsddm_canceltimer();
+	jsddm_close();
+	ddmenuitem = $(this).find('ul').eq(0).css('visibility', 'visible');}
+
+function jsddm_close()
+{	if(ddmenuitem) ddmenuitem.css('visibility', 'hidden');}
+
+function jsddm_timer()
+{	closetimer = window.setTimeout(jsddm_close, timeout);}
+
+function jsddm_canceltimer()
+{	
+	if(closetimer)
+	{	window.clearTimeout(closetimer);
+		closetimer = null;
+	}
+}
+ 
+	$(document).ready(function() {
+		$(".twitterBtn").click(function() {
+			openServiceLogin('T');
+		});
+		$(".facebookBtn").click(function() {
+			openServiceLogin('F');
+		});
+		
+		makeAutocomplete("#topSearchBox", "all");
+
+		$('.moretext').truncatable({ limit: 70, more: '... more', less: true, hideText: '...less' });
+		$('.moretext2').truncatable({ limit: 220, more: '... more', less: true, hideText: '...less' });
+		
+		$('#nav > li').bind('mouseover', jsddm_open);
+		$('#nav > li').bind('mouseout',  jsddm_timer);
+		
+		$('#settings').bind('mouseover', jsddm_open);
+		$('#settings').bind('mouseout',  jsddm_timer);
+		
+		$('#settings1').bind('mouseover', jsddm_open);
+		$('#settings1').bind('mouseout',  jsddm_timer);
+		
+		$('#settings2').bind('mouseover', jsddm_open);
+		$('#settings2').bind('mouseout',  jsddm_timer);
+
+		//close button in popups
+		$('.window .close, .window .cancelLink').click(function (e) {
+			//Cancel the link behavior
+			e.preventDefault();
+			hideAll();
+		});
+	});
+
+ 
+ 
+	
+</script>
+<div id="header">
+	<h1 class="logo"><a href="/"><img src="/public/images/index/tah_logo.png" alt="Talk About Health" /></a>
+	</h1>
+	<ul class="search_signin" style="height: 40px;">
+	    <li>
+	      <form action="?action=search" method="get">
+	        <input id="topSearchBox" type="text" placeholder="Your search here..." class="search_field" />
+	        <input id="topSearchText" type="button" class="search_btn" />
+	      </form>
+	    </li>
+	    #{if session.contains("username") }
+	    #{set currentUser = session.get("username") /}
+	    
+			#{if currentUser.equals("admin") }
+				<li id="settings2"><a class="menu1" href="#">Admin</a>
+	                <ul>
+	                  <li><a href="@{Notifications.index()}">Moderate New Questions</a></li>
+	                  <li><a href="@{Dashboard.manageAccounts()}">Manage Accounts</a></li>
+	                  <li><a href="@{Dashboard.verifyProfessionals()}">Verify Professionals</a></li>
+	                  <li><a href="@{UserList.index()}">Users</a></li>
+	                  <li><a href="@{Video.homePageVideo()}">Home video</a></li>
+	                  <li><a href="@{Dashboard.diseaseUtil()}">Disease</a></li>
+	                  <li><hr></li>
+	                  <li><a href="@{NewsletterStats.index()}">Newsletter Stats</a></li>
+	                  <li><a href="@{NewsletterStats.emailLookup()}">Email Lookup</a></li>
+	                  <li><a href="@{ActivityLogReportController.logReport()}">Activity Stats</a></li>
+	                  <li><a href="@{Advertisement.logReport()}">Advertisement Stats</a></li>
+	                  <li><a href="@{Dashboard.topicStats()}">Topic Stats</a></li>
+	                  <li><a href="@{Dashboard.diseaseStats()}">Disease Stats</a></li>
+	                  <li><hr></li>
+					  *{
+	                  <li><a href="@{QuestionRecovery.index()}">Question Recovery</a></li>
+	                  <li><a href="@{Application.reloadTalkersHealthInfo()}">Reload Talker Health Info</a></li>
+	                  <li><a href="@{Application.updateTalkerIds()}">Update Talkers</a></li>
+	                  <li><a href="@{UpdateQuestion.updateQuestionStatus()}">Question Recovery</a></li>
+	                  }*
+	                  <li><a href="@{Dashboard.updateTalkerImage()}">Image All</a></li>
+	                </ul>
+	            </li>
+			#{/if}
+	    	<li>
+	    	#{if session.inboxUnreadCount != null && !session.inboxUnreadCount.equals("") && !session.inboxUnreadCount.equals("0")  }
+            	<a href="@{Messaging.inbox()}" title="You have ${session.inboxUnreadCount} unread messages">
+               		<b>Inbox(${session.inboxUnreadCount})</b>
+               	</a>
+			#{/if}
+			#{else}
+				<a href="@{Messaging.inbox()}" id="inboxLink">Inbox</a>
+			#{/else}
+            </li>
+            <li id="settings">
+                <a class="menu1" href="#">Settings</a>
+                <ul style="width: 141px;"><!--  right: 0; -->
+                  <li><a href="@{Profile.edit()}">Edit Profile</a></li>
+                  #{ifnot session.prof }
+                  	<li><a href="@{Profile.healthDetails()}">Edit Health Info</a></li>
+                  #{/ifnot}
+                  <li><a href="@{Profile.notifications()}">Notification & Password</a></li>
+                  <li><a href="@{Profile.preferences()}">Privacy Settings</a></li>
+                </ul>
+			</li>
+			<li id="settings1"> <a class="menu1" href="#">More</a>
+                <ul style="width: 136px;"><!-- right: 0; -->
+					<li><a href="@{Static.aboutus()}">About</a></li>
+					<li><a href="@{Static.howitworks()}">How it works</a></li>		                
+					<li><a href="@{Static.faq()}">FAQ</a></li>
+					<li><a href="@{Static.workshops()}">Q&A Workshops</a></li>
+					<li><a href="@{Static.trained_peer_support_program()}">Trained Peer Support</a></li>
+					<li><a href="@{Static.communityguidelines()}">Community Guidelines</a></li>
+					<li><a href="@{Static.howyoucanhelp()}">How you can help</a></li>
+					<li><a href="http://blog.talkabouthealth.com">Blog</a></li>
+					<li><a href="@{Static.resources()}">Resources</a></li>
+					<li><a href="#" onclick="openInvitationsWindow();">Share TalkAboutHealth</a></li>
+					<li><a href="@{Application.contactus()}">Feedback</a></li>
+					<li><a href="@{Secure.logout()}">Logout</a></li>
+                </ul>
+              </li>
+	    #{/if}
+	    #{else}
+		    <li><a href="@{Application.signup()}" onClick="_gaq.push(['_trackEvent', 'Join_Home', 'Signup_Text', 'Standard']);"><img src="/public/images/index/user.png" alt="join now" /> Join Now</a></li>
+		    <li><a href="@{Secure.login()}"><img src="/public/images/index/sign_in_icon.png" alt="sign in" /> Sign In</a></li>
+		    <li><a href="#" class="twitterBtn"><img src="/public/images/index/t_signin.png" alt="twitter signin" /></a></li>
+		    <li><a href="#" class="facebookBtn"><img src="/public/images/index/fb_signin.png" alt="facebook signin" /></a></li>
+		#{/else}	
+	</ul>
+	<ul id="nav">
+	#{if session.contains("username") }
+	    <li><a href="@{Home.index()}">Home</a></li>
+	#{/if}
+	#{else}
+	    <li><a href="@{Explore.conversations('expert')}">Answers</a></li>
+	#{/else}
+	    <li><a href="@{Explore.topics()}">Topics</a></li>
+	    <li><a href="@{Static.TAH_Videos()}">Videos</a></li>
+	    <li><a href="@{Explore.browseMembers('active')}">Members</a></li>
+	#{if session.contains("username") }
+		<li><a href="#" class="menu1">You</a>
+          <ul>
+            <li><a href="@{ViewDispatcher.view(currentUser)}">Your Profile</a></li>
+            <li><a href="@{PublicProfile.thoughts(currentUser)}">Your Thoughts</a></li>
+            <li class="gap"><a href="@{PublicProfile.conversations(currentUser)}">Your Questions</a></li>
+            <li><a href="@{PublicProfile.topicsFollowing(currentUser)}">Your Topics Following</a></li>
+            <li class="gap"><a href="@{PublicProfile.answers(currentUser)}">Your Answers</a></li>
+            <li><a href="@{PublicProfile.userBasedActions(currentUser, 'thankyous')}">Your Thank you's</a></li>
+          </ul>
+        </li>
+	#{/if}
+	#{else}
+	    <li><a href="@{Static.medical_professionals()}">Experts</a></li>
+	    <li><a href="@{Static.workshops()}">Workshops</a></li>
+	    <li><a href="@{Static.trained_peer_support_program()}">Support</a></li><!-- Support Team -->
+	    <li><a href="http://blog.talkabouthealth.com" target="_new">Blog</a></li>
+	#{/else}    
+	    
+	</ul>
+</div>

@@ -1,0 +1,63 @@
+#{if !rewardLetterFlag}
+	<script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var rewardOptions = { success: setRewardLetterMessage }; 
+			$('#reward').submit(function() {
+				$("#reward").ajaxSubmit(rewardOptions); 
+				return false;
+			});
+			$('#emailReward').click(function() {
+				if($("#emailReward").val().trim() == 'Email Address')
+					$("#emailReward").val('');
+			});
+			
+			$('#emailReward').blur(function() {
+				if($("#emailReward").val().trim() == '')
+					$("#emailReward").val('Email Address');
+			});
+		});
+		function setRewardLetterMessage(responseText, statusText, xhr, $form) {
+			if (responseText.indexOf("Error:") === 0) {
+		   		var errorText = responseText.replace("Error:", "");
+		   		$("#rewardMessage").css("color","#ff0000");
+		   		$("#rewardMessage").html(errorText); 
+		   		$("#rewardMessage").fadeIn(100);
+		   		closeTimeout = setTimeout(function() { $("#rewardMessage").fadeOut(200) }, 4000);
+		   	} else {
+		   		//$("#rewardMessage").css("color","#2E8B57");
+		   		//$("#rewardMessage").html(responseText);
+		   		//$("#rewardMessage").fadeIn(100);
+		   		//closeTimeout = setTimeout(function() { $("#rewardblock").fadeOut(200) }, 4000);
+		   		window.location.href = "/signup?fromPage=NEWS";
+		   	}
+		}
+	</script>
+	<div class="box" id="tahreward">
+	<div id="rewardblock" >
+		<h2 class="heading">
+			<img style="margin-top:-4px;width:153px;" src="/public/images/index/tah_logo.png"/> Benefits
+		</h2>
+		<div class="body" style="padding:0px;width:100%;">
+			<div style="float:left;padding:20px;">
+				<span class="blacktextgrey15">Custom health, wellness, food, diet,<br/>fitness & medical offers.</span>
+			
+	   		#{form @Application.subscribeReward(), id:'reward' }
+		  		<div style="clear: both;height: 15px;padding:0 5px"><span id="rewardMessage" class="success" style="display:none;font-size: 12px;">Thanks for subscribing.</span></div>
+		  		<div style="float:left;padding:1px 5px 0 5px">
+				#{if session.username }
+					<input name="email" id="emailReward" class="search_field" type="text" value="${talker.email}" style="width: 140px;" />
+				#{/if}
+				#{else}
+					<input name="email" id="emailReward" class="search_field" type="text" value="Email Address" style="width: 140px;" />
+				#{/else}
+				</div>
+				<div style="float:left;">
+					<input class="submitSubscribeEmail" type="submit" value="" style="cursor: pointer;" onClick="_gaq.push(['_trackEvent', 'Newsletter_Signup_Widget', 'Signup_Click', 'Benefits']);"/>
+				</div>
+			#{/form}
+	   	</div>
+	   	</div>
+   	</div>
+   	</div>
+#{/if}

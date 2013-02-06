@@ -16,13 +16,14 @@
       <div class="cb"></div>
 </div> 
 #{/if}	
+<div class="tabBody" style="border-radius:5px;padding: 20px; width: 650px;">
 <div class="editsWraper">
 	<div class="editsWraper">
 		<div class='inline-edit' id="titleEdit">
 			<div class="inline_display">
 				<div class="inline_full">
 					<div class="targetedh7">
-						<h1 class="inline_view" style="display: inline;">${convo.topic}</h1>
+						<h3 class="inline_view" style="display: inline;">${convo.topic}</h3>
 						#{if talker && (talker.admin || talker.userName == convo.talker.userName) }
 							<span class="editit2" style="float: none;">
 								<a href="#" class="inline_editlink">Edit</a>
@@ -54,7 +55,7 @@
 		</div>
 	</div>
 </div><!--editsWraper-->
-<div style="clear:both">
+<div style="clear:both;padding:10px 0;">
 	<div class='inline-edit' id="detailsEdit">
 		<div class="suggestxt inline_display">
 			<div class="inline_full" style="display: ${convo.details ? 'block' : 'none'}">
@@ -76,7 +77,7 @@
            </div>
 		<div class='inline_form'>
 			<div style="padding-top:10px;">
-		        <textarea id="detailsinput" class="edititinputx inline_text" 
+		        <textarea id="detailsinput" class="search_field edititinputx inline_text" 
 		        	style="width:600px">${convo.details}</textarea>
 	        </div>
 			<div style="float:right;margin-right:30px;">
@@ -88,19 +89,19 @@
 		</div>
 	</div>
 </div> <!--Blank-->   
-		
-		
 <div class="topipcWraper">
      <div class="topic">
-		<div class='inline-edit' id="topicsEdit">
+		<div class='inline-edit' id="topicsEdit" style="clear: both; padding: 5px 0pt;width: 100%;float:left;">
 			<div class="suggestxt inline_display">
 				<div class="inline_full" style="display: ${convo.topics ? 'block' : 'none'}">
-					<div style="display: block; float: left; width: auto;" class="topictxt">
-                  						<div style="float: left;">Topics (Tags): </div>
+					<div style="display: block; width: auto;" class="topictxt">
+                  						<div style="float: left; background: url(/public/images/index/tagicon.png) no-repeat scroll left center; padding-left: 20px;">Topic Tags:&nbsp;&nbsp;</div>
                   						<div id="topicsList">
+                  						#{set topicSize = convo.topics.size() /}
                    						#{list items: convo.topics, as: 'tag'}
-								<a class="topicTitle" href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>
-							#{/list}
+											<a class="topicTitle" href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>#{if convo.topics.size() > 1 && topicSize > 1 },#{/if}
+											#{set topicSize = topicSize -1 /}
+										#{/list}
                   						</div>
 					</div>
 					#{if talker && (talker.admin || talker.userName == convo.talker.userName) }
@@ -120,8 +121,8 @@
 				</div>
             </div>
 			<div class='inline_form'>
-				<div style="display: block; float: left; width: auto;" class="topictxt">
-                 						<div style="float: left;">Topics: </div>
+				<div style="display: block;  width: auto;" class="topictxt">
+                	<div style="float: left; background: url(/public/images/index/tagicon.png) no-repeat scroll left center; padding-left: 20px;">Topic Tags:&nbsp;&nbsp;</div>
                  						<div id="topicsEditList">
                   						#{list items: convo.topics, as: 'tag'}
 							<a class="topicTitle" href="@{ViewDispatcher.view(tag.mainURL)}">${tag.title}</a>
@@ -131,9 +132,9 @@
 				</div>
 				<div class="addcomCover" style="width:400px;">
 					<input type="text" id="topicInput" 
-						class="addcominput inline_text"  value="" style="float:left; width:215px;"/>
-                   	<input type="submit" value=" " id="addTopicBtn" 
-                   		class="addcomsubmit inline_add" style="float:left; width:80;"  />
+						class="search_field addcominput inline_text"  value="" style="float:left; width:215px;"/>
+                   	<input type="submit" value=" Add " id="addTopicBtn" 
+                   		class="addcomsubmit inline_add" style="float:left; width:80;height:27px;"  />
 			        <div class="canclebtnz" style="float:left; width:auto;">
 			          	<a class="cancel" href="#">Done</a>
 			        </div> 
@@ -141,18 +142,23 @@
 			</div>
 		</div>
 
-		<div class='inline-edit' id="diseaseEdit">
+		<div class='inline-edit' id="diseaseEdit" style="clear: both; padding: 5px 0pt;width: 100%;float:left;">
 			<div class="suggestxt inline_display">
 				<div class="inline_full" style="display: ${convo.category || convo.otherDiseaseCategories ? 'block' : 'none'}">
-					<div style="display: block; float: left; width: auto;" class="topictxt">
-                  		<div style="float: left;">Diseases: </div>
+					<div style="display: block; width: auto;" class="topictxt">
+                  		<div style="float: left; background: url(/public/images/index/diseaseicon.png) no-repeat scroll left center; padding-left: 20px;">Diseases:&nbsp;&nbsp;</div>
                   		<div id="diseasesList">
                   			#{if convo.category != null && !convo.category.equals("")}
 								<a class="topicTitle" href="/explore/${convo.category.convertToURL()}">${convo.category}</a>
 							#{/if}
-							#{list items: convo.otherDiseaseCategories, as: 'category'}
-								<a class="topicTitle" href="/explore/${category.convertToURL()}">${category}</a>
-							#{/list}
+							#{if convo.otherDiseaseCategories != null}
+								#{set topicSize = convo.otherDiseaseCategories.size() /}
+								#{list items: convo.otherDiseaseCategories, as: 'category'}
+									#{if convo.otherDiseaseCategories.size() > 0 && topicSize > 0 },#{/if}
+									#{set topicSize = topicSize -1 /}
+									<a class="topicTitle" href="/explore/${category.convertToURL()}">${category}</a>
+								#{/list}
+							#{/if}	
                   		</div>
 					</div>
 					#{if talker != null && (talker.admin || talker.userName == convo.talker.userName) }
@@ -172,8 +178,9 @@
 				</div>
             </div>
 			<div class='inline_form'>
-				<div style="display: block; float: left; width: auto;" class="topictxt">
-           			<div style="float: left;">Diseases: </div>
+				<div style="display: block; width: auto;" class="topictxt">
+           			<div style="float: left; background: url(/public/images/index/diseaseicon.png) no-repeat scroll left center; padding-left: 20px;">Diseases:&nbsp;&nbsp;</div>
+                  		
            			<div id="diseasesEditList">
            				#{if convo.category != null  && !convo.category.equals("")}
            					<a class="topicTitle" href="/explore/${convo.category.convertToURL()}">${convo.category}</a>
@@ -189,9 +196,9 @@
 				</div>
 				<div class="addcomCover" style="width:400px;">
 					<input type="text" id="diseaseInput" 
-						class="addcominput inline_text"  value="" style="float:left; width:215px;"/>
-                   	<input type="submit" value=" " id="addTopicBtn" 
-                   		class="addcomsubmit inline_add" style="float:left; width:80;"  />
+						class="search_field addcominput inline_text"  value="" style="float:left; width:215px;"/>
+                   	<input type="submit" value=" Add " id="addTopicBtn" 
+                   		class="addcomsubmit inline_add" style="float:left; width:80;height:27px;"  />
 			        <div class="canclebtnz" style="float:left; width:auto;">
 			          	<a class="cancel" href="#">Done</a>
 			        </div> 
@@ -199,7 +206,7 @@
 			</div>
 		</div>
         #{if talker }
-			<div class="tagtxts">
+			<div class="tagtxts" style="margin: 10px 0pt;">
                   	<a href="#" id="postFollowupLink">Post follow-up question</a> |  
                   	<a href="#" onclick="$('#convoreplies').toggle(); return false;"
                     			#{if convo.replies.size() == 0}
@@ -258,11 +265,13 @@
 		<div class="cb"></div>
 	</div> <!--topic-->
     <div class="topicborder" style="margin-bottom: 5px;margin-top: 5px;"></div>
-			#{include 'socialNetworkShare.html' /}
+    		<div style="float: left; padding-top: 10px;width:100%;">
+				#{include 'socialNetworkShare.html' /}
+			</div>
 				<div class="topicborder" style="margin-top: 10px;"></div>
                  		<div class="topicborder" style="margin-bottom: 5px;"></div>
 				#{if convo.helpfulAnswers?.size > 1}
-                 		<div class="topic inline-edit" id="summaryEdit">
+                 		<div class="topic inline-edit" id="summaryEdit" style="float: left; width: 100%; ">
                  			<div class="inline_display">
                  				<div class="inline_empty" style="display: ${!convo.summary ? 'block' : 'none'}">
                  					#{if talker && talker?.isAdmin()}
@@ -271,7 +280,7 @@
 								</div>
 							#{/if}
 						</div>
-                  			<div class="cscover inline_full" style="display: ${convo.summary ? 'block' : 'none'}">
+                  			<div class="cscover inline_full" style="margin-top: 10px;display: ${convo.summary ? 'block' : 'none'}">
                   				<div class="cstop">
 			                   <div>
 			 						<div class="cstoptext" id="hidit3">Answer Summary</div>
@@ -291,10 +300,10 @@
 									</div>
 								#{/if}
 				            </div>
-				            <div style="margin-top:10px; margin-bottom:10px; clear: both"></div>
+<!-- 				            <div style="margin-top:10px; margin-bottom:10px; clear: both"></div> -->
 						</div>
 									#{if convo.sumContributors && talker}
-										<div style="clear: both; padding-top: 10px;">
+<!-- 										<div style="clear: both;"> -->
 											<span class="blacktext">Contributions By:</span> 
 								<span class="blacktext">
 									#{list items: convo.sumContributors, as: 'contributor'}
@@ -306,17 +315,17 @@
 										#{/else}
 									#{/list}
 								</span>
-										</div>
+<!-- 										</div> -->
 									#{/if}
 									#{else}
-										<div style="clear: both; padding-top: 10px;">&nbsp;</div>
+<!-- 										<div style="clear: both; padding-top: 10px;">&nbsp;</div> -->
 									#{/else}
 					</div><!--cmmidtext-->
                				</div><!--csmid-->
                 				<div class="csbot"></div>
                 			</div>
                			</div>
-					<div class="cscover inline_form">
+					<div class="cscover inline_form" style="margin-top: 10px;">
                 				<div class="cstop">
 	                   <div>
 	 						<div class="cstoptext" id="hidit3">Answer Summary</div>
@@ -326,7 +335,7 @@
                    	<div class="cmmidtext">
 									<div style="width: 100%">
 							<div style="float:left; width:auto;">
-  												<textarea style="width:585px;height:230px;font-size:13px;font-weight:normal" 
+  												<textarea style="width:610px;height:50px;" 
   													id="summaryinput" class="edititinputs inline_text">${convo.summary}</textarea>
   											</div>
 							<div style="float:right; width:auto;margin-right:30px;">
@@ -338,7 +347,7 @@
 						</div>
 									
 									#{if convo.sumContributors && talker }
-										<div style="clear: both; padding-top: 10px;">
+<!-- 										<div style="clear: both;"> -->
 											<span class="blacktext">Contributions By:</span> 
 								<span class="blacktext">
 									#{list items: convo.sumContributors, as: 'contributor'}
@@ -350,10 +359,10 @@
 										#{/else}
 									#{/list}
 								</span>
-										</div>
+<!-- 										</div> -->
 									#{/if}
 									#{else}
-										<div style="clear: both; padding-top: 10px;">&nbsp;</div>
+<!-- 										<div style="clear: both; padding-top: 10px;">&nbsp;</div> -->
 									#{/else}
 					</div><!--cmmidtext-->
                				</div><!--csmid-->
@@ -361,69 +370,85 @@
                			</div>
               		</div>
               		#{/if}
-					<!-- Video Code -->
-						#{if videoBeanList != null}
-							#{include '/Conversations/viewVideo.html' /}
-						#{/if}
+	</div>
+</div>
 					<!-- End Video Code -->
                		<div class="topic" style="margin-bottom: 15px;">
                			<a id="answers"></a>
+               			<!-- Video Code -->
+						#{if videoBeanList != null}
+							#{include '/Conversations/viewVideo.html' /}
+						#{/if}
                			#{if expertCommentSize != 0}
-               			<div class="answerh1">Expert Answers <span class="style2">(${expertCommentSize})</span></div>
+               			<div style="float:left;">
+               			<div class="answerh1">
+               				<div class="convoCount">${expertCommentSize}</div> Expert Answers</div>
                 			<div class="topicborder"></div>
                 		#{convo/convoCommentsTree commentsList: expertComments, level: 1, talker: talker /}
+                		</div>
                 		#{/if}
                 		
                 		<!-- Code for experience -->
                 		<!-- expertComments,sharedComments,expertCommentSize,sharedCommentSize -->
                 		#{if sharedCommentSize != 0}
-                		<div class="answerh1">Shared Experiences <span class="style2">(${sharedCommentSize})</span></div>
-                			<div class="topicborder"></div>
+                		<div style="float:left;background: url(/public/images/index/grayTop.png) repeat-x scroll 0% 0% transparent;width:690px;">
+                		<div class="answerh1">
+                		<div class="convoCount">
+                			${sharedCommentSize}</div> Shared Experiences</div>
+                		<div class="topicborder"></div>
                 		#{convo/convoCommentsTree commentsList: sharedComments, level: 1, talker: talker /}
+                		</div>
                 		#{/if}
                 	</div>
                 		#{if talker != null && talker.userName.equals("admin")}
                 			#{set deletedAnswers = convo.deletedAnswers /}
 	                		#{if deletedAnswers.size() != 0 }
-	                			<a href="#" onclick="$('#deletedAnswers').show(); return false;"
-	                				>View ${deletedAnswers.size()} Answer(s) Deleted</a>
-	                 		<div id="deletedAnswers" style="display: none; margin-top: 3px;">
+	                 		<div style="padding:10px 0;float:left;width:100%;">
+	                 			<a href="#" onclick="$('#deletedAnswers').show(); return false;">View ${deletedAnswers.size()} Answer(s) Deleted</a>
+	                 		</div>
+	                 		<div id="deletedAnswers" style="width:100%;display: none; margin-top: 3px;float:left;">
 	                 			#{convo/convoDeletedCommentsTree commentsList: deletedAnswers, level: 1, talker: talker /}
 	                 		</div>	
-	                 		<br/><br/>
+<!-- 	                 		<br/><br/> -->
 	                		#{/if}
 	                	#{/if}
                 		#{set notHelpfulAnswers = convo.notHelpfulAnswers /}
                 		#{if notHelpfulAnswers.size() != 0 }
-                			<a href="#" onclick="$('#notHelpfulAnswers').show(); return false;"
-                				>View ${notHelpfulAnswers.size()} Answer(s) Marked Not Helpful</a>
-                 		<div id="notHelpfulAnswers" style="display: none; margin-top: 3px;">
+                			<div style="padding:10px 0;float:left;width:100%;">
+                				<a href="#" onclick="$('#notHelpfulAnswers').show(); return false;">View ${notHelpfulAnswers.size()} Answer(s) Marked Not Helpful</a>
+                			</div>
+                 		<div id="notHelpfulAnswers" style="width:100%;display: none; margin-top: 3px;float:left;">
                  			#{convo/convoCommentsTree commentsList: notHelpfulAnswers, level: 1, talker: talker /}
                  		</div>	
                 		#{/if}
-                		</div>
-	<div class="topic" id="replyform"><br />
+                		#{if talker == null}
+                			<div style="padding:20px 0; float: left;"><a href="/signup"><div class="questionbannerSignup"></div></a></div>
+                		#{/if}
+                		
+	<div class="topic" id="replyform"> 
 		#{if talker }
 			<div id="answerFormDiv" style="display: ${userHasAnswer ? 'none' : 'block'};">
 				<div class="topicborder" style="margin-top: 7px;"></div>
 				#{if talker.isProf() }
 					<div class="answerh1">Add Answer </div>
-					<textarea name="textarea" id="replytext" class="answerinput" style="width: 617px; height: 150px;text-align: left;"
+					<textarea name="textarea" id="replytext" class="search_field" style="width: 680px; height: 150px;text-align: left;"
 					onclick="if (this.value === 'Add New Answer') this.value='';">Add New Answer</textarea>
 				#{/if}
 				#{else}
 					<div class="answerh1">Share your experience</div>
-					<textarea name="textarea" id="replytext" class="answerinput" style="width: 617px; height: 150px;text-align: left;"
+					<textarea name="textarea" id="replytext" class="search_field" style="width: 680px; height: 150px;text-align: left;"
 					onclick="if (this.value === 'Share your experience') this.value='';">Share your experience</textarea>
 				#{/else}
-				<br />
+<!-- 				<br /> -->
 				<input type="submit" onclick="return saveAnswerOrReply('');" 
-					src="/public/images/addcomments.jpg" class="addcomments" value=" " />
+					class="addcomments" value="Add Answer" />
 				<div id="saveAnswerImage" class="ajaxLoading" 
 					style="float: right; margin-right: 15px; margin-top: 20px;"></div>
 			</div>
-			<div id="noAnswerText" style="display: ${!userHasAnswer ? 'none' : 'block'};">
-				Only one answer per conversation per user. You may edit your answer though.
+			<div class="tabBody" style="padding:10px 20px;width:650px;display: ${!userHasAnswer ? 'none' : 'block'};margin-top: 15px;">
+				<span>
+				<b>Note:</b> Only one answer per conversation per user. You may edit your answer though.
+				</span>
 			</div>
 		#{/if}
 		#{if session.username && convo.messages}
@@ -461,9 +486,10 @@
 	    <div class="cb"></div>
 	</div>
 	#{if talker?.isAdmin() }
-		<div class="topic">
+		<div class="tabBody" style="width:100%;margin: 10px 0pt;">
+		<div style="padding: 10px 20px;">
 			<div style="margin-bottom: 5px;margin-top: 20px;" class="topicborder"></div>
-			<div class="topich1">Add Video</div>
+			<div class="topich1" style="font-weight: bold;">Add Video</div>
 			<div class="blacktextgrey15">Note: Every Youtube video come's with a unique 11 charactor lenght id. Please save that ID only as URL
 			<br/> Eg. If URL is http://youtu.be/gUQKZ8Md0Rg then Video ID is <i>gUQKZ8Md0Rg</i> 
 			<br/> If URL is http://www.youtube.com/watch?v=X7mW9vhMx3A then Video ID is <i>X7mW9vhMx3A</i>
@@ -471,38 +497,29 @@
 			#{form @Video.addNewVideo() , id:'videoForm' }
 				<input type="hidden" name="convoId" value="${convo.id}" />
 				<div class="mtinputbox" style="padding-top: 0px;">
-					<div style="float:left;margin-bottom:5px;">
-						<div style="float:left;font-weight: bold;margin-top: 7px;width: 138px;">Video ID: http://youtu.be/</div>
-						 <input type="text" name="videoId" class="mtinput" style="width: 175px; margin-right: 10px;"/>
+					<div style="margin-bottom: 5px; width: 100%; padding-bottom: 10px;">
+						<div style="float:left;font-weight: bold;margin-top: 7px;width: 157px;">Video ID: http://youtu.be/</div>
+						 <input type="text" name="videoId" class="search_field" style="width: 175px; margin-right: 10px;"/>
 					</div>
-					<div style="float:left;margin-bottom:5px;">
+					<div style="margin-bottom:5px;">
 						<div style="float:left;font-weight: bold;margin-top: 7px;width: 138px">User:</div>
-						<input type="text" name="talkerId" class="mtinput" style="width: 175px; margin-right: 10px;"/>
+						<input type="text" name="talkerId" class="search_field" style="width: 175px; margin-right: 10px;"/>
 					</div>
-					<!-- <div style="float:left;margin-bottom:5px;">
-						<div style="float:left;font-weight: bold;margin-top: 7px;width: 138px">Home page Title:</div>
-						<input type="text" name="videoTitle" class="mtinput" style="width: 175px; margin-right: 10px;"/>
-					</div>
-					<div style="float:left;margin-bottom:5px;width:100%;height:45px;">
-						<div style="float:left;font-weight: bold;margin-top: 7px;width: 138px">Show on home page:</div>
-						<input type="checkbox" name="homeVideoFlag" class="mtinput" style="width: 175px; margin-right: 10px;"/>
-					</div>
-					 -->
-					<div style="float:left;margin-top:-10px;">
-						<input type="submit" class="addVideobtn" value=" "/>
+					<div style="">
+						<input type="submit" class="submitSubscribeEmail" value=" "/>
 					</div>
 					<div style="width: 100%;float:left;margin-bottom:5px;"><span id="vedioMessage"></span></div>
 				</div>
 			#{/form}
 			<div style="margin-bottom: 5px;margin-top: 5px;" class="topicborder"></div>
 		</div>
-
-		<div class="topic"> 
+		</div>	
+		<div class="topic" style="float:left;"> 
            <div class="topich1">Merge conversation</div>
            <div class="mtinputbox" style="padding-top: 0px;">
              <input id="convoToMerge" type="text" onfocus="selectedConvoURL = '';"
-             	class="mtinput" style="width: 300px; margin-right: 10px;"/>
-             <input id="mergeConvosBtn" type="submit" value="" src="/public/images/mergebtn.jpg" class="mergebtn"/>
+             	class="search_field" style="width: 300px; margin-right: 10px;"/>
+             <input id="mergeConvosBtn" type="submit" value="" src="/public/images/mergebtn.jpg" class="submitSubscribeEmail"/>
              <div class="cb"></div>
            </div>
            <!--mtinputbox-->
@@ -510,29 +527,36 @@
             <div class="cb"></div>
 		</div>
 	#{/if}
-	#{ notLoggedNotice /}
+	
+
+	
 	#{if relatedConvos != null && relatedConvos.size() > 8}
-		<div>
-			<div class="answerh1">Similar Questions </div>
-			<br />			
+		<div style="float: left; padding-bottom: 20px;">
+			<div Style="font-size: 20px; padding: 10px 0pt;"><strong>Similar Questions </strong></div>
 			%{int i=0;}%
 			#{list items: relatedConvos, as: 'relatedConvo'}
 						#{if relatedConvo && i>=8 }
-							<span class="topipsts" style="font-weight: bold;">
+							<div style="font-size: 15px; line-height: 25px;background: url(/public/images/index/arrowblue.png) 0 8px no-repeat;padding-left:10px;">
 										<a href="${relatedConvo.mainURL}">${relatedConvo.topic}</a>
-							</span>
-							<br /><br />
+							</div>
 						#{/if}
 						%{i++;}%
-				  
 			#{/list}
 		</div>
 	#{/if}
-		<span style="color: red; font-weight: bold;">
-			<br/><br/>
-			Note: All content on this site is informational and not a substitute for professional medical advice. 
+		<div class="tabBody" style="padding:10px 20px;color: #383838; border:1px solid #ff7474;background-color: #ffefef; float: left;">
+			<span>
+			<b>Note:</b> All content on this site is informational and not a substitute for professional medical advice. 
 			Always seek the advice of your physician or other qualified health provider with questions regarding your health.
+			</span>
+		</div>
+		#{ifnot session.username}
+		<div class="tabBody" style="padding:10px 20px;width:auto;margin-top:15px;">
+		<span>
+			<b>Note:</b> Usernames have been made anonymous and profile images are not shown to protect the privacy of our members.
 		</span>
+		</div>
+		#{/ifnot}
 		<div class="cb"></div>
 <div id="boxes">
 	<div id="dialog" class="window"></div>
