@@ -66,9 +66,6 @@ function openFacebook(redirectURL) {
 	return false;
 }
 
-
-
-
 /* ---------------- Conversations/Chats related ----------------- */
 function showStartConvoDialog(type) {
 	//select correct radio button

@@ -64,10 +64,9 @@
 			});
 	
 			// Edit link
-			$editLink.bind( 'click.inline-edit', function(){
+			$editLink.live( 'click.inline-edit', function(){
 				$display.hide();
 				$form.show();
-				
 				var editText = "";
 				if ($view.size() != 0) {
 					editText = $view.html();

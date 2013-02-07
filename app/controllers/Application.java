@@ -700,6 +700,7 @@ public class Application extends Controller {
     	vars.put("other_talker", "admin");
     	vars.put("message_text", moredetails);
     	EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, EmailUtil.SUPPORT_EMAIL, vars, null, false);
+    	EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_DIRECT_MESSAGE, "aawte.umesh@avibha.com", vars, null, false);
     	renderText("We have sent this error to admin");
     }
     

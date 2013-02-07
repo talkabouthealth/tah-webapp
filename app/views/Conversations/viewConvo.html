@@ -391,9 +391,11 @@
 					
 					
 					#{ifnot talker }
+						<div style="margin:0 0 10px">
 						<a href="@{Application.signup()}" onClick="_gaq.push(['_trackEvent', 'Join_Other', 'Signup', 'Standard']);">
 							<img src="/public/images/index/getstarted.png" alt="" border="0"/>
-						</a>	
+						</a>
+						</div>
 						*{ #{include 'tahInfo.html' /} }*
 					#{/ifnot}
 					#{if talker }

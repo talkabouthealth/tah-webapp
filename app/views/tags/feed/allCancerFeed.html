@@ -1,27 +1,27 @@
 #{if allDiseaseList != null}
-	#{list items: allDiseaseList.keySet(), as: 'cancerType'}
-		<div id="${cancerType.replaceAll("\\(","").replaceAll("\\)","")}CommunityFeedContent" class="tabContent">
+	#{list items: allDiseaseList.keySet(), as: 'csrType'}
+		<div id="${csrType.replaceAll("\\(","").replaceAll("\\)","")}CommunityFeedContent" class="tabContent">
 			<div class="topic">
 				<div class="cb"></div>
 				<div class="topic" id='comfeed'>
-					<a href=# id="${cancerType}CommunityFeedNotifications" class="morenotification" style='display:none' onClick="updateFeed('communityFeed'); return false;" >
+					<a href=# id="${csrType}CommunityFeedNotifications" class="morenotification" style='display:none' onClick="updateFeed('communityFeed'); return false;" >
 						0 new items
 					</a>
-                   	<div id="${cancerType.replaceAll("\\(","").replaceAll("\\)","")}CommunityFeedList">
-                       	#{if allDiseaseList.get(cancerType).size() == 0}
+                   	<div id="${csrType.replaceAll("\\(","").replaceAll("\\)","")}CommunityFeedList">
+                       	#{if allDiseaseList.get(csrType).size() == 0}
 							<span class="blacktext16">Follow topics, conversations, and other members to get the latest updates.</span>
                        	#{/if}
-                       	#{list items: allDiseaseList.get(cancerType), as: 'cancerCommunityFeed' }
+                       	#{list items: allDiseaseList.get(csrType), as: 'cancerCommunityFeed' }
 	                    	#{list items: cancerCommunityFeed, as: 'activity'}
-								#{feed/feedActivity activity: activity, talker: talker, parentList: cancerType+'CommunityFeedContent' /}
+								#{feed/feedActivity activity: activity, talker: talker, parentList: csrType+'CommunityFeedContent' /}
 							#{/list}
 						#{/list}
 					</div>
-					#{if allDiseaseList.get(cancerType) != null}
-						#{if allDiseaseList.get(cancerType).size() == logic.FeedsLogic.FEEDS_PER_PAGE }
-							<div class="replytommentbox" id="${cancerType.replaceAll("\\(","").replaceAll("\\)","")}CommunityFeedBtn">
+					#{if allDiseaseList.get(csrType) != null}
+						#{if allDiseaseList.get(csrType).size() == logic.FeedsLogic.FEEDS_PER_PAGE }
+							<div class="replytommentbox" id="${csrType.replaceAll("\\(","").replaceAll("\\)","")}CommunityFeedBtn">
 	                          <input type="submit" src="images/seemore.jpg"
-	                          	onclick="return loadMoreFeed('${cancerType.replaceAll("\\(","").replaceAll("\\)","")}CommunityFeed');" value=" " class="seemorecom" />
+	                          	onclick="return loadMoreFeed('${csrType.replaceAll("\\(","").replaceAll("\\)","")}CommunityFeed');" value=" " class="seemorecom" />
 	                        </div>
 						#{/if}
 					#{/if}

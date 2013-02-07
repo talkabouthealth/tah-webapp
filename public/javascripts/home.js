@@ -135,15 +135,15 @@ function initHomeTabs() {
 		$(this).parent().removeClass("newTab").addClass("newActiveTab");
 		
 		var id = $(this).attr("id");
-		var cancerType;
+		var csrType;
 		var feedType = id; 
 		id = $(this).attr("name");
-		cancerType = id;
+		csrType = id;
 		
 		if(id == "allFeed"){
 			$("#ajaxLoading").appendTo($("#allCancerFeed")).show();
 			$(".tabContent").hide();
-			$.get("/home/loadCancerFeed", {feedType: feedType, cancerType: cancerType},
+			$.get("/home/loadCancerFeed", {feedType: feedType, csrType: csrType},
 					function(data) {
 						$("#allCancerFeed").html(data);
 						$('.inline-edit').inlineEdit( { hover: ''} );
@@ -154,7 +154,7 @@ function initHomeTabs() {
 		}else if(id == "convoFeed"){
 			$("#ajaxLoading").appendTo($("#conversationFeed")).show();
 			$(".tabContent").hide();
-			$.get("/home/loadCancerFeed", {feedType: feedType, cancerType: cancerType},
+			$.get("/home/loadCancerFeed", {feedType: feedType, csrType: csrType},
 					function(data) {
 						$("#conversationFeed").html(data);
 						$('.inline-edit').inlineEdit( { hover: ''} );
@@ -165,7 +165,7 @@ function initHomeTabs() {
 		}else if(id == "mentions"){
 			$("#ajaxLoading").appendTo($("#mentionsFeed")).show();
 			$(".tabContent").hide();
-			$.get("/home/loadCancerFeed", {feedType: feedType, cancerType: cancerType},
+			$.get("/home/loadCancerFeed", {feedType: feedType, csrType: csrType},
 					function(data) {
 						$("#mentionsFeed").html(data);
 						$('.inline-edit').inlineEdit( { hover: ''} );
@@ -176,7 +176,7 @@ function initHomeTabs() {
 		} else if(id == "openConvo"){ 
 			$("#ajaxLoading").appendTo($("#openFeed")).show();
 			$(".tabContent").hide();
-			$.get("/home/loadCancerFeed", {feedType: feedType, cancerType: cancerType},
+			$.get("/home/loadCancerFeed", {feedType: feedType, csrType: csrType},
 					function(data) {
 						$("#openFeed").html(data);
 						$('.inline-edit').inlineEdit( { hover: ''} );
@@ -184,10 +184,10 @@ function initHomeTabs() {
 						$('.moretext2').truncatable({ limit: 220, more: '... more', less: true, hideText: '...less' });
 					}
 				);
-		} else if(cancerType != ""){
+		} else if(csrType != ""){
 			$("#ajaxLoading").appendTo($("#cancerFeed")).show();
 			$(".tabContent").hide();
-			$.get("/home/loadCancerFeed", {feedType: feedType, cancerType: cancerType},
+			$.get("/home/loadCancerFeed", {feedType: feedType, csrType: csrType},
 					function(data) {
 						$("#cancerFeed").html(data);
 						$('.inline-edit').inlineEdit( { hover: ''} );
