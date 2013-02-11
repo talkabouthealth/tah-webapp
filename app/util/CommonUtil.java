@@ -506,6 +506,7 @@ public class CommonUtil {
 			}
 		}
 		text = text.replaceAll(">#&", ">#").replaceAll(">@&", ">@");
+		text = text.replace("\n", "<br/>");
 		return text;
 	}
 
@@ -534,12 +535,11 @@ public class CommonUtil {
 		String htmlText = text;
 		if (thoughtOrAnswer.getFrom() != null && thoughtOrAnswer.getFrom().equalsIgnoreCase("twitter")) {
 			htmlText = CommonUtil.prepareTwitterThought(htmlText);
+			htmlText = htmlText.replace("\n", "<br/>");
 		}
 		else {
 			htmlText = CommonUtil.prepareThoughtOrAnswer(htmlText);
 		}
-		
-		htmlText = htmlText.replace("\n", "<br/>");
 		return htmlText;
 	}
 	
