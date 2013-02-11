@@ -374,6 +374,7 @@ public class ActionDAO {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
 		}
 		
+		/*
 		if(talker != null && talker.getId() == null) {
 			List<String> cat = FeedsLogic.getCancerType(talker);
 			cat.add(ConversationBean.ALL_CANCERS);
@@ -384,6 +385,7 @@ public class ActionDAO {
 				)
 			);
 		}
+		*/
 		DBObject query = queryBuilder.get();
 		return loadPreloadActions(query);
 	}
