@@ -138,11 +138,15 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 			if(StringUtils.isNotBlank(cancerType) && "Breast Cancer".equals(cancerType)) {
 				try{
 					accessToken = responseText.substring(13,responseText.lastIndexOf('&'));
-				} catch(ArrayIndexOutOfBoundsException e){
+				} catch(ArrayIndexOutOfBoundsException e) {
 					accessToken = responseText.substring(13);
 				}
 			} else {
-				accessToken = responseText.substring(13);
+				try{
+					accessToken = responseText.substring(13,responseText.lastIndexOf('&'));
+				} catch(ArrayIndexOutOfBoundsException e){
+					accessToken = responseText.substring(13);
+				}
 			}
 		}
 		return accessToken;
