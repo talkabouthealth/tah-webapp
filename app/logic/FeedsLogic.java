@@ -208,23 +208,25 @@ public class FeedsLogic {
 		for (Action action : feedActions) {
 			ConversationBean actionConvo = action.getConvo();
 			//check repeated conversations
+			isAdd = true;
 			if (actionConvo != null) {
 				if (!addedConvos.contains(actionConvo)) {
 					switch (feedType) {
 						case ALL_CANCER: 
-							String str[]={"other_disease_categories","category","opened"};
+							//String str[]={"other_disease_categories","category","opened"};
+							String str[]={"opened"};
 							ConversationBean convo = ConversationDAO.getConvoCategories(actionConvo.getId(),str);
-							if(convo.getCategory() == null){
+							/*if(convo.getCategory() == null){
 								if (convo.getOtherDiseaseCategories() != null && convo.getOtherDiseaseCategories().length > 0)
 									isAdd = true;
 								else
-									isAdd = false;
+									isAdd = true;
 							}else{
 								if (convo.getCategory().equals(""))
-									isAdd = false;
+									isAdd = true;
 								else
 									isAdd = true;
-							}
+							}*/
 							if(convo.isOpened() == true) 
 								isAdd = false;
 							break;
