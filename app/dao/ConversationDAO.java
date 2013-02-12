@@ -548,6 +548,7 @@ public class ConversationDAO {
 			}
 		}
 
+		/* 
 		if(StringUtils.isNotBlank(cancerType)){
 			List<String> cat = new ArrayList<String>();
 			cat.add(cancerType);
@@ -559,6 +560,7 @@ public class ConversationDAO {
 				)
 			);
 		}
+		*/
 		List<DBObject> convosDBList = new ArrayList<DBObject>();
 		DBCursor convoCur=convosColl.find(queryBuilder.get()).sort(new BasicDBObject("cr_date", -1)).limit(logic.FeedsLogic.FEEDS_PER_PAGE);
 		int recCount = 0;

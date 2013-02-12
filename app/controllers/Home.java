@@ -336,7 +336,7 @@ public class Home extends Controller {
      * Loading feeds using ajax
      * @param feedType, cancerType
      */
-    public static void loadCancerFeed(String feedType, String cancerType){
+    public static void loadCancerFeed(String feedType, String csrType){
     	TalkerBean talker = CommonUtil.loadCachedTalker(session);
     	if(feedType.equalsIgnoreCase("allFeed")){
     		Set<Action> feedItems = FeedsLogic.getAllCancerFeed(null, true,talker);
@@ -350,20 +350,20 @@ public class Home extends Controller {
     	}else if(feedType.equalsIgnoreCase("openConvo")){
     		List<ConversationBean> feedItems = null;
     		if(Security.isConnected())
-    			feedItems = ConversationDAO.getOpenQuestions(null,cancerType);
+    			feedItems = ConversationDAO.getOpenQuestions(null,csrType);
     		else
-    			feedItems = ConversationDAO.getOpenQuestions(null,cancerType);
+    			feedItems = ConversationDAO.getOpenQuestions(null,csrType);
 			render("tags/feed/openFeedList.html",feedItems, feedType);
     	} else {
 	    	Set<Action> multipleCancerCommunityFeed = null;
 	    	Map<String, Set<Action>> allDiseaseList = new LinkedHashMap<String, Set<Action>>();
 	    	String talkerCat = talker.getCategory();
-	    	cancerType = cancerType.replaceAll("_", " ");
-	    	talker.setCategory(cancerType);
+	    	csrType = csrType.replaceAll("_", " ");
+	    	talker.setCategory(csrType);
 	    	multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
 			allDiseaseList.put(talker.getCategory().replaceAll(" ", "_"),multipleCancerCommunityFeed);
 			talker.setCategory(talkerCat);
-			render("tags/feed/allCancerFeed.html", allDiseaseList, cancerType);
+			render("tags/feed/allCancerFeed.html", allDiseaseList, csrType);
     	}
     }
 }

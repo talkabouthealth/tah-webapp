@@ -17,10 +17,9 @@
 			background: #FFFFFF none repeat scroll 0 0;
 		}
 		#container {
-			height:400px;
-			width:650px;
+			width:700px;
 			text-align:left;
-			margin: 20px auto;
+			margin: 15px auto;
 		}
 		h1 {
 			color: #000000;
@@ -30,7 +29,7 @@
 			color:#0680C5;
 			font-size: 25px 
 		}
-		span { display: block; padding: 15px 0px }
+		.personalfields {width:270px;height: 25px;margin-top: 2px;background-color: #FFF; }
 	</style>
 	
 	<script type="text/javascript">
@@ -52,26 +51,250 @@
   				}
   			);
 		}
+		function displayOptions(option) {
+			if(document.getElementById(option).style.display == 'none') {
+				document.getElementById(option).style.display = 'block';
+				document.getElementById(option + 'EC').src = "/public/images/expand.png";
+			} else {
+				document.getElementById(option).style.display = 'none';
+				document.getElementById(option + 'EC').src = "/public/images/collapse.png";
+			}
+		}
+		function validateFormOnSubmit(signup) {
+			if ($("#email")) {
+				email = $("#email").val();
+				var error = validateEmail(email); 
+				if(error != '') {
+					$("#emailError").html(error);
+					$("#email").focus();
+					return false;
+				}
+			}
+			document.getElementById("signup").submit();
+		}
+		function validateEmail(fld) {
+		    var error="";
+		    var tfld = $.trim(fld);	// value of field with whitespace trimmed off
+		    var emailFilter = /^[^@]+@[^@.]+\.[^@]*\w\w$/ ;
+		    var illegalChars= /[\(\)\<\>\,\;\:\\\"\[\]]/ ;
+		    if (tfld == "") {
+		        error = "You didn't enter an email address.\n";
+		    } else if (!emailFilter.test(tfld)) {	//test email for illegal characters
+		        error = "Please enter a valid email address.\n";
+		    } else if (fld.match(illegalChars)) {
+		        error = "The email address contains illegal characters.\n";
+		    } 
+		    return error;
+		}
+		
 	</script>
 </head>
 <body>
-
 <div id="container">
+#{form @Application.createUserFromService() , id:'signup' }
 	<div class="tah" style="height: 70px;">
-		<img src="/public/images/mainlogo.png" alt="TalkAboutHealth" />
+		<img src="/public/images/index/tah_logo.png" alt="TalkAboutHealth" />
 	</div>
-	#{if session.serviceType?.equals("TWITTER")}
-		<span id="emailError" class="red16" style="padding: 0px;"></span>
+	<h1 style="padding-bottom: 20px;">Become a TalkAboutHealth Member</h1>
+	*{ #{if session.serviceType?.equals("TWITTER")} }*
+	
+		<span id="emailError" class="red16" style="padding: 0px;">#{if error != null}${error}#{/if}</span>
 		<div class="signupmain" style="padding-top: 3px;">
-			<div class="signuptextarea" style="padding-top: 4px; width: 100px;">
-				<span style="font-size: 25px; padding: 0px;">E-mail:</span>
-			</div>
+			<div class="signuptextarea"><span class="blacktext14">Email </div>
 			<div class="personaltextfield">
-			  	<input id="email" type="text" class="personalfields" value="" />
+			  	<input id="email" name="email" type="text" class="personalfields" value="" />
 			</div>
 		</div>
+	*{ #{/if} }*
+	<div class="signupmain">
+		<div class="signuptextarea"><span class="blacktext14">Health Community</span></div>
+		<div class="personaltextfield">
+			<select size="1" name="talker.category" class="personalfields" id="talkercategory">
+		  		 <option></option>
+		  		#{list items:diseaseList , as: 'disease'}
+				    <option value="${disease.name}" >${disease.name}</option>
+				#{/list}
+			</select>
+		</div>
+	</div>
+	<div class="signupmain">
+		<div class="signuptextarea"><span class="blacktext14">Patient, Physician, Caregiver, etc.</span></div>
+		<div class="personaltextfield">
+			<select size="1" name="talker.connection" class="personalfields" id="talker.connection">
+		  		<option selected value=''></option>
+		  		#{list items:models.TalkerBean.CONNECTIONS_ARRAY, as:'connection'}
+				    <option value="${connection}"
+				    #{if connection.equals(flash['talker.connection']) } selected #{/if} 
+				    >${connection}</option>
+				#{/list}
+			</select>
+		</div>
+	</div>
+
+*{ #{ifnot session.get("cancerType")} }*
+<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
+	#{if newsletter != null && newsletter.newsLetterType !=null}
+		#{if newsletter.newsLetterType.contains("TAH Workshop Notification")}
+			<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TAH Workshop Notification" checked="checked"/>
+		#{/if}
+		#{else}
+			<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TAH Workshop Notification"/>
+		#{/else}
 	#{/if}
-	<h1 class="title" style="clear: both;">
+	#{else}
+		<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TAH Workshop Notification" checked="checked"/>
+	#{/else}
+	Daily Workshop Announcement &amp; News<br/>
+	<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured answers, experts, tips &amp; latest news.)</font>
+</div>
+<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
+	#{if newsletter != null && newsletter.newsLetterType !=null}
+		#{if newsletter.newsLetterType.contains("TAH Workshop Summary")}
+			<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TAH Workshop Summary" checked="checked"/>
+		#{/if}
+		#{else}
+			<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TAH Workshop Summary"/>
+		#{/else}
+	#{/if}
+	#{else}
+		<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TAH Workshop Summary" checked="checked"/>
+	#{/else}
+	Daily Q&A Workshop Summary<br/>
+	<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Daily answer summaries from our expert Q&A workshops.)</font>
+</div>
+<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
+	#{if newsletter != null && newsletter.newsLetterType !=null}
+		#{if newsletter.newsLetterType.contains("Best of TalkAboutHealth")}
+			<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Best of TalkAboutHealth" checked='checked'>
+		#{/if}
+		#{else}
+			<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Best of TalkAboutHealth">
+		#{/else}
+	#{/if}
+	#{else}
+		<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Best of TalkAboutHealth" checked='checked'> 
+	#{/else}
+	Best of TalkAboutHealth (weekly)<br/>
+	<font size="2px;" style="font-weight: normal;padding-left: 23px;">(The week's best answers, news &amp; support.)</font>
+</div>
+<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
+	#{if newsletter != null && newsletter.newsLetterType !=null}
+		#{if newsletter.newsLetterType.contains("TalkAboutHealth Rewards")}
+			<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TalkAboutHealth Rewards" checked="checked"/>
+		#{/if}
+		#{else}
+			<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TalkAboutHealth Rewards"/>
+		#{/else}
+	#{/if}
+	#{else}
+		<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TalkAboutHealth Rewards" checked="checked"/>
+	#{/else}
+	TalkAboutHealth Benefits<br/>
+	<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Custom health, wellness &amp; medical offers.)</font>
+</div>
+<h4 style="font-weight: bold; margin-top: 10px;clear:both;width: 100%;">
+<a href="javascript:displayOptions('newsLetterOption');" ><img id="newsLetterOptionEC" src="/public/images/collapse.png"/><span style="margin-left: 5px; vertical-align: top;">View All Newsletters</span></a></h4>
+<div id="newsLetterOption" style="display: none;">
+	<div style="width: 100%; margin-bottom: 50px;">
+	<div style="width: 50%;  float: left;">
+		<h4 style="color: #000; font-weight: bold;">Disease Communities (weekly)</h4>
+		#{list items:diseaseList , as: 'disease'}
+		   <div id="checkboxarea2" style="padding-top: 2px;">
+			       #{if newsletter != null && newsletter.newsLetterType !=null && newsletter.newsLetterType.contains(disease.name) }
+					<input id="newsletter" name="newsletter.newsLetterType" 
+						type="checkbox"  id="newsletter.newsLetterType" value="${disease.name}" checked="checked"/> 
+					#{/if}
+					#{else}
+						<input id="newsletter" name="newsletter.newsLetterType" 
+						type="checkbox"  id="newsletter.newsLetterType" value="${disease.name}"/>
+					#{/else}	
+					${disease.name}
+				</div>
+			#{/list}
+		</div>
+	</div>
+       		<div class="cb"></div>
+       </div>
+<h4 style="font-weight: bold; margin-top: 10px;clear:both;width: 100%;">
+<a href="javascript:displayOptions('rewardsOptions');" ><img id="rewardsOptionsEC" src="/public/images/collapse.png"/><span style="margin-left: 5px; vertical-align: top;">View All Benefits</span></a></h4>
+<div id="rewardsOptions" style="display: none;">
+	<div id="checkboxarea2" style="padding-top: 2px;">
+		#{if newsletter != null && newsletter.newsLetterType !=null}
+			#{if newsletter.newsLetterType.contains("Diet, Nutrition, Food, and Recipe Rewards")}
+				<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Diet, Nutrition, Food, and Recipe Rewards" checked="checked"/>
+			#{/if}
+			#{else}
+				<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Diet, Nutrition, Food, and Recipe Rewards"/>
+			#{/else}
+		#{/if}
+		#{else}
+			<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Diet, Nutrition, Food, and Recipe Rewards"/>
+		#{/else}
+		Diet, Nutrition, Food and Recipe Benefits
+	</div>
+	<div id="checkboxarea2" style="padding-top: 2px;">
+		#{if newsletter != null && newsletter.newsLetterType !=null}
+			#{if newsletter.newsLetterType.contains("Fitness and Exercise Rewards")}
+				<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Fitness and Exercise Rewards" checked="checked"/>
+			#{/if}
+			#{else}
+				<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Fitness and Exercise Rewards"/>
+			#{/else}
+		#{/if}
+		#{else}
+			<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Fitness and Exercise Rewards"/>
+		#{/else}
+		Fitness and Exercise Benefits
+	</div>
+	
+	<div id="checkboxarea2" style="padding-top: 2px;">
+		#{if newsletter != null && newsletter.newsLetterType !=null}
+			#{if newsletter.newsLetterType.contains("Skin and Beauty Rewards")}
+				<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Skin and Beauty Rewards" checked="checked"/>
+			#{/if}
+			#{else}
+				<input id="newsletter" name="newsletter.newsLetterType"	type="checkbox" id="newsletter.newsLetterType" value="Skin and Beauty Rewards"/>
+			#{/else}
+		#{/if}
+		#{else}
+			<input id="newsletter" name="newsletter.newsLetterType"	type="checkbox" id="newsletter.newsLetterType" value="Skin and Beauty Rewards"/>
+		#{/else}
+		Skin and Beauty Benefits
+	</div>
+	<div id="checkboxarea2"  style="padding-bottom: 10px;padding-top: 2px;">
+		#{if newsletter != null && newsletter.newsLetterType !=null}
+			#{if newsletter.newsLetterType.contains("Pharmaceutical Rewards")}
+				<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Pharmaceutical Rewards" checked="checked"/>
+			#{/if}
+			#{else}
+				<input id="newsletter" name="newsletter.newsLetterType"	type="checkbox" id="newsletter.newsLetterType" value="Pharmaceutical Rewards"/>
+			#{/else}
+		#{/if}
+		#{else}
+			<input id="newsletter" name="newsletter.newsLetterType"	type="checkbox" id="newsletter.newsLetterType" value="Pharmaceutical Rewards"/>
+		#{/else}
+		Pharmaceutical Benefits<br/>
+		<font size="2px;" style="font-weight: normal;padding-left: 23px;">Relevant offers and survey opportunities based on disease and more.</font>
+	</div>
+	<div id="checkboxarea2" style="padding-bottom: 35px;padding-top: 2px;">
+		#{if newsletter != null && newsletter.newsLetterType !=null}
+			#{if newsletter.newsLetterType.contains("Family Rewards")}
+				<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Family Rewards" checked="checked"/>
+			#{/if}
+			#{else}
+				<input id="newsletter" name="newsletter.newsLetterType"	type="checkbox" id="newsletter.newsLetterType" value="Family Rewards"/>
+			#{/else}
+		#{/if}
+		#{else}
+			<input id="newsletter" name="newsletter.newsLetterType"	type="checkbox" id="newsletter.newsLetterType" value="Family Rewards"/>
+		#{/else}
+		Family Benefits <br/>
+		<font size="2px;" style="font-weight: normal;padding-left: 23px;">Maternity, baby and family offers.</font>
+	</div>
+</diV>
+*{ #{/ifnot} }*						
+						
+	<h3 class="title" style="clear: both;  padding-top: 15px;">
 		I agree to the TalkAboutHealth 
 		<a href="#" 
 			onclick="window.open('@{Static.tos()}', 'TermsOfService','width=1000,height=550,resizable=1,scrollbars=1');" 
@@ -79,27 +302,29 @@
 		<a href="#" 
 			onclick="window.open('@{Static.privacy()}', 'PrivacyPolicy','width=1000,height=550,resizable=1,scrollbars=1');" 
 			>Privacy Policy</a>.
-	</h1>
-	<span style="padding-top: 10px;" class="popusertxzt">Note: Your information will remain safe and private.</span>
+	</h3>
+	<span style="padding-top: 10px;clear: both;" class="popusertxzt"><b>Note:</b> Your information will remain safe and private.</span>
     <div style="float: left;">
        	<input type="button" id="agreeBtn" value="I agree." 
        		*{ Move style? }*
        		style="padding: 10px 25px; font-size: 20px; margin: 5px 0px; clear: both;"
-       		onclick="redirectToHome();"
+       		onclick="validateFormOnSubmit(document.signup);"
        		onmouseover="this.style.cursor='pointer'"/>
     	<br/>
 	    <span style="color: red; font-size: 14px;">
 			<b>Note:</b> All content on this site is informational and not a substitute for professional medical advice. 
 			Always seek the advice of your physician or other qualified health provider with questions regarding your health.
 		</span>
+		<br/><br/>
 	    <span class="popusertxzt">Health care professionals (i.e. physicians, pharmacists, nurses, etc.) are 
 	    	members of the TalkAboutHealth Community and participate by sharing
 	    	insights and knowledge. Just like any other member, their communications are informational 
 	    	and are not personal medical advice.
 	    </span>
+	    <br/><br/><br/>
     </div>
-    
     <div class="cb"></div>
+#{/form}
 </div>
 
 	#{ common/googleAnalytics /}

@@ -505,7 +505,6 @@ public class TalkerLogic {
 				}
 			}
 		}
-				
 		TalkerBean profileTalker = null;
 		if (profileTalkerId == null) {
 			profileTalker = talker;
@@ -585,7 +584,7 @@ public class TalkerLogic {
 			TalkerBean thankYouTalker = TalkerDAO.getByThankYouId(comment.getParentId());
 			
 			// Get the comment text of original thank you
-			if(parentList != null && parentList.equalsIgnoreCase("thankYouList")){
+			if(parentList != null && parentList.equalsIgnoreCase("thankYouList") && thankYouTalker != null){
 				List<ThankYouBean> thanklist = thankYouTalker.getThankYouList();
 				if(thanklist != null){
 					for(int index = 0 ; index < thanklist.size(); index++){
@@ -647,7 +646,7 @@ public class TalkerLogic {
 				}
 			}else{
 				//Set mail to user who gives the thank you
-				TalkerBean talkerBean = TalkerDAO.getByThankYouId(rootId);
+				TalkerBean talkerBean = TalkerDAO.getById(profileTalkerId);
 				List<ThankYouBean> list = talkerBean.getThankYouList();
 				if(list != null){
 					for(int index = 0 ; index < list.size(); index++){
@@ -656,11 +655,11 @@ public class TalkerLogic {
 							TalkerBean mailSendtalker = TalkerDAO.getByEmail(thanYou.getFromTalker().getEmail());
 				    		if(mailSendtalker.getEmailSettings().toString().contains("RECEIVE_COMMENT")){
 				    			if(talker.getUserName().equals(thanYou.getFromTalker().getUserName())){
-				    				System.out.println("equels");
+				    				//System.out.println("equels");
 				    				NotificationUtils.sendEmailNotification(EmailSetting.REPLY_TO_THANKYOU, 
 				    					TalkerDAO.getById(thanYou.getTo()), vars);
 				    			}else{
-				    				System.out.println("not eqyels ");
+				    				//System.out.println("not eqyels ");
 				    				NotificationUtils.sendEmailNotification(EmailSetting.REPLY_TO_THANKYOU, 
 				    						thanYou.getFromTalker(), vars);
 				    			}

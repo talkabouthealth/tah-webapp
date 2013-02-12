@@ -39,13 +39,15 @@
 							<span class="comname" style="font-size: 14px;">
 								<a href="@{ViewDispatcher.view(comment.fromTalker.name)}">${comment.fromTalker.name}</a>
 							</span>
-				        	<textarea id="titleinput" type="text" style="width:470px; height: 100px;"  
-				        		class="edititinputs inline_text">${comment.text}</textarea>
 				        </div>
-						<div style="float:right;margin-right:30px;">
+						<div style="float:left;margin-right:2px;width: 395px;">
+							<textarea id="titleinput" type="text" style="width:395px; height: 100px;"  
+				        		class="edititinputs inline_text">${comment.text}</textarea>
+				        	<div style="float:right;">	
 					        <input id="titleBtn" type="submit" class="updatebtns inline_save" value=" " />
-					        <div class="canclebtnz">
+					        <div class="canclebtnz" style="padding-left: 0px;padding-top: 3px;" >
 					        	<a class="cancel" href="#">Cancel</a>
+					        </div>
 					        </div>
 						</div>
 					</div>

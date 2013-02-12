@@ -60,9 +60,9 @@
   						$(".reply"+parentId).before($(html));
   					}
   					$("#saveThoughtImage"+parentId).hide();
+  					$('.inline-edit').inlineEdit( { hover: '', saveFunction: saveData} );
   				}
   			);
-   			
   			return false;
    		}
 	</script>

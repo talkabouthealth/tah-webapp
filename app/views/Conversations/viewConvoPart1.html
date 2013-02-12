@@ -45,7 +45,7 @@
 		        		value="${convo.topic}" class="edititinputs inline_text notempty" 
 		        		maxlength="160" >
 		        </div>
-				<div style="float:right;margin-right:30px;">
+				<div style="float:right;margin-right:40px;width:17%;">
 			        <input id="titleBtn" type="submit" class="updatebtns inline_save" value=" " />
 			        <div class="canclebtnz">
 			        	<a class="cancel" href="#">Cancel</a>
@@ -80,7 +80,7 @@
 		        <textarea id="detailsinput" class="search_field edititinputx inline_text" 
 		        	style="width:600px">${convo.details}</textarea>
 	        </div>
-			<div style="float:right;margin-right:30px;">
+			<div style="float:right;margin-right:40px;width:17%;">
 				<input id="detailsBtn" type="submit" class="updatebtns inline_save" value=" " />
 				<div class="canclebtnz">
 					<a class="cancel" href="#">Cancel</a>
@@ -206,7 +206,7 @@
 			</div>
 		</div>
         #{if talker }
-			<div class="tagtxts" style="margin: 10px 0pt;">
+			<div class="tagtxts" style="margin: 10px 0pt; width: 100%; float: left; font-size: 8pt;">
                   	<a href="#" id="postFollowupLink">Post follow-up question</a> |  
                   	<a href="#" onclick="$('#convoreplies').toggle(); return false;"
                     			#{if convo.replies.size() == 0}
@@ -338,7 +338,7 @@
   												<textarea style="width:610px;height:50px;" 
   													id="summaryinput" class="edititinputs inline_text">${convo.summary}</textarea>
   											</div>
-							<div style="float:right; width:auto;margin-right:30px;">
+							<div style="float:right; width:auto;margin-right:40px;width:17%;">
 								<input id="summaryBtn" class="updatebtns inline_save" value=" " />
 								<div class="canclebtnz">
 									<a class="cancel" href="#">Cancel</a>
