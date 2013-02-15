@@ -1439,10 +1439,11 @@ border:0;
 	background: url(../images/index/newsletter_btnHover.png);
 }
 .questionbannerSignup{
-	background: url('/public/images/index/signupbanner.png');width:690px;height:85px;
+	background: url('/public/images/index/newbanner.png');width:690px;height:35px; background-repeat: no-repeat;  
+	padding: 25px;color:#FFF; font-weight:bold;
 }
 .questionbannerSignup:HOVER{
-	background: url('/public/images/index/signupbannerHover.png'); 
+	background: url('/public/images/index/newbannerHover.png'); background-repeat: no-repeat;  
 }
 .editit,.editit2 {font-size:8pt;}
 .editit a,.editit2 a {

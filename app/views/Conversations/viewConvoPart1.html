@@ -1,3 +1,4 @@
+*{
 #{if talker && !talker?.hiddenHelps?.contains('convo')}
 <div id="convoHelp" class="helpInfo">
       <div class="popboxWraper">
@@ -16,6 +17,7 @@
       <div class="cb"></div>
 </div> 
 #{/if}	
+}*
 <div class="tabBody" style="border-radius:5px;padding: 20px; width: 650px;">
 <div class="editsWraper">
 	<div class="editsWraper">
@@ -380,7 +382,7 @@
 							#{include '/Conversations/viewVideo.html' /}
 						#{/if}
                			#{if expertCommentSize != 0}
-               			<div style="float:left;">
+               			<div style="float:left;width:100%;">
                			<div class="answerh1">
                				<div class="convoCount">${expertCommentSize}</div> Expert Answers</div>
                 			<div class="topicborder"></div>
@@ -422,7 +424,15 @@
                  		</div>	
                 		#{/if}
                 		#{if talker == null}
-                			<div style="padding:20px 0; float: left;"><a href="/signup"><div class="questionbannerSignup"></div></a></div>
+                			<div style="padding:20px 0; float: left;">
+                				<a href="/signup">
+                					<div class="questionbannerSignup">
+                					 <span style="font-size: 16px;">Join Now to ask a follow-up question or share your experience!</span>
+                					 <br/>
+                					 <span style="font-size: 15px;font-weight:normal;">We'll help guide and support you through treatments.</span>
+                					</div>
+                				</a>
+                			</div>
                 		#{/if}
                 		
 	<div class="topic" id="replyform"> 
