@@ -398,30 +398,7 @@
 						</div>
 						*{ #{include 'tahInfo.html' /} }*
 					#{/ifnot}
-					#{if talker }
-					<div class="box">
-					<h2 class="heading">Question Statistics</h2>
-						<div class="body" style="padding: 0px;width:100%;">
-							<div style="padding:20px;float:left;">
-							<p style="color:#000000">
-								<strong style="color: #646664;">Latest Activity:</strong> ${latestActivityTime?.format('MM / dd / yyyy')} <br />
-								<strong style="color: #646664;">Views:</strong> ${convo.views}<br />
-								<strong style="color: #646664;">Followed By:</strong> ${convo.followers?.size()} members<br/>
-								#{if talker}
-									#{list items: convo.followers, as: 'follower'}
-										#{talker/talkerImageLink size: 48, userName: follower.userName /}
-									#{/list}
-								#{/if}
-							</p>
-							</div>
-							<div class="topicborder"></div>
-						</div>
-						<div class="cb"></div>
-					</div><!--topipsts-->
-					#{/if}
-					#{else}
-						#{include 'newsletter_signup_new.html' /}
-					#{/else}
+					
 					<div class="box">
 						<div class='inline-edit' id="relatedConvosEdit">
 							<div class="inline_display">
@@ -490,6 +467,31 @@
 							</div>
 						</div>
 					</div><!--topipsts-->
+					
+					#{if talker }
+					<div class="box">
+					<h2 class="heading">Question Statistics</h2>
+						<div class="body" style="padding: 0px;width:100%;">
+							<div style="padding:20px;float:left;">
+							<p style="color:#000000">
+								<strong style="color: #646664;">Latest Activity:</strong> ${latestActivityTime?.format('MM / dd / yyyy')} <br />
+								<strong style="color: #646664;">Views:</strong> ${convo.views}<br />
+								<strong style="color: #646664;">Followed By:</strong> ${convo.followers?.size()} members<br/>
+								#{if talker}
+									#{list items: convo.followers, as: 'follower'}
+										#{talker/talkerImageLink size: 48, userName: follower.userName /}
+									#{/list}
+								#{/if}
+							</p>
+							</div>
+							<div class="topicborder"></div>
+						</div>
+						<div class="cb"></div>
+					</div><!--topipsts-->
+					#{/if}
+					#{else}
+						#{include 'newsletter_signup_new.html' /}
+					#{/else}
 					#{if !talker}
 						#{include 'subscribe_reward_new.html' /}
 					#{/if}
