@@ -1,25 +1,28 @@
 <style type="text/css">
 	/* main nav */
-	/*#nav { float: left;margin-left: 25px; margin-top: 20px; }*/ 
-	#nav { position: relative;height: 26px; }
-	#nav li ul{background-color: #FFF; border: 1px solid #CCCCCC;position: absolute; width:130px;visibility: hidden;}
-	#nav li ul li,#settings li,#settings1 li,#settings2 li{
+	#nav { float: left;margin-left: 25px;  } 
+	#nav,#userTopMenu  { position: relative;height: 26px;float:left;line-height:27px; }
+	#nav li ul, #userTopMenu li ul{
+		background-color: #FFF; 
+		border: 1px solid #CCCCCC;
+		position: absolute; 
+		width:auto;
+		visibility: hidden; 
+		}
+		
+	#nav li ul li,#userTopMenu li ul li {
 		display: inline;
 		clear:both;
 		float: none;
 		line-height:15px;
-	}
-	 
-	#settings li:hover, #settings1 li:hover, #settings2 li:hover  {
-		background: #0286BC !important;
-		color : #FFF !important;
+		margin-left:0px;width:100%;line-height:20px;
 	}
 	#nav li a.menu1 {
    	background-image: url("/public/images/bullet.gif");
-    background-position: 36px 10px;
+    background-position: 36px 15px;
     background-repeat: no-repeat;
-    padding-right: 25px;
-}
+    padding-right: 15px;
+	}
 	#nav li a {
 		cursor: pointer;
 		display: block;
@@ -29,9 +32,7 @@
 		font-weight: bold;
 		padding: 5px 15px 5px 5px;
 	}
-	#settings ul,#settings1 ul,#settings2 ul {
-		margin: 0;
-		padding: 0;
+	#userTopMenu ul{
 		position: absolute;
 		visibility: hidden;
 		border:1px solid #CCC;
@@ -39,7 +40,14 @@
 		z-index: 1000;
 		background-color: #FFF;
 	}
-	#nav li ul li a,#settings li a,#settings1 li a,#settings2 li a {
+	
+	#settings ul,#settings1 ul,#nav li ul {
+		right:0;
+	}
+	#userTopMenu li { margin-right:10px;margin-left:10px; }
+	
+	
+	#nav li ul li a,#userTopMenu ul li a {
 		cursor: pointer;
 		display: block;
 		text-transform: capitalize;
@@ -49,22 +57,22 @@
 		padding: 5px;
 	}
 	
-	#settings li a:hover,#settings1 li a:hover,#settings2 li a:hover {
+	#nav li ul li a:hover, #userTopMenu li ul li a:hover {
 		background: #0286BC;
 		color:#FFF;
 	}
-	#settings1,#settings2,#settings{margin:0 5px;}
-	#settings1 a.menu1,#settings2 a.menu1,#settings a.menu1 {
+	#userTopMenu{margin-left:20px;}
+	#userTopMenu a.menu1 {
     background-image: url("/public/images/bullet.gif");
     background-repeat: no-repeat;
-    padding-right: 9px;
+    padding-right: 15px;
 	}
-	#settings1 a.menu1{ background-position: 31px 5px; }
+	#userTopMenu a.menu1{ background-position: 35px 5px; }
 	#settings2 a.menu1{	background-position: 39px 5px; }
 	#settings a.menu1 { background-position: 50px 5px; }
 </style>
 <script type="text/javascript">
-var timeout         = 500;
+var timeout         = 100;
 var closetimer		= 0;
 var ddmenuitem      = 0;
 
@@ -103,14 +111,14 @@ function jsddm_canceltimer()
 		$('#nav > li').bind('mouseover', jsddm_open);
 		$('#nav > li').bind('mouseout',  jsddm_timer);
 		
-		$('#settings').bind('mouseover', jsddm_open);
-		$('#settings').bind('mouseout',  jsddm_timer);
+		$('#userTopMenu > li').bind('mouseover', jsddm_open);
+		$('#userTopMenu > li').bind('mouseout',  jsddm_timer);
 		
-		$('#settings1').bind('mouseover', jsddm_open);
-		$('#settings1').bind('mouseout',  jsddm_timer);
+		//$('#settings1').bind('mouseover', jsddm_open);
+		//$('#settings1').bind('mouseout',  jsddm_timer);
 		
-		$('#settings2').bind('mouseover', jsddm_open);
-		$('#settings2').bind('mouseout',  jsddm_timer);
+		//$('#settings2').bind('mouseover', jsddm_open);
+		//$('#settings2').bind('mouseout',  jsddm_timer);
 
 		//close button in popups
 		$('.window .close, .window .cancelLink').click(function (e) {
@@ -127,8 +135,8 @@ function jsddm_canceltimer()
 <div id="header">
 	<h1 class="logo"><a href="/"><img src="/public/images/index/tah_logo.png" alt="Talk About Health" /></a>
 	</h1>
-	<ul class="search_signin" style="height: 40px;">
-	    <li>
+	<ul class="search_signin" style="height: 40px;" id="userTopMenu">
+	    <li style="width:255px;">
 	      <form action="?action=search" method="get">
 	        <input id="topSearchBox" type="text" placeholder="Your search here..." class="search_field" />
 	        <input id="topSearchText" type="button" class="search_btn" />
@@ -176,7 +184,7 @@ function jsddm_canceltimer()
             </li>
             <li id="settings">
                 <a class="menu1" href="#">Settings</a>
-                <ul style="width: 141px;"><!--  right: 0; -->
+                <ul><!--  right: 0; -->
                   <li><a href="@{Profile.edit()}">Edit Profile</a></li>
                   #{ifnot session.prof }
                   	<li><a href="@{Profile.healthDetails()}">Edit Health Info</a></li>
@@ -185,8 +193,9 @@ function jsddm_canceltimer()
                   <li><a href="@{Profile.preferences()}">Privacy Settings</a></li>
                 </ul>
 			</li>
-			<li id="settings1"> <a class="menu1" href="#">More</a>
-                <ul style="width: 136px;"><!-- right: 0; -->
+			<li id="settings1"> 
+				<a class="menu1" href="#">More</a>
+                <ul><!-- right: 0; -->
 					<li><a href="@{Static.aboutus()}">About</a></li>
 					<li><a href="@{Static.howitworks()}">How it works</a></li>		                
 					<li><a href="@{Static.faq()}">FAQ</a></li>
