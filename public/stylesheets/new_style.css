@@ -17,7 +17,7 @@ a, a:visited {
 
 a:hover, a:focus { color: #E9225F; }
 
-ol, ul { list-style: none; }
+/*ol, ul { list-style: none; }*/
 
 em { font-style: italic; }
 
@@ -335,7 +335,8 @@ body {
 .tabBody li {
 	padding: 30px;
 	border-bottom: 1px solid #d5d5d5;
-	min-height: 105px
+	min-height: 105px;
+	list-style: none;
 }
 
 .tabBody h3 {
@@ -347,7 +348,11 @@ body {
 	font-size: 18px;
 }
 
-.disc { font-size: 15px; }
+.disc { 
+	font-size: 15px;
+	line-height: 20px;
+	margin-bottom: 10px; 
+}
 
 .by { color: #5a5959; }
 .by a{font-weight: bold;}

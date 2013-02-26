@@ -15,17 +15,17 @@
 			</div>
 		#{/if}
 		
-		<div class="jointxtlink2 moretext">
+		<div class="jointxtlink2 moretext2">
 			#{if _activity.reply}
-				${_activity.reply.text}
+				${_activity.reply.printThoughtOrAnswer(session.username)}
 			#{/if}
 			#{elseif _activity.answer}
-			${_activity.answer.printThoughtOrAnswer(session.username)}
-			*{
-				#{if _activity.convo.comments}
-					${_activity.convo.comments[0].printThoughtOrAnswer(session.username)}
-				#{/if}
-			}*
+				${_activity.answer.printThoughtOrAnswer(session.username)}
+				*{
+					#{if _activity.convo.comments}
+						${_activity.convo.comments[0].printThoughtOrAnswer(session.username)}
+					#{/if}
+				}*
 			#{/elseif}
 		</div>
 		

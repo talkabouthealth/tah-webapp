@@ -66,6 +66,18 @@ public class Search extends Controller {
 	}
 	
 	/**
+	 * Back-end for html editor autocomplete
+	 * @param term String entered by user
+	 */
+	public static void ajaxEditorSearch(String term) throws Exception {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		List<String> allowedTypes = Arrays.asList("User", "Conversation", "Question", "Topic");
+		List<Map<String, String>> results = makeSearch(term, allowedTypes, null);
+		renderJSON(results);
+	}
+	
+	
+	/**
 	 * Back-end for conversation autocomplete
 	 * @param term
 	 */

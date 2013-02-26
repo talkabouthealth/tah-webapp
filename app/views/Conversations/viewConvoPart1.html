@@ -441,16 +441,16 @@
 				<div class="topicborder" style="margin-top: 7px;"></div>
 				#{if talker.isProf() }
 					<div class="answerh1">Add Answer </div>
-					<textarea name="textarea" id="replytext" class="search_field" style="width: 680px; height: 150px;text-align: left;"
+					<textarea name="textarea" id="replytext" class="search_field" style="width: 690px; height: 150px;text-align: left;"
 					onclick="if (this.value === 'Add New Answer') this.value='';">Add New Answer</textarea>
 				#{/if}
 				#{else}
 					<div class="answerh1">Share your experience</div>
-					<textarea name="textarea" id="replytext" class="search_field" style="width: 680px; height: 150px;text-align: left;"
+					<textarea name="textarea" id="replytext" class="search_field" style="width: 690px; height: 150px;text-align: left;"
 					onclick="if (this.value === 'Share your experience') this.value='';">Share your experience</textarea>
 				#{/else}
 <!-- 				<br /> -->
-				<input type="submit" onclick="return saveAnswerOrReply('');" 
+				<input type="submit" onclick="return saveAnswerOrReplyHere('');" 
 					class="addcomments" value="Add Answer" />
 				<div id="saveAnswerImage" class="ajaxLoading" 
 					style="float: right; margin-right: 15px; margin-top: 20px;"></div>
@@ -592,3 +592,15 @@
 	#{/else}
 </div>
 <div id="mask"></div>
+#{if talker}
+<script>
+saveAnswerOrReplyHere = function() {
+	alert( area1.instanceById('replytext').getContent() );
+	$("#replytext").val(area1.instanceById('replytext').getContent());
+	saveAnswerOrReply('');
+}
+
+area1 = new nicEditor({buttonList : ['bold','italic','underline','indent','ol','ul','link','unlink','upload']}).panelInstance('replytext',{hasPanel : true});
+n2 = new nicEditor({buttonList : ['bold','italic','underline','indent','ol','ul','link','unlink','upload']}).panelInstance('editanswer',{hasPanel : true});
+</script>
+#{/if} 

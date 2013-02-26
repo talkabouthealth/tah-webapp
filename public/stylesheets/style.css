@@ -75,9 +75,11 @@ form {
 	float:left;
 	width:260px;
 }
+/*
 li {
 	list-style:none;
 }
+*/
 caption, th {
 	text-align:left;
 }

@@ -356,7 +356,7 @@ public class Application extends Controller {
         	String accountId = session.get("accountId");
         	String verifyCode = null;
 
-        	List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+        	//List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
         	if (serviceType == ServiceType.TWITTER) {
     			userEmail = email;		//verifyCode = CommonUtil.generateVerifyCode();
         		TwitterUtil.followUser(accountId);
@@ -369,8 +369,8 @@ public class Application extends Controller {
         		TalkerBean otherTalker = TalkerDAO.getByEmail(email);
     			if (otherTalker != null) {
     				//renderText("Error: "+Messages.get("email.exists"));
-    				String error = "Error: "+Messages.get("email.exists");
-    				render("Application/tosAccept.html",error,diseaseList,newsletter,email);
+    				//render("Application/tosAccept.html",error,diseaseList,newsletter,email);
+    				renderText("Error: "+Messages.get("email.exists"));
     				return;
     			}
     			TalkerLogic.signupFromService(serviceType, session, screenName, userEmail, verifyCode, accountId);
@@ -380,11 +380,12 @@ public class Application extends Controller {
     					ApplicationDAO.addToNewsLetter(userEmail, newsletter.getNewsLetterType());
     				}
     			}
-        		//render("ok");
-        		index();
+    			renderText("ok");
+        		//index();
         	} else {
         		String error = "Error: "+Messages.get("validation.required","email");
-        		render("Application/tosAccept.html",error,diseaseList,newsletter,email);
+        		renderText(error);
+        		//render("Application/tosAccept.html",error,diseaseList,newsletter,email);
 				return;
         	}
     	} else {
@@ -494,7 +495,8 @@ public class Application extends Controller {
     
 	public static void tosAccept() {
 		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
-		render(diseaseList);
+		String userEmail = session.get("userEmail");
+		render(diseaseList,userEmail);
 	}
 	
     public static void suspendedAccount() {

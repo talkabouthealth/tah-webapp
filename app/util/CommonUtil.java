@@ -529,8 +529,8 @@ public class CommonUtil {
 		}
 		
 		//delinkify because previously we store links in db
-		text = text.replaceAll("<a[^>]*>", "");
-		text = text.replaceAll("</a>", "");
+		//text = text.replaceAll("<a[^>]*>", "");
+		//text = text.replaceAll("</a>", "");
 		
 		String htmlText = text;
 		if (thoughtOrAnswer.getFrom() != null && thoughtOrAnswer.getFrom().equalsIgnoreCase("twitter")) {
@@ -538,8 +538,11 @@ public class CommonUtil {
 			htmlText = htmlText.replace("\n", "<br/>");
 		}
 		else {
+			htmlText = htmlText.replace("\n", "<br/>");
+			
 			htmlText = CommonUtil.prepareThoughtOrAnswer(htmlText);
 		}
+		htmlText = htmlText.replace("<br>", "<br/>");
 		return htmlText;
 	}
 	
@@ -560,8 +563,7 @@ public class CommonUtil {
 	}
 	
 	public static void log(String method,String error){
-		System.out.println(""+method+ "  :"+error);
-		
+		//System.out.println(""+method+ "  :"+error);
 		//Logger.info("method:"+method+"error"+message);
 	}
 }
