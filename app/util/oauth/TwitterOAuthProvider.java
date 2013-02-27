@@ -71,10 +71,15 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			consumer = new DefaultOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);	
 		}
 
-		provider = new DefaultOAuthProvider(
+			provider = 	new DefaultOAuthProvider(
+                    "https://api.twitter.com/oauth/request_token",
+                    "https://api.twitter.com/oauth/access_token",
+                    "https://api.twitter.com/oauth/authorize");
+		/*	provider = new DefaultOAuthProvider(
 	            "http://twitter.com/oauth/request_token",
 	            "http://twitter.com/oauth/access_token",
 	            "http://twitter.com/oauth/authorize");
+	    */
 	}
 
 	public String getAuthURL(Session session, boolean secureRequest) {
