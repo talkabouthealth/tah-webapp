@@ -541,7 +541,7 @@
 
 	
 	#{if relatedConvos != null && relatedConvos.size() > 8}
-		<div style="float: left; padding-bottom: 20px;">
+		<div style="float: left; padding-bottom: 20px;width:100%;">
 			<div Style="font-size: 20px; padding: 10px 0pt;"><strong>Similar Questions </strong></div>
 			%{int i=0;}%
 			#{list items: relatedConvos, as: 'relatedConvo'}
@@ -595,7 +595,6 @@
 #{if talker}
 <script>
 saveAnswerOrReplyHere = function() {
-	alert( area1.instanceById('replytext').getContent() );
 	$("#replytext").val(area1.instanceById('replytext').getContent());
 	saveAnswerOrReply('');
 }
