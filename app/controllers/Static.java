@@ -31,6 +31,9 @@ public class Static extends Controller {
     public static void medical_professional_network() {
     	render();
     }    
+    public static void resources_breastcancer_products() {
+    	render();
+    }    
     public static void resources_career_legal() {
     	render();
     }    
