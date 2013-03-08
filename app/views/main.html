@@ -42,7 +42,7 @@
 		#{/if}
 		<meta property="og:description" content="${pageDescription}"/>
 	#{/if}
-	#{if pageType?.equals("profile")}
+	#{elseif pageType?.equals("profile")}
 		#{if session.get("cancerType") != null }
 			<meta property="og:site_name" content="Talk ${session.get("cancerType")}"/>
 		#{/if}
@@ -54,7 +54,7 @@
 		<meta property="og:url" content="${currentURL}"/>
 		<meta property="og:description" content="${pageDescription}"/>
 		<meta property="og:image" content="http://talkabouthealth.com@{Image.showSocialSiteImage(talker.name)}"/>
-	#{/if}
+	#{/elseif}
 	#{else}
 		#{if session.get("cancerType") != null }
 			<meta property="og:site_name" content="Talk ${session.get("cancerType")}"/>
