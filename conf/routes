@@ -75,6 +75,7 @@ GET		/dashboard/?							Dashboard.index
 GET		/chat/{convoId}							Talk.talkApp
 GET		/chat/?									Talk.talkApp
 GET		/image/{userName}						Image.show
+GET		/image/showsocialsiteimage/{userName}	Image.showsocialsiteimage
 
 # Map's public ajax request
 GET		/topics/topicAjaxLoad					ViewDispatcher.topicAjaxLoad
