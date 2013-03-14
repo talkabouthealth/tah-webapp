@@ -65,6 +65,7 @@
 	
 			// Edit link
 			$editLink.live( 'click.inline-edit', function(){
+				$save.css('backgroundImage','url(/public/images/index/submitBtn.png)');
 				$display.hide();
 				$form.show();
 				var editText = "";
@@ -147,6 +148,7 @@
 
 			// Save Actions
 			$save.bind( 'click.inline-edit', function( event ) {
+				$save.css('backgroundImage','url(/public/images/index/tah_loading.gif)');
 				var newValue = $.trim($text.val());
 				if ($text.hasClass('notempty') && newValue === '') {
 					//if value should be notempty - validate and show error message

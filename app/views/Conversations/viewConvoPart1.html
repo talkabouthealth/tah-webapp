@@ -450,10 +450,8 @@
 					onclick="if (this.value === 'Share your experience') this.value='';">Share your experience</textarea>
 				#{/else}
 <!-- 				<br /> -->
-				<input type="submit" onclick="return saveAnswerOrReplyHere('');" 
-					class="addcomments" value="Add Answer" />
-				<div id="saveAnswerImage" class="ajaxLoading" 
-					style="float: right; margin-right: 15px; margin-top: 20px;"></div>
+				<input type="submit" onclick="return saveAnswerOrReplyHere(this);" class="addcomments" value="Add Answer" />
+				<div id="saveAnswerImage" class="ajaxLoading"></div>
 			</div>
 			<div class="tabBody" style="padding:10px 20px;width:650px;display: ${!userHasAnswer ? 'none' : 'block'};margin-top: 15px;">
 				<span>
@@ -594,7 +592,9 @@
 <div id="mask"></div>
 #{if talker}
 <script>
-saveAnswerOrReplyHere = function() {
+saveAnswerOrReplyHere = function(elm) {
+	$("#saveAnswerImage").show();
+	$(elm).hide();
 	$("#replytext").val(area1.instanceById('replytext').getContent());
 	saveAnswerOrReply('');
 }
