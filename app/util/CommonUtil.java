@@ -77,7 +77,7 @@ import dao.TopicDAO;
 public class CommonUtil {
 	
 	//pattern for locating links in the text
-	public static final String WEB_URL_PATTERN = "((https?|ftp)://[a-zA-Z0-9+\\-&@#/%?=~_|!:,.;]*[a-zA-Z0-9+&@#/%=~_|])";
+	public static final String WEB_URL_PATTERN = " ((https?|ftp)://[a-zA-Z0-9+\\-&@#/%?=~_|!:,.;]*[a-zA-Z0-9+&@#/%=~_|])";
 	
 	private static final MessageDigest MD5_MESSAGE_DIGEST;
 	static {
