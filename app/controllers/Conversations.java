@@ -59,6 +59,7 @@ import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.ConversationDAO;
+import dao.ImageDAO;
 import dao.QuestionDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
@@ -858,22 +859,20 @@ public class Conversations extends Controller {
 		int width = 600;
 		if (imageFile != null) {
             String fileName = imageFile.getName();
-            
-            
-            
             String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
             if (fileExt.equalsIgnoreCase("png") || fileExt.equalsIgnoreCase("jpg") || fileExt.equalsIgnoreCase("jpeg") || fileExt.equalsIgnoreCase("gif")) {
                 if (imageFile.length() > 2000000) {
-                   renderText("invalid file size"); 
+                   renderText("invalid file size");
                 } else {
                 	try {
-                		
+                		String newImageName = "tah" + ImageDAO.getNewImageName() + "." +fileExt;
                 		BufferedImage bimg = ImageIO.read(imageFile);
                         width = bimg.getWidth();
-                		String pathToShow = File.separator +"public" + File.separator + "uploads" + File.separator + fileName;
+                		String pathToShow = File.separator +"public" + File.separator + "uploads" + File.separator + newImageName;
                 		String path = Play.getFile("").getAbsolutePath()  + pathToShow;
                 		FileInputStream is = new FileInputStream(imageFile); 
                         IOUtils.copy(is, new FileOutputStream(new File(path)));
+                        ImageDAO.updateImageName();
                         renderText(width + "|" + pathToShow);
                 	} catch (IOException e) {
                 		e.printStackTrace();
