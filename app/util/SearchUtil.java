@@ -200,7 +200,7 @@ public class SearchUtil {
 			} else {
 				Document doc = is.doc(docs[i].doc);
 				String convoId = doc.get("id");
-				System.out.println(doc.get("topics"));
+				//System.out.println(doc.get("topics"));
 				if (searchedConvo.getId().equals(convoId)) {
 					continue;
 				} else {

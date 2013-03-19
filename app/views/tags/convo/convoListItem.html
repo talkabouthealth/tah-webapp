@@ -21,7 +21,8 @@
 		</div>
 		<div class="jointxtlink2 moretext">
 			#{if _convo.comments != null && _convo.comments.size() > 0}
-				${_convo.comments.get(0).text.raw()}
+				
+				${_convo.comments.get(0).printThoughtOrAnswer(session.username)}
 			#{/if}
 		</div>
 		<div class="joinztextlink">

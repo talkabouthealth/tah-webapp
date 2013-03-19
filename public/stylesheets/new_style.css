@@ -1,7 +1,9 @@
 @charset "utf-8";
 /* CSS Document */
 
-html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, 
+abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, 
+sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -17,7 +19,7 @@ a, a:visited {
 
 a:hover, a:focus { color: #E9225F; }
 
-ol, ul { list-style: none; }
+/*ol, ul { list-style: none; }*/
 
 em { font-style: italic; }
 
@@ -287,7 +289,7 @@ body {
 	width: 100%;
 }
 
-.tabs li { display: inline; }
+.tabs li { display: inline;list-style: none; }
 
 .tabs li a {
 	float: left;
@@ -335,7 +337,8 @@ body {
 .tabBody li {
 	padding: 30px;
 	border-bottom: 1px solid #d5d5d5;
-	min-height: 105px
+	min-height: 105px;
+	list-style: none;
 }
 
 .tabBody h3 {
@@ -347,7 +350,19 @@ body {
 	font-size: 18px;
 }
 
-.disc { font-size: 15px; }
+.disc { 
+	font-size: 15px;
+	line-height: 20px;
+	margin-bottom: 10px; 
+}
+
+.disc ul li,.disc ol li, .joinbox ul li,.joinbox  ol li  {
+		margin: 0 0 0 15px;
+		border-bottom: 0px;
+		min-height: 100%;
+		list-style: inherit !important;
+		padding: 0px;
+	}
 
 .by { color: #5a5959; }
 .by a{font-weight: bold;}
@@ -450,7 +465,7 @@ body {
 	display: inline-block;
 }
 
-.box li, .box2 li { display: inline; }
+.box li, .box2 li { display: inline;list-style: none; }
 
 .box li a {
 	display: inline-block;
@@ -515,7 +530,7 @@ body {
 
 ul.client { float: left; }
 
-.client li { display: inline; }
+.client li { display: inline; list-style: none;}
 
 .client li a {
 	float: left;
@@ -564,7 +579,7 @@ ul.client { float: left; }
 	-webkit-text-shadow: 1px 2px 2px #2f759e;
 	color: #FFFFFF;
 }
-
+#footer li {list-style:none;}
 #footer_inner {
 	margin: 10px auto;
 	width: 980px;
@@ -638,6 +653,7 @@ ul.client { float: left; }
 	float: left;
  width: 100% display: block;
 	padding: 04px 10px 0 0;
+	list-style: none;
 }
 
 .sml_logo {
@@ -768,7 +784,7 @@ ul.client { float: left; }
 	cursor:pointer;
 	color: #FFF;
 	font-weight: bold;
-	font-size: 17px;
+	font-size: 15px;
 }
 .addcomments:HOVER { background:url(../images/index/buttonBgHover.png); }
 
@@ -1466,3 +1482,17 @@ border:0;
 	background-position:0 3px;
 	background:url(../images/edi1.jpg);
 }
+
+/* New following buttons */
+.followMemberBtn, .followingMemberBtn, .restartChatBtn, 
+.followConvoBtn, .followingConvoBtn, .followTopicBtn, .followingTopicBtn {	
+	border: 0 none;
+	cursor: pointer;
+	width: 170px;
+	height: 34px; 
+	margin-left: 35px;
+	display: block;
+}
+.followTopicBtn { background: url(../images/followTopicBtn.jpg); }
+.followingTopicBtn { background: url(../images/followingBtn.jpg); }
+.followingTopicBtn:hover { background: url(../images/unfollowTopicBtn.jpg); }

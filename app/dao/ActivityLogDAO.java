@@ -109,7 +109,6 @@ public class ActivityLogDAO {
 	
 	public static Map<String, Integer> getLogListGrouped(Date date) {
 
-		//ArrayList<ActivityLogBean> logList = null;
 		DBCollection activityLogColl = getCollection(ACTIVITYLOG_COLLECTION);
 
 		Calendar startDate = Calendar.getInstance();
@@ -123,9 +122,9 @@ public class ActivityLogDAO {
 		query.put("timestamp", BasicDBObjectBuilder.start("$gte", startDate.getTime()).add("$lte", calendar.getTime()).get());
 		DBCursor dbCursor = activityLogColl.find(query).sort(new BasicDBObject("timestamp", -1));
 		ActivityLogBean logBean;
-		
+
 		Map<String, Integer> logList = new HashMap<String, Integer>();
-		
+
 		if(dbCursor != null) {
 			for (DBObject dbObject : dbCursor) {
 				logBean = new ActivityLogBean();
@@ -137,8 +136,6 @@ public class ActivityLogDAO {
 				} else {
 					logList.put(logBean.getPageName(), new Integer(1));
 				}
-				System.out.println(logList.size());
-				//logList.add(logBean);
 			}
 		}
 		return logList;

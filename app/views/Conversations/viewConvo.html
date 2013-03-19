@@ -87,10 +87,25 @@
 }
 .video { padding-left: 25px;background: url("/public/images/index/videoIcon.png") 0 center no-repeat;}
 .convoCount {float:left;background: url(/public/images/index/countbubble.png) repeat scroll 0 0 transparent; height:25px;width:28px;text-align:center;font-size:15px;font-weight:bold;margin-right:5px}
+
+
+/*Styles for nice editor*/
+.nicEdit-pane {
+    border: 1px solid #ccc !important;
+    border-radius: 0px 0px 10px 10px;
+    padding: 10px 25px 10px 10px !important;
+    margin-top: 2px;
+}
+.nicEdit-main ul, .nicEdit-main ol, .nicEdit-main li{
+padding-left:15px !important;
+}
+
+.ajaxLoading{ background: url("/public/images/index/tah_loading.gif") 0 center no-repeat;display:none;height:32px;float: right; margin-top: 10px;width:32px;background-size:30px auto; }
 </style>
 <script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
-<script type="text/javascript" src="/public/javascripts/viewconvo.js" ></script>
+<script type="text/javascript" src="/public/javascripts/viewconvo.js?1.1" ></script>
 <script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
+<script type="text/javascript" src="/public/javascripts/nicEdit.js?1.1" ></script>
 <script type="text/javascript">
 		var tid = "${convo.tid}";
 		var currentConvoId = "${convo.id}";

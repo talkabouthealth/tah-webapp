@@ -52,7 +52,7 @@ function openTwitter(redirectURL) {
 		redirectURL = "";
 	}
 	var popupWindow = window.open("/oauth/getauth?type=twitter&redirectURL="+redirectURL, 
-		"TwitterLogin", "width=800,height=470,toolbar=no,location=no,menubar=no");
+		"TwitterLogin", "width=800,height=1000,toolbar=no,location=no,menubar=no,scrollbars=yes");
 	
 	return false;
 }
@@ -62,7 +62,7 @@ function openFacebook(redirectURL) {
 		redirectURL = "";
 	}
 	var popupWindow = window.open("/oauth/getauth?type=facebook&redirectURL="+redirectURL,  
-		"FacebookLogin", "width=1000,height=550,toolbar=no,location=no,menubar=no");
+		"FacebookLogin", "width=1000,height=1000,toolbar=no,location=no,menubar=no,scrollbars=yes");
 	return false;
 }
 
@@ -622,7 +622,7 @@ function loadMoreFeed(type, talkerName) {
 				
 				//for new items
 				$('.inline-edit').inlineEdit( { hover: ''} );
-				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+				$('.moretext2').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
 			}
 		);
 	
@@ -667,11 +667,11 @@ function loadMoreFeedWithoutLogin(type, talkerName) {
 				if (feedSize >= feedsPerPage) {
 					moreBtn.show();
 				}
-				
 				$(data).appendTo($("#"+type+"List"));
 				//for new items
-				$('.inline-edit').inlineEdit( { hover: ''} );
 				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+				$('.moretext2').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+				$('.inline-edit').inlineEdit( { hover: ''} );
  			}
 		);
 	
@@ -954,7 +954,7 @@ function loadMoreTopicsFeed(type,title) {
 				$(data).appendTo($("#"+type+"Content"));
 				//for new items
 				$('.inline-edit').inlineEdit( { hover: ''} );
-				$('.moretext').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+				$('.moretext2').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
 			}
 	);
 	return false;

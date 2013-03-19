@@ -7,7 +7,7 @@
 	<meta name="robots" content="all" /> 
 	<title>TalkAboutHealth</title>
 	
-	<script type="text/javascript" src="/public/javascripts/jquery-1.4.2.min.js" ></script>
+
 	<link href="/public/stylesheets/style.css" rel="stylesheet" type="text/css" />
 	<link href="/public/stylesheets/old_style.css" rel="stylesheet" type="text/css" />
 	
@@ -32,7 +32,45 @@
 		.personalfields {width:270px;height: 25px;margin-top: 2px;background-color: #FFF; }
 	</style>
 	
+	<script type="text/javascript" src="/public/javascripts/jquery-1.4.2.min.js" ></script>
+	<script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
 	<script type="text/javascript">
+	
+	function setRewardLetterMessage(responseText, statusText, xhr, $form) {
+		if (responseText.indexOf("Error:") === 0) {
+	   		var errorText = responseText.replace("Error:", "");
+	   		$("#rewardMessage").css("color","#ff0000");
+	   		$("#rewardMessage").html(errorText); 
+	   		$("#rewardMessage").fadeIn(100);
+	   		closeTimeout = setTimeout(function() { $("#rewardMessage").fadeOut(200) }, 4000);
+	   	} else {
+	   		window.opener.document.location = '/home';
+			window.close();
+	   	}
+	}
+	
+	$(document).ready(function() {
+		var rewardOptions = { success: setRewardLetterMessage }; 
+		$('#signup').submit(function() {
+			var isError = false;
+			if ($("#email")) {
+				email = $("#email").val();
+				 
+				var error = validateEmail(email); 
+				if(error != '') {
+					$("#emailError").html(error);
+					$("#email").focus();
+					isError = true;
+				}
+			} 
+			if(!isError) {
+				$("#signup").ajaxSubmit(rewardOptions); 
+					
+			}
+			return false;
+		});
+	});
+	
 		function redirectToHome() {
 			var email = "";
 			if ($("#email")) {
@@ -96,16 +134,18 @@
 		<img src="/public/images/index/tah_logo.png" alt="TalkAboutHealth" />
 	</div>
 	<h1 style="padding-bottom: 20px;">Become a TalkAboutHealth Member</h1>
-	*{ #{if session.serviceType?.equals("TWITTER")} }*
-	
-		<span id="emailError" class="red16" style="padding: 0px;">#{if error != null}${error}#{/if}</span>
+	<span id="emailError" class="red16" style="padding: 0px;">#{if error != null}${error}#{/if}</span>
+	#{if session.serviceType?.equals("TWITTER")}
 		<div class="signupmain" style="padding-top: 3px;">
 			<div class="signuptextarea"><span class="blacktext14">Email </div>
 			<div class="personaltextfield">
 			  	<input id="email" name="email" type="text" class="personalfields" value="" />
 			</div>
 		</div>
-	*{ #{/if} }*
+	#{/if}
+	#{else}
+		<input id="email" name="email" type="hidden" class="personalfields" value="${userEmail}" />
+	#{/else}
 	<div class="signupmain">
 		<div class="signuptextarea"><span class="blacktext14">Health Community</span></div>
 		<div class="personaltextfield">
@@ -305,11 +345,11 @@
 	</h3>
 	<span style="padding-top: 10px;clear: both;" class="popusertxzt"><b>Note:</b> Your information will remain safe and private.</span>
     <div style="float: left;">
-       	<input type="button" id="agreeBtn" value="I agree." 
+       	<input type="submit" id="agreeBtn" value="I agree." 
        		*{ Move style? }*
        		style="padding: 10px 25px; font-size: 20px; margin: 5px 0px; clear: both;"
-       		onclick="validateFormOnSubmit(document.signup);"
-       		onmouseover="this.style.cursor='pointer'"/>
+       		
+       		onmouseover="this.style.cursor='pointer'"/><!-- onclick="validateFormOnSubmit(document.signup);" -->
     	<br/>
 	    <span style="color: red; font-size: 14px;">
 			<b>Note:</b> All content on this site is informational and not a substitute for professional medical advice. 

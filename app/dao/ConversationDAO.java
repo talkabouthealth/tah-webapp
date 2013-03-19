@@ -1122,7 +1122,6 @@ public class ConversationDAO {
 		DBCollection talkerColl = getCollection(TalkerDAO.TALKERS_COLLECTION);
 		DBCollection ConvoColl = getCollection(ConversationDAO.CONVERSATIONS_COLLECTION);
 		List<String> cat = new ArrayList<String>(2);
-		System.out.println("cancerType : " + cancerType);
 		if(StringUtils.isNotBlank(cancerType)) {
 			cat.add(cancerType);
 			cat.add("All Cancers");

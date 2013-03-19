@@ -75,9 +75,11 @@ form {
 	float:left;
 	width:260px;
 }
+/*
 li {
 	list-style:none;
 }
+*/
 caption, th {
 	text-align:left;
 }
@@ -6568,3 +6570,10 @@ margin-bottom:5px;
     height: 21px;
     width: 160px;
 }
+.disc ul li,.disc ol li, .joinbox ul li,.joinbox  ol li  {
+		margin: 0 0 0 15px;
+		border-bottom: 0px;
+		min-height: 100%;
+		list-style: inherit !important;
+		padding: inherit;;
+	}

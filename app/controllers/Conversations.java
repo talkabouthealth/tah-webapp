@@ -3,7 +3,13 @@ package controllers;
 import static util.DBUtil.createRef;
 import static util.DBUtil.getCollection;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -14,6 +20,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.ImageOutputStream;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
@@ -48,10 +59,12 @@ import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.CommentsDAO;
 import dao.ConversationDAO;
+import dao.ImageDAO;
 import dao.QuestionDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
 import play.Logger;
+import play.Play;
 import play.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer;
 import play.data.validation.Validation;
 import play.exceptions.UnexpectedException;
@@ -67,6 +80,7 @@ import play.templates.TemplateLoader;
 import util.BitlyUtil;
 import util.CommonUtil;
 import util.EmailUtil;
+import util.ImageUtil;
 import util.NotificationUtils;
 import util.SearchUtil;
 import util.EmailUtil.EmailTemplate;
@@ -837,5 +851,39 @@ public class Conversations extends Controller {
 		
 		renderText("ok");
     }
+    /**
+	 * Delete current or upload new image
+	 * @param submitAction 'Remove current image' or 'Upload'
+	 */
+	public static void uploadAnswerImage(File imageFile) {
+		int width = 600;
+		if (imageFile != null) {
+            String fileName = imageFile.getName();
+            String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
+            if (fileExt.equalsIgnoreCase("png") || fileExt.equalsIgnoreCase("jpg") || fileExt.equalsIgnoreCase("jpeg") || fileExt.equalsIgnoreCase("gif")) {
+                if (imageFile.length() > 2000000) {
+                   renderText("invalid file size");
+                } else {
+                	try {
+                		String newImageName = "tah" + ImageDAO.getNewImageName() + "." +fileExt;
+                		BufferedImage bimg = ImageIO.read(imageFile);
+                        width = bimg.getWidth();
+                		String pathToShow = File.separator +"public" + File.separator + "uploads" + File.separator + newImageName;
+                		String path = Play.getFile("").getAbsolutePath()  + pathToShow;
+                		FileInputStream is = new FileInputStream(imageFile); 
+                        IOUtils.copy(is, new FileOutputStream(new File(path)));
+                        ImageDAO.updateImageName();
+                        renderText(width + "|" + pathToShow);
+                	} catch (IOException e) {
+                		e.printStackTrace();
+                        renderText("error converting image"); 
+                	}
+                    renderText("image uploaded"); 
+                }
+            } else {
+                renderText("invalid file type"); 
+            }
+		}
+        renderText("Image is null"); 
+	}
 }
-

@@ -19,11 +19,11 @@
 				<h3 class="sub_heading">
 					<a href="@{ViewDispatcher.view(convo.mainURL)}">${convo.topic}</a>
 				</h3>
-				<p class="disc">
+				<div class="disc">
 					#{if convo.comments != null && convo.comments.size() > 0}
-						${convo.comments.get(0).printThoughtOrAnswer()}
+						${convo.comments.get(0).printThoughtOrAnswer(session.username)}
 					#{/if}
-				</p>
+				</div>
 				<p class="by">
 					New answer by 
 					<span>#{if convo.comments != null && convo.comments.size() > 0}
@@ -83,11 +83,11 @@
 				<h3 class="sub_heading">
 					<a href="@{ViewDispatcher.view(convo.mainURL)}">${convo.topic}</a>
 				</h3>
-				<p class="disc">
+				<div class="disc">
 					#{if convo.comments != null && convo.comments.size() > 0}
 						${convo.comments.get(0).printThoughtOrAnswer()}
 					#{/if}
-				</p>
+				</div>
 				<p class="by">
 					New answer by 
 					<span>#{if convo.comments != null && convo.comments.size() > 0}
@@ -144,7 +144,7 @@
 				<h3 class="sub_heading">
 					<a href="@{ViewDispatcher.view(convo.mainURL)}">${convo.topic}</a>
 				</h3>
-				<p class="disc"></p>
+<!-- 				<div class="disc"></div> -->
 				<p class="by">${convo.getHtmlDetails(_talker != null).raw()}</p>
 				<div class="ans">
 					<img src="/public/images/index/chat_icon.png" alt="answers" />

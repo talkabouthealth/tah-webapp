@@ -65,13 +65,14 @@
 	
 			// Edit link
 			$editLink.live( 'click.inline-edit', function(){
+				$save.css('backgroundImage','url(/public/images/index/submitBtn.png)');
 				$display.hide();
 				$form.show();
 				var editText = "";
 				if ($view.size() != 0) {
 					editText = $view.html();
 				}
-				if (editText) {
+				/*if (editText) {
 					editText = editText.replace(/<br>/g, '\n');
 					editText = editText.replace(/<BR>/g, '\n');
 
@@ -84,9 +85,8 @@
 					//remove links html code before editing
 					editText = editText.replace(/<a[^>]*>/g, '');
 					editText = editText.replace(/<\/a>/g, '');
-				}
+				}*/
 				$text.val(editText).focus();
-
 				return false;
 			})
 			.bind( 'mouseenter.inline-edit', function(){
@@ -148,6 +148,7 @@
 
 			// Save Actions
 			$save.bind( 'click.inline-edit', function( event ) {
+				$save.css('backgroundImage','url(/public/images/index/tah_loading.gif)');
 				var newValue = $.trim($text.val());
 				if ($text.hasClass('notempty') && newValue === '') {
 					//if value should be notempty - validate and show error message
@@ -174,7 +175,8 @@
 				}
 				else if ($dataType.indexOf('answerEdit') == 0) {
 					var answerId = $dataType.substring(10);
-					
+					$("#editanswer").val(n2.instanceById('editanswer').getContent());
+					newValue = n2.instanceById('editanswer').getContent();
 		   	   		$.post("/conversations/updateAnswer", 
 		  				{ answerId: answerId, todo: 'update', newText: newValue},
 		  				function(returnText) {
@@ -212,5 +214,4 @@
 			});
 		});
 	};
-
 })( jQuery );
