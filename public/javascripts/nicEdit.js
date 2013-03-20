@@ -563,7 +563,8 @@ var nicEditorInstance = bkClass.extend({
 	},
 	
 	getContent : function() {
-		this.content = this.getElm().innerHTML;
+		var tempConten = this.getElm().innerHTML; 
+		this.content = tempConten.replace(/^(<br>)*|(<br>$)/g,"");
 		this.ne.fireEvent('get',this);
 		return this.content;
 	},
