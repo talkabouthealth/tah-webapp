@@ -143,7 +143,23 @@ public class TemplateExtensions extends JavaExtensions {
 		return JavaExtensions.raw(htmlText);
 		 */
 		String htmlText = CommonUtil.commentToHTML(thoughtOrAnswer);
-		return JavaExtensions.raw(htmlText);
+    	String tmp = htmlText.trim();
+    	if(tmp != null && tmp.length() > 5) {
+	    	String t = tmp.substring(0,5);
+	    	int start=5;
+	    	int end=10;
+	    	while(t.equals("<br/>")) {
+	    		t = tmp.substring(start,end);
+	    		if(t.equals("<br/>")) {
+	        		start=end;
+	        		end =start+5;
+	    		}
+	    	}
+	    	return JavaExtensions.raw(tmp.substring(start,tmp.length()));
+    	} else {
+    		return JavaExtensions.raw(htmlText);
+    	}
+		
 	}
 	
 	public static Object printMessage(MessageBean message,String userName) {
