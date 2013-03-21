@@ -145,9 +145,9 @@ public class TemplateExtensions extends JavaExtensions {
 		String htmlText = CommonUtil.commentToHTML(thoughtOrAnswer);
     	String tmp = htmlText.trim();
     	if(tmp != null && tmp.length() > 5) {
-	    	String t = tmp.substring(0,5);
-	    	int start=5;
-	    	int end=10;
+    		int start=0;
+	    	int end=5;
+    		String t = tmp.substring(start,end);
 	    	while(t.equals("<br/>")) {
 	    		t = tmp.substring(start,end);
 	    		if(t.equals("<br/>")) {
