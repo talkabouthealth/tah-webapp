@@ -16,8 +16,10 @@
 		return this.each(function(num){
 			//get size of only plain text, we don't need html tags
 			if(($(this).html()).search(">... more")==-1){
+				$( this ).linkify();
 				var fullText = $(this).html();
-				var plainText = $(this).html();
+				
+				var plainText = $(this).text();
 				//var plainText = $(this).text();
 				if(plainText.indexOf("<a") <= defaults.limit && plainText.indexOf("</a") >= defaults.limit) {
 					defaults.limit = plainText.indexOf("</a>");
@@ -35,7 +37,7 @@
 							var hiddenText='<span class="hiddenText_'+num+'" style="display:none">'+fullText+'</span>';
 							var setNewLimit=(newLimit-1);
 							var trunkLink=$('<a>').attr('class','more_'+num+'');
-							var smallText = '<span class="smallText_'+num+'" style="display:block;">'+$(this).html().substr(0,setNewLimit)+'</span>';
+							var smallText = '<span class="smallText_'+num+'" style="display:block;">'+plainText.substr(0,setNewLimit)+'</span>';
 							$(this).html(smallText).append('<a class="more_'+num+'" href="#">'+defaults.more+'<a/> '+hiddenText);
 							$('a.more_'+num).bind('click',function(){
 								$('span.smallText_'+num).hide();
