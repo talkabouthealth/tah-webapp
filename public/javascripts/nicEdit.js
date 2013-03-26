@@ -450,12 +450,181 @@ var nicEditorInstance = bkClass.extend({
 		this.elm.setAttribute('contentEditable','true');	
 		if(this.getContent() == "") {
 			this.setContent('<br />');
-		}
+		} 
 		this.instanceDoc = document.defaultView;
 		this.elm.addEvent('mousedown',this.selected.closureListener(this)).addEvent('keypress',this.keyDown.closureListener(this)).addEvent('focus',this.selected.closure(this)).addEvent('blur',this.blur.closure(this)).addEvent('keyup',this.selected.closure(this));
 		this.ne.fireEvent('add',this);
+		
+		 /* CLEAN WORD PASTE MOD */
+        this.elm.addEvent('paste',this.initPasteClean.closureListener(this));
+        
 	},
 	
+	initPasteClean : function() {
+        this.pasteCache = this.getElm().innerHTML;
+        setTimeout(this.pasteClean.closure(this),100);
+    },
+    
+    /* CLEAN WORD PASTE MOD : pasteClean method added for clean word paste */
+    pasteClean : function() {
+        var matchedHead = "";
+        var matchedTail = "";
+        var newContent = this.getElm().innerHTML;
+        this.ne.fireEvent("get",this);
+        var newContentStart = 0;
+        var newContentFinish = 0;
+        var newSnippet = "";
+        var tempNode = document.createElement("div");
+
+        /* Find start of both strings that matches */
+
+        for (newContentStart = 0; newContent.charAt(newContentStart) == this.pasteCache.charAt(newContentStart); newContentStart++)
+        {
+            matchedHead += this.pasteCache.charAt(newContentStart);
+        }
+
+        /* If newContentStart is inside a HTML tag, move to opening brace of tag */
+        for (var i = newContentStart; i >= 0; i--)
+        {
+            if (this.pasteCache.charAt(i) == "<")
+            {
+                newContentStart = i;
+                matchedHead = this.pasteCache.substring(0, newContentStart);
+
+                break;
+            }
+            else if(this.pasteCache.charAt(i) == ">")
+            {
+                break;
+            }
+        }
+
+        newContent = this.reverse(newContent);
+        this.pasteCache = this.reverse(this.pasteCache);
+
+        /* Find end of both strings that matches */
+        for (newContentFinish = 0; newContent.charAt(newContentFinish) == this.pasteCache.charAt(newContentFinish); newContentFinish++)
+        {
+            matchedTail += this.pasteCache.charAt(newContentFinish);
+        }
+
+        /* If newContentFinish is inside a HTML tag, move to closing brace of tag */
+        for (var i = newContentFinish; i >= 0; i--)
+        {
+            if (this.pasteCache.charAt(i) == ">")
+            {
+                newContentFinish = i;
+                matchedTail = this.pasteCache.substring(0, newContentFinish);
+
+                break;
+            }
+            else if(this.pasteCache.charAt(i) == "<")
+            {
+                break;
+            }
+        }
+
+        matchedTail = this.reverse(matchedTail);
+
+        /* If there's no difference in pasted content */
+        if (newContentStart == newContent.length - newContentFinish)
+        {
+            return false;
+        }
+
+        newContent = this.reverse(newContent);
+        newSnippet = newContent.substring(newContentStart, newContent.length - newContentFinish);
+        newSnippet = this.validTags(newSnippet);
+
+        /* Replace opening bold tags with strong */
+        newSnippet = newSnippet.replace(/<b(\s+|>)/g, "<strong$1");
+        /* Replace closing bold tags with closing strong */
+        newSnippet = newSnippet.replace(/<\/b(\s+|>)/g, "</strong$1");
+
+        /* Replace italic tags with em */
+        newSnippet = newSnippet.replace(/<i(\s+|>)/g, "<em$1");
+        /* Replace closing italic tags with closing em */
+        newSnippet = newSnippet.replace(/<\/i(\s+|>)/g, "</em$1");
+
+        /* strip out comments -cgCraft */
+        newSnippet = newSnippet.replace(/<!(?:--[\s\S]*?--\s*)?>\s*/g, "");
+
+        /* strip out &nbsp; -cgCraft */
+        newSnippet = newSnippet.replace(/&nbsp;/gi, " ");
+        /* strip out extra spaces -cgCraft */
+        newSnippet = newSnippet.replace(/ <\//gi, "</");
+
+        while (newSnippet.indexOf("  ") != -1) {
+            var anArray = newSnippet.split("  ")
+            newSnippet = anArray.join(" ")
+        }
+
+        /* strip &nbsp; -cgCraft */
+        newSnippet = newSnippet.replace(/^\s*|\s*$/g, "");
+
+        /* Strip out unaccepted attributes */
+
+        newSnippet = newSnippet.replace(/<[^>]*>/g, function(match)
+            {
+                match = match.replace(/ ([^=]+)="[^"]*"/g, function(match2, attributeName)
+                    {
+                        if (attributeName == "alt" || attributeName == "href" || attributeName == "src" || attributeName == "title")
+                        {
+                            return match2;
+                        }
+                        if (attributeName == "style"){
+                        	return "";
+                        }
+                        return "";
+                    });
+
+                return match;
+            }
+            );
+
+        /* Final cleanout for MS Word cruft */
+        newSnippet = newSnippet.replace(/<\?xml[^>]*>/g, "");
+        newSnippet = newSnippet.replace(/<[^ >]+:[^>]*>/g, "");
+        newSnippet = newSnippet.replace(/<\/[^ >]+:[^>]*>/g, "");
+
+        /* remove undwanted tags */
+        newSnippet = newSnippet.replace(/<(div|span|style|meta|link|img|font|br){1}.*?>/gi,'');
+
+        this.content = matchedHead + newSnippet + matchedTail;
+        this.ne.fireEvent("set",this);
+        this.elm.innerHTML = this.content;
+    },
+	
+    reverse : function(sentString) {
+        var theString = "";
+        for (var i = sentString.length - 1; i >= 0; i--) {
+            theString += sentString.charAt(i);
+        }
+        return theString;
+    },
+
+    /* CLEAN WORD PASTE MOD : validTags method added for clean word paste */
+    validTags : function(snippet) {
+        var theString = snippet;
+
+        /* Replace uppercase element names with lowercase */
+        theString = theString.replace(/<[^> ]*/g, function(match){return match.toLowerCase();});
+
+        /* Replace uppercase attribute names with lowercase */
+        theString = theString.replace(/<[^>]*>/g, function(match) {
+            match = match.replace(/ [^=]+=/g, function(match2){return match2.toLowerCase();});
+            return match;
+        });
+
+        /* Put quotes around unquoted attributes */
+        theString = theString.replace(/<[^>]*>/g, function(match) {
+            match = match.replace(/( [^=]+=)([^"][^ >]*)/g, "$1\"$2\"");
+            return match;
+        });
+
+        return theString;
+    },
+    
 	remove : function() {
 		this.saveContent();
 		if(this.copyElm || this.options.hasPanel) {
@@ -988,7 +1157,6 @@ var nicEditorAdvancedButton = nicEditorButton.extend({
 						this.inputs[itm] = new bkElement('textarea').setAttributes({id : itm}).setStyle({border : '1px solid #ccc', 'float' : 'left'}).setStyle(field.style).appendTo(contain);
 						this.inputs[itm].value = val;
 				}
-				
 			}
 		}
 		new bkElement('input').setAttributes({'type' : 'submit','value' : 'Link'}).setStyle({backgroundColor : '#efefef',border : '1px solid #ccc', margin : '3px 0', 'float' : 'right', 'clear' : 'both'}).appendTo(this.form);
@@ -1087,7 +1255,7 @@ var nicLinkButton = nicEditorAdvancedButton.extend({
 		if(this.ln) {
 			this.ln.setAttributes({
 				href : this.inputs['href'].value,
-				//title : this.inputs['title'].value,
+				title : this.inputs['title'].value,
 				target : '_blank'
 			});
 		}

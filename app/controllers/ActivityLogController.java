@@ -66,7 +66,7 @@ public class ActivityLogController  extends Controller{
 		String userLocationLatitude = params.get("geoLat");
 		String userLocationLongitude = params.get("geoLong");
 
-		if(!userLocationCode.equals("unknown")) {
+		if(userLocationCode != null && !userLocationCode.equals("unknown")) {
 			addrArray = userLocationCode + "," + userLocationCountry + "," + userLocationState + "," + userLocationCity + "," + userLocationLatitude + "," + userLocationLongitude;
 			session.put("address", addrArray);
 		}
