@@ -39,10 +39,10 @@
 	function setRewardLetterMessage(responseText, statusText, xhr, $form) {
 		if (responseText.indexOf("Error:") === 0) {
 	   		var errorText = responseText.replace("Error:", "");
-	   		$("#rewardMessage").css("color","#ff0000");
-	   		$("#rewardMessage").html(errorText); 
-	   		$("#rewardMessage").fadeIn(100);
-	   		closeTimeout = setTimeout(function() { $("#rewardMessage").fadeOut(200) }, 4000);
+	   		$("#emailError").css("color","#ff0000");
+	   		$("#emailError").html(errorText); 
+	   		$("#emailError").fadeIn(100);
+	   		closeTimeout = setTimeout(function() { $("#emailError").fadeOut(200) }, 4000);
 	   	} else {
 	   		window.opener.document.location = '/home';
 			window.close();
@@ -55,22 +55,20 @@
 			var isError = false;
 			if ($("#email")) {
 				email = $("#email").val();
-				 
 				var error = validateEmail(email); 
 				if(error != '') {
 					$("#emailError").html(error);
 					$("#email").focus();
 					isError = true;
 				}
-			} 
+			}
 			if(!isError) {
 				$("#signup").ajaxSubmit(rewardOptions); 
-					
 			}
 			return false;
 		});
 	});
-	
+/*
 		function redirectToHome() {
 			var email = "";
 			if ($("#email")) {
@@ -89,6 +87,7 @@
   				}
   			);
 		}
+		*/
 		function displayOptions(option) {
 			if(document.getElementById(option).style.display == 'none') {
 				document.getElementById(option).style.display = 'block';
@@ -134,7 +133,7 @@
 		<img src="/public/images/index/tah_logo.png" alt="TalkAboutHealth" />
 	</div>
 	<h1 style="padding-bottom: 20px;">Become a TalkAboutHealth Member</h1>
-	<span id="emailError" class="red16" style="padding: 0px;">#{if error != null}${error}#{/if}</span>
+	<span id="emailError" class="red16" style="float:left;width:100%;padding:5px 0;">#{if error != null}${error}#{/if}</span>
 	#{if session.serviceType?.equals("TWITTER")}
 		<div class="signupmain" style="padding-top: 3px;">
 			<div class="signuptextarea"><span class="blacktext14">Email </div>
@@ -144,7 +143,8 @@
 		</div>
 	#{/if}
 	#{else}
-		<input id="email" name="email" type="hidden" class="personalfields" value="${userEmail}" />
+<!-- 		<input id="email" name="email" type="hidden" class="personalfields" value="${userEmail}" /> -->
+		<input id="email" name="email" type="hidden" class="personalfields" value="aawte.umesh@avibha.com" />
 	#{/else}
 	<div class="signupmain">
 		<div class="signuptextarea"><span class="blacktext14">Health Community</span></div>

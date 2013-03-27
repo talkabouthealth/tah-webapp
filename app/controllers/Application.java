@@ -178,7 +178,6 @@ public class Application extends Controller {
             forgotPassword();
             return;
         }
-    	
 		//generate new password
 	    String newPassword = CommonUtil.generateRandomPassword();
 	    talker.setPassword(CommonUtil.hashPassword(newPassword));
@@ -348,7 +347,7 @@ public class Application extends Controller {
      * Called after accepting TOS and PP by user.
      * 
      */
-    public static void createUserFromService(String email,NewsLetterBean newsletter) {
+    public static void createUserFromService(String email,NewsLetterBean newsletter,TalkerBean talker) {
     	if(request.method.equals("POST")) {
     		ServiceType serviceType = ServiceType.valueOf(session.get("serviceType")); //ServiceType.TWITTER;//
         	String screenName = session.get("screenName");
@@ -360,11 +359,13 @@ public class Application extends Controller {
         	if (serviceType == ServiceType.TWITTER) {
     			userEmail = email;		//verifyCode = CommonUtil.generateVerifyCode();
         		TwitterUtil.followUser(accountId);
-        	} 
+        	}
        		//for Twitter we check email
-       		validation.required(userEmail);
-       		validation.email(userEmail);
-       		
+        	validation.required("Health Community", talker.getCategory());
+        	validation.required("Connection",talker.getConnection());
+        	
+       		validation.required("Email",userEmail);
+       		validation.email("Email", userEmail);
         	if (!validation.hasErrors()) {
         		TalkerBean otherTalker = TalkerDAO.getByEmail(email);
     			if (otherTalker != null) {
@@ -383,8 +384,13 @@ public class Application extends Controller {
     			renderText("ok");
         		//index();
         	} else {
-        		String error = "Error: "+Messages.get("validation.required","email");
-        		renderText(error);
+        		List<Error> errors = validation.errors();
+        		String errorMsg = "Error: ";
+        		for (Error error : errors) {
+        			errorMsg = errorMsg + " <br/>" + error.message();
+				}
+        		//String error = "Error: "+Messages.get("validation.required","email");
+        		renderText(errorMsg);
         		//render("Application/tosAccept.html",error,diseaseList,newsletter,email);
 				return;
         	}

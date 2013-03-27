@@ -89,7 +89,7 @@ public class Newsletter extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		String email = newsletter.getEmail();
 		validation.required(email).message("Email is required");
-		validation.email(email.trim());
+		validation.email(email);
 		if (validation.hasErrors()) {
 			renderText("Error:" + validation.errors().get(0));
 		}

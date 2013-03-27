@@ -1129,7 +1129,6 @@ public class TalkerDAO {
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("thankyous.id", id)
 			.get();
-		
 		DBObject talkerDBObject = talkersColl.findOne(query);
 		
 		if (talkerDBObject == null) {

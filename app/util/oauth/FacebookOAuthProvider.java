@@ -223,7 +223,10 @@ public class FacebookOAuthProvider implements OAuthServiceProvider {
 		else {
 			//try to get username from email
 			String screenName = null;
-			int atIndex = userEmail.indexOf("@");
+			int atIndex = -1;
+			if(userEmail != null)
+			 atIndex = userEmail.indexOf("@");
+			
 			if (atIndex != -1) {
 				screenName = userEmail.substring(0, atIndex);
 			}

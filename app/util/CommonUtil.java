@@ -407,7 +407,6 @@ public class CommonUtil {
 		if (text == null) {
 			return null;
 		}
-		
 		String replacedText = text.replaceAll(WEB_URL_PATTERN, "<a href=\"$1\" target=\"_blank\">$1</a>");
 		return replacedText;
 	}
