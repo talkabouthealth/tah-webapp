@@ -135,7 +135,7 @@
 	     <div class="topicborder"></div>
 	   </div>
 	   #{/ifnot}
-	   
+	   *{
 	   #{if talker.serviceAccounts != null && talker.serviceAccounts.size() > 0}
 		   #{ifnot talker?.hiddenHelps.contains("updateCommunity") }
 			   <div id="updateCommunityHelp" class="topipsts">
@@ -159,7 +159,7 @@
 			   </div>
 		   #{/ifnot}
 	   #{/if}
-	   
+	   }*
 	   *{
 		   <div id="updateEmailHelp" class="topipsts">
 	           <div class="mtrighttxt1">Add email</div>
@@ -173,7 +173,7 @@
 		     <div class="topicborder"></div>
 		   </div>
 	   }*
-	   
+	   *{
 	   #{ifnot talker?.hiddenHelps.contains("updateConnection") }
 	   <div id="updateConnectionHelp" class="topipsts">
            <div class="mtrighttxt1">
@@ -250,7 +250,7 @@
 	   </div>
 	   #{/ifnot}
  	#{/if}
- 	
+ 	}*
  	*{
  	#{if session.username.equals(talker.userName) && talker.verifyCode != null }
 		<div class="topipsts">
@@ -272,7 +272,7 @@
 	   </div>
  	#{/if}
  	}*
- 	
+ 	#{/if}
  	<!-- REFACTOR DEEMPHASIZE IM --> 
  	#{if false && currentPage?.equals("home") && showNotificationAccounts }
  		<div id="notificationAccountsHelp" class="topipsts">
