@@ -66,7 +66,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Leukemia;;;;;d5;false
+Disease;CLL (Chronic Lymphocytic Leukemia);;;;;d5;true
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -381,7 +381,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Metastatic Breast Cancer;;;;;d38;insert
+Disease;Metastatic Breast Cancer;;;;;d38;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -389,7 +389,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Metastatic Lung Cancer;;;;;d39;insert
+Disease;Metastatic Lung Cancer;;;;;d39;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -397,7 +397,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Metastatic Colorectal Cancer;;;;;d40;insert
+Disease;Metastatic Colorectal Cancer;;;;;d40;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -405,7 +405,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Metastatic Prostate Cancer;;;;;d41;insert
+Disease;Metastatic Prostate Cancer;;;;;d41;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -413,7 +413,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Metastatic Melanoma;;;;;d42;insert
+Disease;Metastatic Melanoma;;;;;d42;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -421,7 +421,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Metastatic Endometrial Cancer;;;;;d43;insert
+Disease;Metastatic Endometrial Cancer;;;;;d43;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -429,7 +429,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Metastatic Kidney Cancer;;;;;d44;insert
+Disease;Metastatic Kidney Cancer;;;;;d44;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -437,7 +437,63 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Metastatic Bladder Cancer;;;;;d45;insert
+Disease;Metastatic Bladder Cancer;;;;;d45;false
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Barretts Esophagus;;;;;d46;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Inflammatory Breast Cancer;;;;;d47;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;MPN (Myeloproliferative Neoplasm);;;;;d48;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;MDS (Myelodysplastic Syndrome);;;;;d49;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;CML (Chronic Myeloid Leukemia);;;;;d50;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;AML (Acute Myeloid Leukemia);;;;;d51;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;ALL (Acute Lymphocytic Leukemia);;;;;d52;insert
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV

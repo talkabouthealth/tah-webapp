@@ -598,8 +598,8 @@ saveAnswerOrReplyHere = function(elm) {
 	$("#replytext").val(area1.instanceById('replytext').getContent());
 	saveAnswerOrReply('');
 }
-
 area1 = new nicEditor({buttonList : ['bold','italic','underline','indent','outdent','ol','ul','link','unlink','upload']}).panelInstance('replytext',{hasPanel : true});
 n2 = new nicEditor({buttonList : ['bold','italic','underline','indent','outdent','ol','ul','link','unlink','upload']}).panelInstance('editanswer',{hasPanel : true});
+$('.disc').linkify();
 </script>
 #{/if} 
