@@ -4,9 +4,12 @@ import static util.DBUtil.createRef;
 
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+
+import util.DBUtil;
 
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
@@ -25,7 +28,8 @@ public class VideoBean implements DBModel {
 	private String videoTitle;
 	private String homeVideoLink;
 	private String cancerType;
-
+	private Date creationDate;
+	
 	public String getVideoId() {
 		return videoId;
 	}
@@ -75,6 +79,12 @@ public class VideoBean implements DBModel {
 		this.cancerType = cancerType;
 	}
 
+	public Date getCreationDate() {
+		return creationDate;
+	}
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
 	@Override
 	public void parseDBObject(DBObject dbObject) {
 		setId(dbObject.get("_id").toString());
@@ -87,6 +97,7 @@ public class VideoBean implements DBModel {
 		setVideoId(dbObject.get("videoId").toString());
 		setVideoTitle(dbObject.get("videoTitle").toString());
 		setHomeVideoLink(dbObject.get("videoLink").toString());
+		setCreationDate((Date)dbObject.get("timestamp"));
 	}
 	
 	public void parseDBObjectTopic(DBObject dbObject) {
@@ -97,11 +108,10 @@ public class VideoBean implements DBModel {
 		}
 		DBRef topicDBRef = (DBRef)dbObject.get("convo"); 
 		setConvoBean(ConversationDAO.getConvoById(topicDBRef.getId().toString()));
-		if(getVideoTitle() == null) {
-			setVideoTitle(getConvoBean().getTopic());
-		} else if(StringUtils.isBlank(getVideoTitle())) {
+		if(StringUtils.isBlank(getVideoTitle())) {
 			setVideoTitle(getConvoBean().getTopic());
 		}
+		setCreationDate((Date)dbObject.get("timestamp"));
 	}
 
 	@Override

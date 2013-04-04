@@ -1,5 +1,5 @@
 #{set currentPage = 'topicPage' /}
-#{extends 'main.html' /}
+#{extends 'main_new.html' /}
 	<style>
 		#innermiddlearea { padding-top: 10px }
 		
@@ -22,7 +22,17 @@
 		}
 		
 		.tabContent { padding-top: 10px }
-		#diseasesList a,#diseasesEditList .deleteDiseaseLink { margin-right: 10px; } 
+		.home { background: url(/public/images/index/headernew.png) 0 0px repeat-x; }
+		.slide { margin-top:30px;float:left; }
+		#mask {
+	position:absolute;
+	left:0;
+	top:0;
+	z-index:9000;
+	display:none;
+	background-color: #FFFFFF
+}
+.popboxflagzx, .popboxflagzx1{height:auto;position: fixed;left: inherit;top:inherit;}
 	</style>
 	
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
@@ -110,25 +120,24 @@
    					}
    				);
 			} else if (dataType === 'diseaseEdit') {  //possible comma-separated diseases
-				alert('Doing same');
-				$.post("@{Topics.updateField()}", { topicId : '${topic.id}', name: 'disease', value: newValue, todo: 'add'},
-	   				function(html) {
-	   					$(html).appendTo($("#diseasesEditList"));
-	   	   				$("#diseasesList").html($("#diseasesEditList").html());
-	   				}
-	   			);
+				if($.trim(newValue) != '') {
+					$.post("@{Topics.updateField()}", { topicId : '${topic.id}', name: 'disease', value: newValue, todo: 'add'},
+		   				function(html) {
+		   					$(html).appendTo($("#diseasesEditList"));
+		   	   				$("#diseasesList").html($("#diseasesEditList").html());
+		   				}
+		   			);
+				}
 			}
 		}
 	</script>
 </head>
-
-<body>
-#{include 'header.html' /}
-
+<body class="home">
 <div id="boxes">
 	<div id="dialog" class="window"></div>
 	
 	#{if !talker}
+		*{#{ popups/loginPopup  mainURL: topic.mainURL /}}*
 		#{ newsletter/emailpopup /}
 	#{/if}
 	#{ popups/flag /}
@@ -141,7 +150,7 @@
 	#{ popups/shareEmail shareType: 'Topic', userName: talker?.userName, topicName: topic.title, topicDetails: topic.summary, topicURL: currentURL /}
 </div>
 <!-- Mask to cover the whole screen -->
-<div id="mask"></div>  
+<div id="mask"></div> 
 <script type="text/javascript">
 var medium='${session.showLoginPoup}';
 if(medium=='show'){
@@ -149,13 +158,11 @@ if(medium=='show'){
 	  showPopup("#loginPopup", 350);
 }
 </script>
-	<div id="bottom_container">
-      	<div class="haderbanner"><div id="innerbanner"></div></div>
-	<div id="targetedtherapy">
-          <div id="innermiddlearea">
-            <div id="comcover">
-              <div id="comleft">
-                <div class="comcontent">
+<div id="wrapper">
+#{include 'header_new.html' /}
+<div id="content">
+              <div id="main">
+              <div class="tabBody" style="border-radius:5px;padding: 20px; width: 650px;">
 					#{if currentPage.equals('manageTopic') && !talker?.hiddenHelps.contains('topicManage')}
 					<div id="topicManageHelp" class="helpInfo">
 					      <div class="popboxWraper">
@@ -197,7 +204,7 @@ if(medium=='show'){
 						<div class="inline-edit" id="titleEdit">
 							<div class="inline_display">
 								<div class="inline_full">
-									<div class="targetedh7"><h1 class="inline_view">${topic.title}</h1></div>
+									<div class="targetedh7" style="float:left;"><h1 class="inline_view">${topic.title}</h1></div>
 									#{if talker && talker.name.equals("admin") && !topic.fixed }
 										<div class="editdiv">
 											<div class="editit">
@@ -208,7 +215,7 @@ if(medium=='show'){
 								</div>
 								<div class="inline_empty" style="display: none"></div>
 							</div>
-							<div class='inline_form'>
+							<div class='inline_form' style="display: none;">
 								<div style="float:left; width:auto; padding-bottom:5px;" >
 							       	<input id="titleinput" type="text" style="width:600px"  
 							       		value="${topic.title}" class="edititinputs inline_text notempty" >
@@ -222,12 +229,9 @@ if(medium=='show'){
 							</div>
 						</div>
                     </div>
-                    <!--editsWraper-->
-                    <div class="cb"></div>
-                    <br/>
                   </div>
                   <div class="topipcWraper">
-                    <div style="width: 600px; margin-top: -10px;" class="comments">
+                    <div style=" margin-top: 10px;" class="comments">
 						<div class='inline-edit' id="summaryEdit" style="width: 600px;">
 							<div class="suggestxt inline_display" style="width: 600px">
 								<div class="inline_full" style="display: ${topic.summary ? 'block' : 'none'}">
@@ -244,14 +248,14 @@ if(medium=='show'){
 								</div>
 								<div class="inline_empty" style="display: ${!topic.summary ? 'block' : 'none'}">
 									#{if talker && talker.name.equals("admin") }
-										<div class="targetenew">
+										<div class="targetenew" style="clear:both;padding:10px 0;">
 											<a class="inline_addlink" href="#">Add Topic Description</a>
 										</div>
 									#{/if}
 								</div>
 								
 						        </div>
-							<div class='inline_form'>
+							<div class='inline_form'  style="display: none;">
 								<div style="padding-top:10px;">
 							        <textarea id="summaryinput" class="edititinputx inline_text" 
 							        	style="width: 585px; height: 100px; font-size: 14px; font-weight: normal;" rows="3" cols="4"
@@ -264,17 +268,19 @@ if(medium=='show'){
 									</div>
 								</div>
 							</div>
-							
 						</div>                      
                       <!-- New disease association feature -->
-							<div class='inline-edit' id="diseaseEdit">
+							<div class='inline-edit' id="diseaseEdit" style="clear: both; padding-top: 10px;">
 								<div class="suggestxt inline_display">
 									<div class="inline_full" style="display: ${topic.diseaseList ? 'block' : 'none'}">
 										<div style="display: block; float: left; width: auto;" class="topictxt">
-					                  		<div style="float: left;">Diseases: </div>
-					                  		<div id="diseasesList" style="float: left; padding: 0pt 10px;">
+					                  		<div style="float: left; background: url(/public/images/index/diseaseicon.png) no-repeat scroll left center; padding-left: 20px;">Diseases:&nbsp;&nbsp;</div>
+					                  		<div id="diseasesList" style="float: left;">
+					                  			#{set topicSize = topic.diseaseList.size() /}
 												#{list items: topic.diseaseList, as: 'category'}
 													<a class="topicTitle" href="/explore/${category.name.convertToURL()}">${category.name}</a>
+													#{if topic.diseaseList.size() > 1 && topicSize > 1 },#{/if}
+													#{set topicSize = topicSize -1 /}
 												#{/list}
 					                  		</div>
 											#{if talker != null && talker.admin}
@@ -285,9 +291,9 @@ if(medium=='show'){
 										</div>
 									</div>
 					            </div>
-								<div class='inline_form'>
+								<div class='inline_form'  style="display: none;">
 									<div style="display: block; float: left; width: auto;" class="topictxt">
-					           			<div style="float: left;">Diseases: </div>
+					           			<div style="float: left; background: url(/public/images/index/diseaseicon.png) no-repeat scroll left center; padding-left: 20px;">Diseases:&nbsp;&nbsp;</div>
 					           			<div id="diseasesEditList" style="float: left; padding: 0pt 10px;">
 					            			#{list items: topic.diseaseList, as: 'category'}
 												<a class="deleteDiseaseLink" href="#" rel="${category.name}">${category.name} X</a>
@@ -301,24 +307,16 @@ if(medium=='show'){
 								    </div>
 								</div>
 							</div>
+							<div style="clear: both; padding-top: 10px;">
 					        <!-- New disease association feature End-->
 					        #{include 'socialNetworkShare.html' /}
+					        </div>
+					        </div>
+					      </div>
+					       </div>
                       	#{doLayout /}
-                      <!--comreplyCover-->
-                      <div class="cb"></div>
-                    </div>
-                    <!--comments-->
-                    <div class="cb"></div>
-                  </div>
-                  <!--topipcWraper-->
-                  <div class="cb"></div>
-                </div>
-                <!--comcontent-->
-                <div class="cb"></div>
-              </div>
-              
-              
-              <div style="margin-left: 30px;" id="mtright">
+                      	</div>
+               <div id="sidebar">
               	#{if talker }
 					<div class="topipsts">
 						#{if talker.followingTopicsList?.contains(topic) }
@@ -336,10 +334,21 @@ if(medium=='show'){
 			        <!-- Advertisement Code End -->
 				#{/if}
 				#{include '/tags/newsletter/subscribeTopic.html' /}
-				#{include '/tags/newsletter/subscribeCancer.html' /}
+				#{include '/tags/newsletter/subscribeCancerNew.html' /}
 				#{if talker }
-	                <div class="topipsts">
-	                	<div class="mtrighttxt">
+                <div class="box">
+                  	<h2 class="heading">Topic Statistics</h2>
+          			<div class="body" style="width: 223px;">
+						<div><strong>Conversations/Questions:</strong>  ${topic.conversations?.size()}</div>
+	               		<div><strong>Views:</strong> ${topic.views}</div>
+						<div><strong>Followed By:</strong> ${topic.followers?.size()} Members</div>
+						<div style="padding-top: 5px;">
+	                  	#{list items: topic.followers, as: 'follower'}
+							#{talker/talkerImageLink size: 25, userName: follower.userName /}
+						#{/list}
+						</div>
+						
+						<div class="mtrighttxt">
 					     	<a class="${currentPage.equals('viewTopic') ? 'current' : ''}" 
 					     		href="@{ViewDispatcher.view(topic.mainURL)}">Topic Home</a>
 					    </div>
@@ -349,79 +358,51 @@ if(medium=='show'){
 					     		href="@{Topics.manage(topic.mainURL)}">Manage Topic</a>
 					    </div>
 					    #{/if}
-	                  <div class="mtop"></div>
-	                  <div class="topicborder"></div>
-	                  <div class="cb"></div>
-	                </div>
-                
-                
-                <div class="topipsts">
-                  <div class="mtrighttxt1">Topic Statistics</div>
-                  <div class="latextCover">
-                    <div class="latextr"><strong><span class="black" style="color: #646664;">Conversations/Questions:</span></strong> </div>
-                    <div style="float: left; width: auto;" class="viewstext1">${topic.conversations?.size()}</div>
+						
                   </div>
-                  <!--topixtext-->
-                  <div class="latextCover">
-                    <div class="latextr"><strong><span class="black" style="color: #646664;">Views:</span></strong> </div>
-                    <div style="float: left; width: auto;" class="viewstext1">${topic.views}</div>
-                  </div>
-                  <!--topixtext-->
-                  <div class="latextCover">
-                    <div class="latextr"><strong><span class="black" style="color: #646664;">Followed By:</span></strong> </div>
-                    <div style="float: left; width: auto;" class="viewstext1">${topic.followers?.size()} Members</div>
-                  </div>
-                  <!--topixtext-->
-                  <div class="membersarea">
-	                  	#{list items: topic.followers, as: 'follower'}
-							#{talker/talkerImageLink size: 25, userName: follower.userName /}
-						#{/list}
-                  </div>
-                  <!--membersarea-->
-                  <div class="topicborder"></div>
                 </div>
                 #{/if}
                 #{else}
-                	#{include 'tahInfo.html' /}
+                	*{ #{include 'tahInfo.html' /} }*
+                	<div style="margin:0 0 10px">
+						<a href="@{Application.signup()}" onClick="_gaq.push(['_trackEvent', 'Join_Other', 'Signup', 'Standard']);">
+							<img src="/public/images/index/getstarted.png" alt="" border="0"/>
+						</a>
+						</div>
                 	<!-- Advertisement Code Start -->
 	                #{ad/advertisement add: '1' /}
 			        <!-- Advertisement Code End -->
                 #{/else}
-                	
+                *{
 		        #{ifnot pageType == 'TopicVideo'}
 					#{if videoBeanList != null}
 							#{include '/Conversations/viewVideo.html' /}
 					#{/if}
 				#{/ifnot}
-                
+                }*
 				#{ifnot talker }
-                	#{include 'newsletter_signup.html' /}
+                	#{include 'newsletter_signup_new.html' /}
                 #{/ifnot}
                 <!--topipsts-->
-                <div class="topipsts">
-                  <div class="mtrighttxt1">Topic Organization</div>
-                  <div class="topixtext">
-                    <div class="viewstext" style="color: #646664;">Parent Topic: </div>
-                    <div class="viewstext1">
+                <div class="box">
+                  <h2 class="heading">Topic Organization</h2>
+                  <div class="body" style="width: 223px;">
+                  #{if topic.parents && topic.parents.size() > 0}
+                    <div>Parent Topic:  
 	                    #{list items: topic.parents, as: 'parent'}
-							<a href="@{ViewDispatcher.view(parent.mainURL)}" style="color: #646664;">${parent.title}</a>${ parent_isLast ? '' : ', ' }
+							<a href="@{ViewDispatcher.view(parent.mainURL)}">${parent.title}</a>${ parent_isLast ? '' : ', ' }
 						#{/list}
-						#{else}
-							none
-						#{/else}
+						#{else} none #{/else}
                     </div>
-                  </div>
-                  <!--topixtext-->
-                  <div class="topixtext">
-                    <div class="viewstext" style="color: #646664;">Sub-topics: </div>
-                    <div class="viewstext1">
+                    #{/if}
+                    #{if topic.children && topic.children.size() > 0}
+                    <div style="padding-top:5px;">Sub-topics:  
                     	#{list items: topic.children, as: 'children'}
 							<a href="@{ViewDispatcher.view(children.mainURL)}">${children.title}</a>${ children_isLast ? '' : ', ' }
 						#{/list}
-						#{else}
-							none
-						#{/else}
+						#{else} none #{/else}
                     </div>
+                    #{/if}
                   </div>
                   <!--topixtext-->
                   <br/>
@@ -429,47 +410,15 @@ if(medium=='show'){
                   <div class="topicborder"></div>
                 </div>
                 #{ifnot session.username }
-                	#{include 'subscribe_reward.html' /}
+                	#{include 'subscribe_reward_new.html' /}
                 #{/ifnot}
-		#{include 'Upcoming_Workshops.html' /}
+		#{include 'Upcoming_Workshops_new.html' /}
 		#{common/popularTopics popularTopics: popularTopics /}
-		#{include 'SHARE_trained_peer_support.html' /}
-		#{include 'SHARE_telephone_support.html' /}
-		#{include 'tahHowYouCanHelp.html' /}
-	        #{include 'shareWidgets.html' /}
-                
-                *{
-                <div class="topipsts">
-                  <div class="mtrighttxt1">Top Answerers</div>
-                  <div class="topbox">
-                    <div style="float: left;" class="topleftimg"><img alt="topanser" src="/public/images/topanswer1.jpg"/></div>
-                    <div class="topr">
-                      <div class="toprighttext">
-                        <div class="latextleft"><strong><strong><a href="#">Murray</a></strong></strong></div>
-                        <div class="latextrigtz">  (Physician, Advocate)</div>
-                      </div>
-                      <!--toprighttext-->
-                      <div class="toprighttext">
-                        <div class="topiptextl"><a href="#">101 Answers</a></div>
-                      </div>
-                      <!--toprighttext-->
-                    </div>
-                    <!--topr-->
-                    <div class="cb"></div>
-                  </div>
-                </div>
-                }*
-                
-                <!--topipsts-->
-                <div class="cb"></div>
-              </div>
+		*{ #{include 'SHARE_trained_peer_support.html' /} }*
+		#{include 'SHARE_telephone_support_new.html' /}
+		#{include 'tahHowYouCanHelp_new.html' /}
+	       *{ #{include 'shareWidgets.html' /} }*
               <!--comright-->
-              <div class="cb"></div>
-            </div>
-            <!--comcover-->
-            <div class="cb"></div>
-          </div>
-          <div id="signupright"></div>
     </div>
-    
-  
+       </div>
+</div>

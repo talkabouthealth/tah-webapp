@@ -284,7 +284,7 @@ public class ActionDAO {
 	 * Topic Feed - latest actions connected with this topic
 	 * @param nextActionId Id of last action from previous load (used for paging)
 	 */
-	public static List<Action> loadLatestByTopic(TalkerBean talker, TopicBean topic, String nextActionId) {
+	public static List<Action> loadLatestByTopic(TalkerBean talker, TopicBean topic, String nextActionId,boolean isExp) {
 		Date firstActionTime = null;
 		if (nextActionId != null) {
 			firstActionTime = getActionTime(nextActionId);
@@ -294,15 +294,15 @@ public class ActionDAO {
 		
 		//list of needed actions for this Feed
 		Set<String> actionTypes = new HashSet<String>();
-		for (ActionType actionType : TOPIC_FEED_ACTIONS) {
-			actionTypes.add(actionType.toString());
-		}
+		//for (ActionType actionType : TOPIC_FEED_ACTIONS) {
+		//	actionTypes.add(actionType.toString());
+		//}
+		actionTypes.add(ActionType.ANSWER_CONVO.toString());
 		Set<DBRef> convosDBSet = ConversationDAO.getConversationsByTopics(new HashSet(Arrays.asList(topic)));
 		
 		BasicDBObjectBuilder queryBuilder = 
 			BasicDBObjectBuilder.start()
 				.add("type", new BasicDBObject("$in", actionTypes))
-				//.add("category", new BasicDBObject("$in", cat) )
 				.add("convoId", new BasicDBObject("$in", convosDBSet));
 		if (firstActionTime != null) {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));

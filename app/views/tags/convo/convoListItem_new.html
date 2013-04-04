@@ -1,0 +1,85 @@
+#{if _type !=null && _type=="expertConvo"}
+	<li id="${_convo.comments.get(0).id}">
+#{/if}
+#{elseif _type !=null && _type=="recentConvo"}
+	<li id="${_convo.comments.get(0).id}">
+#{/elseif}
+#{else}
+	<li id="${_convo.id}">
+#{/else}
+	<div class="varified">
+		#{if _convo.comments != null && _convo.comments.size() > 0}
+			#{talker/talkerImageLink size: 72, userName: _convo.comments.get(0).fromTalker.name /}
+			#{if _type !=null && _type=="expertConvo"}
+				#{if _convo.comments.get(0).fromTalker.connectionVerified }
+					<h4>Verified</h4>
+				#{/if}
+				#{else}
+						<h4 class="not">Not Verified</h4>
+				#{/else}
+			#{/if}
+		#{/if}
+		#{else}
+			#{talker/talkerImageLink size: 72, userName: _convo.talker.name /}
+		#{/else}
+	</div>
+	<div class="q">
+		<h3 class="sub_heading">
+			<a href="@{ViewDispatcher.view(_convo.mainURL)}">${_convo.topic}</a>
+		</h3>
+		<div class="disc">
+			#{if _convo.comments != null && _convo.comments.size() > 0}
+				${_convo.comments.get(0).printThoughtOrAnswer(session.username)}
+			#{/if}
+		</div>
+		
+		<p class="by">
+			New answer by 
+			#{if _convo.comments != null && _convo.comments.size() > 0}
+				#{talker/talkerLink talker: _convo.comments.get(0).fromTalker /}
+			#{/if}
+			#{else}
+				#{talker/talkerLink talker: _convo.talker /}
+			#{/else}
+			<span class="blacktext12">
+				#{if _convo.comments != null && _convo.comments.size() > 0}
+					#{talker/talkerInfo talker: _convo.comments.get(0).fromTalker /}
+				#{/if}
+				#{else}
+					#{talker/talkerLink talker: _convo.talker /}
+				#{/else}
+			</span>
+		</p>
+		
+		
+			<div class="ans">
+				#{if !_convo.comments || _convo.comments?.size() == 0}
+					<a href="@{ViewDispatcher.view(_convo.mainURL)}#answers">Answer</a> | 
+				#{/if}
+				#{else}
+					<img src="/public/images/index/chat_icon.png" alt="answers" />
+					<a href="@{ViewDispatcher.view(_convo.mainURL)}#answers">${_convo.comments?.size()} 
+						Answer${_convo.comments.pluralize()}</a> | 
+				#{/else}
+			</div>
+			<div class="ans">
+				<img src="/public/images/index/timer_icon.png" alt="time" />
+				#{if _convo.comments != null && _convo.comments.size() > 0}
+					 ${_convo.comments.get(0).time.since()} 
+				#{/if}
+				#{else}
+					${_convo.creationDate.since()}
+				#{/else}
+			</div>
+			<div class="ans">
+			#{if session.username }
+				 | <a href="#" class="followConvoLink" rel="${_convo.id}">
+					${_talker?.followingConvosList?.contains(_convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
+			#{/if}
+			*{ when the user is not logged in, change the link for "Flag" to "5 Answers" or "Answer" }*
+			#{if session.username }
+				<a href="javaScript:openFlagWindow('${_convo.id}')" class="test" rel="${_convo.id}">Flag</a> 
+			#{/if}
+			</div>
+	</div>
+</li>

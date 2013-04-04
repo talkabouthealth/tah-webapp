@@ -1,6 +1,8 @@
 #{extends 'Topics/topicPage.html' /}
 #{set currentPage = 'manageTopic' /}
-
+<style>
+.topic{padding:10px;}
+.inputCover{ float:left;}</style>
 <script type="text/javascript">
 	$(document).ready(function() {
 		makeAutocomplete("#newParent", "topic");
@@ -32,12 +34,14 @@
 		$("#newParentBtn").click(function() {
 			var newParent = $("#newParent").val();
 			$("#newParent").val("");
-			$.post("@{Topics.manageParents()}", 
-				{topicId: "${topic.id}", todo: "add", parentId: newParent},
-				function(data) {
-					$("#parents").after($(data));
-				}
-			);
+			if($.trim(newParent) != ''){
+				$.post("@{Topics.manageParents()}", 
+					{topicId: "${topic.id}", todo: "add", parentId: newParent},
+					function(data) {
+						$("#parents").after($(data));
+					}
+				);
+			}
 			return false;
 		});
 		$(".removeParentLink").live("click", function() {
@@ -53,18 +57,20 @@
 			$("#childError").html("");
 			var newChild = $("#newChild").val();
 			$("#newChild").val("");
-			$.post("@{Topics.manageChildren()}", 
-				{topicId: "${topic.id}", todo: "add", childId: newChild},
-				function(data) {
-					if (data.charAt(0) === '<') {
-						$(data).appendTo($("#children"));
+			if($.trim(newChild) != ''){
+				$.post("@{Topics.manageChildren()}", 
+					{topicId: "${topic.id}", todo: "add", childId: newChild},
+					function(data) {
+						if (data.charAt(0) === '<') {
+							$(data).appendTo($("#children"));
+						}
+						else {
+							//error
+							$("#childError").html(data);
+						}
 					}
-					else {
-						//error
-						$("#childError").html(data);
-					}
-				}
-			);
+				);
+			}
 			return false;
 		});
 		$(".removeChildLink").live("click", function() {
@@ -105,7 +111,7 @@
 
 <div class="cb"></div>
 <div class="mtborder" style="margin-top: 20px;"></div>
-<div class="topipcWraper">
+<div class="tabBody" style="margin-top:10px;">
 				*{
 				Temporary hidden - topic aliases
                     <div class="topic">
@@ -164,7 +170,7 @@
 	                        <div class="inputCover">
 	                          <input id="newParent" type="text" class="mtinput"/>
 	                        </div>
-	                        <input id="newParentBtn" type="submit" value=" " class="addbtn" />
+	                        <input id="newParentBtn" type="submit" value=" Add " class="addbtn" />
 	                        <div class="cb"></div>
 	                      </div>
 	                  #{/ifnot}
@@ -178,7 +184,7 @@
                         <div class="inputCover">
                           <input  id="newChild"  type="text" class="mtinput"/>
                         </div>
-                        <input id="newChildBtn"  type="submit" value=" " src="/public/images/addbtn.jpg" class="addbtn"/>
+                        <input id="newChildBtn"  type="submit" value=" Add " src="/public/images/addbtn.jpg" class="addbtn"/>
                         <div class="cb" style="margin-bottom:3px;"></div>
                         <span id="childError" style="color: red;"></span>
                       </div>

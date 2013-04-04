@@ -382,8 +382,7 @@ public class Profile extends Controller {
                            Logger.debug("Image Size: " + imageFile.length());
                            session.put("image_upload", "error");
                            renderText("invalid file size"); 
-                        }
-                        else {
+                        } else {
                             try {
                                 BufferedImage bsrc = ImageIO.read(imageFile);
                                 ByteArrayOutputStream baos = ImageUtil.createThumbnail(bsrc);

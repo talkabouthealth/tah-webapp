@@ -1,73 +1,141 @@
+#{extends 'Topics/topicPage.html' /}
 #{set pageType = 'Topic' /}
 #{set pageTitle = topic.title + ' questions and answers' /}
 #{set pageDescription = (topic.summary?.length() > 0 ? topic.summary : topic.title) /}
 #{set pageDescription = ('A summary of ' + topic.title + ' questions and answers on TalkAboutHealth') /}
-
-
-#{extends 'Topics/topicPage.html' /}
 #{set currentPage = 'viewTopic' /}
 <script type="text/javascript">
 		var feedsPerPage = ${logic.FeedsLogic.TALKERFEEDS_PER_PAGE};
 </script>
 </head>
-<br/>
-<div class="newTabCover">
-  <div class="newActiveTab"><a href="#" id="latestActivity" class="tabLink">Latest Activity</a></div>
-  <div class="newTab"><a href="#" id="openQuestions" class="tabLink">Unanswered Questions</a></div>
-  <div class="newTab"><a href="#" id="popularConvos" class="tabLink">Popular Questions</a></div>
-  <div class="newTab"><a href="#" id="thoughts" class="tabLink">Thoughts</a></div>
-  <!-- <div class="newTab"><a href="#" id="trendingConvos" class="tabLink">Trending Questions</a></div>  -->
-  <div class="laborder"></div>
-</div>
-<div class="cb"></div>
-<div>
-	<div id="latestActivityContent" class="tabContent">	
-		#{list items: activities, as: 'activity'}
-			#{feed/feedActivity activity: activity, talker: talker /}
-		#{/list}
-	</div>
-	#{if activities != null &&  activities.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
-		<div class="replytommentbox" id="latestActivityBtn">
-				<input type="button" src="images/seemore.jpg" onclick="return loadMoreTopicsFeed('latestActivity','${topic.mainURL}');" 
-				value=" " class="seemorecom" />
-		</div>
-	#{/if}
-	<div id="openQuestionsContent" class="tabContent" style="display: none;">
-		#{list items: openConvosSaved, as: 'convo' }
-			#{convo/convoListItemTopic convo: convo, talker: talker /}
-		#{/list}	
-	</div>
-	#{if openConvosSaved != null &&  openConvosSaved.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
-	<div class="replytommentbox" id="openQuestionsBtn" style="display: none;">
-				<input type="button" src="images/seemore.jpg" onclick="return loadMoreTopicsFeed('openQuestions','${topic.mainURL}');" 
-				value=" " class="seemorecom" />
-	</div>
-	#{/if}
-	<div id="popularConvosContent" class="tabContent" style="display: none;">
-		#{list items: popularConvos, as: 'convo' }
-			#{convo/convoListItemTopic convo: convo, talker: talker /}
-		#{/list}
-	</div>
-	#{if popularConvos != null && popularConvos.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
-	<div class="replytommentbox" id="popularConvosBtn" style="display: none;">
-				<input type="button" src="images/seemore.jpg" onclick="return loadMoreTopicsFeed('popularConvos','${topic.mainURL}');" 
-				value=" " class="seemorecom" />
-	</div>
-	#{/if}
-	<div id="thoughtsContent" class="tabContent" style="display: none;">
-		#{list items: topicMentions, as: 'activity'}
-			#{feed/feedActivity activity: activity, talker: talker /}
-		#{/list}
-	</div>
-	#{if topicMentions != null && topicMentions.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
-	<div class="replytommentbox" id="thoughtsBtn" style="display: none;">
-				<input type="button" src="images/seemore.jpg" onclick="return loadMoreTopicsFeed('thoughts','${topic.mainURL}');" 
-				value=" " class="seemorecom" />
-	</div>
-	#{/if}
-	*{
-		<div id="trendingConvosContent" class="tabContent" style="display: none;"></div>
-	 }*
-</div>
+<div class="slide">
+	<ul class="tabs">
+		<li id="expert" class="fst active"><a href="#">Expert Answers</a></li>
+		<li id="recent"><a href="#">Shared Experiences</a></li>
+		<li id="open"><a href="#">Unanswered Questions</a></li>
+		<li id="video"><a href="#">Videos</a></li>
+	</ul>
 
-#{ notLoggedNotice /}
+	<div id="expertTab" class="tabBody">
+	   <ul id="expertCnt">
+	   </ul>
+	   <ul>
+	   	<li class="lastFeed">
+	   		<a class="moreBtn" id="expertMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+	   	</li>
+	   </ul>
+	 </div>
+	 <div id="recentTab" class="tabBody" style="display:none;">
+	<ul id="recentCnt">
+	   	</ul>
+	   	<ul>
+	   	<li class="lastFeed">
+	   		<a class="moreBtn" id="recentMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+	   	</li>
+	   </ul>
+	 </div>
+	 <div id="openTab" class="tabBody" style="display:none;">
+	 		<ul id="openCnt"></ul>
+	   	<ul>
+	   	<li class="lastFeed">
+	   		<a class="moreBtn" id="openMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+	   	</li>
+	   </ul>
+	 </div>
+	 <div id="videoTab" class="tabBody" style="display:none;">
+	 		<ul id="videoCnt"></ul>
+	   	<ul>
+	   	<li class="lastFeed">
+	   		<a class="moreBtn" id="videoMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+	   	</li>
+	   </ul>
+	 </div>
+</div>
+#{ifnot session.username}
+	<div class="tabBody" style="padding:10px 20px;width:auto;margin-top:15px;border-radius: 5px;">
+		<span><b>Note:</b> Usernames have been made anonymous and profile images are not shown to protect the privacy of our members.</span>
+	</div>
+#{/ifnot}
+*{ #{ notLoggedNotice /} }*
+<script>
+var recentConvo=0;
+var expertConvo=0;
+var openConvo=0;
+var videonConvo=0;
+$(document).ready(function(){
+	$(".tabs li").click(function() {
+		$(".active").removeClass("active");
+		$(this).addClass("active");
+		var id = $(this).attr("id");
+		if(id == 'expert' && expertConvo==0) {
+			loadFeed(id);
+			expertConvo = 1;
+		} else if(id == 'recent' && recentConvo==0) {
+			loadFeed(id);
+			recentConvo = 1;
+		} else if(id == 'open' && openConvo==0) { 
+			loadFeed(id);
+			openConvo = 1;
+		} else if(id == 'video' && videonConvo==0) {
+			loadFeed(id);
+			videonConvo = 1;
+		}
+		$(".slide div.tabBody").hide();
+		$("#" + id + "Tab").fadeIn();
+		return false;
+	});
+	
+	$(".moreBtn").click(function() {
+		var idBtn = $(this).attr("id");
+		var id = "expert"
+		if(idBtn == 'expertMore')
+			id = "expert";
+		else if(idBtn == 'recentMore')
+			id = "recent";
+		else if(idBtn == 'openMore')
+			id = "open";
+		else if(idBtn == 'videoMore')
+			id = "video";
+		var idElm =  $("#" + id);
+		var lastActionId = $("#"+id+"Cnt").children().last().attr("id");
+		var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
+		$(loading).appendTo($("#"+id+"Cnt"));
+		$.get("/topics/topicAjaxLoad",{ title: '${topic.mainURL}' ,feedType : id,afterActionId:lastActionId },function(data){
+			if ($.trim(data).toLowerCase().indexOf("there is no new") >= 0) {
+				$("#" + id + "More").hide();
+				$(loading).remove();
+			} else {
+				$(loading).remove();
+				$(data).appendTo($("#"+id+"Cnt"));
+				$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+			}
+		});
+		return false;
+	});
+	$("#expert").click();
+});
+var flagType;
+var flagId;
+openFlagWindow = function(id) {
+	flagType = "convo";
+	flagId = $(this).attr("rel");
+	showPopup("#flagPopup", 200);
+}
+loadFeed = function(id) {
+	var lastActionId = '';
+	var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
+	$("#"+id+"Cnt").html(loading);
+	$.get("/topics/topicAjaxLoad",{ title: '${topic.mainURL}' ,feedType : id,afterActionId:lastActionId },function(data){
+		if ($.trim(data).toLowerCase().indexOf("there is no new") >= 0) {
+			$("#" + id + "More").hide();
+			$(loading).remove();
+			$(data).appendTo($("#"+id+"Cnt"));
+		} else {
+			$("#" + id + "More").show();
+			$(loading).remove();
+			$(data).appendTo($("#"+id+"Cnt"));
+			$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+		}
+	});
+}
+</script>

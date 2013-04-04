@@ -24,6 +24,7 @@ public class PreloadAction implements Action {
 	protected ActionType type;
 	protected DBObject dbObject;
 	protected Date time;
+	protected TalkerBean talker;
 
 	public PreloadAction(DBObject dbObject) {
 		this.dbObject = dbObject;
@@ -38,8 +39,19 @@ public class PreloadAction implements Action {
 			convo.setId(convoRef.getId().toString());
 			setConvo(convo);
 		}
+		DBRef talkerRef = (DBRef)dbObject.get("uid");
+		
+		if(talkerRef != null) {
+			TalkerBean tempTalker = new TalkerBean();
+			tempTalker.setId(talkerRef.getId().toString());
+			talker = tempTalker;
+		}
 	}
 	
+	public void setTalker(TalkerBean talker) {
+		this.talker = talker;
+	}
+
 	/**
 	 * Loads full action information
 	 * @return
@@ -73,7 +85,7 @@ public class PreloadAction implements Action {
 	public void setConvo(ConversationBean convo) { this.convo = convo; }
 	
 	@Override
-	public TalkerBean getTalker() { return null; }
+	public TalkerBean getTalker() { return talker; }
 
 	@Override
 	public void setID(String id) {

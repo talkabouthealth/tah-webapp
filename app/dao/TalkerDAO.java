@@ -286,13 +286,11 @@ public class TalkerDAO {
 			
 			if (talkerDBObject == null) {
 				return null;
-			}
-			else {
+			} else {
 				talker = new TalkerBean();
 				talker.parseFromDB(talkerDBObject);
 			}
 		}
-		
 		return talker;
 	}
 	

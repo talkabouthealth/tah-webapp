@@ -18,6 +18,7 @@ email.exists = Email is already registered. Please enter a different email.
 email.nosuchemail = Sorry, there are no user with this email in our database.
 emails.incorrect = Please input correct emails
 emails.noinvites = Sorry, you don't have enough invites
+email.suspended = Sorry, This email is suspended
 
 password.currentbad = Current password is wrong.
 password.different = New and Confirm passwords are different.

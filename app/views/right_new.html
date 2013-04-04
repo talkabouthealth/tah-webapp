@@ -1,0 +1,354 @@
+<div id="comright">
+#{if session.username }
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var share = "${params.share}";
+			if (share === "twitter") {
+				showPopup("#shareTwitterDialog", 350);
+			}
+			else if (share === "facebook") {
+				showPopup("#shareFBDialog", 450);
+			}
+		});
+	</script>
+	<div class="box"> 
+		<div style="padding:10px;">
+		<table width="100%">
+		<tr>
+		<td>
+       	#{if session.username.equals(talker.userName) }
+       		Welcome <a href="@{ViewDispatcher.view(talker.userName)}"><strong>${talker.userName}</strong></a>!
+       		<br/> #{if talker.connection}
+                 	<div class="topiptext2">(#{talker/connectionInfo talker: talker /})</div>
+                 #{/if}
+       	#{/if}
+       	#{else}
+       		<a href="@{ViewDispatcher.view(talker.userName)}"><strong>${talker.userName}'s</strong></a> Profile
+       		<br/> #{if talker.connection}
+                 	<div class="topiptext2">(#{talker/connectionInfo talker: talker /})</div>
+                 #{/if}
+       	#{/else}
+       	</td>
+       	<td align="center">
+         
+             
+				#{talker/talkerImageLink size: 58, userName: talker.userName /}
+             
+              
+       		 
+		 
+		</td></tr>
+			<tr>
+			<td>Thank You's:&nbsp;&nbsp; 
+           	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.userName, 'thankyous')}">
+				${talker.thankYouList.size()}
+			</a></td>
+			<td>Following:&nbsp;&nbsp; 
+           	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.userName, 'following')}">
+				${talker.followingList.size()}
+			</a></td>
+			</tr>
+		
+		
+		<tr>
+			<td>Answers:&nbsp;&nbsp; 
+           	<a style="text-decoration: none;" href="@{PublicProfile.answers(talker.userName)}">
+				${talker.answerList.size()}
+			</a></td>
+			<td>Followers:&nbsp;&nbsp; 
+           	<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.userName, 'followers')}">
+           	#{if talker.followerList != null}${talker.followerList.size()}#{/if}	
+			#{else}0#{/else}
+			</a></td>
+			</tr>
+		</table>
+
+    
+     </div>
+   </div>
+   <!--topipsts-->
+   <div class="cb"></div>
+   
+ 	#{if currentPage?.equals("home") }
+ 		#{ifnot talker?.hiddenHelps.contains("updateUsername") }
+	 		<div id="updateUsernameHelp" class="topipsts">
+			   <div class="close" style="padding-top: 7px; padding-right: 7px;">
+			   	<img src="/public/images/close.jpg" alt="Close" onclick="return hideHelpInfo('updateUsername', true);" />
+			   </div>
+	           <div class="mtrighttxt1">Update username</div>
+	           <div class="topixtext">
+	             <div class="tellustext">
+	             	<input id="newUsername"  type="text" value="${talker.userName}" style="width: 190px;"/>
+	             	<div style="padding-top: 15px;">
+	             		<input id="updateUsernameBtn"  type="submit" style="margin: -5px 10px 0px 0px;"
+	             			value=" " class="cupdate" />
+	             		<a href="#" onclick="return hideHelpInfo('updateUsername', true);">No thanks.</a>
+	             	</div>
+	             </div>
+	           </div>
+	           <!--topixtext-->
+		     <div class="mtop"></div>
+		     <div class="topicborder"></div>
+		   </div>
+	   #{/ifnot}
+	   
+	   #{ifnot talker?.hiddenHelps.contains("updatePassword") }
+	   <div id="updatePasswordHelp" class="topipsts">
+           <div class="mtrighttxt1">Update password</div>
+           <div class="topixtext">
+             <div class="tellustext">
+             	<input id="newPassword"  type="password" value="" style="width: 190px;" />
+             	<div style="padding-top: 15px;">
+             		<input id="updatePasswordBtn"  type="submit" style="margin: -5px 10px 0px 0px;"
+             			value=" " class="cupdate" />
+             	</div>
+             </div>
+           </div>
+           <!--topixtext-->
+	     <div class="mtop"></div>
+	     <div class="topicborder"></div>
+	   </div>
+	   #{/ifnot}
+	  
+ 	#{/if}
+ 	<!-- REFACTOR DEEMPHASIZE IM --> 
+ 	#{if false && currentPage?.equals("home") && showNotificationAccounts }
+ 		<div id="notificationAccountsHelp" class="topipsts">
+		   <div class="close" style="padding-top: 7px; padding-right: 7px;">
+		   	<img src="/public/images/close.jpg" alt="Close" onclick="return hideHelpInfo('notificationAccounts', true);" />
+		   </div>
+           <div class="mtrighttxt1">Notify me of questions and chats relevant to me.</div>
+           <div class="topixtext">
+             <div class="tellustext">
+             	Select a service:<br/>
+             	<input type="radio" name="notifyType" class="notifyType" 
+             		${ talker.im?.equalsIgnoreCase("GoogleTalk") ? 'checked="true"' : '' } 
+             		value="GoogleTalk" /> Google chat<br/>
+             	<input type="radio" name="notifyType" class="notifyType"
+             		${ talker.im?.equalsIgnoreCase("WindowLive") ? 'checked="true"' : '' }  
+             		value="WindowLive" /> Windows live chat<br/>
+             	<input type="radio" name="notifyType" class="notifyType"
+             		${ talker.im?.equalsIgnoreCase("YahooIM") ? 'checked="true"' : '' }  
+             		value="YahooIM" /> Yahoo Messenger<br/>
+             	<input type="radio" name="notifyType" class="notifyType"
+             		${ talker.im?.equalsIgnoreCase("Twitter") ? 'checked="true"' : '' } 
+             		value="Twitter" /> Twitter<br/>
+             	
+             	<div id="notifyUsernamePanel" style="padding-top: 12px;">
+	             	Username: <input id="notificationUsername"  type="text" value="${talker.imUsername}" />
+	             	<br/>
+	             	<span class="textgreylight12" style="line-height: 14px;">Just the username, 
+									  		no need for the "@gmail.com" or "@yahoo.com" (i.e. joesmith)</span>
+				</div>
+             	
+             	<div style="padding-top: 25px;">
+             		<input id="addNotificationAccount"  type="submit" style="margin: -5px 10px 0px 0px;"
+             			value=" " src="/public/images/addbtn.jpg" class="addbtn"/>
+             		<a href="#" onclick="return hideHelpInfo('notificationAccounts', true);">No thanks.</a>
+             	</div>
+             </div>
+           </div>
+           <!--topixtext-->
+	     <div class="mtop"></div>
+	     <div class="topicborder"></div>
+	   </div>
+    #{/if}
+    
+    *{
+    #{if session.username.equals(talker.userName) && talker.nextStepMessage }
+		<div class="topipsts">
+           <div class="mtrighttxt1">Next Step</div>
+           <div class="topixtext">
+             <div class="tellustext">
+             	<span style="font-size: 16px;">${talker.nextStepMessage?.raw()}</span>
+             	#{if talker.nextStepNote}
+             		<br/><br/>
+             		${talker.nextStepNote}
+             	#{/if}
+             </div>
+           </div>
+           <!--topixtext-->
+	     <div class="mtop"></div>
+	     <div class="topicborder"></div>
+	   </div>
+ 	#{/if}
+ 	}*
+ 	
+ 	#{if talker.userName.equals(session.username) && talker.profileCompletionValue != 100 }
+              <div class="box">
+                <h2 class="heading">Profile Completion</h2>
+                
+                <style type="text/css">
+			#profilebar {
+				width: 200px;
+				height: 20px;
+				border: 1px solid #CCCCCC;
+			}
+			#profileprogress {
+				background-color: #0386bc;
+				padding-left: 5px;
+				line-height: 20px;
+				width: ${2*talker.profileCompletionValue-5}px;
+				height: 100%;
+			}
+		</style>
+		<div class="body">
+		<div id="profilebar">
+			<div id="profileprogress">
+				<span class="whitetext12">${talker.profileCompletionValue}%</span>
+			</div>
+		</div>
+                <div class="profilecompletiontxt">${talker.profileCompletionMessage?.raw()}</div>
+              </div>
+              </div>
+	#{/if}
+
+   <!-- For similar Members widget -->
+   <div class="topipsts" id="similarMembersCnt" style="display:none;">
+     <div class="mtrighttxt1">Similar Members</div>
+     <div>
+     	<div id="USRList"></div>
+  	 </div>
+	 <div class="topbox1" >
+		[<a href="@{Explore.browseMembers('active')}"><strong>View all</strong></a>]
+		<span id = "usrRBtn" >[<a href="javascript:refreshMembers('USR');"><strong>Refresh</strong></a>] </span>
+    </div>
+	<div class="topicborder"></div>
+   </div>
+   
+   <!-- For experts widget -->
+   <div class="topipsts" id="expertsCnt" style="display:none;">
+     <div class="mtrighttxt1">Recommended Professionals</div>
+     <div>
+     	<div id="EXPList"></div>
+  	 </div>
+	 <div class="topbox1" >
+	       [<a href="/explore/experts"><strong>View all</strong></a>]
+	       <span id = "expRBtn" >[<a href="javascript:refreshMembers('EXP');" id="EXPbtn" ><strong>Refresh</strong></a>] </span>
+	 </div>
+	<div class="topicborder"></div>
+   </div>
+   
+   
+   #{if recommendedTopics}
+   <div class="topipsts">
+   		<div class="mtrighttxt1">Topics For You</div>
+   		<div id="recommendedTopics">
+	     	<div id="TOPICList">#{ topicList recommendedTopics: recommendedTopics /}</div>
+   		</div>
+   		<div class="topbox1">
+	       [<a href="/explore/topics"><strong>View all</strong></a>]
+	       [<a href="javascript:refreshMembers('TOPIC');" id="TOPICbtn"><strong>Refresh</strong></a>] 
+   		</div>
+   		<div class="topicborder"></div>
+	</div>
+	#{/if}
+	
+	
+	#{if pageType != null && pageType == "cancerPage"}
+		<!-- Advertisement Code Start -->
+    	#{ad/advertisement add: '1' /}
+		<!-- Advertisement Code End -->
+	#{/if}
+	#{include 'Upcoming_Workshops_new.html' /}
+	<!-- New Changes Added -->
+	<div id="popularTopicsCnt" style="display:none;"></div>
+	<!-- #{common/popularTopics popularTopics: popularTopics /}  -->
+	<!-- New Changes Added -->
+	#{include 'newsletter_signup_new.html' /}
+	#{include 'subscribe_reward_new.html' /}
+	#{include 'SHARE_telephone_support_new.html' /}
+
+	#{include 'Senology_Study_Of_Week_New.html' /}
+	<div class="box">
+	    <h2 class="heading">Share TalkAboutHealth</h2>
+	    <div class="body">
+	     <div class="topixtext"> Invite friends to join the Community </div>
+	     <!--topixtext-->
+	     <div class="membersarea" style="height: auto;">
+			#{ share/buttons /}
+			#{if currentPage?.equals("home") }
+				<br/>
+				#{ share/fblike currentURL: 'www.facebook.com/talkabouthealth' /}
+			#{/if}
+	     </div>
+	     <!--membersarea-->
+	     </div>
+	</div>
+
+	#{include 'tahHowYouCanHelp_new.html' /}
+	
+	<div class="mtop"></div>
+	<div class="cb"></div>
+#{/if}
+#{else}
+	#{if pageType != null && pageType == "cancerPage"}
+		#{include '/tags/newsletter/subscribeCancerNew.html' /}
+		<!-- Advertisement Code Start -->
+    	#{ad/advertisement add: '1' /}
+		<!-- Advertisement Code End -->
+	#{/if}
+	<div style="margin:0 0 10px">
+		<a href="@{Application.signup()}" onClick="_gaq.push(['_trackEvent', 'Join_Other', 'Signup', 'Standard']);">
+			<img src="/public/images/index/getstarted.png" alt="" border="0"/>
+		</a>
+	</div>
+	#{include 'newsletter_signup_new.html' /}
+	#{ share/fbwidget /}<br />
+	<div class="topicborder"></div>
+	#{include 'Upcoming_Workshops_new.html' /}
+	<!-- New Changes Added -->
+	<div id="popularTopicsCnt" style="display:none;"></div>
+	<!-- #{common/popularTopics popularTopics: popularTopics /}  -->
+	<!-- New Changes Added -->
+
+	#{include 'subscribe_reward_new.html' /}
+	*{ #{include 'SHARE_trained_peer_support.html' /} }*
+	#{include 'SHARE_telephone_support_new.html' /}
+	#{include 'Senology_Study_Of_Week_New.html' /}
+	
+	
+	#{include 'shareWidgets.html' /}	
+#{/else}
+</div>
+
+<div id="boxes">
+  <div id="dialog" class="window"> </div>
+  
+  #{popups/startConvo page: currentPage, talker: talker /}
+  #{newsletter/emailpopup page: currentPage, talker: talker /}
+  #{if talker}
+  	#{popups/emailDialogs talker: talker /}
+  	#{popups/passwordChangePopup  /}
+ 	#{set twitterAccount = talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
+			
+	#{ popups/shareEmail shareType: 'TalkAboutHealth', userName: talker?.userName /}	
+	#{ popups/shareTwitter shareType: 'TalkAboutHealth', userName: twitterAccount?.userName /}
+	#{ popups/shareFacebook shareType: 'TalkAboutHealth' /}
+  #{/if}
+
+  <!-- Mask to cover the whole screen -->
+  <div id="mask"></div>
+</div>
+	<script type="text/javascript">
+		function display(){
+			var size = $("#EXPList > div").size();
+			if(size < 3){
+				if(document.getElementById("expRBtn"))
+					document.getElementById("expRBtn").style.display = "none";
+			}else{
+				if(document.getElementById("expRBtn"))
+					document.getElementById("expRBtn").style.display = "";
+			}
+
+			var sizeMembers = $("#USRList > div").size();
+			if(sizeMembers < 3){
+				if(document.getElementById("usrRBtn"))
+					document.getElementById("usrRBtn").style.display = "none";
+			}else{
+				if(document.getElementById("usrRBtn"))
+					document.getElementById("usrRBtn").style.display = "";
+			}
+		}
+		window.onload = display;
+	</script>
