@@ -319,7 +319,7 @@
   #{newsletter/emailpopup page: currentPage, talker: talker /}
   #{if talker}
   	#{popups/emailDialogs talker: talker /}
-  	#{popups/passwordChangePopup  /}
+  	*{ #{popups/passwordChangePopup  /} }*
  	#{set twitterAccount = talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
 			
 	#{ popups/shareEmail shareType: 'TalkAboutHealth', userName: talker?.userName /}	
