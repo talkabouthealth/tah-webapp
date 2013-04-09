@@ -171,6 +171,9 @@ public class Application extends Controller {
     	if (!validation.hasError("email")) {
     		talker = TalkerDAO.getByEmail(email);
     		validation.isTrue(talker != null).message("email.nosuchemail");
+    		if (talker != null) {
+    			validation.isTrue(!talker.isSuspended()).message("email.suspended");
+    		}
     	}
     	if (validation.hasErrors()) {
             params.flash();

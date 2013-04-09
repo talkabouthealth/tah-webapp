@@ -19,9 +19,6 @@
 		#{/else}
 		<br />
 		<a href="/static/howyoucanhelp" class="bluetext14">How you can help</a><br />
-
-
-
 		#{if session.contains("cancerType")}  
 			<a href="@{Explore.newsletter(session.get("cancerType").toLowerCase().replaceAll(" ","-"))}" class="bluetext14">Newsletters</a>
 		#{/if}
@@ -29,7 +26,6 @@
 			<a href="@{Explore.newsletter("cancer")}" class="bluetext14">Newsletters</a>
 		#{/else}
 		<br />
-
 		<a href="http://blog.talkabouthealth.com" class="bluetext14">Blog</a><br />
 		<a href="/static/resources" class="bluetext14">More Resources</a><br />
 		<a href="/static/partner_network" class="bluetext14">Partner Network</a><br />

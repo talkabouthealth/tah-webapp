@@ -1,0 +1,77 @@
+#{if feedType == 'recent'}
+	#{if expertConvos.size() > 0 }
+	*{
+	#{list items: expertConvos, as: 'convo'}
+		#{convo/convoListItem_new convo: convo, talker: talker ,type : type /}
+	#{/list}
+	}*
+	#{list items: expertConvos, as: 'activity'}
+		#{feed/feedActivity_new activity: activity, talker: talker /}
+	#{/list}
+	#{/if}
+	#{else}<li> There is no new Shared Experiences. Ask <a href="/signup">question</a> now </li>	#{/else}
+#{/if}
+
+#{if feedType == 'expert'}
+	#{if expertConvos.size() > 0 }
+	*{
+	#{list items: expertConvos, as: 'convo'}
+		#{convo/convoListItem_new convo: convo, talker: talker ,type : type /}
+	#{/list}
+	}*
+	#{list items: expertConvos, as: 'activity'}
+		#{feed/feedActivity_new activity: activity, talker: talker /}
+	#{/list}
+	#{/if}
+	#{else}<li> There is no new Expert answer. Ask <a href="/signup">question</a> now </li>	#{/else}
+#{/if}
+
+#{if feedType == 'open'}
+	#{if openConvo != null && openConvo.size() > 0 }
+		#{list items: openConvo, as: 'convo' }
+				#{convo/openQuestion_new convo: convo, talker: talker /}
+		#{/list}
+	#{/if}
+	#{else}	<li> There is no new open question. Ask <a href="/signup">question</a> now </li>	#{/else}
+#{/if}
+#{if feedType == 'video'}
+	#{if videoBeanList != null && videoBeanList.size() > 0 }
+		#{list items: videoBeanList, as: 'video' }
+		<li id="${video.id}">
+		
+			<div class="varified"> 
+				#{if video.convoBean.talker != null && video.convoBean.talker.name != null}
+					#{talker/talkerImageLink size: 72, userName: video.convoBean.talker.name /}
+				#{/if}
+				#{if video.convoBean.talker.connectionVerified }
+					<h4>Verified</h4>
+				#{/if}
+				#{elseif video.convoBean.talker.isProf() }
+					<h4 class="not">Not Verified</h4>
+				#{/elseif}
+	       </div>
+			<div  class="q">
+				<h3 class="sub_heading"><a href="@{ViewDispatcher.view(video.convoBean.mainURL)}">${video.convoBean.topic}</a></h3>
+				<div style="padding:5px 0;">
+					<iframe width="540" height="300" src="http://www.youtube.com/embed/${video.videoId}" frameborder="0" allowfullscreen></iframe>
+				</div>
+				<div class="ans">
+					<img src="/public/images/index/chat_icon.png" alt="answers" />
+					#{if !video.convoBean.comments || video.convoBean.comments?.size() == 0}
+						<a href="@{ViewDispatcher.view(video.convoBean.mainURL)}#answers">Answer</a>
+					#{/if}
+					#{else}
+						<a href="@{ViewDispatcher.view(video.convoBean.mainURL)}#answers">${video.convoBean.comments?.size()} 
+							Answer${video.convoBean.comments.pluralize()}</a>
+					#{/else}
+				</div>
+				<div class="ans">
+				<img src="/public/images/index/timer_icon.png" alt="time" />
+					${video.creationDate.since()}
+			</div>
+			</div>
+			</li>
+		#{/list}
+	#{/if}
+	#{else}	<li> There is no new video answer. Ask <a href="/signup">question</a> now </li>	#{/else}
+#{/if}

@@ -424,10 +424,8 @@ public class ViewDispatcher extends Controller {
 		//Logging disease
 		ActivityLogDAO.logDisease(topic.getDiseaseList());
 		
-		//List<String> cat = FeedsLogic.getCancerType(talker);
-		
 		//load latest activities for convos with this topic
-		Set<Action> activities = FeedsLogic.getTopicFeed(talker,topic, null);
+		Set<Action> activities = FeedsLogic.getTopicFeed(talker,topic, null,true);
 		
 		List<ConversationBean> openConvos  = new ArrayList<ConversationBean>(topic.getConversations());
 		List<ConversationBean> openConvosSaved = new ArrayList<ConversationBean>();
@@ -443,14 +441,6 @@ public class ViewDispatcher extends Controller {
 		
 		//- "Popular Conversations" - topic conversations ordered by page views
 		List<ConversationBean> popularConvos = new ArrayList<ConversationBean>(topic.getConversations());
-		//List<ConversationBean> popularConvos = new ArrayList<ConversationBean>();
-		//added for check cancer type
-		//for (ConversationBean conversationBean : popularConvos1) {
-			//if(cat.contains(conversationBean.getCategory())){
-		//		popularConvos.add(conversationBean);
-			//}
-		//}
-		//popularConvos1.clear();
 		Collections.sort(popularConvos);
 		//Added code for adding pagination to the popular topic section on topic page
 		if(popularConvos != null && popularConvos.size() >= FeedsLogic.FEEDS_PER_PAGE){
@@ -463,14 +453,6 @@ public class ViewDispatcher extends Controller {
 		List<ConversationBean> trendingConvos = null;//new ArrayList<ConversationBean>();
 		
 		List<Action> topicMentions = CommentsDAO.getTopicMentions(topic);
-		//List<Action> topicMentions = new ArrayList<Action>();
-		//added for check cancer type
-		//for (Action action : topicMentions1) {
-			//if(cat.contains(action.getTalker().getCategory())){
-		//		topicMentions.add(action);
-			//}
-		//}
-		//topicMentions1.clear();
 		if(topicMentions != null && topicMentions.size() >= FeedsLogic.FEEDS_PER_PAGE){
 			topicMentions = topicMentions.subList(0, FeedsLogic.FEEDS_PER_PAGE);	
 		}
@@ -482,14 +464,14 @@ public class ViewDispatcher extends Controller {
 		List<VideoBean> videoBeanList = VideoDAO.loadTopicVideo(topic.getId(),2);
 		/*Code for Video*/
 		
-		String cancerType = "";
-		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
-		for (DiseaseBean diseaseBean : diseaseList) {
-			if(topic.getTitle().contains(diseaseBean.getName()))
-				cancerType =  diseaseBean.getName();		
+		String csrType = ConversationBean.ALL_CANCERS;
+		Iterator itr = topic.getDiseaseList().iterator();
+		if(itr.hasNext()) {
+			 DiseaseBean diseaseBean = (DiseaseBean) itr.next();
+			 csrType = diseaseBean.getName();
 		}
 		render("Topics/viewTopic.html", talker, topic, activities, openConvosSaved,
-				popularConvos, trendingConvos, topicMentions,newsLetterFlag,rewardLetterFlag,videoBeanList,cancerType);
+				popularConvos, trendingConvos, topicMentions,newsLetterFlag,rewardLetterFlag,videoBeanList,csrType);
 	}
 	
 	public static void showTopicVideo(String name) {
@@ -509,7 +491,13 @@ public class ViewDispatcher extends Controller {
 		/*Code for Video*/
 		List<VideoBean> videoBeanList = VideoDAO.loadTopicVideo(topic.getId(),0);
 		/*Code for Video*/
-		render("Topics/viewVideo.html", talker,topic, newsLetterFlag,rewardLetterFlag,videoBeanList);
+		String csrType = ConversationBean.ALL_CANCERS;
+		Iterator itr = topic.getDiseaseList().iterator();
+		 if(itr.hasNext()) {
+			 DiseaseBean diseaseBean = (DiseaseBean) itr.next();
+			 csrType = diseaseBean.getName();
+		}
+		render("Topics/viewVideo.html", talker,topic, newsLetterFlag,rewardLetterFlag,videoBeanList,csrType);
 	}
 
 	/**
@@ -517,69 +505,147 @@ public class ViewDispatcher extends Controller {
 	 * @param afterActionId load actions after given action
 	 */
     public static void topicAjaxLoad(String title, String afterActionId, String feedType) {
+    	 
     	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
     	TopicBean topic = TopicDAO.getByURL(title);
     	
     	int countArray = 1;
-    	if(feedType.equals("popularConvos")){
-    		List<ConversationBean> popularConvos = new ArrayList<ConversationBean>(topic.getConversations());
-    		Collections.sort(popularConvos);
-    		for (ConversationBean conversationBean : popularConvos) {
-				if(!conversationBean.getId().equals(afterActionId))
-					countArray++;
-				else
-					break;
-			}
-    		int countArrayLimit = countArray + FeedsLogic.FEEDS_PER_PAGE;
-    		//Added code for adding pagination to the popular topic section on topic page
-    		if(popularConvos.size() > countArrayLimit){
-    			popularConvos = popularConvos.subList(countArray, countArrayLimit);	
-    		}else{
-    			popularConvos = popularConvos.subList(countArray, popularConvos.size());
+    	if(feedType.equals("expert")) {
+    		/*List<ConversationBean> expertConvosTemp = new ArrayList<ConversationBean>(topic.getConversations());
+    		Collections.sort(expertConvosTemp);
+    		if(StringUtils.isNotBlank(afterActionId)) {
+    			for (ConversationBean conversationBean : expertConvosTemp) {
+					if(conversationBean.getId().equals(afterActionId))
+						break;
+					else
+						countArray++;
+				}
+    			if(expertConvosTemp.size() > countArray) {
+    				expertConvosTemp = expertConvosTemp.subList(countArray,expertConvosTemp.size());	
+        		}
     		}
-    		render("tags/convo/convoList.html", popularConvos, _talker);
-    	}else if(feedType.equals("openQuestions")){
-    		List<ConversationBean> openConvos  = new ArrayList<ConversationBean>(topic.getConversations());
+
+    		List<ConversationBean> expertConvos = new ArrayList<ConversationBean>();
+    		int size = 0;
+    		for (ConversationBean conversationBean : expertConvosTemp) {
+    			if(!conversationBean.isOpened()  ) {
+    				conversationBean = ConversationDAO.validateExpertConvo(conversationBean,true);
+    				if(conversationBean != null) {
+    					expertConvos.add(conversationBean);
+    					size++;
+    				}
+    				if(size >= 20)
+    					break;
+    			}
+    		}*/
+    		Set<Action> expertConvos = null;
+    		if(StringUtils.isBlank(afterActionId))
+    			afterActionId = null;
+    		expertConvos = FeedsLogic.getTopicFeed(_talker,topic, afterActionId,true);
+    		render("tags/convo/convoList_topic.html", expertConvos, _talker,feedType);
+    	} else if(feedType.equals("recent")) {
+    		/*
+    		List<ConversationBean> expertConvosTemp = new ArrayList<ConversationBean>(topic.getConversations());
+    		Collections.sort(expertConvosTemp);
+    		if(StringUtils.isNotBlank(afterActionId)) {
+    			for (ConversationBean conversationBean : expertConvosTemp) {
+					if(conversationBean.getId().equals(afterActionId))
+						break;
+					else
+						countArray++;
+				}
+    			if(expertConvosTemp.size() > countArray) {
+    				expertConvosTemp = expertConvosTemp.subList(countArray,expertConvosTemp.size());	
+        		}
+    		}
+
+    		List<ConversationBean> expertConvos = new ArrayList<ConversationBean>();
+    		int size = 0;
+    		for (ConversationBean conversationBean : expertConvosTemp) {
+    			if(!conversationBean.isOpened()  ) {
+    				conversationBean = ConversationDAO.validateExpertConvo(conversationBean,false);
+    				if(conversationBean != null) {
+    					expertConvos.add(conversationBean);
+    					size++;
+    				}
+    				if(size >= 20)
+    					break;
+    			}
+    		}
+    		*/
+    		Set<Action> expertConvos = null;
+    		if(StringUtils.isBlank(afterActionId))
+    			afterActionId = null;
+    		expertConvos = FeedsLogic.getTopicFeed(_talker,topic, afterActionId,false);
+    		render("tags/convo/convoList_topic.html", expertConvos, _talker,feedType);
+    	} else if(feedType.equals("open")) {
+    		List<ConversationBean> openConvo  = new ArrayList<ConversationBean>(topic.getConversations());
     		List<ConversationBean> popularConvos = new ArrayList<ConversationBean>();
-    		for (ConversationBean conversationBean : openConvos) {
+    		for (ConversationBean conversationBean : openConvo) {
     			if(conversationBean.isOpened()){
     				popularConvos.add(conversationBean);
     			}
     		}
-    		openConvos.clear();
-    		for (ConversationBean conversationBean : popularConvos) {
-				if(!conversationBean.getId().equals(afterActionId))
-					countArray++;
-				else
-					break;
-			}
-    		int countArrayLimit = countArray + FeedsLogic.FEEDS_PER_PAGE;
-    		//Added code for adding pagination to the popular topic section on topic page
-    		if(popularConvos.size() > countArrayLimit){
-    			popularConvos = popularConvos.subList(countArray, countArrayLimit);	
-    		}else{
-    			popularConvos = popularConvos.subList(countArray, popularConvos.size());
+    		openConvo.clear();
+    		if(StringUtils.isNotBlank(afterActionId)) {
+	    		for (ConversationBean conversationBean : popularConvos) {
+					if(!conversationBean.getId().equals(afterActionId))
+						countArray++;
+					else
+						break;
+				}
+    		} else {
+    			countArray = 0;
     		}
-    		render("tags/convo/convoList.html", popularConvos, _talker);
-    	}else if(feedType.equals("thoughts")){
+    		int countArrayLimit = countArray + FeedsLogic.FEEDS_PER_PAGE;
+    		if(popularConvos.size() > countArrayLimit){
+    			openConvo = popularConvos.subList(countArray, countArrayLimit);	
+    		} else if(popularConvos.size() > 0 ) {
+    			openConvo = popularConvos.subList(countArray, popularConvos.size());
+    		}
+    		render("tags/convo/convoList_topic.html", openConvo, _talker,feedType);
+    	} else if(feedType.equals("video")) {
+    		List<VideoBean> videoBeanList = VideoDAO.loadTopicVideo(topic.getId(),0);
+    		if(videoBeanList != null && videoBeanList.size() > 0) {
+	    		if(StringUtils.isNotBlank(afterActionId)) {
+		    		for (VideoBean videoBean : videoBeanList) {
+						if(!videoBean.getId().equals(afterActionId))
+							countArray++;
+						else
+							break;
+					}
+	    		} else {
+	    			countArray = 0;
+	    		}
+	    		int countArrayLimit = countArray + FeedsLogic.FEEDS_PER_PAGE;
+	    		if(videoBeanList.size() > countArrayLimit) {
+	    			videoBeanList = videoBeanList.subList(countArray, countArrayLimit);	
+	    		} else if(videoBeanList.size() > 0 && countArray < videoBeanList.size()) {
+	    			videoBeanList = videoBeanList.subList(countArray, videoBeanList.size());
+	    		} else {
+	    			videoBeanList = null;
+	    		}
+    		}
+    		render("tags/convo/convoList_topic.html", videoBeanList, _talker,feedType);
+    	} else if(feedType.equals("thoughts")){
     		List<Action> _feedItems = CommentsDAO.getTopicMentions(topic);
     		for (Action conversationBean : _feedItems) {
 				if(!conversationBean.getId().equals(afterActionId))
 					countArray++;
 				else
 					break;
-			}
+			} 
     		int countArrayLimit = countArray + FeedsLogic.FEEDS_PER_PAGE;
     		if(_feedItems.size() > countArrayLimit){
     			_feedItems = _feedItems.subList(countArray, countArrayLimit);
     		}else{
     			_feedItems = _feedItems.subList(countArray, _feedItems.size());
     		}
-    		render("tags/feed/feedList.html", _feedItems, _talker);
-    	}else{
+    		render("tags/feed/feedList.html", _feedItems, _talker,feedType);
+    	} else {
     		Set<Action> _feedItems = null;
-    		_feedItems = FeedsLogic.getTopicFeed(_talker,topic, afterActionId);
-    		render("tags/feed/feedList.html", _feedItems, _talker);
+    		_feedItems = FeedsLogic.getTopicFeed(_talker,topic, afterActionId,true);
+    		render("tags/feed/feedList.html", _feedItems, _talker,feedType);
     	}
     }
 }

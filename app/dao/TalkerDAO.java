@@ -286,13 +286,11 @@ public class TalkerDAO {
 			
 			if (talkerDBObject == null) {
 				return null;
-			}
-			else {
+			} else {
 				talker = new TalkerBean();
 				talker.parseFromDB(talkerDBObject);
 			}
 		}
-		
 		return talker;
 	}
 	
@@ -1390,5 +1388,13 @@ public class TalkerDAO {
 			});
 		 }
 		return talkerList;
+	 }
+	 
+	 public static String getTalkerConnection(String talkerId) {
+		 DBCollection talkerColl = getCollection(TALKERS_COLLECTION);
+		 DBObject query=new BasicDBObject("_id",new ObjectId(talkerId));
+		String connection=talkerColl.findOne(query, new BasicDBObject("connection",1)).get("connection").toString();
+		return connection;
+		
 	 }
 }

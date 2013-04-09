@@ -534,14 +534,13 @@ public class CommonUtil {
 		String htmlText = text;
 		if (thoughtOrAnswer.getFrom() != null && thoughtOrAnswer.getFrom().equalsIgnoreCase("twitter")) {
 			htmlText = CommonUtil.prepareTwitterThought(htmlText);
-			htmlText = htmlText.replace("\n", "<br/>");
 		}
-		else {
-			htmlText = htmlText.replace("\n", "<br/>");
-			
-			htmlText = CommonUtil.prepareThoughtOrAnswer(htmlText);
-		}
+		 
+		htmlText = htmlText.replace("\n", "<br/>");
+		htmlText = CommonUtil.prepareThoughtOrAnswer(htmlText);
+		
 		htmlText = htmlText.replace("<br>", "<br/>");
+		
 		return htmlText;
 	}
 	

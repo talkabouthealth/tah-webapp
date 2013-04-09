@@ -1,0 +1,83 @@
+<li id="${_activity.id}">
+	<div class="varified" style="width: 70px;">
+		#{if _activity.talker != null && _activity.talker.name != null}
+			#{talker/talkerImageLink size: 70, userName: _activity.talker.name /}
+		#{/if}
+		#{if _activity.talker.connectionVerified }
+			<h4>Verified</h4>
+		#{/if}
+		#{elseif _activity.talker.isProf() }
+			<h4 class="not">Not Verified</h4>
+		#{/elseif}
+	</div>
+	<div  class="q">
+		#{if _activity.convo}
+			<div class="jointextstop">
+				<h3><a href="@{ViewDispatcher.view(_activity.convo.mainURL)}">${_activity.convo.topic}</a></h3>
+			</div>
+		#{/if}
+		
+		<div class="disc">
+			#{if _activity.reply}
+				${_activity.reply.printThoughtOrAnswer(session.username)}
+			#{/if}
+			#{elseif _activity.answer}
+				${_activity.answer.printThoughtOrAnswer(session.username)}
+				*{
+					#{if _activity.convo.comments}
+						${_activity.convo.comments[0].printThoughtOrAnswer(session.username)}
+					#{/if}
+				}*
+			#{/elseif}
+		</div>
+		
+		#{if _activity.profileComment}
+			#{if _activity.otherTalker.equals(_activity.talker)}
+				#{publicprofile/profileCommentsTree commentsList: [_activity.profileComment], level: 1, showDelete: _talker?.isAdmin(), isFeed: true, parentList: _parentList /}
+			#{/if}
+			#{else}
+				<p class="by">
+					${_activity.toHTML(session.username != null).raw()}
+				</p>
+				#{publicprofile/profileCommentsTree commentsList: [_activity.profileComment], level: 1, showDelete: _talker?.isAdmin(), isFeed: true, parentList: _parentList /}
+			#{/else}
+		#{/if}
+		#{else}
+			<p class="by">
+				${_activity.toHTML(session.username != null).raw()}
+			</p>
+		#{/else}
+		
+		#{if _activity.convo}
+			<div class="joinztextlink">
+				#{if _activity.convo.comments != null}
+					<div class="ans">
+					<img alt="answers" src="/public/images/index/chat_icon.png">
+					#{if _activity.convo.comments.size() == 0}
+						<a href="@{ViewDispatcher.view(_activity.convo.mainURL)}#answers">Answer</a> | 
+					#{/if}
+					#{else}
+						<a href="@{ViewDispatcher.view(_activity.convo.mainURL)}#answers">${_activity.convo.comments.size()} 
+							Answer${_activity.convo.comments.pluralize()}</a> | 
+					#{/else}
+					</div>
+				#{/if}
+				<div class="ans">
+					<img alt="time" src="/public/images/index/timer_icon.png">
+					${_activity.time.since()}
+				</div>
+
+				#{if session.username}
+					&nbsp;|&nbsp;<a href="#" class="followConvoLink" rel="${_activity.convo.id}">
+						${_talker?.followingConvosList?.contains(_activity.convo.id) ? 'Unfollow' : 'Follow'}</a>
+				#{/if}
+				
+				#{if _activity.convo.numOfChatters != 0 }
+					&nbsp;|&nbsp;<a href="#" onclick="return openChat('${_activity.convo.tid}');">${_activity.convo.numOfChatters} user(s) chatting</a>
+				#{/if}
+			</div>
+		#{/if}
+	</div>
+	<div class="cb"></div>
+	<div class="joinborder"></div>
+</li>

@@ -458,7 +458,7 @@ public class CommentsDAO {
 		bd.append("-id",1);
 		bd.append("from", 1);
 		bd.append("text", 1);
-		
+		bd.append("time", 1);
 		List<DBObject> commentsList=new ArrayList<DBObject>();//List<DBObject> commentsList = commentsColl.find(query, bd).sort(new BasicDBObject("vote_score", -1)).toArray();
 		DBCursor commentCur=commentsColl.find(query, bd).sort(new BasicDBObject("vote_score", -1));
 		while(commentCur.hasNext()){
@@ -473,6 +473,7 @@ public class CommentsDAO {
 			
 			answer.setId(answerDBObject.get("_id").toString());
 			answer.setText(answerDBObject.get("text").toString());
+			answer.setTime((Date)answerDBObject.get("time"));
 			DBRef Ref=(DBRef)answerDBObject.get("from");
 			DBObject talkerRef=Ref.fetch();
 			

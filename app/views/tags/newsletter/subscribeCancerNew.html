@@ -47,31 +47,29 @@
 		showPopup("#emailpopup", 350);
 	}
 </script>
-<div class="topipsts" id="tahcancerTopic">
-	<div class="" id="cancerTopicBlock">
-		<div style="padding:5px;float: left;">
-			<span style="float: left; padding-top: 3px;color:#3888c1;font-style: italic;font-size: 14px;" class="mtrighttxt1">${csrType} newsletter</span>
-		</div>
+<div class="box" id="tahcancerTopic">
+	<h2 class="heading">#{if csrType == "All Cancers"}Cancer#{/if}#{else}${csrType}#{/else} newsletter</h2>
+	<div class="body" id="cancerTopicBlock">
 		<div style="float:left;padding:5px;">
 			<span class="blacktextgrey15">Sign up for our weekly ${csrType} newsletter for the latest news, best answers and featured experts.</span>
 		</div>
 	  		#{form @Newsletter.subscribeWorkShop(), id:'cancerTopic' }
 	  		<input id="newsletter" name="newsletter.newsLetterType" type="hidden" value="${csrType}"/>
 	  		<div style="clear: both;height: 15px;padding:0 5px"><span id="cancerTopicMessage" class="success" style="display:none;font-size: 12px;">Thanks for subscribing.</span></div>
-	  		<div style="float:left;padding:0px 5px 0 5px">
+	  		<div>
+	  		<div style="margin-right: 5px;float:left;">
 			#{if session.username }
-				<input name="newsletter.email" id="emailcancerTopic" style="background: none repeat scroll 0 0 #F0F0F0;border: 1px solid #606060;color: #010101;padding: 3px;" type="text" value="${talker.email}" size="17" />
+				<input name="newsletter.email" id="emailcancerTopic" class="search_field" style="width:145px;" type="text" value="${talker.email}" size="17" />
 			#{/if}
 			#{else}
-				<input name="newsletter.email" id="emailcancerTopic" style="background: none repeat scroll 0 0 #F0F0F0;border: 1px solid #606060;color: #010101;padding: 3px;" type="text" value="Email Address" size="17"/>
+				<input name="newsletter.email" id="emailcancerTopic" class="search_field" style="width:145px;" type="text" value="Email Address" size="17"/>
 			#{/else}
 			</div>
-			<div style="float:left;padding-top: 2px;">
-				<input class="newsignupBenefits" type="submit" value="" style="cursor: pointer;"/>
+			<div style="float:left;">
+				<input class="updatebtns" type="submit" value="" style="cursor: pointer;"/>
+			</div>
 			</div>
 		#{/form}
-		<br/>
-  		<div class="topicborder" style="margin-top: 20px;"></div>
   	</div>
 </div>
 #{/if}

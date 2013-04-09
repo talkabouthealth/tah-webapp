@@ -1,0 +1,36 @@
+<li id="${_convo.id}">
+   	<div class="varified"> 
+		#{if _convo.talker != null && _convo.talker.name != null}
+			#{talker/talkerImageLink size: 72, userName: _convo.talker.name /}
+		#{/if}
+		#{if _convo.talker.connectionVerified }
+			<h4>Verified</h4>
+		#{/if}
+		#{elseif _convo.talker.isProf() }
+			<h4 class="not">Not Verified</h4>
+		#{/elseif}
+       </div>
+	<div  class="q">
+		<h3 class="sub_heading">
+			<a href="@{ViewDispatcher.view(_convo.mainURL)}">${_convo.topic}</a>
+		</h3>
+		<p class="by">${_convo.getHtmlDetails(_talker != null).raw()}</p>
+		<div class="ans">
+			<img src="/public/images/index/chat_icon.png" alt="answers" />
+				<a href="@{ViewDispatcher.view(_convo.mainURL)}#answers">0 Answer</a>
+		</div>
+		<div class="ans">	
+			<img src="/public/images/index/timer_icon.png" alt="time" />
+			${_convo.creationDate.since()}
+		</div>
+		<div style="padding-top: 5px; clear: both;">
+			<a href="@{ViewDispatcher.view(_convo.mainURL)}#answers">Answer</a>
+			#{if session.username}
+				 |
+				<a href="#" class="followConvoLink" rel="${_convo.id}">
+					${_talker?.followingConvosList?.contains(_convo.id) ? 'Unfollow' : 'Follow'}</a>&nbsp;| 
+				<a href="#" onclick="restartConvo(${_convo.tid}, '${_convo.id}')">Re-start chat</a>
+			#{/if}
+		</div>
+	</div>
+</li>

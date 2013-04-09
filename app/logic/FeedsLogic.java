@@ -7,6 +7,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bson.types.ObjectId;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+
 import play.Logger;
 
 import dao.ActionDAO;
@@ -19,6 +25,7 @@ import models.actions.PreloadAction;
 import models.actions.Action.ActionType;
 import dao.ActionDAO;
 import dao.ConversationDAO;
+import dao.TalkerDAO;
 
 public class FeedsLogic {
 	
@@ -45,8 +52,8 @@ public class FeedsLogic {
 		return loadFeed(FeedType.TALKER, afterActionId, talker, null, true, TALKERFEEDS_PER_PAGE);
 	}
 	
-	public static Set<Action> getTopicFeed(TalkerBean talker,TopicBean topic, String afterActionId) {
-		return loadFeed(FeedType.TOPIC, afterActionId, talker, topic, true, FEEDS_PER_PAGE);
+	public static Set<Action> getTopicFeed(TalkerBean talker,TopicBean topic, String afterActionId,boolean isExp) {
+		return loadFeed(FeedType.TOPIC, afterActionId, talker, topic, isExp, FEEDS_PER_PAGE);
 	}
 	
 	public static Set<Action> getAllCancerFeed(String afterActionId, boolean loggedIn,TalkerBean talker) {
@@ -77,7 +84,7 @@ public class FeedsLogic {
 					feedActions = ActionDAO.loadTalkerFeed(talker.getId(), nextActionId);
 					break;
 				case TOPIC: 
-					feedActions = ActionDAO.loadLatestByTopic(talker,topic, nextActionId);
+					feedActions = ActionDAO.loadLatestByTopic(talker,topic, nextActionId,loggedIn);
 					break;
 				case ALL_CANCER: 
 					feedActions = ActionDAO.loadAllCancerFeed(nextActionId, loggedIn,talker);
@@ -104,14 +111,12 @@ public class FeedsLogic {
 						}
 						addedConvos.add(actionConvo);
 					}
-				}
-				else {
+				} else {
 					if (canAdd) {
 						PreloadAction preAction = (PreloadAction)action;
 						Action fullAction = preAction.getFullAction();
 						//we do not include thoughts of suspended users
-						if (!(fullAction.getType() == ActionType.PERSONAL_PROFILE_COMMENT
-								&& fullAction.getTalker().isSuspended())) {
+						if (!(fullAction.getType() == ActionType.PERSONAL_PROFILE_COMMENT && fullAction.getTalker().isSuspended())) {
 							feed.add(fullAction);
 						}
 					}
@@ -167,7 +172,7 @@ public class FeedsLogic {
 					feedActions = ActionDAO.loadTalkerFeed(talker.getId(), nextActionId);
 					break;
 				case TOPIC: 
-					feedActions = ActionDAO.loadLatestByTopic(talker,topic, nextActionId);
+					feedActions = ActionDAO.loadLatestByTopic(talker,topic, nextActionId,loggedIn);
 					break;
 				case ALL_CANCER: 
 					feedActions = ActionDAO.loadAllCancerFeed(nextActionId, loggedIn,talker);
@@ -175,7 +180,7 @@ public class FeedsLogic {
 			}
 			
 			canAdd = filter(feed, feedActions, 
-					addedConvos, afterActionId, canAdd, feedsPerPage,feedType);
+					addedConvos, afterActionId, canAdd, feedsPerPage,feedType,loggedIn);
 			
 			//exit if no more actions to preload or feed is big enough for this page
 			if (feedActions.size() < ACTIONS_PRELOAD || feed.size() >= feedsPerPage) {
@@ -203,31 +208,35 @@ public class FeedsLogic {
 	 */
 	private static boolean filter(Set<Action> feed, 
 			List<Action> feedActions, Set<ConversationBean> addedConvos, 
-			String afterActionId, boolean canAdd, int feedSize, FeedType feedType) {
+			String afterActionId, boolean canAdd, int feedSize, FeedType feedType,boolean loggedIn) {
 		boolean isAdd = true;
 		for (Action action : feedActions) {
 			ConversationBean actionConvo = action.getConvo();
 			//check repeated conversations
 			isAdd = true;
 			if (actionConvo != null) {
-				if (!addedConvos.contains(actionConvo)) {
+				
 					switch (feedType) {
+						case TOPIC:
+							TalkerBean talker = action.getTalker();
+							String con = TalkerDAO.getTalkerConnection(talker.getId());
+							if(loggedIn && TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(con))
+								 isAdd = true;
+							 else if(!loggedIn && !TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(con))
+								 isAdd = true;
+							 else
+								 isAdd = false;
+							 break;
 						case ALL_CANCER: 
-							//String str[]={"other_disease_categories","category","opened"};
-							String str[]={"opened"};
-							ConversationBean convo = ConversationDAO.getConvoCategories(actionConvo.getId(),str);
-							/*if(convo.getCategory() == null){
-								if (convo.getOtherDiseaseCategories() != null && convo.getOtherDiseaseCategories().length > 0)
-									isAdd = true;
+							if (!addedConvos.contains(actionConvo)) {
+								String str[]={"opened"};
+								ConversationBean convo = ConversationDAO.getConvoCategories(actionConvo.getId(),str);
+								
+								if(convo.isOpened() == true) 
+									isAdd = false;
 								else
 									isAdd = true;
-							}else{
-								if (convo.getCategory().equals(""))
-									isAdd = true;
-								else
-									isAdd = true;
-							}*/
-							if(convo.isOpened() == true) 
+							}else
 								isAdd = false;
 							break;
 					}
@@ -237,9 +246,8 @@ public class FeedsLogic {
 							feed.add(preAction.getFullAction());
 					}
 					addedConvos.add(actionConvo);
-				}
-			}
-			else {
+				
+			} else {
 				if (canAdd) {
 					PreloadAction preAction = (PreloadAction)action;
 					Action fullAction = preAction.getFullAction();
