@@ -370,7 +370,7 @@ public class Application extends Controller {
        		validation.required("Email",userEmail);
        		validation.email("Email", userEmail);
         	if (!validation.hasErrors()) {
-        		TalkerBean otherTalker = TalkerDAO.getByEmail(email);
+        		TalkerBean otherTalker = TalkerDAO.getByEmailNotSuspended(email);
     			if (otherTalker != null) {
     				//renderText("Error: "+Messages.get("email.exists"));
     				//render("Application/tosAccept.html",error,diseaseList,newsletter,email);
@@ -410,7 +410,7 @@ public class Application extends Controller {
 			validation.isTrue(nameNotExists).message("username.exists");
 		}
 		if (!validation.hasError("talker.email")) {
-			TalkerBean otherTalker = TalkerDAO.getByEmail(talker.getEmail());
+			TalkerBean otherTalker = TalkerDAO.getByEmailNotSuspended(talker.getEmail());
 			validation.isTrue(otherTalker == null).message("email.exists");
 		}
 		 

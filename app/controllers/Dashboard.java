@@ -117,26 +117,31 @@ public class Dashboard extends Controller {
 	}
 	public static void saveAccounts(List<String> selectedTalkerIds) {
 		List<TalkerBean> talkers = TalkerDAO.loadAllTalkers();
-		
+		TalkerBean newTalker = null;
 		selectedTalkerIds = (selectedTalkerIds == null ? Collections.EMPTY_LIST : selectedTalkerIds);
 		for (TalkerBean talker : talkers) {
 			if (selectedTalkerIds.contains(talker.getId())) {
 				talker.setSuspended(true);
-				try{
+				try {
 					deleteTalkerIndex(talker.getId());
+					TalkerDAO.updateTalker(talker);	
 				}catch (Exception e) {
 					Logger.error(e,"Dashboard.java : saveAccounts");
 				}
+			} else {
+				//Need to add code here
+				newTalker = TalkerDAO.getByEmailNotSuspended(talker.getEmail());
+				if(newTalker == null) {
+					talker.setSuspended(false);
+					try{
+						TalkerDAO.updateTalker(talker);	
+					}catch (Exception e) {
+						Logger.error(e,"Dashboard.java : saveAccounts");
+					}
+				} else {
+					System.out.println("There is a account with this email");
+				}
 			}
-			else {
-				talker.setSuspended(false);
-			}
-			try{
-				TalkerDAO.updateTalker(talker);	
-			}catch (Exception e) {
-				Logger.error(e,"Dashboard.java : saveAccounts");
-			}
-			
 		}
 		manageAccounts();
 	}

@@ -295,6 +295,26 @@ public class TalkerDAO {
 	}
 	
 	/**
+	 * Get by main or non-primary emails.
+	 */
+	public static TalkerBean getByEmailNotSuspended(String email) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		TalkerBean talker = null;
+		DBObject usernameQuery = BasicDBObjectBuilder.start()
+				.add("email", email)
+				.add("suspended",new BasicDBObject("$ne",true))
+				.get();
+		DBObject talkerDBObject = talkersColl.findOne(usernameQuery, new BasicDBObject("img", 0));
+		
+		if (talkerDBObject != null) {
+			talker = new TalkerBean();
+			talker.parseFromDB(talkerDBObject);
+			return talker;
+		}
+		return talker;
+	}
+	
+	/**
 	 * Get by verify code of main or non-primary emails
 	 */
 	public static TalkerBean getByVerifyCode(String verifyCode) {
