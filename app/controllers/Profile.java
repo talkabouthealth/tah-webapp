@@ -355,13 +355,10 @@ public class Profile extends Controller {
                 else if (session.get("image_upload").equalsIgnoreCase("error")) {
                     status = "error";
                     session.put("image_upload", "invalid");
-                }
-                else if (session.get("image_upload").equalsIgnoreCase("default")) {
+                } else if (session.get("image_upload").equalsIgnoreCase("default")) {
                     status = "default";
                     session.put("image_upload", "invalid");
-                    
-                }
-                else {
+                } else {
                     status = "invalid";
                 }
                 
@@ -433,9 +430,9 @@ public class Profile extends Controller {
                             }
                             session.put("image_upload", "complete");
                             renderText("image uploaded"); 
+                            image();
                         }
-                    }
-                    else {
+                    } else {
                         Logger.debug("Invalid File Type: " + fileName);
                         session.put("image_upload", "error");
                         renderText("invalid file type"); 
