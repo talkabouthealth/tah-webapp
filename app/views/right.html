@@ -10,9 +10,7 @@
 				showPopup("#shareFBDialog", 450);
 			}
 		});
-
 	</script>
-	
 	<div class="topipsts"> <br />
        	#{if session.username.equals(talker.userName) }
        		Welcome 
@@ -411,31 +409,6 @@
 	#{/if}
 	
 	
-	<!-- #{if recommendedConvos}
-	<div class="topipsts">
-   		<div class="mtrighttxt1">Recommended Questions</div>
-   		<div id="recommendedTopics">
-   			#{list items: recommendedConvos, as: 'convo'}
-   				<div id="${convo.id}" class="topbox1">
-			       <div class="topr" style="width: 100%;">
-			         <div class="trendingtext">
-			           	<a style="color:#0286BC;" href="@{ViewDispatcher.view(convo.mainURL)}">${convo.topic}</a>
-			         </div>
-			         <div id="convoFollowDiv${convo.id}" class="follow" style='margin-left:175px;'>
-			           <input type="submit" rel="${convo.id}" class="followers followConvoLink2" value=" " />
-			         </div>
-			         <div id="convoUnfollowDiv${convo.id}" class="follow" style="display: none; text-align: right;">
-			           Followed!
-			         </div>
-			       </div>
-			       <div class="cb"></div>
-			   </div>
-			#{/list} 
-   		</div>
-   		<div class="topicborder"></div>
-	</div>
-	#{/if}
-	-->
 	#{if pageType != null && pageType == "cancerPage"}
 		<!-- Advertisement Code Start -->
     	#{ad/advertisement add: '1' /}

@@ -67,7 +67,7 @@ public class SearchUtil {
 		//prepare query to search
 		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
 		Query searchQuery = prepareSearchQuery(query, new String[] {"uname","fname","lname","bio"}, analyzer, true,cancerType);
-		System.out.println(searchQuery.toString());
+		//System.out.println(searchQuery.toString());
 		TopDocs hits = is.search(searchQuery, 15);
 		ScoreDoc [] docs = hits.scoreDocs;
 		

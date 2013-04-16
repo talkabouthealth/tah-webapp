@@ -16,12 +16,16 @@
 <form name="verifyform" action="@{Dashboard.saveVerifyProfessionals()}" method="POST">
 	<table border="1" cellspacing="0">
 		<tr>
+			<th>#Id</th>
 			<th>Username</th>
 			<th>Connection</th>
 			<th>Verified?</th>
 		</tr>
+		#{set start:0 /}
 		#{list items: talkers, as: 'talker'}
+		#{set start: start + 1 /}
 			<tr>
+				<td>${start}</td>
 				<td>${talker.userName}</td>
 				<td>${talker.connection == null || talker.connection.isEmpty() ? '-' : talker.connection}</td>
 				<td>

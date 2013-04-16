@@ -7,12 +7,14 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageFilter;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,6 +30,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
+import javax.persistence.criteria.CriteriaBuilder.In;
 
 import logic.TalkerLogic;
 import logic.TopicLogic;
@@ -338,8 +341,9 @@ public class Profile extends Controller {
 	public static void image() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		String userName = talker.getUserName();
-                int num = new Random().nextInt();
-              	render(userName, num);
+		session.remove("image_upload");
+        int num = new Random().nextInt();
+        render(userName, num);
 	}
 	public static void imageStatus() {
             String status = "incomplete";
@@ -370,11 +374,44 @@ public class Profile extends Controller {
 	 * @param submitAction 'Remove current image' or 'Upload'
 	 */
 	public static void uploadImage(String submitAction, File imageFile) {
+		session.remove("image_upload");
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
 		if ("Remove current image".equals(submitAction)) {
 			TalkerDAO.updateTalkerImage(talker, null);
-		}
-		else if (imageFile != null) {
+		} else if ("crop".equals(submitAction)) {
+			int xPos = 0;
+			int yPos = 0;
+			int width = 100;
+			int height = 100;
+			try {
+				xPos =  Integer.parseInt(params.get("x"));
+				yPos = Integer.parseInt(params.get("y"));
+				width = Integer.parseInt(params.get("w"));
+				height = Integer.parseInt(params.get("h"));
+				if (imageFile != null) {
+					BufferedImage bsrc = ImageIO.read(imageFile);
+					ByteArrayOutputStream baos = ImageUtil.createThumbnail(xPos, yPos, width, height, bsrc);
+					TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
+				} else {
+					byte[] imageArray = TalkerDAO.loadTalkerImage(talker.getName(), Security.connected());
+					InputStream in = new ByteArrayInputStream(imageArray);
+				 	BufferedImage originalImage = ImageIO.read(in);
+				 	ByteArrayOutputStream baos = ImageUtil.createThumbnail(xPos, yPos, width, height, originalImage);
+				 	TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
+				}
+				System.out.println("[x,y] : [" + xPos + " , " + yPos + "]" );
+				System.out.println("[w,h] : [" + width + " , " + height + "]" );
+				session.put("image_upload", "complete");
+				//renderText("image uploaded");
+				image();
+			} catch(Exception e) {
+				e.printStackTrace();
+				session.put("image_upload", "error");
+				//renderText("error converting image"); 
+				image();
+			}
+		} else if (imageFile != null) {
                     String fileName = imageFile.getName();
                     String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
                     if (fileExt.equalsIgnoreCase("png") || fileExt.equalsIgnoreCase("jpg") || fileExt.equalsIgnoreCase("jpeg") || fileExt.equalsIgnoreCase("gif")) {
@@ -385,9 +422,9 @@ public class Profile extends Controller {
                         } else {
                             try {
                                 BufferedImage bsrc = ImageIO.read(imageFile);
-                                ByteArrayOutputStream baos = ImageUtil.createThumbnail(bsrc);
+                                //ByteArrayOutputStream baos = ImageUtil.createThumbnail(bsrc);
+                                ByteArrayOutputStream baos = ImageUtil.getImageArray(bsrc);
                                 TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
-
                             } catch (IOException e) {
                                     TalkerDAO.updateTalkerImage(talker, null);
                                     Logger.error(e, "Profile.java : uploadImage");
