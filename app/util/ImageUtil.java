@@ -13,6 +13,30 @@ import play.Logger;
 
 public class ImageUtil {
 	
+	
+	/**
+	 * 
+	 */
+	public static ByteArrayOutputStream createCropedThumbnail(int xPos, int yPos, int width, int height, BufferedImage bsrc) throws IOException {
+		
+		//width = width - xPos;
+		//height = height - yPos;
+		BufferedImage bdest = ImageUtil.getScaledInstance(bsrc, bsrc.getWidth(), bsrc.getHeight(), 
+				RenderingHints.VALUE_INTERPOLATION_BICUBIC, true);
+	
+		bdest = bdest.getSubimage(xPos, yPos, width, height);
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    	ImageIO.write(bdest, "GIF", baos);
+    	return baos;
+	}
+	
+	public static ByteArrayOutputStream getImageArray(BufferedImage bsrc) throws IOException {
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    	ImageIO.write(bsrc, "GIF", baos);
+    	return baos;
+	}
 	/**
 	 * Creates 100x100 thumbnail from given image
 	 * @param bsrc

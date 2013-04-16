@@ -391,13 +391,13 @@ public class Profile extends Controller {
 				height = Integer.parseInt(params.get("h"));
 				if (imageFile != null) {
 					BufferedImage bsrc = ImageIO.read(imageFile);
-					ByteArrayOutputStream baos = ImageUtil.createThumbnail(xPos, yPos, width, height, bsrc);
+					ByteArrayOutputStream baos = ImageUtil.createCropedThumbnail(xPos, yPos, width, height, bsrc);
 					TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
 				} else {
 					byte[] imageArray = TalkerDAO.loadTalkerImage(talker.getName(), Security.connected());
 					InputStream in = new ByteArrayInputStream(imageArray);
 				 	BufferedImage originalImage = ImageIO.read(in);
-				 	ByteArrayOutputStream baos = ImageUtil.createThumbnail(xPos, yPos, width, height, originalImage);
+				 	ByteArrayOutputStream baos = ImageUtil.createCropedThumbnail(xPos, yPos, width, height, originalImage);
 				 	TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
 				}
 				System.out.println("[x,y] : [" + xPos + " , " + yPos + "]" );
