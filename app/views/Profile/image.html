@@ -134,6 +134,7 @@
                     			jcropObj = this;	
                     		}
                     	);
+                        jcropObj.setSelect(getDefaults());
                     });
                }
             }, "text");
@@ -162,7 +163,17 @@
         			jcropObj = this;	
         		}
         	);
+         jcropObj.setSelect(getDefaults());
         });
+        
+        function getDefaults(){
+        	return [
+        			Math.round($("#x").val()),
+        			Math.round($("#y").val()),
+        			Math.round($("#w").val()),
+        			Math.round($("#h").val())
+        		];
+        }
         function updateCoords(c) {
         	jQuery('#x').val(c.x);
         	jQuery('#y').val(c.y);
@@ -182,53 +193,33 @@
 </head>
 <body>
 	#{include 'header.html' /}
-
 	<div id="innerbanner"></div>
-	<form id="uploadimageform" name="uploadimageform" enctype="multipart/form-data"
-              action="@{Profile.uploadImage()}" method="POST">
-	<input type="hidden" id="x" name="x" />
-	<input type="hidden" id="y" name="y" />
-	<input type="hidden" id="w" name="w" />
-	<input type="hidden" id="h" name="h" />
+	<form id="uploadimageform" name="uploadimageform" enctype="multipart/form-data" action="@{Profile.uploadImage()}" method="POST">
+		<input type="hidden" id="x" name="x" value="${xPos}"/>
+		<input type="hidden" id="y" name="y" value="${yPos}"/>
+		<input type="hidden" id="w" name="w" value="${width}"/>
+		<input type="hidden" id="h" name="h" value="${height}"/>
 	
-	<div id="innermain">
-		<div class="blacktext2" id="innerheading">Upload Picture</div>
-		<div id="innermiddlearea">
-			<div style="border:1px solid #999;float:left;width:100%;padding:10px;border-radius:10px;">
-<!-- 				<div class="notifactionboxtop"></div> -->
-<!-- 				<div> -->
-					<div style="float:left;padding-right:20px;">
-                                    <img id="loading" src="/public/images/index/tah_loading.gif" style="padding: 34px; float: left; margin: 10px; display:none;" />
-                                    <img id="userpicture" src="@{Image.show(userName)}?${num}" /> 
+			<div id="innermain">
+				<div class="blacktext2" id="innerheading">Upload Picture</div>
+				<div id="innermiddlearea">
+					<div style="border:1px solid #999;float:left;width:100%;padding:10px;border-radius:10px;">
+						<div style="float:left;padding-right:20px;">
+                             <img id="loading" src="/public/images/index/tah_loading.gif" style="padding: 34px; float: left; margin: 10px; display:none;" />
+                             <img id="userpicture" src="@{Image.showForEdit(userName)}?${num}" /> 
                          </div>
                          <div style="float:left;">           
-                                    <h3>Actions</h3>
-                                   
-                                    <br/><br/>
-                                    
-                                    <input type="file" id="imageFile" name="imageFile" onchange="return ajaxFileUpload('Upload');" />
-                                    <br/><br/>
-                                    
-                                    <input type="button" value="Crop current image" onclick="return docrop('crop');" title="Crop current image" />
-<!--                                     <a href="javascript:docrop('crop')">Crop</a> -->
-                                    <br/><br/>
-                                    
-                                    <input type="button" value="Remove current image" onclick="return ajaxFileUpload('Remove current image');" title="Remove current image" />
-                                    
-                                     
-                                    
-                                    <input type="hidden" id="submitAction" name="submitAction" />
+                              <h3>Actions</h3>
+                              <br/><br/>
+                              <input type="file" id="imageFile" name="imageFile" onchange="return ajaxFileUpload('Upload');" />
+                              <br/><br/>
+                              <input type="button" value="Crop current image" onclick="return docrop('crop');" title="Crop current image" />
+                              <br/><br/>
+                              <input type="button" value="Remove current image" onclick="return ajaxFileUpload('Remove current image');" title="Remove current image" />
+                              <input type="hidden" id="submitAction" name="submitAction" />
                         </div>
-<!-- 				</div> -->
-<!-- 				<div class="notifactionboxbot"></div> -->
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>
-           
 	</form>
-        
-        <div id="image_msg">
-            
-        </div>
-        
-       
+<div id="image_msg"></div>

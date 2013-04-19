@@ -343,7 +343,18 @@ public class Profile extends Controller {
 		String userName = talker.getUserName();
 		session.remove("image_upload");
         int num = new Random().nextInt();
-        render(userName, num);
+        String [] coords = TalkerDAO.getTalkerCoords(talker.getUserName());
+        String xPos = "0";
+		String yPos =  "0";
+		String width =  "100";
+		String height =  "100";
+        if(coords != null && coords.length == 4) {
+        	xPos = coords[0];
+			yPos =  coords[1];
+			width =  coords[2];
+			height =  coords[3];
+        }
+        render(userName, num, xPos, yPos, width, height);
 	}
 	public static void imageStatus() {
             String status = "incomplete";
@@ -388,15 +399,19 @@ public class Profile extends Controller {
 				height = Integer.parseInt(params.get("h"));
 				if (imageFile != null) {
 					BufferedImage bsrc = ImageIO.read(imageFile);
-					ByteArrayOutputStream baos = ImageUtil.createCropedThumbnail(xPos, yPos, width, height, bsrc);
+					//ByteArrayOutputStream baos = ImageUtil.updateTalkerImage(xPos, yPos, width, height, bsrc);
+					ByteArrayOutputStream baos = ImageUtil.getImageArray(bsrc);
 					TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
+					String [] imgcrop = {xPos + "",yPos + "",width + "",height + ""};
+				 	TalkerDAO.updateTalkerImageCoords(talker, imgcrop);
 				} else {
-					byte[] imageArray = TalkerDAO.loadTalkerImage(talker.getName(), Security.connected());
-					InputStream in = new ByteArrayInputStream(imageArray);
-				 	BufferedImage originalImage = ImageIO.read(in);
-				 	ByteArrayOutputStream baos = ImageUtil.createCropedThumbnail(xPos, yPos, width, height, originalImage);
-				 	TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
-				}
+					//byte[] imageArray = TalkerDAO.loadTalkerImage(talker.getName(), Security.connected());
+					//InputStream in = new ByteArrayInputStream(imageArray);
+				 	//BufferedImage originalImage = ImageIO.read(in);
+				 	//ByteArrayOutputStream baos = ImageUtil.createCropedThumbnail(xPos, yPos, width, height, originalImage);
+				 	String [] imgcrop = {xPos + "",yPos + "",width + "",height + ""};
+				 	TalkerDAO.updateTalkerImageCoords(talker, imgcrop);
+				} 
 				System.out.println("[x,y] : [" + xPos + " , " + yPos + "]" );
 				System.out.println("[w,h] : [" + width + " , " + height + "]" );
 				session.put("image_upload", "complete");

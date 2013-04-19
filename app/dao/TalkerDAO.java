@@ -9,6 +9,7 @@ import static util.DBUtil.setToDB;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -204,7 +205,42 @@ public class TalkerDAO {
 		talkersColl.update(talkerId, new BasicDBObject("$set", talkerObject));
 	}
 	
+	public static void updateTalkerImageCoords(TalkerBean talker, String[] imageCoords) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		
+		DBObject talkerObject = BasicDBObjectBuilder.start()
+			.add("imgcoords", imageCoords)
+			.get();
+		
+		DBObject talkerId = new BasicDBObject("_id", new ObjectId(talker.getId()));
+		//"$set" is used for updating fields
+		talkersColl.update(talkerId, new BasicDBObject("$set", talkerObject));
+	}
 	
+	public static String [] getTalkerCoords(String userName){
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		
+		DBObject usernameQuery = new BasicDBObject("uname", userName);
+		DBObject anonymousQuery = new BasicDBObject("anon_name", userName);
+		DBObject query = new BasicDBObject("$or", Arrays.asList(usernameQuery, anonymousQuery));
+		
+		DBObject fields = BasicDBObjectBuilder.start()
+			.add("imgcoords", 1)
+			.get();
+		DBObject talkerDBObject = talkersColl.findOne(query, fields);
+		
+		if (talkerDBObject == null) {
+			return null;
+		} else {
+			Collection<String> otherCategories = (Collection<String>)talkerDBObject.get("imgcoords");
+			if (otherCategories != null) {
+				return otherCategories.toArray(new String[]{});
+			} else {
+				return null;
+			}
+		}
+	}
+
 	// --------------------- Query ---------------------------
 	
 	public static TalkerBean getByUserName(String userName) {
