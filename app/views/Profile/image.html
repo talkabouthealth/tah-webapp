@@ -1,5 +1,4 @@
 #{ extends 'main.html' /}
-
 	<style>
 		#userpicture {
 			float: left;
@@ -58,6 +57,8 @@
 .jcrop-dark .jcrop-handle{-moz-border-radius:3px;-webkit-border-radius:3px;background-color:#FFF;border-color:#000;border-radius:3px;}
 .solid-line .jcrop-vline,.solid-line .jcrop-hline{background:#FFF;}
 .jcrop-holder img,img.jcrop-preview{max-width:none;}
+      /*File upload css changes*/
+      #imgwrapper{display:none;}
                 
 	</style>
 	<script type="text/javascript" src="/public/plugins/jquery.Jcrop.js" ></script>
@@ -113,19 +114,19 @@
                 	);
                 } else {
                     var msg;
-                    if (data == 'error') {
-                        $("#image_msg").html('<p>Error uploading file. Please make sure size of file is under 50KB and type of file is jpg, png, gif</p>');
-                    } else {
-                        $('#image_msg').html('<p>Picture uploaded successfully. It may take a couple of minutes to appear on all of the pages.</p>');
-                    }
-                    var imageurl = '@{Image.show(userName)}';
+                    //if (data == 'error') {
+                    //    $("#image_msg").html('<p>Error uploading file. Please make sure size of file is under 50KB and type of file is jpg, png, gif</p>');
+                    //} else {
+                    //    $('#image_msg').html('<p>Picture uploaded successfully. It may take a couple of minutes to appear on all of the pages.</p>');
+                    //}
+                    var imageurl = '@{Image.showForEdit(userName)}';
                     imageurl+= '?' + new Date().getTime();    
                     $('#userpicture').attr("src", imageurl);
                     $('#userpicture').load(function(){
                         $("#loading").hide();
                         $('#userpicture').show();
                         $('iframe').remove();
-                        $('#image_msg').dialog("open");
+                       // $('#image_msg').dialog("open");
                         $('#userpicture').unbind();
                         $('#userpicture').Jcrop({
                     		aspectRatio: 1,
@@ -141,6 +142,11 @@
         };
       
         $(window).load(function(){
+        	
+        	$("#browse").click(function(){
+        		$("#imageFile").click();
+        	});
+        	
             $("#image_msg").dialog({
             autoOpen: false, 
             modal: true, 
@@ -155,7 +161,6 @@
                     }
                 }
         ] });
-            
          $('#userpicture').Jcrop({
         		aspectRatio: 1,
         		onSelect: updateCoords},
@@ -189,7 +194,7 @@
 	        	cropFile(operation);
         	}
         }
-	</script>	
+	</script>
 </head>
 <body>
 	#{include 'header.html' /}
@@ -199,23 +204,30 @@
 		<input type="hidden" id="y" name="y" value="${yPos}"/>
 		<input type="hidden" id="w" name="w" value="${width}"/>
 		<input type="hidden" id="h" name="h" value="${height}"/>
-	
 			<div id="innermain">
 				<div class="blacktext2" id="innerheading">Upload Picture</div>
 				<div id="innermiddlearea">
 					<div style="border:1px solid #999;float:left;width:100%;padding:10px;border-radius:10px;">
 						<div style="float:left;padding-right:20px;">
                              <img id="loading" src="/public/images/index/tah_loading.gif" style="padding: 34px; float: left; margin: 10px; display:none;" />
-                             <img id="userpicture" src="@{Image.showForEdit(userName)}?${num}" /> 
+                             <img id="userpicture" src="@{Image.showForEdit(userName)}?${num}" />
+                             <br/> 
+                             <span style="padding-top: 10px; width: 190px; float: left;">This version of your public profile picture will appear around the site.</span>
                          </div>
                          <div style="float:left;">           
                               <h3>Actions</h3>
                               <br/><br/>
-                              <input type="file" id="imageFile" name="imageFile" onchange="return ajaxFileUpload('Upload');" />
+							    <a href="#" id="browse">Upload image</a>
+							    <div id="imgwrapper">
+							        <input id="imageFile" name="imageFile" size="1" type="file" title="Upload image" onchange="return ajaxFileUpload('Upload');"/>
+							    </div>
+                              
+<!--                               <input type="file" id="imageFile" name="imageFile" onchange="return ajaxFileUpload('Upload');" title="Upload image" /> -->
                               <br/><br/>
-                              <input type="button" value="Crop current image" onclick="return docrop('crop');" title="Crop current image" />
-                              <br/><br/>
+                              
                               <input type="button" value="Remove current image" onclick="return ajaxFileUpload('Remove current image');" title="Remove current image" />
+                               <br/><br/>
+                              <input type="button" value="Save" onclick="return docrop('crop');" title="Save" />
                               <input type="hidden" id="submitAction" name="submitAction" />
                         </div>
 					</div>
