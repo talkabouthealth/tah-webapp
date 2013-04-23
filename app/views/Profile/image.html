@@ -96,14 +96,15 @@
             var listAction = #{jsAction @Profile.imageStatus() /}
             $.get(listAction(), function(data){
                 if (data == 'incomplete') {
-                    if (new Date().getTime() - time > 5000) {
+                	/*
+                    if (new Date().getTime() - time > 10000) {
                        $("#image_msg").html("Error Uploading File. Please try again."); 
                        $("#loading").hide();
                        $('#userpicture').show();
                        $('iframe').remove();
                        $('#image_msg').dialog("open");
                     } else {
-                        setTimeout('checkResponse(' + time + ')', 1000);
+                        
                     }
                     $('#userpicture').Jcrop({
                 		aspectRatio: 1,
@@ -112,11 +113,14 @@
                 			jcropObj = this;	
                 		}
                 	);
+                    */
+                	setTimeout('checkResponse(' + time + ')', 1500);
                 } else {
                     var msg;
-                    //if (data == 'error') {
-                    //    $("#image_msg").html('<p>Error uploading file. Please make sure size of file is under 50KB and type of file is jpg, png, gif</p>');
-                    //} else {
+                    if (data == 'error') {
+                        $("#image_msg").html('<p>Error uploading file. Please make sure size of file is under 50KB and type of file is jpg, png, gif</p>');
+                        $('#image_msg').dialog("open");
+                    }// else {
                     //    $('#image_msg').html('<p>Picture uploaded successfully. It may take a couple of minutes to appear on all of the pages.</p>');
                     //}
                     var imageurl = '@{Image.showForEdit(userName)}';
@@ -126,7 +130,6 @@
                         $("#loading").hide();
                         $('#userpicture').show();
                         $('iframe').remove();
-                       // $('#image_msg').dialog("open");
                         $('#userpicture').unbind();
                         $('#userpicture').Jcrop({
                     		aspectRatio: 1,

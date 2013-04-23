@@ -387,6 +387,7 @@ public class Profile extends Controller {
 		
 		if ("Remove current image".equals(submitAction)) {
 			TalkerDAO.updateTalkerImage(talker, null);
+			session.put("image_upload", "complete");
 		} else if ("crop".equals(submitAction)) {
 			int xPos = 0;
 			int yPos = 0;
@@ -444,8 +445,8 @@ public class Profile extends Controller {
                                     renderText("error converting image"); 
                             }
                             session.put("image_upload", "complete");
-                            renderText("image uploaded"); 
-                            image();
+                            //renderText("image uploaded"); 
+                            //image();
                         }
                     } else {
                         Logger.debug("Invalid File Type: " + fileName);
