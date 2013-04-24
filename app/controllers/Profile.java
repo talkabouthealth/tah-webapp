@@ -359,11 +359,10 @@ public class Profile extends Controller {
 	public static void imageStatus() {
             String status = "incomplete";
             if (session.contains("image_upload")) {
-                if (session.get("image_upload").equalsIgnoreCase("complete")){    
+                if (session.get("image_upload").equalsIgnoreCase("complete")){
                     status = "complete";
                     session.put("image_upload", "invalid");
-                }
-                else if (session.get("image_upload").equalsIgnoreCase("error")) {
+                } else if (session.get("image_upload").equalsIgnoreCase("error")) {
                     status = "error";
                     session.put("image_upload", "invalid");
                 } else if (session.get("image_upload").equalsIgnoreCase("default")) {
@@ -372,10 +371,8 @@ public class Profile extends Controller {
                 } else {
                     status = "invalid";
                 }
-                
             }
             renderText(status);
-            
         }
 	/**
 	 * Delete current or upload new image
@@ -387,7 +384,9 @@ public class Profile extends Controller {
 		
 		if ("Remove current image".equals(submitAction)) {
 			TalkerDAO.updateTalkerImage(talker, null);
-			session.put("image_upload", "complete");
+			session.put("image_upload", "default");
+			String [] imgcrop = {"0","0","100","100"};
+		 	TalkerDAO.updateTalkerImageCoords(talker, imgcrop);
 		} else if ("crop".equals(submitAction)) {
 			int xPos = 0;
 			int yPos = 0;
@@ -413,15 +412,15 @@ public class Profile extends Controller {
 				 	String [] imgcrop = {xPos + "",yPos + "",width + "",height + ""};
 				 	TalkerDAO.updateTalkerImageCoords(talker, imgcrop);
 				} 
-				System.out.println("[x,y] : [" + xPos + " , " + yPos + "]" );
-				System.out.println("[w,h] : [" + width + " , " + height + "]" );
+				//System.out.println("[x,y] : [" + xPos + " , " + yPos + "]" );
+				//System.out.println("[w,h] : [" + width + " , " + height + "]" );
 				session.put("image_upload", "complete");
 				//renderText("image uploaded");
-				image();
+				edit(true);
 			} catch(Exception e) {
 				e.printStackTrace();
 				session.put("image_upload", "error");
-				//renderText("error converting image"); 
+				renderText("error converting image"); 
 				image();
 			}
 		} else if (imageFile != null) {
@@ -445,7 +444,7 @@ public class Profile extends Controller {
                                     renderText("error converting image"); 
                             }
                             session.put("image_upload", "complete");
-                            //renderText("image uploaded"); 
+                            renderText("image uploaded"); 
                             //image();
                         }
                     } else {

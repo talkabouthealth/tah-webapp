@@ -115,6 +115,24 @@
                 	);
                     */
                 	setTimeout('checkResponse(' + time + ')', 1500);
+                } else if(data == 'default') {
+                    var imageurl = '@{Image.showForEdit(userName)}';
+                    imageurl+= '?' + new Date().getTime();    
+                    $('#userpicture').attr("src", imageurl);
+                    $('#userpicture').load(function(){
+                        $("#loading").hide();
+                        $('#userpicture').show();
+                        $('iframe').remove();
+                        $('#userpicture').unbind();
+                        $('#userpicture').Jcrop({
+                    		aspectRatio: 1,
+                    		onSelect: updateCoords},
+                    		function(){
+                    			jcropObj = this;
+                    		}
+                    	);
+                        jcropObj.setSelect([0,0,70,70]);
+                    });
                 } else {
                     var msg;
                     if (data == 'error') {
