@@ -7,12 +7,14 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageFilter;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,6 +30,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
+import javax.persistence.criteria.CriteriaBuilder.In;
 
 import logic.TalkerLogic;
 import logic.TopicLogic;
@@ -338,43 +341,89 @@ public class Profile extends Controller {
 	public static void image() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		String userName = talker.getUserName();
-                int num = new Random().nextInt();
-              	render(userName, num);
+		session.remove("image_upload");
+        int num = new Random().nextInt();
+        String [] coords = TalkerDAO.getTalkerCoords(talker.getUserName());
+        String xPos = "0";
+		String yPos =  "0";
+		String width =  "100";
+		String height =  "100";
+        if(coords != null && coords.length == 4) {
+        	xPos = coords[0];
+			yPos =  coords[1];
+			width =  coords[2];
+			height =  coords[3];
+        }
+        render(userName, num, xPos, yPos, width, height);
 	}
 	public static void imageStatus() {
             String status = "incomplete";
             if (session.contains("image_upload")) {
-                if (session.get("image_upload").equalsIgnoreCase("complete")){    
+                if (session.get("image_upload").equalsIgnoreCase("complete")){
                     status = "complete";
                     session.put("image_upload", "invalid");
-                }
-                else if (session.get("image_upload").equalsIgnoreCase("error")) {
+                } else if (session.get("image_upload").equalsIgnoreCase("error")) {
                     status = "error";
                     session.put("image_upload", "invalid");
-                }
-                else if (session.get("image_upload").equalsIgnoreCase("default")) {
+                } else if (session.get("image_upload").equalsIgnoreCase("default")) {
                     status = "default";
                     session.put("image_upload", "invalid");
-                    
-                }
-                else {
+                } else {
                     status = "invalid";
                 }
-                
             }
             renderText(status);
-            
         }
 	/**
 	 * Delete current or upload new image
 	 * @param submitAction 'Remove current image' or 'Upload'
 	 */
 	public static void uploadImage(String submitAction, File imageFile) {
+		session.remove("image_upload");
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
 		if ("Remove current image".equals(submitAction)) {
 			TalkerDAO.updateTalkerImage(talker, null);
-		}
-		else if (imageFile != null) {
+			session.put("image_upload", "default");
+			String [] imgcrop = {"0","0","100","100"};
+		 	TalkerDAO.updateTalkerImageCoords(talker, imgcrop);
+		} else if ("crop".equals(submitAction)) {
+			int xPos = 0;
+			int yPos = 0;
+			int width = 100;
+			int height = 100;
+			try {
+				xPos =  Integer.parseInt(params.get("x"));
+				yPos = Integer.parseInt(params.get("y"));
+				width = Integer.parseInt(params.get("w"));
+				height = Integer.parseInt(params.get("h"));
+				if (imageFile != null) {
+					BufferedImage bsrc = ImageIO.read(imageFile);
+					//ByteArrayOutputStream baos = ImageUtil.updateTalkerImage(xPos, yPos, width, height, bsrc);
+					ByteArrayOutputStream baos = ImageUtil.getImageArray(bsrc);
+					TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
+					String [] imgcrop = {xPos + "",yPos + "",width + "",height + ""};
+				 	TalkerDAO.updateTalkerImageCoords(talker, imgcrop);
+				} else {
+					//byte[] imageArray = TalkerDAO.loadTalkerImage(talker.getName(), Security.connected());
+					//InputStream in = new ByteArrayInputStream(imageArray);
+				 	//BufferedImage originalImage = ImageIO.read(in);
+				 	//ByteArrayOutputStream baos = ImageUtil.createCropedThumbnail(xPos, yPos, width, height, originalImage);
+				 	String [] imgcrop = {xPos + "",yPos + "",width + "",height + ""};
+				 	TalkerDAO.updateTalkerImageCoords(talker, imgcrop);
+				} 
+				//System.out.println("[x,y] : [" + xPos + " , " + yPos + "]" );
+				//System.out.println("[w,h] : [" + width + " , " + height + "]" );
+				session.put("image_upload", "complete");
+				//renderText("image uploaded");
+				edit(true);
+			} catch(Exception e) {
+				e.printStackTrace();
+				session.put("image_upload", "error");
+				renderText("error converting image"); 
+				image();
+			}
+		} else if (imageFile != null) {
                     String fileName = imageFile.getName();
                     String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
                     if (fileExt.equalsIgnoreCase("png") || fileExt.equalsIgnoreCase("jpg") || fileExt.equalsIgnoreCase("jpeg") || fileExt.equalsIgnoreCase("gif")) {
@@ -385,9 +434,9 @@ public class Profile extends Controller {
                         } else {
                             try {
                                 BufferedImage bsrc = ImageIO.read(imageFile);
-                                ByteArrayOutputStream baos = ImageUtil.createThumbnail(bsrc);
+                                //ByteArrayOutputStream baos = ImageUtil.createThumbnail(bsrc);
+                                ByteArrayOutputStream baos = ImageUtil.getImageArray(bsrc);
                                 TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
-
                             } catch (IOException e) {
                                     TalkerDAO.updateTalkerImage(talker, null);
                                     Logger.error(e, "Profile.java : uploadImage");
@@ -396,9 +445,9 @@ public class Profile extends Controller {
                             }
                             session.put("image_upload", "complete");
                             renderText("image uploaded"); 
+                            //image();
                         }
-                    }
-                    else {
+                    } else {
                         Logger.debug("Invalid File Type: " + fileName);
                         session.put("image_upload", "error");
                         renderText("invalid file type"); 

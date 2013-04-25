@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 
 import play.Play;
 import play.mvc.Controller;
+import util.ImageUtil;
 import dao.TalkerDAO;
 
 public class Image extends Controller {
@@ -28,6 +29,40 @@ public class Image extends Controller {
 	 * Renders image of given talker (or returns default image)
 	 */
 	public static void show(String userName) {
+		byte[] imageArray = TalkerDAO.loadTalkerImage(userName, Security.connected());
+		
+		
+		
+		response.setHeader("Content-Type", "image/gif");
+		response.setHeader("Cache-Control", "no-cache");
+		if (imageArray == null) {
+			//render default
+			renderBinary(DEFAULT_IMAGE_FILE);
+		} else {
+			try{
+			String [] coords = TalkerDAO.getTalkerCoords(userName);
+	        int xPos = 0;
+			int yPos =  0;
+			int width =  100;
+			int height =  100;
+	        if(coords != null && coords.length == 4) {
+	        	xPos = Integer.parseInt(coords[0]);
+				yPos =  Integer.parseInt(coords[1]);
+				width =  Integer.parseInt(coords[2]);
+				height =  Integer.parseInt(coords[3]);
+	        }
+			InputStream in = new ByteArrayInputStream(imageArray);
+		 	BufferedImage originalImage = ImageIO.read(in);
+	        ByteArrayOutputStream baos = ImageUtil.createCropedThumbnail(xPos, yPos, width, height, originalImage);
+	        renderBinary(new ByteArrayInputStream(baos.toByteArray()));
+			}catch ( Exception e ){
+				e.printStackTrace();
+			}
+			
+		}
+	}
+
+	public static void showForEdit(String userName) {
 		byte[] imageArray = TalkerDAO.loadTalkerImage(userName, Security.connected());
 		
 		response.setHeader("Content-Type", "image/gif");

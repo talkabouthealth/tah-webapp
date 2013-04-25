@@ -57,7 +57,9 @@
 <div class="box" id="tahconvoTopic">
 <h2 class="heading">
 	<a href="@{Explore.newsletter()}">
-	<img src="/public/images/index/emailIcon.png" />#{if session.get("cancerType")}${session.get("cancerType")}#{/if}#{else}${convoTopicName}#{/else} Updates
+	<img src="/public/images/index/emailIcon.png" />
+	#{if convoTopicName == "All Cancers"}Cancer#{/if}#{else}${convoTopicName}#{/else} Updates
+	*{ #{if session.get("cancerType")}${session.get("cancerType")}#{/if}#{else}${convoTopicName}#{/else} Updates }*
 	</a>
 	</h2>
 		

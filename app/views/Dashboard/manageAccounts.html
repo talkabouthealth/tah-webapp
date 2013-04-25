@@ -16,12 +16,16 @@
 <form name="manageaccountsform" action="@{Dashboard.saveAccounts()}" method="POST">
 	<table border="1" cellspacing="0">
 		<tr>
+			<th>#Id</th>
 			<th>Username</th>
 			<th>Suspended?</th>
 		</tr>
+		#{set start:0 /}
 		#{list items: talkers, as: 'talker'}
 			#{ifnot "admin".equals(talker.userName)}
+			#{set start: start + 1 /}
 				<tr>
+					<td>${start}</td>
 					<td>${talker.userName}</td>
 					<td>
 						<input type="checkbox" name="selectedTalkerIds" value="${talker.id}"
