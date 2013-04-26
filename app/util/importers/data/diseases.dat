@@ -149,7 +149,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Skin Cancer;;;;;d12;false
+Disease;BCC (Basal Cell Carcinoma);;;;;d12;true
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -445,7 +445,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Barretts Esophagus;;;;;d46;insert
+Disease;Barretts Esophagus;;;;;d46;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -453,7 +453,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Inflammatory Breast Cancer;;;;;d47;insert
+Disease;Inflammatory Breast Cancer;;;;;d47;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -461,7 +461,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;MPN (Myeloproliferative Neoplasm);;;;;d48;insert
+Disease;MPN (Myeloproliferative Neoplasm);;;;;d48;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -469,7 +469,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;MDS (Myelodysplastic Syndrome);;;;;d49;insert
+Disease;MDS (Myelodysplastic Syndrome);;;;;d49;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -477,7 +477,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;CML (Chronic Myeloid Leukemia);;;;;d50;insert
+Disease;CML (Chronic Myeloid Leukemia);;;;;d50;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -485,7 +485,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;AML (Acute Myeloid Leukemia);;;;;d51;insert
+Disease;AML (Acute Myeloid Leukemia);;;;;d51;false
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -493,7 +493,39 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;ALL (Acute Lymphocytic Leukemia);;;;;d52;insert
+Disease;ALL (Acute Lymphocytic Leukemia);;;;;d52;false
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Actinic Keratosis;;;;;d53;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Carcinoid Tumors;;;;;d54;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Neuroendocrine Tumors;;;;;d55;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;SCC (Squamous Cell Carcinoma);;;;;d56;insert
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
