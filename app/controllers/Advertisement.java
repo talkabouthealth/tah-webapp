@@ -33,7 +33,7 @@ public class Advertisement extends Controller {
 		} else {
 			AdvertisementDAO.populateStats(addId, "click",  true);
 		}
-		redirect("http://www.fifthseasonfinancial.com/");
+		redirect("https://attendee.gotowebinar.com/register/6386058441856173568");
 	}
 	
 	public static void logReport(String fromDate,String toDate,boolean group) {

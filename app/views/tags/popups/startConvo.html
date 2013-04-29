@@ -12,7 +12,7 @@
                 <b>Your question to ${_target.name}:</b>
                 #{/if}
                 #{else}
-            	<b>Question:</b>
+            	<b>1) Question:</b>
             	#{/else}
             </div>
             <!-- REFACTOR REMOVE LIVE CHAT OPTIONS
@@ -39,7 +39,7 @@
             </div>
           </div>
           <div class="askheadingCover">
-            <div class="asktext2"><b>Optional:</b> What context or background information is relevant to this request?</div>
+            <div class="asktext2"><b>2) Background Info (optional):</b> What context or background information is relevant to this request?</div>
           </div>
           <div class="askheadingCover">
             <div class="askinputCover">
@@ -60,7 +60,7 @@
           -->
 			#{if _talker != null }
 	          <div class="askheadingCover">
-	            <div class="asktext2"><b>Disease:</b> What disease is this question related to?</div>
+	            <div class="asktext2"><b>3) Disease:</b> What disease is this question related to?</div>
 	          </div>
 	          <div class="askheadingCover">
 	            <div class="personaltextfield">
@@ -114,13 +114,13 @@
           <div class="iwant1">
           Thank you for sharing your question.
           #{if _page.equals("profileRight")}
-          We will notify ${_target.name} right away.
+          We will notify ${_target.name}.
           #{/if}
           </div>
 
-          <div class="popusertxt3">We will notify other members of your question. 
+          <div class="popusertxt3">Our topic related experts will review the question and will either answer right away, find the right specialist, or save the question for the next relevant Q&A workshop.
           Responses will be sent to your email account as well as viewable at the
-          following link:<br />
+          following link on TalkAboutHealth:<br />
           <a id="questionLink" href="#"></a></div>
           <div class="popsubmitcover1">
             <div class="popnothanks3"><a class="cancelLink" href="#">Close</a></div>
