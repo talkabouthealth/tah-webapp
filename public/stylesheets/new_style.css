@@ -633,6 +633,7 @@ ul.client { float: left; }
 	box-shadow: 0 1px 0 #edf2f5 inset;
 	-moz-box-shadow: 0 1px 0 #edf2f5 inset;
 	-webkit-box-shadow: 0 1px 0 #edf2f5 inset;
+	width:175px;
 }
 
 .newsltr_btn {
@@ -1496,3 +1497,20 @@ border:0;
 .followTopicBtn { background: url(../images/followTopicBtn.jpg); }
 .followingTopicBtn { background: url(../images/followingBtn.jpg); }
 .followingTopicBtn:hover { background: url(../images/unfollowTopicBtn.jpg); }
+
+/*CSS For new drop down menu*/
+
+/* .mega-menu .sub, .mega-menu ul li ul {display: none;} */
+.mega-menu .sub ul {display: block;}
+
+ul.mega-menu, ul.mega-menu li a.dc-mega {position: relative;} 
+ul.mega-menu li a .dc-mega-icon { background: url("/public/images/bullet.gif"); position: absolute; width: 7px; height: 7px;  top: 15px; right: 0px;}
+ul.mega-menu li .sub-container {position: absolute;} /*background-color: #FFF; border:1px solid #CCC;*/
+ul.mega-menu li .sub .row {width: 100%; overflow: hidden; clear: both;}
+ul.mega-menu li .sub li { float: none; width: 250px; font-weight: normal;}
+ul.mega-menu .sub li.mega-hdr li a {padding: 4px 5px 4px 10px !important; font-weight: normal !important;}
+ul.mega-menu .sub li.mega-hdr li a:hover {background: #efefef;}
+.row{position: absolute;background-color: #FFF;z-index: 9999; border:1px solid #CCC; }
+#settings div.row, #uprofile div.row,#settings1 div.row, #settings2 div.row{width:175px !important;}
+li.settings {width:150px !important;float:left;}
+#settings1 div.row li , #settings2 div.row li{clear:both;margin: 0px 5px !important;width:95%;}

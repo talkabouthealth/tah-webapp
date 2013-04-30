@@ -1,6 +1,6 @@
 <style type="text/css">
 	/* main nav */
-	#nav { float: left;margin-left: 25px;  } 
+/*	#nav { float: left;margin-left: 25px;  } 
 	#nav,#userTopMenu  { position: relative;height: 26px;float:left;line-height:27px; }
 	#nav li ul, #userTopMenu li ul{
 		background-color: #FFF; 
@@ -68,13 +68,13 @@
 	}
 	#userTopMenu a.menu1{ background-position: 35px 5px; }
 	#settings2 a.menu1{	background-position: 39px 5px; }
-	#settings a.menu1 { background-position: 50px 5px; }
+	#settings a.menu1 { background-position: 50px 5px; } */
 </style>
 <script type="text/javascript">
 var timeout         = 100;
 var closetimer		= 0;
 var ddmenuitem      = 0;
-
+/*
 function jsddm_open()
 {	jsddm_canceltimer();
 	jsddm_close();
@@ -93,8 +93,34 @@ function jsddm_canceltimer()
 		closetimer = null;
 	}
 }
- 
+ */
 	$(document).ready(function() {
+		
+		if ( $("#diseaseMenu").length > 0 ) {
+			//Load data
+			//do something
+			$.get("/Explore/getDiseaseListMenu",{ },function(data){
+				//$(data).appendTo($("#"+id+"Cnt"));
+				$('#diseaseMenu').after(data);
+				$('#nav').dcMegaMenu({
+					rowItems: '2',
+					speed: 'fast',
+					effect: 'slide'
+				});
+				
+			});
+		}
+		$('#nav').dcMegaMenu({
+			rowItems: '2',
+			speed: 'fast',
+			effect: 'slide'
+		});
+		$('#userTopMenu').dcMegaMenu({
+			rowItems: '2',
+			speed: 'fast',
+			effect: 'slide'
+		});
+		
 		$(".twitterBtn").click(function() {
 			openServiceLogin('T');
 		});
@@ -107,18 +133,12 @@ function jsddm_canceltimer()
 		$('.moretext').truncatable({ limit: 70, more: '... more', less: true, hideText: '...less' });
 		$('.moretext2').truncatable({ limit: 220, more: '... more', less: true, hideText: '...less' });
 		
-		$('#nav > li').bind('mouseover', jsddm_open);
-		$('#nav > li').bind('mouseout',  jsddm_timer);
+		//$('#nav > li').bind('mouseover', jsddm_open);
+		//$('#nav > li').bind('mouseout',  jsddm_timer);
 		
-		$('#userTopMenu > li').bind('mouseover', jsddm_open);
-		$('#userTopMenu > li').bind('mouseout',  jsddm_timer);
+		//$('#userTopMenu > li').bind('mouseover', jsddm_open);
+		//$('#userTopMenu > li').bind('mouseout',  jsddm_timer);
 		
-		//$('#settings1').bind('mouseover', jsddm_open);
-		//$('#settings1').bind('mouseout',  jsddm_timer);
-		
-		//$('#settings2').bind('mouseover', jsddm_open);
-		//$('#settings2').bind('mouseout',  jsddm_timer);
-
 		//close button in popups
 		$('.window .close, .window .cancelLink').click(function (e) {
 			//Cancel the link behavior
@@ -126,10 +146,6 @@ function jsddm_canceltimer()
 			hideAll();
 		});
 	});
-
- 
- 
-	
 </script>
 <div id="header">
 	<h1 class="logo"><a href="/"><img src="/public/images/index/tah_logo.png" alt="Talk About Health" /></a>
@@ -146,7 +162,8 @@ function jsddm_canceltimer()
 	    
 			#{if currentUser.equals("admin") }
 				<li id="settings2"><a class="menu1" href="#">Admin</a>
-	                <ul>
+	              <ul><!--  right: 0; -->
+                <li><ul>
 	                  <li><a href="@{Notifications.index()}">Moderate New Questions</a></li>
 	                  <li><a href="@{Dashboard.manageAccounts()}">Manage Accounts</a></li>
 	                  <li><a href="@{Dashboard.verifyProfessionals()}">Verify Professionals</a></li>
@@ -169,6 +186,8 @@ function jsddm_canceltimer()
 	                  }*
 	                  <li><a href="@{Dashboard.updateTalkerImage()}">Image All</a></li>
 	                </ul>
+	                </li>
+	                </ul>
 	            </li>
 			#{/if}
 	    	<li>
@@ -182,19 +201,22 @@ function jsddm_canceltimer()
 			#{/else}
             </li>
             <li id="settings">
-                <a class="menu1" href="#">Settings</a>
+                <a href="#">Settings</a>
                 <ul><!--  right: 0; -->
-                  <li><a href="@{Profile.edit()}">Edit Profile</a></li>
+                <li><ul>
+                  <li class="settings"><a href="@{Profile.edit()}">Edit Profile</a></li>
                   #{ifnot session.prof }
-                  	<li><a href="@{Profile.healthDetails()}">Edit Health Info</a></li>
+                  	<li class="settings"><a href="@{Profile.healthDetails()}">Edit Health Info</a></li>
                   #{/ifnot}
-                  <li><a href="@{Profile.notifications()}">Notification & Password</a></li>
-                  <li><a href="@{Profile.preferences()}">Privacy Settings</a></li>
+                  <li class="settings"><a href="@{Profile.notifications()}">Notification & Password</a></li>
+                  <li class="settings"><a href="@{Profile.preferences()}">Privacy Settings</a></li>
+                  </ul></li>
                 </ul>
 			</li>
 			<li id="settings1"> 
-				<a class="menu1" href="#">More</a>
+				<a  href="#">More</a>
                 <ul><!-- right: 0; -->
+                <li><ul>
 					<li><a href="@{Static.aboutus()}">About</a></li>
 					<li><a href="@{Static.howitworks()}">How it works</a></li>		                
 					<li><a href="@{Static.faq()}">FAQ</a></li>
@@ -207,6 +229,8 @@ function jsddm_canceltimer()
 					<li><a href="#" onclick="openInvitationsWindow();">Share TalkAboutHealth</a></li>
 					<li><a href="@{Application.contactus()}">Feedback</a></li>
 					<li><a href="@{Secure.logout()}">Logout</a></li>
+					</ul>
+					</li>
                 </ul>
               </li>
 	    #{/if}
@@ -217,25 +241,31 @@ function jsddm_canceltimer()
 		    <li><a href="#" class="facebookBtn"><img src="/public/images/index/fb_signin.png" alt="facebook signin" /></a></li>
 		#{/else}	
 	</ul>
-	<ul id="nav">
+	<ul id="nav" class="mega-menu">
 	#{if session.contains("username") }
 	    <li><a href="@{Home.index()}">Home</a></li>
 	#{/if}
 	#{else}
-	    <li><a href="@{Explore.conversations('expert')}">Answers</a></li>
+	    <!-- <li><a href="@{Explore.conversations('expert')}">Answers</a></li>  -->
+	    <li><a href="#" id="diseaseMenu">Disease</a>
+	    </li>
 	#{/else}
 	    <li><a href="@{Explore.topics()}">Topics</a></li>
 	    <li><a href="@{Static.TAH_Videos()}">Videos</a></li>
 	    <li><a href="@{Explore.browseMembers('active')}">Members</a></li>
 	#{if session.contains("username") }
-		<li><a href="#" class="menu1">You</a>
+		<li id="uprofile"><a href="#" class="menu1">You</a>
           <ul>
+          <li>
+		<ul>
             <li><a href="@{ViewDispatcher.view(currentUser)}">Your Profile</a></li>
             <li><a href="@{PublicProfile.thoughts(currentUser)}">Your Thoughts</a></li>
             <li class="gap"><a href="@{PublicProfile.conversations(currentUser)}">Your Questions</a></li>
             <li><a href="@{PublicProfile.topicsFollowing(currentUser)}">Your Topics Following</a></li>
             <li class="gap"><a href="@{PublicProfile.answers(currentUser)}">Your Answers</a></li>
             <li><a href="@{PublicProfile.userBasedActions(currentUser, 'thankyous')}">Your Thank you's</a></li>
+          </ul>
+          </li>
           </ul>
         </li>
 	#{/if}

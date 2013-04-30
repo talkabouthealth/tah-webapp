@@ -729,4 +729,30 @@ public class Explore extends Controller {
 			renderText("Please select on of the option");
 		}
 	}
+	
+	public static void getDiseaseListMenu() {
+		List<DiseaseBean> homediseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+		List<DiseaseBean> diseaseList = new ArrayList<DiseaseBean>();
+
+		/*	Code to remove new cancer categories from home page */
+		Set<String> newCancerList = DiseaseDAO.newCancerTypes();
+
+		for (DiseaseBean diseaseBean : homediseaseList) {
+			if(!newCancerList.contains(diseaseBean.getName()))
+				diseaseList.add(diseaseBean);
+		}
+		
+		List<DiseaseBean> diseaseList1 = null;
+		List<DiseaseBean> diseaseList2 = null;
+		int size = 0;
+  		if(diseaseList != null && diseaseList.size() > 0){
+  			int mod = (diseaseList.size()-1)%2;
+      		size = (diseaseList.size()-1)/2;
+      		if(mod > 0)
+      			size = size + 1;
+      		diseaseList1 = diseaseList.subList(0, size);
+      		diseaseList2 = diseaseList.subList(size, diseaseList.size()-1);
+  		}
+  		render("Explore/diseaselistmenu.html", diseaseList1,diseaseList2);
+	}
 }

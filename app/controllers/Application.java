@@ -134,13 +134,26 @@ public class Application extends Controller {
 	    			if(!newCancerList.contains(diseaseBean.getName()))
 	    				diseaseList.add(diseaseBean);
 				}
+	    		
+	    		List<DiseaseBean> diseaseList1 = null;
+	    		List<DiseaseBean> diseaseList2 = null;
+	    		int size = 0;
+	      		if(diseaseList != null && diseaseList.size() > 0){
+	      			int mod = (diseaseList.size()-1)%2;
+	          		size = (diseaseList.size()-1)/2;
+	          		if(mod > 0)
+	          			size = size + 1;
+	          		diseaseList1 = diseaseList.subList(0, size);
+	          		diseaseList2 = diseaseList.subList(size, diseaseList.size()-1);
+	      		}
+	    		
 	    		if(isCommunityHomePage){
 	    			String cancerType = session.get("cancerType");
 	    			List<VideoBean> videoList = VideoDAO.loadVideoForHome(3, cancerType);
-	    			render("/Community/index.html",diseaseList, videoList, numberOfMembers, numberOfAnswers,cancerType);
+	    			render("/Community/index.html",diseaseList, videoList, numberOfMembers, numberOfAnswers,cancerType,diseaseList1,diseaseList2);
 	    		} else {
 	    			List<VideoBean> videoList = VideoDAO.loadVideoForHome(3,"All Cancers");
-	    			render(null, numberOfMembers, numberOfAnswers, diseaseList,videoList);
+	    			render(null, numberOfMembers, numberOfAnswers, diseaseList,videoList,diseaseList1,diseaseList2);
 	    		}
     	}
     }

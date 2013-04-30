@@ -53,7 +53,20 @@
 			<div  class="q">
 				<h3 class="sub_heading"><a href="@{ViewDispatcher.view(video.convoBean.mainURL)}">${video.convoBean.topic}</a></h3>
 				<div style="padding:5px 0;">
-					<iframe width="540" height="300" src="http://www.youtube.com/embed/${video.videoId}" frameborder="0" allowfullscreen></iframe>
+					<!-- meta tags for video SEO -->
+					<meta itemprop="thumbnailUrl" content="http://img.youtube.com/vi/${video.videoId}/1.jpg" />
+					<meta itemprop="embedURL" content="http://www.youtube.com/embed/${video.videoId}" />
+					<meta itemprop="contentURL" content="http://youtu.be/${video.videoId}" />
+					<meta itemprop="duration" content="T1M33S" />
+
+					<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="640" height="385" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0">
+					<param name="allowFullScreen" value="true" />
+					<param name="allowscriptaccess" value="always" />
+					<param name="src" value="http://www.youtube.com/v/5_sfnQDr1-o?fs=1&hl=en_GB" />
+					<param name="allowfullscreen" value="true" />
+					<embed type="application/x-shockwave-flash" width="540" height="300" src="http://www.youtube.com/v/${video.videoId}" allowscriptaccess="always" allowfullscreen="true"></embed>
+					</object>
+<!-- 				<iframe width="540" height="300" src="http://www.youtube.com/embed/${video.videoId}" frameborder="0" allowfullscreen></iframe> -->					
 				</div>
 				<div class="ans">
 					<img src="/public/images/index/chat_icon.png" alt="answers" />
