@@ -75,8 +75,8 @@ body {
 .logo span {color: #eb208c;}
 
 .search_signin {
-	float: right;
-	margin: 0 0 10px;
+	float: left;
+	margin: 0 0 10px 20px;
 }
 
 .search_signin li {
@@ -108,7 +108,7 @@ body {
 
 /* main nav */
 
-#nav { float: right; }
+#nav { float: left;margin-left:20px; }
 
 #nav li {
 	float: left;

@@ -730,7 +730,8 @@ public class Explore extends Controller {
 		}
 	}
 	
-	public static void getDiseaseListMenu() {
+	public static void getDiseaseListMenu(String oldPage) {
+	
 		List<DiseaseBean> homediseaseList = DiseaseDAO.getCatchedDiseasesList(session);
 		List<DiseaseBean> diseaseList = new ArrayList<DiseaseBean>();
 
@@ -753,6 +754,10 @@ public class Explore extends Controller {
       		diseaseList1 = diseaseList.subList(0, size);
       		diseaseList2 = diseaseList.subList(size, diseaseList.size()-1);
   		}
-  		render("Explore/diseaselistmenu.html", diseaseList1,diseaseList2);
+  		if(StringUtils.isNotBlank(oldPage)) {
+  			render("Explore/diseaselistmenuOld.html", diseaseList1,diseaseList2);
+  		} else {
+  			render("Explore/diseaselistmenu.html", diseaseList1,diseaseList2);
+  		}
 	}
 }

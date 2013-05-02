@@ -1,5 +1,4 @@
 <style type="text/css">
-	/* Font size for autocomplete items */
 	#wrapper {
 	margin: 0 auto;
 	width: 980px;
@@ -53,7 +52,6 @@
 	cursor: pointer;
 }
 	
-	/* main nav */
 	
 	#jsddm { float: left;margin-left: 25px; margin-top: 20px; }
 	#jsddm li ul{background-color: #FFF;}
@@ -69,11 +67,11 @@
 		color : #FFF !important;
 	}
 	#jsddm li a.menu1 {
-   	background-image: url("/public/images/bullet.gif");
+   	background-image: url('/public/images/bullet.gif');
     background-position: 36px 10px;
     background-repeat: no-repeat;
     padding-right: 25px;
-}
+	}
 	#jsddm li a {
 		cursor: pointer;
 		display: block;
@@ -148,6 +146,25 @@ openServiceLogin = function(serviceType) {
 	}
 }
 	$(document).ready(function() {
+		
+		if ( $("#diseaseMenu").length > 0 ) {
+			//Load data
+			//do something
+			$.get("/Explore/getDiseaseListMenu",{'oldPage':'old' },function(data){
+				//$(data).appendTo($("#"+id+"Cnt"));
+				$('#diseaseMenu').after(data);
+				/*$('#nav').dcMegaMenu({
+					rowItems: '2',
+					speed: 'fast',
+					effect: 'slide'
+				});
+				*/
+				$('#diseaseMenu > li').bind('mouseover', jsddm_open);
+				$('#diseaseMenu > li').bind('mouseout',  jsddm_timer);
+			});
+		}
+		
+		
 		$(".twitterBtn").click(function() {
 			openServiceLogin('T');
 		});
@@ -361,7 +378,9 @@ openServiceLogin = function(serviceType) {
         <li><a href="@{Static.TAH_Videos()}">Videos</a></li>
 	#{/if}
 	#{else}
-	    <li><a href="@{Explore.conversations('expert')}">Answers</a></li>
+	    <!-- <li><a href="@{Explore.conversations('expert')}">Answers</a></li>  -->
+	    <li  style="padding-right: 5px;"><a href="#" id="diseaseMenu" class="menu1" style="background-position: 75px 10px !important;">Diseases</a></li>
+
 	    <li><a href="@{Explore.topics()}">Topics</a></li>
 	    <li>
 	    	#{if session.contains("cancerType")}

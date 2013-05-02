@@ -53,12 +53,16 @@ public class Image extends Controller {
 	        }
 			InputStream in = new ByteArrayInputStream(imageArray);
 		 	BufferedImage originalImage = ImageIO.read(in);
-	        ByteArrayOutputStream baos = ImageUtil.createCropedThumbnail(xPos, yPos, width, height, originalImage);
-	        renderBinary(new ByteArrayInputStream(baos.toByteArray()));
-			}catch ( Exception e ){
+		 	if(originalImage.getWidth() < xPos + width || originalImage.getHeight() < yPos + height) {
+		 		ByteArrayOutputStream baos = ImageUtil.createCropedThumbnail(0, 0, originalImage.getWidth(), originalImage.getHeight(), originalImage);
+		 		renderBinary(new ByteArrayInputStream(baos.toByteArray()));
+		 	} else {
+		 		ByteArrayOutputStream baos = ImageUtil.createCropedThumbnail(xPos, yPos, width, height, originalImage);
+		 		renderBinary(new ByteArrayInputStream(baos.toByteArray()));
+		 	}
+			}catch ( Exception e ) {
 				e.printStackTrace();
 			}
-			
 		}
 	}
 

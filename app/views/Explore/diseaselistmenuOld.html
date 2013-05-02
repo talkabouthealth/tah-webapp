@@ -1,0 +1,12 @@
+<ul style="width: 440px;">
+	#{if diseaseList1 != null && diseaseList1.size() > 0}
+		#{list items: diseaseList1, as: 'disease'}
+			<li style="width:220px;clear:none !important;float:left;"><a href="/explore/${disease.name.convertToURL()}">${disease.name}</a></li>
+		#{/list}
+	#{/if}
+	#{if diseaseList2 != null && diseaseList2.size() > 0}
+		#{list items: diseaseList2, as: 'disease'}
+			<li style="width:220px;clear:none !important;float:left;"><a href="/explore/${disease.name.convertToURL()}">${disease.name}</a></li>
+		#{/list}
+	#{/if}
+</ul>
