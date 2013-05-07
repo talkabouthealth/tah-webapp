@@ -1248,14 +1248,14 @@ var nicLinkButton = nicEditorAdvancedButton.extend({
 		this.removePane();
 		
 		if(!this.ln) {
-			var tmp = 'javascript:nicTemp();';
+			var tmp = this.inputs['href'].value; //'javascript:nicTemp();';
 			this.ne.nicCommand("createlink",tmp);
 			this.ln = this.findElm('A','href',tmp);
 		}
 		if(this.ln) {
 			this.ln.setAttributes({
 				href : this.inputs['href'].value,
-				title : this.inputs['title'].value,
+				//title : this.inputs['title'].value,
 				target : '_blank'
 			});
 		}
