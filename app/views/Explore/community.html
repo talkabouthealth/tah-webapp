@@ -77,16 +77,26 @@
 					$.get("/Explore/communityFeedAjaxLoad",{  type : 'recentConvo', csrType : '${csrType}' },function(data){
 						recentConvo=1;
 						$(loading).remove();
-						$(data).appendTo($("#"+id+"Cnt"));
-						$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+						if($.trim(data) == '') {
+							$("<li>No question found</li>").appendTo($("#"+id+"Cnt"));
+							$("#recentConvoTab li.lastFeed").hide();
+						} else {
+							$(data).appendTo($("#"+id+"Cnt"));
+							$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+						}
 				    });
 				} else if(id=='expertConvo' && expertConvo==0){
 					$("#"+id+"Cnt").html(loading);
 					$.get("/Explore/communityFeedAjaxLoad",{  type : 'expertConvo', csrType : '${csrType}' },function(data){
 						expertConvo=1;
 						$(loading).remove();
-						$(data).appendTo($("#"+id+"Cnt"));
-						$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+						if($.trim(data) == '') {
+							$("<li>No question found</li>").appendTo($("#"+id+"Cnt"));
+							$("#expertConvoTab li.lastFeed").hide();
+						} else {
+							$(data).appendTo($("#"+id+"Cnt"));
+							$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+						}
 					});
 				} else if(id=='openConvo' && openConvo ==0) {
 					$("#"+id+"Cnt").html(loading);
@@ -109,11 +119,13 @@
 			$.get("/Explore/communityFeedAjaxLoad", {afterActionId: lastActionId, type: type, csrType : '${csrType}' },
 					function(data) {
 						$(loading).remove();
-						//$(data).appendTo($("#"+type+"List"));
-						$(data).appendTo($("#"+type+"Cnt"));
-						//for new items
-						$('.inline-edit').inlineEdit( { hover: ''} );
-						$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+						if($.trim(data) == '') {
+							$("#" + type + "Tab li.lastFeed").hide();
+						} else {
+							$(data).appendTo($("#"+type+"Cnt"));
+							$('.inline-edit').inlineEdit( { hover: ''} );
+							$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+						}
 		 			}
 				);
 			
