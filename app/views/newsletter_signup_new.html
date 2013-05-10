@@ -2,18 +2,16 @@
 <!--
 var submitOption = { success: setNewsletterMessage }; 
 $(document).ready(function() {
-	
-	 
-	$('#subcribeNewsletter .search_field').click(function() {
-		if($("#subcribeNewsletter .search_field").val().trim() == 'Email Address')
-			$("#subcribeNewsletter .search_field").val('');
+	$('#subcribeNewsletterUpdate .search_field').click(function() {
+		if($("#subcribeNewsletterUpdate .search_field").val().trim() == 'Email Address')
+			$("#subcribeNewsletterUpdate .search_field").val('');
 	});
-	$('#subcribeNewsletter .search_field').blur(function() {
-		if($("#subcribeNewsletter .search_field").val().trim() == '')
-			$("#subcribeNewsletter .search_field").val('Email Address');
+	$('#subcribeNewsletterUpdate .search_field').blur(function() {
+		if($("#subcribeNewsletterUpdate .search_field").val().trim() == '')
+			$("#subcribeNewsletterUpdate .search_field").val('Email Address');
 	});
-	$('#subcribeNewsletter').submit(function() {
-		$("#subcribeNewsletter").ajaxSubmit(submitOption);
+	$('#subcribeNewsletterUpdate').submit(function() {
+		$("#subcribeNewsletterUpdate").ajaxSubmit(submitOption);
 		return false;
 	});
 });
@@ -47,7 +45,7 @@ function setNewsletterMessage(responseText, statusText, xhr, $form)  {
 	<div class="body" style="padding:20px 10px;">
 	<div style="padding-bottom:5px;text-align: justify;" class="talkinfo">Sign up for our newsletters for the latest news on your disease, best answers, and featured experts.</div>
 	#{if !newsLetterFlag }
-		#{form @Newsletter.subscribeMoreNewsLetter() , id:'subcribeNewsletter' }
+		#{form @Newsletter.subscribeMoreNewsLetter() , id:'subcribeNewsletterUpdate' }
 			<div style="font-size: 12px;float: left;" class="talkinfo">
 				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TAH Workshop Notification" checked='checked' /></div>
 					<!-- <div style="padding-top: 3px;float:left;">Daily Workshop Announcement &amp; News</div> -->
@@ -70,10 +68,10 @@ function setNewsletterMessage(responseText, statusText, xhr, $form)  {
 					<span id="respMessage" style="margin-top: 5px;height:15px;float:left;width:100%;"></span>
 				</div>
 				#{if session.username }
-					<input name="email" id="email" style="width: 220px;" class="search_field" type="text" value="${talker.email}" />
+					<input name="newsletter.email" id="email" style="width: 220px;" class="search_field" type="text" value="${talker.email}" />
 				#{/if}
 				#{else}
-					<input name="email" id="email" style="width: 220px;" class="search_field" type="text" value="Email Address" />
+					<input name="newsletter.email" id="email" style="width: 220px;" class="search_field" type="text" value="Email Address" />
 				#{/else}
 				<input class="newsletterWidgetBtn" type="submit" value="" />
 			</div>
