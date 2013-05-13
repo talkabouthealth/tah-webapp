@@ -55,12 +55,12 @@
 		<div id="innerbanner"></div>
 		<div id="bottom_container">
 			#{if flash.cancerType}
-				<div style="font-size: 19px;font-weight: bold;line-height:20px;width:590px;" id="innerheading">Thank you for subscribing to our newsletter! Join now to ask questions to leading medical professionals and connect with others like you.</div>
+				<div style="font-size: 19px;font-weight: bold;line-height:20px;width:590px;" id="innerheading">Thank you for subscribing to our newsletters! Join now to ask questions to leading medical professionals and for guidance through diagnosis and treatments.</div>
 			#{/if}
 			#{elseif flash.fromPage}
 				<div style="font-size: 19px;font-weight: bold;line-height:20px;width:590px;" id="innerheading">
 				Thank you for subscribing to our newsletters! 
-				<br/>Join now to ask questions to leading medical professionals and connect with others like you.
+				<br/>Join now to ask questions to leading medical professionals and for guidance through diagnosis and treatments.
 				</div>
 			#{/elseif}
 			#{else}
@@ -175,7 +175,7 @@
 						</div>
 						#{if flash.captcha }
 						<div class="signupmain">
-							<div class="signuptextarea"><span class="blacktext14">Please type the code bellow</span></div>
+							<div class="signuptextarea"><span class="blacktext14">Please type the code below</span></div>
 							<div ><img src="@{Application.captcha(randomID)}" /></div>
 						</div>
 						<div class="signupmain">
@@ -296,8 +296,8 @@
 							#{else}
 								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TAH Workshop Notification" checked="checked"/>
 							#{/else}
-							Daily Health Update<br/>
-							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured answers, experts, tips &amp; latest news.)</font>
+							Q&A Workshop Announcments<br/>
+							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured experts, answers, tips &amp; latest news.)</font>
 						</div>
 						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
 							#{if newsletter != null && newsletter.newsLetterType !=null}
@@ -311,8 +311,8 @@
 							#{else}
 								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TAH Workshop Summary" checked="checked"/>
 							#{/else}
-							Daily Q&A Workshop Summary<br/>
-							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Daily answer summaries from our expert Q&A workshops.)</font>
+							 Q&A Workshop Summaries<br/>
+							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Answer summaries from our expert Q&A workshops.)</font>
 						</div>
 						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
 							#{if newsletter != null && newsletter.newsLetterType !=null}
@@ -341,8 +341,8 @@
 							#{else}
 								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TalkAboutHealth Rewards" checked="checked"/>
 							#{/else}
-							TalkAboutHealth Benefits<br/>
-							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Custom health, wellness &amp; medical offers.)</font>
+							Benefits and programs from our partners<br/>
+							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Custom health & medical offers including clinical trials, market research programs.)</font>
 						</div>
 						<h4 style="font-weight: bold; margin-top: 10px;">
 						<a href="javascript:displayOptions('newsLetterOption');" ><img id="newsLetterOptionEC" src="/public/images/collapse.png"/><span style="margin-left: 5px; vertical-align: top;">View All Newsletters</span></a></h4>

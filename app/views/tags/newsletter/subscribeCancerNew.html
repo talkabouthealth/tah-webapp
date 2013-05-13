@@ -51,7 +51,7 @@
 	<h2 class="heading">#{if csrType == "All Cancers"}Cancer#{/if}#{else}${csrType}#{/else} newsletter</h2>
 	<div class="body" id="cancerTopicBlock">
 		<div style="float:left;padding:5px;">
-			<span class="blacktextgrey15">Sign up for our weekly ${csrType} newsletter for the latest news, best answers and featured experts.</span>
+			<span class="blacktextgrey15">Sign up for our weekly ${csrType} updates for the latest news, best answers and featured experts.</span>
 		</div>
 	  		#{form @Newsletter.subscribeWorkShop(), id:'cancerTopic' }
 	  		<input id="newsletter" name="newsletter.newsLetterType" type="hidden" value="${csrType}"/>
