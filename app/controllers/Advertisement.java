@@ -67,7 +67,6 @@ public class Advertisement extends Controller {
 				}else{
 					dateError = true;
 				}
-
 				if(dateError) {
 					emailList = AdvertisementDAO.getAdvertisementCount(null,null,group);
 				} else {
@@ -82,7 +81,6 @@ public class Advertisement extends Controller {
 					totalImp = bean.getAdCount();
 					emailList.remove(bean);
 				}
-				
 				render(emailList,totalImp,totalClick,fromDate,toDate,errorMsg,group);
 			} else {
 				forbidden();

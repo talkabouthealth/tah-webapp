@@ -217,7 +217,7 @@ public class ConversationDAO {
 		DBObject query = new BasicDBObject("_id", new ObjectId(convoId));
 		DBObject convoDBObject = convosColl.findOne(query, fields);
 		
-		return parseConvoFromDBObject(convoDBObject, true);
+		return parseConvoFromDBObject(convoDBObject, false);
 	}
 
 	/**
@@ -873,7 +873,7 @@ public class ConversationDAO {
 			.add("deleted", new BasicDBObject("$ne", true))
 			.get();
 		List<DBObject> convosDBList=new ArrayList<DBObject>();//convosColl.find(query, new BasicDBObject("_id", 1)).sort(new BasicDBObject("cr_date", -1)).toArray();
-		DBCursor convoCur=convosColl.find(query, new BasicDBObject("_id", 1)).sort(new BasicDBObject("cr_date", -1));
+		DBCursor convoCur=convosColl.find(query, new BasicDBObject("_id", 1)).sort(new BasicDBObject("modified_date", -1)).sort(new BasicDBObject("cr_date", -1)); //
 		while(convoCur.hasNext()){
 			convosDBList.add(convoCur.next());
 		}
@@ -1059,7 +1059,7 @@ public class ConversationDAO {
 		List<String> cat = new ArrayList<String>(2);
 		if(StringUtils.isNotBlank(cancerType)){
 			cat.add(cancerType);
-			cat.add("All Cancers");
+			//cat.add("All Cancers");
 		}
 		List<ConversationBean> convolist=new ArrayList<ConversationBean>();
 
@@ -1124,7 +1124,7 @@ public class ConversationDAO {
 		List<String> cat = new ArrayList<String>(2);
 		if(StringUtils.isNotBlank(cancerType)) {
 			cat.add(cancerType);
-			cat.add("All Cancers");
+			//cat.add("All Cancers");
 		}
 		List<ConversationBean> convolist=new ArrayList<ConversationBean>();
 		
