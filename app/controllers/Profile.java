@@ -392,30 +392,31 @@ public class Profile extends Controller {
 			int yPos = 0;
 			int width = 100;
 			int height = 100;
+			String fileExt = null;
 			try {
 				xPos =  Integer.parseInt(params.get("x"));
 				yPos = Integer.parseInt(params.get("y"));
 				width = Integer.parseInt(params.get("w"));
 				height = Integer.parseInt(params.get("h"));
 				if (imageFile != null) {
-					BufferedImage bsrc = ImageIO.read(imageFile);
-					//ByteArrayOutputStream baos = ImageUtil.updateTalkerImage(xPos, yPos, width, height, bsrc);
-					ByteArrayOutputStream baos = ImageUtil.getImageArray(bsrc);
-					TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
-					String [] imgcrop = {xPos + "",yPos + "",width + "",height + ""};
-				 	TalkerDAO.updateTalkerImageCoords(talker, imgcrop);
+					String fileName = imageFile.getName();
+					 fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
+					 if (fileExt.equalsIgnoreCase("png") || fileExt.equalsIgnoreCase("jpg") || fileExt.equalsIgnoreCase("jpeg") || fileExt.equalsIgnoreCase("gif")) {
+						 	BufferedImage bsrc = ImageIO.read(imageFile);
+							ByteArrayOutputStream baos = ImageUtil.getImageArray(bsrc,fileExt.toUpperCase());
+							TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
+							String [] imgcrop = {xPos + "",yPos + "",width + "",height + ""};
+						 	TalkerDAO.updateTalkerImageCoords(talker, imgcrop);
+		             } else {
+		                 Logger.debug("Invalid File Type: " + fileName);
+		                 session.put("image_upload", "error");
+		                 renderText("invalid file type"); 
+		             }
 				} else {
-					//byte[] imageArray = TalkerDAO.loadTalkerImage(talker.getName(), Security.connected());
-					//InputStream in = new ByteArrayInputStream(imageArray);
-				 	//BufferedImage originalImage = ImageIO.read(in);
-				 	//ByteArrayOutputStream baos = ImageUtil.createCropedThumbnail(xPos, yPos, width, height, originalImage);
 				 	String [] imgcrop = {xPos + "",yPos + "",width + "",height + ""};
 				 	TalkerDAO.updateTalkerImageCoords(talker, imgcrop);
 				} 
-				//System.out.println("[x,y] : [" + xPos + " , " + yPos + "]" );
-				//System.out.println("[w,h] : [" + width + " , " + height + "]" );
 				session.put("image_upload", "complete");
-				//renderText("image uploaded");
 				edit(true);
 			} catch(Exception e) {
 				e.printStackTrace();
@@ -434,8 +435,7 @@ public class Profile extends Controller {
                         } else {
                             try {
                                 BufferedImage bsrc = ImageIO.read(imageFile);
-                                //ByteArrayOutputStream baos = ImageUtil.createThumbnail(bsrc);
-                                ByteArrayOutputStream baos = ImageUtil.getImageArray(bsrc);
+                                ByteArrayOutputStream baos = ImageUtil.getImageArray(bsrc,fileExt.toUpperCase());
                                 TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
                             } catch (IOException e) {
                                     TalkerDAO.updateTalkerImage(talker, null);
@@ -445,7 +445,6 @@ public class Profile extends Controller {
                             }
                             session.put("image_upload", "complete");
                             renderText("image uploaded"); 
-                            //image();
                         }
                     } else {
                         Logger.debug("Invalid File Type: " + fileName);

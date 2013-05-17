@@ -19,8 +19,6 @@ public class ImageUtil {
 	 */
 	public static ByteArrayOutputStream createCropedThumbnail(int xPos, int yPos, int width, int height, BufferedImage bsrc) throws IOException {
 		
-		//width = width - xPos;
-		//height = height - yPos;
 		BufferedImage bdest = ImageUtil.getScaledInstance(bsrc, bsrc.getWidth(), bsrc.getHeight(), 
 				RenderingHints.VALUE_INTERPOLATION_BICUBIC, true);
 	
@@ -31,10 +29,33 @@ public class ImageUtil {
     	return baos;
 	}
 	
+	
+	
+	public static ByteArrayOutputStream getImageArray(BufferedImage bsrc,String fileExt) throws IOException {
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		int srcWidth = bsrc.getWidth();
+		int srcHeight = bsrc.getHeight();
+
+		BufferedImage bdest = ImageUtil.getScaledInstance(bsrc, srcWidth, srcHeight, 
+				RenderingHints.VALUE_INTERPOLATION_BICUBIC, true);
+		bdest = bdest.getSubimage(0, 0, srcWidth, srcHeight);
+
+    	ImageIO.write(bdest, fileExt, baos);
+    	return baos;
+	}
+
 	public static ByteArrayOutputStream getImageArray(BufferedImage bsrc) throws IOException {
 		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    	ImageIO.write(bsrc, "GIF", baos);
+		int srcWidth = bsrc.getWidth();
+		int srcHeight = bsrc.getHeight();
+
+		BufferedImage bdest = ImageUtil.getScaledInstance(bsrc, srcWidth, srcHeight, 
+				RenderingHints.VALUE_INTERPOLATION_BICUBIC, true);
+		bdest = bdest.getSubimage(0, 0, srcWidth, srcHeight);
+
+    	ImageIO.write(bdest, "JPG", baos);
     	return baos;
 	}
 	/**
