@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -220,7 +221,7 @@ public class ConversationBean implements Comparable<ConversationBean> {
 		parseFollowupConvos((Collection<DBRef>)convoDBObject.get("followup_convos"));
     	parseChatMessages((Collection<DBObject>)convoDBObject.get("messages"));
     	setTalker(TalkerLogic.loadTalkerFromCache(convoDBObject, "uid"));
-    	setCategory((String)convoDBObject.get("category"));
+    	//setCategory((String)convoDBObject.get("category"));
     	setFollowers(ConversationDAO.getConversationFollowers(getId()));
 	}
 	
@@ -283,7 +284,7 @@ public class ConversationBean implements Comparable<ConversationBean> {
 	}
 	
 	public void parseTopics(Collection<DBRef> topicsDBList) {
-		topics = new HashSet<TopicBean>();
+		topics = new LinkedHashSet();
 		if (topicsDBList != null) {
 			for (DBRef topicDBRef : topicsDBList) {
 				if(topicDBRef.getId() != null ){ 
