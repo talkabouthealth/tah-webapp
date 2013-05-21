@@ -986,7 +986,71 @@ public class TalkerDAO {
 			return (byte[])talkerDBObject.get("img");
 	}
 	
-	
+	/**
+	 * Returns 'null' if Privacy Settings do not allow to show image.
+	 * 
+	 * @param userName
+	 * @param currentUser
+	 * @return
+	 */
+	public static TalkerImageBean loadTalkerImageBean(String userName, String currentUser) {
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		TalkerImageBean imageBean = new TalkerImageBean();
+		DBObject usernameQuery = new BasicDBObject("uname", userName);
+		DBObject anonymousQuery = new BasicDBObject("anon_name", userName);
+		DBObject query = new BasicDBObject("$or", Arrays.asList(usernameQuery, anonymousQuery));
+		DBObject fields = BasicDBObjectBuilder.start()
+			.add("img", 1)
+			.add("deactivated", 1)
+			.add("privacy_settings", 1)
+			.add("imgcoords", 1)
+			.add("fileExt", 1)
+			.get();
+		DBObject talkerDBObject = talkersColl.findOne(query, fields);
+		
+		if (talkerDBObject == null) {
+			return null;
+		}
+
+		//User can always see his/her own image
+		if (!userName.equals(currentUser)) {
+			//If user has private image, display the default profile image.
+			TalkerBean talker = new TalkerBean();
+			talker.setPrivacySettings(parseSet(PrivacySetting.class, talkerDBObject, "privacy_settings"));
+
+			PrivacyValue privacyValue = talker.getPrivacyValue(PrivacyType.PROFILE_IMAGE);
+			if ( (currentUser == null && privacyValue != PrivacyValue.PUBLIC)
+					|| privacyValue == PrivacyValue.PRIVATE
+					|| getBoolean(talkerDBObject, "deactivated") ) {
+				//show default image
+				return null;
+			}
+		}
+
+		if (talkerDBObject.get("img") == null) { 
+			imageBean.setImageArray(null);
+			imageBean.setImageType("gif");
+			imageBean.setCoords(null);
+		} else {
+			imageBean.setImageArray((byte[])talkerDBObject.get("img"));
+
+			//Co ordinations
+			Collection<String> otherCategories = (Collection<String>)talkerDBObject.get("imgcoords");
+			if (otherCategories != null) {
+				imageBean.setCoords(otherCategories.toArray(new String[]{}));
+			} else {
+				imageBean.setCoords(null);
+			}
+
+			if(talkerDBObject.get("fileExt") != null) {
+				imageBean.setImageType(talkerDBObject.get("fileExt").toString());
+			} else {
+				imageBean.setImageType("gif");
+			}
+		}
+		return imageBean;
+	}
+
 	/**
 	 * Returns 'null' if Privacy Settings do not allow to show image.
 	 * 
