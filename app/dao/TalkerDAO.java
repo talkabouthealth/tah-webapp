@@ -1023,7 +1023,10 @@ public class TalkerDAO {
 					|| privacyValue == PrivacyValue.PRIVATE
 					|| getBoolean(talkerDBObject, "deactivated") ) {
 				//show default image
-				return null;
+				imageBean.setImageArray(null);
+				imageBean.setImageType("gif");
+				imageBean.setCoords(null);
+				//return null;
 			}
 		}
 
