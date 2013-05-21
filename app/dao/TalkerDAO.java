@@ -29,6 +29,7 @@ import models.IMAccountBean;
 import models.NewsLetterBean;
 import models.PrivacySetting;
 import models.TalkerBean;
+import models.TalkerImageBean;
 import models.ThankYouBean;
 import models.TopicBean;
 import models.ConversationBean.ConvoType;
@@ -189,7 +190,7 @@ public class TalkerDAO {
 		talkersColl.update(talkerId, new BasicDBObject("$set", talkerObject));
 	}
 	
-	public static void updateTalkerImage(TalkerBean talker, byte[] imageArray) {
+	public static void updateTalkerImage(TalkerBean talker, byte[] imageArray,String fileExt) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		boolean isImage = true;
 		if(imageArray == null)
@@ -198,6 +199,7 @@ public class TalkerDAO {
 		DBObject talkerObject = BasicDBObjectBuilder.start()
 			.add("img", imageArray)
 			.add("isImg", isImage)
+			.add("fileExt",fileExt)
 			.get();
 		
 		DBObject talkerId = new BasicDBObject("_id", new ObjectId(talker.getId()));

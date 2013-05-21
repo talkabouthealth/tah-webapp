@@ -383,7 +383,7 @@ public class Profile extends Controller {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		
 		if ("Remove current image".equals(submitAction)) {
-			TalkerDAO.updateTalkerImage(talker, null);
+			TalkerDAO.updateTalkerImage(talker, null,"png");
 			session.put("image_upload", "default");
 			String [] imgcrop = {"0","0","100","100"};
 		 	TalkerDAO.updateTalkerImageCoords(talker, imgcrop);
@@ -404,7 +404,7 @@ public class Profile extends Controller {
 					 if (fileExt.equalsIgnoreCase("png") || fileExt.equalsIgnoreCase("jpg") || fileExt.equalsIgnoreCase("jpeg") || fileExt.equalsIgnoreCase("gif")) {
 						 	BufferedImage bsrc = ImageIO.read(imageFile);
 							ByteArrayOutputStream baos = ImageUtil.getImageArray(bsrc,fileExt.toUpperCase());
-							TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
+							TalkerDAO.updateTalkerImage(talker, baos.toByteArray(),fileExt);
 							String [] imgcrop = {xPos + "",yPos + "",width + "",height + ""};
 						 	TalkerDAO.updateTalkerImageCoords(talker, imgcrop);
 		             } else {
@@ -436,9 +436,9 @@ public class Profile extends Controller {
                             try {
                                 BufferedImage bsrc = ImageIO.read(imageFile);
                                 ByteArrayOutputStream baos = ImageUtil.getImageArray(bsrc,fileExt.toUpperCase());
-                                TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
+                                TalkerDAO.updateTalkerImage(talker, baos.toByteArray(),fileExt);
                             } catch (IOException e) {
-                                    TalkerDAO.updateTalkerImage(talker, null);
+                                    TalkerDAO.updateTalkerImage(talker, null,fileExt);
                                     Logger.error(e, "Profile.java : uploadImage");
                                     session.put("image_upload", "error");
                                     renderText("error converting image"); 
