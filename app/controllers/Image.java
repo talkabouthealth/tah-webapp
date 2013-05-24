@@ -13,6 +13,8 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+import models.TalkerImageBean;
+
 import play.Play;
 import play.mvc.Controller;
 import util.ImageUtil;
@@ -29,46 +31,50 @@ public class Image extends Controller {
 	 * Renders image of given talker (or returns default image)
 	 */
 	public static void show(String userName) {
-		byte[] imageArray = TalkerDAO.loadTalkerImage(userName, Security.connected());
-		
-		
-		
-		response.setHeader("Content-Type", "image/gif");
+		TalkerImageBean imageBean = TalkerDAO.loadTalkerImageBean(userName, Security.connected());
+		String contentType = "image/" + imageBean.getImageType();
+
+		response.setHeader("Content-Type", contentType);
 		response.setHeader("Cache-Control", "no-cache");
-		if (imageArray == null) {
+		if (imageBean.getImageArray() == null) {
 			//render default
 			renderBinary(DEFAULT_IMAGE_FILE);
 		} else {
 			try{
-			String [] coords = TalkerDAO.getTalkerCoords(userName);
-	        int xPos = 0;
-			int yPos =  0;
-			int width =  100;
-			int height =  100;
-	        if(coords != null && coords.length == 4) {
-	        	xPos = Integer.parseInt(coords[0]);
-				yPos =  Integer.parseInt(coords[1]);
-				width =  Integer.parseInt(coords[2]);
-				height =  Integer.parseInt(coords[3]);
-	        }
-			InputStream in = new ByteArrayInputStream(imageArray);
-		 	BufferedImage originalImage = ImageIO.read(in);
-		 	if(originalImage.getWidth() < xPos + width || originalImage.getHeight() < yPos + height) {
-		 		ByteArrayOutputStream baos = ImageUtil.createCropedThumbnail(0, 0, originalImage.getWidth(), originalImage.getHeight(), originalImage);
-		 		renderBinary(new ByteArrayInputStream(baos.toByteArray()));
-		 	} else {
-		 		ByteArrayOutputStream baos = ImageUtil.createCropedThumbnail(xPos, yPos, width, height, originalImage);
-		 		renderBinary(new ByteArrayInputStream(baos.toByteArray()));
-		 	}
+				InputStream in = new ByteArrayInputStream(imageBean.getImageArray());
+			 	BufferedImage originalImage = ImageIO.read(in);
+				String [] coords = imageBean.getCoords();
+		        int xPos = 0;
+				int yPos =  0;
+				int width =  100;
+				int height =  100;
+				if(coords != null && coords.length == 4) {
+			    	xPos = Integer.parseInt(coords[0]);
+			    	yPos = Integer.parseInt(coords[1]);
+			    	width = Integer.parseInt(coords[2]);
+			    	height = Integer.parseInt(coords[3]);
+			    }
+				ByteArrayOutputStream baos = null;
+				if(coords == null || (originalImage.getWidth() < xPos + width || originalImage.getHeight() < yPos + height)) {
+			 		//baos = ImageUtil.createCropedThumbnail(0, 0, originalImage.getWidth(), originalImage.getHeight(), originalImage,imageBean.getImageType());
+					//baos = new ByteArrayOutputStream(in);
+					renderBinary(new ByteArrayInputStream(imageBean.getImageArray()));
+			 	} else {
+			 		width = width + xPos;
+			 		height = height + yPos;
+			 		baos = ImageUtil.crop(xPos, yPos, width, height, originalImage,imageBean.getImageType());
+			 		renderBinary(new ByteArrayInputStream(baos.toByteArray()));
+			 	}
 			}catch ( Exception e ) {
 				e.printStackTrace();
+				renderBinary(DEFAULT_IMAGE_FILE);
 			}
 		}
 	}
 
 	public static void showForEdit(String userName) {
 		byte[] imageArray = TalkerDAO.loadTalkerImage(userName, Security.connected());
-		
+
 		response.setHeader("Content-Type", "image/gif");
 		response.setHeader("Cache-Control", "no-cache");
 		if (imageArray == null) {
@@ -112,7 +118,7 @@ public class Image extends Controller {
 				g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 
 				g.drawImage(originalImage, 0, 0, IMG_WIDTH, IMG_HEIGHT, null);
-				g.dispose();	
+				g.dispose();
 
 				g.setComposite(AlphaComposite.Src);
 

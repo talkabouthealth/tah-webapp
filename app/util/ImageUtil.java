@@ -1,5 +1,6 @@
 package util;
 
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Transparency;
@@ -12,29 +13,65 @@ import javax.imageio.ImageIO;
 import play.Logger;
 
 public class ImageUtil {
-	
-	
+
 	/**
 	 * 
 	 */
-	public static ByteArrayOutputStream createCropedThumbnail(int xPos, int yPos, int width, int height, BufferedImage bsrc) throws IOException {
-		
-		//width = width - xPos;
-		//height = height - yPos;
-		BufferedImage bdest = ImageUtil.getScaledInstance(bsrc, bsrc.getWidth(), bsrc.getHeight(), 
-				RenderingHints.VALUE_INTERPOLATION_BICUBIC, true);
+	public static ByteArrayOutputStream createCropedThumbnail(int xPos, int yPos, int width, int height, BufferedImage bsrc,String imgType) throws IOException {
+
+		//BufferedImage bdest = ImageUtil.getScaledInstance(bsrc, bsrc.getWidth(), bsrc.getHeight(), RenderingHints.VALUE_INTERPOLATION_BICUBIC, true);
+		//bdest = bdest.getSubimage(xPos, yPos, width, height);
 	
-		bdest = bdest.getSubimage(xPos, yPos, width, height);
-		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    	ImageIO.write(bdest, "GIF", baos);
+    	ImageIO.write(bsrc,imgType.toUpperCase(), baos);
     	return baos;
 	}
-	
-	public static ByteArrayOutputStream getImageArray(BufferedImage bsrc) throws IOException {
+
+    public static ByteArrayOutputStream crop(int x1, int y1, int x2, int y2,BufferedImage img,String imgType) throws IOException {
+        if (x1 < 0 || x2 <= x1 || y1 < 0 || y2 <= y1 || x2 > img.getWidth() || y2 > img.getHeight())
+            throw new IllegalArgumentException("invalid crop coordinates");
+        int type = img.getType() == 0 ? BufferedImage.TYPE_3BYTE_BGR : img.getType();
+        int nNewWidth = x2 - x1;
+        int nNewHeight = y2 - y1;
+        BufferedImage cropped = new BufferedImage(nNewWidth, nNewHeight, type);
+        Graphics2D g = cropped.createGraphics();
+
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g.setComposite(AlphaComposite.Src);
+
+        g.drawImage(img, 0, 0, nNewWidth, nNewHeight, x1, y1, x2, y2, null);
+        g.dispose();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    	ImageIO.write(cropped, imgType.toUpperCase(), baos);
+
+        return baos;
+    }
+
+	public static ByteArrayOutputStream getImageArray(BufferedImage bsrc,String fileExt) throws IOException {
 		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    	ImageIO.write(bsrc, "GIF", baos);
+		
+		int srcWidth = bsrc.getWidth();
+		int srcHeight = bsrc.getHeight();
+		
+		BufferedImage bdest = ImageUtil.getScaledInstance(bsrc, srcWidth, srcHeight, 
+				RenderingHints.VALUE_INTERPOLATION_BICUBIC, true);
+		bdest = bdest.getSubimage(0, 0, srcWidth, srcHeight);
+    	ImageIO.write(bdest, fileExt, baos);
+    	return baos;
+	}
+
+	public static ByteArrayOutputStream getImageArray(BufferedImage bsrc) throws IOException {
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		int srcWidth = bsrc.getWidth();
+		int srcHeight = bsrc.getHeight();
+
+		BufferedImage bdest = ImageUtil.getScaledInstance(bsrc, srcWidth, srcHeight, 
+				RenderingHints.VALUE_INTERPOLATION_BICUBIC, true);
+		bdest = bdest.getSubimage(0, 0, srcWidth, srcHeight);
+
+    	ImageIO.write(bdest, "JPG", baos);
     	return baos;
 	}
 	/**
@@ -46,21 +83,18 @@ public class ImageUtil {
 	public static ByteArrayOutputStream createThumbnail(BufferedImage bsrc) throws IOException {
 		int width = 100;
 		int height = 100;
-		
 		int srcWidth = bsrc.getWidth();
 		int srcHeight = bsrc.getHeight();
 		int scaleToWidth = 0;
 		int scaleToHeight = 0;
-                
-                if (srcWidth <= width && srcHeight <= height) {
-                    width = srcWidth;
-                    height = srcHeight;
-                }
-                if (srcHeight > srcWidth) {
+        if (srcWidth <= width && srcHeight <= height) {
+        	width = srcWidth;
+        	height = srcHeight;
+        }
+        if (srcHeight > srcWidth) {
 			scaleToWidth = width;
 			scaleToHeight = (srcHeight*width)/srcWidth;
-		}
-		else {
+		} else {
 			scaleToWidth = (srcWidth*height)/srcHeight;
 			scaleToHeight = height;
 		}
@@ -147,7 +181,6 @@ public class ImageUtil {
            h = targetHeight;
        }
        
-       int count = 0;
        do {
            if (higherQuality && w > targetWidth) {
                w /= 2;
@@ -168,12 +201,8 @@ public class ImageUtil {
            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, hint);
            g2.drawImage(ret, 0, 0, w, h, null);
            g2.dispose();
-
            ret = tmp;
-           count++;
        } while (w != targetWidth || h != targetHeight);
-       Logger.info("getScaledInstance : " + count);
-
        return ret;
    }
 }

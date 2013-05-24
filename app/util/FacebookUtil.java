@@ -102,12 +102,9 @@ public class FacebookUtil {
 			URL pictureURL = new URL("http://graph.facebook.com/"+accountId+"/picture?type=normal");
 			BufferedImage bsrc = ImageIO.read(pictureURL);
 			ByteArrayOutputStream baos = ImageUtil.createThumbnailFromFacebook(bsrc);
-	    	TalkerDAO.updateTalkerImage(talker, baos.toByteArray());
-		}
-		catch (Exception e) {
+	    	TalkerDAO.updateTalkerImage(talker, baos.toByteArray(),"png");
+		} catch (Exception e) {
 			Logger.error(e, "FacebookUtil : userFacebookImage ");
 		}
-		
 	}
-
 }

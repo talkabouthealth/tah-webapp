@@ -463,6 +463,7 @@ body {
 	background: #fafafa;
 	color:#000;
 	display: inline-block;
+	width: 223px;
 }
 
 .box li, .box2 li { display: inline;list-style: none; }
