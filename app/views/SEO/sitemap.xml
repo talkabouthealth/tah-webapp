@@ -15,4 +15,7 @@
    <sitemap>
       <loc>http://talkabouthealth.com/sitemapconvo.xml</loc>
    </sitemap>
+      <sitemap>
+      <loc>http://talkabouthealth.com/sitemapvideo.xml</loc>
+   </sitemap>
 </sitemapindex>
