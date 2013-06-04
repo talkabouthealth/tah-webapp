@@ -111,6 +111,7 @@ public class VideoBean implements DBModel {
 		if(StringUtils.isBlank(getVideoTitle())) {
 			setVideoTitle(getConvoBean().getTopic());
 		}
+		setHomeVideoLink(getConvoBean().getMainURL());
 		setCreationDate((Date)dbObject.get("timestamp"));
 	}
 
