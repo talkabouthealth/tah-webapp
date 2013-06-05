@@ -441,6 +441,29 @@ public class Application extends Controller {
     	} else if(talker.getConnection().trim().equals("")) {
 			validation.required(talker.getConnection()).message("connection.notselected");
 		}
+    	if(talker.getConnection() != null && !talker.getConnection().trim().equals("") && !talker.isProf()) {
+    		if(StringUtils.isEmpty(talker.getZip())) {
+    			validation.required(talker.getZip()).message("zip.empty");
+    		}
+    		Date dateOfBirth = CommonUtil.parseDate(talker.getDobMonth(), talker.getDobDay(), talker.getDobYear());
+    		if (dateOfBirth != null) {
+    			validation.past(dateOfBirth);
+    			talker.setDob(dateOfBirth);
+    		}
+    		else {
+    			validation.required(dateOfBirth).message("dob.incorrect");
+    		}
+    		
+    		Date dateOfDiagnosed = CommonUtil.parseDate(talker.getDodMonth(), talker.getDodDay(), talker.getDodYear());
+    		if (dateOfDiagnosed != null) {
+    			validation.past(dateOfDiagnosed);
+    			talker.setDod(dateOfDiagnosed);
+    		}
+    		else {
+    			validation.required(dateOfDiagnosed).message("dod.incorrect");
+    		}
+    	}
+    	
 		// Validation for old fields (used earlier) - might be useful later
 //		Date dateOfBirth = CommonUtil.parseDate(talker.getDobMonth(), talker.getDobDay(), talker.getDobYear());
 //		if (dateOfBirth != null) {

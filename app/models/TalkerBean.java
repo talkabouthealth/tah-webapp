@@ -174,6 +174,13 @@ public class TalkerBean implements Serializable {
 	private int dobYear;
 	private Date regDate;
 	
+	//Added fiedls for dignosed dates
+	private Date dod;
+	private int dodMonth;
+	private int dodDay;
+	private int dodYear;
+	
+	
 	//Patient/Caregiver/etc.
 	private String connection;
 	private boolean connectionVerified;
@@ -1102,5 +1109,29 @@ public class TalkerBean implements Serializable {
 	}
 	public void setLogTime(Date logTime) {
 		this.logTime = logTime;
+	}
+	public Date getDod() {
+		return dod;
+	}
+	public void setDod(Date dod) {
+		this.dod = dod;
+	}
+	public int getDodMonth() {
+		return dodMonth;
+	}
+	public void setDodMonth(int dodMonth) {
+		this.dodMonth = dodMonth;
+	}
+	public int getDodDay() {
+		return dodDay;
+	}
+	public void setDodDay(int dodDay) {
+		this.dodDay = dodDay;
+	}
+	public int getDodYear() {
+		return dodYear;
+	}
+	public void setDodYear(int dodYear) {
+		this.dodYear = dodYear;
 	}
 }
