@@ -56,6 +56,9 @@ public class TalkerBean implements Serializable {
 		"Organization","Support Group",
 		 "other"
 	};
+	
+	public static final List<String> CONNECTONS_RELATIVE = Arrays.asList("Parent", "Caregiver", "Family member", "Friend");
+	
 	public static final List<String> CONNECTIONS_INTERRUPTORS = Arrays.asList(
 		"Survivor (Greater than 20 years)","Friend","Researcher"
 	);
@@ -700,6 +703,10 @@ public class TalkerBean implements Serializable {
 	
 	public boolean isAdmin() {
 		return (userName != null && userName.equals("admin"));
+	}
+	
+	public boolean isRelative() {
+		return CONNECTONS_RELATIVE.contains(connection);
 	}
 	
 	public String getAge() {

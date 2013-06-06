@@ -180,7 +180,7 @@
 								<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
 									<input id="newDieses" name="newsletter.newsLetterType" type="checkbox" value="" checked="checked"/>
 									Weekly <span id="categoryText"></span> Newsletter<br/>
-									<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured answers, experts, tips &amp; latest news.)</font>
+									<span class="textgreylight12" style="padding-left: 23px;">(Featured answers, experts, tips &amp; latest news.)</span>
 								</div>
 							</div>
 						</div>
@@ -228,7 +228,7 @@
 									</select>
 								</div>
 								<div class="signtag">
-									<span class="textgreylight12">You must be over 18 years old to use this service.</span>
+									<span class="textgreylight12">(So we can individualize your experience.)</span>
 								</div>
 							</div>						
 							<div class="signupmain">
@@ -259,15 +259,16 @@
 									</select>
 								</div>
 								<div class="signtag">
-									<span class="textgreylight12">You must be over 18 years old to use this service.</span>
+									<span class="textgreylight12">(You must be over 18 years old to use this service.)</span>
 								</div>
 							</div>
 							<div class="signupmain" style="margin-bottom: 10px;">
-								<div class="signuptextarea"><span class="blacktext14" id="ziplable">Zip code</span><br/>
-									<font style="font-weight: normal; line-height: 12px; font-size: 12px;">(So we can notify you of local programs)</font></div>
+								<div class="signuptextarea"><span class="blacktext14" id="ziplable">Zip code</span> </div>
 								<div class="personaltextfield">
 									<input name="talker.zip" type="text" class="personalfields" id="talker.zip" value="${flash['talker.zip']}" />
-									
+								</div>
+								<div class="signtag">
+									<span class="textgreylight12">(So we can notify you of local programs.)</span>
 								</div>
 							</div>
 						</div>
@@ -418,7 +419,7 @@
 								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TAH Workshop Notification" checked="checked"/>
 							#{/else}
 							Daily Health Update<br/>
-							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured answers, experts, tips &amp; latest news.)</font>
+							<span class="textgreylight12" style="padding-left: 23px;">(Featured answers, experts, tips &amp; latest news.)</span>
 						</div>
 						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
 							#{if newsletter != null && newsletter.newsLetterType !=null}
@@ -433,7 +434,7 @@
 								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TAH Workshop Summary" checked="checked"/>
 							#{/else}
 							Daily Q&A Workshop Summary<br/>
-							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Daily answer summaries from our expert Q&A workshops.)</font>
+							<span class="textgreylight12" style="padding-left: 23px;">(Daily answer summaries from our expert Q&A workshops.)</span>
 						</div>
 						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
 							#{if newsletter != null && newsletter.newsLetterType !=null}
@@ -448,7 +449,7 @@
 								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Best of TalkAboutHealth" checked='checked'> 
 							#{/else}
 							Best of TalkAboutHealth (weekly)<br/>
-							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(The week's best answers, news &amp; support.)</font>
+							<span class="textgreylight12" style="padding-left: 23px;">(The week's best answers, news &amp; support.)</span>
 						</div>
 						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
 							#{if newsletter != null && newsletter.newsLetterType !=null}
@@ -463,7 +464,7 @@
 								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TalkAboutHealth Rewards" checked="checked"/>
 							#{/else}
 							TalkAboutHealth Benefits<br/>
-							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Custom health, wellness &amp; medical offers.)</font>
+							<span class="textgreylight12" style="padding-left: 23px;">(Custom health, wellness &amp; medical offers.)</span>
 						</div>
 						<h4 style="font-weight: bold; margin-top: 10px;">
 						<a href="javascript:displayOptions('newsLetterOption');" ><img id="newsLetterOptionEC" src="/public/images/collapse.png"/><span style="margin-left: 5px; vertical-align: top;">View All Newsletters</span></a></h4>
@@ -547,7 +548,7 @@
 									<input id="newsletter" name="newsletter.newsLetterType"	type="checkbox" id="newsletter.newsLetterType" value="Pharmaceutical Rewards"/>
 								#{/else}
 								Pharmaceutical Benefits<br/>
-								<font size="2px;" style="font-weight: normal;padding-left: 23px;">Relevant offers and survey opportunities based on disease and more.</font>
+								<span class="textgreylight12" style="padding-left: 23px;">(Relevant offers and survey opportunities based on disease and more.)</span>
 							</div>
 							<div id="checkboxarea2" style="padding-bottom: 35px;padding-top: 2px;">
 								#{if newsletter != null && newsletter.newsLetterType !=null}
@@ -562,7 +563,7 @@
 									<input id="newsletter" name="newsletter.newsLetterType"	type="checkbox" id="newsletter.newsLetterType" value="Family Rewards"/>
 								#{/else}
 								Family Benefits <br/>
-								<font size="2px;" style="font-weight: normal;padding-left: 23px;">Maternity, baby and family offers.</font>
+								<span class="textgreylight12" style="padding-left: 23px;">(Maternity, baby and family offers.)</span>
 							</div>
 						</diV>
 						#{/ifnot}

@@ -76,6 +76,7 @@ public class TalkerDAO {
 				//.add("verify_code", talker.getVerifyCode())
 				.add("verify_code", null)
 				.add("dob", talker.getDob())
+				.add("dob_private", talker.getDob())
 				.add("dob", talker.getDod())
 				.add("timestamp",  Calendar.getInstance().getTime())
 				.add("category", talker.getCategory() == null ? null : talker.getCategory().equals("") ? null : talker.getCategory())
@@ -147,6 +148,7 @@ public class TalkerDAO {
 			
 			.add("hidden_helps", talker.getHiddenHelps())
 			.add("dob", talker.getDob())
+			.add("dod", talker.getDod())
 			.add("gender", talker.getGender())
 			.add("mar_status", talker.getMaritalStatus())
 			.add("city", talker.getCity())

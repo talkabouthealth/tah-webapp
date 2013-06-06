@@ -14,13 +14,11 @@
    	  				{ followingId: '${talker.id}'},
    	  				function(data) {
    	  					$("#followActionlink").html(data);
-
    	  					if (data == 'Follow') {
    	  						$("#followActionImageBtn").removeClass("followingMemberBtn").addClass("followMemberBtn");
    	  						$("#ajaxLoading").hide();
    	  						$("#followActionImageBtn").show();
-   	  					}
-   	  					else {
+   	  					} else {
    	  						$("#followActionImageBtn").removeClass("followMemberBtn").addClass("followingMemberBtn");
    	  						$("#ajaxLoading").hide();
    	  						$("#followActionImageBtn").show();

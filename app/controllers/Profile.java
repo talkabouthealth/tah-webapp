@@ -137,6 +137,9 @@ public class Profile extends Controller {
 		Date dateOfBirth = CommonUtil.parseDate(talker.getDobMonth(), talker.getDobDay(), talker.getDobYear());
 		talker.setDob(dateOfBirth);
 		
+		Date dateOfDiagnosed = CommonUtil.parseDate(talker.getDodMonth(), talker.getDodDay(), talker.getDodYear());
+		talker.setDod(dateOfDiagnosed);
+		
 		//------- save actions
 		if (!StringUtils.equals(oldTalker.getBio(), talker.getBio())) {
 			ActionDAO.saveAction(new UpdateProfileAction(oldTalker, ActionType.UPDATE_BIO));
@@ -148,6 +151,7 @@ public class Profile extends Controller {
 		oldTalker.setProfileName(talker.getProfileName());
 		oldTalker.setUserName(talker.getUserName());
 		oldTalker.setDob(dateOfBirth);
+		oldTalker.setDod(dateOfDiagnosed);
 		oldTalker.setGender(talker.getGender());
 		oldTalker.setWebpage(talker.getWebpage());
 		oldTalker.setBio(talker.getBio());

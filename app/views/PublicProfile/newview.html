@@ -392,6 +392,19 @@
 			                      </div>
 			                    </div>
 			                    #{/if}
+			                   
+			                    #{if talker.dod}
+			                    <div class="profiletxtCantant">
+			                      <div class="profileCantanttxt1">
+			                      	<strong>#{if talker.isRelative()}
+									Date Patient Diagnosed
+									#{/if}
+									#{else}
+									Date Diagnosed
+									#{/else}:</strong> <span class="Profilepersonsub">${talker.dod.format('dd MMM yyyy')}</span>
+			                      </div>
+			                    </div>
+			                    #{/if}
 			                    #{if talker.fullGender}
 			                    <div class="profiletxtCantant">
 			                    	<div class="profileCantanttxt1">
