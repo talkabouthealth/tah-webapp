@@ -355,6 +355,7 @@ public class TalkerBean implements Serializable {
 		setWorkshopSummery(getBoolean(talkerDBObject, "workshopSummery"));
 		setGender((String)talkerDBObject.get("gender"));
 		setDob((Date)talkerDBObject.get("dob"));
+		setDod((Date)talkerDBObject.get("dod"));
 		setInvitations(getInt(talkerDBObject, "invites"));
 		setCity((String)talkerDBObject.get("city"));
 		setState((String)talkerDBObject.get("state"));
