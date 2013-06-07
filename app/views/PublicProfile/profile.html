@@ -1,0 +1,402 @@
+#{set pageType = 'profile' /}
+#{set pageTitle = talker.name + " | " + talker.connection + " " + (talker.profInfo?.get("prim_specialty")==null?"":talker.profInfo?.get("prim_specialty")) + " | " + talker.category + (talker.otherCategories==null?"":"  " + talker.otherCategories) /}
+#{if talker.profileName != null && !talker.profileName.equals("")}
+  #{set pageTitle = talker.profileName + " | " + talker.connection + " " + (talker.profInfo?.get("prim_specialty")==null?"":talker.profInfo?.get("prim_specialty")) + " | " + talker.category + (talker.otherCategories==null?"":"  " + talker.otherCategories) /}
+#{/if}
+#{if talker.profStatement}
+	#{set pageDescription = talker.profStatement /}  
+#{/if}
+#{ set currentPage = 'publicProfile' /}
+#{extends 'main_new.html' /}
+<style>
+/* New following buttons */
+.followMemberBtn, .followingMemberBtn, .restartChatBtn, 
+.followConvoBtn, .followingConvoBtn, .followTopicBtn, .followingTopicBtn {	
+	border: 0 none;
+	cursor: pointer;
+	width: 170px;
+	height: 34px; 
+	margin-left: 35px;
+	display: block;
+	width:233px;
+	height:32px;
+	margin-top:-5px;
+}
+.followMemberBtn { background: url(/public/images/index/buttonBg.png); }
+.followMemberBtn:hover { background: url(/public/images/index/buttonBgHover.png); }
+.followingMemberBtn { background: url(/public/images/followingBtn.jpg); }
+.followingMemberBtn:hover { background: url(/public/images/unfollowMemberBtn.jpg); }
+.followingpictxt a{font-size:10px;}
+.tabBody { border-radius:5px; }
+.inline_form { display:none; }
+.inline-edit { float:left;	clear:both; }
+.tabBody li{float:left;width: 630px;}
+.comments {	float:left; }
+.bn1{float: right; font-size: 12px; padding: 0px 10px; line-height: 25px; margin-top: -5px;cursor: pointer;}
+.edititinputx{ width: 637px; height: 35px; margin: 0px; padding: 3px 5px; border: 1px solid rgb(204, 204, 204); border-radius: 5px 5px 5px 5px; color: rgb(153, 153, 153);}
+.comreplytxt{width:90%;}
+.comtextr{width:100%;}
+</style>
+	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
+	<script type="text/javascript" src="/public/javascripts/newview.js" ></script>
+	<script type="text/javascript">
+	<!--
+		var feedsPerPage = ${logic.FeedsLogic.TALKERFEEDS_PER_PAGE};
+		$(document).ready(function() {
+			var medium='${session.showLoginPoup}';
+			if(medium=='show'){
+				$("#loginpopupform").show();
+				  showPopup("#loginPopup", 350);
+			}
+			$('.inline-edit').inlineEdit( { hover: ''} );
+			$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+			
+			
+   			$("#thankYouUser").html('${talker.userName}');
+   			$("#commentUser").html('${talker.userName}');
+
+   			$("#followActionImageBtn, #followActionlink").click(function() {
+				var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
+				$(loading).appendTo("#followActionImageBtn");
+   			    $.post("@{Actions.followTalker()}", 
+   	  				{ followingId: '${talker.id}'},
+   	  				function(data) {
+   	  					$("#followActionlink").html(data);
+   	  					if (data == 'Follow') {
+   	  						$("#followActionImageBtn span").html(data);//("followingMemberBtn").addClass("followMemberBtn");
+   	  						$(loading).remove();
+   	  					} else {
+   	  						$("#followActionImageBtn span").html(data);//removeClass("followMemberBtn").addClass("followingMemberBtn");
+   	  						$(loading).remove();
+   	  					}
+   	  				}
+   	  			);
+	   		});
+			if($.trim($("#eduBox div").html()) == '') {
+				$("#eduBox").hide();
+			}
+		});
+   		function showSaveDialog(type,user) {
+   	   		if (type === 'startChat') {
+   	   			$("#newConvoTypeConvo").attr("checked", "checked");
+   	   		} else {
+   	   			$("#newConvoTypeQuestion").attr("checked", "checked");
+   	   		}
+			$("#newConvoForm").show();
+			$("#newQuestionConfirm").hide();
+			$("#newTalkConfirm").hide();
+			var convoTitle = $("#"+type+"Text").val();
+			if(user == 'anonymous'){
+				if (convoTitle !== "" 
+					&& convoTitle !== "Post a question and we will notify the right members to answer."
+					&& convoTitle !== "Start a live chat by sharing the topic you would like to discuss. Your peers will join within minutes." ) {
+					$("#newConvoTitleAnon").val($("#"+type+"Text").val());
+				}
+				showPopup("#startAnonymusDialog", 350);
+			}else{
+				if (convoTitle !== "" 
+					&& convoTitle !== "Post a question and we will notify the right members to answer."
+					&& convoTitle !== "Start a live chat by sharing the topic you would like to discuss. Your peers will join within minutes." ) {
+					$("#newConvoTitle").val($("#"+type+"Text").val());
+				}
+				showPopup("#startDialog", 350);
+			}
+   		}		
+   		function joinNow(){
+   	   		showPopup("#showJoinNow", 350);
+   		}
+   		deleteComment = function(commentId) {
+   	   		var confirmDel = confirm("Are you sure want to delete this thought/reply?");
+   	   		if (confirmDel) {
+   	   	  		$.post("@{Actions.deleteComment()}", 
+   					{ commentId : commentId},
+   					function(html) {
+   						$(".comment"+html).html("<div class=\"inline_view moretext2\" style=\"color:#000000;padding-bottom:5px; border-bottom:solid 0px gray\">Thought deleted ...</span>");
+   					}
+   				);
+   	   		}
+   	   		return false;
+   		}
+   	-->
+	</script>
+</head>
+<body class="home">
+	<div id="wrapper">
+		#{include 'header_new.html' /}
+		<div id="content">
+			<div id="main">
+			  <div class="profileCatant">
+                  <div class="mtcontent">
+                  	#{if notProvidedInfo }
+                  		<div id="provideInfoHelp" class="tabBody" style="margin-bottom: 15px;color: #383838; border:1px solid #ff7474;background-color: #ffefef; float: left;">
+						        <div>
+						          <div class="closecover" style="clear: none; float: right;">
+						            <div class="close" onclick="return hideHelpInfo('provideInfo', false);">
+						            	<img src="/public/images/close.png" alt="Close" /></div>
+						          </div>
+						          <div class="note"  style="padding:15px;">
+								  	<strong>Notice:</strong>
+								  	#{if talker.isProf() }
+								    	You have not provided Personal Info. You may provide this information using the 
+									  	<a href="@{Profile.edit()}">Edit Profile</a> page. 
+									  	<br/><br/> Your Personal Info will never be viewable by the public.
+								    #{/if}
+								    #{else}
+								    	You have not provided Personal Info or Health Info. You may provide this information using the 
+									  	<a href="@{Profile.edit()}">Edit Profile</a> and <a href="@{Profile.healthDetails()}">Edit Health Info</a> pages. 
+									  	<br/><br/>Your Personal Info and Health Info will never be viewable by the public.
+								    #{/else}
+						          </div>
+						        </div><!--popbox2-->
+						      </div>
+                  	#{/if}
+                  	#{if !notProvidedInfo && notViewableInfo }
+                  		<div id="viewableInfoHelp" class="tabBody" style="margin-bottom: 15px;color: #383838; border:1px solid #ff7474;background-color: #ffefef; float: left;">
+						        <div>
+						          <div class="closecover" style="clear: none; float: right;">
+						            <div class="close" onclick="return hideHelpInfo('viewableInfo', false);"><img src="/public/images/close.png" alt="Close" /></div>
+						          </div>
+						          <div class="note" style="padding:15px;"><strong>Notice:</strong>
+								  	Some of your profile information is private and no one else may view it. You may share your profile information with the TalkAboutHealth Community by changing your <a href="@{Profile.preferences()}">Privacy Settings</a>.
+						          </div>
+						        </div><!--popbox2-->
+						</div> 
+                  	#{/if}
+                  	<div class="box" style="width:100%;border-radius:5px;">
+						<h2 class="heading headerStrip">
+							#{if talker.connection}
+								#{talker/connectionInfo_new talker: talker /}
+							#{/if}
+							#{if currentTalker != null && !talker.userName.equals(currentTalker.userName)}
+								<span class="f1" style="float:right;margin-top:-6px;"><a href="#" id="followActionImageBtn"  
+								><span>${ currentTalker.followingList.contains(talker) ? 'Unfollow' : 'Follow'}</span></a></span>
+							#{/if}
+							</h2>
+						<div style="padding:10px">
+						<table style="width: 100%;">
+							<tr>
+								<td style="width:150px"><img width="150" src="@{Image.show(talker.name)}"></td>
+								<td style="padding-left: 10px;vertical-align:top;">
+									#{if talker.profileName != null && talker.profileName != ""}
+		                      			<h1 style="font-weight: bold; font-size: 25px; float: left; padding-right: 5px;">${talker.profileName}
+		                      			#{if talker.isProf() || talker.isOrg()}
+		                      				#{if talker.connectionVerified }<img src="/public/images/profile/vsign.png"/>#{/if}
+		                      				<img src="/public/images/profile/dsign.png"/>
+		                      			#{/if}
+		                      			</h1>
+		                      		#{/if}
+		                      		#{else}
+		                      			<h1 style="font-weight: bold; font-size: 25px; float: left; padding-right: 5px;">${talker.name}</h1>#{if talker.isProf() || talker.isOrg()}
+		                      				#{if talker.connectionVerified }<img src="/public/images/profile/vsign.png"/>#{/if}
+		                      				<img src="/public/images/profile/dsign.png"/>
+		                      			#{/if}
+		                      		#{/else}
+		                      		<br/><br/>
+		                      		<strong>Communities:</strong> 
+		                      		<br/>
+	                      	#{if talker.category != null}
+	                      		<a class="topicTitle" href="/explore/${talker.category.convertToURL()}">${talker.category}</a>#{if talker.otherCategories != null}#{list items: talker.otherCategories, as: 'cancerType'}, <a class="topicTitle" href="/explore/${cancerType.convertToURL()}">${cancerType}</a>#{/list}
+	                      		#{/if}
+	                      	#{/if}
+	                      	#{else}
+	                      		#{if talker.otherCategories != null}
+		                      		#{if talker.otherCategories.length == 0}
+		                      			<b>---</b>
+		                      		#{/if}
+		                      		#{else}
+		                      			#{list items: talker.otherCategories, as: 'cancerType'}
+		                      				<a class="topicTitle" href="/explore/${cancerType.convertToURL()}">${cancerType}</a>,
+		                      			#{/list}
+	                      			#{/else}
+	                      		#{/if}
+	                      		#{else}
+	                      			<b>---</b>
+	                      		#{/else}
+	                      	#{/else}
+								</td>
+								<td style="width: 150px; padding-left: 20px;">
+								<strong>Thank You's:</strong>
+								<div class="bn1">
+							<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.name, 'thankyous')}">
+								${talker.thankYouList.size()}
+							</a>
+							</div>
+							<br/><br/>
+							<strong>Answers:&nbsp;</strong>
+							<div class="bn1">
+                      	<a style="text-decoration: none" href="@{PublicProfile.answers(talker.name)}">${numOfAnswers}</a>
+                      	</div>
+                      	<br/><br/>
+                      	
+                      	<strong>Questions:&nbsp;</strong>
+                      	<div class="bn1">
+                      	<a style="text-decoration: none" href="@{PublicProfile.conversations(talker.name)}">${numOfStartedConvos}</a>
+                      	</div>
+                      	<br/><br/>
+		                      		<strong>Joined</strong><br/><span style="color:#014BA9;">${talker.regDate.format('MMM. yyyy')}</span>
+								</td>
+							</tr>
+						</table>
+						</div>
+					</div>
+					<div style="float: left; width: 100%; padding: 10px 0px 20px;">
+						#{include 'socialNetworkShare.html' /}
+					</div>
+					<div id="postQuestionTabContent" class="tabBody" style="display:block;border-radius:5px;padding: 20px; width: 650px;">
+						<div style="float:left;">                  		    
+	                  	<div class="bn1" style="float: left; padding: 3px; font-weight: bold; font-size: 13px; margin-bottom: 10px;">
+	                  		<div style="float: left; margin-top: 4px; margin-right: 3px;"><img src="/public/images/profile/ask_icon.png" /></div>
+	                  		<a href="#">Ask a question</a></div>
+							#{if currentTalker}
+								<input type="text" id="postQuestionText" class="edititinputx inline_text greyarea"
+								onKeyUp="countDown(this);"
+								onfocus="clearTextArea('postQuestionText', 'Post a question and we will notify the right members to answer.');"
+								maxlength="160" 
+								value="Post a question and we will notify the right members to answer." />
+							#{/if}
+							#{else}
+								<input type="text" id="postQuestionText" class="edititinputx inline_text greyarea"
+								maxlength="160" onfocus="$(this).blur(); joinNow();" 
+								value="Post a question and we will notify the right members to answer." />
+							#{/else}					
+						</div>
+						<div style="width:100%; padding-top: 15px; float:left;">
+								<div style="float: left;color:#a5a5a5;">Characters remaining:<span id="postQuestionTextSize">160</span></div>
+								<div style="width:300px;float:left;">
+								#{ convo/ccInputs_new type: "Question", setting: "POST_ON_CONVO" /}
+								</div>
+								<div style="float:right;">
+				                  	#{if currentTalker == null }
+										<input class="bn1" type="button" onclick="return showSaveDialog('postQuestion','anonymous');" id="postQuestionBtn" value="Post Question" style="font-weight: bold; font-size: 13px;padding:5px 10px;"/>
+				                  	#{/if}
+				                  	#{else}
+										<input class="bn1" type="button" onclick="return showSaveDialog('postQuestion');" id="postQuestionBtn" value="Post Question" style="font-weight: bold; font-size: 13px;padding:5px 10px;"/>
+				                  	#{/else} 
+				                </div>
+	                  	</div>
+                  		<div style="clear:both"></div>
+					</div>
+					#{if talker.profStatement}
+						<div class="tabBody" style="margin-top:20px;">
+							<div style="padding:20px;">
+								#{if talker.isOrg()}
+									<div class="profilebio"><strong>Organization Info</strong></div>
+				                    <div class="topicborder"></div>
+								#{/if}				
+								#{ifnot talker.isOrg()}
+									<div class="profilebio"><strong>Professional Statement</strong></div>
+				                    <div class="topicborder"></div>
+								#{/ifnot}
+			                    <div class="profilebiotxt">${talker.profStatement.replaceAll("(http://[^\"\'\n ]+)", "<a href=\"\$1\" target=_blank>\$1</a>").nl2br()}</div>
+		                    </div>
+						</div>
+					#{/if}
+					 #{if talker.bio && talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_INFO, currentTalker)}
+						 <div class="tabBody" style="margin-top:20px;">
+							<div style="padding:20px;">
+								<div class=cb></div>							
+								<div class="profilebio"><strong>Personal Bio (My story)</strong></div>
+			                    <div class="topicborder"></div>
+			                    <div class="profilebiotxt">${talker.bio.nl2br()}</div>
+			                </div>
+						</div>
+					#{/if}
+                    #{if talker.isAllowed(models.PrivacySetting.PrivacyType.ACTIVITY_STREAM, currentTalker) && talkerFeed}
+                    <div style="float: left; height: 20px;">&nbsp;</div>
+						<div class="slide">
+						<ul class="tabs" style="border-left:1px solid #CCC;">
+						<li>
+						<a href="#">${talker.name} Activities </a>
+						</li>
+						</ul>
+						</div>
+	                    <div class="tabBody" style="border-radius: 0px 0px 5px 5px;">
+	                    <ul id="talkerFeedCnt">
+		                    	#{list items: talkerFeed, as: 'activity'}
+									#{feed/feedActivity_profile activity: activity, talker: talker /}
+								#{/list}
+						</ul>		
+							#{if talkerFeed.size() == logic.FeedsLogic.TALKERFEEDS_PER_PAGE }
+							<ul>
+							<li class="lastFeed">
+								<div id="talkerFeedBtn">
+		                          <button type="submit" src="images/seemore.jpg" onclick="return loadMoreProfileFeed('talkerFeed', '${talker.userName}');" value=" " 
+		                          		style="margin: 0; padding: 0;border-width: 0;background: none;cursor: pointer;">
+		                          	<img src="/public/images/index/see_more_btn.png" alt="see more" />
+		                          </button>
+		                        </div>
+		                        </li>
+		                       </ul>
+							#{/if}
+									
+                    	</div>
+					#{/if}
+					#{if talker.isProf()}					
+						#{if !talker.isAllowed(models.PrivacySetting.PrivacyType.USERNAME, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_IMAGE, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_INFO, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.PROFESSIONAL_INFO, currentTalker) }
+							<div style="padding-top: 30px; clear: both;">
+								<b>${talker.name}</b> has chosen to have all or some of their profile information private or only viewable by the community.</div>
+						#{/if}
+					#{/if}
+					#{else}
+						#{if !talker.isAllowed(models.PrivacySetting.PrivacyType.USERNAME, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_IMAGE, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_INFO, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.HEALTH_INFO, currentTalker) }
+							<div style="padding-top: 30px; clear: both;">
+								<b>${talker.name}</b> has chosen to have all or some of their profile information private or only viewable by the community.</div>
+						#{/if}
+					#{/else}
+                  </div><!--profileCatant-->
+                </div>
+			  </div><!--mtleft-->
+			  <div id="sidebar">
+            	#{ include 'PublicProfile/profileRight_new.html' /}
+            	</div>
+          </div><!--mtcover-->
+       </div>
+	<div id="boxes">
+			<div id="dialog" class="window"></div>
+				#{if !talker}
+					#{ popups/loginPopup  mainURL: talker.userName /}
+				#{/if}
+				#{ popups/thankyou /}
+				#{ popups/thoughtComment /}
+				#{ popups/profileJoinNow /}
+				#{popups/startConvo page: 'profileRight', target: talker, talker: currentTalker /}
+			</div>
+<div id="mask"></div>
+<script type="text/javascript">
+var medium='${session.showLoginPoup}';
+if(medium=='show'){
+	$("#loginpopupform").show();
+	  showPopup("#loginPopup", 350);
+}
+
+countDown = function(obj) {
+	var currLenght = $(obj).val().length/1;
+	var oldLength = $('#postQuestionTextSize').text()/1;
+	if(160 - currLenght >= 0) {
+		$('#postQuestionTextSize').html(160 - currLenght);
+		
+	}
+}
+
+function loadMoreProfileFeed(type, talkerName) {
+	var lastActionId = $("#"+type+"Cnt").children().last().attr("id");
+	//replace More button with loading image
+
+	var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
+	$(loading).appendTo($("#"+type+"Cnt"));
+	
+	//public static void conversationFeedAjax(String afterActionId) {
+	$.get("/explore/feedAjaxLoad", {afterActionId: lastActionId, feedType: type, talkerName: talkerName},
+			function(data) {
+				$(loading).remove();
+				if($.trim(data) == '') {
+					$("li.lastFeed").hide();
+				} else {
+					$(data).appendTo($("#"+type+"Cnt"));
+					$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+				}
+ 			}
+		);
+	return false;
+}
+</script>

@@ -76,7 +76,7 @@
 	<link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
 	
 	<link href="/public/stylesheets/new_style.css" rel="stylesheet" type="text/css" />
-	
+	<style>.home { background: url(/public/images/index/headernew.png) 0 0px repeat-x !important; }</style>
         
         <link type="text/css" href="/public/stylesheets/smoothness/jquery-ui-1.8.14.custom.css" rel="stylesheet" />	
         <script type="text/javascript" src="/public/javascripts/jquery-1.5.1.min.js"></script>
@@ -190,7 +190,12 @@
 	        <div style="float:left;height:12px;">&nbsp;<span id="respMessageMain" style="float:left;display: none;">Test Text</span></div>
 	        <div style="float:left;">
 	        #{if session.username }
+	        	#{if currentTalker}
+				<input name="newsletter.email" id="email" placeholder="Valid Email" type="text" class="newsltr_field" value="${currentTalker.email}"/>
+				#{/if}
+				#{else}
 				<input name="newsletter.email" id="email" placeholder="Valid Email" type="text" class="newsltr_field" value="${talker.email}"/>
+				#{/else}
 			#{/if}
 			#{else}
 				<input name="newsletter.email" id="email" placeholder="Valid Email" type="text" class="newsltr_field" />

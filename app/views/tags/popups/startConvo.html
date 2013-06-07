@@ -114,7 +114,7 @@
           <div class="iwant1">
           Thank you for sharing your question.
           #{if _page.equals("profileRight")}
-          We will notify ${_target.name}.
+          We will notify ${_target.name} right away.
           #{/if}
           </div>
 
@@ -154,3 +154,31 @@
     </div>
     <!--boxtopcenter-->
   </div> 
+  
+  
+  <div id="showJoinNow" class="window">
+    <div class="boxtopcenter">
+      <div id="newConvoForm" class="popboxWraper">
+        <div class="popbox2" style="height: 170px; width: 500px;margin-top: 190px; margin-left: 120px;">
+          <div class="closecover">
+            <div class="close"><img src="/public/images/close.jpg" alt="Close" /></div>
+          </div>
+           <div class="">
+           <img class="logotopmargin" border="0"  src="/public/images/logo_footer.jpg" alt="Talk About Health">
+          </div>
+          <!--askquestion-->
+          <div style="font-size: 18px; font-weight: bold; padding-top: 10px">
+              <b>Please join TalkAboutHealth and you will be able to ask questions.</b>
+            </div> 
+          <div id="joinnowbutton" style="margin: 5px 0px; padding-top: 10px; width: 145px;">
+			<a href="@{Application.signup()}">
+				<img src="/public/images/join_now1.png" alt="" border="0"/>
+			</a>
+			</div>
+          <!--joinnowbutton-->
+          <div class="cb"></div>
+        </div>
+      </div>
+     </div> 
+  </div> 
+  

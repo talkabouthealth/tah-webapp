@@ -115,7 +115,6 @@ public class TalkerDAO {
     		vars.put("username", talker.getUserName());
         	EmailUtil.sendEmail(EmailTemplate.WELCOME_NEWSLETTER, talker.getEmail(), vars, null, false);
 		}
-
 		talker.setId(talkerDBObject.get("_id").toString());
 		return true;
 	}

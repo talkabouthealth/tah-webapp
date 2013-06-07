@@ -1,0 +1,663 @@
+<!-- Overview -->
+#{if talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_INFO, currentTalker)}
+	<div class="box">
+	<h2 class="heading"><img src="/public/images/profile/overview_icon.png" alt="Personal Info" /><a href="@{Static.workshops()}">Personal Info</a></h2>
+	<div class=body>
+                 <div class="topicborder"></div>
+                 #{if talker.state || talker.city || talker.zip || talker.country}
+                 <div class="profiletxtCantant">
+                   	<div class="profileCantanttxt1">
+                    	<strong>Location:</strong><br/><span class="Profilepersonsub">
+                    	#{if talker.state} ${talker.state}, #{/if}
+                    	#{if talker.city} ${talker.city}, #{/if}
+                    	#{if talker.zip} ${talker.zip}, #{/if}
+                    	#{if talker.country} ${talker.country} #{/if}
+                    	</span>
+                  </div>
+                 </div>
+                 #{/if}
+                 #{if talker.age}
+                 <div class="profiletxtCantant">
+                   <div class="profileCantanttxt1">
+                   	<strong>Age:</strong><br/><span class="Profilepersonsub">${talker.age}</span>
+                   </div>
+                 </div>
+                 #{/if}
+                 #{if talker.dod}
+			                    <div class="profiletxtCantant">
+			                      <div class="profileCantanttxt1">
+			                      	<strong>#{if talker.isRelative()}
+									Date Patient Diagnosed
+									#{/if}
+									#{else}
+									Date Diagnosed
+									#{/else}<br/></strong> <span class="Profilepersonsub">${talker.dod.format('dd MMM yyyy')}</span>
+			                      </div>
+			                    </div>
+			                    #{/if}
+                 #{if talker.fullGender}
+                 <div class="profiletxtCantant">
+                 	<div class="profileCantanttxt1">
+                    	<strong>Gender:</strong><br/><span class="Profilepersonsub">${talker.fullGender}</span>
+                  </div>
+              </div>
+              #{/if}
+              #{if talker.maritalStatus}
+              <div class="profiletxtCantant">
+                 	<div class="profileCantanttxt1">
+                   		<strong>Marital Status:</strong><br/><span class="Profilepersonsub">${talker.maritalStatus}</span>
+                     </div>
+              </div>
+              #{/if}
+              #{if talker.childrenNum > 0}
+                  <div class="profiletxtCantant">
+                  	<div class="profileCantanttxt1">
+                     	<strong>Number of children:</strong><br/><span class="Profilepersonsub"> ${talker.childrenNum}</span>
+                   </div>
+               </div>
+              #{/if}
+              #{if talker.childrenAges}
+              <div class="profiletxtCantant">
+                 	<div class="profileCantanttxt1">
+                    	<strong>Ages of children:</strong><br/>
+                   		<span class="Profilepersonsub"> ${talker.childrenAges?.toCommaStringView()}</span>
+                  </div>
+              </div>
+              #{/if}
+              #{if talker.ethnicities}
+              <div class="profiletxtCantant">
+                 	<div class="profileCantanttxt1">
+                    	<strong>Ethnicity:</strong><br/>
+                   		<span class="Profilepersonsub"> ${talker.ethnicities?.toCommaStringView()}</span>
+                  </div>
+              </div>
+              #{/if}
+              #{if talker.religion}
+              <div class="profiletxtCantant">
+                 	<div class="profileCantanttxt1">
+                    	<strong>Religion:</strong><br/>
+                   		<span class="Profilepersonsub"> ${talker.religion} ${talker.religionSerious}</span>
+                  </div>
+              </div>
+              #{/if}
+              #{if talker.languagesList}
+              <div class="profiletxtCantant">
+                 	<div class="profileCantanttxt1">
+                    	<strong>Speaks:</strong><br/>
+                   		<span class="Profilepersonsub"> ${talker.languagesAsString}</span>
+                  </div>
+              </div>
+              #{/if}
+              #{if talker.keywords}
+              <div class="profiletxtCantant">
+                 	<div class="profileCantanttxt1">
+                   	<strong>Ask me about:</strong><br/>
+                   	<span class="Profilepersonsub"> ${talker.keywords?.toCommaStringView()}</span>
+                   </div>
+              </div>
+              #{/if}
+		</div>
+	</div>
+#{/if}
+
+#{if (talker.isProf() || talker.isOrg()) && talker.isAllowed(models.PrivacySetting.PrivacyType.PROFESSIONAL_INFO, currentTalker)}
+<div class="box">
+	<h2 class="heading"><img src="/public/images/profile/overview_icon.png" alt="Overview" /><a href="@{Static.workshops()}">Overview</a></h2>
+	<div class=body>
+	 #{list items: logic.TalkerLogic.PROF_FIELDS_MAP.keySet(), as: 'field'}
+		#{if field.equals("specialty") && talker.isProf()}
+	 		#{if talker.profInfo.get("specialty")}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>Specialty</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get("specialty")}</span>
+		              </div>
+		         </div>
+	         #{/if}
+	 	#{/if}
+	 	#{if field.equals("cam")}
+	 		#{if talker.profInfo.get(field)}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>${logic.TalkerLogic.PROF_FIELDS_MAP.get(field)?.raw()}</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get(field)}</span>
+		              </div>
+		         </div>
+	         #{/if}
+	 	#{/if}
+	 	
+	 	#{if field.equals("prim_specialty") && talker.isProf()}
+	 		#{if talker.profInfo.get("prim_specialty")}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>Specialty</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get("prim_specialty")}</span>
+		              </div>
+		         </div>
+	         #{/if}
+	 	#{/if}
+	 	#{if field.equals("sec_specialty") && talker.isProf()}
+	 		#{if talker.profInfo.get("sec_specialty")}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>Specialty</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get("sec_specialty")}</span>
+		              </div>
+		         </div>
+	         #{/if}
+	 	#{/if}
+		#{if field.equals("states_lic") && talker.isProf()}
+	 		#{if talker.profInfo.get("states_lic")}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>State Licenses</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get("states_lic")}</span>
+		              </div>
+		         </div>
+	         #{/if}
+	 	#{/if}
+	 	#{if field.equals("licenses") && talker.isProf()}
+	 		#{if talker.profInfo.get("licenses")}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>Licenses</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get("licenses")}</span>
+		              </div>
+		         </div>
+			#{/if}
+	 	#{/if}
+	 	#{if field.equals("affiliation") && talker.isProf()}
+	 		#{if talker.profInfo.get("affiliation")}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>Hospital Affiliation</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get("affiliation")}</span>
+		              </div>
+		         </div>
+	         #{/if}
+	 	#{/if}
+	 	#{if field.equals("other_affiliation")}
+	 		#{if talker.profInfo.get("other_affiliation")}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>${logic.TalkerLogic.PROF_FIELDS_MAP.get(field)?.raw()}</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get("other_affiliation")}</span>
+		              </div>
+		         </div>
+	         #{/if}
+	 	#{/if}	 	
+	 	#{if field.equals("pract_name") && talker.isProf()}
+	 		#{if talker.profInfo.get("pract_name")}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>Practice name</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get("pract_name")}</span>
+		              </div>
+		         </div>
+	         #{/if}
+	 	#{/if}
+		#{if field.equals("pract_adr")}
+        	#{if talker.profInfo.get("pract_adr1") || talker.profInfo.get("pract_adr2") || talker.profInfo.get("pract_city") || talker.profInfo.get("pract_state") || talker.profInfo.get("pract_zip")}					                
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>
+		              	#{if talker.isOrg()}Organization address#{/if}
+		              	#{else}Practice address#{/else}:</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">
+		              		${talker.profInfo.get("pract_adr1")} ${talker.profInfo.get("pract_adr2")}
+		              		${talker.profInfo.get("pract_city")}, ${talker.profInfo.get("pract_state")} 
+		              		${talker.profInfo.get("pract_zip")}
+		              	</span>
+		              </div>
+		         </div>
+	         #{/if}
+        #{/if}				
+		#{if field.equals("pract_phone") && talker.isProf()}
+           	#{if talker.profInfo.get("pract_phone")}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>#{if talker.isOrg()}Contact phone#{/if}
+		              	#{else}Practice phone#{/else}:</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get("pract_phone")}</span>
+		              </div>
+		         </div>
+		    #{/if}
+        #{/if}
+	 #{/list}
+	 </div>
+</div>
+#{/if}
+<!-- Overview End -->
+<!-- Education and Certification -->
+<div class="box" id="eduBox">
+	<h2 class="heading" style="padding-right:0px">
+	<img src="/public/images/profile/education_icon.png" alt="Education" style="margin-right:3px;margin-top: -1px;"/>
+	<a href="@{Static.workshops()}" style="font-size:17px;">Education and Certification</a></h2>
+	<div class=body>
+	 #{list items: logic.TalkerLogic.PROF_FIELDS_MAP.keySet(), as: 'field'}
+	 	#{if field.equals("med_school")}
+			#{if talker.profInfo.get("med_school")}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>Medical School:</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get("med_school")}</span>
+		              </div>
+		         </div>
+		    #{/if}
+		#{/if}
+		#{if field.equals("nurse_school") && talker.isProf()}
+           	#{if talker.profInfo.get("nurse_school")}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>Nurse School</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get("nurse_school")}</span>
+		              </div>
+		         </div>
+		    #{/if}
+        #{/if}
+		#{if field.equals("pharm_school") && talker.isProf()}
+           	#{if talker.profInfo.get("pharm_school")}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>Residency</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get("pharm_school")}</span>
+		              </div>
+		         </div>
+		    #{/if}
+        #{/if}
+		#{if field.equals("residency")}
+           	#{if talker.profInfo.get("residency")}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>Residency:</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get("residency")}</span>
+		              </div>
+		         </div>
+		    #{/if}
+        #{/if}
+        #{if field.equals("school_uni") && talker.isProf()}
+           	#{if talker.profInfo.get("school_uni")}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>School University:</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get("school_uni")}</span>
+		              </div>
+		         </div>
+		    #{/if}
+        #{/if}
+		#{if field.equals("internship") && talker.isProf()}
+           	#{if talker.profInfo.get("internship")}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>Internship</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get("internship")}</span>
+		              </div>
+		         </div>
+		    #{/if}
+        #{/if}
+        #{if talker.profInfo.get(field) || (field.equals("educ") && talker.connection.equals("Physician"))}
+            #{if talker.profInfo.get("educ")}
+            <div class="profiletxtCantant">
+              <div class="profileCantanttxt1">
+              	<h2 style="font-size:12px;"><strong>${logic.TalkerLogic.PROF_FIELDS_MAP.get(field)?.raw()}:</strong> 
+              	<span class="Profilepersonsub" style="font-weight: normal;">
+              		${talker.profInfo.get(field).replaceAll("(http://[^\"\'\n ]+)", "<a href=\"\$1\" target=_blank>\$1</a>").nl2br()}					                      		
+              	</span></h2>
+              </div>
+            </div>
+            #{/if}
+        #{/if}
+        
+        #{if field.equals("certifications") && talker.isProf()}
+           	#{if talker.profInfo.get("certifications")}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>Certifications</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get("certifications")}</span>
+		              </div>
+		         </div>
+		    #{/if}
+        #{/if}
+        
+		#{if field.equals("board_certs") && talker.isProf()}
+           	#{if talker.profInfo.get("board_certs")}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>Board Certifications</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get("board_certs")}</span>
+		              </div>
+		         </div>
+		    #{/if}
+        #{/if}
+        #{if field.equals("fellowship") && talker.isProf()}
+           	#{if talker.profInfo.get("fellowship")}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>Board Certifications</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get("fellowship")}</span>
+		              </div>
+		         </div>
+		    #{/if}
+        #{/if}
+		#{if field.equals("memberships")}
+           	#{if talker.profInfo.get(field)}
+		         <div class="profiletxtCantant">
+		            	<div class="profileCantanttxt1">
+		              	<strong>${logic.TalkerLogic.PROF_FIELDS_MAP.get(field)?.raw()}</strong>
+		              	<br/>
+		              	<span class="Profilepersonsub">${talker.profInfo.get("memberships")}</span>
+		              </div>
+		         </div>
+		    #{/if}
+        #{/if}
+	#{/list}
+	#{if talker.profInfo.get("bl_page")}
+         <div class="profiletxtCantant">
+            	<div class="profileCantanttxt1">
+              	<strong>Blog</strong>
+              	<br/>
+              	<span class="Profilepersonsub">${talker.profInfo.get("bl_page").replaceAll("(http://[^\"\'\n ]+)", "<a href=\"\$1\" target=_blank>\$1</a>").nl2br()}</span>
+              </div>
+         </div>
+    #{/if}
+	#{if field.equals("tw_page") || talker.profInfo.get("fb_page") || talker.profInfo.get("li_page") }      	
+	     <div class="profiletxtCantant">
+	       	<div class="profileCantanttxt1">
+	          	<strong>Connect</strong>
+	           	<br/>
+				#{list items: logic.TalkerLogic.PRIV_FIELDS_MAP.keySet(), as: 'field'}
+				#{if field.equals("fb_page")}
+					#{if talker.profInfo.get("tw_page")}
+		            <span class="Profilepersonsub">${talker.profInfo.get("tw_page").replaceAll("(http://[^\"\'\n ]+)", "<a href=\"\$1\" target=_blank><img src='/public/images/profile/tweeter.png'/></a>").nl2br()}</span>
+		            #{/if}
+				#{/if}
+				#{if field.equals("fb_page")}
+					#{if talker.profInfo.get("fb_page")}
+		              	<span class="Profilepersonsub">
+		              		${talker.profInfo.get("fb_page").replaceAll("(http://[^\"\'\n ]+)", "<a href=\"\$1\" target=_blank><img src='/public/images/profile/facebook.png'/></a>").nl2br()}
+		              	</span>
+					#{/if}
+				#{/if}  
+				#{if field.equals("li_page")} 
+					#{if talker.profInfo.get("li_page")}
+		              	<span class="Profilepersonsub">${talker.profInfo.get("li_page").replaceAll("(http://[^\"\'\n ]+)", "<a href=\"\$1\" target=_blank><img src='/public/images/profile/in.png'/></a>").nl2br()}</span>
+					#{/if}
+				#{/if}  
+		 		#{/list}
+	  		  </div>
+	     </div>
+	#{/if}
+	#{if talker.webpage}
+      <div class="profiletxtCantant">
+         	<div class="profileCantanttxt1">
+           	<strong>Webpage:</strong>
+           	<br/>
+           	<span class="Profilepersonsub">
+           		<a href="${talker.webpage.startsWith('http') ? talker.webpage : 'http://'+talker.webpage}"
+              			target="_blank">${talker.webpage}</a>
+           	</span>
+           </div>
+      </div>
+	#{/if}
+	</div>
+</div>
+<!-- Education and Certification End-->
+<!-- Expertise and Interests -->
+#{if talker.isProf() || talker.isOrg()}
+	#{if talker.profInfo.get("expertise") || talker.profInfo.get("research_interests")}
+		<div class="box">
+			<h2 class="heading"><img src="/public/images/profile/experties.png" alt="Expertise" style="margin-top:-3px;"/><a href="@{Static.workshops()}" style="font-size:17px;">Expertise and Interests</a></h2>
+			<div class=body>
+			#{list items: logic.TalkerLogic.PROF_FIELDS_MAP.keySet(), as: 'field'}
+					#{if field.equals("expertise") && talker.isProf()}
+		           	#{if talker.profInfo.get("expertise")}
+				         <div class="profiletxtCantant">
+				            	<div class="profileCantanttxt1">
+				              	<strong>Expertise</strong>
+				              	<br/>
+				              	<span class="Profilepersonsub">${talker.profInfo.get("expertise")}</span>
+				              </div>
+				         </div>
+				    #{/if}
+		        #{/if}
+		        #{if field.equals("research_interests") && talker.isProf()}
+		           	#{if talker.profInfo.get("research_interests")}
+				         <div class="profiletxtCantant">
+				            	<div class="profileCantanttxt1">
+				              	<strong>Research Interests</strong>
+				              	<br/>
+				              	<span class="Profilepersonsub">${talker.profInfo.get("research_interests")}</span>
+				              </div>
+				         </div>
+				    #{/if}
+		        #{/if}            
+			#{/list}
+			</div>
+		</div>
+#{/if}
+#{/if}
+<!-- Expertise and Interests End-->
+<!-- Awards-->
+#{list items: logic.TalkerLogic.PROF_FIELDS_MAP.keySet(), as: 'field'}
+	#{if field.equals("awards")}
+		#{if talker.profInfo.get("awards")}
+			<div class="box">
+				<h2 class="heading"><img src="/public/images/profile/awards_icon.png" alt="Awards" /><a href="@{Static.workshops()}">Awards</a></h2>
+				<div class=body>
+					<div class="profiletxtCantant">
+						<div class="profileCantanttxt1"><span class="Profilepersonsub">${talker.profInfo.get("awards")}</span></div>
+					</div>
+				</div>
+			</div>
+		#{/if}
+	#{/if}
+#{/list}
+
+<!-- Awards End-->
+
+<!-- Insurance -->
+ #{if talker.insuranceAccepted?.size() > 0 }
+	<div class="box">
+		<h2 class="heading"><img src="/public/images/profile/overview_icon.png" alt="Personal Info" /><a href="@{Static.workshops()}">Insurance accepted</a></h2>
+		<div class=body>
+   			#{list items: talker.insuranceAccepted, as: 'insurance' }
+   				${insurance}<br/>
+   			#{/list}
+ 		</div>
+ 	</div>
+#{/if}
+<!-- Insurance End-->
+
+<!-- Health Info -->
+
+#{if talker.isAllowed(models.PrivacySetting.PrivacyType.HEALTH_INFO, currentTalker) && talkerDisease && !talker.isProf() }
+	#{if talker.category != null}
+		#{if !talkerDisease.isEmptyHealthInfo() }
+			<div class="box">
+			<h2 class="heading"><img src="/public/images/index/cal_icon.png" alt="calendar" /><a href="@{Static.workshops()}">Health Info</a></h2>
+				<ul>
+					<li class="blacktext12"><b>Disease</b>: <span class="blacktext">${talkerDisease.name}</span><br/></li>
+					#{list items: disease.questions, as: 'question'}
+						#{if question.name.equals("rareforms")}
+							#{if talkerDisease.combinedToCommaString("rareforms")}
+							<li class="blacktext12" style="height: auto"><b>${question.displayName}</b><br/>
+							<span class="blacktext">${talkerDisease.combinedToCommaString("rareforms")}</span>
+							<br/>
+							</li>
+							#{/if} 
+						#{/if}
+						#{elseif talkerDisease.healthInfo?.get(question.name)}
+							<li class="blacktext12" style="height: auto"><b>${question.displayName}</b><br/> 
+								<span class="blacktext">${talkerDisease.healthInfo.get(question.name)?.toCommaStringView()}</span>
+								<br/>
+							</li>
+						#{/elseif}
+					#{/list}
+					#{if talkerDisease.symptomDate}
+						<li class="blacktext12"><b>Date of first symptom</b><br/> 
+							<span class="blacktext">${talkerDisease.symptomDate?.format('MM/dd/yyyy')}</span>
+							<br/>
+						</li>
+					#{/if}
+					
+					#{if talkerDisease.diagnoseDate}
+						<li class="blacktext12"><b>Date of diagnosis</b><br/> 
+							<span class="blacktext">${talkerDisease.diagnoseDate?.format('MM/dd/yyyy')}</span>
+							<br/>
+						</li>
+					#{/if}
+					#{if talkerDisease.recurrent}
+					<li class="blacktext12"><b>Recurrent</b><br/>
+						<span class="blacktext">${talkerDisease.recurrent}</span>
+						<br/>
+					</li>
+					#{/if}
+					#{if !talkerDisease.isEmpty("symptoms")}
+					<li class="blacktext12 healthitemtitle" style="padding-top:10px;"><strong>Initial Symptoms</strong><br/></li>
+					<!-- We need span to hide health items titles without children using jQuery -->
+					#{ profile/healthItemsList healthItem: healthItemsMap.get("symptoms"), talkerDisease: talkerDisease /}
+					#{list items: talkerDisease.otherHealthItems?.symptoms, as: 'item' }									
+						<li class="blacktext12">${item}<br/></li>
+						
+					#{/list}
+					#{/if}
+					
+					#{if !talkerDisease.isEmpty("tests")}
+					<li class="blacktext12 healthitemtitle" style="padding-top:10px;"><strong>Tests</strong><br/></li>
+					#{ profile/healthItemsList healthItem:healthItemsMap.tests, talkerDisease: talkerDisease /}
+					#{list items: talkerDisease.otherHealthItems?.tests, as: 'item' }
+						<li class="blacktext12">${item}<br/></li>
+					#{/list}
+					#{/if}
+				 
+					#{if !talkerDisease.isEmpty("procedures")}
+					<li class="blacktext12 healthitemtitle"><strong>Procedures/Surgeries</strong><br/></li>
+						#{ profile/healthItemsList healthItem:healthItemsMap["procedures"], talkerDisease: talkerDisease /}
+						#{list items: talkerDisease.otherHealthItems?.procedures, as: 'item' }
+							<li class="blacktext12">${item}<br/></li>
+						#{/list}
+					#{/if}
+					
+					#{if !talkerDisease.isEmpty("treatments")}
+					<li class="blacktext12 healthitemtitle" style="padding-top:10px;">
+						<strong>Medications and Treatments</strong><br/>
+					</li>
+						#{ profile/healthItemsList healthItem:healthItemsMap.get("treatments"), talkerDisease: talkerDisease /}
+						#{list items: talkerDisease.otherHealthItems?.treatments, as: 'item' }
+							<li class="blacktext12">${item}<br/></li>
+						#{/list}
+					#{/if}
+					
+					#{if !talkerDisease.isEmpty("sideeffects")}
+					<li class="blacktext12 healthitemtitle" style="padding-top:10px;">
+						<strong>Side effects from medications/treatments</strong>
+						<br/>
+					</li>
+						#{ profile/healthItemsList healthItem:healthItemsMap["sideeffects"], talkerDisease: talkerDisease /}
+						#{list items: talkerDisease.otherHealthItems?.sideeffects, as: 'item' }
+							<li class="blacktext12">${item}<br/></li>
+						#{/list}
+					#{/if}
+				</ul>
+			</div>
+		#{/if}
+	#{/if}
+#{/if}
+
+<!-- Health Info End -->
+<!-- Followers-->
+#{if talker.followerList.size() > 0}
+<div class="box">
+	<h2 class="heading"><a href="@{Static.workshops()}">Followers </a><div class="bn1" style="float: right; font-size: 12px; padding: 0px 10px; line-height: 25px; margin-top: -5px;">${talker.followerList.size()}</div></h2>
+	<div class="body" style="padding-left:15px;width:243px;padding-right:5px;">
+	#{if talker.isAllowed(models.PrivacySetting.PrivacyType.FOLLOWERS, currentTalker) }
+		#{if !talker.followerList.isEmpty()}
+		<div class="followingpicbox">
+			#{list items:talker.followerList.limit(10), as:'following' }
+				<div class="followingtxtpic" style="float: left; padding: 0px 2px 5px 0px;">
+                    <div class="followingpic">
+                    	#{talker/talkerImageLink size: 45, userName: following.name /}
+                    </div>
+                    <div class="followingpictxt">
+                    	<a href="@{ViewDispatcher.view(following.name)}">${following.name.limitSize(6)}</a>
+                    </div>
+                    <div class="cb"></div>
+				</div>
+			#{/list}
+		</div>
+		<div class="cb"></div>
+		<div class="mtop"></div>
+		<div class="topicborder"></div>
+		#{/if}
+	#{/if}
+	</div>
+</div>
+#{/if}
+<!-- Followers End-->
+<!-- Following-->
+#{if talker.followingList.size() > 0}
+<div class="box">
+	<h2 class="heading"><a href="@{Static.workshops()}">Following </a><div class="bn1" style="float: right; font-size: 12px; padding: 0px 10px; line-height: 25px; margin-top: -5px;">${talker.followingList.size()}</div></h2>
+	<div class="body" style="padding-left:15px;width:243px;padding-right:5px;">
+		#{if talker.isAllowed(models.PrivacySetting.PrivacyType.FOLLOWING, currentTalker) }
+		#{if currentTalker != null || !talker.followingList.isEmpty()}
+		<div class="followingpicbox">
+			#{list items:talker.followingList.limit(10), as:'following' }
+				<div class="followingtxtpic" style="float: left; padding: 0px 2px 5px 0px;">
+                    <div class="followingpic">
+						#{talker/talkerImageLink size: 45, userName: following.name /}
+                    </div>
+                    <div class="followingpictxt">
+                    	<a href="@{ViewDispatcher.view(following.name)}">${following.name.limitSize(6)}</a>
+                    </div>
+                    <div class="cb"></div>
+				</div>
+			#{/list}
+		</div>
+        #{/if}
+	#{/if}
+	</div>
+</div>
+#{/if}
+<!-- Following End -->
+<!-- 
+<div class="box">
+	<h2 class="heading"><img src="/public/images/index/cal_icon.png" alt="calendar" /><a href="@{Static.workshops()}">Others</a></h2>
+	<div class=body>
+	  #{list items: logic.TalkerLogic.PROF_FIELDS_MAP.keySet(), as: 'field'}
+	   <div class="profiletxtCantant">
+	  "${field}"
+		 #{if talker.profInfo.get(field)}
+             	<strong>${logic.TalkerLogic.PRIV_FIELDS_MAP.get(field)}:</strong> 
+             	<span class="Profilepersonsub">
+             	#{if talker.profInfo.get(field)} 
+             		${talker.profInfo.get(field).replaceAll("(http://[^\"\'\n ]+)", "<a href=\"\$1\" target=_blank>\$1</a>").nl2br()}					                      		
+             	#{/if}
+             	</span>
+          #{/if}
+          </div>
+          <hr/>
+	 #{/list}
+	 </div>
+</div>
+ -->

@@ -1,4 +1,6 @@
-<li id="${_activity.id}">
+<li id="${_activity.id}" style="min-height:100%;">
+
+*{
 	<div class="varified" style="width: 70px;">
 		#{if _activity.talker != null && _activity.talker.name != null}
 			#{talker/talkerImageLink size: 70, userName: _activity.talker.name /}
@@ -10,7 +12,8 @@
 			<h4 class="not">Not Verified</h4>
 		#{/elseif}
 	</div>
-	<div  class="q">
+}*	
+	<div  class="q" style="margin-left:15px;">
 		#{if _activity.convo}
 			<div class="jointextstop">
 				<h3><a href="@{ViewDispatcher.view(_activity.convo.mainURL)}">${_activity.convo.topic}</a></h3>

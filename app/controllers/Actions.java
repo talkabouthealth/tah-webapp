@@ -157,7 +157,7 @@ public class Actions extends Controller {
 			int _level = (comment.getParentId() == null ? 1 : 2);
 			boolean _showDelete = false;
 			boolean _isFeed = false;
-			render("tags/publicprofile/profileCommentsTree.html", _commentsList, _level, _showDelete, _isFeed);
+			render("tags/publicprofile/profileCommentsTree_new.html", _commentsList, _level, _showDelete, _isFeed);
 		}
 	}
 	

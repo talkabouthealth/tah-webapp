@@ -442,7 +442,7 @@ public class Explore extends Controller {
     		if (profileTalker != null) {
     			_feedItems = FeedsLogic.getTalkerFeed(profileTalker, afterActionId);
     		}
-    		render("tags/feed/feedList.html", _feedItems, _talker);
+    		render("tags/feed/feedList_new.html", _feedItems, _talker);
     	}
     }
     
