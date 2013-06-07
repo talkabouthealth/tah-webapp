@@ -500,34 +500,34 @@
 					#{list items: disease.questions, as: 'question'}
 						#{if question.name.equals("rareforms")}
 							#{if talkerDisease.combinedToCommaString("rareforms")}
-							<li class="blacktext12" style="height: auto"><b>${question.displayName}</b><br/>
+							<li class="blacktext12" style="padding-top:10px;"><b>${question.displayName}</b><br/>
 							<span class="blacktext">${talkerDisease.combinedToCommaString("rareforms")}</span>
 							<br/>
 							</li>
 							#{/if} 
 						#{/if}
 						#{elseif talkerDisease.healthInfo?.get(question.name)}
-							<li class="blacktext12" style="height: auto"><b>${question.displayName}</b><br/> 
+							<li class="blacktext12" style="padding-top:10px;"><b>${question.displayName}</b><br/> 
 								<span class="blacktext">${talkerDisease.healthInfo.get(question.name)?.toCommaStringView()}</span>
 								<br/>
 							</li>
 						#{/elseif}
 					#{/list}
 					#{if talkerDisease.symptomDate}
-						<li class="blacktext12"><b>Date of first symptom</b><br/> 
+						<li class="blacktext12" style="padding-top:10px;"><b>Date of first symptom</b><br/> 
 							<span class="blacktext">${talkerDisease.symptomDate?.format('MM/dd/yyyy')}</span>
 							<br/>
 						</li>
 					#{/if}
 					
 					#{if talkerDisease.diagnoseDate}
-						<li class="blacktext12"><b>Date of diagnosis</b><br/> 
+						<li class="blacktext12" style="padding-top:10px;"><b>Date of diagnosis</b><br/> 
 							<span class="blacktext">${talkerDisease.diagnoseDate?.format('MM/dd/yyyy')}</span>
 							<br/>
 						</li>
 					#{/if}
 					#{if talkerDisease.recurrent}
-					<li class="blacktext12"><b>Recurrent</b><br/>
+					<li class="blacktext12" style="padding-top:10px;"><b>Recurrent</b><br/>
 						<span class="blacktext">${talkerDisease.recurrent}</span>
 						<br/>
 					</li>
