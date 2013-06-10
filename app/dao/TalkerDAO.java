@@ -77,7 +77,7 @@ public class TalkerDAO {
 				.add("verify_code", null)
 				.add("dob", talker.getDob())
 				.add("dob_private", talker.getDob())
-				.add("dob", talker.getDod())
+				.add("dod", talker.getDod())
 				.add("timestamp",  Calendar.getInstance().getTime())
 				.add("category", talker.getCategory() == null ? null : talker.getCategory().equals("") ? null : talker.getCategory())
 				.add("connection", talker.getConnection())
