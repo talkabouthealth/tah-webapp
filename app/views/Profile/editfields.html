@@ -53,7 +53,7 @@
 							</select>
 							<select size="1"  name="talker.dobYear" class="textarea2" id="talker.dobYear">
 						  		<option selected value='0'>Year</option>
-						  		#{list items:1991..1900, as:'i'}
+						  		#{list items:2013..1900, as:'i'}
 								    <option value="${i}"
 								    #{if talker.dob?.year == i - 1900} selected #{/if} 
 								    >${i}</option>
@@ -90,7 +90,7 @@
 							</select>
 							<select size="1"  name="talker.dodYear" class="textarea2" id="talker.dodYear">
 						  		<option selected value='0'>Year</option>
-						  		#{list items:1991..1900, as:'i'}
+						  		#{list items:2013..1900, as:'i'}
 								    <option value="${i}"
 								    #{if talker.dod?.year == i - 1900} selected #{/if} 
 								    >${i}</option>
