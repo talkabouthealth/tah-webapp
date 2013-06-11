@@ -75,7 +75,7 @@ public class TalkerDAO {
 				.add("email", talker.getEmail())
 				//.add("verify_code", talker.getVerifyCode())
 				.add("verify_code", null)
-				.add("dob", talker.getDob())
+				//.add("dob", talker.getDob())
 				.add("dob_private", talker.getDob())
 				.add("dod", talker.getDod())
 				.add("timestamp",  Calendar.getInstance().getTime())
@@ -89,10 +89,8 @@ public class TalkerDAO {
 				.add("ctype_other", talker.getOtherCtype())
 				.add("im_notify", talker.isImNotify())
 				.add("service_accounts", setToDB(talker.getServiceAccounts()))
-				
 				.add("privacy_settings", setToDB(talker.getPrivacySettings()))
 				.add("email_settings", talker.emailSettingsToList())
-				
 				.add("hidden_helps", talker.getHiddenHelps())
 				//.add("newsletter", talker.isNewsletter())
 				.add("newsletter", true)

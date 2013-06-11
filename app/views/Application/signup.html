@@ -220,7 +220,7 @@
 									</select>
 									<select size="1"  name="talker.dodYear" class="textarea2" id="talker.dodYear">
 								  		<option selected value='0'>Year</option>
-								  		#{list items:1991..1900, as:'i'}
+								  		#{list items:2013..1913, as:'i'}
 										    <option value="${i}"
 										    #{if flash['talker.dodYear'].equals(i.toString()) } selected #{/if} 
 										    >${i}</option>
@@ -251,7 +251,7 @@
 									</select>
 									<select size="1"  name="talker.dobYear" class="textarea2" id="talker.dobYear">
 								  		<option selected value='0'>Year</option>
-								  		#{list items:1991..1900, as:'i'}
+								  		#{list items:2013..1913, as:'i'}
 										    <option value="${i}"
 										    #{if flash['talker.dobYear'].equals(i.toString()) } selected #{/if} 
 										    >${i}</option>
