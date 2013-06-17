@@ -435,6 +435,40 @@ public class TalkerLogic {
 		return allAnswers.size();
 	}
 	
+	/**
+	 * Loads all answers of this talker in Feed format
+	 * and checks what answers are top answers.
+	 * 
+	 * @param talkerId
+	 * @param answersFeed Feed where answer actions are stored
+	 * @param loadAllInfo Do we need all conversations' info or only number of answers/top answers?
+	 * @return Number of top answers of this talker
+	 */
+	public static List<Action>  prepareTalkerAnswers(String talkerId, boolean loadAllInfo,String lastActionId) {
+		List<CommentBean> allAnswers = CommentsDAO.getTalkerAnswersAll(talkerId, lastActionId);
+		List<Action> answersFeed = new ArrayList<Action>();
+		for (CommentBean answer : allAnswers) {
+			List<CommentBean> convoAnswers = CommentsDAO.loadConvoAnswers(answer.getConvoId());
+			if (loadAllInfo) {
+				ConversationBean convo = TalkerLogic.loadConvoFromCache(answer.getConvoId());
+				if(convo != null){
+					convo.setComments(convoAnswers);
+					//Use special action for answer displaying.
+					AnswerDisplayAction answerAction = new AnswerDisplayAction(convo.getTalker(), convo, answer, ActionType.ANSWER_CONVO, null);
+					answerAction.setTime(answer.getTime());
+					answersFeed.add(answerAction);
+				} else {
+					//just empty stub as we need only number of answers
+					answersFeed.add(new AnswerDisplayAction());
+				}
+			} else {
+				//just empty stub as we need only number of answers
+				answersFeed.add(new AnswerDisplayAction());
+			}
+		}
+		return answersFeed;
+	}
+	
 	public static Set<ConversationBean> loadFollowingConversations(TalkerBean talker,
 			String nextConvoId, int numOfConversations) {
 		if (talker == null) {

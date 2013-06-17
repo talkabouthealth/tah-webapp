@@ -2,23 +2,32 @@
 
 #{list items: _commentsList, as: 'comment' }
 #{ifnot comment.deleted}
-<div class="comment${comment.id} ${_level == 1 ? 'comments' : 'comreply'}"
+#{if _parentId }
+<div id="comment${comment.id}" class="comment${_parentId} ${_level == 1 ? 'comments' : 'comreply'}"
+		#{if _level != 1}
+			style="display: ${comment_index > (numberOfReplies-2) ? 'block' : 'none'};"
+		#{/if}
+		>
+#{/if}
+#{else}
+<div id="comment${comment.id}" class="comment${comment.id} ${_level == 1 ? 'comments' : 'comreply'}"
 		#{if _level != 1}
 			style="width: 100%; float: left; border-bottom: 1px solid #CCC; padding-bottom: 5px;display: ${comment_index > (numberOfReplies-2) ? 'block' : 'none'};"
 		#{/if}
 		>
-	<div class="commentstop" style="padding:10px;">
+#{/else}		
+	<div class="commentstop" style="padding-top:10px;float:left;width:100%;">
 	#{if _level == 1 && !_isFeed}
 			<div class="compic" style="float:left;padding-right: 10px;">
 				#{talker/talkerImageLink size: 40, userName: comment.fromTalker.name /}
 			</div>
 		#{/if}
 		#{if _level != 1}
-			<div class="comreplypic" style="padding:  5px 10px 10px; float: left; ">
+			<div class="comreplypic" style="float: left; ">
 				#{talker/talkerImageLink size: 31, userName: comment.fromTalker.name /}
 			</div>
 		#{/if}
-		<div style="float:right;" class="${_level == 1 ? 'comtextr' : 'comreplytxt'}">
+		<div style="float:left;padding-left:10px;" class="${_level == 1 ? 'comtextr' : 'comreplytxt'}">
 			<div class="${_level == 1 ? 'comtext' : 'comreplytext'}">
 				<div class='inline-edit' id="commentEdit${comment.id}">
 					<div class="suggestxt2 inline_display">
@@ -32,7 +41,6 @@
 									<a href="#" class="inline_editlink">Edit</a>
 								</span>
 							#{/if}
-							
 						</div>
 		            </div>
 					<div class='inline_form'>
@@ -42,11 +50,11 @@
 							</span>
 				        </div>
 						<div style="float:left;margin-right:2px;width: 100%;">
-							<textarea id="titleinput" type="text" style="width:525px; height: 45px;"  
+							<textarea id="titleinput" type="text" style="width:460px; height: 45px;"  
 				        		class="edititinputs inline_text">${comment.text}</textarea>
 				        	<div style="float:right;">	
 					        <input id="titleBtn" type="submit" class="updatebtns inline_save" value=" " />
-					        <div class="canclebtnz" style="padding-left: 0px;padding-top: 3px;" >
+					        <div class="canclebtnz" style="padding-left: 5px;padding-top: 5px;" >
 					        	<a class="cancel" href="#">Cancel</a>
 					        </div>
 					        </div>

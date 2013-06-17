@@ -1,0 +1,128 @@
+#{set level = 1 /} 
+#{set numberOfReplies = talker.profileCommentsList?.size() /} 
+
+#{list items: talker.profileCommentsList, as: 'comment' }
+#{ifnot comment.deleted}
+<li id="${comment.id}" style="min-height:100%;">
+ 
+	#{if level == 1 && !_isFeed}
+			<div class="varified" style="float:left;padding-right: 10px;">
+				#{talker/talkerImageLink size: 72, userName: comment.fromTalker.name /}
+			</div>
+		#{/if}
+		#{if level != 1}
+			<div class="comreplypic" style="padding:  5px 10px 10px; float: left; ">
+				#{talker/talkerImageLink size: 31, userName: comment.fromTalker.name /}
+			</div>
+		#{/if}
+		<div class="q">
+			<div class="${level == 1 ? 'comtext' : 'comreplytext'}">
+				<div class='inline-edit' id="commentEdit${comment.id}" style="clear:none;">
+					<div class="suggestxt2 inline_display">
+						<div class="inline_full inline_empty">
+							<span class="comname">
+								<a href="@{ViewDispatcher.view(comment.fromTalker.name)}">${comment.fromTalker.name}</a>
+							</span>&nbsp;&nbsp;&nbsp;
+							<span class="inline_view moretext2" id="commentText${comment.id}">${comment.printThoughtOrAnswer(session.username)}</span>
+							#{if _showDelete || session.username?.equals(comment.fromTalker.userName)}
+								<span class="editit2">
+									<a href="#" class="inline_editlink">Edit</a>
+								</span>
+							#{/if}
+							
+						</div>
+		            </div>
+					<div class='inline_form'>
+						<div style="float:left; width:auto; padding-bottom:5px;" >
+							<span class="comname" style="font-size: 14px;">
+								<a href="@{ViewDispatcher.view(comment.fromTalker.name)}">${comment.fromTalker.name}</a>
+							</span>
+				        </div>
+						<div style="float:left;margin-right:2px;width: 100%;">
+							<textarea id="titleinput" type="text" style="width:525px; height: 45px;"  
+				        		class="edititinputs inline_text">${comment.text}</textarea>
+				        	<div style="float:right;">	
+					        <input id="titleBtn" type="submit" class="updatebtns inline_save" value=" " />
+					        <div class="canclebtnz" style="padding-left: 5px;padding-top: 5px;" >
+					        	<a class="cancel" href="#">Cancel</a>
+					        </div>
+					        </div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<br/>
+			
+			<div class="${level == 1 ? 'comadd' : 'comreplytext1'}" style="float: left; padding-top: 10px;">
+				<div class="ans">
+					<img src="/public/images/index/timer_icon.png" alt="time"> ${comment.time.since()}
+				</div>
+				#{if level == 1}
+					
+					#{if comment.children == null || comment.children?.size() == 0 }
+						#{if session.username}
+							&nbsp;|&nbsp;<a href="#" onclick="return showReplyForm('${comment.id}');">Reply</a>
+						#{/if}
+					#{/if}
+					#{elseif comment.children?.size() == 1}
+						&nbsp;|&nbsp;1 Reply
+					#{/elseif}
+					#{elseif comment.children?.size() == 2}
+						&nbsp;|&nbsp;2 Replies
+					#{/elseif}
+					#{else}
+						&nbsp;|&nbsp;<a href="#" onclick="return showAllReplies('${comment.id}');">View all ${comment.children?.size()} replies</a>
+					#{/else}
+				#{/if}
+				#{if _showDelete || session.username?.equals(comment.fromTalker.userName) }
+					&nbsp;|&nbsp;
+					<a href="#" onclick="deleteComment('${comment.id}');">Delete</a>
+				#{/if}
+			 </div>
+		</div>
+	<div class="cb"></div>
+	#{if level == 1}
+		<div class="commentsreply" style="margin-left: 16%;">
+			#{publicprofile/profileCommentsTree_new commentsList: comment.children, level: (level+1), showDelete: _showDelete, isFeed: _isFeed, parentId: comment.id  /}
+			
+			#{if session.username}
+				<div class="reply${comment.id} replytommentbax">
+					<div class="saveThoughtImage${comment.id} ajaxLoading"></div>
+					<div class="cb"></div>
+					<div style="float:left;margin-top:10px;">
+						<div class="inline-edit" id="replyAdd">
+							<div class="inline_display">
+								<div class="inline_full inline_empty">
+									<div style="clear:both; height:30px; margin-bottom:7px; position:relative;">
+										<a href="#" class="inline_editlink">
+						             		<textarea class="edititinputx" rows="1" cols="4" 
+						             			style="width:535px; height:20px;">Reply to thought ...</textarea>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class='inline_form'>
+								<div class="addnewansar" style="text-align:left">Reply to thought</div>
+								<div style="float:left;">
+									<textarea class="replytext${comment.id} edititinputx inline_text" 
+										style="width:535px" cols="4" rows="3" ></textarea>
+									<input type="submit" class="repcomsubmits inline_save" src="/public/images/repcomsubmits.jpg" value=" " 
+										onclick="return saveProfileComment('${comment.id}', '${_parentList}');" 
+										style="float:right;margin-right:2px; margin-top:7px;cursor:pointer"/>
+								</div>
+							</div>
+						</div>						
+					</div>
+				</div>
+			#{/if}
+		</div>
+	#{/if}
+	
+	<div class="cb"></div>
+	#{if level == 1 && !_isFeed}
+		<div class="joinborder" style="margin-bottom: 10px;"></div>
+	#{/if}
+ 
+</li>
+#{/ifnot}
+#{/list}

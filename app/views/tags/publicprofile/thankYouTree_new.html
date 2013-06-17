@@ -1,61 +1,55 @@
 #{set _level =2 /}
-<div id="thankYouList" class="conversationsList">
-	<div id="tempDiv" style="display: none;"></div>
     #{list items: talker.thankYouList, as: 'activity'}
-    <div class="commentstop" id="${activity.id}">
+    <li class="commentstop" id="${activity.id}" style="min-height: 85px;">
 		
-		<div class="joinbox">
-		<div class="joinpic" style="width: 70px;">
-			#{talker/talkerImageLink size: 70, userName: activity.fromTalker.name /}
+		<div class="varified">
+			#{talker/talkerImageLink size: 72, userName: activity.fromTalker.name /}
 		</div>
-		<div class="jointxtbox">
-		<div class="commentstop">
-			<div class="comtext"> 
+		<div class="q">
 			<span class="comname">
 								<a href="@{ViewDispatcher.view(activity.fromTalker.name)}">${activity.fromTalker.name}</a>
 							</span>&nbsp;&nbsp;&nbsp;
 				 Thank you <a href="@{ViewDispatcher.view(talker.userName)}">@${talker.userName}</a> "${activity.note}"
-			</div>
 			<div class="${_level == 1 ? 'comadd' : 'comadd'}">
-				${activity.time.since()} | 
+				<div class="ans"><img src="/public/images/index/timer_icon.png" alt="time"> ${activity.time.since()} </div>
 				#{if activity.profileComments == null || activity.profileComments?.size() == 0 }
 					#{if session.username}
-						<a href="#" onclick="return showReplyForm('${activity.id}');">Reply</a>
+						 |<a href="#" onclick="return showReplyForm('${activity.id}');">Reply</a>
 					#{/if}
 				#{/if}
 				#{elseif activity.profileComments?.size() == 1}
-					1 Reply
+					 |1 Reply
 				#{/elseif}
 				#{elseif activity.profileComments?.size() == 2}
-					2 Replies
+					 |2 Replies
 				#{/elseif}
 				#{else}
-					<a href="#" onclick="return showAllThankYouReplies('${activity.id}');">View all ${activity.profileComments?.size()} replies</a>
+					 | <a href="#" onclick="return showAllThankYouRepliesById('${activity.id}');">View all ${activity.profileComments?.size()} replies</a>
 				#{/else}
 				#{if session.username?.equals(activity.fromTalker.name)}
-					<a href="#" class="deleteThankYouLink lightgrey12" rel="${activity.id}">| Delete</a>
+					 | <a href="#" class="deleteThankYouLink lightgrey12" rel="${activity.id}">| Delete</a>
 				#{/if}
 			</div>
-			 </div>
+			
 			#{if activity.profileComments}
 					#{set numberOfReplies = activity.profileComments?.size() /}
 					#{list items: activity.profileComments, as: 'comment' }
 					#{ifnot comment.profileComment.deleted}
-					<div class="comment${activity.id} ${_level == 1 ? 'comments' : 'comreply'}" id="comment${activity.id} ${_level == 1 ? 'comments' : 'comreply'}"
-						style="display: ${comment_index > (numberOfReplies-2) ? 'block' : 'none'};"
+					<div class="comment${activity.id} ${_level == 1 ? 'comments' : 'comreply'}" id="comment${comment.id}"
+						style="float: left;width: 530px; margin-top: 10px;display: ${comment_index > (numberOfReplies-2) ? 'block' : 'none'};"
 					>
 					<div class="commentstop">
 						#{if _level == 1 && !_isFeed}
-							<div class="compic">
+							<div class="compic" style="float:left;">
 								#{talker/talkerImageLink size: 40, userName: comment.otherTalker.name /}
 							</div>
 						#{/if}
 						#{if _level != 1}
-							<div class="comreplypic">
+							<div class="comreplypic" style="float:left;">
 								#{talker/talkerImageLink size: 31, userName: comment.otherTalker.name /}
 							</div>
 						#{/if}
-						<div class="${_level == 1 ? 'comtextr' : 'comreplytxt'}">
+						<div class="${_level == 1 ? 'comtextr' : 'comreplytxt'}" style="float: left; margin-left: 10px;">
 							<div class="${_level == 1 ? 'comtext' : 'comreplytext'}">
 								<div class='inline-edit' id="commentEdit${comment.id}">
 									<div class="suggestxt2 inline_display">
@@ -88,8 +82,9 @@
 									</div>
 								</div>
 							</div>
+							<br/>
 							<div class="${_level == 1 ? 'comadd' : 'comreplytext1'}">
-								${comment.profileComment.time.since()}
+								<div class="ans"><img src="/public/images/index/timer_icon.png" alt="time"> ${comment.profileComment.time.since()}</div>
 									
 								#{if _showDelete || session.username?.equals(comment.otherTalker.userName) }
 									&nbsp;|&nbsp;
@@ -103,22 +98,18 @@
 					#{/ifnot}
 					#{/list}
 			#{/if}
-		
+		 
 			<div class="inline-edit">
 				#{if session.username}
-					
 					<div class="reply${activity.id} replytommentbax">
 						<div class="saveThoughtImage${activity.id} ajaxLoading"></div>
-						<div class="cb"></div>
-						<div>
-							<div class="cb"></div>
+						<div style="float: left; width: 530px; margin-top: 10px;">
 							<div class="inline-edit" id="replyAdd">
 								<div class="inline_display">
 									<div class="inline_full inline_empty">
 										<div style="clear:both; height:30px; margin-bottom:7px; position:relative;">
 											<a href="#" class="inline_editlink">
-							             		<textarea class="edititanputx" rows="1" cols="4" 
-							             			style="width:444px; height:20px;">Reply to thank you ...</textarea>
+							             		<textarea class="edititanputx" rows="1" cols="4" style="width:444px; height:20px;">Reply to thank you ...</textarea>
 											</a>
 										</div>
 									</div>
@@ -127,10 +118,10 @@
 									<div class="addnewansar" style="text-align:left">Reply to thank you</div>
 									<div style="float:left;">
 										<textarea class="replytext${activity.id} edititinputx inline_text" 
-											style="width:444px" cols="4" rows="3" ></textarea>
+											style="width:515px;float:left;" cols="4" rows="3" ></textarea>
 										<input type="submit" class="repcomsubmits inline_save" src="/public/images/repcomsubmits.jpg" value=" " 
-											onclick="return saveProfileComment('${activity.id}', 'thankYouList','${activity.fromTalker.name}');" 
-											style="float:right;margin-right:2px; margin-top:7px;cursor:pointer"/>
+											onclick="return saveProfileComment('${activity.id}', 'thankyouCnt','${activity.fromTalker.name}');" 
+											style="float:right;margin-right:2px; margin-top:5px;cursor:pointer"/>
 									</div>
 								</div>
 							</div>						
@@ -138,10 +129,6 @@
 					</div>
 				#{/if}
 			</div>
-		</div> 
-		<div class="cb"></div>
-		<div class="joinborder" style="margin-bottom: 10px;"></div>
-		</div>
-	</div>
-	#{/list}
-</div>
+			</div>
+	</li>
+#{/list}

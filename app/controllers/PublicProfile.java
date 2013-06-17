@@ -264,4 +264,83 @@ public class PublicProfile extends Controller {
     	render("tags/publicprofile/recommendedTopicsList.html", _recommendedTopics, _talker);
     }
 	
+	public static void loadProfileFeedList(String type, String lastActionId,String userId) {
+		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+		TalkerBean talker = TalkerDAO.getById(userId);
+		List<Action> _feedItems = new ArrayList<Action>();
+		notFoundIfNull(talker);
+		if(lastActionId != null && "".equals(lastActionId))
+			lastActionId = null;
+		if(type.equals("answer")) {
+			List<Action> answersFeedTemp = TalkerLogic.prepareTalkerAnswers(talker.getId(), true,lastActionId);
+			//added because if convo is null then answers are not displayed.
+			for(int index=0; index < answersFeedTemp.size(); index++) {
+				if(answersFeedTemp.get(index).getConvo()!=null)
+					_feedItems.add(answersFeedTemp.get(index));
+			}
+			answersFeedTemp.clear();
+			render("tags/feed/feedList_new.html",_feedItems,type);
+		} else if(type.equals("thoughts")) {
+
+			notFoundIfNull(talker);
+			
+			talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
+			
+			TalkerLogic.preloadTalkerInfo(talker);
+			
+			//If the user views his own thoughts he should see the following text under the text box 
+			//until the user posts for the first time (even if another user posts first, this should still appear):
+			boolean firstTimeComment = false;
+			if (talker.equals(currentTalker)) {
+				firstTimeComment = true;
+				//user views his own thoughts - check if he's made comment
+				for (CommentBean cb : talker.getProfileCommentsList()) {
+					if (cb.getFromTalker().equals(talker)) {
+						firstTimeComment = false;
+						break;
+					}
+				}
+			}
+			int numOfStartedConvos = ConversationDAO.getNumOfStartedConvos(talker.getId());
+			int commentCount = CommentsDAO.loadProfileCommentCount(talker.getId());
+			render("tags/feed/thoughtfeedList_new.html",talker, currentTalker, firstTimeComment,commentCount,numOfStartedConvos);
+		} else if(type.equals("thankyou")) {
+			List<ThankYouBean> thankyouList = talker.getThankYouList();
+			for(ThankYouBean thankYouBean : thankyouList){
+				List<Action> profileComments = CommentsDAO.getProfileComments(thankYouBean.getId(),talker);
+				thankYouBean.setProfileComments(profileComments);
+			}
+			
+			//Displaying thank you's in most recent order
+			if(thankyouList != null && thankyouList.size() > 1){
+				for(int i=0;i<thankyouList.size();i++){
+					for(int index=0;index<thankyouList.size()-1;index++){
+						Date indexdate;
+						Date indexdate1;
+						List<Action> indexProfilecomments=((ThankYouBean)thankyouList.get(index)).getProfileComments();
+						if(indexProfilecomments.size()==0)
+							indexdate=(Date)((ThankYouBean)thankyouList.get(index)).getTime().clone();
+						else
+							indexdate=(Date)indexProfilecomments.get(indexProfilecomments.size()-1).getTime().clone();
+						
+						List<Action> indexProfilecomments1=((ThankYouBean)thankyouList.get(index+1)).getProfileComments();
+						if(indexProfilecomments1.size()==0)
+							indexdate1=(Date)((ThankYouBean)thankyouList.get(index+1)).getTime().clone();
+						else
+							indexdate1=(Date)indexProfilecomments1.get(indexProfilecomments1.size()-1).getTime().clone();
+						if(indexdate.before(indexdate1)){
+							ThankYouBean temp=((ThankYouBean)thankyouList.get(index));
+							thankyouList.set(index, ((ThankYouBean)thankyouList.get(index+1)));
+							thankyouList.set(index+1, temp);
+						}
+					}
+				}
+			}
+			talker.setThankYouList(thankyouList);
+			render("tags/publicprofile/thankYouTree_new.html",talker);
+		} else {
+			_feedItems = ConversationLogic.convosToFeed(ConversationDAO.getStartedConvos(userId, lastActionId, ConversationLogic.CONVERSATIONS_PER_PAGE));
+			render("tags/feed/feedList_new.html",_feedItems,type);
+		}
+	}
 }

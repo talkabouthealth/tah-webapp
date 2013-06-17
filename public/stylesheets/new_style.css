@@ -346,8 +346,27 @@ body {
 	display: block;
 	font-weight: bold;
 	margin: 0 0 10px 0;
-	/* color: #014ba9; */
-	
+	font-size: 18px;
+}
+
+.tabBodyOther {
+	float: left;
+	background: #f7f7f7;
+	border: 1px solid #d5d5d5;
+	width: 100%;
+}
+
+.tabBodyOther li {
+	padding: 30px;
+	border-bottom: 1px solid #d5d5d5;
+	min-height: 105px;
+	list-style: none;
+}
+
+.tabBodyOther h3 {
+	display: block;
+	font-weight: bold;
+	margin: 0 0 10px 0;
 	font-size: 18px;
 }
 
@@ -812,6 +831,14 @@ ul.client { float: left; }
 }
 
 /*-----------------Popups Global (common popup css)------------------------------*/
+#mask {
+	position:absolute;
+	left:0;
+	top:0;
+	z-index:9000;
+	display:none;
+	background-color: #FFFFFF
+}
 #mask1 {
 	position:absolute;
 	left:0;
@@ -1157,6 +1184,7 @@ a.popup_black10s:hover {
 	float:right;
 	padding-right:15px;
 	padding-top:5px;
+	cursor: pointer;
 }
 .invitepeople {
 	clear:both;

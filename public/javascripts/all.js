@@ -273,7 +273,6 @@ function saveProfileComment(parentId, parentList, userName) {
 	//YURIY: FIX FOR URLS IN REPLIES NOT BEING TRANSLATED -- SPENT 2h TO HUNT THIS DOWN %-/
 	//linkedText = linkify(commentText);
 	linkedText = commentText;
-
 	$.post("/actions/saveProfileComment", 
 		{ parentId: parentId, text: linkedText,  parentList: parentList},
 		function(html) {
@@ -290,6 +289,7 @@ function saveProfileComment(parentId, parentList, userName) {
 			else {
 				//add as last element in subtree
 				$(parentListId+".reply"+parentId).before($(html));
+				$('.inline-edit').inlineEdit( { hover: ''} );
 			}
 		}
 	);
@@ -637,7 +637,7 @@ function showReplyForm(commentId) {
 	return false;
 }
 function showAllReplies(commentId) {
-	$(".comment"+commentId+" .comreply").fadeIn();
+	$(".comment"+commentId).show();
 	return false;
 }
 
@@ -674,11 +674,8 @@ function loadMoreFeedWithoutLogin(type, talkerName) {
 				$('.inline-edit').inlineEdit( { hover: ''} );
  			}
 		);
-	
 	return false;
 }
-
-
 
 /* ---------------- Other common functions ----------------- */
 

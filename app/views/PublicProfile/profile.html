@@ -27,21 +27,32 @@
 .followingMemberBtn { background: url(/public/images/followingBtn.jpg); }
 .followingMemberBtn:hover { background: url(/public/images/unfollowMemberBtn.jpg); }
 .followingpictxt a{font-size:10px;}
-.tabBody { border-radius:5px; }
+
 .inline_form { display:none; }
 .inline-edit { float:left;	clear:both; }
 .tabBody li{float:left;width: 630px;}
+.tabBody { border-radius:0px 5px 5px 5px; }
+.tabBodyOther li{float:left;width: 630px;}
+.tabBodyOther { border-radius:0px 0px 5px 5px; }
 .comments {	float:left; }
 .bn1{float: right; font-size: 12px; padding: 0px 10px; line-height: 25px; margin-top: -5px;cursor: pointer;}
 .edititinputx{ width: 637px; height: 35px; margin: 0px; padding: 3px 5px; border: 1px solid rgb(204, 204, 204); border-radius: 5px 5px 5px 5px; color: rgb(153, 153, 153);}
 .comreplytxt{width:90%;}
 .comtextr{width:100%;}
 .blacktext12{float:left;width:100%;clear:both;}
+.profileCantanttxt1{padding-top:10px;}
+.comreply {width: 100%; float: left; border-bottom: 1px solid #CCC; padding-bottom: 5px;}
 </style>
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
 	<script type="text/javascript" src="/public/javascripts/newview.js" ></script>
+	<script type="text/javascript" src="/public/javascripts/jquery-ui-1.8.4.custom.min.js" ></script>
 	<script type="text/javascript">
 	<!--
+		var answer=0;
+		var thoughts=0;
+		var thankyou=0;
+		var questions=0;
+		
 		var feedsPerPage = ${logic.FeedsLogic.TALKERFEEDS_PER_PAGE};
 		$(document).ready(function() {
 			var medium='${session.showLoginPoup}';
@@ -76,6 +87,59 @@
 			if($.trim($("#eduBox div").html()) == '') {
 				$("#eduBox").hide();
 			}
+
+			//TAbs
+			$(".tabs li").click(function() {
+				$(".active").removeClass("active");
+				$(this).addClass("active");
+				var id = $(this).attr("id");
+				if(id == 'answer' && answer==0) {
+					loadFeed(id);
+					answer = 1;
+				} else if(id == 'thoughts' && thoughts==0) {
+					loadFeed(id);
+					thoughts = 1;
+				} else if(id == 'thankyou' && thankyou==0) {
+					loadFeed(id);
+					thankyou = 1;
+				} else if(id == 'questions' && questions==0) {
+					loadFeed(id);
+					questions = 1;
+				}
+				$(".tabBody").hide();
+				$("#" + id + "Tab").fadeIn();
+				return false;
+			});
+			
+			$(".moreBtn").click(function() {
+				var idBtn = $(this).attr("id");
+				var id = "answer"
+				if(idBtn == 'answerMore')
+					id = "answer";
+				else if(idBtn == 'thoughtsMore')
+					id = "thoughts";
+				else if(idBtn == 'thankyouMore')
+					id = "thankyou";
+				else if(idBtn == 'questionsMore')
+					id = "questions";
+				
+				var idElm =  $("#" + id);
+				var lastActionId = $("#"+id+"Cnt").children().last().attr("id");
+				var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
+				$(loading).appendTo($("#"+id+"Cnt"));
+				$.get("/PublicProfile/loadProfileFeedList",{ type : id,lastActionId:lastActionId, userId:'${talker.id}' },function(data){
+					$(loading).remove();
+					if($.trim(data) == '') {
+						$("li.lastFeed").hide();
+					} else {
+						$(data).appendTo($("#"+id+"Cnt"));
+						$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+					}
+				});
+				return false;
+			});
+			
+			$("#answer").click();
 		});
    		function showSaveDialog(type,user) {
    	   		if (type === 'startChat') {
@@ -112,11 +176,27 @@
    	   	  		$.post("@{Actions.deleteComment()}", 
    					{ commentId : commentId},
    					function(html) {
-   						$(".comment"+html).html("<div class=\"inline_view moretext2\" style=\"color:#000000;padding-bottom:5px; border-bottom:solid 0px gray\">Thought deleted ...</span>");
+   						html = $.trim(html);
+   						$("#comment"+html).html("<div class=\"inline_view moretext2\" style=\"color:#000000;padding-bottom:5px; border-bottom:solid 0px gray\">Thought deleted ...</span>");
    					}
    				);
    	   		}
    	   		return false;
+   		}
+   		loadFeed = function(id) {
+   			var lastActionId = '';
+   			var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
+   			$("#"+id+"Cnt").html(loading);
+   			$.get("/PublicProfile/loadProfileFeedList",{ type : id,lastActionId:lastActionId,userId:'${talker.id}' },function(data){
+   				$(loading).remove();
+   				$(data).appendTo($("#"+id+"Cnt"));
+   				$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+   				$('.inline-edit').inlineEdit( { hover: ''} );
+   			});
+   		}
+   		function showAllThankYouRepliesById(commentId) {
+   			$(".comment" + commentId).show();
+   			return false;
    		}
    	-->
 	</script>
@@ -129,7 +209,7 @@
 			  <div class="profileCatant">
                   <div class="mtcontent">
                   	#{if notProvidedInfo }
-                  		<div id="provideInfoHelp" class="tabBody" style="margin-bottom: 15px;color: #383838; border:1px solid #ff7474;background-color: #ffefef; float: left;">
+                  		<div id="provideInfoHelp" class="tabBodyOther" style="margin-bottom: 15px;color: #383838; border:1px solid #ff7474;background-color: #ffefef; float: left;">
 						        <div>
 						          <div class="closecover" style="clear: none; float: right;">
 						            <div class="close" onclick="return hideHelpInfo('provideInfo', false);">
@@ -152,7 +232,7 @@
 						      </div>
                   	#{/if}
                   	#{if !notProvidedInfo && notViewableInfo }
-                  		<div id="viewableInfoHelp" class="tabBody" style="margin-bottom: 15px;color: #383838; border:1px solid #ff7474;background-color: #ffefef; float: left;">
+                  		<div id="viewableInfoHelp" class="tabBodyOther" style="margin-bottom: 15px;color: #383838; border:1px solid #ff7474;background-color: #ffefef; float: left;">
 						        <div>
 						          <div class="closecover" style="clear: none; float: right;">
 						            <div class="close" onclick="return hideHelpInfo('viewableInfo', false);"><img src="/public/images/close.png" alt="Close" /></div>
@@ -234,7 +314,7 @@
                       	<a style="text-decoration: none" href="@{PublicProfile.conversations(talker.name)}">${numOfStartedConvos}</a>
                       	</div>
                       	<br/><br/>
-		                      		<strong>Joined</strong><br/><span style="color:#014BA9;">${talker.regDate.format('MMM. yyyy')}</span>
+		                      		<strong>Joined</strong><br/><span>${talker.regDate.format('MMM. yyyy')}</span>
 								</td>
 							</tr>
 						</table>
@@ -243,10 +323,10 @@
 					<div style="float: left; width: 100%; padding: 10px 0px 20px;">
 						#{include 'socialNetworkShare.html' /}
 					</div>
-					<div id="postQuestionTabContent" class="tabBody" style="display:block;border-radius:5px;padding: 20px; width: 650px;">
+					<div id="postQuestionTabContent" class="tabBodyOther" style="display:block;border-radius:5px;padding: 20px; width: 650px;">
 						<div style="float:left;">                  		    
 	                  	<div class="bn1" style="float: left; padding: 3px; font-weight: bold; font-size: 13px; margin-bottom: 10px;">
-	                  		<div style="float: left; margin-top: 4px; margin-right: 3px;"><img src="/public/images/profile/ask_icon.png" /></div>
+	                  		<div style="float: left; margin-top: 4px; margin-right: 3px;"><img src="/public/images/profile/newq.png" /></div>
 	                  		<a href="#">Ask a question</a></div>
 							#{if currentTalker}
 								<input type="text" id="postQuestionText" class="edititinputx inline_text greyarea"
@@ -263,9 +343,11 @@
 						</div>
 						<div style="width:100%; padding-top: 15px; float:left;">
 								<div style="float: left;color:#a5a5a5;">Characters remaining:<span id="postQuestionTextSize">160</span></div>
+								*{
 								<div style="width:300px;float:left;">
 								#{ convo/ccInputs_new type: "Question", setting: "POST_ON_CONVO" /}
 								</div>
+								}*
 								<div style="float:right;">
 				                  	#{if currentTalker == null }
 										<input class="bn1" type="button" onclick="return showSaveDialog('postQuestion','anonymous');" id="postQuestionBtn" value="Post Question" style="font-weight: bold; font-size: 13px;padding:5px 10px;"/>
@@ -278,30 +360,80 @@
                   		<div style="clear:both"></div>
 					</div>
 					#{if talker.profStatement}
-						<div class="tabBody" style="margin-top:20px;">
-							<div style="padding:20px;">
+						<div class="tabBodyOther" style="border-radius:5px;margin-top:20px;">
+							<h2 class="heading">
 								#{if talker.isOrg()}
-									<div class="profilebio"><strong>Organization Info</strong></div>
-				                    <div class="topicborder"></div>
-								#{/if}				
+									 Organization Info 
+								#{/if}
 								#{ifnot talker.isOrg()}
-									<div class="profilebio"><strong>Professional Statement</strong></div>
-				                    <div class="topicborder"></div>
+									  Professional Statement
 								#{/ifnot}
+								</h2> 
+								<div style="padding:20px;">
 			                    <div class="profilebiotxt">${talker.profStatement.replaceAll("(http://[^\"\'\n ]+)", "<a href=\"\$1\" target=_blank>\$1</a>").nl2br()}</div>
 		                    </div>
 						</div>
 					#{/if}
 					 #{if talker.bio && talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_INFO, currentTalker)}
-						 <div class="tabBody" style="margin-top:20px;">
-							<div style="padding:20px;">
-								<div class=cb></div>							
-								<div class="profilebio"><strong>Personal Bio (My story)</strong></div>
-			                    <div class="topicborder"></div>
+						 <div class="tabBodyOther" style="margin-top:20px;border-radius:5px;">
+								<h2 class="heading">Personal Bio (My story)</h2>
+			                    <div style="padding:20px;">
 			                    <div class="profilebiotxt">${talker.bio.nl2br()}</div>
 			                </div>
 						</div>
 					#{/if}
+					#{if talker.isAllowed(models.PrivacySetting.PrivacyType.ACTIVITY_STREAM, currentTalker)}
+					<div id="main" class="slide" style="border-radius:5px 5px 5px 5px;padding-top: 15px;">
+					    <ul class="tabs">
+					    	<li id="answer" class="fst active"><a href="#">Answers</a></li>
+							<li id="thoughts"><a href="#">Thoughts</a></li>
+<!-- 					    	<li id="open"><a href="#">Activities</a></li> -->
+					    	<li id="thankyou"><a href="#">Thank yous</a></li>
+					    	<li id="questions"><a href="#">Questions</a></li>
+					   </ul>
+					   <div id="answerTab" class="tabBody" >
+					     <ul id="answerCnt"></ul>
+					     
+					     <ul>
+					     	<li class="lastFeed">
+					     		<a class="moreBtn" id="answerMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+					     	</li>
+					     </ul>
+					    
+					   </div>
+					   <div id="thoughtsTab" class="tabBody" style="display:none;">
+					     <ul id="thoughtsCnt"></ul>
+					     <!-- 
+					     <ul>
+					     	<li class="lastFeed">
+					     		<a class="moreBtn" id="thoughtsMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+					     	</li>
+					     </ul>
+					      -->
+					   </div>
+					   <div id="thankyouTab" class="tabBody" style="display:none;">
+					     <ul id="thankyouCnt">
+					     </ul>
+					     <!-- 
+					     <ul>
+					     	<li class="lastFeed">
+					     		<a class="moreBtn" id="thankyouMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+					     	</li>
+					     </ul>
+					      -->
+					   </div>
+					   <div id="questionsTab" class="tabBody" style="display:none;">
+					     <ul id="questionsCnt">
+					     </ul>
+					     <ul>
+					     	<li class="lastFeed">
+					     		<a class="moreBtn" id="questionsMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+					     	</li>
+					     </ul>
+					   </div>
+					</div>
+					#{/if}
+					*{
                     #{if talker.isAllowed(models.PrivacySetting.PrivacyType.ACTIVITY_STREAM, currentTalker) && talkerFeed}
                     <div style="float: left; height: 20px;">&nbsp;</div>
 						<div class="slide">
@@ -311,7 +443,7 @@
 						</li>
 						</ul>
 						</div>
-	                    <div class="tabBody" style="border-radius: 0px 0px 5px 5px;">
+	                    <div class="tabBodyOther" style="border-radius: 0px 0px 5px 5px;">
 	                    <ul id="talkerFeedCnt">
 		                    	#{list items: talkerFeed, as: 'activity'}
 									#{feed/feedActivity_profile activity: activity, talker: talker /}
@@ -329,9 +461,9 @@
 		                        </li>
 		                       </ul>
 							#{/if}
-									
                     	</div>
 					#{/if}
+					}*
 					#{if talker.isProf()}					
 						#{if !talker.isAllowed(models.PrivacySetting.PrivacyType.USERNAME, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_IMAGE, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_INFO, currentTalker) || !talker.isAllowed(models.PrivacySetting.PrivacyType.PROFESSIONAL_INFO, currentTalker) }
 							<div style="padding-top: 30px; clear: both;">
@@ -351,18 +483,20 @@
             	#{ include 'PublicProfile/profileRight_new.html' /}
             	</div>
           </div><!--mtcover-->
-       </div>
-	<div id="boxes">
-			<div id="dialog" class="window"></div>
-				#{if !talker}
-					#{ popups/loginPopup  mainURL: talker.userName /}
-				#{/if}
-				#{ popups/thankyou /}
-				#{ popups/thoughtComment /}
-				#{ popups/profileJoinNow /}
-				#{popups/startConvo page: 'profileRight', target: talker, talker: currentTalker /}
-			</div>
+</div>
 <div id="mask"></div>
+<div id="boxes">
+	<div id="dialog" class="window"></div>
+	#{if !talker}
+		#{ popups/loginPopup  mainURL: talker.userName /}
+	#{/if}
+	#{ popups/thankyou /}
+	#{ popups/thoughtComment /}
+	#{ popups/profileJoinNow /}
+	#{popups/startConvo page: 'profileRight', target: talker, talker: currentTalker /}
+	#{ newsletter/emailpopup /}
+	#{ popups/newMessage target: talker/}
+</div>
 <script type="text/javascript">
 var medium='${session.showLoginPoup}';
 if(medium=='show'){

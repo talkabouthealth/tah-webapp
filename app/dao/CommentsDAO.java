@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import logic.ConversationLogic;
 import logic.TalkerLogic;
 import models.CommentBean;
 import models.CommentBean.Vote;
@@ -521,6 +522,47 @@ public class CommentsDAO {
 		}
 		
 		
+		List<CommentBean> answersList = new ArrayList<CommentBean>();
+		for (DBObject answerDBObject : commentsList) {
+			CommentBean answer = new CommentBean();
+			answer.parseFromDB(answerDBObject);
+			answersList.add(answer);
+		}
+		return answersList;
+	}
+	
+	/**
+	 * Returns talker answers, all or filtered by given topic
+	 */
+	public static List<CommentBean> getTalkerAnswersAll(String talkerId, String lastActionId) {
+		DBCollection commentsColl = getCollection(CONVO_COMMENTS_COLLECTION);
+		
+		
+		Date firstConvoTime = null;
+		if (lastActionId != null) {
+			CommentBean convo = getConvoCommentById(lastActionId);
+			firstConvoTime = convo.getTime();
+		}
+		
+		
+		DBRef fromTalkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start()
+			.add("from", fromTalkerRef)
+			.add("deleted", new BasicDBObject("$ne", true))
+			.add("answer", true);
+		
+		if (firstConvoTime != null) {
+			queryBuilder.add("time", new BasicDBObject("$lt", firstConvoTime));
+		}
+		DBObject query = queryBuilder.get();
+		
+		List<DBObject> commentsList=new ArrayList<DBObject>();
+		DBCursor commentCur=commentsColl.find(query).sort(new BasicDBObject("time", -1));
+		commentCur = commentCur.limit(ConversationLogic.CONVERSATIONS_PER_PAGE);
+		while(commentCur.hasNext()){
+			commentsList.add(commentCur.next());
+		}
+
 		List<CommentBean> answersList = new ArrayList<CommentBean>();
 		for (DBObject answerDBObject : commentsList) {
 			CommentBean answer = new CommentBean();

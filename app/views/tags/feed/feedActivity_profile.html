@@ -1,18 +1,9 @@
-<li id="${_activity.id}" style="min-height:100%;">
-
-*{
-	<div class="varified" style="width: 70px;">
-		#{if _activity.talker != null && _activity.talker.name != null}
-			#{talker/talkerImageLink size: 70, userName: _activity.talker.name /}
-		#{/if}
-		#{if _activity.talker.connectionVerified }
-			<h4>Verified</h4>
-		#{/if}
-		#{elseif _activity.talker.isProf() }
-			<h4 class="not">Not Verified</h4>
-		#{/elseif}
-	</div>
-}*	
+#{if _type == 'answer' }
+<li id="${_activity.answer.id}" style="min-height:100%;">
+#{/if}
+#{else}
+<li id="${_activity.convo.id}" style="min-height:100%;">
+#{/else}
 	<div  class="q" style="margin-left:15px;">
 		#{if _activity.convo}
 			<div class="jointextstop">

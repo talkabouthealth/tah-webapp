@@ -1,8 +1,8 @@
 <!-- Overview -->
 #{if talker.isAllowed(models.PrivacySetting.PrivacyType.PROFILE_INFO, currentTalker)}
 	<div class="box">
-	<h2 class="heading"><img src="/public/images/profile/overview_icon.png" alt="Personal Info" /><a href="@{Static.workshops()}">Personal Info</a></h2>
-	<div class=body>
+	<h2 class="heading"><img src="/public/images/profile/overview_icon.png" alt="Personal Info" />Personal Info</h2>
+	<div class=body style="padding-top:0px;">
                  <div class="topicborder"></div>
                  #{if talker.state || talker.city || talker.zip || talker.country}
                  <div class="profiletxtCantant">
@@ -102,8 +102,8 @@
 
 #{if (talker.isProf() || talker.isOrg()) && talker.isAllowed(models.PrivacySetting.PrivacyType.PROFESSIONAL_INFO, currentTalker)}
 <div class="box">
-	<h2 class="heading"><img src="/public/images/profile/overview_icon.png" alt="Overview" /><a href="@{Static.workshops()}">Overview</a></h2>
-	<div class=body>
+	<h2 class="heading"><img src="/public/images/profile/overview_icon.png" alt="Overview" />Overview</h2>
+	<div class="body" style="padding-top:0px;"> 
 	 #{list items: logic.TalkerLogic.PROF_FIELDS_MAP.keySet(), as: 'field'}
 		#{if field.equals("specialty") && talker.isProf()}
 	 		#{if talker.profInfo.get("specialty")}
@@ -241,10 +241,10 @@
 <!-- Overview End -->
 <!-- Education and Certification -->
 <div class="box" id="eduBox">
-	<h2 class="heading" style="padding-right:0px">
-	<img src="/public/images/profile/education_icon.png" alt="Education" style="margin-right:3px;margin-top: -1px;"/>
-	<a href="@{Static.workshops()}" style="font-size:17px;">Education and Certification</a></h2>
-	<div class=body>
+	<h2 class="heading" style="padding-right:0px;font-size:17px;">
+	<img src="/public/images/profile/education_icon.png" alt="Education" style="margin-right:3px;"/>
+	Education and Certification</h2>
+	<div class="body"  style="padding-top:0px;">
 	 #{list items: logic.TalkerLogic.PROF_FIELDS_MAP.keySet(), as: 'field'}
 	 	#{if field.equals("med_school")}
 			#{if talker.profInfo.get("med_school")}
@@ -426,8 +426,8 @@
 #{if talker.isProf() || talker.isOrg()}
 	#{if talker.profInfo.get("expertise") || talker.profInfo.get("research_interests")}
 		<div class="box">
-			<h2 class="heading"><img src="/public/images/profile/experties.png" alt="Expertise" style="margin-top:-3px;"/><a href="@{Static.workshops()}" style="font-size:17px;">Expertise and Interests</a></h2>
-			<div class=body>
+			<h2 class="heading" style="font-size:17px;"><img src="/public/images/profile/experties.png" alt="Expertise" style="margin-top:-3px;"/>Expertise and Interests</h2>
+			<div class="body"  style="padding-top:0px;">
 			#{list items: logic.TalkerLogic.PROF_FIELDS_MAP.keySet(), as: 'field'}
 					#{if field.equals("expertise") && talker.isProf()}
 		           	#{if talker.profInfo.get("expertise")}
@@ -462,8 +462,8 @@
 	#{if field.equals("awards")}
 		#{if talker.profInfo.get("awards")}
 			<div class="box">
-				<h2 class="heading"><img src="/public/images/profile/awards_icon.png" alt="Awards" /><a href="@{Static.workshops()}">Awards</a></h2>
-				<div class=body>
+				<h2 class="heading"><img src="/public/images/profile/awards_icon.png" alt="Awards" />Awards</h2>
+				<div class="body"  style="padding-top:0px;">
 					<div class="profiletxtCantant">
 						<div class="profileCantanttxt1"><span class="Profilepersonsub">${talker.profInfo.get("awards")}</span></div>
 					</div>
@@ -478,10 +478,10 @@
 <!-- Insurance -->
  #{if talker.insuranceAccepted?.size() > 0 }
 	<div class="box">
-		<h2 class="heading"><img src="/public/images/profile/overview_icon.png" alt="Personal Info" /><a href="@{Static.workshops()}">Insurance accepted</a></h2>
-		<div class=body>
+		<h2 class="heading"><img src="/public/images/profile/overview_icon.png" alt="Personal Info" />Insurance accepted</h2>
+		<div class="body">
    			#{list items: talker.insuranceAccepted, as: 'insurance' }
-   				${insurance}<br/>
+   				 <div class="profiletxtCantant">${insurance}</div>
    			#{/list}
  		</div>
  	</div>
@@ -494,7 +494,7 @@
 	#{if talker.category != null}
 		#{if !talkerDisease.isEmptyHealthInfo() }
 			<div class="box">
-			<h2 class="heading"><img src="/public/images/index/cal_icon.png" alt="calendar" /><a href="@{Static.workshops()}">Health Info</a></h2>
+			<h2 class="heading"><img src="/public/images/index/cal_icon.png" alt="calendar" />Health Info</h2>
 				<ul>
 					<li class="blacktext12"><b>Disease</b>: <span class="blacktext">${talkerDisease.name}</span><br/></li>
 					#{list items: disease.questions, as: 'question'}
@@ -551,7 +551,7 @@
 					#{/if}
 				 
 					#{if !talkerDisease.isEmpty("procedures")}
-					<li class="blacktext12 healthitemtitle"><strong>Procedures/Surgeries</strong><br/></li>
+					<li class="blacktext12 healthitemtitle" style="padding-top:10px;"><strong>Procedures/Surgeries</strong><br/></li>
 						#{ profile/healthItemsList healthItem:healthItemsMap["procedures"], talkerDisease: talkerDisease /}
 						#{list items: talkerDisease.otherHealthItems?.procedures, as: 'item' }
 							<li class="blacktext12">${item}<br/></li>
@@ -588,7 +588,7 @@
 <!-- Followers-->
 #{if talker.followerList.size() > 0}
 <div class="box">
-	<h2 class="heading"><a href="@{Static.workshops()}">Followers </a><div class="bn1" style="float: right; font-size: 12px; padding: 0px 10px; line-height: 25px; margin-top: -5px;">${talker.followerList.size()}</div></h2>
+	<h2 class="heading"><a href="@{PublicProfile.userBasedActions(talker.name, 'followers')}">Followers </a><div class="bn1" style="float: right; font-size: 12px; padding: 0px 10px; line-height: 25px; margin-top: -5px;">${talker.followerList.size()}</div></h2>
 	<div class="body" style="padding-left:15px;width:243px;padding-right:5px;">
 	#{if talker.isAllowed(models.PrivacySetting.PrivacyType.FOLLOWERS, currentTalker) }
 		#{if !talker.followerList.isEmpty()}
@@ -617,7 +617,7 @@
 <!-- Following-->
 #{if talker.followingList.size() > 0}
 <div class="box">
-	<h2 class="heading"><a href="@{Static.workshops()}">Following </a><div class="bn1" style="float: right; font-size: 12px; padding: 0px 10px; line-height: 25px; margin-top: -5px;">${talker.followingList.size()}</div></h2>
+	<h2 class="heading"><a href="@{PublicProfile.userBasedActions(talker.name, 'following')}">Following </a><div class="bn1" style="float: right; font-size: 12px; padding: 0px 10px; line-height: 25px; margin-top: -5px;">${talker.followingList.size()}</div></h2>
 	<div class="body" style="padding-left:15px;width:243px;padding-right:5px;">
 		#{if talker.isAllowed(models.PrivacySetting.PrivacyType.FOLLOWING, currentTalker) }
 		#{if currentTalker != null || !talker.followingList.isEmpty()}
