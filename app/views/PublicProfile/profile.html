@@ -73,14 +73,12 @@
    			    $.post("@{Actions.followTalker()}", 
    	  				{ followingId: '${talker.id}'},
    	  				function(data) {
-   	  					$("#followActionlink").html(data);
-   	  					if (data == 'Follow') {
-   	  						$("#followActionImageBtn span").html(data);//("followingMemberBtn").addClass("followMemberBtn");
-   	  						$(loading).remove();
+   	  					if (data == 'Unfollow') {
+   	  						$("#followActionImageBtn span").html("Following");
    	  					} else {
-   	  						$("#followActionImageBtn span").html(data);//removeClass("followMemberBtn").addClass("followingMemberBtn");
-   	  						$(loading).remove();
+   	  						$("#followActionImageBtn span").html(data);
    	  					}
+	   	  				$(loading).remove();
    	  				}
    	  			);
 	   		});
@@ -138,8 +136,23 @@
 				});
 				return false;
 			});
-			
+
 			$("#answer").click();
+			
+			$("#followBtnText").hover(
+				function () {
+					var linkTxt = $(this).text();
+					if(linkTxt == 'Following') {
+						$(this).text('Unfollow');
+					}
+				},
+				function () {
+					var linkTxt = $(this).text();
+					if(linkTxt == 'Unfollow') {
+						$(this).text('Following');
+					}
+				}
+			);
 		});
    		function showSaveDialog(type,user) {
    	   		if (type === 'startChat') {
@@ -250,7 +263,7 @@
 							#{/if}
 							#{if currentTalker != null && !talker.userName.equals(currentTalker.userName)}
 								<span class="f1" style="float:right;margin-top:-6px;"><a href="#" id="followActionImageBtn"  
-								><span>${ currentTalker.followingList.contains(talker) ? 'Unfollow' : 'Follow'}</span></a></span>
+								><span id="followBtnText" >${ currentTalker.followingList.contains(talker) ? 'Following' : 'Follow'}</span></a></span>
 							#{/if}
 							</h2>
 						<div style="padding:10px">
@@ -295,7 +308,9 @@
 	                      		#{/else}
 	                      	#{/else}
 								</td>
+								
 								<td style="width: 150px; padding-left: 20px;">
+								<!-- 
 								<strong>Thank You's:</strong>
 								<div class="bn1">
 							<a style="text-decoration: none" href="@{PublicProfile.userBasedActions(talker.name, 'thankyous')}">
@@ -303,6 +318,7 @@
 							</a>
 							</div>
 							<br/><br/>
+							 -->
 							<strong>Answers:&nbsp;</strong>
 							<div class="bn1">
                       	<a style="text-decoration: none" href="@{PublicProfile.answers(talker.name)}">${numOfAnswers}</a>
@@ -325,9 +341,9 @@
 					</div>
 					<div id="postQuestionTabContent" class="tabBodyOther" style="display:block;border-radius:5px;padding: 20px; width: 650px;">
 						<div style="float:left;">                  		    
-	                  	<div class="bn1" style="float: left; padding: 3px; font-weight: bold; font-size: 13px; margin-bottom: 10px;">
+	                  	<div class="bn1" style="cursor: default;float: left; padding: 3px; font-weight: bold; font-size: 13px; margin-bottom: 10px;">
 	                  		<div style="float: left; margin-top: 4px; margin-right: 3px;"><img src="/public/images/profile/newq.png" /></div>
-	                  		<a href="#">Ask a question</a></div>
+	                  		Ask a question</div>
 							#{if currentTalker}
 								<input type="text" id="postQuestionText" class="edititinputx inline_text greyarea"
 								onKeyUp="countDown(this);"

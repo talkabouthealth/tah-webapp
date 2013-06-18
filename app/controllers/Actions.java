@@ -108,21 +108,20 @@ public class Actions extends Controller {
 	public static void followTalker(String followingId) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		TalkerBean followingTalker = TalkerDAO.getById(followingId);
-		
+
 		boolean follow = true;
 		if (talker.getFollowingList().contains(followingTalker)) {
 			//we need unfollow
 			follow = false;
 		}
-		
+
 		TalkerDAO.followAction(talker.getId(), followingId, follow);
 		CommonUtil.refreshCachedTalker(session);
-		
+
 		//Text for the follow link after this action
 		if (follow) {
 			ActionDAO.saveAction(new FollowTalkerAction(talker, followingTalker));
 			NotificationUtils.emailNotifyOnFollow(talker, followingTalker);
-			
 			renderText("Unfollow");
 		}
 		else {
