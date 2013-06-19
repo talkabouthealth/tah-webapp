@@ -124,7 +124,8 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 //        	System.out.println(line);
         	//For now we get only screen_name
         	//Ex: <screen_name>kankangaroo</screen_name>
-        	line = line.trim();			        	
+        	line = line.trim();
+        	System.out.println(line);
         	if (line.startsWith("<screen_name>")) {
         		screenName = line.substring(13, line.length()-14);
         	}
