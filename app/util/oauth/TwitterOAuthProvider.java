@@ -156,8 +156,8 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 	 */
 	private void retrieveTokens(Session session, Map<String, String> params) {
 		String oauthVerifier = params.get("oauth_verifier");
-		//String token = (String)session.get("twitter_token"); //oauth_token
-		String token = (String)session.get("oauth_token"); //oauth_token
+		String token = (String)session.get("twitter_token"); //oauth_token
+		//String token = (String)session.get("oauth_token"); //oauth_token
 		String tokenSecret = (String)session.get("twitter_token_secret");
 		
 		//SignPost check this flag to make access_token request
