@@ -108,6 +108,7 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 		
 		URL url = new URL("http://api.twitter.com/1/account/verify_credentials.xml");
         HttpURLConnection req = (HttpURLConnection) url.openConnection();
+        req.setRequestMethod("GET");
         //sign the request
         try {
 			consumer.sign(req);
