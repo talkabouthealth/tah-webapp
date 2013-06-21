@@ -52,7 +52,7 @@
 		var thoughts=0;
 		var thankyou=0;
 		var questions=0;
-		
+
 		var feedsPerPage = ${logic.FeedsLogic.TALKERFEEDS_PER_PAGE};
 		$(document).ready(function() {
 			var medium='${session.showLoginPoup}';
@@ -62,8 +62,7 @@
 			}
 			$('.inline-edit').inlineEdit( { hover: ''} );
 			$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
-			
-			
+
    			$("#thankYouUser").html('${talker.userName}');
    			$("#commentUser").html('${talker.userName}');
 
@@ -366,7 +365,7 @@
 								}*
 								<div style="float:right;">
 				                  	#{if currentTalker == null }
-										<input class="bn1" type="button" onclick="return showSaveDialog('postQuestion','anonymous');" id="postQuestionBtn" value="Post Question" style="font-weight: bold; font-size: 13px;padding:5px 10px;"/>
+										<input class="bn1" type="button" onclick="joinNow();" id="postQuestionBtn" value="Post Question" style="font-weight: bold; font-size: 13px;padding:5px 10px;"/>
 				                  	#{/if}
 				                  	#{else}
 										<input class="bn1" type="button" onclick="return showSaveDialog('postQuestion');" id="postQuestionBtn" value="Post Question" style="font-weight: bold; font-size: 13px;padding:5px 10px;"/>
@@ -404,7 +403,7 @@
 					    	<li id="answer" class="fst active"><a href="#">Answers</a></li>
 							<li id="thoughts"><a href="#">Thoughts</a></li>
 <!-- 					    	<li id="open"><a href="#">Activities</a></li> -->
-					    	<li id="thankyou"><a href="#">Thank yous</a></li>
+<!-- 					    	<li id="thankyou"><a href="#">Thank yous</a></li> -->
 					    	<li id="questions"><a href="#">Questions</a></li>
 					   </ul>
 					   <div id="answerTab" class="tabBody" >
@@ -427,17 +426,19 @@
 					     </ul>
 					      -->
 					   </div>
+					    <!-- 
 					   <div id="thankyouTab" class="tabBody" style="display:none;">
 					     <ul id="thankyouCnt">
 					     </ul>
-					     <!-- 
+					    
 					     <ul>
 					     	<li class="lastFeed">
 					     		<a class="moreBtn" id="thankyouMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
 					     	</li>
 					     </ul>
-					      -->
+					     
 					   </div>
+					    -->
 					   <div id="questionsTab" class="tabBody" style="display:none;">
 					     <ul id="questionsCnt">
 					     </ul>

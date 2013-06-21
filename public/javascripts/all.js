@@ -572,10 +572,12 @@ function showResponse(responseText, statusText, xhr, $form)  {
 	if (responseText.indexOf("Error:") === 0) {
 		var errorText = responseText.replace("Error:", "");
 		$("#savedHelpText").html(""); 
-		$("#savedHelpError, #saveBtnText").html(errorText); 
+		$("#savedHelpError, #saveBtnText").html(errorText);
+		$("#saveBtnText").css("color","#F00"); 
 		closeTimeout = setTimeout(function() { $("#savedHelp").fadeOut(200) }, 4000);
 	}
 	else {
+		$("#saveBtnText").css("color","#000");
 		$("#savedHelpText, #saveBtnText").html("Saved!"); 
 		closeTimeout = setTimeout(function() { $("#savedHelp").fadeOut(200) }, 2500);
 	}
@@ -845,6 +847,7 @@ function clearTextArea (id, defaultText) {
 	$("#"+id).removeClass("greyarea");
 	if (value === defaultText) {
    		$("#"+id).val("");
+   		$("#"+id).css("color","#000");
 	}
 }
 
