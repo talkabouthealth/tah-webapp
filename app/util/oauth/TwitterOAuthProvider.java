@@ -108,6 +108,7 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 		
 		URL url = new URL("http://api.twitter.com/1/account/verify_credentials.xml");
         HttpURLConnection req = (HttpURLConnection) url.openConnection();
+        req.setRequestMethod("GET");
         //sign the request
         try {
 			consumer.sign(req);
@@ -124,7 +125,8 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 //        	System.out.println(line);
         	//For now we get only screen_name
         	//Ex: <screen_name>kankangaroo</screen_name>
-        	line = line.trim();			        	
+        	line = line.trim();
+        	System.out.println(line);
         	if (line.startsWith("<screen_name>")) {
         		screenName = line.substring(13, line.length()-14);
         	}
@@ -155,7 +157,8 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 	 */
 	private void retrieveTokens(Session session, Map<String, String> params) {
 		String oauthVerifier = params.get("oauth_verifier");
-		String token = (String)session.get("twitter_token");
+		String token = (String)session.get("twitter_token"); //oauth_token
+		//String token = (String)session.get("oauth_token"); //oauth_token
 		String tokenSecret = (String)session.get("twitter_token_secret");
 		
 		//SignPost check this flag to make access_token request

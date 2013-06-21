@@ -49,11 +49,11 @@
   		<div class="haderbanner"><div id="innerbanner"></div></div>
   			<div id="innermain">
   			  #{ifnot session.contains("cancerType")}
-	         	<div class="blacktext2" id="innerheading">Subscribe to our free newsletters!</div>
+	         	<div class="blacktext2" id="innerheading">Get updates on our experts, answers & programs!</div>
 	         	<div id="innermiddlearea">
 		            <div id="signupleft">
 		            	#{form @Explore.subscribeNewsLetterAll() , id:'newsLetterForm' }
-		            	<h3 style="color: #000">Answers from leading cancer experts: What to expect. How to prepare. Next steps.</h3>
+		            	<h3 style="color: #000">Free information and answers from leading cancer experts: What to expect. How to prepare. Next steps.</h3>
 		          		<div id="checkboxarea3">
 		          			<div style="float:left;">
 							#{if newsletter != null && newsletter.newsLetterType !=null}
@@ -70,11 +70,11 @@
 							</div>
 							<div class="lableDiv">
 							#{if session.username} 
-								Daily Health Update<br/>
+								Q&A Workshop Announcements<br/>
 								<font size="2px;" style="font-weight: normal;">(Featured experts, answers, tips &amp; latest news.)</font>
 							#{/if}
 							#{else}
-								Daily Health Update<br/>
+								Q&A Workshop Announcements<br/>
 								<font size="2px;" style="font-weight: normal;">(Featured experts, answers, tips &amp; latest news.)</font>
 							#{/else}
 							</div>
@@ -95,12 +95,12 @@
 							</div>
 							<div class="lableDiv">
 							#{if session.username}
-								Daily Q&A Workshop Summary<br/>
-								<font size="2px;" style="font-weight: normal;">(Daily answer summaries from our expert Q&A workshops.)</font>
+								Q&A Workshop Summaries<br/>
+								<font size="2px;" style="font-weight: normal;">(Answer summaries from our expert Q&A workshops.)</font>
 							#{/if}
 							#{else}
-								Daily Q&A Workshop Summary<br/>
-								<font size="2px;" style="font-weight: normal;">(Daily answer summaries from our expert Q&A workshops.)</font>
+								Q&A Workshop Summaries<br/>
+								<font size="2px;" style="font-weight: normal;">(Answer summaries from our expert Q&A workshops.)</font>
 							#{/else}
 							</div>
 						</div>
@@ -145,13 +145,13 @@
 							#{/else}
 							</div>
 							<div class="lableDiv">
-							#{if session.username}TalkAboutHealth Benefits
+							#{if session.username}Benefits and programs from our partners
 							<br/>
-							<font size="2px;" style="font-weight: normal;">(Custom health, wellness &amp; medical offers.)</font>
+							<font size="2px;" style="font-weight: normal;">(Custom health, wellness &amp; medical offers including clinical trials, market research.)</font>
 							#{/if}
-							#{else}TalkAboutHealth Benefits
+							#{else}Benefits and programs from our partners
 							<br/>
-							<font size="2px;" style="font-weight: normal;">(Custom health, wellness &amp; medical offers.)</font>
+							<font size="2px;" style="font-weight: normal;">(Custom health & medical offers including clinical trials, market research programs.)</font>
 							#{/else}
 							</div>
 						</div>
