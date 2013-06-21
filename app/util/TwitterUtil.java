@@ -37,8 +37,8 @@ import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
-import oauth.signpost.http.HttpParameters;
 import oauth.signpost.http.HttpRequest;
+import oauth.signpost.signature.SignatureMethod;
 import play.Logger;
 import sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
 import util.oauth.TwitterOAuthProvider;
@@ -67,7 +67,7 @@ public class TwitterUtil {
 		Executors.newSingleThreadExecutor().execute(new Runnable() {
 			@Override
 			public void run() {
-				OAuthConsumer consumer = new DefaultOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
+				OAuthConsumer consumer = new DefaultOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET,SignatureMethod.HMAC_SHA1);
 				consumer.setTokenWithSecret(ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
 				
 				try {
@@ -96,7 +96,7 @@ public class TwitterUtil {
 		Executors.newSingleThreadExecutor().execute(new Runnable() {
 			@Override
 			public void run() {
-				OAuthConsumer consumer = new DefaultOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
+				OAuthConsumer consumer = new DefaultOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET,SignatureMethod.HMAC_SHA1);
 				consumer.setTokenWithSecret(ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
 				
 				try {
@@ -124,7 +124,7 @@ public class TwitterUtil {
 	 * @return
 	 */
 	public static List<ServicePost> loadMentions() {
-		OAuthConsumer consumer = new DefaultOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
+		OAuthConsumer consumer = new DefaultOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET,SignatureMethod.HMAC_SHA1);
 		consumer.setTokenWithSecret(ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
 		
 		List<ServicePost> mentionTweets = new ArrayList<ServicePost>();
@@ -154,7 +154,7 @@ public class TwitterUtil {
 		Executors.newSingleThreadExecutor().execute(new Runnable() {
 			@Override
 			public void run() {
-				OAuthConsumer consumer = new DefaultOAuthConsumer(TwitterOAuthProvider.CONSUMER_KEY, TwitterOAuthProvider.CONSUMER_SECRET);
+				OAuthConsumer consumer = new DefaultOAuthConsumer(TwitterOAuthProvider.CONSUMER_KEY, TwitterOAuthProvider.CONSUMER_SECRET,SignatureMethod.HMAC_SHA1);
 				consumer.setTokenWithSecret(twitterAccount.getToken(), twitterAccount.getTokenSecret());
 				
 				try {
@@ -187,7 +187,7 @@ public class TwitterUtil {
 		Executors.newSingleThreadExecutor().execute(new Runnable() {
 			@Override
 			public void run() {
-				OAuthConsumer consumer = new DefaultOAuthConsumer(TwitterOAuthProvider.CONSUMER_KEY, TwitterOAuthProvider.CONSUMER_SECRET);
+				OAuthConsumer consumer = new DefaultOAuthConsumer(TwitterOAuthProvider.CONSUMER_KEY, TwitterOAuthProvider.CONSUMER_SECRET,SignatureMethod.HMAC_SHA1);
 				consumer.setTokenWithSecret(twitterAccount.getToken(), twitterAccount.getTokenSecret());
 				
 				try {
@@ -233,7 +233,7 @@ public class TwitterUtil {
 	}
 	
 	public static List<ServicePost> importTweets(ServiceAccountBean twitterAccount, String sinceId) {
-		OAuthConsumer consumer = new DefaultOAuthConsumer(TwitterOAuthProvider.CONSUMER_KEY, TwitterOAuthProvider.CONSUMER_SECRET);
+		OAuthConsumer consumer = new DefaultOAuthConsumer(TwitterOAuthProvider.CONSUMER_KEY, TwitterOAuthProvider.CONSUMER_SECRET,SignatureMethod.HMAC_SHA1);
 		consumer.setTokenWithSecret(twitterAccount.getToken(), twitterAccount.getTokenSecret());
 		
 		List<ServicePost> tweetsList = new ArrayList<ServicePost>();
