@@ -42,16 +42,16 @@ function setNewsletterMessage(responseText, statusText, xhr, $form)  {
 		<span style="float: left; padding-top: 3px;color:#3888c1;font-style: italic;font-size: 14px;" class="mtrighttxt1">Newsletters</span>
 	</div>
 <!--	<div style="border-bottom: 2px solid #D9D7D7;float: left; margin: 5px;width: 97%;"></div>-->
-	<div style="padding:5px;text-align: justify;" class="talkinfo">Sign up for our newsletters for free world class health information from leading medical experts.</div>
+	<div style="padding:5px;text-align: justify;" class="talkinfo">Sign up for email updates of the latest news, best answers, and featured experts.</div>
 	#{if !newsLetterFlag }
 		#{form @Newsletter.subscribeMoreNewsLetter() , id:'subcribeNewsletter' }
 			<div style="font-size: 12px;float: left;" class="talkinfo">
 				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TAH Workshop Notification" checked='checked' /></div>
-				<div style="padding-top: 3px;float:left;">Daily Workshop Announcement &amp; News</div>
+				<div style="padding-top: 3px;float:left;">Q&A Workshop Announcements &amp; News</div>
 			</div>
 			<div style="font-size: 12px;float: left;" class="talkinfo">
 				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TAH Workshop Summary" checked='checked' /></div>
-				<div style="padding-top: 3px;float:left;">Daily Q&A Workshop Summary</div>
+				<div style="padding-top: 3px;float:left;">Q&A Workshop Summaries</div>
 			</div>
 			<div style="font-size: 12px;float: left;" class="talkinfo">
 				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Best of TalkAboutHealth" checked='checked' /></div>
@@ -59,7 +59,7 @@ function setNewsletterMessage(responseText, statusText, xhr, $form)  {
 			</div>
 			<div style="font-size: 12px;float: left;" class="talkinfo">
 				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TalkAboutHealth Rewards" checked='checked' /></div> 
-				<div style="padding-top: 3px;float:left;">TalkAboutHealth Benefits</div>
+				<div style="padding-top: 3px;float:left;">Benefits and programs from our partners</div>
 			</div>
 			<div style="font-size: 12px;padding:15px 5px 0;" class="talkinfo">
 				<div style="clear: both;height: 20px;">

@@ -66,14 +66,14 @@
 	<div class="body" style="width: 100%; padding:0px;" id="convoTopicblock" >
 	<div style="padding:20px;">
 		<div style="float:left;padding:5px;">
-			<span class="blacktextgrey15">Sign up for our weekly 
+			<span class="blacktextgrey15">Sign up for our  
 			#{if session.get("cancerType")}
 				${session.get("cancerType")} 
 			#{/if}
 			#{else}
 				${convoTopicName}
 			#{/else}
-			newsletter for the latest news, best answers and featured experts.</span>
+			updates for the latest news, best answers and featured experts.</span>
 		</div>
 	  		#{form @Newsletter.subscribeWorkShop(), id:'convoTopic' }
 	  		#{if session.get("cancerType")}

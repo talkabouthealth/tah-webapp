@@ -43,17 +43,17 @@ function setNewsletterMessage(responseText, statusText, xhr, $form)  {
 		</a>
 	</h2>
 	<div class="body" style="padding:20px 10px;">
-	<div style="padding-bottom:5px;text-align: justify;" class="talkinfo">Sign up for our newsletters for the latest news on your disease, best answers, and featured experts.</div>
+	<div style="padding-bottom:5px;text-align: justify;" class="talkinfo">Sign up for email updates of the latest news, best answers, and featured experts.</div>
 	#{if !newsLetterFlag }
 		#{form @Newsletter.subscribeMoreNewsLetter() , id:'subcribeNewsletterUpdate' }
 			<div style="font-size: 12px;float: left;" class="talkinfo">
 				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TAH Workshop Notification" checked='checked' /></div>
 					<!-- <div style="padding-top: 3px;float:left;">Daily Workshop Announcement &amp; News</div> -->
-					<div style="padding-top: 3px;float:left;">Daily Health Update</div>
+					<div style="padding-top: 3px;float:left;">Q&A Workshop Announcements</div>
 			</div>
 			<div style="font-size: 12px;float: left;" class="talkinfo">
 				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TAH Workshop Summary" checked='checked' /></div>
-				<div style="padding-top: 3px;float:left;">Daily Q&A Workshop Summary</div>
+				<div style="padding-top: 3px;float:left;">Q&A Workshop Summaries</div>
 			</div>
 			<div style="font-size: 12px;float: left;" class="talkinfo">
 				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="Best of TalkAboutHealth" checked='checked' /></div>
@@ -61,7 +61,8 @@ function setNewsletterMessage(responseText, statusText, xhr, $form)  {
 			</div>
 			<div style="font-size: 12px;float: left;" class="talkinfo">
 				<div style="float:left;"><input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TalkAboutHealth Rewards" checked='checked' /></div> 
-				<div style="padding-top: 3px;float:left;">TalkAboutHealth Benefits</div>
+				<div style="padding-top: 3px;float:left;">Benefits and programs from our partners</div> 
+
 			</div>
 			<div style="font-size: 12px;padding:15px 5px 0;" class="talkinfo">
 				<div style="clear: both;height: 20px;">
