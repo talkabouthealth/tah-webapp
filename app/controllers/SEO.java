@@ -14,12 +14,14 @@ import models.ConversationBean;
 import models.DiseaseBean;
 import models.TalkerBean;
 import models.TopicBean;
+import models.VideoBean;
 
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import dao.DiseaseDAO;
+import dao.VideoDAO;
 
 import play.mvc.Controller;
 import play.mvc.Router;
@@ -56,6 +58,9 @@ public class SEO extends Controller  {
 					renderXml(xml);
 				} else if("static".equals(name))  {
 					render("SEO/sitemapstatic.xml");
+				} else if("video".equals(name)) {
+					Document xml = getVideoXml();
+					renderXml(xml);
 				} else {
 					render("SEO/sitemap.xml");
 				}
@@ -229,13 +234,71 @@ public class SEO extends Controller  {
 					freqElement.appendChild(xml.createTextNode("daily")); // daily/weekly
 					urlElement.appendChild(freqElement);
 
-					//priorityElement = xml.createElement("priority");
-					//priorityElement.appendChild(xml.createTextNode("0.80"));
-					//urlElement.appendChild(priorityElement);
-
 					rootElement.appendChild(urlElement);
 					it++;
 				}
+			}
+			System.out.println("Convo URL Count : " + it);
+			xml.appendChild(rootElement);
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+		return xml;
+	}
+
+	private static Document getVideoXml(){
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder;
+		Document xml = null;
+		Element urlElement,locElement,freqElement,thumb; //,priorityElement;
+		try {
+			docBuilder = docFactory.newDocumentBuilder();
+			xml = docBuilder.newDocument();
+			int it = 0;
+			Element rootElement = xml.createElement("urlset");
+			rootElement.setAttribute("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
+			rootElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+			rootElement.setAttribute("xmlns:video", "http://www.google.com/schemas/sitemap-video/1.1");
+
+			List<VideoBean> videoList = VideoDAO.loadAllVideo();
+			for (VideoBean videoBean : videoList) {
+				urlElement = xml.createElement("url");
+
+				locElement = xml.createElement("loc");
+				locElement.appendChild(xml.createTextNode("http://talkabouthealth.com/" + videoBean.getHomeVideoLink()));
+				urlElement.appendChild(locElement);
+
+				freqElement = xml.createElement("video:video");
+
+				thumb = xml.createElement("video:thumbnail_loc");
+				thumb.appendChild(xml.createTextNode("http://img.youtube.com/vi/" + videoBean.getVideoId() + "/1.jpg"));
+				freqElement.appendChild(thumb);
+
+				thumb = xml.createElement("video:title");
+				thumb.appendChild(xml.createTextNode(videoBean.getVideoTitle()));
+				freqElement.appendChild(thumb);
+
+				thumb = xml.createElement("video:description");
+				thumb.appendChild(xml.createTextNode(videoBean.getVideoTitle()));
+				freqElement.appendChild(thumb);
+
+				thumb = xml.createElement("video:content_loc");
+				thumb.appendChild(xml.createTextNode("http://youtu.be/" + videoBean.getVideoId()));
+				freqElement.appendChild(thumb);
+
+				thumb = xml.createElement("video:gallery_loc");
+				thumb.appendChild(xml.createTextNode("http://www.youtube.com/user/talkabouthealth"));
+				freqElement.appendChild(thumb);
+
+				thumb = xml.createElement("video:uploader");
+				thumb.setAttribute("info", "http://talkabouthealth.com");
+				thumb.appendChild(xml.createTextNode("TalkAboutHealth.com"));
+				freqElement.appendChild(thumb);
+
+				urlElement.appendChild(freqElement);
+
+				rootElement.appendChild(urlElement);
+				it++;
 			}
 			System.out.println("Convo URL Count : " + it);
 			xml.appendChild(rootElement);

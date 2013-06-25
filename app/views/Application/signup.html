@@ -9,6 +9,10 @@
 			#{elseif session.get("cancerType")}
 				changeNewsletterCategory();
 			#{/elseif}
+			
+			chnageUserType();
+				
+				
 			$('.personalfields').keypress(function(e){
 				//call submit on enter in any field
 				if (e.which == 13) {
@@ -21,6 +25,11 @@
 			$('#talkercategory').change(function(e){
 				changeNewsletterCategory();
 			});
+			
+			$('#talkerconnection').change(function(e) {
+				chnageUserType();
+			});
+			
 		});
 		function displayOptions(option) {
 			if(document.getElementById(option).style.display == 'none') {
@@ -31,6 +40,42 @@
 				document.getElementById(option + 'EC').src = "/public/images/collapse.png";
 			}
 		}
+		
+		chnageUserType = function() {
+			var isPatient = true;
+			var str = "";
+	        $("#talkerconnection option:selected").each(function () {
+	              str = $(this).text();
+	        });
+	        str = $.trim(str);
+			
+			var arrayPatient = ["Just Diagnosed", "High Risk Individual", "Current Patient", "Survivor (1 year)", "Survivor (2 - 5 years)", "Survivor (5 - 10 years)", "Survivor (10 - 20 years)", "Survivor (Greater than 20 years)"];
+			var arrayOther = ["Parent", "Caregiver", "Family member", "Friend"];
+			var res = $.inArray(str, arrayPatient);
+			
+			if(res < 0) {
+				var res = $.inArray(str, arrayOther);
+				if(res >= 0) {
+					isPatient = false;
+				}
+			}
+
+			if(res >= 0) {
+				if(isPatient == true) {
+					//Change labels
+					$("#doblable").html("Birth Date");
+					$("#dodlable").html("Date Diagnosed");
+					 
+				} else {
+					$("#doblable").html("Birth Date of Patient");
+					$("#dodlable").html("Date Patient Diagnosed");
+				}
+				$("#extraFieldMap").show();
+			} else {
+				$("#extraFieldMap").hide();
+			}
+		}
+		
 		changeNewsletterCategory = function(){
 			var str = "";
 	        $("#talkercategory option:selected").each(function () {
@@ -135,14 +180,14 @@
 								<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
 									<input id="newDieses" name="newsletter.newsLetterType" type="checkbox" value="" checked="checked"/>
 									Weekly <span id="categoryText"></span> Newsletter<br/>
-									<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured answers, experts, tips &amp; latest news.)</font>
+									<span class="textgreylight12" style="padding-left: 23px;">(Featured answers, experts, tips &amp; latest news.)</span>
 								</div>
 							</div>
 						</div>
 						<div class="signupmain">
 							<div class="signuptextarea"><span class="blacktext14">Patient, Physician, Caregiver, etc.</span></div>
 							<div class="personaltextfield">
-								<select size="1" name="talker.connection" class="personalfields" id="talker.connection">
+								<select size="1" name="talker.connection" class="personalfields" id="talkerconnection">
 							  		<option selected value=''></option>
 							  		#{list items:models.TalkerBean.CONNECTIONS_ARRAY, as:'connection'}
 									    <option value="${connection}"
@@ -152,6 +197,83 @@
 								</select>
 							</div>
 						</div>
+						
+						<!-- Area for new fields -->
+						<div id="extraFieldMap">
+							<div class="signupmain">
+								<div class="signuptextarea"><span class="blacktext14" id="dodlable">Date Diagnosed</span></div>
+								<div class="personaltextfield">
+									<select size="1"  name="talker.dodMonth" id="talker.dodMonth" class="textarea2">
+										#{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
+										    <option value="${i_index-1}" 
+										    #{if flash['talker.dodMonth'].equals((i_index-1).toString()) } selected #{/if} 
+										    >${i}</option>
+										#{/list}
+									</select>
+									<select size="1" name="talker.dodDay" class="textarea2" id="talker.dodDay">
+								  		<option selected value='0'>Day</option>
+								  		#{list items:1..31, as:'i'}
+										    <option value="${i}"
+										    #{if flash['talker.dodDay'].equals(i.toString()) } selected #{/if} 
+										    >${i}</option>
+										#{/list}
+									</select>
+									<select size="1"  name="talker.dodYear" class="textarea2" id="talker.dodYear">
+								  		<option selected value='0'>Year</option>
+								  		#{list items:2013..1913, as:'i'}
+										    <option value="${i}"
+										    #{if flash['talker.dodYear'].equals(i.toString()) } selected #{/if} 
+										    >${i}</option>
+										#{/list}
+									</select>
+								</div>
+								<div class="signtag">
+									<span class="textgreylight12">(So we can individualize your experience.)</span>
+								</div>
+							</div>						
+							<div class="signupmain">
+								<div class="signuptextarea"><span class="blacktext14" id="doblable">Date of Birth</span></div>
+								<div class="personaltextfield">
+									<select size="1"  name="talker.dobMonth" id="talker.dobMonth" class="textarea2">
+										#{list items:['Month', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], as:'i'}
+										    <option value="${i_index-1}" 
+										    #{if flash['talker.dobMonth'].equals((i_index-1).toString()) } selected #{/if} 
+										    >${i}</option>
+										#{/list}
+									</select>
+									<select size="1" name="talker.dobDay" class="textarea2" id="talker.dobDay">
+								  		<option selected value='0'>Day</option>
+								  		#{list items:1..31, as:'i'}
+										    <option value="${i}"
+										    #{if flash['talker.dobDay'].equals(i.toString()) } selected #{/if} 
+										    >${i}</option>
+										#{/list}
+									</select>
+									<select size="1"  name="talker.dobYear" class="textarea2" id="talker.dobYear">
+								  		<option selected value='0'>Year</option>
+								  		#{list items:2013..1913, as:'i'}
+										    <option value="${i}"
+										    #{if flash['talker.dobYear'].equals(i.toString()) } selected #{/if} 
+										    >${i}</option>
+										#{/list}
+									</select>
+								</div>
+								<div class="signtag">
+									<span class="textgreylight12">(You must be over 18 years old to use this service.)</span>
+								</div>
+							</div>
+							<div class="signupmain" style="margin-bottom: 10px;">
+								<div class="signuptextarea"><span class="blacktext14" id="ziplable">Zip code</span> </div>
+								<div class="personaltextfield">
+									<input name="talker.zip" type="text" class="personalfields" id="talker.zip" value="${flash['talker.zip']}" />
+								</div>
+								<div class="signtag">
+									<span class="textgreylight12">(So we can notify you of local programs.)</span>
+								</div>
+							</div>
+						</div>
+						<!-- Area for new fields end -->
+						
 						<div class="signupmain">
 							<div class="signuptextarea"><span class="blacktext14">Username</span></div>
 							<div class="personaltextfield">
@@ -296,8 +418,8 @@
 							#{else}
 								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="TAH Workshop Notification" checked="checked"/>
 							#{/else}
-							Q&A Workshop Announcments<br/>
-							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Featured experts, answers, tips &amp; latest news.)</font>
+							Daily Health Update<br/>
+							<span class="textgreylight12" style="padding-left: 23px;">(Featured answers, experts, tips &amp; latest news.)</span>
 						</div>
 						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
 							#{if newsletter != null && newsletter.newsLetterType !=null}
@@ -311,8 +433,9 @@
 							#{else}
 								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" value="TAH Workshop Summary" checked="checked"/>
 							#{/else}
-							 Q&A Workshop Summaries<br/>
-							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(Answer summaries from our expert Q&A workshops.)</font>
+							Daily Q&A Workshop Summary<br/>
+							<span class="textgreylight12" style="padding-left: 23px;">(Daily answer summaries from our expert Q&A workshops.)</span>
+
 						</div>
 						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
 							#{if newsletter != null && newsletter.newsLetterType !=null}
@@ -327,7 +450,7 @@
 								<input id="newsletter" name="newsletter.newsLetterType" type="checkbox" id="newsletter.newsLetterType" value="Best of TalkAboutHealth" checked='checked'> 
 							#{/else}
 							Best of TalkAboutHealth (weekly)<br/>
-							<font size="2px;" style="font-weight: normal;padding-left: 23px;">(The week's best answers, news &amp; support.)</font>
+							<span class="textgreylight12" style="padding-left: 23px;">(The week's best answers, news &amp; support.)</span>
 						</div>
 						<div id="checkboxarea2" style="padding-top: 5px;padding-bottom: 20px;">
 							#{if newsletter != null && newsletter.newsLetterType !=null}
@@ -426,7 +549,7 @@
 									<input id="newsletter" name="newsletter.newsLetterType"	type="checkbox" id="newsletter.newsLetterType" value="Pharmaceutical Rewards"/>
 								#{/else}
 								Pharmaceutical Benefits<br/>
-								<font size="2px;" style="font-weight: normal;padding-left: 23px;">Relevant offers and survey opportunities based on disease and more.</font>
+								<span class="textgreylight12" style="padding-left: 23px;">(Relevant offers and survey opportunities based on disease and more.)</span>
 							</div>
 							<div id="checkboxarea2" style="padding-bottom: 35px;padding-top: 2px;">
 								#{if newsletter != null && newsletter.newsLetterType !=null}
@@ -441,7 +564,7 @@
 									<input id="newsletter" name="newsletter.newsLetterType"	type="checkbox" id="newsletter.newsLetterType" value="Family Rewards"/>
 								#{/else}
 								Family Benefits <br/>
-								<font size="2px;" style="font-weight: normal;padding-left: 23px;">Maternity, baby and family offers.</font>
+								<span class="textgreylight12" style="padding-left: 23px;">(Maternity, baby and family offers.)</span>
 							</div>
 						</diV>
 						#{/ifnot}

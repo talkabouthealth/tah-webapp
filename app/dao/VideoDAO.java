@@ -58,6 +58,23 @@ public class VideoDAO {
 		return videoBeanList;
 	}
 
+	public static List<VideoBean> loadAllVideo() {
+		List<VideoBean> videoBeanList = null;
+		VideoBean videoBean;
+		DBCollection videoColl = getCollection(VIDEO_COLLECTION);
+		DBObject videodbObject = BasicDBObjectBuilder.start().get();
+		DBCursor convoCur=videoColl.find(videodbObject).sort(new BasicDBObject("timestamp", -1));//.limit(10);
+		if(convoCur.hasNext()){
+			videoBeanList = new ArrayList<VideoBean>();
+			do {
+				videoBean = new VideoBean();
+				videoBean.parseDBObjectTopic(convoCur.next());
+				videoBeanList.add(videoBean);
+			}while(convoCur.hasNext());
+		}
+		return videoBeanList;
+	}
+	
 	public static List<VideoBean> loadTopicVideo(String convoId,int limit){
 		List<VideoBean> videoBeanList = null;
 		VideoBean videoBean;
@@ -147,8 +164,8 @@ public class VideoDAO {
 		DBCollection videoColl = getCollection(HOME_VIDEO_COLLECTION);
 		DBCursor convoCur= null;
 
-		DBObject query =  BasicDBObjectBuilder.start().add("cancerType", cancerType).get();
-		convoCur=videoColl.find(query).sort(new BasicDBObject("timestamp", -1));
+		//DBObject query =  BasicDBObjectBuilder.start().add("cancerType", cancerType).get();
+		convoCur=videoColl.find().sort(new BasicDBObject("timestamp", -1)); //find(query)
 
 		if(convoCur.hasNext()) {
 			videoBeanList = new ArrayList<VideoBean>();

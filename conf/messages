@@ -13,6 +13,9 @@ username.exists = Username is already taken. Please enter a different username.
 username.reserved = Username is reserved. Please enter a different username.
 category.notselected = Please select a Health Community.
 connection.notselected = Please select whether you are a patient, caregiver, physician, etc.
+zip.empty = Please enter correct zip code.
+dob.incorrect = Date of Birth is incorrect
+dod.incorrect = Date of Diagnosed is incorrect
 
 email.exists = Email is already registered. Please enter a different email.
 email.nosuchemail = Sorry, there are no user with this email in our database.
@@ -31,4 +34,4 @@ vote.exists = You've already voted for this answer.
 talker.userName = Username
 talker.password = Password
 talker.email = Email
-talker.dob = sdfsd
+talker.dob = Date of Birth

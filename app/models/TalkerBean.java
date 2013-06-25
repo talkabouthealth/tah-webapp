@@ -56,6 +56,9 @@ public class TalkerBean implements Serializable {
 		"Organization","Support Group",
 		 "other"
 	};
+	
+	public static final List<String> CONNECTONS_RELATIVE = Arrays.asList("Parent", "Caregiver", "Family member", "Friend");
+	
 	public static final List<String> CONNECTIONS_INTERRUPTORS = Arrays.asList(
 		"Survivor (Greater than 20 years)","Friend","Researcher"
 	);
@@ -173,6 +176,13 @@ public class TalkerBean implements Serializable {
 	private int dobDay;
 	private int dobYear;
 	private Date regDate;
+	
+	//Added fiedls for dignosed dates
+	private Date dod;
+	private int dodMonth;
+	private int dodDay;
+	private int dodYear;
+	
 	
 	//Patient/Caregiver/etc.
 	private String connection;
@@ -345,6 +355,7 @@ public class TalkerBean implements Serializable {
 		setWorkshopSummery(getBoolean(talkerDBObject, "workshopSummery"));
 		setGender((String)talkerDBObject.get("gender"));
 		setDob((Date)talkerDBObject.get("dob"));
+		setDod((Date)talkerDBObject.get("dod"));
 		setInvitations(getInt(talkerDBObject, "invites"));
 		setCity((String)talkerDBObject.get("city"));
 		setState((String)talkerDBObject.get("state"));
@@ -693,6 +704,10 @@ public class TalkerBean implements Serializable {
 	
 	public boolean isAdmin() {
 		return (userName != null && userName.equals("admin"));
+	}
+	
+	public boolean isRelative() {
+		return CONNECTONS_RELATIVE.contains(connection);
 	}
 	
 	public String getAge() {
@@ -1102,5 +1117,29 @@ public class TalkerBean implements Serializable {
 	}
 	public void setLogTime(Date logTime) {
 		this.logTime = logTime;
+	}
+	public Date getDod() {
+		return dod;
+	}
+	public void setDod(Date dod) {
+		this.dod = dod;
+	}
+	public int getDodMonth() {
+		return dodMonth;
+	}
+	public void setDodMonth(int dodMonth) {
+		this.dodMonth = dodMonth;
+	}
+	public int getDodDay() {
+		return dodDay;
+	}
+	public void setDodDay(int dodDay) {
+		this.dodDay = dodDay;
+	}
+	public int getDodYear() {
+		return dodYear;
+	}
+	public void setDodYear(int dodYear) {
+		this.dodYear = dodYear;
 	}
 }

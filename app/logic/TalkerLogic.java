@@ -198,6 +198,7 @@ public class TalkerLogic {
 		PROF_FIELDS_MAP.put("languages", "Languages");
 		PROF_FIELDS_MAP.put("gender", "Gender");
 		PROF_FIELDS_MAP.put("age", "Age");
+		//PROF_FIELDS_MAP.put("dod", "Date Diagnosed");
 		PROF_FIELDS_MAP.put("nurse_school", "Nursing school");
 		PROF_FIELDS_MAP.put("pharm_school", "Pharmacy school");
 		PROF_FIELDS_MAP.put("school_uni", "School / University");

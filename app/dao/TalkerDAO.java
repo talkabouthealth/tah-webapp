@@ -75,7 +75,9 @@ public class TalkerDAO {
 				.add("email", talker.getEmail())
 				//.add("verify_code", talker.getVerifyCode())
 				.add("verify_code", null)
-				.add("dob", talker.getDob())
+				//.add("dob", talker.getDob())
+				.add("dob_private", talker.getDob())
+				.add("dod", talker.getDod())
 				.add("timestamp",  Calendar.getInstance().getTime())
 				.add("category", talker.getCategory() == null ? null : talker.getCategory().equals("") ? null : talker.getCategory())
 				.add("connection", talker.getConnection())
@@ -87,10 +89,8 @@ public class TalkerDAO {
 				.add("ctype_other", talker.getOtherCtype())
 				.add("im_notify", talker.isImNotify())
 				.add("service_accounts", setToDB(talker.getServiceAccounts()))
-				
 				.add("privacy_settings", setToDB(talker.getPrivacySettings()))
 				.add("email_settings", talker.emailSettingsToList())
-				
 				.add("hidden_helps", talker.getHiddenHelps())
 				//.add("newsletter", talker.isNewsletter())
 				.add("newsletter", true)
@@ -113,7 +113,6 @@ public class TalkerDAO {
     		vars.put("username", talker.getUserName());
         	EmailUtil.sendEmail(EmailTemplate.WELCOME_NEWSLETTER, talker.getEmail(), vars, null, false);
 		}
-
 		talker.setId(talkerDBObject.get("_id").toString());
 		return true;
 	}
@@ -146,6 +145,7 @@ public class TalkerDAO {
 			
 			.add("hidden_helps", talker.getHiddenHelps())
 			.add("dob", talker.getDob())
+			.add("dod", talker.getDod())
 			.add("gender", talker.getGender())
 			.add("mar_status", talker.getMaritalStatus())
 			.add("city", talker.getCity())
