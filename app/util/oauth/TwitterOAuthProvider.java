@@ -1,24 +1,11 @@
 package util.oauth;
 
-import static util.DBUtil.setToDB;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-
-import logic.TalkerLogic;
 import models.ServiceAccountBean;
 import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean;
@@ -26,8 +13,12 @@ import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
+import oauth.signpost.signature.SignatureMethod;
+
+import org.apache.commons.lang.StringUtils;
+import org.json.JSONObject;
+
 import play.Logger;
-import play.cache.Cache;
 import play.mvc.Scope.Session;
 import util.CommonUtil;
 import util.TwitterUtil;
@@ -56,22 +47,22 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 	private String cancerType;
 
 	public TwitterOAuthProvider() {
-		consumer = new DefaultOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
-		provider = new DefaultOAuthProvider(
+		consumer = new DefaultOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET,SignatureMethod.HMAC_SHA1);
+
+		provider = new DefaultOAuthProvider(consumer,
 	            "http://twitter.com/oauth/request_token",
 	            "http://twitter.com/oauth/access_token",
 	            "http://twitter.com/oauth/authorize");
 	}
-	
+
 	public TwitterOAuthProvider(String csrType) {
 		cancerType = csrType;
 		if(StringUtils.isNotBlank(cancerType) && "Breast Cancer".equals(cancerType)) {
-			consumer = new DefaultOAuthConsumer(TBC_CONSUMER_KEY, TBC_CONSUMER_SECRET);
+			consumer = new DefaultOAuthConsumer(TBC_CONSUMER_KEY, TBC_CONSUMER_SECRET,SignatureMethod.HMAC_SHA1);
 		} else {
-			consumer = new DefaultOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);	
+			consumer = new DefaultOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET,SignatureMethod.HMAC_SHA1);	
 		}
-
-			provider = 	new DefaultOAuthProvider(
+			provider = 	new DefaultOAuthProvider(consumer,
                     "https://api.twitter.com/oauth/request_token",
                     "https://api.twitter.com/oauth/access_token",
                     "https://api.twitter.com/oauth/authorize");
@@ -92,7 +83,7 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
         		callbackURL = callbackURL+CALLBACK_URL;	
         	}
 
-			authURL = provider.retrieveRequestToken(consumer, callbackURL);
+			authURL = provider.retrieveRequestToken(callbackURL);
 
 			//save token and token secret for next step of OAuth
 			session.put("twitter_token", consumer.getToken());
@@ -105,10 +96,12 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 
 	public String handleCallback(Session session, Map<String, String> params, boolean secureRequest) throws Exception {
 		retrieveTokens(session, params);
-		
-		URL url = new URL("http://api.twitter.com/1/account/verify_credentials.xml");
+		//URL url = new URL("http://api.twitter.com/1/account/verify_credentials.xml");
+		URL url = new URL("https://api.twitter.com/1.1/account/verify_credentials.json");
+
         HttpURLConnection req = (HttpURLConnection) url.openConnection();
         req.setRequestMethod("GET");
+
         //sign the request
         try {
 			consumer.sign(req);
@@ -116,31 +109,25 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			e.printStackTrace();
 		}
         req.connect();
-        
+
         BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
+        
         String line = null;
         String screenName = null;
         String accountId = null;
+        String jsonText = "";
+
         while ((line = br.readLine()) != null) {
-//        	System.out.println(line);
-        	//For now we get only screen_name
-        	//Ex: <screen_name>kankangaroo</screen_name>
-        	line = line.trim();
-        	System.out.println(line);
-        	if (line.startsWith("<screen_name>")) {
-        		screenName = line.substring(13, line.length()-14);
-        	}
-        	
-        	//Ex: <id>23090656</id>
-        	if (line.startsWith("<id>")) {
-        		//check only first <id> (there is also <id> of status)
-        		if (accountId == null) {
-        			accountId = line.substring(4, line.length()-5);
-        		}
-        	}
+        	jsonText = jsonText + line.trim();
         }
-        br.close();
         
+        if(StringUtils.isNotBlank(jsonText)){
+        	JSONObject jsonObject = new JSONObject(jsonText);
+        	screenName = jsonObject.get("screen_name").toString();
+        	accountId = jsonObject.get("id_str").toString();
+        }
+        
+        br.close();
         boolean isConnected = session.contains("username");
 		if (isConnected) {
 			return addAccount(session, screenName, accountId);
@@ -156,16 +143,15 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 	 * @param params
 	 */
 	private void retrieveTokens(Session session, Map<String, String> params) {
-		String oauthVerifier = params.get("oauth_verifier");
+		String oauthVerifier = params.get("oauth_verifier"); //oauth_verifier
 		String token = (String)session.get("twitter_token"); //oauth_token
-		//String token = (String)session.get("oauth_token"); //oauth_token
 		String tokenSecret = (String)session.get("twitter_token_secret");
 		
 		//SignPost check this flag to make access_token request
-		provider.setOAuth10a(true);
+		//provider.setOAuth10a(true);
 		try {
 			consumer.setTokenWithSecret(token, tokenSecret);
-			provider.retrieveAccessToken(consumer, oauthVerifier);
+			provider.retrieveAccessToken(oauthVerifier);
 			
 			session.put("token", consumer.getToken());
 			session.put("token_secret", consumer.getTokenSecret());
@@ -200,17 +186,16 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			ServiceAccountBean twitterAccount = new ServiceAccountBean(accountId, screenName, ServiceType.TWITTER);
 			twitterAccount.setToken(consumer.getToken());
 			twitterAccount.setTokenSecret(consumer.getTokenSecret());
-			
+
 			talker.getServiceAccounts().add(twitterAccount);
 			CommonUtil.updateTalker(talker, session);
 		}
-		
+
 		//to sharing or notification settings?
 		String redirectURL = session.get("oauth_redirect_url");
 		if (redirectURL != null) {
 			return redirectURL;
-		}
-		else {
+		} else {
 			return "/profile/notificationsettings";
 		}
 	}
@@ -219,7 +204,6 @@ public class TwitterOAuthProvider implements OAuthServiceProvider {
 			String accountId) {
 		TalkerBean talker = TalkerDAO.getByAccount(ServiceType.TWITTER, accountId);
 		/*TalkerBean anotherNewTalker = TalkerDAO.getByUserName(screenName);
-		
 		if (anotherNewTalker != null) {
 			return "/publicProfile/loginDetails";
 		}else{*/
