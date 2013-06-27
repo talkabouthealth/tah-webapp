@@ -90,10 +90,6 @@ public class CommunityDAO {
 			DBObject query=new BasicDBObject("_id",new ObjectId(((DBRef)obj.get("from")).getId().toString()));
 			String connection=talkerColl.findOne(query, new BasicDBObject("connection",1)).get("connection").toString();
 			if(connection !=null && TalkerBean.PROFESSIONAL_CONNECTIONS_LIST.contains(connection)){
-				/*queryBuilder.add("$or",Arrays.asList(
-					new BasicDBObject("other_disease_categories", new BasicDBObject("$in", cat)),
-					new BasicDBObject("category", new BasicDBObject("$in", cat))
-				));*/
 				queryBuilder.add("_id", new ObjectId(((DBRef)obj.get("convo")).getId().toString()));
 				DBObject convoQuery = queryBuilder.get();
 				
@@ -147,22 +143,15 @@ public class CommunityDAO {
 			}
 		}
 
-		List<DBObject> convosDBList = new ArrayList<DBObject>();//convosColl.find(query).sort(new BasicDBObject("cr_date", -1)).toArray();
 		DBCursor convoCur=convosColl.find(queryBuilder.get()).sort(new BasicDBObject("cr_date", -1)).limit(logic.FeedsLogic.FEEDS_PER_PAGE);
-		int recCount = 0;
-		while(convoCur.hasNext()) {
-			if(recCount>=logic.FeedsLogic.FEEDS_PER_PAGE)
-				break;
-			recCount++;
-			convosDBList.add(convoCur.next());
-		}
+		convoCur.limit(FeedsLogic.FEEDS_PER_PAGE);
+		 
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
-		for (DBObject convoDBObject : convosDBList) {
+		for (DBObject convoDBObject : convoCur) {
 			ConversationBean convo = new ConversationBean();
 			convo.parseBasicFromDB(convoDBObject);
 	    	convosList.add(convo);
 		}
-		//cat.clear();
 		return convosList;
 	}
 	
