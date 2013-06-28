@@ -181,6 +181,8 @@ public class Profile extends Controller {
 		if (!oldUserName.equals(talker.getUserName())) {
 			session.put("username", talker.getUserName());
 			ApplicationDAO.checkURLName(talker.getUserName(), true, oldUserName);
+			//Added to update search Index on change of user name
+			SearchIndexUtil.modifyTalkerSearchIndex(oldTalker);
 		}
 		renderText("ok");
 	}

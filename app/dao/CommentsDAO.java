@@ -164,6 +164,7 @@ public class CommentsDAO {
 		DBObject query = BasicDBObjectBuilder.start()
 			.add("profile", profileTalkerRef)
 			.add("from_service", new BasicDBObject("$ne", "thankyou"))
+			.add("deleted", new BasicDBObject("$ne", true))
 			.get();
 		commentCount = commentsColl.find(query).count();
 		return commentCount;

@@ -54,6 +54,10 @@
 		var questions=0;
 
 		var feedsPerPage = ${logic.FeedsLogic.TALKERFEEDS_PER_PAGE};
+		
+		jQuery.fn.exists = function(){return this.length>0;}
+
+		
 		$(document).ready(function() {
 			var medium='${session.showLoginPoup}';
 			if(medium=='show'){
@@ -127,16 +131,26 @@
 				$.get("/PublicProfile/loadProfileFeedList",{ type : id,lastActionId:lastActionId, userId:'${talker.id}' },function(data){
 					$(loading).remove();
 					if($.trim(data) == '') {
-						$("li.lastFeed").hide();
+						$("#"+id+"Tab li.lastFeed").hide();
+						//$("<li>No " + id + " found</li>").appendTo($("#"+id+"Cnt"));
 					} else {
 						$(data).appendTo($("#"+id+"Cnt"));
 						$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+						$('.inline-edit').inlineEdit( { hover: ''} );
 					}
 				});
 				return false;
 			});
 
-			$("#answer").click();
+			
+			
+			if ($("#answer").exists()) {
+				$("#answer").click(); 
+			} else if($("#thoughts").exists()) {
+				$("#thoughts").click(); 
+			} else if($("#questions").exists()) {
+				$("#questions").click(); 
+			}
 			
 			$("#followBtnText").hover(
 				function () {
@@ -201,9 +215,15 @@
    			$("#"+id+"Cnt").html(loading);
    			$.get("/PublicProfile/loadProfileFeedList",{ type : id,lastActionId:lastActionId,userId:'${talker.id}' },function(data){
    				$(loading).remove();
-   				$(data).appendTo($("#"+id+"Cnt"));
-   				$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
-   				$('.inline-edit').inlineEdit( { hover: ''} );
+   				if($.trim(data) == '') {
+   					$("li.lastFeed").hide(); 
+   					$("#"+id+"Tab li.lastFeed").hide(); //answerTab
+					$("<li>No " + id + " found</li>").appendTo($("#"+id+"Cnt"));
+				} else {
+					$(data).appendTo($("#"+id+"Cnt"));
+					$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+					$('.inline-edit').inlineEdit( { hover: ''} );
+				}
    			});
    		}
    		function showAllThankYouRepliesById(commentId) {
@@ -265,11 +285,12 @@
 								><span id="followBtnText" >${ currentTalker.followingList.contains(talker) ? 'Following' : 'Follow'}</span></a></span>
 							#{/if}
 							</h2>
-						<div style="padding:10px">
+						<div style="padding:10px;">
 						<table style="width: 100%;">
 							<tr>
 								<td style="width:150px"><img width="150" src="@{Image.show(talker.name)}"></td>
 								<td style="padding-left: 10px;vertical-align:top;">
+								<div style="clear:both;">
 									#{if talker.profileName != null && talker.profileName != ""}
 		                      			<h1 style="font-weight: bold; font-size: 25px; float: left; padding-right: 5px;">${talker.profileName}
 		                      			#{if talker.isProf() || talker.isOrg()}
@@ -284,7 +305,9 @@
 		                      				<img src="/public/images/profile/dsign.png"/>
 		                      			#{/if}
 		                      		#{/else}
-		                      		<br/><br/>
+		                      		</div>
+		                      		<div style="clear:both;">
+		                      		<br/>
 		                      		<strong>Communities:</strong> 
 		                      		<br/>
 	                      	#{if talker.category != null}
@@ -306,9 +329,10 @@
 	                      			<b>---</b>
 	                      		#{/else}
 	                      	#{/else}
+	                      	</div>
 								</td>
 								
-								<td style="width: 150px; padding-left: 20px;">
+								<td style="width: 150px; padding-left: 20px;vertical-align: top; padding-top: 10px;">
 								<!-- 
 								<strong>Thank You's:</strong>
 								<div class="bn1">
@@ -318,17 +342,22 @@
 							</div>
 							<br/><br/>
 							 -->
-							<strong>Answers:&nbsp;</strong>
-							<div class="bn1">
-                      	<a style="text-decoration: none" href="@{PublicProfile.answers(talker.name)}">${numOfAnswers}</a>
-                      	</div>
-                      	<br/><br/>
+							 #{if numOfAnswers > 0 }
+								<strong>Answers:&nbsp;</strong>
+								<div class="bn1">
+		                      	<a style="text-decoration: none" href="@{PublicProfile.answers(talker.name)}">${numOfAnswers}</a>
+		                      	</div>
+		                      		<br/><br/>
+	                      	#{/if}
+	                      	 #{if numOfStartedConvos > 0 }
+                      
                       	
                       	<strong>Questions:&nbsp;</strong>
                       	<div class="bn1">
                       	<a style="text-decoration: none" href="@{PublicProfile.conversations(talker.name)}">${numOfStartedConvos}</a>
                       	</div>
                       	<br/><br/>
+                      	#{/if}
 		                      		<strong>Joined</strong><br/><span>${talker.regDate.format('MMM. yyyy')}</span>
 								</td>
 							</tr>
@@ -400,15 +429,21 @@
 					#{if talker.isAllowed(models.PrivacySetting.PrivacyType.ACTIVITY_STREAM, currentTalker)}
 					<div id="main" class="slide" style="border-radius:5px 5px 5px 5px;padding-top: 15px;">
 					    <ul class="tabs">
-					    	<li id="answer" class="fst active"><a href="#">Answers</a></li>
-							<li id="thoughts"><a href="#">Thoughts</a></li>
+					     	#{if numOfAnswers > 0 }
+					    		<li id="answer" class="fst active"><a href="#">Answers</a></li>
+					    	#{/if}
+					    	#{if commentCount > 0}
+								<li id="thoughts"><a href="#">Thoughts</a></li>
+							#{/if}
 <!-- 					    	<li id="open"><a href="#">Activities</a></li> -->
 <!-- 					    	<li id="thankyou"><a href="#">Thank yous</a></li> -->
-					    	<li id="questions"><a href="#">Questions</a></li>
+ 							#{if numOfStartedConvos > 0 }
+					    		<li id="questions"><a href="#">Questions</a></li>
+					    	#{/if}
 					   </ul>
+					   #{if numOfAnswers > 0 }
 					   <div id="answerTab" class="tabBody" >
 					     <ul id="answerCnt"></ul>
-					     
 					     <ul>
 					     	<li class="lastFeed">
 					     		<a class="moreBtn" id="answerMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
@@ -416,6 +451,8 @@
 					     </ul>
 					    
 					   </div>
+					   #{/if}
+					   #{if commentCount > 0}
 					   <div id="thoughtsTab" class="tabBody" style="display:none;">
 					     <ul id="thoughtsCnt"></ul>
 					     <!-- 
@@ -426,6 +463,7 @@
 					     </ul>
 					      -->
 					   </div>
+					   #{/if}
 					    <!-- 
 					   <div id="thankyouTab" class="tabBody" style="display:none;">
 					     <ul id="thankyouCnt">
@@ -439,6 +477,7 @@
 					     
 					   </div>
 					    -->
+					    #{if numOfStartedConvos > 0 }
 					   <div id="questionsTab" class="tabBody" style="display:none;">
 					     <ul id="questionsCnt">
 					     </ul>
@@ -448,6 +487,7 @@
 					     	</li>
 					     </ul>
 					   </div>
+					   #{/if}
 					</div>
 					#{/if}
 					*{
