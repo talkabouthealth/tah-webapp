@@ -523,18 +523,27 @@ public class ConversationDAO {
 	/**
 	 * Opened Questions - not answered, which are marked with 'opened' flag.
 	 */
-	public static List<ConversationBean> getOpenQuestions(String afterActionId,String cancerType) {
+	public static List<ConversationBean> getCommunityOpenQuestions(String afterActionId,String cancerType) {
 		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
-		//List<String> cat = new ArrayList<String>();
 		
 		BasicDBObjectBuilder queryBuilder =  BasicDBObjectBuilder.start()
 			.add("opened", true)
 			.add("deleted", new BasicDBObject("$ne", true));
 		
-		//DBObject query = BasicDBObjectBuilder.start()
-		//	.add("opened", true)
-		//	.add("deleted", new BasicDBObject("$ne", true))
-		//	.get();
+		if(StringUtils.isNotBlank(cancerType)) {
+			List<String> cat = new ArrayList<String>(1);
+			if(StringUtils.isNotBlank(cancerType)){
+				cat.add(cancerType);
+			}
+			queryBuilder.add("$or", 
+				Arrays.asList(
+						new BasicDBObject("other_disease_categories", new BasicDBObject("$in", cat)),
+						new BasicDBObject("category", new BasicDBObject("$in", cat))
+					)
+			)
+			.get();
+		} 
+
 		if (afterActionId != null && !afterActionId.equals("")) {
 			DBObject fields=BasicDBObjectBuilder.start()		
 			.add("cr_date" , 1).get();
@@ -548,30 +557,44 @@ public class ConversationDAO {
 			}
 		}
 
-		/* 
-		if(StringUtils.isNotBlank(cancerType)){
-			List<String> cat = new ArrayList<String>();
-			cat.add(cancerType);
-			cat.add(ConversationBean.ALL_CANCERS);
-			queryBuilder.add("$or", 
-				Arrays.asList(
-						new BasicDBObject("other_disease_categories", new BasicDBObject("$in", cat)),
-						new BasicDBObject("category", new BasicDBObject("$in", cat))
-				)
-			);
-		}
-		*/
-		List<DBObject> convosDBList = new ArrayList<DBObject>();
 		DBCursor convoCur=convosColl.find(queryBuilder.get()).sort(new BasicDBObject("cr_date", -1)).limit(logic.FeedsLogic.FEEDS_PER_PAGE);
-		int recCount = 0;
-		while(convoCur.hasNext()) {
-			if(recCount>=logic.FeedsLogic.FEEDS_PER_PAGE)
-				break;
-			recCount++;
-			convosDBList.add(convoCur.next());
-		}
+		convoCur.limit(FeedsLogic.FEEDS_PER_PAGE);
 		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
-		for (DBObject convoDBObject : convosDBList) {
+		for (DBObject convoDBObject : convoCur) {
+			ConversationBean convo = new ConversationBean();
+			convo.parseBasicFromDB(convoDBObject);
+	    	convosList.add(convo);
+		}
+		return convosList;
+	}
+	
+	/**
+	 * Opened Questions - not answered, which are marked with 'opened' flag.
+	 */
+	public static List<ConversationBean> getOpenQuestions(String afterActionId,String cancerType) {
+		DBCollection convosColl = getCollection(CONVERSATIONS_COLLECTION);
+		
+		BasicDBObjectBuilder queryBuilder =  BasicDBObjectBuilder.start()
+			.add("opened", true)
+			.add("deleted", new BasicDBObject("$ne", true));
+		
+		if (afterActionId != null && !afterActionId.equals("")) {
+			DBObject fields=BasicDBObjectBuilder.start()		
+			.add("cr_date" , 1).get();
+			Date firstActionTime = new Date();
+			DBObject comment=convosColl.findOne(new BasicDBObject("_id", new ObjectId(afterActionId)),fields);
+		
+			firstActionTime=(Date)comment.get("cr_date");
+		
+			if(firstActionTime != null) {
+				queryBuilder.add("cr_date", new BasicDBObject("$lt", firstActionTime));
+			}
+		}
+
+		DBCursor convoCur=convosColl.find(queryBuilder.get()).sort(new BasicDBObject("cr_date", -1)).limit(logic.FeedsLogic.FEEDS_PER_PAGE);
+		convoCur.limit(FeedsLogic.FEEDS_PER_PAGE);
+		List<ConversationBean> convosList = new ArrayList<ConversationBean>();
+		for (DBObject convoDBObject : convoCur) {
 			ConversationBean convo = new ConversationBean();
 			convo.parseBasicFromDB(convoDBObject);
 	    	convosList.add(convo);

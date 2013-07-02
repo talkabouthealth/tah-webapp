@@ -594,7 +594,7 @@ public class Explore extends Controller {
     		//}
 		}
 		if(type.equals("openConvo")) {
-			List<ConversationBean> convoFeed = ConversationDAO.getOpenQuestions(afterActionId,csrType);
+			List<ConversationBean> convoFeed = ConversationDAO.getCommunityOpenQuestions(afterActionId,csrType);
 			type = "open";
 			//if(afterActionId != null) {
 			//	String feedType = type;

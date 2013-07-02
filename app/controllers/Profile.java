@@ -165,29 +165,25 @@ public class Profile extends Controller {
 		
 		if (oldTalker.isProf()) {
 			oldTalker.setProfStatement(talker.getProfStatement());
-			
-			//YURIY: ALL USERS NOW CAN HAVE DATA IN `PROF-INFO`
-			//Map<String, String> profInfo = oldTalker.parseProfInfoFromParams(params.allSimple());
-			//oldTalker.setProfInfo(profInfo);
-		}
-		else {
+		} else {
 			oldTalker.setMaritalStatus(talker.getMaritalStatus());
 			oldTalker.setChildrenNum(talker.getChildrenNum());
 			oldTalker.setChildrenAges(talker.getChildrenAges());
 			oldTalker.setKeywords(talker.getKeywords());	
-			
+
 			oldTalker.setEthnicities(talker.getEthnicities());
 			oldTalker.setReligion(talker.getReligion());
 			oldTalker.setReligionSerious(talker.getReligionSerious());
 			oldTalker.setLanguagesList(talker.getLanguagesList());
 		}
-		
+
 		CommonUtil.updateTalker(oldTalker, session);
 		if (!oldUserName.equals(talker.getUserName())) {
 			session.put("username", talker.getUserName());
 			ApplicationDAO.checkURLName(talker.getUserName(), true, oldUserName);
+			//Added to update search Index on change of user name
+			SearchIndexUtil.modifyTalkerSearchIndex(oldTalker);
 		}
-		
 		renderText("ok");
 	}
 	
