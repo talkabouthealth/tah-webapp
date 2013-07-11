@@ -8,7 +8,9 @@ import models.TalkerBean;
 
 import org.apache.commons.lang.StringUtils;
 
+import play.libs.Crypto;
 import play.mvc.Controller;
+import play.mvc.Http;
 import util.CommonUtil;
 import dao.ActivityLogDAO;
 import dao.AdvertisementDAO;
@@ -69,22 +71,26 @@ public class ActivityLogController  extends Controller{
 		if(userLocationCode != null && !userLocationCode.equals("unknown")) {
 			addrArray = userLocationCode + "," + userLocationCountry + "," + userLocationState + "," + userLocationCity + "," + userLocationLatitude + "," + userLocationLongitude;
 			session.put("address", addrArray);
+			response.setCookie("address", addrArray, "30d");
 		}
-		if(StringUtils.isNotEmpty(oldSessionId) && oldSessionId.equals(sessionId)) {
+
+		Http.Cookie addressCookie = request.cookies.get("address");
+		if(addressCookie != null && addressCookie.value.length() > 0) {
+			addrArray =  addressCookie.value;
+		} else if(StringUtils.isNotEmpty(oldSessionId) && oldSessionId.equals(sessionId)) {
 			addrArray =  session.get("address");
-			String addressArray[] = addrArray.split(",");
-			userLocationCode = addressArray[0];
-			userLocationCountry = addressArray[1];
-			userLocationState = addressArray[2];
-			userLocationCity = addressArray[3];
-			userLocationLatitude = addressArray[4];
-			userLocationLongitude = addressArray[5];
-			addrArray = userLocationCode + "," + userLocationCountry + "," + userLocationState + "," + userLocationCity + "," + userLocationLatitude + "," + userLocationLongitude;
-			session.put("address", addrArray);
-		} else {
-			addrArray = userLocationCode + "," + userLocationCountry + "," + userLocationState + "," + userLocationCity + "," + userLocationLatitude + "," + userLocationLongitude;
-			session.put("address", addrArray);
 		}
+
+		String addressArray[] = addrArray.split(",");
+		userLocationCode = addressArray[0];
+		userLocationCountry = addressArray[1];
+		userLocationState = addressArray[2];
+		userLocationCity = addressArray[3];
+		userLocationLatitude = addressArray[4];
+		userLocationLongitude = addressArray[5];
+		addrArray = userLocationCode + "," + userLocationCountry + "," + userLocationState + "," + userLocationCity + "," + userLocationLatitude + "," + userLocationLongitude;
+		session.put("address", addrArray);
+		response.setCookie("address", addrArray, "30d");
 
 		ActivityLogBean logBean = new ActivityLogBean(
 							remoteIp,

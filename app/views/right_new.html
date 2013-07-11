@@ -188,7 +188,12 @@
 				background-color: #0386bc;
 				padding-left: 5px;
 				line-height: 20px;
+				#{if talker.profileCompletionValue < 5}
+				width: ${2*talker.profileCompletionValue}px;
+				#{/if}
+				#{else}
 				width: ${2*talker.profileCompletionValue-5}px;
+				#{/else}
 				height: 100%;
 			}
 		</style>
