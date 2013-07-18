@@ -40,7 +40,7 @@
 .comreplytxt{width:90%;}
 .comtextr{width:100%;}
 .blacktext12{float:left;width:100%;clear:both;}
-.profileCantanttxt1{padding-top:10px;}
+.profileCantanttxt1{padding-top:10px;word-wrap:break-word;}
 .comreply {width: 100%; float: left; border-bottom: 1px solid #CCC; padding-bottom: 5px;}
 </style>
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
@@ -263,7 +263,7 @@
 						        </div><!--popbox2-->
 						      </div>
                   	#{/if}
-                  	#{if !notProvidedInfo && notViewableInfo }
+                  	#{if false && !notProvidedInfo && notViewableInfo  }
                   		<div id="viewableInfoHelp" class="tabBodyOther" style="margin-bottom: 15px;color: #383838; border:1px solid #ff7474;background-color: #ffefef; float: left;">
 						        <div>
 						          <div class="closecover" style="clear: none; float: right;">
@@ -305,6 +305,10 @@
 		                      				<img src="/public/images/profile/dsign.png"/>
 		                      			#{/if}
 		                      		#{/else}
+		                      		</div>
+		                      		<br/>
+		                      		<div style="clear:both;">
+		                      			<strong>${talker.name}</strong>	
 		                      		</div>
 		                      		<div style="clear:both;">
 		                      		<br/>
