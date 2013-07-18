@@ -6577,3 +6577,5 @@ margin-bottom:5px;
 		list-style: inherit !important;
 		padding: inherit;;
 	}
+/*New Facebook widget*/
+#fbwidget { padding:0px;border: solid #888;border-width:0px 0px 1px 1px; right: -280px; bottom: 20px; position: fixed; background-color:#FFF; box-shadow:rgba(0,0,0,0.75) 0 0 25px;z-index: 1000;border-bottom-left-radius:10px;}

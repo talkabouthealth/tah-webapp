@@ -84,12 +84,10 @@
         <script type="text/javascript" src="/public/javascripts/jquery-1.5.1.min.js"></script>
         <script type="text/javascript" src="/public/javascripts/jquery-ui-1.8.14.custom.min.js"></script>
 	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
-	
-	
-	
 	<script type="text/javascript" src="/public/javascripts/all.js" ></script>
 	<script type="text/javascript" src="/public/javascripts/headermenu.js" ></script>
 	<script type="text/javascript" src="/public/javascripts/jqueryLinkify.js" ></script>
+	<script type="text/javascript" src="/public/plugins/jquery.cookies.js" ></script>
 	<script type="text/javascript">
 		var currentURL = "${currentURL}";
 		#{if talker}
@@ -133,6 +131,29 @@
 			</div>
 		</div>
 	</div>
+	
+	<!-- Facebook widget -->
+<div id="fbwidget" style="width:255px;"> 
+	<div style="padding: 0px 0px 10px;">
+		<div style="width:85px;height:10px;background-color:#1550a4;float:left;"></div>
+		<div style="width:85px;height:10px;background-color:#1da655;float:left;"></div>
+		<div style="width:85px;height:10px;background-color:#eb1d90;float:left;"></div>
+	</div>
+	<div style="padding:10px;background-color:#EEE;border-bottom:1px solid #CCC;width:235px;float:left;">
+		<span class="fbPopClose" style="float:right;background-color: #000; color: #FFF; border-radius: 10px; font-weight: bold; padding: 0px 5px 2px;cursor: pointer;">x</span>
+		<span class="fbAllPopClose" style="float:right;border-right:1px solid #949B9F;margin-right: 10px; padding-right: 10px;cursor: pointer;color:#5A5959;">
+			Don't show again
+		</span>
+	</div>
+	<div style="padding:10px;">
+	<div style="font-weight: bold; text-align: center; margin: 10px 0px; float: left; width: 100%; font-size: 15px;">
+	Like us on Facebook?
+	</div>
+	<iframe src="http://www.facebook.com/plugins/like.php?href=http://www.facebook.com/talkabouthealth&amp;layout=standard&amp;show_faces=false&amp;width=240&amp;action=like&amp;colorscheme=light&amp;height=35" 
+	scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:240px; height:35px;" allowTransparency="true"></iframe>
+	</div>
+</div>
+
 	#{ common/googleAnalytics cpage: currentPage /}
 	<!-- Quantcast Tag -->
 	<script type="text/javascript">
@@ -149,6 +170,47 @@
 		
 		_qevents.push({
 		qacct:"p-7aWXmxtlCHn1M"
+        });
+		//Code for facebook popup
+		var expanded=false;
+		var value = $.cookie('TAH-Fb-Like-popup');
+		if (value == undefined) {
+			value = 0;
+		}
+
+		$(document).ready(function() {
+			//Added feature for facebook popup
+			if (value < 1) {
+				 $(window).scroll(function() {
+					 if (value < 1) {
+						 var height = $(document).height();
+						 if ($(window).scrollTop() + $(window).height() > (height * .75) && expanded == false) {
+							 $("#fbwidget").animate({
+							        right: -(parseFloat($("#fbwidget").css('right'))) == 0 ? -280 : 0
+							 	}, 1000,function() {/*Animcation complete*/});
+							 expanded = true;
+						 } else if ($(window).scrollTop() + $(window).height() < (height * .75) && expanded == true) {
+							 $("#fbwidget").animate({
+							        right: -(parseFloat($("#fbwidget").css('right'))) == -280 ? 0 : -280
+							 	}, 1000,function() {/*Animcation complete*/});
+							 expanded = false;
+						 }
+					 }
+				});
+				$(".fbPopClose").click(function() {
+					value = 1;
+					 $("#fbwidget").animate({
+					        right: -(parseFloat($("#fbwidget").css('right'))) == -270 ? 0 : -270
+					 	}, 1000,function() {/*Animcation complete*/});
+				});
+				$(".fbAllPopClose").click(function() {
+					value = 1;
+					$.cookie('TAH-Fb-Like-popup', 1, {path: "/"});
+					 $("#fbwidget").animate({
+					        right: -(parseFloat($("#fbwidget").css('right'))) == -270 ? 0 : -270
+					 	}, 1000,function() {/*Animcation complete*/});
+				});
+			}
 		});
 	</script>
 	
