@@ -80,7 +80,7 @@
                   </div>
               </div>
               #{/if}
-              #{if talker.languagesList && talker.languagesList.size > 1 }
+              #{if talker.languagesList && talker.languagesList.size > 1 && talker.getLanguagesAsString() != "English" }
               <div class="profiletxtCantant">
                  	<div class="profileCantanttxt1">
                     	<strong>Speaks:</strong><br/>
@@ -108,7 +108,7 @@
 		     #{/if}
 		     
 		     
-			 #{if field.equals("tw_page") || talker.profInfo.get("fb_page") || talker.profInfo.get("li_page") }      	
+			 #{if talker.profInfo.get("tw_page") || talker.profInfo.get("fb_page") || talker.profInfo.get("li_page") }      	
 			    
 						#{list items: logic.TalkerLogic.PRIV_FIELDS_MAP.keySet(), as: 'field'}
 						#{if field.equals("tw_page")}
@@ -117,7 +117,8 @@
 			       					<div class="profileCantanttxt1">
 			          					<strong>Twitter</strong>
 			          					 	<br/>
-												<span class="Profilepersonsub"> <a href="${talker.profInfo.get("tw_page").startsWith('http') ? talker.profInfo.get("tw_page") : 'http://'+talker.profInfo.get("tw_page") }"target="_blank"><img src='/public/images/profile/tweeter.png'/> </a></span>
+												<span class="Profilepersonsub" style="word-break:break-all;"> <a href="${talker.profInfo.get("tw_page").startsWith('http') ? talker.profInfo.get("tw_page") : 'http://'+talker.profInfo.get("tw_page") }"target="_blank"><img style="vertical-align: middle;" src='/public/images/profile/tweeter.png'/> 
+												${talker.profInfo.get("tw_page").startsWith('http') ? talker.profInfo.get("tw_page") : 'http://'+talker.profInfo.get("tw_page")}</a></span>
 				          						 <!--  <span class="Profilepersonsub">${talker.profInfo.get("tw_page").replaceAll("(http://[^\"\'\n ]+)", "<a href=\"\$1\" target=_blank><img src='/public/images/profile/tweeter.png'/></a>").nl2br()}</span> -->
 				            		</div>
 			     			</div>
@@ -130,7 +131,8 @@
 			       					<div class="profileCantanttxt1">
 			          					<strong>Facebook</strong>
 			          					 	<br/>
-												<span class="Profilepersonsub"> <a href="${talker.profInfo.get("fb_page").startsWith('http') ? talker.profInfo.get("fb_page") : 'http://'+talker.profInfo.get("fb_page") }"target="_blank"> <img src='/public/images/profile/facebook.png'/></a></span>
+												<span class="Profilepersonsub" style="word-break:break-all;"> <a href="${talker.profInfo.get("fb_page").startsWith('http') ? talker.profInfo.get("fb_page") : 'http://'+talker.profInfo.get("fb_page") }"target="_blank"> <img style="vertical-align: middle;" src='/public/images/profile/facebook.png'/>
+												${talker.profInfo.get("fb_page").startsWith('http') ? talker.profInfo.get("fb_page") : 'http://'+talker.profInfo.get("fb_page") }</a></span>
 									              	<!-- <span class="Profilepersonsub">
 									              		${talker.profInfo.get("fb_page").replaceAll("(http://[^\"\'\n ]+)", "<a href=\"\$1\" target=_blank><img src='/public/images/profile/facebook.png'/></a>").nl2br()}
 									              	</span> -->
@@ -144,7 +146,8 @@
 			       					<div class="profileCantanttxt1">
 			          					<strong>Linkedin</strong>
 			          					 	<br/>
-							    					<span class="Profilepersonsub"> <a href="${talker.profInfo.get("li_page").startsWith('http') ? talker.profInfo.get("li_page") : 'http://'+talker.profInfo.get("li_page") }"target="_blank"> <img src='/public/images/profile/in.png'/></a></span>
+							    					<span class="Profilepersonsub" style="word-break:break-all;"> <a href="${talker.profInfo.get("li_page").startsWith('http') ? talker.profInfo.get("li_page") : 'http://'+talker.profInfo.get("li_page") }"target="_blank"> <img style="vertical-align: middle;" src='/public/images/profile/in.png'/>
+							    					${talker.profInfo.get("li_page").startsWith('http') ? talker.profInfo.get("li_page") : 'http://'+talker.profInfo.get("li_page") }</a></span>
 									</div>
 							    </div>
 							#{/if}
