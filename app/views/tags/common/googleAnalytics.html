@@ -39,19 +39,27 @@
 // 			var sGeobytesLatitude="0"
 // 			var sGeobytesLongitude="0";
 // 		} 
+<!--	</script> -->
+}*
+ 	<script type="text/javascript">
+ 	var recId = '';
+ 	$(document).ready(function() {
+			var sGeobytesLocationCode="unknown";
+			var sGeobytesCode="unknown";
+			var sGeobytesInternet="unknown";
+			var sGeobytesCity="unknown";
+			var sGeobytesLatitude="0"
+			var sGeobytesLongitude="0";
+ 		var location = window.location + "";
+ 		var ur = encodeURIComponent(window.location);
+ 		var rf = encodeURIComponent(document.referrer);
+ 		var cPage = '${_cpage}';
+ 		var newPageName = location.substring(location.lastIndexOf('/') + 1);
+ 		if(cPage == '')
+ 			cPage = newPageName;
+ 		$.post("/ActivityLogController/log",{ ref: rf, page: ur, pageType: cPage, geoLcode: sGeobytesLocationCode, geoLcountry:sGeobytesInternet, geoLstate:sGeobytesCode, geoLcity:sGeobytesCity,geoLat: sGeobytesLatitude, geoLong: sGeobytesLongitude },function(data) { /*alert(recId);*/ });
+ 	});
 	</script>
-<!-- 	<script type="text/javascript"> -->
-// 	var recId = '';
-// 	$(document).ready(function() {
-// 		var location = window.location + "";
-// 		var ur = encodeURIComponent(window.location);
-// 		var rf = encodeURIComponent(document.referrer);
-// 		var cPage = '${_cpage}';
-// 		var newPageName = location.substring(location.lastIndexOf('/') + 1);
-// 		if(cPage == '')
-// 			cPage = newPageName;
-// 		$.post("/ActivityLogController/log",{ ref: rf, page: ur, pageType: cPage, geoLcode: sGeobytesLocationCode, geoLcountry:sGeobytesInternet, geoLstate:sGeobytesCode, geoLcity:sGeobytesCity,geoLat: sGeobytesLatitude, geoLong: sGeobytesLongitude },function(data) { /*alert(recId);*/ });
-// 	});
-	</script>
+*{
 #{/if}
 }*

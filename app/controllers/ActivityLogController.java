@@ -58,6 +58,14 @@ public class ActivityLogController  extends Controller{
 			// accept-language, cookie
 		}
 
+		//Location
+		String userLocationCode = "unknown";
+		String userLocationCountry = "unknown";
+		String userLocationState = "unknown";
+		String userLocationCity = "unknown";
+		String userLocationLatitude = "unknown";
+		String userLocationLongitude = "unknown";
+/*
 		String addrArray = null;
 
 		//Location
@@ -91,7 +99,7 @@ public class ActivityLogController  extends Controller{
 		addrArray = userLocationCode + "," + userLocationCountry + "," + userLocationState + "," + userLocationCity + "," + userLocationLatitude + "," + userLocationLongitude;
 		session.put("address", addrArray);
 		response.setCookie("address", addrArray, "30d");
-
+*/
 		ActivityLogBean logBean = new ActivityLogBean(
 							remoteIp,
 							pageType,
