@@ -624,6 +624,42 @@ public class TalkerDAO {
 		return talkerList;
 	}
 	
+	
+	/***
+	 * return all talker id's who have category and other category in list
+	 * @param basicInfo
+	 * @param categoryList
+	 * @return
+	 */
+	public static List<String> getAllTalkersIdByCategory(boolean basicInfo,String cat){
+		List<String> categoryList=new ArrayList<String>();
+		categoryList.add(cat);
+		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
+		talkersColl.ensureIndex(new BasicDBObject("uname", 1));
+		
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start()
+			//.add("category", new BasicDBObject("$in", categoryList) )
+			.add("suspended", false)
+			//.add("otherCategories", new BasicDBObject("$in", categoryList) )
+			.add("$or", 
+				Arrays.asList(
+						new BasicDBObject("category", new BasicDBObject("$in", categoryList)),
+						new BasicDBObject("otherCategories", new BasicDBObject("$in", categoryList))
+					)
+			);
+
+		DBObject fields = BasicDBObjectBuilder.start().add("_id", 1).add("uname", 1).get();
+			
+		DBCursor talkerCur=talkersColl.find(queryBuilder.get(), fields).sort(new BasicDBObject("uname", 1));
+		List<String> talkerIds = new ArrayList<String>();
+		while(talkerCur.hasNext()){
+              talkerIds.add(talkerCur.next().get("_id").toString());
+		}
+		return talkerIds;
+	}
+	
+	
+	
 	public static List<TalkerBean> loadAllTalkers(boolean basicInfo,TalkerBean currentTalker,String cancerType) {
 		
 		//List<String> cat = FeedsLogic.getCancerType(currentTalker);
