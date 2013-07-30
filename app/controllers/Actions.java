@@ -161,6 +161,44 @@ public class Actions extends Controller {
 	}
 	
 	/**
+	 * Save thought/reply in the given profile
+	 * @param profileTalkerId
+	 * @param parentId Id of the parent thought (for replies) or null
+	 * @param text
+	 * @param cleanText Text of comment without html (used for links)
+	 * @param from page where request was made
+	 */
+	public static void saveThought(String profileTalkerId, String parentId, 
+			String text, String cleanText, String from, Boolean ccTwitter, Boolean ccFacebook, String parentList) {
+		
+		
+		CommentBean comment = 
+			TalkerLogic.saveProfileComment(CommonUtil.loadCachedTalker(session), 
+					profileTalkerId, parentId, text, cleanText, null, null, ccTwitter, ccFacebook,parentList);
+		notFoundIfNull(comment);
+		
+		if (from != null && from.equals("home") || false) {
+			//for Home page we add new thought to feeds, so we return thought as feed activity item
+    		TalkerBean _talker = comment.getFromTalker();
+    		Action _activity = new PersonalProfileCommentAction(_talker, _talker, comment, null, ActionType.PERSONAL_PROFILE_COMMENT);
+    		_activity.setID(comment.getActionId());
+    		boolean _showDelete = false;
+			boolean _isFeed = false;
+    		render("tags/publicprofile/thoughtReplyTree_new.html", _talker, _talker, comment, _showDelete, _isFeed);
+    		//render("tags/feed/feedActivity.html", _talker, _activity);
+    		
+		//}else if(from != null && from.equals("thankyou")){
+		}else {
+			List<CommentBean> _commentsList = Arrays.asList(comment);
+			int _level = (comment.getParentId() == null ? 1 : 2);
+			boolean _showDelete = false;
+			boolean _isFeed = false;
+			render("tags/publicprofile/profileCommentsTree_new.html", _commentsList, _level, _showDelete, _isFeed);
+		}
+	}
+	
+	
+	/**
 	 * Delete thought/reply
 	 * @param commentId
 	 * @throws Throwable 

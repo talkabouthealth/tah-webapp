@@ -1,0 +1,453 @@
+#{set pageType = 'cancerPage' /}
+#{set currentPage = 'cancerPage' /}
+
+#{extends 'main_new.html' /}
+	<style type="text/css">
+		#innermiddlearea { padding-top: 10px }
+		.home {
+    background-attachment: scroll;
+    background-clip: border-box;
+    background-color: transparent;
+    background-image: url("/public/images/index/headernew.png");
+    background-origin: padding-box;
+    background-position: 0 0;
+    background-repeat: repeat-x;
+    background-size: auto auto;
+}
+.slide {
+    float: left;
+    margin-top: 30px;
+}
+.followMemberBtn, .followingMemberBtn, .restartChatBtn, .followConvoBtn, .followingConvoBtn, .followTopicBtn, .followingTopicBtn {
+    border: 0 none;
+    cursor: pointer;
+    display: block;
+    height: 32px;
+    margin-left: 35px;
+    margin-top: -5px;
+    width: 233px;
+}
+.followMemberBtn {
+    background: url("/public/images/index/buttonBg.png") repeat scroll 0 0 transparent;
+}
+.followMemberBtn:hover {
+    background: url("/public/images/index/buttonBgHover.png") repeat scroll 0 0 transparent;
+}
+.followingMemberBtn {
+    background: url("/public/images/followingBtn.jpg") repeat scroll 0 0 transparent;
+}
+.followingMemberBtn:hover {
+    background: url("/public/images/unfollowMemberBtn.jpg") repeat scroll 0 0 transparent;
+}
+.followingpictxt a {
+    font-size: 10px;
+}
+.inline_form {
+    display: none;
+}
+.inline-edit {
+    clear: both;
+    float: left;
+}
+.tabBody li {
+    float: left;
+    width: 630px;
+}
+.tabBody {
+    border-radius: 0 5px 5px 5px;
+}
+.tabBodyOther li {
+    float: left;
+    width: 630px;
+}
+.tabBodyOther {
+    border-radius: 0 0 5px 5px;
+}
+.comments {
+    float: left;
+}
+.bn1 {
+    cursor: pointer;
+    float: right;
+    font-size: 12px;
+    line-height: 25px;
+    margin-top: -5px;
+    padding: 0 10px;
+}
+.edititinputx {
+    border: 1px solid #CCCCCC;
+    border-radius: 5px 5px 5px 5px;
+    color: #999999;
+    height: 35px;
+    margin: 0;
+    padding: 3px 5px;
+    width: 637px;
+}
+.comreplytxt {
+    width: 90%;
+}
+.comtextr {
+    width: 100%;
+}
+.blacktext12 {
+    clear: both;
+    float: left;
+    width: 100%;
+}
+.profileCantanttxt1 {
+    padding-top: 10px;
+}
+.comreply {
+    border-bottom: 1px solid #CCCCCC;
+    float: left;
+    padding-bottom: 5px;
+    width: 100%;
+}
+#innermiddlearea { padding-top: 10px }
+		
+/* 		.commentsreply { padding-left:50px; }
+		.comreply { margin-bottom: 2px }
+		.comtext { font-size: 14px }
+		.comreplytxt { font-size: 14px }
+		.ajaxLoading { padding-right: 5px } */
+
+	</style>
+	
+	<script type="text/javascript">
+	var thoughts=0;
+	$(document).ready(function() {
+		var medium='${session.showLoginPoup}';
+		if(medium=='show'){
+			$("#loginpopupform").show();
+			  showPopup("#loginPopup", 350);
+		}
+		$('.inline-edit').inlineEdit( { hover: ''} );
+		$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+
+			$("#thankYouUser").html('${talker.userName}');
+			$("#commentUser").html('${talker.userName}');
+
+			$("#followActionImageBtn, #followActionlink").click(function() {
+			var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
+			$(loading).appendTo("#followActionImageBtn");
+			    $.post("@{Actions.followTalker()}", 
+	  				{ followingId: '${talker.id}'},
+	  				function(data) {
+	  					if (data == 'Unfollow') {
+	  						$("#followActionImageBtn span").html("Following");
+	  					} else {
+	  						$("#followActionImageBtn span").html(data);
+	  					}
+   	  				$(loading).remove();
+	  				}
+	  			);
+   		});
+		if($.trim($("#eduBox div").html()) == '') {
+			$("#eduBox").hide();
+		}
+		//TAbs
+		$(".tabs li").click(function() {
+			$(".active").removeClass("active");
+			$(this).addClass("active");
+			var id = $(this).attr("id");
+			
+				loadFeed(id);
+				thoughts = 1;
+			
+			$(".tabBody").hide();
+			//$("#" + id + "Tab").fadeIn();
+			var tab="[id='#' + "+id+" + 'Tab']";
+			$("[id='"+ id + "Tab']").fadeIn();
+			return false;
+		});
+		
+		 $(".moreBtn").click(function() {
+			var idBtn = $(this).attr("id");
+			
+			id=idBtn.replace('More','');
+			var idElm =  $("#" + id);
+			var lastActionId = $("[id='"+ id + "Cnt']").children().last().attr("id");
+			var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
+			$(loading).appendTo($("#"+id+"Cnt"));
+			$.get("/Community/thoughtFeedAjaxLoad",{ type : id,lastActionId:lastActionId, userId:'${talker.id}' },function(data){
+				$(loading).remove();
+				if($.trim(data) == '') {
+					$("#"+id+"Tab li.lastFeed").hide();
+					//$("<li>No " + id + " found</li>").appendTo($("#"+id+"Cnt"));
+				} else {
+					$(data).appendTo($(document.getElementById(id+"Cnt")));
+					$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+					$('.inline-edit').inlineEdit( { hover: ''} );
+				}
+			});
+			return false;
+		}); 
+
+		
+		
+		/* if ($("#answer").exists()) {
+			$("#answer").click(); 
+		} else if($("#thoughts").exists()) {
+			$("#thoughts").click(); 
+		} else if($("#questions").exists()) {
+			$("#questions").click(); 
+		}
+		
+		$("#followBtnText").hover(
+			function () {
+				var linkTxt = $(this).text();
+				if(linkTxt == 'Following') {
+					$(this).text('Unfollow');
+				}
+			},
+			function () {
+				var linkTxt = $(this).text();
+				if(linkTxt == 'Unfollow') {
+					$(this).text('Following');
+				}
+			}
+		); */
+	});
+	$(document).ready(function() {
+		$('.inline-edit').inlineEdit(
+	  		{ hover: '', saveFunction: saveData}
+	  	);
+	});
+	function saveData(dataType, newValue) {
+		if (dataType.indexOf('commentEdit') == 0) {
+			var commentId = dataType.substring(11);
+			
+   	   		$.post("@{Actions.updateComment()}", 
+  				{ commentId: commentId, newText: newValue},
+  				function(html) {
+  	  				//...
+  				}
+  			);
+		}
+	}
+
+		function saveProfileComment(parentId) {
+	   		var commentText = $(".replytext"+parentId).val();
+	   		if (commentText === '') {
+	   	   		alert('Please input comment');
+	   	   		return;
+	   		}
+		
+	   		//linkedText = linkify(commentText);
+	   		linkedText = commentText;
+
+	   		$("#saveThoughtImage"+parentId).show();
+			$(".replytext"+parentId).val("");
+			$.post("@{Actions.saveProfileComment()}", 
+				{ profileTalkerId: '${talker.id}', parentId: parentId, text: linkedText, cleanText: commentText},
+				function(html) {
+	  				$("#firstcommentmessage").hide();
+					//put comment in the tree
+					if (parentId == '') {
+	  					//add as first element in the top
+						$(html).prependTo($(".commentsarea"));
+
+	  					//add inline edit for new comment
+						$('.inline-edit').inlineEdit( { hover: ''} );
+					}
+					else {
+						//add as last element in subtree
+						$(".reply"+parentId).before($(html));
+					}
+					$("#saveThoughtImage"+parentId).hide();
+					$('.inline-edit').inlineEdit( { hover: '', saveFunction: saveData} );
+				}
+			);
+			return false;
+		}
+		
+		deleteComment = function(commentId) {
+   	   		var confirmDel = confirm("Are you sure want to delete this thought/reply?");
+   	   		if (confirmDel) {
+   	   	  		$.post("@{Actions.deleteComment()}", 
+   					{ commentId : commentId},
+   					function(html) {
+   						html = $.trim(html);
+   						$("#"+html).html("<div class=\"inline_view moretext2\" style=\"color:#000000;padding-bottom:5px; border-bottom:solid 0px gray\">Thought deleted ...</span>");
+   					}
+   				);
+   	   		}
+   	   		return false;
+   		}
+		
+		loadFeed = function(id) {
+   			var lastActionId = '';
+   			var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
+   			$("#"+id+"Cnt").html(loading);
+   			$.get("/Community/thoughtFeedAjaxLoad",{ type : id,lastActionId:lastActionId,userId:'${talker.id}' },function(data){
+   				$(loading).remove();
+   				if($.trim(data) == '') {
+   					$("li.lastFeed").hide(); 
+   					$("#"+id+"Tab li.lastFeed").hide(); //answerTa 
+					$("<li>No " + id + " found</li>").appendTo($("#"+id+"Cnt"));
+				} else {
+					//$("#"+id+"Cnt")
+					$(document.getElementById(id+"Cnt")).empty();
+					$(data).appendTo(document.getElementById(id+"Cnt"));
+					$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+					$('.inline-edit').inlineEdit( { hover: ''} );
+				}
+   			});
+   		}
+		
+		function saveThought() {
+			var text = $("#shareThoughtText").val();
+			var ccTwitter = $("#ccTwitterThought").attr("checked");
+			var ccFacebook = $("#ccFacebookThought").attr("checked");
+			$("#shareThoughtText").val("");
+			$("#shareThoughtTextSize").html("0");
+			if (text === "" || text === "What are you thinking or feeling?") {
+				alert("Please enter thought");
+				return;
+			}
+			linkedText = text;
+			$.post("@{Actions.saveThought()}",{ parentId: '', text: linkedText, cleanText: text, from: 'home', ccTwitter: ccTwitter, ccFacebook: ccFacebook},
+				function(html) {
+					$(html).prependTo($("#allCnt"));
+					//$(html).prependTo($("#communityFeedList"));
+					$('.inline-edit').inlineEdit( { hover: ''} );
+				}
+			);
+			return false;
+		}
+		
+		
+		countDown = function(obj) {
+			var currLenght = $(obj).val().length/1;
+			var oldLength = $('#postThoughtTextSize').text()/1;
+			if(160 - currLenght >= 0) {
+				$('#postThoughtTextSize').html(160 - currLenght);
+				
+			}
+		}
+		
+		$(function() {
+			$("[id='all']").click();
+			//$("[id='${talker.category.replaceAll("\\(","").replaceAll("\\)","")}']").click();
+		});
+	</script>
+	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
+</head>		
+<body class="home" onload="doOnLoad()">
+<div id="wrapper">
+#{include 'header_new.html' /}
+  <div id="content">
+  	<div id="main">
+  	<!-- Main Block -->
+  	
+  		        #{set twAccount: talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
+				#{set fbAccount: talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.FACEBOOK) /}
+  		<div style="display:block;border-radius:5px;padding: 20px; width: 650px;" class="tabBodyOther" id="shareThoughtTabContent">
+  		                <h3>Thoughts</h3>
+						<div style="float:left;width: 100%;" >   
+						   #{if currentTalker}
+								<input type="text" id="shareThoughtText" class="edititinputx inline_text greyarea"
+								onKeyUp="countDown(this);"
+								onfocus="clearTextArea('shareThoughtText', 'What are you thinking or feeling?');"
+								maxlength="160" 
+								value="What are you thinking or feeling?" />
+							#{/if}
+							#{else}
+								<input type="text" id="shareThoughtText" class="edititinputx inline_text greyarea"
+								maxlength="160" onfocus="$(this).blur(); joinNow();" 
+								value="What are you thinking or feeling?" />
+							#{/else}
+						</div>
+						<div style="width:100%; padding-top: 15px; float:left;">
+								<div style="float: left;color:#a5a5a5;">Characters remaining:<span id="postThoughtTextSize">160</span></div>
+								<div style="float:right;  padding-top: 5px;">
+										<input type="button" style="font-weight: bold; font-size: 13px;padding:5px 10px;" value="Share Thought" id="shareThoughtBtn" onclick="return saveThought();" class="bn1">
+				                  	 
+				                </div>
+	                  	</div>
+                  		<div style="clear:both"></div>
+		</div>
+		
+  		
+  		<div class="slide">
+			<ul class="tabs">
+				<li id="all" class="fst active"><a href="#">Thoughts</a></li>
+			</ul>
+					 <div id="allTab" class="tabBody" style="display:none;">
+							     <ul id="allCnt"></ul>
+							     <ul>
+							    	<li class="lastFeed">
+							   				<a class="moreBtn" id="allMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+							   		</li>
+							     </ul>
+							      
+				    </div>
+		 </div>
+		 
+		 <!-- <div class="slide">
+			<ul class="tabs">
+				 #{ifnot talker.category == null}
+										<li id="${talker.category.replaceAll("\\(","").replaceAll("\\)","")}" class="fst active"><a href="#">${talker.category}</a></li>
+				#{/ifnot}
+				#{if otherCategory != null   && talker.category != null && !talker.category.equals("All Cancers")}
+								  		#{list items: otherCategory, as: 'cancerType'}
+								  		#{ifnot talker.category.equals(cancerType.replaceAll("_", " "))}
+										<li id="${cancerType.replaceAll("\\(","").replaceAll("\\)","")}"  name="${cancerType}"><a href="#">${cancerType}</a></li>
+										#{/ifnot}
+							            #{/list}
+			   #{/if}
+				<li id="all"><a href="#">All Community</a></li>
+			</ul>
+			        <div id="${talker.category.replaceAll("\\(","").replaceAll("\\)","")}Tab" class="tabBody" style="display:none;">
+							     <ul id="${talker.category.replaceAll("\\(","").replaceAll("\\)","")}Cnt"></ul>
+							     <ul>
+							     	<li class="lastFeed">
+							     		<a class="moreBtn" id="${talker.category.replaceAll("\\(","").replaceAll("\\)","")}More"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+							     	</li>
+							     </ul>
+							      
+				    </div>
+				    
+				    #{if otherCategory != null   && talker.category != null && !talker.category.equals("All Cancers")}
+								  		#{list items: otherCategory, as: 'cancerType'}
+								  		#{ifnot talker.category.equals(cancerType.replaceAll("_", " "))}
+										<div id="${cancerType.replaceAll("\\(","").replaceAll("\\)","")}Tab" class="tabBody" style="display:none;">
+											     <ul id="${cancerType.replaceAll("\\(","").replaceAll("\\)","")}Cnt"></ul>
+											     		<ul>
+											     			<li class="lastFeed">
+											     			<a class="moreBtn" id="${cancerType.replaceAll("\\(","").replaceAll("\\)","")}More"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+											     		</li>
+							     				 </ul>
+							      
+				    					</div>
+										#{/ifnot}
+							            #{/list}
+			        #{/if}
+					 <div id="allTab" class="tabBody" style="display:none;">
+							     <ul id="allCnt"></ul>
+							     <ul>
+							    	<li class="lastFeed">
+							   				<a class="moreBtn" id="allMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+							   		</li>
+							     </ul>
+							      
+				    </div>
+				   <div id="expertConvoTab" class="tabBody">
+							    <ul id="expertConvoCnt">
+							    </ul>
+							   <ul>
+					 
+							   	<li class="lastFeed">
+							   		<a class="moreBtn" id="expertMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+							   	</li>
+							   </ul>
+				   </div>
+		 </div> -->
+  </div>
+  <div id="sidebar">
+   #{ include 'right_new.html' /}
+   </div>
+  </div>
+  </div>
+<!-- Mask to cover the whole screen -->
+<div id="mask"></div>

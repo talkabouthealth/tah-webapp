@@ -17,6 +17,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 
 import logic.FeedsLogic;
+import logic.TalkerLogic;
 import models.CommentBean;
 import models.ConversationBean;
 import models.DiseaseBean;
@@ -39,7 +40,7 @@ import dao.DiseaseDAO;
 import dao.TalkerDAO;
 import dao.VideoDAO;
 
-@With(TAHGlobalSettings.class)
+//@With(TAHGlobalSettings.class)
 public class Community extends Controller {
 	
 	public static void index() {
@@ -68,6 +69,87 @@ public class Community extends Controller {
     		//future communities
     		render("@index",diseaseList, videoList, numberOfMembers, numberOfAnswers,cancerType);
     	}
+	}
+	
+	public static void home() {
+		if(!Security.isConnected()){
+			redirect("/login");
+		} 
+	
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		
+		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+		//TalkerBean talker = TalkerDAO.getByURLName(userName);
+		notFoundIfNull(talker);
+		
+		talker.setProfileCommentsList(CommentsDAO.loadProfileComments(talker.getId()));
+		
+		TalkerLogic.preloadTalkerInfo(talker);
+		
+		//If the user views his own thoughts he should see the following text under the text box 
+		//until the user posts for the first time (even if another user posts first, this should still appear):
+		boolean firstTimeComment = false;
+		if (talker.equals(currentTalker)) {
+			firstTimeComment = true;
+			//user views his own thoughts - check if he's made comment
+			for (CommentBean cb : talker.getProfileCommentsList()) {
+				if (cb.getFromTalker().equals(talker)) {
+					firstTimeComment = false;
+					break;
+				}
+			}
+		}
+		int numOfStartedConvos = ConversationDAO.getNumOfStartedConvos(talker.getId());
+		int commentCount = CommentsDAO.loadProfileCommentCount(talker.getId());
+		List<String>  otherCategory= new ArrayList<String>();
+		for(String cat:talker.getOtherCategories()){
+			otherCategory.add(cat);
+		}
+		if(otherCategory.size()==0)
+			otherCategory=null;
+		
+		render("@home",talker, currentTalker, firstTimeComment,commentCount,numOfStartedConvos,otherCategory);
+		
+		//render("@home",talker);
+	}
+	
+	/**
+	 * Used by "More" button in community feeds.
+	 * @param afterActionId load actions after given action
+	 */
+	public static void thoughtFeedAjaxLoad(String type,String lastActionId, String userId ){
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		TalkerBean currentTalker = CommonUtil.loadCachedTalker(session);
+		notFoundIfNull(talker);
+		
+		Logger.info("type"+type +"\n last action id " +lastActionId);
+		
+		if(type.equals("all")){
+			talker.setProfileCommentsList(CommentsDAO.getAllThought(lastActionId));
+		}else{
+			talker.setProfileCommentsList(CommentsDAO.getAllThought(lastActionId));
+			//talker.setProfileCommentsList(CommentsDAO.getThoughtsByCategory(type,lastActionId));
+		}
+		
+		TalkerLogic.preloadTalkerInfo(talker);
+		
+		//If the user views his own thoughts he should see the following text under the text box 
+		//until the user posts for the first time (even if another user posts first, this should still appear):
+		boolean firstTimeComment = false;
+		if (talker.equals(currentTalker)) {
+			firstTimeComment = true;
+			//user views his own thoughts - check if he's made comment
+			for (CommentBean cb : talker.getProfileCommentsList()) {
+				if (cb.getFromTalker().equals(talker)) {
+					firstTimeComment = false;
+					break;
+				}
+			}
+		}
+		int numOfStartedConvos = ConversationDAO.getNumOfStartedConvos(talker.getId());
+		int commentCount = CommentsDAO.loadProfileCommentCount(talker.getId());
+		
+		render("tags/feed/thoughtfeedList_new.html",talker, currentTalker, firstTimeComment,commentCount,numOfStartedConvos);
 	}
 	
 	public static void viewCommunity() {
