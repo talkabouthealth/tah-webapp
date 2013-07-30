@@ -310,6 +310,37 @@ public class CommentsDAO {
 		
 		
 
+		commentsColl.ensureIndex(new BasicDBObject("time", 1));
+		//Added from_Service to hide thank you from the thoughts page. #21378031
+		
+		List<DBRef> talkesDbRefs=new ArrayList<DBRef>();
+		for(String id:TalkerDAO.getAllTalkersIdByCategory(true,category)){
+			talkesDbRefs.add(createRef(TalkerDAO.TALKERS_COLLECTION, id));
+		}
+		BasicDBObjectBuilder queryBuilder =  BasicDBObjectBuilder.start()
+				.add("from_service", new BasicDBObject("$ne", "thankyou"))
+				.add("from",new BasicDBObject("$in", talkesDbRefs));
+			    ;
+		if (firstActionTime != null) {
+			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
+		}
+		
+		DBObject query = queryBuilder.get();
+		List<DBObject> commentsList=new ArrayList<DBObject>();////
+		DBCursor commentCur=commentsColl.find(query).sort(new BasicDBObject("time", -1));
+		commentCur.limit(ConversationLogic.CONVERSATIONS_PER_PAGE);
+		
+		while(commentCur.hasNext()){
+			commentsList.add(commentCur.next());
+		}
+		//List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
+		
+		//comments without parent (top in hierarchy)
+		List<CommentBean> topCommentsList = parseCommentsTree(commentsList);
+		Logger.info("size"+topCommentsList.size());
+		return topCommentsList;
+	}
+	
 	// -------------- Convo comments -----------------
 	
 	/**
