@@ -127,7 +127,7 @@ public class Community extends Controller {
 		if(type.equals("all")){
 			talker.setProfileCommentsList(CommentsDAO.getAllThought(lastActionId));
 		}else{
-			talker.setProfileCommentsList(CommentsDAO.getAllThought(lastActionId));
+			talker.setProfileCommentsList(CommentsDAO.getThoughtByCategory(type,lastActionId));
 			//talker.setProfileCommentsList(CommentsDAO.getThoughtsByCategory(type,lastActionId));
 		}
 		

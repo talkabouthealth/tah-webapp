@@ -112,7 +112,6 @@
 		.ajaxLoading { padding-right: 5px } */
 
 	</style>
-	
 	<script type="text/javascript">
 	var thoughts=0;
 	$(document).ready(function() {
@@ -123,10 +122,8 @@
 		}
 		$('.inline-edit').inlineEdit( { hover: ''} );
 		$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
-
 			$("#thankYouUser").html('${talker.userName}');
 			$("#commentUser").html('${talker.userName}');
-
 			$("#followActionImageBtn, #followActionlink").click(function() {
 			var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
 			$(loading).appendTo("#followActionImageBtn");
@@ -150,30 +147,32 @@
 			$(".active").removeClass("active");
 			$(this).addClass("active");
 			var id = $(this).attr("id");
+			var name=$(this).attr("name");
 			
-				loadFeed(id);
+				loadFeed(id,name);
 				thoughts = 1;
-			
 			$(".tabBody").hide();
 			//$("#" + id + "Tab").fadeIn();
 			var tab="[id='#' + "+id+" + 'Tab']";
 			$("[id='"+ id + "Tab']").fadeIn();
 			return false;
 		});
-		
 		 $(".moreBtn").click(function() {
 			var idBtn = $(this).attr("id");
+			var nameBtn=$(this).attr("name");
 			
 			id=idBtn.replace('More','');
+			name=nameBtn.replace('More','');
+			
 			var idElm =  $("#" + id);
 			var lastActionId = $("[id='"+ id + "Cnt']").children().last().attr("id");
 			var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
-			$(loading).appendTo($("#"+id+"Cnt"));
-			$.get("/Community/thoughtFeedAjaxLoad",{ type : id,lastActionId:lastActionId, userId:'${talker.id}' },function(data){
+			$(loading).appendTo($(document.getElementById(id+"Cnt")));
+			$.get("/Community/thoughtFeedAjaxLoad",{ type : name,lastActionId:lastActionId, userId:'${talker.id}' },function(data){
 				$(loading).remove();
 				if($.trim(data) == '') {
-					$("#"+id+"Tab li.lastFeed").hide();
-					//$("<li>No " + id + " found</li>").appendTo($("#"+id+"Cnt"));
+					$("[id='"+ id+"MoreBtn']").hide();
+					$("<li>No " + id + " found</li>").appendTo($(document.getElementById(id+"Cnt")));
 				} else {
 					$(data).appendTo($(document.getElementById(id+"Cnt")));
 					$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
@@ -183,8 +182,6 @@
 			return false;
 		}); 
 
-		
-		
 		/* if ($("#answer").exists()) {
 			$("#answer").click(); 
 		} else if($("#thoughts").exists()) {
@@ -232,10 +229,8 @@
 	   	   		alert('Please input comment');
 	   	   		return;
 	   		}
-		
 	   		//linkedText = linkify(commentText);
 	   		linkedText = commentText;
-
 	   		$("#saveThoughtImage"+parentId).show();
 			$(".replytext"+parentId).val("");
 			$.post("@{Actions.saveProfileComment()}", 
@@ -275,16 +270,17 @@
    	   		return false;
    		}
 		
-		loadFeed = function(id) {
+		loadFeed = function(id,name) {
    			var lastActionId = '';
    			var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
-   			$("#"+id+"Cnt").html(loading);
-   			$.get("/Community/thoughtFeedAjaxLoad",{ type : id,lastActionId:lastActionId,userId:'${talker.id}' },function(data){
+   			$("[id='"+id+"Cnt']").html(loading);
+   			$.get("/Community/thoughtFeedAjaxLoad",{ type : name,lastActionId:lastActionId,userId:'${talker.id}' },function(data){
    				$(loading).remove();
    				if($.trim(data) == '') {
-   					$("li.lastFeed").hide(); 
-   					$("#"+id+"Tab li.lastFeed").hide(); //answerTa 
-					$("<li>No " + id + " found</li>").appendTo($("#"+id+"Cnt"));
+   					$("[id='"+ id+"MoreBtn']").hide();
+   					$(document.getElementById(id+"Cnt")).empty();
+					$("<li>No " + id + " found</li>").appendTo(document.getElementById(id+"Cnt"));
+					
 				} else {
 					//$("#"+id+"Cnt")
 					$(document.getElementById(id+"Cnt")).empty();
@@ -294,9 +290,10 @@
 				}
    			});
    		}
-		
 		function saveThought() {
 			var text = $("#shareThoughtText").val();
+			var categoryForThought=$("#categoryForThought").val();
+			//var id=$("#categoryForThought").
 			var ccTwitter = $("#ccTwitterThought").attr("checked");
 			var ccFacebook = $("#ccFacebookThought").attr("checked");
 			$("#shareThoughtText").val("");
@@ -306,17 +303,18 @@
 				return;
 			}
 			linkedText = text;
-			$.post("@{Actions.saveThought()}",{ parentId: '', text: linkedText, cleanText: text, from: 'home', ccTwitter: ccTwitter, ccFacebook: ccFacebook},
+			$.post("@{Actions.saveThought()}",{ parentId: '', text: linkedText, cleanText: text,thoughtCategory:categoryForThought, from: 'home', ccTwitter: ccTwitter, ccFacebook: ccFacebook},
 				function(html) {
-					$(html).prependTo($("#allCnt"));
+				categoryForThought=categoryForThought.replaceAll("(","");
+				categoryForThought=categoryForThought.replaceAll(")","");
+					$(html).prependTo($("[id='"+categoryForThought+"Cnt']"));
+				    $(html).prependTo($("#allCnt"));
 					//$(html).prependTo($("#communityFeedList"));
 					$('.inline-edit').inlineEdit( { hover: ''} );
 				}
 			);
 			return false;
 		}
-		
-		
 		countDown = function(obj) {
 			var currLenght = $(obj).val().length/1;
 			var oldLength = $('#postThoughtTextSize').text()/1;
@@ -325,10 +323,13 @@
 				
 			}
 		}
-		
 		$(function() {
-			$("[id='all']").click();
-			//$("[id='${talker.category.replaceAll("\\(","").replaceAll("\\)","")}']").click();
+			#{if talker.category}
+				$("[id='${talker.category.replaceAll("\\(","").replaceAll("\\)","")}']").click();
+			#{/if}
+			#{else }
+				$("[id='all']").click();
+			#{/else}
 		});
 	</script>
 	<script type="text/javascript" src="/public/plugins/jquery.inline-edit.js" ></script>
@@ -339,7 +340,6 @@
   <div id="content">
   	<div id="main">
   	<!-- Main Block -->
-  	
   		        #{set twAccount: talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
 				#{set fbAccount: talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.FACEBOOK) /}
   		<div style="display:block;border-radius:5px;padding: 20px; width: 650px;" class="tabBodyOther" id="shareThoughtTabContent">
@@ -359,17 +359,31 @@
 							#{/else}
 						</div>
 						<div style="width:100%; padding-top: 15px; float:left;">
-								<div style="float: left;color:#a5a5a5;">Characters remaining:<span id="postThoughtTextSize">160</span></div>
+								<div style="float: left;color:#a5a5a5; ">Characters remaining:<span id="postThoughtTextSize">160</span></div>
+								<div style="padding-top: 25px;">
+									<select id="categoryForThought" name="categoryForThought" style="display: ${talker.otherCategories?'':'none'}"> 
+											#{if talker.category}
+												<option>${talker.category}</option>
+										    #{/if}
+										    #{else}
+										    	<option>All Cancers</option>
+										    #{/else}
+										    #{if talker.otherCategories}
+										    #{list talker.otherCategories, as:'otherCat'}
+											 <br/>
+											 <option>${otherCat}</option>
+											#{/list}
+											#{/if}
+									</select>
+								</div>
 								<div style="float:right;  padding-top: 5px;">
 										<input type="button" style="font-weight: bold; font-size: 13px;padding:5px 10px;" value="Share Thought" id="shareThoughtBtn" onclick="return saveThought();" class="bn1">
-				                  	 
 				                </div>
 	                  	</div>
                   		<div style="clear:both"></div>
 		</div>
-		
-  		
-  		<div class="slide">
+  		 
+  	<!-- 	<div class="slide">
 			<ul class="tabs">
 				<li id="all" class="fst active"><a href="#">Thoughts</a></li>
 			</ul>
@@ -380,14 +394,12 @@
 							   				<a class="moreBtn" id="allMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
 							   		</li>
 							     </ul>
-							      
 				    </div>
-		 </div>
-		 
-		 <!-- <div class="slide">
+		 </div>  -->
+		  <div class="slide">
 			<ul class="tabs">
 				 #{ifnot talker.category == null}
-										<li id="${talker.category.replaceAll("\\(","").replaceAll("\\)","")}" class="fst active"><a href="#">${talker.category}</a></li>
+										<li id="${talker.category.replaceAll("\\(","").replaceAll("\\)","")}"  name="${talker.category}"  class="fst active"><a href="#">${talker.category}</a></li>
 				#{/ifnot}
 				#{if otherCategory != null   && talker.category != null && !talker.category.equals("All Cancers")}
 								  		#{list items: otherCategory, as: 'cancerType'}
@@ -396,26 +408,27 @@
 										#{/ifnot}
 							            #{/list}
 			   #{/if}
-				<li id="all"><a href="#">All Community</a></li>
+				<li id="all" name="all"><a href="#">All Community</a></li>
 			</ul>
-			        <div id="${talker.category.replaceAll("\\(","").replaceAll("\\)","")}Tab" class="tabBody" style="display:none;">
-							     <ul id="${talker.category.replaceAll("\\(","").replaceAll("\\)","")}Cnt"></ul>
-							     <ul>
-							     	<li class="lastFeed">
-							     		<a class="moreBtn" id="${talker.category.replaceAll("\\(","").replaceAll("\\)","")}More"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
-							     	</li>
-							     </ul>
-							      
-				    </div>
-				    
+				    #{if  talker.category} 	       
+				        <div id="${talker.category.replaceAll("\\(","").replaceAll("\\)","")}Tab" class="tabBody" style="display:none;">
+								     <ul id="${talker.category.replaceAll("\\(","").replaceAll("\\)","")}Cnt"></ul>
+								     <ul>
+								     	<li class="lastFeed" id='${talker.category.replaceAll("\\(","").replaceAll("\\)","")}MoreBtn'>  
+								     		<a class="moreBtn" id="${talker.category.replaceAll("\\(","").replaceAll("\\)","")}More" name="${talker.category}More"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+								     	</li>
+								     </ul>
+								      
+					    </div>
+				    #{/if}
 				    #{if otherCategory != null   && talker.category != null && !talker.category.equals("All Cancers")}
 								  		#{list items: otherCategory, as: 'cancerType'}
 								  		#{ifnot talker.category.equals(cancerType.replaceAll("_", " "))}
 										<div id="${cancerType.replaceAll("\\(","").replaceAll("\\)","")}Tab" class="tabBody" style="display:none;">
 											     <ul id="${cancerType.replaceAll("\\(","").replaceAll("\\)","")}Cnt"></ul>
 											     		<ul>
-											     			<li class="lastFeed">
-											     			<a class="moreBtn" id="${cancerType.replaceAll("\\(","").replaceAll("\\)","")}More"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+											     			<li class="lastFeed" id='${cancerType.replaceAll("\\(","").replaceAll("\\)","")}MoreBtn'>
+											     			<a class="moreBtn" id="${cancerType.replaceAll("\\(","").replaceAll("\\)","")}More"  name="${cancerType}More"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
 											     		</li>
 							     				 </ul>
 							      
@@ -423,26 +436,16 @@
 										#{/ifnot}
 							            #{/list}
 			        #{/if}
-					 <div id="allTab" class="tabBody" style="display:none;">
+					  <div id="allTab" class="tabBody" style="display:none;">
 							     <ul id="allCnt"></ul>
 							     <ul>
-							    	<li class="lastFeed">
-							   				<a class="moreBtn" id="allMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
+							    	<li class="lastFeed" id="allMoreBtn">
+							   				<a class="moreBtn" id="allMore" name="allMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
 							   		</li>
 							     </ul>
 							      
 				    </div>
-				   <div id="expertConvoTab" class="tabBody">
-							    <ul id="expertConvoCnt">
-							    </ul>
-							   <ul>
-					 
-							   	<li class="lastFeed">
-							   		<a class="moreBtn" id="expertMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
-							   	</li>
-							   </ul>
-				   </div>
-		 </div> -->
+		 </div>  
   </div>
   <div id="sidebar">
    #{ include 'right_new.html' /}

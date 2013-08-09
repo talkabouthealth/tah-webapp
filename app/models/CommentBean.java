@@ -116,6 +116,9 @@ public class CommentBean extends MessageBean {
 	//For moderate answer notification
 	private String moderate;
 	
+	private String thoughtCategory;
+	
+	
 	public static final String[] MODERATE_ARRAY = new String[] {
 		"Approve Answer","Delete Answer","Not Helpful","Ignore"
 	};
@@ -163,7 +166,6 @@ public class CommentBean extends MessageBean {
 		setVotes(parseSet(Vote.class, commentDBObject, "votes"));
 		setNotHelpful(getBoolean(commentDBObject, "not_helpful"));
 		setNotHelpfulVotes(parseSet(Vote.class, commentDBObject, "not_helpful_votes"));
-		
 		setModerate(getString(commentDBObject, "moderate"));
 	}
 	
@@ -189,8 +191,7 @@ public class CommentBean extends MessageBean {
 		
 		// Add root-id character
 		setRootId((String)commentDBObject.get("rootid"));
-		
-		
+		setThoughtCategory((String)commentDBObject.get("category"));
 	}
 	
 	/**
@@ -296,4 +297,11 @@ public class CommentBean extends MessageBean {
 	public void setModerate(String moderate) {
 		this.moderate = moderate;
 	}
+	public String getThoughtCategory() {
+		return thoughtCategory;
+	}
+	public void setThoughtCategory(String thoughtCategory) {
+		this.thoughtCategory = thoughtCategory;
+	}
+	
 }

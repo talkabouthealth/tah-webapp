@@ -97,16 +97,13 @@ public class CommentsDAO {
 			.add("from", fromTalkerRef)
 			.add("text", comment.getText())
 			.add("time", comment.getTime())
-			
 			.add("from_service", comment.getFrom())
 			.add("from_service_id", comment.getFromId())
-			
+			.add("category", comment.getThoughtCategory())
 			.add("rootid",comment.getRootId())
 			.get();
 		commentsColl.save(commentObject);
-		
 		updateParent(commentsColl, comment.getParentId(), getString(commentObject, "_id"));
-		
 		String id = getString(commentObject, "_id");
 		comment.setId(id);
 	}
@@ -282,7 +279,6 @@ public class CommentsDAO {
 		List<DBObject> commentsList=new ArrayList<DBObject>();////
 		DBCursor commentCur=commentsColl.find(query).sort(new BasicDBObject("time", -1));
 		commentCur.limit(ConversationLogic.CONVERSATIONS_PER_PAGE);
-		
 		while(commentCur.hasNext()){
 			commentsList.add(commentCur.next());
 			List<DBObject> childList=getChildThoughtDbObjects(commentsList.get(commentsList.size()-1).get("_id").toString());
@@ -296,46 +292,34 @@ public class CommentsDAO {
 		return topCommentsList;
 	}
 	
-	/**
-	 * Load tree of all thoughts and replies for given talker
-	 */
-	public static List<CommentBean> getThoughtsByCategory(String category, String nextActionId) {
-		
+	
+	public static List<CommentBean> getThoughtByCategory(String category,String nextActionId){
 		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
-		
 		Date firstActionTime = null;
 		if (nextActionId != null && !nextActionId.equals("")) {
 			firstActionTime = getProfileCommentTime(nextActionId);
 		}
-		
-		
-
 		commentsColl.ensureIndex(new BasicDBObject("time", 1));
-		//Added from_Service to hide thank you from the thoughts page. #21378031
-		
-		List<DBRef> talkesDbRefs=new ArrayList<DBRef>();
-		for(String id:TalkerDAO.getAllTalkersIdByCategory(true,category)){
-			talkesDbRefs.add(createRef(TalkerDAO.TALKERS_COLLECTION, id));
-		}
+
 		BasicDBObjectBuilder queryBuilder =  BasicDBObjectBuilder.start()
-				.add("from_service", new BasicDBObject("$ne", "thankyou"))
-				.add("from",new BasicDBObject("$in", talkesDbRefs));
-			    ;
+				.add("deleted", new BasicDBObject("$ne", true))
+                .add("from_service", new BasicDBObject("$ne", "thankyou"))
+                .add("rootid", "")
+                .add("category",category);
+                ;
 		if (firstActionTime != null) {
 			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
 		}
-		
 		DBObject query = queryBuilder.get();
-		List<DBObject> commentsList=new ArrayList<DBObject>();////
 		DBCursor commentCur=commentsColl.find(query).sort(new BasicDBObject("time", -1));
 		commentCur.limit(ConversationLogic.CONVERSATIONS_PER_PAGE);
-		
+		List<DBObject> commentsList=new ArrayList<DBObject>();
 		while(commentCur.hasNext()){
 			commentsList.add(commentCur.next());
+			List<DBObject> childList=getChildThoughtDbObjects(commentsList.get(commentsList.size()-1).get("_id").toString());
+			if(childList!=null && childList.size()>0)
+				commentsList.addAll(childList);
 		}
-		//List<DBObject> commentsList = commentsColl.find(query).sort(new BasicDBObject("time", -1)).toArray();
-		
-		//comments without parent (top in hierarchy)
 		List<CommentBean> topCommentsList = parseCommentsTree(commentsList);
 		Logger.info("size"+topCommentsList.size());
 		return topCommentsList;

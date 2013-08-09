@@ -168,13 +168,10 @@ public class Actions extends Controller {
 	 * @param cleanText Text of comment without html (used for links)
 	 * @param from page where request was made
 	 */
-	public static void saveThought(String profileTalkerId, String parentId, 
-			String text, String cleanText, String from, Boolean ccTwitter, Boolean ccFacebook, String parentList) {
+	public static void saveThought(String profileTalkerId, String parentId, String text, String cleanText, String from, Boolean ccTwitter, Boolean ccFacebook, String parentList,String thoughtCategory) {
 		
-		
-		CommentBean comment = 
-			TalkerLogic.saveProfileComment(CommonUtil.loadCachedTalker(session), 
-					profileTalkerId, parentId, text, cleanText, null, null, ccTwitter, ccFacebook,parentList);
+		Logger.info("thought Category " + thoughtCategory);
+		CommentBean comment = TalkerLogic.saveProfileComment(CommonUtil.loadCachedTalker(session),profileTalkerId, parentId, text, cleanText, null, null, ccTwitter, ccFacebook,parentList,thoughtCategory);
 		notFoundIfNull(comment);
 		
 		if (from != null && from.equals("home") || false) {
@@ -196,7 +193,6 @@ public class Actions extends Controller {
 			render("tags/publicprofile/profileCommentsTree_new.html", _commentsList, _level, _showDelete, _isFeed);
 		}
 	}
-	
 	
 	/**
 	 * Delete thought/reply
