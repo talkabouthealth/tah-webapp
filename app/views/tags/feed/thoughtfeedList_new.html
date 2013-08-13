@@ -1,9 +1,8 @@
 #{set level = 1 /} 
 #{set numberOfReplies = talker.profileCommentsList?.size() /} 
-
 #{list items: talker.profileCommentsList, as: 'comment' }
 #{ifnot comment.deleted}
-<li id="${comment.id}" style="min-height:100%;">
+<li id="${comment.id}" style="min-height:100%;" value="${talker.profileCommentsList.size()}">
  
 	#{if level == 1 && !_isFeed}
 			<div class="varified" style="float:left;padding-right: 10px;">
@@ -17,7 +16,7 @@
 		#{/if}
 		<div class="q">
 			<div class="${level == 1 ? 'comtext' : 'comreplytext'}">
-				<div class='inline-edit' id="commentEdit${comment.id}" style="clear:none;">
+				<div class='inline-edit' id="commentEdit${comment.id}" style="width: 100%;clear:none;">
 					<div class="suggestxt2 inline_display">
 						<div class="inline_full inline_empty">
 							<span class="comname">
@@ -29,7 +28,6 @@
 									<a href="#" class="inline_editlink">Edit</a>
 								</span>
 							#{/if}
-							
 						</div>
 		            </div>
 					<div class='inline_form'>
@@ -39,19 +37,26 @@
 							</span>
 				        </div>
 						<div style="float:left;margin-right:2px;width: 100%;">
-							<textarea id="titleinput" type="text" style="width:525px; height: 45px;"  
+							<textarea id="titleinput${comment.id}"  style="width:525px; height: 45px;"  
 				        		class="edititinputs inline_text">${comment.text}</textarea>
-				        	<div style="float:right;">	
-					        <input id="titleBtn" type="submit" class="updatebtns inline_save" value=" " />
-					        <div class="canclebtnz" style="padding-left: 5px;padding-top: 5px;" >
-					        	<a class="cancel" href="#">Cancel</a>
-					        </div>
+				        	<div style="float:right;width:115px; ">	
+							        <input id="titleBtn" type="submit" onclick="javascript:{$('#titleinput${comment.id}').val(nicEditors.findEditor('titleinput${comment.id}').getContent())}"  class="updatebtns inline_save" value=" " />
+							        <div class="canclebtnz" style="padding-left: 5px;padding-top: 5px;" >
+							        	<a class="cancel" href="#">Cancel</a>
+							        </div>
 					        </div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<br/>
+			  <script type="text/javascript">
+								try{
+									n2 = new nicEditor({buttonList : ['bold','italic','underline','indent','outdent','ol','ul','link','unlink','upload']}).panelInstance('titleinput${comment.id}',{hasPanel : true});
+								}catch(e){
+									alert(" thoughtFeedList: "+e);
+								}
+			</script>
 			
 			<div class="${level == 1 ? 'comadd' : 'comreplytext1'}" style="float: left; padding-top: 10px;">
 				<div class="ans">
@@ -117,12 +122,10 @@
 			#{/if}
 		</div>
 	#{/if}
-	
 	<div class="cb"></div>
 	#{if level == 1 && !_isFeed}
 		<div class="joinborder" style="margin-bottom: 10px;"></div>
 	#{/if}
- 
 </li>
 #{/ifnot}
 #{/list}
