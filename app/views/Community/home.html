@@ -160,22 +160,19 @@ div.nicEdit-main{ font-size:15px !important;
 			$(this).addClass("active");
 			var id = $(this).attr("id");
 			var name=$(this).attr("name");
-			
 				loadFeed(id,name);
 				thoughts = 1;
 			$(".tabBody").hide();
 			//$("#" + id + "Tab").fadeIn();
-			var tab="[id='#' + "+id+" + 'Tab']";
-			$("[id='"+ id + "Tab']").fadeIn();
+			//var tab="[id='#' + "+id+" + 'Tab']";
+			$("[id='"+id+"Tab']").fadeIn();
 			return false;
 		});
 		 $(".moreBtn").click(function() {
 			var idBtn = $(this).attr("id");
 			var nameBtn=$(this).attr("name");
-			
 			id=idBtn.replace('More','');
 			name=nameBtn.replace('More','');
-			
 			var idElm =  $("#" + id);
 			var lastActionId = $("[id='"+ id + "Cnt']").children().last().attr("id");
 			var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
@@ -193,7 +190,6 @@ div.nicEdit-main{ font-size:15px !important;
 			});
 			return false;
 		}); 
-
 		/* if ($("#answer").exists()) {
 			$("#answer").click(); 
 		} else if($("#thoughts").exists()) {
@@ -201,7 +197,6 @@ div.nicEdit-main{ font-size:15px !important;
 		} else if($("#questions").exists()) {
 			$("#questions").click(); 
 		}
-		
 		$("#followBtnText").hover(
 			function () {
 				var linkTxt = $(this).text();
@@ -234,8 +229,7 @@ div.nicEdit-main{ font-size:15px !important;
   			);
 		}
 	}
-
-		function saveProfileComment(parentId) {
+	function saveProfileComment(parentId) {
 	   		var commentText = $(".replytext"+parentId).val();
 	   		if (commentText === '') {
 	   	   		alert('Please input comment');
@@ -281,7 +275,6 @@ div.nicEdit-main{ font-size:15px !important;
    	   		}
    	   		return false;
    		}
-		
 		loadFeed = function(id,name) {
    			var lastActionId = '';
    			var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
@@ -292,7 +285,6 @@ div.nicEdit-main{ font-size:15px !important;
    					$("[id='"+ id+"MoreBtn']").hide();
    					$(document.getElementById(id+"Cnt")).empty();
 					$("<li>No " + id + " found</li>").appendTo(document.getElementById(id+"Cnt"));
-					
 				} else {
 					//$("#"+id+"Cnt")
 					$(document.getElementById(id+"Cnt")).empty();
@@ -320,8 +312,11 @@ div.nicEdit-main{ font-size:15px !important;
 				function(html) {
 				categoryForThought=categoryForThought.replaceAll("(","");
 				categoryForThought=categoryForThought.replaceAll(")","");
+				if($(".active").attr('id')=='áll')
+					$(html).prependTo($("#allCnt"));
+				else
 					$(html).prependTo($("[id='"+categoryForThought+"Cnt']"));
-				    $(html).prependTo($("#allCnt"));
+				    
 					//$(html).prependTo($("#communityFeedList"));
 					$('.inline-edit').inlineEdit( { hover: ''} );
 					hideTextArea();
@@ -335,7 +330,6 @@ div.nicEdit-main{ font-size:15px !important;
 			var oldLength = $('#postThoughtTextSize').text()/1;
 			if(160 - currLenght >= 0) {
 				$('#postThoughtTextSize').html(160 - currLenght);
-				
 			}
 		}
 		function showTextArea(){
@@ -354,7 +348,6 @@ div.nicEdit-main{ font-size:15px !important;
 			#{else }
 				$("[id='all']").click();
 			#{/else}
-			
 				saveAnswerOrReplyHere = function(elm) {
 					$("#saveAnswerImage").show();
 					$(elm).hide();
@@ -409,7 +402,7 @@ div.nicEdit-main{ font-size:15px !important;
 						</div>
 						<div style="width:100%; padding-top: 15px; float:left;">
 								<div style="float: left;color:#a5a5a5;display: none ">Characters remaining:<span id="postThoughtTextSize">160</span></div>
-								<div style="padding-top: 25px;">
+								<div style="padding-top: 0px;">
 									<select id="categoryForThought" name="categoryForThought" style="display: ${talker.otherCategories?'':'none'}"> 
 											#{if talker.category}
 												<option>${talker.category}</option>
@@ -474,8 +467,8 @@ div.nicEdit-main{ font-size:15px !important;
 								  		#{ifnot talker.category.equals(cancerType.replaceAll("_", " "))}
 										<div id="${cancerType.replaceAll("\\(","").replaceAll("\\)","")}Tab" class="tabBody" style="display:none;">
 											     <ul id="${cancerType.replaceAll("\\(","").replaceAll("\\)","")}Cnt"></ul>
-											     		<ul>
-											     			<li class="lastFeed" id='${cancerType.replaceAll("\\(","").replaceAll("\\)","")}MoreBtn'>
+											     <ul>
+											     		<li class="lastFeed" id='${cancerType.replaceAll("\\(","").replaceAll("\\)","")}MoreBtn'>
 											     			<a class="moreBtn" id="${cancerType.replaceAll("\\(","").replaceAll("\\)","")}More"  name="${cancerType}More"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
 											     		</li>
 							     				 </ul>

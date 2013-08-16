@@ -167,6 +167,7 @@ public class CommentBean extends MessageBean {
 		setNotHelpful(getBoolean(commentDBObject, "not_helpful"));
 		setNotHelpfulVotes(parseSet(Vote.class, commentDBObject, "not_helpful_votes"));
 		setModerate(getString(commentDBObject, "moderate"));
+		setThoughtCategory((String)commentDBObject.get("category"));
 	}
 	
 	

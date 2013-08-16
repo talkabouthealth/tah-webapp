@@ -146,10 +146,11 @@ public class Community extends Controller {
 				}
 			}
 		}
+		type=type.equals("all")?type:"";
+		
 		int numOfStartedConvos = ConversationDAO.getNumOfStartedConvos(talker.getId());
 		int commentCount = CommentsDAO.loadProfileCommentCount(talker.getId());
-		
-		render("tags/feed/thoughtfeedList_new.html",talker, currentTalker, firstTimeComment,commentCount,numOfStartedConvos);
+		render("tags/feed/thoughtfeedList_new.html",talker, currentTalker, firstTimeComment,commentCount,numOfStartedConvos,type);
 	}
 	
 	public static void viewCommunity() {

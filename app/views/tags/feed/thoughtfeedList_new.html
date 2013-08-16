@@ -37,10 +37,10 @@
 							</span>
 				        </div>
 						<div style="float:left;margin-right:2px;width: 100%;">
-							<textarea id="titleinput${comment.id}"  style="width:525px; height: 45px;"  
+							<textarea id="${type}titleinput${comment.id}"  style="width:525px; height: 45px;"  
 				        		class="edititinputs inline_text">${comment.text}</textarea>
 				        	<div style="float:right;width:115px; ">	
-							        <input id="titleBtn" type="submit" onclick="javascript:{$('#titleinput${comment.id}').val(nicEditors.findEditor('titleinput${comment.id}').getContent())}"  class="updatebtns inline_save" value=" " />
+							        <input id="titleBtn" type="submit" onclick="javascript:{$('#${type}titleinput${comment.id}').val(nicEditors.findEditor('${type}titleinput${comment.id}').getContent())}"  class="updatebtns inline_save" value=" " />
 							        <div class="canclebtnz" style="padding-left: 5px;padding-top: 5px;" >
 							        	<a class="cancel" href="#">Cancel</a>
 							        </div>
@@ -52,12 +52,11 @@
 			<br/>
 			  <script type="text/javascript">
 								try{
-									n2 = new nicEditor({buttonList : ['bold','italic','underline','indent','outdent','ol','ul','link','unlink','upload']}).panelInstance('titleinput${comment.id}',{hasPanel : true});
+									n2 = new nicEditor({buttonList : ['bold','italic','underline','indent','outdent','ol','ul','link','unlink','upload']}).panelInstance('${type}titleinput${comment.id}',{hasPanel : true});
 								}catch(e){
 									alert(" thoughtFeedList: "+e);
 								}
 			</script>
-			
 			<div class="${level == 1 ? 'comadd' : 'comreplytext1'}" style="float: left; padding-top: 10px;">
 				<div class="ans">
 					<img src="/public/images/index/timer_icon.png" alt="time"> ${comment.time.since()}
