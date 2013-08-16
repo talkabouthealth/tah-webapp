@@ -554,6 +554,9 @@ var nicEditorInstance = bkClass.extend({
         /* strip out extra spaces -cgCraft */
         newSnippet = newSnippet.replace(/ <\//gi, "</");
 
+	/*Added to add link external */
+	newSnippet = newSnippet.replace(/<a/g,"<a target='_blank'");
+
         while (newSnippet.indexOf("  ") != -1) {
             var anArray = newSnippet.split("  ")
             newSnippet = anArray.join(" ")
