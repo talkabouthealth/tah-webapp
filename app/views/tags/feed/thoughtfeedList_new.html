@@ -2,7 +2,7 @@
 #{set numberOfReplies = talker.profileCommentsList?.size() /} 
 #{list items: talker.profileCommentsList, as: 'comment' }
 #{ifnot comment.deleted}
-<li id="${comment.id}" style="min-height:100%;" value="${talker.profileCommentsList.size()}">
+<li id="${comment.id}" style="min-height:100%;" value="${talker.profileCommentsList.size()}" class=tabBodyLi>
  
 	#{if level == 1 && !_isFeed}
 			<div class="varified" style="float:left;padding-right: 10px;">

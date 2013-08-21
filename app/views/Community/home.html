@@ -48,18 +48,25 @@
     clear: both;
     float: left;
 }
-.tabBody li {
+.tabBodyCommunity li {
     float: left;
     width: 630px;
+    margin: 0 0 0 30px; 
 }
-.tabBody {
+.tabBodyCommunity {
     border-radius: 0 5px 5px 5px;
 }
-.tabBodyOther li {
+.tabBodyLi{
+	padding: 30px;
+	border-bottom: 1px solid #d5d5d5;
+	min-height: 105px;
+	list-style: none;
+}
+.tabBodyOtherCommunity li {
     float: left;
     width: 630px;
 }
-.tabBodyOther {
+.tabBodyOtherCommunity {
     border-radius: 0 0 5px 5px;
 }
 .comments {
@@ -76,7 +83,7 @@
 .edititinputx {
     border: 1px solid #CCCCCC;
     border-radius: 5px 5px 5px 5px;
-    color: #999999;
+    color: black;
     height: 35px;
     margin: 0;
     padding: 3px 5px;
@@ -103,25 +110,28 @@
     width: 100%;
 }
 #innermiddlearea { padding-top: 10px }
-		
-/* 		.commentsreply { padding-left:50px; }
-		.comreply { margin-bottom: 2px }
-		.comtext { font-size: 14px }
-		.comreplytxt { font-size: 14px }
-		.ajaxLoading { padding-right: 5px } */
-/*Styles for nice editor*/
-
 .nicEdit-pane {
     border: 1px solid #ccc !important;
     border-radius: 0px 0px 10px 10px;
     padding: 10px 25px 10px 10px !important;
     margin-top: 2px;
     background: white;
+} 
+
+.nicEdit-main li{ 
+   padding-left:15px !important; 
 }
-.nicEdit-main ul, .nicEdit-main ol, .nicEdit-main li{ padding-left:15px !important; }
+.nicEdit-main ul, .nicEdit-main ol, .nicEdit-main li{ 
+  padding-left:15px !important; 
+}
+
 div.nicEdit-main{ font-size:15px !important;
    background: white;
- }
+}
+
+.inline_view ul, .inline_view ol {
+	padding-left: 30px !important;
+}
 	</style>
 	<script type="text/javascript" src="/public/javascripts/nicEdit.js?1.3" ></script>
 	<script type="text/javascript">
@@ -162,7 +172,7 @@ div.nicEdit-main{ font-size:15px !important;
 			var name=$(this).attr("name");
 				loadFeed(id,name);
 				thoughts = 1;
-			$(".tabBody").hide();
+			$(".tabBodyCommunity").hide();
 			//$("#" + id + "Tab").fadeIn();
 			//var tab="[id='#' + "+id+" + 'Tab']";
 			$("[id='"+id+"Tab']").fadeIn();
@@ -190,27 +200,6 @@ div.nicEdit-main{ font-size:15px !important;
 			});
 			return false;
 		}); 
-		/* if ($("#answer").exists()) {
-			$("#answer").click(); 
-		} else if($("#thoughts").exists()) {
-			$("#thoughts").click(); 
-		} else if($("#questions").exists()) {
-			$("#questions").click(); 
-		}
-		$("#followBtnText").hover(
-			function () {
-				var linkTxt = $(this).text();
-				if(linkTxt == 'Following') {
-					$(this).text('Unfollow');
-				}
-			},
-			function () {
-				var linkTxt = $(this).text();
-				if(linkTxt == 'Unfollow') {
-					$(this).text('Following');
-				}
-			}
-		); */
 	});
 	$(document).ready(function() {
 		$('.inline-edit').inlineEdit(
@@ -379,7 +368,7 @@ div.nicEdit-main{ font-size:15px !important;
   	<!-- Main Block -->
   		        #{set twAccount: talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.TWITTER) /}
 				#{set fbAccount: talker.serviceAccountByType(models.ServiceAccountBean.ServiceType.FACEBOOK) /}
-  		<div style="display:block;border-radius:5px;padding: 20px; width: 650px;" class="tabBodyOther" id="shareThoughtTabContent">
+  		<div style="display:block;border-radius:5px;padding: 20px; width: 650px;" class="tabBodyOtherCommunity" id="shareThoughtTabContent">
   		                <h3>Thoughts</h3>
 						<div style="float:left;width: 100%;" >   
 						   #{if currentTalker}
@@ -453,7 +442,7 @@ div.nicEdit-main{ font-size:15px !important;
 				<li id="all" name="all"><a href="#">All Community</a></li>
 			</ul>
 				    #{if  talker.category} 	       
-				        <div id="${talker.category.replaceAll("\\(","").replaceAll("\\)","")}Tab" class="tabBody" style="display:none;">
+				        <div id="${talker.category.replaceAll("\\(","").replaceAll("\\)","")}Tab" class="tabBodyCommunity" style="display:none;">
 								     <ul id="${talker.category.replaceAll("\\(","").replaceAll("\\)","")}Cnt"></ul>
 								     <ul>
 								     	<li class="lastFeed" id='${talker.category.replaceAll("\\(","").replaceAll("\\)","")}MoreBtn'>  
@@ -465,7 +454,7 @@ div.nicEdit-main{ font-size:15px !important;
 				    #{if otherCategory != null   && talker.category != null && !talker.category.equals("All Cancers")}
 								  		#{list items: otherCategory, as: 'cancerType'}
 								  		#{ifnot talker.category.equals(cancerType.replaceAll("_", " "))}
-										<div id="${cancerType.replaceAll("\\(","").replaceAll("\\)","")}Tab" class="tabBody" style="display:none;">
+										<div id="${cancerType.replaceAll("\\(","").replaceAll("\\)","")}Tab" class="tabBodyCommunity" style="display:none;">
 											     <ul id="${cancerType.replaceAll("\\(","").replaceAll("\\)","")}Cnt"></ul>
 											     <ul>
 											     		<li class="lastFeed" id='${cancerType.replaceAll("\\(","").replaceAll("\\)","")}MoreBtn'>
@@ -476,7 +465,7 @@ div.nicEdit-main{ font-size:15px !important;
 										#{/ifnot}
 							            #{/list}
 			        #{/if}
-					  <div id="allTab" class="tabBody" style="display:none;">
+					  <div id="allTab" class="tabBodyCommunity" style="display:none;">
 							     <ul id="allCnt"></ul>
 							     <ul>
 							    	<li class="lastFeed" id="allMoreBtn">

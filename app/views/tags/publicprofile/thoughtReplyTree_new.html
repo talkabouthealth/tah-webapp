@@ -1,6 +1,6 @@
 #{set level = 1 /} 
 #{ifnot comment.deleted}
-<li id="${comment.id}" style="min-height:100%;" >
+<li id="${comment.id}" style="min-height:100%;"  class="tabBodyLi">
 	#{if level == 1 && !_isFeed}
 			<div class="varified" style="float:left;padding-right: 10px;">
 				#{talker/talkerImageLink size: 72, userName: comment.fromTalker.name /}
@@ -25,7 +25,6 @@
 									<a href="#" class="inline_editlink">Edit</a>
 								</span>
 							#{/if}
-							
 						</div>
 		            </div>
 					<div class='inline_form'>
@@ -52,7 +51,7 @@
 			try{
 				n3  = new nicEditor({buttonList : ['bold','italic','underline','indent','outdent','ol','ul','link','unlink','upload']}).panelInstance('titleinput${comment.id}',{hasPanel : true});
 			}catch(e){
-				alert("thoughtFeedList: "+e);
+			//	alert(e);
 			}
 			</script>
 			<div class="${level == 1 ? 'comadd' : 'comreplytext1'}" style="float: left; padding-top: 10px;">
@@ -60,7 +59,6 @@
 					<img src="/public/images/index/timer_icon.png" alt="time"> ${comment.time.since()}
 				</div>
 				#{if level == 1}
-					
 					#{if comment.children == null || comment.children?.size() == 0 }
 						#{if session.username}
 							&nbsp;|&nbsp;<a href="#" onclick="return showReplyForm('${comment.id}');">Reply</a>
