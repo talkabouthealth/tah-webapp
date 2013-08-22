@@ -37,6 +37,7 @@ import com.tah.im.IMNotifier;
 import com.tah.im.model.UserInfo;
 import com.tah.im.singleton.OnlineUsersSingleton;
 
+import dao.CommentsDAO;
 import dao.ConfigDAO;
 import dao.ConversationDAO;
 import dao.NotificationDAO;
@@ -216,9 +217,8 @@ public class NotificationUtils {
 		vars.put("convo_url", convoURL);
    		sendEmailNotification(EmailSetting.CONVO_COMMENT, convo.getTalker(), vars);
    		//Send mail to admin@talkabouthealth.com
-   		EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_CONVO_REPLY_TO_ANSWER,  EmailUtil.ADMIN_EMAIL, vars, null, true);
+   		EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_CONVO_REPLY,  EmailUtil.ADMIN_EMAIL, vars, null, true);
 	}
-	
 	/**
 	 * @param convo
 	 * @param fromTalker
@@ -235,7 +235,7 @@ public class NotificationUtils {
 		vars.put("convo_url", convoURL);
    		sendEmailNotification(EmailSetting.CONVO_COMMENT, toTalker, vars);
    		//Send mail to admin@talkabouthealth.com
-   		EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_CONVO_REPLY_TO_ANSWER,  EmailUtil.ADMIN_EMAIL, vars, null, true);
+   		EmailUtil.sendEmail(EmailTemplate.NOTIFICATION_CONVO_REPLY,  EmailUtil.ADMIN_EMAIL, vars, null, true);
 	}
 	
 	/**
