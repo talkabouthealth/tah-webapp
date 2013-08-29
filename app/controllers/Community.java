@@ -102,8 +102,10 @@ public class Community extends Controller {
 		int numOfStartedConvos = ConversationDAO.getNumOfStartedConvos(talker.getId());
 		int commentCount = CommentsDAO.loadProfileCommentCount(talker.getId());
 		List<String>  otherCategory= new ArrayList<String>();
-		for(String cat:talker.getOtherCategories()){
-			otherCategory.add(cat);
+		if(talker.getOtherCategories()!=null) {
+			for(String cat:talker.getOtherCategories()){
+				otherCategory.add(cat);
+			}
 		}
 		if(otherCategory.size()==0)
 			otherCategory=null;
