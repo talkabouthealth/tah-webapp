@@ -266,7 +266,8 @@ function updateFeed(type,talkerName) {
 				  <!-- LIVE CHAT REFACTOR: REMOVING THIS OPTION
 				  <div class="topTab"><a href="#" id="startChatTab" class="topTabLink">Start Chat</a></div>
 				  -->
-				  <div class="topTab"><a href="#" id="shareThoughtTab" class="topTabLink">Share Thought</a></div>
+				  *{ thoughts tab is remmoved from home page}*
+				  <!-- <div class="topTab"><a href="#" id="shareThoughtTab" class="topTabLink">Share Thought</a></div> -->
 				</div>
 				<div class="cb"></div>
 				
@@ -313,7 +314,10 @@ function updateFeed(type,talkerName) {
 								id="startChatBtn" value="" />
 						</div>
                   	</div>
-                  	<div id="shareThoughtTabContent" class="topTabContent">	
+                 
+                 
+                  *{ thoughts tab is remmoved from home page}* 	
+                  *{<div id="shareThoughtTabContent" class="topTabContent">	
                   		<div style="float:left;">
 							<textarea id="shareThoughtText" class="edititinputx inline_text greyarea" 
 								onKeyUp=" $('#shareThoughtTextSize').html($(this).val().length);"
@@ -327,7 +331,7 @@ function updateFeed(type,talkerName) {
 							<input type="button" onclick="return saveThought();" 
 								id="shareThoughtBtn" value="" />
 						</div>
-                  	</div>
+                  	</div>}*
 				  </div>
                   <div class="topic" style="padding-top: 10px;">
 	                  #{if liveConversations?.size() > 0}
@@ -362,11 +366,11 @@ function updateFeed(type,talkerName) {
 									#{/ifnot}
 					 				<div class="newTab" style="width: auto;">
 								  		<!-- <a href="#" id="convoFeed" class="tabLink">Your Conversation Feed</a>  -->
-								     	<a href="#" name="convoFeed" id="convoFeed" class="tabLink">Your conversations</a>
+								     	<a href="#" name="convoFeed" id="convoFeed" class="tabLink">Your Answers</a>
 								  	</div>
 							  		<div class="newActiveTab" style="width: auto;">
 								  		<!-- <a href="#" id="allFeed" class="tabLink">All Cancers</a>  -->
-								  		<a href="#" name="allFeed" id="allFeed" class="tabLink">All Answers &amp; Thoughts</a>
+								  		<a href="#" name="allFeed" id="allFeed" class="tabLink">All Answers</a>
 								  	</div>		
 							  		<div class="newTab" style="width: auto;">
 								  		<a href="#" name="openConvo" id="openConvo" class="tabLink">Unanswered Questions</a>

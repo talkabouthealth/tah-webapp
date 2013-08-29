@@ -97,16 +97,13 @@ public class CommentsDAO {
 			.add("from", fromTalkerRef)
 			.add("text", comment.getText())
 			.add("time", comment.getTime())
-			
 			.add("from_service", comment.getFrom())
 			.add("from_service_id", comment.getFromId())
-			
+			.add("category", comment.getThoughtCategory())
 			.add("rootid",comment.getRootId())
 			.get();
 		commentsColl.save(commentObject);
-		
 		updateParent(commentsColl, comment.getParentId(), getString(commentObject, "_id"));
-		
 		String id = getString(commentObject, "_id");
 		comment.setId(id);
 	}
@@ -237,7 +234,97 @@ public class CommentsDAO {
 		return result;
 	}
 	
+	public static List<DBObject> getChildThoughtDbObjects(String rootId) {
+		DBCollection convosColl = getCollection(PROFILE_COMMENTS_COLLECTION);
+		
+		DBObject query = BasicDBObjectBuilder.start()
+		.add("rootid",rootId)
+		.get();
+		
+		DBCursor cur = convosColl.find(query);
+		
+		if(!cur.hasNext()) return null; 
+		List<DBObject> result = new ArrayList<DBObject>();
+        while(cur.hasNext()) {
+        	result.add(cur.next());        	
+        }		
+        CommonUtil.log("CommentsDAO.getThoughtByRootId", ""+cur.size());
+      //  Logger.info("getThoughtByRootId - "+ cur.size());
+		return result;
+	}
+	
+	/**
+	 * Load tree of all thoughts and replies for given talker
+	 */
+	public static List<CommentBean> getAllThought(String nextActionId) {
+		
+		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
+		
+		Date firstActionTime = null;
+		if (nextActionId != null && !nextActionId.equals("")) {
+			firstActionTime = getProfileCommentTime(nextActionId);
+		}
+		commentsColl.ensureIndex(new BasicDBObject("time", 1));
+		//Added from_Service to hide thank you from the thoughts page. #21378031
+		BasicDBObjectBuilder queryBuilder =  BasicDBObjectBuilder.start()
+				                            .add("from_service", new BasicDBObject("$ne", "thankyou"))
+				                            .add("rootid", "")
+				                            .add("deleted", new BasicDBObject("$ne", true))
+				                            ;
+		if (firstActionTime != null) {
+			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
+		}
+		
+		DBObject query = queryBuilder.get();
+		List<DBObject> commentsList=new ArrayList<DBObject>();////
+		DBCursor commentCur=commentsColl.find(query).sort(new BasicDBObject("time", -1));
+		commentCur.limit(ConversationLogic.CONVERSATIONS_PER_PAGE);
+		while(commentCur.hasNext()){
+			commentsList.add(commentCur.next());
+			List<DBObject> childList=getChildThoughtDbObjects(commentsList.get(commentsList.size()-1).get("_id").toString());
+			if(childList!=null && childList.size()>0)
+				commentsList.addAll(childList);
+		}
+		
+		//comments without parent (top in hierarchy)
+		List<CommentBean> topCommentsList = parseCommentsTree(commentsList);
+		Logger.info("size"+topCommentsList.size());
+		return topCommentsList;
+	}
+	
+	
+	public static List<CommentBean> getThoughtByCategory(String category,String nextActionId){
+		DBCollection commentsColl = getCollection(PROFILE_COMMENTS_COLLECTION);
+		Date firstActionTime = null;
+		if (nextActionId != null && !nextActionId.equals("")) {
+			firstActionTime = getProfileCommentTime(nextActionId);
+		}
+		commentsColl.ensureIndex(new BasicDBObject("time", 1));
 
+		BasicDBObjectBuilder queryBuilder =  BasicDBObjectBuilder.start()
+				.add("deleted", new BasicDBObject("$ne", true))
+                .add("from_service", new BasicDBObject("$ne", "thankyou"))
+                .add("rootid", "")
+                .add("category",category);
+                ;
+		if (firstActionTime != null) {
+			queryBuilder.add("time", new BasicDBObject("$lt", firstActionTime));
+		}
+		DBObject query = queryBuilder.get();
+		DBCursor commentCur=commentsColl.find(query).sort(new BasicDBObject("time", -1));
+		commentCur.limit(ConversationLogic.CONVERSATIONS_PER_PAGE);
+		List<DBObject> commentsList=new ArrayList<DBObject>();
+		while(commentCur.hasNext()){
+			commentsList.add(commentCur.next());
+			List<DBObject> childList=getChildThoughtDbObjects(commentsList.get(commentsList.size()-1).get("_id").toString());
+			if(childList!=null && childList.size()>0)
+				commentsList.addAll(childList);
+		}
+		List<CommentBean> topCommentsList = parseCommentsTree(commentsList);
+		Logger.info("size"+topCommentsList.size());
+		return topCommentsList;
+	}
+	
 	// -------------- Convo comments -----------------
 	
 	/**

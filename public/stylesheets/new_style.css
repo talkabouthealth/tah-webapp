@@ -349,6 +349,18 @@ body {
 	font-size: 18px;
 }
 
+.tabBodyCommunity {
+	float: left;
+	background: #f7f7f7;
+	border: 1px solid #d5d5d5;
+	width: 100%;
+}
+.tabBodyCommunity h3 {
+	display: block;
+	font-weight: bold;
+	margin: 0 0 10px 0;
+	font-size: 18px;
+}
 .tabBodyOther {
 	float: left;
 	background: #f7f7f7;
@@ -362,13 +374,26 @@ body {
 	min-height: 105px;
 	list-style: none;
 }
-
 .tabBodyOther h3 {
 	display: block;
 	font-weight: bold;
 	margin: 0 0 10px 0;
 	font-size: 18px;
 }
+.tabBodyOtherCommunity {
+	float: left;
+	background: #f7f7f7;
+	border: 1px solid #d5d5d5;
+	width: 100%;
+}
+.tabBodyOtherCommunity h3 {
+	display: block;
+	font-weight: bold;
+	margin: 0 0 10px 0;
+	font-size: 18px;
+}
+
+
 
 .disc { 
 	font-size: 15px;
@@ -503,8 +528,7 @@ body {
 	width: 100%;
 	border-bottom: 1px solid #e2e2e2;
 }
-
-.lastFeed { border-bottom: none !important; text-align: center;min-height: 20px !important;}
+.lastFeed { border-bottom: none !important; text-align: center;min-height: 20px !important;list-style: none;}
 .last{ border-bottom: none !important; }
 .box li a span { font-weight: bold; }
 

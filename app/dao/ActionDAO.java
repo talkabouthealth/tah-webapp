@@ -142,6 +142,9 @@ public class ActionDAO {
 			actionTypes.add(actionType.toString());
 		}
 		
+		// thoughts are removed from home page
+		actionTypes.remove(ActionType.PERSONAL_PROFILE_COMMENT.toString());
+		
 		//load actions for this criterias
 		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start()
 			.add("$or", Arrays.asList(
@@ -191,10 +194,14 @@ public class ActionDAO {
 		for (ActionType actionType : COMMUNITY_CONVO_FEED_ACTIONS) {
 			actionTypes.add(actionType.toString());
 		}
-		if (!loggedIn) {
+		
+		// thoughts are removed from home page
+		//if (!loggedIn) {
 			//not logged in users can't see Thoughts
 			actionTypes.remove(ActionType.PERSONAL_PROFILE_COMMENT.toString());
-		}
+		//}
+		
+		
 		
 		//for paging
 		Date firstActionTime = null;
@@ -267,6 +274,9 @@ public class ActionDAO {
 			actionTypes.add(actionType.toString());
 		}
 		
+		// thoughts are removed from home page
+		actionTypes.remove(ActionType.PERSONAL_PROFILE_COMMENT.toString());
+		
 		DBRef talkerRef = createRef(TalkerDAO.TALKERS_COLLECTION, talkerId);
 		BasicDBObjectBuilder queryBuilder = 
 			BasicDBObjectBuilder.start()
@@ -299,6 +309,9 @@ public class ActionDAO {
 		//}
 		actionTypes.add(ActionType.ANSWER_CONVO.toString());
 		Set<DBRef> convosDBSet = ConversationDAO.getConversationsByTopics(new HashSet(Arrays.asList(topic)));
+		
+		// thoughts are removed from home page
+		actionTypes.remove(ActionType.PERSONAL_PROFILE_COMMENT.toString());
 		
 		BasicDBObjectBuilder queryBuilder = 
 			BasicDBObjectBuilder.start()
@@ -357,10 +370,12 @@ public class ActionDAO {
 		for (ActionType actionType : COMMUNITY_CONVO_FEED_ACTIONS) {
 			actionTypes.add(actionType.toString());
 		}
-		if (!loggedIn) {
+		
+		//remove thoughts from home page
+		//if (!loggedIn) {
 			//not logged in users can't see Thoughts
 			actionTypes.remove(ActionType.PERSONAL_PROFILE_COMMENT.toString());
-		}
+		//}
 		
 		//for paging
 		Date firstActionTime = null;

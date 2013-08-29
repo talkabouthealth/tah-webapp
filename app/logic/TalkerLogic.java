@@ -522,8 +522,8 @@ public class TalkerLogic {
 	 * 
 	 * @return
 	 */
-	public static CommentBean saveProfileComment(TalkerBean talker, String profileTalkerId, 
-			String parentId, String text, String cleanText, String from, String fromId, Boolean ccTwitter, Boolean ccFacebook,String parentList) {
+	public static CommentBean saveProfileComment (TalkerBean talker, String profileTalkerId, 
+			String parentId, String text, String cleanText, String from, String fromId, Boolean ccTwitter, Boolean ccFacebook,String parentList,String thoughtCategory) {
 		
 		//find profile talker by parent thought or given talker id
 		// also retrieve thread's rootid from parent comment
@@ -569,6 +569,10 @@ public class TalkerLogic {
 		}
 		comment.setFromId(fromId);
 		comment.setRootId(rootId);
+		
+		//if(thoughtCategory!=null && thoughtCategory.equals("")){
+			comment.setThoughtCategory(thoughtCategory);
+		//}
 		CommentsDAO.saveProfileComment(comment);
 		
 		if (comment.getParentId() == null) {
@@ -707,6 +711,27 @@ public class TalkerLogic {
 		}
 		return comment;
 	}
+	
+	/***
+	 * method for previous ref without thought category
+	 * @param talker
+	 * @param profileTalkerId
+	 * @param parentId
+	 * @param text
+	 * @param cleanText
+	 * @param from
+	 * @param fromId
+	 * @param ccTwitter
+	 * @param ccFacebook
+	 * @param parentList
+	 * @return
+	 */
+	public static CommentBean saveProfileComment (TalkerBean talker, String profileTalkerId, 
+			String parentId, String text, String cleanText, String from, String fromId, Boolean ccTwitter, Boolean ccFacebook,String parentList) {
+		return saveProfileComment ( talker,  profileTalkerId, 
+					 parentId,  text,  cleanText,  from,  fromId,  ccTwitter,  ccFacebook, parentList,null);
+	}
+	
 
 	/**
 	 * Overloading getDefaultPrivacySettings() with user-specific settings.
