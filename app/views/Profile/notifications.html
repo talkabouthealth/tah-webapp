@@ -220,15 +220,15 @@
 									#{list items:models.TalkerBean.EmailSetting.values(), as:'setting' }
 										#{if setting.toString().startsWith('CONVO') && showConvoTitle}
 										<div class="preferencescheck">
-											<input type="checkbox" value="CLINICAL_TRIALS_UPDATE" name="newsLetterType"   #{if talker.newsLetterBean.newsLetterType?.contains("CLINICAL_TRIALS_UPDATE") } checked='checked' #{/if}  />
+											<input type="checkbox" value="CLINICAL_TRIALS_UPDATE" name="newsLetterType"   #{if talker.newsLetterBean && talker.newsLetterBean.newsLetterType?.contains("CLINICAL_TRIALS_UPDATE") } checked='checked' #{/if}  />
 											<span class="blacktext14">&nbsp;Send me updates to relevant clinical trials.</span>
 										</div>
 										<div class="preferencescheck">
-											<input type="checkbox" value="PRODUCT_AND_PROGRAMS_UPDATE" name="newsLetterType"  #{if talker.newsLetterBean.newsLetterType?.contains("PRODUCT_AND_PROGRAMS_UPDATE") } checked='checked' #{/if} />
+											<input type="checkbox" value="PRODUCT_AND_PROGRAMS_UPDATE" name="newsLetterType"  #{if  talker.newsLetterBean && talker.newsLetterBean.newsLetterType?.contains("PRODUCT_AND_PROGRAMS_UPDATE") } checked='checked' #{/if} />
 											<span class="blacktext14">&nbsp;Send me updates for new products and programs from partners.</span>
 										</div>
 										<div class="preferencescheck">
-											<input type="checkbox" value="MARKET_RESEARCH_UPDATE" name="newsLetterType" #{if talker.newsLetterBean.newsLetterType?.contains("MARKET_RESEARCH_UPDATE") } checked='checked' #{/if} />
+											<input type="checkbox" value="MARKET_RESEARCH_UPDATE" name="newsLetterType" #{if talker.newsLetterBean && talker.newsLetterBean.newsLetterType?.contains("MARKET_RESEARCH_UPDATE") } checked='checked' #{/if} />
 											<span class="blacktext14">&nbsp;Send me updates for market research opportunities.</span>
 										</div>
 											<h4>Question Related</h4>
