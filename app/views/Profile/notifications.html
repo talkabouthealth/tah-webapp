@@ -1,5 +1,4 @@
 #{ extends 'main.html' /}
-
 <style>
 	#innerpersonalarea { padding-top: 10px; padding-bottom: 10px;}
 	#innermiddlearea { width: 655px; padding-top: 5px; }
@@ -20,7 +19,6 @@
 	.signfields2 h1, .notiblueareamid h1 {
 		color:#000000;
 	}
-	
 	.twitterSetting { margin-bottom: 0px; }
 	.settingsDiv {
 		padding-top: 15px;
@@ -34,7 +32,6 @@
 	.showSettingsLink { font-size: 15px; }
 	h4 { color: #000000 }
 </style>
-
 <script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
 <script type="text/javascript" charset="utf-8">
 	$(document).ready(function() {
@@ -69,12 +66,10 @@
 			$.post("@{Profile.deleteEmail()}", 
 				{email : email},
 				function(data) {
-					
 				},
 				"json"
 			);
 		});
-
 		// ------------ IM Accounts --------------
 		$("#newIMBtn").click(function() {
 			$("#imError").html("");
@@ -88,7 +83,6 @@
 				alert("Please enter correct IM Username");
 				return;
 			}
-
 			$.post("@{Profile.addIMAccount()}", 
 				{imUserName : imUserName, imService : imService},
 				function(data) {
@@ -96,7 +90,6 @@
 						$("#imUserName").val("");
 						$("#imService").val("");
 						$("#addIMForm").hide();
-
 						$(data).appendTo($("#imstable"));
 					}
 					else {
@@ -114,7 +107,6 @@
 				function(data) {}
 			);
 		});
-
 		//Show or Hide settings of IM, Email, etc.
 		$(".showSettingsLink").click(function() {
 			var currentText = $(this).html();
@@ -137,13 +129,11 @@
 		    alert(reason);
 		    return false;
 		}
-		
 		document.changePasswordForm.submit();
 	}
 	function validatePassword(fld) {
 	    var error = "";
 	    var illegalChars = /[\W_]/; // allow only letters and numbers 
-	 
 	    if (fld.value == "") {
 	        fld.style.background = 'Yellow';
 	        error = "You didn't enter a password.\n";
@@ -161,7 +151,6 @@
 	    }
 	   return error;
 	}  
-
 	function addServiceAccount(serviceType) {
 		if (serviceType === "TWITTER") {
 			openTwitter();
@@ -180,13 +169,10 @@
 				}
 			);
    		}
-   		
    		return false;
 	}
 </script>
-
 </head>
-
 <body>
 	#{include 'header.html' /}
 	<div id="innerbanner"></div>
@@ -233,6 +219,18 @@
 									#{set showConvoTitle = true /}
 									#{list items:models.TalkerBean.EmailSetting.values(), as:'setting' }
 										#{if setting.toString().startsWith('CONVO') && showConvoTitle}
+										<div class="preferencescheck">
+											<input type="checkbox" value="CLINICAL_TRIALS_UPDATE" name="newsLetterType"   #{if talker.newsLetterBean.newsLetterType?.contains("CLINICAL_TRIALS_UPDATE") } checked='checked' #{/if}  />
+											<span class="blacktext14">&nbsp;Send me updates to relevant clinical trials.</span>
+										</div>
+										<div class="preferencescheck">
+											<input type="checkbox" value="PRODUCT_AND_PROGRAMS_UPDATE" name="newsLetterType"  #{if talker.newsLetterBean.newsLetterType?.contains("PRODUCT_AND_PROGRAMS_UPDATE") } checked='checked' #{/if} />
+											<span class="blacktext14">&nbsp;Send me updates for new products and programs from partners.</span>
+										</div>
+										<div class="preferencescheck">
+											<input type="checkbox" value="MARKET_RESEARCH_UPDATE" name="newsLetterType" #{if talker.newsLetterBean.newsLetterType?.contains("MARKET_RESEARCH_UPDATE") } checked='checked' #{/if} />
+											<span class="blacktext14">&nbsp;Send me updates for market research opportunities.</span>
+										</div>
 											<h4>Question Related</h4>
 											#{set showConvoTitle = false /}
 										#{/if}
@@ -246,8 +244,8 @@
 										#{/if}
 									#{/list}
 								</div>
-								<h4>Newsletter and workshops</h4>
-								<div class="generalcheck">
+								<h4 style="display: none;">Newsletter and workshops</h4>
+								<div class="generalcheck" style="display: none;">
 									<div class="preferencescheck">
 										<input id="talker.newsletter" name="talker.newsletter" 
 											type="checkbox" #{if talker.newsletter} checked #{/if} /> 
@@ -264,6 +262,7 @@
 										<span class="blacktext14">&nbsp;Send me an email with a summary of answers of workshops.</span>
 									</div>
 								</div>
+								<input type="hidden" name="talker.email" value="${talker.email}" >
 								</form>
 							</div>
 						</div>

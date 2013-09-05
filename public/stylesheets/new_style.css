@@ -16,11 +16,8 @@ a, a:visited {
 	color: #014ba9;
 	text-decoration: none;
 }
-
 a:hover, a:focus { color: #E9225F; }
-
 /*ol, ul { list-style: none; }*/
-
 em { font-style: italic; }
 
 strong { font-weight: bold; }
@@ -108,9 +105,7 @@ body {
 }
 
 /* main nav */
-
-#nav { float: left;margin-left:20px; }
-
+#nav { float: right;margin-left:20px; }
 #nav li {
 	float: left;
 	display: inline;
@@ -1559,7 +1554,7 @@ border:0;
 
 ul.mega-menu, ul.mega-menu li a.dc-mega {position: relative;} 
 ul.mega-menu li a .dc-mega-icon { background: url("/public/images/bullet.gif"); position: absolute; width: 7px; height: 7px;  top: 15px; right: 0px;}
-a.dc-mega .dc-mega-icon { background: url("/public/images/bullet.gif") no-repeat; position: absolute; width: 7px; height: 7px;  top: 21px;margin-left:3px;}
+a.dc-mega .dc-mega-icon { background: url("/public/images/bullet.gif") no-repeat; position: absolute; width: 7px; height: 7px;  top: 21px;margin-left:3px;display: inline-block;}
 ul.mega-menu li .sub-container {position: absolute;} /*background-color: #FFF; border:1px solid #CCC;*/
 ul.mega-menu li .sub .row {width: 100%; overflow: hidden; clear: both;}
 ul.mega-menu li .sub li { float: none; width: 250px; font-weight: normal;}
