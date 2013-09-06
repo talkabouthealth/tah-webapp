@@ -10,7 +10,7 @@
 		<a href="/static/howitworks" class="bluetext14">How it works</a><br />
 		<a href="/static/faq" class="bluetext14">FAQ</a><br />
 		<a href="/static/communityguidelines" class="bluetext14">Community Guidelines</a><br />
-		<a href="/static/trained_peer_support_program" class="bluetext14">Trained Peer Support</a><br />
+		<!-- <a href="/static/trained_peer_support_program" class="bluetext14">Trained Peer Support</a><br /> -->
 		#{if session.contains("cancerType")} 
 			<a class="bluetext14" href="@{MicroSite.workshops(session.get("cancerType").toLowerCase().replaceAll(" ","-"))}">Q&A Workshops with Professionals</a>
 		#{/if}
