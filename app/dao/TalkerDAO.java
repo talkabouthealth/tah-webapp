@@ -102,12 +102,21 @@ public class TalkerDAO {
 				.add("isImg", false)
 				.add("answerCnt", 0)
 				.get();
-
 		talkersColl.save(talkerDBObject);
 		/* Date : 27 June 2011
 		 * Added subscribe to newsletter feature. Here added user's name used by user while registration
 		 * */
 		if(talker.isNewsletter() || talker.getNewsLetterBean() != null && talker.getNewsLetterBean().getNewsLetterType().length > 0){
+			Logger.info("save news letter:::::"+talker.getEmail());
+			
+			String talkerNLType[]=talker.getNewsLetterBean().getNewsLetterType();
+			String newsLetterTypes[]=new String[talkerNLType.length+3];
+			for(int i=0;i<talkerNLType.length;i++){newsLetterTypes[i]=talkerNLType[i];}
+			newsLetterTypes[talkerNLType.length]="CLINICAL_TRIALS_UPDATE";
+			newsLetterTypes[talkerNLType.length+1]="PRODUCT_AND_PROGRAMS_UPDATE";
+			newsLetterTypes[talkerNLType.length+2]="MARKET_RESEARCH_UPDATE";
+			
+			talker.getNewsLetterBean().setNewsLetterType(newsLetterTypes);
 			ApplicationDAO.addToNewsLetter(talker.getEmail(), talker.getNewsLetterBean().getNewsLetterType());
 			Map<String, String> vars = new HashMap<String, String>();
     		vars.put("username", talker.getUserName());
@@ -116,7 +125,6 @@ public class TalkerDAO {
 		talker.setId(talkerDBObject.get("_id").toString());
 		return true;
 	}
-	
 	public static void updateTalker(TalkerBean talker) {
 		DBCollection talkersColl = getCollection(TALKERS_COLLECTION);
 		

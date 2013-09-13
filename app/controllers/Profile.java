@@ -91,7 +91,6 @@ import dao.TalkerDiseaseDAO;
 import dao.ConversationDAO;
 import dao.TopicDAO;
 import java.util.Random;
-
 /**
  * Different profile related actions - profile info, health, notifications, privacy
  */
@@ -482,10 +481,12 @@ public class Profile extends Controller {
 		if (error != null) {
 			flash.put("err", "Sorry, this account is already connected.");
 		}
-		NewsLetterBean newsletterNew = NewsLetterDAO.getNewsLetterInfo(talker.getEmail());
-		talker.setNewsLetterBean(newsletterNew);
+		NewsLetterBean newsletter = NewsLetterDAO.getNewsLetterInfo(talker.getEmail());
+		talker.setNewsLetterBean(newsletter);
+		
 		flash.put("from", params.get("from"));
-		render(talker);
+		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+		render(talker,diseaseList,newsletter);
 	}
 	
 	public static void notificationsSave(TalkerBean talker, String otherCTypes) {
@@ -503,7 +504,6 @@ public class Profile extends Controller {
 		TalkerDAO.updateTalker(sessionTalker);
 		renderText("ok");
 	}
-	
 	/**
 	 * @param imUserName Username of IM account
 	 * @param imService 'YahooIM'/'GoogleTalk'/'WindowLive'
@@ -516,17 +516,13 @@ public class Profile extends Controller {
 			renderText(Messages.get("imaccount.exists"));
 			return;
 		}
-        
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		talker.getImAccounts().add(imAccount);
 		CommonUtil.updateTalker(talker, session);
-		
 		NotificationUtils.sendIMInvitation(imAccount);
-		
 		IMAccountBean _imAccount = imAccount;
 		render("tags/profile/profileNotificationIM.html", _imAccount);
 	}
-	
 	/**
 	 * @param imId - imUsername and imService separated by "|"
 	 */
@@ -585,6 +581,22 @@ public class Profile extends Controller {
 		}
 		CommonUtil.updateTalker(sessionTalker, session);
 		renderText("ok");
+	}
+	
+	public static void subscribeNewsLetterAll(NewsLetterBean newsletter) {
+		TalkerBean talker = CommonUtil.loadCachedTalker(session);
+		String email = newsletter.getEmail();
+		validation.required(email).message("Email is required");
+		validation.email(email.trim());
+		if (validation.hasErrors()) {
+			renderText("Error:" + validation.errors().get(0));
+		}
+		if(newsletter != null && newsletter.getNewsLetterType() != null && newsletter.getNewsLetterType().length > 0) {
+			NewsLetterDAO.saveOrUpdateNewsletterAll(newsletter,talker);
+			renderText("Ok");
+		}else{
+			renderText("Please select on of the option");
+		}
 	}
 	
 	/**
