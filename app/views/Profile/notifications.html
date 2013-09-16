@@ -64,7 +64,6 @@
 		addAjaxForm("#setNotifyFrequency");
 		addAjaxForm("#emailsettings");
 		addAjaxForm("#serviceSettingsForm");
-		
 		// ------------ Emails --------------
 		$("#newEmailBtn").click(function() {
 			$("#emailError").html("");
@@ -144,6 +143,23 @@
 			$(this).next().toggle();
 			return false;
 		});
+		
+		$("[name='newsletter.newsLetterType']").change(function(){
+			 var email="${talker.email}";
+			 var newsletter=this.value;
+			 var add;
+			 if(this.checked)
+				 add=true;
+			 else
+				 add=false;
+			 $("#savedHelpText, #saveBtnText").html("Saving...!"); 
+			 $.get("/Profile/addOrRemoveNewsletter",{email:email,newsletter:newsletter,addorremove:add},function(data){
+				 if (data.indexOf("Error:") === 0) {
+					 $("#savedHelpText, #saveBtnText").html("Error!");
+				 }else
+				 $("#savedHelpText, #saveBtnText").html("Saved!"); 
+			});
+		}); 
 	});
 	function validatePasswordForm() {
 		var reason = "";
@@ -244,15 +260,15 @@
 									#{list items:models.TalkerBean.EmailSetting.values(), as:'setting' }
 										#{if setting.toString().startsWith('CONVO') && showConvoTitle}
 										<div class="preferencescheck">
-											<input type="checkbox" value="CLINICAL_TRIALS_UPDATE" name="newsLetterType"   #{if talker.newsLetterBean && talker.newsLetterBean.newsLetterType?.contains("CLINICAL_TRIALS_UPDATE") } checked='checked' #{/if}  />
+											<input type="checkbox"  id="newsletter"  value="CLINICAL_TRIALS_UPDATE" name="newsletter.newsLetterType"   #{if talker.newsLetterBean && talker.newsLetterBean.newsLetterType?.contains("CLINICAL_TRIALS_UPDATE") } checked='checked' #{/if}  />
 											<span class="blacktext14">&nbsp;Send me updates to relevant clinical trials.</span>
 										</div>
 										<div class="preferencescheck">
-											<input type="checkbox" value="PRODUCT_AND_PROGRAMS_UPDATE" name="newsLetterType"  #{if  talker.newsLetterBean && talker.newsLetterBean.newsLetterType?.contains("PRODUCT_AND_PROGRAMS_UPDATE") } checked='checked' #{/if} />
+											<input type="checkbox"  id="newsletter"  value="PRODUCT_AND_PROGRAMS_UPDATE" name="newsletter.newsLetterType"  #{if  talker.newsLetterBean && talker.newsLetterBean.newsLetterType?.contains("PRODUCT_AND_PROGRAMS_UPDATE") } checked='checked' #{/if} />
 											<span class="blacktext14">&nbsp;Send me updates for new products and programs from partners.</span>
 										</div>
 										<div class="preferencescheck">
-											<input type="checkbox" value="MARKET_RESEARCH_UPDATE" name="newsLetterType" #{if talker.newsLetterBean && talker.newsLetterBean.newsLetterType?.contains("MARKET_RESEARCH_UPDATE") } checked='checked' #{/if} />
+											<input type="checkbox"  id="newsletter"  value="MARKET_RESEARCH_UPDATE" name="newsletter.newsLetterType" #{if talker.newsLetterBean && talker.newsLetterBean.newsLetterType?.contains("MARKET_RESEARCH_UPDATE") } checked='checked' #{/if} />
 											<span class="blacktext14">&nbsp;Send me updates for market research opportunities.</span>
 										</div>
 											<h4>Question Related</h4>
@@ -398,7 +414,6 @@
 					<div class="signfields2">
 						<h1>Newsletters</h1>
 						<div class="settingsDiv">
-		            	#{form @Profile.subscribeNewsLetterAll() , id:'newsLetterForm' }
 		            		<input type="hidden" name="newsletter.email" value="${talker.email}">
 		          		<div id="checkboxarea3">
 			          				<div style="float:left;">
@@ -837,7 +852,6 @@
 								</div>
 							</div>
 						</div>
-		          		#{/form}
 			        </div>
 						</div>
 				</div>

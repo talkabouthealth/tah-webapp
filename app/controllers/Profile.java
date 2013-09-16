@@ -546,7 +546,7 @@ public class Profile extends Controller {
 		EnumSet<EmailSetting> emailSettings = EnumSet.noneOf(EmailSetting.class);
 		for (String paramName : paramsMap.keySet()) {
 			//try to parse all parameters to EmailSetting enum
-			if(!(paramName.equals("talker.email") || paramName.equals("newsLetterType") || paramName.equals("talker.newsletter") || paramName.equals("talker.workshop") || paramName.equals("talker.workshopSummery") ||
+			if(!(paramName.equals("talker.email") || paramName.equals("newsletter.newsLetterType") || paramName.equals("talker.newsletter") || paramName.equals("talker.workshop") || paramName.equals("talker.workshopSummery") ||
 				paramName.equals("body") || paramName.equals("action") || paramName.equals("controller"))) {
 				try {
 					EmailSetting emailSetting = EmailSetting.valueOf(paramName);
@@ -561,14 +561,6 @@ public class Profile extends Controller {
 				}
 			}
 		}
-		String newsLeterTypes[]=params.getAll("newsLetterType");
-		if(newsLeterTypes==null){
-			newsLeterTypes=new String[0];
-		}
-		NewsLetterBean newsLetterBeen=new NewsLetterBean();
-		newsLetterBeen.setNewsLetterType(newsLeterTypes);
-		newsLetterBeen.setEmail(talker.getEmail());
-		NewsLetterDAO.saveOrUpdateNewsletterAll(newsLetterBeen,talker);
 		sessionTalker.setEmailSettings(emailSettings);
 		if (talker == null) {
 			sessionTalker.setWorkshop(false);
@@ -583,21 +575,27 @@ public class Profile extends Controller {
 		renderText("ok");
 	}
 	
-	public static void subscribeNewsLetterAll(NewsLetterBean newsletter) {
-		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		String email = newsletter.getEmail();
-		validation.required(email).message("Email is required");
-		validation.email(email.trim());
-		if (validation.hasErrors()) {
-			renderText("Error:" + validation.errors().get(0));
-		}
-		if(newsletter != null && newsletter.getNewsLetterType() != null && newsletter.getNewsLetterType().length > 0) {
-			NewsLetterDAO.saveOrUpdateNewsletterAll(newsletter,talker);
-			renderText("Ok");
+	/***
+	 * add or remove single newsletter from database
+	 * @param email
+	 * @param newsLetter
+	 * @param addOrRemove
+	 */
+	public static void addOrRemoveNewsletter(String email,String newsletter,boolean addorremove) {
+		Logger.info("email"+email);
+		Logger.info("newsletter"+newsletter);
+		Logger.info("addorremove"+addorremove);
+		if(email!=null && !email.equals("")){
+		if(addorremove){
+			NewsLetterDAO.addNewsletter(newsletter, email);
 		}else{
-			renderText("Please select on of the option");
+			NewsLetterDAO.removeNewsletter(newsletter, email);
 		}
+		renderText("ok");
+		}else
+			renderText("Error: email must not be empty!");
 	}
+	
 	
 	/**
 	 * Changes primary email of authenticated talker

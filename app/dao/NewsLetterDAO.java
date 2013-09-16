@@ -69,7 +69,6 @@ public class NewsLetterDAO {
 					}
 				}
 			}
-
 			DBObject newsLetterDBObject = BasicDBObjectBuilder.start()
 				.add("email", newsLetterBean.getEmail())
 				.add("newsletter_type", types)
@@ -139,6 +138,68 @@ public class NewsLetterDAO {
 		}
 		return isExist;
 	}
+	
+	/***
+	 * method will add single newsletter in db
+	 * @param newsLetter
+	 * @param email
+	 */
+	public static void addNewsletter(String newsLetter,String email){
+		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
+		boolean isExist = ApplicationDAO.isEmailExists(email);
+		if(isExist) {
+			DBObject emailDb = new BasicDBObject("email", email);
+			DBObject obj=newsLetterColl.findOne(emailDb);
+			Collection<String> newLetterTypes = (Collection<String>)obj.get("newsletter_type");
+			if(!newLetterTypes.contains(newsLetter)){
+				newLetterTypes.add(newsLetter);
+			}
+			String types[]= newLetterTypes.toArray(new String[]{});
+			DBObject newsLetterDBObject = BasicDBObjectBuilder.start()
+					.add("email", email)
+					.add("newsletter_type", types)
+					.get();
+			newsLetterColl.update(emailDb,newsLetterDBObject);
+		}else{
+			String types[]={newsLetter};
+			DBObject newsLetterDBObject = BasicDBObjectBuilder.start()
+					.add("email", email)
+					.add("newsletter_type",types)
+					.get();
+				newsLetterColl.save(newsLetterDBObject);
+		}
+	}
+	/**
+	 * method remove single newsletter from db
+	 * @param newsLetter
+	 * @param remove
+	 */
+	public static void removeNewsletter(String newsLetter,String email){
+		DBCollection newsLetterColl = getCollection(NEWSLETTER_COLLECTION);
+		boolean isExist = ApplicationDAO.isEmailExists(email);
+		if(isExist) {
+			
+			DBObject emailDb = new BasicDBObject("email", email);
+			DBObject obj=newsLetterColl.findOne(emailDb);
+			Collection<String> newLetterTypes = (Collection<String>)obj.get("newsletter_type");
+			if(
+					newLetterTypes.contains(newsLetter)){
+				newLetterTypes.remove(newsLetter);
+				Logger.info("removed  -------------------", newsLetter);
+			}
+			String types[]= newLetterTypes.toArray(new String[]{});
+			DBObject newsLetterDBObject = BasicDBObjectBuilder.start()
+					.add("email", email)
+					.add("newsletter_type", types)
+					.get();
+			newsLetterColl.update(emailDb,newsLetterDBObject);
+		}
+	}
+	
+	
+	
+	
+	
 	
 	public static void populateStats(String newsLetter, boolean addFlag){
 		DBCollection newsLetterColl = getCollection("newsletterStats");
