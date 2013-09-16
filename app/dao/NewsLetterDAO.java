@@ -151,7 +151,11 @@ public class NewsLetterDAO {
 			DBObject emailDb = new BasicDBObject("email", email);
 			DBObject obj=newsLetterColl.findOne(emailDb);
 			Collection<String> newLetterTypes = (Collection<String>)obj.get("newsletter_type");
-			if(!newLetterTypes.contains(newsLetter)){
+			
+			if(newLetterTypes!=null && newLetterTypes.size()>0 && !newLetterTypes.contains(newsLetter)){
+				newLetterTypes.add(newsLetter);
+			}else{
+				newLetterTypes=new ArrayList<String>();
 				newLetterTypes.add(newsLetter);
 			}
 			String types[]= newLetterTypes.toArray(new String[]{});
