@@ -122,7 +122,6 @@ body {
 }
 
 /* banner */
-
 #banner {
 	float: left;
 	width: 980px;
@@ -154,7 +153,6 @@ body {
 .get_started { display: block; margin: 20px 0 0 90px;}
 .get_started a { display: inline-block; vertical-align: middle; }
 /* slides */
-
 #slider {
 	float: left;
 	width:980px;
@@ -454,7 +452,6 @@ body {
 .q { margin-left: 16%; }
 
 /* sidebar */
-
 #sidebar {
 	float: right;
 	width: 265px;
@@ -471,7 +468,6 @@ body {
 	-webkit-border-radius: 3px;
 	-ms-border-radius: 3px;
 	/*color: #014ba9; */
-	
 }
 
 .heading {
@@ -539,7 +535,6 @@ body {
 }
 
 /* client */
-
 #client {
 	float: left;
 	width: 100%;
@@ -608,7 +603,6 @@ ul.client { float: left; }
 }
 
 /* footer start */
-
 #footer {
 	float: left;
 	background: #419ed5 url(../images/index/footer_bg.png) 0 0 repeat-x;
@@ -651,7 +645,6 @@ ul.client { float: left; }
 	height: 50px;
 }
 /* newsletter start */
-
 #newsltr {
 	float: left;
 	width: 279px;
@@ -665,7 +658,7 @@ ul.client { float: left; }
 	border: 1px solid #b5c3cd;
 	color: #01659e;
 	padding: 6px 5px 5px 5px;
-	float: left
+	float: left;
 	border-radius: 5px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
@@ -1263,7 +1256,6 @@ a.popup_black10s:hover {
 	cursor:pointer;
 }
 /*---------------------------------Popup 2---------------------------------------*/
-
 .popbox2 {
 	background:none repeat scroll 0 0 #F7FCFF;
 	border:1px solid #A6C4D6;
@@ -1554,7 +1546,7 @@ border:0;
 
 ul.mega-menu, ul.mega-menu li a.dc-mega {position: relative;} 
 ul.mega-menu li a .dc-mega-icon { background: url("/public/images/bullet.gif"); position: absolute; width: 7px; height: 7px;  top: 15px; right: 0px;}
-a.dc-mega .dc-mega-icon { background: url("/public/images/bullet.gif") no-repeat; position: absolute; width: 7px; height: 7px;  top: 21px;margin-left:3px;display: inline-block;}
+a.dc-mega .dc-mega-icon { background: url("/public/images/bullet.gif") no-repeat; /*position: absolute;*/ width: 7px; height: 7px;  top: 21px;margin-left:3px;display: inline-block;}
 ul.mega-menu li .sub-container {position: absolute;} /*background-color: #FFF; border:1px solid #CCC;*/
 ul.mega-menu li .sub .row {width: 100%; overflow: hidden; clear: both;}
 ul.mega-menu li .sub li { float: none; width: 250px; font-weight: normal;}
