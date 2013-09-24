@@ -40,6 +40,7 @@ import models.EmailBean;
 import models.HealthItemBean;
 import models.IMAccountBean;
 import models.LanguageBean;
+import models.NewsLetterBean;
 import models.PrivacySetting;
 import models.PrivacySetting.PrivacyType;
 import models.PrivacySetting.PrivacyValue;
@@ -84,12 +85,12 @@ import dao.ActionDAO;
 import dao.ApplicationDAO;
 import dao.DiseaseDAO;
 import dao.HealthItemDAO;
+import dao.NewsLetterDAO;
 import dao.TalkerDAO;
 import dao.TalkerDiseaseDAO;
 import dao.ConversationDAO;
 import dao.TopicDAO;
 import java.util.Random;
-
 /**
  * Different profile related actions - profile info, health, notifications, privacy
  */
@@ -107,7 +108,6 @@ public class Profile extends Controller {
 	
 	public static void save(@Valid TalkerBean talker) {
 		TalkerBean oldTalker = CommonUtil.loadCachedTalker(session);
-		
 		//------- validate
 		String oldUserName = oldTalker.getUserName();
 		if (!oldUserName.equals(talker.getUserName())) {
@@ -119,7 +119,6 @@ public class Profile extends Controller {
 			renderText("Error:"+error.message());
             return;
         }
-		
 		//------- parse all info
 		if (talker.getKeywords() != null) {
 			talker.setKeywords(CommonUtil.parseCommaSerapatedList(talker.getKeywords().get(0), "Keywords (please separate by commas)"));
@@ -133,20 +132,15 @@ public class Profile extends Controller {
 			Logger.error(e, "Profile.java : save");
 		}
 		talker.setChildrenNum(childrenNum);
-		
 		Date dateOfBirth = CommonUtil.parseDate(talker.getDobMonth(), talker.getDobDay(), talker.getDobYear());
 		talker.setDob(dateOfBirth);
-		
 		Date dateOfDiagnosed = CommonUtil.parseDate(talker.getDodMonth(), talker.getDodDay(), talker.getDodYear());
 		talker.setDod(dateOfDiagnosed);
-		
 		//------- save actions
 		if (!StringUtils.equals(oldTalker.getBio(), talker.getBio())) {
 			ActionDAO.saveAction(new UpdateProfileAction(oldTalker, ActionType.UPDATE_BIO));
 		}
 		String temp = ActionDAO.saveAction(new UpdateProfileAction(oldTalker, ActionType.UPDATE_PERSONAL));
-		
-		
 		//------- save updated info to the talker
 		oldTalker.setProfileName(talker.getProfileName());
 		oldTalker.setUserName(talker.getUserName());
@@ -159,10 +153,8 @@ public class Profile extends Controller {
 		oldTalker.setState(talker.getState());
 		oldTalker.setCountry(talker.getCountry());
 		oldTalker.setZip(talker.getZip());
-		
 		Map<String, String> profInfo = oldTalker.parseProfInfoFromParams(params.allSimple());
 		oldTalker.setProfInfo(profInfo);
-		
 		if (oldTalker.isProf()) {
 			oldTalker.setProfStatement(talker.getProfStatement());
 		} else {
@@ -176,7 +168,6 @@ public class Profile extends Controller {
 			oldTalker.setReligionSerious(talker.getReligionSerious());
 			oldTalker.setLanguagesList(talker.getLanguagesList());
 		}
-
 		CommonUtil.updateTalker(oldTalker, session);
 		if (!oldUserName.equals(talker.getUserName())) {
 			session.put("username", talker.getUserName());
@@ -186,16 +177,13 @@ public class Profile extends Controller {
 		}
 		renderText("ok");
 	}
-	
 	/**
 	 * Back-end for updating profile on the right side of the Home page
-	 * 
 	 * @param name
 	 * @param newValue
 	 */
 	public static void updateProfile(String name, String newValue) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-
 		if (name.equals("userName")) {
 			String oldUserName = talker.getUserName();
 			if (!oldUserName.equals(newValue)) {
@@ -207,7 +195,6 @@ public class Profile extends Controller {
 				renderText("Error:"+error.message());
 	            return;
 	        }
-			
 			talker.setUserName(newValue);
 			CommonUtil.updateTalker(talker, session);
 			if (!oldUserName.equals(newValue)) {
@@ -230,11 +217,9 @@ public class Profile extends Controller {
 				renderText("Error:"+Messages.get("email.exists"));
 				return;
 			}
-			
 			talker.setEmail(newValue);
 			talker.setVerifyCode(CommonUtil.generateVerifyCode());
 			CommonUtil.updateTalker(talker, session);
-			
 			//send verification email
 			/* 
 			Map<String, String> vars = new HashMap<String, String>();
@@ -248,7 +233,6 @@ public class Profile extends Controller {
 			if (twitterAccount != null) {
 				twitterAccount.parseSettingsFromParams(params.allSimple());
 				CommonUtil.updateTalker(talker, session);
-				
 				if (twitterAccount.isTrue("FOLLOW")) {
 					//follow TAH by this user
 					TwitterUtil.followTAH(twitterAccount);
@@ -262,7 +246,6 @@ public class Profile extends Controller {
 				CommonUtil.updateTalker(talker, session);
 			}
 		}
-		
 		renderText("ok");
 	}
 	
@@ -493,15 +476,17 @@ public class Profile extends Controller {
 	public static void notifications() {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		TalkerLogic.preloadTalkerInfo(talker);
-		
 		//check possible parameters after adding Twitter/Facebook accounts
 		String error = params.get("err");
 		if (error != null) {
 			flash.put("err", "Sorry, this account is already connected.");
 		}
-		flash.put("from", params.get("from"));
+		NewsLetterBean newsletter = NewsLetterDAO.getNewsLetterInfo(talker.getEmail());
+		talker.setNewsLetterBean(newsletter);
 		
-		render(talker);
+		flash.put("from", params.get("from"));
+		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
+		render(talker,diseaseList,newsletter);
 	}
 	
 	public static void notificationsSave(TalkerBean talker, String otherCTypes) {
@@ -519,7 +504,6 @@ public class Profile extends Controller {
 		TalkerDAO.updateTalker(sessionTalker);
 		renderText("ok");
 	}
-	
 	/**
 	 * @param imUserName Username of IM account
 	 * @param imService 'YahooIM'/'GoogleTalk'/'WindowLive'
@@ -532,17 +516,13 @@ public class Profile extends Controller {
 			renderText(Messages.get("imaccount.exists"));
 			return;
 		}
-        
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
 		talker.getImAccounts().add(imAccount);
 		CommonUtil.updateTalker(talker, session);
-		
 		NotificationUtils.sendIMInvitation(imAccount);
-		
 		IMAccountBean _imAccount = imAccount;
 		render("tags/profile/profileNotificationIM.html", _imAccount);
 	}
-	
 	/**
 	 * @param imId - imUsername and imService separated by "|"
 	 */
@@ -556,7 +536,6 @@ public class Profile extends Controller {
 		
 		renderText("Ok");
 	}
-	
 	/* ------------------ Email notifications ------------------ */
 	public static void emailSettingsSave(TalkerBean talker) {
 		TalkerBean sessionTalker = CommonUtil.loadCachedTalker(session);
@@ -567,7 +546,7 @@ public class Profile extends Controller {
 		EnumSet<EmailSetting> emailSettings = EnumSet.noneOf(EmailSetting.class);
 		for (String paramName : paramsMap.keySet()) {
 			//try to parse all parameters to EmailSetting enum
-			if(!(paramName.equals("talker.newsletter") || paramName.equals("talker.workshop") || paramName.equals("talker.workshopSummery") ||
+			if(!(paramName.equals("talker.email") || paramName.equals("newsletter.newsLetterType") || paramName.equals("talker.newsletter") || paramName.equals("talker.workshop") || paramName.equals("talker.workshopSummery") ||
 				paramName.equals("body") || paramName.equals("action") || paramName.equals("controller"))) {
 				try {
 					EmailSetting emailSetting = EmailSetting.valueOf(paramName);
@@ -583,7 +562,6 @@ public class Profile extends Controller {
 			}
 		}
 		sessionTalker.setEmailSettings(emailSettings);
-
 		if (talker == null) {
 			sessionTalker.setWorkshop(false);
 			sessionTalker.setWorkshopSummery(false);
@@ -593,10 +571,31 @@ public class Profile extends Controller {
 			sessionTalker.setWorkshopSummery(talker.isWorkshopSummery());
 			sessionTalker.setNewsletter(talker.isNewsletter());
 		}
-		
 		CommonUtil.updateTalker(sessionTalker, session);
 		renderText("ok");
 	}
+	
+	/***
+	 * add or remove single newsletter from database
+	 * @param email
+	 * @param newsLetter
+	 * @param addOrRemove
+	 */
+	public static void addOrRemoveNewsletter(String email,String newsletter,boolean addorremove) {
+		Logger.info("email"+email);
+		Logger.info("newsletter"+newsletter);
+		Logger.info("addorremove"+addorremove);
+		if(email!=null && !email.equals("")){
+		if(addorremove){
+			NewsLetterDAO.addNewsletter(newsletter, email);
+		}else{
+			NewsLetterDAO.removeNewsletter(newsletter, email);
+		}
+		renderText("ok");
+		}else
+			renderText("Error: email must not be empty!");
+	}
+	
 	
 	/**
 	 * Changes primary email of authenticated talker
