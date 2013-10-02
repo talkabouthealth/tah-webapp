@@ -66,7 +66,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;CLL (Chronic Lymphocytic Leukemia);;;;;d5;false
+Disease;Leukemia (CLL);;;;;d5;true
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -74,7 +74,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Lung Cancer;;;;;d6;false
+Disease;Lung Cancer (NSCLC);;;;;d6;true
 ;;;;;;
 type;Type of lung cancer;Type of lung cancer;select;;;
 choices;Small Cell Lung Cancer (SCLC);Non-Small Cell Lung Cancer (NSCLC)
@@ -105,7 +105,7 @@ choices;Skin;Brain;Digestive Tract;Eyes;Mouth;Spinal cord;Urinary Tract;Vagina;;
 GeneticRisk;Genetic Risk;Genetic Risk;multiselect;;;
 choices;Braf V600E;Gene 5 (MDA5) (Melanoma-Differentiation-Associated Gene 5);Melanocortin-1 receptor (MC1R) gene;HBOC gene (BRCA2);INK4a/p16 gene (16INK4a/MTS1/CDKN2 gene);Chromosome 1 (1p22);CDKN2A;Xeroderma pigmentosum (XP);CDK4;;;;
 ;;;;;;
-Disease;Non-Hodgkin Lymphoma;;;;;d8;false
+Disease;Lymphoma (Diffuse large B-cell);;;;;d8;true
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -165,7 +165,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Uterine and Endometrial Cancer;;;;;d14;false
+Disease;Endometrial (Uterine);;;;;d14;true
 ;;;;;;
 TypeUterineCancer;Type of uterine cancer;Type of uterine cancer;select;;;
 choices;Uterine endometrial;Uterine sarcoma;;;
@@ -381,7 +381,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Metastatic Breast Cancer;;;;;d38;false
+Disease;Breast Cancer (Metastatic);;;;;d38;true
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -389,7 +389,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Metastatic Lung Cancer;;;;;d39;false
+Disease;Lung Cancer (Metastatic);;;;;d39;true
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -397,7 +397,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Metastatic Colorectal Cancer;;;;;d40;false
+Disease;Colorectal Cancer (Metastatic);;;;;d40;true
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -405,7 +405,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Metastatic Prostate Cancer;;;;;d41;false
+Disease;Prostate Cancer (Metastatic);;;;;d41;true
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -413,7 +413,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Metastatic Melanoma;;;;;d42;false
+Disease;Melanoma (Metastatic);;;;;d42;true
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -421,7 +421,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Metastatic Endometrial Cancer;;;;;d43;false
+Disease;Endometrial Cancer (Metastatic);;;;;d43;true
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -429,7 +429,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Metastatic Kidney Cancer;;;;;d44;false
+Disease;Kidney Cancer(Metastatic);;;;;d44;true
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -437,7 +437,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Metastatic Bladder Cancer;;;;;d45;false
+Disease;Bladder Cancer (Metastatic);;;;;d45;true
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -453,7 +453,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Inflammatory Breast Cancer;;;;;d47;false
+Disease;Breast Cancer (Inflammatory);;;;;d47;true
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -477,7 +477,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;CML (Chronic Myeloid Leukemia);;;;;d50;false
+Disease;Leukemia (CML);;;;;d50;true
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -485,7 +485,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;AML (Acute Myeloid Leukemia);;;;;d51;false
+Disease;Leukemia (AML);;;;;d51;true
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -493,7 +493,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;ALL (Acute Lymphocytic Leukemia);;;;;d52;false
+Disease;Leukemia (ALL);;;;;d52;true
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
@@ -526,6 +526,175 @@ tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
 Disease;SCC (Squamous Cell Carcinoma);;;;;d56;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Lung Cancer (SCLC);;;;;d57;insert
+;;;;;;
+type;Type of lung cancer;Type of lung cancer;select;;;
+choices;Small Cell Lung Cancer (SCLC);Non-Small Cell Lung Cancer (NSCLC)
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Occult (hidden) stage;Stage 0 (carcinoma in situ);Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+invasive;Is the cancer invasive or non-invasive?;Invasive/Non-invasive;select;;;
+choices;Invasive;Non-invasive;;;;
+;;;;;;
+beginpart;Where did the cancer begin?;Cancer started in;select;;;
+choices;Lining of the bronchial tubes (NSCLC - squamous cell carcinoma / epidermoid carcinoma);Glands of the lungs (NSCLC - adenocarcinoma);Near the lungs' air sacs (NSCLC - bronchioalveolar carcinoma);Near the surface, or outer edges, of the lungs (NSCLC - large-cell undifferentiated carcinoma);Breathing tubes (SCLC);;;
+;;;;;;
+GeneticRisk;Genetic Risk;Genetic Risk;multiselect;;;
+choices;EGFR;KRAS;EML4-ALK;Nuclear Factor I/B (NFIB);P53;Nicotine metabolic gene (CYP2A6);BRAF;Nicotinic gene cluster (CHRNA5-A3-B3);RAS;;;;
+;;;;;;
+Disease;Breast Cancer (Metaplastic);;;;;d58;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Breast Cancer (Phyllodes Tumor);;;;;d59;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Breast Cancer (Angiosarcoma);;;;;d60;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Lymphoma (Follicular Lymphoma);;;;;d61;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Lymphoma (Mantle Cell);;;;;d62;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Lymphoma (Marginal Zone B-cell);;;;;d63;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Lymphoma (Burkitt Lymphoma);;;;;d64;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Lymphoma (Lymphoplasmacytic);;;;;d65;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Lymphoma (Hairy Cell);;;;;d66;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Lymphoma (CNS - Primary Central Nervous System);;;;;d67;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Lymphoma (Precursor T-lymphoblastic);;;;;d68;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Lymphoma (Cutaneous T-cell lymphoma);;;;;d69;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Lymphoma (Angioimmunoblastic T-cell);;;;;d70;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Lymphoma (Extranodal Natural Killer T-cell);;;;;d71;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Lymphoma (Enteropathy Type Intestinal T-cell);;;;;d72;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Lymphoma (Anaplastic Large Cell);;;;;d73;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Lymphoma (Peripheral T-cell);;;;;d74;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Anal Cancer;;;;;d75;insert
+;;;;;;
+stage;Stage of disease;Stage of disease;select;;;
+choices;Stage I;Stage II;Stage III;Stage IV
+;;;;;;
+tumorgrade;Tumor grade;Tumor grade;select;;;
+choices;1;2;3;4;;
+;;;;;;
+Disease;Bile Duct Cancer;;;;;d76;insert
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
