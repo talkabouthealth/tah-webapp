@@ -12,7 +12,11 @@
 	<ul class="tabs">
 		<li id="expert" class="fst active"><a href="#">Expert Answers</a></li>
 		<li id="recent"><a href="#">Shared Experiences</a></li>
-		<li id="open"><a href="#">Unanswered Questions</a></li>
+		
+		#{if talker}					
+						 <li id="open"><a href="#">Unanswered Questions</a></li> 
+		#{/if}
+				    
 		<li id="video"><a href="#">Videos</a></li>
 	</ul>
 
@@ -34,6 +38,7 @@
 	   	</li>
 	   </ul>
 	 </div>
+	  #{if talker}
 	 <div id="openTab" class="tabBody" style="display:none;">
 	 		<ul id="openCnt"></ul>
 	   	<ul>
@@ -42,6 +47,7 @@
 	   	</li>
 	   </ul>
 	 </div>
+	 #{/if}
 	 <div id="videoTab" class="tabBody" style="display:none;">
 	 		<ul id="videoCnt"></ul>
 	   	<ul>

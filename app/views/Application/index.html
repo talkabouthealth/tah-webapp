@@ -165,7 +165,9 @@
 			    	<!-- Removed as per #38929721 : -->
 					<!-- <li id="recent"><a href="#">Recent Answers</a></li> -->
 					<li id="recent"><a href="#">Shared Experiences</a></li>
-			    	<li id="open"><a href="#">Unanswered Questions</a></li>
+			    	#{if talker}					
+						 <li id="open"><a href="#">Unanswered Questions</a></li> 
+				    #{/if}
 			   </ul>
 			   <div id="expertTab" class="tabBody">
 			     <ul id="expertCnt">
@@ -185,6 +187,7 @@
 			     	</li>
 			     </ul>
 			   </div>
+			   #{if talker}
 			   <div id="openTab" class="tabBody" style="display:none;">
 			   		<ul id="openCnt">
 			     	</ul>
@@ -194,6 +197,7 @@
 			     	</li>
 			     </ul>
 			   </div>
+			   #{/if}
 			   <!-- Recent end --> 
 			 </div>
 			 <!-- main end -->
