@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.Session;
+
 import logic.ConversationLogic;
 import logic.TopicLogic;
 import models.ConversationBean;
@@ -205,7 +207,15 @@ public class Search extends Controller {
 		
 		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
 		String cancerType = session.get("cancerType");
-		Query searchQuery = SearchUtil.prepareSearchQuery(term, new String[] {"uname", "title"}, analyzer, true,cancerType);
+		
+		//String profile = "0";
+		Query searchQuery;
+		if(Security.isConnected()) {
+			searchQuery = SearchUtil.prepareSearchQueryTop(term, new String[] {"uname", "title"}, analyzer, true,cancerType,false);
+		} else {
+			searchQuery = SearchUtil.prepareSearchQueryTop(term, new String[] {"uname", "title"}, analyzer, true,cancerType,true);
+		}
+		
 		
 		TopDocs hits = is.search(searchQuery, 10);
 		ScoreDoc [] docs = hits.scoreDocs;
