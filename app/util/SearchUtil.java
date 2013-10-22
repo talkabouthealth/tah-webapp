@@ -24,10 +24,13 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.highlight.Fragmenter;
 
 import org.apache.lucene.search.highlight.Highlighter;
@@ -264,6 +267,65 @@ public class SearchUtil {
 		return searchQuery;
 	}
 
+	public static Query prepareSearchQueryTop(String term, String[] fields, Analyzer analyzer,boolean check,String cancerType,boolean pulbicProfile)
+			throws ParseException {
+		
+		if(check) {
+			if(term != null && !term.equals(""))
+				term = escapeString(term);
+		}
+		
+		QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36,fields, analyzer);
+		parser.setAllowLeadingWildcard(true);
+		/* Updated to show all users if no search term entered. 
+		 * Good to have change
+		 * */
+		String searchTerm = "";
+		if (term != null) {
+			searchTerm = term;
+		}
+		if (term != null && term.length() > 0) {
+			//if term contains only one word (or part) - use wildcard search
+			if (term.split(" ").length == 1) {
+				searchTerm = "*"+term+"*";
+			}
+		}
+		
+		String[] cancerFields = new String[] {"category"};
+		
+		QueryParser cancerParser = new MultiFieldQueryParser(Version.LUCENE_36,cancerFields, analyzer);
+		parser.setAllowLeadingWildcard(true);
+		
+		searchTerm = removeChars(searchTerm);
+		Query searchQuery;
+		if(pulbicProfile) {
+			String[] profileFields = new String[] {"profile"};
+			
+			QueryParser profileParser = new MultiFieldQueryParser(Version.LUCENE_36,profileFields, analyzer);
+			parser.setAllowLeadingWildcard(true);
+			
+			if(StringUtils.isNotEmpty(cancerType)) {
+				if(StringUtils.isNotBlank(searchTerm))
+					searchQuery = parser.parse(searchTerm  + " AND (" + profileParser.parse("0")  + ") AND  (" +cancerParser.parse("\"" + cancerType + "\",\"" + ALL_CANCERS  + "\"") + ")");
+				else
+					searchQuery = cancerParser.parse(" (" + profileParser.parse("0")  + ")  AND  \"" + cancerType + "\",\"" + ALL_CANCERS  + "\"");
+			} else {
+				searchQuery = parser.parse(searchTerm + " AND (" + profileParser.parse("0")  + ") ");
+			}
+		} else {
+			if(StringUtils.isNotEmpty(cancerType)) {
+				if(StringUtils.isNotBlank(searchTerm))
+						searchQuery = parser.parse(searchTerm  + " AND  (" +cancerParser.parse("\"" + cancerType + "\",\"" + ALL_CANCERS  + "\"") + ")");
+				else
+					searchQuery = cancerParser.parse("\"" + cancerType + "\",\"" + ALL_CANCERS  + "\"");
+			} else {
+				searchQuery = parser.parse(searchTerm);
+			}
+		}
+		System.out.println(searchQuery.toString());
+		return searchQuery;
+	}
+	
 	public static Query prepareSearchQuery(String term, String[] fields, Analyzer analyzer,boolean check,String cancerType)
 			throws ParseException {
 		

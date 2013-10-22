@@ -308,7 +308,6 @@ function makeAutocomplete(id, type, parentTopic) {
 	if ($(id).size() === 0) {
 		return;
 	}
-	
 	var url = "";
 	if (type === "all") {
 		url = "/search/ajaxSearch";
@@ -379,10 +378,9 @@ function makeAutocomplete(id, type, parentTopic) {
 					}
 				}
 				document.location = url;
-			}else if (type === "message"){
+			} else if (type === "message") {
 				mailSearch("#searchMessage",ui.item.value);
-			}
-			else if (type === "user"){
+			} else if (type === "user") {
 				var terms = split( this.value );
 				
 				// remove the current input
@@ -396,8 +394,7 @@ function makeAutocomplete(id, type, parentTopic) {
 				$(this).change();
 				$(this).focus();
 				return false;
-			}	
-			else {
+			} else {
 				$(id).val(ui.item.value);
 				selectedConvoURL = ui.item.url;
 			}			
