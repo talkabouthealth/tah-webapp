@@ -146,6 +146,17 @@ function jsddm_canceltimer()
 			hideAll();
 		});
 	});
+	function makeFullSearch(inputId) {
+		var query = $(inputId).val();
+		if (trim(query) === '') {
+			alert("Please enter search query");
+			return false;
+		}else{
+			query = encodeURIComponent(trim(query));
+			var url = "/search?query="+query;
+			document.location = url; 
+		}
+	}
 </script>
 <div id="header">
 	<h1 class="logo"><a href="/"><img src="/public/images/index/tah_logo.png" alt="Talk About Health" /></a>
@@ -154,7 +165,7 @@ function jsddm_canceltimer()
 	    <li style="width:255px;">
 	      <form action="?action=search" method="get">
 	        <input id="topSearchBox" type="text" placeholder="Your search here..." class="search_field" />
-	        <input id="topSearchText" type="button" class="search_btn" />
+	        <input id="topSearchText" type="button" class="search_btn" onclick="return makeFullSearch('#topSearchBox');"/>
 	      </form>
 	    </li>
 	    #{if session.contains("username") }

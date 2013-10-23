@@ -131,11 +131,12 @@
 				$(loading).appendTo($("#"+id+"Cnt"));
 				$.get("/PublicProfile/loadProfileFeedList",{ type : id,lastActionId:lastActionId, userId:'${talker.id}' },function(data){
 					$(loading).remove();
-					if($.trim(data) == '') {
+					var dataTrimed = $.trim(data); 
+					if( dataTrimed == '') {
 						$("#"+id+"Tab li.lastFeed").hide();
 						//$("<li>No " + id + " found</li>").appendTo($("#"+id+"Cnt"));
 					} else {
-						$(data).appendTo($("#"+id+"Cnt"));
+						$(dataTrimed).appendTo($("#"+id+"Cnt"));
 						$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
 						$('.inline-edit').inlineEdit( { hover: ''} );
 					}
@@ -143,8 +144,6 @@
 				return false;
 			});
 
-			
-			
 			if ($("#answer").exists()) {
 				$("#answer").click(); 
 			} else if($("#thoughts").exists()) {
@@ -216,12 +215,23 @@
    			$("#"+id+"Cnt").html(loading);
    			$.get("/PublicProfile/loadProfileFeedList",{ type : id,lastActionId:lastActionId,userId:'${talker.id}' },function(data){
    				$(loading).remove();
-   				if($.trim(data) == '') {
+   				var dataTrimed = $.trim(data);
+   				if('answer' == id) {
+	   				#{if numOfAnswers <= 10 }
+	   					$("#"+id+"Tab li.lastFeed").hide();
+					#{/if}
+   				} else if(id == 'questions') {
+   					#{if numOfStartedConvos <= 10 }
+						$("#"+id+"Tab li.lastFeed").hide();
+					#{/if}
+   				}
+
+   				if(dataTrimed == '') {
    					$("li.lastFeed").hide(); 
-   					$("#"+id+"Tab li.lastFeed").hide(); //answerTab
+   					$("#"+id+"Tab li.lastFeed").hide();
 					$("<li>No " + id + " found</li>").appendTo($("#"+id+"Cnt"));
 				} else {
-					$(data).appendTo($("#"+id+"Cnt"));
+					$(dataTrimed).appendTo($("#"+id+"Cnt"));
 					$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
 					$('.inline-edit').inlineEdit( { hover: ''} );
 				}
@@ -355,8 +365,6 @@
 		                      		<br/><br/>
 	                      	#{/if}
 	                      	 #{if numOfStartedConvos > 0 }
-                      
-                      	
                       	<strong>Questions:&nbsp;</strong>
                       	<div class="bn1">
                       	<a style="text-decoration: none" href="@{PublicProfile.conversations(talker.name)}">${numOfStartedConvos}</a>
@@ -473,7 +481,6 @@
 					   <div id="thankyouTab" class="tabBody" style="display:none;">
 					     <ul id="thankyouCnt">
 					     </ul>
-					    
 					     <ul>
 					     	<li class="lastFeed">
 					     		<a class="moreBtn" id="thankyouMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
@@ -571,7 +578,6 @@ countDown = function(obj) {
 	var oldLength = $('#postQuestionTextSize').text()/1;
 	if(160 - currLenght >= 0) {
 		$('#postQuestionTextSize').html(160 - currLenght);
-		
 	}
 }
 
@@ -581,7 +587,6 @@ function loadMoreProfileFeed(type, talkerName) {
 
 	var loading = $('<li><img src="/public/images/index/tah_loading.gif" width="25"/></li>');
 	$(loading).appendTo($("#"+type+"Cnt"));
-	
 	//public static void conversationFeedAjax(String afterActionId) {
 	$.get("/explore/feedAjaxLoad", {afterActionId: lastActionId, feedType: type, talkerName: talkerName},
 			function(data) {

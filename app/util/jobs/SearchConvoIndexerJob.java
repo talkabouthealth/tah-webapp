@@ -44,7 +44,10 @@ public class SearchConvoIndexerJob{
 		  	 ArrayList<Document> autoConvoIndex = new ArrayList<Document>();
 			 for (ConversationBean convo : convoList) {
 				//possibly weight titles, conversation details, summaries, and answers more than the archived real-time conversations?
-				
+				List<CommentBean> answersList = CommentsDAO.loadConvoAnswersTreeForScheduler(convo.getId());
+				if (convo.isDeleted() || (answersList==null ||  answersList.size()==0)) {
+					continue;
+				}
 				Document doc = new Document();
 				doc.add(new Field("id", convo.getId(), Field.Store.YES, Field.Index.ANALYZED));
 				doc.add(new Field("title", convo.getTopic(), Field.Store.YES, Field.Index.ANALYZED));
@@ -54,7 +57,6 @@ public class SearchConvoIndexerJob{
 					doc.add(new Field("category", ConversationBean.ALL_CANCERS, Field.Store.YES, Field.Index.ANALYZED));
 				}
 				//add an answer, reply, or live conversation text ?
-				List<CommentBean> answersList = CommentsDAO.loadConvoAnswersTreeForScheduler(convo.getId());
 				StringBuilder answersString = new StringBuilder();
 				for (CommentBean answer : answersList) {
 					if (!answer.isDeleted()) {
@@ -80,7 +82,7 @@ public class SearchConvoIndexerJob{
 				} else {
 					doc.add(new Field("category", ConversationBean.ALL_CANCERS, Field.Store.YES, Field.Index.ANALYZED));
 				}
-				
+				doc.add(new Field("profile", "0", Field.Store.YES, Field.Index.ANALYZED));
 				doc.add(new Field("topics", topic, Field.Store.YES, Field.Index.ANALYZED));
 				
 				doc.add(new Field("type", "Conversation", Field.Store.YES, Field.Index.NO));
@@ -110,5 +112,4 @@ public class SearchConvoIndexerJob{
 	protected void finalize() throws Throwable {
 		super.finalize();
 	}
-	
 }

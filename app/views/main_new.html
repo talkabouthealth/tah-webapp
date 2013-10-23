@@ -81,14 +81,14 @@
         <link type="text/css" href="/public/stylesheets/smoothness/jquery-ui-1.8.14.custom.css" rel="stylesheet" />	
         <script type="text/javascript" src="/public/javascripts/jquery-1.5.1.min.js"></script>
         <script type="text/javascript" src="/public/javascripts/jquery-ui-1.8.14.custom.min.js"></script>
+        <script type="text/javascript" src="/public/javascripts/all.js" ></script>
         <script type="text/javascript" src="/public/javascripts/jqueryLinkify.js" ></script>
 	<script type="text/javascript" src="/public/plugins/jquery.truncatable.js" ></script>
 		<script type='text/javascript' src='/public/plugins/menu/jquery.hoverIntent.minified.js'></script>
 	<script type='text/javascript' src='/public/plugins/menu/jquery.dcmegamenu.1.3.3.js'></script>
 	
 	
-	<script type="text/javascript" src="/public/javascripts/all.js" ></script>
-<!-- 	<script type="text/javascript" src="/public/javascripts/headermenu.js" ></script> -->
+	
 	<script type="text/javascript" src="/public/javascripts/jscroller.js"></script>
 	<script type="text/javascript" src="/public/plugins/jquery.cookies.js" ></script>
 	<script type="text/javascript">
@@ -313,6 +313,7 @@
 			mouseWheel:true
 	    });
 		//Search button code
+		/*
 		$("#topSearchText").click(function() {
 			makeSearch();
 		});
@@ -322,6 +323,7 @@
 				makeSearch();
 			}
 		});
+		*/
 		$(".twitterBtn").click(function() {
 			openServiceLogin('T');
 		});
@@ -329,7 +331,7 @@
 			openServiceLogin('F');
 		});
 
-		makeAutoComplete();
+		makeAutoCompleteNew();
 		
 		//Subscribe button feature	
 		$('#subscribeMain').click(function() {
@@ -401,7 +403,8 @@
 			document.location = url; 
 		}
 	}
-	makeAutoComplete = function(){
+	
+	makeAutoCompleteNew = function(){
 		var url = "/search/ajaxSearch";
 		var cache = {};
 		$("#topSearchBox").autocomplete({

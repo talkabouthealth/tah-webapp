@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import models.TalkerBean;
 import models.PrivacySetting.PrivacyType;
+import models.PrivacySetting.PrivacyValue;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -62,6 +63,12 @@ public class SearchIndexUtil {
 			if (!talker.isPrivate(PrivacyType.PROFILE_INFO) && talker.getBio() != null) {
 				doc.add(new Field("bio", talker.getBio(), Field.Store.YES,Field.Index.ANALYZED));
 			}
+			
+			if(PrivacyValue.PRIVATE.equals(talker.getPrivacyValue(PrivacyType.PROFILE_INFO))) {
+				  doc.add(new Field("profile", "1", Field.Store.YES, Field.Index.ANALYZED));
+			  } else {
+				  doc.add(new Field("profile", "0", Field.Store.YES, Field.Index.ANALYZED));
+			  }
 			talkerIndexWriter.addDocument(doc);
 			talkerIndexWriter.close();
 
@@ -111,6 +118,12 @@ public class SearchIndexUtil {
 			if (!talker.isPrivate(PrivacyType.PROFILE_INFO) && talker.getBio() != null) {
 				doc.add(new Field("bio", talker.getBio(), Field.Store.YES,Field.Index.ANALYZED));
 			}
+			
+			if(PrivacyValue.PRIVATE.equals(talker.getPrivacyValue(PrivacyType.PROFILE_INFO))) {
+				  doc.add(new Field("profile", "1", Field.Store.YES, Field.Index.ANALYZED));
+			  } else {
+				  doc.add(new Field("profile", "0", Field.Store.YES, Field.Index.ANALYZED));
+			  }
 			talkerIndexWriter.addDocument(doc);
 			talkerIndexWriter.close();
 
