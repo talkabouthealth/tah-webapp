@@ -165,7 +165,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Endometrial (Uterine);;;;;d14;true
+Disease;Endometrial (Uterine) Cance;;;;;d14;true
 ;;;;;;
 TypeUterineCancer;Type of uterine cancer;Type of uterine cancer;select;;;
 choices;Uterine endometrial;Uterine sarcoma;;;
@@ -429,7 +429,7 @@ choices;Stage I;Stage II;Stage III;Stage IV
 tumorgrade;Tumor grade;Tumor grade;select;;;
 choices;1;2;3;4;;
 ;;;;;;
-Disease;Kidney Cancer(Metastatic);;;;;d44;true
+Disease;Kidney Cancer (Metastatic);;;;;d44;true
 ;;;;;;
 stage;Stage of disease;Stage of disease;select;;;
 choices;Stage I;Stage II;Stage III;Stage IV
