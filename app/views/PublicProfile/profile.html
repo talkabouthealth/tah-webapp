@@ -193,7 +193,13 @@
 				showPopup("#startDialog", 350);
 			}
    		}		
-   		function joinNow(){
+   		function joinNowNew(msg){
+   			//msg
+   			if(msg != '') {
+   			$("#startConvoMsg").html(msg);
+   			} else {
+   				$("#startConvoMsg").html("Please join TalkAboutHealth and you will be able to ask questions.");
+   			}
    	   		showPopup("#showJoinNow", 350);
    		}
    		deleteComment = function(commentId) {
@@ -253,12 +259,11 @@
                   <div class="mtcontent">
                   	#{if notProvidedInfo }
                   		<div id="provideInfoHelp" class="tabBodyOther" style="margin-bottom: 15px;color: #383838; border:1px solid #ff7474;background-color: #ffefef; float: left;">
-						        <div>
-						          <div class="closecover" style="clear: none; float: right;">
-						            <div class="close" onclick="return hideHelpInfo('provideInfo', false);">
-						            	<img src="/public/images/close.png" alt="Close" /></div>
-						          </div>
-						          <div class="note"  style="padding:15px;">
+							<div>
+						    	<div class="closecover" style="clear: none; float: right;">
+						        	<div class="close" onclick="return hideHelpInfo('provideInfo', false);"><img src="/public/images/close.png" alt="Close" /></div>
+						    	</div>
+						        <div class="note"  style="padding:15px;">
 								  	<strong>Notice:</strong>
 								  	#{if talker.isProf() }
 								    	You have not provided Personal Info. You may provide this information using the 
@@ -270,9 +275,9 @@
 									  	<a href="@{Profile.edit()}">Edit Profile</a> and <a href="@{Profile.healthDetails()}">Edit Health Info</a> pages. 
 									  	<br/><br/>Your Personal Info and Health Info will never be viewable by the public.
 								    #{/else}
-						          </div>
-						        </div><!--popbox2-->
-						      </div>
+						    	</div>
+							</div><!--popbox2-->
+						</div>
                   	#{/if}
                   	#{if false && !notProvidedInfo && notViewableInfo  }
                   		<div id="viewableInfoHelp" class="tabBodyOther" style="margin-bottom: 15px;color: #383838; border:1px solid #ff7474;background-color: #ffefef; float: left;">
@@ -292,9 +297,15 @@
 								#{talker/connectionInfo_new talker: talker /}
 							#{/if}
 							#{if currentTalker != null && !talker.userName.equals(currentTalker.userName)}
-								<span class="f1" style="float:right;margin-top:-6px;"><a href="#" id="followActionImageBtn"  
-								><span id="followBtnText" >${ currentTalker.followingList.contains(talker) ? 'Following' : 'Follow'}</span></a></span>
+								<span class="f1" style="float:right;margin-top:-6px;">
+									<a href="#" id="followActionImageBtn"><span id="followBtnText" >${ currentTalker.followingList.contains(talker) ? 'Following' : 'Follow'}</span></a>
+								</span>
 							#{/if}
+							#{else}
+								<span class="f1" style="float:right;margin-top:-6px;">
+									<a href="javaScript:joinNowNew('Please join now to follow ${talker.userName}')" ><span id="followBtnText" >Follow</span></a>
+								</span>
+				            #{/else} 
 							</h2>
 						<div style="padding:10px;">
 						<table style="width: 100%;">
@@ -304,15 +315,16 @@
 								<div style="clear:both;">
 									#{if talker.profileName != null && talker.profileName != ""}
 		                      			<h1 style="font-weight: bold; font-size: 25px; float: left; padding-right: 5px;">${talker.profileName}
+		                      			
 		                      			#{if talker.isProf() || talker.isOrg()}
-		                      				#{if talker.connectionVerified }<img src="/public/images/profile/vsign.png"/>#{/if}
+		                      				*{ #{if talker.connectionVerified }<img src="/public/images/profile/vsign.png"/>#{/if} }*
 		                      				<img src="/public/images/profile/dsign.png"/>
 		                      			#{/if}
 		                      			</h1>
 		                      		#{/if}
 		                      		#{else}
 		                      			<h1 style="font-weight: bold; font-size: 25px; float: left; padding-right: 5px;">${talker.name}</h1>#{if talker.isProf() || talker.isOrg()}
-		                      				#{if talker.connectionVerified }<img src="/public/images/profile/vsign.png"/>#{/if}
+		                      				*{ #{if talker.connectionVerified }<img src="/public/images/profile/vsign.png"/>#{/if} }*
 		                      				<img src="/public/images/profile/dsign.png"/>
 		                      			#{/if}
 		                      		#{/else}
@@ -320,6 +332,10 @@
 		                      		<br/>
 		                      		<div style="clear:both;">
 		                      			<strong>${talker.name}</strong>	
+		                      			#{if talker.isProf() || talker.isOrg()}
+		                      			#{if talker.connectionVerified }<span class="green12">(Verified)</span>#{/if}
+		                      			#{else}<span style="color:#E21C3F;">(not verified)</span>#{/else}
+		                      			#{/if}
 		                      		</div>
 		                      		<div style="clear:both;">
 		                      		<br/>
@@ -346,7 +362,6 @@
 	                      	#{/else}
 	                      	</div>
 								</td>
-								
 								<td style="width: 150px; padding-left: 20px;vertical-align: top; padding-top: 10px;">
 								<!-- 
 								<strong>Thank You's:</strong>
@@ -377,9 +392,10 @@
 						</table>
 						</div>
 					</div>
-					<div style="float: left; width: 100%; padding: 10px 0px 20px;">
+					<div style="float: left; width: 100%; padding: 10px 0px 0px;">
 						#{include 'socialNetworkShare.html' /}
 					</div>
+					<!-- 
 					<div id="postQuestionTabContent" class="tabBodyOther" style="display:block;border-radius:5px;padding: 20px; width: 650px;">
 						<div style="float:left;">                  		    
 	                  	<div class="bn1" style="cursor: default;float: left; padding: 3px; font-weight: bold; font-size: 13px; margin-bottom: 10px;">
@@ -416,6 +432,7 @@
 	                  	</div>
                   		<div style="clear:both"></div>
 					</div>
+					 -->
 					#{if talker.profStatement}
 						<div class="tabBodyOther" style="border-radius:5px;margin-top:20px;">
 							<h2 class="heading">
@@ -549,8 +566,18 @@
                 </div>
 			  </div><!--mtleft-->
 			  <div id="sidebar">
-            	#{ include 'PublicProfile/profileRight_new.html' /}
-            	</div>
+			  	<div style="width: 120px; margin: 0px auto;">
+					#{if currentTalker == null }
+						<div onclick="joinNowNew('');" class="bn1" style="cursor: pointer;float: left; padding: 3px; font-weight: bold; font-size: 13px; margin-bottom: 10px;">
+						<div style="float: left; margin-top: 4px; margin-right: 3px;"><img src="/public/images/profile/newq.png" /></div>Ask a question</div>
+					#{/if}
+					#{else}
+						<div onclick="return showSaveDialog('postQuestion');" class="bn1" style="cursor: pointer;float: left; padding: 3px; font-weight: bold; font-size: 13px; margin-bottom: 10px;">
+						<div style="float: left; margin-top: 4px; margin-right: 3px;"><img src="/public/images/profile/newq.png" /></div>Ask a question</div>
+					#{/else}
+				</div>
+            #{ include 'PublicProfile/profileRight_new.html' /}
+           </div>
           </div><!--mtcover-->
 </div>
 <div id="mask"></div>

@@ -414,6 +414,10 @@
 					<div class="signfields2">
 						<h1>Newsletters</h1>
 						<div class="settingsDiv">
+							<input style="display: none;" type="checkbox"  id="CLINICAL_TRIALS_UPDATE_newsletter"       value="CLINICAL_TRIALS_UPDATE"      name="newsletter.newsLetterType"   #{if talker.newsLetterBean && talker.newsLetterBean.newsLetterType?.contains("CLINICAL_TRIALS_UPDATE") } checked='checked' #{/if}  />
+							<input style="display: none;" type="checkbox"  id="PRODUCT_AND_PROGRAMS_UPDATE_newsletter"  value="PRODUCT_AND_PROGRAMS_UPDATE" name="newsletter.newsLetterType"   #{if talker.newsLetterBean && talker.newsLetterBean.newsLetterType?.contains("PRODUCT_AND_PROGRAMS_UPDATE") } checked='checked' #{/if} />
+							<input style="display: none;" type="checkbox"  id="MARKET_RESEARCH_UPDATE_newsletter"       value="MARKET_RESEARCH_UPDATE"      name="newsletter.newsLetterType"   #{if talker.newsLetterBean && talker.newsLetterBean.newsLetterType?.contains("MARKET_RESEARCH_UPDATE") } checked='checked' #{/if} />
+		            		
 		            		<input type="hidden" name="newsletter.email" value="${talker.email}">
 		          		<div id="checkboxarea3">
 			          				<div style="float:left;">
