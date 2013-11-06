@@ -513,7 +513,6 @@
 <!-- Insurance End-->
 
 <!-- Health Info -->
-
 #{if talker.isAllowed(models.PrivacySetting.PrivacyType.HEALTH_INFO, currentTalker) && talkerDisease && !talker.isProf() }
 	#{if talker.category != null}
 		#{if !talkerDisease.isEmptyHealthInfo() }
@@ -610,6 +609,7 @@
 
 <!-- Health Info End -->
 <!-- Followers-->
+#{if currentTalker != null }
 #{if talker.followerList.size() > 0}
 <div class="box">
 	<h2 class="heading"><a href="@{PublicProfile.userBasedActions(talker.name, 'followers')}">Followers </a><div class="bn1" style="float: right; font-size: 12px; padding: 0px 10px; line-height: 25px; margin-top: -5px;">${talker.followerList.size()}</div></h2>
@@ -636,6 +636,7 @@
 	#{/if}
 	</div>
 </div>
+#{/if}
 #{/if}
 <!-- Followers End-->
 <!-- Following-->
