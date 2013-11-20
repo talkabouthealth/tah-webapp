@@ -250,7 +250,8 @@ public class SearchUtil {
 		Query searchQuery;
 		if(StringUtils.isNotEmpty(cancerType)) {
 			if(StringUtils.isNotBlank(term))
-				searchQuery = parser.parse(term  + " AND  ((" +cancerParser.parse("\"" + cancerType + "\"") + ") AND (" + topicQuery +  ") )");
+				//searchQuery = parser.parse(term  + " AND  ((" +cancerParser.parse("\"" + cancerType + "\"") + ") AND (" + topicQuery +  ") )");
+				searchQuery = parser.parse(term  + " AND  (" +cancerParser.parse("\"" + cancerType + "\"") + ")");
 			else
 				searchQuery = cancerParser.parse("\"" + cancerType + "\"");
 		} else {
