@@ -606,8 +606,6 @@ public class Conversations extends Controller {
     	
     	Vote newVote = new Vote(talker, up);
     	int voteScore = answer.getVoteScore();
-    	voteScore = voteScore + (up ? 1 : -1);
-    	
     	Vote oldVote = answer.getVoteByTalker(talker, answer.getVotes());
     	if (oldVote != null) {
     		//user already voted for this answer/reply
@@ -619,8 +617,13 @@ public class Conversations extends Controller {
     		else {
     			//remove previous vote from score
     			voteScore = voteScore + (oldVote.isUp() ? -1 : 1);
+    			//voteScore = voteScore + (up ? 1 : -1);
+    			if(voteScore<0){voteScore=0;}
     		}
     		answer.getVotes().remove(oldVote);
+    	}else{
+    		voteScore = voteScore + (up ? 1 : -1);
+    		if(voteScore<0){voteScore=0;}
     	}
     	
     	if (newVote.isUp()) {

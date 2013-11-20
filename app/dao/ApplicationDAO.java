@@ -730,4 +730,21 @@ public class ApplicationDAO {
 		return createURLName(name, isUsername);
 	}
 	
+	public static String getSchedularStat() {
+		DBCollection namesColl = getCollection("schedulerStat");
+		String replyText = "NOTWORKING";
+		Calendar cal= Calendar.getInstance();
+		cal.add(Calendar.MINUTE, -20);
+		Date date=cal.getTime();
+		BasicDBObject time = new BasicDBObject("$gt", date);
+		
+		DBObject query = BasicDBObjectBuilder.start()
+				.add("timestamp", time)
+				.get();
+		DBCursor talkerCur=namesColl.find(query).sort(new BasicDBObject("uname", 1));
+		if(talkerCur != null && talkerCur.hasNext()) {
+			replyText = "WORKING";
+		}
+		return replyText;
+	}
 }

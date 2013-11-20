@@ -239,41 +239,7 @@ public class ViewDispatcher extends Controller {
 		
 		Set<Action> talkerFeed = FeedsLogic.getTalkerFeed(talker, null);
 		
-		//For removing answer from feed list which have moderate no moderate value or value as "Delete Answer"
-		//Iterator<Action> talkerFeedIter = talkerFeed.iterator();
-		/* while (talkerFeedIter.hasNext()) {
-			 Action actionIterator = talkerFeedIter.next();
-			 if(actionIterator != null && actionIterator.getConvo() != null){
-				 List<CommentBean> commentBeanList = actionIterator.getConvo().getComments();
-				 for(int index = 0; index < commentBeanList.size(); index++){
-					 CommentBean commentBean = commentBeanList.get(index);
-					 CommentBean comment =  CommentsDAO.getConvoCommentById(commentBean.getId());
-					 if(comment != null && comment.getModerate() != null && comment.getFromTalker().equals(talker)){
-						 if(comment.getModerate().equalsIgnoreCase(AnswerNotification.DELETE_ANSWER)){
-							 commentBeanList.remove(index);
-							 actionIterator.getConvo().setComments(commentBeanList);
-						 }else if(comment.getModerate().equalsIgnoreCase("null")){
-							 commentBeanList.remove(index);
-							 actionIterator.getConvo().setComments(commentBeanList);
-						 }
-					 }else {
-						 if(actionIterator.getTalker().getActivityList()!=null){
-							 int count = actionIterator.getTalker().getActivityList().size();
-							 actionIterator.getTalker().getActivityList().remove(count);
-						 }
-						 commentBeanList.remove(index);
-						 actionIterator.getConvo().setComments(commentBeanList);
-					 }
-				 }
-			 }
-		 }
-		*/
-		
-		//List<Action> answersFeed = new ArrayList<Action>();
-		//int numOfTopAnswers = TalkerLogic.prepareTalkerAnswers(talker.getId(), answersFeed, false);
-		//List<CommentBean> allAnswers = CommentsDAO.getTalkerAnswers(talker.getId(), null);
 		int numOfAnswers = CommentsDAO.getTalkerNumberOfAnswers(talker.getId(), null);
-		//allAnswers.clear();
 		
 		if(talkerDisease != null) {
 			talkerDisease.setHealthItemsMap(healthItemsMap);
@@ -343,20 +309,6 @@ public class ViewDispatcher extends Controller {
 			}
 		}
 		List<CommentBean> commentList = answerList;
-		//For getting answers in top position which have question text
-		//For removing answer from question page which have moderate no moderate value or value as "Delete Answer" .
-		/*for(int index = 0; index < answerList.size(); index++){
-			CommentBean commentBean= answerList.get(index);
-			if(commentBean.getModerate() == null && !commentBean.getFromTalker().equals(talker)){
-				commentList.remove(index);
-			}else if(commentBean.getModerate() != null){
-				 if(commentBean.getModerate().equalsIgnoreCase(AnswerNotification.DELETE_ANSWER)){
-					 commentList.remove(index);
-				 }else if(commentBean.getModerate().equalsIgnoreCase("null")){
-					 commentList.remove(index);
-				 }
-			}
-		}*/
 		
 		convo.setComments(commentList);
 		convo.setReplies(CommentsDAO.loadConvoReplies(convo.getId()));
@@ -387,8 +339,7 @@ public class ViewDispatcher extends Controller {
 				}
 			}
 		}
-		
-		
+
 		//Added for displaying proper answer count
 		int commentSize = 0;
 		for(int i = 0; i < convo.getComments().size(); i++) {
@@ -647,5 +598,8 @@ public class ViewDispatcher extends Controller {
     		_feedItems = FeedsLogic.getTopicFeed(_talker,topic, afterActionId,true);
     		render("tags/feed/feedList.html", _feedItems, _talker,feedType);
     	}
+    }
+    public static void schedulerStatus() {
+    	renderText(ApplicationDAO.getSchedularStat());
     }
 }

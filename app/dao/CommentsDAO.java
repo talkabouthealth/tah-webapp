@@ -493,7 +493,8 @@ public class CommentsDAO {
 		.add("vote_score", 0)
 		.get();
 		//List<DBObject> commentsList=new ArrayList<DBObject>();//
-		 commentCur=commentsColl.find(query).sort(new BasicDBObject("time", -1));
+		//commentCur=commentsColl.find(query).sort(new BasicDBObject("time", -1));
+		 commentCur=commentsColl.find(query).sort(orderby);
 		while(commentCur.hasNext()){
 			commentsList.add(commentCur.next());
 		}

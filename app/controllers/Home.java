@@ -79,16 +79,12 @@ public class Home extends Controller {
     	if(talker.getCategory() != null && !talker.getCategory().equals("")){
 			//Code added for display talker's cancer fees
 			
-    		//Set<Action> multipleCancerCommunityFeed = null;
-	    	//talkerCat = talker.getCategory();
-	    	//multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
 	    	if(talkerCat != null)
 	    		allDiseaseList.put(talker.getCategory().replaceAll(" ", "_"),null);
 			
 	    	if(talker.getOtherCategories() != null) {
 	    		for (int i = 0; i < talker.getOtherCategories().length; i++) {
 	    			talker.setCategory(talker.getOtherCategories()[i]);
-	    			//multipleCancerCommunityFeed = FeedsLogic.getCommunityFeed(null, true,talker);
 	    			allDiseaseList.put(talker.getOtherCategories()[i].replaceAll(" ", "_"),null);
 	    		}
 	    	}
@@ -106,23 +102,22 @@ public class Home extends Controller {
         session.put("topicCount", TopicLogic.TOPICS_PER_PAGE);
 
         session.put("inboxUnreadCount", MessagingDAO.getUnreadMessageCount(talker.getId()));
-        
+
 		boolean emailVerification = false;
 		if (session.contains("justloggedin") && talker.getVerifyCode() != null) {
 			emailVerification = true;
 			session.remove("justloggedin");
 		}
-		
+
 		boolean newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
 		boolean rewardLetterFlag = ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
-		
+
 		List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
-		
+
 		render("@newhome", talker, emailVerification, liveConversations, showNotificationAccounts,
-		newsLetterFlag, rewardLetterFlag, allDiseaseList, diseaseList, talkerCat, allFeed); 
-		
+		newsLetterFlag, rewardLetterFlag, allDiseaseList, diseaseList, talkerCat, allFeed);
     }
-    
+
     private static boolean prepareNotificationPanel(Session session, TalkerBean talker) {
 		boolean showNotificationAccounts = (!talker.getHiddenHelps().contains("notificationAccounts") && !talker.isAdmin());
 		if (showNotificationAccounts) {

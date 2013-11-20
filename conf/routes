@@ -26,6 +26,7 @@ GET     /newsletter/?                           Application.newsletter_signup
 *		/posterror								Application.postError
 GET     /captcha                                Application.captcha
 
+*		/schedulerStatus						ViewDispatcher.schedulerStatus
 
 *		/profile/profileinfo					Profile.edit
 *		/profile/healthinfo						Profile.healthDetails
