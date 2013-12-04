@@ -887,7 +887,6 @@ public class TalkerDAO {
 			while(talkerCur.hasNext()){
 				talkersDBObjectList.add(talkerCur.next());
 			}
-			
 		} else {
 			talkersDBObjectList=new ArrayList<DBObject>();//talkersDBObjectList = talkersColl.find(query).sort(new BasicDBObject("uname", 1)).toArray();
 			DBCursor talkerCur=talkersColl.find(query).sort(new BasicDBObject("uname", 1));
@@ -903,20 +902,13 @@ public class TalkerDAO {
 			TalkerBean talker = new TalkerBean();
 			if (basicInfo) {
 				talker.parseBasicFromDB(talkerDBObject);
-			}
-			else {
+			} else {
 				talker.parseFromDB(talkerDBObject);
 			}
 			talkerList.add(talker);
 		}
-		
 		return talkerList;
 	}
-	
-	
-	
-	
-	
 	
 	//db.talkers.find().skip(50).limit(20);
 		

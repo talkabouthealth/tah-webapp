@@ -285,63 +285,9 @@ public class Explore extends Controller {
 	 */
 	public static void conversations(String action) {
 		TalkerBean talker = CommonUtil.loadCachedTalker(session);
-		//boolean loggedIn = (talker != null);
-		Set<Action> recentConvo = null;//FeedsLogic.getAllCancerFeed(null, loggedIn, talker);
-		
-		List<TopicBean> popularTopics = null;
-    	//if (talker == null) {
-    	//	int limit = session.get("topicCount")==null?TopicLogic.TOPICS_PER_PAGE:Integer.parseInt(session.get("topicCount"));
-    	//	popularTopics = TopicLogic.loadPopularTopics(limit);
-		//}
-    	
-    	//For removing answer from feed list which have moderate no moderate value or value as "Delete Answer"
-		//Iterator<Action> recentConvosIter = recentConvos.iterator();
-		/* 
-		while (communityFeedIter.hasNext()) {
-			 Action actionIterator = communityFeedIter.next();
-			 if(actionIterator != null && actionIterator.getConvo() != null){
-				 List<CommentBean> commentBeanList = actionIterator.getConvo().getComments();
-				 for(int index = 0; index < commentBeanList.size(); index++){
-					 CommentBean commentBean = commentBeanList.get(index);
-					 CommentBean comment =  CommentsDAO.getConvoCommentById(commentBean.getId());
-					 if(comment != null && comment.getModerate() != null  && !comment.getFromTalker().equals(talker)){
-						 if(comment.getModerate().equalsIgnoreCase(AnswerNotification.DELETE_ANSWER)){
-							 commentBeanList.remove(index);
-							 actionIterator.getConvo().setComments(commentBeanList);
-						 }else if(comment.getModerate().equalsIgnoreCase("null")){
-							 commentBeanList.remove(index);
-							 actionIterator.getConvo().setComments(commentBeanList);
-						 }
-					 }else{
-						 commentBeanList.remove(index);
-						 actionIterator.getConvo().setComments(commentBeanList);
-					 }
-				 }
-			 }
-		 }
-		 */
-		//"Popular Conversations" - ordered by page views
-		//List<ConversationBean> popularConvo = ConversationDAO.loadPopularAnswers("popular",null);
-		//For removing answer from feed list which have moderate value as "Delete Answer"
-		/*for(int index = 0; index < popularConvo.size(); index++){
-			 ConversationBean conversationBean = popularConvo.get(index);
-			 List<CommentBean> answerList = CommentsDAO.loadConvoAnswersTree(conversationBean.getId());
-			 for(int index1 = 0; index1 < answerList.size(); index1++){
-				 CommentBean commentBean = answerList.get(index1);
-				 if(commentBean != null && commentBean.getModerate() != null  && !commentBean.getFromTalker().equals(talker)){
-					 if(commentBean.getModerate().equalsIgnoreCase(AnswerNotification.DELETE_ANSWER)){
-						 answerList.remove(index1);
-					 }else if(commentBean.getModerate().equalsIgnoreCase("null")){
-						 answerList.remove(index1);
-					 }
-				 }else{
-					 answerList.remove(index1);
-				 }
-				 conversationBean.setComments(answerList);
-			 }
-		 }*/
-		//Set<Action> popularConvos = FeedsLogic.getPopularConvoFeed(null);
+		Set<Action> recentConvo = null;
 
+		List<TopicBean> popularTopics = null;
 		if (action == null) {
 			action = "feed";
 		}
@@ -362,12 +308,6 @@ public class Explore extends Controller {
 			render("Explore/feedList.html",openConvo, type);
 		}
 		if(type.equals("recentConvo")) {
-//			TalkerBean talker = CommonUtil.loadCachedTalker(session);
-//			boolean loggedIn = (talker != null);
-//			String cancerType = session.get("cancerType"); 
-//			talker = new TalkerBean();
-//			talker.setCategory(cancerType);
-//			Set<Action> recentConvo = FeedsLogic.getAllCancerFeed(null, loggedIn, talker);
 			List<ConversationBean> recentConvo = ConversationDAO.loadSharedExperiences(null,cancerType);
 			render("Explore/feedList.html",recentConvo, type);
 		}

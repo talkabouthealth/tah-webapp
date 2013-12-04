@@ -181,14 +181,26 @@
 		  				{ answerId: answerId, todo: 'update', newText: newValue},
 		  				function(returnText) {
 		  					$view.html(returnText);
-							
+
 							$displayEmpty.hide();
 							$displayFull.show();
 							$display.show();
 		  				}
 		  			);
-				}
-				else {
+				} else if ($dataType.indexOf('replyEdit') == 0) {
+					var answerId = $dataType.substring(9);
+					//$("#editanswer").val(n3.instanceById('editReply').getContent());
+					newValue = n3.instanceById('editReply').getContent();
+		   	   		$.post("/conversations/updateAnswer", 
+		  				{ answerId: answerId, todo: 'update', newText: newValue},
+		  				function(returnText) {
+		  					$view.html(returnText);
+							$displayEmpty.hide();
+							$displayFull.show();
+							$display.show();
+		  				}
+		  			);
+				} else {
 					//prepare plain text for display
 					newValue = linkify(newValue);
 					newValue = newValue.replace(/\n/g, '<br/>');

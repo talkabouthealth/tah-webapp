@@ -250,7 +250,8 @@ public class SearchUtil {
 		Query searchQuery;
 		if(StringUtils.isNotEmpty(cancerType)) {
 			if(StringUtils.isNotBlank(term))
-				searchQuery = parser.parse(term  + " OR  ((" +cancerParser.parse("\"" + cancerType + "\"") + ") AND (" + topicQuery +  ") )");
+				//searchQuery = parser.parse(term  + " AND  ((" +cancerParser.parse("\"" + cancerType + "\"") + ") AND (" + topicQuery +  ") )");
+				searchQuery = parser.parse(term  + " AND  (" +cancerParser.parse("\"" + cancerType + "\"") + ")");
 			else
 				searchQuery = cancerParser.parse("\"" + cancerType + "\"");
 		} else {
@@ -322,7 +323,7 @@ public class SearchUtil {
 				searchQuery = parser.parse(searchTerm);
 			}
 		}
-		System.out.println(searchQuery.toString());
+		//System.out.println(searchQuery.toString());
 		return searchQuery;
 	}
 	
@@ -359,7 +360,7 @@ public class SearchUtil {
 		Query searchQuery;
 		if(StringUtils.isNotEmpty(cancerType)) {
 			if(StringUtils.isNotBlank(searchTerm))
-				searchQuery = parser.parse(searchTerm  + " AND  (" +cancerParser.parse("\"" + cancerType + "\",\"" + ALL_CANCERS  + "\"") + ")");
+					searchQuery = parser.parse(searchTerm  + " AND  (" +cancerParser.parse("\"" + cancerType + "\",\"" + ALL_CANCERS  + "\"") + ")");
 			else
 				searchQuery = cancerParser.parse("\"" + cancerType + "\",\"" + ALL_CANCERS  + "\"");
 		} else {

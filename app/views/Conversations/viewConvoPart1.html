@@ -247,11 +247,13 @@
 				#{convo/convoReply reply: convoReply, talker: talker /}
 			#{/list}
 			#{if talker}
+			<!-- -->
+			#{if convo.replies.size() == 0}
 				<div id="convoReplyForm" style="clear:both">
 					<div id="saveConvoReplyImage" class="ajaxLoading" ></div>
-                    <div class="repcommbox22">
+                    <div class="repcommbox22" style="margin-left:0px !important;">
 	                    <textarea id="convoReplyText" class="repcominput" ></textarea>
-	                    <div class="repcommstextbox">
+	                    <div class="repcommstextbox" style="float:right;">
 	                    	<input type="submit" class="repcomsubmits" 
 	                    		onclick="return saveConvoReply();"
 	                    		value=" " />
@@ -261,7 +263,9 @@
 	                    </div>
 	                    <div class="cb"></div>
                     </div>
-                   </div><!--Blankdivsub-->
+                   </div>
+                   #{/if}
+                    <!--Blankdivsub-->
 			#{/if}
 		</div>
 		<div class="cb"></div>
@@ -595,7 +599,19 @@ saveAnswerOrReplyHere = function(elm) {
 	$("#replytext").val(area1.instanceById('replytext').getContent());
 	saveAnswerOrReply('');
 }
-area1 = new nicEditor({buttonList : ['bold','italic','underline','indent','outdent','ol','ul','link','unlink','upload']}).panelInstance('replytext',{hasPanel : true});
-n2 = new nicEditor({buttonList : ['bold','italic','underline','indent','outdent','ol','ul','link','unlink','upload']}).panelInstance('editanswer',{hasPanel : true});
+var area1;
+var n2;
+var n3;
+createEditors = function() {
+	try {
+		area1 = new nicEditor({buttonList : ['bold','italic','underline','indent','outdent','ol','ul','link','unlink','upload']}).panelInstance('replytext',{hasPanel : true});
+	} catch(e) {}
+	try {
+		n2 = new nicEditor({buttonList : ['bold','italic','underline','indent','outdent','ol','ul','link','unlink','upload']}).panelInstance('editanswer',{hasPanel : true});
+	} catch(e) {}
+	try {
+		n3 = new nicEditor({buttonList : ['bold','italic','underline','indent','outdent','ol','ul','link','unlink','upload']}).panelInstance('editReply',{hasPanel : true});
+	} catch(e) {}
+}
 </script>
 #{/if} 

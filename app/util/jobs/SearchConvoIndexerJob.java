@@ -1,7 +1,10 @@
 package util.jobs;
 
+import static util.DBUtil.getCollection;
+
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -19,20 +22,32 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+
 import dao.CommentsDAO;
 import dao.ConversationDAO;
 
-public class SearchConvoIndexerJob{
+@SuppressWarnings("deprecation")
+public class SearchConvoIndexerJob {
 	
 	public static void main(String[] args) throws Throwable {
 		int limit=10;
+		popupateDB();
 		
-		File autocompleteIndexerFile = new File("/data/searchindex/autocomplete");
+		//For Local
+		//String searchIndexPath = "/home/avibha/Documents/db/data/searchindex/";
+
+		//For Live/QA
+		String searchIndexPath = "/data/searchindex/";
+
+		File autocompleteIndexerFile = new File(searchIndexPath + "autocomplete");
  		Directory autocompleteIndexDir = FSDirectory.open(autocompleteIndexerFile);
- 		
- 		File convoIndexerFile = new File("/data/searchindex/conversations");
+
+ 		File convoIndexerFile = new File(searchIndexPath + "conversations");
  		Directory convoIndexDir = FSDirectory.open(convoIndexerFile);
- 		
+
 		System.out.println("SearchConvoIndexerJob Started::::"+ new Date());
 		IndexWriter convoIndexWriter = new IndexWriter(convoIndexDir, new StandardAnalyzer(Version.LUCENE_36), false,MaxFieldLength.UNLIMITED) ;
 		IndexWriter autocompleteIndexWriter = new IndexWriter(autocompleteIndexDir, new StandardAnalyzer(Version.LUCENE_36), false,MaxFieldLength.UNLIMITED);
@@ -42,6 +57,7 @@ public class SearchConvoIndexerJob{
 			 List<ConversationBean> convoList =  ConversationDAO.loadUpdatedConversations(limit);
 			 ArrayList<Document> convoIndex = new ArrayList<Document>();
 		  	 ArrayList<Document> autoConvoIndex = new ArrayList<Document>();
+		  	 int count = 0;
 			 for (ConversationBean convo : convoList) {
 				//possibly weight titles, conversation details, summaries, and answers more than the archived real-time conversations?
 				List<CommentBean> answersList = CommentsDAO.loadConvoAnswersTreeForScheduler(convo.getId());
@@ -70,6 +86,7 @@ public class SearchConvoIndexerJob{
 						topic = topic + topicBean.getTitle() + " ";
 					}
 			 	}
+				doc.add(new Field("profile", "0", Field.Store.YES, Field.Index.ANALYZED));
 				doc.add(new Field("topics", topic, Field.Store.YES, Field.Index.ANALYZED));
 				//convoIndexWriter.addDocument(doc);
 				convoIndex.add(doc);
@@ -91,7 +108,7 @@ public class SearchConvoIndexerJob{
 				}
 				//autocompleteIndexWriter.addDocument(doc);
 				autoConvoIndex.add(doc);
-				System.out.println("Completed convo indexes::::");
+				count++;
 			}
 			 if(convoIndex.size()>0)
 				 convoIndexWriter.addDocuments(convoIndex);
@@ -100,15 +117,25 @@ public class SearchConvoIndexerJob{
 			 convoIndex.clear();
 			 autoConvoIndex.clear();
 			 convoList.clear();
+			 System.out.println("Completed convo indexes: " + count);
 		 } finally {
 			convoIndexWriter.close();
 			autocompleteIndexWriter.close();
-			System.out.println("SearchConvoIndexerJob Completed::::"+ new Date());
+			System.out.println("SearchConvoIndexerJob Completed: "+ new Date());
 			SearchConvoIndexerJob convoJob = new SearchConvoIndexerJob();
 			convoJob.finalize();
 		 }
 	}
-	
+
+	private static void popupateDB() {
+		DBCollection namesColl = getCollection("schedulerStat");
+		DBObject waitingDBObject = BasicDBObjectBuilder.start()
+				.add("scheduleType", "CONVO")
+				.add("timestamp", Calendar.getInstance().getTime())
+				.get();
+		namesColl.save(waitingDBObject);
+	}
+
 	protected void finalize() throws Throwable {
 		super.finalize();
 	}
