@@ -1,8 +1,9 @@
 package controllers;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 
-import antlr.collections.List;
 import models.ConversationBean;
 import models.NewsLetterBean;
 import models.TalkerBean;
@@ -23,8 +24,8 @@ public class Video extends Controller {
 
 	@Check("admin")
 	public static void homePageVideo() {
-		java.util.List<VideoBean> list = VideoDAO.loadHomeVideo("All Cancers");
-		java.util.List<VideoBean> listBC = VideoDAO.loadHomeVideo("Breast Cancer");
+		List<VideoBean> list = VideoDAO.loadHomeVideo("All Cancers");
+		List<VideoBean> listBC = VideoDAO.loadHomeVideo("Breast Cancer");
 		render("Dashboard/homeVideo.html",list,listBC);
 	}
 
