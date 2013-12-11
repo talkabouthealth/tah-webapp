@@ -34,6 +34,7 @@ import models.MessageBean;
 import models.TalkerBean;
 import models.ConversationBean;
 import models.TopicBean;
+import models.VideoBean;
 import models.actions.Action.ActionType;
 
 import org.apache.commons.lang.StringUtils;

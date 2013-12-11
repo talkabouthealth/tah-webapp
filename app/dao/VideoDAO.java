@@ -6,6 +6,7 @@ import static util.DBUtil.getCollection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,7 +22,10 @@ import com.mongodb.DBRef;
 import com.mongodb.QueryBuilder;
 import com.mongodb.WriteResult;
 
+import logic.FeedsLogic;
 import models.CommentBean;
+import models.ConversationBean;
+import models.DiseaseBean;
 import models.TalkerBean;
 import models.VideoBean;
 
@@ -31,13 +35,14 @@ public class VideoDAO {
 		DBCollection videoColl = getCollection(VIDEO_COLLECTION);
 		videoColl.save(bean.toDBObject());
 		return true;
-		/*	id - default
-			videoId
-			talkerId
-			convoId
-			list topics
-			date
-		 */
+	}
+	
+	public static boolean saveOrUpdate(VideoBean bean) {
+		DBCollection videoColl = getCollection(VIDEO_COLLECTION);
+		DBObject convoId = new BasicDBObject("_id", new ObjectId(bean.getId()));
+		videoColl.update(convoId, new BasicDBObject("$set", bean.toupdateDBObject()));
+		//videoColl.update(bean.toDBObject());
+		return true;
 	}
 
 	public static List<VideoBean> loadConvoVideo(String convoId) {
@@ -187,11 +192,46 @@ public class VideoDAO {
 			do {
 				DBObject dbObject =	convoCur.next();
 				videoColl.remove(dbObject);
-			}while(convoCur.hasNext());
+			} while(convoCur.hasNext());
 		}
 		return returnFlag;
 	}
 
+	public static List<VideoBean> loadVideoConvo(String lastActionId, String communityName,int limit) {
+		List<VideoBean> videoBeanList = null;
+		VideoBean videoBean;
+		DBCollection videoColl = getCollection(VIDEO_COLLECTION);
+		BasicDBObjectBuilder queryBuilder = BasicDBObjectBuilder.start();
+		
+		
+		if (lastActionId != null && !lastActionId.equals("")) {
+			DBObject fields=BasicDBObjectBuilder.start().add("timestamp" , 1).get();
+			Date firstActionTime = new Date();
+			DBObject comment= videoColl.findOne(new BasicDBObject("_id", new ObjectId(lastActionId)),fields);
+			firstActionTime=(Date)comment.get("timestamp");
+			if(firstActionTime != null) {
+				queryBuilder.add("timestamp", new BasicDBObject("$lt", firstActionTime));
+			}
+		}
+
+		if(communityName != null) {
+			DiseaseBean diseBean = DiseaseDAO.getByName(communityName);
+			Set<DBRef> topicDB = new HashSet<DBRef>();
+			topicDB.add(createRef(DiseaseDAO.DISEASES_COLLECTION, diseBean.getId()));
+			queryBuilder.add("diseases", new BasicDBObject("$in", topicDB));
+		}
+		DBCursor convoCur= videoColl.find(queryBuilder.get()).sort(new BasicDBObject("timestamp", -1)).limit(limit);
+		if(convoCur.hasNext()) {
+			videoBeanList = new ArrayList<VideoBean>();
+			do {
+				videoBean = new VideoBean();
+				videoBean.parseDBObjectTopic(convoCur.next());
+				videoBeanList.add(videoBean);
+			} while(convoCur.hasNext());
+		}
+		return videoBeanList;
+	}
+	
 	public static final String VIDEO_COLLECTION = "video";
 	public static final String HOME_VIDEO_COLLECTION = "homevideo";
 }

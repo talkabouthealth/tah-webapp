@@ -253,8 +253,9 @@ div.nicEdit-main{ font-size:15px !important; }
    			$('.disc').linkify();
    			$('.styles2answers').linkify();
    			startWindow(share);
-   			
-   			createEditors();
+   			try{
+   				createEditors();
+   			}catch(e){}
    			
 		});
 		function mergeConvoOp(selectedConvoURL) {

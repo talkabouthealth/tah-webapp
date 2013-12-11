@@ -28,7 +28,7 @@
 		var recentConvo=0;
 		var expertConvo=0;
 		var openConvo=0;
-		
+		var videoConvo=0;
 		$(document).ready(function() {
 			initTabs();
 
@@ -38,6 +38,8 @@
    	   			$("#openConvo").click();
    			} else if (action === 'recentConvo') {
    	   			$("#recentConvo").click();
+   			} else if(action === 'videoConvoTab') {
+   	   			$("#videoConvo").click();
    			}
 
 			$(".flagConvoLink").click(function() {
@@ -55,6 +57,8 @@
 					id = "recentConvo";
 				else if(idBtn == 'openMore')
 					id = "openConvo";
+				else if(idBtn == 'videoMore')
+					id = "videoConvo";
 				loadMoreCommunityFeeds(id);
 			});
 			
@@ -78,7 +82,7 @@
 						recentConvo=1;
 						$(loading).remove();
 						if($.trim(data) == '') {
-							$("<li>No question found</li>").appendTo($("#"+id+"Cnt"));
+							$("<li> There is no new video answer. Ask <a href='/signup'>question</a> now </li>").appendTo($("#"+id+"Cnt"));
 							$("#recentConvoTab li.lastFeed").hide();
 						} else {
 							$(data).appendTo($("#"+id+"Cnt"));
@@ -91,7 +95,7 @@
 						expertConvo=1;
 						$(loading).remove();
 						if($.trim(data) == '') {
-							$("<li>No question found</li>").appendTo($("#"+id+"Cnt"));
+							$("<li> There is no new video answer. Ask <a href='/signup'>question</a> now </li>").appendTo($("#"+id+"Cnt"));
 							$("#expertConvoTab li.lastFeed").hide();
 						} else {
 							$(data).appendTo($("#"+id+"Cnt"));
@@ -105,6 +109,20 @@
 						$(loading).remove();
 						$(data).appendTo($("#"+id+"Cnt"));
 						$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+					});
+				} else if(id=='videoConvo' && videoConvo ==0) {
+					$("#"+id+"Cnt").html(loading);
+					$.get("/Explore/communityFeedAjaxLoad",{ type : 'videoConvo', csrType : '${csrType}' },function(data){
+						videoConvo=1;
+						$(loading).remove();
+						//if($.trim(data) == '') {
+						if ($.trim(data).toLowerCase().indexOf("there is no new") >= 0) {
+							$(data).appendTo($("#"+id+"Cnt"));
+							$("#videoConvoTab li.lastFeed").hide();
+						} else {
+							$(data).appendTo($("#"+id+"Cnt"));
+							$('.disc').truncatable({ limit: 160, more: '... more', less: true, hideText: '...less' });
+						}
 					});
 				}
 				return false;
@@ -145,8 +163,9 @@
 				<li id="expertConvo" class="fst active"><a href="#">Expert Answers</a></li>
 				<li id="recentConvo"><a href="#">Shared Experiences</a></li>
 				#{if talker}					
-						 <li id="openConvo"><a href="#">Unanswered Questions</a></li> 
+					<li id="openConvo"><a href="#">Unanswered Questions</a></li> 
 				#{/if}
+				<li id="videoConvo"><a href="#">Videos</a></li>
 			</ul>
 		</div>
 		<div id="expertConvoTab" class="tabBody">
@@ -169,7 +188,7 @@
 		 </div>
 		  #{if talker}
 		 <div id="openConvoTab" class="tabBody" style="display:none;">
-		 		<ul id="openConvoCnt"></ul>
+		 	<ul id="openConvoCnt"></ul>
 		   	<ul>
 		   	<li class="lastFeed">
 		   		<a class="moreBtn" id="openMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a>
@@ -177,83 +196,10 @@
 		   </ul>
 		 </div>
 		  #{/if}
-		 <!-- 
-        <div id="targetedtherapy">
-          <div id="innermiddlearea">
-            <div id="mtcover">
-              <div id="mtleft">
-                <div class="mtcontent">
-                  <div class="topipcWraper">
-					<div class="cb"></div>
-					<div class="topic">
-						
-						
-	                      <div id="expertConvoContent" class="tabContent" style="display: none;">
-							<div class="topic">
-		                      <div class="newpage1">Expert Answers</div>
-		                      <div class="cb"></div>
-		                      <div class="joinborder"></div>
-		                      <!--mtinputbox-- >
-		                      <div class="cb"></div>
-		                      <div class="topic" >
-			                      <div id="expertConvoDiv"> 
-				                      <div id="expertConvoList"></div>
-				                  </div>	
-								  <div class="cb"></div>
-							  </div>
-		                      <!--newpageCover-- >
-		                      <div class="cb"></div>
-		                    </div> 
-						</div>
-	                      <div id="recentConvoContent" class="tabContent">	
-							<div class="topic">
-		                      <div class="newpage1">Shared Experiences</div>
-		                      <div class="cb"></div>
-		                      <div class="joinborder"></div>
-		                      <div class="cb"></div>
-		                      <div class="topic">
-		                      	<div id="recentConvoDiv"> 
-				                      <div id="recentConvoList">
-				                      </div>
-				                  </div>
-							  <div class="cb"></div>
-		                      </div> <!--newpageCover-- >
-		                      <div class="cb"></div>
-		                    </div> 
-						</div>
-						
-						<div id="openConvoContent" class="tabContent" style="display: none;">
-							<div class="topic">
-		                      <div class="newpage1">Unanswered Questions</div>
-		                      <div class="cb"></div>
-		                      <div class="joinborder"></div>
-		                      <div class="cb"></div>
-		                      <div class="topic" >
-							  <div id="openConvoDiv">		                      
-			                      <div id="openConvoList">
-			                      </div>
-			                  </div>
-									<div class="cb"></div>
-								</div>  <!--newpageCover-- >
-		                      <div class="cb"></div>
-		                    </div> 
-						</div>
-	                    </div> 
-                    <div class="cb"></div>
-                  <div class="cb"></div>
-                </div>
-                <div class="cb"></div>
-              </div>
-              <div class="cb"></div>
-          </div>
-          <!--mtcover-- >
-          <div class="cb"></div>
-        </div>
-        <div id="signupright"></div>
-       
-      </div>
-    </div>
-      -->
+		<div id="videoConvoTab" class="tabBody" style="display:none;">
+			<ul id="videoConvoCnt"></ul>
+			<ul><li class="lastFeed"><a class="moreBtn" id="videoMore"><img src="/public/images/index/see_more_btn.png" alt="see more" /></a></li></ul>
+	 	</div>
   </div>
   <div id="sidebar">
    #{ include 'right_new.html' /}

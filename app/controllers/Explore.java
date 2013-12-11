@@ -38,6 +38,7 @@ import models.DiseaseBean;
 import models.GuidanceNewsLetterBean;
 import models.NewsLetterBean;
 import models.ServiceAccountBean;
+import models.VideoBean;
 import models.PrivacySetting.PrivacyType;
 import models.ServiceAccountBean.ServiceType;
 import models.TalkerBean;
@@ -64,6 +65,7 @@ import dao.DiseaseDAO;
 import dao.NewsLetterDAO;
 import dao.TalkerDAO;
 import dao.TopicDAO;
+import dao.VideoDAO;
 
 @With( LoggerController.class )
 public class Explore extends Controller {
@@ -487,7 +489,7 @@ public class Explore extends Controller {
 		List <ConversationBean> communityFeed = null;
 		boolean newsLetterFlag=false;
 		boolean rewardLetterFlag=false;
-		if(talker != null){
+		if(talker != null) {
 			talker.setFollowerList(TalkerDAO.loadFollowers(talker.getId()));
 			newsLetterFlag = ApplicationDAO.isEmailExists(talker.getEmail());
 			rewardLetterFlag=ApplicationDAO.isnewsLetterSubscribe(talker.getEmail(),"TalkAboutHealth Rewards");
@@ -500,8 +502,8 @@ public class Explore extends Controller {
 		
 			boolean isValid = false;
 			List<DiseaseBean> diseaseList = DiseaseDAO.getCatchedDiseasesList(session);
-			for(int index = 0; index < diseaseList.size(); index++){
-				if(diseaseList.get(index).getName().equalsIgnoreCase(csrType)){
+			for(int index = 0; index < diseaseList.size(); index++) {
+				if(diseaseList.get(index).getName().equalsIgnoreCase(csrType)) {
 					isValid = true;
 					csrType = diseaseList.get(index).getName();
 					break;
@@ -527,33 +529,24 @@ public class Explore extends Controller {
     	if(type.equals("expertConvo")) {
     		type = "expert"; 
     		List<ConversationBean> convoFeed = ConversationDAO.loadExpertsAnswer(afterActionId,csrType);
-    		//if(afterActionId != null) {
-		    //	render("tags/convo/convoList.html", convoFeed ,type);
-    		//} else {
-    			render("Explore/homeFeedList.html",convoFeed, type,csrType);
-    		//}
+   			render("Explore/homeFeedList.html",convoFeed, type,csrType);
 		}
 		if(type.equals("openConvo")) {
 			List<ConversationBean> convoFeed = ConversationDAO.getCommunityOpenQuestions(afterActionId,csrType);
 			type = "open";
-			//if(afterActionId != null) {
-			//	String feedType = type;
-			//	render("tags/convo/convoList.html",openConvo, feedType);
-			//} else {
-			//	render("Explore/communityFeedList.html",openConvo, type,csrType);
-			//}
 			render("Explore/homeFeedList.html",convoFeed, type,csrType);
 		}
 		if(type.equals("recentConvo")) {
 			List<ConversationBean> convoFeed = ConversationDAO.loadSharedExperiences(afterActionId,csrType);
 			type = "recent";
-			//if(afterActionId != null) {
-			//	TalkerBean _talker = CommonUtil.loadCachedTalker(session);
-			//	render("tags/feed/recentFeedList.html", recentConvo, _talker, type);
-			//} else {
-				//render("Explore/communityFeedList.html",recentConvo, type,csrType);
-			///}
 			render("Explore/homeFeedList.html",convoFeed, type,csrType);
+		} 
+		if(type.equals("videoConvo")) {
+			List<VideoBean> videoBeanList = VideoDAO.loadVideoConvo(afterActionId,csrType,10);
+			type = "video";
+			String feedType =type ; 
+			TalkerBean _talker = CommonUtil.loadCachedTalker(session);
+			render("tags/convo/convoList_topic.html", videoBeanList, feedType, _talker);
 		}
     }
     /**

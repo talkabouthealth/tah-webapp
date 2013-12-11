@@ -28,6 +28,15 @@ public class Video extends Controller {
 		render("Dashboard/homeVideo.html",list,listBC);
 	}
 
+	public static void updateAll() {
+		List<VideoBean> vList = VideoDAO.loadAllVideo();
+		for (VideoBean videoBean : vList) {
+			System.out.println("D: " + videoBean.getVideoId());
+			VideoDAO.saveOrUpdate(videoBean);
+		}
+		homePageVideo();
+	}
+	
 	public static void removeHomeVideo(String videoId,String cancerType) {
 		VideoDAO.removeHomeVideo(videoId,cancerType);
 		homePageVideo();
@@ -38,7 +47,7 @@ public class Video extends Controller {
 		System.out.println(videoTitle);
 		System.out.println(videoLink);
 		System.out.println(cancerType);
-		if(videoId != null){
+		if(videoId != null) {
 			VideoDAO.addHomeVideo(videoId,videoTitle,videoLink,cancerType);
 		}
 		homePageVideo();
@@ -73,9 +82,9 @@ public class Video extends Controller {
 			if(VideoDAO.save(videoBean))
 				returnPath = true;	
 		}
-		if(returnPath){
+		if(returnPath) {
 			renderText(message);
-		}else
+		} else
 			renderText(message);
     }
 

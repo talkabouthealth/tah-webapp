@@ -127,7 +127,7 @@ public class EmailUtil {
 				for (Iterator iterator = emailList.iterator(); iterator.hasNext();) {
 					email = (EmailListBean) iterator.next();
 					lists = new HashMap<String, Boolean>();
-					lists.put(email.getListName(), true);
+					lists.put(email.getListName(), email.isListFlag());
 					try {
 						client.setEmail(email.getEmail(), false, false, false, null, lists, null);
 					} catch (Exception e) {

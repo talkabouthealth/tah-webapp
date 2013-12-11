@@ -2,9 +2,12 @@ package models;
 
 import static util.DBUtil.createRef;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -16,6 +19,7 @@ import com.mongodb.DBObject;
 import com.mongodb.DBRef;
 
 import dao.ConversationDAO;
+import dao.DiseaseDAO;
 import dao.TopicDAO;
 
 public class VideoBean implements DBModel {
@@ -25,6 +29,7 @@ public class VideoBean implements DBModel {
 	private TalkerBean talkerBean;
 	private ConversationBean convoBean;
 	private Set<TopicBean> topics;
+	private Set<DiseaseBean> diseases;
 	private String videoTitle;
 	private String homeVideoLink;
 	private String cancerType;
@@ -85,6 +90,21 @@ public class VideoBean implements DBModel {
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
+	public Set<DiseaseBean> getDiseases() {
+		diseases = new LinkedHashSet();
+		if(StringUtils.isNotBlank(getConvoBean().getCategory())) {
+			diseases.add(DiseaseDAO.getByName(getConvoBean().getCategory()));
+		}
+		if(getConvoBean().getOtherDiseaseCategories() != null){
+			for(int index = 0; index < getConvoBean().getOtherDiseaseCategories().length; index++){
+				diseases.add(DiseaseDAO.getByName(getConvoBean().getOtherDiseaseCategories()[index]));
+			}
+		}
+		return diseases;
+	}
+	public void setDiseases(Set<DiseaseBean> diseases) {
+		this.diseases = diseases;
+	}
 	@Override
 	public void parseDBObject(DBObject dbObject) {
 		setId(dbObject.get("_id").toString());
@@ -125,8 +145,33 @@ public class VideoBean implements DBModel {
 		.add("convo", convoDBRef)
 		.add("topics", getConvoBean().topicsToDB())
 		.add("timestamp", Calendar.getInstance().getTime())
-		//.add("videoTitle",getVideoTitle())
+		.add("diseases",diseaseToDB())
 		.get();
 		return videoDBObject;
+	}
+
+	public DBObject toupdateDBObject() {
+		DBRef convoDBRef = createRef(ConversationDAO.CONVERSATIONS_COLLECTION, getConvoBean().getId());
+
+		DBObject videoDBObject = BasicDBObjectBuilder.start()
+		.add("videoId", getVideoId())
+		.add("talker", getTalkerBean())
+		.add("convo", convoDBRef)
+		.add("topics", getConvoBean().topicsToDB())
+		//.add("timestamp", Calendar.getInstance().getTime())
+		.add("diseases",diseaseToDB())
+		.get();
+		return videoDBObject;
+	}
+	
+	public List<DBRef> diseaseToDB() {
+		List<DBRef> diseaseDBList = new ArrayList<DBRef>();
+		for (DiseaseBean disease : getDiseases()) {
+			if(disease != null && disease.getId() != null) {
+				DBRef diseaseRef = createRef(DiseaseDAO.DISEASES_COLLECTION, disease.getId());
+				diseaseDBList.add(diseaseRef);
+			}
+		}
+		return diseaseDBList;
 	}
 }
