@@ -93,8 +93,8 @@
 		          	#{/if}
 		          	<div style="margin-left: 30px;">
 			            <h4> Answers from the World's</h4>
-			            <h2>Leading Cancer Experts</h2>
-			            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> What to expect. How to prepare. Next steps. We'll help<br/> guide you through cancer treatments. <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
+			            <h2>Leading Medical Experts</h2>
+			            <p><img src="/public/images/index/quote_open.png" alt="quote open" /> What to expect. How to prepare. Next steps. We'll help<br/> guide you through treatments. <img src="/public/images/index/quote_close.png" alt="quote close" /></p>
 			              <div class="get_started">
 			              	<a href="@{Application.signup()}" onClick="_gaq.push(['_trackEvent', 'Join_Home', 'Signup_Image', 'Standard']);"><img src="/public/images/index/get_started_btn.png" alt="get started" /></a> or
 			              	<a href="#" class="facebookBtn" onClick="_gaq.push(['_trackEvent', 'Join_Home', 'Signup', 'Facebook']);"><img src="/public/images/index/join_using_fb.png" alt="join using facebbok" /></a> 
@@ -205,7 +205,7 @@
 			 #{include 'Upcoming_Workshops_new.html' /}
 
 			 <div class="box2">
-		        <h2 class="heading"><img src="/public/images/index/logo_blue.png" alt="logo_blue" /><a href="@{Explore.topics()}"> Cancer Communities</a></h2>
+		        <h2 class="heading"><img src="/public/images/index/logo_blue.png" alt="logo_blue" /><a href="@{Explore.topics()}"> Disease Communities</a></h2>
 		        <ul>
 			        #{list items: diseaseList, as: 'disease'}
 			        	#{ifnot disease.name == null}
@@ -256,12 +256,12 @@
     <div id="site_nav">
       <h3>Topics</h3>
       <ul>
-        <li><a href="@{Explore.topics()}">Cancer Communities</a></li>
-        <li><a href="@{Explore.topics('survivorship')}">Cancer Patients and Survivors</a></li>
-        <li><a href="@{Explore.topics('Symptoms and Diagnosis')}">Cancer Symptoms and Diagnosis</a></li>
-        <li><a href="@{Explore.topics('treatments and side effect')}">Cancer Treatments and Side Effects</a></li>
+        <li><a href="@{Explore.topics()}">Disease Communities</a></li>
+        <li><a href="@{Explore.topics('survivorship')}">Patients and Caregivers</a></li>
+        <li><a href="@{Explore.topics('Symptoms and Diagnosis')}">Symptoms and Diagnosis</a></li>
+        <li><a href="@{Explore.topics('treatments and side effect')}">Treatments and Side Effects</a></li>
         <li><a href="@{Explore.topics('Life and Everyday')}">Life and Everyday</a></li>
-        <li><a href="@{Explore.topics('Risk')}">Cancer Risk and Screening</a></li>
+        <li><a href="@{Explore.topics('Risk')}">Risk and Screening</a></li>
       </ul>
     </div>
     <!-- site nav end -->
