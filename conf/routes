@@ -12,7 +12,11 @@ GET		/sitemap{name}.xml						SEO.sitemap
 #Ad controller
 *		/advertisement/logreport				Advertisement.logReport
 GET		/advertisement/{addId}					Advertisement.index
-GET     /                                       Application.index
+# Commented old Home
+#GET     /                                       Application.index
+GET     /                                       NewHome.index
+
+
 GET     /signup/?                               Application.signup
 POST    /register/?	                            Application.register
 GET     /forgotpassword/?                       Application.forgotPassword

@@ -1,0 +1,409 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      >
+	<head>    
+	    <title>TalkAboutHealth - Health and Medical Answers From World Leading Experts. Relevant, helpful, and accurate health information.</title>  
+	    <meta name="description" content="${pageDescription ? pageDescription : 'Health and Medical Answers From World Leading Experts. Relevant, helpful, and accurate health information. We are a welcoming and caring community who have come together to meet, share, and learn with each other. We welcome patients, families, caregivers, survivors, professionals, and organizations. Everyone is encouraged to share their unique knowledge and experiences. The more we share, the more lives we improve and save.'}" /> 
+	    <meta name="keywords" content="${pageKeywords ? pageKeywords : 'support, health, talk'}" />
+	     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+	    <meta name="author" content="TalkAboutHealth" /> 
+	    <meta name="robots" content="all" /> 
+	    <link rel="shortcut icon" href="@{'/public/images/favicon.ico'}" />
+	    
+	        <!-- Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link href="/public/newhome/css/bootstrap.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link href="/public/newhome/css/freelancer.css" rel="stylesheet"/>
+
+    <!-- Custom Fonts -->
+    <link href="/public/newhome/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css"/>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css"/>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+    <!--
+    .one_third {
+	    width: 32%;
+	    margin-right: 2%;
+	        float: left;
+	}
+	.last {
+    padding: 0;
+    margin-right: 0 !important;
+    clear: right;
+}
+-->
+    </style>
+	    
+    </head>
+    <body id="page-top" class="index">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#page-top"><img src="/public/newhome/img/tah_logo_top.png"/></a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#portfolio">How We Engage</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#about">Easy To Get Started</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#testimonials">Testimonials</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="intro-text">
+                         <div class="col-lg-12"><p>What to expect. How to prepare. <br/> Next steps. We'll help guide you through treatments. <br/><br/></p></div>
+                        <div class="col-lg-5" style="border: 1px solid #FFF;padding:25px;    font-size: 23px;">
+                         Personalized Care <br/>Management <br/>For Primary Care
+                         <br/><br/>
+                         <a href="http://www.talkabouthealth.net/" target="_new"><img src="/public/newhome/img/btn_learnmore.png"/></a>
+                        </div>
+                        	<div class="col-lg-2">
+                        
+                        </div>
+                        <div class="col-lg-5" style="border: 1px solid #FFF;padding:25px;    font-size: 23px;">
+                        Patient Q&A: Answers<br/> From The World's <br/>Leading Experts
+                        <br/><br/>
+                        <a href="@{NewHome.start()}"><img src="/public/newhome/img/btn_getstarted.png"/></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         	
+    </header>
+    
+	<section style="padding:50px 0;    background: #b81976;color: #FFF;">
+		<div  class="container">
+		#{form @Newsletter.subscribeMoreNewsLetter() , id:'subcribeNewsletter' }
+			<input name="newsletter.newsLetterType" type="hidden" value="TalkAboutHealth News"/>
+			<div class="col-lg-4">
+         		<span style="font-size: 20px;font-weight: bolder;">Stay In The Loop!</span><br/>
+         		Sign-up to recieve updates and new <br/>content from TalkAboutHealth.com
+         	</div>
+         	<div class="col-lg-4" style="margin-top: 15px;">
+         		<div class="input-group">
+      				<div class="input-group-addon" style="background: #872f62;color:#FFF;border: 2px solid #852560;border-right-color: #656;border-right-style: inset; ">
+      				<i class="fa fa-envelope-o"></i> </div>
+      				<input type="text" class="form-control" id="exampleInputAmount" name="newsletter.email" placeholder="Your Email Address" 
+      				style="background: #872f62;color:#FFF;border: 2px solid #852560;">
+    			</div>
+    			
+      				<span id="respMessage"></span>
+    		</div>
+    		<div class="col-lg-4" style="    margin-top: 15px;">
+    			<a id="subscribe" href="javaScript:void(0);"><img style="height: 45px;" class="img-responsive" src="/public/newhome/img/btn_join.png"/></a>
+    		</div>
+    	#{/form}
+		</div>
+	</section>
+
+    <!-- Portfolio Grid Section -->
+    <section id="portfolio">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>How We Engage</h2>
+                    <hr class="star-primary" />
+                </div>
+            </div>
+            <div class="row">
+            	 <div class="col-lg-1">
+            	 </div>
+                 <div class="col-lg-10 text-center">
+<div class="step"><img class="img-responsive" style="    margin: 0 auto;" src="/public/newhome/img/Steps-Illulstration.png" alt="Steps Illustration" width="850" /></div>
+<div class="one_third">
+<h4>New Patients</h4>
+<ul>
+	<li>Engage patients at first contact guiding them through treatments step-by-step.</li>
+	<li>Personalized disease specific care plans.</li>
+</ul>
+</div>
+<div class="one_third">
+<h4>During Treatments</h4>
+<ul>
+	<li>Proactively support and monitor patients with ongoing disease specific assessments of health needs.</li>
+	<li>Provides the right information at the right time to educate about what to expect and watch for.</li>
+</ul>
+</div>
+<div class="one_third last">
+<h4>Ongoing Management</h4>
+<ul>
+	<li>Improve adherence to care plans with relevant information, motivation, and reminders at the right time.</li>
+	<li>Increase retention by maintaining relationships with patients through treatments.</li>
+</ul>
+</div>
+</div>
+<div class="col-lg-1">
+            	 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="success" id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Easy To Get Started &amp; Streamlined Integration</h2>
+                    <hr class="star-light"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="one_third" style="width: 25%;">
+                <img class="img-responsive" src="/public/newhome/img/HIPPA-LOGO.png" alt="HIPPA LOGO" width="272" height="143" />
+                <br/>
+                <img class="img-responsive" src="/public/newhome/img/HL7.png" alt="HL7" width="198" height="179" /></div>
+<div class="one_third" style="width: 71%; padding-left: 90px;">
+
+<ul style="list-style-position: inside;">
+	<li style="list-style-position: inside;">Minimal resources required and no space needed.</li>
+	<li style="list-style-position: inside;">We seamlessly use the practice’s EHR for all documentation and billing.</li>
+	<li style="list-style-position: inside;">Responsive customer support by phone &amp; email.</li>
+	<li style="list-style-position: inside;">HIPAA compliant and secure processes.</li>
+</ul>
+</div>
+            </div>
+        </div>
+    </section>
+    
+        <!-- About Section -->
+    <section id="testimonials" class="testimonial">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Testimonials</h2>
+                    <hr class="star-primary"/>
+                </div>
+            </div>
+            <div class="row">
+                
+<div class="one_third text-center">
+<h4>Patients</h4>
+<img class="alignnone size-full wp-image-52" src="/public/newhome/img/nancy.jpg" alt="Profile Pic (2)" width="175" height="175" />
+<br/>
+<i>"I didn't know what to expect or how to prepare. The TalkAboutHealth Nurse followed up after appointments and helped me through treatments with the right information at the right
+time." </i>
+
+- Nancy S.
+
+</div>
+<div class="one_third text-center">
+<h4>Practitioners</h4>
+<img class="alignnone size-full wp-image-53" src="/public/newhome/img/Kristie.jpg" alt="Profile Pic" width="175" height="175" />
+<br/>
+<i>"TalkAboutHealth helps to proactively support and triage the patients that need extra help. This has resulted in improved quality of care and many situations where we caught potential problems early." </i>
+
+-Kristie Todd, Nurse Navigator
+
+</div>
+<div class="one_third text-center last">
+<h4>Administrators</h4>
+<img class="alignnone size-full wp-image-54" src="/public/newhome/img/BethJerniganRN-large.jpg" alt="Profile Pic (1)" width="175" height="175" />
+<br/>
+<i> "TalkAboutHealth enabled us to efficiently fulfill guidelines while improving the patient experience." </i>
+
+- Beth Jernigan, RN, MSN, OCN
+
+</div>
+            </div>
+        </div>
+    </section>
+    
+    
+
+
+
+    <!-- Footer -->
+    <footer class="text-center">
+        <div class="footer-above">
+            <div class="container">
+                <div class="row">
+                    <div class="footer-col col-md-4">
+                        <img src="/public/newhome/img/icon_whoweare.png"/>
+                    </div>
+                    <div class="footer-col col-md-4">
+                        <img src="/public/newhome/img/icon_partners.png"/>
+                    </div>
+                    <div class="footer-col col-md-4">
+                      <a href="#contactmodel" data-toggle="modal"><img src="/public/newhome/img/icon_contact.png"/></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-below">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                    	<img src="/public/newhome/img/tah_logo_muted.png"/>
+                    	<br/><br/>
+                        &copy; Copyright Talk About Health - Privacy Policy | Terms of Service
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+    <div class="scroll-top page-scroll visible-xs visible-sm">
+        <a class="btn btn-primary" href="#page-top">
+            <i class="fa fa-chevron-up"></i>
+        </a>
+    </div>
+
+    <div class="portfolio-modal modal fade" id="contactmodel" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="close-modal" data-dismiss="modal">
+                <div class="lr">
+                    <div class="rl">
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <h2>Contact TalkAboutHealth</h2>
+                            <hr class="star-primary">
+                            <span id="contactresponce"></span>
+							#{form @NewHome.sendContactEmail() , id:'contactusform' }
+					         	<div class="col-lg-12" style="margin-top: 15px;">
+					         		<div class="input-group">
+					      				<div class="input-group-addon" style="width:90px;">
+					      				Email</div>
+					      				<input type="text" class="form-control" id="exampleInputAmount" name="email" placeholder="Your Email Address">
+					    			</div>
+					    		</div>
+					    		<div class="col-lg-12" style="margin-top: 15px;">
+					         		<div class="input-group">
+					      				<div class="input-group-addon" style="width:90px;">
+					      				Subject </div>
+					      				<input type="text" class="form-control" id="exampleInputAmount" name="subject" placeholder="Subject">
+					    			</div>
+					    		</div>
+					    		<div class="col-lg-12" style="margin-top: 15px;">
+					         		<div class="input-group">
+					      				<div class="input-group-addon" style="width:90px;">
+					      				Message</div>
+					      				<textarea name="message" cols="75" rows="5" class="form-control" placeholder="Your message"></textarea>
+					    			</div>
+					    		</div>
+					    		<div class="col-lg-12" style="    margin-top: 15px;">
+					    			<button type="button" class="btn btn-success" id="contactformsubmit"> Submit</button>
+					    			<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+					    		</div>
+					    	#{/form}
+						 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+   <script type="text/javascript" src="/public/newhome/js/jquery.js" ></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/public/newhome/js/bootstrap.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="/public/newhome/js/classie.js"></script>
+    <script src="/public/newhome/js/cbpAnimatedHeader.js"></script>
+
+    <!-- Contact Form JavaScript -->
+<!--     <script src="js/contact_me.js"></script> -->
+
+    <!-- Custom Theme JavaScript -->
+    <script src="/public/newhome/js/freelancer.js"></script>
+    <script type="text/javascript" src="/public/plugins/jquery.form.js" ></script>
+	<script type="text/javascript">
+	<!--
+	$(document).ready(function(){
+		$('#subscribe').click(function() {
+			$("#subcribeNewsletter").ajaxSubmit({ success: setNewsletterMessage });
+			return false;
+		});
+		
+		$('#contactformsubmit').click(function() {
+			$("#contactusform").ajaxSubmit({ success: setContactFormMessage });
+		});
+
+		setNewsletterMessage = function(responseText, statusText, xhr, $form)  {
+			var errorText;
+			$("#respMessage").css("color","#FFFFFF");
+			if (responseText.indexOf("Error:") === 0) {
+		   		errorText = responseText.replace("Error:", "");
+		   		$("#respMessage").html(errorText); 
+		   		$("#respMessage").fadeIn(100);
+		   		closeTimeout = setTimeout(function() { $("#respMessage").fadeOut(200) }, 4000);
+		   	} else if (responseText.indexOf("Email alrady subscribed!") === 0) {
+		   		errorText = responseText;
+		   		$("#respMessage").html(errorText); 
+		   		$("#respMessage").fadeIn(100);
+		   		closeTimeout = setTimeout(function() { $("#respMessage").fadeOut(200) }, 4000);
+		   	} else {
+		   		errorText= "Thank you for subscribing!";
+		   		$("#respMessage").html(errorText); 
+		   		$("#respMessage").fadeIn(100);
+		   		closeTimeout = setTimeout(function() { $("#respMessage").fadeOut(200) }, 4000);
+		   	}
+		}
+		
+		setContactFormMessage = function(responseText, statusText, xhr, $form)  {
+			var errorText;
+			$("#contactresponce").css("color","#444");
+			if (responseText.indexOf("Error:") === 0) {
+		   		errorText = responseText.replace("Error:", "");
+		   		$("#contactresponce").html(errorText); 
+		   		$("#contactresponce").fadeIn(100);
+		   		closeTimeout = setTimeout(function() { $("#contactresponce").fadeOut(200) }, 4000);
+		   	} else {
+		   		errorText= "Thank you for contacting!";
+		   		$("#contactresponce").html(errorText); 
+		   		$("#contactresponce").fadeIn(100);
+		   		closeTimeout = setTimeout(function() { $("#contactresponce").fadeOut(200) }, 4000);
+		   	}
+		}
+	});
+	-->
+	</script>
+	</body>
+</html>
